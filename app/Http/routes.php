@@ -1,16 +1,40 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+/**
+ * 前台
+ */
+$router->group(['namespace' => 'Index'], function ($router) {
+    $router->get('/', ['as' => 'index', 'uses' => 'HomeController@index']);                     // 首页
+});
 
-Route::get('/', function () {
-    return view('welcome');
+
+/**
+ * 后台
+ */
+$router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router) {
+    // 首页
+    $router->get('/', function () {
+        return redirect('admin/home/index');
+    });
+});
+
+
+/**
+ * 接口
+ */
+$router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
+    /**
+     * v2 版本
+     */
+    $router->group(['prefix' => 'v1', 'namespace' => 'v1'], function ($router) {
+        // 接口地址
+        $router->get('/', [
+            'as' => 'api.v1.root',
+            function () {
+                return redirect('/');
+            }
+        ]);
+
+        $router->controller('file', 'FileController');                              // 文件上传
+    });
 });
