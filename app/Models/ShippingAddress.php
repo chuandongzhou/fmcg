@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserBank extends Model
+class ShippingAddress extends Model
 {
-    protected $table = 'user_bank';
+    //
+    protected $table = 'receivingAddress';
     protected $fillable = [
-        'card_number',
-        'card_type',
-        'card_holder',
-        'card_address',
+        'address',
+        'consigner',
+        'phone',
         'is_default',
         'user_id'
     ];
+
     /**
      * 用户表
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -17,59 +17,77 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'user';
+    protected $fillable = [
+        'username',
+        'password',
+        'nickname',
+        'province_id',
+        'city_id',
+        'district_id',
+        'street_id',
+        'address',
+        'group',
+        'spreading_code'
+    ];
 
     /**
-     * ¹ºÎï³µ
+     * è§’è‰²è¡¨
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role');
+    }
+
+    /**
+     * è´­ç‰©è½¦ï³µ
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function carts()
     {
-        return $this->hasMany('app/Cart');
+        return $this->hasMany('App\Models\Cart');
     }
 
     /**
-     * ÊÕ²Ø
+     * æ”¶è—
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function likes()
     {
-        return $this->hasMany('app/Like');
+        return $this->hasMany('App\Models\Like');
     }
 
     /**
-     * ÉÌÆÌ
+     * åº—é“º
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function shops()
     {
-        return $this->hasMany('app/Shop');
+        return $this->hasMany('App\Models\Shop');
     }
 
     /**
-     * °ó¶¨µÄÒøÐÐ
+     * é“¶è¡Œ
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function userBanks()
     {
-        return $this->hasMany('app/UserBank');
+        return $this->hasMany('App\Models\UserBank');
     }
 
     /**
-     * ÊÕ»õµØÖ·
+     * æ”¶è´§åœ°å€è¡¨
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function receivingAddresss(){
-        return $this->hasMany('app/ReceivingAddress');
+    public function shippingAddress()
+    {
+        return $this->hasMany('app\Models\ShippingAddress');
     }
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['name', 'email', 'password'];
 
     /**
      * The attributes excluded from the model's JSON form.

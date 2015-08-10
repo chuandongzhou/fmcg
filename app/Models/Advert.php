@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 class Advert extends Model
 {
     /**
-     * @var string ¹ã¸æ±í
+     * @var string å¹¿å‘Šè¡¨
      */
     protected $table = 'advert';
+    protected $fillable = ['name', 'link_path', 'ad_type', 'type'];
 }
