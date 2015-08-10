@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Index;
 
+use DB;
+
 class HomeController extends Controller
 {
 
@@ -12,6 +14,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         return view('index.home.index');
     }
 }

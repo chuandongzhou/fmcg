@@ -1,7 +1,7 @@
 @extends('master')
 
 
-@section('title')@yield('subtitle') | 恒草堂后台管理@stop
+@section('title')@yield('subtitle') | 快销后台管理@stop
 
 
 @section('css')
