@@ -24,14 +24,9 @@ class UpdateAdminRequest extends Request
     public function rules()
     {
         return [
-            'user_name'=>'required|max:20|unique:user_name',
-            'true_name'=>'required|max:32',
-            'password'=>'required|max:60',
-            'password_confirmation'=>'confirmed',
-            'last_login_ip'=>'required',
-            'last_login_time'=>'required|date',
-            'created_at'=>'required|date',
-            'updated_at'=>'required|date'
+            'user_name'=>'required|max:20|unique:admin',
+            'real_name'=>'required|max:32|min:2',
+            'password'=>'required|min:8|confirmed',
         ];
     }
 }

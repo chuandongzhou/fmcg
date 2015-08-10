@@ -14,7 +14,7 @@ $router->group(['namespace' => 'Index'], function ($router) {
 $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router) {
     // 首页
     $router->get('/', function () {
-        return redirect('admin/home/index');
+        return view('admin/home/index');
     });
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->resource('role', 'RoleController');
