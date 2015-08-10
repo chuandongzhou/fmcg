@@ -7,19 +7,38 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'order';
+    protected $fillable = [
+        'order_id',
+        'price',
+        'payable_type',
+        'payable_id',
+        'remark',
+        'status',
+        'shipping_address_id',
+        'delivery_man_id',
+        'user_id',
+        'seller_id',
+        'paid_at',
+        'confirmed_at'
+    ];
 
     /**
-     * ¸Ã¶©µ¥ÏÂËùÓÐÉÌÆ·
+     * è¯¥è®¢å•ä¸‹æ‰€æœ‰å•†å“
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orderGoods()
     {
-        return $this->hasMany('app/OrderGoods');
+        return $this->hasMany('App\Models\OrderGoods');
     }
 
+
+    /**
+     * æ”¶è´§åœ°å€
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function receivingAddress()
     {
-        return $this->hasOne('app/ReceivingAddress', 'receiving_address_id');
+        return $this->hasOne('App\Models\ReceivingAddress');
     }
 }

@@ -5,40 +5,58 @@
  * Date: 2015/8/6
  * Time: 16:29
  */
-namespace app\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Goods extends Model
 {
     protected $table = 'goods';
+    protected $fillable = [
+        'name',
+        'price',
+        'category_id',
+        'brand_id',
+        'packing',
+        'is_new',
+        'is_out',
+        'is_change',
+        'is_back',
+        'is_expire',
+        'is_promotion',
+        'promotion_info',
+        'min_num',
+        'introduce',
+        'shop_id'
+    ];
 
     /**
-     * ËùÊôµêÆÌ
+     * æ‰€å±žåº—é“º
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function shop()
     {
-        return $this->belongsTo('app/shop');
+        return $this->belongsTo('App/shop');
     }
 
     /**
-     * ÅäËÍÇøÓò
+     * é…é€åŒºåŸŸ
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function goodsDeliveryArea()
     {
-        return $this->hasMany('app/GoodsDeliveryArea');
+        return $this->hasMany('App\Models\GoodsDeliveryArea');
     }
 
     /**
-     * ¶©µ¥ÀïµÄÉÌÆ·
+     * è®¢å•é‡Œçš„å•†å“
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function orderGoods()
     {
-        return $this->hasMany('app/OrderGoods');
+        return $this->hasMany('App\Models\OrderGoods');
     }
 }

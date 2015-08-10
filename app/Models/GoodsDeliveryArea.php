@@ -8,13 +8,22 @@ class GoodsDeliveryArea extends Model
 {
     protected $table = 'goodsDeliveryArea';
     public $timestamp = false;
+    protected $fillable = [
+        'province_id',
+        'city_id',
+        'district_id',
+        'street_id',
+        'detail_address',
+        'goods_id'
+    ];
 
     /**
-     * ÉÌÆ·±í
+     * å•†å“è¡¨
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function goods()
     {
-        return $this->belongsTo('app/Goods');
+        return $this->belongsTo('App\Models\Goods');
     }
 }
