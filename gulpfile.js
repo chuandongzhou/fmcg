@@ -35,6 +35,8 @@ elixir(function (mix) {
             ]
         })
 
+        .sass('admin.scss', 'public/css/admin.css')
+
         // fonts
         .copy([
             paths.fontawesome + 'fonts/**'
