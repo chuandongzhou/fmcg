@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Http\Request;
 
 
 class UserController extends Controller
@@ -13,28 +13,40 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $getGroup = Input::get('group');
-        $getGroup = in_array($getGroup, array_keys(cons('user.type'))) ? $getGroup : array_keys(cons('user.type'))[0];
-        $group = cons('user.type.' . $getGroup);
-        $users = User::where('group', $group)->get();
-        return view('admin\user\index', ['users' => $users, 'group' => $group]);
+        $types = cons('user.type');
+        $type = (string)$request->input('type');
+
+        $users = User::where('type', array_get($types, $type, head($types)))->paginate();
+
+        return view('admin.user.index', [
+            'users' => $users,
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
-        $getGroup = Input::get('group');
-        $getGroup = in_array($getGroup, array_keys(cons('user.type'))) ? $getGroup : array_keys(cons('user.type'))[0];
-        $group = cons('user.type.' . $getGroup);
-        return view('admin\user\user', ['group' => $group]);
+        $type = $request->input('type');
+        $types = cons('user.type');
+        $typeId = array_get($types, $type);
+        if (empty($typeId)) {
+            return $this->error('无法添加用户');
+        }
+
+        return view('admin.user.user', [
+            'user' => new User,
+            'typeId' => $typeId,
+        ]);
     }
 
     /**
@@ -64,12 +76,15 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $userInfo
-     * @return Response
+     * @param  \App\Models\User $user
+     * @return \Illuminate\View\View
      */
-    public function edit($userInfo)
+    public function edit($user)
     {
-        return view('admin\user\user', ['user' => $userInfo, 'group' => $userInfo->group]);
+        return view('admin.user.user', [
+            'user' => $user,
+            'typeId' => $user->type,
+        ]);
     }
 
     /**
@@ -88,6 +103,7 @@ class UserController extends Controller
 
     /**
      * 删除用户
+     *
      * @param \App\Models\User $user
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception
@@ -95,8 +111,7 @@ class UserController extends Controller
     public function destroy($user)
     {
         if ($user->delete()) {
-            $redirect = $user->group == cons('user.type.wholesalers') ? 'wholesalers' : 'retailer';
-            return $this->success('删除用户成功', url('admin/user?group=' . $redirect));
+            return $this->success('删除用户成功');
         }
         return $this->error('删除用户时遇到错误');
     }

@@ -1,66 +1,87 @@
-@extends('index.master')
+@extends('admin.master')
 
-@section('subtitle', '首页')
+@section('right-container')
+    <form class="form-horizontal ajax-form" method="{{ $user->id ? 'put' : 'post' }}"
+          action="{{ url('admin/user/' . $user->id) }}" data-help-class="col-sm-push-2 col-sm-10">
 
-@section('container')
-    @include('admin.left-nav')
-    <div class="right-content">
-        <form method="post"
-              action="{{ url( isset($user) ? 'admin/user/'.$user->id :  'admin/user') }}">
-            <table class="table">
-                <tr>
-                    <td width="20%">账号：</td>
-                    <td><input class="text w200 necessary" type="text" name="user_name"
-                               value="{{ isset($user) ? $user->user_name : ''  }}"/></td>
-                </tr>
-                <tr>
-                    <td>密码：</td>
-                    <td><input class="text w200 necessary" type="password" name="password"/></td>
-                </tr>
-                <tr>
-                    <td>确认密码：</td>
-                    <td><input class="text w200 necessary" type="password" name="password_confirmation"/></td>
-                </tr>
-                <tr>
-                    <td>{{ $group == cons('user.type.wholesalers') ? '经销商' : '终端商'  }}姓名：</td>
-                    <td><input class="text w200 necessary" type="text" name="nickname"
-                               value="{{ isset($user) ? $user->nickname : '' }}"/></td>
-                </tr>
-                <tr>
-                    <td>地址：</td>
-                    <td>
-                        <select name="province_id">
-                            <option value="0">省</option>
-                            <option value="1">四川</option>
-                        </select>
-                        <select name="city_id">
-                            <option value="0">市</option>
-                            <option value="11">成都</option>
-                        </select>
-                        <select name="district_id">
-                            <option value="0">区</option>
-                            <option value="111">高新区</option>
-                        </select>
-                        <select name="street_id">
-                            <option value="0">街道</option>
-                            <option value="1111">天府五街</option>
-                        </select>
-                        <input type="text" name="address" value="{{ isset($user) ? $user->address : '' }}">
-                    </td>
-                </tr>
-                <tr>
-                    {{csrf_field()}}
-                    @if(isset($user))
-                        <input type="hidden" name="_method" value="PUT"/>
-                    @endif
-                    <input type="hidden" value="{{  $group  }}" name="group"/>
-                    <td colspan="2">
-                        <button type="submit" class="btn btn-bg btn-default">添加</button>
-                    </td>
-                </tr>
-            </table>
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">用户名</label>
 
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名"
+                       value="{{ $user->user_name }}">
+            </div>
+        </div>
 
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label">密码</label>
+
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password-confirmation" class="col-sm-2 control-label">重复密码</label>
+
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="password-confirmation" name="password_confirmation"
+                       placeholder="请重复输入密码">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname" class="col-sm-2 control-label">{{ cons()->valueLang('user.type', $typeId) }}
+                姓名</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="nickname" name="nickname" placeholder="请输入姓名"
+                       value="{{ $user->nickname }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">地址</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" name="province_id">
+                    <option value="0">省</option>
+                    <option value="1">四川</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" name="city_id">
+                    <option value="0">市</option>
+                    <option value="11">成都</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" name="district_id">
+                    <option value="0">区</option>
+                    <option value="111">高新区</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" name="street_id">
+                    <option value="0">街道</option>
+                    <option value="1111">天府五街</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label">详细地址</label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="address" name="address" placeholder="请输入详细地址"
+                       value="{{ $user->address }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-bg btn-primary">添加</button>
+            </div>
+        </div>
+    </form>
 @stop

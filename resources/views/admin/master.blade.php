@@ -5,75 +5,132 @@
 
 
 @section('css')
-        <!-- Bootstrap -->
-<link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 @stop
 
 
 @section('header')
-        <!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">导航切换</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url('admin/home') }}">恒草堂</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                @foreach ($menus as $menu1)
-                    @if ($menu1['_children'])
-                        <li class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">{{ $menu1['name'] }}
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                @foreach ($menu1['_children'] as $index => $menu2)
-                                    <li><a href="{{ route($menu2['route']) }}">{{ $menu2['name'] }}</a></li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @else
-                        <li class=""><a href="javascript:;">{{ $menu1['name'] }}</a></li>
-                    @endif
-                @endforeach
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="javascript:;">缓存清理</a></li>
-            </ul>
-        </div>
-        <!--/.nav-collapse -->
-    </div>
-</nav>
-
-<div class="container notification">
-    @if ($notification1)
-        <div class="alert alert-{{ $notification1['status'] ? 'success' : 'danger' }} alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-            {{ $notification1['content'] }}
-        </div>
-    @endif
-</div>
-<div class="container tab-list">
-    <ul class="nav nav-tabs" role="tablist">
-        @foreach($tabs as $tab)
-            <li role="presentation" class="{{ $tab['active'] ? 'active' : '' }}"><a
-                        href="{{ $tab['active'] ? '#' : route($tab['route']) }}">{{ $tab['value'] }}</a></li>
-        @endforeach
-        @yield('tab')
-    </ul>
-</div>
 @stop
 
 
 @section('body')
-    <div class="container">
-        @yield('admin-container')
+    <div class="container-fluid admin-container">
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="panel-group text-center" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse-one">
+                                    系统管理
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-one" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <ul>
+                                    <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="{{url('admin/admin/create')}}">管理员添加</a> <a href="#"
+                                                                                             class="manger">管理</a></li>
+                                    <li><a href="#">密码修改</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse-two">
+                                    账号管理
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-two" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul>
+                                    <li><a href="{{ url('/admin/wholesalers/create')  }}">批发商添加</a> <a
+                                                href="{{ url('/admin/wholesalers')  }}" class="manger">管理</a></li>
+                                    <li><a href="#">终端商添加</a> <a href="#" class="manger">管理</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse-three">
+                                    商品管理
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-three" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul>
+                                    <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">密码修改</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse-four">
+                                    广告投放
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-four" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul>
+                                    <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">密码修改</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapse-five">
+                                    平台交易
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-five" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul>
+                                    <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
+                                    <li><a href="#">密码修改</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+                <div class="right-container">
+                    @yield('right-container')
+                </div>
+            </div>
+        </div>
     </div><!--/.container-->
 @stop
 
