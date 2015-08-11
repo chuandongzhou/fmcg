@@ -8,6 +8,7 @@ class Admin extends Model
 {
     protected $table = 'admin';
     protected $fillable = [
+        'role_id',
         'user_name',
         'real_name',
         'password',
@@ -17,7 +18,6 @@ class Admin extends Model
         'email',
         'remark',
         'status',
-        'info'
     ];
     protected $hidden = ['password'];
 
