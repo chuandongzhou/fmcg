@@ -1,7 +1,12 @@
-.admin-container .left-container, .admin-container .right-container {
-  margin-left: -15px;
-  margin-right: -15px; }
-
-.admin-container .right-container {
-  padding-left: 10px;
-  padding-top: 20px; }
+#accordion ul {
+  list-style-type: none;
+  padding-left: 0; }
+  #accordion ul li {
+    display: block;
+    height: 25px;
+    line-height: 25px;
+    border-bottom: 1px solid RGB(245, 245, 245); }
+    #accordion ul li a {
+      display: inline-block; }
+      #accordion ul li a, #accordion ul li a:hover {
+        text-decoration: none; }

@@ -1,11 +1,23 @@
-.admin-container {
-  .left-container, .right-container {
-    margin-left: -15px;
-    margin-right: -15px;
-  }
+#accordion {
+  ul {
+    list-style-type: none;
+    padding-left: 0;
 
-  .right-container {
-    padding-left: 10px;
-    padding-top: 20px;
+    li {
+      display: block;
+      height: 25px;
+      line-height: 25px;
+      border-bottom: 1px solid RGB(245, 245, 245);
+
+      a {
+        display: inline-block;
+
+        &, &:hover {
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
+
+
