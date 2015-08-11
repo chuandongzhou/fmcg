@@ -17,6 +17,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'user';
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'remember_token'];
     protected $fillable = [
         'username',
         'password',
@@ -31,12 +37,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     ];
 
     /**
-     * 角色表
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 密码自动转换
+     * @param $value
      */
-    public function role()
-    {
-        return $this->belongsTo('App\Models\Role');
+    public function setPasswordAttribute($value){
+        if($value){
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 
     /**
@@ -89,10 +96,5 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('app\Models\ShippingAddress');
     }
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token'];
+
 }

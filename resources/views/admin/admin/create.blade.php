@@ -3,7 +3,7 @@
 @section('subtitle', '首页')
 
 @section('container')
-    @include('admin.leftNav')
+    @include('admin.left-nav')
     <div class="right-content">
        <form method="post" action="{{url('admin/adminManger')}}">
            {{--<input type="hidden" name="user_name"/>--}}

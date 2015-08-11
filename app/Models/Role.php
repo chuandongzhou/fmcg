@@ -11,16 +11,6 @@ class Role extends Model
     protected $hidden = ['created_at'];
 
     /**
-     * User表
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function users()
-    {
-        return $this->hasMany('app\Models\User');
-    }
-
-    /**
      * 节点点
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
