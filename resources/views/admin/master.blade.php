@@ -35,9 +35,9 @@
                                         <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
                                         <li>
                                             <a href="{{url('admin/admin/create')}}">管理员添加</a>
-                                            <a href="#" class="manger">管理</a>
+                                            <a href="{{url('admin/admin')}}" class="manger">管理</a>
                                         </li>
-                                        <li><a href="#">密码修改</a></li>
+                                        <li><a href="{{url('admin/admin/change-password')}}">密码修改</a></li>
 
                                     </ul>
                                 </div>

@@ -1,44 +1,60 @@
-@extends('index.master')
+@extends('admin.master')
 
-@section('subtitle', '首页')
+@section('right-container')
+    <form class="form-horizontal ajax-form" method="post"
+          action="{{url('admin/admin')}}" data-help-class="col-sm-push-2 col-sm-10">
 
-@section('container')
-    @include('admin.left-nav')
-    <div class="right-content">
-       <form method="post" action="{{url('admin/admin')}}">
-           {{--<input type="hidden" name="user_name"/>--}}
-           {{csrf_field()}}
-           <table>
-               <tr>
-                   <td>管理员账号：</td>
-                   <td><input type="text" name="user_name"/></td>
-               </tr>
-               <tr>
-                   <td>管理员密码：</td>
-                   <td><input type="password" name="password"/></td>
-               </tr>
-               <tr>
-                   <td>确认密码：</td>
-                   <td><input type="password" name="password_confirmation"/></td>
-               </tr>
-               <tr>
-                   <td>管理员姓名：</td>
-                   <td><input type="text" name="real_name"/></td>
-               </tr>
-               <tr>
-                   <td>所属角色：</td>
-                   <td><select name="role_id">
-                           @foreach($role as $key=>$item)
-                           <option value="{{$key}}">{{$item}}</option>
-                          @endforeach
-                       </select></td>
-               </tr>
-               <tr>
-                   <td colspan="2"><button type="submit">添加</button></td>
-               </tr>
-           </table>
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">管理员账号:</label>
 
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名">
+            </div>
+        </div>
 
-       </form>
-    </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label">管理员密码:</label>
+
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password-confirmation" class="col-sm-2 control-label">确认密码:</label>
+
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="password-confirmation" name="password_confirmation"
+                       placeholder="请重复输入密码">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname" class="col-sm-2 control-label">管理员姓名:</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="nickname" name="real_name" placeholder="请输入姓名">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">所属角色:</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" name="role_id">
+                    @foreach($role as $key=>$item)
+                        <option value="{{$key}}">{{$item}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="type" value="">
+                <button type="submit" class="btn btn-bg btn-primary">添加</button>
+            </div>
+        </div>
+
+    </form>
 @stop

@@ -18,6 +18,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     });
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->post('admin/change-password','AdminController@changePassword');
+    $router->delete('admin/delete-batch','AdminController@deleteBatch');
     $router->resource('role', 'RoleController');
     $router->resource('user','UserController');
 });
