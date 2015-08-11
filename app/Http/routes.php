@@ -18,8 +18,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     });
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->resource('role', 'RoleController');
-    $router->resource('wholesalers','WholesalersController');
-    $router->resource('retailer','RetailerController');
+    $router->resource('user','UserController');
 });
 
 

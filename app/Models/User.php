@@ -24,7 +24,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token'];
     protected $fillable = [
-        'username',
+        'user_name',
         'password',
         'nickname',
         'province_id',
@@ -38,10 +38,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     /**
      * 密码自动转换
+     *
      * @param $value
      */
-    public function setPasswordAttribute($value){
-        if($value){
+    public function setPasswordAttribute($value)
+    {
+        if ($value) {
             $this->attributes['password'] = bcrypt($value);
         }
     }

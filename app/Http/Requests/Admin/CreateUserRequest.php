@@ -14,7 +14,7 @@ class CreateUserRequest extends Request
     public function rules()
     {
         return [
-            'user_name' => 'required|between:4,8|unique:user',
+            'user_name' => 'required|between:4,16|unique:user',
             'password' => 'required|min:6|confirmed',
             'nickname' => 'required|unique:user',
             'province_id' => 'required|numeric',

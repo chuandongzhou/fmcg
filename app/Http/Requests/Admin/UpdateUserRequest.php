@@ -13,9 +13,11 @@ class UpdateUserRequest extends Request
      */
     public function rules()
     {
+        $user = $this->route('user');
         return [
-            'password' => 'min:6',
-            'nickname' => 'required|unique:user',
+            'user_name' => 'sometimes|required|between:4,16|unique:user,user_name,' . $user->id,
+            'password' => 'min:6|confirmed',
+            'nickname' => 'required|unique:user,nickname,' . $user->id,
             'province_id' => 'required|numeric',
             'city_id' => 'required|numeric',
             'district_id' => 'required|numeric',

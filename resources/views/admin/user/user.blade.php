@@ -6,11 +6,12 @@
     @include('admin.left-nav')
     <div class="right-content">
         <form method="post"
-              action="{{ url(($group == config('constant.user_group.wholesalers')) ? 'admin/wholesalers' : 'admin/retailer') }}">
+              action="{{ url( isset($user) ? 'admin/user/'.$user->id :  'admin/user') }}">
             <table class="table">
                 <tr>
                     <td width="20%">账号：</td>
-                    <td><input class="text w200 necessary" type="text" name="user_name"/></td>
+                    <td><input class="text w200 necessary" type="text" name="user_name"
+                               value="{{ isset($user) ? $user->user_name : ''  }}"/></td>
                 </tr>
                 <tr>
                     <td>密码：</td>
@@ -21,8 +22,9 @@
                     <td><input class="text w200 necessary" type="password" name="password_confirmation"/></td>
                 </tr>
                 <tr>
-                    <td>{{ $group == config('constant.user_group.wholesalers') ? '经销商' : '终端商'  }}姓名：</td>
-                    <td><input class="text w200 necessary" type="text" name="nickname"/></td>
+                    <td>{{ $group == cons('user.type.wholesalers') ? '经销商' : '终端商'  }}姓名：</td>
+                    <td><input class="text w200 necessary" type="text" name="nickname"
+                               value="{{ isset($user) ? $user->nickname : '' }}"/></td>
                 </tr>
                 <tr>
                     <td>地址：</td>
@@ -43,11 +45,14 @@
                             <option value="0">街道</option>
                             <option value="1111">天府五街</option>
                         </select>
-                        <input type="text" name="address">
+                        <input type="text" name="address" value="{{ isset($user) ? $user->address : '' }}">
                     </td>
                 </tr>
                 <tr>
                     {{csrf_field()}}
+                    @if(isset($user))
+                        <input type="hidden" name="_method" value="PUT"/>
+                    @endif
                     <input type="hidden" value="{{  $group  }}" name="group"/>
                     <td colspan="2">
                         <button type="submit" class="btn btn-bg btn-default">添加</button>
