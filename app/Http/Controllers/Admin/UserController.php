@@ -36,7 +36,7 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        $type = $request->input('type');
+        $type = (string)$request->input('type');
         $types = cons('user.type');
         $typeId = array_get($types, $type);
         if (empty($typeId)) {
@@ -55,10 +55,10 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        if (User::Create($request->all())) {
-            $redirect = $request->input('group') == cons('user.type.wholesalers') ? 'wholesalers' : 'retailer';
-            return $this->success('添加用户成功', url('admin/user?group=' . $redirect));
+        if (User::Create($request->all())->exists) {
+            return $this->success('添加用户成功');
         }
+
         return $this->error('添加用户时遇到错误');
     }
 
@@ -106,7 +106,6 @@ class UserController extends Controller
      *
      * @param \App\Models\User $user
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
      */
     public function destroy($user)
     {

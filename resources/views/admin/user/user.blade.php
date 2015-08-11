@@ -41,7 +41,7 @@
         </div>
 
         <div class="form-group">
-            <label for="username" class="col-sm-2 control-label">地址</label>
+            <label class="col-sm-2 control-label">地址</label>
 
             <div class="col-sm-2">
                 <select class="form-control" name="province_id">
@@ -80,6 +80,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="type" value="{{ $typeId }}">
                 <button type="submit" class="btn btn-bg btn-primary">添加</button>
             </div>
         </div>
