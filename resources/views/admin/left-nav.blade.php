@@ -11,9 +11,9 @@
         <div id="collapse-one" class="panel-collapse collapse in">
             <div class="panel-body">
                 <ul>
-                    <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a> </li>
-                    <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a> </li>
-                    <li><a href="{{url('admin/admin/create')}}">管理员添加</a> <a href="#" class="manger">管理</a> </li>
+                    <li><a href="{{url('admin/role/create')}}">角色添加</a> <a href="{{url('admin/role')}}" class="manger">管理</a> </li>
+                    <li><a href="{{url('admin/role/create')}}">菜单添加</a> <a href="{{url('admin/role')}}" class="manger">管理</a> </li>
+                    <li><a href="{{url('admin/admin/create')}}">管理员添加</a> <a href="{{url('admin/admin')}}" class="manger">管理</a> </li>
                     <li><a href="#">密码修改</a> </li>
 
                 </ul>

@@ -9,8 +9,9 @@ class Admin extends Model
     protected $table = 'admin';
     protected $fillable = [
         'user_name',
-        'true_name',
+        'real_name',
         'password',
+        'role_id',
         'last_login_ip',
         'last_login_time',
         'email',
@@ -28,5 +29,17 @@ class Admin extends Model
     public function role()
     {
         return $this->belongsTo('App\Models\Role');
+    }
+
+    /**
+     * 设置密码时候进行哈希处理
+     *
+     * @param $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 }

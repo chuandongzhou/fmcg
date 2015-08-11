@@ -18,7 +18,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::orderBy('id', 'DESC')->lists('name', 'id');
-        dd($roles);
+
+        return view('admin.role.index',['roles'=>$roles]);
     }
 
     /**
@@ -29,7 +30,7 @@ class RoleController extends Controller
     public function create()
     {
         $node = Node::all();
-        return view('admin/role/create', ['node' => $node]);
+        return view('admin.role.create', ['node' => $node]);
     }
 
     /**

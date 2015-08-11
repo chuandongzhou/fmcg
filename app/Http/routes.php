@@ -14,9 +14,10 @@ $router->group(['namespace' => 'Index'], function ($router) {
 $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router) {
     // 首页
     $router->get('/', function () {
-        return view('admin/home/index');
+        return view('admin/index');
     });
     $router->resource('admin', 'AdminController');          //管理员管理
+    $router->post('admin/change-password','AdminController@changePassword');
     $router->resource('role', 'RoleController');
 });
 
