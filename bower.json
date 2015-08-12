@@ -21,6 +21,8 @@
     "cropper": "*",
     "blueimp-file-upload": "*",
     "fontawesome": "~4.0",
-    "jquery-placeholder": "~2.1.2"
+    "jquery-placeholder": "~2.1.2",
+    "jstree": "~3.2",
+    "jquery-treetable": "~3.2.0"
   }
 }

@@ -55,11 +55,17 @@ elixir(function (mix) {
         .copy([bowerDir + 'cropper/dist/**'], 'public/js/lib/jquery/cropper')
 
         // js-cookie
-        .copy([bowerDir + 'js-cookie/src/**'], 'public/js')
+        .copy([bowerDir + 'js-cookie/src/js.cookie.js'], 'public/js')
 
         // jquery-placeholder
         .copy([bowerDir + 'jquery-placeholder/**'], 'public/js/lib/jquery/placeholder')
 
+        // jstree
+        .copy([bowerDir + 'jstree/dist/**'], 'public/js/lib/jquery/jstree')
+
+        // jquery-treetable
+        .copy([bowerDir + 'jquery-treetable/css/**'], 'public/js/lib/jquery/treetable/css')
+        .copy([bowerDir + 'jquery-treetable/jquery.treetable.js'], 'public/js/lib/jquery/treetable');
 
         // version
         //.version(['css/style.css'])
