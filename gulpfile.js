@@ -61,7 +61,7 @@ elixir(function (mix) {
         .copy([bowerDir + 'jquery-placeholder/**'], 'public/js/lib/jquery/placeholder')
 
         // jstree
-        .copy([bowerDir + 'jstree/dist/**'], 'public/js/lib/jstree')
+        .copy([bowerDir + 'jstree/dist/**'], 'public/js/lib/jquery/jstree')
 
 
         // version
