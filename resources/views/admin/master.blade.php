@@ -10,6 +10,21 @@
 
 
 @section('header')
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url('admin') }}">快销系统</a>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
 @stop
 
 
@@ -17,7 +32,7 @@
     <div class="container-fluid admin-container">
         <div class="row">
             <div class="col-sm-2">
-                <div class="left-container">
+                <div class="row left-container">
                     <div class="panel-group text-center" id="accordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">

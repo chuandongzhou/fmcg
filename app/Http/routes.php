@@ -13,14 +13,12 @@ $router->group(['namespace' => 'Index'], function ($router) {
  */
 $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router) {
     // 首页
-    $router->get('/', function () {
-        return view('admin/index');
-    });
+    $router->get('/', ['uses' => 'HomeController@getIndex']);  // 后台首页
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->post('admin/change-password','AdminController@changePassword');
     $router->delete('admin/delete-batch','AdminController@deleteBatch');
     $router->resource('role', 'RoleController');
-    $router->resource('user','UserController');
+    $router->resource('user', 'UserController');
 });
 
 
