@@ -52,7 +52,7 @@
                                             <a href="{{url('admin/admin/create')}}">管理员添加</a>
                                             <a href="{{url('admin/admin')}}" class="manger">管理</a>
                                         </li>
-                                        <li><a href="{{url('admin/admin/change-password')}}">密码修改</a></li>
+                                        <li><a href="{{url('admin/admin/password')}}">密码修改</a></li>
 
                                     </ul>
                                 </div>

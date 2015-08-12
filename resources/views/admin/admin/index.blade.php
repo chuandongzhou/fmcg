@@ -1,8 +1,8 @@
 @extends('admin.master')
 
 @section('right-container')
-    <form class="form-horizontal ajax-form" method="put"
-          action="{{url('admin/admin/')}}" data-help-class="col-sm-push-2 col-sm-10">
+    <form class="form-horizontal ajax-form" method="post"
+          action="{{ url('admin/admin/') }}" data-help-class="col-sm-push-2 col-sm-10">
         {{csrf_field()}};
     <table class="table table-striped">
         <thead>
@@ -19,25 +19,25 @@
         <tbody>
             @foreach($admins as $admin)
                 <tr>
-                    <td><input type="checkbox" name="status[]" value="{{$admin->id}}"/> </td>
+                    <td><input type="checkbox" class="child" name="checked[]" value="{{$admin->id}}"/> </td>
                     <td>{{$admin->id}}</td>
                     <td>{{$admin->user_name}}</td>
                     <td>{{$admin->real_name}}</td>
                     <td>{{$admin->role->name}}</td>
                     <td>
                         @if($admin->status)
-                            禁用
-                        @else
                             启用
+                        @else
+                            禁用
                         @endif
                     </td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
-                            <a class="btn btn-primary" href="{{url('admin/admin/'.$admin->id.'/edit')}}">
+                            <a class="btn btn-primary" href="{{ url('admin/admin/'.$admin->id.'/edit') }}">
                                 <i class="fa fa-edit"></i> 编辑
                             </a>
                             <button type="button" class="btn btn-danger ajax" data-method="delete"
-                                    data-url="{{url('admin/admin/'.$admin->id)}}">
+                                    data-url="{{ url('admin/admin/'.$admin->id) }}">
                                 <i class="fa fa-trash-o"></i> 删除
                             </button>
                         </div>
@@ -46,24 +46,25 @@
             @endforeach
         </tbody>
     </table>
-
-        <input type="checkbox" id="check-all">
-
+        <div class="btn-group btn-group-xs" role="group">
+            <input type="checkbox" id="parent" class="checkbox-inline"/>
+            <label for="parent">全选</label>
+        </div>
         <div class="btn-group btn-group-xs" role="group">
             <button type="button" class="btn btn-danger ajax" data-method="delete"
-                    data-url="{{url('admin/admin/delete-batch')}}">
+                    data-url="{{ url('admin/admin/batch') }}">
                 <i class="fa fa-trash-o"></i> 删除
             </button>
         </div>
         <div class="btn-group btn-group-xs" role="group">
-            <button type="button" class="btn btn-primary ajax" data-method="input"
-                    data-url="{{url('admin/admin')}}">
+            <button type="button" class="btn btn-primary ajax" data-method="put" data-data='{"status":1}'
+                    data-url="{{ url('admin/admin/switch') }}">
                 <i class="fa fa-adjust"></i> 启用
             </button>
         </div>
         <div class="btn-group btn-group-xs" role="group">
-            <button type="button" class="btn btn-danger ajax" data-method="input"
-                    data-url="{{url('admin/admin')}}">
+            <button type="button" class="btn btn-danger ajax" data-method="put" data-data='{"status":0}'
+                    data-url="{{ url('admin/admin/switch') }}">
                 <i class="fa fa-trash-o"></i> 禁用
             </button>
         </div>
@@ -72,10 +73,9 @@
 @stop
 @section('js')
     @parent
-    <script>
-        $('#check-all').on('click',function(){
-            var checkedOfAll=$(this).prop("checked");
-            $(':checkbox').prop("checked", checkedOfAll);
-        });
+    <script type="text/javascript">
+        $(function () {
+            onCheckChange('#parent', '.child');
+        })
     </script>
 @stop
