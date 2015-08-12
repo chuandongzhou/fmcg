@@ -55,10 +55,13 @@ elixir(function (mix) {
         .copy([bowerDir + 'cropper/dist/**'], 'public/js/lib/jquery/cropper')
 
         // js-cookie
-        .copy([bowerDir + 'js-cookie/src/**'], 'public/js')
+        .copy([bowerDir + 'js-cookie/src/js.cookie.js'], 'public/js')
 
         // jquery-placeholder
         .copy([bowerDir + 'jquery-placeholder/**'], 'public/js/lib/jquery/placeholder')
+
+        // jstree
+        .copy([bowerDir + 'jstree/dist/**'], 'public/js/lib/jstree')
 
 
         // version
