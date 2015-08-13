@@ -22,7 +22,7 @@ class CreateUserRequest extends Request
             'district_id' => 'required|numeric',
             'street_id' => 'required|numeric',
             'address' => 'required|max:45',
-            'group' => 'required|in:1,2',
+            'type' => 'required|in:1,2,3',
             'status' => 'in|0,1'
         ];
     }

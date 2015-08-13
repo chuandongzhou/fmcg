@@ -2,7 +2,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $user->id ? 'put' : 'post' }}"
-          action="{{ url('admin/user/' . $user->id) }}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{ url('admin/user/' . $user->id) }}" data-help-class="col-sm-push-2 col-sm-10" data-done-then="referer">
 
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">用户名</label>

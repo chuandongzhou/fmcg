@@ -17,7 +17,8 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'App\Http\Controllers';
 
     protected $modelBindings = [
-        'App\Models\User' => 'user'
+        'App\Models\User' => 'user',
+        'App\Models\Category' => 'category'
     ];
 
     /**

@@ -406,7 +406,6 @@ var commonAjaxSetup = function () {
                             } else if (doneThen == 'referer') {
                                 site.redirectReferer();
                             }
-
                             return;
                         }
 

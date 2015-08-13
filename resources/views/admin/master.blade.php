@@ -70,10 +70,15 @@
                             <div id="collapse-two" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('/admin/wholesalers/create')  }}">批发商添加</a> <a
-                                                    href="{{ url('/admin/wholesalers')  }}" class="manger">管理</a></li>
-                                        <li><a href="#">终端商添加</a> <a href="#" class="manger">管理</a></li>
-
+                                        <li><a href="{{ url('/admin/user/create?type=wholesalers')  }}">批发商添加</a> <a
+                                                    href="{{ url('/admin/user?type=wholesalers')  }}"
+                                                    class="manger">管理</a></li>
+                                        <li><a href="{{ url('/admin/user/create?type=retailer')  }}">终端商添加</a> <a
+                                                    href="{{ url('/admin/user?type=retailer')  }}" class="manger">管理</a>
+                                        </li>
+                                        <li><a href="{{ url('/admin/user/create?type=supplier')  }}">供应商添加</a> <a
+                                                    href="{{ url('/admin/user?type=supplier')  }}" class="manger">管理</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -90,7 +95,10 @@
                             <div id="collapse-three" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
+                                        <li>
+                                        <li><a href="{{  url('admin/category/create')  }}">商品分类添加</a> <a
+                                                    href="{{  url('admin/category')  }}" class="manger">管理</a></li>
+                                        </li>
                                         <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
                                         <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
                                         <li><a href="#">密码修改</a></li>

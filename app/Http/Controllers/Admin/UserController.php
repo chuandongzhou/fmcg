@@ -68,9 +68,9 @@ class UserController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function show($id)
+    public function show($user)
     {
-
+        return view('admin.user.show');
     }
 
     /**
@@ -95,8 +95,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $user)
     {
         if ($user->fill($request->all())->save()) {
-            $redirect = $request->input('group') == cons('user.type.wholesalers') ? 'wholesalers' : 'retailer';
-            return $this->success('添加用户成功', url('admin/user?group=' . $redirect));
+            return $this->success('更新用户成功');
         }
         $this->error('更新时遇到错误');
     }
@@ -109,9 +108,65 @@ class UserController extends Controller
      */
     public function destroy($user)
     {
-        if ($user->delete()) {
+        if ($this->deleteUser($user)) {
+            //TODO 删除其它信息
             return $this->success('删除用户成功');
         }
         return $this->error('删除用户时遇到错误');
+    }
+
+    /**
+     * 批量删除用户
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteBatch(Request $request)
+    {
+        $post = $request->all();
+        if (empty($post['uid'])) {
+            return $this->error('用户未选择');
+        }
+        foreach ($post['uid'] as $id) {
+            $user = User::find($id);
+
+            if (!$this->deleteUser($user)) {
+                return $this->error('用户' . $user->name . '删除时遇到错误');
+            }
+            return $this->success('删除用户成功');
+        }
+    }
+
+    /**
+     * 修改用户状态
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function putSwitch(Request $request)
+    {
+        $post = $request->all();
+        if (empty($post['uid'])) {
+            return $this->error('用户未选择');
+        }
+        if (User::whereIn('id', $post['uid'])->update(['status' => $post['status']])) {
+            return $this->success('操作成功');
+        }
+        return $this->error('操作失败');
+    }
+
+    /**
+     * 删除用户处理
+     *
+     * @param $user
+     * @return bool
+     */
+    private function deleteUser($user)
+    {
+        if ($user->delete()) {
+            //TODO 删除其它信息
+            return true;
+        }
+        return false;
     }
 }

@@ -16,7 +16,10 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->get('/', ['uses' => 'HomeController@getIndex']);  // 后台首页
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->resource('role', 'RoleController');
+    $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
+    $router->put('user/switch', 'UserController@putSwitch');//批量修改用户
     $router->resource('user', 'UserController');
+    $router->resource('category','CategoryController');
 });
 
 
