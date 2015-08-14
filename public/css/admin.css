@@ -1,12 +1,41 @@
 #accordion ul {
-  list-style-type: none;
-  padding-left: 0; }
-  #accordion ul li {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#accordion ul li {
     display: block;
     height: 25px;
     line-height: 25px;
-    border-bottom: 1px solid RGB(245, 245, 245); }
-    #accordion ul li a {
-      display: inline-block; }
-      #accordion ul li a, #accordion ul li a:hover {
-        text-decoration: none; }
+    border-bottom: 1px solid RGB(245, 245, 245);
+}
+
+#accordion ul li a {
+    display: inline-block;
+}
+
+#accordion ul li a, #accordion ul li a:hover {
+    text-decoration: none;
+}
+/**********************************用户详情开始***************************************/
+.user-show{ padding: 5px;}
+.user-show img.shop-img{
+    width: 95px;
+    height: 95px;
+}
+.btn{ margin-bottom: 3px;}
+.shop-img span{
+    float: right;
+    cursor: pointer;
+}
+.top-right .address{ padding: 0px;}
+.bottom .phone-display{
+    padding: 10px 50px;
+}
+.bottom .phone-display img{
+    margin: 10px;
+}
+.bottom .save button{
+    margin-left: 10px;
+}
+/**********************************用户详情结束***************************************/

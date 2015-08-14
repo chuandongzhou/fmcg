@@ -11,6 +11,7 @@ return [
         'type' => [
             'wholesalers' => 1,    //批发商
             'retailer' => 2,       //零售商
+            'supplier' => 3,       //供应商
         ],
     ]
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Weiheng\Foundation;
+namespace WeiHeng\Foundation;
 
 use RecursiveTreeIterator, RecursiveIteratorIterator, CachingIterator;
 
@@ -109,4 +109,22 @@ class Tree extends RecursiveTreeIterator
         return str_replace(' ', '&nbsp;', parent::getPrefix());
     }
 
+    /**
+     * 组合多维数组
+     * @param $cate
+     * @param int $pid
+     * @param string $name
+     * @return array
+     */
+    static function unlimitedForLayer($cate, $pid = 0, $name= 'child'){
+        $arr = array();
+        foreach ($cate as $v){
+            if($v['pid'] == $pid){
+                $v[$name] = self::unlimitedForLayer($cate, $v['id'], $name);
+                $arr[] = $v;
+            }
+        }
+
+        return $arr;
+    }
 }

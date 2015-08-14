@@ -32,7 +32,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'district_id',
         'street_id',
         'address',
-        'group',
+        'type',
         'spreading_code'
     ];
 
@@ -95,8 +95,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function shippingAddress()
     {
-        return $this->hasMany('app\Models\ShippingAddress');
+        return $this->hasMany('App\Models\ShippingAddress');
     }
 
+    public function files()
+    {
+        return $this->morphMany('App\Models\File', 'fileable');
+    }
 
 }
