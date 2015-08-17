@@ -19,7 +19,7 @@ class RoleController extends Controller
     {
         $roles = Role::orderBy('id', 'DESC')->lists('name', 'id');
 
-        return view('admin.role.index',['roles'=>$roles]);
+        return view('admin.role.index', ['roles' => $roles]);
     }
 
     /**
@@ -30,7 +30,7 @@ class RoleController extends Controller
     public function create()
     {
         $node = Node::all();
-        return view('admin.role.create', ['node' => $node]);
+        return view('admin.role.create', ['node' => $node, 'role' => new Role]);
     }
 
     /**
@@ -41,15 +41,16 @@ class RoleController extends Controller
      */
     public function store(CreateRoleRequest $request)
     {
-        $data = $request->all();
+        $attributes = $request->all();
 
-        $role = Role::create(['name' => $data['name']]);
-        $roleId = $role->id;
-        $nodes = $request['node'];
+        $role = Role::create(['name' => $attributes['name']]);
+        if ($role->exists) {
+            $nodes = $request['node'];
+            $role->nodes()->sync($nodes);
+            return $this->success('添加角色成功');
+        }
+        return $this->error('添加角色时遇到问题');
 
-        $role->nodes()->sync($nodes);
-
-        return $this->success('添加成功');
     }
 
     /**
@@ -72,7 +73,7 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::with('nodes')->find($id);
-        dd($role);
+        return view('admin.role.create', ['role' => $role , 'node'=>$role['node']]);
     }
 
     /**
@@ -108,4 +109,5 @@ class RoleController extends Controller
     public function destroy($id)
     {
         return Role::destroy($id) ? $this->success('删除成功') : $this->success('删除失败');
-    }}
+    }
+}

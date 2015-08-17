@@ -5,7 +5,7 @@ namespace App\Models;
 class Shop extends Model
 {
     protected $table = 'shop';
-    public $timestamp = false;
+    protected $timestamp = false;
     protected $fillable = [
         'contact_person',
         'contact_info',

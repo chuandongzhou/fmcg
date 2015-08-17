@@ -99,10 +99,12 @@
                                         <li><a href="{{  url('admin/category/create')  }}">商品分类添加</a> <a
                                                     href="{{  url('admin/category')  }}" class="manger">管理</a></li>
                                         </li>
-                                        <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">密码修改</a></li>
-
+                                        <li><a href="{{  url('admin/attr/create')  }}">商品标签添加</a> <a
+                                                    href="{{  url('admin/attr')  }}" class="manger">管理</a></li>
+                                        </li>
+                                        <li><a href="{{  url('admin/images/create')  }}">商品图片添加</a> <a
+                                                    href="{{  url('admin/images')  }}" class="manger">管理</a></li>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

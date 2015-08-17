@@ -48,7 +48,7 @@ class CategoryController extends Controller
     public function store(CreateCategoryRequest $request)
     {
         $post = $request->all();
-        if (Category::create($post)) {
+        if (Category::create($post)->exists) {
             return $this->success('添加分类成功');
         }
         return $this->error('添加分类出现问题');
@@ -66,10 +66,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * how the form for editing the specified resource.
      *
-     * @param  int $id
-     * @return Response
+     * @param $category
+     * @return \Illuminate\View\View
      */
     public function edit($category)
     {
@@ -79,7 +79,7 @@ class CategoryController extends Controller
             'pid',
             'level'
         ])->toArray();
-        $categories =new Tree($categories);
+        $categories = new Tree($categories);
         return view('admin.category.category', ['categories' => $categories, 'category' => $category]);
     }
 
@@ -102,9 +102,13 @@ class CategoryController extends Controller
      */
     public function destroy($category)
     {
-       /* if ($category->delete()) {
+        $childNode = Category::where('pid', $category->id)->first();
+        if (!empty($childNode)) {
+            return $this->error('该分类存在子分类，不能删除');
+        }
+        if ($category->delete()) {
             return $this->success('删除分类成功');
-        }*/
+        }
         return $this->error('删除分类时遇到错误');
     }
 }

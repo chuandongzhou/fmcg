@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -55,7 +56,10 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        if (User::Create($request->all())->exists) {
+        $user = User::Create($request->all());
+        if ($user->exists) {
+            $userId = $user->id;
+            Shop::Create(['user_id' => $userId]);
             return $this->success('添加用户成功');
         }
 
@@ -63,14 +67,19 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     *  Display the specified resource.
      *
-     * @param  int $id
-     * @return Response
+     * @param $user
+     * @return \Illuminate\View\View
      */
     public function show($user)
     {
         return view('admin.user.show');
+    }
+
+    public function saveUser(Request $request)
+    {
+
     }
 
     /**
@@ -108,11 +117,7 @@ class UserController extends Controller
      */
     public function destroy($user)
     {
-        if ($this->deleteUser($user)) {
-            //TODO 删除其它信息
-            return $this->success('删除用户成功');
-        }
-        return $this->error('删除用户时遇到错误');
+        return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
     }
 
     /**
@@ -123,18 +128,11 @@ class UserController extends Controller
      */
     public function deleteBatch(Request $request)
     {
-        $post = $request->all();
-        if (empty($post['uid'])) {
+        $uids = (array)$request->input('uid');
+        if ($uids) {
             return $this->error('用户未选择');
         }
-        foreach ($post['uid'] as $id) {
-            $user = User::find($id);
-
-            if (!$this->deleteUser($user)) {
-                return $this->error('用户' . $user->name . '删除时遇到错误');
-            }
-            return $this->success('删除用户成功');
-        }
+        return User::destroy($uids) ? $this->success('删除用户成功') : $this->error('用户删除时遇到错误');
     }
 
     /**
@@ -153,20 +151,5 @@ class UserController extends Controller
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
-    }
-
-    /**
-     * 删除用户处理
-     *
-     * @param $user
-     * @return bool
-     */
-    private function deleteUser($user)
-    {
-        if ($user->delete()) {
-            //TODO 删除其它信息
-            return true;
-        }
-        return false;
     }
 }

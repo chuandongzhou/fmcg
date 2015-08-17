@@ -25,7 +25,7 @@ class FileController extends Controller
         $file = $request->file('file');
 
         // 判断文件是否有效
-        if (!$file || !$file->isValid()) {
+        if (!is_object($file) || !$file->isValid()) {
             return $this->error('上传文件时遇到错误');
         }
 

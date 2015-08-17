@@ -23,8 +23,14 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->resource('role', 'RoleController');
     $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
     $router->put('user/switch', 'UserController@putSwitch');//批量修改用户
-    $router->resource('user', 'UserController');
-    $router->resource('category', 'CategoryController');
+    $router->resource('user', 'UserController');            //用户管理
+    $router->post('getCategory', 'CategoryController@getCategory');  //获取属性
+    $router->resource('category', 'CategoryController');            //属性管理
+    $router->post('getAttr', 'AttrController@getAttr');             //获取标签
+    $router->resource('attr', 'AttrController');                    //标签管理
+    $router->get('attr/create/{id}', 'AttrController@create')->where('id','[0-9]+'); //添加子标签
+    $router->resource('images', 'GoodsImagesController');                    //商品图片管理
+
 });
 
 
@@ -45,5 +51,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         ]);
 
         $router->controller('file', 'FileController');                              // 文件上传
+        $router->get('category/{id}/attrs', 'CategoryController@getAttr');         //获取标签
+        $router->get('categories', 'CategoryController@getCategory');         //获取标签
+
     });
 });

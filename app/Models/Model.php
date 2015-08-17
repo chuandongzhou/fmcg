@@ -56,7 +56,6 @@ class Model extends Eloquent
 
             $oldFile->delete();
         }
-
         // 更新附件
         if ($file) {
             $file->type = $fileType;

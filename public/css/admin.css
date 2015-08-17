@@ -28,14 +28,30 @@
     float: right;
     cursor: pointer;
 }
-.top-right .address{ padding: 0px;}
-.bottom .phone-display{
-    padding: 10px 50px;
-}
-.bottom .phone-display img{
-    margin: 10px;
-}
-.bottom .save button{
+ .save button{
     margin-left: 10px;
+}
+.modal .address-select select ,.modal .address-select .address{
+    display: inline;
+    margin-bottom: 5px;
+}
+.modal .modal-body .address-detail{
+    margin: 10px 0;
+}
+.modal .address-select select{
+    width: 30%;
+}
+.modal .address-select .address{
+    width: 90%;
+}
+.address-list {
+    margin-top: 5px;
+}
+.address-list div{
+    border: 1px solid #EEEEEE;
+    border-radius: 3px;
+    margin-top: 4px;
+    padding: 5px;
+    color: #808080;
 }
 /**********************************用户详情结束***************************************/

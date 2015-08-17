@@ -5,7 +5,7 @@ namespace App\Models;
 class ShippingAddress extends Model
 {
     //
-    protected $table = 'receivingAddress';
+    protected $table = 'shipping_address';
     protected $fillable = [
         'address',
         'consigner',

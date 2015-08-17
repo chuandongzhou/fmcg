@@ -54,8 +54,7 @@ if (!function_exists('upload_url')) {
         $type && $configName .= '_' . $type;
 
         $relatePath = str_replace(public_path(), '', config($configName));
-
-        return asset($relatePath . $path, $secure);
+        return str_replace('\\', '/', asset($relatePath . $path, $secure));
     }
 }
 
@@ -72,7 +71,7 @@ if (!function_exists('upload_file_url')) {
     {
         $relatePath = str_replace(public_path(), '', config('path.upload_file'));
 
-        return asset($relatePath . $path, $secure);
+        return str_replace('\\', '/',asset($relatePath . $path, $secure));
     }
 
 }

@@ -22,7 +22,7 @@
                     </div>
                     <span class="btn btn-primary fileinput-button">
                         请选择图片文件
-                        <input type="file" name="file" data-url="{{ url('api/v2/file/upload-temp') }}" accept="image/*">
+                        <input type="file" name="file" data-url="{{ url('api/v1/file/upload-temp') }}" accept="image/*">
                     </span>
 
                     <div id="cropper-container">

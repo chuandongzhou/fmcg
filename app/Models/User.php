@@ -35,6 +35,23 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'type',
         'spreading_code'
     ];
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($user) {
+            //TODO 删除其它
+            $user->carts()->delete();
+            $user->likes()->delete();
+            $user->shops()->delete();
+            $user->userBanks()->delete();
+            $user->shippingAddress()->delete();
+        });
+    }
 
     /**
      * 密码自动转换
@@ -98,6 +115,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('App\Models\ShippingAddress');
     }
 
+    /**
+     * 关联文件表
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function files()
     {
         return $this->morphMany('App\Models\File', 'fileable');
