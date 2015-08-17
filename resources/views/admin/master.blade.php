@@ -119,10 +119,12 @@
                             <div id="collapse-four" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">密码修改</a></li>
+                                        <li><a href="{{ url('admin/advert/create?type=home') }}">首页广告添加</a>
+                                            <a href="{{ url('admin/advert?type=home') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/advert/create?type=retailer') }}">终端商广告添加</a>
+                                            <a href="{{ url('admin/advert?type=retailer') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/advert/create?type=app') }}">APP广告添加</a>
+                                            <a href="{{ url('admin/advert?type=app') }}" class="manger">管理</a></li>
 
                                     </ul>
                                 </div>

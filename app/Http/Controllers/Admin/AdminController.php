@@ -107,6 +107,11 @@ class AdminController extends Controller
         return Admin::destroy($id) ? $this->success('删除成功', url('admin/admin')) : $this->error('删除失败');
     }
 
+    /**
+     * 获取修改密码视图
+     *
+     * @return \Illuminate\View\View
+     */
     public function getPassword()
     {
 
@@ -137,7 +142,12 @@ class AdminController extends Controller
             url('admin/admin')) : $this->error('删除失败');
     }
 
-
+    /**
+     * 批量修改启用/禁用状态
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function putSwitch(Request $request)
     {
         if ($request->input('status')) {
