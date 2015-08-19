@@ -45,7 +45,7 @@ class RoleController extends Controller
 
         $role = Role::create(['name' => $attributes['name']]);
         if ($role->exists) {
-            $nodes = $request['node'];
+            $nodes = $attributes['node'];
             $role->nodes()->sync($nodes);
             return $this->success('添加角色成功');
         }

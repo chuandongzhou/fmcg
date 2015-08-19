@@ -22,7 +22,7 @@ class UserController extends Controller
         $types = cons('user.type');
         $type = (string)$request->input('type');
 
-        $users = User::where('type', array_get($types, $type, head($types)))->paginate();
+        $users = User::where('type', array_get($types, $type, head($types)))->with('shop')->paginate();
 
         return view('admin.user.index', [
             'users' => $users,
@@ -58,8 +58,8 @@ class UserController extends Controller
     {
         $user = User::Create($request->all());
         if ($user->exists) {
-            $userId = $user->id;
-            Shop::Create(['user_id' => $userId]);
+            //插入商店
+            Shop::create(['user_id' => $user->id]);
             return $this->success('添加用户成功');
         }
 

@@ -18,22 +18,4 @@ class Attr extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
-
-    /**
-     * 格式化标签
-     * @param $attrs
-     * @return array
-     */
-    static public function formatAttr($attrs){
-        $collect = collect($attrs);
-        $attrList = $collect->where('pid', 0)->all();
-        foreach ($attrList as $key => $level) {
-            foreach ($attrs as $attr) {
-                if ($level['id'] == $attr['pid']) {
-                    $attrList[$key]['child'][] = $attr;
-                }
-            }
-        }
-        return $attrList;
-    }
 }

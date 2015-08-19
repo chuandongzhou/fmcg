@@ -18,7 +18,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected $modelBindings = [
         'App\Models\User' => 'user',
-        'App\Models\Category' => 'category'
+        'App\Models\Category' => 'category',
+        'App\Models\Shop' => 'shop',
     ];
 
     /**

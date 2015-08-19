@@ -17,11 +17,6 @@ class CreateUserRequest extends Request
             'user_name' => 'required|between:4,16|unique:user',
             'password' => 'required|min:6|confirmed',
             'nickname' => 'required|unique:user',
-            'province_id' => 'required|numeric',
-            'city_id' => 'required|numeric',
-            'district_id' => 'required|numeric',
-            'street_id' => 'required|numeric',
-            'address' => 'required|max:45',
             'type' => 'required|in:1,2,3',
             'status' => 'in|0,1'
         ];

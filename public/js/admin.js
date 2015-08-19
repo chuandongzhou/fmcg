@@ -63,7 +63,7 @@ function shopPicFunc() {
 }
 
 /**
- * 店铺添加图片处理
+ * 添加地址
  */
 function addAddFunc() {
     var container = $('.address-list')
@@ -96,7 +96,7 @@ function addAddFunc() {
     };
 
     changeAddButtonStatus();
-    // 删除图片
+    // 删除地址
     container.on('click', '.close', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();

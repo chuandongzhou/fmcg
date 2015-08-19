@@ -15,19 +15,6 @@ class GoodsImages extends Model
     ];
 
     /**
-     * 模型启动事件
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        // 注册删除事件
-        static::deleted(function ($image) {
-            $image->image()->delete();
-        });
-    }
-
-    /**
      * 关联文件表
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -37,8 +24,28 @@ class GoodsImages extends Model
         return $this->morphOne('App\Models\File', 'fileable');
     }
 
+    /**
+     * 保存图片
+     *
+     * @param $image
+     * @return bool
+     */
     public function setImageAttribute($image)
     {
         return $this->associateFile(upload_file($image, 'temp'), 'image');
+    }
+
+    /**
+     * 设置标签搜索
+     *
+     * @param $attr
+     */
+    public function setAttrsAttribute($attr)
+    {
+        if (is_array($attr)) {
+            $this->attributes['attrs'] = implode(',', $attr);
+        } else {
+            $this->attributes['attrs'] = '';
+        }
     }
 }

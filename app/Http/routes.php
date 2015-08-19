@@ -28,9 +28,10 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->resource('category', 'CategoryController');            //属性管理
     $router->post('getAttr', 'AttrController@getAttr');             //获取标签
     $router->resource('attr', 'AttrController');                    //标签管理
-    $router->get('attr/create/{id}', 'AttrController@create')->where('id','[0-9]+'); //添加子标签
+    $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
     $router->resource('images', 'GoodsImagesController');                    //商品图片管理
-
+    $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
+    $router->controller('trade', 'SystemTradeInfoController');
 });
 
 
@@ -51,7 +52,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         ]);
 
         $router->controller('file', 'FileController');                              // 文件上传
-        $router->get('category/{id}/attrs', 'CategoryController@getAttr');         //获取标签
+        $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
 
     });

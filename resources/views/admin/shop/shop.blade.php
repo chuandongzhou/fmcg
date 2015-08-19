@@ -4,8 +4,8 @@
 @section('subtitle' , '用户管理')
 
 @section('right-container')
-    <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/user/save') }}" data-help-class="col-sm-push-2 col-sm-10">
+    <form class="form-horizontal ajax-form" method="put"
+          action="{{ url('admin/shop/'.$shop->id) }}" data-help-class="col-sm-push-2 col-sm-10">
         <div class="col-sm-9 user-show">
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="username">店家LOGO:</label>
@@ -16,7 +16,8 @@
                         本地上传(128x128)
                     </button>
                     <div class="image-preview">
-                        <img class="img-thumbnail" src="{{ asset('images/u8.png') }}">
+                        <img class="img-thumbnail"
+                             src="{{ is_object($shop->logo) ? upload_file_url($shop->logo->path) : asset('images/u8.png') }}">
                     </div>
                 </div>
             </div>
@@ -24,7 +25,8 @@
                 <label class="col-sm-2 control-label" for="username">店家名称:</label>
 
                 <div class="col-sm-10 col-md-6">
-                    <input class="form-control" id="name" name="name" placeholder="请输入店家名称" value=""
+                    <input class="form-control" id="name" name="name" placeholder="请输入店家名称"
+                           value="{{ $shop->user->nickname }}"
                            type="text">
                 </div>
             </div>
@@ -33,7 +35,7 @@
 
                 <div class="col-sm-10 col-md-6">
                     <input class="form-control" id="contact_person" name="contact_person" placeholder="请输入联系人"
-                           value=""
+                           value="{{ $shop->contact_person }}"
                            type="text">
                 </div>
             </div>
@@ -42,7 +44,7 @@
 
                 <div class="col-sm-10 col-md-6">
                     <input class="form-control" id="contact_info" name="contact_info" placeholder="请输入联系方式"
-                           value=""
+                           value="{{ $shop->contact_info }}"
                            type="text">
                 </div>
             </div>
@@ -51,7 +53,7 @@
 
                 <div class="col-sm-10 col-md-6">
                             <textarea class="form-control" placeholder="请输入店家简介" rows="4" id="introduction"
-                                      name="introduction"></textarea>
+                                      name="introduction">{{ $shop->introduction }}</textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -68,7 +70,8 @@
                             </span>
 
                     <div class="image-preview w160">
-                        <img src="" class="img-thumbnail">
+                        <img src="{{ is_object($shop->license) ? upload_file_url($shop->license->path) : '' }}"
+                             class="img-thumbnail">
                     </div>
                 </div>
             </div>
@@ -82,19 +85,25 @@
                         请选择图片文件(300x225)
                     </button>
                     <div class="row shop-pictures">
-
-                        <div class="col-xs-6 col-sm-4 col-md-3">
-                            <div class="thumbnail">
-                                <button aria-label="Close" class="close" type="button">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <img alt="" src="http://192.168.2.34/upload/file/2015/05/25/5562edc9b5be6.jpeg">
-                                <input type="hidden" value="168" name="images[id][]">
-                                <input type="hidden" value="2015/05/25/5562edc9b5be6.jpeg" name="images[path][]">
-                                <input type="text" value="啦啦啦啦啦啦1" name="images[name][]" class="form-control input-sm">
-                            </div>
+                        <div class="hidden">
+                            <input type="hidden" value="" name="images[id][]">
+                            <input type="hidden" value="" name="images[path][]">
+                            <input type="text" value="" name="images[name][]"
+                                   class="form-control input-sm">
                         </div>
-
+                        @foreach($shop->images as $image)
+                            <div class="col-xs-3">
+                                <div class="thumbnail">
+                                    <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <img alt="" src="{{ upload_file_url($image->path) }}">
+                                    <input type="hidden" value="{{ $image->id }}" name="images[id][]">
+                                    <input type="hidden" value="{{ $image->path }}" name="images[path][]">
+                                    <input type="text" value="{{ $image->name }}" name="images[name][]"
+                                           class="form-control input-sm">
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -123,7 +132,8 @@
                 <label for="address" class="col-sm-2 control-label">详细地址</label>
 
                 <div class="col-sm-10 col-md-6">
-                    <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control">
+                    <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control"
+                           value="{{ $shop->address }}">
                 </div>
             </div>
             <div class="form-group">
@@ -135,13 +145,12 @@
                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址</a>
                     </div>
                     <div class="address-list col-lg-12">
-                        <div class="col-sm-12 fa-border">辽宁省 大连 西港 天府五街美年广场1248 <span class="close">×</span></div>
-                        <div class="col-sm-12 fa-border">辽宁省 大连 西港 天府五街美年广场1248 <span class="close">×</span></div>
+                        @foreach (explode(',',$shop->delivery_area) as $area)
+                            <div class="col-sm-12 fa-border">{{ $area }} <span class="close">×</span><input
+                                        type="hidden" name="delivery_area[]" value="{{ $area }}"/></div>
+                        @endforeach
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-
             </div>
 
             <div class="col-sm-12 text-center save">

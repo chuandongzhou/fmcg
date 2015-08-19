@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-10">
-                    @foreach($goods_image as $id=>$image)
+                    @foreach($goodsImage as $id => $image)
                         <div class="row shop-pictures">
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="thumbnail">
@@ -68,7 +68,7 @@
             $('select[name="level2"] , select[name="level3"]').change(function () {
                 var categoryId = $(this).val() || $('select[name="level2"]').val();
 
-                $.get(site.api('category/' + categoryId + '/attrs'), {format: true}, function (data) {
+                $.get(site.api('categories/' + categoryId + '/attrs'), {format: true}, function (data) {
                     var html = '';
                     for (var index in data) {
                         var options = '';

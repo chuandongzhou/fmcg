@@ -42,24 +42,16 @@ class AttrController extends Controller
     {
         $categories = Category::all(['id', 'name', 'pid', 'level'])->toArray();
         $attr = new Attr();
-        $categoryId = 0;
         if ($id) {
             $categoryId = Attr::where('id', $id)->pluck('category_id');
             $attr->category_id = $categoryId;
             $attr->pid = $id;
-        } else {
-            $firstCategory = array_first($categories, function ($key, $value) {
-                return $value['level'] > 1;
-            });
-            $categoryId = $firstCategory['id'];
         }
-        $firstCategoryOfAttr = Attr::where(['category_id' => $categoryId, 'pid' => 0])->lists('name', 'id');
         $categories = new Tree($categories);
         return view('admin.attr.attr',
             [
                 'categories' => $categories,
                 'attr' => $attr,
-                'first_category_of_attr' => $firstCategoryOfAttr
             ]
         );
     }
@@ -147,5 +139,29 @@ class AttrController extends Controller
             return $this->success('删除标签成功');
         }
         return $this->error('删除标签时遇到问题');
+    }
+
+    /**
+     * Get Attr by Search
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
+    public function getAttr(Request $request)
+    {
+        $post = $request->all();
+        if (!isset($post['format'])) {
+            $result = Attr::where($post)->lists('name', 'id');
+            return json_encode($result);
+        } else {
+            unset($post['format']);
+            $attrs = Attr::where($post)->get([
+                'id',
+                'name',
+                'pid'
+            ])->toArray();
+            $attrList = Attr::formatAttr($attrs);
+            return json_encode($attrList);
+        }
     }
 }

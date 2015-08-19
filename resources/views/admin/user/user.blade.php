@@ -41,44 +41,6 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">地址</label>
-
-            <div class="col-sm-2">
-                <select class="form-control" name="province_id">
-                    <option value="0">省</option>
-                    <option value="1">四川</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" name="city_id">
-                    <option value="0">市</option>
-                    <option value="11">成都</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" name="district_id">
-                    <option value="0">区</option>
-                    <option value="111">高新区</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" name="street_id">
-                    <option value="0">街道</option>
-                    <option value="1111">天府五街</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="address" class="col-sm-2 control-label">详细地址</label>
-
-            <div class="col-sm-8">
-                <input type="text" class="form-control" id="address" name="address" placeholder="请输入详细地址"
-                       value="{{ $user->address }}">
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="hidden" name="type" value="{{ $typeId }}">
                 <button type="submit" class="btn btn-bg btn-primary">添加</button>

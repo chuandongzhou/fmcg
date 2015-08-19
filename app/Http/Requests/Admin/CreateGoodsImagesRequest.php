@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 
-class CreateImagesRequest extends Request
+class CreateGoodsImagesRequest extends Request
 {
 
     /**

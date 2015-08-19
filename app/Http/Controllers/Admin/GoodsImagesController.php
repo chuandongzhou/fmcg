@@ -28,7 +28,7 @@ class GoodsImagesController extends Controller
         }
 
         $goodsImage = GoodsImages::where($attributes)->with('image')->get();
-        return view('admin.images.index', ['search' => $attributes, 'goods_image' => $goodsImage]);
+        return view('admin.images.index', ['search' => $attributes, 'goodsImage' => $goodsImage]);
     }
 
     /**
@@ -45,15 +45,14 @@ class GoodsImagesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\Admin\CreateImagesRequest $request
+     * @param \App\Http\Requests\Admin\CreateGoodsImagesRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function store(Requests\Admin\CreateImagesRequest $request)
+    public function store(Requests\Admin\CreateGoodsImagesRequest $request)
     {
         $post = $request->all();
 
-        $post['attrs'] = implode(',', $post['attrs']);
-        if ($goodsImages = GoodsImages::create($post)->exists) {
+        if (GoodsImages::create($post)->exists) {
             return $this->success('添加图片成功');
         }
 

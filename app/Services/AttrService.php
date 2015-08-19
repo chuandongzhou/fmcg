@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 /**
  * Created by PhpStorm.
  * User: Colin
@@ -20,13 +21,14 @@ class AttrService
 
     /**
      * 格式化标签
+     *
      * @return array
      */
     public function format()
     {
         $attrs = $this->attrs;
 
-        if(empty($attrs)){
+        if (empty($attrs)) {
             return [];
         }
 

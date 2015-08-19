@@ -48,14 +48,7 @@ class Model extends Eloquent
             }
         }
 
-        // 查出当前正在使用的附件
-        if ($oldFile = $this->$relate) {
-            if ($file && $oldFile->id == $file->id) {
-                return true;
-            }
 
-            $oldFile->delete();
-        }
         // 更新附件
         if ($file) {
             $file->type = $fileType;
@@ -72,16 +65,49 @@ class Model extends Eloquent
     }
 
     /**
-     * 模型关联一个文件
+     * 模型关联多个文件
      *
-     * @param int $filesId
+     * @param array $files [1] , [$path] , [['id'=>0 , 'path'=>'and.png']]
      * @param string $relate
      * @param int $fileType
+     * @param bool $isOnly
      * @return bool
      */
-    public function associateFiles($filesId, $relate, $fileType = 0)
+    public function associateFiles($files, $relate, $fileType = 0, $isOnly = true)
     {
+        foreach ($files as $fileItem) {
+            if (is_numeric($fileItem)) {
+                $file = File::where(['id' => $fileItem, 'fileable_id' => 0])->first(['id']);
+            } elseif (is_array($fileItem)) {
+                if ($id = $fileItem['id']) {
+                    $file = File::where(['id' => $id])->first(['id']);
+                    $file && ($file->name = $fileItem['name']);
+                } else {
+                    $file = File::createWithFile($fileItem['path']);
+                }
+            } else {
+                //文件地址
+                $file = File::createWithFile($fileItem);
+            }
+            // 查出当前正在使用的附件
+            if ($isOnly && $oldFile = $this->$relate->where('type', $fileType)->first()) {
+                if ($file && $oldFile->id == $file->id) {
+                    return true;
+                }
 
+                $oldFile->delete();
+            }
+            if ($file) {
+                $file->type = $fileType;
+                if ($this->exists) {
+                    $this->$relate()->where('id', $file->id)->save($file);
+                } else {
+                    static::created(function ($model) use ($relate, $file) {
+                        $model->$relate()->where('id', $file->id)->save($file);
+                    });
+                }
+            }
+        }
     }
 
     /**

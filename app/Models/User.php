@@ -27,11 +27,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'user_name',
         'password',
         'nickname',
-        'province_id',
-        'city_id',
-        'district_id',
-        'street_id',
-        'address',
         'type',
         'spreading_code'
     ];
@@ -90,9 +85,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shops()
+    public function shop()
     {
-        return $this->hasMany('App\Models\Shop');
+        return $this->hasOne('App\Models\Shop');
     }
 
     /**
@@ -113,15 +108,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function shippingAddress()
     {
         return $this->hasMany('App\Models\ShippingAddress');
-    }
-
-    /**
-     * 关联文件表
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function files()
-    {
-        return $this->morphMany('App\Models\File', 'fileable');
     }
 
 }

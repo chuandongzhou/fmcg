@@ -14,8 +14,8 @@ class CreateAttrRequest extends Request
     {
         return [
             'name' => 'required',
-            'pid' => 'required|numeric',
-            'category_id' => 'required|numeric'
+            'pid' => 'required|exists:attr',
+            'category_id' => 'required|exists:category'
         ];
     }
 }

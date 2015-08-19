@@ -25,9 +25,6 @@
             <div class="col-sm-4">
                 <select class="form-control" id="pid" name="pid">
                     <option value="0">作为主标签</option>
-                    @foreach($first_category_of_attr as $id => $name)
-                        <option value="{{ $id }}" {{ $id == $attr->pid  ? 'selected' : '' }}>{{ $name }}</option>
-                    @endforeach
                 </select>
             </div>
         </div>
@@ -53,16 +50,25 @@
     @parent
     <script>
         $(function () {
-            $('#category_id').change(function () {
+            var categorySelect = $('#category_id');
+            categorySelect.change(function () {
                 var categoryId = $(this).val();
-                $.get(site.api('category/' + categoryId + '/attrs'), {'pid': 0}, function (data) {
-                    var html = '<option value="0">作为主标签</option>';
-                    for (var index in data) {
+                setPidSelect(categoryId)
+            });
+            setPidSelect(categorySelect.val(), '{{ $attr->pid }}');
+        });
+        function setPidSelect(categoryId, selectId) {
+            $.get(site.api('categories/' + categoryId + '/attrs'), {pid: 0}, function (data) {
+                var html = '<option value="0">作为主标签</option>';
+                for (var index in data) {
+                    if (index == selectId) {
+                        html += '<option value="' + index + '" selected>' + data[index] + '</option>';
+                    } else {
                         html += '<option value="' + index + '">' + data[index] + '</option>';
                     }
-                    $('#pid').html(html);
-                }, 'json')
-            })
-        });
+                }
+                $('#pid').html(html);
+            }, 'json')
+        }
     </script>
 @stop

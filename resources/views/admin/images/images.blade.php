@@ -74,7 +74,7 @@
             $('select[name="level2"] , select[name="level3"]').change(function () {
                 var categoryId = $(this).val() || $('select[name="level2"]').val();
 
-                $.get(site.api('category/' + categoryId + '/attrs'), {category_id: categoryId, format: true}, function (data) {
+                $.get(site.api('categories/' + categoryId + '/attrs'), {category_id: categoryId, format: true}, function (data) {
                     var html = '';
                     for (var index in data) {
                         var options = '';

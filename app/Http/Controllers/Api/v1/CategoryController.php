@@ -27,7 +27,7 @@ class CategoryController extends Controller
         if (!isset($attributes['format'])) {
             $where = array_merge(['category_id' => $id], $attributes);
             $result = Attr::where($where)->lists('name', 'id');
-            return json_encode($result);
+            return $this->success($result);
         } else {
             $attrs = Attr::where('category_id', $id)->get([
                 'id',
@@ -35,7 +35,7 @@ class CategoryController extends Controller
                 'pid'
             ])->toArray();
             $attrList = (new AttrService($attrs))->format();
-            return json_encode($attrList);
+            return $this->success($attrList);
         }
     }
 
@@ -62,6 +62,6 @@ class CategoryController extends Controller
             }
         }
 
-        return json_encode($categories);
+        return $this->success($categories);
     }
 }

@@ -12,7 +12,7 @@
                 <th><input type="checkbox" id="parent"/></th>
                 <th>用户名</th>
                 <th>昵称</th>
-                <th>地址</th>
+                <th>注册时间</th>
                 <th>状态</th>
                 <th class="text-nowrap">操作</th>
             </tr>
@@ -23,14 +23,14 @@
                     <th scope="row"><input type="checkbox" class="child" name="uid[]" value="{{ $user->id }}"/></th>
                     <td>{{ $user->user_name }}</td>
                     <td>{{ $user->nickname }}</td>
-                    <td>{{ $user->address }}</td>
+                    <td>{{ $user->created_at }}</td>
                     <td>{{ cons()->valueLang('status', $user->status) }}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
                             <a class="btn btn-primary" href="{{ url('admin/user/' . $user->id . '/edit') }}">
                                 <i class="fa fa-edit"></i> 编辑
                             </a>
-                            <a class="btn btn-default" href="{{ url('admin/user/' . $user->id) }}">
+                            <a class="btn btn-default" href="{{ url('admin/shop/' . $user->shop['id'] . '/edit') }}">
                                 <i class="fa fa-user"></i> 查看
                             </a>
                             <a type="button" class="btn btn-danger ajax" data-method="delete"
