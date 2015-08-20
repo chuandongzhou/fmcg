@@ -31,7 +31,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
     $router->resource('images', 'GoodsImagesController');                    //商品图片管理
     $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
-    $router->controller('trade', 'SystemTradeInfoController');
+//    $router->controller('trade', 'SystemTradeInfoController');
 });
 
 

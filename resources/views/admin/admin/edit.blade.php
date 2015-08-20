@@ -45,11 +45,7 @@
             <div class="col-sm-2">
                 <select class="form-control" name="role_id">
                     @foreach($role as $key=>$item)
-                        <option value="{{$key}}"
-                        @if ($key == $user->role->id)
-                                selected
-                            @endif
-                            >{{ $item }}</option>
+                        <option value="{{$key}}" {{ $key == $user->role->id ? 'selected' : '' }}>{{ $item }}</option>
                     @endforeach
                 </select>
             </div>

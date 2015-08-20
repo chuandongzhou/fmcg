@@ -6,7 +6,6 @@ use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Http\Requests\Admin\UpdatePasswordRequest;
 use App\Models\Admin;
 use App\Models\Role;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -155,7 +154,7 @@ class AdminController extends Controller
         } else {
             $status = cons('status.off');
         }
-        if (Admin::whereIn('id', $request->input('checked'))->update(['status' => $status])) {
+        if (Admin::whereIn('id', $request->input('ids'))->update(['status' => $status])) {
             return $this->success('操作成功');
         }
 

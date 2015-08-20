@@ -23,17 +23,17 @@
             @foreach($records as $record)
                 <tr>
                     <td>{{ $record->name }}</td>
-                    <td><img src="{{ $record->link_path }}" />pic</td>
+                    <td><img class="img-polaroid thumbnail" style="width:100px;height:100px;margin-bottom: 0;" src="{{ upload_file_url(($record->image['path'])) }}" /></td>
                     <td>{{ $record->link_path }}</td>
                     @if($type=='retailer' || $type=='app')
-                        <td>{{ $record->ad_type }}</td>
+                        <td>{{ cons()->lang('advert.ad_type')[$record->ad_type] }}</td>
                         @if($type=='app')
-                            <td>{{ $record->app_type }}</td>
+                            <td>{{ cons()->lang('advert.app_type')[$record->app_type] }}</td>
                         @endif
                     @endif
-                    <td>{{ $record->time_type }}</td>
-                    <td>{{ $record->started_at}}</td>
-                    <td>{{ $record->end_at}}</td>
+                    <td>{{ $record->show_str }}</td>
+                    <td>{{ $record->time_type == cons('advert.time_type.forever') ? '' : $record->started_at }}</td>
+                    <td>{{ $record->time_type == cons('advert.time_type.forever') ? '' : $record->end_at }}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
                             <a class="btn btn-primary" href="{{ url('admin/advert/'. $record->id .'/edit?type='.$type) }}">
@@ -49,7 +49,7 @@
             @endforeach
         </tbody>
     </table>
-
+    {!! $records->appends(['type'=>$type])->render() !!}
 
 
 

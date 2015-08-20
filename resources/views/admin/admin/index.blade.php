@@ -2,8 +2,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/admin/') }}" data-help-class="col-sm-push-2 col-sm-10">
-        {{csrf_field()}};
+          action="{{ url('admin/admin') }}" data-help-class="col-sm-push-2 col-sm-10">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -19,17 +18,13 @@
         <tbody>
             @foreach($admins as $admin)
                 <tr>
-                    <td><input type="checkbox" class="child" name="checked[]" value="{{$admin->id}}"/> </td>
+                    <td><input type="checkbox" class="child" name="ids[]" value="{{$admin->id}}"/> </td>
                     <td>{{$admin->id}}</td>
                     <td>{{$admin->user_name}}</td>
                     <td>{{$admin->real_name}}</td>
                     <td>{{$admin->role->name}}</td>
                     <td>
-                        @if($admin->status)
-                            启用
-                        @else
-                            禁用
-                        @endif
+                        {{ $admin->status ? '启用' : '禁用' }}
                     </td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">

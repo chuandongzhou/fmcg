@@ -4,44 +4,46 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Advert;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 
 class AdvertController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 获取广告列表
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Advert $user
+     * @return \Illuminate\View\View
      */
     public function index(Request $request, Advert $user)
     {
+        $records =  $user->formatDuration($request->input('type'));
+        foreach($records as &$value){
+            $value->show_str = $this->showTip($value);
+        }
         return view('admin.advert.index', [
-            'records' => $user->formatDuration(),
-            'type'    => $request->input('type'),
+            'records' => $records,
+            'type' => $request->input('type'),
         ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        //
+
         $adType = cons()->lang('advert.ad_type');
         $timeType = cons()->lang('advert.time_type');
         $appType = cons()->lang('advert.app_type');
         $type = $request->input('type');
 
         return view('admin.advert.create', [
-            'ad'        => new Advert,
-            'type'      => $type,
-            'ad_type'   => $adType,
+            'type' => $type,
+            'ad_type' => $adType,
             'time_type' => $timeType,
-            'app_type'  => $appType,
+            'app_type' => $appType,
         ]);
     }
 
@@ -53,8 +55,10 @@ class AdvertController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        dd($request);
+        if(Advert::create($request->all())->exists){
+            return $this->success('添加广告成功',url('admin/advert?type='.$request->type));
+        }
+        return $this->error('添加广告时遇到错误');
     }
 
     /**
@@ -69,19 +73,25 @@ class AdvertController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @param $id
+     * @return \Illuminate\View\View
      */
     public function edit(Request $request, $id)
     {
-        dd(Advert::find($id));
+        $adType = cons()->lang('advert.ad_type');
+        $timeType = cons()->lang('advert.time_type');
+        $appType = cons()->lang('advert.app_type');
+        $record = Advert::find($id);
+        $record->show_str = $this->showTip($record);
 
-        //
-        return view('admin.advert.create', [
+        return view('admin.advert.edit', [
             'type' => $request->input('type'),
-            'ad'   => Advert::find($id),
+            'ad' => $record,
+            'pic' => $record->file,
+            'ad_type' => $adType,
+            'time_type' => $timeType,
+            'app_type' => $appType,
         ]);
 
     }
@@ -95,7 +105,14 @@ class AdvertController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $advert = Advert::find($id);
+        if(!$advert){
+            return $this->error('该广告信息不存在');
+        }
+        if($advert->fill($request->all())->save()){
+            return $this->success('修改成功', url('admin/advert?type='.$request->input('type')));
+        }
+        return $this->error('修改失败');
     }
 
     /**
@@ -106,6 +123,34 @@ class AdvertController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Advert::destroy($id) ? $this->success('删除成功', url('admin/advert')) : $this->error('删除失败');
+    }
+
+    /**
+     * 处理获取信息时时长的显示信息
+     *
+     * @param $value
+     * @return string
+     */
+    public function showTip($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+        $now = date('Y-m-d H:i:s', time());
+        if ($value->time_type == cons('advert.time_type.forever')) {
+            $str = '永久';
+        } else {
+
+            if ($value->started_at > $now) {
+                $str = '未开始';
+            } elseif ($value->end_at < $now) {
+                $str = '已结束';
+            } else {
+                $str = '展示中';
+            }
+        }
+
+        return $str;
     }
 }

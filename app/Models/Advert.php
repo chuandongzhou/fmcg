@@ -2,14 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
 class Advert extends Model
 {
     //对应表
     protected $table = 'advert';
     //不批量更新字段
-    protected $guarded = ['id'];
+//    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'link_path',
+        'ad_type',
+        'time_type',
+        'app_type',
+        'started_at',
+        'end_at',
+        'image',
+    ];
     //关闭自动维护时间戳
     public $timestamps = false;
 
@@ -18,32 +27,61 @@ class Advert extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function file()
+    public function image()
     {
-        return $this->hasOne('App\Models\File', 'fileable_id', 'id');
+        return $this->morphOne('App\Models\File', 'fileable');
     }
 
-    public function formatDuration()
+
+    /**
+     * 模型关联一个文件
+     *
+     * @param $image
+     * @return bool
+     */
+    public function setImageAttribute($image)
     {
-        $now = date('Y-m-d H:i:s');
-        $records = $this->get();
-        foreach ($records as &$value) {
-            if ($value->time_type == cons('advert.time_type.forever')) {
-                $value->time_type = '永久';
-                $value->started_at = '';
-                $value->end_at = '';
-            } else {
-                if ($value->started_at > $now) {
-                    $value->time_type = '未开始';
-                } elseif ($value->end_at < $now) {
-                    $value->time_type = '已结束';
-                } else {
-                    $value->time_type = '展示中';
-                }
-            }
+
+        return $this->associateFile(upload_file($image, 'temp'), 'image');
+    }
+
+    /**
+     * 获取格式化后的广告信息
+     *
+     * @param $type
+     * @return mixed
+     */
+    public function formatDuration($type)
+    {
+        $records = $this->whereRaw($this->cate($type))->paginate(5);
+        foreach ($records as $value) {
+            $value->image()->max('id');
         }
 
-//        dd($records);
         return $records;
     }
+
+    /**
+     * 添加查询条件
+     *
+     * @param $type
+     * @return string
+     */
+    public function cate($type)
+    {
+        switch ($type) {
+            case 'home':
+                $option = 'ad_type = 0 and app_type = 0';
+                break;
+            case 'retailer':
+                $option = 'ad_type != 0 and app_type = 0';
+                break;
+            default:
+                $option = 'ad_type != 0 and app_type != 0';
+        }
+
+        return $option;
+    }
+
+
 }
