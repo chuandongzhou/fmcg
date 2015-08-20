@@ -174,17 +174,17 @@
                 <div class="modal-body address-select">
                     <div>
                         <label class="control-label">&nbsp;&nbsp;&nbsp;所在地:</label>
-                        <select class="address-province form-control add-province">
+                        <select class="address-province inline-control add-province">
                             <option selected="selected" value="">请选择省市/其他...</option>
                             <option value="210000">辽宁省</option>
                         </select>
 
-                        <select class="address-city form-control add-city">
+                        <select class="address-city inline-control add-city">
                             <option selected="selected" value="">请选择城市...</option>
                             <option value="100">大连</option>
                         </select>
 
-                        <select class="address-district form-control add-district">
+                        <select class="address-district inline-control add-district">
                             <option selected="selected" value="">请选择区/县...</option>
                             <option value="100">西港</option>
                         </select>

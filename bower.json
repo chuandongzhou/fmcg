@@ -23,6 +23,7 @@
     "fontawesome": "~4.0",
     "jquery-placeholder": "~2.1.2",
     "jstree": "~3.2",
-    "jquery-treetable": "~3.2.0"
+    "jquery-treetable": "~3.2.0",
+    "eonasdan-bootstrap-datetimepicker": "~4.15.35"
   }
 }
