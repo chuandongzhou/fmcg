@@ -52,10 +52,10 @@
     @endif
     @endif
     <div class="form-group">
-        <label for="nickname" class="col-sm-2 control-label">广告URL:</label>
+        <label for="url" class="col-sm-2 control-label">广告URL:</label>
 
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="nickname" name="link_path" placeholder="请输入广告URL" />
+            <input type="text" class="form-control" id="url" name="url" placeholder="必须包含http://" />
         </div>
     </div>
 
@@ -70,6 +70,16 @@
             </select>
         </div>
     </div>
+    <div class="form-group" id="date-time" style="display: none;">
+        <label class="col-sm-2 control-label">起止时间:</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control datetimepicker" name="started_at" />
+        </div>
+
+        <div class="col-sm-2">
+            <input type="text" class="form-control datetimepicker" name="end_at" />
+        </div>
+    </div>
 
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
@@ -79,4 +89,24 @@
 </form>
 @stop
 
+@section('js')
+    @parent
+    <script>
+        $(function(){
+            var forever =  {{ cons('advert.time_type.forever') }} ;
+            $("select[name = 'time_type']").on('change  ',function(){
+                var con = $(this).find("option:selected").val();
+                if(con == forever){
+                    $('#date-time').css('display','none');
+                }else{
+                    $('#date-time').css('display','block');
+                }
+//                alert(flag);
+                //启动时间插件
+            });
+        });
+
+    </script>
+@endsection
 @include('includes.uploader')
+@include('includes.timepicker')

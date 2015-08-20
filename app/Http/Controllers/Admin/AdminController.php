@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Http\Requests\Admin\UpdatePasswordRequest;
 use App\Models\Admin;
 use App\Models\Role;
@@ -81,7 +82,7 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(CreateAdminRequest $request, $id)
+    public function update(UpdateAdminRequest $request, $id)
     {
         $user = Admin::find($id);
         if (!$user) {

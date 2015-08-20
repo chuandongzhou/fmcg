@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\CreateAdvertRequest;
 use App\Models\Advert;
 
 
@@ -53,7 +54,7 @@ class AdvertController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateAdvertRequest $request)
     {
         if(Advert::create($request->all())->exists){
             return $this->success('添加广告成功',url('admin/advert?type='.$request->type));
@@ -83,7 +84,6 @@ class AdvertController extends Controller
         $timeType = cons()->lang('advert.time_type');
         $appType = cons()->lang('advert.app_type');
         $record = Advert::find($id);
-        $record->show_str = $this->showTip($record);
 
         return view('admin.advert.edit', [
             'type' => $request->input('type'),

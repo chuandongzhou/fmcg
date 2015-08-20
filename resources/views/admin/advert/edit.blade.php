@@ -62,10 +62,10 @@
             @endif
         @endif
         <div class="form-group">
-            <label for="nickname" class="col-sm-2 control-label">广告URL:</label>
+            <label for="url" class="col-sm-2 control-label">广告URL:</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="nickname" name="link_path" placeholder="请输入广告URL"
+                <input type="text" class="form-control" id="url" name="url" placeholder="请输入广告URL"
                        value="{{ $ad->link_path }}">
             </div>
         </div>
@@ -85,7 +85,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group" id="datetimepicker" style="display: {{ $ad->time_type == cons('advert.time_type.forever') ? 'none' : 'block' }}">
+        <div class="form-group" id="date-time" style="display: {{ $ad->time_type == cons('advert.time_type.forever') ? 'none' : 'block' }}">
             <label class="col-sm-2 control-label">起止时间:</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control datetimepicker" name="started_at" />
@@ -113,9 +113,9 @@
             $("select[name = 'time_type']").on('change  ',function(){
                 var con = $(this).find("option:selected").val();
                 if(con == forever){
-                    $('#datetimepicker').css('display','none');
+                    $('#date-time').css('display','none');
                 }else{
-                    $('#datetimepicker').css('display','block');
+                    $('#date-time').css('display','block');
                 }
 //                alert(flag);
                 //启动时间插件
@@ -125,3 +125,4 @@
     </script>
 @endsection
 @include('includes.uploader')
+@include('includes.timepicker')

@@ -55,7 +55,7 @@ class Advert extends Model
     {
         $records = $this->whereRaw($this->cate($type))->paginate(5);
         foreach ($records as $value) {
-            $value->image()->max('id');
+            $value->image;
         }
 
         return $records;
