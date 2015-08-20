@@ -47,7 +47,14 @@ class Model extends Eloquent
                 $file = null;
             }
         }
+        // 查出当前正在使用的附件
+        if ($oldFile = $this->$relate) {
+            if ($file && $oldFile->id == $file->id) {
+                return true;
+            }
 
+            $oldFile->delete();
+        }
 
         // 更新附件
         if ($file) {

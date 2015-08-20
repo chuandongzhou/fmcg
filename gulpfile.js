@@ -65,7 +65,12 @@ elixir(function (mix) {
 
         // jquery-treetable
         .copy([bowerDir + 'jquery-treetable/css/**'], 'public/js/lib/jquery/treetable/css')
-        .copy([bowerDir + 'jquery-treetable/jquery.treetable.js'], 'public/js/lib/jquery/treetable');
+        .copy([bowerDir + 'jquery-treetable/jquery.treetable.js'], 'public/js/lib/jquery/treetable')
+
+        // eonasdan-bootstrap-datetimepicker
+        .copy([bowerDir + 'eonasdan-bootstrap-datetimepicker/build/**'], 'public/js/lib/jquery/bootstrap-datetimepicker')
+
+        .copy([bowerDir + 'moment/min/**'], 'public/js/lib/jquery/moment')
 
         // version
         //.version(['css/style.css'])
