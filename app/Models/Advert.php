@@ -5,22 +5,26 @@ namespace App\Models;
 
 class Advert extends Model
 {
-    //对应表
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'advert';
-    //不批量更新字段
-//    protected $guarded = ['id'];
-    protected $fillable = [
-        'name',
-        'link_path',
-        'ad_type',
-        'time_type',
-        'app_type',
-        'started_at',
-        'end_at',
-        'image',
-    ];
-    //关闭自动维护时间戳
-    public $timestamps = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'type', 'url', 'start_at', 'end_at', 'image'];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['start_at', 'end_at'];
 
     /**
      * 关联广告图片文件
@@ -32,7 +36,6 @@ class Advert extends Model
         return $this->morphOne('App\Models\File', 'fileable');
     }
 
-
     /**
      * 模型关联一个文件
      *
@@ -41,47 +44,52 @@ class Advert extends Model
      */
     public function setImageAttribute($image)
     {
-
         return $this->associateFile(upload_file($image, 'temp'), 'image');
     }
 
     /**
-     * 获取格式化后的广告信息
+     * 设置结束时间
      *
-     * @param $type
-     * @return mixed
+     * @param $endAt
      */
-    public function formatDuration($type)
+    public function setEndAtAttribute($endAt)
     {
-        $records = $this->whereRaw($this->cate($type))->paginate(5);
-        foreach ($records as $value) {
-            $value->image;
+        if (empty($endAt)) {
+            $this->attributes['end_at'] = null;
         }
-
-        return $records;
     }
 
     /**
-     * 添加查询条件
+     * 获取图片链接
      *
-     * @param $type
      * @return string
      */
-    public function cate($type)
+    public function getImageUrlAttribute()
     {
-        switch ($type) {
-            case 'home':
-                $option = 'ad_type = 0 and app_type = 0';
-                break;
-            case 'retailer':
-                $option = 'ad_type != 0 and app_type = 0';
-                break;
-            default:
-                $option = 'ad_type != 0 and app_type != 0';
-        }
-
-        return $option;
+        $image = $this->image;
+        return $image ? upload_file_url($image->path) : '';
     }
 
+    /**
+     * 获取当前广告状态
+     *
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        if ($this->start_at->isFuture()) {
+            return '未开始';
+        }
 
+        $endAt = $this->end_at;
+        if (is_null($endAt)) {
+            return '永久';
+        }
+
+        if ($endAt->isPast()) {
+            return '已结束';
+        }
+
+        return '展示中';
+    }
 }

@@ -121,12 +121,12 @@
                             <div id="collapse-four" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('admin/advert/create?type=home') }}">首页广告添加</a>
-                                            <a href="{{ url('admin/advert?type=home') }}" class="manger">管理</a></li>
-                                        <li><a href="{{ url('admin/advert/create?type=retailer') }}">终端商广告添加</a>
-                                            <a href="{{ url('admin/advert?type=retailer') }}" class="manger">管理</a></li>
-                                        <li><a href="{{ url('admin/advert/create?type=app') }}">APP广告添加</a>
-                                            <a href="{{ url('admin/advert?type=app') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/advert-index/create') }}">首页广告添加</a>
+                                            <a href="{{ url('admin/advert-index') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/advert-user/create') }}">用户广告添加</a>
+                                            <a href="{{ url('admin/advert-user') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/advert-app/create') }}">APP广告添加</a>
+                                            <a href="{{ url('admin/advert-app') }}" class="manger">管理</a></li>
 
                                     </ul>
                                 </div>

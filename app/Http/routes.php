@@ -19,7 +19,9 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->put('admin/password', 'AdminController@putPassword');//修改当前管理员密码
     $router->put('admin/switch', 'AdminController@putSwitch');//管理员状态切换
     $router->resource('admin', 'AdminController');          //管理员管理
-    $router->resource('advert', 'advertController');         //广告相关管理
+    $router->resource('advert-index', 'AdvertIndexController'); // 首页广告
+    $router->resource('advert-user', 'AdvertUserController'); // 用户端广告
+    $router->resource('advert-app', 'AdvertAppController'); // APP广告
     $router->resource('role', 'RoleController');
     $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
     $router->put('user/switch', 'UserController@putSwitch');//批量修改用户

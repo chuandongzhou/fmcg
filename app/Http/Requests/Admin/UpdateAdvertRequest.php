@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
-class CreateAdvertRequest extends Request
+class UpdateAdvertRequest extends Request
 {
 
     /**
@@ -13,10 +13,10 @@ class CreateAdvertRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required',
-            'image' => 'required',
-            'url' => 'required|url',
-            'start_at' => 'required|date',
+            'name' => 'sometimes|required',
+            'image' => 'sometimes|required',
+            'url' => 'sometimes|required|url',
+            'start_at' => 'sometimes|required|date',
             'end_at' => 'date|after:start_at',
         ];
     }

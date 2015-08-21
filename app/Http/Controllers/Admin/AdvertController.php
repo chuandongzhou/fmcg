@@ -2,62 +2,62 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\UpdateAdvertRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\CreateAdvertRequest;
 use App\Models\Advert;
 
 
-class AdvertController extends Controller
+abstract class AdvertController extends Controller
 {
+    /**
+     * 默认首页内容
+     *
+     * @var string
+     */
+    protected $type = 'index';
+
     /**
      * 获取广告列表
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Advert $user
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, Advert $user)
+    public function index()
     {
-        $records =  $user->formatDuration($request->input('type'));
-        foreach($records as &$value){
-            $value->show_str = $this->showTip($value);
-        }
+        $adverts = Advert::where('type', cons('advert.type.' . $this->type))->paginate();
+
         return view('admin.advert.index', [
-            'records' => $records,
-            'type' => $request->input('type'),
+            'type' => $this->type,
+            'adverts' => $adverts,
         ]);
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * 显示创建广告页面
+     *
      * @return \Illuminate\View\View
      */
-    public function create(Request $request)
+    public function create()
     {
-
-        $adType = cons()->lang('advert.ad_type');
-        $timeType = cons()->lang('advert.time_type');
-        $appType = cons()->lang('advert.app_type');
-        $type = $request->input('type');
-
-        return view('admin.advert.create', [
-            'type' => $type,
-            'ad_type' => $adType,
-            'time_type' => $timeType,
-            'app_type' => $appType,
+        return view('admin.advert.advert', [
+            'type' => $this->type,
+            'advert' => new Advert,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request $request
-     * @return Response
+     * @param \App\Http\Requests\Admin\CreateAdvertRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function store(CreateAdvertRequest $request)
     {
-        if(Advert::create($request->all())->exists){
-            return $this->success('添加广告成功',url('admin/advert?type='.$request->type));
+        $attributes = $request->all();
+        $attributes['type'] = cons('advert.type.' . $this->type);
+
+        if (Advert::create($attributes)->exists) {
+            return $this->success('添加广告成功');
         }
         return $this->error('添加广告时遇到错误');
     }
@@ -74,24 +74,16 @@ class AdvertController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param $id
+     * 显示修改界面
+     *
+     * @param \App\Models\Advert $advert
      * @return \Illuminate\View\View
      */
-    public function edit(Request $request, $id)
+    public function edit($advert)
     {
-        $adType = cons()->lang('advert.ad_type');
-        $timeType = cons()->lang('advert.time_type');
-        $appType = cons()->lang('advert.app_type');
-        $record = Advert::find($id);
-
-        return view('admin.advert.edit', [
-            'type' => $request->input('type'),
-            'ad' => $record,
-            'pic' => $record->file,
-            'ad_type' => $adType,
-            'time_type' => $timeType,
-            'app_type' => $appType,
+        return view('admin.advert.advert', [
+            'type' => $this->type,
+            'advert' => $advert,
         ]);
 
     }
@@ -99,18 +91,17 @@ class AdvertController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request $request
-     * @param  int $id
-     * @return Response
+     * @param \App\Http\Requests\Admin\UpdateAdvertRequest $request
+     * @param \App\Models\Advert $advert
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAdvertRequest $request, $advert)
     {
-        $advert = Advert::find($id);
-        if(!$advert){
-            return $this->error('该广告信息不存在');
-        }
-        if($advert->fill($request->all())->save()){
-            return $this->success('修改成功', url('admin/advert?type='.$request->input('type')));
+        $attributes = $request->all();
+        unset($attributes['type']);
+
+        if ($advert->fill($attributes)->save()) {
+            return $this->success('修改成功');
         }
         return $this->error('修改失败');
     }
@@ -118,39 +109,15 @@ class AdvertController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return Response
+     * @param  \App\Models\Advert $advert
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function destroy($id)
+    public function destroy($advert)
     {
-        return Advert::destroy($id) ? $this->success('删除成功', url('admin/advert')) : $this->error('删除失败');
-    }
-
-    /**
-     * 处理获取信息时时长的显示信息
-     *
-     * @param $value
-     * @return string
-     */
-    public function showTip($value)
-    {
-        if (empty($value)) {
-            return $value;
-        }
-        $now = date('Y-m-d H:i:s', time());
-        if ($value->time_type == cons('advert.time_type.forever')) {
-            $str = '永久';
-        } else {
-
-            if ($value->started_at > $now) {
-                $str = '未开始';
-            } elseif ($value->end_at < $now) {
-                $str = '已结束';
-            } else {
-                $str = '展示中';
-            }
+        if ($advert->delete()) {
+            return $this->success('删除成功');
         }
 
-        return $str;
+        return $this->error('删除失败');
     }
 }

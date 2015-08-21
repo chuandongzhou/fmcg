@@ -20,6 +20,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\User' => 'user',
         'App\Models\Category' => 'category',
         'App\Models\Shop' => 'shop',
+        'App\Models\Advert' => ['advert-index', 'advert-user', 'advert-app'],
     ];
 
     /**

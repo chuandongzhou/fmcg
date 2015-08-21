@@ -276,7 +276,7 @@ var commonJQueryExtendSetup = function () {
             // 清空之前的表单错误信息
             this.find('[class*="has-"]').removeClass(function (index, css) {
                 return (css.match(/(^|\s)has-\S+/g) || []).join(' ');
-            }).find('.help-block').remove();
+            }).find('.ajax-error').remove();
 
             if (validates == 'reset' || !$.isPlainObject(validates)) {
                 return this;
@@ -285,10 +285,10 @@ var commonJQueryExtendSetup = function () {
             state = state || 'error';
             $.each(validates, function (name, messages) {
                 var formGroup = self.find('[name="' + name + '"]').closest('.form-group').addClass('has-' + state)
-                    , helpBlock = formGroup.find('.help-block');
+                    , helpBlock = formGroup.find('.ajax-error');
 
                 if (!helpBlock.length) {
-                    helpBlock = $('<p class="help-block"></p>').addClass(self.data('help-class')).appendTo(formGroup);
+                    helpBlock = $('<p class="help-block ajax-error"></p>').addClass(self.data('help-class')).appendTo(formGroup);
                 }
 
                 $.each(messages, function (index, message) {
