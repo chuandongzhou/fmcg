@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\UpdateAdvertRequest;
-use Illuminate\Http\Request;
 use App\Http\Requests\Admin\CreateAdvertRequest;
 use App\Models\Advert;
 
@@ -59,6 +58,7 @@ abstract class AdvertController extends Controller
         if (Advert::create($attributes)->exists) {
             return $this->success('添加广告成功');
         }
+
         return $this->error('添加广告时遇到错误');
     }
 
@@ -103,6 +103,7 @@ abstract class AdvertController extends Controller
         if ($advert->fill($attributes)->save()) {
             return $this->success('修改成功');
         }
+
         return $this->error('修改失败');
     }
 

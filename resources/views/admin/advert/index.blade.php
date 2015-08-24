@@ -26,7 +26,7 @@
                             <i class="fa fa-edit"></i> 编辑
                         </a>
                         <button type="button" class="btn btn-danger ajax" data-method="delete"
-                                data-url="{{ url('admin/advert/' . $advert->id ) }}">
+                                data-url="{{ url('admin/advert-' .$type. '/' . $advert->id ) }}">
                             <i class="fa fa-trash-o"></i> 删除
                         </button>
                     </div>

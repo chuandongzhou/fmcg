@@ -37,12 +37,11 @@ class AdminController extends Controller
 
     /**
      * @param \App\Http\Requests\Admin\CreateAdminRequest $request
-     * @param \App\Models\Admin $user
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function store(CreateAdminRequest $request, Admin $user)
+    public function store(CreateAdminRequest $request)
     {
-        if ($user->create($request->all())->exists) {
+        if (Admin::create($request->all())->exists) {
             return $this->success('添加账号成功');
         }
 
@@ -61,34 +60,24 @@ class AdminController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
+     * @param $admin
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit($admin)
     {
         $roles = Role::lists('name', 'id');
-        $info = Admin::with('role')->find($id);
-        if (!$info) {
-            return $this->error('该账号不存在', url('admin/admin'));
-        }
 
-        return view('admin.admin.edit', ['user' => $info, 'role' => $roles]);
+        return view('admin.admin.edit', ['user' => $admin, 'role' => $roles]);
     }
 
     /**
-     * @param \App\Http\Requests\Admin\CreateAdminRequest $request
-     * @param $id
+     * @param \App\Http\Requests\Admin\UpdateAdminRequest $request
+     * @param $admin
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(UpdateAdminRequest $request, $id)
+    public function update(UpdateAdminRequest $request, $admin)
     {
-        $user = Admin::find($id);
-        if (!$user) {
-            return $this->error('该用户不存在');
-        }
-        if ($user->fill($request->all())->save()) {
+        if ($admin->fill($request->all())->save()) {
             return $this->success('修改成功', url('admin/admin'));
         }
 
@@ -101,10 +90,10 @@ class AdminController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($admin)
     {
         //
-        return Admin::destroy($id) ? $this->success('删除成功', url('admin/admin')) : $this->error('删除失败');
+        return $admin->delete() ? $this->success('删除成功', url('admin/admin')) : $this->error('删除失败');
     }
 
     /**

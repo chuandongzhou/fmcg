@@ -8,7 +8,7 @@
             <label for="username" class="col-sm-2 control-label">管理员账号:</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名">
+                <input type="text" class="form-control" id="username" name="name" placeholder="请输入用户名">
             </div>
         </div>
 
@@ -33,7 +33,7 @@
             <label for="nickname" class="col-sm-2 control-label">管理员姓名:</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="nickname" name="real_name" placeholder="请输入姓名">
+                <input type="text" class="form-control" id="nickname" name="realname" placeholder="请输入姓名">
             </div>
         </div>
 

@@ -95,16 +95,12 @@
                             <div id="collapse-three" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li>
                                         <li><a href="{{  url('admin/category/create')  }}">商品分类添加</a> <a
                                                     href="{{  url('admin/category')  }}" class="manger">管理</a></li>
-                                        </li>
                                         <li><a href="{{  url('admin/attr/create')  }}">商品标签添加</a> <a
                                                     href="{{  url('admin/attr')  }}" class="manger">管理</a></li>
-                                        </li>
                                         <li><a href="{{  url('admin/images/create')  }}">商品图片添加</a> <a
                                                     href="{{  url('admin/images')  }}" class="manger">管理</a></li>
-                                        </li>
                                     </ul>
                                 </div>
                             </div>

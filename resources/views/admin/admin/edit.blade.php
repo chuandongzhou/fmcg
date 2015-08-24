@@ -9,7 +9,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名"
-                       value="{{ $user->user_name }}">
+                       value="{{ $user->name }}">
             </div>
         </div>
 
@@ -35,7 +35,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="nickname" name="real_name" placeholder="请输入姓名"
-                       value="{{ $user->real_name }}">
+                       value="{{ $user->realname }}">
             </div>
         </div>
 

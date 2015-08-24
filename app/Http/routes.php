@@ -5,6 +5,10 @@
  */
 $router->group(['namespace' => 'Index'], function ($router) {
     $router->get('/', ['as' => 'index', 'uses' => 'HomeController@index']);                     // 首页
+    $router->group(['prefix'=>'wholesalers/admin','namespace'=>'Wholesaler\Manage'],function($router){
+        $router->get('/','ManageController@index');    //批发商管理首页
+    });
+
 });
 
 

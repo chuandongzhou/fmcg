@@ -1,14 +1,10 @@
-@extends('index.master')
+@extends('admin.master')
 
-@section('subtitle', '首页')
-
-@section('container')
-    @include('admin.left-nav')
-    <div class="right-content table-responsive">
-        <form method="post" action="{{url('admin/admin')}}">
+@section('right-container')
+        <form class="form-horizontal ajax-form" method="post" action="{{url('admin/role')}}" data-help-class="col-sm-push-2 col-sm-10" >
             <table class="table table-hover table-striped">
                 <tr>
-                    <th></th>
+                    <th>#</th>
                     <th>角色名</th>
                     <th>操作</th>
                 </tr>
@@ -18,14 +14,28 @@
                         <input type="hidden" name="id[]" value="{{$key}}"/>
 
                         <td>{{$role}}</td>
+                        <td><div class="btn-group btn-group-xs" role="group">
 
-                        <td><a href="{{url('admin/admin/'.$key.'/edit')}}">修改</a>|
-                            <a class="ajax" data-method="delete" href="{{url('admin/admin/'.$key)}}">删除</a></td>
+
+                        <a class="btn btn-primary"  href="{{url('admin/role/'.$key.'/edit')}}">修改</a>
+                            <a class="btn btn-danger ajax" data-method="delete" href="{{url('admin/role/'.$key)}}">删除</a>
+                            </div>
+                        </td>
+
                     </tr>
                 @endforeach
             </table>
-            <input type="checkbox" name="check_all" />
-            <button type="submit" name="delete" >删除</button>
+            <div class="btn-group btn-group-xs" role="group">
+                <input type="checkbox" id="parent" class="checkbox-inline" name="check_all"/>
+                <label for="parent">全选</label>
+            </div>
+            <div class="btn-group btn-group-xs" role="group">
+                <button type="button" class="btn btn-danger ajax" data-method="delete"
+                        data-url="{{ url('admin/role') }}">
+                    <i class="fa fa-trash-o"></i> 删除
+                </button>
+            </div>
+
         </form>
-    </div>
+
 @stop

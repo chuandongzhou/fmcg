@@ -9,10 +9,9 @@ class Admin extends Model
     protected $table = 'admin';
     protected $fillable = [
         'role_id',
-        'user_name',
-        'real_name',
+        'name',
+        'realname',
         'password',
-        'role_id',
         'last_login_ip',
         'last_login_time',
         'email',

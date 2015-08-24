@@ -67,6 +67,7 @@ class Advert extends Model
     public function getImageUrlAttribute()
     {
         $image = $this->image;
+
         return $image ? upload_file_url($image->path) : '';
     }
 

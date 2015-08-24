@@ -37,6 +37,9 @@
                 <input type="text" class="form-control" id="url" name="url" placeholder="请输入广告URL"
                        value="{{ $advert->url }}">
             </div>
+            <div class="col-sm-push-2 col-sm-10">
+                <p class="help-block">必须以http://开头</p>
+            </div>
         </div>
 
         <div class="form-group" id="date-time">
