@@ -109,6 +109,28 @@ class Shop extends Model
     }
 
     /**
+     * 获取logo链接
+     *
+     * @return string
+     */
+    public function getLogoUrlAttribute()
+    {
+        $logo = $this->logo;
+        return $logo ? upload_file_url($logo->path) : asset('images/u8.png');
+    }
+
+    /**
+     * 获取营业执照链接
+     *
+     * @return string
+     */
+    public function getLicenseUrlAttribute()
+    {
+        $license = $this->license;
+        return $license ? upload_file_url($license->path) : '';
+    }
+
+    /**
      * 配送地址
      *
      * @param $deliveryArea
@@ -118,6 +140,16 @@ class Shop extends Model
         if ($deliveryArea) {
             $this->attributes['delivery_area'] = implode(',', $deliveryArea);
         }
+    }
+
+    /**
+     * 获取配送地址
+     *
+     * @return array
+     */
+    public function getDeliveryAreaAttribute($deliveryArea)
+    {
+        return explode(',', $deliveryArea);
     }
 
     /**
@@ -146,7 +178,7 @@ class Shop extends Model
         //删除的图片
         $files = $this->files();
         if (!empty (array_filter($images['id']))) {
-            $files =  $files->whereNotIn('id', array_filter($images['id']));
+            $files = $files->whereNotIn('id', array_filter($images['id']));
         }
         $files->where('type', cons('shop.file_type.images'))->delete();
 

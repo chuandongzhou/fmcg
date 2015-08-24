@@ -6,7 +6,7 @@ namespace App\Models;
 class Attr extends Model
 {
     protected $table = 'attr';
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable = ['name', 'category_id', 'pid', 'status', 'sort', 'is_default'];
 
     /**

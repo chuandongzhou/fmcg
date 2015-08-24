@@ -17,7 +17,7 @@
                     </button>
                     <div class="image-preview">
                         <img class="img-thumbnail"
-                             src="{{ is_object($shop->logo) ? upload_file_url($shop->logo->path) : asset('images/u8.png') }}">
+                             src="{{ $shop->logo_url }}">
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                             </span>
 
                     <div class="image-preview w160">
-                        <img src="{{ is_object($shop->license) ? upload_file_url($shop->license->path) : '' }}"
+                        <img src="{{ $shop->license_url }}"
                              class="img-thumbnail">
                     </div>
                 </div>
@@ -94,9 +94,10 @@
                         @foreach($shop->images as $image)
                             <div class="col-xs-3">
                                 <div class="thumbnail">
-                                    <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span>
+                                    <button aria-label="Close" class="close" type="button"><span
+                                                aria-hidden="true">×</span>
                                     </button>
-                                    <img alt="" src="{{ upload_file_url($image->path) }}">
+                                    <img alt="" src="{{ $image->url  }}">
                                     <input type="hidden" value="{{ $image->id }}" name="images[id][]">
                                     <input type="hidden" value="{{ $image->path }}" name="images[path][]">
                                     <input type="text" value="{{ $image->name }}" name="images[name][]"
@@ -145,7 +146,7 @@
                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址</a>
                     </div>
                     <div class="address-list col-lg-12">
-                        @foreach (explode(',',$shop->delivery_area) as $area)
+                        @foreach ($shop->delivery_area as $area)
                             <div class="col-sm-12 fa-border">{{ $area }} <span class="close">×</span><input
                                         type="hidden" name="delivery_area[]" value="{{ $area }}"/></div>
                         @endforeach

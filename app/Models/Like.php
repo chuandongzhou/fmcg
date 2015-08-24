@@ -5,7 +5,7 @@ namespace App\Models;
 class Like extends Model
 {
     protected $table = 'like';
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'likeable_id',

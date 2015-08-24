@@ -140,11 +140,7 @@
                             <div id="collapse-five" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">管理员添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">密码修改</a></li>
-
+                                        <li><a href="{{ url('admin/system-trade') }}">平台交易信息</a>
                                     </ul>
                                 </div>
                             </div>
@@ -161,8 +157,8 @@
                             <div id="collapse-six" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">反馈信息</a></li>
-                                        <li><a href="#">交易信息查询</a></li>
+                                        <li><a href="{{ url('admin/feedback') }}">反馈信息</a></li>
+                                        <li><a href="{{ url('admin/trade') }}">交易信息查询</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -196,7 +192,24 @@
                             <div id="collapse-eight" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">推广人员添加</a><a href="#" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/promoter/create') }}">推广人员添加</a><a href="{{ url('admin/promoter') }}" class="manger">管理</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse-nine">
+                                        运维管理
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse-nine" class="panel-collapse collapse">
+                                <div class="panel-body" class="fa-border">
+                                    <ul>
+                                        <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a href="{{ url('admin/operation-record') }}" class="manger">管理</a></li>
                                     </ul>
                                 </div>
                             </div>

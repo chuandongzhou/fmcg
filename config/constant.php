@@ -48,5 +48,11 @@ return [
             'rmb' => 1,             //人民币
             'foreign_currency' => 2 //外币
         ]
+    ],
+    'feedback' => [               //反馈
+        'status' => [
+            'untreaded' => 0,      // 未处理
+            'treaded' => 1,        //已处理
+        ]
     ]
 ];

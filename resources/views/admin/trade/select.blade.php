@@ -1,5 +1,4 @@
 @extends('admin.master')
-@include('includes.timepicker')
 @section('right-container')
     <form class="form-horizontal" method="get" action="{{ url('admin/system-trade') }}">
 
@@ -21,14 +20,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="account" class="col-sm-2 control-label">商家账号：</label>
-
-            <div class="col-sm-4">
-                <input type="text" value="{{ isset($account) ? $account : '' }}" class="form-control" id="account"
-                       name="account" placeholder="请输入商家账号">
-            </div>
-        </div>
 
         <div class="form-group">
             <label class="col-sm-2 control-label">支付平台：</label>
@@ -43,19 +34,8 @@
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-2 control-label">已付款确认时间：</label>
-
-            <div class="col-sm-6 time-limit">
-                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $startedAt }}"> 至
-                <input type="text" class="inline-control datetimepicker" name="ended_at" value="{{ $endedAt }}">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-10">
+            <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-bg btn-primary">查询</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{{ url('admin/system-trade/export-to-excel?' . $linkUrl) }}" class="btn btn-bg btn-warning">导出</a>
             </div>
         </div>
         <table class="table table-striped">
@@ -95,13 +75,7 @@
             </tbody>
         </table>
     </form>
-    {!! $trades->render() !!}
-@stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            timepicker('.datetimepicker' , 'YYYY-MM-DD HH:mm:ss');
-        })
-    </script>
+    @if(!empty($trades))
+        {!! $trades->render() !!}
+    @endif
 @stop

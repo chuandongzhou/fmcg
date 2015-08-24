@@ -37,7 +37,13 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
     $router->resource('images', 'GoodsImagesController');                    //商品图片管理
     $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
-//    $router->controller('trade', 'SystemTradeInfoController');
+    $router->controller('system-trade', 'SystemTradeInfoController');        //系统交易信息
+    $router->controller('feedback', 'FeedbackController');             //反馈管理
+    $router->controller('trade', 'TradeController');        //交易信息
+    $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
+    $router->resource('promoter', 'PromoterController');             //推广人员管理
+    $router->resource('operation-record' , 'OperationRecordController');    //运维操作记录
+    $router->controller('data-statistics' , 'DataStatisticsController');    //运营数据统计
 });
 
 

@@ -129,7 +129,7 @@ class UserController extends Controller
     public function deleteBatch(Request $request)
     {
         $uids = (array)$request->input('uid');
-        if ($uids) {
+        if (empty($uids)) {
             return $this->error('用户未选择');
         }
         return User::destroy($uids) ? $this->success('删除用户成功') : $this->error('用户删除时遇到错误');

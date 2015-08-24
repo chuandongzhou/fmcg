@@ -10,8 +10,8 @@
     <script src="{{ asset('js/lib/jquery/moment/locales.min.js') }}"></script>
     <script src="{{ asset('js/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
-        $(function () {
-            $('.datetimepicker').datetimepicker({
+        function timepicker(obj , format){
+            $(obj).datetimepicker({
                 icons: {
                     time: "fa fa-clock-o",
                     date: "fa fa-calendar",
@@ -23,8 +23,8 @@
                     clear: "fa fa-trash",
                     close: "fa fa-remove"
                 },
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: format
             });
-        })
+        }
     </script>
 @stop

@@ -5,7 +5,7 @@ namespace App\Models;
 class Cart extends Model
 {
     protected $table = 'cart';
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable = ['goods_id', 'num', 'user_id', 'carted_at'];
 
     /**

@@ -48,4 +48,14 @@ class GoodsImages extends Model
             $this->attributes['attrs'] = '';
         }
     }
+    /**
+     * 获取图片链接
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        $image = $this->image;
+        return $image ? upload_file_url($image->path) : '';
+    }
 }

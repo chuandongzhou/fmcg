@@ -83,7 +83,7 @@ class SystemTradeInfoController extends Controller
                         'account' => $trade['account'],
                         'order_num' => $trade['order_num'],
                         'trade_num' => $trade['trade_num'],
-                        'pay_info' => cons()->valueLang('trade.pay_info', $trade['pay_info']),
+                        'pay_status' => cons()->valueLang('trade.pay_status', $trade['pay_status']),
                         'amount' => $trade['amount'],
                         'trade_currency' => cons()->valueLang('trade.trade_currency', $trade['trade_currency']),
                         'callback_type' => $trade['callback_type'],

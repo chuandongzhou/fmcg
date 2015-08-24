@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class GoodsDeliveryArea extends Model
 {
     protected $table = 'goodsDeliveryArea';
-    public $timestamp = false;
     protected $fillable = [
         'province_id',
         'city_id',

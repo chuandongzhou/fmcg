@@ -43,7 +43,7 @@
                                             data-method="delete">
                                         <span aria-hidden="true" type="button">×</span>
                                     </a>
-                                    <img alt="" src="{{ upload_file_url($image->image['path']) }}">
+                                    <img alt="" src="{{ $image->image_url }}">
                                     <label class="form-control">{{ $image->image['name'] }}</label>
                                 </div>
                             </div>
