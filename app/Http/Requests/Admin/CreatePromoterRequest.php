@@ -15,7 +15,7 @@ class CreatePromoterRequest extends Request
     {
         return [
             'name' => 'required|unique:promoter',
-            'contact => required'
+            'contact' => 'required'
         ];
     }
 }

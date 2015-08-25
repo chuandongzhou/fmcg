@@ -69,8 +69,11 @@ elixir(function (mix) {
 
         // eonasdan-bootstrap-datetimepicker
         .copy([bowerDir + 'eonasdan-bootstrap-datetimepicker/build/**'], 'public/js/lib/jquery/bootstrap-datetimepicker')
-
+        //moment
         .copy([bowerDir + 'moment/min/**'], 'public/js/lib/jquery/moment')
+        //easing
+        .copy([bowerDir + 'jquery.easing/js/**'], 'public/js/lib/jquery/easing')
+
 
         // version
         //.version(['css/style.css'])

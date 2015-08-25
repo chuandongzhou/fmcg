@@ -8,7 +8,7 @@
     <form class="form-horizontal" method="get" action="{{ url('admin/feedback') }}">
         <div class="form-group">
             <label class="col-sm-1 control-label" for="feed_time">时间</label>
-            <input type="text" class="datetimepicker inline-control" value="{{ $feedTime }}" name="feed_time">
+            <input type="text" class="datetimepicker inline-control" value="{{ $feedTime }}" data-format="YYYY-MM-DD" name="feed_time">
             <input type="submit" class="btn btn-default" value="搜索">
         </div>
     </form>
@@ -51,12 +51,4 @@
     </table>
 
     {!! $feedbacks->render() !!}
-@stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            timepicker('.datetimepicker', 'YYYY-MM-DD');
-        })
-    </script>
 @stop

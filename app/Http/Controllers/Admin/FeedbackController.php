@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Feedback;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,9 +17,9 @@ class FeedbackController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $createdAt = $request->input('feed_time') ? $request->input('feed_time') : '';
+        $createdAt = new Carbon($request->input('feed_time'));
         if ($createdAt) {
-            $feedbacks = Feedback::where('created_at', 'like', $createdAt . '%')->paginate();
+            $feedbacks = Feedback::whereBetween('created_at', [$createdAt ,$createdAt->copy()->endOfDay()])->paginate();
         } else {
             $feedbacks = Feedback::paginate();
         }

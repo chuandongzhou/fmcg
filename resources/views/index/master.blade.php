@@ -20,6 +20,7 @@
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
     <![endif]-->
+
 @stop
 
 @section('body')
@@ -29,6 +30,7 @@
 
 
 @section('footer')
+
 @stop
 
 @section('js')

@@ -9,11 +9,22 @@ class DataStatistics extends Model
     public $timestamps = false;
     protected $fillable = [
         'active_user',
-        'wholesalers_login_num',
+        'wholesaler_login_num',
         'retailer_login_num',
         'supplier_login_num',
-        'wholesalers_reg_num',
+        'wholesaler_reg_num',
         'retailer_reg_num',
-        'supplier_reg_num'
+        'supplier_reg_num',
+        'created_at'
     ];
+
+    /**
+     * 获取活跃用户
+     * @param $activeUser
+     * @return array
+     */
+    public function getActiveUserAttribute($activeUser)
+    {
+        return explode(',', $activeUser);
+    }
 }
