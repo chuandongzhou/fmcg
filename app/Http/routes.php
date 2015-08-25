@@ -5,8 +5,8 @@
  */
 $router->group(['namespace' => 'Index'], function ($router) {
     $router->get('/', ['as' => 'index', 'uses' => 'HomeController@index']);                     // 首页
-    $router->group(['prefix'=>'wholesalers/admin','namespace'=>'Wholesaler\Manage'],function($router){
-        $router->get('/','ManageController@index');    //批发商管理首页
+    $router->group(['prefix' => 'wholesaler/admin', 'namespace' => 'Wholesaler'], function ($router) {
+        $router->controller('/', 'AdminController');    //批发商管理首页
     });
 
 });
@@ -42,8 +42,8 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->controller('trade', 'TradeController');        //交易信息
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
     $router->resource('promoter', 'PromoterController');             //推广人员管理
-    $router->resource('operation-record' , 'OperationRecordController');    //运维操作记录
-    $router->controller('data-statistics' , 'DataStatisticsController');    //运营数据统计
+    $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
+    $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
 });
 
 

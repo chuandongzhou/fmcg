@@ -1,0 +1,575 @@
+body {
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  margin-bottom: 60px; }
+
+html {
+  position: relative;
+  min-height: 100%; }
+
+ul, li, p, a, h1, h2, h3, h4 {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+
+.btn-cancel {
+  color: #fff;
+  background-color: #b4b4b4;
+  border-color: #b4b4b4; }
+
+.red {
+  color: #fe462f; }
+
+/*==================================================================================wholesalers begin======================================================================*/
+/*======================================header begin======================================*/
+.wholesalers-top-header .logo {
+  padding-bottom: 10px;
+  padding-top: 10px; }
+  .wholesalers-top-header .logo .logo-icon {
+    height: 34px;
+    line-height: 34px;
+    display: inline-block; }
+.search .form-control {
+  outline: none;
+  border: 1px solid #4cb9fe; }
+
+.right-search, .wholesalers-management .pay-detail {
+  padding: 15px 0; }
+
+.wholesalers-header .container .active a {
+  color: #fff;
+  background-color: #4cb9fe; }
+.wholesalers-header .container .menu-wrap {
+  position: relative; }
+  .wholesalers-header .container .menu-wrap:hover .a-menu {
+    display: block; }
+  .wholesalers-header .container .menu-wrap .a-menu {
+    position: absolute;
+    z-index: 2;
+    display: none;
+    background-color: #4cb9fe; }
+    .wholesalers-header .container .menu-wrap .a-menu li {
+      float: left;
+      margin-right: 1px; }
+      .wholesalers-header .container .menu-wrap .a-menu li .menu-hide {
+        color: #fff; }
+      .wholesalers-header .container .menu-wrap .a-menu li .item {
+        width: 104px; }
+      .wholesalers-header .container .menu-wrap .a-menu li a {
+        display: inline-block;
+        height: 20px;
+        text-align: center;
+        font-size: 11px; }
+      .wholesalers-header .container .menu-wrap .a-menu li:hover .secondary-menu {
+        display: block; }
+      .wholesalers-header .container .menu-wrap .a-menu li:hover a.menu-hide {
+        background: #5bc0de; }
+  .wholesalers-header .container .menu-wrap .secondary-menu {
+    display: none;
+    position: absolute;
+    top: 1px;
+    left: 105px;
+    padding: 2px 3px;
+    min-width: 500px;
+    background-color: #fff;
+    color: #555555; }
+    .wholesalers-header .container .menu-wrap .secondary-menu .second-menu-item {
+      width: 49%;
+      float: left; }
+      .wholesalers-header .container .menu-wrap .secondary-menu .second-menu-item .item {
+        text-align: left; }
+      .wholesalers-header .container .menu-wrap .secondary-menu .second-menu-item .three-menu a {
+        color: #000; }
+
+.panel-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%; }
+
+.modal .address-wrap {
+  height: 80px;
+  padding: 0;
+  position: relative; }
+  .modal .address-wrap label {
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    line-height: 80px;
+    top: 0; }
+  .modal .address-wrap textarea {
+    width: 70%;
+    height: 80%;
+    margin-left: 80px;
+    margin-top: 10px; }
+
+/*======================================header end======================================*/
+/*======================================index begin======================================*/
+.index .left-store-logo .store-logo {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #b4b4b4; }
+.index .store .store-panel {
+  width: 100%;
+  padding: 8px 0;
+  border-top: 1px dashed #b4b4b4;
+  border-bottom: 1px dashed #b4b4b4; }
+  .index .store .store-panel .avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    float: left; }
+  .index .store .store-panel .store-msg {
+    margin-left: 80px; }
+    .index .store .store-panel .store-msg li {
+      padding: 2px 0; }
+.index .store .address-panel {
+  border-top: 1px dashed #b4b4b4;
+  border-bottom: 1px dashed #b4b4b4;
+  padding: 10px 0;
+  margin-top: -1px; }
+  .index .store .address-panel ul {
+    padding: 10px 0; }
+    .index .store .address-panel ul .address-panel-item {
+      margin-left: 80px; }
+      .index .store .address-panel ul .address-panel-item .panel-name {
+        display: block;
+        color: #777777;
+        margin-bottom: 5px; }
+    .index .store .address-panel ul .icon {
+      background: url("../image/address-icon.png") no-repeat center;
+      width: 50px;
+      height: 50px;
+      display: inline-block;
+      float: left;
+      margin-left: 20px; }
+    .index .store .address-panel ul .icon-tel {
+      background-position: 0 0; }
+    .index .store .address-panel ul .icon-address {
+      background-position: 0 -100px; }
+    .index .store .address-panel ul .icon-address {
+      background-position: 0 -128px; }
+.index .nav-wrap {
+  background-color: #f2f2f2;
+  margin: 30px 0;
+  height: 40px; }
+  .index .nav-wrap li {
+    padding: 0; }
+    .index .nav-wrap li a {
+      color: #777777;
+      padding: 0 15px;
+      line-height: 40px; }
+      .index .nav-wrap li a:hover {
+        background-color: #f2f2f2; }
+  .index .nav-wrap .active a {
+    background-color: #f2f2f2;
+    color: #4cb9fe;
+    border-bottom: 2px solid #4cb9fe; }
+.index .list-penal .commodity .commodity-img, .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
+  width: 100%;
+  display: inline-block; }
+.index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
+  background-color: #f2f2f2;
+  padding: 10px 5px; }
+.index .list-penal .commodity .sell-panel .money {
+  color: #fe462f;
+  font-weight: bolder; }
+
+/*======================================index end======================================*/
+/*======================================my-goods begin======================================*/
+.my-goods .controls {
+  padding: 20px 0; }
+  .my-goods .controls .item {
+    background-color: #cae6f7;
+    padding: 15px 15px; }
+    .my-goods .controls .item .control {
+      height: 27px;
+      line-height: 13px; }
+    .my-goods .controls .item .search {
+      margin-bottom: 3px; }
+.my-goods .sort {
+  margin-bottom: 40px;
+  color: #777777; }
+  .my-goods .sort .sort-item {
+    border: 1px solid #b4b4b4;
+    padding: 5px 15px; }
+  .my-goods .sort .sort-name, .my-goods .sort .package {
+    margin-top: -1px; }
+.my-goods .menu {
+  text-align: center;
+  padding: 0; }
+  .my-goods .menu a {
+    color: #777777; }
+  .my-goods .menu .go-back {
+    padding: 10px 5px;
+    width: 60%;
+    display: inline-block;
+    border: 1px solid #b4b4b4; }
+  .my-goods .menu .menu-list {
+    border: 1px solid #b4b4b4;
+    width: 60%;
+    margin: -1px auto auto auto; }
+    .my-goods .menu .menu-list a {
+      display: inline-block;
+      width: 100%;
+      padding: 10px 0; }
+
+/*======================================my-goods end======================================*/
+/*======================================goods-detail begin======================================*/
+.goods-detail .operating {
+  padding: 10px 0;
+  line-height: 33px; }
+  .goods-detail .operating .btn-list {
+    padding: 0; }
+    .goods-detail .operating .btn-list .btn-remove {
+      color: #fff;
+      background-color: #b4b4b4; }
+.goods-detail .good-wrap {
+  border: 1px solid #e0e0e0;
+  padding: 10px 0; }
+  .goods-detail .good-wrap .commodity-img, .goods-detail .good-wrap .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .goods-detail .good-wrap .commodity-name, .goods-detail .good-wrap .index .list-penal .commodity .sell-panel, .index .list-penal .commodity .goods-detail .good-wrap .sell-panel {
+    padding-top: 5px; }
+    .goods-detail .good-wrap .commodity-img .commodity, .goods-detail .good-wrap .index .list-penal .commodity .commodity-name .commodity, .index .list-penal .commodity .goods-detail .good-wrap .commodity-name .commodity, .goods-detail .good-wrap .index .list-penal .commodity .sell-panel .commodity, .index .list-penal .commodity .goods-detail .good-wrap .sell-panel .commodity {
+      width: 90%;
+      height: 90%; }
+  .goods-detail .good-wrap .detail-list-wrap li {
+    padding: 5px 0; }
+  .goods-detail .good-wrap .detail-list-wrap .left-list {
+    margin-right: 50px; }
+.goods-detail .delivery-wrap {
+  padding: 15px 0; }
+  .goods-detail .delivery-wrap .switching {
+    padding: 0;
+    border: 1px solid #b4b4b4; }
+    .goods-detail .delivery-wrap .switching a {
+      display: inline-block;
+      height: 33px;
+      line-height: 33px;
+      padding: 0 15px;
+      border-left: 1px solid #b4b4b4;
+      border-right: 1px solid #b4b4b4;
+      margin-left: -1px;
+      color: #555555; }
+      .goods-detail .delivery-wrap .switching a:last-of-type {
+        margin-left: -5px; }
+      .goods-detail .delivery-wrap .switching a.active {
+        color: #5bc0de;
+        border-bottom: 3px solid #4cb9fe; }
+  .goods-detail .delivery-wrap .location {
+    padding: 0; }
+    .goods-detail .delivery-wrap .location p {
+      padding: 5px 0; }
+      .goods-detail .delivery-wrap .location p input {
+        width: 30%; }
+      .goods-detail .delivery-wrap .location p .address-map {
+        width: 30%;
+        height: 250px; }
+
+/*======================================goods-detail end======================================*/
+/*======================================goods-editor begin======================================*/
+.upload-progress-wrap, .goods-editor .content-wrap .upload-wrap, .personal-center .upload-picture .upload-wrap {
+  padding-left: 83px; }
+  .upload-progress-wrap .upload-img-item, .goods-editor .content-wrap .upload-wrap .upload-img-item, .personal-center .upload-picture .upload-wrap .upload-img-item {
+    position: relative; }
+    .upload-progress-wrap .upload-img-item .file-name, .goods-editor .content-wrap .upload-wrap .upload-img-item .file-name, .personal-center .upload-picture .upload-wrap .upload-img-item .file-name {
+      position: absolute;
+      top: 0; }
+    .upload-progress-wrap .upload-img-item .progress-wrap, .goods-editor .content-wrap .upload-wrap .upload-img-item .progress-wrap, .personal-center .upload-picture .upload-wrap .upload-img-item .progress-wrap {
+      width: 50%;
+      margin: 8px 0 7px 20%;
+      height: 10px; }
+
+.upload-item, .goods-editor .content-wrap .item, .personal-center .upload-picture .upload-wrap .item, .personal-center .right-panel .address-item .item {
+  background-color: #e0e0e0;
+  border-radius: 1px;
+  padding: 0 10px;
+  width: 60%;
+  height: 25px;
+  margin: 5px 0;
+  line-height: 25px; }
+  .upload-item span, .goods-editor .content-wrap .item span, .personal-center .upload-picture .upload-wrap .item span, .personal-center .right-panel .address-item .item span {
+    display: inline-block;
+    height: 25px;
+    line-height: 25px; }
+
+.goods-editor .editor-panel {
+  border: 1px solid #e0e0e0; }
+  .goods-editor .editor-panel .editor-wrap {
+    padding: 10px 15px; }
+    .goods-editor .editor-panel .editor-wrap .editor-item {
+      padding: 5px 0; }
+      .goods-editor .editor-panel .editor-wrap .editor-item .narrow {
+        width: 80px; }
+      .goods-editor .editor-panel .editor-wrap .editor-item .items-item {
+        display: inline-block;
+        padding-right: 40px;
+        position: relative; }
+        .goods-editor .editor-panel .editor-wrap .editor-item .items-item .checks {
+          display: inline-block;
+          width: 60px; }
+      .goods-editor .editor-panel .editor-wrap .editor-item .right-item {
+        position: absolute;
+        left: 40%; }
+    .goods-editor .editor-panel .editor-wrap .promotions-msg {
+      height: 80px;
+      position: relative; }
+      .goods-editor .editor-panel .editor-wrap .promotions-msg label {
+        height: 100%;
+        display: inline-block;
+        position: absolute;
+        line-height: 80px;
+        top: 0; }
+      .goods-editor .editor-panel .editor-wrap .promotions-msg textarea {
+        margin-left: 70px;
+        width: 65%;
+        height: 100%; }
+  .goods-editor .editor-panel .right-save {
+    padding: 15px 0; }
+.goods-editor .content-wrap .add-address, .goods-editor .content-wrap .upload-img {
+  margin: 15px 0; }
+.goods-editor .content-wrap .map {
+  margin: 10px 0; }
+.upload {
+  display: inline-block;
+  position: relative; }
+  .upload input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; }
+.goods-editor .content-wrap .preview-wrap, .goods-editor .content-wrap .graphic-wrap {
+  padding: 15px; }
+  .goods-editor .content-wrap .preview-wrap p, .goods-editor .content-wrap .graphic-wrap p {
+    padding: 10px 0; }
+.goods-editor .content-wrap .graphic-wrap textarea {
+  width: 80%;
+  height: 100px; }
+
+/*======================================goods-editor end======================================*/
+/*======================================wholesalers-management begin======================================*/
+.wholesalers-management .notice-bar {
+  padding: 0;
+  border-bottom: 1px solid #4cb9fe; }
+.wholesalers-management .pay-detail .item {
+  display: inline-block;
+  padding: 5px 25px 5px 0;
+  font-size: 12px; }
+  .wholesalers-management .pay-detail .item input {
+    width: 80px; }
+.wholesalers-management .order-form-list {
+  border: 1px solid #cae6f7;
+  margin-top: 10px;
+  margin-bottom: 10px; }
+  .wholesalers-management .order-form-list div {
+    height: 100%; }
+  .wholesalers-management .order-form-list .list-title {
+    padding: 10px 15px;
+    background-color: #cae6f7; }
+    .wholesalers-management .order-form-list .list-title span {
+      margin-left: 15px; }
+  .wholesalers-management .order-form-list .list-content li {
+    padding: 15px; }
+    .wholesalers-management .order-form-list .list-content li span {
+      display: inline-block;
+      margin-left: 15%; }
+    .wholesalers-management .order-form-list .list-content li .product-name {
+      margin-left: 10px;
+      color: #555555; }
+  .wholesalers-management .order-form-list .order-form-operating p, .wholesalers-management .order-form-list .order-form-detail p {
+    padding: 5px 0;
+    line-height: 20px; }
+    .wholesalers-management .order-form-list .order-form-operating p:first-of-type, .wholesalers-management .order-form-list .order-form-detail p:first-of-type {
+      margin-top: 45px; }
+    .wholesalers-management .order-form-list .order-form-operating p .btn, .wholesalers-management .order-form-list .order-form-detail p .btn {
+      padding: 5px 20px; }
+  .wholesalers-management .order-form-list .order-form-detail p {
+    padding: 10px 0; }
+.wholesalers-management .order-process {
+  border: 1px solid #cae6f7;
+  margin: 15px 0;
+  padding: 10px 18px; }
+  .wholesalers-management .order-process ul li {
+    padding: 5px 0; }
+
+/*======================================wholesalers-management end======================================*/
+/*======================================personal-center begin======================================*/
+.personal-center .switching {
+  margin: 40px 0 20px 0;
+  padding: 0;
+  border: 1px solid #b4b4b4; }
+  .personal-center .switching a {
+    border-left: 1px solid #b4b4b4;
+    border-right: 1px solid #b4b4b4;
+    margin-left: -5px;
+    color: #555555; }
+    .personal-center .switching a:first-of-type {
+      margin-left: -1px; }
+    .personal-center .switching a.active {
+      border-top: 5px solid #4cb9fe;
+      line-height: 15px; }
+.personal-center .upload-picture {
+  padding: 10px 0; }
+  .personal-center .upload-picture .upload-wrap {
+    margin-top: 15px; }
+.personal-center .list-wrap {
+  padding: 10px 0; }
+  .personal-center .list-wrap p {
+    padding: 10px 0; }
+    .personal-center .list-wrap p .upload-img {
+      vertical-align: top;
+      width: 150px;
+      height: 100px; }
+    .personal-center .list-wrap p input {
+      padding: 3px 0;
+      width: 30%; }
+      .personal-center .list-wrap p input.minimum-amount {
+        width: 100px; }
+    .personal-center .list-wrap p textarea {
+      vertical-align: top;
+      width: 50%;
+      height: 80px; }
+  .personal-center .list-wrap .upload {
+    margin-left: 15%; }
+.personal-center .preview-wrap, .personal-center .goods-editor .content-wrap .graphic-wrap, .goods-editor .content-wrap .personal-center .graphic-wrap {
+  padding: 10px 0; }
+  .personal-center .preview-wrap .picture-preview, .personal-center .goods-editor .content-wrap .graphic-wrap .picture-preview, .goods-editor .content-wrap .personal-center .graphic-wrap .picture-preview {
+    padding: 10px 0; }
+.personal-center .left-panel {
+  padding: 10px 0; }
+  .item {
+    padding: 10px 0; }
+    .item .address-norm {
+      height: 25px;
+      margin-top: 10px; }
+      .item .address-norm li {
+        float: left;
+        border: 1px solid #b4b4b4;
+        width: 10%;
+        height: 100%;
+        text-align: center;
+        margin-left: -1px; }
+    .item .address-map {
+      margin-top: 10px;
+      width: 300px;
+      height: 250px; }
+.personal-center .right-panel {
+  padding: 10px 15px; }
+  .personal-center .right-panel .address-item .item {
+    width: 100%; }
+.personal-center .title-name {
+  display: inline-block;
+  width: 80px; }
+
+/*======================================personal-center end======================================*/
+/*======================================order-detail begin======================================*/
+.order-detail .order-tracking {
+  background-color: #e0e0e0;
+  border: 1px solid #4cb9fe;
+  padding: 10px 15px; }
+  .order-detail .order-tracking .orders-submit-detail .submit-detail-item {
+    margin: 10px;
+    height: 40px; }
+    .order-detail .order-tracking .orders-submit-detail .submit-detail-item:first-of-type {
+      border-bottom: 2px solid #b4b4b4;
+      line-height: 30px; }
+    .order-detail .order-tracking .orders-submit-detail .submit-detail-item li {
+      float: left;
+      width: 30%;
+      height: 100%; }
+      .order-detail .order-tracking .orders-submit-detail .submit-detail-item li.time .clock {
+        display: block;
+        padding: 0 0 0 30px; }
+.order-detail .order-receipt {
+  margin-top: 40px;
+  padding: 10px 15px;
+  border: 1px solid #b4b4b4; }
+  .order-detail .order-receipt .order-information li, .order-detail .order-receipt .receiving-information li {
+    padding-bottom: 15px; }
+    .order-detail .order-receipt .order-information li.title, .order-detail .order-receipt .receiving-information li.title {
+      font-weight: bold;
+      font-size: 16px; }
+    .order-detail .order-receipt .order-information li .remarks-content, .order-detail .order-receipt .receiving-information li .remarks-content {
+      padding: 10px 0; }
+.order-detail .table-row .table-col {
+  padding: 30px 0 0 0; }
+  .order-detail .table-row .table-col table thead tr th {
+    text-align: center;
+    border: none;
+    background-color: #cae6f7; }
+  .order-detail .table-row .table-col table tbody tr td {
+    padding: 30px; }
+
+/*======================================order-detail end======================================*/
+/*======================================order-report begin======================================*/
+.order-report .content .title {
+  padding: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0; }
+  .order-report .content .title a {
+    display: inline-block;
+    padding: 10px 25px;
+    color: #555555;
+    margin-bottom: -1px; }
+    .order-report .content .title a.active {
+      border-bottom: 1px solid #4cb9fe;
+      color: #4cb9fe; }
+.order-report .content .enter-item {
+  padding: 0; }
+  .order-report .content .enter-item .enter, .order-report .content .enter-item .btn {
+    height: 30px;
+    margin-right: 5px;
+    vertical-align: middle; }
+  .order-report .content .enter-item .btn {
+    width: 100px;
+    margin: 5px; }
+.order-report .content .tables {
+  padding: 10px 0; }
+  .order-report .content .tables .title-table {
+    padding: 10px 0;
+    font-weight: bold; }
+  .order-report .content .tables table {
+    margin: 0; }
+    .order-report .content .tables table thead tr td {
+      text-align: center;
+      border: none;
+      background-color: #f2f2f2;
+      color: #777777; }
+    .order-report .content .tables table tbody tr td {
+      text-align: center;
+      padding: 15px 10px; }
+
+/*======================================order-report end======================================*/
+/*==================================================================================wholesalers end======================================================================*/
+/*==================================================================================dealer begin======================================================================*/
+.dealer-top-header .city-wrap .location-panel {
+  padding: 10px;
+  width: 120px;
+  position: relative;
+  z-index: 5; }
+  .dealer-top-header .city-wrap .location-panel .location-text {
+    color: #555555;
+    text-decoration: none; }
+    .dealer-top-header .city-wrap .location-panel .location-text:hover {
+      border: 1px solid #e0e0e0;
+      border-bottom-color: #fff; }
+.dealer-top-header .city-wrap .city-list {
+  border: 1px solid #e0e0e0;
+  margin-top: -1px;
+  position: relative;
+  z-index: 3;
+  display: none; }
+  .dealer-top-header .city-wrap .city-list .list-wrap .item {
+    float: left;
+    width: 70px;
+    text-align: center; }
+    .dealer-top-header .city-wrap .city-list .list-wrap .item a {
+      padding: 5px 8px;
+      color: #555555;
+      text-decoration: none;
+      font-size: 13px; }
+      .dealer-top-header .city-wrap .city-list .list-wrap .item a:hover {
+        background-color: #f2f2f2; }
+
+/*==================================================================================dealer end======================================================================*/
+
+/*# sourceMappingURL=index.css.map */

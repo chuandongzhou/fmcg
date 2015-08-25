@@ -6,6 +6,22 @@ return [
         'off' => 0,
         'on' => 1,
     ],
+    //支付方式
+    'pay_type' => [
+        'online' => 1,
+        'cod' => 2,
+    ],
+    //订单表
+    'order' => [
+        'order_status' => [ //订单状态
+            'non-delivery' => 0,
+            'delivered' => 1,
+        ],
+        'pay_status' => [ //支付状态
+            'non-payment' => 0,
+            'payment' => 1,
+        ]
+    ],
     //用户类别
     'user' => [
         'type' => [

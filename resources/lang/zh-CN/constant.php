@@ -6,6 +6,22 @@ return [
         'off' => '禁用',
         'on' => '正常',
     ],
+    //支付方式
+    'pay_type' => [
+        'online' => '在线支付',
+        'cod' => '货到付款',
+    ],
+    //订单表
+    'order' => [
+        'order_status' => [ //订单状态
+            'non-delivery' => '未发货',
+            'delivered' => '已发货',
+        ],
+        'pay_status' => [ //支付状态
+            'non-payment' => '未支付',
+            'payment' => '已支付',
+        ]
+    ],
     //用户类别
     'user' => [
         'type' => [

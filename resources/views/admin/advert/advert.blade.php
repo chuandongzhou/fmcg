@@ -45,12 +45,12 @@
         <div class="form-group" id="date-time">
             <label class="col-sm-2 control-label">起止时间</label>
 
-            <div class="col-sm-2">
+            <div class="col-sm-2 time-limit">
                 <input type="text" class="form-control datetimepicker" name="start_at" placeholder="起始时间"
                        value="{{ $advert->start_at }}"/>
             </div>
 
-            <div class="col-sm-2">
+            <div class="col-sm-2 time-limit">
                 <input type="text" class="form-control datetimepicker" name="end_at" placeholder="结束时间"
                        value="{{ $advert->end_at }}"/>
             </div>
@@ -67,4 +67,12 @@
             </div>
         </div>
     </form>
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(function () {
+            timepicker('.datetimepicker' , 'YYYY-MM-DD HH:mm:ss');
+        })
+    </script>
 @stop
