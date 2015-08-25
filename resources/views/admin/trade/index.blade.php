@@ -97,11 +97,3 @@
     </form>
     {!! $trades->render() !!}
 @stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            timepicker('.datetimepicker' , 'YYYY-MM-DD HH:mm:ss');
-        })
-    </script>
-@stop

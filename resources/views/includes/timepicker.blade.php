@@ -10,21 +10,25 @@
     <script src="{{ asset('js/lib/jquery/moment/locales.min.js') }}"></script>
     <script src="{{ asset('js/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
-        function timepicker(obj , format){
-            $(obj).datetimepicker({
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-arrow-up",
-                    down: "fa fa-arrow-down",
-                    previous: "fa fa-chevron-left",
-                    next: "fa fa-chevron-right",
-                    today: "fa fa-screenshot",
-                    clear: "fa fa-trash",
-                    close: "fa fa-remove"
-                },
-                format: format
+        $(function () {
+            $('.datetimepicker').each(function (i, obj) {
+                var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD HH:mm:ss';
+
+                obj.datetimepicker({
+                    icons: {
+                        time: "fa fa-clock-o",
+                        date: "fa fa-calendar",
+                        up: "fa fa-arrow-up",
+                        down: "fa fa-arrow-down",
+                        previous: "fa fa-chevron-left",
+                        next: "fa fa-chevron-right",
+                        today: "fa fa-screenshot",
+                        clear: "fa fa-trash",
+                        close: "fa fa-remove"
+                    },
+                    format: format
+                });
             });
-        }
+        });
     </script>
 @stop

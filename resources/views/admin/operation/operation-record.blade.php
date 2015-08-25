@@ -23,7 +23,7 @@
             <label for="contact" class="col-sm-2 control-label">开始时间</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control timepicker" id="start_at" name="start_at"
+                <input type="text" class="form-control datetimepicker" id="start_at" name="start_at"
                        value="{{ \Carbon\Carbon::now()->subHour() }}">
             </div>
         </div>
@@ -31,7 +31,7 @@
             <label for="contact" class="col-sm-2 control-label">结束时间</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control timepicker" id="end_at" name="end_at"
+                <input type="text" class="form-control datetimepicker" id="end_at" name="end_at"
                        value="{{ \Carbon\Carbon::now() }}">
             </div>
         </div>
@@ -59,13 +59,4 @@
             </div>
         </div>
     </form>
-@stop
-
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            timepicker('.timepicker', 'YYYY-MM-DD HH:mm:ss');
-        })
-    </script>
 @stop

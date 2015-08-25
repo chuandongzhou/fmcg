@@ -54,13 +54,13 @@ class DataStatistics extends Command
         $retailerLogin = array_get($loginCount, array_get($userType, 'retailer'), 0);
         \App\Models\DataStatistics::create([
             'active_user' => implode(',', $activeUserArr),
-            'wholesalers_login_num' => $wholesalersLogin,
+            'wholesaler_login_num' => $wholesalersLogin,
             'retailer_login_num' => $retailerLogin,
             'supplier_login_num' => $supplierLogin,
-            'wholesalers_reg_num' => $wholesalersReg,
+            'wholesaler_reg_num' => $wholesalersReg,
             'retailer_reg_num' => $retailerReg,
             'supplier_reg_num' => $supplierReg,
-            'created_at' => (new Carbon)->formatLocalized('%Y-%m-%d')
+            'created_at' => Carbon::now()->toDateString()
         ]);
     }
 }

@@ -16,15 +16,16 @@ class TradeController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $attributes = array_filter($request->all());
+        $data = array_filter($request->all());
         $map = [];
         $trades = [];
-        if (isset($attributes['order_num']) || isset($attributes['trade_num'])) {
-            if (isset($attributes['order_num']) && $attributes['order_num'] != '') {
-                $map['order_num'] = $attributes['order_num'];
+        // TODO 搜索可优化
+        if (isset($data['order_num']) || isset($data['trade_num'])) {
+            if (isset($data['order_num']) && $data['order_num'] != '') {
+                $map['order_num'] = $data['order_num'];
             }
-            if (isset($attributes['trade_num']) && $attributes['trade_num']) {
-                $map['trade_num'] = $attributes['trade_num'];
+            if (isset($data['trade_num']) && $data['trade_num']) {
+                $map['trade_num'] = $data['trade_num'];
             }
             if (isset($attributes['pay_type']) && $attributes['pay_type']) {
                 $map['pay_type'] = $attributes['pay_type'];

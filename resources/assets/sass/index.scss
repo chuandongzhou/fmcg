@@ -1,0 +1,876 @@
+@import "variables";
+@import "bootstrap/bootstrap/mixins";
+
+body {
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  margin-bottom: 60px;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+ul, li, p, a, h1, h2, h3, h4 {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@mixin dash-bord {
+  border-top: 1px dashed $gray-lighter;
+  border-bottom: 1px dashed $gray-lighter;
+}
+
+@mixin padding-clear {
+  padding: 0;
+}
+
+.btn-cancel {
+  color: $body-bg;
+  background-color: $brand-cancel;
+  border-color: $brand-cancel;
+}
+
+.red {
+  color: $brand-danger;
+}
+
+/*==================================================================================wholesalers begin======================================================================*/
+/*======================================header begin======================================*/
+.wholesalers-top-header {
+  .logo {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    .logo-icon {
+      height: 34px;
+      line-height: 34px;
+      display: inline-block;
+    }
+  }
+  @at-root .search {
+    .form-control {
+      outline: none;
+      border: 1px solid $brand-primary;
+    }
+  }
+}
+
+.right-search {
+  padding: 15px 0;
+}
+
+.wholesalers-header {
+  .container {
+    .active {
+      a {
+        color: $body-bg;
+        background-color: $brand-primary;
+      }
+    }
+    .menu-wrap {
+      position: relative;
+      &:hover {
+        .a-menu {
+          display: block;
+        }
+      }
+      .a-menu {
+        position: absolute;
+        z-index: 2;
+        display: none;
+        background-color: $brand-primary;
+        li {
+          float: left;
+          margin-right: 1px;
+          .menu-hide {
+            color: $body-bg;
+          }
+          .item {
+            width: 104px;
+          }
+          a {
+            display: inline-block;
+            height: 20px;
+            text-align: center;
+            font-size: 11px;
+          }
+          &:hover {
+            .secondary-menu {
+              display: block;
+            }
+            a.menu-hide {
+              background: $brand-info;
+            }
+          }
+        }
+      }
+      .secondary-menu {
+        display: none;
+        position: absolute;
+        top: 1px;
+        left: 105px;
+        padding: 2px 3px;
+        min-width: 500px;
+        background-color: $body-bg;
+        color: $gray;
+        .second-menu-item {
+          width: 49%;
+          float: left;
+          .item {
+            text-align: left;
+          }
+          .three-menu {
+            a {
+              color: $gray-base
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+.panel-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.modal {
+  .address-wrap {
+    height: 80px;
+    padding: 0;
+    position: relative;
+    label {
+      display: inline-block;
+      position: absolute;
+      height: 100%;
+      line-height: 80px;
+      top: 0;
+    }
+    textarea {
+      @include size(70%, 80%);
+      margin-left: 80px;
+      margin-top: 10px;
+    }
+  }
+}
+
+/*======================================header end======================================*/
+
+/*======================================index begin======================================*/
+.index {
+  .left-store-logo {
+    .store-logo {
+      width: 100%;
+      height: 300px;
+      border: 1px solid $gray-lighter;
+    }
+  }
+  .store {
+    .store-panel {
+      width: 100%;
+      padding: 8px 0;
+      @include dash-bord;
+      .avatar {
+        @include square(70px);
+        border-radius: 50%;
+        float: left;
+      }
+      .store-msg {
+        margin-left: 80px;
+        li {
+          padding: 2px 0;
+        }
+      }
+    }
+
+    .address-panel {
+      @include dash-bord;
+      padding: 10px 0;
+      margin-top: -1px;
+      ul {
+        padding: 10px 0;
+        .address-panel-item {
+          margin-left: 80px;
+          .panel-name {
+            display: block;
+            color: $gray-light;
+            margin-bottom: 5px;
+          }
+        }
+        .icon {
+          background: url('../image/address-icon.png') no-repeat center;
+          @include square(50px);
+          display: inline-block;
+          float: left;
+          margin-left: 20px;
+        }
+        .icon-tel {
+          background-position: 0 0;
+        }
+        .icon-address {
+          background-position: 0 -100px;
+        }
+        .icon-address {
+          background-position: 0 -128px;
+        }
+      }
+    }
+  }
+
+  .nav-wrap {
+    background-color: $gray-plain;
+    margin: 30px 0;
+    height: 40px;
+    li {
+      padding: 0;
+      a {
+        color: $gray-light;
+        padding: 0 15px;
+        line-height: 40px;
+        &:hover {
+          background-color: $gray-plain;
+        }
+      }
+    }
+    .active {
+      a {
+        background-color: $gray-plain;
+        color: $brand-primary;
+        border-bottom: 2px solid $brand-primary;
+      }
+    }
+  }
+  .list-penal {
+    .commodity {
+      .commodity-img {
+        width: 100%;
+        display: inline-block;
+      }
+      .commodity-name {
+        @extend .commodity-img;
+        background-color: $gray-plain;
+        padding: 10px 5px;
+      }
+      .sell-panel {
+        @extend .commodity-name;
+        .money {
+          color: $brand-danger;
+          font-weight: bolder;
+        }
+
+      }
+    }
+  }
+}
+
+/*======================================index end======================================*/
+
+/*======================================my-goods begin======================================*/
+.my-goods {
+  .controls {
+    padding: 20px 0;
+    .item {
+      background-color: $blue-light;
+      padding: 15px 15px;
+      .control {
+        height: 27px;
+        line-height: 13px;
+      }
+      .search {
+        margin-bottom: 3px;
+      }
+    }
+  }
+
+  .sort {
+    margin-bottom: 40px;
+    color: $gray-light;
+    .sort-item {
+      border: 1px solid $gray-lighter;
+      padding: 5px 15px;
+    }
+    .sort-name {
+      margin-top: -1px;
+    }
+    .package {
+      @extend .sort-name;
+    }
+  }
+  .menu {
+    text-align: center;
+    padding: 0;
+    a {
+      color: $gray-light;
+    }
+    .go-back {
+      padding: 10px 5px;
+      width: 60%;
+      display: inline-block;
+      border: 1px solid $gray-lighter;
+    }
+    .menu-list {
+      border: 1px solid $gray-lighter;
+      width: 60%;
+      margin: -1px auto auto auto;
+      a {
+        display: inline-block;
+        width: 100%;
+        padding: 10px 0;
+      }
+    }
+  }
+}
+
+/*======================================my-goods end======================================*/
+/*======================================goods-detail begin======================================*/
+.goods-detail {
+  .operating {
+    padding: 10px 0;
+    line-height: 33px;
+    .btn-list {
+      padding: 0;
+      .btn-remove {
+        color: $body-bg;
+        background-color: $gray-lighter;
+      }
+    }
+  }
+  .good-wrap {
+    border: 1px solid $gray-plain-light;
+    padding: 10px 0;
+    .commodity-img {
+      padding-top: 5px;
+      .commodity {
+        @include size(90%, 90%);
+      }
+    }
+    .detail-list-wrap {
+      li {
+        padding: 5px 0;
+
+      }
+      .left-list {
+        margin-right: 50px;
+      }
+    }
+  }
+  .delivery-wrap {
+    padding: 15px 0;
+    .switching {
+      padding: 0;
+      border: 1px solid $gray-lighter;
+      a {
+        display: inline-block;
+        height: 33px;
+        line-height: 33px;
+        padding: 0 15px;
+        border-left: 1px solid $gray-lighter;
+        border-right: 1px solid $gray-lighter;
+        margin-left: -1px;
+        color: $gray;
+        &:last-of-type {
+          margin-left: -5px;
+        }
+        &.active {
+          color: $brand-info;
+          border-bottom: 3px solid $brand-primary;
+        }
+      }
+    }
+    .location {
+      padding: 0;
+      p {
+        padding: 5px 0;
+        input {
+          width: 30%;
+        }
+        .address-map {
+          @include size(30%, 250px);
+        }
+      }
+    }
+  }
+}
+
+/*======================================goods-detail end======================================*/
+/*======================================goods-editor begin======================================*/
+.upload-progress-wrap {
+  padding-left: 83px;
+  .upload-img-item {
+    position: relative;
+    .file-name {
+      position: absolute;
+      top: 0;
+    }
+    .progress-wrap {
+      width: 50%;
+      margin: 8px 0 7px 20%;
+      height: 10px;
+    }
+  }
+}
+
+.upload-item {
+  background-color: $gray-plain-light;
+  border-radius: 1px;
+  padding: 0 10px;
+  @include size(60%, 25px);
+  margin: 5px 0;
+  line-height: 25px;
+  span {
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+  }
+}
+
+.goods-editor {
+  .editor-panel {
+    border: 1px solid $gray-plain-light;
+    .editor-wrap {
+      padding: 10px 15px;
+      .editor-item {
+        padding: 5px 0;
+        .narrow {
+          width: 80px;
+        }
+        .items-item {
+          display: inline-block;
+          padding-right: 40px;
+          position: relative;
+          .checks {
+            display: inline-block;
+            width: 60px;
+          }
+        }
+        .right-item {
+          position: absolute;
+          left: 40%;
+        }
+      }
+      .promotions-msg {
+        height: 80px;
+        position: relative;
+        label {
+          height: 100%;
+          display: inline-block;
+          position: absolute;
+          line-height: 80px;
+          top: 0;
+        }
+        textarea {
+          margin-left: 70px;
+          @include size(65%, 100%)
+        }
+      }
+    }
+    .right-save {
+      padding: 15px 0;
+    }
+  }
+  .content-wrap {
+    .add-address {
+      margin: 15px 0;
+    }
+    .item {
+      @extend .upload-item;
+    }
+    .map {
+      margin: 10px 0;
+    }
+    .upload-img {
+      @extend .add-address;
+      @at-root .upload {
+        display: inline-block;
+        position: relative;
+        input {
+          position: absolute;
+          left: 0;
+          top: 0;
+          @include square(100%);
+          opacity: 0;
+        }
+      }
+    }
+    .upload-wrap {
+      @extend .upload-progress-wrap;
+    }
+    .preview-wrap {
+      padding: 15px;
+      p {
+        padding: 10px 0;
+      }
+    }
+    .graphic-wrap {
+      @extend .preview-wrap;
+      textarea {
+        @include size(80%, 100px);
+      }
+    }
+  }
+}
+
+/*======================================goods-editor end======================================*/
+/*======================================wholesalers-management begin======================================*/
+.wholesalers-management {
+  .notice-bar {
+    @include padding-clear;
+    border-bottom: 1px solid $brand-primary;
+  }
+
+  .pay-detail {
+    @extend .right-search;
+    .item {
+      display: inline-block;
+      padding: 5px 25px 5px 0;
+      font-size: 12px;
+      input {
+        width: 80px;
+      }
+    }
+  }
+
+  .order-form-list {
+    border: 1px solid $blue-light;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    div {
+      height: 100%;
+    }
+    .list-title {
+      padding: 10px 15px;
+      background-color: $blue-light;
+      span {
+        margin-left: 15px;
+      }
+    }
+    .list-content {
+      li {
+        padding: 15px;
+        span {
+          display: inline-block;
+          margin-left: 15%;
+        }
+        .product-name {
+          margin-left: 10px;
+          color: $gray;
+        }
+      }
+    }
+    .order-form-operating {
+      p {
+        padding: 5px 0;
+        line-height: 20px;
+        &:first-of-type {
+          margin-top: 45px;
+        }
+        .btn {
+          padding: 5px 20px;
+        }
+      }
+    }
+    .order-form-detail {
+      @extend .order-form-operating;
+      p {
+        padding: 10px 0;
+      }
+
+    }
+
+  }
+  .order-process {
+    border: 1px solid $blue-light;
+    margin: 15px 0;
+    padding: 10px 18px;
+    ul {
+      li {
+        padding: 5px 0;
+      }
+    }
+  }
+}
+
+/*======================================wholesalers-management end======================================*/
+/*======================================personal-center begin======================================*/
+.personal-center {
+  .switching {
+    margin: 40px 0 20px 0;
+    padding: 0;
+    border: 1px solid $gray-lighter;
+    a {
+      border-left: 1px solid $gray-lighter;
+      border-right: 1px solid $gray-lighter;
+      margin-left: -5px;
+      color: $gray;
+      &:first-of-type {
+        margin-left: -1px;
+      }
+      &.active {
+        border-top: 5px solid $brand-primary;
+        line-height: 15px;
+      }
+    }
+  }
+  .upload-picture {
+    padding: 10px 0;
+    .upload-wrap {
+      @extend .upload-progress-wrap;
+      margin-top: 15px;
+      .item {
+        @extend .upload-item;
+      }
+    }
+  }
+  .list-wrap {
+    padding: 10px 0;
+    p {
+      padding: 10px 0;
+      .upload-img {
+        vertical-align: top;
+        @include size(150px, 100px);
+      }
+      input {
+        padding: 3px 0;
+        width: 30%;
+        &.minimum-amount {
+          width: 100px;
+        }
+      }
+      textarea {
+        vertical-align: top;
+        @include size(50%, 80px);
+      }
+    }
+    .upload {
+      margin-left: 15%;
+    }
+  }
+  .preview-wrap {
+    padding: 10px 0;
+    .picture-preview {
+      padding: 10px 0;
+    }
+  }
+  .left-panel {
+    padding: 10px 0;
+    @at-root .item {
+      padding: 10px 0;
+      .address-norm {
+        height: 25px;
+        margin-top: 10px;
+        li {
+          float: left;
+          border: 1px solid $gray-lighter;
+          @include size(10%, 100%);
+          text-align: center;
+          margin-left: -1px;
+        }
+      }
+
+      .address-map {
+        margin-top: 10px;
+        @include size(300px, 250px);
+      }
+    }
+  }
+  .right-panel {
+    padding: 10px 15px;
+    .address-item {
+      .item {
+        @extend .upload-item;
+        width: 100%;
+      }
+    }
+  }
+  .title-name {
+    display: inline-block;
+    width: 80px;
+  }
+}
+
+/*======================================personal-center end======================================*/
+/*======================================order-detail begin======================================*/
+.order-detail {
+  .order-tracking {
+    background-color: $gray-plain-light;
+    border: 1px solid $brand-primary;
+    padding: 10px 15px;
+    .orders-submit-detail {
+      .submit-detail-item {
+        margin: 10px;
+        height: 40px;
+        &:first-of-type {
+          border-bottom: 2px solid $gray-lighter;
+          line-height: 30px;
+        }
+        li {
+          float: left;
+          @include size(30%, 100%);
+          &.time {
+            .clock {
+              display: block;
+              padding: 0 0 0 30px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .order-receipt {
+    margin-top: 40px;
+    padding: 10px 15px;
+    border: 1px solid $gray-lighter;
+    .order-information {
+      li {
+        padding-bottom: 15px;
+        &.title {
+          font-weight: bold;
+          font-size: 16px;
+        }
+        .remarks-content {
+          padding: 10px 0;
+        }
+      }
+    }
+    .receiving-information {
+      @extend .order-information;
+    }
+  }
+  .table-row {
+    .table-col {
+      padding: 30px 0 0 0;
+      table {
+        thead {
+          tr {
+            th {
+              text-align: center;
+              border: none;
+              background-color: $blue-light;
+            }
+          }
+        }
+        tbody {
+          tr {
+            td {
+              padding: 30px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*======================================order-detail end======================================*/
+/*======================================order-report begin======================================*/
+.order-report {
+  .content {
+    .title {
+      padding: 0;
+      margin-bottom: 10px;
+      border-bottom: 1px solid $gray-plain-light;
+      a {
+        display: inline-block;
+        padding: 10px 25px;
+        color: $gray;
+        margin-bottom: -1px;
+        &.active {
+          border-bottom: 1px solid $brand-primary;
+          color: $brand-primary;
+        }
+      }
+    }
+    .enter-item {
+      padding: 0;
+      .enter {
+        height: 30px;
+        margin-right: 5px;
+        vertical-align: middle;
+      }
+      .btn {
+        @extend .enter;
+        width: 100px;
+        margin: 5px;
+      }
+    }
+    .tables {
+      padding: 10px 0;
+      .title-table {
+        padding: 10px 0;
+        font-weight: bold;
+      }
+      table {
+        margin: 0;
+        thead {
+          tr {
+            td {
+              text-align: center;
+              border: none;
+              background-color: $gray-plain;
+              color: $gray-light;
+            }
+          }
+        }
+        tbody {
+          tr {
+            td {
+              text-align: center;
+              padding: 15px 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*======================================order-report end======================================*/
+/*==================================================================================wholesalers end======================================================================*/
+/*==================================================================================dealer begin======================================================================*/
+.dealer-top-header {
+  .city-wrap {
+    .location-panel {
+      padding: 10px;
+      /*border:1px solid $gray-plain-light;
+      border-bottom-color:$body-bg;*/
+      width: 120px;
+      position:relative;
+      z-index:5;
+      .location-text{
+        color: $gray;
+        text-decoration: none;
+        &:hover{
+
+        }
+      }
+    }
+    .city-list {
+      border: 1px solid $gray-plain-light;
+      margin-top: -1px;
+      position: relative;
+      z-index:3;
+      display: none;
+      .list-wrap {
+        .item {
+          float: left;
+          width: 70px;
+          text-align: center;
+          a {
+            padding: 5px 8px;
+            color: $gray;
+            text-decoration: none;
+            font-size: 13px;
+            &:hover {
+              background-color: $gray-plain;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/*==================================================================================dealer end======================================================================*/

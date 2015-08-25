@@ -17,7 +17,7 @@ class PromoterController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->input('name') ? $request->input('name') : '';
+        $name = $request->input('name');
         if ($name) {
             $promoters = Promoter::where('name', 'like', $name . '%')->paginate();
         } else {
@@ -45,7 +45,6 @@ class PromoterController extends Controller
     public function store(Requests\Admin\CreatePromoterRequest $request)
     {
         $attributes = $request->all();
-        $attributes['spreading_code'] = strtoupper(uniqid());
         if (Promoter::create($attributes)->exists) {
             return $this->success('添加推广人员成功');
         }
