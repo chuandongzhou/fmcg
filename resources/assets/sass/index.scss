@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/bootstrap/mixins";
+@import "bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -202,7 +202,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
         .icon {
-          background: url('../image/address-icon.png') no-repeat center;
+          background: url('../images/address-icon.png') no-repeat center;
           @include square(50px);
           display: inline-block;
           float: left;

@@ -50,6 +50,6 @@ class DataStatisticsController extends Controller
         ];
         return view('admin.statistics.index', ['totleUser' => $totleUser, 'statistics' => $statistics, 'maxArray' => $maxArray , 'time' => $time]);
     }
-    // TODO 导出的方法
+    // TODO: 导出的方法
     // 每日订单统计
 }

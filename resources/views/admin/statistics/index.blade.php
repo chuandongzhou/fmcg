@@ -37,7 +37,7 @@
                     <td>{{ array_get($statistics['active_user'] , 0 ,0) }}</td>
                     <td>{{ array_get($statistics['active_user'] , 1 ,0) }}</td>
                     <td>{{ array_get($statistics['active_user'] , 2 ,0) }}</td>
-                    <td>{{ array_sum($statistics['active_user']) }}</td>
+                    <td>{{ isset($statistics['active_user']) ? array_sum($statistics['active_user']) : 0 }}</td>
                 </tr>
             </table>
         </div>

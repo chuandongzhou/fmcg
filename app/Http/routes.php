@@ -4,9 +4,14 @@
  * 前台
  */
 $router->group(['namespace' => 'Index'], function ($router) {
-    $router->get('/', ['as' => 'index', 'uses' => 'HomeController@index']);                     // 首页
-    $router->group(['prefix' => 'wholesaler/admin', 'namespace' => 'Wholesaler'], function ($router) {
-        $router->controller('/', 'AdminController');    //批发商管理首页
+
+    $router->get('/', 'HomeController@index');              //商家管理首页
+    $router->controller('shop', 'ShopController');
+
+    $router->group(['prefix' => 'wholesaler', 'namespace' => 'Wholesaler'], function ($router) {
+
+       // $router->controller('order', 'OrderController');    //批发商订单
+
     });
 
 });

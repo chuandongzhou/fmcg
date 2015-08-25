@@ -28,6 +28,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     height: 34px;
     line-height: 34px;
     display: inline-block; }
+
 .search .form-control {
   outline: none;
   border: 1px solid #4cb9fe; }
@@ -38,6 +39,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .wholesalers-header .container .active a {
   color: #fff;
   background-color: #4cb9fe; }
+
 .wholesalers-header .container .menu-wrap {
   position: relative; }
   .wholesalers-header .container .menu-wrap:hover .a-menu {
@@ -107,6 +109,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   width: 100%;
   height: 300px;
   border: 1px solid #b4b4b4; }
+
 .index .store .store-panel {
   width: 100%;
   padding: 8px 0;
@@ -121,6 +124,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin-left: 80px; }
     .index .store .store-panel .store-msg li {
       padding: 2px 0; }
+
 .index .store .address-panel {
   border-top: 1px dashed #b4b4b4;
   border-bottom: 1px dashed #b4b4b4;
@@ -135,7 +139,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: #777777;
         margin-bottom: 5px; }
     .index .store .address-panel ul .icon {
-      background: url("../image/address-icon.png") no-repeat center;
+      background: url("../images/address-icon.png") no-repeat center;
       width: 50px;
       height: 50px;
       display: inline-block;
@@ -147,6 +151,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-position: 0 -100px; }
     .index .store .address-panel ul .icon-address {
       background-position: 0 -128px; }
+
 .index .nav-wrap {
   background-color: #f2f2f2;
   margin: 30px 0;
@@ -163,12 +168,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     background-color: #f2f2f2;
     color: #4cb9fe;
     border-bottom: 2px solid #4cb9fe; }
+
 .index .list-penal .commodity .commodity-img, .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
   width: 100%;
   display: inline-block; }
+
 .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
   background-color: #f2f2f2;
   padding: 10px 5px; }
+
 .index .list-penal .commodity .sell-panel .money {
   color: #fe462f;
   font-weight: bolder; }
@@ -185,6 +193,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       line-height: 13px; }
     .my-goods .controls .item .search {
       margin-bottom: 3px; }
+
 .my-goods .sort {
   margin-bottom: 40px;
   color: #777777; }
@@ -193,6 +202,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 5px 15px; }
   .my-goods .sort .sort-name, .my-goods .sort .package {
     margin-top: -1px; }
+
 .my-goods .menu {
   text-align: center;
   padding: 0; }
@@ -222,6 +232,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .goods-detail .operating .btn-list .btn-remove {
       color: #fff;
       background-color: #b4b4b4; }
+
 .goods-detail .good-wrap {
   border: 1px solid #e0e0e0;
   padding: 10px 0; }
@@ -234,6 +245,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 5px 0; }
   .goods-detail .good-wrap .detail-list-wrap .left-list {
     margin-right: 50px; }
+
 .goods-detail .delivery-wrap {
   padding: 15px 0; }
   .goods-detail .delivery-wrap .switching {
@@ -323,10 +335,13 @@ ul, li, p, a, h1, h2, h3, h4 {
         height: 100%; }
   .goods-editor .editor-panel .right-save {
     padding: 15px 0; }
+
 .goods-editor .content-wrap .add-address, .goods-editor .content-wrap .upload-img {
   margin: 15px 0; }
+
 .goods-editor .content-wrap .map {
   margin: 10px 0; }
+
 .upload {
   display: inline-block;
   position: relative; }
@@ -337,10 +352,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 100%;
     height: 100%;
     opacity: 0; }
+
 .goods-editor .content-wrap .preview-wrap, .goods-editor .content-wrap .graphic-wrap {
   padding: 15px; }
   .goods-editor .content-wrap .preview-wrap p, .goods-editor .content-wrap .graphic-wrap p {
     padding: 10px 0; }
+
 .goods-editor .content-wrap .graphic-wrap textarea {
   width: 80%;
   height: 100px; }
@@ -350,12 +367,14 @@ ul, li, p, a, h1, h2, h3, h4 {
 .wholesalers-management .notice-bar {
   padding: 0;
   border-bottom: 1px solid #4cb9fe; }
+
 .wholesalers-management .pay-detail .item {
   display: inline-block;
   padding: 5px 25px 5px 0;
   font-size: 12px; }
   .wholesalers-management .pay-detail .item input {
     width: 80px; }
+
 .wholesalers-management .order-form-list {
   border: 1px solid #cae6f7;
   margin-top: 10px;
@@ -384,6 +403,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 5px 20px; }
   .wholesalers-management .order-form-list .order-form-detail p {
     padding: 10px 0; }
+
 .wholesalers-management .order-process {
   border: 1px solid #cae6f7;
   margin: 15px 0;
@@ -407,10 +427,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     .personal-center .switching a.active {
       border-top: 5px solid #4cb9fe;
       line-height: 15px; }
+
 .personal-center .upload-picture {
   padding: 10px 0; }
   .personal-center .upload-picture .upload-wrap {
     margin-top: 15px; }
+
 .personal-center .list-wrap {
   padding: 10px 0; }
   .personal-center .list-wrap p {
@@ -430,10 +452,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       height: 80px; }
   .personal-center .list-wrap .upload {
     margin-left: 15%; }
+
 .personal-center .preview-wrap, .personal-center .goods-editor .content-wrap .graphic-wrap, .goods-editor .content-wrap .personal-center .graphic-wrap {
   padding: 10px 0; }
   .personal-center .preview-wrap .picture-preview, .personal-center .goods-editor .content-wrap .graphic-wrap .picture-preview, .goods-editor .content-wrap .personal-center .graphic-wrap .picture-preview {
     padding: 10px 0; }
+
 .personal-center .left-panel {
   padding: 10px 0; }
   .item {
@@ -452,10 +476,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       margin-top: 10px;
       width: 300px;
       height: 250px; }
+
 .personal-center .right-panel {
   padding: 10px 15px; }
   .personal-center .right-panel .address-item .item {
     width: 100%; }
+
 .personal-center .title-name {
   display: inline-block;
   width: 80px; }
@@ -479,6 +505,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .order-detail .order-tracking .orders-submit-detail .submit-detail-item li.time .clock {
         display: block;
         padding: 0 0 0 30px; }
+
 .order-detail .order-receipt {
   margin-top: 40px;
   padding: 10px 15px;
@@ -490,6 +517,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       font-size: 16px; }
     .order-detail .order-receipt .order-information li .remarks-content, .order-detail .order-receipt .receiving-information li .remarks-content {
       padding: 10px 0; }
+
 .order-detail .table-row .table-col {
   padding: 30px 0 0 0; }
   .order-detail .table-row .table-col table thead tr th {
@@ -513,6 +541,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .order-report .content .title a.active {
       border-bottom: 1px solid #4cb9fe;
       color: #4cb9fe; }
+
 .order-report .content .enter-item {
   padding: 0; }
   .order-report .content .enter-item .enter, .order-report .content .enter-item .btn {
@@ -522,6 +551,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   .order-report .content .enter-item .btn {
     width: 100px;
     margin: 5px; }
+
 .order-report .content .tables {
   padding: 10px 0; }
   .order-report .content .tables .title-table {
@@ -543,15 +573,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*==================================================================================dealer begin======================================================================*/
 .dealer-top-header .city-wrap .location-panel {
   padding: 10px;
+  /*border:1px solid $gray-plain-light;
+      border-bottom-color:$body-bg;*/
   width: 120px;
   position: relative;
   z-index: 5; }
   .dealer-top-header .city-wrap .location-panel .location-text {
     color: #555555;
     text-decoration: none; }
-    .dealer-top-header .city-wrap .location-panel .location-text:hover {
-      border: 1px solid #e0e0e0;
-      border-bottom-color: #fff; }
+
 .dealer-top-header .city-wrap .city-list {
   border: 1px solid #e0e0e0;
   margin-top: -1px;
@@ -571,5 +601,3 @@ ul, li, p, a, h1, h2, h3, h4 {
         background-color: #f2f2f2; }
 
 /*==================================================================================dealer end======================================================================*/
-
-/*# sourceMappingURL=index.css.map */

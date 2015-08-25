@@ -11,9 +11,9 @@
                 <label class="col-sm-2 control-label" for="username">店家LOGO:</label>
 
                 <div class="col-sm-10 col-md-6">
-                    <button class="btn btn-primary btn-sm" data-height="128" data-width="128"
+                    <button class="btn btn-primary btn-sm" data-height="100" data-width="100"
                             data-target="#cropperModal" data-toggle="modal" data-name="logo" type="button">
-                        本地上传(128x128)
+                        本地上传(100x100)
                     </button>
                     <div class="image-preview">
                         <img class="img-thumbnail"
@@ -79,10 +79,10 @@
                 <label class="col-sm-2 control-label">图片</label>
 
                 <div class="col-sm-10">
-                    <button data-height="225" data-width="300" data-target="#cropperModal" data-toggle="modal"
+                    <button data-height="400" data-width="1000" data-target="#cropperModal" data-toggle="modal"
                             data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
                             id="shop-pic-upload">
-                        请选择图片文件(300x225)
+                        请选择图片文件(1000x400)
                     </button>
                     <div class="row shop-pictures">
                         <div class="hidden">

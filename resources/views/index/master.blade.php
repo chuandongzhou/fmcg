@@ -20,7 +20,120 @@
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
     <![endif]-->
+    <div class="container wholesalers-top-header">
+        <div class="col-sm-4 logo">
+            <a class="logo-icon">LOGO</a>
+        </div>
+        <div class="col-sm-4 col-sm-push-4 right-search">
+            <form class="search" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-describedby="course-search">
+                <span class="input-group-btn btn-primary">
+                    <button class="btn btn-primary" type="submit">搜本店</button>
+                </span>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <nav class="navbar navbar-default wholesalers-header">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">首页</a></li>
+                    <li class="menu-wrap">
+                        <a href="#" class="menu-hide item menu-wrap-title">商品分类</a>
+                        <ul class="a-menu">
+                            <li>
+                                <a href="#" class="menu-hide item">酒水饮料</a>
+                                <ul class="secondary-menu">
+                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="menu-hide item">休闲食品</a>
+                                <ul class="secondary-menu">
+                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
+
+                                        <div class="three-menu">
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 |</a>
+                                            <a href="#">酒水饮料 </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="menu-hide item">调味品</a></li>
+                        </ul>
+
+                    </li>
+                    <li><a href="#">店家信息</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="right"><a href="#">控制台</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 @stop
 
 @section('body')
@@ -30,7 +143,9 @@
 
 
 @section('footer')
-
+    <footer class="panel-footer">
+        <div class="container text-center text-muted">&copy;2003-2015 版权所有</div>
+    </footer>
 @stop
 
 @section('js')

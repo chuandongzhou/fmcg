@@ -16,7 +16,7 @@ class UpdatePromoterRequest extends Request
         $promoter = $this->route('promoter');
         return [
             'name' => 'required|unique:promoter,name,' . $promoter->id,
-            'contact => required'
+            'contact' => 'required'
         ];
     }
 }

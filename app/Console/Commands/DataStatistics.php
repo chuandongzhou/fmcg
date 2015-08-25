@@ -60,7 +60,7 @@ class DataStatistics extends Command
             'wholesaler_reg_num' => $wholesalersReg,
             'retailer_reg_num' => $retailerReg,
             'supplier_reg_num' => $supplierReg,
-            'created_at' => Carbon::now()->toDateString()
+            'created_at' => new Carbon()
         ]);
     }
 }
