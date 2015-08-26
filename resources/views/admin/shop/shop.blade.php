@@ -40,12 +40,21 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="username">联系方式:</label>
+                <label class="col-sm-2 control-label" for="contact_info">联系方式:</label>
 
                 <div class="col-sm-10 col-md-6">
                     <input class="form-control" id="contact_info" name="contact_info" placeholder="请输入联系方式"
                            value="{{ $shop->contact_info }}"
                            type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="min_money">最低配送额:</label>
+
+                <div class="col-sm-10 col-md-6">
+                    <input class="inline-control" id="min_money" name="min_money" placeholder="请输入最低配送额"
+                           value="{{ $shop->min_money }}"
+                           type="text">元
                 </div>
             </div>
             <div class="form-group">

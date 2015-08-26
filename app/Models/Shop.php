@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\ShopService;
+use App\Services\ImageUploadService;
 
 class Shop extends Model
 {
@@ -174,7 +174,7 @@ class Shop extends Model
     public function setImagesAttribute($images)
     {
         //格式化图片数组
-        $imagesArr = (new ShopService($images))->formatImagePost();
+        $imagesArr = (new ImageUploadService($images))->formatImagePost();
         //删除的图片
         $files = $this->files();
         if (!empty (array_filter($images['id']))) {

@@ -8,7 +8,7 @@ namespace App\Services;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class ShopService
+class ImageUploadService
 {
 
     protected $array = [];

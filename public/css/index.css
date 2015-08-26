@@ -82,6 +82,14 @@ ul, li, p, a, h1, h2, h3, h4 {
       .wholesalers-header .container .menu-wrap .secondary-menu .second-menu-item .three-menu a {
         color: #000; }
 
+.wholesalers-header .container .collect .btn {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  background-color: #fff;
+  color: #4cb9fe;
+  vertical-align: middle; }
+
 .panel-footer {
   position: absolute;
   bottom: 0;
@@ -105,70 +113,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================header end======================================*/
 /*======================================index begin======================================*/
-.index .left-store-logo .store-logo {
-  width: 100%;
-  height: 300px;
-  border: 1px solid #b4b4b4; }
-
-.index .store .store-panel {
-  width: 100%;
-  padding: 8px 0;
-  border-top: 1px dashed #b4b4b4;
-  border-bottom: 1px dashed #b4b4b4; }
-  .index .store .store-panel .avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    float: left; }
-  .index .store .store-panel .store-msg {
-    margin-left: 80px; }
-    .index .store .store-panel .store-msg li {
-      padding: 2px 0; }
-
-.index .store .address-panel {
-  border-top: 1px dashed #b4b4b4;
-  border-bottom: 1px dashed #b4b4b4;
-  padding: 10px 0;
-  margin-top: -1px; }
-  .index .store .address-panel ul {
-    padding: 10px 0; }
-    .index .store .address-panel ul .address-panel-item {
-      margin-left: 80px; }
-      .index .store .address-panel ul .address-panel-item .panel-name {
-        display: block;
-        color: #777777;
-        margin-bottom: 5px; }
-    .index .store .address-panel ul .icon {
-      background: url("../images/address-icon.png") no-repeat center;
-      width: 50px;
-      height: 50px;
-      display: inline-block;
-      float: left;
-      margin-left: 20px; }
-    .index .store .address-panel ul .icon-tel {
-      background-position: 0 0; }
-    .index .store .address-panel ul .icon-address {
-      background-position: 0 -100px; }
-    .index .store .address-panel ul .icon-address {
-      background-position: 0 -128px; }
-
-.index .nav-wrap {
-  background-color: #f2f2f2;
-  margin: 30px 0;
-  height: 40px; }
-  .index .nav-wrap li {
-    padding: 0; }
-    .index .nav-wrap li a {
-      color: #777777;
-      padding: 0 15px;
-      line-height: 40px; }
-      .index .nav-wrap li a:hover {
-        background-color: #f2f2f2; }
-  .index .nav-wrap .active a {
-    background-color: #f2f2f2;
-    color: #4cb9fe;
-    border-bottom: 2px solid #4cb9fe; }
-
 .index .list-penal .commodity .commodity-img, .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
   width: 100%;
   display: inline-block; }
@@ -180,6 +124,95 @@ ul, li, p, a, h1, h2, h3, h4 {
 .index .list-penal .commodity .sell-panel .money {
   color: #fe462f;
   font-weight: bolder; }
+
+.index .list-penal .img-wrap {
+  position: relative; }
+  .index .list-penal .img-wrap .prompt {
+    position: absolute;
+    display: inline-block;
+    width: 117px;
+    height: 117px;
+    top: 0;
+    left: 0;
+    background: url("../images/titles.png") no-repeat left top; }
+  .index .list-penal .img-wrap .lack {
+    background-position: 0 0; }
+  .index .list-penal .img-wrap .promotions {
+    background-position: 0 -150px; }
+  .index .list-penal .img-wrap .new-listing {
+    background-position: 0 -300px; }
+
+.wholesalers-index .left-store-logo .banner .item {
+  padding: 0; }
+  .wholesalers-index .left-store-logo .banner .item img {
+    width: 100%;
+    max-width: 1000px;
+    height: 370px;
+    border: 1px solid #b4b4b4; }
+
+.wholesalers-index .store {
+  border-top: 1px dashed #b4b4b4;
+  border-bottom: 1px dashed #b4b4b4;
+  height: 370px;
+  padding: 0; }
+  .wholesalers-index .store .store-panel {
+    width: 100%;
+    padding: 10px 0; }
+    .wholesalers-index .store .store-panel .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      float: left; }
+    .wholesalers-index .store .store-panel .store-msg {
+      margin-left: 80px; }
+      .wholesalers-index .store .store-panel .store-msg li {
+        padding: 1px 0; }
+  .wholesalers-index .store .address-panel {
+    border-top: 1px dashed #b4b4b4;
+    margin-top: -1px; }
+    .wholesalers-index .store .address-panel ul {
+      padding: 10px 0; }
+      .wholesalers-index .store .address-panel ul .address-panel-item {
+        margin-left: 80px; }
+        .wholesalers-index .store .address-panel ul .address-panel-item .panel-name {
+          display: block;
+          color: #777777;
+          margin-bottom: 5px; }
+        .wholesalers-index .store .address-panel ul .address-panel-item .address-list {
+          display: inline-block; }
+          .wholesalers-index .store .address-panel ul .address-panel-item .address-list span {
+            display: block;
+            padding: 2px; }
+      .wholesalers-index .store .address-panel ul .icon {
+        background: url("../images/address-icon.png") no-repeat center;
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        float: left;
+        margin-left: 20px; }
+      .wholesalers-index .store .address-panel ul .icon-tel {
+        background-position: 0 0; }
+      .wholesalers-index .store .address-panel ul .icon-address {
+        background-position: 0 -100px; }
+      .wholesalers-index .store .address-panel ul .icon-address {
+        background-position: 0 -128px; }
+
+.wholesalers-index .nav-wrap {
+  background-color: #f2f2f2;
+  margin: 30px 0;
+  height: 40px; }
+  .wholesalers-index .nav-wrap li {
+    padding: 0; }
+    .wholesalers-index .nav-wrap li a {
+      color: #777777;
+      padding: 0 15px;
+      line-height: 40px; }
+      .wholesalers-index .nav-wrap li a:hover {
+        background-color: #f2f2f2; }
+  .wholesalers-index .nav-wrap .active a {
+    background-color: #f2f2f2;
+    color: #4cb9fe;
+    border-bottom: 2px solid #4cb9fe; }
 
 /*======================================index end======================================*/
 /*======================================my-goods begin======================================*/
@@ -571,33 +604,208 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================order-report end======================================*/
 /*==================================================================================wholesalers end======================================================================*/
 /*==================================================================================dealer begin======================================================================*/
-.dealer-top-header .city-wrap .location-panel {
-  padding: 10px;
-  /*border:1px solid $gray-plain-light;
-      border-bottom-color:$body-bg;*/
-  width: 120px;
-  position: relative;
-  z-index: 5; }
-  .dealer-top-header .city-wrap .location-panel .location-text {
-    color: #555555;
-    text-decoration: none; }
+.navbar-button {
+  border: 1px solid #e0e0e0; }
+  .navbar-button .icon-bar {
+    border: 1px solid #4cb9fe; }
 
-.dealer-top-header .city-wrap .city-list {
-  border: 1px solid #e0e0e0;
-  margin-top: -1px;
-  position: relative;
-  z-index: 3;
-  display: none; }
-  .dealer-top-header .city-wrap .city-list .list-wrap .item {
-    float: left;
-    width: 70px;
-    text-align: center; }
-    .dealer-top-header .city-wrap .city-list .list-wrap .item a {
-      padding: 5px 8px;
-      color: #555555;
-      text-decoration: none;
-      font-size: 13px; }
-      .dealer-top-header .city-wrap .city-list .list-wrap .item a:hover {
-        background-color: #f2f2f2; }
+/*======================================index begin======================================*/
+.dealer-top-header {
+  /*height: 31px;
+  line-height: 31px;*/
+  width: 100%;
+  background-color: #f2f2f2; }
+  .dealer-top-header .city-wrap {
+    position: relative; }
+    .dealer-top-header .city-wrap .location-panel {
+      padding: 5px 10px;
+      width: 135px;
+      line-height: 31px;
+      border: 1px solid #f2f2f2;
+      position: relative;
+      z-index: 5; }
+      .dealer-top-header .city-wrap .location-panel .location-text {
+        color: #555555;
+        text-decoration: none; }
+    .dealer-top-header .city-wrap .city-list {
+      border: 1px solid #e0e0e0;
+      margin-top: -1px;
+      position: absolute;
+      background-color: #fff;
+      z-index: 10000;
+      display: none; }
+      .dealer-top-header .city-wrap .city-list .list-wrap .item {
+        float: left;
+        width: 70px;
+        text-align: center; }
+        .dealer-top-header .city-wrap .city-list .list-wrap .item a {
+          padding: 5px 8px;
+          color: #555555;
+          text-decoration: none;
+          font-size: 13px; }
+          .dealer-top-header .city-wrap .city-list .list-wrap .item a:hover {
+            background-color: #f2f2f2; }
+  .dealer-top-header .operating-wrap a {
+    color: #777777;
+    padding-top: 10px;
+    padding-bottom: 10px; }
+    .dealer-top-header .operating-wrap a:hover {
+      background: none; }
 
+.dealer-header .search {
+  min-width: 80%; }
+  .dealer-header .search .input-group {
+    min-width: 50%;
+    border: 1px solid #4cb9fe; }
+    .dealer-header .search .input-group .select-role {
+      display: inline-block;
+      color: #b4b4b4;
+      padding: 5px 0;
+      position: relative;
+      height: 32px;
+      width: 20%; }
+      .dealer-header .search .input-group .select-role .selected span {
+        display: inline-block;
+        width: 80%; }
+      .dealer-header .search .input-group .select-role a {
+        text-decoration: none;
+        color: #b4b4b4; }
+      .dealer-header .search .input-group .select-role .select-list {
+        display: none;
+        position: absolute;
+        bottom: -40px;
+        width: 100%;
+        z-index: 99999; }
+        .dealer-header .search .input-group .select-role .select-list li {
+          padding-right: 10px; }
+          .dealer-header .search .input-group .select-role .select-list li a {
+            color: #000; }
+    .dealer-header .search .input-group .control {
+      width: 78%;
+      height: 33px;
+      border: none;
+      outline: none; }
+    .dealer-header .search .input-group .search-btn {
+      width: 100%; }
+
+.dealer-header .right-btn li {
+  height: 100%;
+  padding: 10px; }
+  .dealer-header .right-btn li .btn {
+    padding: 5px 15px; }
+
+.categories-btn {
+  background-color: #4cb9fe;
+  padding: 0; }
+  .categories-btn .btn {
+    width: 100%; }
+
+.categories {
+  display: inline-block;
+  position: relative; }
+  .categories .menu-wrap {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 400px;
+    background-color: #409bd5;
+    z-index: 999; }
+    .categories .menu-wrap li {
+      padding: 10px 0 10px 55px;
+      color: #fff;
+      cursor: pointer; }
+      .categories .menu-wrap li:hover {
+        background-color: #f2f2f2;
+        color: #409bd5; }
+  .menu-down-layer {
+    display: none;
+    position: absolute;
+    left: 0;
+    z-index: 999;
+    background-color: #f2f2f2;
+    border: 1px solid #4cb9fe;
+    width: 995px;
+    width: 995px;
+    height: 400px;
+    padding-top: 10px; }
+    .menu-down-layer .item {
+      padding: 10px; }
+      .menu-down-layer .item label {
+        color: #777777;
+        cursor: pointer; }
+        .menu-down-layer .item label:hover {
+          color: #fe462f; }
+      .menu-down-layer .item a {
+        font-size: 13px;
+        color: #555555;
+        display: inline-block;
+        padding: 0 10px 0 8px;
+        border-left: 1px solid #e0e0e0; }
+
+.banner-wrap {
+  background-color: #d2d2d2; }
+  .banner-slide .carousel-indicators {
+    text-align: right; }
+    .banner-slide .carousel-indicators li {
+      margin: 0 5px; }
+  .banner-wrap .dealer-index-banner .carousel-inner .item {
+    padding: 0; }
+    .banner-wrap .dealer-index-banner .carousel-inner .item img {
+      width: 100%;
+      height: 400px; }
+
+.dealer-index .list-penal .title {
+  margin: 50px 0 15px 0; }
+  .dealer-index .list-penal .title h3 {
+    padding: 8px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #e0e0e0; }
+
+/*======================================index end======================================*/
+/*======================================search begin======================================*/
+.search-page .search-list-item {
+  padding: 10px 0;
+  border-bottom: 1px dashed #e0e0e0; }
+  .search-page .search-list-item a {
+    color: #000;
+    display: inline-block;
+    padding: 0 15px; }
+
+.search-page .title {
+  margin: 20px 0;
+  padding: 8px 5px 8px 15px;
+  background-color: #e0e0e0; }
+  .search-page .title a {
+    color: #000;
+    padding: 0 10px; }
+
+/*======================================search end======================================*/
+/*======================================shopping-car begin======================================*/
+.audit-step-outs .step {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  position: relative;
+  border: 1px solid red;
+  background-color: #e0e0e0; }
+  .audit-step-outs .step .triangle-right {
+    position: absolute;
+    right: -40px;
+    top: -1px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-left: 40px solid #e0e0e0;
+    border-bottom: 20px solid transparent;
+    z-index: 3; }
+
+.audit-step-outs .step-active {
+  background-color: #fe462f;
+  color: #fff; }
+  .audit-step-outs .step-active .triangle-right {
+    border-left-color: #fe462f; }
+
+/*======================================shopping-car end======================================*/
 /*==================================================================================dealer end======================================================================*/

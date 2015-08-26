@@ -6,7 +6,7 @@
 $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
-    $router->controller('shop', 'ShopController');
+    $router->controller('shop', 'ShopController');          //商家商店首页
 
     $router->group(['prefix' => 'wholesaler', 'namespace' => 'Wholesaler'], function ($router) {
 

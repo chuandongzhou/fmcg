@@ -7,7 +7,8 @@
  */
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+
+use App\Services\ImageUploadService;
 
 class Goods extends Model
 {
@@ -59,4 +60,67 @@ class Goods extends Model
     {
         return $this->hasMany('App\Models\OrderGoods');
     }
+
+    /**
+     * 关联文件表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function images()
+    {
+        return $this->morphMany('App\Models\File', 'fileable');
+    }
+
+    /**
+     * 查询热销产品
+     *
+     * @param $query
+     */
+    public function scopeHot($query)
+    {
+        $query->orderBy('sales_volume', 'desc');
+    }
+
+    /**
+     * 查询新品
+     *
+     * @param $query
+     */
+    public function scopeNew($query)
+    {
+        $query->where('is_new', 1);
+    }
+
+    /**
+     * 查询促销产品
+     * @param $query
+     */
+    public function scopePromotion($query)
+    {
+        $query->where('is_promotion', 1);
+    }
+
+    /**
+     *  设置店铺图片
+     *
+     * @param $images ['id'=>['1' ,''] , 'path'=>'']
+     * @return bool
+     */
+    public function setImagesAttribute($images)
+    {
+        //格式化图片数组
+        $imagesArr = (new ImageUploadService($images))->formatImagePost();
+        //删除的图片
+        $files = $this->files();
+        if (!empty (array_filter($images['id']))) {
+            $files = $files->whereNotIn('id', array_filter($images['id']));
+        }
+        $files->where('type', cons('shop.file_type.images'))->delete();
+
+        if (!empty($imagesArr)) {
+            return $this->associateFiles($imagesArr, 'images', 0, false);
+        }
+        return true;
+    }
+
 }

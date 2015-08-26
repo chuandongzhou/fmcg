@@ -129,6 +129,16 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
 
     }
+    .collect{
+      .btn{
+        padding-top:5px;
+        padding-bottom:5px;
+        margin-top: 10px;
+        background-color: $body-bg;
+        color:$brand-primary;
+        vertical-align: middle;
+      }
+    }
   }
 }
 
@@ -162,18 +172,70 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .index {
+  .list-penal {
+    .commodity {
+      .commodity-img {
+        width: 100%;
+        display: inline-block;
+      }
+      .commodity-name {
+        @extend .commodity-img;
+        background-color: $gray-plain;
+        padding: 10px 5px;
+      }
+      .sell-panel {
+        @extend .commodity-name;
+        .money {
+          color: $brand-danger;
+          font-weight: bolder;
+        }
+
+      }
+    }
+    .img-wrap {
+      position: relative;
+      .prompt {
+        position: absolute;
+        display: inline-block;
+        @include square(117px);
+        top: 0;
+        left: 0;
+        background: url("../images/titles.png") no-repeat left top;
+      }
+      .lack {
+        background-position: 0 0;
+      }
+      .promotions {
+        background-position: 0 -150px;
+      }
+      .new-listing {
+        background-position: 0 -300px;
+      }
+    }
+  }
+}
+
+.wholesalers-index {
   .left-store-logo {
-    .store-logo {
-      width: 100%;
-      height: 300px;
-      border: 1px solid $gray-lighter;
+    .banner {
+      .item {
+        padding: 0;
+        img {
+          width: 100%;
+          max-width: 1000px;
+          height: 370px;
+          border: 1px solid $gray-lighter;
+        }
+      }
     }
   }
   .store {
+    @include dash-bord;
+    height: 370px;
+    padding:0;
     .store-panel {
       width: 100%;
-      padding: 8px 0;
-      @include dash-bord;
+      padding: 10px 0;
       .avatar {
         @include square(70px);
         border-radius: 50%;
@@ -182,14 +244,13 @@ ul, li, p, a, h1, h2, h3, h4 {
       .store-msg {
         margin-left: 80px;
         li {
-          padding: 2px 0;
+          padding: 1px 0;
         }
       }
     }
 
     .address-panel {
-      @include dash-bord;
-      padding: 10px 0;
+      border-top:1px dashed $gray-lighter;
       margin-top: -1px;
       ul {
         padding: 10px 0;
@@ -199,6 +260,13 @@ ul, li, p, a, h1, h2, h3, h4 {
             display: block;
             color: $gray-light;
             margin-bottom: 5px;
+          }
+          .address-list{
+            display: inline-block;
+            span{
+              display: block;
+              padding: 2px;
+            }
           }
         }
         .icon {
@@ -244,27 +312,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .list-penal {
-    .commodity {
-      .commodity-img {
-        width: 100%;
-        display: inline-block;
-      }
-      .commodity-name {
-        @extend .commodity-img;
-        background-color: $gray-plain;
-        padding: 10px 5px;
-      }
-      .sell-panel {
-        @extend .commodity-name;
-        .money {
-          color: $brand-danger;
-          font-weight: bolder;
-        }
 
-      }
-    }
-  }
 }
 
 /*======================================index end======================================*/
@@ -830,29 +878,41 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================order-report end======================================*/
 /*==================================================================================wholesalers end======================================================================*/
+
 /*==================================================================================dealer begin======================================================================*/
+.navbar-button {
+  border: 1px solid $gray-plain-light;
+  .icon-bar {
+    border: 1px solid $brand-primary;
+  }
+}
+
+/*======================================index begin======================================*/
 .dealer-top-header {
+  /*height: 31px;
+  line-height: 31px;*/
+  width: 100%;
+  background-color: $gray-plain;
   .city-wrap {
+    position: relative;
     .location-panel {
-      padding: 10px;
-      /*border:1px solid $gray-plain-light;
-      border-bottom-color:$body-bg;*/
-      width: 120px;
-      position:relative;
-      z-index:5;
-      .location-text{
+      padding: 5px 10px;
+      width: 135px;
+      line-height: 31px;
+      border: 1px solid $gray-plain;
+      position: relative;
+      z-index: 5;
+      .location-text {
         color: $gray;
         text-decoration: none;
-        &:hover{
-
-        }
       }
     }
     .city-list {
       border: 1px solid $gray-plain-light;
       margin-top: -1px;
-      position: relative;
-      z-index:3;
+      position: absolute;
+      background-color: $body-bg;
+      z-index: 10000;
       display: none;
       .list-wrap {
         .item {
@@ -872,5 +932,224 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
+  .operating-wrap {
+    a {
+      color: $gray-light;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      &:hover {
+        background: none;
+      }
+    }
+  }
 }
+
+.dealer-header {
+  .search {
+    min-width: 80%;
+    .input-group {
+      min-width: 50%;
+      border: 1px solid $brand-primary;
+      .select-role {
+        display: inline-block;
+        color: $gray-lighter;
+        padding: 5px 0;
+        position:relative;
+        height: 32px;
+        width: 20%;
+        .selected{
+          span{
+            display: inline-block;
+            width: 80%;
+          }
+        }
+        a{
+          text-decoration: none;
+          color: $gray-lighter;
+        }
+        .select-list{
+          display: none;
+          position:absolute;
+          bottom:-40px;
+          width: 100%;
+          z-index:99999;
+          li{
+            padding-right: 10px;
+            a{
+              color: $gray-base;
+            }
+          }
+        }
+      }
+      .control {
+        width: 78%;
+        height: 33px;
+        border: none;
+        outline: none;
+      }
+      .search-btn {
+        width: 100%;
+      }
+    }
+  }
+  .right-btn {
+    li {
+      height: 100%;
+      padding: 10px;
+      .btn {
+        padding: 5px 15px;
+      }
+    }
+  }
+}
+
+.categories-btn {
+  background-color: $brand-primary;
+  padding: 0;
+  .btn {
+    width: 100%;
+  }
+}
+
+.categories {
+  display: inline-block;
+  position: relative;
+  .menu-wrap {
+    position: absolute;
+    left: 0;
+    @include size(100%, 400px);
+    background-color: $blue;
+    z-index: 999;
+    li {
+      padding: 10px 0 10px 55px;
+      color: $body-bg;
+      cursor: pointer;
+      &:hover {
+        background-color: $gray-plain;
+        color: $blue;
+      }
+    }
+  }
+  @at-root .menu-down-layer {
+    display: none;
+    position: absolute;
+    left: 0;
+    z-index: 999;
+    background-color: $gray-plain;
+    border: 1px solid $brand-primary;
+    width: 995px;
+    @include size(995px, min(400px));
+    padding-top: 10px;
+    .item {
+      padding: 10px;
+      label {
+        color: $gray-light;
+        cursor: pointer;
+        &:hover {
+          color: $brand-danger;
+        }
+      }
+      a {
+        font-size: 13px;
+        color: $gray;
+        display: inline-block;
+        padding: 0 10px 0 8px;
+        border-left: 1px solid $gray-plain-light;
+      }
+    }
+  }
+}
+
+.banner-wrap {
+  background-color: $banner-gray;
+  @at-root .banner-slide {
+    .carousel-indicators {
+      text-align: right;
+      li {
+        margin: 0 5px;
+      }
+    }
+  }
+  .dealer-index-banner {
+    .carousel-inner {
+      .item {
+        padding: 0;
+        img {
+          @include size(100%, 400px);
+        }
+      }
+    }
+  }
+}
+
+.dealer-index {
+  .list-penal {
+    .title {
+      margin: 50px 0 15px 0;
+      h3 {
+        padding: 8px 20px;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: $gray-plain-light;
+      }
+    }
+
+  }
+}
+
+/*======================================index end======================================*/
+/*======================================search begin======================================*/
+.search-page {
+  .search-list-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed $gray-plain-light;
+    a {
+      color: $gray-base;
+      display: inline-block;
+      padding: 0 15px;
+    }
+  }
+  .title {
+    margin: 20px 0;
+    padding: 8px 5px 8px 15px;
+    background-color: $gray-plain-light;
+    a {
+      color: $gray-base;
+      padding: 0 10px;
+    }
+  }
+}
+
+/*======================================search end======================================*/
+/*======================================shopping-car begin======================================*/
+.audit-step-outs{
+  .step{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: relative;
+    border:1px solid red;
+    background-color: $gray-plain-light;
+    .triangle-right{
+      position: absolute;
+      right: -40px;
+      top:-1px;
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-left: 40px solid $gray-plain-light;
+      border-bottom: 20px solid transparent;
+      z-index:3;
+    }
+  }
+  .step-active{
+    background-color: $brand-danger;
+    color: $body-bg;
+    .triangle-right{
+      border-left-color: $brand-danger;
+    }
+  }
+}
+/*======================================shopping-car end======================================*/
 /*==================================================================================dealer end======================================================================*/

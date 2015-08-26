@@ -53,76 +53,28 @@
                     <li class="menu-wrap">
                         <a href="#" class="menu-hide item menu-wrap-title">商品分类</a>
                         <ul class="a-menu">
-                            <li>
-                                <a href="#" class="menu-hide item">酒水饮料</a>
-                                <ul class="secondary-menu">
-                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                    <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="#" class="menu-hide item">休闲食品</a>
-                                <ul class="secondary-menu">
-                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                    <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                        <div class="three-menu">
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 |</a>
-                                            <a href="#">酒水饮料 </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="#" class="menu-hide item">调味品</a></li>
+                            @foreach($categories as $category)
+                                <li>
+                                    <a href="{{ url('shop/detail/' . $category['id'] . ($type ? '/' . $type : '')) }}"
+                                       class="menu-hide item">{{ $category['name'] }}</a>
+                                    <ul class="secondary-menu">
+                                        @foreach($category['child'] as $child)
+                                            <li class="second-menu-item">
+                                                <a href="{{ url('shop/detail/' . $child['id'] . ($type ? '/' . $type : '')) }}" class="item">
+                                                    {{ $child['name'] }}
+                                                </a>
+                                                <div class="three-menu">
+                                                    @foreach($child['child'] as $grandChild)
+                                                        <a href="{{ url('shop/detail/' . $grandChild['id'] . ($type ? '/' . $type : '')) }}">
+                                                            {{ $grandChild['name'] }} |
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endforeach
                         </ul>
 
                     </li>
