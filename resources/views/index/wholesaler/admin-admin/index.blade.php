@@ -1,121 +1,6 @@
 @extends('index.master')
 @include('includes.timepicker')
 @section('container')
-        <div class="container wholesalers-top-header">
-            <div class="col-sm-4 logo">
-                <a class="logo-icon">LOGO</a>
-            </div>
-            <div class="col-sm-4 col-sm-push-4 right-search">
-                <form class="search" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" aria-describedby="course-search">
-                <span class="input-group-btn btn-primary">
-                    <button class="btn btn-primary" type="submit">搜本店</button>
-                </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <nav class="navbar navbar-default wholesalers-header">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                            aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">首页</a></li>
-                        <li class="menu-wrap">
-                            <a href="#" class="menu-hide item menu-wrap-title">商品分类</a>
-                            <ul class="a-menu">
-                                <li>
-                                    <a href="#" class="menu-hide item">酒水饮料</a>
-                                    <ul class="secondary-menu">
-                                        <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                        <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                        <li class="second-menu-item"><a href="#" class="item">酒水饮料2</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a href="#" class="menu-hide item">休闲食品</a>
-                                    <ul class="secondary-menu">
-                                        <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                        <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                        <li class="second-menu-item"><a href="#" class="item">休闲食品</a>
-
-                                            <div class="three-menu">
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 |</a>
-                                                <a href="#">酒水饮料 </a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a href="#" class="menu-hide item">调味品</a></li>
-                            </ul>
-
-                        </li>
-                        <li><a href="#">店家信息</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="right"><a href="#">控制台</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
         <div class="container my-goods wholesalers-management">
             <div class="row">
                 <div class="col-sm-2 menu">
@@ -130,13 +15,26 @@
                 <div class="col-sm-10">
                     <div class="row">
                         <div class="col-sm-12 notice-bar">
-                            <a href="#" class="btn btn-primary">待确认1</a>
-                            <a href="#" class="btn">待收货2</a>
-                            <a href="#" class="btn">待付款3</a>
+                            @if(isset($data['nonPayment']))
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/non-sure') }}">待确认{{ $data['nonSure'] }}</a>
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/non-payment') }}">待付款{{ $data['nonPayment'] }}</a>
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/non-arrived') }}">待收货{{ $data['nonArrived'] }}</a>
+                            @else
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/non-sure') }}">待确认{{ $data['nonSure'] }}</a>
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/non-send') }}">待发货{{ $data['nonSend'] }}</a>
+                                <a class="btn ajax-get"
+                                   data-url="{{ url('order/pending-collection') }}">待收款{{ $data['pendingCollection'] }}</a>
+                            @endif
                         </div>
                         <div class="col-sm-8 pay-detail">
                     <span class="item">支付方式 :
-                        <select name="pay_type" class="ajax-get">
+                        <select name="pay_type" class="ajax-select">
+                            <option value="">全部方式</option>
                             @foreach($pay_type as $key => $value)
                             <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -144,106 +42,75 @@
                     </span>
                     <span class="item">
                         订单状态 :
-                          <select name="status" class="ajax-get">
-                              @foreach($pay_type as $key => $value)
+                          <select name="status" class="ajax-select">
+                              <option value="">全部状态</option>
+                              @foreach($order_status as $key => $value)
                                   <option value="{{ $key }}">{{ $value }}</option>
                               @endforeach
                           </select>
-                        <input type="hidden" id="target-url" value="{{ url('wholesaler/admin/search') }}" />
+                        <input type="hidden" id="target-url" value="{{ url('order/select') }}" />
+                        <input type="hidden" id="search-role" value="{{ cons('user.type.retailer') }}" />
                     </span>
                     <span class="item">
                         时间段 :
-                        <input type="text" class="datetimepicker" placeholder="开始时间" name="start_at" />　至　
-                        <input type="text" class="datetimepicker" placeholder="结束时间" name="end_at" />
+                        <input type="text" class="datetimepicker" placeholder="开始时间" name="start_at" data-format="YYYY-MM-DD" />　至　
+                        <input type="text" class="datetimepicker" id="end-time" placeholder="结束时间" name="end_at" data-format="YYYY-MM-DD" />
                     </span>
                         </div>
                         <div class="col-sm-4 right-search search">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="终端商、订单号" aria-describedby="course-search">
+                                <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号" aria-describedby="course-search">
                         <span class="input-group-btn btn-primary">
-                            <button class="btn btn-primary" type="submit">搜索</button>
+                            <button class="btn btn-primary ajax-submit" type="submit" data-url="{{ url('order/search') }}">搜索</button>
                         </span>
                             </div>
                         </div>
                     </div>
-                    <div class="row order-form-list">
-                        <div class="col-sm-12 list-title">
-                            <input type="checkbox">
-                            <span class="time">2015年8月18日</span>
-                            <span>订单号:100000000000000xx00</span>
-                            <span>xxx终端商</span>
+                    <form class="ajax-form" method="post">
+                    <div class="content">
+                        @foreach($orders['data'] as $order)
+                        <div class="row order-form-list">
+                            <div class="col-sm-12 list-title">
+                                <input type="checkbox" name="orderIds[]" value="{{ $order['id'] }}">
+                                <span class="time">{{ $order['created_at'] }}</span>
+                                <span>订单号:100000000000000{{ $order['id'] }}</span>
+                                <span>{{ $order['user']['user_name'] or $order['seller']['user_name'] }}</span>
+                            </div>
+                            <div class="col-sm-8 list-content">
+                                <ul>
+                                    @foreach($order['goods'] as $good)
+                                    <li>
+                                        <img src="{{ $good['image_url'] }}">
+                                        <a class="product-name" href="#">{{ $good['name'] }}</a>
+                                        <span class="red">￥{{ $good['pivot']['price'] }}</span>
+                                        <span>{{ $good['pivot']['num'] }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="col-sm-2 order-form-detail">
+                                <p>订单状态 :{{ $order['status_name'] }}</p>
+                                <p>支付方式 :{{ $order['payment_type'] }}</p>
+                                <p>订单金额 :<span class="red">￥{{ $order['price'] }}</span></p>
+                            </div>
+                            <div class="col-sm-2 order-form-operating">
+                                <p><a href="#" class="btn btn-primary">查看</a></p>
+                                <p><a class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order/sure/'.$order['id']) }}">确认</a></p>
+                                <p><a href="#" class="btn btn-success">导出</a></p>
+                            </div>
                         </div>
-                        <div class="col-sm-8 list-content">
-                            <ul>
-                                <li>
-                                    <img src="http://placehold.it/100">
-                                    <a class="product-name" href="#">益力多 100ml*20瓶 活性乳酸菌饮品</a>
-                                    <span class="red">￥60</span>
-                                    <span>1</span>
-                                </li>
-                                <li>
-                                    <img src="http://placehold.it/100">
-                                    <a class="product-name" href="#">益力多 100ml*20瓶 活性乳酸菌饮品</a>
-                                    <span class="red">￥60</span>
-                                    <span>1</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-2 order-form-detail">
-                            <p>订单状态 :未支付</p>
-                            <p>支付方式 :在线支付</p>
-                            <p>订单金额 :<span class="red">￥120</span></p>
-                        </div>
-                        <div class="col-sm-2 order-form-operating">
-                            <p><a href="#" class="btn btn-primary">查看</a></p>
-                            <p><a href="#" class="btn btn-danger">确认</a></p>
-                            <p><a href="#" class="btn btn-success">导出</a></p>
-                        </div>
-                    </div>
-                    <div class="row order-form-list">
-                        <div class="col-sm-12 list-title">
-                            <input type="checkbox">
-                            <span class="time">2015年8月18日</span>
-                            <span>订单号:100000000000000xx00</span>
-                            <span>xxx终端商</span>
-                        </div>
-                        <div class="col-sm-8 list-content">
-                            <ul>
-                                <li>
-                                    <img src="http://placehold.it/100">
-                                    <a class="product-name" href="#">益力多 100ml*20瓶 活性乳酸菌饮品</a>
-                                    <span class="red">￥60</span>
-                                    <span>1</span>
-                                </li>
-                                <li>
-                                    <img src="http://placehold.it/100">
-                                    <a class="product-name" href="#">益力多 100ml*20瓶 活性乳酸菌饮品</a>
-                                    <span class="red">￥60</span>
-                                    <span>1</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-2 order-form-detail">
-                            <p>订单状态 :未支付</p>
-                            <p>支付方式 :在线支付</p>
-                            <p>订单金额 :<span class="red">￥120</span></p>
-                        </div>
-                        <div class="col-sm-2 order-form-operating">
-                            <p><a href="#" class="btn btn-primary">查看</a></p>
-                            <p><a href="#" class="btn btn-danger">确认</a></p>
-                            <p><a href="#" class="btn btn-success">导出</a></p>
-                        </div>
+                        @endforeach
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
                             <button class="btn btn-primary">查看</button>
-                            <button class="btn btn-danger">确认</button>
+                            <button class="btn btn-danger ajax" data-url="{{ url('order/batch-sure') }}" data-method="put">确认</button>
                             <button class="btn btn-cancel">取消</button>
                             <button class="btn btn-success">导出</button>
                             <button class="btn btn-warning">发货</button>
                             <button class="btn btn-info">已收款</button>
                         </div>
-                        <div class="col-sm-12 order-process">
+                        <div class="col-sm-12 order-process page">
                             <ul>
                                 <li>订单状态流程 :</li>
                                 <li>在线支付 :</li>
@@ -253,7 +120,9 @@
                             </ul>
                         </div>
                     </div>
+                    </form>
                 </div>
+
             </div>
         </div>
 @endsection
@@ -261,8 +130,7 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            $('.datetimepicker').on('click',timepicker('.datetimepicker' , 'YYYY-MM-DD'));
-            ajaxGetSelect();
+            getOrderList();
         })
     </script>
 @stop

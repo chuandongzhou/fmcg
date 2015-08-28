@@ -31,6 +31,8 @@ class Goods extends Model
         'shop_id'
     ];
 
+    public $appends = ['image_url'];
+
     /**
      * 所属店铺
      *
@@ -52,13 +54,13 @@ class Goods extends Model
     }
 
     /**
-     * 订单里的商品
+     * 关联订单
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function orderGoods()
+    public function orders()
     {
-        return $this->hasMany('App\Models\OrderGoods');
+        return $this->belongsToMany('App\Models\Order', 'order_goods', 'goods_id', 'order_id');
     }
 
     /**
@@ -93,6 +95,7 @@ class Goods extends Model
 
     /**
      * 查询促销产品
+     *
      * @param $query
      */
     public function scopePromotion($query)
@@ -120,7 +123,19 @@ class Goods extends Model
         if (!empty($imagesArr)) {
             return $this->associateFiles($imagesArr, 'images', 0, false);
         }
+
         return true;
     }
 
+    /**
+     * 获取商品的单个图片地址，用于订单页面显示
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        $image = $this->images->first();
+
+        return $image ? upload_file_url($image->path) : '';
+    }
 }

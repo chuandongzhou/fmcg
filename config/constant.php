@@ -13,20 +13,26 @@ return [
     ],
     //订单表
     'order' => [
-        'order_status' => [ //订单状态
-            'non-delivery' => 0,
-            'delivered' => 1,
+        'pay_status' => [//支付状态
+            'non_payment' => 0,
+            'payment_success' => 1,
+            'payment_failed' =>2,
+            'refund' => 3,
+            'refund_success' => 4,
+            'refund_failed' => 5,
         ],
-        'pay_status' => [ //支付状态
-            'non-payment' => 0,
-            'payment' => 1,
-        ]
+        'status' => [ //订单状态
+            'non_sure' => 0, //未确认
+            'non_send' => 1, //未发货
+            'send' => 2, //已发货
+            'finished' => 3, //完成
+        ],
     ],
     //用户类别
     'user' => [
         'type' => [
-            'wholesalers' => 1,       //批发商
-            'retailer' => 2,       //零售商
+            'retailer' => 1,       //零售商
+            'wholesaler' => 2,       //批发商
             'supplier' => 3,       //供应商
         ],
     ],

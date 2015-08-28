@@ -13,14 +13,20 @@ return [
     ],
     //订单表
     'order' => [
-        'order_status' => [ //订单状态
-            'non-delivery' => '未发货',
-            'delivered' => '已发货',
+        'pay_status' => [//支付状态
+            'non_payment' => '未付款',
+            'payment_success' => '已付款',
+            'payment_failed' => '付款失败',
+            'refund' => '退款中',
+            'refund_success' => '退款成功',
+            'refund_failed' => '退款失败',
         ],
-        'pay_status' => [ //支付状态
-            'non-payment' => '未支付',
-            'payment' => '已支付',
-        ]
+        'status' => [ //订单状态
+            'non_sure' => '未确认',
+            'non_send' => '未发货',
+            'send' => '已发货',
+            'finished' => '已完成',
+        ],
     ],
     //用户类别
     'user' => [
