@@ -33,7 +33,7 @@ class AttrService
         }
 
         $collect = collect($attrs);
-        $attrList = $collect->where('pid', 0)->all();
+        $attrList = array_values($collect->where('pid', 0)->all());
         foreach ($attrList as $key => $level) {
             foreach ($attrs as $attr) {
                 if ($level['id'] == $attr['pid']) {

@@ -334,6 +334,9 @@ var commonAjaxSetup = function () {
                 });
             }
 
+            if (typeof tinymce == 'object') {
+                tinyMCE.triggerSave();
+            }
             var method = self.data('method') || form.attr('method')
                 , url = self.data('url') || form.attr('action')
                 , data = form.serializeArray()
@@ -475,6 +478,151 @@ var commonUploadSetup = function () {
 };
 
 /**
+ * 添加地址
+ */
+var addAddFunc = function () {
+    var container = $('.address-list')
+        , addButton = $('#add-address')
+        , btnAdd = $('.btn-add')
+        , addLimit = 5, province = $('.add-province')
+        , city = $('.add-city')
+        , district = $('.add-district')
+        , address = $('.address');
+
+    $('#addressModal').on('hidden.bs.modal', function (e) {
+        //TODO 初始化地址
+        address.val('');
+    });
+    // 地址限制
+    var changeAddButtonStatus = function () {
+        if (container.children('div:visible').length >= addLimit) {
+            addButton.button('loading');
+            return true;
+        }
+
+        addButton.button('reset');
+        return false;
+    };
+    var changeBtnAddhtml = function (html) {
+        btnAdd.html(html);
+        setTimeout(function () {
+            btnAdd.html(btnAdd.data('text'));
+        }, 3000)
+    };
+
+    changeAddButtonStatus();
+    // 删除地址
+    container.on('click', '.close', function () {
+        $(this).parent().fadeOut('normal', function () {
+            $(this).remove();
+
+            changeAddButtonStatus();
+        });
+    });
+
+    // 添加地址
+    btnAdd.on('click', '', function () {
+        if (!province.val()) {
+            changeBtnAddhtml('请选择省市...');
+            return false;
+        }
+        if (!city.val()) {
+            changeBtnAddhtml('请选择城市...');
+            return false;
+        }
+        if (!district.val()) {
+            changeBtnAddhtml('请选择区县...');
+            return false;
+        }
+        if (!address.val()) {
+            changeBtnAddhtml('请输入详细地址');
+            return false;
+        }
+        var provinceText = province.find("option:selected").text(),
+            cityText = city.find("option:selected").text(),
+            districtText = district.find("option:selected").text(),
+            addressText = address.val(),
+            addressDetail = provinceText + ' ' + cityText + ' ' + districtText + ' ' + addressText + ' ';
+        $('.btn-close').trigger('click');
+        container.prepend(
+            '<div class="col-sm-12 fa-border">' +
+            addressDetail +
+            '<input type="hidden" name="area[id][]" value=""/>' +
+            '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
+            '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
+            '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
+            '<input type="hidden" name="area[street_id][]" value="' + 0 + '"/>' +
+            '<span class="fa fa-times-circle pull-right close"></span>' +
+            '<input type="hidden" name="area[detail_address][]" value="' + addressDetail + '"/>',
+            '</div>'
+        );
+        changeAddButtonStatus();
+    });
+}
+
+var getCategory = function (url) {
+    var level1 = $('select[name="cate_level_1"]')
+        , level2 = $('select[name="cate_level_2"]')
+        , level3 = $('select[name="cate_level_3"]');
+
+
+    var post = function (pid, select) {
+        var ohtml = '<option value="">请选择</option>';
+        $.get(url, {pid: pid}, function (data) {
+            for (var index in data) {
+                ohtml += '<option value="' + index + '">' + data[index] + '</option>'
+            }
+            select.html(ohtml);
+        }, 'json')
+    };
+    level1.change(function () {
+        post($(this).val(), level2);
+        level3.html('<option value="">请选择</option>');
+    });
+    level2.change(function () {
+        post($(this).val(), level3);
+    })
+}
+
+/**
+ * 获取所有的分类
+ * @param url
+ * @param level1
+ * @param level2
+ * @param level3
+ */
+var getAllCategory = function (url, level1, level2, level3) {
+    level2 = level2 || 0;
+    level3 = level3 || 0;
+    var params = {
+        'level1': level1,
+        'level2': level2,
+        'level3': level3,
+    };
+    $.get(url, params, function (data) {
+        var level1Info = data.level1;
+        var level2Info = data.level2;
+        var level3Info = data.level3;
+        addOption(level1Info, $('select[name="cate_level_1"]'), level1);
+        addOption(level2Info, $('select[name="cate_level_2"]'), level2, '<option value="">请选择</option>');
+        addOption(level3Info, $('select[name="cate_level_3"]'), level3, '<option value="">请选择</option>');
+    }, 'json');
+
+    var addOption = function (data, selectObj, selectedId, prefix) {
+        var htmls = prefix || '';
+        for (var key in data) {
+            if (selectedId == key) {
+                htmls += "<option value='" + key + "' selected>" + data[key] + "</option>";
+            } else {
+                htmls += "<option value='" + key + "'>" + data[key] + "</option>";
+            }
+        }
+        selectObj.html(htmls);
+    }
+}
+
+
+/**
  * 通用裁剪Modal
  */
 var commonCropSetup = function () {
@@ -538,6 +686,58 @@ var commonMethodSetup = function () {
     // Bootstrap默认设置
     $.fn.button.Constructor.DEFAULTS.loadingText = '请稍后...';
 };
+
+/**
+ * 添加图片
+ */
+function picFunc() {
+    var container = $('.pictures')
+        , uploadButton = $('#pic-upload')
+        , uploadLimit = 5;
+
+    // 图片上传限制
+    var changeUploadButtonStatus = function () {
+        if (container.children('div:visible').length >= uploadLimit) {
+            uploadButton.button('loading');
+            return true;
+        }
+
+        uploadButton.button('reset');
+        return false;
+    };
+    changeUploadButtonStatus();
+
+    // 删除图片
+    container.on('click', '.close', function () {
+        $(this).closest('.thumbnail').parent().fadeOut('normal', function () {
+            $(this).remove();
+
+            changeUploadButtonStatus();
+        });
+    });
+
+    // 裁剪事件通知
+    $('#pic-upload').on('cropped.hct.cropper', '', function (e, data) {
+        e.stopImmediatePropagation();
+
+        var name = data.org_name;
+        name = name.substr(0, name.lastIndexOf('.')) || name;
+        container.prepend('' +
+            '<div class="col-xs-3"> ' +
+            '   <div class="thumbnail"> ' +
+            '       <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button> ' +
+            '       <img src="' + data.url + '" alt=""> ' +
+            '       <input type="hidden" name="images[id][]" value=""> ' +
+            '       <input type="hidden" name="images[path][]" value="' + data.path + '"> ' +
+            '       <input type="hidden" name="images[org_name][]" value="' + data.org_name + '"> ' +
+            '       <input type="text" class="form-control input-sm" name="images[name][]" value="' + name + '"> ' +
+            '   </div>' +
+            '</div>');
+
+        changeUploadButtonStatus();
+    });
+}
+
 
 /**
  * 初始化方法

@@ -23,8 +23,8 @@ class AttrController extends Controller
             $where['category_id'] = max($search);
         } else {
             $firstCategory = Category::orderBy('id', 'ASC')->take(2)->lists('id');
-            $search['level1'] = $firstCategory[0];
-            $search['level2'] = $where['category_id'] = $firstCategory[1];
+            $search['cate_level_1'] = $firstCategory[0];
+            $search['cate_level_2'] = $where['category_id'] = $firstCategory[1];
         }
         $attrs = Attr::where($where)->get(['id', 'name', 'pid'])->toArray();
         if ($attrs) {

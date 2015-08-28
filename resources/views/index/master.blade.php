@@ -55,17 +55,19 @@
                         <ul class="a-menu">
                             @foreach($categories as $category)
                                 <li>
-                                    <a href="{{ url('shop/detail/' . $category['id'] . ($type ? '/' . $type : '')) }}"
+                                    <a href="{{ url('shop/detail/1' . $category['id'] . (isset($type) && $type ? '/' . $type : '')) }}"
                                        class="menu-hide item">{{ $category['name'] }}</a>
                                     <ul class="secondary-menu">
                                         @foreach($category['child'] as $child)
                                             <li class="second-menu-item">
-                                                <a href="{{ url('shop/detail/' . $child['id'] . ($type ? '/' . $type : '')) }}" class="item">
+                                                <a href="{{ url('shop/detail/2' . $child['id'] . (isset($type) && $type ? '/' . $type : '')) }}"
+                                                   class="item">
                                                     {{ $child['name'] }}
                                                 </a>
+
                                                 <div class="three-menu">
                                                     @foreach($child['child'] as $grandChild)
-                                                        <a href="{{ url('shop/detail/' . $grandChild['id'] . ($type ? '/' . $type : '')) }}">
+                                                        <a href="{{ url('shop/detail/3' . $grandChild['id'] . (isset($type) && $type ? '/' . $type : '')) }}">
                                                             {{ $grandChild['name'] }} |
                                                         </a>
                                                     @endforeach

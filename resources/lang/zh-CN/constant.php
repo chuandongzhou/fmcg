@@ -62,5 +62,16 @@ return [
             'untreaded' => '未处理',
             'treaded' => '已处理'
         ]
+    ],
+    // 商品
+    'goods' => [
+        'type' => [
+            'yes' => '是',
+            'no' => '否',
+        ],
+        'status' => [
+            'on' => '上架',
+            'off' => '下架'
+        ]
     ]
 ];

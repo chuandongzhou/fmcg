@@ -7,9 +7,9 @@ class GoodsImages extends Model
 {
     protected $table = 'goods_images';
     protected $fillable = [
-        'level1',
-        'level2',
-        'level3',
+        'cate_level_1',
+        'cate_level_2',
+        'cate_level_3',
         'attrs',
         'image'
     ];
@@ -43,7 +43,7 @@ class GoodsImages extends Model
     public function setAttrsAttribute($attr)
     {
         if (is_array($attr)) {
-            $this->attributes['attrs'] = implode(',', $attr);
+            $this->attributes['attrs'] = json_encode($attr);
         } else {
             $this->attributes['attrs'] = '';
         }

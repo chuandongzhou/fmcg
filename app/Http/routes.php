@@ -7,10 +7,11 @@ $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->controller('shop', 'ShopController');          //商家商店首页
+    $router->resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'edit']]);          //商家商店首页
 
     $router->group(['prefix' => 'wholesaler', 'namespace' => 'Wholesaler'], function ($router) {
 
-       // $router->controller('order', 'OrderController');    //批发商订单
+        // $router->controller('order', 'OrderController');    //批发商订单
 
     });
 
@@ -71,6 +72,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
+        $router->post('goods/shelve/{id}', 'GoodsController@shelve');              //上下架
+        $router->resource('goods', 'GoodsController', ['only' => ['store', 'update', 'destroy']]);          //商品管理
 
     });
 });

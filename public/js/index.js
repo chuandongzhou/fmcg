@@ -31,10 +31,17 @@ function _getArgs(){
     $.ajax({
         type: targetUrl,
         url: targetUrl,
-        data,
+        data :data,
         dataType: 'json',
         success: function (data) {
             alert(data);
         }
     });
+}
+function tabBox(){
+    $(".switching a").click(function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        var boxclass= $(this).attr("id");
+        $("."+boxclass).css("display","block").siblings(".box").css("display","none");
+    })
 }

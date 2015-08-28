@@ -9,17 +9,17 @@
             <form action="{{ url('admin/attr') }}" method="get" class="categories">
                 <div class="form-group">
                     <div class="col-sm-2">
-                        <select name="level1" class="address-province form-control">
+                        <select name="cate_level_1" class="address-province form-control">
                             <option selected="selected" value="">请选择</option>
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select name="level2" class="address-city form-control">
+                        <select name="cate_level_2" class="address-city form-control">
                             <option selected="selected" value="">请选择</option>
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select name="level3" class="address-district form-control">
+                        <select name="cate_level_3" class="address-district form-control">
                             <option selected="selected" value="">请选择</option>
                         </select>
                     </div>
@@ -63,7 +63,7 @@
         $(function () {
             $('#attr').treetable({expandable: true});
             getCategory(site.api('categories'));
-            getAllCategory(site.api('categories'), '{{ $search['level1'] }}', '{{ isset($search['level2']) ? $search['level2'] : 0 }}', '{{ isset($search['level3']) ? $search['level3'] : 0 }}');
+            getAllCategory(site.api('categories'), '{{ $search['cate_level_1'] }}', '{{ isset($search['cate_level_2']) ? $search['cate_level_2'] : 0 }}', '{{ isset($search['cate_level_3']) ? $search['cate_level_3'] : 0 }}');
         });
     </script>
 @stop

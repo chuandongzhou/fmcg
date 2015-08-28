@@ -12,17 +12,17 @@
                     <label class="control-label col-sm-1"></label>
 
                     <div class="col-sm-2">
-                        <select name="level1" class="address-province form-control">
+                        <select name="cate_level_1" class="form-control">
 
                         </select>
                     </div>
                     <div class="col-sm-2" id="level2" >
-                        <select name="level2" class="address-city form-control">
+                        <select name="cate_level_2" class="form-control">
 
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select name="level3" class="address-district form-control">
+                        <select name="cate_level_3" class="form-control">
                             <option selected="selected" value="0">请选择</option>
                         </select>
                     </div>
@@ -66,13 +66,13 @@
         $(function () {
             $('#attr').treetable({expandable: true});
             getCategory(site.api('categories'));
-            getAllCategory(site.api('categories'), '{{ $search }}', 0, 0);
-            $('select[name="level1"]').change(function () {
+            getAllCategory(site.api('categories'), '{{ $search }}');
+            $('select[name="cate_level_1"]').change(function () {
                 $('div.attr').html('');
             });
 
-            $('select[name="level2"] , select[name="level3"]').change(function () {
-                var categoryId = $(this).val() || $('select[name="level2"]').val();
+            $('select[name="cate_level_2"] , select[name="cate_level_3"]').change(function () {
+                var categoryId = $(this).val() || $('select[name="cate_level_2"]').val();
 
                 $.get(site.api('categories/' + categoryId + '/attrs'), {category_id: categoryId, format: true}, function (data) {
                     var html = '';
@@ -80,7 +80,7 @@
                         var options = '';
                         html += '<label class="control-label col-sm-1">' + data[index]['name'] + '</label>';
                         html += '<div class="col-sm-2">';
-                        html += ' <select name="attrs[]" class="form-control">';
+                        html += ' <select name="attrs[' + data[index]['id'] + ']" class="form-control">';
                         for (var i in data[index]['child']) {
                             options += ' <option value="' + data[index]['child'][i]['id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                         }

@@ -1,6 +1,6 @@
 @extends('admin.master')
 @include('includes.cropper')
-
+@include('includes.address')
 @section('subtitle' , '用户管理')
 
 @section('right-container')
@@ -90,10 +90,10 @@
                 <div class="col-sm-10">
                     <button data-height="400" data-width="1000" data-target="#cropperModal" data-toggle="modal"
                             data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
-                            id="shop-pic-upload">
+                            id="pic-upload">
                         请选择图片文件(1000x400)
                     </button>
-                    <div class="row shop-pictures">
+                    <div class="row pictures">
                         <div class="hidden">
                             <input type="hidden" value="" name="images[id][]">
                             <input type="hidden" value="" name="images[path][]">
@@ -155,9 +155,24 @@
                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址</a>
                     </div>
                     <div class="address-list col-lg-12">
-                        @foreach ($shop->delivery_area as $area)
-                            <div class="col-sm-12 fa-border">{{ $area }} <span class="close">×</span><input
-                                        type="hidden" name="delivery_area[]" value="{{ $area }}"/></div>
+                        <div class="hidden">
+                            <input type="hidden" name="area[id][]" value=""/>
+                            <input type="hidden" name="area[province_id][]" value=""/>
+                            <input type="hidden" name="area[city_id][]" value=""/>
+                            <input type="hidden" name="area[district_id][]" value=""/>
+                            <input type="hidden" name="area[street_id][]" value=""/>
+                            <input type="hidden" name="area[detail_address][]" value=""/>
+                        </div>
+                        @foreach ($shop->deliveryArea as $area)
+                            <div class="col-sm-12 fa-border">{{ $area->detail_address }}
+                                <span class="fa fa-times-circle pull-right close"></span>
+                                <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
+                                <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
+                                <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
+                                <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
+                                <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
+                                <input type="hidden" name="area[detail_address][]" value="{{ $area->detail_address }}"/>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -172,57 +187,13 @@
 
         </div>
     </form>
-    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="cropperModalLabel">选择要添加的地址<span class="extra-text"></span></h4>
-                </div>
-                <div class="modal-body address-select">
-                    <div>
-                        <label class="control-label">&nbsp;&nbsp;&nbsp;所在地:</label>
-                        <select class="address-province inline-control add-province">
-                            <option selected="selected" value="">请选择省市/其他...</option>
-                            <option value="210000">辽宁省</option>
-                        </select>
-
-                        <select class="address-city inline-control add-city">
-                            <option selected="selected" value="">请选择城市...</option>
-                            <option value="100">大连</option>
-                        </select>
-
-                        <select class="address-district inline-control add-district">
-                            <option selected="selected" value="">请选择区/县...</option>
-                            <option value="100">西港</option>
-                        </select>
-
-                        <div class="address-detail">
-                            <label class="control-label">详细地址:</label>
-                            <input type="text" placeholder="请输入详细地址" class="form-control address">
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    @parent
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
         $(function () {
-            shopPicFunc();
-            addAddFunc();
+            picFunc();
         })
     </script>
 @stop

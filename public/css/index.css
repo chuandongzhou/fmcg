@@ -11,6 +11,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0; }
 
+.padding-clear {
+  padding: 0; }
+
 .btn-cancel {
   color: #fff;
   background-color: #b4b4b4;
@@ -308,6 +311,51 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 30%;
         height: 250px; }
 
+.goods-detail .left-store-logo .banner .item img {
+  height: 300px; }
+
+.goods-detail .store-detail-wrap {
+  height: 300px; }
+  .goods-detail .store-detail-wrap h3 {
+    padding: 0 0 20px 0;
+    border-bottom: 1px dashed #777777; }
+  .goods-detail .store-detail-wrap li {
+    padding: 10px 0; }
+  .goods-detail .store-detail-wrap .information li {
+    padding: 5px 0; }
+    .goods-detail .store-detail-wrap .information li .stores-img {
+      width: 80px;
+      height: 80px; }
+  .goods-detail .store-detail-wrap .left-panel {
+    width: 30%; }
+  .goods-detail .store-detail-wrap .right-panel {
+    width: 50%; }
+    .goods-detail .store-detail-wrap .right-panel .count {
+      padding: 1px 5px;
+      font-size: 16px; }
+      .goods-detail .store-detail-wrap .right-panel .count:hover {
+        color: #fff; }
+    .goods-detail .store-detail-wrap .right-panel .collect {
+      color: #4cb9fe; }
+    .goods-detail .store-detail-wrap .right-panel .amount {
+      width: 25%;
+      padding: 3px 0;
+      vertical-align: middle; }
+
+.goods-detail .title-name {
+  color: #b4b4b4; }
+
+.goods-detail .address-wrap {
+  padding: 20px 0 20px 30px; }
+  .goods-detail .address-wrap .item .address-list li {
+    padding: 0 0 5px 20px; }
+  .goods-detail .address-wrap .item .map {
+    max-width: 500px;
+    max-height: 380px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid #e0e0e0; }
+
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
 .upload-progress-wrap, .goods-editor .content-wrap .upload-wrap, .personal-center .upload-picture .upload-wrap {
@@ -340,7 +388,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   .goods-editor .editor-panel .editor-wrap {
     padding: 10px 15px; }
     .goods-editor .editor-panel .editor-wrap .editor-item {
-      padding: 5px 0; }
+      padding: 5px 0;
+      margin: 0px; }
       .goods-editor .editor-panel .editor-wrap .editor-item .narrow {
         width: 80px; }
       .goods-editor .editor-panel .editor-wrap .editor-item .items-item {
@@ -371,6 +420,18 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor .content-wrap .add-address, .goods-editor .content-wrap .upload-img {
   margin: 15px 0; }
+
+.goods-editor .content-wrap .address-list {
+  margin-top: 5px; }
+  .goods-editor .content-wrap .address-list div {
+    border: 1px solid #EEEEEE;
+    border-radius: 3px;
+    margin-top: 4px;
+    padding: 5px;
+    color: #808080; }
+
+.goods-editor .content-wrap .pictures {
+  margin-top: 10px; }
 
 .goods-editor .content-wrap .map {
   margin: 10px 0; }
@@ -553,7 +614,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .order-detail .table-row .table-col {
   padding: 30px 0 0 0; }
-  .order-detail .table-row .table-col table thead tr th {
+  .order-detail .table-row .table-col table thead tr th, .order-detail .table-row .table-col .table-list-row .shopping-table-list table thead tr td, .table-list-row .shopping-table-list .order-detail .table-row .table-col table thead tr td {
     text-align: center;
     border: none;
     background-color: #cae6f7; }
@@ -692,7 +753,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   height: 100%;
   padding: 10px; }
   .dealer-header .right-btn li .btn {
-    padding: 5px 15px; }
+    padding: 6px 15px; }
+    .dealer-header .right-btn li .btn:hover {
+      background-color: #4cb9fe; }
 
 .categories-btn {
   background-color: #4cb9fe;
@@ -787,25 +850,109 @@ ul, li, p, a, h1, h2, h3, h4 {
   line-height: 40px;
   text-align: center;
   position: relative;
-  border: 1px solid red;
-  background-color: #e0e0e0; }
+  background-color: #f2f2f2; }
   .audit-step-outs .step .triangle-right {
     position: absolute;
-    right: -40px;
-    top: -1px;
+    top: 0;
     display: inline-block;
     width: 0;
     height: 0;
     border-top: 20px solid transparent;
-    border-left: 40px solid #e0e0e0;
+    border-left: 35px solid;
     border-bottom: 20px solid transparent;
     z-index: 3; }
+  .audit-step-outs .step span.first {
+    border-left-color: #e0e0e0;
+    right: -35px; }
+  .audit-step-outs .step span.last {
+    border-left-color: #f2f2f2;
+    right: -33px; }
 
 .audit-step-outs .step-active {
   background-color: #fe462f;
   color: #fff; }
-  .audit-step-outs .step-active .triangle-right {
-    border-left-color: #fe462f; }
+  .audit-step-outs .step-active span.first {
+    border-left-color: #fe462f;
+    right: -35px; }
+  .audit-step-outs .step-active span.last {
+    border-left-color: #fe462f;
+    right: -33px; }
+
+.table-list-row {
+  margin-top: 40px; }
+  .table-list-row .shopping-table-list {
+    padding: 0; }
+    .table-list-row .shopping-table-list table thead th, .table-list-row .shopping-table-list table thead tr td, .table-list-row .shopping-table-list table tr thead td {
+      background-color: #cae6f7;
+      color: #777777; }
+    .table-list-row .shopping-table-list table tfoot td {
+      background-color: #f2f2f2; }
+      .table-list-row .shopping-table-list table tfoot td .operating {
+        padding: 5px 0; }
+        .table-list-row .shopping-table-list table tfoot td .operating .control {
+          width: 85%;
+          padding: 3px 0; }
+    .table-list-row .shopping-table-list table tr th, .table-list-row .shopping-table-list table tr td {
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: middle; }
+    .table-list-row .shopping-table-list table tr td {
+      padding: 15px 8px; }
+      .table-list-row .shopping-table-list table tr td .avatar {
+        width: 50px;
+        height: 50px; }
+      .table-list-row .shopping-table-list table tr td .btn {
+        color: #333333; }
+    .table-list-row .shopping-table-list table tr td.total-money {
+      border-left: 1px solid #e0e0e0; }
+    .table-list-row .shopping-table-list .check-item {
+      display: inline-block; }
+      .table-list-row .shopping-table-list .check-item .span-checkbox {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #b4b4b4;
+        line-height: 13px;
+        font-size: 17px;
+        vertical-align: middle;
+        cursor: pointer; }
+      .table-list-row .shopping-table-list .check-item .inp-checkbox {
+        opacity: 0; }
+
+.fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1030; }
+
+.clearing {
+  background-color: #d2d2d2;
+  padding: 0; }
+  .clearing .money .red {
+    margin: 0 10px;
+    font-size: 22px;
+    vertical-align: middle; }
+  .clearing .btn {
+    padding: 15px 40px; }
+
+.submit-order {
+  padding: 6px 25px; }
 
 /*======================================shopping-car end======================================*/
+/*======================================collect begin======================================*/
+.collect .control-panel {
+  padding: 10px 15px; }
+  .collect .control-panel .control {
+    width: 10%;
+    padding: 4px 0;
+    vertical-align: middle; }
+  .collect .control-panel input.control {
+    width: 15%;
+    padding: 4px 3px; }
+  .collect .control-panel .search {
+    width: 15%;
+    background-color: #e0e0e0; }
+
+/*======================================collect end======================================*/
 /*==================================================================================dealer end======================================================================*/
