@@ -22,7 +22,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   border-bottom: 1px dashed $gray-lighter;
 }
 
-@mixin padding-clear {
+.padding-clear {
   padding: 0;
 }
 
@@ -129,13 +129,13 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
 
     }
-    .collect{
-      .btn{
-        padding-top:5px;
-        padding-bottom:5px;
+    .collect {
+      .btn {
+        padding-top: 5px;
+        padding-bottom: 5px;
         margin-top: 10px;
         background-color: $body-bg;
-        color:$brand-primary;
+        color: $brand-primary;
         vertical-align: middle;
       }
     }
@@ -232,7 +232,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   .store {
     @include dash-bord;
     height: 370px;
-    padding:0;
+    padding: 0;
     .store-panel {
       width: 100%;
       padding: 10px 0;
@@ -250,7 +250,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
 
     .address-panel {
-      border-top:1px dashed $gray-lighter;
+      border-top: 1px dashed $gray-lighter;
       margin-top: -1px;
       ul {
         padding: 10px 0;
@@ -261,9 +261,9 @@ ul, li, p, a, h1, h2, h3, h4 {
             color: $gray-light;
             margin-bottom: 5px;
           }
-          .address-list{
+          .address-list {
             display: inline-block;
-            span{
+            span {
               display: block;
               padding: 2px;
             }
@@ -442,6 +442,75 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
+  .left-store-logo {
+    .banner {
+      .item {
+        img {
+          height: 300px;
+        }
+      }
+    }
+  }
+  .store-detail-wrap {
+    height: 300px;
+    h3 {
+      padding: 0 0 20px 0;
+      border-bottom: 1px dashed $gray-light;
+    }
+    li {
+      padding: 10px 0;
+    }
+    .information {
+      li {
+        padding: 5px 0;
+        .stores-img {
+          @include square(80px);
+        }
+      }
+    }
+    .left-panel {
+      width: 30%;
+    }
+    .right-panel {
+      width: 50%;
+      .count {
+        padding: 1px 5px;
+        font-size: 16px;
+        &:hover {
+          color: $body-bg;
+        }
+      }
+      .collect {
+        color: $brand-primary;
+      }
+      .amount {
+        width: 25%;
+        padding: 3px 0;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .title-name {
+    color: $gray-lighter;
+  }
+  .address-wrap {
+    padding: 20px 0 20px 30px;
+    .item {
+      .address-list {
+        li {
+          padding: 0 0 5px 20px;
+        }
+      }
+      .map {
+        max-width: 500px;
+        max-height: 380px;
+        margin-left: 10px;
+        padding: 10px;
+        border: 1px solid $gray-plain-light;
+      }
+    }
+  }
 }
 
 /*======================================goods-detail end======================================*/
@@ -483,6 +552,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 10px 15px;
       .editor-item {
         padding: 5px 0;
+        margin:0px;
         .narrow {
           width: 80px;
         }
@@ -523,6 +593,20 @@ ul, li, p, a, h1, h2, h3, h4 {
   .content-wrap {
     .add-address {
       margin: 15px 0;
+    }
+    .address-list {
+      margin-top: 5px;
+
+      div {
+        border: 1px solid #EEEEEE;
+        border-radius: 3px;
+        margin-top: 4px;
+        padding: 5px;
+        color: #808080;
+      }
+    }
+    .pictures {
+      margin-top: 10px;
     }
     .item {
       @extend .upload-item;
@@ -566,7 +650,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================wholesalers-management begin======================================*/
 .wholesalers-management {
   .notice-bar {
-    @include padding-clear;
+    padding: 0;
     border-bottom: 1px solid $brand-primary;
   }
 
@@ -954,28 +1038,28 @@ ul, li, p, a, h1, h2, h3, h4 {
         display: inline-block;
         color: $gray-lighter;
         padding: 5px 0;
-        position:relative;
+        position: relative;
         height: 32px;
         width: 20%;
-        .selected{
-          span{
+        .selected {
+          span {
             display: inline-block;
             width: 80%;
           }
         }
-        a{
+        a {
           text-decoration: none;
           color: $gray-lighter;
         }
-        .select-list{
+        .select-list {
           display: none;
-          position:absolute;
-          bottom:-40px;
+          position: absolute;
+          bottom: -40px;
           width: 100%;
-          z-index:99999;
-          li{
+          z-index: 99999;
+          li {
             padding-right: 10px;
-            a{
+            a {
               color: $gray-base;
             }
           }
@@ -997,7 +1081,10 @@ ul, li, p, a, h1, h2, h3, h4 {
       height: 100%;
       padding: 10px;
       .btn {
-        padding: 5px 15px;
+        padding: 6px 15px;
+        &:hover {
+          background-color: $brand-primary;
+        }
       }
     }
   }
@@ -1122,34 +1209,157 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================search end======================================*/
 /*======================================shopping-car begin======================================*/
-.audit-step-outs{
-  .step{
+.audit-step-outs {
+  .step {
     height: 40px;
     line-height: 40px;
     text-align: center;
     position: relative;
-    border:1px solid red;
-    background-color: $gray-plain-light;
-    .triangle-right{
+    background-color: $gray-plain;
+    .triangle-right {
       position: absolute;
-      right: -40px;
-      top:-1px;
+      top: 0;
       display: inline-block;
       width: 0;
       height: 0;
       border-top: 20px solid transparent;
-      border-left: 40px solid $gray-plain-light;
+      border-left: 35px solid;
       border-bottom: 20px solid transparent;
-      z-index:3;
+      z-index: 3;
+    }
+    span.first {
+      border-left-color: $gray-plain-light;
+      right: -35px;
+    }
+    span.last {
+      border-left-color: $gray-plain;
+      right: -33px;
     }
   }
-  .step-active{
+  .step-active {
     background-color: $brand-danger;
     color: $body-bg;
-    .triangle-right{
+    span.first {
       border-left-color: $brand-danger;
+      right: -35px;
+    }
+    span.last {
+      border-left-color: $brand-danger;
+      right: -33px;
     }
   }
 }
+
+.table-list-row {
+  margin-top: 40px;
+  .shopping-table-list {
+    padding: 0;
+    table {
+      thead {
+        th {
+          background-color: $blue-light;
+          color: $gray-light;
+        }
+      }
+      tfoot {
+        td {
+          background-color: $gray-plain;
+          .operating {
+            padding: 5px 0;
+            .control {
+              width: 85%;
+              padding: 3px 0;
+            }
+          }
+        }
+      }
+      tr {
+        th {
+          border: none;
+          border-bottom: 1px solid $gray-plain-light;
+          vertical-align: middle;
+        }
+        td {
+          @extend th;
+          padding: 15px 8px;
+          .avatar {
+            @include square(50px);
+          }
+          .btn {
+            color: $gray-dark;
+          }
+        }
+        td.total-money {
+          border-left: 1px solid $gray-plain-light;
+        }
+      }
+    }
+    .check-item {
+      display: inline-block;
+      .span-checkbox {
+        display: inline-block;
+        @include square(16px);
+        border: 1px solid $gray-lighter;
+        line-height: 13px;
+        font-size: 17px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+      .inp-checkbox {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+.fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1030;
+}
+
+.clearing {
+  background-color: $banner-gray;
+  padding: 0;
+  .money {
+    .red {
+      margin: 0 10px;
+      font-size: 22px;
+      vertical-align: middle;
+    }
+  }
+  .btn {
+    padding: 15px 40px;
+  }
+}
+
+.submit-order {
+  padding: 6px 25px;
+}
+
 /*======================================shopping-car end======================================*/
+/*======================================collect begin======================================*/
+.collect {
+  .control-panel {
+    padding: 10px 15px;
+    .control {
+      width: 10%;
+      padding: 4px 0;
+      vertical-align: middle;
+    }
+    input.control {
+      width: 15%;
+      padding:4px 3px;
+    }
+    .search {
+      width: 15%;
+      background-color: $gray-plain-light;
+    }
+  }
+
+}
+
+/*======================================collect end======================================*/
 /*==================================================================================dealer end======================================================================*/

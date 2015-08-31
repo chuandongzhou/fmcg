@@ -7,11 +7,12 @@ $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->controller('shop', 'ShopController');          //商家商店首页
-    $router->controller('order', 'OrderController');  //批发商订单管理
-//    $router->controller('order-retailer', 'RetailerOrderController');  //终端商订单管理
-//    $router->controller('order-supplier', 'SupplierOrderController');  //供应商订单管理
 
+    $router->group(['prefix' => 'wholesaler', 'namespace' => 'Wholesaler'], function ($router) {
 
+       // $router->controller('order', 'OrderController');    //批发商订单
+
+    });
 
 });
 

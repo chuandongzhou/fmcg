@@ -18,4 +18,14 @@ class Attr extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
+
+    /**
+     * 关联商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function goods()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'goods_attr');
+    }
 }

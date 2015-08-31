@@ -16,9 +16,9 @@ class Goods extends Model
     protected $fillable = [
         'name',
         'price',
-        'category_id',
-        'brand_id',
-        'packing',
+        'cate_level_1',
+        'cate_level_2',
+        'cate_level_3',
         'is_new',
         'is_out',
         'is_change',
@@ -28,7 +28,8 @@ class Goods extends Model
         'promotion_info',
         'min_num',
         'introduce',
-        'shop_id'
+        'shop_id',
+        'images',
     ];
 
     public $appends = ['image_url'];
@@ -44,23 +45,34 @@ class Goods extends Model
     }
 
     /**
-     * 配送区域
+     * 订单里的商品
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function goodsDeliveryArea()
+    public function orderGoods()
     {
-        return $this->hasMany('App\Models\GoodsDeliveryArea');
+        return $this->hasMany('App\Models\OrderGoods');
     }
 
     /**
      * 关联订单
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+
     public function orders()
     {
         return $this->belongsToMany('App\Models\Order', 'order_goods', 'goods_id', 'order_id');
+
+    }
+    /**
+     * 关联标签表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attr()
+    {
+        return $this->belongsToMany('App\Models\Attr')->withPivot('attr_pid');
     }
 
     /**
@@ -71,6 +83,14 @@ class Goods extends Model
     public function images()
     {
         return $this->morphMany('App\Models\File', 'fileable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function deliveryArea()
+    {
+        return $this->morphMany('App\Models\Address', 'addressable');
     }
 
     /**
@@ -104,7 +124,21 @@ class Goods extends Model
     }
 
     /**
-     *  设置店铺图片
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            // 删除所有关联文件
+           $model->deliveryArea->delete();
+        });
+    }
+
+    /**
+     *  设置图片
      *
      * @param $images ['id'=>['1' ,''] , 'path'=>'']
      * @return bool
@@ -114,11 +148,11 @@ class Goods extends Model
         //格式化图片数组
         $imagesArr = (new ImageUploadService($images))->formatImagePost();
         //删除的图片
-        $files = $this->files();
+        $files = $this->images();
         if (!empty (array_filter($images['id']))) {
             $files = $files->whereNotIn('id', array_filter($images['id']));
         }
-        $files->where('type', cons('shop.file_type.images'))->delete();
+        $files->delete();
 
         if (!empty($imagesArr)) {
             return $this->associateFiles($imagesArr, 'images', 0, false);

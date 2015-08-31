@@ -23,16 +23,20 @@ class ShopController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function getDetail($categoryId = 'all', $type = '')
+    public function getDetail($cateStr = 'all', $type = '')
     {
         //TODO: shop_id 修改
         $shop = Shop::where('user_id', 1)->first(); //商店详情
         $map = ['shop_id' => 1];
         $goods = new \stdClass();
 
-        if (is_numeric($categoryId) && $categoryId > 0) {
-            $ids = CategoryService::getChildsId(Category::select(['id', 'pid'])->get(), $categoryId);
-            $goods = Goods::whereIn('category_id', $ids);
+        /**
+         * $category  第一个为层级  后面为categoryId
+         */
+        if (is_numeric($cateStr) && strlen($cateStr) > 1) {
+            $level = substr($cateStr, 0, 1);
+            $categoryId = substr($cateStr, 1);
+            $goods = Goods::where('cate_level_'.$level, $categoryId);
         }
 
         $goods = $goods instanceof \stdClass ? Goods::where($map) : $goods->where($map);
@@ -41,7 +45,7 @@ class ShopController extends Controller
         }
         $goods = $goods->paginate();
         return view('index.shop.detail',
-            ['shop' => $shop, 'goods' => $goods, 'type' => $type, 'categoryId' => $categoryId]);
+            ['shop' => $shop, 'goods' => $goods, 'type' => $type, 'categoryId' => $cateStr]);
     }
 
     public function getIndex()

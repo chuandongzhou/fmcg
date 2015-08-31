@@ -73,9 +73,10 @@ elixir(function (mix) {
         .copy([bowerDir + 'moment/min/**'], 'public/js/lib/jquery/moment')
         //easing
         .copy([bowerDir + 'jquery.easing/js/**'], 'public/js/lib/jquery/easing')
+        //tinymce
+        .copy([bowerDir + 'tinymce/**'], 'public/js/lib/jquery/tinymce');
 
 
         // version
         //.version(['css/style.css'])
-    ;
 });

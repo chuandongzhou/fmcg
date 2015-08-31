@@ -72,7 +72,7 @@ function _ajaxGet(targetUrl, data) {
     $.ajax({
         type: 'get',
         url: targetUrl,
-        data,
+        data :data,
         dataType: 'json',
         success: function (list) {
 
@@ -115,4 +115,11 @@ function _ajaxGet(targetUrl, data) {
             $('.content').html(str);
         }
     });
+}
+function tabBox(){
+    $(".switching a").click(function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        var boxclass= $(this).attr("id");
+        $("."+boxclass).css("display","block").siblings(".box").css("display","none");
+    })
 }

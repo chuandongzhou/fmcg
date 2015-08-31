@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\AddressService;
 use App\Services\ImageUploadService;
 
 class Shop extends Model
@@ -20,8 +21,8 @@ class Shop extends Model
         'city_id',
         'district_id',
         'street_id',
+        'area',
         'address',
-        'delivery_area',
         'delivery_location',
         'user_id',
         'license_num'
@@ -98,6 +99,14 @@ class Shop extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function deliveryArea()
+    {
+        return $this->morphMany('App\Models\Address', 'addressable');
+    }
+
+    /**
      * 设置logo
      *
      * @param $logo
@@ -142,15 +151,6 @@ class Shop extends Model
         }
     }
 
-    /**
-     * 获取配送地址
-     *
-     * @return array
-     */
-    public function getDeliveryAreaAttribute($deliveryArea)
-    {
-        return explode(',', $deliveryArea);
-    }
 
     /**
      * 设置营业执照
@@ -184,6 +184,28 @@ class Shop extends Model
 
         if (!empty($imagesArr)) {
             return $this->associateFiles($imagesArr, 'files', cons('shop.file_type.images'), false);
+        }
+        return true;
+    }
+
+    /**
+     * 配送区域
+     * @param $area
+     * @return bool
+     */
+    public function setAreaAttribute($area)
+    {
+        $areaArr = (new AddressService($area))->formatAddressPost();
+
+        $nowArea = $this->deliveryArea;
+        if (count($nowArea) == count(array_filter($area['province_id']))) {
+            return true;
+        }
+        $this->deliveryArea()->delete();
+        if (!empty($areaArr)) {
+            foreach ($areaArr as $data) {
+                $this->deliveryArea()->create($data);
+            }
         }
         return true;
     }

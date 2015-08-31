@@ -52,8 +52,8 @@
                             <span class="panel-name">商品配送区域</span>
 
                             <div class="address-list">
-                                @foreach($shop->delivery_area as $area)
-                                    <span>{{ $area }}</span>
+                                @foreach ($shop->deliveryArea as $area)
+                                    <span>{{ $area->detail_address }}</span>
                                 @endforeach
                             </div>
                         </li>
@@ -94,7 +94,7 @@
             @foreach($goods as $item)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <img class="commodity-img" src="{{ $item->images->url }}">
+                        <img class="commodity-img" src="{{ $item->images[0]->url }}">
                         <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
                     </div>
                     <p class="commodity-name">{{ $item->name }}</p>

@@ -17,14 +17,24 @@ class GoodsImagesController extends Controller
      */
     public function index(Request $request)
     {
+        // TODO: 查询是需要返回标签
+        /*$attrs = $goods->attrs;
+        $attrIds = array_keys($attrs);
+        $attrResults = Attr::select(['id', 'pid', 'name'])
+            ->whereIn('id', $attrIds)
+            ->orWhere(function ($query) use ($attrIds) {
+                $query->whereIn('pid', $attrIds);
+            })->get()->toArray();
+        $attrResults = (new AttrService($attrResults))->format();*/
+        // TODO 以上代码可能会用到
         $attributes = array_filter($request->all());
         if ($attributes) {
             if (isset($attributes['attrs'])) {
-                $attributes['attrs'] = implode(',', $attributes['attrs']);
+                $attributes['attrs'] = json_encode($attributes['attrs']);
             }
 
         } else {
-            $attributes['level1'] = Category::orderBy('id', 'ASC')->pluck('id');
+            $attributes['cate_level_1'] = Category::orderBy('id', 'ASC')->pluck('id');
         }
 
         $goodsImage = GoodsImages::where($attributes)->with('image')->get();
@@ -38,7 +48,7 @@ class GoodsImagesController extends Controller
      */
     public function create()
     {
-        $firstCategory = Category::orderBy('id', 'ASC')->pluck('id');
+        $firstCategory = Category::where('pid', 0)->pluck('id');
         return view('admin.images.images', ['search' => $firstCategory]);
     }
 
