@@ -100,14 +100,21 @@ class Order extends Model
         $status = $this->attributes['status'];
         $payStatus = $this->attributes['pay_status'];
         $payType = $this->attributes['pay_type'];
-        if($payType == cons('pay_type.online')){//在线支付
+        if ($payType == cons('pay_type.online')) {//在线支付
             if (!$status) {//显示未确认
                 return cons()->valueLang('order.status')[$status];
             }
-            if(!$payStatus){//显示未支付
+            if (!$payStatus) {//显示未支付
                 return cons()->valueLang('order.pay_status')[$payStatus];
             }
         }
+        //货到付款，当客户已付款时候显示订单状态为已付款
+        if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
+            && $status == cons('order.status.send')
+        ) {
+            return '已付款';
+        }
+
 
         return cons()->valueLang('order.status')[$status];
     }
@@ -117,13 +124,14 @@ class Order extends Model
      *
      * @param $query
      * @param $search
+     * @param $userId
      * @return mixed
      */
-    public function scopeOfUserType($query, $search)
+    public function scopeOfUserType($query, $search, $userId)
     {
-        return $query->wherehas('user', function ($query) use ($search) {
+        return $query->wherehas('user', function ($query) use ($search, $userId) {
 
-            $query->where('type', $search['search_role'])->where('user_name', $search['search_content']);
+            $query->where('type', '<', $userId)->where('user_name', $search);
         });
     }
 
@@ -132,13 +140,14 @@ class Order extends Model
      *
      * @param $query
      * @param $search
+     * @param $userId
      * @return mixed
      */
-    public function scopeOfSellerType($query, $search)
+    public function scopeOfSellerType($query, $search, $userId)
     {
-        return $query->wherehas('seller', function ($query) use ($search) {
+        return $query->wherehas('seller', function ($query) use ($search, $userId) {
 
-            $query->where('type', $search['search_role'])->where('user_name', $search['search_content']);
+            $query->where('type', '>', $userId)->where('user_name', $search['search_content']);
 
 
         });
@@ -153,7 +162,7 @@ class Order extends Model
      */
     public function scopeOfBuy($query, $userId)
     {
-        return $query->where('user_id', $userId)->with('seller', 'goods');
+        return $query->where('user_id', $userId)->with('seller', 'goods')->orderBy('id', 'desc');
     }
 
     /**
@@ -165,7 +174,7 @@ class Order extends Model
      */
     public function scopeOfSell($query, $userId)
     {
-        return $query->where('seller_id', $userId)->with('user', 'goods');
+        return $query->where('seller_id', $userId)->with('user', 'goods')->orderBy('id', 'desc');
     }
 
     /**
@@ -197,7 +206,7 @@ class Order extends Model
      * @param $query
      * @return mixed
      */
-        public function scopeGetPayment($query)
+    public function scopeGetPayment($query)
     {
         return $query->where('pay_status', cons('order.pay_status.non_payment'))->where('status',
             cons('order.status.send'));

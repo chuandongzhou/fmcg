@@ -50,34 +50,34 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">首页</a></li>
-                    <li class="menu-wrap">
-                        <a href="#" class="menu-hide item menu-wrap-title">商品分类</a>
-                        <ul class="a-menu">
-                            @foreach($categories as $category)
-                                <li>
-                                    <a href="{{ url('shop/detail/' . $category['id'] . ($type ? '/' . $type : '')) }}"
-                                       class="menu-hide item">{{ $category['name'] }}</a>
-                                    <ul class="secondary-menu">
-                                        @foreach($category['child'] as $child)
-                                            <li class="second-menu-item">
-                                                <a href="{{ url('shop/detail/' . $child['id'] . ($type ? '/' . $type : '')) }}" class="item">
-                                                    {{ $child['name'] }}
-                                                </a>
-                                                <div class="three-menu">
-                                                    @foreach($child['child'] as $grandChild)
-                                                        <a href="{{ url('shop/detail/' . $grandChild['id'] . ($type ? '/' . $type : '')) }}">
-                                                            {{ $grandChild['name'] }} |
-                                                        </a>
-                                                    @endforeach
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @endforeach
-                        </ul>
+                    {{--<li class="menu-wrap">--}}
+                        {{--<a href="#" class="menu-hide item menu-wrap-title">商品分类</a>--}}
+                        {{--<ul class="a-menu">--}}
+                            {{--@foreach($categories as $category)--}}
+                                {{--<li>--}}
+                                    {{--<a href="{{ url('shop/detail/' . $category['id'] . ($type ? '/' . $type : '')) }}"--}}
+                                       {{--class="menu-hide item">{{ $category['name'] }}</a>--}}
+                                    {{--<ul class="secondary-menu">--}}
+                                        {{--@foreach($category['child'] as $child)--}}
+                                            {{--<li class="second-menu-item">--}}
+                                                {{--<a href="{{ url('shop/detail/' . $child['id'] . ($type ? '/' . $type : '')) }}" class="item">--}}
+                                                    {{--{{ $child['name'] }}--}}
+                                                {{--</a>--}}
+                                                {{--<div class="three-menu">--}}
+                                                    {{--@foreach($child['child'] as $grandChild)--}}
+                                                        {{--<a href="{{ url('shop/detail/' . $grandChild['id'] . ($type ? '/' . $type : '')) }}">--}}
+                                                            {{--{{ $grandChild['name'] }} |--}}
+                                                        {{--</a>--}}
+                                                    {{--@endforeach--}}
+                                                {{--</div>--}}
+                                            {{--</li>--}}
+                                        {{--@endforeach--}}
+                                    {{--</ul>--}}
+                                {{--</li>--}}
+                            {{--@endforeach--}}
+                        {{--</ul>--}}
 
-                    </li>
+                    {{--</li>--}}
                     <li><a href="#">店家信息</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

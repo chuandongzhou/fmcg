@@ -15,17 +15,14 @@ function getOrderList() {
         data = {};
         targetUrl = $(this).data('url');
         var value = $('input[name="search_content"]').val();
-        //查询对象
-        var role = $('#search-role').val();
         if (value == '') {
             return false;
         }
         data['search_content'] = value;
-        data['search_role'] = role;
         _ajaxGet(targetUrl, data);
     });
     //待办事项动态加载详情
-    $('a.ajax-get').on('click',function(){
+    $('a.ajax-get').on('click', function () {
         //修改选中状态
         $(this).addClass('btn-primary');
         $(this).siblings('a').removeClass('btn-primary');
@@ -72,7 +69,7 @@ function _ajaxGet(targetUrl, data) {
     $.ajax({
         type: 'get',
         url: targetUrl,
-        data :data,
+        data: data,
         dataType: 'json',
         success: function (list) {
 
@@ -105,10 +102,36 @@ function _ajaxGet(targetUrl, data) {
                     + '         <p>订单金额 :<span class="red">￥' + result.price + '</span></p>'
                     + '     </div>'
                     + '     <div class="col-sm-2 order-form-operating">'
-                    + '         <p><a href="#" class="btn btn-primary">查看</a></p>'
-                    + '         <p><a class="btn btn-danger ajax" data-method="put" data-url="'+SITE.ROOT+'/order/sure/'+ result.id +'">确认</a></p>'
-                    + '         <p><a href="#" class="btn btn-success">导出</a></p>'
-                    + '     </div>'
+                    + '         <p><a href="#" class="btn btn-primary">查看</a></p>';
+                //TODO:这里需要当前用户ID
+                if (SITE.USER.id == result.seller_id) {//卖家----需要修改参照order-buy/sell
+                    if (result.status == 0) {
+                        str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
+                            'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
+                    } else if (result.pay_type == 1 && result.pay_status == 0 && result.status == 1) {
+                        str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                            'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
+                    } else if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
+                        str += '<p><a class="btn btn-warning ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-send" ' +
+                            'data-data=\'{"order_id"' + result.id + '}\'>发货</a></p>';
+                    } else if (result.pay_type == 2 && result.pay_status == 1 && result.status == 2) {
+                        str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
+                            'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
+                    }
+                } else {//买家
+                    if (result.pay_status == 0 && result.status == 1) {
+                        str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                            'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
+                    }
+                    if (result.pay_status == 0 && result.status != 0) {
+                        str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
+                    } else if (result.pay_type == 1 && result.status == 2) {
+                        str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
+                            'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>已收货</a></p>';
+                    }
+                }
+                str += '<p><a href="#" class="btn btn-success">导出</a></p>'
+                    + '</div>'
                     + '</div>';
 
             });
@@ -116,10 +139,10 @@ function _ajaxGet(targetUrl, data) {
         }
     });
 }
-function tabBox(){
-    $(".switching a").click(function(){
+function tabBox() {
+    $(".switching a").click(function () {
         $(this).addClass("active").siblings().removeClass("active");
-        var boxclass= $(this).attr("id");
-        $("."+boxclass).css("display","block").siblings(".box").css("display","none");
+        var boxclass = $(this).attr("id");
+        $("." + boxclass).css("display", "block").siblings(".box").css("display", "none");
     })
 }

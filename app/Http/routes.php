@@ -7,12 +7,8 @@ $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->controller('shop', 'ShopController');          //商家商店首页
-
-    $router->group(['prefix' => 'wholesaler', 'namespace' => 'Wholesaler'], function ($router) {
-
-       // $router->controller('order', 'OrderController');    //批发商订单
-
-    });
+    $router->controller('order-buy', 'OrderBuyController');  //买家订单管理
+    $router->controller('order-sell', 'OrderSellController');//卖家订单管理
 
 });
 
