@@ -9,6 +9,7 @@ namespace App\Models;
 
 
 use App\Services\ImageUploadService;
+use DB;
 
 class Goods extends Model
 {
@@ -65,6 +66,7 @@ class Goods extends Model
         return $this->belongsToMany('App\Models\Order', 'order_goods', 'goods_id', 'order_id');
 
     }
+
     /**
      * 关联标签表
      *
@@ -100,7 +102,7 @@ class Goods extends Model
      */
     public function scopeHot($query)
     {
-        $query->orderBy('sales_volume', 'desc');
+        return $query->orderBy('sales_volume', 'desc');
     }
 
     /**
@@ -110,7 +112,101 @@ class Goods extends Model
      */
     public function scopeNew($query)
     {
-        $query->where('is_new', 1);
+        return $query->where('is_new', 1);
+    }
+
+    /**
+     * 价格由低到高
+     *
+     * @param $query
+     */
+    public function scopeOrderPrice($query)
+    {
+        return $query->orderBy('price', 'asc');
+    }
+
+    /**
+     * 查询最新
+     *
+     * @param $query
+     */
+    public function scopeOrderNew($query)
+    {
+        return $query->orderBy('id', 'desc');
+    }
+
+    /**
+     * 名称排序
+     *
+     * @param $query
+     */
+    public function scopeOrderName($query)
+    {
+        return $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * 配送地址
+     *
+     * @param $query
+     * @param $data
+     */
+
+    public function scopeOfDeliveryArea($query, $data)
+    {
+        if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id'],
+                        'district_id' => $data['district_id']
+                    ]);
+            });
+        } elseif (isset($data['province_id']) && isset($data['city_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id']
+                    ]);
+            });
+        } elseif (isset($data['province_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id']
+                    ]);
+            });
+        }
+    }
+
+    /**
+     * 过滤分类
+     *
+     * @param $query
+     * @param $categoryId
+     * @param int $level
+     */
+    public function scopeOfCategory($query, $categoryId, $level = 1)
+    {
+        return $query->where('cate_level_' . $level, $categoryId);
+    }
+
+    /**
+     * @param $query
+     * @param $attr
+     */
+    public function scopeOfAttr($query, $attr)
+    {
+        $goodsAttr = DB::table('attr_goods')->select(DB::raw('goods_id ,count(attr_id) as num'))->whereIn('attr_id',
+            $attr)->groupBy('goods_id')->get();
+
+        $goodsAttr = array_filter($goodsAttr, function ($item) use ($attr) {
+            return $item->num == count($attr);
+        });
+        $goodsIds = array_pluck($goodsAttr, 'goods_id');
+        return $query->whereIn('id', $goodsIds);
     }
 
     /**
@@ -120,7 +216,7 @@ class Goods extends Model
      */
     public function scopePromotion($query)
     {
-        $query->where('is_promotion', 1);
+        return $query->where('is_promotion', 1);
     }
 
     /**
@@ -133,7 +229,7 @@ class Goods extends Model
         // 注册删除事件
         static::deleted(function ($model) {
             // 删除所有关联文件
-           $model->deliveryArea->delete();
+            $model->deliveryArea->delete();
         });
     }
 

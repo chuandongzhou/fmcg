@@ -7,6 +7,7 @@ use App\Models\Goods;
 use App\Http\Requests;
 use App\Services\AddressService;
 use Illuminate\Http\Request;
+use App\Models\Address;
 
 class GoodsController extends Controller
 {
@@ -102,9 +103,11 @@ class GoodsController extends Controller
         }
         $model->deliveryArea()->delete();
         if (!empty($areaArr)) {
-            foreach ($areaArr as $data) {
-                $model->deliveryArea()->create($data);
+           $data = [];
+            foreach ($areaArr as $area) {
+                $data[] = new Address($area);
             }
+            $model->deliveryArea()->saveMany($data);
         }
         return true;
     }

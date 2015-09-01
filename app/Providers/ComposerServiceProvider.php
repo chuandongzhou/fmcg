@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\CategoryComposer;
+use App\Http\ViewComposers\AttrComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -14,8 +15,10 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer(
-            'index.master', CategoryComposer::class
+        view()->composers(
+            [
+                CategoryComposer::class => 'index.master'
+            ]
         );
     }
 

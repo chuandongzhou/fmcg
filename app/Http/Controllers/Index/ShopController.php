@@ -26,7 +26,7 @@ class ShopController extends Controller
     public function getDetail($cateStr = 'all', $type = '')
     {
         //TODO: shop_id 修改
-        $shop = Shop::where('user_id', 1)->first(); //商店详情
+        $shop = Shop::with('images')->where('user_id', 1)->first(); //商店详情
         $map = ['shop_id' => 1];
         $goods = new \stdClass();
 

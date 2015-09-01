@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Attr;
+
 /**
  * Created by PhpStorm.
  * User: Colin
@@ -24,9 +26,9 @@ class AttrService
      *
      * @return array
      */
-    public function format()
+    public function format($attrs = [])
     {
-        $attrs = $this->attrs;
+        $attrs = empty($attrs) ? $this->attrs : $attrs;
 
         if (empty($attrs)) {
             return [];
@@ -42,5 +44,17 @@ class AttrService
             }
         }
         return $attrList;
+    }
+
+    /**
+     *
+     *
+     * @param $categoryId
+     * @return array
+     */
+    public function getAttrByCategoryId($categoryId)
+    {
+        $attrs = Attr::where('category_id', $categoryId)->select(['id', 'pid', 'name'])->get()->toArray();
+        return  $this->format($attrs);
     }
 }

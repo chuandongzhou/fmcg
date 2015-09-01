@@ -43,6 +43,7 @@
                             @foreach($attrs as $key=>$attr)
                                 <label>{{ $attr['name'] }}</label>
                                 <select name="attrs[{{ $attr['id'] }}]" class="narrow">
+                                    <option value="0">请选择</option>
                                     @foreach($attr['child'] as $child)
                                         <option value="{{ $child['id'] }}" {{ $child['id'] == $goods->attr[$key]->id ? 'selected' : '' }}>{{ $child['name'] }}</option>
                                     @endforeach
@@ -150,8 +151,8 @@
                 <div class="col-sm-12 map">
                     <label>商品图片 :</label>
                     <button id="pic-upload" type="button" class="btn btn-primary" data-loading-text="图片已达到最大数量"
-                            data-toggle="modal" data-target="#cropperModal" data-width="1000" data-height="400">
-                        请选择图片文件(1000x400)
+                            data-toggle="modal" data-target="#cropperModal" data-width="200" data-height="200">
+                        请选择图片文件(200x200)
                     </button>
 
                     <div class="col-sm-10">
@@ -219,7 +220,7 @@
             }, function (data) {
                 var html = '';
                 for (var index in data) {
-                    var options = '';
+                    var options = '<option value="0">请选择</option>';
                     html += '<label>' + data[index]['name'] + '</label>';
                     html += ' <select name="attrs[' + data[index]['id'] + ']" class="narrow">';
                     for (var i in data[index]['child']) {
