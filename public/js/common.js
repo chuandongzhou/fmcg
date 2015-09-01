@@ -569,8 +569,8 @@ var getCategory = function (url) {
     var post = function (pid, select) {
         var ohtml = '<option value="">请选择</option>';
         $.get(url, {pid: pid}, function (data) {
-            for (var index in data) {
-                ohtml += '<option value="' + index + '">' + data[index] + '</option>'
+            for (var index in data['message']) {
+                ohtml += '<option value="' + index + '">' + data['message'][index] + '</option>'
             }
             select.html(ohtml);
         }, 'json')

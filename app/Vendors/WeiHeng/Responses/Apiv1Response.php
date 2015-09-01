@@ -60,7 +60,7 @@ class Apiv1Response extends JsonResponse
     public function __construct($id = 'internal_server_error', $data = null, $headers = [], $options = 0)
     {
         list($code, $message) = $this->status[$id];
-        $data = $data ? (is_array($data) ? $data : ['message' => $data]) : [];
+        $data = $data ? (is_array($data) ? $data : ['message' => $data]) : null;
 
         if ($code < 200 || $code >= 300) {
             $data = array_merge(['id' => $id, 'message' => $message], $data);
