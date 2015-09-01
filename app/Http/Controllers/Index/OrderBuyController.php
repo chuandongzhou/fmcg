@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 
 use App\Http\Requests;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
 
@@ -23,12 +24,11 @@ class OrderBuyController extends OrderController
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
 
-        $data['nonSure'] = Order::OfBuy($this->userId)->NonSure()->count();//未确认
-        $data['nonPayment'] = Order::OfBuy($this->userId)->NonPayment()->count();//待付款
-        $data['nonArrived'] = Order::OfBuy($this->userId)->NonArrived()->count();//待收货
+        $data['nonSure'] = Order::OfBuy($this->userId)->NonSure()->NonCancel()->count();//未确认
+        $data['nonPayment'] = Order::OfBuy($this->userId)->NonPayment()->NonCancel()->count();//待付款
+        $data['nonArrived'] = Order::OfBuy($this->userId)->NonArrived()->NonCancel()->count();//待收货
         //默认显示所有订单订单
-        $orders = Order::OfBuy($this->userId)->paginate()->toArray();
-
+        $orders = Order::OfBuy($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
 
         return view('index.order.order-buy', [
             'pay_type' => $payType,
@@ -84,6 +84,16 @@ class OrderBuyController extends OrderController
     }
 
     /**
+     * 获取待确认订单列表
+     *
+     * @return mixed
+     */
+    public function getNonSure()
+    {
+        return Order::OfBuy($this->userId)->NonSure()->paginate()->toArray();
+    }
+
+    /**
      * 获取待收货订单列表
      *
      * @return mixed
@@ -94,7 +104,7 @@ class OrderBuyController extends OrderController
     }
 
     /**
-     * 订单完成，订单必须付款成功，状态是已发货，买家才能做错完成操作，否则失败，主要是防止误操作
+     * 订单完成，订单必须付款成功，状态是已发货，买家才能做完成操作，否则失败，主要是防止误操作
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -104,12 +114,34 @@ class OrderBuyController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where('user_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->where('status',
-            cons('order.status.send'))->update(['status' => cons('order.status.finished')]);
+            cons('order.pay_status.payment_success'))->where('status', cons('order.status.send'))->NonCancel()->update([
+            'status' => cons('order.status.finished'),
+            'finished_at' => Carbon::now()
+        ]);
         if ($status) {
             return $this->success();
         }
 
         return $this->error('操作失败');
+    }
+
+    /**
+     * 获取订单详情
+     *
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function getDetailOnline($id)
+    {
+        $detail = Order::Where('user_id', $this->userId)->with('user', 'shoppingAddress', 'seller', 'goods',
+            'goods.images')->find($id)->toArray();
+        if ($detail['pay_type'] == cons('pay_type.online')) {
+            return view('index.order.detail-online', [
+                'order' => $detail
+            ]);
+        }
+        return view('index.order.detail-cod', [
+            'order' => $detail
+        ]);
     }
 }

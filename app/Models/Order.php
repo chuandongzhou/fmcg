@@ -20,9 +20,14 @@ class Order extends Model
         'seller_id',
         'paid_at',
         'confirmed_at',
+        'is_cancel',
+        'cancel_by',
+        'cancel_at',
     ];
 
-    protected $appends = ['status_name', 'payment_type',];
+    protected $appends = ['status_name', 'payment_type', 'step_num',];
+
+    public $timestamps = false;
 
     /**
      * 该订单下所有商品
@@ -40,9 +45,9 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function receivingAddress()
+    public function shoppingAddress()
     {
-        return $this->hasOne('App\Models\ReceivingAddress');
+        return $this->belongsTo('App\Models\ShoppingAddress');
     }
 
     /**
@@ -100,6 +105,10 @@ class Order extends Model
         $status = $this->attributes['status'];
         $payStatus = $this->attributes['pay_status'];
         $payType = $this->attributes['pay_type'];
+        $isCancel = $this->attributes['is_cancel'];
+        if($isCancel){
+            return '已取消';
+        }
         if ($payType == cons('pay_type.online')) {//在线支付
             if (!$status) {//显示未确认
                 return cons()->valueLang('order.status')[$status];
@@ -117,6 +126,32 @@ class Order extends Model
 
 
         return cons()->valueLang('order.status')[$status];
+    }
+
+    /**
+     * 进度条显示
+     *
+     * @return mixed
+     */
+    public function getStepNumAttribute()
+    {
+        $payType = $this->attributes['pay_type'];
+        $payStatus = $this->attributes['pay_status'];
+        $status = $this->attributes['status'];
+        if ($payType == cons('pay_type.online')) {
+            if ($payStatus) {
+                return $status + 2;
+            }
+
+            return $status + 1;
+        } else {
+            if ($status <= cons('order.status.send')) {
+                return $status + 1;
+            }
+            if ($payStatus) {
+                return $status + 2;
+            }
+        }
     }
 
     /**
@@ -189,6 +224,17 @@ class Order extends Model
     }
 
     /**
+     * 未取消条件
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeNonCancel($query)
+    {
+        return $query->where('is_cancel', cons('order.is_cancel.off'));
+    }
+
+    /**
      * 未付款
      *
      * @param $query
@@ -196,8 +242,8 @@ class Order extends Model
      */
     public function scopeNonPayment($query)
     {
-        return $query->where('pay_status', cons('order.pay_status.non_payment'))->where('status', '<>',
-            cons('order.status.non_sure'));
+        return $query->where('pay_status', cons('order.pay_status.non_payment'))->whereNotIn('status',
+            [cons('order.status.non_sure'), cons('order.status.finished')]);
     }
 
     /**
@@ -225,14 +271,21 @@ class Order extends Model
 
 
     /**
-     * 待收货
+     * 待收货,分在线支付和货到付款来讨论
      *
      * @param $query
      * @return mixed
      */
     public function scopeNonArrived($query)
     {
-        return $query->whereNotIn('status', [cons('order.status.non_sure'), cons('order.status.finished')]);
+        return $query->where(function ($query) {
+            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                cons('order.pay_status.payment_success'))->whereIn('status',
+                [cons('order.status.non_send'), cons('order.status.send')]);
+        })->OrWhere(function ($query) {
+            $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
+                [cons('order.status.non_send'), cons('order.status.send')]);
+        });
     }
 
     /**
@@ -249,8 +302,9 @@ class Order extends Model
                 $query->where('pay_type', $search['pay_type']);
             }
             if ($search['status']) {
-                if ($search['status'] == key(cons('order.pay_status'))) {
-                    $query->where('pay_status', cons('order.pay_status')[$search['status']]);
+                if ($search['status'] == key(cons('order.pay_status'))) {//查询未付款
+                    $query->where('pay_status', cons('order.pay_status')[$search['status']])->whereNotIn('status', '<>',
+                        cons('order.status.non_sure'));
                 } else {
                     $query->where('status', cons('order.status')[$search['status']]);
                 }

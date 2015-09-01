@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,6 +17,7 @@ class OrderController extends Controller
     {
         //TODO:获取当前用户ID号
         $this->userId = 1;
+        session(['id' => $this->userId]);
 
     }
 
@@ -29,14 +31,15 @@ class OrderController extends Controller
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where('seller_id', $this->userId)->orWhere('user_id', $this->userId)->whereIn('id',
-            $orderIds)->where('pay_status',
-            cons('order.status.non_payment'))->NonSend()->update(['status' => cons('order.status.non_sure')]);
+            $orderIds)->where('pay_status', cons('order.pay_status.non_payment'))->NonSend()->update([
+            'is_cancel' => cons('order.is_cancel.on'),
+            'cancel_by' => $this->userId,
+            'cancel_at' => Carbon::now()
+        ]);
         if ($status) {
             return $this->success();
         }
 
         return $this->error('操作失败');
     }
-
-
 }

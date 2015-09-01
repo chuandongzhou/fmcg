@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 
 use App\Http\Requests;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
 
@@ -26,8 +27,8 @@ class OrderSellController extends OrderController
         $data['nonSure'] = Order::OfSell($this->userId)->NonSure()->count();//未确认
         $data['nonSend'] = Order::OfSell($this->userId)->NonSend()->count();//待发货
         $data['pendingCollection'] = Order::OfSell($this->userId)->GetPayment()->count();//待收款（针对货到付款）
-        $orders = Order::OfSell($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
 
+        $orders = Order::OfSell($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -52,7 +53,7 @@ class OrderSellController extends OrderController
             $order = Order::OfSell($this->userId)->find($orderId);
             $orders['data'][0] = $order;
         } else {
-                $orders = Order::OfSell($this->userId)->ofUserType($search,$this->userId)->paginate()->toArray();
+            $orders = Order::OfSell($this->userId)->ofUserType($search, $this->userId)->paginate()->toArray();
         }
 
         return $orders;
@@ -112,7 +113,10 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('status',
-            cons('order.status.non_sure'))->update(['status' => cons('order.status.non_send')]);
+            cons('order.status.non_sure'))->NonCancel()->update([
+            'status' => cons('order.status.non_send'),
+            'confirmed_at' => Carbon::now()
+        ]);
         if ($status) {
             return $this->success();
         }
@@ -130,7 +134,7 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where('seller_id', $this->userId)->whereIn('id',
-            $orderIds)->update(['status' => cons('order.status.send')]);
+            $orderIds)->NonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
         if ($status) {
             return $this->success();
         }
@@ -149,11 +153,29 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->update(['status' => cons('order.status.finished')]);
+            cons('order.pay_status.payment_success'))->NonCancel()->update([
+            'status' => cons('order.status.finished'),
+            'finished_at' => Carbon::now()
+        ]);
         if ($status) {
             return $this->success();
         }
 
         return $this->error('请确认买家是否付款');
+    }
+
+    public function getDetailOnline($id)
+    {
+        $detail = Order::where('seller_id', $this->userId)->with('shoppingAddress', 'user', 'seller', 'goods',
+            'goods.images')->find($id)->toArray();
+        if ($detail['pay_type'] == cons('pay_type.online')) {
+            return view('index.order.detail-online', [
+                'order' => $detail
+            ]);
+        }
+
+        return view('index.order.detail-cod', [
+            'order' => $detail
+        ]);
     }
 }

@@ -16,7 +16,7 @@ return [
         'pay_status' => [//支付状态
             'non_payment' => 0,
             'payment_success' => 1,
-            'payment_failed' =>2,
+            'payment_failed' => 2,
             'refund' => 3,
             'refund_success' => 4,
             'refund_failed' => 5,
@@ -27,6 +27,10 @@ return [
             'send' => 2, //已发货
             'finished' => 3, //完成
         ],
+        'is_cancel' => [ //订单是否被取消，默认是未取消
+            'off' => 0,
+            'on' => 1,
+        ]
     ],
     //用户类别
     'user' => [
@@ -81,7 +85,7 @@ return [
     'goods' => [
         'type' => [
             'yes' => 1,   //是
-            'no'  => 0    //否
+            'no' => 0    //否
         ],
         'status' => [
             'on' => 1,   //上架
