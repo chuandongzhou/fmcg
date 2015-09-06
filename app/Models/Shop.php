@@ -25,7 +25,8 @@ class Shop extends Model
         'address',
         'delivery_location',
         'user_id',
-        'license_num'
+        'license_num',
+        'nickname'
     ];
 
     /**
@@ -190,6 +191,7 @@ class Shop extends Model
 
     /**
      * 配送区域
+     *
      * @param $area
      * @return bool
      */
@@ -207,6 +209,22 @@ class Shop extends Model
                 $this->deliveryArea()->create($data);
             }
         }
+        return true;
+    }
+
+    /**
+     * 设置昵称
+     *
+     * @param $nickname
+     * @return bool
+     */
+    public function setNicknameAttribute($nickname)
+    {
+        if ($this->user->nickname == $nickname){
+            return true;
+        }
+        $this->user->nickname = $nickname;
+        $this->user->save();
         return true;
     }
 

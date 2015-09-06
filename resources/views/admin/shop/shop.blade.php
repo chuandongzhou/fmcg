@@ -22,10 +22,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="username">店家名称:</label>
+                <label class="col-sm-2 control-label" for="nickname">店家名称:</label>
 
                 <div class="col-sm-10 col-md-6">
-                    <input class="form-control" id="name" name="name" placeholder="请输入店家名称"
+                    <input class="form-control" id="nickname" name="nickname" placeholder="请输入店家名称"
                            value="{{ $shop->user->nickname }}"
                            type="text">
                 </div>

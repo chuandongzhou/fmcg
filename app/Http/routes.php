@@ -11,6 +11,15 @@ $router->group(['namespace' => 'Index'], function ($router) {
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
     $router->resource('goods', 'GoodsController');          //商品管理
 
+    $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+        $router->get('shop', 'ShopController@index');          //商家信息
+        $router->get('password', 'PasswordController@index');          //修改密码
+        $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
+        $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
+        $router->get('balance', 'BalanceController@index'); //账户余额
+    });
+
+
 });
 
 
@@ -54,7 +63,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
  */
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     /**
-     * v2 版本
+     * v1 版本
      */
     $router->group(['prefix' => 'v1', 'namespace' => 'v1'], function ($router) {
         // 接口地址
@@ -68,6 +77,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
+
+        $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+            $router->put('shop', 'ShopController@shop');          //商家信息
+            $router->put('password', 'PasswordController@password');          //修改密码
+            $router->post('bank-default/{bank}' , 'UserBankController@bankDefault');
+            $router->resource('bank', 'UserBankController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
+            $router->resource('delivery-man', 'DeliveryManController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
+        });
 
     });
 });

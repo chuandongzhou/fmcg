@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Index;
 
 
-class UpdatePasswordRequest extends Request
+class CreateDeliveryManRequest extends Request
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,8 +13,8 @@ class UpdatePasswordRequest extends Request
     public function rules()
     {
         return [
-            'old_password'=>'required|min:8',
-            'new_password'=>'required|min:8|confirmed'
+            'name' =>'required',
+            'phone' =>'required|numeric|digits_between:7,14',
         ];
     }
 }

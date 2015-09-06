@@ -50,32 +50,65 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">首页</a></li>
+                    <li class="menu-list" id="menu-list">
+                        <a href="#" class="menu-wrap-title list-name">商品分类</a>
+
+                        <div class="menu-list-wrap">
+                            <div class="categories" id="other-page-categories">
+                                <ul class="menu-wrap">
+                                    @foreach($categories as $category)
+                                        <li class="list1"><span><i></i>
+                                            <a href="{{ url('shop/detail/' . $category['id'] . (isset($type) ? '/' . $type : '')) }}">{{ $category['name'] }}</a>
+                                        </span>
+
+                                            <div class="menu-down-wrap menu-down-layer">
+                                                @foreach($category['child'] as $child)
+                                                    <div class="item active">
+                                                        <h3 class="title">
+                                                            <a href="{{ url('shop/detail/' . $child['id'] . (isset($type) ? '/' . $type : '')) }}">
+                                                                {{ $child['name'] }}
+                                                            </a>
+                                                        </h3>
+                                                        @foreach($child['child'] as $grandChild)
+                                                            <a href="{{ url('shop/detail/' . $grandChild['id'] . (isset($type) ? '/' . $type : '')) }}">
+                                                                {{ $grandChild['name'] }}
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
                     {{--<li class="menu-wrap">--}}
-                        {{--<a href="#" class="menu-hide item menu-wrap-title">商品分类</a>--}}
-                        {{--<ul class="a-menu">--}}
-                            {{--@foreach($categories as $category)--}}
-                                {{--<li>--}}
-                                    {{--<a href="{{ url('shop/detail/' . $category['id'] . ($type ? '/' . $type : '')) }}"--}}
-                                       {{--class="menu-hide item">{{ $category['name'] }}</a>--}}
-                                    {{--<ul class="secondary-menu">--}}
-                                        {{--@foreach($category['child'] as $child)--}}
-                                            {{--<li class="second-menu-item">--}}
-                                                {{--<a href="{{ url('shop/detail/' . $child['id'] . ($type ? '/' . $type : '')) }}" class="item">--}}
-                                                    {{--{{ $child['name'] }}--}}
-                                                {{--</a>--}}
-                                                {{--<div class="three-menu">--}}
-                                                    {{--@foreach($child['child'] as $grandChild)--}}
-                                                        {{--<a href="{{ url('shop/detail/' . $grandChild['id'] . ($type ? '/' . $type : '')) }}">--}}
-                                                            {{--{{ $grandChild['name'] }} |--}}
-                                                        {{--</a>--}}
-                                                    {{--@endforeach--}}
-                                                {{--</div>--}}
-                                            {{--</li>--}}
-                                        {{--@endforeach--}}
-                                    {{--</ul>--}}
-                                {{--</li>--}}
-                            {{--@endforeach--}}
-                        {{--</ul>--}}
+                    {{--<a href="#" class="menu-hide item menu-wrap-title">商品分类</a>--}}
+                    {{--<ul class="a-menu">--}}
+                    {{--@foreach($categories as $category)--}}
+                    {{--<li>--}}
+                    {{--<a href="{{ url('shop/detail/' . $category['id'] . (isset($type) ? '/' . $type : '')) }}"--}}
+                    {{--class="menu-hide item">{{ $category['name'] }}</a>--}}
+                    {{--<ul class="secondary-menu">--}}
+                    {{--@foreach($category['child'] as $child)--}}
+                    {{--<li class="second-menu-item">--}}
+                    {{--<a href="{{ url('shop/detail/' . $child['id'] . (isset($type) ? '/' . $type : '')) }}" class="item">--}}
+                    {{--{{ $child['name'] }}--}}
+                    {{--</a>--}}
+                    {{--<div class="three-menu">--}}
+                    {{--@foreach($child['child'] as $grandChild)--}}
+                    {{--<a href="{{ url('shop/detail/' . $grandChild['id'] . (isset($type) ? '/' . $type : '')) }}">--}}
+                    {{--{{ $grandChild['name'] }} |--}}
+                    {{--</a>--}}
+                    {{--@endforeach--}}
+                    {{--</div>--}}
+                    {{--</li>--}}
+                    {{--@endforeach--}}
+                    {{--</ul>--}}
+                    {{--</li>--}}
+                    {{--@endforeach--}}
+                    {{--</ul>--}}
 
                     {{--</li>--}}
                     <li><a href="#">店家信息</a></li>

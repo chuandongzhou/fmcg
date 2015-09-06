@@ -144,10 +144,113 @@ function _ajaxGet(targetUrl, data) {
         }
     });
 }
-function tabBox() {
+/*function tabBox() {
     $(".switching a").click(function () {
         $(this).addClass("active").siblings().removeClass("active");
         var boxclass = $(this).attr("id");
         $("." + boxclass).css("display", "block").siblings(".box").css("display", "none");
+    })
+}*/
+$(function(){
+    menuFunc();
+})
+function menuFunc(){
+    //city-menu begin
+    $('.dealer-top-header .location-panel').mouseenter(function(){
+        $('.dealer-top-header .city-list').css('display','block');
+        $('.dealer-top-header .location-panel').css({'border':'1px solid #e0e0e0','border-bottom-color':'#fff'});
+        $('.up-down').removeClass('fa-angle-down').addClass('fa-angle-up');
+    })
+    $('.dealer-top-header .city-wrap').mouseleave(function(){
+        $('.dealer-top-header .city-list').css('display','none');
+        $('.dealer-top-header .location-panel').css('border','1px solid #f2f2f2');
+        $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
+    })
+
+    $('.city-wrap .item').on('click',function(){
+        $('.city-value').text($(this).text());
+        $('.dealer-top-header .city-list').css('display','none');
+        $('.dealer-top-header .location-panel').css('border','1px solid f2f2f2');
+        $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
+    })
+    //city-menu end
+
+    //top secondary-menu begin
+    $('.navbar-nav .menu-wrap-title').mouseenter(function(){
+        $('.menu-list-wrap').css('display','block');
+    })
+    $('.menu-list-wrap').mouseleave(function(){
+        $(this).css('display','none');
+        $('.categories .menu-wrap li').removeClass('hover-effect');
+        $('.menu-down-layer').css('display','none');
+    })
+
+    $('#menu-list .categories .menu-wrap li').mouseenter(function(){
+        $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
+        $(this).children('.menu-down-wrap').css('display','block').parents('li').siblings().
+            children('.menu-down-wrap').css('display','none');
+        $(this).children('.menu-down-wrap').css('border','1px solid #4cb9fe');
+    })
+    $('.categories-menu-item').mouseleave(function(){
+        $('.categories .menu-wrap li').removeClass('hover-effect');
+        $('.menu-down-layer').css('display','none');
+        $('#menu-down-wrap .menu-down-layer').css('border','none');
+    })
+    //top secondary-menu end
+
+    $('.banner-wrap .categories .menu-wrap li').mouseenter(function(){
+        $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
+        $('.menu-down-layer').css('display','block');
+    })
+
+    //search role begin
+    $('.dealer-header .select-role').hover(function(){
+        $(this).children('.select-list').css('display','block')
+        $(this).children('.selected').children('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
+    },function(){
+        $(this).children('.select-list').css('display','none')
+        $(this).children('.selected').children('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
+    })
+
+    $('.dealer-header .select-list li a').click(function(){
+        $('.dealer-header .selected span').text($(this).text());
+        $('.dealer-header .select-list').css('display','none');
+    })
+    //search role end
+
+    //left nav-menu
+    $('.dealer-menu-list .list-item').click(function(){
+        $(this).siblings('.menu-wrap').slideToggle();
+    })
+}
+
+function fixedBottom(){
+    var scrolltop=document.body.scrollTop;
+    var bottom=$(document).height()-$(window).height()-$('.clearing-container').height();
+    if(scrolltop>bottom){
+        $('.clearing-container').removeClass('fixed-bottom')
+    }else{
+        $('.clearing-container').addClass('fixed-bottom')
+    }
+}
+function selectedFunc(){
+    $('.span-checkbox').click(function(){
+        var ischeck=$(this).siblings('.inp-checkbox').is(':checked');
+        if(ischeck==false){
+            $(this).children('.fa').addClass('fa-check');
+            $(this).siblings('.inp-checkbox').prop('checked',true);
+        }else{
+            $(this).children('.fa').removeClass('fa-check');
+            $(this).siblings('.inp-checkbox').prop('checked',false);
+        }
+    })
+}
+
+function tabBox(){
+    $('.location').css('display','block')
+    $('.switching a').click(function(){
+        $(this).addClass('active').siblings().removeClass('active');
+        var boxclass= $(this).attr('id');
+        $('.'+boxclass).css('display','block').siblings('.box').css('display','none');
     })
 }
