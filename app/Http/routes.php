@@ -7,6 +7,7 @@ $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->controller('shop', 'ShopController');          //商家商店首页
+    $router->controller('order','OrderController');//订单统计
     $router->controller('order-buy', 'OrderBuyController');  //买家订单管理
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
     $router->resource('goods', 'GoodsController');          //商品管理

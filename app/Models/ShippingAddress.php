@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-class ShoppingAddress extends Model
+class ShippingAddress extends Model
 {
     //
-    protected $table = 'shopping_address';
+    protected $table = 'shipping_address';
     protected $fillable = [
         'address',
         'consigner',

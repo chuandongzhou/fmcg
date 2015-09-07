@@ -133,7 +133,7 @@ class OrderBuyController extends OrderController
      */
     public function getDetailOnline($id)
     {
-        $detail = Order::Where('user_id', $this->userId)->with('user', 'shoppingAddress', 'seller', 'goods',
+        $detail = Order::Where('user_id', $this->userId)->with('user', 'shippingAddress', 'seller', 'goods',
             'goods.images')->find($id)->toArray();
         if ($detail['pay_type'] == cons('pay_type.online')) {
             return view('index.order.detail-online', [

@@ -45,9 +45,9 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function shoppingAddress()
+    public function shippingAddress()
     {
-        return $this->belongsTo('App\Models\ShoppingAddress');
+        return $this->belongsTo('App\Models\ShippingAddress');
     }
 
     /**
@@ -106,8 +106,8 @@ class Order extends Model
         $payStatus = $this->attributes['pay_status'];
         $payType = $this->attributes['pay_type'];
         $isCancel = $this->attributes['is_cancel'];
-        if($isCancel){
-            return '已取消';
+        if ($isCancel) {
+            return cons()->lang('order.is_cancel.on');
         }
         if ($payType == cons('pay_type.online')) {//在线支付
             if (!$status) {//显示未确认
@@ -121,7 +121,7 @@ class Order extends Model
         if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
             && $status == cons('order.status.send')
         ) {
-            return '已付款';
+            return cons()->valueLang('order.pay_status.payment_success');
         }
 
 
@@ -311,6 +311,15 @@ class Order extends Model
             }
             if ($search['start_at'] && $search['end_at']) {
                 $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
+            }
+        });
+    }
+
+    public function scopeOfStatistics($query,$search)
+    {
+        return $query->where(function($query) use ($search) {
+            if(empty($search)){
+                $query->where('user_id');
             }
         });
     }

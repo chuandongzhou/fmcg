@@ -166,7 +166,7 @@ class OrderSellController extends OrderController
 
     public function getDetailOnline($id)
     {
-        $detail = Order::where('seller_id', $this->userId)->with('shoppingAddress', 'user', 'seller', 'goods',
+        $detail = Order::where('seller_id', $this->userId)->with('shippingAddress', 'user', 'seller', 'goods',
             'goods.images')->find($id)->toArray();
         if ($detail['pay_type'] == cons('pay_type.online')) {
             return view('index.order.detail-online', [

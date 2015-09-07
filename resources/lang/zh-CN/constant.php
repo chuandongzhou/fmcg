@@ -27,11 +27,15 @@ return [
             'send' => '已发货',
             'finished' => '已完成',
         ],
+        'is_cancel' => [//订单是否被取消
+            'off' => '未取消',
+            'on' => '已取消',
+        ]
     ],
     //用户类别
     'user' => [
         'type' => [
-            'wholesalers' => '批发商',
+            'wholesaler' => '批发商',
             'retailer' => '零售商',
             'supplier' => '供应商',
         ],
