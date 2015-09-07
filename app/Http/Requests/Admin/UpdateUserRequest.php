@@ -15,7 +15,7 @@ class UpdateUserRequest extends Request
     {
         $user = $this->route('user');
         return [
-            'user_name' => 'sometimes|required|between:4,16|unique:user,user_name,' . $user->id,
+            'user_name' => 'sometimes|required|alpha_dash|between:4,16|unique:user,user_name,' . $user->id,
             'password' => 'min:6|confirmed',
             'nickname' => 'required|unique:user,nickname,' . $user->id,
             'type' => 'required|in:1,2,3',

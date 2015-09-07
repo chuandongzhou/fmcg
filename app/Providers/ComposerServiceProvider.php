@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\CategoryComposer;
-use App\Http\ViewComposers\AttrComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {

@@ -25,6 +25,9 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\Admin' => 'admin',
         'App\Models\OperationRecord' => 'operation-record',
         'App\Models\Goods' => 'goods',
+        'App\Models\UserBank' => 'bank',
+        'App\Models\DeliveryMan' => 'delivery-man',
+
     ];
 
     /**

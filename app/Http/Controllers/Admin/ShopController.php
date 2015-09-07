@@ -26,7 +26,7 @@ class ShopController extends Controller
      * @param $shop
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(Request $request, $shop)
+    public function update(Requests\Admin\UpdateShopRequest $request, $shop)
     {
         if ($shop->fill($request->all())->save()) {
             return $this->success('保存店铺成功');

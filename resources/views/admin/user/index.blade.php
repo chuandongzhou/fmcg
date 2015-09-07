@@ -5,7 +5,6 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
           action="{{ url('admin/admin/') }}" data-help-class="col-sm-push-2 col-sm-10">
-        {{csrf_field()}}
         <table class="table table-striped">
             <thead>
             <tr>

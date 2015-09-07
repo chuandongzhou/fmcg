@@ -56,78 +56,66 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
+#menu-list {
+  .menu-list-wrap {
+    display:  none;
+    position: relative;
+    width: 100%;
+    height: auto;
+    .menu-wrap{
+      height: auto;
+      text-align: center;
+      li{
+        padding:10px 0;
+        border:1px solid $blue;
+      }
+    }
+    .menu-down-layer {
+      position: absolute;
+      top:0;
+      left: inherit;
+      right:-599px;
+      width: 600px;
+      height: auto;
+      text-align: left;
+    }
+  }
+
+}
+
+#other-page-categories {
+  li {
+    &:hover {
+      border: 1px solid $brand-primary;
+      border-right-color: $body-bg;
+    }
+  }
+}
+
 .right-search {
   padding: 15px 0;
 }
 
 .wholesalers-header {
   .container {
+    padding: 0;
+    .collapse {
+      padding: 0;
+    }
     .active {
-      a {
+      .list-name {
         color: $body-bg;
         background-color: $brand-primary;
       }
     }
-    .menu-wrap {
-      position: relative;
-      &:hover {
-        .a-menu {
-          display: block;
+    .navbar-nav {
+      li {
+        padding: 0;
+        .list-name {
+          width: 100%;
+          padding: 15px 55px;
         }
       }
-      .a-menu {
-        position: absolute;
-        z-index: 2;
-        display: none;
-        background-color: $brand-primary;
-        li {
-          float: left;
-          margin-right: 1px;
-          .menu-hide {
-            color: $body-bg;
-          }
-          .item {
-            width: 104px;
-          }
-          a {
-            display: inline-block;
-            height: 20px;
-            text-align: center;
-            font-size: 11px;
-          }
-          &:hover {
-            .secondary-menu {
-              display: block;
-            }
-            a.menu-hide {
-              background: $brand-info;
-            }
-          }
-        }
-      }
-      .secondary-menu {
-        display: none;
-        position: absolute;
-        top: 1px;
-        left: 105px;
-        padding: 2px 3px;
-        min-width: 500px;
-        background-color: $body-bg;
-        color: $gray;
-        .second-menu-item {
-          width: 49%;
-          float: left;
-          .item {
-            text-align: left;
-          }
-          .three-menu {
-            a {
-              color: $gray-base
-            }
-          }
-        }
-      }
-
     }
     .collect {
       .btn {
@@ -179,7 +167,6 @@ ul, li, p, a, h1, h2, h3, h4 {
         display: inline-block;
       }
       .commodity-name {
-        @extend .commodity-img;
         background-color: $gray-plain;
         padding: 10px 5px;
       }
@@ -353,6 +340,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 0;
     a {
       color: $gray-light;
+      display: inline-block;
+      width: 100%;
+      padding: 10px 0;
+      text-decoration: none;
     }
     .go-back {
       padding: 10px 5px;
@@ -360,14 +351,31 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: inline-block;
       border: 1px solid $gray-lighter;
     }
+    .name {
+      @extend .go-back;
+      .avatar {
+        @include square(50px);
+        border-radius: 50%;
+      }
+    }
+    .dealer-menu-list {
+      .list-item {
+        color: $gray-base;
+      }
+      text-align: left;
+      padding-left: 15px;
+    }
+
     .menu-list {
       border: 1px solid $gray-lighter;
       width: 60%;
       margin: -1px auto auto auto;
-      a {
-        display: inline-block;
-        width: 100%;
-        padding: 10px 0;
+      .menu-wrap {
+        text-align: left;
+        display: none;
+      }
+      .active {
+        color: $brand-primary;
       }
     }
   }
@@ -393,7 +401,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .commodity-img {
       padding-top: 5px;
       .commodity {
-        @include size(90%, 90%);
+        @include square(90%);
       }
     }
     .detail-list-wrap {
@@ -440,6 +448,12 @@ ul, li, p, a, h1, h2, h3, h4 {
           @include size(30%, 250px);
         }
       }
+    }
+    .graphic-details {
+      padding: 15px;
+    }
+    .box {
+      display: none;
     }
   }
   .left-store-logo {
@@ -552,7 +566,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 10px 15px;
       .editor-item {
         padding: 5px 0;
-        margin:0px;
+        margin: 0px;
         .narrow {
           width: 80px;
         }
@@ -596,7 +610,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .address-list {
       margin-top: 5px;
-
       div {
         border: 1px solid #EEEEEE;
         border-radius: 3px;
@@ -653,7 +666,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 0;
     border-bottom: 1px solid $brand-primary;
   }
-
+  .product-name {
+    margin-left: 10px;
+    color: $gray;
+  }
   .pay-detail {
     @extend .right-search;
     .item {
@@ -662,6 +678,30 @@ ul, li, p, a, h1, h2, h3, h4 {
       font-size: 12px;
       input {
         width: 80px;
+      }
+    }
+  }
+  .order-management {
+    .item {
+      .control {
+        padding: 5px 0;
+      }
+    }
+    .control-item {
+      width: 28%;
+      .control {
+        width: 60%;
+      }
+    }
+    .right {
+      padding-top: 20px;
+      .control {
+        width: 40%;
+        padding: 5px 0;
+        vertical-align: middle;
+      }
+      .btn-cancel {
+        color: $gray-light;
       }
     }
   }
@@ -687,10 +727,6 @@ ul, li, p, a, h1, h2, h3, h4 {
           display: inline-block;
           margin-left: 15%;
         }
-        .product-name {
-          margin-left: 10px;
-          color: $gray;
-        }
       }
     }
     .order-form-operating {
@@ -713,6 +749,42 @@ ul, li, p, a, h1, h2, h3, h4 {
 
     }
 
+  }
+  .order-table-list {
+    .table-col {
+      padding: 0;
+      table {
+        tr {
+          th {
+            border: none;
+            background-color: $gray-plain;
+            color: $gray-light;
+            vertical-align: middle;
+            .order-number {
+              display: inline-block;
+              margin-left: 20px;
+            }
+          }
+          td {
+            border-right: none;
+            border-left: none;
+            vertical-align: middle;
+            .store-img {
+              @include square(100px);
+            }
+          }
+          td.pay-detail {
+            border-left: 1px solid $table-border-color;
+            border-right: 1px solid $table-border-color;
+          }
+          td.operating {
+            p {
+              padding: 5px 0;
+            }
+          }
+        }
+      }
+    }
   }
   .order-process {
     border: 1px solid $blue-light;
@@ -747,80 +819,99 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .upload-picture {
-    padding: 10px 0;
-    .upload-wrap {
-      @extend .upload-progress-wrap;
-      margin-top: 15px;
-      .item {
-        @extend .upload-item;
-      }
-    }
-  }
-  .list-wrap {
-    padding: 10px 0;
-    p {
-      padding: 10px 0;
-      .upload-img {
-        vertical-align: top;
-        @include size(150px, 100px);
-      }
-      input {
-        padding: 3px 0;
-        width: 30%;
-        &.minimum-amount {
-          width: 100px;
-        }
-      }
-      textarea {
-        vertical-align: top;
-        @include size(50%, 80px);
-      }
-    }
-    .upload {
-      margin-left: 15%;
-    }
-  }
-  .preview-wrap {
-    padding: 10px 0;
-    .picture-preview {
-      padding: 10px 0;
-    }
-  }
-  .left-panel {
-    padding: 10px 0;
-    @at-root .item {
-      padding: 10px 0;
-      .address-norm {
-        height: 25px;
-        margin-top: 10px;
-        li {
-          float: left;
-          border: 1px solid $gray-lighter;
-          @include size(10%, 100%);
-          text-align: center;
-          margin-left: -1px;
-        }
-      }
+  .user-show {
+    padding: 5px;
 
-      .address-map {
-        margin-top: 10px;
-        @include size(300px, 250px);
+    img.shop-img {
+      width: 95px;
+      height: 95px;
+    }
+  }
+
+  .shop-img span {
+    float: right;
+    cursor: pointer;
+  }
+
+  .save button {
+    margin-left: 10px;
+  }
+
+  .modal {
+
+    .modal .address-select {
+      width: 30%;
+      display: inline;
+      margin-bottom: 5px;
+    }
+
+    .modal-body .address-detail {
+      margin: 10px 0;
+    }
+
+    .address-select .address {
+      width: 90%;
+      display: inline;
+      margin-bottom: 5px;
+    }
+  }
+
+  .address-list {
+    margin-top: 5px;
+
+    div {
+      border: 1px solid #EEEEEE;
+      border-radius: 3px;
+      margin-top: 4px;
+      padding: 5px;
+      color: #808080;
+    }
+  }
+
+  .pictures {
+    margin-top: 10px;
+  }
+  table {
+    tr {
+      th {
+        text-align: center;
       }
     }
   }
-  .right-panel {
-    padding: 10px 15px;
-    .address-item {
-      .item {
-        @extend .upload-item;
-        width: 100%;
-      }
+  .account-balance {
+    margin-bottom: 20px;
+    .balance {
+      display: inline-block;
+      margin-right: 20px;
+    }
+    .btn {
+      padding: 5px 30px;
     }
   }
-  .title-name {
+  .time {
+    padding: 10px 0
+  }
+}
+
+.personal-center-tab2 {
+  .add {
     display: inline-block;
-    width: 80px;
+    margin-left: 30px;
+    label {
+      padding: 1px 4px;
+      background-color: #4cb9fe;
+      color: #fff;
+    }
+  }
+
+}
+
+.personal-center-tab3 {
+  .add {
+    padding-bottom: 10px;
+    .btn {
+      padding: 5px 30px;
+    }
   }
 }
 
@@ -895,6 +986,66 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
+  .order-panel {
+    border: 1px solid $brand-primary;
+    padding: 10px 15px;
+    ul {
+      li {
+        padding: 5px 0;
+        .remarks-content {
+          display: inline-block;
+          color: $blue;
+        }
+      }
+    }
+  }
+  .order-table {
+    .little-table {
+      width: 50%;
+    }
+    table {
+      margin: auto;
+      thead {
+        td {
+          background-color: $gray-plain;
+          color: $gray-light;
+        }
+      }
+      td {
+        border-left: none;
+        border-right: none;
+        vertical-align: middle;
+        text-align: center;
+      }
+    }
+  }
+
+  .store-msg {
+    margin: 50px 0 5px 0;
+    border: 1px solid $gray-plain-light;
+    .item {
+      li {
+        padding-bottom: 5px;
+      }
+      .title-name {
+        display: inline-block;
+        width: 8%;
+        margin-right: 18px;
+      }
+      table {
+        width: 90%;
+      }
+    }
+  }
+  .bottom-content {
+    padding: 10px 0;
+    p {
+      padding: 10px 0;
+      .btn {
+        padding: 5px 25px;
+      }
+    }
+  }
 }
 
 /*======================================order-detail end======================================*/
@@ -918,9 +1069,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .enter-item {
       padding: 0;
+      .item {
+        display: inline-block;
+      }
+      .address {
+        margin: 0 10px;
+      }
+      .check-item {
+        margin-right: 10px;
+      }
       .enter {
         height: 30px;
-        margin-right: 5px;
+        margin-right: 10px;
         vertical-align: middle;
       }
       .btn {
@@ -1002,6 +1162,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         .item {
           float: left;
           width: 70px;
+          padding: 10px 0;
           text-align: center;
           a {
             padding: 5px 8px;
@@ -1036,11 +1197,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       border: 1px solid $brand-primary;
       .select-role {
         display: inline-block;
+        background-color: $gray-plain;
         color: $gray-lighter;
-        padding: 5px 0;
+        padding: 5px 2px;
         position: relative;
-        height: 32px;
-        width: 20%;
+        height: 33px;
+        width: 68px;
         .selected {
           span {
             display: inline-block;
@@ -1049,18 +1211,24 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
         a {
           text-decoration: none;
-          color: $gray-lighter;
+          color: $gray-base;
+          vertical-align: middle;
         }
         .select-list {
           display: none;
           position: absolute;
-          bottom: -40px;
+          background-color: $gray-plain;
+          bottom: -44px;
+          left: 0;
           width: 100%;
           z-index: 99999;
           li {
             padding-right: 10px;
             a {
               color: $gray-base;
+              font-size: 13px;
+              display: inline-block;
+              padding-bottom: 3px;
             }
           }
         }
@@ -1099,22 +1267,21 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .categories {
-  display: inline-block;
   position: relative;
   .menu-wrap {
     position: absolute;
     left: 0;
-    @include size(100%, 400px);
+    @include size(100%, 401px);
     background-color: $blue;
     z-index: 999;
     li {
       padding: 10px 0 10px 55px;
       color: $body-bg;
       cursor: pointer;
-      &:hover {
-        background-color: $gray-plain;
-        color: $blue;
-      }
+    }
+    .hover-effect {
+      background-color: $gray-plain;
+      color: $blue;
     }
   }
   @at-root .menu-down-layer {
@@ -1122,26 +1289,36 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: absolute;
     left: 0;
     z-index: 999;
-    background-color: $gray-plain;
-    border: 1px solid $brand-primary;
-    width: 995px;
-    @include size(995px, min(400px));
-    padding-top: 10px;
+    background-color: $body-bg;
+    @include size(100%, min(401px));
     .item {
-      padding: 10px;
-      label {
-        color: $gray-light;
+      padding: 0 10px 5px 10px;
+      margin-top: 10px;
+      &.active {
+        .title {
+          color: $brand-danger;
+        }
+      }
+      .title {
         cursor: pointer;
+        padding: 5px;
+        color: $gray-base;
+        font-size: 14px;
+        margin-bottom: 5px;
         &:hover {
           color: $brand-danger;
         }
       }
       a {
         font-size: 13px;
-        color: $gray;
+        color: $gray-base;
         display: inline-block;
         padding: 0 10px 0 8px;
-        border-left: 1px solid $gray-plain-light;
+        margin: 5px 0;
+        border-right: 1px solid $gray-plain-light;
+        &:hover {
+          color: $brand-danger;
+        }
       }
     }
   }
@@ -1149,6 +1326,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .banner-wrap {
   background-color: $banner-gray;
+  border-top: 1px solid $brand-primary;
+  margin-top: -1px;
   @at-root .banner-slide {
     .carousel-indicators {
       text-align: right;
@@ -1294,21 +1473,23 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-    .check-item {
-      display: inline-block;
-      .span-checkbox {
-        display: inline-block;
-        @include square(16px);
-        border: 1px solid $gray-lighter;
-        line-height: 13px;
-        font-size: 17px;
-        vertical-align: middle;
-        cursor: pointer;
-      }
-      .inp-checkbox {
-        opacity: 0;
-      }
-    }
+
+  }
+}
+
+.check-item {
+  display: inline-block;
+  .span-checkbox {
+    display: inline-block;
+    @include square(16px);
+    border: 1px solid $gray-lighter;
+    line-height: 13px;
+    font-size: 17px;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  .inp-checkbox {
+    opacity: 0;
   }
 }
 
@@ -1351,15 +1532,22 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     input.control {
       width: 15%;
-      padding:4px 3px;
+      padding: 4px 3px;
     }
     .search {
       width: 15%;
-      background-color: $gray-plain-light;
+      background-color: $banner-gray;
+      color: $gray-base;
     }
   }
 
 }
 
 /*======================================collect end======================================*/
+.wholesalers-list {
+  .dealer-index-banner {
+    padding-left: 240px !important;
+  }
+}
+
 /*==================================================================================dealer end======================================================================*/
