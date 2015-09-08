@@ -314,13 +314,4 @@ class Order extends Model
             }
         });
     }
-
-    public function scopeOfStatistics($query,$search)
-    {
-        return $query->where(function($query) use ($search) {
-            if(empty($search)){
-                $query->where('user_id');
-            }
-        });
-    }
 }

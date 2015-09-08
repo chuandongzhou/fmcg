@@ -153,7 +153,7 @@ function _ajaxGet(targetUrl, data) {
 }*/
 $(function(){
     menuFunc();
-})
+});
 function menuFunc(){
     //city-menu begin
     $('.dealer-top-header .location-panel').mouseenter(function(){

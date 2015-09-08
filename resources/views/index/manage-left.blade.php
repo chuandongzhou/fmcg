@@ -10,8 +10,8 @@
                     <li><a href="#">我的商品</a></li>
                     {{--TODO:批发商的订单统计需要分角色--}}
                     @if(session('type') == cons('user.type.wholesaler'))
-                        <li><a href="{{ url('order/statistics?obj_type=1&pay_type=1') }}">终端商订单统计</a></li>
-                        <li><a href="{{ url('order/statistics?obj_type=3&pay_type=1') }}">供应商订单统计</a></li>
+                        <li><a href="{{ url('order-sell/statistics?obj_type=1&pay_type=1') }}">终端商订单统计</a></li>
+                        <li><a href="{{ url('order-buy/statistics?obj_type=3&pay_type=1') }}">供应商订单统计</a></li>
                     @else
                     <li><a href="{{ url('order/statistics') }}">订单统计</a></li>
                     @endif

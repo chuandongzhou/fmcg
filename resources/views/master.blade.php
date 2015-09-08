@@ -27,7 +27,7 @@
                 USER: {!! $user or '{}' !!},
                 ROOT: '{{ url('/') }}',
                 API_ROOT: '{{ route('api.v1.root') }}',
-                ID: {{ session('id') }},
+                ID: 1,
 
             };
         </script>
