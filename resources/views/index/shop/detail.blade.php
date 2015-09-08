@@ -94,7 +94,7 @@
             @foreach($goods as $item)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <img class="commodity-img" src="{{ $item->images[0]->url }}">
+                        <img class="commodity-img" src="{{  $item->image_url }}">
                         <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
                     </div>
                     <p class="commodity-name">{{ $item->name }}</p>

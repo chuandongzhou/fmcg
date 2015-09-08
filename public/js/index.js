@@ -104,7 +104,7 @@ function _ajaxGet(targetUrl, data) {
                     + '     <div class="col-sm-2 order-form-operating">';
                 //TODO:这里需要当前用户ID
                 if (SITE.ID == result.seller_id) {//卖家----需要修改参照order-buy/sell
-                    str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-'+ (result.pay_type ==1 ? 'online' : 'cod') +'/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                    str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
                     if (!result.is_cancel) {
                         if (result.status == 0) {
                             str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
@@ -121,7 +121,7 @@ function _ajaxGet(targetUrl, data) {
                         }
                     }
                 } else {//买家
-                    str += '<p><a href="' + SITE.ROOT + '/order-buy/detail-'+ (result.pay_type ==1 ? 'online' : 'cod') +'/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                    str += '<p><a href="' + SITE.ROOT + '/order-buy/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
                     if (!result.is_cancel) {
                         if (result.pay_status == 0 && result.status == 1) {
                             str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
@@ -145,112 +145,269 @@ function _ajaxGet(targetUrl, data) {
     });
 }
 /*function tabBox() {
-    $(".switching a").click(function () {
-        $(this).addClass("active").siblings().removeClass("active");
-        var boxclass = $(this).attr("id");
-        $("." + boxclass).css("display", "block").siblings(".box").css("display", "none");
-    })
-}*/
-$(function(){
+ $(".switching a").click(function () {
+ $(this).addClass("active").siblings().removeClass("active");
+ var boxclass = $(this).attr("id");
+ $("." + boxclass).css("display", "block").siblings(".box").css("display", "none");
+ })
+ }*/
+$(function () {
     menuFunc();
 })
-function menuFunc(){
+function menuFunc() {
     //city-menu begin
-    $('.dealer-top-header .location-panel').mouseenter(function(){
-        $('.dealer-top-header .city-list').css('display','block');
-        $('.dealer-top-header .location-panel').css({'border':'1px solid #e0e0e0','border-bottom-color':'#fff'});
+    $('.dealer-top-header .location-panel').mouseenter(function () {
+        $('.dealer-top-header .city-list').css('display', 'block');
+        $('.dealer-top-header .location-panel').css({'border': '1px solid #e0e0e0', 'border-bottom-color': '#fff'});
         $('.up-down').removeClass('fa-angle-down').addClass('fa-angle-up');
     })
-    $('.dealer-top-header .city-wrap').mouseleave(function(){
-        $('.dealer-top-header .city-list').css('display','none');
-        $('.dealer-top-header .location-panel').css('border','1px solid #f2f2f2');
+    $('.dealer-top-header .city-wrap').mouseleave(function () {
+        $('.dealer-top-header .city-list').css('display', 'none');
+        $('.dealer-top-header .location-panel').css('border', '1px solid #f2f2f2');
         $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
 
-    $('.city-wrap .item').on('click',function(){
+    $('.city-wrap .item').on('click', function () {
         $('.city-value').text($(this).text());
-        $('.dealer-top-header .city-list').css('display','none');
-        $('.dealer-top-header .location-panel').css('border','1px solid f2f2f2');
+        $('.dealer-top-header .city-list').css('display', 'none');
+        $('.dealer-top-header .location-panel').css('border', '1px solid f2f2f2');
         $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
     //city-menu end
 
     //top secondary-menu begin
-    $('.navbar-nav .menu-wrap-title').mouseenter(function(){
-        $('.menu-list-wrap').css('display','block');
+    $('.navbar-nav .menu-wrap-title').mouseenter(function () {
+        $('.menu-list-wrap').css('display', 'block');
     })
-    $('.menu-list-wrap').mouseleave(function(){
-        $(this).css('display','none');
+    $('.menu-list-wrap').mouseleave(function () {
+        $(this).css('display', 'none');
         $('.categories .menu-wrap li').removeClass('hover-effect');
-        $('.menu-down-layer').css('display','none');
+        $('.menu-down-layer').css('display', 'none');
     })
 
-    $('#menu-list .categories .menu-wrap li').mouseenter(function(){
+    $('#menu-list .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
-        $(this).children('.menu-down-wrap').css('display','block').parents('li').siblings().
-            children('.menu-down-wrap').css('display','none');
-        $(this).children('.menu-down-wrap').css('border','1px solid #4cb9fe');
+        $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().
+            children('.menu-down-wrap').css('display', 'none');
+        $(this).children('.menu-down-wrap').css('border', '1px solid #4cb9fe');
     })
-    $('.categories-menu-item').mouseleave(function(){
+    $('.categories-menu-item').mouseleave(function () {
         $('.categories .menu-wrap li').removeClass('hover-effect');
-        $('.menu-down-layer').css('display','none');
-        $('#menu-down-wrap .menu-down-layer').css('border','none');
+        $('.menu-down-layer').css('display', 'none');
+        $('#menu-down-wrap .menu-down-layer').css('border', 'none');
     })
     //top secondary-menu end
 
-    $('.banner-wrap .categories .menu-wrap li').mouseenter(function(){
+    $('.banner-wrap .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
-        $('.menu-down-layer').css('display','block');
+        var titleIndex = $(this).index();
+        $(".banner-wrap .menu-down-wrap .menu-down-item").each(function () {
+            if (titleIndex == $(this).index()) {
+                $(".banner-wrap .menu-down-wrap .menu-down-layer:eq(" + $(this).index() + ")").css("display", "block").siblings().css("display", "none");
+            }
+        })
     })
 
     //search role begin
-    $('.dealer-header .select-role').hover(function(){
-        $(this).children('.select-list').css('display','block')
+    $('.dealer-header .select-role').hover(function () {
+        $(this).children('.select-list').css('display', 'block')
         $(this).children('.selected').children('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
-    },function(){
-        $(this).children('.select-list').css('display','none')
+    }, function () {
+        $(this).children('.select-list').css('display', 'none')
         $(this).children('.selected').children('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
 
-    $('.dealer-header .select-list li a').click(function(){
+    $('.dealer-header .select-list li a').click(function () {
         $('.dealer-header .selected span').text($(this).text());
-        $('.dealer-header .select-list').css('display','none');
+        $('.dealer-header .select-list').css('display', 'none');
     })
     //search role end
 
     //left nav-menu
-    $('.dealer-menu-list .list-item').click(function(){
+    $('.dealer-menu-list .list-item').click(function () {
         $(this).siblings('.menu-wrap').slideToggle();
     })
 }
 
-function fixedBottom(){
-    var scrolltop=document.body.scrollTop;
-    var bottom=$(document).height()-$(window).height()-$('.clearing-container').height();
-    if(scrolltop>bottom){
+function fixedBottom() {
+    var scrolltop = document.documentElement.scrollTop + document.body.scrollTop;
+    var bottom = $(document).height() - $(window).height() - $('.clearing-container').height();
+    if (scrolltop > bottom) {
         $('.clearing-container').removeClass('fixed-bottom')
-    }else{
+    } else {
         $('.clearing-container').addClass('fixed-bottom')
     }
 }
-function selectedFunc(){
-    $('.span-checkbox').click(function(){
-        var ischeck=$(this).siblings('.inp-checkbox').is(':checked');
-        if(ischeck==false){
-            $(this).children('.fa').addClass('fa-check');
-            $(this).siblings('.inp-checkbox').prop('checked',true);
-        }else{
-            $(this).children('.fa').removeClass('fa-check');
-            $(this).siblings('.inp-checkbox').prop('checked',false);
+function selectedFunc() {
+    var initMoney = function () {
+        var cartSumPriceSpan = $('.cart-sum-price'),
+            cartSumPrice = 0,
+            submitBtn = $('input.btn-primary');
+        $('.shopping-table-list table').each(function () {
+            var obj = $(this),
+                shopCheckBox = obj.find('.shop-checkbox').next('input'),
+                shopSumPriceSpan = obj.find('.shop-sum-price'),
+                shopSumPrice = 0,
+                minMoney = obj.find('.min-money'),
+                notEnough = obj.find('.not-enough');
+            obj.find('.goods-list').each(function () {
+                var tag = $(this);
+                if (tag.find('.inp-checkbox').is(':checked')) {
+                    var money = parseInt(tag.find('.goods-all-money').html());
+                    shopSumPrice += money;
+                    cartSumPrice += money;
+                }
+            });
+            shopSumPriceSpan.html(shopSumPrice);
+            if (shopSumPrice < minMoney.html() && shopCheckBox.is(':checked')) {
+                notEnough.removeClass('hidden');
+            } else {
+                notEnough.addClass('hidden');
+            }
+        });
+
+        if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
+            submitBtn.prop('disabled', false);
+        } else {
+            submitBtn.prop('disabled', true);
         }
-    })
+
+        cartSumPriceSpan.html(cartSumPrice);
+    };
+
+
+    //  添加和减少数量
+    var shopCheckbox = $('.shop-checkbox'),
+        goodsCheckbox = $('.goods-checkbox'),
+        incButton = $('.inc-num'),
+        descButton = $('.desc-num'),
+        buyInput = incButton.siblings('.num');
+    incButton.on('click', '', function () {
+        var obj = $(this),
+            buyInput = obj.siblings('.num'),
+            minNum = buyInput.data('minNum'),
+            descButton = obj.siblings('.desc-num'),
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
+        buyInput.val(parseInt(buyInput.val()) + 1);
+        if (buyInput.val() <= minNum) {
+            descButton.prop('disabled', true);
+        } else {
+            descButton.prop('disabled', false);
+        }
+        var goodsAllMoney = buyInput.val() * parseInt(buyInput.data('price'));
+        goodsAllMoneyTag.html(goodsAllMoney);
+        initMoney();
+    });
+    descButton.on('click', '', function () {
+        var obj = $(this),
+            buyInput = obj.siblings('.num'),
+            minNum = buyInput.data('minNum'),
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
+        buyInput.val(parseInt(buyInput.val()) - 1);
+        if (buyInput.val() <= minNum) {
+            obj.prop('disabled', true);
+        } else {
+            obj.prop('disabled', false);
+        }
+        var goodsAllMoney = buyInput.val() * parseInt(buyInput.data('price'));
+        goodsAllMoneyTag.html(goodsAllMoney);
+        initMoney();
+    });
+    buyInput.on('keyup', '', function () {
+        var obj = $(this),
+            minNum = obj.data('minNum'),
+            descButton = obj.siblings('.desc-num'),
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');;;
+        if (obj.val() <= minNum) {
+            descButton.prop('disabled', true);
+        } else {
+            descButton.prop('disabled', false);
+        }
+        var goodsAllMoney = obj.val() * parseInt(obj.data('price'));
+        goodsAllMoneyTag.html(goodsAllMoney);
+        initMoney();
+    });
+
+    /**
+     * checkBox选择
+     */
+    shopCheckbox.click(function () {
+        var obj = $(this),
+            iconTag = obj.children('.fa'),
+            checkbox = obj.next('input'),
+            isChecked = iconTag.hasClass('fa-check'),
+            childCheckbox = obj.closest('table').find('.goods-checkbox');
+
+        if (isChecked) {
+            iconTag.removeClass('fa-check');
+            checkbox.prop('checked', false);
+            childCheckbox.children('.fa').removeClass('fa-check').end().next('input').prop('checked', false);
+        } else {
+            iconTag.addClass('fa-check');
+            checkbox.prop('checked', true);
+            childCheckbox.children('.fa').addClass('fa-check').end().next('input').prop('checked', true);
+        }
+        initMoney();
+    });
+    goodsCheckbox.click(function () {
+        var obj = $(this),
+            iconTag = obj.children('.fa'),
+            checkbox = obj.next('input'),
+            isChecked = iconTag.hasClass('fa-check'),
+            parentCheckbox = obj.closest('table').find('.shop-checkbox');
+        if (isChecked) {
+            iconTag.removeClass('fa-check');
+            checkbox.prop('checked', false);
+        } else {
+            iconTag.addClass('fa-check');
+            checkbox.prop('checked', true);
+        }
+        var tableNode = obj.closest('tbody'),
+            goodsCheckboxCount = tableNode.find('.goods-checkbox').length,
+            goodsCheckedCount = tableNode.find('input[type="checkbox"]:checked').length;
+        if (goodsCheckboxCount == goodsCheckedCount) {
+            parentCheckbox.children('.fa').addClass('fa-check').end().next('input').prop('checked', true);
+        } else {
+            parentCheckbox.children('.fa').removeClass('fa-check').end().next('input').prop('checked', false);
+        }
+        initMoney()
+    });
+    initMoney();
 }
 
-function tabBox(){
-    $('.location').css('display','block')
-    $('.switching a').click(function(){
+
+var numChange = function (num) {
+    var incButton = $('.inc-num'),
+        descButton = $('.desc-num'),
+        buyInput = incButton.siblings('.num'),
+        cartBtn = $('.add-to-cart');
+    var changeDescButton = function () {
+        if (buyInput.val() <= num) {
+            descButton.prop('disabled', true);
+        } else {
+            descButton.prop('disabled', false);
+        }
+        cartBtn.data('data', {num: buyInput.val()});
+    };
+    incButton.on('click', '', function () {
+        buyInput.val(parseInt(buyInput.val()) + 1);
+        changeDescButton();
+    });
+    descButton.on('click', '', function () {
+        buyInput.val(parseInt(buyInput.val()) - 1);
+        changeDescButton();
+    });
+    buyInput.on('keyup', '', function () {
+        changeDescButton();
+    });
+    changeDescButton();
+};
+
+function tabBox() {
+    $('.location').css('display', 'block')
+    $('.switching a').click(function () {
         $(this).addClass('active').siblings().removeClass('active');
-        var boxclass= $(this).attr('id');
-        $('.'+boxclass).css('display','block').siblings('.box').css('display','none');
+        var boxclass = $(this).attr('id');
+        $('.' + boxclass).css('display', 'block').siblings('.box').css('display', 'none');
     })
 }

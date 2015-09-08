@@ -22,6 +22,74 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: #fe462f; }
 
+/*======================================step begin======================================*/
+.ui-stepBar-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: none;
+  z-index: 100; }
+  .ui-stepBar-wrap .ui-stepBar {
+    position: relative;
+    width: 90%;
+    height: 5px;
+    background: #b4b4b4;
+    top: 50px;
+    left: 6%;
+    z-index: 101; }
+    .ui-stepBar-wrap .ui-stepBar .ui-stepProcess {
+      position: relative;
+      width: 0;
+      height: 5px;
+      background: #4cb9fe;
+      top: 0;
+      left: 0;
+      z-index: 102; }
+  .ui-stepBar-wrap .ui-stepInfo-wrap {
+    width: 90%;
+    margin: 0 auto;
+    height: 100%; }
+    .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo {
+      position: relative;
+      float: left;
+      padding-top: 36px;
+      text-align: center; }
+      .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence {
+        position: relative;
+        padding: 1px 10px;
+        border-radius: 50%;
+        z-index: 103; }
+      .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepName {
+        position: relative;
+        line-height: 50px;
+        z-index: 103; }
+      .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-pre-change {
+        cursor: pointer; }
+        .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-pre-change:hover {
+          box-shadow: 0 0 3px 1px #4cb9fe; }
+      .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-hind-change {
+        cursor: pointer; }
+        .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-hind-change:hover {
+          box-shadow: 0 0 3px 1px #b4b4b4; }
+
+.judge-stepSequence-pre {
+  background: #4cb9fe;
+  color: #ffffff; }
+
+.judge-stepSequence-hind {
+  background: #b4b4b4;
+  color: #000000; }
+
+.author {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  margin: 40px auto;
+  color: #1569ec;
+  text-shadow: 1px 1px 0 #e7e7e7, 0 1px 7px #fff; }
+
+/*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
 .wholesalers-top-header .logo {
@@ -202,10 +270,15 @@ ul, li, p, a, h1, h2, h3, h4 {
       line-height: 40px; }
       .wholesalers-index .nav-wrap li a:hover {
         background-color: #f2f2f2; }
-  .wholesalers-index .nav-wrap .active a {
-    background-color: #f2f2f2;
-    color: #4cb9fe;
-    border-bottom: 2px solid #4cb9fe; }
+  .wholesalers-index .nav-wrap .switching a {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 20px; }
+    .wholesalers-index .nav-wrap .switching a.active {
+      background-color: #f2f2f2;
+      color: #4cb9fe;
+      border-bottom: 2px solid #4cb9fe; }
 
 /*======================================index end======================================*/
 /*======================================my-goods begin======================================*/
@@ -225,7 +298,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: #777777; }
   .my-goods .sort .sort-item {
     border: 1px solid #b4b4b4;
-    padding: 5px 15px; }
+    padding: 5px 5px; }
   .my-goods .sort .sort-name, .my-goods .sort .package {
     margin-top: -1px; }
 
@@ -257,7 +330,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 60%;
     margin: -1px auto auto auto; }
     .my-goods .menu .menu-list .menu-wrap {
-      text-align: left;
+      padding-left: 15px;
       display: none; }
     .my-goods .menu .menu-list .active {
       color: #4cb9fe; }
@@ -314,10 +387,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       .goods-detail .delivery-wrap .location p .address-map {
         width: 30%;
         height: 250px; }
-  .goods-detail .delivery-wrap .graphic-details {
-    padding: 15px; }
-  .goods-detail .delivery-wrap .box {
-    display: none; }
+
+.goods-detail .box {
+  display: none; }
+
+.goods-detail .graphic-details {
+  padding: 15px; }
 
 .goods-detail .left-store-logo .banner .item img {
   height: 300px; }
@@ -702,6 +777,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .order-detail .store-msg {
   margin: 50px 0 5px 0;
+  padding: 8px;
   border: 1px solid #e0e0e0; }
   .order-detail .store-msg .item li {
     padding-bottom: 5px; }
@@ -888,28 +964,35 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 10px 0 10px 55px;
       color: #fff;
       cursor: pointer; }
+      .categories .menu-wrap li .one-title {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        text-decoration: none; }
     .categories .menu-wrap .hover-effect {
-      background-color: #f2f2f2;
-      color: #409bd5; }
+      background-color: #f2f2f2; }
+      .categories .menu-wrap .hover-effect .one-title {
+        color: #409bd5 !important; }
   .menu-down-layer {
     display: none;
     position: absolute;
     left: 0;
     z-index: 999;
     background-color: #fff;
+    padding-left: 10px;
     width: 100%;
     height: 401px; }
     .menu-down-layer .item {
-      padding: 0 10px 5px 10px;
-      margin-top: 10px; }
+      padding: 0 10px 5px 0;
+      margin-top: 5px; }
       .menu-down-layer .item.active .title {
         color: #fe462f; }
       .menu-down-layer .item .title {
         cursor: pointer;
-        padding: 5px;
+        padding: 2px 5px 3px 5px;
         color: #000;
-        font-size: 14px;
-        margin-bottom: 5px; }
+        font-size: 14px; }
         .menu-down-layer .item .title:hover {
           color: #fe462f; }
       .menu-down-layer .item a {
@@ -917,7 +1000,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: #000;
         display: inline-block;
         padding: 0 10px 0 8px;
-        margin: 5px 0;
+        margin: 3px 0 0 0;
         border-right: 1px solid #e0e0e0; }
         .menu-down-layer .item a:hover {
           color: #fe462f; }
@@ -1011,12 +1094,32 @@ ul, li, p, a, h1, h2, h3, h4 {
         .table-list-row .shopping-table-list table tfoot td .operating .control {
           width: 85%;
           padding: 3px 0; }
+      .table-list-row .shopping-table-list table tfoot td .lowest-money {
+        display: inline-block;
+        padding: 0 30px;
+        display: inline-block; }
+      .table-list-row .shopping-table-list table tfoot td .total-money {
+        display: inline-block; }
     .table-list-row .shopping-table-list table tr th, .table-list-row .shopping-table-list table tr td {
       border: none;
       border-bottom: 1px solid #e0e0e0;
       vertical-align: middle; }
     .table-list-row .shopping-table-list table tr td {
       padding: 15px 8px; }
+      .table-list-row .shopping-table-list table tr td .modified {
+        background-color: #f2f2f2;
+        outline: none;
+        border: 1px solid #e0e0e0;
+        width: 23px;
+        height: 25px;
+        text-align: center; }
+        .table-list-row .shopping-table-list table tr td .modified:hover {
+          border: 1px solid #f0ad4e; }
+      .table-list-row .shopping-table-list table tr td .money {
+        font-size: 18px; }
+      .table-list-row .shopping-table-list table tr td .num {
+        width: 40px;
+        text-align: center; }
       .table-list-row .shopping-table-list table tr td .avatar {
         width: 50px;
         height: 50px; }

@@ -1,16 +1,19 @@
 <?php
 
+$router->get('login', 'Auth\AuthController@login');
 /**
  * 前台
  */
 $router->group(['namespace' => 'Index'], function ($router) {
-
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->controller('shop', 'ShopController');          //商家商店首页
     $router->controller('order','OrderController');//订单统计
     $router->controller('order-buy', 'OrderBuyController');  //买家订单管理
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
-    $router->resource('goods', 'GoodsController');          //商品管理
+    $router->resource('my-goods', 'MyGoodsController');          //商品管理
+    $router->get('goods/{goods}', 'GoodsController@detail')->where('goods', '[0-9]+');          //商品详情
+    $router->get('cart' , 'CartController@index');          // 购物车
+    $router->controller('order' , 'OrderController');       //订单
 
     $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
@@ -19,7 +22,6 @@ $router->group(['namespace' => 'Index'], function ($router) {
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->get('balance', 'BalanceController@index'); //账户余额
     });
-
 
 });
 
@@ -82,10 +84,12 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
             $router->put('shop', 'ShopController@shop');          //商家信息
             $router->put('password', 'PasswordController@password');          //修改密码
-            $router->post('bank-default/{bank}' , 'UserBankController@bankDefault');
+            $router->post('bank-default/{bank}', 'UserBankController@bankDefault');
             $router->resource('bank', 'UserBankController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
-            $router->resource('delivery-man', 'DeliveryManController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
+            $router->resource('delivery-man', 'DeliveryManController',
+                ['only' => ['store', 'update', 'destroy']]);          //提现账号
         });
-
+        $router->controller('cart' , 'CartController');
+        $router->controller('like' , 'LikeController');
     });
 });

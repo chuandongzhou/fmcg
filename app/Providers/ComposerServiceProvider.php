@@ -16,7 +16,7 @@ class ComposerServiceProvider extends ServiceProvider
     {
         view()->composers(
             [
-                CategoryComposer::class => 'index.master'
+                CategoryComposer::class => ['index.master' , 'index.index.index' , 'index.index-master']
             ]
         );
     }

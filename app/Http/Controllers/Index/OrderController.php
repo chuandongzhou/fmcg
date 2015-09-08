@@ -47,6 +47,46 @@ class OrderController extends Controller
         return $this->error('操作失败');
     }
 
+
+    public function postConfirmOrder(Request $request)
+    {
+        $attributes = $request->all();
+        if (empty($attributes['goods_id'])) {
+            return redirect()->back()->withInput();
+        }
+
+        $carts = auth()->user()->carts()->whereIn('goods_id', $attributes['goods_id'])->with('goods')->get();
+
+        if (!empty($carts[0])) {
+            //是否通过验证
+            $allow = true;
+            //判断商品购买数量是否小于该商品的最低配送额
+            foreach ($carts as $cart) {
+                $buyNum = $attributes['num'][$cart->goods_id];
+                if ($cart->goods->min_num > $buyNum) {
+                    $allow = false;
+                }
+                $cart->fill(['num' => $buyNum])->save();
+            }
+            if (!$allow) {
+                return redirect()->back()->withInput();
+            }
+            $shops = (new CartService($carts))->formatCarts();
+        } else {
+            return redirect()->back()->withInput();
+        }
+        // 判断购买金额是否小于商店的最低配送额
+
+        foreach ($shops as $shop) {
+            if ($shop->min_money > $shop->sum_price) {
+                return redirect()->back()->withInput();
+            }
+        }
+
+
+        return view('index.order.confirm-order', ['shops' => $shops]);
+    }
+
     public function getStatistics(Request $request)
     {
         //订单对象类型

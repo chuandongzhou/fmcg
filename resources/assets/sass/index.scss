@@ -36,6 +36,84 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-danger;
 }
 
+/*======================================step begin======================================*/
+.ui-stepBar-wrap{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+  display:none;
+  z-index:100;
+  .ui-stepBar{
+    position:relative;
+    width:90%;
+    height:5px;
+    background:#b4b4b4;
+    top:50px;
+    left:6%;
+    z-index:101;
+    .ui-stepProcess{
+      position:relative;
+      width:0;
+      height:5px;
+      background:#4cb9fe;
+      top:0;
+      left:0;
+      z-index:102;
+    }
+  }
+  .ui-stepInfo-wrap{
+    width:90%;
+    margin:0 auto;
+    height:100%;
+    .ui-stepInfo{
+      position:relative;
+      float:left;
+      padding-top:36px;
+      text-align:center;
+      .ui-stepSequence{
+        position:relative;
+        padding:1px 10px;
+        border-radius:50%;
+        z-index:103;
+      }
+      .ui-stepName{
+        position:relative;
+        line-height:50px;
+        z-index:103;
+      }
+      .judge-stepSequence-pre-change{
+        cursor:pointer;
+        &:hover{
+          box-shadow:0 0 3px 1px #4cb9fe;
+        }
+      }
+      .judge-stepSequence-hind-change{
+        cursor:pointer;
+        &:hover{
+          box-shadow:0 0 3px 1px #b4b4b4;
+        }
+      }
+    }
+  }
+}
+.judge-stepSequence-pre{
+  background:#4cb9fe;
+  color:#ffffff;
+}
+.judge-stepSequence-hind{
+  background:#b4b4b4;
+  color:#000000;
+}
+.author{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  margin:40px auto;
+  color:#1569ec;
+  text-shadow:1px 1px 0 #e7e7e7, 0 1px 7px #fff;
+}
+/*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
 .wholesalers-top-header {
@@ -58,23 +136,23 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 #menu-list {
   .menu-list-wrap {
-    display:  none;
+    display: none;
     position: relative;
     width: 100%;
     height: auto;
-    .menu-wrap{
+    .menu-wrap {
       height: auto;
       text-align: center;
-      li{
-        padding:10px 0;
-        border:1px solid $blue;
+      li {
+        padding: 10px 0;
+        border: 1px solid $blue;
       }
     }
     .menu-down-layer {
       position: absolute;
-      top:0;
+      top: 0;
       left: inherit;
-      right:-599px;
+      right: -599px;
       width: 600px;
       height: auto;
       text-align: left;
@@ -291,11 +369,17 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-    .active {
+    .switching {
       a {
-        background-color: $gray-plain;
-        color: $brand-primary;
-        border-bottom: 2px solid $brand-primary;
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        margin-right: 20px;
+        &.active {
+          background-color: $gray-plain;
+          color: $brand-primary;
+          border-bottom: 2px solid $brand-primary;
+        }
       }
     }
   }
@@ -326,7 +410,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     color: $gray-light;
     .sort-item {
       border: 1px solid $gray-lighter;
-      padding: 5px 15px;
+      padding: 5px 5px;
     }
     .sort-name {
       margin-top: -1px;
@@ -371,7 +455,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 60%;
       margin: -1px auto auto auto;
       .menu-wrap {
-        text-align: left;
+        padding-left: 15px;
         display: none;
       }
       .active {
@@ -449,12 +533,14 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-    .graphic-details {
-      padding: 15px;
-    }
-    .box {
-      display: none;
-    }
+
+
+  }
+  .box {
+    display: none;
+  }
+  .graphic-details {
+    padding: 15px;
   }
   .left-store-logo {
     .banner {
@@ -1022,6 +1108,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
   .store-msg {
     margin: 50px 0 5px 0;
+    padding: 8px;
     border: 1px solid $gray-plain-light;
     .item {
       li {
@@ -1278,10 +1365,19 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 10px 0 10px 55px;
       color: $body-bg;
       cursor: pointer;
+      .one-title {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        color: $body-bg;
+        text-decoration: none;
+      }
     }
     .hover-effect {
       background-color: $gray-plain;
-      color: $blue;
+      .one-title {
+        color: $blue !important;
+      }
     }
   }
   @at-root .menu-down-layer {
@@ -1290,10 +1386,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     left: 0;
     z-index: 999;
     background-color: $body-bg;
+    padding-left: 10px;
     @include size(100%, min(401px));
     .item {
-      padding: 0 10px 5px 10px;
-      margin-top: 10px;
+      padding: 0 10px 5px 0;
+      margin-top: 5px;
       &.active {
         .title {
           color: $brand-danger;
@@ -1301,10 +1398,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
       .title {
         cursor: pointer;
-        padding: 5px;
+        padding: 2px 5px 3px 5px;
         color: $gray-base;
         font-size: 14px;
-        margin-bottom: 5px;
         &:hover {
           color: $brand-danger;
         }
@@ -1314,7 +1410,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $gray-base;
         display: inline-block;
         padding: 0 10px 0 8px;
-        margin: 5px 0;
+        margin: 3px 0 0 0;
         border-right: 1px solid $gray-plain-light;
         &:hover {
           color: $brand-danger;
@@ -1328,6 +1424,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   background-color: $banner-gray;
   border-top: 1px solid $brand-primary;
   margin-top: -1px;
+
   @at-root .banner-slide {
     .carousel-indicators {
       text-align: right;
@@ -1450,6 +1547,15 @@ ul, li, p, a, h1, h2, h3, h4 {
               padding: 3px 0;
             }
           }
+          .lowest-money{
+            display: inline-block;
+            padding: 0 30px;
+            display: inline-block;
+          }
+          .total-money{
+            display: inline-block;
+          }
+
         }
       }
       tr {
@@ -1461,6 +1567,23 @@ ul, li, p, a, h1, h2, h3, h4 {
         td {
           @extend th;
           padding: 15px 8px;
+          .modified{
+            background-color: $gray-plain;
+            outline: none;
+            border: 1px solid $gray-plain-light;
+            @include size(23px,25px);
+            text-align: center;
+            &:hover{
+              border:1px solid $brand-warning;
+            }
+          }
+          .money{
+            font-size: 18px;
+          }
+          .num{
+            width: 40px;
+            text-align: center;
+          }
           .avatar {
             @include square(50px);
           }

@@ -12,6 +12,12 @@ class Like extends Model
         'likeable_type',
         'created_at'
     ];
+    public static function boot(){
+        parent ::boot();
+        static::creating(function($model){
+            $model->user_id = auth()->user()->id;
+        });
+    }
 
     /**
      * 用户表
@@ -21,5 +27,12 @@ class Like extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function likeable(){
+       return $this->morphTo();
     }
 }

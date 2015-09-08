@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Attr;
+use App\Models\Goods;
 
 /**
  * Created by PhpStorm.
@@ -15,7 +16,7 @@ class AttrService
 
     protected $attrs = [];
 
-    public function __construct($attrs)
+    public function __construct($attrs = [])
     {
         $this->attrs = $attrs;
         return $this;
@@ -55,6 +56,39 @@ class AttrService
     public function getAttrByCategoryId($categoryId)
     {
         $attrs = Attr::where('category_id', $categoryId)->select(['id', 'pid', 'name'])->get()->toArray();
-        return  $this->format($attrs);
+        return $this->format($attrs);
+    }
+
+    /**
+     * 根据商品查出标签
+     * @param $goods
+     * @param int $limit
+     * @return array
+     */
+    public function getAttrByGoods($goods , $limit = 0)
+    {
+        $attrGoods = [];
+        if (is_numeric($goods)) {
+            $goods = Goods::find($goods);
+        } else {
+            if (!$goods instanceof Goods) {
+                return [];
+            }
+        }
+
+        foreach ($goods->attr as $key=>$attr) {
+            if ($limit > 0 && $key == $limit){
+                break;
+            }
+            $attrGoods[] = $attr->pivot->toArray();
+        }
+        $attrIds = array_merge(array_pluck($attrGoods, 'attr_id'), array_pluck($attrGoods, 'attr_pid'));
+        $attrResults = Attr::select(['id', 'pid', 'name'])
+            ->whereIn('id', $attrIds)
+            ->get()
+            ->toArray();
+
+        $attrResults = $this->format($attrResults);
+        return $attrResults;
     }
 }

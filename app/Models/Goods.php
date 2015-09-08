@@ -10,6 +10,7 @@ namespace App\Models;
 
 use App\Services\ImageUploadService;
 use DB;
+use Auth;
 
 class Goods extends Model
 {
@@ -42,7 +43,7 @@ class Goods extends Model
      */
     public function shop()
     {
-        return $this->belongsTo('App/shop');
+        return $this->belongsTo('App\Models\Shop');
     }
 
     /**
@@ -68,6 +69,15 @@ class Goods extends Model
     }
 
     /**
+     * 购物车内的商品
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function carts()
+    {
+        return $this->hasMany('App\Models\Cart');
+    }
+
+    /**
      * 关联标签表
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -88,11 +98,21 @@ class Goods extends Model
     }
 
     /**
+     * 收藏表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function likes()
+    {
+        return $this->morphMany('App\Models\Like', 'likeable');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\Address', 'addressable');
+        return $this->morphMany('App\Models\DeliveryArea', 'addressable');
     }
 
     /**
@@ -230,6 +250,10 @@ class Goods extends Model
         static::deleted(function ($model) {
             // 删除所有关联文件
             $model->deliveryArea->delete();
+        });
+
+        static::creating(function ($model) {
+            $model->user_type = Auth::User()->type;
         });
     }
 

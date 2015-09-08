@@ -16,7 +16,7 @@ class UpdateShopRequest extends Request
         $shop = $this->route('shop');
         return [
             'logo' => 'sometimes|required',
-            'nickname' => 'required|unique:user,nickname,' . $shop->id,
+            'name' => 'required|unique:shop,name,' . $shop->id,
             'contact_person' => 'required|max:10',
             'contact_info' => 'required',
             'introduction' => 'max:200',

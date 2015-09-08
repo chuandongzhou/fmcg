@@ -11,6 +11,7 @@ class Shop extends Model
     protected $timestamp = false;
     protected $fillable = [
         'logo',
+        'name',
         'license',
         'images',
         'contact_person',
@@ -100,11 +101,32 @@ class Shop extends Model
     }
 
     /**
+     * 收藏表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function likes()
+    {
+        return $this->morphMany('App\Models\Like', 'likeable');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\Address', 'addressable');
+        return $this->morphMany('App\Models\DeliveryArea', 'addressable');
+    }
+
+    /**
+     * 获取热门商家
+     *
+     * @param $query
+     */
+    public function scopeOfHot($query)
+    {
+        //TODO: 热门商家排序规则修改
+        return $query->orderBy('id', 'desc');
     }
 
     /**
@@ -212,20 +234,5 @@ class Shop extends Model
         return true;
     }
 
-    /**
-     * 设置昵称
-     *
-     * @param $nickname
-     * @return bool
-     */
-    public function setNicknameAttribute($nickname)
-    {
-        if ($this->user->nickname == $nickname){
-            return true;
-        }
-        $this->user->nickname = $nickname;
-        $this->user->save();
-        return true;
-    }
 
 }
