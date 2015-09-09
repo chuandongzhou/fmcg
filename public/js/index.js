@@ -103,7 +103,7 @@ function _ajaxGet(targetUrl, data) {
                     + '     </div>'
                     + '     <div class="col-sm-2 order-form-operating">';
                 //TODO:这里需要当前用户ID
-                if (SITE.ID == result.seller_id) {//卖家----需要修改参照order-buy/sell
+                if (SITE.ID == result.shop_id) {//卖家----需要修改参照order-buy/sell
                     str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
                     if (!result.is_cancel) {
                         if (result.status == 0) {

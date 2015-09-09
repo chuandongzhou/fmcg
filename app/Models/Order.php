@@ -17,7 +17,7 @@ class Order extends Model
         'shipping_address_id',
         'delivery_man_id',
         'user_id',
-        'seller_id',
+        'shop_id',
         'paid_at',
         'confirmed_at',
         'is_cancel',

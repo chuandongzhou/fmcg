@@ -37,7 +37,7 @@ class WholesalerOrderController extends OrderController
             if($search['search_content']){//搜索框查询
                 $orderId = trim($search['search_content']);
                 if(is_numeric(trim($orderId))){
-                    $orders = Order::where('seller_id', $userId)->find($orderId);
+                    $orders = Order::where('shop_id', $userId)->find($orderId);
                 }else {
                     $orders = Order::ofUserType($search)->paginate();
                 }
@@ -59,7 +59,7 @@ class WholesalerOrderController extends OrderController
         $userId = 2;
         $search = $request->all();
         if ($search['search_role']) {
-            $orders = Order::where('seller_id', $sellerId)->where('payable_type', $search['pay_type'])->where('status',
+            $orders = Order::where('shop_id', $sellerId)->where('payable_type', $search['pay_type'])->where('status',
                 $search['status'])->paginate();
         }
     }

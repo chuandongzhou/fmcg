@@ -14,11 +14,15 @@ class CartController extends Controller
 
     public function index()
     {
-        $carts = auth()->user()->carts()->with('goods')->get();
+        $myCartsModels = auth()->user()->carts();
+        $carts = $myCartsModels->with('goods')->get();
         if (!empty($carts[0])) {
-            $carts =(new CartService($carts))->formatCarts();
+            // 将所有状态更新为零
+            $myCartsModels->update(['status' => 0]);
+
+            $carts = (new CartService($carts))->formatCarts();
         }
-        return view('index.cart.index' , ['shops' => $carts]);
+        return view('index.cart.index', ['shops' => $carts]);
     }
 
 }

@@ -112,7 +112,7 @@ class OrderSellController extends OrderController
     public function putBatchSure(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('status',
+        $status = Order::where('shop_id', $this->userId)->whereIn('id', $orderIds)->where('status',
             cons('order.status.non_sure'))->NonCancel()->update([
             'status' => cons('order.status.non_send'),
             'confirmed_at' => Carbon::now()
@@ -133,7 +133,7 @@ class OrderSellController extends OrderController
     public function putBatchSend(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id',
+        $status = Order::where('shop_id', $this->userId)->whereIn('id',
             $orderIds)->NonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
         if ($status) {
             return $this->success();
@@ -152,7 +152,7 @@ class OrderSellController extends OrderController
     public function putBatchFinish(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
+        $status = Order::where('shop_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
             cons('order.pay_status.payment_success'))->NonCancel()->update([
             'status' => cons('order.status.finished'),
             'finished_at' => Carbon::now()
@@ -166,7 +166,7 @@ class OrderSellController extends OrderController
 
     public function getDetailOnline($id)
     {
-        $detail = Order::where('seller_id', $this->userId)->with('shippingAddress', 'user', 'seller', 'goods',
+        $detail = Order::where('shop_id', $this->userId)->with('shippingAddress', 'user', 'seller', 'goods',
             'goods.images')->find($id)->toArray();
         if ($detail['pay_type'] == cons('pay_type.online')) {
             return view('index.order.detail-online', [

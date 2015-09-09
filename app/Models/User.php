@@ -104,8 +104,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shoppingAddress()
+    public function shippingAddress()
     {
-        return $this->hasMany('App\Models\ShoppingAddress');
+        return $this->hasMany('App\Models\ShippingAddress');
     }
 }
