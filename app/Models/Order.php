@@ -19,15 +19,16 @@ class Order extends Model
         'user_id',
         'shop_id',
         'paid_at',
+        'send_at',
         'confirmed_at',
+        'finished_at',
         'is_cancel',
         'cancel_by',
-        'cancel_at',
+        'cancel_at'
     ];
 
     protected $appends = ['status_name', 'payment_type', 'step_num',];
 
-    public $timestamps = false;
 
     /**
      * 该订单下所有商品

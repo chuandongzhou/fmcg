@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Api\v1\personal;
 
 use App\Http\Controllers\Api\v1\Controller;
-use App\Models\Shop;
+use Gate;
 use App\Http\Requests;
 
 class ShopController extends Controller
 {
     /**
-     * 保存店铺信息
-     *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Index\UpdateShopRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function shop(Requests\Index\UpdateShopRequest $request)
+    public function shop(Requests\Index\UpdateShopRequest $request , $shop)
     {
-        // TODO: 更改shopid
-        $shopId = 1;
-        $shop = Shop::find($shopId);
+        if (Gate::denies('validate-shop',$shop)){
+            return $this->error('保存失败');
+        }
+
         if ($shop->fill($request->all())->save()) {
             return $this->success('保存店铺成功');
         }

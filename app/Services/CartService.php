@@ -41,7 +41,11 @@ class CartService
                 if (Gate::denies('validate-goods', $cart->goods)) {
                     continue;
                 }
+                $cart->is_like = !is_null($cart->goods->whereHas('likes' , function($q) {
+                    $q->where('user_id' , auth()->user()->id);
+                })->first());
                 if ($cart->goods->shop_id == $shop->id) {
+
                     $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,
                         [$cart]) : [$cart];
                     $sumPrice += $cart->goods->price * $cart->num;

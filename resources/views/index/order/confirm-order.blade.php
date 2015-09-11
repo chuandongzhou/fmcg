@@ -78,8 +78,8 @@
                                     <p class="operating">
                                         <span>支付方式 :</span>
                                         <select name="shop[{{ $shop->id }}][pay_type]">
-                                            @foreach(cons('pay_type') as $type)
-                                                <option value="{{ $type }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
+                                            @foreach(cons('pay_type') as $key=>$type)
+                                                <option value="{{ $key }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
                                             @endforeach
                                         </select>
                                     </p>

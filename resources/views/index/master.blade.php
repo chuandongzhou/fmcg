@@ -57,10 +57,8 @@
                             <div class="categories" id="other-page-categories">
                                 <ul class="menu-wrap">
                                     @foreach($categories as $category)
-                                        <li class="list1"><span><i></i>
-                                            <a href="{{ url('shop/detail/' . $category['id'] . (isset($type) ? '/' . $type : '')) }}">{{ $category['name'] }}</a>
-                                        </span>
-
+                                        <li class="list1">
+                                            <a class="one-title" href="{{ url('shop/detail/' . $category['id'] . (isset($type) ? '/' . $type : '')) }}"><i></i>{{ $category['name'] }}</a>
                                             <div class="menu-down-wrap menu-down-layer">
                                                 @foreach($category['child'] as $child)
                                                     <div class="item active">

@@ -56,17 +56,14 @@
                                    class="btn btn-primary ajax add-to-cart"
                                    data-method="post" data-data='{"num" : {{ $goods->min_num }}}'>加入购物车</a>
 
-                                @if(is_null($isLike))
-                                    <a data-url="{{ url('api/v1/like/add/goods_'.$goods->id) }}"
-                                       class="btn btn-default ajax" data-method="post">
-                                        加入收藏
-                                    </a>
-                                @else
-                                    <a data-url="{{ url('api/v1/like/delete/'.$isLike) }}"
-                                       class="btn btn-default ajax" data-method="delete">
-                                        取消收藏
-                                    </a>
-                                @endif
+                                <a href="javascript:void(0)" data-type="goods" data-method="post"
+                                   class="btn btn-default btn-like" data-id="{{ $goods->id }}">
+                                    @if(is_null($isLike))
+                                        <i class="fa fa-star-o"></i> 加入收藏夹
+                                    @else
+                                        <i  class="fa fa-star"></i> 已收藏
+                                    @endif
+                                </a>
 
                             </li>
                         </form>
@@ -112,6 +109,7 @@
             });
             numChange({{ $goods->min_num }});
             tabBox();
+            likeFunc('goods');
         });
     </script>
 @stop

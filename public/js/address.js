@@ -4465,7 +4465,6 @@
         // 设置省份
         setProviceObject: function (obj, val) {
             var that = this;
-
             // 移除旧的绑定事件
             var oldObj = $(this.province);
             if (oldObj.length) {
@@ -4479,7 +4478,6 @@
         // 设置城市
         setCityObject: function (obj, val) {
             var that = this;
-
             // 移除旧的绑定事件
             var oldObj = $(this.city);
             if (oldObj.length) {
@@ -4492,8 +4490,22 @@
         },
         // 设置地区
         setDistrictObject: function (obj, val) {
-            return this.setObject('district', obj, val);
+            var that = this;
+
+            // 移除旧的绑定事件
+            var oldObj = $(this.city);
+            if (oldObj.length) {
+                oldObj.off('change', '', this.updateStreetSource);
+            }
+            return this.setObject('district', obj, val).on('change', '', function () {
+                that.updateStreetSource();
+            });
         },
+        // 设置街道
+        setStreetObject: function (obj, val) {
+            return this.setObject('street', obj, val)
+        },
+
         // 根据ID生成option的html
         optionHtml: function (pid) {
             var html = '';
@@ -4519,6 +4531,27 @@
                 obj.val(selected);
             }
         },
+        updateSourceForStreet: function (obj, pid, selected, prefix) {
+            if (!$(obj).length || !pid) {
+                return;
+            }
+            prefix = prefix || '';
+            selected = selected || '';
+
+            $.post(site.api('address/street'), {pid: pid}, function (data) {
+                if (data) {
+                    var html = '';
+                    for (var id in data) {
+                        if (id == selected)
+                            html += '<option value="' + id + '" selected>' + data[id] + '</option>';
+                        else
+                            html += '<option value="' + id + '">' + data[id] + '</option>';
+                    }
+                    obj.html(prefix + html);
+                }
+            }, 'json');
+
+        },
         // 更新省份数据
         updateProvinceSource: function () {
             var obj = $(this.province);
@@ -4531,41 +4564,60 @@
         },
         // 更新城市数据
         updateCitySource: function () {
-            var obj = $(this.city);
+            var obj = $(this.city),
+                prefix = '<option value="" selected="selected">请选择城市...</option>';
             if (!obj.length) {
                 return;
             }
-
             var pid = $(this.province).children('option:selected').val();
-            this.updateSource(obj, pid, this['cityVal'],'<option value="" selected="selected">请选择城市...</option>');
+            this.updateSource(obj, pid, this['cityVal'], prefix);
 
             var html = obj.html();
 
-            pid && !html ? obj.hide() : obj.show();
-            !html && obj.html('<option value="" selected="selected">请选择城市...</option>');
+            //pid && html != prefix ? obj.show() : obj.hide();
+            !html && obj.html(prefix);
             this.updateDistrictSource();
         },
-        // 更新地区视距
+        // 更新地区数据
         updateDistrictSource: function () {
-            var obj = $(this.district);
+            var obj = $(this.district),
+                prefix = '<option value="" selected="selected">请选择区/县...</option>';
             if (!obj.length) {
                 return;
             }
 
             var cid = $(this.city).children('option:selected').val();
-            this.updateSource(obj, cid, this['districtVal'],'<option value="" selected="selected">请选择区/县...</option>');
+            this.updateSource(obj, cid, this['districtVal'], prefix);
 
             var html = obj.html();
 
-            cid && !html ? obj.hide() : obj.show();
-            !html && obj.html('<option value="" selected="selected">请选择区/县...</option>');
+            //cid && html != prefix ? obj.show() : obj.hide();
+            !html && obj.html(prefix);
+            this.updateStreetSource();
+        },
+        // 更新地区数据
+        updateStreetSource: function () {
+            var obj = $(this.street),
+                prefix = '<option value="" selected="selected">请选择街道...</option>';
+                ;
+            if (!obj.length) {
+                return;
+            }
+
+            var did = $(this.district).children('option:selected').val();
+
+            this.updateSourceForStreet(obj, did, this['streetVal'], prefix);
+
+            var html = obj.html();
+
+            did && html !=prefix  ? obj.show() : obj.hide();
+            !html && obj.html();
         }
     };
 
     $.fn.extend({
         province: function (id) {
             var obj = this.first();
-
             (id === undefined) && (id = obj.data('id'));
             address.setProviceObject(obj, id);
 
@@ -4574,7 +4626,6 @@
 
         city: function (id) {
             var obj = this.first();
-
             (id === undefined) && (id = obj.data('id'));
             address.setCityObject(obj, id);
 
@@ -4590,27 +4641,23 @@
             return this;
         },
 
-        setHtml: function () {
-            this.each(function () {
-                var obj = $(this);
-                var id = obj.data('id');
-                if (id > 0) {
-                    obj.html(data[id][0]);
-                }else if(id == -1){
-                    obj.html('市直属');
-                }
-            });
+        street: function (id) {
+            var obj = this.first();
+
+            (id === undefined) && (id = obj.data('id'));
+            address.setStreetObject(obj, id);
 
             return this;
         }
-
     });
 
     // 初始化
-    $('.address-province').province();
-    $('.address-city').city();
-    $('.address-district').district();
-    $('.provinceName').setHtml();
-    $('.cityName').setHtml();
-    $('.areaName').setHtml();
+    $('.address-province').each(function (index) {
+        $('.address-province').eq(index).province();
+        $('.address-city').eq(index).city();
+        $('.address-district').eq(index).district();
+        $('.address-street').eq(index).street();
+    })
+
+
 }(window.jQuery);

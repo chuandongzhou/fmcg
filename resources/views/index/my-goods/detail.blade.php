@@ -1,9 +1,9 @@
-@extends('index.manage-left')
+@extends('index.menu-master')
 
 @section('subtitle', '商品详情')
 
 @section('right')
-    <div class="col-sm-10  goods-detail">
+    <div class="col-sm-12 my-goods goods-detail">
         <div class="row operating">
             <div class="col-sm-1">
                 <a>< 返回</a>

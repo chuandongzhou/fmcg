@@ -328,7 +328,7 @@ var commonAjaxSetup = function () {
 
             if (isButton) {
                 self.button({
-                    loadingText: '操作中...',
+                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
                     doneText: '操作成功',
                     failText: '操作失败'
                 });

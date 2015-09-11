@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/mixins";
+@import "bootstrap/bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -37,82 +37,86 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 /*======================================step begin======================================*/
-.ui-stepBar-wrap{
-  position:relative;
-  width:100%;
-  overflow:hidden;
-  display:none;
-  z-index:100;
-  .ui-stepBar{
-    position:relative;
-    width:90%;
-    height:5px;
-    background:#b4b4b4;
-    top:50px;
-    left:6%;
-    z-index:101;
-    .ui-stepProcess{
-      position:relative;
-      width:0;
-      height:5px;
-      background:#4cb9fe;
-      top:0;
-      left:0;
-      z-index:102;
+.ui-stepBar-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+  .ui-stepBar {
+    position: relative;
+    width: 90%;
+    height: 5px;
+    background: #b4b4b4;
+    top: 50px;
+    left: 6%;
+    z-index: 101;
+    .ui-stepProcess {
+      position: relative;
+      width: 0;
+      height: 5px;
+      background: #4cb9fe;
+      top: 0;
+      left: 0;
+      z-index: 102;
     }
   }
-  .ui-stepInfo-wrap{
-    width:90%;
-    margin:0 auto;
-    height:100%;
-    .ui-stepInfo{
-      position:relative;
-      float:left;
-      padding-top:36px;
-      text-align:center;
-      .ui-stepSequence{
-        position:relative;
-        padding:1px 10px;
-        border-radius:50%;
-        z-index:103;
+  .ui-stepInfo-wrap {
+    width: 90%;
+    margin: 0 auto;
+    height: 100%;
+    .ui-stepInfo {
+      position: relative;
+      float: left;
+      padding-top: 36px;
+      text-align: center;
+      .ui-stepSequence {
+        position: relative;
+        padding: 1px 10px;
+        border-radius: 50%;
+        z-index: 103;
       }
-      .ui-stepName{
-        position:relative;
-        line-height:50px;
-        z-index:103;
+      .ui-stepName {
+        position: relative;
+        line-height: 50px;
+        z-index: 103;
       }
-      .judge-stepSequence-pre-change{
-        cursor:pointer;
-        &:hover{
-          box-shadow:0 0 3px 1px #4cb9fe;
+      .judge-stepSequence-pre-change {
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 3px 1px #4cb9fe;
         }
       }
-      .judge-stepSequence-hind-change{
-        cursor:pointer;
-        &:hover{
-          box-shadow:0 0 3px 1px #b4b4b4;
+      .judge-stepSequence-hind-change {
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 3px 1px #b4b4b4;
         }
       }
     }
   }
 }
-.judge-stepSequence-pre{
-  background:#4cb9fe;
-  color:#ffffff;
+
+.judge-stepSequence-pre {
+  background: #4cb9fe;
+  color: #ffffff;
 }
-.judge-stepSequence-hind{
-  background:#b4b4b4;
-  color:#000000;
+
+.judge-stepSequence-hind {
+  background: #b4b4b4;
+  color: #000000;
 }
-.author{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  text-align:center;
-  margin:40px auto;
-  color:#1569ec;
-  text-shadow:1px 1px 0 #e7e7e7, 0 1px 7px #fff;
+
+.author {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  margin: 40px auto;
+  color: #1569ec;
+  text-shadow: 1px 1px 0 #e7e7e7, 0 1px 7px #fff;
 }
+
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
@@ -181,7 +185,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 0;
     }
     .active {
-      .list-name {
+      a.list-name {
         color: $body-bg;
         background-color: $brand-primary;
       }
@@ -300,7 +304,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 0;
     .store-panel {
       width: 100%;
-      padding: 10px 0;
+      padding: 8px 0 15px 0;
       .avatar {
         @include square(70px);
         border-radius: 50%;
@@ -405,16 +409,54 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 
-  .sort {
-    margin-bottom: 40px;
+  @at-root .sort {
+    margin-bottom: 30px;
     color: $gray-light;
     .sort-item {
       border: 1px solid $gray-lighter;
       padding: 5px 5px;
+      .title-name {
+        display: inline-block;
+        padding: 3px 0 0 10px;
+      }
+      .all-sort-panel {
+        margin-left: 40px;
+        .all-sort {
+          width: 90%;
+          padding: 0 6px;
+          max-height: 60px;
+          overflow: hidden;
+          a {
+            display: inline-block;
+            padding: 3px 5px;
+            margin: 2px 10px 5px 10px;
+            font-size: 12px;
+            color: $gray;;
+            &.active {
+              background-color: $brand-primary;
+              color: $body-bg;
+              &:hover {
+                color: $body-bg;
+              }
+            }
+            &:hover {
+              color: $brand-primary;
+            }
+          }
+        }
+        .more {
+          display: inline-block;
+          padding-right: 5px;
+          color: $gray-darker;
+          text-decoration: none;
+        }
+      }
     }
+
     .sort-name {
       margin-top: -1px;
     }
+
     .package {
       @extend .sort-name;
     }
@@ -534,7 +576,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
 
-
   }
   .box {
     display: none;
@@ -647,12 +688,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor {
   .editor-panel {
-    border: 1px solid $gray-plain-light;
     .editor-wrap {
       padding: 10px 15px;
       .editor-item {
         padding: 5px 0;
-        margin: 0px;
+        margin: 0;
         .narrow {
           width: 80px;
         }
@@ -665,9 +705,12 @@ ul, li, p, a, h1, h2, h3, h4 {
             width: 60px;
           }
         }
-        .right-item {
-          position: absolute;
-          left: 40%;
+      }
+      .attr {
+        border: 1px solid $gray-lighter;
+        padding: 5px 0 5px 38px;
+        .items-item {
+          padding: 5px 20px 5px 0;
         }
       }
       .promotions-msg {
@@ -688,6 +731,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .right-save {
       padding: 15px 0;
+      .btn {
+        padding: 5px 30px;
+      }
     }
   }
   .content-wrap {
@@ -1111,6 +1157,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 8px;
     border: 1px solid $gray-plain-light;
     .item {
+      padding: 10px 0;
       li {
         padding-bottom: 5px;
       }
@@ -1400,16 +1447,21 @@ ul, li, p, a, h1, h2, h3, h4 {
         cursor: pointer;
         padding: 2px 5px 3px 5px;
         color: $gray-base;
-        font-size: 14px;
+        font-size: 13px;
+        a {
+          border: none;
+          padding: 0;
+          font-weight: 600;
+        }
         &:hover {
           color: $brand-danger;
         }
       }
       a {
-        font-size: 13px;
         color: $gray-base;
+        font-size: 13px;
         display: inline-block;
-        padding: 0 10px 0 8px;
+        padding: 0 10px 0 5px;
         margin: 3px 0 0 0;
         border-right: 1px solid $gray-plain-light;
         &:hover {
@@ -1463,8 +1515,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================index end======================================*/
 /*======================================search begin======================================*/
 .search-page {
+  .search-sort {
+    margin: 0;
+  }
   .search-list-item {
     padding: 10px 0;
+    border: none;
     border-bottom: 1px dashed $gray-plain-light;
     a {
       color: $gray-base;
@@ -1474,11 +1530,27 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .title {
     margin: 20px 0;
-    padding: 8px 5px 8px 15px;
-    background-color: $gray-plain-light;
+    line-height: 40px;
+    padding-right: 10px;
+    border: 1px solid $gray-plain-light;
+    background-color: $gray-plain;
     a {
-      color: $gray-base;
+      color: $gray;
+      display: inline-block;
+      border-right: 1px solid $gray-plain-light;
       padding: 0 10px;
+      margin-left: -4px;
+      height: 100%;
+      &:first-of-type {
+        margin: 0;
+      }
+      &:hover {
+        color: $brand-primary;
+      }
+      &.active {
+        background-color: $brand-primary;
+        color: $body-bg;
+      }
     }
   }
 }
@@ -1547,15 +1619,14 @@ ul, li, p, a, h1, h2, h3, h4 {
               padding: 3px 0;
             }
           }
-          .lowest-money{
+          .lowest-money {
             display: inline-block;
             padding: 0 30px;
             display: inline-block;
           }
-          .total-money{
+          .total-money {
             display: inline-block;
           }
-
         }
       }
       tr {
@@ -1567,20 +1638,20 @@ ul, li, p, a, h1, h2, h3, h4 {
         td {
           @extend th;
           padding: 15px 8px;
-          .modified{
+          .modified {
             background-color: $gray-plain;
             outline: none;
             border: 1px solid $gray-plain-light;
-            @include size(23px,25px);
+            @include size(23px, 25px);
             text-align: center;
-            &:hover{
-              border:1px solid $brand-warning;
+            &:hover {
+              border: 1px solid $brand-warning;
             }
           }
-          .money{
+          .money {
             font-size: 18px;
           }
-          .num{
+          .num {
             width: 40px;
             text-align: center;
           }
@@ -1660,7 +1731,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .search {
       width: 15%;
       background-color: $banner-gray;
-      color: $gray-base;
+      color: $gray;
     }
   }
 

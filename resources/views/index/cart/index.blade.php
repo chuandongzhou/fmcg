@@ -72,9 +72,18 @@
                                     <td class="text-center red">￥<span
                                                 class="goods-all-money">{{ $cartGoods->goods->price * $cartGoods->num }}</span>
                                     </td>
-                                    <td class="text-right"><a href="#" class="btn"><i class="fa fa-star"></i> 加入收藏夹</a>
+                                    <td class="text-right">
+                                        <a href="javascript:void(0)" data-type="goods" data-method="post"
+                                           class="btn btn-xs btn-like" data-id="{{ $cartGoods->goods_id }}">
+                                            @if($cartGoods->is_like) <i class="fa fa-star"></i> 已收藏@else<i
+                                                    class="fa fa-star-o"></i> 加入收藏夹 @endif
+                                        </a>
                                     </td>
-                                    <td class="text-center"><a href="#" class="btn">删除</a></td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)"
+                                           data-url="{{ url('api/v1/cart/delete/'.$cartGoods->id ) }}"
+                                           class="btn btn-xs ajax" data-method="delete">删除</a>
+                                    </td>
                                 </tr>
                             @endforeach
 
@@ -102,7 +111,7 @@
         <div class="container clearing-container fixed-bottom">
             <div class="row clearing text-right">
                 <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
-                <input type="submit" class="btn btn-primary" />
+                <input type="submit" class="btn btn-primary"/>
             </div>
         </div>
     </form>
@@ -116,6 +125,8 @@
             $(window).scroll(function () {
                 fixedBottom();
             });
+            likeFunc('goods');
+            // deleteFunc('cart');
         })
     </script>
 @stop

@@ -1,4 +1,4 @@
-@extends('index.master')
+@extends('index.index-master')
 
 @section('container')
     <div class="container my-goods">
@@ -18,7 +18,9 @@
                     <li><a href="#">个人中心</a></li>
                 </ul>
             </div>
-            @yield('right')
+            <div class="col-sm-10">
+                @yield('right')
+            </div>
         </div>
     </div>
 @stop

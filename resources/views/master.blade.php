@@ -24,10 +24,9 @@
         <![endif]-->
         <script>
             var SITE = {
-                USER: {!! $user or '{}' !!},
+                USER: {!! empty(auth()->user()) ? '{}' : auth()->user() !!},
                 ROOT: '{{ url('/') }}',
-                API_ROOT: '{{ route('api.v1.root') }}',
-                ID: {{ session('id') }},
+                API_ROOT: '{{ route('api.v1.root') }}'
 
             };
         </script>
@@ -42,8 +41,9 @@
 
         <script src="{{ asset('js/ie10-viewport-bug-workaround.js') }}"></script>
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-        @yield('js-lib')
+
         <script src="{{ asset('js/common.js?v=1.0.0') }}"></script>
+        @yield('js-lib')
         @yield('js')
 
     </body>

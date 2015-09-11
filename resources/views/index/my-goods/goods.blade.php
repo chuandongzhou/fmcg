@@ -1,4 +1,4 @@
-@extends('index.manage-left')
+@extends('index.menu-master')
 @include('includes.cropper')
 @include('includes.address')
 @include('includes.tinymce')
@@ -6,7 +6,7 @@
 @section('subtitle', '商品')
 
 @section('right')
-    <div class="col-sm-10  goods-editor">
+    <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
               action="{{ url('api/v1/goods/'.$goods->id) }}"
               data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('goods') }}">
@@ -25,31 +25,30 @@
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">分类 :</label>
-                            <select name="cate_level_1" class="narrow">
+                            <select name="cate_level_1">
 
                             </select>
-                            <select name="cate_level_2" class="narrow">
+                            <select name="cate_level_2">
 
                             </select>
-                            <select name="cate_level_3" class="narrow">
+                            <select name="cate_level_3">
 
                             </select>
                         </p>
                     </div>
-                    <div class="form-group editor-item">
-                        <label class="control-label">标签 :</label>
-
-                        <p class="items-item brand-msg">
-                            @foreach($attrs as $key=>$attr)
+                    <div class="form-group editor-item attr">
+                        @foreach($attrs as $key=>$attr)
+                            <p class="items-item">
                                 <label>{{ $attr['name'] }}</label>
-                                <select name="attrs[{{ $attr['id'] }}]" class="narrow">
+                                <select name="attrs[{{ $attr['id'] }}]">
                                     <option value="0">请选择</option>
                                     @foreach($attr['child'] as $child)
                                         <option value="{{ $child['id'] }}" {{ $child['id'] == $goods->attr[$key]->id ? 'selected' : '' }}>{{ $child['name'] }}</option>
                                     @endforeach
                                 </select>
-                            @endforeach
-                        </p>
+                            </p>
+                        @endforeach
+
                     </div>
 
                     <div class="form-group editor-item">
@@ -221,15 +220,17 @@
                 var html = '';
                 for (var index in data) {
                     var options = '<option value="0">请选择</option>';
+                    html += '<p class="items-item">';
                     html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['id'] + ']" class="narrow">';
+                    html += ' <select name="attrs[' + data[index]['id'] + ']" >';
                     for (var i in data[index]['child']) {
                         options += ' <option value="' + data[index]['child'][i]['id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                     }
                     html += options;
-                    html += '</select>'
+                    html += '</select>';
+                    html += '</p>';
                 }
-                $('p.brand-msg').html(html);
+                $('.attr').html(html);
             }, 'json')
         })
         //促销

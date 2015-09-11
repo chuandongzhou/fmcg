@@ -135,7 +135,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-header .container .collapse {
     padding: 0; }
-  .wholesalers-header .container .active .list-name {
+  .wholesalers-header .container .active a.list-name {
     color: #fff;
     background-color: #4cb9fe; }
   .wholesalers-header .container .navbar-nav li {
@@ -218,7 +218,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-index .store .store-panel {
     width: 100%;
-    padding: 10px 0; }
+    padding: 8px 0 15px 0; }
     .wholesalers-index .store .store-panel .avatar {
       width: 70px;
       height: 70px;
@@ -293,13 +293,38 @@ ul, li, p, a, h1, h2, h3, h4 {
     .my-goods .controls .item .search {
       margin-bottom: 3px; }
 
-.my-goods .sort {
+.sort {
   margin-bottom: 40px;
   color: #777777; }
-  .my-goods .sort .sort-item {
+  .sort .sort-item {
     border: 1px solid #b4b4b4;
     padding: 5px 5px; }
-  .my-goods .sort .sort-name, .my-goods .sort .package {
+    .sort .sort-item .title-name {
+      display: inline-block;
+      padding: 3px 0 0 10px; }
+    .sort .sort-item .all-sort-panel {
+      margin-left: 40px; }
+      .sort .sort-item .all-sort-panel .all-sort {
+        width: 90%;
+        padding: 0 6px;
+        max-height: 55px;
+        overflow: hidden; }
+        .sort .sort-item .all-sort-panel .all-sort a {
+          display: inline-block;
+          padding: 3px 5px;
+          margin: 2px 10px 5px 10px;
+          font-size: 12px;
+          color: #555555;
+          text-decoration: none; }
+          .sort .sort-item .all-sort-panel .all-sort a.active {
+            background-color: #4cb9fe;
+            color: #fff; }
+      .sort .sort-item .all-sort-panel .more {
+        display: inline-block;
+        padding-right: 5px;
+        color: #222222;
+        text-decoration: none; }
+  .sort .sort-name, .sort .package {
     margin-top: -1px; }
 
 .my-goods .menu {
@@ -466,40 +491,43 @@ ul, li, p, a, h1, h2, h3, h4 {
     height: 25px;
     line-height: 25px; }
 
-.goods-editor .editor-panel {
-  border: 1px solid #e0e0e0; }
-  .goods-editor .editor-panel .editor-wrap {
-    padding: 10px 15px; }
-    .goods-editor .editor-panel .editor-wrap .editor-item {
-      padding: 5px 0;
-      margin: 0px; }
-      .goods-editor .editor-panel .editor-wrap .editor-item .narrow {
-        width: 80px; }
-      .goods-editor .editor-panel .editor-wrap .editor-item .items-item {
-        display: inline-block;
-        padding-right: 40px;
-        position: relative; }
-        .goods-editor .editor-panel .editor-wrap .editor-item .items-item .checks {
-          display: inline-block;
-          width: 60px; }
-      .goods-editor .editor-panel .editor-wrap .editor-item .right-item {
-        position: absolute;
-        left: 40%; }
-    .goods-editor .editor-panel .editor-wrap .promotions-msg {
-      height: 80px;
+.goods-editor .editor-panel .editor-wrap {
+  padding: 10px 15px; }
+  .goods-editor .editor-panel .editor-wrap .editor-item {
+    padding: 5px 0;
+    margin: 0; }
+    .goods-editor .editor-panel .editor-wrap .editor-item .narrow {
+      width: 80px; }
+    .goods-editor .editor-panel .editor-wrap .editor-item .items-item {
+      display: inline-block;
+      padding-right: 40px;
       position: relative; }
-      .goods-editor .editor-panel .editor-wrap .promotions-msg label {
-        height: 100%;
+      .goods-editor .editor-panel .editor-wrap .editor-item .items-item .checks {
         display: inline-block;
-        position: absolute;
-        line-height: 80px;
-        top: 0; }
-      .goods-editor .editor-panel .editor-wrap .promotions-msg textarea {
-        margin-left: 70px;
-        width: 65%;
-        height: 100%; }
-  .goods-editor .editor-panel .right-save {
-    padding: 15px 0; }
+        width: 60px; }
+  .goods-editor .editor-panel .editor-wrap .attr {
+    border: 1px solid #b4b4b4;
+    padding: 5px 0 5px 38px; }
+    .goods-editor .editor-panel .editor-wrap .attr .items-item {
+      padding: 5px 20px 5px 0; }
+  .goods-editor .editor-panel .editor-wrap .promotions-msg {
+    height: 80px;
+    position: relative; }
+    .goods-editor .editor-panel .editor-wrap .promotions-msg label {
+      height: 100%;
+      display: inline-block;
+      position: absolute;
+      line-height: 80px;
+      top: 0; }
+    .goods-editor .editor-panel .editor-wrap .promotions-msg textarea {
+      margin-left: 70px;
+      width: 65%;
+      height: 100%; }
+
+.goods-editor .editor-panel .right-save {
+  padding: 15px 0; }
+  .goods-editor .editor-panel .right-save .btn {
+    padding: 5px 30px; }
 
 .goods-editor .content-wrap .add-address, .goods-editor .content-wrap .upload-img {
   margin: 15px 0; }
@@ -992,14 +1020,18 @@ ul, li, p, a, h1, h2, h3, h4 {
         cursor: pointer;
         padding: 2px 5px 3px 5px;
         color: #000;
-        font-size: 14px; }
+        font-size: 13px; }
+        .menu-down-layer .item .title a {
+          border: none;
+          padding: 0;
+          font-weight: 600; }
         .menu-down-layer .item .title:hover {
           color: #fe462f; }
       .menu-down-layer .item a {
-        font-size: 13px;
         color: #000;
+        font-size: 13px;
         display: inline-block;
-        padding: 0 10px 0 8px;
+        padding: 0 10px 0 5px;
         margin: 3px 0 0 0;
         border-right: 1px solid #e0e0e0; }
         .menu-down-layer .item a:hover {
@@ -1031,6 +1063,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================search begin======================================*/
 .search-page .search-list-item {
   padding: 10px 0;
+  border: none;
   border-bottom: 1px dashed #e0e0e0; }
   .search-page .search-list-item a {
     color: #000;
@@ -1176,7 +1209,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   .collect .control-panel .search {
     width: 15%;
     background-color: #d2d2d2;
-    color: #000; }
+    color: #555555; }
 
 /*======================================collect end======================================*/
 .wholesalers-list .dealer-index-banner {

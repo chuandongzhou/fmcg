@@ -11,60 +11,43 @@ namespace App\Http\Controllers\Api\v1;
 use App\Models\Like;
 use Auth;
 use Gate;
+use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
 
-    protected $user;
-
-    public function __construct()
-    {
-        $this->user = Auth::user();
-    }
-
     /**
-     * 添加收藏
+     * 收藏
      *
-     * @param $attributes
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function postAdd($attributes)
+    public function putInterests(Request $request)
     {
-        $likeable = explode('_', $attributes);
-        $likeType = cons('like.type');
+        $data = $request->all();
+        $class = array_get(cons('model'), $data['type'], head(cons('model')));
 
-        if (!array_get($likeType, $likeable[0])) {
-            return $this->error('收藏失败');
+        if ($data['status']) {
+            $likeInfo = $class::find($data['id']);
+            if (is_null($likeInfo)) {
+                return $this->success(['status' => false]);
+            }
+            $likeInfo->likes()->firstOrCreate([]);
+            return $this->success(['status' => true]);
+        } else {
+            $result = $class::find($data['id']);
+            if (is_null($result)) {
+                return $this->success(['status' => false]);
+            }
+            $likeInfo = $result->likes()->where('user_id', auth()->user()->id)->first();
+
+            if (is_null($likeInfo)) {
+                return $this->success(['status' => false]);
+            }
+            if ($likeInfo->delete()) {
+                return $this->success(['status' => false]);
+            }
+            return $this->success(['status' => false]);
         }
-
-        $class = array_get(cons('model'), $likeable[0]);
-
-        $likeInfo = $class::find($likeable[1]);
-
-        $likeName = cons()->valueLang('like.type', array_get($likeType, $likeable[0]));
-
-        if (is_null($likeInfo)) {
-            return $this->error('收藏' . $likeName . '失败');
-        }
-
-        $likeResult =$likeInfo->likes()->firstOrCreate([]);
-        if ($likeResult->exists) {
-            return $this->success('收藏' . $likeName . '成功');
-        }
-        return $this->error('收藏' . $likeName . '失败');
-    }
-
-
-    public function deleteDelete($likeId)
-    {
-        $likeInfo = Like::findOrFail($likeId);
-        if (Gate::denies('validate-user', $likeInfo)) {
-            abort(403);
-        }
-        if ($likeInfo->delete()) {
-            return $this->success('取消成功');
-        }
-        return $this->error('取消失败');
-
     }
 }

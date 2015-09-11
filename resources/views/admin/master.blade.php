@@ -70,8 +70,8 @@
                             <div id="collapse-two" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('/admin/user/create?type=wholesalers')  }}">批发商添加</a> <a
-                                                    href="{{ url('/admin/user?type=wholesalers')  }}"
+                                        <li><a href="{{ url('/admin/user/create?type=wholesaler')  }}">批发商添加</a> <a
+                                                    href="{{ url('/admin/user?type=wholesaler')  }}"
                                                     class="manger">管理</a></li>
                                         <li><a href="{{ url('/admin/user/create?type=retailer')  }}">终端商添加</a> <a
                                                     href="{{ url('/admin/user?type=retailer')  }}" class="manger">管理</a>
