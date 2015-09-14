@@ -28,10 +28,7 @@ class UserBankController extends Controller
         }
         // 设置些用户其它银行账号默认
 
-        $defaultBank = UserBank::where(['user_id' => $this->userId, 'is_default' => 1])->first();
-        if ($defaultBank->id) {
-            $defaultBank->fill(['is_default' => 0])->save();
-        }
+        auth()->user()->userBanks()->where( 'is_default' , 1)->update(['is_default' => 0]);
 
         if ($bankInfo->fill(['is_default' => 1])->save()) {
             return $this->success('设置成功');
@@ -40,15 +37,13 @@ class UserBankController extends Controller
     }
 
     /**
-     * 添加提现账号
-     *
-     * @param \App\Http\Requests\Index\CreateUserBankRequest $request
+     * @param \App\Http\Requests\Api\v1\CreateUserBankRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function store(Requests\Index\CreateUserBankRequest $request)
+    public function store(Requests\Api\v1\CreateUserBankRequest $request)
     {
         // TODO: userId 登录后添加
-        if (UserBank::create($request->all())->exists) {
+        if (auth()->user()->userBanks()->create($request->all())->exists) {
             return $this->success('添加账号成功');
         }
         return $this->success('添加账号时出现问题');
@@ -57,11 +52,11 @@ class UserBankController extends Controller
     /**
      * 保存
      *
-     * @param \App\Http\Requests\Index\UpdateUserBankRequest $request
+     * @param \App\Http\Requests\Api\v1\CreateUserBankRequest $request
      * @param $userBank
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Index\UpdateUserBankRequest $request, $userBank)
+    public function update(Requests\Api\v1\CreateUserBankRequest $request, $userBank)
     {
         if ($userBank->fill($request->all())->save()) {
             return $this->success('保存成功');

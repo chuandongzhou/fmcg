@@ -145,7 +145,7 @@
                 <div class="col-sm-2 categories">
                     <ul class="menu-wrap">
                         @foreach($categories as $category)
-                            <li><a href="#">{{ $category['name'] }}</a></li>
+                            <li><a class="one-title" href="{{ url('search?category_id=1'. $category['id']) }}">{{ $category['name'] }}</a></li>
                         @endforeach
                     </ul>
                 </div>
@@ -155,9 +155,9 @@
                             <div class="col-sm-12 menu-down-layer menu-down-item">
                                 @foreach($category['child'] as $child)
                                     <div class="item">
-                                        <h3 class="title"><a href="#">{{ $child['name'] }}</a></h3>
+                                        <h3 class="title"><a href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a></h3>
                                         @foreach($child['child'] as $grandChild)
-                                            <a href="#">{{ $grandChild['name'] }}</a>
+                                            <a href="{{ url('search?category_id=3'. $grandChild['id']) }}">{{ $grandChild['name'] }}</a>
                                         @endforeach
                                     </div>
                                 @endforeach

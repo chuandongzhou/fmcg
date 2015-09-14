@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Category;
 use App\Models\Goods;
 use App\Models\Shop;
-use App\Services\CategoryService;
 use DB;
 
 
@@ -25,9 +23,9 @@ class ShopController extends Controller
      */
     public function getDetail($cateStr = 'all', $type = '')
     {
-        //TODO: shop_id 修改
-        $shop = Shop::with('images')->where('user_id', 1)->first(); //商店详情
-        $map = ['shop_id' => 1];
+        $shop = auth()->user()->shop()->with('images')->first();
+
+        $map = ['shop_id' =>$shop->id];
         $goods = new \stdClass();
 
         /**

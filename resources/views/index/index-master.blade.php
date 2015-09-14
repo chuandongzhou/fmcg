@@ -121,7 +121,8 @@
                     </div>
                 </form>
                 <ul class="nav navbar-nav navbar-right right-btn">
-                    <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车</a></li>
+                    <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -147,14 +148,15 @@
                             <div class="categories" id="other-page-categories">
                                 <ul class="menu-wrap">
                                     @foreach($categories as $category)
-                                        <li><a class="one-title"><i></i>{{ $category['name'] }}</a>
+                                        <li><a class="one-title" href="{{ url('search?category_id=1'. $category['id']) }}"><i></i>{{ $category['name'] }}</a>
+
                                             <div class="menu-down-wrap menu-down-layer">
                                                 @foreach($category['child'] as $child)
                                                     <div class="item active">
-                                                        <h3 class="title">{{ $child['name'] }}</h3>
+                                                        <h3 class="title"><a href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a></h3>
                                                         @foreach($child['child'] as $grandChild)
-                                                        <a href="#">{{ $grandChild['name'] }}</a>
-                                                       @endforeach
+                                                            <a href="{{ url('search?category_id=3'. $grandChild['id']) }}">{{ $grandChild['name'] }}</a>
+                                                        @endforeach
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -164,8 +166,8 @@
                             </div>
                         </div>
                     </li>
-                    <li class="active"><a href="{{ url('/') }}">首页</a></li>
-                    <li><a href="#">店家信息</a></li>
+                    <li class="active"><a class="list-name" href="{{ url('/') }}">首页</a></li>
+                    <li><a class="list-name" href="#">店家信息</a></li>
                 </ul>
             </div>
         </div>

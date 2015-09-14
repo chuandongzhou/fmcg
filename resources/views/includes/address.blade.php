@@ -31,17 +31,18 @@
                         <label class="control-label">&nbsp;&nbsp;&nbsp;所在地:</label>
                         <select class="address-province inline-control add-province">
                             <option selected="selected" value="">请选择省市/其他...</option>
-                            <option value="210000">辽宁省</option>
                         </select>
 
                         <select class="address-city inline-control add-city">
                             <option selected="selected" value="">请选择城市...</option>
-                            <option value="100">大连</option>
                         </select>
 
                         <select class="address-district inline-control add-district">
                             <option selected="selected" value="">请选择区/县...</option>
-                            <option value="100">西港</option>
+                        </select>
+
+                        <select class="address-street inline-control add-street">
+                            <option selected="selected" value="">请选择街道...</option>
                         </select>
 
                         <div class="address-detail">

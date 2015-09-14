@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/bootstrap/mixins";
+@import "bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -633,7 +633,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 
   .title-name {
-    color: $gray-lighter;
+    color: $gray-light;
   }
   .address-wrap {
     padding: 20px 0 20px 30px;
@@ -1306,6 +1306,10 @@ ul, li, p, a, h1, h2, h3, h4 {
             &:hover {
               background-color: $gray-plain;
             }
+            &.selected {
+              background-color: $brand-primary;
+              color: $body-bg;
+            }
           }
         }
       }
@@ -1528,12 +1532,14 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 0 15px;
     }
   }
-  .title {
-    margin: 20px 0;
-    line-height: 40px;
-    padding-right: 10px;
-    border: 1px solid $gray-plain-light;
-    background-color: $gray-plain;
+}
+.tab-title {
+  margin: 20px 0;
+  line-height: 40px;
+  padding-right: 10px;
+  border: 1px solid $gray-plain-light;
+  background-color: $gray-plain;
+  .sequence {
     a {
       color: $gray;
       display: inline-block;
@@ -1722,6 +1728,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .control {
       width: 10%;
       padding: 4px 0;
+      margin-left: 10px;
       vertical-align: middle;
     }
     input.control {

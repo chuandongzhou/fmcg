@@ -487,6 +487,7 @@ var addAddFunc = function () {
         , addLimit = 5, province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
+        , street = $('.add-street')
         , address = $('.address');
 
     $('#addressModal').on('hidden.bs.modal', function (e) {
@@ -530,8 +531,13 @@ var addAddFunc = function () {
             changeBtnAddhtml('请选择城市...');
             return false;
         }
-        if (!district.val()) {
+        if (district.is(':visible') && !district.val()) {
             changeBtnAddhtml('请选择区县...');
+            return false;
+        }
+
+        if (street.is(':visible') && !street.val()) {
+            changeBtnAddhtml('请选择街道...');
             return false;
         }
         if (!address.val()) {
@@ -540,9 +546,10 @@ var addAddFunc = function () {
         }
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
-            districtText = district.find("option:selected").text(),
+            districtText =district.is(':visible') ? district.find("option:selected").text() : '',
+            streetText = street.is(':visible') ? street.find("option:selected").text() : '',
             addressText = address.val(),
-            addressDetail = provinceText + ' ' + cityText + ' ' + districtText + ' ' + addressText + ' ';
+            addressDetail = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText + ' ' + addressText + ' ';
         $('.btn-close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border">' +
@@ -551,7 +558,7 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
             '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
-            '<input type="hidden" name="area[street_id][]" value="' + 0 + '"/>' +
+            '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
             '<span class="fa fa-times-circle pull-right close"></span>' +
             '<input type="hidden" name="area[detail_address][]" value="' + addressDetail + '"/>',
             '</div>'

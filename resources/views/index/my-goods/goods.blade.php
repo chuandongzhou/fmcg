@@ -19,7 +19,11 @@
 
                     <div class="form-group editor-item">
                         <label class="control-label">价格 :</label>
-                        <input name="price" value="{{ $goods->price }}" type="text" required>
+                        <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+                        @if (auth()->user()->type == cons('user.type.supplier'))
+                            <label class="control-label">价格(批发商) :</label>
+                            <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text" required>
+                        @endif
                     </div>
 
                     <div class="form-group editor-item">
@@ -53,8 +57,16 @@
 
                     <div class="form-group editor-item">
                         <label class="control-label">最底购买数 :</label>
-                        <input class="narrow" value="{{ $goods->min_num }}" name="min_num" type="text" required>
+                        <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer" type="text"
+                               required>
                         <span>(整数)</span>
+                        @if (auth()->user()->type == cons('user.type.supplier'))
+                            <label class="control-label">最底购买数(批发商) :</label>
+                            <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
+                                   type="text" required>
+                            <span>(整数)</span>
+                        @endif
+
                     </div>
 
                     <div class="form-group editor-item">

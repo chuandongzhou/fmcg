@@ -20,8 +20,8 @@ class AuthServiceProvider extends ServiceProvider
         /**
          * 验证用户
          */
-        $gate->define('validate-user', function ($user, $user) {
-            return $user->id === $user->user_id;
+        $gate->define('validate-user', function ($user, $post) {
+            return $user->id === $post->user_id;
         });
 
         $gate->define('validate-goods', function ($user, $goods) {

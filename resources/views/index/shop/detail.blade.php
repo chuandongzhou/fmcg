@@ -61,32 +61,15 @@
                 </div>
             </div>
         </div>
-        <div class="row nav-wrap">
+        <div class="row">
             <div class="col-sm-12 ">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1"
-                            aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar1">
-                    <ul class="nav navbar-nav">
-                        <li class="{{ $type == 'all' || !$type  ? 'active' : '' }}">
-                            <a href="{{ url('shop/detail' . ($categoryId > 0 ? '/' . $categoryId : '')) }}">全部</a>
-                        </li>
-                        <li class="{{ $type == 'hot' ? 'active' : '' }}">
-                            <a href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/hot') }}">热销</a>
-                        </li>
-                        <li class="{{ $type == 'new' ? 'active' : '' }}">
-                            <a href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/new') }}">最新</a>
-                        </li>
-                        <li class="{{ $type == 'promotion' ? 'active' : '' }}">
-                            <a href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/promotion') }}">促销</a>
-                        </li>
-                    </ul>
+                <div class="tab-title clearfix">
+                    <p class="sequence">
+                            <a class="{{ $type == 'all' || !$type  ? 'active' : '' }}" href="{{ url('shop/detail' . ($categoryId > 0 ? '/' . $categoryId : '')) }}">全部</a>
+                            <a class="{{ $type == 'hot' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/hot') }}">热销</a>
+                            <a class="{{ $type == 'new' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/new') }}">最新</a>
+                            <a class="{{ $type == 'promotion' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/promotion') }}">促销</a>
+                    </p>
                 </div>
             </div>
         </div>

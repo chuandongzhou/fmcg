@@ -6,5 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 abstract class Request extends FormRequest
 {
-    //
+    public function authorize (){
+        return auth()->user()->type >= cons('user.type.wholesaler');
+    }
 }

@@ -17,7 +17,10 @@ class Goods extends Model
     protected $table = 'goods';
     protected $fillable = [
         'name',
-        'price',
+        'price_retailer',
+        'min_num_retailer',
+        'price_wholesaler',
+        'min_num_wholesaler',
         'cate_level_1',
         'cate_level_2',
         'cate_level_3',
@@ -28,7 +31,6 @@ class Goods extends Model
         'is_expire',
         'is_promotion',
         'promotion_info',
-        'min_num',
         'introduce',
         'shop_id',
         'images',
@@ -70,6 +72,7 @@ class Goods extends Model
 
     /**
      * 购物车内的商品
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function carts()
@@ -279,6 +282,24 @@ class Goods extends Model
         }
 
         return true;
+    }
+
+    /**
+     * 根据不同角色获取价格
+     * @return mixed
+     */
+    public function getPriceAttribute()
+    {
+        return auth()->user()->type == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer;
+    }
+
+    /**
+     * 根据不同角色获取最低购买数
+     * @return mixed
+     */
+    public function getMinNumAttribute()
+    {
+        return auth()->user()->type == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer;
     }
 
     /**

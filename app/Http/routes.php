@@ -23,6 +23,7 @@ $router->group(['namespace' => 'Index'], function ($router) {
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->get('balance', 'BalanceController@index'); //账户余额
+        $router->resource('shipping-address', 'ShippingAddressController', ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
 
 });
@@ -88,6 +89,9 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->post('bank-default/{bank}', 'UserBankController@bankDefault');
             $router->resource('bank', 'UserBankController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
+            $router->post('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');
+            $router->resource('shipping-address', 'ShippingAddressController', ['only' => ['store', 'update', 'destroy']]);          //收货地址
+
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['store', 'update', 'destroy']]);          //提现账号
         });

@@ -50,15 +50,15 @@
             </div>
             <div class="col-sm-12">
                 <div class="title clearfix">
-                    <p class="pull-left">
+                    <p class="pull-left sequence">
                         <a href="{{ url('search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"
-                           class="{{!isset($get['sort']) ? 'active' : 'btn-default'}} control">全部</a>
+                           class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>
                         <a href="{{ url('search?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                           class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : 'btn-default' }} control">名称</a>
+                           class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
                         <a href="{{ url('search?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                           class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : 'btn-default' }}">价格</a>
+                           class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
                         <a href="{{ url('search?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                           class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : 'btn-default' }}">新增商品</a>
+                           class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">新增商品</a>
                     </p>
 
                     <p class="pull-right">
