@@ -6,7 +6,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="put"
           action="{{ url('admin/shop/'.$shop->id) }}" data-help-class="col-sm-push-2 col-sm-10">
-        <div class="col-sm-9 user-show">
+        <div class="col-sm-12 user-show">
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="username">店家LOGO:</label>
 
@@ -121,20 +121,22 @@
                 <label class="col-sm-2 control-label">所在地</label>
 
                 <div class="col-sm-3">
-                    <select name="province_id" class="address-province form-control">
+                    <select data-group="shop" name="province_id" data-id="{{ $shop->province_id }}" class="address-province form-control">
                         <option selected="selected" value="">请选择省市/其他...</option>
-                        <option value="210000">辽宁省</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    <select name="city_id" class="address-city form-control">
+                    <select data-group="shop" name="city_id" data-id="{{ $shop->city_id }}" class="address-city form-control">
                         <option selected="selected" value="">请选择城市...</option>
                     </select>
                 </div>
-                <div class="col-sm-4">
-                    <select name="district_id" class="address-district form-control">
+                <div class="col-sm-2">
+                    <select data-group="shop" name="district_id" data-id="{{ $shop->district_id }}" class="address-district form-control">
                         <option selected="selected" value="">请选择区/县...</option>
                     </select>
+                </div>
+                <div class="col-sm-2">
+                    <select data-group="shop" name="street_id"  data-id="{{ $shop->street_id }}"  class="address-street form-control"></select>
                 </div>
             </div>
 
@@ -161,17 +163,19 @@
                             <input type="hidden" name="area[city_id][]" value=""/>
                             <input type="hidden" name="area[district_id][]" value=""/>
                             <input type="hidden" name="area[street_id][]" value=""/>
-                            <input type="hidden" name="area[detail_address][]" value=""/>
+                            <input type="hidden" name="area[area_name][]" value=""/>
+                            <input type="hidden" name="area[address][]" value=""/>
                         </div>
                         @foreach ($shop->deliveryArea as $area)
-                            <div class="col-sm-12 fa-border">{{ $area->detail_address }}
+                            <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
                                 <span class="fa fa-times-circle pull-right close"></span>
                                 <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                                 <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
                                 <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
                                 <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
                                 <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                                <input type="hidden" name="area[detail_address][]" value="{{ $area->detail_address }}"/>
+                                <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                                <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                             </div>
                         @endforeach
                     </div>

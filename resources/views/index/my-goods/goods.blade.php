@@ -1,15 +1,15 @@
-@extends('index.manage-left')
-@include('includes.cropper')
+@extends('index.menu-master')
 @include('includes.address')
+@include('includes.cropper')
 @include('includes.tinymce')
 
 @section('subtitle', '商品')
 
 @section('right')
-    <div class="col-sm-10  goods-editor">
+    <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
-              action="{{ url('api/v1/goods/'.$goods->id) }}"
-              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('goods') }}">
+              action="{{ url('api/v1/my-goods/'.$goods->id) }}"
+              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('my-goods') }}">
             <div class="row editor-panel">
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">
@@ -19,43 +19,54 @@
 
                     <div class="form-group editor-item">
                         <label class="control-label">价格 :</label>
-                        <input name="price" value="{{ $goods->price }}" type="text" required>
+                        <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+                        @if (auth()->user()->type == cons('user.type.supplier'))
+                            <label class="control-label">价格(批发商) :</label>
+                            <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text" required>
+                        @endif
                     </div>
 
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">分类 :</label>
-                            <select name="cate_level_1" class="narrow">
+                            <select name="cate_level_1">
 
                             </select>
-                            <select name="cate_level_2" class="narrow">
+                            <select name="cate_level_2">
 
                             </select>
-                            <select name="cate_level_3" class="narrow">
+                            <select name="cate_level_3">
 
                             </select>
                         </p>
                     </div>
-                    <div class="form-group editor-item">
-                        <label class="control-label">标签 :</label>
-
-                        <p class="items-item brand-msg">
-                            @foreach($attrs as $key=>$attr)
+                    <div class="form-group editor-item attr">
+                        @foreach($attrs as $key=>$attr)
+                            <p class="items-item">
                                 <label>{{ $attr['name'] }}</label>
-                                <select name="attrs[{{ $attr['id'] }}]" class="narrow">
+                                <select name="attrs[{{ $attr['id'] }}]">
                                     <option value="0">请选择</option>
                                     @foreach($attr['child'] as $child)
                                         <option value="{{ $child['id'] }}" {{ $child['id'] == $goods->attr[$key]->id ? 'selected' : '' }}>{{ $child['name'] }}</option>
                                     @endforeach
                                 </select>
-                            @endforeach
-                        </p>
+                            </p>
+                        @endforeach
+
                     </div>
 
                     <div class="form-group editor-item">
                         <label class="control-label">最底购买数 :</label>
-                        <input class="narrow" value="{{ $goods->min_num }}" name="min_num" type="text" required>
+                        <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer" type="text"
+                               required>
                         <span>(整数)</span>
+                        @if (auth()->user()->type == cons('user.type.supplier'))
+                            <label class="control-label">最底购买数(批发商) :</label>
+                            <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
+                                   type="text" required>
+                            <span>(整数)</span>
+                        @endif
+
                     </div>
 
                     <div class="form-group editor-item">
@@ -107,7 +118,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2 right-save">
-                    <input type="submit" class="btn btn-primary" value="保存">
+                    <button type="submit" class="btn btn-primary">保存</button>
                 </div>
 
             </div>
@@ -126,17 +137,19 @@
                         <input type="hidden" name="area[city_id][]" value=""/>
                         <input type="hidden" name="area[district_id][]" value=""/>
                         <input type="hidden" name="area[street_id][]" value=""/>
-                        <input type="hidden" name="area[detail_address][]" value=""/>
+                        <input type="hidden" name="area[area_name][]" value=""/>
+                        <input type="hidden" name="area[address][]" value=""/>
                     </div>
                     @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border">{{ $area->detail_address }}
+                        <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
                             <span class="fa fa-times-circle pull-right close"></span>
                             <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                             <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
                             <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
                             <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
                             <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                            <input type="hidden" name="area[detail_address][]" value="{{ $area->detail_address }}"/>
+                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                         </div>
                     @endforeach
 
@@ -193,7 +206,6 @@
 @section('js')
     @parent
     <script type="text/javascript">
-
         //上传图片处理
         picFunc();
         //获取下级分类
@@ -221,15 +233,17 @@
                 var html = '';
                 for (var index in data) {
                     var options = '<option value="0">请选择</option>';
+                    html += '<p class="items-item">';
                     html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['id'] + ']" class="narrow">';
+                    html += ' <select name="attrs[' + data[index]['id'] + ']" >';
                     for (var i in data[index]['child']) {
                         options += ' <option value="' + data[index]['child'][i]['id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                     }
                     html += options;
-                    html += '</select>'
+                    html += '</select>';
+                    html += '</p>';
                 }
-                $('p.brand-msg').html(html);
+                $('.attr').html(html);
             }, 'json')
         })
         //促销

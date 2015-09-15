@@ -23,6 +23,7 @@ class Shop extends Model
         'district_id',
         'street_id',
         'area',
+        'area_name',
         'address',
         'delivery_location',
         'user_id',
@@ -221,6 +222,7 @@ class Shop extends Model
      */
     public function setLicenseAttribute($license)
     {
+        dd($license);
         if ($license) {
             return $this->associateFiles((array)upload_file($license, 'temp'), 'files', cons('shop.file_type.license'));
         }
@@ -260,10 +262,10 @@ class Shop extends Model
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
 
-        $nowArea = $this->deliveryArea;
-        if (count($nowArea) == count(array_filter($area['province_id']))) {
-            return true;
-        }
+        /* $nowArea = $this->deliveryArea;
+       * if (count($nowArea) == count(array_filter($area['province_id']))) {
+             return true;
+         }*/
         $this->deliveryArea()->delete();
         if (!empty($areaArr)) {
             foreach ($areaArr as $data) {

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Models\DeliveryArea;
 use App\Models\Goods;
 
 use App\Http\Requests;
 use App\Services\AddressService;
 use Illuminate\Http\Request;
-use App\Models\Address;
 
-class GoodsController extends Controller
+class MyGoodsController extends Controller
 {
     /**
      * tore a newly created resource in storage.
      *
-     * @param \App\Http\Requests\Index\CreateGoodsRequest $request
+     * @param \App\Http\Requests\Api\v1\CreateGoodsRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function store(Requests\Index\CreateGoodsRequest $request)
+    public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
         $attributes = $request->all();
-        $goods = Goods::create($attributes);
+        $goods = auth()->user()->shop()->goods()->create($attributes);
         if ($goods->exists) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
@@ -35,11 +35,11 @@ class GoodsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\Index\UpdateGoodsRequest $request
+     * @param \App\Http\Requests\Api\v1\UpdateGoodsRequest $request
      * @param $goods
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(Requests\Index\UpdateGoodsRequest $request, $goods)
+    public function update(Requests\Api\v1\UpdateGoodsRequest $request, $goods)
     {
         $attributes = $request->all();
         if ($goods->fill($attributes)->save()) {
@@ -105,7 +105,7 @@ class GoodsController extends Controller
         if (!empty($areaArr)) {
            $data = [];
             foreach ($areaArr as $area) {
-                $data[] = new Address($area);
+                $data[] = new DeliveryArea($area);
             }
             $model->deliveryArea()->saveMany($data);
         }

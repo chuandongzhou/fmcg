@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\OrderGoods;
+use App\Services\CartService;
 use App\Services\ExportWordService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,43 +53,135 @@ class OrderController extends Controller
     }
 
 
+    /**
+     * 确认订单消息
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return $this|\Illuminate\View\View
+     */
     public function postConfirmOrder(Request $request)
     {
         $attributes = $request->all();
-        if (empty($attributes['goods_id'])) {
+
+        $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
+        foreach ($attributes['goods_id'] as $goodsId) {
+            if ($attributes['num'][$goodsId] > 0) {
+                $orderGoodsNum[$goodsId] = $attributes['num'][$goodsId];
+            }
+        }
+
+        if (empty($orderGoodsNum)) {
+            return redirect()->back()->withInput();
+        }
+        $confirmedGoods = auth()->user()->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
+
+        $carts = $confirmedGoods->with('goods')->get();
+
+        //验证
+        $cartService = new CartService($carts);
+
+        if (!$cartService->validateOrder($orderGoodsNum, true)) {
             return redirect()->back()->withInput();
         }
 
-        $carts = auth()->user()->carts()->whereIn('goods_id', $attributes['goods_id'])->with('goods')->get();
-
-        if (!empty($carts[0])) {
-            //是否通过验证
-            $allow = true;
-            //判断商品购买数量是否小于该商品的最低配送额
-            foreach ($carts as $cart) {
-                $buyNum = $attributes['num'][$cart->goods_id];
-                if ($cart->goods->min_num > $buyNum) {
-                    $allow = false;
-                }
-                $cart->fill(['num' => $buyNum])->save();
-            }
-            if (!$allow) {
-                return redirect()->back()->withInput();
-            }
-            $shops = (new CartService($carts))->formatCarts();
+        if ($confirmedGoods->update(['status' => 1])) {
+            return redirect('order/confirm-order');
         } else {
             return redirect()->back()->withInput();
         }
-        // 判断购买金额是否小于商店的最低配送额
+    }
 
+    /**
+     * 确认订单页
+     *
+     * @return \Illuminate\View\View
+     */
+    public function getConfirmOrder()
+    {
+        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $shops = (new CartService($carts))->formatCarts();
+        //收货地址
+        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
+
+        return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
+    }
+
+
+    /**
+     * 提交订单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function postSubmitOrder(Request $request)
+    {
+
+        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+
+        if (empty($carts[0])) {
+            return redirect()->back()->withInput();
+        }
+        $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
+        foreach ($carts as $cart) {
+            $orderGoodsNum[$cart->goods_id] = $cart->num;
+        }
+        //验证
+        $cartService = new CartService($carts);
+
+        if (!$shops = $cartService->validateOrder($orderGoodsNum)) {
+            return redirect('cart');
+        }
+
+        $data = $request->input('shop');
+
+        $payTypes = cons('pay_type');
+
+        $onlinePaymentOrder = [];   //  保存在线支付的订单
         foreach ($shops as $shop) {
-            if ($shop->min_money > $shop->sum_price) {
-                return redirect()->back()->withInput();
+            $payType = array_get($payTypes, $data[$shop->id]['pay_type'], head($payTypes));
+            $orderData = [
+                'user_id' => auth()->user()->id,
+                'shop_id' => $shop->id,
+                'price' => $shop->sum_price,
+                'pay_type' => $payType,
+                //TODO: 需要验证收货地址是否合法
+                'shipping_address_id' => $data[$shop->id]['shipping_address_id'],
+                'remark' => $data[$shop->id]['remark'] ? $data[$shop->id]['remark'] : ''
+            ];
+            $order = Order::create($orderData);
+            if ($order->exists) {
+                $orderGoods = [];
+                foreach ($shop->cart_goods as $cartGoods) {
+                    $orderGoods[] = new OrderGoods(
+                        [
+                            'goods_id' => $cartGoods->goods_id,
+                            'price' => $cartGoods->goods->price,
+                            'num' => $cartGoods->num,
+                            'total_price' => $cartGoods->goods->price * $cartGoods->num,
+                        ]
+                    );
+                }
+                if ($order->orderGoods()->saveMany($orderGoods)){
+                    if ($payType == $payTypes['online']) {
+                        $onlinePaymentOrder[] = $order->id;
+                    }
+                    // 删除购物车
+                    auth()->user()->carts()->where('status' , 1)->delete();
+                } else {
+                    //TODO: 跳转页面后期修改
+                    $order->delete();
+                    return redirect('cart');
+                }
+
+            }else {
+                //跳转页面后期修改
+                return redirect('cart');
             }
         }
 
+        // TODO: 跳至支付页面
+        dd($onlinePaymentOrder);
 
-        return view('index.order.confirm-order', ['shops' => $shops]);
     }
 
     /**

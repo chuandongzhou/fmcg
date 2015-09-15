@@ -23,7 +23,6 @@ class UserController extends Controller
         $type = (string)$request->input('type');
 
         $users = User::where('type', array_get($types, $type, head($types)))->with('shop')->paginate();
-
         return view('admin.user.index', [
             'users' => $users,
         ]);

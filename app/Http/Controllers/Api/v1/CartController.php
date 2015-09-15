@@ -47,4 +47,19 @@ class CartController extends Controller
         return $this->error('加入购物车失败');
     }
 
+    /**
+     * @param $cartId
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteDelete($cartId)
+    {
+        $cart = auth()->user()->carts()->find($cartId);
+
+        if (!is_null($cart)) {
+            $cart->delete();
+        }
+        return $this->success('删除成功');
+    }
+
+
 }

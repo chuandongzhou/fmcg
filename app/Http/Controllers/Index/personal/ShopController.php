@@ -18,8 +18,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        //TODO: user_id修改
-        $shop = Shop::with('images')->where('user_id', 1)->first(); //商店详情
+        $shop = auth()->user()->shop()->with('images')->first();
         return view('index.personal.shop', ['shop' => $shop]);
     }
 

@@ -7,7 +7,6 @@ class ShippingAddress extends Model
     //
     protected $table = 'shipping_address';
     protected $fillable = [
-        'address',
         'consigner',
         'phone',
         'is_default',
@@ -25,11 +24,11 @@ class ShippingAddress extends Model
     }
 
     /**
-     * 收货地址
+     * 关联地址
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function deliveryArea()
+    public function address()
     {
         return $this->morphOne('App\Models\DeliveryArea', 'addressable');
     }

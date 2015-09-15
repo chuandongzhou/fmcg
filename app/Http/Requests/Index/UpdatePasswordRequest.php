@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Index;
 
-use App\Http\Requests\Request;
 
 class UpdatePasswordRequest extends Request
 {
@@ -14,8 +13,8 @@ class UpdatePasswordRequest extends Request
     public function rules()
     {
         return [
-            'old_password'=>'required|min:6',
-            'new_password'=>'required|min:6|confirmed'
+            'old_password'=>'required|min:6|different:password',
+            'password'=>'required|min:6|confirmed'
         ];
     }
 }

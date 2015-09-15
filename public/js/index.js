@@ -1,4 +1,25 @@
 /**
+ * 显示提示
+ * @param {object} obj
+ * @param {string} content
+ */
+function tips(obj, content) {
+    var tips = $('#tips');
+    if (!tips.length) {
+        tips = $('<div id="tips"><div class="text"></div><div class="arrow"></div></div>').appendTo($('body'));
+    } else {
+        tips.stop(true, true).hide().css({top: 0, left: 0});
+    }
+    tips.children('.text').html(content);
+    var offsetTop = obj.offset().top, offsetLeft = obj.offset().left, selfW = obj.outerWidth(true), w = tips.outerWidth(true), h = tips.outerHeight(true);
+    tips.show().css({
+        top: offsetTop - h + 10,
+        left: (offsetLeft - (w - selfW) / 2)
+    }).animate({top: offsetTop - h - 2}, function () {
+        tips.fadeOut(1500);
+    });
+}
+/**
  * 动态查询订单列表
  */
 function getOrderList() {
@@ -103,7 +124,7 @@ function _ajaxGet(targetUrl, data) {
                     + '     </div>'
                     + '     <div class="col-sm-2 order-form-operating">';
                 //TODO:这里需要当前用户ID
-                if (SITE.ID == result.seller_id) {//卖家----需要修改参照order-buy/sell
+                if (SITE.ID == result.shop_id) {//卖家----需要修改参照order-buy/sell
                     str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
                     if (!result.is_cancel) {
                         if (result.status == 0) {
@@ -179,8 +200,8 @@ function menuFunc() {
     $('.navbar-nav .menu-wrap-title').mouseenter(function () {
         $('.menu-list-wrap').css('display', 'block');
     })
-    $('.menu-list-wrap').mouseleave(function () {
-        $(this).css('display', 'none');
+    $('#menu-list').mouseleave(function () {
+        $('.menu-list-wrap').css('display', 'none');
         $('.categories .menu-wrap li').removeClass('hover-effect');
         $('.menu-down-layer').css('display', 'none');
     })
@@ -317,7 +338,9 @@ function selectedFunc() {
         var obj = $(this),
             minNum = obj.data('minNum'),
             descButton = obj.siblings('.desc-num'),
-            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');;;
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
+        ;
+        ;
         if (obj.val() <= minNum) {
             descButton.prop('disabled', true);
         } else {
@@ -402,6 +425,47 @@ var numChange = function (num) {
     });
     changeDescButton();
 };
+/**
+ * 点击感兴趣处理函数
+ * @param {string} module         模块
+ * @returns {undefined}
+ */
+function likeFunc(type) {
+    $('.btn-like').button({
+        loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中',
+        likedText: '<i class="fa fa-star"></i> 已收藏',
+        likeText: '<i class="fa fa-star-o"></i> 加入收藏夹'
+    });
+
+    $(document).on('click', '.btn-like', function () {
+        var self = $(this), id = self.data('id'), status = self.children('.fa-star').length > 0;
+        // 判断登录
+        if (!site.isLogin()) {
+            site.redirect('auth/login');
+            return;
+        }
+
+        self.button('loading');
+        $.ajax({
+            url: site.api('like/interests'),
+            method: 'put',
+            data: {status: !status ? 1 : 0, type: type, id: id}
+        }).done(function (data, textStatus, jqXHR) {
+            if ($.isPlainObject(data)) {
+                status = data.status;
+            }
+
+            self.data('status', status).button(status ? 'liked' : 'like');
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            self.button(status ? 'liked' : 'like');
+            if (errorThrown == 'Unauthorized') {
+                site.redirect('auth/login');
+            } else {
+                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
+            }
+        });
+    });
+}
 
 function tabBox() {
     $('.location').css('display', 'block')
@@ -409,5 +473,17 @@ function tabBox() {
         $(this).addClass('active').siblings().removeClass('active');
         var boxclass = $(this).attr('id');
         $('.' + boxclass).css('display', 'block').siblings('.box').css('display', 'none');
+    })
+}
+function displayList(){
+    $('.all-sort-panel .more').click(function(){
+        if($(this).children('span').text()=="更多"){
+            $(this).siblings('.all-sort').css({'maxHeight':'100px','overflowY':'scroll'});
+            $(this).children('span').text('收起').siblings('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
+        }else if($(this).children('span').text()=="收起"){
+            $(this).siblings('.all-sort').css({'maxHeight':'55px','overflow':'hidden'});
+            $(this).children('span').text('更多').siblings('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+
     })
 }

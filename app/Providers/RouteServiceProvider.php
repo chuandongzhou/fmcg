@@ -27,6 +27,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\Goods' => ['my-goods', 'goods'],
         'App\Models\UserBank' => 'bank',
         'App\Models\DeliveryMan' => 'delivery-man',
+        'App\Models\ShippingAddress' => 'shipping-address',
 
     ];
 

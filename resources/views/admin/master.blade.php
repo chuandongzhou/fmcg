@@ -43,7 +43,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-one" class="panel-collapse collapse in">
+                            <div id="collapse-one"
+                                 class="panel-collapse collapse {{ path_active([ 'admin' , 'admin/admin/create' , 'admin/admin' , 'admin/admin/password'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
@@ -67,11 +68,12 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-two" class="panel-collapse collapse">
+                            <div id="collapse-two"
+                                 class="panel-collapse collapse {{ path_active(['admin/user/create' , 'user'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('/admin/user/create?type=wholesalers')  }}">批发商添加</a> <a
-                                                    href="{{ url('/admin/user?type=wholesalers')  }}"
+                                        <li><a href="{{ url('/admin/user/create?type=wholesaler')  }}">批发商添加</a> <a
+                                                    href="{{ url('/admin/user?type=wholesaler')  }}"
                                                     class="manger">管理</a></li>
                                         <li><a href="{{ url('/admin/user/create?type=retailer')  }}">终端商添加</a> <a
                                                     href="{{ url('/admin/user?type=retailer')  }}" class="manger">管理</a>
@@ -92,7 +94,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-three" class="panel-collapse collapse">
+                            <div id="collapse-three" class="panel-collapse collapse
+                            {{ path_active(['admin/category/create' , 'admin/attr/create' , 'admin/images/create' , 'admin/category' , 'admin/attr' , 'admin/images'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{  url('admin/category/create')  }}">商品分类添加</a> <a
@@ -114,7 +117,9 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-four" class="panel-collapse collapse">
+                            <div id="collapse-four" class="panel-collapse collapse
+                            {{ path_active([ 'admin/advert-index/create', 'admin/advert-index', 'admin/advert-user/create',
+                                'admin/advert-user', 'admin/advert-app/create', 'admin/advert-app' ], 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/advert-index/create') }}">首页广告添加</a>
@@ -137,7 +142,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-five" class="panel-collapse collapse">
+                            <div id="collapse-five"
+                                 class="panel-collapse collapse {{ path_active(['admin/system-trade'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/system-trade') }}">平台交易信息</a>
@@ -154,7 +160,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-six" class="panel-collapse collapse">
+                            <div id="collapse-six"
+                                 class="panel-collapse collapse {{ path_active(['admin/feedback' , 'admin/trade'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/feedback') }}">反馈信息</a></li>
@@ -189,10 +196,12 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-eight" class="panel-collapse collapse">
+                            <div id="collapse-eight"
+                                 class="panel-collapse collapse {{ path_active(['admin/promoter/create','admin/promoter'], 'in') }}">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('admin/promoter/create') }}">推广人员添加</a><a href="{{ url('admin/promoter') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/promoter/create') }}">推广人员添加</a><a
+                                                    href="{{ url('admin/promoter') }}" class="manger">管理</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -206,10 +215,13 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-nine" class="panel-collapse collapse">
+                            <div id="collapse-nine"
+                                 class="panel-collapse collapse {{ path_active(['admin/operation-record/create','admin/operation-record'] , 'in') }}">
                                 <div class="panel-body" class="fa-border">
                                     <ul>
-                                        <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a href="{{ url('admin/operation-record') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a
+                                                    href="{{ url('admin/operation-record') }}" class="manger">管理</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

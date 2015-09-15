@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'balance', 'spreading_code' ,'status'];
     protected $fillable = [
         'user_name',
         'password',
@@ -104,8 +104,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shoppingAddress()
+    public function shippingAddress()
     {
-        return $this->hasMany('App\Models\ShoppingAddress');
+        return $this->hasMany('App\Models\ShippingAddress');
     }
 }

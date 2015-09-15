@@ -14,11 +14,11 @@ use Gate;
 class CartService
 {
 
-    protected $carts = [];
+    protected $data = [];
 
-    public function __construct($carts = [])
+    public function __construct($data = [])
     {
-        $this->carts = $carts;
+        $this->data = $data;
         return $this;
     }
 
@@ -29,7 +29,7 @@ class CartService
      */
     public function formatCarts($carts = null)
     {
-        $carts = is_null($carts) ? $this->carts : $carts;
+        $carts = is_null($carts) ? $this->data : $carts;
         $shopIds = $carts->pluck('goods.shop_id');
         $shopIds = $shopIds->all();
 
@@ -41,12 +41,54 @@ class CartService
                 if (Gate::denies('validate-goods', $cart->goods)) {
                     continue;
                 }
+                $cart->is_like = !is_null($cart->goods->whereHas('likes' , function($q) {
+                    $q->where('user_id' , auth()->user()->id);
+                })->first());
                 if ($cart->goods->shop_id == $shop->id) {
-                    $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods, [$cart]) : [$cart];
-                    $sumPrice +=   $cart->goods->price * $cart->num;
+
+                    $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,
+                        [$cart]) : [$cart];
+                    $sumPrice += $cart->goods->price * $cart->num;
                 }
             }
             $shops[$key]->sum_price = $sumPrice;
+        }
+        return $shops;
+    }
+
+    /**
+     * 购买商品数据验证
+     *
+     * @param $num
+     * @param bool|false $updateNum
+     * @return bool
+     */
+    public function validateOrder($num , $updateNum = false)
+    {
+        $carts = $this->data;
+        if (empty($carts[0]) || empty($num)) {
+            return false;
+        }
+        //是否通过验证
+        $allow = true;
+        //判断商品购买数量是否小于该商品的最低配送额
+        foreach ($carts as $cart) {
+            $buyNum = $num[$cart->goods_id];
+            if ($cart->goods->min_num > $buyNum) {
+                $allow = false;
+            }
+            $updateNum && $cart->fill(['num' => $buyNum])->save();
+        }
+        if (!$allow) {
+            return false;
+        }
+
+        $shops = $this->formatCarts();
+        // 判断购买金额是否小于商店的最低配送额
+        foreach ($shops as $shop) {
+            if ($shop->min_money > $shop->sum_price) {
+                return false;
+            }
         }
         return $shops;
     }

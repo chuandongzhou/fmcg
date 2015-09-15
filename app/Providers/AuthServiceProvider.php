@@ -24,8 +24,12 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $post->user_id;
         });
 
-        $gate->define('validate-goods', function ($user, $post) {
-            return $user->type < $post->user_type;
+        $gate->define('validate-goods', function ($user, $goods) {
+            return $user->type < $goods->user_type;
+        });
+
+        $gate->define('validate-shop', function ($user, $shop) {
+            return $user->shop->id === $shop->id;
         });
     }
 }

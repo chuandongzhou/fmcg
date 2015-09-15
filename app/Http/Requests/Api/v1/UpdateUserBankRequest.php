@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Index;
+namespace App\Http\Requests\Api\v1;
 
 
 class UpdateUserBankRequest extends Request
@@ -14,7 +14,7 @@ class UpdateUserBankRequest extends Request
     {
         $cardInfo = $this->route('bank');
         return [
-            'card_number' => 'required|digits_between:16,18|unique:user_bank,card_number,' . $cardInfo->id,
+            'card_number' => 'required|digits_between:16,19|unique:user_bank,card_number,' . $cardInfo->id,
             'card_type' => 'required',
             'card_holder' => 'required',
             'card_address' => 'required'

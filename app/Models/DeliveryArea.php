@@ -13,7 +13,8 @@ class DeliveryArea extends Model
         'city_id',
         'district_id',
         'street_id',
-        'detail_address',
+        'area_name',
+        'address'
     ];
     /**
      * 复用模型关系

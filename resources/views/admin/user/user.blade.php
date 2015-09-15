@@ -30,20 +30,11 @@
             </div>
         </div>
 
-        {{--<div class="form-group">--}}
-            {{--<label for="shop_name" class="col-sm-2 control-label">{{ cons()->valueLang('user.type', $typeId) }}--}}
-                {{--姓名</label>--}}
-
-            {{--<div class="col-sm-4">--}}
-                {{--<input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="请输入姓名"--}}
-                       {{--value="{{ $user->shop->name }}">--}}
-            {{--</div>--}}
-        {{--</div>--}}
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="hidden" name="type" value="{{ $typeId }}">
-                <button type="submit" class="btn btn-bg btn-primary">添加</button>
+                <button type="submit" class="btn btn-bg btn-primary">{{ $user->id ? '修改' : '添加' }}</button>
             </div>
         </div>
     </form>

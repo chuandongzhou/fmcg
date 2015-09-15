@@ -47,7 +47,6 @@ class MyGoodsController extends Controller
         }
         if (isset($data['category_id'])) {
             //分类最高位为层级 后面为categoryId
-
             $level = substr($data['category_id'], 0, 1);
             $categoryId = substr($data['category_id'], 1);
             $attrs = (new AttrService([]))->getAttrByCategoryId($categoryId);
@@ -91,6 +90,9 @@ class MyGoodsController extends Controller
      */
     public function show($goods)
     {
+        if (!Gate::denies('validate-goods', $goods)) {
+            abort(403);
+        }
         return view('index.my-goods.detail', ['goods' => $goods]);
     }
 

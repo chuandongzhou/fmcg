@@ -39,7 +39,8 @@ class AddressService
                     'city_id' => $array['city_id'][$key],
                     'district_id' => $array['district_id'][$key],
                     'street_id' => $array['street_id'][$key],
-                    'detail_address' => $array['detail_address'][$key]
+                    'area_name' => $array['area_name'][$key],
+                    'address' => $array['address'][$key]
                 ];
             }
         }
