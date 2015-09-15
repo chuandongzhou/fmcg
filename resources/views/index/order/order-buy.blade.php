@@ -1,10 +1,9 @@
 @include('includes.timepicker')
-@extends('index.switch')
+@extends('index.menu-master')
 
-@section('container')
+@section('right')
 <div class="container my-goods index wholesalers-management">
     <div class="row">
-        @include('index.retailer-left')
         <div class="col-sm-10 wholesalers-management">
             <div class="row ">
                 <div class="col-sm-12 notice-bar">

@@ -184,7 +184,7 @@ class OrderSellController extends OrderController
     public function getDetail($id)
     {
         $detail = Order::ofSellByShopId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
-            'shippingAddress.deliveryArea')->find($id);
+            'shippingAddress.address')->find($id);
         if (!$detail) {
             return $this->error('订单不存在');
         }

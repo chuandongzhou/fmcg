@@ -1,9 +1,8 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @include('includes.address')
-@section('container')
+@section('right')
 <div class="container my-goods index">
     <div class="row">
-        @include('index.retailer-left')
         <div class="col-sm-10 collect">
             <div class="row">
                 <div class="col-sm-12 control-panel">

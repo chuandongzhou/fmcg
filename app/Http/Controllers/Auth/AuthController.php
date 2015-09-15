@@ -71,7 +71,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $userName = '新建短发';
+        $userName = 'wholesalers';
         $password = '123456';
         if (Auth::attempt(['user_name' => $userName, 'password' => $password])) {
             return redirect()->intended('/');

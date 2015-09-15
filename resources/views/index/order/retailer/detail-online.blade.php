@@ -1,10 +1,8 @@
-@extends('index.switch')
+@extends('index.menu-master')
 
-@section('container')
+@section('right')
 <div class="container my-goods index">
     <div class="row">
-
-        @include('index.retailer-left')
          <div class="col-sm-10 order-detail">
             <div class="row">
                 <div class="col-sm-12 order-panel">
@@ -145,7 +143,7 @@
                 </div>
                 <div class="item">
                     <label class="title-name">收货地址</label>
-                    <span>{{ $order['shipping_address']['delivery_area']['address'] }}</span>
+                    <span>{{ $order['shipping_address']['address']['address'] }}</span>
                 </div>
                 <div class="table-responsive order-table clearfix item">
                     <label class="pull-left title-name">商品清单</label>

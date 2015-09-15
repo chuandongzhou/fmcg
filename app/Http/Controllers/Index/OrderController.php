@@ -152,28 +152,27 @@ class OrderController extends Controller
             if ($order->exists) {
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
-                    $orderGoods[] = new OrderGoods(
-                        [
+                    $orderGoods[] = new OrderGoods([
                             'goods_id' => $cartGoods->goods_id,
                             'price' => $cartGoods->goods->price,
                             'num' => $cartGoods->num,
                             'total_price' => $cartGoods->goods->price * $cartGoods->num,
-                        ]
-                    );
+                        ]);
                 }
-                if ($order->orderGoods()->saveMany($orderGoods)){
+                if ($order->orderGoods()->saveMany($orderGoods)) {
                     if ($payType == $payTypes['online']) {
                         $onlinePaymentOrder[] = $order->id;
                     }
                     // 删除购物车
-                    auth()->user()->carts()->where('status' , 1)->delete();
+                    auth()->user()->carts()->where('status', 1)->delete();
                 } else {
                     //TODO: 跳转页面后期修改
                     $order->delete();
+
                     return redirect('cart');
                 }
 
-            }else {
+            } else {
                 //跳转页面后期修改
                 return redirect('cart');
             }

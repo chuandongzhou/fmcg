@@ -1,9 +1,8 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @include('includes.timepicker')
-@section('container')
+@section('right')
     <div class="container my-goods order-report">
         <div class="row">
-            @include('index.retailer-left')
             <div class="col-sm-10 content">
                 {{--<div class="col-sm-12 title">--}}
                     {{--<a href="#" class="active">待付款2</a>--}}
@@ -160,4 +159,4 @@
             </div>
         </div>
     </div>
-@endsection
+@stop

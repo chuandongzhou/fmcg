@@ -21,9 +21,10 @@ $router->group(['namespace' => 'Index'], function ($router) {
     $router->get('goods/{goods}', 'GoodsController@detail')->where('goods', '[0-9]+');          //商品详情
     $router->get('cart', 'CartController@index');          // 购物车
     $router->controller('order', 'OrderController');       //订单
-    $router->get('search', 'SearchController@index');            //商品搜索页
+    $router->get('search', 'SearchController@index');      //商品搜索页
+    $router->controller('collect','LikeController');//收藏夹
 
-    $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+    $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
         $router->get('password', 'PasswordController@index');          //修改密码
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
@@ -32,6 +33,8 @@ $router->group(['namespace' => 'Index'], function ($router) {
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
+
+
 
 });
 
@@ -78,7 +81,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     /**
      * v1 版本
      */
-    $router->group(['prefix' => 'v1', 'namespace' => 'v1'], function ($router) {
+    $router->group(['prefix' => 'v1', 'namespace' => 'V1'], function ($router) {
         // 接口地址
         $router->get('/', [
             'as' => 'api.v1.root',
@@ -93,7 +96,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
         $router->resource('my-goods', 'MyGoodsController');
 
-        $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+        $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->post('bank-default/{bank}', 'UserBankController@bankDefault');

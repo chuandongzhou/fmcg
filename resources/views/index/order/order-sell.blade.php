@@ -1,4 +1,4 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @include('includes.timepicker')
 @section('right')
 <div class="col-sm-10 wholesalers-management">
@@ -114,7 +114,7 @@
     </div>
     </form>
 </div>
-@endsection
+@stop
 @section('js')
     @parent
     <script type="text/javascript">

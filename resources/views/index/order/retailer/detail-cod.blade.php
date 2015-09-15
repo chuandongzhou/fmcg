@@ -1,4 +1,4 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @section('right')
 <div class="col-sm-10 order-detail">
     <div class="row">

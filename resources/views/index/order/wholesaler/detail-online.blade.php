@@ -1,4 +1,4 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @section('right')
     <div class="col-sm-10 order-detail">
 
@@ -163,7 +163,7 @@
                     <li>终端商名称 : {{ $order['user']['user_name'] }}<li>
                     <li>联系人 : {{ $order['shipping_address']['consigner'] }}</li>
                     <li>联系电话 : {{ $order['shipping_address']['phone'] }}</li>
-                    <li>联系地址 : {{ $order['shipping_address']['delivery_area']['address'] }}</li>
+                    <li>联系地址 : {{ $order['shipping_address']['address']['address'] }}</li>
                 </ul>
             </div>
         </div>

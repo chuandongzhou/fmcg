@@ -1,7 +1,6 @@
-@extends('index.switch')
+@extends('index.menu-master')
 @section('right')
     <div class="col-sm-10 order-detail">
-
         <div class="row order-tracking">
             <div class="col-sm-12">
                 <p><label>订单跟踪 :</label></p>
@@ -155,7 +154,7 @@
                                 @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
                                     <button class="btn btn-primary ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
                                             data-data='{"order_id":{{ $order['id'] }}}'>发货</button>
-                                        <button class="btn btn-success">导出</button>
+                                    <button class="btn btn-success">导出</button>
                                 @endif
                             @endif
 
@@ -169,7 +168,7 @@
                     <li>终端商名称 : {{ $order['user']['user_name'] }}<li>
                     <li>联系人 : {{ $order['shipping_address']['consigner'] }}</li>
                     <li>联系电话 : {{ $order['shipping_address']['phone'] }}</li>
-                    <li>联系地址 : {{ $order['shipping_address']['address'] }}</li>
+                    <li>联系地址 : {{ $order['shipping_address']['address']['address'] }}</li>
                 </ul>
             </div>
         </div>
@@ -207,5 +206,5 @@
             </div>
         </div>
     </div>
-@endsection
+@stop
 @include('includes.stepBar')
