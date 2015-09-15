@@ -1,4 +1,4 @@
-@extends('index.manage-left')
+@extends('index.switch')
 @section('right')
     <div class="col-sm-10 order-detail">
 
@@ -49,6 +49,14 @@
                     <li>操作时间</li>
                     <li>操作人</li>
                 </ul>
+                <ul class="submit-detail-item">
+                    <li>提交订单</li>
+                    <li class="time">
+                        <span class="date">{{ $order['created_at'] }}</span>
+                        {{--<span class="clock">11:20</span>--}}
+                    </li>
+                    <li>{{ $order['user']['user_name'] }}</li>
+                </ul>
                 @if((int)$order['confirmed_at'])
                     <ul class="submit-detail-item">
                         <li>确认订单</li>
@@ -56,7 +64,7 @@
                             <span class="date">{{ $order['confirmed_at'] }}</span>
                             {{--<span class="clock">11:20</span>--}}
                         </li>
-                        <li>{{ $order['seller']['user_name'] }}</li>
+                        <li>{{ $order['shop']['contact_person'] }}</li>
                     </ul>
                 @endif
                 @if($order['is_cancel'])
@@ -66,7 +74,7 @@
                             <span class="date">{{ $order['cancel_at'] }}</span>
                             {{--<span class="clock">11:20</span>--}}
                         </li>
-                        <li>{{ $order['cancel_by'] == $order['seller']['user_name'] ? $order['seller']['user_name'] : $order['user']['user_name'] }}</li>
+                        <li>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</li>
                     </ul>
                 @endif
                 @if((int)$order['send_at'])
@@ -76,7 +84,7 @@
                             <span class="date">{{ $order['send_at'] }}</span>
                             {{--<span class="clock">11:20</span>--}}
                         </li>
-                        <li>{{ $order['seller']['user_name'] }}</li>
+                        <li>{{ $order['shop']['contact_person'] }}</li>
                     </ul>
                 @endif
                 @if((int)$order['paid_at'])
@@ -115,26 +123,7 @@
                 </ul>
                 <div class="pull-right">
                     {{--TODO: 获取当前用户ID--}}
-                    @if(session('id') == $order['seller']['id'])
-                        {{--卖家显示按钮--}}
-                        <div class="pull-right">
-                            @if(!$order['is_cancel'])
-                                @if($order['status'] == cons('order.status.non_sure'))
-                                    <button class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"
-                                            data-data='{"order_id":{{ $order['id'] }}}'>确认</button>
-                                @endif
-                                @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
-                                    <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
-                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</button>
-                                @endif
-                                @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
-                                    <button class="btn btn-primary ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
-                                            data-data='{"order_id":{{ $order['id'] }}}'>发货</button>
-                                @endif
-                            @endif
-                            <button class="btn btn-success">导出</button>
-                        </div>
-                    @else
+                    @if(session('id') == $order['user']['id'])
                         {{--买家显示按钮，如果订单被取消则只显示导出功能按钮--}}
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
@@ -153,6 +142,25 @@
                             @endif
                             <button class="btn btn-success">导出</button>
                         </div>
+                    @else
+                        {{--卖家显示按钮--}}
+                        <div class="pull-right">
+                            @if(!$order['is_cancel'])
+                                @if($order['status'] == cons('order.status.non_sure'))
+                                    <button class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"
+                                            data-data='{"order_id":{{ $order['id'] }}}'>确认</button>
+                                @endif
+                                @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
+                                    <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
+                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</button>
+                                @endif
+                                @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
+                                    <button class="btn btn-primary ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
+                                            data-data='{"order_id":{{ $order['id'] }}}'>发货</button>
+                                @endif
+                            @endif
+                            <button class="btn btn-success">导出</button>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -160,9 +168,9 @@
                 <ul>
                     <li class="title">收货人信息</li>
                     <li>终端商名称 : {{ $order['user']['user_name'] }}<li>
-                    <li>联系人 : {{ $order['shopping_address']['consigner'] }}</li>
-                    <li>联系电话 : {{ $order['shopping_address']['phone'] }}</li>
-                    <li>联系地址 : {{ $order['shopping_address']['address'] }}</li>
+                    <li>联系人 : {{ $order['shipping_address']['consigner'] }}</li>
+                    <li>联系电话 : {{ $order['shipping_address']['phone'] }}</li>
+                    <li>联系地址 : {{ $order['shipping_address']['address'] }}</li>
                 </ul>
             </div>
         </div>
@@ -188,7 +196,7 @@
                                 <td>{{ $item['name'] }}</td>
                                 <td>{{ $item['pivot']['price'] }}</td>
                                 <td>{{ $item['pivot']['num'] }}</td>
-                                <td>{{ $item['pivot']['price'] * $item['pivot']['num'] }}</td>
+                                <td>{{ $item['pivot']['total_price'] }}</td>
                                 <td>修改</td>
                             </tr>
                         @endforeach

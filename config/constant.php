@@ -108,5 +108,17 @@ return [
             'CITIC' => 10 ,   // '中信实业银行'
             'CIB' => 11 ,   // '福建兴业银行'
         ]
+    ],
+    //收藏
+    'like' => [
+        'type' => [
+            'goods' => 1,
+            'shop' => 2
+        ]
+    ],
+    //Model
+    'model' => [
+        'goods' => App\Models\Goods::class,
+        'shop' => App\Models\Shop::class,
     ]
 ];

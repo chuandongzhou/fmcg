@@ -1,6 +1,5 @@
 @extends('index.index-master')
-
-@section('content')
+@section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
             <div class="col-sm-5 left-store-logo">

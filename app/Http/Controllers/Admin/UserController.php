@@ -56,7 +56,8 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        $user = User::Create($request->all());
+        $attributes = $request->all();
+        $user = User::Create($attributes);
         if ($user->exists) {
             //插入商店
             Shop::create(['user_id' => $user->id]);

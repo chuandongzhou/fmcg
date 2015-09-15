@@ -3,9 +3,9 @@
 namespace App\Models;
 
 
-class Address extends Model
+class DeliveryArea extends Model
 {
-    protected $table = 'address';
+    protected $table = 'delivery_area';
     protected $fillable = [
         'addressable_id',
         'addressable_type',
