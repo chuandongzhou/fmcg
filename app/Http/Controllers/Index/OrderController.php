@@ -98,7 +98,7 @@ class OrderController extends Controller
         $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
-        $shippingAddress = auth()->user()->shippingAddress;
+        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
 
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }

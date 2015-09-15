@@ -251,6 +251,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .commodity-name {
         background-color: $gray-plain;
         padding: 10px 5px;
+        a{
+          color:$gray;
+        }
       }
       .sell-panel {
         @extend .commodity-name;
@@ -393,7 +396,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/
-.my-goods {
+.public-personal {
   .controls {
     padding: 20px 0;
     .item {
@@ -604,8 +607,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     .information {
       li {
         padding: 5px 0;
+        .title-name{
+          display: inline-block;
+          width: 85px;
+          text-align: right;
+          padding-right: 10px;
+        }
+        .content{
+          display: inline-block;
+          width: 85%;
+        }
         .stores-img {
-          @include square(80px);
+          @include square(60px);
         }
       }
     }
@@ -806,19 +819,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     @extend .right-search;
     .item {
       display: inline-block;
-      padding: 5px 25px 5px 0;
+      padding: 3px 25px 3px 0;
       font-size: 12px;
       input {
         width: 80px;
       }
-    }
-  }
-  .order-management {
-    .item {
-      .control {
+      .control{
         padding: 5px 0;
       }
     }
+  }
+  .order-management {
     .control-item {
       width: 28%;
       .control {
@@ -889,7 +900,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         tr {
           th {
             border: none;
-            background-color: $gray-plain;
+            background-color: $blue-light;;
             color: $gray-light;
             vertical-align: middle;
             .order-number {
@@ -1148,6 +1159,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         border-right: none;
         vertical-align: middle;
         text-align: center;
+        .store-img{
+          @include square(50px);
+        }
       }
     }
   }

@@ -181,6 +181,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
   background-color: #f2f2f2;
   padding: 10px 5px; }
+  .index .list-penal .commodity .commodity-name a, .index .list-penal .commodity .sell-panel a {
+    color: #555555; }
 
 .index .list-penal .commodity .sell-panel .money {
   color: #fe462f;
@@ -282,15 +284,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index end======================================*/
 /*======================================my-goods begin======================================*/
-.my-goods .controls {
+.public-personal .controls {
   padding: 20px 0; }
-  .my-goods .controls .item {
+  .public-personal .controls .item {
     background-color: #cae6f7;
     padding: 15px 15px; }
-    .my-goods .controls .item .control {
+    .public-personal .controls .item .control {
       height: 27px;
       line-height: 13px; }
-    .my-goods .controls .item .search {
+    .public-personal .controls .item .search {
       margin-bottom: 3px; }
 
 .sort {
@@ -330,37 +332,37 @@ ul, li, p, a, h1, h2, h3, h4 {
   .sort .sort-name, .sort .package {
     margin-top: -1px; }
 
-.my-goods .menu {
+.public-personal .menu {
   text-align: center;
   padding: 0; }
-  .my-goods .menu a {
+  .public-personal .menu a {
     color: #777777;
     display: inline-block;
     width: 100%;
     padding: 10px 0;
     text-decoration: none; }
-  .my-goods .menu .go-back, .my-goods .menu .name {
+  .public-personal .menu .go-back, .public-personal .menu .name {
     padding: 10px 5px;
     width: 60%;
     display: inline-block;
     border: 1px solid #b4b4b4; }
-  .my-goods .menu .name .avatar {
+  .public-personal .menu .name .avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%; }
-  .my-goods .menu .dealer-menu-list {
+  .public-personal .menu .dealer-menu-list {
     text-align: left;
     padding-left: 15px; }
-    .my-goods .menu .dealer-menu-list .list-item {
+    .public-personal .menu .dealer-menu-list .list-item {
       color: #000; }
-  .my-goods .menu .menu-list {
+  .public-personal .menu .menu-list {
     border: 1px solid #b4b4b4;
     width: 60%;
     margin: -1px auto auto auto; }
-    .my-goods .menu .menu-list .menu-wrap {
+    .public-personal .menu .menu-list .menu-wrap {
       padding-left: 15px;
       display: none; }
-    .my-goods .menu .menu-list .active {
+    .public-personal .menu .menu-list .active {
       color: #4cb9fe; }
 
 /*======================================my-goods end======================================*/
@@ -434,9 +436,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 10px 0; }
   .goods-detail .store-detail-wrap .information li {
     padding: 5px 0; }
+    .goods-detail .store-detail-wrap .information li .title-name {
+      display: inline-block;
+      width: 85px;
+      text-align: right;
+      padding-right: 10px; }
+    .goods-detail .store-detail-wrap .information li .content {
+      display: inline-block;
+      width: 85%; }
     .goods-detail .store-detail-wrap .information li .stores-img {
-      width: 80px;
-      height: 80px; }
+      width: 60px;
+      height: 60px; }
   .goods-detail .store-detail-wrap .left-panel {
     width: 30%; }
   .goods-detail .store-detail-wrap .right-panel {
@@ -582,13 +592,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .wholesalers-management .pay-detail .item {
   display: inline-block;
-  padding: 5px 25px 5px 0;
+  padding: 3px 25px 3px 0;
   font-size: 12px; }
   .wholesalers-management .pay-detail .item input {
     width: 80px; }
-
-.wholesalers-management .order-management .item .control {
-  padding: 5px 0; }
+  .wholesalers-management .pay-detail .item .control {
+    padding: 5px 0; }
 
 .wholesalers-management .order-management .control-item {
   width: 28%; }
@@ -634,7 +643,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-management .order-table-list .table-col table tr th, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td {
     border: none;
-    background-color: #f2f2f2;
+    background-color: #cae6f7;
     color: #777777;
     vertical-align: middle; }
     .wholesalers-management .order-table-list .table-col table tr th .order-number, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number {
@@ -805,6 +814,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-right: none;
     vertical-align: middle;
     text-align: center; }
+    .order-detail .order-table table td .store-img {
+      width: 50px;
+      height: 50px; }
 
 .order-detail .store-msg {
   margin: 50px 0 5px 0;

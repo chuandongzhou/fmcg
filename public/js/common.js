@@ -549,18 +549,20 @@ var addAddFunc = function () {
             districtText =district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = street.is(':visible') ? street.find("option:selected").text() : '',
             addressText = address.val(),
-            addressDetail = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText + ' ' + addressText + ' ';
+            areaName = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText
         $('.btn-close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border">' +
-            addressDetail +
+            areaName+
+            addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
             '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
             '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
             '<span class="fa fa-times-circle pull-right close"></span>' +
-            '<input type="hidden" name="area[detail_address][]" value="' + addressDetail + '"/>',
+            '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>'+
+            '<input type="hidden" name="area[address][]" value="' + addressText + '"/>',
             '</div>'
         );
         changeAddButtonStatus();

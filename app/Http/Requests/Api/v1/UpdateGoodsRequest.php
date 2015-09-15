@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Index;
+namespace App\Http\Requests\Api\v1;
 
 
 class UpdateGoodsRequest extends Request
@@ -14,7 +14,8 @@ class UpdateGoodsRequest extends Request
     {
         return [
             'name' => 'required',
-            'price' => 'required|numeric|min:0',
+            'price_retailer' => 'required|numeric|min:0',
+            'price_wholesaler' => 'sometimes|required|numeric|min:0',
             'cate_level_1' => 'required|numeric|min:0',
             'cate_level_2' => 'required|numeric|min:1',
             'is_new' => 'required|boolean',
@@ -24,7 +25,8 @@ class UpdateGoodsRequest extends Request
             'is_expire' => 'required|boolean',
             'is_promotion' => 'required|boolean',
             'promotion_info' => 'sometimes|required_if:is_promotion,1',
-            'min_num' => 'required|numeric|min:0',
+            'min_num_retailer' => 'required|numeric|min:0',
+            'min_num_wholesaler' => 'sometimes|required|numeric|min:0',
             'images' => 'sometimes|array',
             'area' => 'sometimes|array'
         ];

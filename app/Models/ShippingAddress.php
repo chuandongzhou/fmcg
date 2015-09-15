@@ -7,7 +7,6 @@ class ShippingAddress extends Model
     //
     protected $table = 'shipping_address';
     protected $fillable = [
-        'province_city_district',
         'consigner',
         'phone',
         'is_default',

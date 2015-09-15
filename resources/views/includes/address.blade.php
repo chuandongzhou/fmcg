@@ -64,6 +64,10 @@
     </div>
     @parent
 @stop
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
+@stop
 @section('js')
     @parent
     <script>

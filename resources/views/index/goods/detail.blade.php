@@ -81,7 +81,7 @@
                     <span class="pull-left title-name">商品配送区域</span>
                     <ul class="pull-left address-list">
                         @foreach($goods->deliveryArea as $area)
-                            <li>{{ $area->detail_address }}</li>
+                            <li>{{ $area->address }}</li>
                         @endforeach
                     </ul>
                 </div>

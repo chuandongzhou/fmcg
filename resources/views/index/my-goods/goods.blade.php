@@ -1,6 +1,6 @@
 @extends('index.menu-master')
-@include('includes.cropper')
 @include('includes.address')
+@include('includes.cropper')
 @include('includes.tinymce')
 
 @section('subtitle', '商品')
@@ -8,8 +8,8 @@
 @section('right')
     <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
-              action="{{ url('api/v1/goods/'.$goods->id) }}"
-              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('goods') }}">
+              action="{{ url('api/v1/my-goods/'.$goods->id) }}"
+              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('my-goods') }}">
             <div class="row editor-panel">
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2 right-save">
-                    <input type="submit" class="btn btn-primary" value="保存">
+                    <button type="submit" class="btn btn-primary">保存</button>
                 </div>
 
             </div>
@@ -137,17 +137,19 @@
                         <input type="hidden" name="area[city_id][]" value=""/>
                         <input type="hidden" name="area[district_id][]" value=""/>
                         <input type="hidden" name="area[street_id][]" value=""/>
-                        <input type="hidden" name="area[detail_address][]" value=""/>
+                        <input type="hidden" name="area[area_name][]" value=""/>
+                        <input type="hidden" name="area[address][]" value=""/>
                     </div>
                     @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border">{{ $area->detail_address }}
+                        <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
                             <span class="fa fa-times-circle pull-right close"></span>
                             <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                             <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
                             <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
                             <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
                             <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                            <input type="hidden" name="area[detail_address][]" value="{{ $area->detail_address }}"/>
+                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                         </div>
                     @endforeach
 
@@ -204,7 +206,6 @@
 @section('js')
     @parent
     <script type="text/javascript">
-
         //上传图片处理
         picFunc();
         //获取下级分类

@@ -1,101 +1,77 @@
 @extends('index.master')
 
-@section('subtitle', '首页')
+@section('subtitle', '店铺详情')
 
 @section('container')
-    <div class="container wholesalers-index index">
+    <div class="container wholesalers-index goods-detail">
         <div class="row">
-            <div class="col-sm-8 left-store-logo">
-                <div id="myCarousel" class="carousel slide banner banner-slide">
+            <div class="col-sm-5 left-store-logo">
+                <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
-                        @for($index = 0; $index < count($shop->images); $index++)
-                            <li data-target="#myCarousel" data-slide-to="{{ $index }}"
-                                class="{{ $index == 0 ? 'active' : '' }}">
-                        @endfor
+                        @foreach($shop->images as $key=>$image)
+                            <li data-target="#myCarousel" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}">
+                        @endforeach
                     </ol>
                     <div class="carousel-inner banner">
                         @foreach($shop->images as $key=>$image)
-                            <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image->url }}">
-                            </div>
-                        @endforeach
+                        <div class="item {{ $key == 0 ? 'active' : '' }}">
+                            <img src="{{ $image->url }}" alt="{{ $image->name }}">
+                        </div>
+                       @endforeach
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 store">
-                <div class="store-panel">
-                    <img class="avatar" src="{{ $shop->logo_url }}">
-                    <ul class="store-msg">
-                        <li>店家姓名:{{ $shop->user->nickname }}</li>
-                        <li>联系人:{{ $shop->contact_person }}</li>
-                        <li>最低配送额:￥{{ $shop->min_money }}</li>
-                    </ul>
-                </div>
-                <div class="address-panel">
-                    <ul>
-                        <i class="icon icon-tel"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">联系方式</span>
-                            <span>{{ $shop->contact_info }}</span>
-                        </li>
-                    </ul>
-                    <ul>
-                        <i class="icon icon-seller"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">店家地址</span>
-                            <span>{{ $shop->address }}</span>
-                        </li>
-                    </ul>
-                    <ul>
-                        <i class="icon icon-address"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">商品配送区域</span>
-
-                            <div class="address-list">
-                                @foreach ($shop->deliveryArea as $area)
-                                    <span>{{ $area->detail_address }}</span>
-                                @endforeach
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="col-sm-7 store-detail-wrap">
+                <ul class="store-detail information">
+                    <li><span class="title-name">店家图片 </span><img class="stores-img" src="{{ $shop->logo ? $shop->logo->url : '' }}"></li>
+                    <li><span class="title-name">联系人 </span><b>{{ $shop->contact_person }}</b></li>
+                    <li><span class="title-name">联系方式 </span><b>{{ $shop->contact_info }}</b></li>
+                    <li><span class="title-name">最低配送额 </span><b class="red">￥{{ $shop->min_money }}</b></li>
+                    <li><span class="title-name">店家地址 </span><b class="red">{{ $shop->address }}</b></li>
+                    <li><span class="title-name">店家介绍 </span><span>{{ $shop->introduction }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="row">
+        <div class="row nav-wrap">
             <div class="col-sm-12 ">
-                <div class="tab-title clearfix">
-                    <p class="sequence">
-                            <a class="{{ $type == 'all' || !$type  ? 'active' : '' }}" href="{{ url('shop/detail' . ($categoryId > 0 ? '/' . $categoryId : '')) }}">全部</a>
-                            <a class="{{ $type == 'hot' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/hot') }}">热销</a>
-                            <a class="{{ $type == 'new' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/new') }}">最新</a>
-                            <a class="{{ $type == 'promotion' ? 'active' : '' }}" href="{{ url('shop/detail/' . ($categoryId > 0 ? $categoryId : 'all') . '/promotion') }}">促销</a>
-                    </p>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1"
+                            aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">配送区域</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="row list-penal">
-            @foreach($goods as $item)
-                <div class="col-sm-3 commodity">
-                    <div class="img-wrap">
-                        <img class="commodity-img" src="{{  $item->image_url }}">
-                        <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
-                    </div>
-                    <p class="commodity-name">{{ $item->name }}</p>
+            <div class="col-sm-12 address-wrap">
+                <div class="item clearfix">
+                    <span class="pull-left title-name">商品配送区域</span>
+                    <ul class="pull-left address-list">
+                        @foreach($shop->deliveryArea as $area)
+                        <li>{{ $area->address }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="item">
+                    <span class="title-name pull-left">商品配送区域大概地图标识</span>
 
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
+                    <p class="map pull-left">
+                        <img src="http://placehold.it/470x350">
                     </p>
                 </div>
-            @endforeach
-            <div class="col-xs-12 text-right">
-                {{ $goods->render() }}
             </div>
         </div>
     </div>
 @stop
+
 @section('js')
-    @parent
     <script type="text/javascript">
         $(document).ready(function () {
             $('.carousel').carousel({

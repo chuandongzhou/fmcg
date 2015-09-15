@@ -70,7 +70,7 @@
                                         <select name="shop[{{ $shop->id }}][shipping_address_id]" class="control">
                                             @foreach($shippingAddress as $address)
                                                 <option value="{{ $address->id }}" {{ $address->is_default ? 'selected' : '' }}>
-                                                    {{ $address->address . '  ' . $address->consigner . '  ' .  $address->phone }}
+                                                    {{ $address->address->area_name .$address->address->address . '  ' . $address->consigner . '  ' .  $address->phone }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -89,7 +89,7 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <a class="btn brand-cancel">管理收货地址</a>
+                                    <a href="{{ url('personal/shipping-address') }}" class="btn brand-cancel">管理收货地址</a>
                                 </td>
                             </tr>
                             </tfoot>

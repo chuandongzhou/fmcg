@@ -9,12 +9,12 @@
                 <a>< 返回</a>
             </div>
             <div class="col-sm-3 col-sm-push-8 text-right btn-list">
-                <a href="{{ url('goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>
-                <a data-url="{{ url('api/v1/goods/shelve/' . $goods->id) }}" data-method="post"
+                <a href="{{ url('my-goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>
+                <a data-url="{{ url('api/v1/my-goods/shelve/' . $goods->id) }}" data-method="post"
                    data-data='{ "status": "{{ !$goods->status }}" }' class="btn btn-info no-form ajax"
                    data-done-then="refresh">{{ cons()->valueLang('goods.status' , !$goods->status) }}</a>
                 <a class="btn btn-remove delete no-form ajax" data-method="delete"
-                   data-url="{{ url('api/v1/goods/' . $goods->id) }}" data-done-url="{{ url('goods') }}">删除</a>
+                   data-url="{{ url('api/v1/my-goods/' . $goods->id) }}" data-done-url="{{ url('goods') }}">删除</a>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
             <div class="col-sm-12 location box">
                 <p>商品配送区域 :</p>
                 @foreach($goods->deliveryArea as $area)
-                    <p class="col-sm-12">{{ $area->detail_address }}</p>
+                    <p class="col-sm-12">{{ $area->address }}</p>
                 @endforeach
                 <p>商品配送区域大概地图标识 :</p>
 

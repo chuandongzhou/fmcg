@@ -145,7 +145,7 @@ class Goods extends Model
      */
     public function scopeOrderPrice($query)
     {
-        return $query->orderBy('price', 'asc');
+        return $query->orderBy('price_retailer', 'asc');
     }
 
     /**

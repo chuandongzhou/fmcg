@@ -26,7 +26,7 @@
                     @foreach($default as $defaultAddress)
                         <tr>
                             <td>
-                                {{ $defaultAddress['province_city_district'] . $defaultAddress['address']['detail_address'] }}
+                                {{ $defaultAddress['address']['area_name'] . $defaultAddress['address']['address'] }}
                             </td>
                             <td>
                                 {{ $defaultAddress['consigner'] }}
@@ -61,7 +61,7 @@
                     @foreach($shippingAddress as $address)
                         <tr>
                             <td>
-                                {{ $address['province_city_district'] . $address['address']['detail_address'] }}
+                                {{ $address['address']['area_name'] . $address['address']['address'] }}
                             </td>
                             <td>
                                 {{ $address['consigner'] }}

@@ -10,19 +10,18 @@ use Gate;
 
 class ShippingAddressController extends Controller
 {
-    protected $userId = 1;
 
     /**
-     * 设置默认收货地址
+     * 设置默认
      *
-     * @param $bankInfo
+     * @param $id
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function addressDefault($id)
     {
         $addressInfo = ShippingAddress::find($id);
         if (Gate::denies('validate-user', $addressInfo)) {
-            abort(403);
+            return $this->error('设置失败，请重试');
         }
         if ($addressInfo['is_default'] == 1) {
             return $this->success('设置成功');
@@ -67,7 +66,7 @@ class ShippingAddressController extends Controller
     {
         $attributes = $request->all();
         if (Gate::denies('validate-user', $address)) {
-            abort(403);
+            return $this->error('保存收货地址时出现问题');
         }
 
         if ($address->fill($request->all())->save()) {
@@ -77,7 +76,8 @@ class ShippingAddressController extends Controller
                     'city_id' => $attributes['city_id'],
                     'district_id' => $attributes['district_id'],
                     'street_id' => $attributes['street_id'],
-                    'detail_address' =>  $attributes['detail_address']
+                    'area_name' => $attributes['area_name'],
+                    'address' =>  $attributes['address']
                 ])->save();
             return $this->success('保存收货地址成功');
         }
@@ -94,11 +94,11 @@ class ShippingAddressController extends Controller
     {
 
         if (Gate::denies('validate-user', $address)) {
-            abort(403);
+            return $this->error('删除收货地址时遇到问题');
         }
         if ($address->delete()) {
             return $this->success('删除收货地址成功');
         }
-        return $this->error('删除时遇到问题');
+        return $this->error('删除收货地址时遇到问题');
     }
 }

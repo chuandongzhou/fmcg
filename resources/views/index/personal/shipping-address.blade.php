@@ -56,9 +56,9 @@
             <label for="address" class="col-sm-2 control-label">详细地址</label>
 
             <div class="col-sm-10 col-md-6">
-                <input type="hidden" name="province_city_district" value="{{ $shippingAddress->province_city_district }}"/>
-                <input type="text" placeholder="请输入详细地址" name="detail_address" id="detail_address" class="form-control"
-                       value="{{ $shippingAddress['address']['detail_address'] }}">
+                <input type="hidden" name="area_name" value="{{ $shippingAddress['address']['area_name'] }}"/>
+                <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control"
+                       value="{{ $shippingAddress['address']['address'] }}">
             </div>
         </div>
         <div class="form-group row">
@@ -68,10 +68,6 @@
         </div>
     </form>
     @parent
-@stop
-@section('js-lib')
-    @parent
-    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop
 @section('js')
     @parent
@@ -86,7 +82,7 @@
                         cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
                         districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
-                $('input[name="province_city_district"]').val(provinceVal + ' ' + cityVal + ' ' + districtVal + ' ' + streetVal);
+                $('input[name="area_name"]').val(provinceVal + ' ' + cityVal + ' ' + districtVal + ' ' + streetVal);
             })
         })
     </script>

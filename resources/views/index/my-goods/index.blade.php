@@ -109,10 +109,6 @@
         @endforeach
     </div>
 @stop
-@section('js-lib')
-    @parent
-    <script type="text/javascript" src="{{ asset('js/address.js') }}"/>
-@stop
 @section('js')
     @parent
     <script type="text/javascript">

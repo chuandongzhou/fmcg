@@ -23,7 +23,8 @@ class CreateShippingAddressRequest extends Request
             'city_id' => 'required|numeric',
             'district_id' => 'numeric',
             'street_id' => '|numeric',
-            'detail_address' => 'required',
+            'area_name' => 'required',
+            'address' => 'required',
         ];
     }
 }

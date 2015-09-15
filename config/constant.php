@@ -54,6 +54,10 @@ return [
             'logo' => 1,         //logo
             'license' => 2,         //营业执照
             'images' => 3          //店铺图片
+        ],
+        'address_type' => [
+            'shop_address' => 1,        //店铺地址
+            'delivery_address' => 2,    //配送地址
         ]
     ],
     // 交易相关

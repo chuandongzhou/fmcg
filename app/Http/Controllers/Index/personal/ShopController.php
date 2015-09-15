@@ -18,7 +18,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shop = Shop::with('images')->where('user_id', auth()->id())->first(); //商店详情
+        $shop = auth()->user()->shop()->with('images')->first();
         return view('index.personal.shop', ['shop' => $shop]);
     }
 

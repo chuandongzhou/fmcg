@@ -90,6 +90,9 @@ class MyGoodsController extends Controller
      */
     public function show($goods)
     {
+        if (!Gate::denies('validate-goods', $goods)) {
+            abort(403);
+        }
         return view('index.my-goods.detail', ['goods' => $goods]);
     }
 
