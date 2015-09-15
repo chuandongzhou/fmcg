@@ -28,7 +28,6 @@ class CategoryService
                 $arr[] = $v;
             }
         }
-
         return $arr;
     }
 

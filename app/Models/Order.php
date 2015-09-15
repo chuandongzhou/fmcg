@@ -17,7 +17,7 @@ class Order extends Model
         'shipping_address_id',
         'delivery_man_id',
         'user_id',
-        'seller_id',
+        'shop_id',
         'paid_at',
         'confirmed_at',
         'is_cancel',
@@ -41,7 +41,7 @@ class Order extends Model
 
 
     /**
-     * 收货地址
+     * 收货人信息
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -61,13 +61,13 @@ class Order extends Model
     }
 
     /**
-     * 卖家信息
+     * 店铺信息
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function seller()
+    public function shop()
     {
-        return $this->belongsTo('App\Models\user', 'seller_id');
+        return $this->belongsTo('App\Models\shop');
     }
 
 
@@ -79,7 +79,17 @@ class Order extends Model
     public function goods()
     {
         return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('price',
-            'num');
+            'num', 'total_price');
+    }
+
+    /**
+     * 订单配送人员信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function deliveryMan()
+    {
+        return $this->belongsTo('App\Models\DeliveryMan');
     }
 
     /**
@@ -159,14 +169,13 @@ class Order extends Model
      *
      * @param $query
      * @param $search
-     * @param $userId
      * @return mixed
      */
-    public function scopeOfUserType($query, $search, $userId)
+    public function scopeOfUserType($query, $search)
     {
-        return $query->wherehas('user', function ($query) use ($search, $userId) {
+        return $query->wherehas('user', function ($query) use ($search) {
 
-            $query->where('type', '<', $userId)->where('user_name', $search);
+            $query->where('user_name', $search);
         });
     }
 
@@ -175,14 +184,13 @@ class Order extends Model
      *
      * @param $query
      * @param $search
-     * @param $userId
      * @return mixed
      */
-    public function scopeOfSellerType($query, $search, $userId)
+    public function scopeOfSellerType($query, $search)
     {
-        return $query->wherehas('seller', function ($query) use ($search, $userId) {
+        return $query->wherehas('shop.user', function ($query) use ($search) {
 
-            $query->where('type', '>', $userId)->where('user_name', $search['search_content']);
+            $query->where('user_name', $search['search_content']);
 
 
         });
@@ -197,7 +205,7 @@ class Order extends Model
      */
     public function scopeOfBuy($query, $userId)
     {
-        return $query->where('user_id', $userId)->with('seller', 'goods')->orderBy('id', 'desc');
+        return $query->where('user_id', $userId)->with('shop.user', 'goods')->orderBy('id', 'desc');
     }
 
     /**
@@ -209,7 +217,24 @@ class Order extends Model
      */
     public function scopeOfSell($query, $userId)
     {
-        return $query->where('seller_id', $userId)->with('user', 'goods')->orderBy('id', 'desc');
+        return $query->wherehas('shop.user', function ($query) use ($userId) {
+            $query->where('id', $userId);
+        })->with('user', 'goods')->orderBy('id', 'desc');
+    }
+
+    /**
+     * 通过shop_id查询卖家
+     *
+     * @param $query
+     * @param $userId
+     * @return mixed
+     */
+    public function scopeOfSellByShopId($query, $userId)
+    {
+        return $query->wherehas('shop.user', function ($query) use ($userId) {
+            $query->where('id', $userId);
+        });
+
     }
 
     /**

@@ -14,11 +14,14 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composers(
-            [
-                CategoryComposer::class => ['index.master' , 'index.index.index' , 'index.index-master']
-            ]
-        );
+        view()->composers([
+                CategoryComposer::class => [
+                    'index.master',
+                    'index.index.index',
+                    'index.index-master',
+                    'index.retailer-master'
+                ]
+            ]);
     }
 
     /**

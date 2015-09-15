@@ -30,6 +30,8 @@ class Shop extends Model
         'nickname'
     ];
 
+    protected $appends = ['image_url', 'orders'];
+
     /**
      * 用户表
      *
@@ -111,11 +113,33 @@ class Shop extends Model
     }
 
     /**
+     * 送货区域
+     *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function deliveryArea()
     {
         return $this->morphMany('App\Models\DeliveryArea', 'addressable');
+    }
+
+    /**
+     * 该店铺下完成的订单数量
+     *
+     * @return mixed
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order')->where('status', cons('order.status.finished'))->count();
+    }
+
+    /**
+     * 追加订单完成量
+     *
+     * @return mixed
+     */
+    public function getOrdersAttribute()
+    {
+        return $this->orders();
     }
 
     /**
@@ -148,6 +172,7 @@ class Shop extends Model
     public function getLogoUrlAttribute()
     {
         $logo = $this->logo;
+
         return $logo ? upload_file_url($logo->path) : asset('images/u8.png');
     }
 
@@ -159,7 +184,20 @@ class Shop extends Model
     public function getLicenseUrlAttribute()
     {
         $license = $this->license;
+
         return $license ? upload_file_url($license->path) : '';
+    }
+
+    /**
+     * 获取店铺图片
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        $image = $this->images->first();
+
+        return $image ? upload_file_url($image->path) : '';
     }
 
     /**
@@ -208,6 +246,7 @@ class Shop extends Model
         if (!empty($imagesArr)) {
             return $this->associateFiles($imagesArr, 'files', cons('shop.file_type.images'), false);
         }
+
         return true;
     }
 
@@ -231,6 +270,7 @@ class Shop extends Model
                 $this->deliveryArea()->create($data);
             }
         }
+
         return true;
     }
 

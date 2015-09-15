@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Models\Like;
 
 use App\Http\Requests;
+use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
@@ -20,7 +21,7 @@ class LikeController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function getShops()
+    public function getShops(Request $request)
     {
         $shops = Like::with('likeable')->where('user_id', $this->userId)->where('likeable_type',
             cons('model.shop'))->get();

@@ -11,6 +11,18 @@ use App\Models\Order;
 class OrderSellController extends OrderController
 {
     /**
+     * 构造方法限制终端商访问销售功能
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        //终端商无销售权限
+        if ($this->userType == cons('user.type.retailer')) {
+            return redirect()->back();
+        }
+    }
+
+    /**
      * @return \Illuminate\View\View
      */
     public function getIndex()
@@ -23,12 +35,11 @@ class OrderSellController extends OrderController
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
+        $data['nonSure'] = Order::ofSell($this->userId)->nonSure()->count();//未确认
+        $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
+        $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
 
-        $data['nonSure'] = Order::OfSell($this->userId)->NonSure()->count();//未确认
-        $data['nonSend'] = Order::OfSell($this->userId)->NonSend()->count();//待发货
-        $data['pendingCollection'] = Order::OfSell($this->userId)->GetPayment()->count();//待收款（针对货到付款）
-
-        $orders = Order::OfSell($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
+        $orders = Order::ofSell($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -50,10 +61,10 @@ class OrderSellController extends OrderController
         $search = $request->input('search_content');
         $orderId = trim($search);
         if (is_numeric($orderId)) {
-            $order = Order::OfSell($this->userId)->find($orderId);
+            $order = Order::ofSell($this->userId)->find($orderId);
             $orders['data'][0] = $order;
         } else {
-            $orders = Order::OfSell($this->userId)->ofUserType($search, $this->userId)->paginate()->toArray();
+            $orders = Order::ofSell($this->userId)->ofUserType($search, $this->userType)->paginate()->toArray();
         }
 
         return $orders;
@@ -68,7 +79,7 @@ class OrderSellController extends OrderController
     public function getSelect(Request $request)
     {
         $search = $request->all();
-        $orders = Order::OfSell($this->userId)->OfSelectOptions($search)->paginate()->toArray();
+        $orders = Order::ofSell($this->userId)->ofSelectOptions($search)->paginate()->toArray();
 
         return $orders;
     }
@@ -80,7 +91,7 @@ class OrderSellController extends OrderController
      */
     public function getNonSure()
     {
-        return Order::OfSell($this->userId)->NonSure()->paginate()->toArray();
+        return Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
     }
 
     /**
@@ -90,7 +101,7 @@ class OrderSellController extends OrderController
      */
     public function getNonSend()
     {
-        return Order::OfSell($this->userId)->NonSend()->paginate()->toArray();
+        return Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
     }
 
     /**
@@ -100,7 +111,7 @@ class OrderSellController extends OrderController
      */
     public function getPendingCollection()
     {
-        return Order::OfSell($this->userId)->GetPayment()->paginate()->toArray();
+        return Order::ofSell($this->userId)->getPayment()->paginate()->toArray();
     }
 
     /**
@@ -112,8 +123,8 @@ class OrderSellController extends OrderController
     public function putBatchSure(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('status',
-            cons('order.status.non_sure'))->NonCancel()->update([
+        $status = Order::ofSellByShopId($this->userId)->whereIn('id', $orderIds)->where('status',
+            cons('order.status.non_sure'))->nonCancel()->update([
             'status' => cons('order.status.non_send'),
             'confirmed_at' => Carbon::now()
         ]);
@@ -133,8 +144,8 @@ class OrderSellController extends OrderController
     public function putBatchSend(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id',
-            $orderIds)->NonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
+        $status = Order::ofSellByShopId($this->userId)->whereIn('id',
+            $orderIds)->nonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
         if ($status) {
             return $this->success();
         }
@@ -152,8 +163,8 @@ class OrderSellController extends OrderController
     public function putBatchFinish(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('seller_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->NonCancel()->update([
+        $status = Order::ofSellByShopId($this->userId)->whereIn('id', $orderIds)->where('pay_status',
+            cons('order.pay_status.payment_success'))->nonCancel()->update([
             'status' => cons('order.status.finished'),
             'finished_at' => Carbon::now()
         ]);
@@ -164,17 +175,29 @@ class OrderSellController extends OrderController
         return $this->error('请确认买家是否付款');
     }
 
-    public function getDetailOnline($id)
+    /**
+     * 查询订单详情
+     *
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function getDetail($id)
     {
-        $detail = Order::where('seller_id', $this->userId)->with('shippingAddress', 'user', 'seller', 'goods',
-            'goods.images')->find($id)->toArray();
-        if ($detail['pay_type'] == cons('pay_type.online')) {
-            return view('index.order.detail-online', [
-                'order' => $detail
-            ]);
+        $detail = Order::ofSellByShopId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
+            'shippingAddress.deliveryArea')->find($id);
+        if (!$detail) {
+            return $this->error('订单不存在');
         }
+        $detail = $detail->toArray();
 
-        return view('index.order.detail-cod', [
+        //拼接需要调用的模板名字
+        $folderName = array_flip(cons('user.type'))[$this->userType];
+        $payType = $detail['pay_type'];
+        $fileName = array_flip(cons('pay_type'))[$payType];
+
+        $view = 'index.order.' . $folderName . '.detail-' . $fileName;
+
+        return view($view, [
             'order' => $detail
         ]);
     }

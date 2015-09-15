@@ -12,17 +12,21 @@ $router->group(['namespace' => 'Index'], function ($router) {
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
     $router->resource('my-goods', 'MyGoodsController');          //商品管理
     $router->get('goods/{goods}', 'GoodsController@detail')->where('goods', '[0-9]+');          //商品详情
-    $router->get('cart' , 'CartController@index');          // 购物车
-    $router->controller('order' , 'OrderController');       //订单
+    $router->get('cart', 'CartController@index');          // 购物车
+    $router->controller('collect', 'LikeController', ['only' => ['shops', 'goods']]); //查看收藏夹
 
-    $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+    $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
         $router->get('password', 'PasswordController@index');          //修改密码
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->get('balance', 'BalanceController@index'); //账户余额
+        $router->group(['prefix' => 'retailer', 'namespace' => 'Retailer'], function ($router) {  //终端商个人中心
+            $router->resource('information', 'InformationController'); //店铺信息管理
+            $router->resource('shipping-address','ShippingAddressController');//收货地址管理
+        });
     });
-    $router->controller('store-info', 'StoreInfoController');
+    $router->controller('store-info', 'StoreInfoController'); //商店信息
 
 });
 
@@ -82,7 +86,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
 
-        $router->group(['prefix' => 'personal', 'namespace' => 'personal'], function ($router) {
+        $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop', 'ShopController@shop');          //商家信息
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->post('bank-default/{bank}', 'UserBankController@bankDefault');
@@ -90,7 +94,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['store', 'update', 'destroy']]);          //提现账号
         });
-        $router->controller('cart' , 'CartController');
-        $router->controller('like' , 'LikeController');
+        $router->controller('cart', 'CartController');
+        $router->controller('like', 'LikeController');
     });
 });

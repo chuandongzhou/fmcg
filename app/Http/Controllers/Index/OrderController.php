@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Services\ExportWordService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,8 @@ class OrderController extends Controller
     public function __construct()
     {
         //TODO:获取当前用户ID号和类型
-        $this->userId = 1;
-        $this->userType = 2;
+        $this->userId = Auth()->user()->id;
+        $this->userType = Auth()->user()->type;
         session(['id' => $this->userId]);
         session(['type' => $this->userType]);
 
@@ -34,8 +35,10 @@ class OrderController extends Controller
     {
         $orderIds = (array)$request->input('order_id');
         $status = Order::where(function ($query) {
-            $query->where('seller_id', $this->userId)->orWhere('user_id', $this->userId);
-        })->whereIn('id', $orderIds)->where('pay_status', cons('order.pay_status.non_payment'))->NonSend()->update([
+            $query->wherehas('shop.user', function ($query) {
+                $query->where('id', $this->userId);
+            })->orWhere('user_id', $this->userId);
+        })->whereIn('id', $orderIds)->where('pay_status', cons('order.pay_status.non_payment'))->nonSend()->update([
             'is_cancel' => cons('order.is_cancel.on'),
             'cancel_by' => $this->userId,
             'cancel_at' => Carbon::now()
@@ -133,7 +136,9 @@ class OrderController extends Controller
     private function _searchAllOrder()
     {
         return Order::where(function ($query) {
-            $query->where('user_id', $this->userId)->orWhere('seller_id', $this->userId);
+            $query->where('user_id', $this->userId)->orWhere(function ($query) {
+                $query->ofSellByShopId($this->userId);
+            });
         })->where(function ($query) {
             //在线支付情况，只查询付款完成以后的状态
             $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
@@ -142,7 +147,7 @@ class OrderController extends Controller
             //货到付款情况，只查询发货以后的状态
             $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
                 [cons('order.status.send'), cons('order.status.finished')]);
-        })->NonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
     }
 
     /**
@@ -164,7 +169,7 @@ class OrderController extends Controller
             }
             //查询对象
             if ($search['obj_type'] > $this->userId) {
-                $query->where('seller_id', intval($search['obj_type']));
+                $query->ofSellByShopId(intval($search['obj_type']));
             } else {
                 $query->where('user_id', intval($search['obj_type']));
             }
@@ -172,7 +177,7 @@ class OrderController extends Controller
             if (!empty($search['start_at']) && !empty($search['end_at'])) {
                 $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
             }
-        })->NonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
     }
 
     /**
@@ -226,4 +231,89 @@ class OrderController extends Controller
         return $stat;
     }
 
+    /**
+     * 导出订单word文档
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getExport(Request $request)
+    {
+
+        $orderIds = (array)$request->input('order_id');
+        $res = Order::with('shippingAddress', 'goods', 'address')->where('user_id', $this->userId)->whereIn('id',
+            $orderIds)->get()->toArray();
+        if (empty($res)) {
+            return $this->error('没有该订单信息');
+        }
+        $wordName = $this->_getFileName($res);
+
+        return response()->download(public_path($wordName));
+
+    }
+
+    /**
+     * 生成word文档
+     *
+     * @param $res
+     * @return string
+     */
+    public function _getFileName($res)
+    {
+        $word = new ExportWordService();
+        $word->start();
+        foreach ($res as $item) {
+            $html = ' <table style="width:600px;text-align: left;line-height: 30px">
+
+                    <tr><th colspan="6" style="text-align: center;"><h1>送货单</h1></th></tr>
+                    <tr><th>订单号:</th><td>' . $item['id'] . '</td></tr>';
+            foreach ($item['goods'] as $good) {
+                $html .= ' <tr><th>货号</th><th>商品名称</th><th>促销信息</th><th>数量</th><th>单价</th><th>小计</th></tr>
+                    <tr><td>'
+                    . $good['id']
+                    . '</td><td>'
+                    . $good['name']
+                    . '</td><td>'
+                    . $good['promotion_info']
+                    . '</td><td>'
+                    . $good['pivot']['num']
+                    . '</td><td>'
+                    . $good['pivot']['price']
+                    . '</td><td>'
+                    . $good['pivot']['total_price']
+                    . '</td></tr>';
+            }
+            $html .= ' <tr><th>付款方式:</th><td colspan="5">'
+                . $item['payment_type']
+                . '</td></tr>
+                    <tr><th>备注:</th><td colspan="5">'
+                . $item['remark']
+                . '</td></tr>
+                    <tr><th colspan="5" style="text-align: right">合计:</th><td style="text-align: left">'
+                . $item['price']
+                . '</td></tr>
+                    <tr style="height: 30px"></tr>
+                    <tr><th>收货人:</th><td colspan="5">'
+                . $item['shipping_address']['consigner']
+                . '</td></tr>
+                    <tr><th>电话:</th><td colspan="5">'
+                . $item['shipping_address']['phone']
+                . '</td></tr>
+                    <tr><th>地址:</th><td colspan="5">'
+                . $item['address']['detail_address']
+                . '</td>
+
+                    <tr><th colspan="6" style="text-align: right">'
+                . date('Y-m-d')
+                . '</th></tr>
+                </table>
+                ';
+            echo $html;
+        }
+        $wordName = 'upload/' . strtotime('now') . rand() . '.doc';
+
+        $word->save($wordName);
+
+        return $wordName;
+    }
 }

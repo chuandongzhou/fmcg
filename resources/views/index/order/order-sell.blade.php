@@ -1,4 +1,4 @@
-@extends('index.manage-left')
+@extends('index.switch')
 @include('includes.timepicker')
 @section('right')
 <div class="col-sm-10 wholesalers-management">
@@ -73,7 +73,7 @@
                 <p>订单金额 :<span class="red">￥{{ $order['price'] }}</span></p>
             </div>
             <div class="col-sm-2 order-form-operating">
-                <p><a href="{{ url('order-sell/detail-online/'.$order['id']) }}" class="btn btn-primary">查看</a></p>
+                <p><a href="{{ url('order-sell/detail/'.$order['id']) }}" class="btn btn-primary">查看</a></p>
                 @if($order['status'] == cons('order.status.non_sure'))
                     <p><a class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"
                           data-data='{"order_id":{{ $order['id'] }}}'>确认</a></p>

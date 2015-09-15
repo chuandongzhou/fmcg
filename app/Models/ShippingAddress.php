@@ -16,10 +16,21 @@ class ShippingAddress extends Model
 
     /**
      * 用户表
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * 收货地址
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function deliveryArea()
+    {
+        return $this->morphOne('App\Models\DeliveryArea', 'addressable');
     }
 }

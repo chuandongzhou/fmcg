@@ -52,23 +52,28 @@
                     <tr>
                         <td>订单操作</td>
                         <td>操作时间</td>
-                        <td>订单操作</td>
+                        <td>操作人</td>
                     </tr>
                 </thead>
                 <tbody>
-                    @if((int)$order['created_at'])
                     <tr>
                         <td>提交订单</td>
                         <td>{{ $order['created_at'] }}</td>
                         <td>{{ $order['user']['user_name'] }}</td>
                     </tr>
-                    @endif
                     @if((int)$order['confirmed_at'])
                     <tr>
                         <td>确认订单</td>
                         <td>{{ $order['confirmed_at'] }}</td>
                         <td>{{ $order['shop']['contact_person'] }}</td>
                     </tr>
+                    @endif
+                    @if($order['is_cancel'])
+                        <tr>
+                            <td>取消订单</td>
+                            <td>{{ $order['cancel_at'] }}</td>
+                            <td>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</td>
+                        </tr>
                     @endif
                     @if((int)$order['send_at'])
                     <tr>
@@ -153,9 +158,15 @@
         <div class="col-sm-12 text-right bottom-content">
             <p>总额<b class="red">￥{{ $order['price'] }}</b></p>
             <p>
-                <a class="btn btn-danger">付款</a>
-                <a class="btn btn-primary">已收货</a>
-                <a class="btn btn-cancel">付款</a>
+                @if(!$order['is_cancel'])
+                    @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
+                        <a class="btn btn-danger ajax" data-url="{{ url('order-buy/cancel-sure') }}"
+                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                    @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
+                        <a class="btn btn-danger ajax" data-url="{{ url('order-buy/batch-finish') }}"
+                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
+                    @endif
+                @endif
             </p>
         </div>
     </div>

@@ -122,8 +122,7 @@
                     </li>
                 </ul>
                 <div class="pull-right">
-                    {{--TODO: 获取当前用户ID--}}
-                    @if(session('id') == $order['user']['id'])
+                    @if(Auth()->user()->id == $order['user']['id'])
                         {{--买家显示按钮，如果订单被取消则只显示导出功能按钮--}}
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
@@ -140,7 +139,6 @@
                                     <button class="btn btn-danger">付款</button>
                                 @endif
                             @endif
-                            <button class="btn btn-success">导出</button>
                         </div>
                     @else
                         {{--卖家显示按钮--}}
@@ -157,9 +155,10 @@
                                 @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
                                     <button class="btn btn-primary ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
                                             data-data='{"order_id":{{ $order['id'] }}}'>发货</button>
+                                        <button class="btn btn-success">导出</button>
                                 @endif
                             @endif
-                            <button class="btn btn-success">导出</button>
+
                         </div>
                     @endif
                 </div>

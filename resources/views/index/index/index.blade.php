@@ -189,6 +189,7 @@
         <div class="row list-penal">
             <div class="col-sm-12 title"><h3>热门商品</h3></div>
             @foreach($hotGoods as $hot)
+                <a href="{{ url('goods/'.$hot->id) }}" >
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
                         <img class="commodity-img" src="{{ $hot->image_url }}">
@@ -201,11 +202,13 @@
                         <span class="sales pull-right">销量 : {{ $hot->sales_volume }}</span>
                     </p>
                 </div>
+                </a>
             @endforeach
         </div>
         <div class="row list-penal">
             <div class="col-sm-12 title"><h3>热门经销商</h3></div>
             @foreach($hotShops as $shop)
+                <a href="{{ url('shop/detail/'.$shop->id) }}" >
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap"><img class="commodity-img" src="{{ $shop->image_url }}"></div>
                     <p class="commodity-name">{{ $shop->name }}</p>
@@ -215,6 +218,7 @@
                         <span class="sales pull-right">销量 : 2000</span>
                     </p>
                 </div>
+                </a>
             @endforeach
         </div>
     </div>

@@ -1,7 +1,3 @@
-@section('css')
-    @parent
-    <link rel="stylesheet" href="{{ asset('css/control.css') }}">
-@endsection
 @section('js-lib')
     @parent
     <script src="{{ asset('js/lib/jquery/easing/jquery.easing.min.js') }}"></script>

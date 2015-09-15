@@ -1,9 +1,10 @@
-@extends('index.manage-left')
+@extends('index.switch')
 @include('includes.timepicker')
-@section('right')
-    <div class="order-report">
-        <div class="col-sm-10 content ">
-            <div class="row ">
+@section('container')
+    <div class="container my-goods order-report">
+        <div class="row">
+            @include('index.retailer-left')
+            <div class="col-sm-10 content">
                 {{--<div class="col-sm-12 title">--}}
                     {{--<a href="#" class="active">待付款2</a>--}}
                     {{--<a href="#">待收货2</a>--}}
@@ -19,8 +20,7 @@
                                 <option value="{{ $key }}" {{ $key==$selectedPay ? 'selected' : '' }}>{{ $value }}</option>
                             @endforeach
                         </select>
-                        {{--TODO:需要比较用户类型--}}
-                        @if(session('type') == cons('user.type.wholesaler'))
+                        @if(Auth()->user()->type == cons('user.type.wholesaler'))
                             <input type="hidden" name="obj_type" value="{{ $selectedObj }}" />
                         @else
                         <select class="enter" name="obj_type">
@@ -34,6 +34,23 @@
                         <button class="btn" type="submit" >统计</button>
                         <button class="btn btn-primary">统计导出</button>
                     </div>
+                    @if(Auth()->user()->type == cons('user.type.retailer'))
+                        <div class="col-sm-12 enter-item">
+                            <div class="check-item"><span class="span-checkbox"><i class="fa"></i></span><input class="inp-checkbox" type="checkbox">显示商品</div>
+                            <input type="text" class="enter" placeholder="商品名称">
+                            <p class="item address" >地区 :
+                                <select class="enter">
+                                    <option>省</option>
+                                </select>
+                                <select class="enter">
+                                    <option>市</option>
+                                </select>
+                                <select class="enter">
+                                    <option>区</option>
+                                </select>
+                            </p>
+                        </div>
+                    @endif
                 </form>
                 <div class="col-sm-12 table-responsive tables">
                     <table class="table-bordered table">
@@ -143,5 +160,4 @@
             </div>
         </div>
     </div>
-
 @endsection
