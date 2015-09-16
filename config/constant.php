@@ -58,6 +58,10 @@ return [
         'address_type' => [
             'shop_address' => 1,        //店铺地址
             'delivery_address' => 2,    //配送地址
+        ],
+        'sort' => [
+            'hot',
+            'new'
         ]
     ],
     // 交易相关
@@ -94,23 +98,28 @@ return [
         'status' => [
             'on' => 1,   //上架
             'off' => 0   //下架
+        ],
+        'sort' => [
+            'name',
+            'price',
+            'new'
         ]
-    ] ,
+    ],
     // 银行列表
     'bank' => [
         'type' => [
-            'BOC' => 1 ,   // '中国银行'
-            'ICBC' => 2 ,   // '中国工商银行'
-            'ABOC' => 3 ,   // '中国农业银行'
-            'CCB' => 4 ,   // '中国建设银行'
-            'CMB' => 5 ,   // '中国招商银行'
-            'CB' => 6 ,   // '商业银行'
+            'BOC' => 1,   // '中国银行'
+            'ICBC' => 2,   // '中国工商银行'
+            'ABOC' => 3,   // '中国农业银行'
+            'CCB' => 4,   // '中国建设银行'
+            'CMB' => 5,   // '中国招商银行'
+            'CB' => 6,   // '商业银行'
             //预留
-            'HB' => 7 ,   // '华夏银行'
-            'CEB' => 8 ,   // '中国光大银行'
-            'CMBC' => 9 ,   // '中国民生银行'
-            'CITIC' => 10 ,   // '中信实业银行'
-            'CIB' => 11 ,   // '福建兴业银行'
+            'HB' => 7,   // '华夏银行'
+            'CEB' => 8,   // '中国光大银行'
+            'CMBC' => 9,   // '中国民生银行'
+            'CITIC' => 10,   // '中信实业银行'
+            'CIB' => 11,   // '福建兴业银行'
         ]
     ],
     //收藏
@@ -118,11 +127,10 @@ return [
         'type' => [
             'goods' => 1,
             'shop' => 2
+        ],
+        'model' => [
+            'goods' => App\Models\Goods::class,
+            'shop' => App\Models\Shop::class
         ]
     ],
-    //Model
-    'model' => [
-        'goods' => App\Models\Goods::class,
-        'shop' => App\Models\Shop::class,
-    ]
 ];

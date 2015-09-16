@@ -26,7 +26,9 @@ class GoodsController extends Controller
         }
         $attrs = (new AttrService())->getAttrByGoods($goods);
         $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');
-        $isLike = $goods->likes()->where('user_id', auth()->user()->id)->pluck('id');
+        $isLike = auth()->user()->whereHas('likeGoods' , function ($q) use ($goods) {
+            $q->where('id' , $goods->id);
+        })->pluck('id');
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,

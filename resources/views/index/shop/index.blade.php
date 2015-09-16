@@ -1,112 +1,55 @@
-@extends('index.master')
+@extends('index.index-master')
 
 @section('subtitle', '首页')
 
 @section('container')
-    <div class="container wholesalers-index index">
-        <div class="row">
-            <div class="col-sm-8 left-store-logo">
-                <div id="myCarousel" class="carousel slide banner banner-slide">
-                    <ol class="carousel-indicators">
-                        @for($index = 0; $index < count($shop->images); $index++)
-                            <li data-target="#myCarousel" data-slide-to="{{ $index }}"
-                                class="{{ $index == 0 ? 'active' : '' }}">
-                        @endfor
-                    </ol>
-                    <div class="carousel-inner banner">
-                        @foreach($shop->images as $key=>$image)
-                            <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image->url }}">
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 store">
-                <div class="store-panel">
-                    <img class="avatar" src="{{ $shop->logo_url }}">
-                    <ul class="store-msg">
-                        <li>店家姓名:{{ $shop->user->nickname }}</li>
-                        <li>联系人:{{ $shop->contact_person }}</li>
-                        <li>最低配送额:￥{{ $shop->min_money }}</li>
-                    </ul>
-                </div>
-                <div class="address-panel">
-                    <ul>
-                        <i class="icon icon-tel"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">联系方式</span>
-                            <span>{{ $shop->contact_info }}</span>
-                        </li>
-                    </ul>
-                    <ul>
-                        <i class="icon icon-seller"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">店家地址</span>
-                            <span>{{ $shop->address }}</span>
-                        </li>
-                    </ul>
-                    <ul>
-                        <i class="icon icon-address"></i>
-                        <li class="address-panel-item">
-                            <span class="panel-name">商品配送区域</span>
-
-                            <div class="address-list">
-                                @foreach ($shop->deliveryArea as $area)
-                                    <span>{{ $area->area_name .$area->address }}</span>
-                                @endforeach
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 ">
+    <div class="container dealer-index index search-page">
+        <div class="row sort">
+            <div class="col-sm-12">
                 <div class="tab-title clearfix">
-                    <p class="sequence">
-                        <a class="{{ $type == 'all' || !$type  ? 'active' : '' }}"
-                           href="{{ url('shop/' . $shop->id) }}">全部</a>
-                        <a class="{{ $type == 'hot' ? 'active' : '' }}"
-                           href="{{ url('shop/'.$shop->id . '/hot') }}">热销</a>
-                        <a class="{{ $type == 'new' ? 'active' : '' }}"
-                           href="{{url('shop/'.$shop->id .  '/new') }}">最新</a>
-                        <a class="{{ $type == 'promotion' ? 'active' : '' }}"
-                           href="{{url('shop/'.$shop->id . '/promotion') }}">促销</a>
+                    <p class="pull-left sequence">
+                        <a href="{{ url('shop') }}"
+                           class="{{ $sort == '' ? 'active' : '' }} control">全部</a>
+                        <a href="{{ url('shop/hot') }}"
+                           class="control {{ $sort == 'hot' ? 'active' : '' }}">热门</a>
+                        <a href="{{ url('shop/new') }}"
+                           class="control {{ $sort == 'new' ? 'active' : '' }}">最新</a>
+                    </p>
+
+                    <p class="pull-right">
+                        <span>配送区域</span>
+                        <select name="province_id" class="address-province"></select>
+                        <select name="city_id" class="address-city"></select>
+                        <select name="district_id" class="address-district"> </select>
+                        <select name="street_id" class="address-street"> </select>
                     </p>
                 </div>
             </div>
         </div>
         <div class="row list-penal">
-            @foreach($goods as $item)
+            @foreach($shops  as $item)
                 <div class="col-sm-3 commodity">
-                    <div class="img-wrap">
-                        <a href="{{ url('my-goods/' . $item->id) }}"><img class="commodity-img"
-                                                                          src="{{  $item->image_url }}"></a>
-                        <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
+                    <div class="img-wrap"><img class="commodity-img" src="{{ $item->image_url }}"></div>
+                    <div class="content-panel">
+                        <p class="sell-panel">
+                            <span class="sales ">最底配送额</span>
+                            <span class="money pull-right">￥{{ $item->min_money }}</span>
+                        </p>
 
+                        <p class="commodity-name">{{ $item->name }}</p>
+
+                        <p class="order-count">订单量 : <span>10010</span></p>
                     </div>
-                    <p class="commodity-name"><a href="{{ url('my-goods/' . $item->id) }}">{{ $item->name }}</a></p>
-
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
-                    </p>
                 </div>
             @endforeach
+        </div>
+        <div class="row">
             <div class="col-xs-12 text-right">
-                {{ $goods->render() }}
+                {{--{{ $shops->render() }}--}}
             </div>
         </div>
     </div>
 @stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.carousel').carousel({
-                interval: 2000
-            })
-        });
-    </script>
+@section('js-lib')
+    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop

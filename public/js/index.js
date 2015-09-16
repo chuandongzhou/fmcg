@@ -430,7 +430,7 @@ var numChange = function (num) {
  * @param {string} module         模块
  * @returns {undefined}
  */
-function likeFunc(type) {
+function likeFunc() {
     $('.btn-like').button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中',
         likedText: '<i class="fa fa-star"></i> 已收藏',
@@ -438,7 +438,10 @@ function likeFunc(type) {
     });
 
     $(document).on('click', '.btn-like', function () {
-        var self = $(this), id = self.data('id'), status = self.children('.fa-star').length > 0;
+        var self = $(this),
+            id = self.data('id'),
+            status = self.children('.fa-star').length > 0
+            type = self.data('type') || 'goods';
         // 判断登录
         if (!site.isLogin()) {
             site.redirect('auth/login');
@@ -452,9 +455,10 @@ function likeFunc(type) {
             data: {status: !status ? 1 : 0, type: type, id: id}
         }).done(function (data, textStatus, jqXHR) {
             if ($.isPlainObject(data)) {
-                status = data.status;
+                status = data.message.id;
+            } else {
+                status = null;
             }
-
             self.data('status', status).button(status ? 'liked' : 'like');
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.button(status ? 'liked' : 'like');
@@ -475,13 +479,13 @@ function tabBox() {
         $('.' + boxclass).css('display', 'block').siblings('.box').css('display', 'none');
     })
 }
-function displayList(){
-    $('.all-sort-panel .more').click(function(){
-        if($(this).children('span').text()=="更多"){
-            $(this).siblings('.all-sort').css({'maxHeight':'100px','overflowY':'scroll'});
+function displayList() {
+    $('.all-sort-panel .more').click(function () {
+        if ($(this).children('span').text() == "更多") {
+            $(this).siblings('.all-sort').css({'maxHeight': '100px', 'overflowY': 'scroll'});
             $(this).children('span').text('收起').siblings('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
-        }else if($(this).children('span').text()=="收起"){
-            $(this).siblings('.all-sort').css({'maxHeight':'55px','overflow':'hidden'});
+        } else if ($(this).children('span').text() == "收起") {
+            $(this).siblings('.all-sort').css({'maxHeight': '55px', 'overflow': 'hidden'});
             $(this).children('span').text('更多').siblings('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
         }
 

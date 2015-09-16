@@ -24,7 +24,7 @@
         <![endif]-->
         <script>
             var SITE = {
-                USER: {!! empty(auth()->user()) ? '{}' : auth()->user() !!},
+                USER: {!! auth()->id() !!},
                 ROOT: '{{ url('/') }}',
                 API_ROOT: '{{ route('api.v1.root') }}'
 

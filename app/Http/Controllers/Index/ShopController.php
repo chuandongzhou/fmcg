@@ -4,20 +4,30 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Category;
 use App\Models\Goods;
+use App\Models\Shop;
 use App\Services\AttrService;
 use DB;
 use Illuminate\Http\Request;
 
-
 class ShopController extends Controller
 {
 
-    protected $sort = [
-        'name',
-        'price',
-        'new'
-    ];
+    public function index($sort = '')
+    {
+        $user = auth()->user();
+        $shops = Shop::whereHas('user', function ($q) use ($user) {
+            $q->where('type', '>', $user->type);
+        })->with('images');
 
+        $shopSorts = cons('shop.sort');
+
+        if (in_array($sort, $shopSorts)) {
+            $sortName = 'Of' . $sort;
+            $shops = $shops->$sortName();
+        }
+
+        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort]);
+    }
 
     /**
      * 店铺首页
@@ -26,17 +36,17 @@ class ShopController extends Controller
      * @param $type
      * @return \Illuminate\View\View
      */
-    public function index($shop, $type = '')
+    public function shop($shop, $sort = '')
     {
         $map = ['shop_id' => $shop->id];
 
         $goods = Goods::where($map);
-        if (in_array($type, $this->sort)) {
-            $goods = $goods->$type();
+        if (in_array($sort, cons('goods.sort'))) {
+            $goods = $goods->$sort();
         }
         $goods = $goods->paginate();
-        return view('index.shop.index',
-            ['shop' => $shop, 'goods' => $goods, 'type' => $type]);
+        return view('index.shop.shop',
+            ['shop' => $shop, 'goods' => $goods, 'sort' => $sort]);
     }
 
 

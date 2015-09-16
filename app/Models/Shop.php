@@ -104,16 +104,6 @@ class Shop extends Model
     }
 
     /**
-     * 收藏表
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function likes()
-    {
-        return $this->morphMany('App\Models\Like', 'likeable');
-    }
-
-    /**
      * 送货区域
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -155,6 +145,16 @@ class Shop extends Model
     }
 
     /**
+     * 最新的商家
+     *
+     * @param $query
+     */
+    public function scopeOfNew($query)
+    {
+        return $query->orderBy('id', 'desc');
+    }
+
+    /**
      * 设置logo
      *
      * @param $logo
@@ -165,41 +165,7 @@ class Shop extends Model
         return $this->associateFiles((array)upload_file($logo, 'temp'), 'files', cons('shop.file_type.logo'));
     }
 
-    /**
-     * 获取logo链接
-     *
-     * @return string
-     */
-    public function getLogoUrlAttribute()
-    {
-        $logo = $this->logo;
 
-        return $logo ? upload_file_url($logo->path) : asset('images/u8.png');
-    }
-
-    /**
-     * 获取营业执照链接
-     *
-     * @return string
-     */
-    public function getLicenseUrlAttribute()
-    {
-        $license = $this->license;
-
-        return $license ? upload_file_url($license->path) : '';
-    }
-
-    /**
-     * 获取店铺图片
-     *
-     * @return string
-     */
-    public function getImageUrlAttribute()
-    {
-        $image = $this->images->first();
-
-        return $image ? upload_file_url($image->path) : '';
-    }
 
     /**
      * 配送地址
@@ -275,6 +241,40 @@ class Shop extends Model
 
         return true;
     }
+    /**
+     * 获取logo链接
+     *
+     * @return string
+     */
+    public function getLogoUrlAttribute()
+    {
+        $logo = $this->logo;
 
+        return $logo ? upload_file_url($logo->path) : asset('images/u8.png');
+    }
+
+    /**
+     * 获取营业执照链接
+     *
+     * @return string
+     */
+    public function getLicenseUrlAttribute()
+    {
+        $license = $this->license;
+
+        return $license ? upload_file_url($license->path) : '';
+    }
+
+    /**
+     * 获取店铺图片
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        $image = $this->images->first();
+
+        return $image ? upload_file_url($image->path) : '';
+    }
 
 }

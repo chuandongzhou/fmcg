@@ -9,10 +9,8 @@ $router->group(['namespace' => 'Index'], function ($router) {
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
     $router->get('shop/{shop}/detail', 'ShopController@detail')->where('shop', '[0-9]+');          //商家商店详情
-    $router->get('shop/{shop}/{type?}', 'ShopController@index')->where('shop', '[0-9]+');          //商家商店首页
-
-
-
+    $router->get('shop/{shop}/{sort?}', 'ShopController@shop')->where('shop', '[0-9]+');          //商家商店首页
+    $router->get('shop/{sort?}', 'ShopController@index')->where('shop', '\d+');                   //商家
 
     $router->controller('order', 'OrderController');//订单统计
     $router->controller('order-buy', 'OrderBuyController');  //买家订单管理

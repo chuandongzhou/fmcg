@@ -20,8 +20,8 @@
                 <a class="btn btn-primary">全部商品分类</a>
             </div>
             <div class="col-sm-10">
-                <a class="btn">首页</a>
-                <a class="btn">经销商</a>
+                <a href="{{ url('/') }}" class="btn">首页</a>
+                <a href="{{ url('shop') }}" class="btn">商家</a>
             </div>
         </div>
     </div>

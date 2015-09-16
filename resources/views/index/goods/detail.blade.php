@@ -109,7 +109,7 @@
             });
             numChange({{ $goods->min_num }});
             tabBox();
-            likeFunc('goods');
+            likeFunc();
         });
     </script>
 @stop

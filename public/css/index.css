@@ -129,7 +129,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   border-right-color: #fff; }
 
 .right-search, .wholesalers-management .pay-detail {
-  padding: 15px 0; }
+  padding: 10px 0; }
 
 .wholesalers-header .container {
   padding: 0; }
@@ -178,15 +178,18 @@ ul, li, p, a, h1, h2, h3, h4 {
   width: 100%;
   display: inline-block; }
 
-.index .list-penal .commodity .commodity-name, .index .list-penal .commodity .sell-panel {
-  background-color: #f2f2f2;
-  padding: 10px 5px; }
-  .index .list-penal .commodity .commodity-name a, .index .list-penal .commodity .sell-panel a {
-    color: #555555; }
-
-.index .list-penal .commodity .sell-panel .money {
-  color: #fe462f;
-  font-weight: bolder; }
+.index .list-penal .commodity .content-panel {
+  padding: 10px 5px;
+  background-color: #f2f2f2; }
+  .index .list-penal .commodity .content-panel .commodity-name {
+    padding: 10px 0; }
+    .index .list-penal .commodity .content-panel .commodity-name a {
+      color: #555555; }
+  .index .list-penal .commodity .content-panel .sell-panel .money {
+    color: #fe462f;
+    font-weight: bolder; }
+  .index .list-penal .commodity .content-panel .order-count {
+    color: #777777; }
 
 .index .list-penal .img-wrap {
   position: relative; }
@@ -605,7 +608,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 60%; }
 
 .wholesalers-management .order-management .right {
-  padding-top: 20px; }
+  padding-top: 12px; }
   .wholesalers-management .order-management .right .control {
     width: 40%;
     padding: 5px 0;

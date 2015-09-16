@@ -175,7 +175,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .right-search {
-  padding: 15px 0;
+  padding: 10px 0;
 }
 
 .wholesalers-header {
@@ -248,20 +248,24 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 100%;
         display: inline-block;
       }
-      .commodity-name {
-        background-color: $gray-plain;
+      .content-panel {
         padding: 10px 5px;
-        a{
-          color:$gray;
+        background-color: $gray-plain;
+        .commodity-name {
+          padding: 10px 0;
+          a {
+            color: $gray;
+          }
         }
-      }
-      .sell-panel {
-        @extend .commodity-name;
-        .money {
-          color: $brand-danger;
-          font-weight: bolder;
+        .sell-panel {
+          .money {
+            color: $brand-danger;
+            font-weight: bolder;
+          }
         }
-
+        .order-count {
+          color: $gray-light;
+        }
       }
     }
     .img-wrap {
@@ -607,13 +611,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     .information {
       li {
         padding: 5px 0;
-        .title-name{
+        .title-name {
           display: inline-block;
           width: 85px;
           text-align: right;
           padding-right: 10px;
         }
-        .content{
+        .content {
           display: inline-block;
           width: 85%;
         }
@@ -824,7 +828,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       input {
         width: 80px;
       }
-      .control{
+      .control {
         padding: 5px 0;
       }
     }
@@ -837,7 +841,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
     .right {
-      padding-top: 20px;
+      padding-top: 12px;
       .control {
         width: 40%;
         padding: 5px 0;
@@ -1159,7 +1163,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         border-right: none;
         vertical-align: middle;
         text-align: center;
-        .store-img{
+        .store-img {
           @include square(50px);
         }
       }
@@ -1547,6 +1551,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 .tab-title {
   margin: 20px 0;
   line-height: 40px;

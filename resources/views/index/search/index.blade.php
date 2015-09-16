@@ -76,18 +76,20 @@
                 <div class="col-sm-3 commodity">
                     <img class="commodity-img" src="{{ $item->image_url }}">
 
-                    <p class="commodity-name">{{ $item->name }}</p>
+                    <div class="content-panel">
+                        <p class="commodity-name">{{ $item->name }}</p>
 
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
-                    </p>
+                        <p class="sell-panel">
+                            <span class="money">￥{{ $item->price }}</span>
+                            <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
+                        </p>
+                    </div>
                 </div>
             @endforeach
         </div>
         <div class="row">
             <div class="col-xs-12 text-right">
-               {{ $goods->render() }}
+                {{ $goods->render() }}
             </div>
         </div>
     </div>

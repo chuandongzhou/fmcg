@@ -71,13 +71,23 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * 收藏
+     * 店铺收藏
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function likes()
+    public function likeShops()
     {
-        return $this->hasMany('App\Models\Like');
+        return $this->belongsToMany('App\Models\Shop', 'like_shop', 'user_id', 'shop_id');
+    }
+
+    /**
+     * 商品收藏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likeGoods()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'like_goods', 'user_id', 'goods_id');
     }
 
     /**

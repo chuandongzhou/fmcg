@@ -101,16 +101,6 @@ class Goods extends Model
     }
 
     /**
-     * 收藏表
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function likes()
-    {
-        return $this->morphMany('App\Models\Like', 'likeable');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function deliveryArea()
@@ -136,6 +126,15 @@ class Goods extends Model
     public function scopeNew($query)
     {
         return $query->where('is_new', 1);
+    }
+    /**
+     * 查询促销产品
+     *
+     * @param $query
+     */
+    public function scopePromotion($query)
+    {
+        return $query->where('is_promotion', 1);
     }
 
     /**
@@ -232,15 +231,7 @@ class Goods extends Model
         return $query->whereIn('id', $goodsIds);
     }
 
-    /**
-     * 查询促销产品
-     *
-     * @param $query
-     */
-    public function scopePromotion($query)
-    {
-        return $query->where('is_promotion', 1);
-    }
+
 
     /**
      * 模型启动事件

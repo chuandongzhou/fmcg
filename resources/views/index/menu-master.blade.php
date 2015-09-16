@@ -9,19 +9,21 @@
                     <ul class="menu-list">
                         <li><a href="#"><span class=""></span>订单管理</a></li>
                         <li><a href="#">我的商品</a></li>
-                        @if(Auth()->user()->type == cons('user.type.wholesaler'))
+                        {{--TODO:批发商的订单统计需要分角色--}}
+                        @if(auth()->user()->type == cons('user.type.wholesaler'))
                             <li><a href="{{ url('order/statistics?obj_type=1&pay_type=1') }}">终端商订单统计</a></li>
                             <li><a href="{{ url('order/statistics?obj_type=3&pay_type=1') }}">供应商订单统计</a></li>
                         @else
                             <li><a href="{{ url('order/statistics') }}">订单统计</a></li>
                         @endif
-                        <li><a href="#">个人中心</a></li>
+                        <li><a href="{{ url('personal/shop') }}">个人中心</a></li>
                     </ul>
                 </div>
             @else
                 <div class="col-sm-2 menu">
                     <ul class="name" href="#">
                         {{--<li><img class="avatar" src="{{ auth()->user()->shop->logo->url }}"></li>--}}
+                        <li><img class="avatar" src="{{ auth()->user()->shop->logo->url }}"></li>
                         <li>终端商名称</li>
                     </ul>
                     <ul class="menu-list dealer-menu-list">
@@ -39,7 +41,7 @@
                         <li><a href="{{ url('order-buy/statistics') }}" class="list-item active"><i
                                         class="fa fa-file-o"></i>
                                 统计报表</a></li>
-                        <li><a href="#" class="list-item"><i class="fa fa-heart-o"></i> 个人中心</a></li>
+                        <li><a href="{{ url('personal/shop') }}" class="list-item"><i class="fa fa-heart-o"></i> 个人中心</a></li>
                     </ul>
                 </div>
             @endif
