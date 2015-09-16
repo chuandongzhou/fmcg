@@ -24,10 +24,9 @@
         <![endif]-->
         <script>
             var SITE = {
-                USER: {!! auth()->id() !!},
+                USER: {!! $user or '{}' !!},
                 ROOT: '{{ url('/') }}',
                 API_ROOT: '{{ route('api.v1.root') }}'
-
             };
         </script>
         <script src="{{ asset('js/jquery.min.js') }}"></script>

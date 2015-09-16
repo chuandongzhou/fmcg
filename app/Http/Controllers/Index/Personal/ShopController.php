@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Index\Personal;
 
 use App\Http\Controllers\Index\Controller;
-use App\Models\Shop;
 
 use App\Http\Requests;
 
@@ -18,7 +17,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shop = auth()->user()->shop()->with('images')->first();
+        $shop = auth()->user()->shop()->with(['images' , 'deliveryArea' , 'shopAddress'])->first();
         return view('index.personal.shop', ['shop' => $shop]);
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Personal;
 
-use App\Http\Controllers\Api\v1\Controller;
+use App\Http\Controllers\Api\V1\Controller;
 use Gate;
 use App\Http\Requests;
 

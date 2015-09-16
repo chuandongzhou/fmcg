@@ -57,7 +57,7 @@ return [
         ],
         'address_type' => [
             'shop_address' => 1,        //店铺地址
-            'delivery_address' => 2,    //配送地址
+            'delivery_address' => 0,    //配送地址
         ],
         'sort' => [
             'hot',

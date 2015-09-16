@@ -176,7 +176,17 @@ class Goods extends Model
 
     public function scopeOfDeliveryArea($query, $data)
     {
-        if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
+        if(isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])){
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id'],
+                        'district_id' => $data['district_id'],
+                        'street_id' => $data['street_id'],
+                    ]);
+            });
+        } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
                 $query->where(
                     [

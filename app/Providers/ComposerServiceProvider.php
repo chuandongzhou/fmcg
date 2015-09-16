@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\CategoryComposer;
+use App\Http\ViewComposers\UserComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,9 @@ class ComposerServiceProvider extends ServiceProvider
                     'index.index.index',
                     'index.index-master',
                     'index.retailer-master'
+                ],
+                UserComposer::class => [
+                    'master'
                 ]
             ]);
     }

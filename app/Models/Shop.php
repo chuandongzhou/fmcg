@@ -110,7 +110,19 @@ class Shop extends Model
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\DeliveryArea', 'addressable');
+        return $this->morphMany('App\Models\DeliveryArea', 'addressable')->where('type',
+            cons('shop.address_type.delivery_address'));
+    }
+
+    /**
+     * 地址
+     *
+     * @return mixed
+     */
+    public function shopAddress()
+    {
+        return $this->morphOne('App\Models\DeliveryArea', 'addressable')->where('type',
+            cons('shop.address_type.shop_address'));
     }
 
     /**
@@ -155,6 +167,53 @@ class Shop extends Model
     }
 
     /**
+     * 配送地址
+     *
+     * @param $query
+     * @param $data
+     */
+
+    public function scopeOfDeliveryArea($query, $data)
+    {
+        if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id'],
+                        'district_id' => $data['district_id'],
+                        'street_id' => $data['street_id'],
+                    ]);
+            });
+        } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id'],
+                        'district_id' => $data['district_id']
+                    ]);
+            });
+        } elseif (isset($data['province_id']) && isset($data['city_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id'],
+                        'city_id' => $data['city_id']
+                    ]);
+            });
+        } elseif (isset($data['province_id'])) {
+            $query->whereHas('deliveryArea', function ($query) use ($data) {
+                $query->where(
+                    [
+                        'province_id' => $data['province_id']
+                    ]);
+            });
+        }
+    }
+
+
+    /**
      * 设置logo
      *
      * @param $logo
@@ -165,21 +224,6 @@ class Shop extends Model
         return $this->associateFiles((array)upload_file($logo, 'temp'), 'files', cons('shop.file_type.logo'));
     }
 
-
-
-    /**
-     * 配送地址
-     *
-     * @param $deliveryArea
-     */
-    public function setDeliveryAreaAttribute($deliveryArea)
-    {
-        if ($deliveryArea) {
-            $this->attributes['delivery_area'] = implode(',', $deliveryArea);
-        }
-    }
-
-
     /**
      * 设置营业执照
      *
@@ -188,7 +232,6 @@ class Shop extends Model
      */
     public function setLicenseAttribute($license)
     {
-        dd($license);
         if ($license) {
             return $this->associateFiles((array)upload_file($license, 'temp'), 'files', cons('shop.file_type.license'));
         }
@@ -219,6 +262,19 @@ class Shop extends Model
     }
 
     /**
+     * @param $address
+     * @return bool
+     */
+    public function setAddressAttribute($address)
+    {
+
+        $this->shopAddress()->delete();
+        $address['type'] = cons('shop.address_type.shop_address');
+        $this->shopAddress()->create($address);
+        return true;
+    }
+
+    /**
      * 配送区域
      *
      * @param $area
@@ -227,20 +283,18 @@ class Shop extends Model
     public function setAreaAttribute($area)
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
-
-        /* $nowArea = $this->deliveryArea;
-       * if (count($nowArea) == count(array_filter($area['province_id']))) {
-             return true;
-         }*/
         $this->deliveryArea()->delete();
         if (!empty($areaArr)) {
+            $areas = [];
             foreach ($areaArr as $data) {
-                $this->deliveryArea()->create($data);
+                $areas[] = new DeliveryArea($data);
             }
+            $this->deliveryArea()->saveMany($areas);
         }
 
         return true;
     }
+
     /**
      * 获取logo链接
      *
@@ -275,6 +329,15 @@ class Shop extends Model
         $image = $this->images->first();
 
         return $image ? upload_file_url($image->path) : '';
+    }
+
+    /**
+     * 获取地址
+     * @return string
+     */
+    public function getAddressAttribute()
+    {
+        return is_null($this->shopAddress) ? '' : $this->shopAddress->area_name . ' ' . $this->shopAddress->address;
     }
 
 }

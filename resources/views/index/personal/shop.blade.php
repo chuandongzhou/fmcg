@@ -127,26 +127,23 @@
                     <label class="col-sm-2 control-label">所在地</label>
 
                     <div class="col-sm-3">
-                        <select data-group="shop" name="province_id" data-id="{{ $shop->province_id }}"
-                                class="address-province form-control">
-                            <option selected="selected" value="">请选择省市/其他...</option>
+                        <select data-group="shop" name="address[province_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
+                                class="address-province form-control address">
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <select data-group="shop" name="city_id" data-id="{{ $shop->city_id }}"
-                                class="address-city form-control">
-                            <option selected="selected" value="">请选择城市...</option>
+                        <select data-group="shop" name="address[city_id]" data-id="{{  $shop->shopAddress ? $shop->shopAddress->city_id : '' }}"
+                                class="address-city form-control address">
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select data-group="shop" name="district_id" data-id="{{ $shop->district_id }}"
-                                class="address-district form-control">
-                            <option selected="selected" value="">请选择区/县...</option>
+                        <select data-group="shop" name="address[district_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->district_id : '' }}"
+                                class="address-district form-control address">
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select data-group="shop" name="street_id" data-id="{{ $shop->street_id }}"
-                                class="address-street form-control"></select>
+                        <select data-group="shop" name="address[street_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
+                                class="address-street form-control address"></select>
                     </div>
                 </div>
 
@@ -154,8 +151,9 @@
                     <label for="address" class="col-sm-2 control-label">详细地址</label>
 
                     <div class="col-sm-10 col-md-6">
-                        <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control"
-                               value="{{ $shop->address }}">
+                        <input type="hidden" name="address[area_name]" value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}" />
+                        <input type="text" placeholder="请输入详细地址" name="address[address]" id="address" class="form-control"
+                               value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -214,6 +212,17 @@
     <script type="text/javascript">
         $(function () {
             picFunc();
+            $('select.address').change(function () {
+                var provinceControl = $('select[name="address[province_id]"]'),
+                        cityControl = $('select[name="address[city_id]"]'),
+                        districtControl = $('select[name="address[district_id]"]'),
+                        streetControl = $('select[name="address[street_id]"]'),
+                        provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
+                        cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
+                        districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
+                        streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
+                $('input[name="address[area_name]"]').val(provinceVal + ' ' + cityVal + ' ' + districtVal + ' ' + streetVal);
+            })
         })
     </script>
 @stop
