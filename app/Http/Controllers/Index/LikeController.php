@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Models\Like;
 
 use App\Http\Requests;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 
