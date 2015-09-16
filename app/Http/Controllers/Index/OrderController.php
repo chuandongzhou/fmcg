@@ -20,8 +20,8 @@ class OrderController extends Controller
     public function __construct()
     {
         //TODO:获取当前用户ID号和类型
-        $this->userId = Auth()->user()->id;
-        $this->userType = Auth()->user()->type;
+        $this->userId = auth()->user()->id;
+        $this->userType = auth()->user()->type;
         session(['id' => $this->userId]);
         session(['type' => $this->userType]);
 
