@@ -22,7 +22,7 @@ $router->group(['namespace' => 'Index'], function ($router) {
     $router->get('cart', 'CartController@index');          // 购物车
     $router->controller('order', 'OrderController');       //订单
     $router->get('search', 'SearchController@index');      //商品搜索页
-    $router->controller('collect','LikeController');//收藏夹
+    $router->controller('like','LikeController');//收藏夹
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
@@ -96,7 +96,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
         $router->resource('my-goods', 'MyGoodsController');
 
-        $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
+        $router->group(['prefix' => 'personal', 'namespace' => 'P
+        ersonal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->post('bank-default/{bank}', 'UserBankController@bankDefault');

@@ -22,13 +22,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token', 'balance', 'spreading_code' ,'status'];
+    protected $hidden = ['password', 'remember_token', 'balance', 'spreading_code', 'status'];
     protected $fillable = [
         'user_name',
         'password',
         'type',
         'spreading_code'
     ];
+
     /**
      * 模型启动事件
      */
@@ -107,5 +108,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function shippingAddress()
     {
         return $this->hasMany('App\Models\ShippingAddress');
+    }
+
+    /**
+     * 店铺收藏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likeShops()
+    {
+        return $this->belongsToMany('App\Models\Shop', 'like_shop', 'user_id', 'shop_id');
+    }
+
+    /**
+     * 商家收藏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likeGoods()
+    {
+        return $this->belongsToMany('App\Models\Shop', 'like_goods', 'user_id', 'goods_id');
     }
 }
