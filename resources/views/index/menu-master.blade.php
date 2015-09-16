@@ -22,7 +22,6 @@
             @else
                 <div class="col-sm-2 menu">
                     <ul class="name" href="#">
-                        {{--<li><img class="avatar" src="{{ auth()->user()->shop->logo->url }}"></li>--}}
                         <li><img class="avatar" src="{{ auth()->user()->shop->logo->url }}"></li>
                         <li>终端商名称</li>
                     </ul>

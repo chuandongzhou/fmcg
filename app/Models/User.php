@@ -119,24 +119,4 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany('App\Models\ShippingAddress');
     }
-
-    /**
-     * 店铺收藏
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function likeShops()
-    {
-        return $this->belongsToMany('App\Models\Shop', 'like_shop', 'user_id', 'shop_id');
-    }
-
-    /**
-     * 商家收藏
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function likeGoods()
-    {
-        return $this->belongsToMany('App\Models\Shop', 'like_goods', 'user_id', 'goods_id');
-    }
 }
