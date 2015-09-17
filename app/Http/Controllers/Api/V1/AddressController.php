@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 class AddressController extends Controller
 {
 
+    /**
+     * 根据区id 获取街道
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function street(Request $request)
     {
         $addressList = DB::table('address')->where('pid', $request->input('pid'))->lists('name', 'id');

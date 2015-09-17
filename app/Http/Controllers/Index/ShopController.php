@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class ShopController extends Controller
 {
 
-    public function index($sort = '')
+    public function index(Request $request, $sort = '')
     {
         $user = auth()->user();
         $shops = Shop::whereHas('user', function ($q) use ($user) {
@@ -26,7 +26,12 @@ class ShopController extends Controller
             $shops = $shops->$sortName();
         }
 
-        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort]);
+        $address = $request->all();
+        if (!empty($address)) {
+            $shops = $shops->OfDeliveryArea($address);
+        }
+
+        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $address]);
     }
 
     /**

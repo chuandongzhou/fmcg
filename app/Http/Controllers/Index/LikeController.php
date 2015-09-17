@@ -29,7 +29,7 @@ class LikeController extends Controller
         if (isset($data['name'])) {
             $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
         }
-        if (!empty($data['province_id'])) {
+        if ($request->has('province_id')) {
             $shops = $shops->OfDeliveryArea($data);
         }
 

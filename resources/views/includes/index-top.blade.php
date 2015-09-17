@@ -12,43 +12,16 @@
             <div class="col-sm-4 city-wrap">
                 <div class="location-panel">
                     <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                class="city-value">四川</span> <span class="fa fa-angle-down up-down"></span></a>
+                                class="city-value">{{  object_get($provinces ,cookie('province_id') , '北京')}}</span> <span
+                                class="fa fa-angle-down up-down"></span></a>
                 </div>
                 <div class="city-list clearfix">
                     <div class="list-wrap">
-                        <div class="item"><a href="javascript:void(0)">上海</a></div>
-                        <div class="item"><a href="javascript:void(0)">天津</a></div>
-                        <div class="item"><a href="javascript:void(0)">重庆</a></div>
-                        <div class="item"><a href="javascript:void(0)">河北</a></div>
-                        <div class="item"><a href="javascript:void(0)">山西</a></div>
-                        <div class="item"><a href="javascript:void(0)">河南</a></div>
-                        <div class="item"><a href="javascript:void(0)">辽宁</a></div>
-                        <div class="item"><a href="javascript:void(0)">吉林</a></div>
-                        <div class="item"><a href="javascript:void(0)">黑龙江</a></div>
-                        <div class="item"><a href="javascript:void(0)">内蒙古</a></div>
-                        <div class="item"><a href="javascript:void(0)">江苏</a></div>
-                        <div class="item"><a href="javascript:void(0)">山东</a></div>
-                        <div class="item"><a href="javascript:void(0)">安徽</a></div>
-                        <div class="item"><a href="javascript:void(0)">浙江</a></div>
-                        <div class="item"><a href="javascript:void(0)">福建</a></div>
-                        <div class="item"><a href="javascript:void(0)">湖北</a></div>
-                        <div class="item"><a href="javascript:void(0)">湖南</a></div>
-                        <div class="item"><a href="javascript:void(0)">广东</a></div>
-                        <div class="item"><a href="javascript:void(0)">广西</a></div>
-                        <div class="item"><a href="javascript:void(0)">江西</a></div>
-                        <div class="item"><a class="btn-primary" href="javascript:void(0)">四川</a></div>
-                        <div class="item"><a href="javascript:void(0)">海南</a></div>
-                        <div class="item"><a href="javascript:void(0)">贵州</a></div>
-                        <div class="item"><a href="javascript:void(0)">云南</a></div>
-                        <div class="item"><a href="javascript:void(0)">西藏</a></div>
-                        <div class="item"><a href="javascript:void(0)">陕西</a></div>
-                        <div class="item"><a href="javascript:void(0)">甘肃</a></div>
-                        <div class="item"><a href="javascript:void(0)">青海</a></div>
-                        <div class="item"><a href="javascript:void(0)">宁夏</a></div>
-                        <div class="item"><a href="javascript:void(0)">新疆</a></div>
-                        <div class="item"><a href="javascript:void(0)">台湾</a></div>
-                        <div class="item"><a href="javascript:void(0)">香港</a></div>
-                        <div class="item"><a href="javascript:void(0)">澳门</a></div>
+                        @foreach($provinces as $provinceId => $provinces)
+                            <div class="item">
+                                <a href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $provinces }}</a>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

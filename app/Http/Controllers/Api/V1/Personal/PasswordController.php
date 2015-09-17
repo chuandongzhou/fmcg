@@ -13,10 +13,10 @@ class PasswordController extends Controller
 
 
     /**
-     * @param \App\Http\Requests\Index\UpdatePasswordRequest $request
+     * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function password(Requests\Index\UpdatePasswordRequest $request)
+    public function password(Requests\Api\v1\UpdatePasswordRequest $request)
     {
         $attributes = $request->all();
 

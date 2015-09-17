@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Api\v1\CreateInterestsRequest;
 
 class LikeController extends Controller
 {
@@ -16,10 +16,10 @@ class LikeController extends Controller
     /**
      * 收藏
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\v1\CreateInterestsRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function putInterests(Request $request)
+    public function putInterests(CreateInterestsRequest $request)
     {
         $type = $request->input('type');
         $likeTypes = array_keys(cons('like.type'));

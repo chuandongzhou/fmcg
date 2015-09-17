@@ -18,7 +18,6 @@ class PasswordController extends Controller
      */
     public function index()
     {
-        //dd(Hash::check('654321', '$2y$10$cZy0YHMYelOKXzhCdslPDeqbCGRnupt29TVnobMU4PBHmMwRVcnd2'));
         return view('index.personal.password');
     }
 }

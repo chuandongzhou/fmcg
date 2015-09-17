@@ -53,7 +53,7 @@
                         </div>
                     </li>
                     <li class="active"><a class="list-name" href="{{ url('/') }}">首页</a></li>
-                    <li><a class="list-name" href="#">店家信息</a></li>
+                    <li><a class="list-name" href="{{ url('shop') }}">商家</a></li>
                 </ul>
             </div>
         </div>

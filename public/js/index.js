@@ -188,14 +188,20 @@ function menuFunc() {
         $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
 
-    $('.city-wrap .item').on('click', function () {
-        $('.city-value').text($(this).text());
-        $('.dealer-top-header .city-list').css('display', 'none');
-        $('.dealer-top-header .location-panel').css('border', '1px solid f2f2f2');
-        $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
+    $('.city-wrap .item a').on('click', function () {
+        setCookie('province_id', $(this).data('id'));
+        window.location.reload();
     })
     //city-menu end
-
+    $('.collect-select').hover(function(){
+        $(this).children(".collect-selected").siblings('.select-list').css('display','block');
+        $(this).children(".collect-selected").children('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
+        $(this).children(".collect-selected").css({'background': '#fff','border':'1px solid #e0e0e0','border-bottom':'none'});
+    },function(){
+        $(this).children(".collect-selected").siblings('.select-list').css('display','none');
+        $(this).children(".collect-selected").children('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
+        $(this).children(".collect-selected").css({'background': '#f2f2f2','border':'1px solid #f2f2f2'});
+    })
     //top secondary-menu begin
     $('.navbar-nav .menu-wrap-title').mouseenter(function () {
         $('.menu-list-wrap').css('display', 'block');

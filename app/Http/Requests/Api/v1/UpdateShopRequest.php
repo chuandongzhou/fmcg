@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Index;
+namespace App\Http\Requests\Api\v1;
 
 
 class UpdateShopRequest extends Request

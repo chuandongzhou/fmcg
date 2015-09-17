@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/mixins";
+@import "bootstrap/bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -848,7 +848,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         vertical-align: middle;
       }
       .btn-cancel {
-        color: $gray-light;
+        color: $gray;
       }
     }
   }
@@ -1285,19 +1285,17 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .dealer-top-header {
-  /*height: 31px;
-  line-height: 31px;*/
   width: 100%;
   background-color: $gray-plain;
   .city-wrap {
     position: relative;
     .location-panel {
-      padding: 5px 10px;
+      padding: 5px 3px;
       width: 135px;
       line-height: 31px;
       border: 1px solid $gray-plain;
       position: relative;
-      z-index: 5;
+      z-index: 999;
       .location-text {
         color: $gray;
         text-decoration: none;
@@ -1308,7 +1306,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       margin-top: -1px;
       position: absolute;
       background-color: $body-bg;
-      z-index: 10000;
+      z-index: 888;
       display: none;
       .list-wrap {
         .item {
@@ -1334,6 +1332,37 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .operating-wrap {
+    .collect-select {
+      position: relative;
+      .collect-selected{
+        border: 1px solid $gray-plain;
+        border-bottom: none;
+        margin-top: -1px;
+        vertical-align: middle;
+      }
+      .select-list {
+        display: none;
+        text-align: left;
+        position: absolute;
+        width: 100%;
+        top: 35px;
+        z-index: 6;
+        margin-top: -2px;
+        border: 1px solid $gray-plain-light;
+        border-top: none;
+        background-color: $body-bg;
+        li {
+          padding:2px 0 2px 18px;
+          width: 100%;
+          a{
+            &:hover{
+              color:$brand-primary;
+            }
+          }
+        }
+      }
+    }
+
     a {
       color: $gray-light;
       padding-top: 10px;
@@ -1422,6 +1451,15 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
+.nav-name {
+  a {
+    color: $gray;
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+}
+
 .categories {
   position: relative;
   .menu-wrap {
@@ -1429,7 +1467,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     left: 0;
     @include size(100%, 401px);
     background-color: $blue;
-    z-index: 999;
+    z-index: 666;
     li {
       padding: 10px 0 10px 55px;
       color: $body-bg;
@@ -1453,7 +1491,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: none;
     position: absolute;
     left: 0;
-    z-index: 999;
+    z-index: 666;
     background-color: $body-bg;
     padding-left: 10px;
     @include size(100%, min(401px));

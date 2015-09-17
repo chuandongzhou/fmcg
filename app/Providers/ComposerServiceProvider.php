@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\CategoryComposer;
 use App\Http\ViewComposers\UserComposer;
+use App\Http\ViewComposers\ProvinceComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,9 @@ class ComposerServiceProvider extends ServiceProvider
                 ],
                 UserComposer::class => [
                     'master'
+                ],
+                ProvinceComposer::class => [
+                    'includes.index-top'
                 ]
             ]);
     }

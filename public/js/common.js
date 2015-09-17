@@ -188,6 +188,15 @@ Common.prototype = {
 var noop = function () {
 };
 
+
+function setCookie(name,value)
+{
+    var Days = 30;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name + "="+ value + ";expires=" + exp.toGMTString();
+}
+
 /**
  * 获取api返回的第一个错误
  *
