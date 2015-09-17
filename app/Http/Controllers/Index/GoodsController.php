@@ -24,7 +24,7 @@ class GoodsController extends Controller
         if (Gate::denies('validate-goods', $goods)) {
             abort(403);
         }
-        $attrs = (new AttrService())->getAttrByGoods($goods);
+        $attrs = (new AttrService())->getAttrByGoods($goods ,4);
         $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');
         $isLike = auth()->user()->whereHas('likeGoods' , function ($q) use ($goods) {
             $q->where('id' , $goods->id);
