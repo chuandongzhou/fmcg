@@ -18,9 +18,7 @@ class OrderBuyController extends OrderController
     {
         parent::__construct();
         //供应商无购买商品功能
-        if ($this->userType == cons('user.type.supplier')) {
-            return $this->error('无权查看~');
-        }
+        $this->middleware('supplier');
     }
 
     /**
@@ -71,7 +69,7 @@ class OrderBuyController extends OrderController
         } else {
             $orders = Order::ofBuy($this->userId)->ofSellerType($search)->paginate()->toArray();
         }
-
+//dd($orders);
         return $orders;
     }
 
@@ -150,7 +148,7 @@ class OrderBuyController extends OrderController
     public function getDetail($id)
     {
         $detail = Order::where('user_id', $this->userId)->with('user', 'shippingAddress', 'shop', 'goods',
-            'goods.images', 'deliveryMan','shippingAddress.deliveryArea')->find($id);
+            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($id);
         if (!$detail) {
             return $this->error('订单不存在');
         }

@@ -132,7 +132,7 @@ class Order extends Model
         if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
             && $status == cons('order.status.send')
         ) {
-            return cons()->valueLang('order.pay_status.payment_success');
+            return cons()->lang('order.pay_status.payment_success');
         }
 
 
@@ -146,21 +146,21 @@ class Order extends Model
      */
     public function getStepNumAttribute()
     {
-        $payType = $this->attributes['pay_type'];
-        $payStatus = $this->attributes['pay_status'];
-        $status = $this->attributes['status'];
-        if ($payType == cons('pay_type.online')) {
+        $payType = $this->attributes['pay_type'];//支付方式
+        $payStatus = $this->attributes['pay_status'];//支付状态
+        $status = $this->attributes['status'];//订单状态
+        if ($payType == cons('pay_type.online')) {//在线支付
             if ($payStatus) {
                 return $status + 2;
             }
 
             return $status + 1;
-        } else {
-            if ($status <= cons('order.status.send')) {
-                return $status + 1;
-            }
+        } else {//货到付款
             if ($payStatus) {
                 return $status + 2;
+            }
+            if ($status <= cons('order.status.send')) {
+                return $status + 1;
             }
         }
     }

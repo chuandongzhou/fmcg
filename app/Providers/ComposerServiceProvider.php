@@ -20,7 +20,7 @@ class ComposerServiceProvider extends ServiceProvider
                     'index.master',
                     'index.index.index',
                     'index.index-master',
-                    'index.retailer-master'
+                    'index.like.goods'
                 ],
                 UserComposer::class => [
                     'master'

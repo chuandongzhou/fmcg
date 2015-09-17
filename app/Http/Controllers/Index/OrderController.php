@@ -19,7 +19,6 @@ class OrderController extends Controller
 
     public function __construct()
     {
-        //TODO:获取当前用户ID号和类型
         $this->userId = auth()->user()->id;
         $this->userType = auth()->user()->type;
         session(['id' => $this->userId]);
@@ -153,11 +152,11 @@ class OrderController extends Controller
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
-                            'goods_id' => $cartGoods->goods_id,
-                            'price' => $cartGoods->goods->price,
-                            'num' => $cartGoods->num,
-                            'total_price' => $cartGoods->goods->price * $cartGoods->num,
-                        ]);
+                        'goods_id' => $cartGoods->goods_id,
+                        'price' => $cartGoods->goods->price,
+                        'num' => $cartGoods->num,
+                        'total_price' => $cartGoods->goods->price * $cartGoods->num,
+                    ]);
                 }
                 if ($order->orderGoods()->saveMany($orderGoods)) {
                     if ($payType == $payTypes['online']) {

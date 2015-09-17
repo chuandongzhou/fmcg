@@ -85,6 +85,20 @@
                         <td>{{ $order['shop']['contact_person'] }}</td>
                     </tr>
                     @endif
+                    @if((int)$order['paid_at'])
+                        <tr>
+                            <td>付款</td>
+                            <td>{{ $order['paid_at'] }}</td>
+                            <td>{{ $order['user']['user_name'] }}</td>
+                        </tr>
+                    @endif
+                    @if((int)$order['finished_at'])
+                        <tr>
+                            <td>完成</td>
+                            <td>{{ $order['finished_at'] }}</td>
+                            <td>{{ $order['shop']['contact_person'] }}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -125,7 +139,7 @@
             </div>
             <div class="item">
                 <label class="title-name">收货地址</label>
-                <span>{{ $order['shipping_address']['address'] }}</span>
+                <span>{{ $order['shipping_address']['address']['address'] }}</span>
             </div>
             <div class="table-responsive order-table clearfix item">
                 <label class="pull-left title-name">商品清单</label>

@@ -127,6 +127,7 @@ class Goods extends Model
     {
         return $query->where('is_new', 1);
     }
+
     /**
      * 查询促销产品
      *
@@ -176,39 +177,39 @@ class Goods extends Model
 
     public function scopeOfDeliveryArea($query, $data)
     {
-        if(isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])){
+        if (isset($data['province_id'])
+            && isset($data['city_id'])
+            && isset($data['district_id'])
+            && isset($data['street_id'])
+        ) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where(
-                    [
-                        'province_id' => $data['province_id'],
-                        'city_id' => $data['city_id'],
-                        'district_id' => $data['district_id'],
-                        'street_id' => $data['street_id'],
-                    ]);
+                $query->where([
+                    'province_id' => $data['province_id'],
+                    'city_id' => $data['city_id'],
+                    'district_id' => $data['district_id'],
+                    'street_id' => $data['street_id'],
+                ]);
             });
         } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where(
-                    [
-                        'province_id' => $data['province_id'],
-                        'city_id' => $data['city_id'],
-                        'district_id' => $data['district_id']
-                    ]);
+                $query->where([
+                    'province_id' => $data['province_id'],
+                    'city_id' => $data['city_id'],
+                    'district_id' => $data['district_id']
+                ]);
             });
         } elseif (isset($data['province_id']) && isset($data['city_id'])) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where(
-                    [
-                        'province_id' => $data['province_id'],
-                        'city_id' => $data['city_id']
-                    ]);
+                $query->where([
+                    'province_id' => $data['province_id'],
+                    'city_id' => $data['city_id']
+                ]);
             });
         } elseif (isset($data['province_id'])) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where(
-                    [
-                        'province_id' => $data['province_id']
-                    ]);
+                $query->where([
+                    'province_id' => $data['province_id']
+                ]);
             });
         }
     }
@@ -238,9 +239,9 @@ class Goods extends Model
             return $item->num == count($attr);
         });
         $goodsIds = array_pluck($goodsAttr, 'goods_id');
+
         return $query->whereIn('id', $goodsIds);
     }
-
 
 
     /**
@@ -287,6 +288,7 @@ class Goods extends Model
 
     /**
      * 根据不同角色获取价格
+     *
      * @return mixed
      */
     public function getPriceAttribute()
@@ -296,11 +298,13 @@ class Goods extends Model
 
     /**
      * 根据不同角色获取最低购买数
+     *
      * @return mixed
      */
     public function getMinNumAttribute()
     {
-        return auth()->user()->type == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer;
+        return auth()->user()->type
+        == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer;
     }
 
     /**

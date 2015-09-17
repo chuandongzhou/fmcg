@@ -16,10 +16,7 @@ class OrderSellController extends OrderController
     public function __construct()
     {
         parent::__construct();
-        //终端商无销售权限
-        if ($this->userType == cons('user.type.retailer')) {
-            return redirect()->back();
-        }
+        $this->middleware('retailer');
     }
 
     /**

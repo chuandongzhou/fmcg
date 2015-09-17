@@ -7,12 +7,12 @@
                     <div class="col-sm-12 control-panel">
                         <form action="{{ url('like/shops') }}" method="get">
                             <label>配送区域</label>
-                            <select data-id="{{ isset($data['province_id']) ? $data['province_id'] : 0 }}" class="control address-province" name="province_id"></select>
-                            <select data-id="{{ isset($data['city_id']) ? $data['city_id'] : 0 }}" class="control address-city" name="city_id"> </select>
-                            <select data-id="{{ isset($data['district_id']) ? $data['district_id'] : 0 }}" class="control address-district" name="district_id"> </select>
-                            <select data-id="{{ isset($data['street_id']) ? $data['street_id'] : 0 }}" class="control address-street" name="street_id"> </select>
+                            <select data-id="{{ $data['province_id'] or 0 }}" class="control address-province" name="province_id"></select>
+                            <select data-id="{{ $data['city_id'] or 0 }}" class="control address-city" name="city_id"> </select>
+                            <select data-id="{{ $data['district_id'] or 0 }}" class="control address-district" name="district_id"> </select>
+                            <select data-id="{{ $data['street_id'] or 0 }}" class="control address-street" name="street_id"> </select>
 
-                            <input type="text" placeholder="经销商名称" class="control" name="name" value="{{ isset($data['name']) ? $data['name'] : '' }}">
+                            <input type="text" placeholder="经销商名称" class="control" name="name" value="{{$data['name'] or '' }}">
                             <button class=" btn btn-cancel search">搜索</button>
                         </form>
                     </div>

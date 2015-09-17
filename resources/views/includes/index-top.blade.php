@@ -66,7 +66,7 @@
                      aria-expanded="false" style="height: 1px;">
                     <ul class="nav navbar-nav navbar-right operating-wrap">
                         <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
-                        <li><a href="#"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
+                        <li><a href="{{ url('order-buy') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
                         <li><a href="{{ url('like') }}"><span class="fa fa-star-o"></span> 收藏夹</a></li>
                         <li><a href="{{ url('auth/logout') }}"><span class="fa fa-ban"></span> 退出</a></li>
                     </ul>

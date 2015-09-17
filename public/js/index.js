@@ -97,70 +97,70 @@ function _ajaxGet(targetUrl, data) {
             var str = '';
 
             $.each(list.data, function (index, result) {
-                str += '<div class="row order-form-list">'
-                    + '     <div class="col-sm-12 list-title">'
-                    + '         <input type="checkbox" name="orderIds[]" value="' + result.id + '"/>'
-                    + '         <span class="time">' + result.created_at + '</span>'
-                    + '         <span>订单号:100000000' + result.id + '</span>'
-                    + '         <span>' + (result.seller ? result.seller.user_name : result.user.user_name) + '终端商</span>'
-                    + '     </div>'
-                    + '     <div class="col-sm-8 list-content">'
-                    + '         <ul>';
+                str += '<table class="table table-bordered">'
+                    + '     <thead><tr><th>'
+                    + '         <label><input type="checkbox" name="order_id[]" value="' + result.id + '"/>' + result.created_at + '</label>'
+                    + '         <span class="order-number">订单号:' + result.id + '</span></th>'
+                    + '         <th>' + (result.user_id == SITE.USER.id ? SITE.USER.user_name : result.shop.user.user_name) + '</th>'
+                    + '     <th></th><th></th><th></th>'
+                    + '     </tr>'
+                    + '         </thead><tbody>';
                 $.each(result.goods, function (key, item) {
-                    str += '             <li>'
-                        + '                 <img src="' + item.image_url + '">'
-                        + '                 <a class="product-name" href="#">' + item.name + '</a>'
-                        + '                 <span class="red">￥' + item.pivot.price + '</span>'
-                        + '                 <span>' + item.pivot.num + '</span>'
-                        + '             </li>';
+                    str += '            <tr><td>'
+                        + '                 <img class="store-img" src="' + item.image_url + '">'
+                        + '                 <a class="product-name" href="' + SITE.ROOT + '/goods/' + item.id + '">' + item.name + '</a>'
+                        + '                 <td class="red">￥' + item.pivot.price + '</td>'
+                        + '                 <td>' + item.pivot.num + '</td>';
+                    if (0 == key) {
+                        str += '         <td rowspan="' + result.goods.length + '" class="pay-detail text-center">'
+                            + '         <p>订单状态 :' + result.status_name + '</p>'
+                            + '         <p>支付方式 :' + result.payment_type + '</p>'
+                            + '         <p>订单金额 :<span class="red">￥' + result.price + '</span></p>'
+                            + '     </td>'
+                            + '     <td rowspan="' + result.goods.length + '" class="operating text-center">';
+                        if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
+                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            if (!result.is_cancel) {
+                                if (result.pay_status == 0 && result.status == 1) {
+                                    str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
+                                }
+                                if (result.pay_status == 0 && result.status != 0) {
+                                    str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
+                                } else if (result.pay_type == 1 && result.status == 2) {
+                                    str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
+                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>已收货</a></p>';
+                                }
+                            }
+                        } else {//卖家
+                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            if (!result.is_cancel) {
+                                if (result.status == 0) {
+                                    str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
+                                        'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
+                                } else if (result.pay_type == 1 && result.pay_status == 0 && result.status == 1) {
+                                    str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                                        'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
+                                } else if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
+                                    str += '<p><a class="btn btn-warning ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-send" ' +
+                                        'data-data=\'{"order_id"' + result.id + '}\'>发货</a></p>';
+                                } else if (result.pay_type == 2 && result.pay_status == 1 && result.status == 2) {
+                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
+                                        'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
+                                }
+                                str += '<p><a href="#" class="btn btn-success">导出</a></p>';
+                            }
+                        }
+                        str += '             </td>';
+                    }
+
+                    str += '             </tr>';
                 });
 
-                str += '         </ul>'
-                    + '     </div>'
-                    + '     <div class="col-sm-2 order-form-detail">'
-                    + '         <p>订单状态 :' + result.status_name + '</p>'
-                    + '         <p>支付方式 :' + result.payment_type + '</p>'
-                    + '         <p>订单金额 :<span class="red">￥' + result.price + '</span></p>'
-                    + '     </div>'
-                    + '     <div class="col-sm-2 order-form-operating">';
-                //TODO:这里需要当前用户ID
-                if (SITE.ID == result.shop_id) {//卖家----需要修改参照order-buy/sell
-                    str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
-                    if (!result.is_cancel) {
-                        if (result.status == 0) {
-                            str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
-                                'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
-                        } else if (result.pay_type == 1 && result.pay_status == 0 && result.status == 1) {
-                            str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
-                                'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
-                        } else if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
-                            str += '<p><a class="btn btn-warning ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-send" ' +
-                                'data-data=\'{"order_id"' + result.id + '}\'>发货</a></p>';
-                        } else if (result.pay_type == 2 && result.pay_status == 1 && result.status == 2) {
-                            str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
-                                'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
-                        }
-                    }
-                } else {//买家
-                    str += '<p><a href="' + SITE.ROOT + '/order-buy/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
-                    if (!result.is_cancel) {
-                        if (result.pay_status == 0 && result.status == 1) {
-                            str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
-                                'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
-                        }
-                        if (result.pay_status == 0 && result.status != 0) {
-                            str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
-                        } else if (result.pay_type == 1 && result.status == 2) {
-                            str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
-                                'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>已收货</a></p>';
-                        }
-                    }
-                }
-                str += '<p><a href="#" class="btn btn-success">导出</a></p>'
-                    + '</div>'
-                    + '</div>';
+                str += '             </tbody></table>';
 
             });
+
             $('.content').html(str);
         }
     });
@@ -441,7 +441,7 @@ function likeFunc() {
         var self = $(this),
             id = self.data('id'),
             status = self.children('.fa-star').length > 0
-            type = self.data('type') || 'goods';
+        type = self.data('type') || 'goods';
         // 判断登录
         if (!site.isLogin()) {
             site.redirect('auth/login');
