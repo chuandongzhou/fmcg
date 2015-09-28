@@ -29,10 +29,9 @@
                 </ul>
                 <ul class="left-list pull-left">
                     <li>状态 : <span class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</span></li>
-                    <li>品牌 : xxx牌</li>
-                    <li>类别 : 饮料</li>
-                    <li>包装 : 箱装</li>
-                    <li>规格 : 350ml/瓶 , 共12瓶</li>
+                    @foreach($attrs as $attr)
+                    <li>{{ $attr['name'] }} : {{ array_pluck($attr['child'], 'name')[0] }}</li>
+                    @endforeach
                 </ul>
                 <ul class="right-list ">
                     <li>是否新品 : {{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</li>
@@ -59,7 +58,7 @@
             <div class="col-sm-12 location box">
                 <p>商品配送区域 :</p>
                 @foreach($goods->deliveryArea as $area)
-                    <p class="col-sm-12">{{ $area->address }}</p>
+                    <p class="col-sm-12">{{ $area->area_name.$area->address }}</p>
                 @endforeach
                 <p>商品配送区域大概地图标识 :</p>
 

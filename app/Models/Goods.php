@@ -38,6 +38,14 @@ class Goods extends Model
 
     public $appends = ['image_url'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'cate_level_1',
+        'cate_level_2',
+        'cate_level_3'
+    ];
+
     /**
      * 所属店铺
      *
@@ -87,7 +95,8 @@ class Goods extends Model
      */
     public function attr()
     {
-        return $this->belongsToMany('App\Models\Attr')->withPivot('attr_pid');
+        return $this->belongsToMany('App\Models\Attr', 'attr_goods', 'goods_id', 'attr_id')->where('category_id',
+            $this->category_id)->withPivot('attr_pid');
     }
 
     /**
@@ -317,5 +326,15 @@ class Goods extends Model
         $image = $this->images->first();
 
         return $image ? upload_file_url($image->path) : '';
+    }
+
+    /**
+     * 获取商品分类
+     *
+     * @return mixed
+     */
+    public function getCategoryIdAttribute()
+    {
+        return $this->cate_level_3 ? $this->cate_level_3 : ($this->cate_level_2 ? $this->cate_level_2 : $this->cate_level_1);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateCategoryRequest;
+use App\Models\Attr;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -47,8 +48,20 @@ class CategoryController extends Controller
      */
     public function store(CreateCategoryRequest $request)
     {
-        $post = $request->all();
-        if (Category::create($post)->exists) {
+        $attributes = $request->all();
+
+        $pid = $attributes['pid'];
+        $attributes['level'] = 1;
+        if ($pid) {
+            $parentCategory = Category::find($pid);
+            $attributes['level'] = $parentCategory->level + 1;
+        }
+
+        $category = Category::create($attributes);
+        if ($category->exists) {
+            if ($category->pid == 0) {
+                $this->_addDefaultAttr($category);
+            }
             return $this->success('添加分类成功');
         }
         return $this->error('添加分类出现问题');
@@ -110,5 +123,19 @@ class CategoryController extends Controller
             return $this->success('删除分类成功');
         }
         return $this->error('删除分类时遇到错误');
+    }
+
+    private function _addDefaultAttr($model)
+    {
+        $attr = [];
+        foreach (cons('attr.default') as $key => $val) {
+            $attr[] = new Attr([
+                'attr_id' => $val,
+                'name' => cons()->valueLang('attr.default', $val),
+                'category_id' => $model->id,
+                'pid' => 0
+            ]);
+        }
+        return $model->attrs()->saveMany($attr);
     }
 }

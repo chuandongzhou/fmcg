@@ -9,11 +9,38 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Goods;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
 
+    /**
+     * 购物车首页
+     */
+    public function postIndex()
+    {
+        $myCarts = auth()->user()->carts();
+        $carts = $myCarts->with('goods')->get();
+
+        if (!empty($carts[0])) {
+            // 将所有状态更新为零
+            $myCarts->update(['status' => 0]);
+
+            $carts = (new CartService($carts))->formatCarts();
+        }
+
+        dd($carts->toArray());
+        return $this->success(['shops'=>$carts->toArray()]);
+    }
+
+    /**
+     * 商品添加至购物车
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $goodsId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function postAdd(Request $request, $goodsId)
     {
         $user = auth()->user();
@@ -41,6 +68,8 @@ class CartController extends Controller
     }
 
     /**
+     * 删除购物车商品
+     *
      * @param $cartId
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */

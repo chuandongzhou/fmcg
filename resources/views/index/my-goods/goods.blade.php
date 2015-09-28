@@ -44,10 +44,10 @@
                         @foreach($attrs as $key=>$attr)
                             <p class="items-item">
                                 <label>{{ $attr['name'] }}</label>
-                                <select name="attrs[{{ $attr['id'] }}]">
+                                <select name="attrs[{{ $attr['attr_id'] }}]">
                                     <option value="0">请选择</option>
                                     @foreach($attr['child'] as $child)
-                                        <option value="{{ $child['id'] }}" {{ $child['id'] == $goods->attr[$key]->id ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                        <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
                                     @endforeach
                                 </select>
                             </p>
@@ -235,9 +235,9 @@
                     var options = '<option value="0">请选择</option>';
                     html += '<p class="items-item">';
                     html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['id'] + ']" >';
+                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" >';
                     for (var i in data[index]['child']) {
-                        options += ' <option value="' + data[index]['child'][i]['id'] + '">' + data[index]['child'][i]['name'] + '</option>'
+                        options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                     }
                     html += options;
                     html += '</select>';

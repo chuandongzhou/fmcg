@@ -27,18 +27,18 @@ class GoodsImagesController extends Controller
             })->get()->toArray();
         $attrResults = (new AttrService($attrResults))->format();*/
         // TODO 以上代码可能会用到
-        $attributes = array_filter($request->all());
-        if ($attributes) {
-            if (isset($attributes['attrs'])) {
-                $attributes['attrs'] = json_encode($attributes['attrs']);
+        $data = array_filter($request->all());
+        if ($data) {
+            if (isset($data['attrs'])) {
+                $data['attrs'] = json_encode($data['attrs']);
             }
 
         } else {
-            $attributes['cate_level_1'] = Category::orderBy('id', 'ASC')->pluck('id');
+            $data['cate_level_1'] = Category::orderBy('id', 'ASC')->pluck('id');
         }
 
-        $goodsImage = GoodsImages::where($attributes)->with('image')->get();
-        return view('admin.images.index', ['search' => $attributes, 'goodsImage' => $goodsImage]);
+        $goodsImage = GoodsImages::where($data)->with('image')->get();
+        return view('admin.images.index', ['search' => $data, 'goodsImage' => $goodsImage]);
     }
 
     /**

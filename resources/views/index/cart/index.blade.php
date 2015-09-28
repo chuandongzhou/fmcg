@@ -55,7 +55,7 @@
                                             <input class="inp-checkbox" checked name="goods_id[]"
                                                    value="{{ $cartGoods->goods_id }}" type="checkbox">
                                         </div>
-                                        <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
+                                        <img class="avatar" src="{{ $cartGoods->image }}">
                                         {{ $cartGoods->goods->name }}
                                     </td>
                                     <td class="text-center">￥<span

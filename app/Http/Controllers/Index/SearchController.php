@@ -10,53 +10,42 @@ namespace App\Http\Controllers\Index;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Services\AttrService;
+use App\Services\CategoryService;
+use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    protected $sort = [
-        'name',
-        'price',
-        'new'
-    ];
-
     public function index(Request $request)
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-        $attrs = [];
 
-        $categories = Category::orderBy('level', 'asc')->select('name', 'level', 'id')->get();
-        $goods = Goods::with('images')->where('user_type', '>' , auth()->user()->type);
-        //排序
-        if (isset($data['sort']) && in_array($data['sort'], $this->sort)) {
-            $goods = $goods->{'Order' . ucfirst($data['sort'])}();
-        }
-        // 省市县
-        if (isset($data['province_id'])) {
-            $goods = $goods->OfDeliveryArea($data);
-        }
-       /* // 名称
-        if (isset($data['name'])) {
-            $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
-        }*/
-        if (isset($data['category_id'])) {
-            //分类最高位为层级 后面为categoryId
-            $level = substr($data['category_id'], 0, 1);
-            $categoryId = substr($data['category_id'], 1);
-            $attrs = (new AttrService([]))->getAttrByCategoryId($categoryId);
-            $goods = $goods->OfCategory($categoryId, $level);
-        }
+        $result = GoodsService::getGoodsBySearch($data, '>');
 
-        // 标签
-        if (isset($data['attr'])) {
-            $goods = $goods->OfAttr($data['attr']);
+        $attrs = $result['attrs'];
+        $defaultAttrName = cons()->valueLang('attr.default');
+
+        $searched = []; //保存已搜索的标签
+        $moreAttr = []; //保存扩展的标签
+
+        // 已搜索的标签
+        foreach ($attrs as $key => $attr) {
+            if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys($data['attr']))) {
+                $searched[$attr['attr_id']] = array_get($attr['child'], $data['attr'][$attr['attr_id']])['name'];
+                unset($attrs[$key]);
+            } elseif (!in_array($attr['name'], $defaultAttrName)) {
+                $moreAttr[$key] = $attr;
+                unset($attrs[$key]);
+            }
         }
         return view('index.search.index',
             [
-                'goods' => $goods->paginate(),
-                'categories' => $categories,
+                'goods' => $result['goods']->paginate(),
+                'categories' =>  $result['categories'],
                 'attrs' => $attrs,
+                'searched' => $searched,
+                'moreAttr' => $moreAttr,
                 'get' => $gets,
                 'data' => $data
             ]);

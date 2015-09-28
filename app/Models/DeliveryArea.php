@@ -17,6 +17,13 @@ class DeliveryArea extends Model
         'area_name',
         'address'
     ];
+    protected $hidden = [
+        'type',
+        'addressable_type',
+        'addressable_id',
+        'created_at',
+        'updated_at'
+    ];
     /**
      * 复用模型关系
      *

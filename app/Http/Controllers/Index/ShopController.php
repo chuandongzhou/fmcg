@@ -26,10 +26,18 @@ class ShopController extends Controller
             $shops = $shops->$sortName();
         }
 
-        $address = $request->all();
+        //配送区域
+        $address = $request->except('name');
         if (!empty($address)) {
             $shops = $shops->OfDeliveryArea($address);
         }
+        // 名称
+        $name = $request->input('name');
+
+        if ($name) {
+            $shops = $shops->where('name', 'like', '%' . $name . '%');
+        }
+
 
         return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $address]);
     }

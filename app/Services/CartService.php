@@ -41,9 +41,8 @@ class CartService
                 if (Gate::denies('validate-goods', $cart->goods)) {
                     continue;
                 }
-                $cart->is_like = !is_null($cart->goods->whereHas('likes' , function($q) {
-                    $q->where('user_id' , auth()->user()->id);
-                })->first());
+                $cart->is_like = !is_null( auth()->user()->likeGoods()->where('id' , $cart->goods_id)->first());
+                $cart->image = $cart->goods->image_url;
                 if ($cart->goods->shop_id == $shop->id) {
 
                     $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,
@@ -51,7 +50,7 @@ class CartService
                     $sumPrice += $cart->goods->price * $cart->num;
                 }
             }
-            $shops[$key]->sum_price = $sumPrice;
+            $sumPrice > 0 ? $shops[$key]->sum_price = $sumPrice : array_except($shops ,$key);
         }
         return $shops;
     }

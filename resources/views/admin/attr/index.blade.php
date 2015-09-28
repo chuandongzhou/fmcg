@@ -36,16 +36,11 @@
                     <tr data-tt-id="{{ $id  }}" data-tt-parent-id="{{  $attrs->data('pid')  }}">
                         <td>{{  $attr  }}</td>
                         <td class=" btn-group-xs">
-                            @if($attrs->callHasChildren() )
-                                <a class="btn btn-default" href="{{ url('admin/attr/create',['pid'=>$id]) }}">
-                                    <i class="fa fa-plus"></i> 添加子标签
-                                </a>
-                            @endif
                             <a class="btn btn-primary" href="{{ url('admin/attr/' . $id . '/edit') }}">
                                 <i class="fa fa-edit"></i> 编辑
                             </a>
                             <a type="button" class="btn btn-danger ajax" data-method="delete"
-                               data-url="{{  url('admin/attr/' . $id)  }}">
+                               data-url="{{  url('admin/attr/' . $attrs->data('id'))  }}">
                                 <i class="fa fa-trash-o"></i> 删除
                             </a>
 

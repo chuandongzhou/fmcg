@@ -11,6 +11,11 @@ use App\Http\Requests\Api\v1\LoginRequest;
 
 class AuthController extends Controller
 {
+    /**
+     * 登录
+     * @param \App\Http\Requests\Api\v1\LoginRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function postLogin(LoginRequest $request)
     {
         //TODO: 判断account
@@ -21,5 +26,15 @@ class AuthController extends Controller
             $this->success([]);
         }
         return $this->error('账号或密码错误');
+    }
+
+    /**
+     * 退出登录
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getLogOut(){
+        auth()->logout();
+        return $this->success();
     }
 }

@@ -50,6 +50,8 @@ class File extends Model
      */
     protected $dates = ['uploaded_at'];
 
+    public $hidden = ['fileable_id' , 'fileable_type'];
+
     /**
      * 复用模型关系
      *

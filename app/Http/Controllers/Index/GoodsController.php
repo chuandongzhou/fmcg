@@ -24,11 +24,12 @@ class GoodsController extends Controller
         if (Gate::denies('validate-goods', $goods)) {
             abort(403);
         }
-        $attrs = (new AttrService())->getAttrByGoods($goods ,4);
+        $attrs = (new AttrService())->getAttrByGoods($goods ,true);
         $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');
         $isLike = auth()->user()->whereHas('likeGoods' , function ($q) use ($goods) {
             $q->where('id' , $goods->id);
         })->pluck('id');
+        //dd($attrs);
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,

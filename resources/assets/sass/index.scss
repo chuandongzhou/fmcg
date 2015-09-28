@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/bootstrap/mixins";
+@import "bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -241,7 +241,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================header end======================================*/
 
 /*======================================index begin======================================*/
-.index {
   .list-penal {
     .commodity {
       .commodity-img {
@@ -289,7 +288,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-}
 
 .wholesalers-index {
   .left-store-logo {
@@ -415,30 +413,31 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-
   @at-root .sort {
     margin-bottom: 30px;
     color: $gray-light;
     .sort-item {
       border: 1px solid $gray-lighter;
-      padding: 5px 5px;
+      margin-top: -1px;
+      padding:0 5px;
       .title-name {
         display: inline-block;
         padding: 3px 0 0 10px;
+        width:90px;
+        text-align: right;
       }
       .all-sort-panel {
         margin-left: 40px;
         .all-sort {
-          width: 90%;
+          width: 85%;
           padding: 0 6px;
-          max-height: 60px;
           overflow: hidden;
           a {
             display: inline-block;
             padding: 3px 5px;
             margin: 2px 10px 5px 10px;
             font-size: 12px;
-            color: $gray;;
+            color: $gray-base;
             &.active {
               background-color: $brand-primary;
               color: $body-bg;
@@ -452,14 +451,106 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
         .more {
-          display: inline-block;
+          display: none;
           padding-right: 5px;
           color: $gray-darker;
           text-decoration: none;
+          overflow-y: inherit;
         }
       }
+      .sort-list{
+        display: inline-block;
+        position:relative;
+        margin:0 8px 0 16px;
+        .list-title{
+          padding: 3px 15px 5px 5px;
+          position:relative;
+          border:1px solid $body-bg;
+          text-decoration: none;
+          &.active{
+            border:1px solid $gray-plain-light;
+            border-bottom-color:$body-bg;
+            z-index: 10;
+          }
+          .title-txt{
+            display: inline-block;
+            max-width: 100px;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            overflow:hidden;
+            vertical-align: top;
+          }
+        }
+        .list-wrap{
+          display: none;
+          position:absolute;
+          top:29px;
+          width: 320px;
+          z-index: 9;
+          background-color: $body-bg;
+          border:1px solid $gray-plain-light;
+          margin-top: -1px;
+          &.scroll-height{
+            max-height: 350px;
+            overflow-y: scroll;
+          }
+          a{
+            float: left;
+            width: 30%;
+            padding: 5px ;
+            font-size: 12px;
+            box-sizing: border-box;
+            -webkit-box-sizing:border-box;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            overflow:hidden;
+            &:hover{
+              color:$brand-primary;
+            }
+          }
+        }
+        .last-category{
+          border:1px dashed $brand-primary;
+          color: $brand-primary;
+          &:hover{
+            border-style: solid;
+          }
+        }
+      }
+      .all-results{
+        padding-top: 4px;
+        .fa-th-large{
+          color: $brand-primary;
+        }
+      }
+      a{
+        display: inline-block;
+        color: $gray-base;
+        padding: 0 15px;
+      }
     }
-
+    .a-menu-panel{
+      .sort-list{
+        margin:0 3px;
+        .list-title{
+          &.active{
+            border:1px solid $body-bg;
+            color: $brand-primary;
+          }
+        }
+        .list-wrap{
+          margin-top:0;
+          border:3px solid $banner-gray;
+          width: 400px;
+          a{
+            color:$gray-light;
+          }
+        }
+      }
+      .fa-angle-right{
+        color:$banner-gray;
+      }
+    }
     .sort-name {
       margin-top: -1px;
     }
@@ -664,8 +755,6 @@ ul, li, p, a, h1, h2, h3, h4 {
         max-width: 500px;
         max-height: 380px;
         margin-left: 10px;
-        padding: 10px;
-        border: 1px solid $gray-plain-light;
       }
     }
   }
@@ -814,6 +903,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   .notice-bar {
     padding: 0;
     border-bottom: 1px solid $brand-primary;
+    .btn{
+      color:$gray;
+      font-weight: bold;
+    }
+    .btn-primary{
+      color: $body-bg;
+    }
   }
   .product-name {
     margin-left: 10px;
@@ -1300,6 +1396,10 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $gray;
         text-decoration: none;
       }
+      &.selected-border{
+        border:1px solid #e0e0e0;
+        border-bottom-color:#F2F2F2;
+      }
     }
     .city-list {
       border: 1px solid $gray-plain-light;
@@ -1339,7 +1439,13 @@ ul, li, p, a, h1, h2, h3, h4 {
         border-bottom: none;
         margin-top: -1px;
         vertical-align: middle;
+        &.active{
+          background: #fff;
+          border:1px solid #e0e0e0;
+          border-bottom:none;
+        }
       }
+
       .select-list {
         display: none;
         text-align: left;
@@ -1579,7 +1685,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin: 0;
   }
   .search-list-item {
-    padding: 10px 0;
+    padding: 5px 0;
     border: none;
     border-bottom: 1px dashed $gray-plain-light;
     a {
@@ -1685,7 +1791,6 @@ ul, li, p, a, h1, h2, h3, h4 {
           .lowest-money {
             display: inline-block;
             padding: 0 30px;
-            display: inline-block;
           }
           .total-money {
             display: inline-block;
@@ -1716,6 +1821,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
           .num {
             width: 40px;
+            height:25px;
             text-align: center;
           }
           .avatar {

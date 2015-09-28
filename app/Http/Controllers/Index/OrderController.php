@@ -114,7 +114,6 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-
         $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
 
         if (empty($carts[0])) {
@@ -134,15 +133,19 @@ class OrderController extends Controller
         $data = $request->input('shop');
 
         $payTypes = cons('pay_type');
+        $codPayTypes = cons('cod_pay_type');
 
         $onlinePaymentOrder = [];   //  保存在线支付的订单
         foreach ($shops as $shop) {
             $payType = array_get($payTypes, $data[$shop->id]['pay_type'], head($payTypes));
+            $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data[$shop->id]['cod_pay_type'],
+                head($codPayTypes)) : 0;
             $orderData = [
                 'user_id' => auth()->user()->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
+                'cod_pay_type' => $codPayType,
                 //TODO: 需要验证收货地址是否合法
                 'shipping_address_id' => $data[$shop->id]['shipping_address_id'],
                 'remark' => $data[$shop->id]['remark'] ? $data[$shop->id]['remark'] : ''
@@ -294,10 +297,10 @@ class OrderController extends Controller
             //订单相关统计
             $stat['totalAmount'] += $value['price'];
             if ($value['pay_type'] == cons('pay_type.online')) {
-                ++ $stat['onlineNum'];
+                ++$stat['onlineNum'];
                 $stat['onlineAmount'] += $value['price'];
             } else {
-                ++ $stat['codNum'];
+                ++$stat['codNum'];
                 $stat['codAmount'] += $value['price'];
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
                     $stat['codReceiveAmount'] += $value['price'];
