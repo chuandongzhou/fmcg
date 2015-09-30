@@ -25,9 +25,9 @@
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
                         <li><span class="title-name">价格 </span><b>￥{{ $goods->price }}</b></li>
-                        @foreach($attrs as $attr)
+                        @foreach($attrs as $key=>$attr)
                             <li>
-                                <span class="title-name">{{ $attr['name'] }} </span><b>{{ $attr['child'][0]['name'] }}</b>
+                                <span class="title-name">{{ $key }} </span><b>{{ $attr }}</b>
                             </li>
                         @endforeach
 

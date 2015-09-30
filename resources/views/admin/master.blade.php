@@ -44,7 +44,7 @@
                                 </h4>
                             </div>
                             <div id="collapse-one"
-                                 class="panel-collapse collapse {{ path_active([ 'admin' , 'admin/admin/create' , 'admin/admin' , 'admin/admin/password'] , 'in') }}">
+                                 class="panel-collapse collapse {{ path_active([ 'admin' , 'admin/admin/*' , 'admin/admin'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>

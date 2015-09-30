@@ -59,6 +59,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->post('getCategory', 'CategoryController@getCategory');  //获取属性
     $router->resource('category', 'CategoryController');            //属性管理
     $router->post('getAttr', 'AttrController@getAttr');             //获取标签
+    $router->post('attr/save' , 'AttrController@save');             //绑定标签到分类
     $router->resource('attr', 'AttrController');                    //标签管理
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
     $router->resource('images', 'GoodsImagesController');                    //商品图片管理
@@ -77,6 +78,10 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
  * 接口
  */
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
+    $router->get('/', function(){
+        return view('api.index');
+    });
+
     /**
      * v1 版本
      */
@@ -89,9 +94,13 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             }
         ]);
 
+        $router->controller('goods' , 'GoodsController');                           //商品
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
+        $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
+        $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
+
         $router->post('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
         $router->resource('my-goods', 'MyGoodsController');
 
@@ -108,6 +117,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 ['only' => ['store', 'update', 'destroy']]);          //提现账号
         });
         $router->controller('cart', 'CartController');
+        $router->controller('order', 'OrderController');
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
     });

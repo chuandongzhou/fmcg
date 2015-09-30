@@ -11,6 +11,10 @@ return [
         'online' => 1,
         'cod' => 2,
     ],
+    'cod_pay_type' => [
+        'cash' => 1,  //现金
+        'card' => 2   //刷卡
+    ],
     //订单表
     'order' => [
         'pay_status' => [//支付状态
@@ -133,6 +137,15 @@ return [
             'shop' => App\Models\Shop::class
         ]
     ],
+    //标签
+    'attr' => [
+        'default' => [
+            'brand' => 1,                  // 品牌
+            'import_and_export' => 20219,  // 进出口
+            'packing' => 20235,            //包装
+            'place' => 20465,              //产地
+        ]
+    ]
     //推送设备类型
     'push_device' => [
         'iphone' => 1,

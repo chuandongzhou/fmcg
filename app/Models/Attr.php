@@ -7,7 +7,8 @@ class Attr extends Model
 {
     protected $table = 'attr';
     public $timestamps = false;
-    protected $fillable = ['name', 'category_id', 'pid', 'status', 'sort', 'is_default'];
+    protected $primaryKey = 'attr_id';
+    protected $fillable = ['name', 'attr_id', 'category_id', 'pid', 'status', 'sort'];
 
     /**
      * 分类表
@@ -26,6 +27,6 @@ class Attr extends Model
      */
     public function goods()
     {
-        return $this->belongsToMany('App\Models\Goods', 'goods_attr');
+        return $this->belongsToMany('App\Models\Goods', 'attr_goods', 'attr_id');
     }
 }

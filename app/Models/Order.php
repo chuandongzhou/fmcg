@@ -10,6 +10,7 @@ class Order extends Model
         'order_id',
         'price',
         'pay_type',
+        'cod_pay_type',
         'pay_id',
         'remark',
         'pay_status',

@@ -12,14 +12,14 @@
             <div class="col-sm-4 city-wrap">
                 <div class="location-panel">
                     <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                class="city-value">{{  object_get($provinces ,cookie('province_id') , '北京')}}</span> <span
+                                class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
                                 class="fa fa-angle-down up-down"></span></a>
                 </div>
                 <div class="city-list clearfix">
                     <div class="list-wrap">
-                        @foreach($provinces as $provinceId => $provinces)
+                        @foreach($provinces as $provinceId => $province)
                             <div class="item">
-                                <a href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $provinces }}</a>
+                                <a class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}" href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
                             </div>
                         @endforeach
                     </div>
@@ -68,16 +68,16 @@
             <a class="navbar-brand logo-icon" href="{{ url('/') }}">LOGO</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left search text-center" role="search">
+            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search" type="get">
                 <div class="input-group">
                     <div class="select-role pull-left">
-                        <a href="#" class="selected"><span>商品1</span><i class="fa fa-angle-down"></i></a>
+                        <a href="javascript:void(0)" class="selected"><span>商品</span><i class="fa fa-angle-down"></i></a>
                         <ul class="select-list">
-                            <li><a href="#">商品2</a></li>
-                            <li><a href="#">经销商</a></li>
+                            <li><a href="javascript:void(0)" data-url="search">商品</a></li>
+                            <li><a href="javascript:void(0)" data-url="shop">经销商</a></li>
                         </ul>
                     </div>
-                    <input type="text" class="control pull-right" aria-describedby="course-search">
+                    <input type="text" name="name" class="control pull-right" aria-describedby="course-search">
                     <span class="input-group-btn btn-primary">
                         <button class="btn btn-primary search-btn" type="submit">搜索</button>
                     </span>

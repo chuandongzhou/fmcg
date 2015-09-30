@@ -77,12 +77,21 @@
                                     </p>
                                     <p class="operating">
                                         <span>支付方式 :</span>
-                                        <select name="shop[{{ $shop->id }}][pay_type]">
+                                        <select name="shop[{{ $shop->id }}][pay_type]" class="pay_type">
                                             @foreach(cons('pay_type') as $key=>$type)
                                                 <option value="{{ $key }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
                                             @endforeach
                                         </select>
                                     </p>
+                                    <p class="operating hidden">
+                                        @foreach(cons('cod_pay_type') as $key=> $type)
+                                            <input type="radio" {{ $key=='cash' ? 'checked' : '' }} disabled
+                                                   name="shop[{{ $shop->id }}][cod_pay_type]"
+                                                   value="{{ $key }}"/> {{ cons()->valueLang('cod_pay_type' , $type) }}
+                                            &nbsp;&nbsp;&nbsp;
+                                        @endforeach
+                                    </p>
+
                                     <p class="operating">
                                         <span>订单备注 :</span>
                                         <input name="shop[{{ $shop->id }}][remark]" class="control" type="text">
@@ -104,5 +113,21 @@
         </div>
     </div>
 
+@stop
+
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(function () {
+            $('.pay_type').on('change', function () {
+                var obj = $(this), payType = obj.val(), codPayType = obj.parent().next();
+                if (payType == 'cod') {
+                    codPayType.removeClass('hidden').children('input[type="radio"]').prop('disabled', false);
+                } else {
+                    codPayType.addClass('hidden').children('input[type="radio"]').prop('disabled', true);
+                }
+            })
+        })
+    </script>
 @stop
 

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @package App\Http\Controllers\Api\v1
  */
-class CategoryController extends Controller
+class Category2Controller extends Controller
 {
     /**
      * Get Attr by Search
@@ -26,13 +26,12 @@ class CategoryController extends Controller
     {
         $data = $request->all();
         if (!isset($data['format'])) {
-            $categoryPid = Category::where('id', $id)->pluck('pid');
-
-            $result = Attr::where('pid', 0)->whereIn('category_id', [$categoryPid, $id])->lists('name', 'attr_id');
+            $where = array_merge(['category_id' => $id], $data);
+            $result = Attr::where($where)->lists('name', 'id');
             return $this->success($result);
         } else {
             $attrs = Attr::where('category_id', $id)->get([
-                'attr_id',
+                'id',
                 'name',
                 'pid'
             ])->toArray();
@@ -72,8 +71,7 @@ class CategoryController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getAllCategory()
-    {
+    public function getAllCategory(){
         return $this->success(CategoryService::unlimitForLayer(Category::all()->toArray()));
     }
 }

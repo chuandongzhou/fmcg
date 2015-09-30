@@ -11,6 +11,10 @@ return [
         'online' => '在线支付',
         'cod' => '货到付款',
     ],
+    'cod_pay_type' => [
+        'cash' => '现金',
+        'card' => '刷卡'
+    ],
     //订单表
     'order' => [
         'pay_status' => [//支付状态
@@ -106,6 +110,15 @@ return [
         'type' => [
             'goods' => '商品',
             'shop' => '店铺'
+        ]
+    ],
+    //标签
+    'attr' => [
+        'default' => [
+            'brand' => '品牌',
+            'import_and_export' => '进口/国产',
+            'packing' => '包装',
+            'place' => '产地'
         ]
     ]
 ];

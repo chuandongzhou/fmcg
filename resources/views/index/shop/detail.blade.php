@@ -63,7 +63,7 @@
                     <span class="title-name pull-left">商品配送区域大概地图标识</span>
 
                     <p class="map pull-left">
-                        <img src="http://placehold.it/470x350">
+                        <img class="img-thumbnail" src="http://placehold.it/470x350">
                     </p>
                 </div>
             </div>

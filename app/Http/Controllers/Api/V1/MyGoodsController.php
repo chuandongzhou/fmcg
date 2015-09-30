@@ -20,7 +20,7 @@ class MyGoodsController extends Controller
     public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
         $attributes = $request->all();
-        $goods = auth()->user()->shop()->goods()->create($attributes);
+        $goods = auth()->user()->shop->goods()->create($attributes);
         if ($goods->exists) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));

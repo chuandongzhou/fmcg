@@ -13,7 +13,7 @@
 
 
 @section('header')
-    @include('includes.index-top')
+    @include('index.index-top')
     <nav class="navbar navbar-default wholesalers-header">
         <div class="container">
             <div class="navbar-header">

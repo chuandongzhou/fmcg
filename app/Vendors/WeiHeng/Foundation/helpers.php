@@ -183,3 +183,39 @@ if (!function_exists('request_info')) {
         ]);
     }
 }
+
+
+if (!function_exists('multi_array_unique')) {
+    /**
+     * 二维数组去重
+     *
+     * @param array $data
+     * @return array
+     */
+    function multi_array_unique($data = array())
+    {
+        $tmp = array();
+        foreach ($data as $key => $value) {
+            //把一维数组键值与键名组合
+            foreach ($value as $key1 => $value1) {
+                $value[$key1] = $key1 . '_|_' . $value1;//_|_分隔符复杂点以免冲突
+            }
+            $tmp[$key] = implode(',|,', $value);//,|,分隔符复杂点以免冲突
+        }
+
+        //对降维后的数组去重复处理
+        $tmp = array_unique($tmp);
+
+        //重组二维数组
+        $newArr = array();
+        foreach ($tmp as $k => $tmp_v) {
+            $tmp_v2 = explode(',|,', $tmp_v);
+            foreach ($tmp_v2 as $k2 => $v2) {
+                $v2 = explode('_|_', $v2);
+                $tmp_v3[$v2[0]] = $v2[1];
+            }
+            $newArr[$k] = $tmp_v3;
+        }
+        return $newArr;
+    }
+}
