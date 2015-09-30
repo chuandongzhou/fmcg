@@ -33,17 +33,19 @@
             </div>
             <div class="row list-penal">
                 @foreach($goods as $good)
-                <div class="col-sm-3 commodity new-listing">
-                    <div class="img-wrap">
-                        <img class="commodity-img" src="{{ $good->image_url }}">
-                        <span class="prompt new-listing"></span>
-                    </div>
-                    <p class="commodity-name">{{ $good->name }}</p>
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $good->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
-                    </p>
-                </div>
+                    <a href="{{ url('goods/'.$good['id']) }}">
+                        <div class="col-sm-3 commodity new-listing">
+                            <div class="img-wrap">
+                                <img class="commodity-img" src="{{ $good->image_url }}">
+                                <span class="prompt new-listing"></span>
+                            </div>
+                            <p class="commodity-name">{{ $good->name }}</p>
+                            <p class="sell-panel">
+                                <span class="money">￥{{ $good->price }}</span>
+                                <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
+                            </p>
+                        </div>
+                    </a>
                 @endforeach
             </div>
         </div>

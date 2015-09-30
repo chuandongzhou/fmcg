@@ -96,7 +96,6 @@ class Order extends Model
     /**
      * 支付形式
      *
-     * @param $type
      * @return mixed
      */
     public function getPaymentTypeAttribute()
@@ -246,7 +245,7 @@ class Order extends Model
      */
     public function scopeNonSure($query)
     {
-        return $query->where('status', cons('order.status.non_sure'));
+        return $query->where('status', cons('order.status.non_sure'))->nonCancel();
     }
 
     /**
@@ -261,15 +260,15 @@ class Order extends Model
     }
 
     /**
-     * 未付款
+     * 未付款,只针对在线支付
      *
      * @param $query
      * @return mixed
      */
     public function scopeNonPayment($query)
     {
-        return $query->where('pay_status', cons('order.pay_status.non_payment'))->whereNotIn('status',
-            [cons('order.status.non_sure'), cons('order.status.finished')]);
+        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+            cons('order.pay_status.non_payment'))->where('status', cons('order.status.non_send'));
     }
 
     /**
@@ -280,8 +279,8 @@ class Order extends Model
      */
     public function scopeGetPayment($query)
     {
-        return $query->where('pay_status', cons('order.pay_status.non_payment'))->where('status',
-            cons('order.status.send'));
+        return $query->where('pay_type', cons('pay_type.cod'))->where('pay_status',
+            cons('order.pay_status.non_payment'))->where('status', cons('order.status.send'));
     }
 
     /**
@@ -292,25 +291,31 @@ class Order extends Model
      */
     public function scopeNonSend($query)
     {
-        return $query->where('status', cons('order.status.non_send'));
+        return $query->where(function ($query) {//在线支付
+            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
+        })->orWhere(function ($query) {//货到付款
+            $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
+        })->nonCancel();
     }
 
 
     /**
      * 待收货,分在线支付和货到付款来讨论
+     * 在线支付,在支付完成后,确认收货前,为待收货状态
+     * 货到付款,在卖家发货后,确认收到货前,为待收货状态
      *
      * @param $query
      * @return mixed
      */
     public function scopeNonArrived($query)
     {
-        return $query->where(function ($query) {
+        return $query->where(function ($query) {//在线支付
             $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
                 cons('order.pay_status.payment_success'))->whereIn('status',
                 [cons('order.status.non_send'), cons('order.status.send')]);
-        })->OrWhere(function ($query) {
-            $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
-                [cons('order.status.non_send'), cons('order.status.send')]);
+        })->orWhere(function ($query) {//货到付款
+            $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
         });
     }
 

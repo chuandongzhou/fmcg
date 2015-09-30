@@ -133,4 +133,10 @@ return [
             'shop' => App\Models\Shop::class
         ]
     ],
+    //推送设备类型
+    'push_device' => [
+        'iphone' => 1,
+        'android' => 2,
+
+    ]
 ];

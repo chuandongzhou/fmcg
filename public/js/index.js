@@ -97,11 +97,12 @@ function _ajaxGet(targetUrl, data) {
             var str = '';
 
             $.each(list.data, function (index, result) {
+
                 str += '<table class="table table-bordered">'
                     + '     <thead><tr><th>'
                     + '         <label><input type="checkbox" name="order_id[]" value="' + result.id + '"/>' + result.created_at + '</label>'
                     + '         <span class="order-number">订单号:' + result.id + '</span></th>'
-                    + '         <th>' + (result.user_id == SITE.USER.id ? SITE.USER.user_name : result.shop.user.user_name) + '</th>'
+                    + '         <th>' + (result.user_id == SITE.USER.id ? result.shop.user.user_name : result.user.user_name) + '</th>'
                     + '     <th></th><th></th><th></th>'
                     + '     </tr>'
                     + '         </thead><tbody>';
@@ -125,7 +126,7 @@ function _ajaxGet(targetUrl, data) {
                                     str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
-                                if (result.pay_status == 0 && result.status != 0) {
+                                if (result.pay_status == 0 && result.status == 0 && result.pay_type == 1) {
                                     str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
                                 } else if (result.pay_type == 1 && result.status == 2) {
                                     str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
@@ -148,7 +149,7 @@ function _ajaxGet(targetUrl, data) {
                                     str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
                                 }
-                                str += '<p><a href="#" class="btn btn-success">导出</a></p>';
+                                str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id='+ result.id +'">导出</a></p>';
                             }
                         }
                         str += '             </td>';
@@ -193,14 +194,18 @@ function menuFunc() {
         window.location.reload();
     })
     //city-menu end
-    $('.collect-select').hover(function(){
-        $(this).children(".collect-selected").siblings('.select-list').css('display','block');
+    $('.collect-select').hover(function () {
+        $(this).children(".collect-selected").siblings('.select-list').css('display', 'block');
         $(this).children(".collect-selected").children('.fa').removeClass('fa-angle-down').addClass('fa-angle-up');
-        $(this).children(".collect-selected").css({'background': '#fff','border':'1px solid #e0e0e0','border-bottom':'none'});
-    },function(){
-        $(this).children(".collect-selected").siblings('.select-list').css('display','none');
+        $(this).children(".collect-selected").css({
+            'background': '#fff',
+            'border': '1px solid #e0e0e0',
+            'border-bottom': 'none'
+        });
+    }, function () {
+        $(this).children(".collect-selected").siblings('.select-list').css('display', 'none');
         $(this).children(".collect-selected").children('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
-        $(this).children(".collect-selected").css({'background': '#f2f2f2','border':'1px solid #f2f2f2'});
+        $(this).children(".collect-selected").css({'background': '#f2f2f2', 'border': '1px solid #f2f2f2'});
     })
     //top secondary-menu begin
     $('.navbar-nav .menu-wrap-title').mouseenter(function () {

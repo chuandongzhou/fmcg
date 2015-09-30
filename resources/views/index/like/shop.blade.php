@@ -20,18 +20,20 @@
                 @if(isset($shops))
                     <div class="row list-penal">
                         @foreach($shops as $shop)
-                            <div class="col-sm-3 commodity">
-                                <div class="img-wrap">
-                                    <img class="commodity-img" src="{{ $shop['image_url'] }}">
-                                    {{--<span class="prompt"></span>--}}
-                                </div>
-                                <p class="commodity-name">{{ $shop['name'] }}</p>
+                            <a href="{{ url('shop/'.$shop['id'].'/detail') }}">
+                                <div class="col-sm-3 commodity">
+                                    <div class="img-wrap">
+                                        <img class="commodity-img" src="{{ $shop['image_url'] }}">
+                                        {{--<span class="prompt"></span>--}}
+                                    </div>
+                                    <p class="commodity-name">{{ $shop['name'] }}</p>
 
-                                <p class="sell-panel">
-                                    <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
-                                    <span class="sales pull-right">订单量 : {{ $shop['orders'] }}</span>
-                                </p>
-                            </div>
+                                    <p class="sell-panel">
+                                        <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
+                                        <span class="sales pull-right">订单量 : {{ $shop['orders'] }}</span>
+                                    </p>
+                                </div>
+                            </a>
                         @endforeach
                     </div>
                 @endif
@@ -41,5 +43,6 @@
 @stop
 
 @section('js-lib')
+    @parent
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop

@@ -141,7 +141,9 @@ return [
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
-        \Maatwebsite\Excel\ExcelServiceProvider::class
+        \Maatwebsite\Excel\ExcelServiceProvider::class,
+        \Riverslei\Pusher\PusherServiceProvider::class,
+        \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
 
 
     ],
@@ -196,7 +198,9 @@ return [
          */
         'Constant' => \WeiHeng\Support\Facades\Constant::class,
         'Image' => \Intervention\Image\Facades\Image::class,
-        'Excel' => \Maatwebsite\Excel\Facades\Excel::class
+        'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
+        'Pusher' => \Riverslei\Pusher\Pusher::class,
+        'PushNotification' => \Davibennun\LaravelPushNotification\Facades\PushNotification::class,
     ],
 
 ];

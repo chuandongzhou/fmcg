@@ -1,5 +1,4 @@
 @extends('index.index-master')
-
 @section('container')
     <div class="container public-personal">
         <div class="row">

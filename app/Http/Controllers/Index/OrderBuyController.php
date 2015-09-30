@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\Redis;
 
 class OrderBuyController extends OrderController
 {
@@ -35,9 +36,9 @@ class OrderBuyController extends OrderController
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
 
-        $data['nonSure'] = Order::ofBuy($this->userId)->nonSure()->nonCancel()->count();//未确认
-        $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->nonCancel()->count();//待付款
-        $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->nonCancel()->count();//待收货
+        $data['nonSure'] = Order::ofBuy($this->userId)->nonSure()->count();//未确认
+        $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
+        $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
         //默认显示所有订单订单
         $orders = Order::ofBuy($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
 
@@ -69,7 +70,7 @@ class OrderBuyController extends OrderController
         } else {
             $orders = Order::ofBuy($this->userId)->ofSellerType($search)->paginate()->toArray();
         }
-//dd($orders);
+
         return $orders;
     }
 
@@ -94,6 +95,10 @@ class OrderBuyController extends OrderController
      */
     public function getNonPayment()
     {
+        //清除redis中买家的提醒消息
+        $redis = Redis::connection();
+        $redis->hDel('order_user', 'u' . $this->userId);//hdel()不存在的域将被忽略
+
         return Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
     }
 

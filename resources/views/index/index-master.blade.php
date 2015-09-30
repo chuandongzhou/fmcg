@@ -63,6 +63,9 @@
 
 @section('body')
     @yield('container')
+    <a href="" id="alert-div" style="width: 300px;height:100px;background-color:rgb(76,185,254);position:fixed;right:0;bottom:0;text-align:center;line-height:100px;display:none;z-index: 99;color:black; font-size: 20px;">
+        你有新消息了
+    </a>
 @stop
 
 
@@ -75,4 +78,5 @@
 
 @section('js')
     <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
+    @include('includes.ajaxPolling')
 @stop

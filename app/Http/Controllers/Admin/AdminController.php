@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdatePasswordRequest;
 use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -85,14 +86,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return Response
+     * @param $admin
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function destroy($admin)
     {
-        //
         return $admin->delete() ? $this->success('删除成功', url('admin/admin')) : $this->error('删除失败');
     }
 
@@ -108,15 +106,26 @@ class AdminController extends Controller
     }
 
     /**
-     * 修改当前用户的密码
+     * 修改当前管理员密码
      *
      * @param \App\Http\Requests\Admin\UpdatePasswordRequest $request
+     * @param \App\Models\Admin $user
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function putPassword(UpdatePasswordRequest $request, Admin $user)
     {
-        //todo:获取当前用户的ID 然后修改密码。
         //检查原密码是否正确
+        if (Hash::check($request->input['old_password'], $user->password)) {
+            //修改新密码
+            if ($user->fill(['password', $request->input['password']])->save()) {
+                return $this->success('修改密码成功');
+            }
 
+            return $this->error('修改密码时遇到错误');
+        }
+
+
+        return $this->error('原密码错误');
     }
 
     /**

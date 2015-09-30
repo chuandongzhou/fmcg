@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\OrderGoods;
 use App\Services\CartService;
-use App\Services\ExportWordService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Models\Order;
+use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
 {
@@ -23,6 +23,7 @@ class OrderController extends Controller
         $this->userType = auth()->user()->type;
         session(['id' => $this->userId]);
         session(['type' => $this->userType]);
+        session('shop_id') ?: session(['shop_id' => auth()->user()->shop->id]);
 
     }
 
@@ -39,11 +40,13 @@ class OrderController extends Controller
             $query->wherehas('shop.user', function ($query) {
                 $query->where('id', $this->userId);
             })->orWhere('user_id', $this->userId);
-        })->whereIn('id', $orderIds)->where('pay_status', cons('order.pay_status.non_payment'))->nonSend()->update([
+        })->whereIn('id', $orderIds)->where('pay_status',
+            cons('order.pay_status.non_payment'))->nonCancel()->nonSend()->update([
             'is_cancel' => cons('order.is_cancel.on'),
             'cancel_by' => $this->userId,
             'cancel_at' => Carbon::now()
         ]);
+        dd($status);
         if ($status) {
             return $this->success();
         }
@@ -176,8 +179,7 @@ class OrderController extends Controller
                 return redirect('cart');
             }
         }
-
-        // TODO: 跳至支付页面
+        // TODO: 跳至支付页面->写入到redis的哈希表,同时设置过期时间.
         dd($onlinePaymentOrder);
 
     }
@@ -324,88 +326,29 @@ class OrderController extends Controller
     }
 
     /**
-     * 导出订单word文档
+     * 网页端信息提示
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getExport(Request $request)
+    public function getOrderPolling()
     {
+        $redis = Redis::connection();
+        //查询hash表中user里是否有值.买家是否有提醒
+        if ($redis->hExists('order_user', 'u' . $this->userId)) {
+            $redis->hDel('order_user', 'u' . $this->userId);
 
-        $orderIds = (array)$request->input('order_id');
-        $res = Order::with('shippingAddress', 'goods', 'address')->where('user_id', $this->userId)->whereIn('id',
-            $orderIds)->get()->toArray();
-        if (empty($res)) {
-            return $this->error('没有该订单信息');
+            return response()->json(['type' => 'user', 'data' => $this->userId]);
         }
-        $wordName = $this->_getFileName($res);
+        //卖家是否有提醒
+        $shopId = session('shop_id');
 
-        return response()->download(public_path($wordName));
+        if ($redis->hExists('order_shop', 's' . $shopId)) {
 
-    }
+            $redis->hDel('order_shop', 's' . $shopId);
 
-    /**
-     * 生成word文档
-     *
-     * @param $res
-     * @return string
-     */
-    public function _getFileName($res)
-    {
-        $word = new ExportWordService();
-        $word->start();
-        foreach ($res as $item) {
-            $html = ' <table style="width:600px;text-align: left;line-height: 30px">
-
-                    <tr><th colspan="6" style="text-align: center;"><h1>送货单</h1></th></tr>
-                    <tr><th>订单号:</th><td>' . $item['id'] . '</td></tr>';
-            foreach ($item['goods'] as $good) {
-                $html .= ' <tr><th>货号</th><th>商品名称</th><th>促销信息</th><th>数量</th><th>单价</th><th>小计</th></tr>
-                    <tr><td>'
-                    . $good['id']
-                    . '</td><td>'
-                    . $good['name']
-                    . '</td><td>'
-                    . $good['promotion_info']
-                    . '</td><td>'
-                    . $good['pivot']['num']
-                    . '</td><td>'
-                    . $good['pivot']['price']
-                    . '</td><td>'
-                    . $good['pivot']['total_price']
-                    . '</td></tr>';
-            }
-            $html .= ' <tr><th>付款方式:</th><td colspan="5">'
-                . $item['payment_type']
-                . '</td></tr>
-                    <tr><th>备注:</th><td colspan="5">'
-                . $item['remark']
-                . '</td></tr>
-                    <tr><th colspan="5" style="text-align: right">合计:</th><td style="text-align: left">'
-                . $item['price']
-                . '</td></tr>
-                    <tr style="height: 30px"></tr>
-                    <tr><th>收货人:</th><td colspan="5">'
-                . $item['shipping_address']['consigner']
-                . '</td></tr>
-                    <tr><th>电话:</th><td colspan="5">'
-                . $item['shipping_address']['phone']
-                . '</td></tr>
-                    <tr><th>地址:</th><td colspan="5">'
-                . $item['address']['detail_address']
-                . '</td>
-
-                    <tr><th colspan="6" style="text-align: right">'
-                . date('Y-m-d')
-                . '</th></tr>
-                </table>
-                ';
-            echo $html;
+            return response()->json(['type' => 'shop', 'data' => $shopId]);
         }
-        $wordName = 'upload/' . strtotime('now') . rand() . '.doc';
 
-        $word->save($wordName);
-
-        return $wordName;
+        return response()->json([]);
     }
 }

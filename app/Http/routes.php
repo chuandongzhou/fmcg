@@ -1,5 +1,7 @@
 <?php
 
+$router->get('pusher','TestController@pusher');
+$router->get('pushIos','TestController@pushIos');
 $router->get('login', 'Auth\AuthController@login');
 /**
  * 前台
