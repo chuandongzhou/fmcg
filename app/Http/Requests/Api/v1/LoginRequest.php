@@ -14,7 +14,7 @@ class LoginRequest extends Request
     {
         return [
             'account' => 'required',
-            'password' => 'required|min:8',
+            'password' => 'required|min:6',
         ];
     }
 }

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\CreateInterestsRequest;
+use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
@@ -43,5 +44,25 @@ class LikeController extends Controller
             $user->$relate()->detach($id);
             return $this->success(null);
         }
+    }
+
+    /**
+     * 获取收藏的店铺信息
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function postShops(Request $request)
+    {
+        $data = $request->all();
+        $shops = auth()->user()->likeShops()->select(['id', 'name', 'min_money']);
+        if (isset($data['name'])) {
+            $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
+        }
+        if ($request->has('province_id')) {
+            $shops = $shops->OfDeliveryArea($data);
+        }
+        dd($shops->get()->toArray());
+        return $this->success(['shops' => $shops->simplePaginate()->toArray()]);
     }
 }

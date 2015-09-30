@@ -31,7 +31,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
@@ -71,10 +71,17 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $userName = 'wholesalers';
-        $password = '123456';
-        if (Auth::attempt(['user_name' => $userName, 'password' => $password])) {
-            return redirect()->intended('/');
-        }
+        return view('auth.login');
+    }
+
+    /**
+     * 退出登录
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function logout()
+    {
+        auth()->logout();
+        return redirect('auth/login');
     }
 }

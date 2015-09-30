@@ -32,7 +32,8 @@
       "WeiHeng\\": "app/Vendors/WeiHeng/"
     },
     "files": [
-      "app/Vendors/WeiHeng/Foundation/helpers.php"
+      "app/Vendors/WeiHeng/Foundation/helpers.php",
+      "app/Vendors/WeiHeng/Foundation/Yeepay.php"
     ]
   },
   "autoload-dev": {

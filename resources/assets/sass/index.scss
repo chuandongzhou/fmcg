@@ -31,11 +31,107 @@ ul, li, p, a, h1, h2, h3, h4 {
   background-color: $brand-cancel;
   border-color: $brand-cancel;
 }
-
 .red {
   color: $brand-danger;
 }
 
+/*======================================login begin======================================*/
+.login-nav{
+  margin: 0;
+  .nav-title{
+    li{
+      display: inline-block;
+      padding: 30px 20px;
+      a{
+        &:hover{
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+.login-banner-slide{
+  .carousel-inner{
+    img{
+      width: 100%;
+      height: 480px;
+    }
+  }
+}
+.login-content{
+  position:relative;
+  .login-wrap{
+    position:absolute;
+    background-color: $body-bg;
+    box-shadow:  0 0 3px $gray-light;
+    bottom:20%;
+    padding: 20px 0;
+    right:15%;
+    width: 360px;
+    border-radius: 4px;
+    .alert-item {
+      padding:0 25px;
+      .alert-warning {
+        display: none;
+        padding: 5px;
+        margin: 0;
+      }
+    }
+    .item{
+      padding: 15px 25px;
+      .enter-item{
+        border:1px solid $gray-plain-light;
+        padding: 5px;
+        vertical-align: middle;
+        &:first-of-type{
+          margin-bottom: 20px;
+        }
+        input{
+          padding: 5px;
+          width: 90%;
+          border:none;
+          outline: none;
+        }
+      }
+      h1{
+        font-size: 20px;
+      }
+      a{
+        color: $gray;
+        &.reg{
+          text-decoration: underline;
+          color:$brand-primary;
+        }
+      }
+      .icon{
+        @include square(18px);
+        background:url("../images/login.png");
+        vertical-align: middle;
+        &.icon-name{
+          background-position: left;
+        }
+        &.icon-password{
+          background-position: -98px 0;
+        }
+      }
+      .role{
+        width: 25%;
+        padding: 5px 0;
+      }
+      .login-btn{
+        width: 70%;
+        padding: 6px 0;
+      }
+    }
+  }
+}
+
+.login-footer{
+  background-color: $body-bg;
+  border:none;
+  padding: 30px 15px;
+}
+/*======================================login end======================================*/
 /*======================================step begin======================================*/
 .ui-stepBar-wrap {
   position: relative;
@@ -394,7 +490,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 
 }
-
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/

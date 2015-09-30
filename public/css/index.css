@@ -22,6 +22,78 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: #fe462f; }
 
+/*======================================login begin======================================*/
+.login-nav {
+  margin: 0; }
+  .login-nav .nav-title li {
+    display: inline-block;
+    padding: 30px 20px; }
+    .login-nav .nav-title li a:hover {
+      background-color: transparent; }
+
+.login-banner-slide .carousel-inner img {
+  width: 100%;
+  height: 480px; }
+
+.login-content {
+  position: relative; }
+  .login-content .login-wrap {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 0 3px #777777;
+    bottom: 20%;
+    padding: 20px 0;
+    right: 15%;
+    width: 360px;
+    border-radius: 4px; }
+    .login-content .login-wrap .alert-item {
+      padding: 0 25px; }
+      .login-content .login-wrap .alert-item .alert-warning {
+        display: none;
+        padding: 5px;
+        margin: 0; }
+    .login-content .login-wrap .item {
+      padding: 15px 25px; }
+      .login-content .login-wrap .item .enter-item {
+        border: 1px solid #e0e0e0;
+        padding: 5px;
+        vertical-align: middle; }
+        .login-content .login-wrap .item .enter-item:first-of-type {
+          margin-bottom: 20px; }
+        .login-content .login-wrap .item .enter-item input {
+          padding: 5px;
+          width: 90%;
+          border: none;
+          outline: none; }
+      .login-content .login-wrap .item h1 {
+        font-size: 20px; }
+      .login-content .login-wrap .item a {
+        color: #555555; }
+        .login-content .login-wrap .item a.reg {
+          text-decoration: underline;
+          color: #4cb9fe; }
+      .login-content .login-wrap .item .icon {
+        width: 18px;
+        height: 18px;
+        background: url("../images/login.png");
+        vertical-align: middle; }
+        .login-content .login-wrap .item .icon.icon-name {
+          background-position: left; }
+        .login-content .login-wrap .item .icon.icon-password {
+          background-position: -98px 0; }
+      .login-content .login-wrap .item .role {
+        width: 25%;
+        padding: 5px 0; }
+      .login-content .login-wrap .item .login-btn {
+        width: 70%;
+        padding: 6px 0; }
+
+.login-footer {
+  background-color: #fff;
+  border: none;
+  padding: 30px 15px; }
+
+/*======================================login end======================================*/
 /*======================================step begin======================================*/
 .ui-stepBar-wrap {
   position: relative;
