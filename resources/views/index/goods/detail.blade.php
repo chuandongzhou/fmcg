@@ -43,7 +43,7 @@
                         <li>
                             <span class="title-name">即期品 </span><b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
-                        <li><span class="title-name">商家 </span><b>我是经销商名称</b></li>
+                        <li><span class="title-name">商家 </span><b>{{ $goods->shop->name }}</b></li>
                         <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post">
                             <li>
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
@@ -81,7 +81,7 @@
                     <span class="pull-left title-name">商品配送区域</span>
                     <ul class="pull-left address-list">
                         @foreach($goods->deliveryArea as $area)
-                            <li>{{ $area->address }}</li>
+                            <p class="col-sm-12">{{ $area->area_name.$area->address }}</p>
                         @endforeach
                     </ul>
                 </div>

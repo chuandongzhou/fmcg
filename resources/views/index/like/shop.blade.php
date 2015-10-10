@@ -12,7 +12,7 @@
                             <select data-id="{{ $data['district_id'] or 0 }}" class="control address-district" name="district_id"> </select>
                             <select data-id="{{ $data['street_id'] or 0 }}" class="control address-street" name="street_id"> </select>
 
-                            <input type="text" placeholder="经销商名称" class="control" name="name" value="{{$data['name'] or '' }}">
+                            <input type="text" placeholder="商家名称" class="control" name="name" value="{{$data['name'] or '' }}">
                             <button class=" btn btn-cancel search">搜索</button>
                         </form>
                     </div>

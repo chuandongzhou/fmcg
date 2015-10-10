@@ -15,11 +15,11 @@ class ForbidSupplier
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->type == cons('user.type.supplier')) {
+        if (auth()->user()->type > cons('user.type.wholesaler')) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-                return back()->withInput();
+                return redirect()->back();
             }
         }
 

@@ -41,9 +41,6 @@ class Goods extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'cate_level_1',
-        'cate_level_2',
-        'cate_level_3'
     ];
 
     /**

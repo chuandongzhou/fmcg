@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\CreateInterestsRequest;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
@@ -43,5 +45,56 @@ class LikeController extends Controller
             $user->$relate()->detach($id);
             return $this->success(null);
         }
+    }
+
+    /**
+     * 获取收藏的店铺信息
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function postShops(Request $request)
+    {
+        $data = $request->all();
+        $shops = auth()->user()->likeShops()->select(['id', 'name', 'min_money']);
+        if (isset($data['name'])) {
+            $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
+        }
+        if ($request->has('province_id')) {
+            $shops = $shops->OfDeliveryArea($data);
+        }
+        dd($shops->get()->toArray());
+        return $this->success(['shops' => $shops->simplePaginate()->toArray()]);
+    }
+
+    /**
+     * 获取收藏的商品信息
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function postGoods(Request $request)
+    {
+        $data = $request->all();
+        $goods = auth()->user()->likeGoods();
+
+        if (isset($data['name'])) {
+            $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
+        }
+        if (!empty($data['province_id'])) {
+            $goods = $goods->OfDeliveryArea($data);
+        }
+        //获取需要显示的分类ID
+        $array = array_unique($goods->simplePaginate()->pluck('cate_level_2')->all());
+        $cateArr = Category::whereIn('id', $array)->get();
+        //加入分类过滤条件
+        if (!empty($data['cate_level_2'])) {
+            $goods = $goods->ofCategory($data['cate_level_2'], 2);
+        }
+
+        return $this->success([
+            'goods' => $goods->simplePaginate(),
+            'cateArr' => $cateArr
+        ]);
     }
 }

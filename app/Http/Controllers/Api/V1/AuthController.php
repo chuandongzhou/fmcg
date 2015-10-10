@@ -13,6 +13,7 @@ class AuthController extends Controller
 {
     /**
      * 登录
+     *
      * @param \App\Http\Requests\Api\v1\LoginRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -21,9 +22,10 @@ class AuthController extends Controller
         //TODO: 判断account
         $account = $request->input('account');
         $password = $request->input('password');
+        $type = $request->input('type');
 
-        if (auth()->attempt(['user_name' => $account, 'password' => $password])) {
-            $this->success([]);
+        if (auth()->attempt(['user_name' => $account, 'password' => $password, 'type' => $type])) {
+            return $this->success('登录成功');
         }
         return $this->error('账号或密码错误');
     }
@@ -33,7 +35,8 @@ class AuthController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getLogOut(){
+    public function getLogout()
+    {
         auth()->logout();
         return $this->success();
     }

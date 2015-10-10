@@ -11,8 +11,8 @@
                    class="btn {{ !isset($get['sort']) || $get['sort'] == 'name' ? 'btn-primary' : 'btn-default' }} control">名称</a>
                 <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                    class="btn  control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'btn-primary' : 'btn-default' }}">价格</a>
-                <a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                   class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>
+                {{--<a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"--}}
+                   {{--class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>--}}
             </div>
             <form action="{{ url('my-goods') }}"
                   method="get">
@@ -43,13 +43,14 @@
                     <input class="control" name="name" value="{{ isset($get['name']) ? $get['name'] : '' }}"
                            type="text">
                     <button class="btn btn-primary control search" type="submit">搜索</button>
+                    <a href="{{ url('my-goods/create') }}" class="btn btn-primary control add-goods">新增商品</a>
                 </div>
             </form>
         </div>
 
     </div>
     <div class="row sort">
-        @if (!empty($get))
+        @if (!empty(array_except($get , 'name')))
             <div class="col-sm-12 a-menu-panel">
                 <div class="sort-item">
                     <a href="{{ url('my-goods') }}" class="pull-left all-results"><span
@@ -66,7 +67,7 @@
 
                                 <div class="list-wrap">
                                     @foreach($category as $key => $item)
-                                        <a href="{{ url('search?category_id=' . $item['level'].$item['id']) }}"
+                                        <a href="{{ url('my-goods?category_id=' . $item['level'].$item['id']) }}"
                                            class="btn  control">
                                             {{ $item['name'] }}
                                         </a>
@@ -96,9 +97,9 @@
                     <div class="clearfix all-sort-panel">
                         <p class="pull-left all-sort">
                             @foreach($categories as $key => $category)
-                                <a href="{{ url('my-goods?category_id=' . $category[0]['level'].$category[0]['id']) }}"
+                                <a href="{{ url('my-goods?category_id=' . $category['level'].$category['id']) }}"
                                    class="btn  control">
-                                    {{ $category[0]['name'] }}
+                                    {{ $category['name'] }}
                                 </a>
                             @endforeach
                         </p>
@@ -163,10 +164,15 @@
     <div class="row list-penal">
         @foreach($goods  as $item)
             <div class="col-sm-3 commodity">
-                <img class="commodity-img" src="{{ $item->image_url }}">
-
+                <a href="{{ url('my-goods/' . $item->id) }}">
+                    <img class="commodity-img" src="{{ $item->image_url }}">
+                </a>
                 <div class="content-panel">
-                    <p class="commodity-name">{{ $item->name }}</p>
+                    <p class="commodity-name">
+                        <a href="{{ url('my-goods/' . $item->id) }}">
+                            {{ $item->name }}
+                        </a>
+                    </p>
 
                     <p class="sell-panel">
                         <span class="money">￥{{ $item->price }}</span>

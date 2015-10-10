@@ -405,6 +405,28 @@
     orders              int         店铺销量
 
 `失败返回`
+### 2.6 收藏 like
+#### 2.5.1 商店收藏[post] (shops)
+`请求参数：`
+
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street              int         街道id
+
+`成功返回：`
+
+    shops               array       商店列表
+
+    shops 字段说明
+
+    id                  int         店铺id
+    name                string      店铺名
+    min_money           decimal     最低配送额
+    image_url           string      店铺图片
+    orders              int         店铺销量
+
+`失败返回`
 
 
 

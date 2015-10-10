@@ -107,7 +107,7 @@
                 <label class="pull-left title-name">商家信息</label>
                 <ul class="pull-left">
                     <li>
-                        <span>经销商名称 :</span>
+                        <span>商家名称 :</span>
                         <span>{{ $order['shop']['name'] }}</span>
                     </li>
                     <li>

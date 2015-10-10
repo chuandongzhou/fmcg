@@ -35,7 +35,9 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            return redirect('/home');
+            $user = $this->auth->user();
+            $redirectUrl = $user->type == cons('user.type.retailer') ? '/' : '/shop/' . $user->shop->id;
+            return redirect($redirectUrl);
         }
 
         return $next($request);

@@ -23,7 +23,7 @@ class BalanceController extends Controller
         $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
         $balance = auth()->user()->balance;
 
-        $tradeInfo = SystemTradeInfo::select('trade_num', 'order_num', 'type', 'amount')->where('account',
+        $tradeInfo = SystemTradeInfo::select('trade_no', 'order_id', 'type', 'amount')->where('account',
             'wholesalers')->whereBetween('success_at', [$startTime, (new Carbon($endTime))->endOfDay()])->paginate(30);
         return view('index.personal.balance',
             [

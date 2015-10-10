@@ -3,50 +3,101 @@
 @section('container')
     <div class="container dealer-index index search-page">
         <div class="row sort">
-            <div class="col-sm-12 sort-panel">
-                <div class="sort-item search-list-item clearfix">
-                    <label class="pull-left  title-name">分类 : </label>
+            @if (!empty(array_except($get , 'name')))
+                <div class="col-sm-12 a-menu-panel">
+                    <div class="sort-item">
+                        <a href="{{ url('shop/' . $shop->id . '/search') }}" class="pull-left all-results"><span
+                                    class="fa fa-th-large"></span>
+                            全部结果 <span class="fa fa-angle-right"></span> </a>
 
-                    <div class="clearfix all-sort-panel">
-                        <p class="pull-left all-sort">
-                            <a href="{{ url('shop/' . $shop->id . '/search' . (empty(array_except($data , ['cate' , 'attr'])) ? '' :  '?' . http_build_query(array_except($data , ['cate' , 'attr']))) )}}"
-                               class="btn  control {{ !isset($get['cate']) ? 'active' : '' }}">
-                                全部
-                            </a>
-                            @foreach($categories as $key => $category)
-                                <a href="{{ url('shop/' . $shop->id . '/search?cate=' . $category['level'].$category['id'] . (empty(array_except($data , ['cate' , 'attr'])) ? '' :  '&' . http_build_query(array_except($data , ['cate' , 'attr'])))) }}"
-                                   class="btn  control {{ isset($get['cate']) &&  $category['level'].$category['id'] == $get['cate'] ? 'active' : '' }}">
-                                    {{ $category['name'] }}
-                                </a>  &nbsp; &nbsp;
+                        @if (isset($get['category_id']))
+                            @foreach($categories as $category)
+                                <div class="sort-list">
+                                    <a class="list-title" href="#">
+                                        <span class="title-txt">{{ isset($category['selected']) ? $category['selected']['name'] : '请选择' }}</span><i
+                                                class="fa fa-angle-down"></i>
+                                    </a>
+
+                                    <div class="list-wrap">
+                                        @foreach($category as $key => $item)
+                                            <a href="{{ url('shop/' . $shop->id . '/search?category_id=' . $item['level'].$item['id']) }}"
+                                               class="btn  control">
+                                                {{ $item['name'] }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <span class="fa fa-angle-right"></span>
                             @endforeach
-                        </p>
-                        <a class="more pull-right" href="javascript:void(0)"><span>更多</span> <i
-                                    class="fa fa-angle-down"></i></a>
+                        @endif
+
+                        @foreach($searched as $attrId => $name)
+                            <div class="sort-list">
+                                <a class="last-category"
+                                   href="{{ url('shop/' . $shop->id . '/search?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}"> {{ $name }}
+                                    <i class="fa fa-times"></i></a>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
-                @foreach($attrs as $attr)
-                    <div class="sort-item  search-list-item clearfix">
-                        <label class="pull-left title-name">{{ $attr['name'] }} : </label>
+
+            @endif
+            <div class="col-sm-12">
+                @if( !isset($get['category_id']))
+                    <div class="search-list-item sort-item sort-item-panel">
+                        <span class="pull-left title-name">分类 : </span>
 
                         <div class="clearfix all-sort-panel">
                             <p class="pull-left all-sort">
-                                <a href="{{ url('shop/' . $shop->id . '/search'. (empty(array_except($get , ['attr_' . $attr['id']])) ? '' : '?'. http_build_query(array_except($get , ['attr_' . $attr['id']])))) }}"
-                                   class="btn  control {{ !isset($get['attr_' . $attr['id']]) ? 'active' : '' }}">
-                                    全部
-                                </a>
-
-                                @foreach($attr['child'] as $child)
-                                    <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['id'] . '=' . $child['id']  . '&' . http_build_query(array_except($get , ['attr_' . $attr['id']]))) }}"
-                                       class="btn  control {{ isset($data['attr']) && in_array($child['id'] , $data['attr']) ? 'active' : '' }}">
-                                        {{ $child['name'] }}
+                                @foreach($categories as $key => $category)
+                                    <a href="{{ url('shop/' . $shop->id . '/search?category_id=' . $category['level'].$category['id']) }}"
+                                       class="btn  control">
+                                        {{ $category['name'] }}
                                     </a>
                                 @endforeach
                             </p>
-                            <a class="more pull-right" href="javascript:void(0)"><span>更多</span> <i
-                                        class="fa fa-angle-down"></i></a>
+                            <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>
                         </div>
                     </div>
+                @endif
+
+                @foreach($attrs as $attr)
+                    @if(isset($attr['child']))
+                        <div class="search-list-item sort-item sort-item-panel">
+                            <span class="pull-left title-name">{{ $attr['name'] }} : </span>
+
+                            <div class="clearfix all-sort-panel">
+                                <p class="pull-left all-sort">
+                                    @foreach($attr['child'] as $child)
+                                        <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}"
+                                           class="btn  control">
+                                            {{ $child['name'] }}
+                                        </a>
+                                    @endforeach
+                                </p>
+                                <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                            </div>
+                        </div>
+                    @endif
                 @endforeach
+
+                @if(!empty($moreAttr))
+                    <div class="search-list-item sort-item">
+                        <span class="pull-left title-name">更多筛选项 : </span>
+
+                        @foreach($moreAttr as $attr)
+                            <div class="sort-list">
+                                <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
+
+                                <div class="list-wrap">
+                                    @foreach($attr['child'] as $child)
+                                        <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
             <div class="col-sm-12">
                 <div class="tab-title clearfix">
@@ -93,6 +144,10 @@
             </div>
         </div>
     </div>
+@stop
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop
 @section('js')
     @parent

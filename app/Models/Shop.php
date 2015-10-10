@@ -33,6 +33,8 @@ class Shop extends Model
 
     protected $appends = ['image_url', 'orders'];
 
+    protected $hidden = ['created_at' , 'updated_at'];
+
     /**
      * 用户表
      *

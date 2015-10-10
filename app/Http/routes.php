@@ -1,10 +1,15 @@
 <?php
 
 $router->get('login', 'Auth\AuthController@login');
+$router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
+    $router->get('login', 'AuthController@login');
+    $router->get('logout', 'AuthController@logout');
+});
+
 /**
  * 前台
  */
-$router->group(['namespace' => 'Index'], function ($router) {
+$router->group(['namespace' => 'Index' ,'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
@@ -21,6 +26,7 @@ $router->group(['namespace' => 'Index'], function ($router) {
     $router->controller('order', 'OrderController');       //订单
     $router->get('search', 'SearchController@index');      //商品搜索页
     $router->controller('like', 'LikeController');//收藏夹
+    $router->controller('pay', 'YeepayController'); //易宝
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
@@ -57,7 +63,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->post('getCategory', 'CategoryController@getCategory');  //获取属性
     $router->resource('category', 'CategoryController');            //属性管理
     $router->post('getAttr', 'AttrController@getAttr');             //获取标签
-    $router->post('attr/save' , 'AttrController@save');             //绑定标签到分类
+    $router->post('attr/save', 'AttrController@save');             //绑定标签到分类
     $router->resource('attr', 'AttrController');                    //标签管理
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
     $router->resource('images', 'GoodsImagesController');                    //商品图片管理
@@ -76,7 +82,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
  * 接口
  */
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
-    $router->get('/', function(){
+    $router->get('/', function () {
         return view('api.index');
     });
 
@@ -92,7 +98,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             }
         ]);
 
-        $router->controller('goods' , 'GoodsController');                           //商品
+        $router->controller('goods', 'GoodsController');                           //商品
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类
@@ -118,5 +124,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('order', 'OrderController');
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
+        $router->controller('auth', 'AuthController');
     });
 });
