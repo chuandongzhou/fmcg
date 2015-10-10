@@ -3,7 +3,7 @@
 @section('container')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
-            @if (!empty($get))
+            @if (!empty(array_except($get , 'name')))
                 <div class="col-sm-12 a-menu-panel">
                     <div class="search-list-item sort-item">
                         <a href="{{ url('search') }}" class="pull-left all-results"><span class="fa fa-th-large"></span></a>
@@ -48,9 +48,9 @@
                         <div class="clearfix all-sort-panel">
                             <p class="pull-left all-sort">
                                 @foreach($categories as $key => $category)
-                                    <a href="{{ url('search?category_id=' . $category[0]['level'].$category[0]['id']) }}"
+                                    <a href="{{ url('search?category_id=' . $category['level'].$category['id']) }}"
                                        class="btn  control">
-                                        {{ $category[0]['name'] }}
+                                        {{ $category['name'] }}
                                     </a>
                                 @endforeach
                             </p>
@@ -127,10 +127,12 @@
         <div class="row list-penal">
             @foreach($goods  as $item)
                 <div class="col-sm-3 commodity">
-                    <img class="commodity-img" src="{{ $item->image_url }}">
+                    <a href="{{ url('goods/' . $item->id) }}">
+                        <img class="commodity-img" src="{{ $item->image_url }}">
+                    </a>
 
                     <div class="content-panel">
-                        <p class="commodity-name">{{ $item->name }}</p>
+                        <p class="commodity-name"><a href="{{ url('goods/' . $item->id) }}">{{ $item->name }}</a></p>
 
                         <p class="sell-panel">
                             <span class="money">￥{{ $item->price }}</span>

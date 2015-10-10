@@ -170,6 +170,7 @@ class OrderController extends Controller
                     }
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
+                    return redirect('order-buy');
                 } else {
                     //TODO: 跳转页面后期修改
                     $order->delete();

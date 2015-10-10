@@ -23,7 +23,7 @@ return [
     #	交易币种,固定值"CNY".
     'p4_cur' => "CNY",
     #	商户接收支付成功数据的地址,支付成功后易宝支付会向该地址发送两次成功通知.
-     'p8_url' => url('yeepay/callback'),
+     'p8_url' => url('pay/callback'),
 
     'pr_need_response' => "1"
 

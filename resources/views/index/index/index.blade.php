@@ -15,7 +15,7 @@
 @section('header')
     @include('index.index-top')
     <div class="container">
-        <div class="row">
+        <div class="row margin-clear">
             <div class="col-sm-2 categories-btn">
                 <a class="btn btn-primary">全部商品分类</a>
             </div>
@@ -30,7 +30,7 @@
 @section('body')
     <div class="banner-wrap">
         <div class="container dealer-index-banner">
-            <div class="row categories-menu-item">
+            <div class="row categories-menu-item margin-clear">
                 <div class="col-sm-2 categories">
                     <ul class="menu-wrap">
                         @foreach($categories as $category)
@@ -102,7 +102,7 @@
             @endforeach
         </div>
         <div class="row list-penal">
-            <div class="col-sm-12 title"><h3>热门经销商</h3></div>
+            <div class="col-sm-12 title"><h3>热门商家</h3></div>
             @foreach($hotShops as $shop)
                 <a href="{{ url('shop/detail/'.$shop->id) }}">
                     <div class="col-sm-3 commodity">

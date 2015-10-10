@@ -58,7 +58,6 @@
                 </div>
                 <div class="col-sm-12 item clearfix">
                     <select name="type" class="role pull-left">
-                        <option value="0">管理员</option>
                         @foreach(cons('user.type') as $val)
                             <option value="{{ $val }}">{{ cons()->valueLang('user.type' , $val) }}</option>
                         @endforeach

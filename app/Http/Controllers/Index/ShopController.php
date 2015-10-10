@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Category;
 use App\Models\Goods;
 use App\Models\Shop;
-use App\Services\AttrService;
+use App\Services\GoodsService;
 use DB;
+use Gate;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('supplier', ['only' => ['index', 'search']]);
+    }
 
     public function index(Request $request, $sort = '')
     {
@@ -46,11 +50,15 @@ class ShopController extends Controller
      * 店铺首页
      *
      * @param $shop
-     * @param $type
+     * @param $sort
      * @return \Illuminate\View\View
      */
     public function shop($shop, $sort = '')
     {
+        if (Gate::denies('validate-allow', $shop)) {
+            return redirect()->back();
+        }
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
         $map = ['shop_id' => $shop->id];
 
         $goods = Goods::where($map);
@@ -58,8 +66,15 @@ class ShopController extends Controller
             $goods = $goods->$sort();
         }
         $goods = $goods->paginate();
+        $url = Gate::denies('validate-shop', $shop) ? 'goods' : 'my-goods';
         return view('index.shop.shop',
-            ['shop' => $shop, 'goods' => $goods, 'sort' => $sort]);
+            [
+                'shop' => $shop,
+                'goods' => $goods,
+                'sort' => $sort,
+                'isLike' => $isLike,
+                'url' => $url
+            ]);
     }
 
 
@@ -71,7 +86,11 @@ class ShopController extends Controller
      */
     public function detail($shop)
     {
-        return view('index.shop.detail', ['shop' => $shop]);
+        if (Gate::denies('validate-allow', $shop)) {
+            return back()->withInput();
+        }
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+        return view('index.shop.detail', ['shop' => $shop, 'isLike' => $isLike]);
     }
 
     /**
@@ -85,40 +104,19 @@ class ShopController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-        $attrs = [];
 
-        $categories = Category::orderBy('level', 'asc')->select('name', 'level', 'id')->get();
         $goods = $shop->goods()->with('images');
-        //排序
-        if (isset($data['sort']) && in_array($data['sort'], $this->sort)) {
-            $goods = $goods->{'Order' . ucfirst($data['sort'])}();
-        }
-        // 省市县
-        if (isset($data['province_id'])) {
-            $goods = $goods->OfDeliveryArea($data);
-        }
-        // 名称
-        if (isset($data['name'])) {
-            $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
-        }
-        if (isset($data['cate'])) {
-            //分类最高位为层级 后面为categoryId
-            $level = substr($data['cate'], 0, 1);
-            $categoryId = substr($data['cate'], 1);
-            $attrs = (new AttrService([]))->getAttrByCategoryId($categoryId);
-            $goods = $goods->OfCategory($categoryId, $level);
-        }
 
-        // 标签
-        if (isset($data['attr'])) {
-            $goods = $goods->OfAttr($data['attr']);
-        }
+        $result = GoodsService::getGoodsBySearch($data, $goods);
+
         return view('index.shop.search',
             [
                 'shop' => $shop,
                 'goods' => $goods->paginate(),
-                'categories' => $categories,
-                'attrs' => $attrs,
+                'categories' => $result['categories'],
+                'attrs' => $result['attrs'],
+                'searched' => $result['searched'],
+                'moreAttr' => $result['moreAttr'],
                 'get' => $gets,
                 'data' => $data
             ]);

@@ -78,7 +78,7 @@ return [
             'yeepay' => 1,          //易宝
             'alipay' => 2           //支付宝
         ],
-        'pay_info' => [
+        'pay_status' => [
             'success' => 1,         //成功
             'failed' => 2           //失败
         ],
@@ -130,7 +130,7 @@ return [
     'like' => [
         'type' => [
             'goods' => 1,
-            'shop' => 2
+            'shops' => 2
         ],
         'model' => [
             'goods' => App\Models\Goods::class,
@@ -145,7 +145,7 @@ return [
             'packing' => 20235,            //包装
             'place' => 20465,              //产地
         ]
-    ]
+    ],
     //推送设备类型
     'push_device' => [
         'iphone' => 1,

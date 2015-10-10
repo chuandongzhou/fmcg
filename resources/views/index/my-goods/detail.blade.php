@@ -29,8 +29,8 @@
                 </ul>
                 <ul class="left-list pull-left">
                     <li>状态 : <span class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</span></li>
-                    @foreach($attrs as $attr)
-                    <li>{{ $attr['name'] }} : {{ array_pluck($attr['child'], 'name')[0] }}</li>
+                    @foreach($attrs as $key => $attr)
+                        <li>{{ $key }} : {{ $attr }}</li>
                     @endforeach
                 </ul>
                 <ul class="right-list ">

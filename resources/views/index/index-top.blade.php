@@ -19,7 +19,8 @@
                     <div class="list-wrap">
                         @foreach($provinces as $provinceId => $province)
                             <div class="item">
-                                <a class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}" href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
+                                <a class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
+                                   href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
                             </div>
                         @endforeach
                     </div>
@@ -38,16 +39,22 @@
                 <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                      aria-expanded="false" style="height: 1px;">
                     <ul class="nav navbar-nav navbar-right operating-wrap">
-                        <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
-                        <li><a href="{{ url('order-buy') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
-                        <li class="collect-select">
-                            <a class="collect-selected"><span class="selected">收藏夹</span> <span class="fa fa-angle-down"></span></a>
-                            <ul class="select-list">
-                                <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
-                                <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="{{ url('auth/logout') }}"><span class="fa fa-ban"></span> 退出</a></li>
+                        @if(auth()->user()->type == cons('user.type.wholesaler'))
+                            <li><a href="{{ url('shop/' .auth()->user()->shop->id) }}"><span
+                                            class="fa fa-heart-o"></span>我的店面</a>
+                            </li>
+                        @endif
+                            <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
+                            <li><a href="{{ url('order-buy') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
+                            <li class="collect-select">
+                                <a class="collect-selected"><span class="selected">收藏夹</span> <span
+                                            class="fa fa-angle-down"></span></a>
+                                <ul class="select-list">
+                                    <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
+                                    <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ url('auth/logout') }}"><span class="fa fa-ban"></span> 退出</a></li>
                     </ul>
                 </div>
             </div>
@@ -68,13 +75,15 @@
             <a class="navbar-brand logo-icon" href="{{ url('/') }}">LOGO</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search" type="get">
+            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search"
+                  type="get">
                 <div class="input-group">
                     <div class="select-role pull-left">
-                        <a href="javascript:void(0)" class="selected"><span>商品</span><i class="fa fa-angle-down"></i></a>
+                        <a href="javascript:void(0)" class="selected"><span>商品</span><i
+                                    class="fa fa-angle-down"></i></a>
                         <ul class="select-list">
                             <li><a href="javascript:void(0)" data-url="search">商品</a></li>
-                            <li><a href="javascript:void(0)" data-url="shop">经销商</a></li>
+                            <li><a href="javascript:void(0)" data-url="shop">商家</a></li>
                         </ul>
                     </div>
                     <input type="text" name="name" class="control pull-right" aria-describedby="course-search">

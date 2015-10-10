@@ -8,7 +8,11 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Order;
+use App\Models\Shop;
+use App\Models\SystemTradeInfo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class YeePayController extends Controller
 {
@@ -18,7 +22,6 @@ class YeePayController extends Controller
      */
     public function getRequest($orderId)
     {
-
         $order = Order::find($orderId);
 
         if (!$order) {
@@ -50,7 +53,7 @@ class YeePayController extends Controller
 
 #	商品名称
 ##用于支付时显示在易宝支付网关左侧的订单产品信息.
-        $p5_Pid = iconv('UTF-8' , 'GB2312' ,'商品名');
+        $p5_Pid = iconv('UTF-8', 'GB2312', '商品名');
 #	商品种类
         $p6_Pcat = 'fmcg_type';
 
@@ -62,13 +65,14 @@ class YeePayController extends Controller
 
 #	商户扩展信息
 ##商户可以任意填写1K 的字符串,支付成功时将原样返回.
-        $pa_MP = 'no';
+        //商家账号
+        $pa_MP = Shop::find($order->shop_id)->user->user_name;
 
 #	支付通道编码
 ##默认为""，到易宝支付网关.若不需显示易宝支付的页面，直接跳转到各银行、神州行支付、骏网一卡通等支付页面，该字段可依照附录:银行列表设置参数值.
         $pd_FrpId = '';
 
-#	应答机制
+//	应答机制
 ##默认为"1": 需要应答机制;
         $pr_NeedResponse = config('yeepay.pr_need_response');
 
@@ -82,7 +86,7 @@ class YeePayController extends Controller
             'p2_Order' => $p2_Order,
             'p3_Amt' => $p3_Amt,
             'p4_Cur' => config('yeepay.p4_cur'),
-            'p5_Pid' => $p5_Pid,
+            "p5_Pid" => $p5_Pid,
             'p6_Pcat' => $p6_Pcat,
             'p7_Pdesc' => $p7_Pdesc,
             'p8_Url' => $p8_Url,
@@ -92,10 +96,32 @@ class YeePayController extends Controller
             'pr_NeedResponse' => $pr_NeedResponse,
             'hmac' => $hmac
         ];
+        /*  $client = new Client();
+          $response = $client->request('POST', 'https://www.yeepay.com/app-merchant-proxy/node', [
+              'verify' => false,
+              'form_params' => $postData
+          ]);
+
+          $body = $response->getBody();
+  // Implicitly cast the body to a string and echo it
+          echo $body;
+
+
+          $client = new Client();
+          $response = $client->request('POST', $postUrl, [
+              'verify' => false,
+              'form_params' => $postData
+          ]);
+
+          dd();*/
         /* var_dump($postData);
          dd($postData);*/
         $postUrl = config('yeepay.req_url_onLine');
-        return view('index.yeepay.request', ['url' => $postUrl, 'data' => $postData]);
+
+        $url = $postUrl . '?' . http_build_query($postData);
+        return redirect($url);
+
+        // return view('index.yeepay.request', ['url' => $postUrl, 'data' => $postData]);
     }
 
 
@@ -122,6 +148,7 @@ class YeePayController extends Controller
             $r9_BType, $hmac);
 #	以上代码和变量不需要修改.
 
+
 #	校验码正确.
         if ($bRet) {
             if ($r1_Code == "1") {
@@ -130,32 +157,47 @@ class YeePayController extends Controller
                 #	并且需要对返回的处理进行事务控制，进行记录的排它性处理，在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理，防止对同一条交易重复发货的情况发生.
 
                 if ($r9_BType == "1") {
-                    dd([
-                        $r0_Cmd,
-                        $r1_Code,
-                        $r3_Amt,
-                        $r4_Cur,
-                        $r5_Pid,
-                        $r6_Order,
-                        $r7_Uid,
-                        $r8_MP,
-                        $r9_BType,
-                        $hmac
-                    ]);
-
+                    //TODO:跳转至交易成功
+                    dd('交易成功');
                 } elseif ($r9_BType == "2") {
-                    #如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
+                    //如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
+
+                    //更改订单状态
                     $orderConf = cons('order');
-                    $order = Order::find(1);
+                    $order = Order::find($r6_Order);
                     $order->fill([
                         'pay_status' => $orderConf['pay_status']['payment_success'],
                     ])->save();
-                    echo "success";
+                    // 增加易宝支付log
+                    DB::table('yeepay_log')->insert(
+                        [
+                            'order_id' => $r6_Order,
+                            'trade_no' => $r2_TrxId,
+                            'amount' => $r3_Amt,
+                        ]
+                    );
+                    //增加系统交易信息
+                    $tradeConf = cons('trade');
+                    SystemTradeInfo::create([
+                        'type' => $tradeConf['type']['in'],
+                        'pay_type' => $tradeConf['pay_type']['yeepay'],
+                        'account' => $r8_MP,
+                        'paid_at' => Carbon::now(),
+                        'order_id' => $r6_Order,
+                        'trade_no' => $r2_TrxId,
+                        'pay_status' => $tradeConf['pay_status']['success'],
+                        'amount' => $r3_Amt,
+                        'trade_currency' => $tradeConf['trade_currency']['rmb'],
+                        'callback_type' => 'json',
+                        'hmac' => $hmac,
+                        'success_at' => Carbon::now(),
+                    ]);
+                    die ("success");
                 }
             }
 
         } else {
-            return $this->error("交易信息被篡改");
+             return $this->error("交易信息被篡改");
         }
     }
 }

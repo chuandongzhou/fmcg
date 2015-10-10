@@ -35,8 +35,8 @@
                         <tbody>
                         @foreach($tradeInfo as $trade)
                             <tr>
-                                <td>{{ $trade->trade_num }}</td>
-                                <td>{{ $trade->order_num }}</td>
+                                <td>{{ $trade->trade_no }}</td>
+                                <td>{{ $trade->order_id }}</td>
                                 <td>{{ cons()->valueLang('trade.type' ,$trade->type) }} <b
                                             class="red">￥{{ $trade->amount }}</b></td>
                             </tr>

@@ -31,5 +31,11 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-shop', function ($user, $shop) {
             return $user->shop->id === $shop->id;
         });
+        /**
+         * 验证是否有权限访问店铺
+         */
+        $gate->define('validate-allow', function ($user, $shop) {
+            return $user->type <= $shop->user->type;
+        });
     }
 }

@@ -32,31 +32,27 @@ class MyGoodsController extends Controller
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
 
-        $result = GoodsService::getGoodsBySearch($data);
+        $goods = Goods::with('images')->select([
+            'id',
+            'name',
+            'sales_volume',
+            'price_retailer',
+            'price_wholesaler',
+            'is_new',
+            'is_promotion',
+            'cate_level_1',
+            'cate_level_2'
+        ])->where('user_type', auth()->user()->type);
 
-        $attrs = $result['attrs'];
-        $defaultAttrName = cons()->valueLang('attr.default');
+        $result = GoodsService::getGoodsBySearch($data, $goods);
 
-        $searched = []; //保存已搜索的标签
-        $moreAttr = []; //保存扩展的标签
-
-        // 已搜索的标签
-        foreach ($attrs as $key => $attr) {
-            if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys($data['attr']))) {
-                $searched[$attr['attr_id']] = array_get($attr['child'], $data['attr'][$attr['attr_id']])['name'];
-                unset($attrs[$key]);
-            } elseif (!in_array($attr['name'], $defaultAttrName)) {
-                $moreAttr[$key] = $attr;
-                unset($attrs[$key]);
-            }
-        }
         return view('index.my-goods.index',
             [
                 'goods' => $result['goods']->paginate(),
                 'categories' => $result['categories'],
-                'attrs' => $attrs,
-                'searched' => $searched,
-                'moreAttr' => $moreAttr,
+                'attrs' => $result['attrs'],
+                'searched' => $result['searched'],
+                'moreAttr' => $result['moreAttr'],
                 'get' => $gets,
                 'data' => $data
             ]);
@@ -89,7 +85,7 @@ class MyGoodsController extends Controller
             abort(403);
         }
 
-        $attrs = (new AttrService())->getAttrByGoods($goods);
+        $attrs = (new AttrService())->getAttrByGoods($goods ,true);
         return view('index.my-goods.detail', ['goods' => $goods, 'attrs' => $attrs]);
     }
 
