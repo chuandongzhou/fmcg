@@ -109,6 +109,7 @@
                 </div>
             </div>
         </div>
+        @if($orders['data'])
         <div class="row">
             <div class="col-sm-12 padding-clear">
                 <button class="btn btn-danger ajax" data-url="{{ url('order-sell/batch-sure') }}" data-method="put">确认</button>
@@ -117,16 +118,8 @@
                 <button class="btn btn-warning ajax" data-url="{{ url('order-sell/batch-send') }}" data-method="put">发货</button>
                 <button class="btn btn-info ajax" data-url="{{ url('order-sell/batch-finish') }}" data-method="put">收款</button>
             </div>
-            <div class="col-sm-12 order-process page">
-                <ul>
-                    <li>订单状态流程 :</li>
-                    <li>在线支付 :</li>
-                    <li>未确认->(卖家确认操作)->未付款->(买家付款成功)->已付款->(卖家发货操作)->已发货->(买家收货操作)->已完成</li>
-                    <li>货到付款 :</li>
-                    <li>未确认->(卖家确认操作)->未发货->(卖家发货操作)->已发货(未收款)->(卖家收货操作)->已收货(未收款)->(卖家已收款操作)->已完成</li>
-                </ul>
-            </div>
         </div>
+        @endif
     </form>
 </div>
 @stop

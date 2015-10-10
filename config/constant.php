@@ -145,7 +145,7 @@ return [
             'packing' => 20235,            //包装
             'place' => 20465,              //产地
         ]
-    ]
+    ],
     //推送设备类型
     'push_device' => [
         'iphone' => 1,

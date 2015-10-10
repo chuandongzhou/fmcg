@@ -93,7 +93,7 @@
                                                         <p><a href="#" class="btn btn-danger">付款</a></p>
                                                     @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
                                                         <p><a class="btn btn-danger ajax" data-url="{{ url('order-buy/batch-finish') }}"
-                                                              data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
+                                                              data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>收货</a></p>
                                                     @endif
                                                 @endif
                                             </td>
@@ -106,12 +106,14 @@
                 </div>
             </div>
         </div>
+        @if($orders['data'])
         <div class="row">
             <div class="col-sm-12 padding-clear">
                 <button class="btn btn-cancel ajax" data-url="{{ url('order-buy/cancel-sure') }}" data-method="put">取消</button>
                 <button class="btn btn-info ajax" data-url="{{ url('order-buy/batch-finish') }}" data-method="put">已收货</button>
             </div>
         </div>
+        @endif
     </form>
 </div>
 @stop

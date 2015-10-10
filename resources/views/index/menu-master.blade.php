@@ -26,7 +26,7 @@
                     </ul>
                     <ul class="menu-list dealer-menu-list">
                         <li>
-                            <a href="#" class="list-item"><i class="fa fa-star-o"></i> 我的收藏</a>
+                            <a class="list-item"><i class="fa fa-star-o"></i> 我的收藏</a>
                             <ul class="menu-wrap">
                                 <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
                                 <li><a href="{{ url('like/goods') }}">商品收藏</a></li>

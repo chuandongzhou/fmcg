@@ -1,6 +1,6 @@
 @extends('index.menu-master')
 @section('right')
-<div class="container my-goods index">
+<div class="my-goods index">
     <div class="row">
         <div class="col-sm-10 collect search-page">
             <div class="row">
@@ -39,11 +39,13 @@
                                 <img class="commodity-img" src="{{ $good->image_url }}">
                                 <span class="prompt new-listing"></span>
                             </div>
-                            <p class="commodity-name">{{ $good->name }}</p>
-                            <p class="sell-panel">
-                                <span class="money">￥{{ $good->price }}</span>
-                                <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
-                            </p>
+                            <div class="content-panel">
+                                <p class="commodity-name">{{ $good->name }}</p>
+                                <p class="sell-panel">
+                                    <span class="money">￥{{ $good->price }}</span>
+                                    <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
+                                </p>
+                            </div>
                         </div>
                     </a>
                 @endforeach

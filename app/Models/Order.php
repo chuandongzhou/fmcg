@@ -30,7 +30,7 @@ class Order extends Model
 
     protected $appends = ['status_name', 'payment_type', 'step_num',];
 
-
+    protected $hidden = [];
     /**
      * 该订单下所有商品
      *
@@ -273,7 +273,7 @@ class Order extends Model
     }
 
     /**
-     * 待收款
+     * 待收款,货到付款
      *
      * @param $query
      * @return mixed
@@ -345,5 +345,29 @@ class Order extends Model
                 $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
             }
         });
+    }
+
+    /**
+     * 在线支付,支付成功的订单条件
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfPaySuccess($query)
+    {
+        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+            cons('order.pay_status.payment_success'));
+    }
+
+    /**
+     * 货到付款,已发货或已完成的订单条件
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfHasSend($query)
+    {
+        return $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
+            [cons('order.status.send'), cons('order.status.finished')]);
     }
 }

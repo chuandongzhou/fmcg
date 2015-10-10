@@ -59,6 +59,7 @@
 
 #### 2.2.2 商品搜索[post] (search)
 `请求参数`
+
     sort        string              排序 （name , price , new）
     province_id int                 省id
     city_id     int                 市id
@@ -292,6 +293,118 @@
 `失败返回`
 
 
+#### 2.5.4 买家获取订单列表[get] (list-of-buy)
+`请求参数：`
+
+    page                int         分页
+
+`成功返回：`
+
+	data                array       订单信息
+
+	data 字段子集说明
+	
+	id					int			订单ID号
+	price               string      订单总金额
+	status_name			string		订单显示状态
+	payment_type		string      支付方式
+	is_cancel			int			订单是否被取消(1取消,0未取消)
+	confirmed_at     	string 		确认时间
+	paid_at				string		支付时间
+	send_at				string		发货时间
+	finished_at			string		完成时间
+	shop                array       店铺详细信息
+    goods    			array		商品详细信息
+
+	shop 字段子集说明
+		
+	name				string		店铺名字
+	user				array		卖家信息
+
+		user 字段子集说明
+
+		user_name       string      卖家账户名称
+		type			int         卖家角色类型
+	
+	goods 字段子集说明
+	
+	id  				int 		商品ID
+	name                string 		商品名称
+	introduce			string		商品描述信息
+	image_url			string		商品图片地址
+	pivot				array		该商品在本订单中的详细信息
+
+		pivot 字段子集说明
+
+		price			string		商品价格
+		num				int			商品数量
+	
+`失败返回`
+
+#### 2.5.5 订单详情[get] (detaily)
+`请求参数：`
+
+	order_id			int			订单号
+
+`成功返回：`
+
+	id					int			订单ID号
+	price               string      订单总金额
+	status_name			string		订单显示状态
+	payment_type		string      支付方式
+	is_cancel			int			订单是否被取消(1取消,0未取消)
+	created_at			string		创建时间
+	confirmed_at     	string 		确认时间
+	paid_at				string		支付时间
+	send_at				string		发货时间
+	finished_at			string		完成时间
+	delivery_man		array		送货人信息(仅发货后才有,否则为Null)
+	shipping_address    array       收货信息
+    goods    			array		商品详细信息
+
+	delivery_man 字段子集说明
+
+	name     			string		送货人姓名
+	phone				string		送货人电话
+
+	shipping_address 字段子集说明
+
+	consigner			string		收货人姓名
+	phone				string		收货人电话
+	address				array		收货地址信息
+		
+		address 字段子集说明
+		
+		province_id         int         省id
+		city_id             int         市id
+    	district_id         int         县id
+    	street              int         街道id
+		address				string		详细地址
+
+`失败返回`
+
+### 2.6 收藏 like
+#### 2.5.1 商店收藏[post] (shops)
+`请求参数：`
+
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street              int         街道id
+
+`成功返回：`
+
+    shops               array       商店列表
+
+    shops 字段说明
+
+    id                  int         店铺id
+    name                string      店铺名
+    min_money           decimal     最低配送额
+    image_url           string      店铺图片
+    orders              int         店铺销量
+
+`失败返回`
 
 
 

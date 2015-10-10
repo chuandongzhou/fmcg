@@ -40,7 +40,7 @@ class OrderBuyController extends OrderController
         $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
         $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
         //默认显示所有订单订单
-        $orders = Order::ofBuy($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->paginate()->toArray();
 
         return view('index.order.order-buy', [
             'pay_type' => $payType,
@@ -97,7 +97,9 @@ class OrderBuyController extends OrderController
     {
         //清除redis中买家的提醒消息
         $redis = Redis::connection();
-        $redis->hDel('order_user', 'u' . $this->userId);//hdel()不存在的域将被忽略
+        if ($redis->exists('push:user:' . $this->userId)) {
+            $redis->del('push:user:' . $this->userId);
+        }
 
         return Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
     }

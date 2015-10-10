@@ -40,7 +40,7 @@ class OrderSellController extends OrderController
         $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
         $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
 
-        $orders = Order::ofSell($this->userId)->orderBy('id', 'desc')->paginate()->toArray();
+        $orders = Order::ofSell($this->userId)->paginate()->toArray();
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -133,11 +133,12 @@ class OrderSellController extends OrderController
         if ($nonSure->isEmpty()) {
             return $this->error('操作失败');
         }
-        //写入redis的hash表
+        //写入redis
         $userIds = $nonSure->pluck('user_id');
         $redis = Redis::connection();
         foreach ($userIds as $item) {
-            $redis->hMSet('order_user', 'u' . $item, 1);
+            $redis->exists('push:user:'.$item) ?  : $redis->set('push:user:'.$item, 1);
+            $redis->expire('push:user:'.$item,600);
         }
         //修改订单状态
         $ids = $nonSure->pluck('id');
@@ -145,11 +146,8 @@ class OrderSellController extends OrderController
             'status' => cons('order.status.non_send'),
             'confirmed_at' => Carbon::now()
         ]);
-        if ($status) {
-            return $this->success();
-        }
 
-        return $this->error('操作失败');
+        return $status ? $this->success() : $this->error('操作失败');
     }
 
     /**

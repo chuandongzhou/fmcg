@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use app\Http\Requests\Api\v1\DeletePushDeviceRequest;
 use App\Models\PushDevice;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Services\PushOrderService;
 
 class PushController extends Controller
 {
@@ -12,6 +13,7 @@ class PushController extends Controller
      * 注册设备
      *
      * @param \App\Http\Requests\Api\V1\CreatePushDeviceRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postActiveToken(Requests\Api\V1\CreatePushDeviceRequest $request)
     {
@@ -20,17 +22,28 @@ class PushController extends Controller
         $attributes['type'] = cons('type.push_device')[strtolower($attributes['type'])];
         $attributes['user_id'] = auth()->user()->id;
 
-        isset($service->id) ? $service->fill($attributes)->save() : PushDevice::create($attributes);
+        $status = isset($service->id) ? $service->fill($attributes)->save() : PushDevice::create($attributes);
+        if ($status) {
+            return $this->success('注册成功');
+        }
+
+        return $this->error('注册失败');
     }
 
     /**
      * 删除设备
      *
-     * @param \App\Http\Requests $requests
+     * @param \app\Http\Requests\Api\v1\DeletePushDeviceRequest $requests
+     * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function deleteDeactiveToken(Requests $requests)
+    public function deleteDeactiveToken(DeletePushDeviceRequest $requests)
     {
         $token = $requests->input('token');
-        PushDevice::where('user_id', auth()->user()->id)->where('token', $token)->delete();
+        $status = PushDevice::where('user_id', auth()->user()->id)->where('token', $token)->delete();
+        if ($status) {
+            return $this->success('删除成功');
+        }
+
+        return $this->error('删除失败');
     }
 }

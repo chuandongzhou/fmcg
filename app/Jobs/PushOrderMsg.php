@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
+use App\Services\PushOrderService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -12,23 +13,21 @@ class PushOrderMsg extends Job implements SelfHandling, ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
+    public $targetUserId;
+
     /**
-     * Create a new job instance.
-     *
-     * @return void
+     * @param $targetUserId
      */
-    public function __construct()
+    public function __construct($targetUserId)
     {
-        //
+        $this->targetUserId = $targetUserId;
     }
 
     /**
-     * Execute the job.
-     *
-     * @return void
+     * @param \App\Services\PushOrderService $push
      */
-    public function handle()
+    public function handle(PushOrderService $push)
     {
-        //
+        $push->push($this->targetUserId);
     }
 }

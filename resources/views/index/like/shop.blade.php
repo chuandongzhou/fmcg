@@ -1,6 +1,6 @@
 @extends('index.menu-master')
 @section('right')
-    <div class="container my-goods index">
+    <div class="my-goods index">
         <div class="row">
             <div class="col-sm-10 collect">
                 <div class="row">
@@ -26,12 +26,14 @@
                                         <img class="commodity-img" src="{{ $shop['image_url'] }}">
                                         {{--<span class="prompt"></span>--}}
                                     </div>
-                                    <p class="commodity-name">{{ $shop['name'] }}</p>
+                                    <div class="content-panel">
+                                        <p class="commodity-name">{{ $shop['name'] }}</p>
 
-                                    <p class="sell-panel">
-                                        <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
-                                        <span class="sales pull-right">订单量 : {{ $shop['orders'] }}</span>
-                                    </p>
+                                        <p class="sell-panel">
+                                            <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
+                                            <span class="sales pull-right">订单量 : {{ $shop['orders'] }}</span>
+                                        </p>
+                                    </div>
                                 </div>
                             </a>
                         @endforeach

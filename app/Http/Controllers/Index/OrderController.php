@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Jobs\PushOrderMsg;
 use App\Models\OrderGoods;
 use App\Services\CartService;
 use Carbon\Carbon;
@@ -46,12 +47,8 @@ class OrderController extends Controller
             'cancel_by' => $this->userId,
             'cancel_at' => Carbon::now()
         ]);
-        dd($status);
-        if ($status) {
-            return $this->success();
-        }
 
-        return $this->error('操作失败');
+        return $status ? $this->success() : $this->error('操作失败');
     }
 
 
@@ -182,7 +179,9 @@ class OrderController extends Controller
                 return redirect('cart');
             }
         }
-        // TODO: 跳至支付页面->写入到redis的哈希表,同时设置过期时间.
+        // TODO: 跳至支付页面->写入到redis,同时设置过期时间.
+        //set push:seller:$seller_id
+        //expire push:seller:$seller_id 600  (10分钟)
         dd($onlinePaymentOrder);
 
     }
@@ -200,24 +199,20 @@ class OrderController extends Controller
         array_forget($objType, $this->userType);
         //支付类型
         $payType = cons()->valueLang('pay_type');
-        $selectedObj = '';
-        $selectedPay = '';
         //查询条件判断
         $search = $request->all();
         if (empty($search)) {
             //无查询条件时，查询该用户所有非取消订单。
             $stat = $this->_searchAllOrder();
         } else {
-            $selectedObj = $search['obj_type'];
-            $selectedPay = $search['pay_type'];
             $stat = $this->_searchAllOrderByOptions($search);
         }
-
         $otherStat = $this->_orderStatistics($stat['data']);
 
+        $search['checkbox_flag'] = isset($search['checkbox_flag']) ? $search['checkbox_flag'] : 1;
+
         return view('index.order.order-statistics', [
-            'selectedPay' => $selectedPay,
-            'selectedObj' => $selectedObj,
+            'search' => $search,
             'pay_type' => $payType,
             'obj_type' => $objType,
             'statistics' => $stat,
@@ -236,15 +231,13 @@ class OrderController extends Controller
             $query->where('user_id', $this->userId)->orWhere(function ($query) {
                 $query->ofSellByShopId($this->userId);
             });
-        })->where(function ($query) {
+        })->nonCancel()->where(function ($query) {
             //在线支付情况，只查询付款完成以后的状态
-            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                cons('order.pay_status.payment_success'));
+            $query->ofPaySuccess();
         })->orWhere(function ($query) {
             //货到付款情况，只查询发货以后的状态
-            $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
-                [cons('order.status.send'), cons('order.status.finished')]);
-        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+            $query->ofHasSend();
+        })->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
     }
 
     /**
@@ -257,23 +250,52 @@ class OrderController extends Controller
     {
         return Order::where(function ($query) use ($search) {
             //付款方式
-            if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
-                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                    cons('order.pay_status.payment_success'));
-            } else { //货到付款
-                $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
-                    [cons('order.status.send'), cons('order.status.finished')]);
-            }
-            //查询对象
-            if ($search['obj_type'] > $this->userId) {
-                $query->ofSellByShopId(intval($search['obj_type']));
+            if (empty($search['pay_type'])) {
+                $query->where(function ($query) {
+                    //在线支付情况，只查询付款完成以后的状态
+                    $query->ofPaySuccess();
+                })->orWhere(function ($query) {
+                    //货到付款情况，只查询发货以后的状态
+                    $query->ofHasSend();
+                });
             } else {
+                if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
+                    $query->ofPaySuccess();
+                } else { //货到付款
+                    $query->ofHasSend();
+                }
+            }
+            //查询买家
+            if (!empty($search['obj_type']) && $search['obj_type'] < $this->userId) {
                 $query->where('user_id', intval($search['obj_type']));
             }
-
+            //時間
             if (!empty($search['start_at']) && !empty($search['end_at'])) {
                 $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
             }
+
+        })->wherehas('goods', function ($query) use ($search) {
+
+            empty($search['goods_name']) ?: $query->where('name', trim($search['goods_name']));
+
+        })->wherehas('shop.user', function ($query) use ($search) {//根据卖家姓名,类型查询
+
+            empty($search['seller_name']) ?: $query->where('user_name', trim($search['seller_name']));
+
+            //查询卖家
+            if (!empty($search['obj_type']) && $search['obj_type'] > $this->userId) {
+                $query->where('id', intval($search['obj_type']));
+            }
+        })->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
+
+            empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
+
+
+            empty($search['city_id']) ?: $query->where('city_id', $search['city_id']);
+
+
+            empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
+
         })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
     }
 
@@ -299,10 +321,10 @@ class OrderController extends Controller
             //订单相关统计
             $stat['totalAmount'] += $value['price'];
             if ($value['pay_type'] == cons('pay_type.online')) {
-                ++$stat['onlineNum'];
+                ++ $stat['onlineNum'];
                 $stat['onlineAmount'] += $value['price'];
             } else {
-                ++$stat['codNum'];
+                ++ $stat['codNum'];
                 $stat['codAmount'] += $value['price'];
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
                     $stat['codReceiveAmount'] += $value['price'];
@@ -336,18 +358,32 @@ class OrderController extends Controller
     public function getOrderPolling()
     {
         $redis = Redis::connection();
-        //查询hash表中user里是否有值.买家是否有提醒
-        if ($redis->hExists('order_user', 'u' . $this->userId)) {
-            $redis->hDel('order_user', 'u' . $this->userId);
+
+        //遍历redis键,过期时间小于5分钟的放入推送列表
+        $targetUserIds = $redis->keys('push:user:*');
+        $targetSellerIds = $redis->keys('push:seller:*');
+        $ids = array_merge($targetUserIds, $targetSellerIds);
+        if (empty($ids)) {
+            return response()->json([]);
+        }
+        foreach ($ids as $id) {
+            if ($redis->ttl($id) < 300) {
+                $this->dispatch(new PushOrderMsg(substr($id, strrpos($id, ':') + 1)));
+                $redis->del($id);
+            }
+        }
+        //push:user:$user_id买家是否有提醒
+        if ($redis->exists('push:user:' . $this->userId)) {
+            $redis->del('push:user:' . $this->userId);
 
             return response()->json(['type' => 'user', 'data' => $this->userId]);
         }
-        //卖家是否有提醒
+        //push:seller:$seller_id卖家是否有提醒
         $shopId = session('shop_id');
 
-        if ($redis->hExists('order_shop', 's' . $shopId)) {
+        if ($redis->exists('push:seller:' . $this->userId)) {
 
-            $redis->hDel('order_shop', 's' . $shopId);
+            $redis->del('push:seller:' . $this->userId);
 
             return response()->json(['type' => 'shop', 'data' => $shopId]);
         }

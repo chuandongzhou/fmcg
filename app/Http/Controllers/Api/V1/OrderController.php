@@ -8,11 +8,49 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    private $userId;
+
+    public function __construct()
+    {
+        $this->userId = auth()->user()->id;
+    }
+
+    /**
+     * 买家查询订单列表
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getListOfBuy()
+    {
+        $orders = Order::ofBuy($this->id)->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 订单详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getDetail(Request $request)
+    {
+        $id = $request->input('order_id');
+        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods',
+            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($id);
+        if ($detail) {
+            return $this->success($detail);
+        }
+
+        return $this->error('订单不存在');
+    }
+
     /**
      * 确认订单消息
      *
@@ -50,6 +88,7 @@ class OrderController extends Controller
             return $this->error('确认订单失败');
         }
     }
+
     /**
      * 确认订单页
      *
@@ -63,6 +102,7 @@ class OrderController extends Controller
         $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
 
         dd($shippingAddress->toArray());
+
         return $this->success(['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
 
@@ -141,7 +181,7 @@ class OrderController extends Controller
         return $this->success('提交订单成功');
 
         // TODO: 跳至支付页面
-       // dd($onlinePaymentOrder);
+        // dd($onlinePaymentOrder);
 
     }
 
