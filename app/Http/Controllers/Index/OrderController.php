@@ -167,6 +167,7 @@ class OrderController extends Controller
                     }
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
+
                     return redirect('order-buy');
                 } else {
                     //TODO: 跳转页面后期修改
@@ -195,6 +196,7 @@ class OrderController extends Controller
      */
     public function getStatistics(Request $request)
     {
+
         //订单对象类型
         $objType = cons()->valueLang('user.type');
         array_forget($objType, $this->userType);
@@ -202,43 +204,48 @@ class OrderController extends Controller
         $payType = cons()->valueLang('pay_type');
         //查询条件判断
         $search = $request->all();
-        if (empty($search)) {
-            //无查询条件时，查询该用户所有非取消订单。
-            $stat = $this->_searchAllOrder();
-        } else {
-            $stat = $this->_searchAllOrderByOptions($search);
-        }
-        $otherStat = $this->_orderStatistics($stat['data']);
+        $orderCurrent = isset($search['order_page_num']) ? intval($search['order_page_num']) : 1;
+        $goodsCurrent = isset($search['goods_page_num']) ? intval($search['goods_page_num']) : 1;
+        $per = 2;//分页数
+        $statistics = $this->_searchAllOrderByOptions($search);
+        $orderCount = $statistics->count();//订单总数
+        $stat = $statistics->forPage($orderCurrent, $per);
+        $res = $this->_orderStatistics($statistics->toArray());
+        $goodsCount = count($res['goods']);//商品总数
+        $otherStat = $res['stat'];
+        $statGoods = collect($res['goods'])->forPage($goodsCurrent, $per);
 
         $search['checkbox_flag'] = isset($search['checkbox_flag']) ? $search['checkbox_flag'] : 1;
+
+        $orderNav = $this->_pageNav($orderCurrent, $per, $orderCount);
+        $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
 
         return view('index.order.order-statistics', [
             'search' => $search,
             'pay_type' => $payType,
             'obj_type' => $objType,
-            'statistics' => $stat,
-            'otherStat' => $otherStat
+            'statistics' => $stat->toArray(),
+            'otherStat' => $otherStat,
+            'goods' => $statGoods->toArray(),
+            'orderNav' => $orderNav,
+            'goodsNav' => $goodsNav,
+            'orderCurrent' => $orderCurrent,
+            'goodsCurrent' => $goodsCurrent
         ]);
     }
 
-    /**
-     * 搜索该用户参与的所有支付或发货的订单
-     *
-     * @return mixed
-     */
-    private function _searchAllOrder()
+    private function _pageNav($pageNum, $per, $pageCount, $flag = 0)
     {
-        return Order::where(function ($query) {
-            $query->where('user_id', $this->userId)->orWhere(function ($query) {
-                $query->ofSellByShopId($this->userId);
-            });
-        })->nonCancel()->where(function ($query) {
-            //在线支付情况，只查询付款完成以后的状态
-            $query->ofPaySuccess();
-        })->orWhere(function ($query) {
-            //货到付款情况，只查询发货以后的状态
-            $query->ofHasSend();
-        })->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+        $html = '';
+        if ($pageNum > 1) {
+            $html .= '<button class="prev' . $flag . '">上一页</button>';
+        }
+
+        if (($pageCount / $per) > $pageNum) {
+            $html .= '<button class="next' . $flag . '">下一页</button>';
+        }
+
+        return $html;
     }
 
     /**
@@ -297,7 +304,7 @@ class OrderController extends Controller
 
             empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
 
-        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -336,19 +343,18 @@ class OrderController extends Controller
                 $num = $good['pivot']['num'];
                 $price = $good['pivot']['price'] * $num;
                 $name = $good['name'];
-
+                $id = $good['id'];
                 if (isset($goodStat[$good['id']])) {
                     $goodStat[$good['id']]['num'] += $num;
                     $goodStat[$good['id']]['price'] += $price;
                 } else {
 
-                    $goodStat[$good['id']] = ['name' => $name, 'price' => $price, 'num' => $num];
+                    $goodStat[$good['id']] = ['id' => $id, 'name' => $name, 'price' => $price, 'num' => $num];
                 }
             }
         }
-        $stat['goods'] = $goodStat;
 
-        return $stat;
+        return ['stat' => $stat, 'goods' => $goodStat];
     }
 
     /**
@@ -390,5 +396,16 @@ class OrderController extends Controller
         }
 
         return response()->json([]);
+    }
+
+    public function postExport(Request $request)
+    {
+        //查询条件判断
+        $search = $request->all();
+
+        $stat = $this->_searchAllOrderByOptions($search);
+
+        $otherStat = $this->_orderStatistics($stat['data']);
+        dd($stat, $otherStat);
     }
 }

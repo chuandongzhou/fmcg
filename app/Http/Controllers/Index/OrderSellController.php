@@ -40,7 +40,7 @@ class OrderSellController extends OrderController
         $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
         $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
 
-        $orders = Order::ofSell($this->userId)->paginate()->toArray();
+        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -93,7 +93,9 @@ class OrderSellController extends OrderController
     public function getNonSure()
     {
         $redis = Redis::connection();
-        $redis->hDel('order_shop', 's' . session('shop_id'));
+        if ($redis->exists('push:seller:' . $this->userId)) {
+            $redis->del('push:seller' . $this->userId);
+        }
 
         return Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
     }
@@ -137,8 +139,8 @@ class OrderSellController extends OrderController
         $userIds = $nonSure->pluck('user_id');
         $redis = Redis::connection();
         foreach ($userIds as $item) {
-            $redis->exists('push:user:'.$item) ?  : $redis->set('push:user:'.$item, 1);
-            $redis->expire('push:user:'.$item,600);
+            $redis->exists('push:user:' . $item) ?: $redis->set('push:user:' . $item, 1);
+            $redis->expire('push:user:' . $item, 600);
         }
         //修改订单状态
         $ids = $nonSure->pluck('id');
@@ -159,13 +161,10 @@ class OrderSellController extends OrderController
     public function putBatchSend(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::ofSellByShopId($this->userId)->whereIn('id',
+        $status = Order::bySellerId($this->userId)->whereIn('id',
             $orderIds)->nonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
-        if ($status) {
-            return $this->success();
-        }
 
-        return $this->error('操作失败');
+        return $status ? $this->success() : $this->error('操作失败');
 
     }
 
@@ -178,16 +177,13 @@ class OrderSellController extends OrderController
     public function putBatchFinish(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::ofSellByShopId($this->userId)->whereIn('id', $orderIds)->where('pay_status',
+        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('pay_status',
             cons('order.pay_status.payment_success'))->nonCancel()->update([
             'status' => cons('order.status.finished'),
             'finished_at' => Carbon::now()
         ]);
-        if ($status) {
-            return $this->success();
-        }
 
-        return $this->error('请确认买家是否付款');
+        return $status ? $this->success() : $this->error('请确认买家是否付款');
     }
 
     /**
@@ -198,7 +194,7 @@ class OrderSellController extends OrderController
      */
     public function getDetail($id)
     {
-        $detail = Order::ofSellByShopId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
+        $detail = Order::bySellerId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
             'shippingAddress.address')->find($id);
         if (!$detail) {
             return $this->error('订单不存在');
@@ -227,7 +223,7 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $res = Order::with('shippingAddress', 'shippingAddress.address',
-            'goods')->ofSellByShopId($this->userId)->whereIn('id', $orderIds)->get()->toArray();
+            'goods')->bySellerId($this->userId)->whereIn('id', $orderIds)->get()->toArray();
         if (empty($res)) {
             return $this->error('没有该订单信息');
         }

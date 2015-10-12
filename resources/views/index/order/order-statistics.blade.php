@@ -28,24 +28,26 @@
                     </select>
                 @endif
                 <button class="btn" type="submit" >统计</button>
-                <a href="#" class="btn btn-primary">统计导出</a>
+                <button id="export" class="btn btn-primary">统计导出</button>
             </div>
-
-                <div class="col-sm-12 enter-item">
-                    <div class="check-item"><span class="span-checkbox"><i class="fa {{$search['checkbox_flag']==1 ? 'fa-check' : ''}}"></i></span>
-                        <input class="inp-checkbox" type="checkbox" {{$search['checkbox_flag']==1 ? 'checked' : ''}}>显示商品</div>
-                    <input type="hidden" class="checkbox-flag" value="{{ $search['checkbox_flag'] }}" name="checkbox_flag" />
-                    <input type="text" class="enter" name="goods_name" placeholder="{{ empty($search['goods_name']) ? '商品名称' : $search['goods_name']}}">
-                    <input type="text" class="enter" name="seller_name" placeholder="{{ empty($search['seller_name']) ? '商家名称' : $search['seller_name']}}">
-                    @if(Auth()->user()->type == cons('user.type.retailer'))
-                        <p class="item address" >商家地址 :
-                            <select data-id="{{ $search['province_id'] or 0 }}" class="enter address-province" name="province_id"></select>
-                            <select data-id="{{ $search['city_id'] or 0 }}" class="enter address-city" name="city_id"></select>
-                            <select data-id="{{ $search['district_id'] or 0 }}" class="enter address-district" name="district_id"></select>
-                            <input type="hidden" class="enter address-street" />
-                        </p>
-                    @endif
-                </div>
+            <div class="col-sm-12 enter-item">
+                <div class="check-item"><span class="span-checkbox"><i class="fa {{$search['checkbox_flag']==1 ? 'fa-check' : ''}}"></i></span>
+                    <input class="inp-checkbox" type="checkbox" {{$search['checkbox_flag']==1 ? 'checked' : ''}}>显示商品</div>
+                <input type="hidden" class="checkbox-flag" value="{{ $search['checkbox_flag'] }}" name="checkbox_flag" />
+                <input type="text" class="enter" name="goods_name" placeholder="{{ empty($search['goods_name']) ? '商品名称' : $search['goods_name']}}">
+                <input type="text" class="enter" name="seller_name" placeholder="{{ empty($search['seller_name']) ? '商家名称' : $search['seller_name']}}">
+                @if(Auth()->user()->type == cons('user.type.retailer'))
+                    <p class="item address" >商家地址 :
+                        <select data-id="{{ $search['province_id'] or 0 }}" class="enter address-province" name="province_id"></select>
+                        <select data-id="{{ $search['city_id'] or 0 }}" class="enter address-city" name="city_id"></select>
+                        <select data-id="{{ $search['district_id'] or 0 }}" class="enter address-district" name="district_id"></select>
+                        <input type="hidden" class="enter address-street" />
+                    </p>
+                @endif
+            </div>
+            <input type="hidden" name="order_page_num" value="{{ $orderCurrent or 1 }}"/>
+            <input type="hidden" name="goods_page_num" value="{{ $goodsCurrent or 1 }}"/>
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
         <div class="col-sm-12 table-responsive tables">
             <table class="table-bordered table">
@@ -66,7 +68,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($statistics['data'] as $order)
+                    @foreach($statistics as $order)
                         @if($search['checkbox_flag'])
                             @foreach($order['goods'] as $key => $value)
                                 @if($key)
@@ -110,7 +112,35 @@
                     @endforeach
                 </tbody>
             </table>
+            {!! $orderNav !!}
         </div>
+         <div class="col-sm-12 table-responsive tables">
+             <p class="title-table">商品总计</p>
+             <table class="table table-bordered">
+                 <thead>
+                     <tr>
+                         <td>商品编号</td>
+                         <td>商品名称</td>
+                         <td>平均单价</td>
+                         <td>商品数量</td>
+                         <td>商品支出金额</td>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     @foreach($goods as $good )
+                         <tr>
+                             <td>{{ $good['id'] }}</td>
+                             <td>{{ $good['name'] }}</td>
+                             <td>{{ $good['price']/$good['num'] }}</td>
+                             <td>{{ $good['num'] }}</td>
+                             <td>{{ $good['price'] }}</td>
+                         </tr>
+                     @endforeach
+                 </tbody>
+             </table>
+             {!! $goodsNav !!}
+         </div>
+             {{--{!! $obj->render()  !!}--}}
         <div class="col-sm-12 table-responsive tables">
             <p class="title-table">订单总计</p>
             <table class="table table-bordered">
@@ -140,33 +170,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-12 table-responsive tables">
-            <p class="title-table">商品总计</p>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <td>商品编号</td>
-                        <td>商品名称</td>
-                        <td>平均单价</td>
-                        <td>商品数量</td>
-                        <td>商品支出金额</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($otherStat['goods'] as $key => $good )
-                    <tr>
-                        <td>{{ $key }}</td>
-                        <td>{{ $good['name'] }}</td>
-                        <td>{{ $good['price']/$good['num'] }}</td>
-                        <td>{{ $good['num'] }}</td>
-                        <td>{{ $good['price'] }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
     </div>
-    </div>
+</div>
 @stop
 @section('js-lib')
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
@@ -184,7 +189,37 @@
             }
             //提交表单
             $('form').submit();
-        })
+        });
 
+        $('#export').click(function(){
+            var url = '{{ url("order/export") }}';
+            $('form').attr('action',url);
+            $('form').attr('method','post');
+            $('form').submit();
+        });
+        $('.next0').on('click',function(){
+            var target = $('input[name="order_page_num"]');
+            var target_value = parseInt(target.attr('value'));
+            target.attr('value',target_value+1);
+            $('form').submit();
+        });
+        $('.prev0').on('click',function(){
+            var target = $('input[name="order_page_num"]');
+            var target_value = parseInt(target.attr('value'));
+            target.attr('value',target_value-1);
+            $('form').submit();
+        });
+        $('.next1').on('click',function(){
+            var target = $('input[name="goods_page_num"]');
+            var target_value = parseInt(target.attr('value'));
+            target.attr('value',target_value+1);
+            $('form').submit();
+        });
+        $('.prev1').on('click',function(){
+            var target = $('input[name="goods_page_num"]');
+            var target_value = parseInt(target.attr('value'));
+            target.attr('value',target_value-1);
+            $('form').submit();
+        });
     </script>
 @stop

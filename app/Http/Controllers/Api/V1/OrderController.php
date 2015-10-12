@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
 {
@@ -28,27 +29,125 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::ofBuy($this->id)->simplePaginate()->toArray();
+        $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
+            'desc')->simplePaginate()->toArray();
 
         return $this->success($orders);
     }
 
     /**
-     * 订单详情
+     * 卖家查询订单列表
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getListOfSell()
+    {
+        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
+            'desc')->simplePaginate()->toArray();
+
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 查询待付款订单列表
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getNonPayment()
+    {
+        //清除redis中买家提醒消息
+        $redis = Redis::connection();
+        if ($redis->exists('push:user:' . $this->userId)) {
+            $redis->del('push:user:' . $this->userId);
+        }
+        $orders = Order::ofBuy($this->userId)->nonPayment()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 买家查询待确认订单
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getNonSureOfBuy()
+    {
+        $orders = Order::ofBuy($this->userId)->nonSure()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 卖家查询待确定订单
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getNonSureOfSell()
+    {
+        $redis = Redis::connection();
+        if ($redis->exists('push:seller:' . $this->userId)) {
+            $redis->del('push:seller' . $this->userId);
+        }
+
+        $orders = Order::ofSell($this->userId)->nonSure()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 获取待收货信息--买家操作
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getNonArrived()
+    {
+        $orders = Order::ofBuy($this->userId)->nonArrived()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 获取待发货订单列表--卖家操作
+     *
+     * @return mixed
+     */
+    public function getNonSend()
+    {
+        $orders = Order::ofSell($this->userId)->nonSend()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+    /**
+     * 买家获取订单详情
      *
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getDetail(Request $request)
+    public function getDetailOfBuy(Request $request)
     {
         $id = $request->input('order_id');
-        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods',
-            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($id);
-        if ($detail) {
-            return $this->success($detail);
-        }
+        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods', 'goods.images',
+            'deliveryMan', 'shippingAddress.address')->find($id);
 
-        return $this->error('订单不存在');
+        return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
+    }
+
+    /**
+     * 卖家查询订单详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+
+    public function getDetailOfSell(Request $request)
+    {
+        $id = $request->input('order_id');
+        $detail = Order::bySellerId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
+            'shippingAddress.address')->find($id);
+
+        return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
     }
 
     /**
@@ -185,4 +284,44 @@ class OrderController extends Controller
 
     }
 
+    /**
+     * 批量取消订单确认状态，在线支付：确认但未付款，可取消；货到付款：确认但未发货，可取消
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putCancelSure(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $status = Order::where(function ($query) {
+            $query->wherehas('shop.user', function ($query) {
+                $query->where('id', $this->userId);
+            })->orWhere('user_id', $this->userId);
+        })->whereIn('id', $orderIds)->where('pay_status',
+            cons('order.pay_status.non_payment'))->nonCancel()->nonSend()->update([
+            'is_cancel' => cons('order.is_cancel.on'),
+            'cancel_by' => $this->userId,
+            'cancel_at' => Carbon::now()
+        ]);
+
+        return $status ? $this->success('操作成功') : $this->error('操作失败');
+    }
+
+    /**
+     * 买家批量确认订单完成,仅针对在线支付订单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putBatchFinish(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $status = Order::where('user_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
+            cons('order.pay_status.payment_success'))->where('status', cons('order.status.send'))->nonCancel()->update([
+            'status' => cons('order.status.finished'),
+            'finished_at' => Carbon::now()
+        ]);
+
+        return $status ? $this->success('操作成功') : $this->error('操作失败');
+    }
 }

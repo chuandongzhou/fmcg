@@ -341,7 +341,40 @@
 	
 `失败返回`
 
-#### 2.5.5 订单详情[get] (detaily)
+#### 2.5.5 待付款订单列表[get] (non-payment)()
+`请求参数：`
+
+	page 				int			分页
+
+`成功返回：`
+	
+	返回信息同上
+
+`失败返回`
+
+#### 2.5.6 待确认订单列表[get] (non-sure-of-buy)
+`请求参数：`
+
+	page 				int			分页
+
+`成功返回：`
+	
+	返回信息同上
+
+`失败返回`
+
+#### 2.5.7 待收货订单列表[get] (non-arrived)
+`请求参数：`
+
+	page 				int			分页
+
+`成功返回：`
+	
+	返回信息同上
+
+`失败返回`
+
+#### 2.5.8 订单详情[get] (detail-of-buy)
 `请求参数：`
 
 	order_id			int			订单号
@@ -353,6 +386,7 @@
 	status_name			string		订单显示状态
 	payment_type		string      支付方式
 	is_cancel			int			订单是否被取消(1取消,0未取消)
+	remark				string		订单备注信息
 	created_at			string		创建时间
 	confirmed_at     	string 		确认时间
 	paid_at				string		支付时间
@@ -383,6 +417,26 @@
 
 `失败返回`
 
+#### 2.5.9 批量取消订单[put] (cancel-sure)
+`请求参数：`
+
+	order_id  				array		订单id
+
+`成功返回：`
+
+
+`失败返回：`
+
+#### 2.5.10 批量确认订单完成[put] (batch-finish)
+`请求参数：`
+
+	order_id  				array		订单id
+
+`成功返回：`
+
+
+`失败返回：`
+
 ### 2.6 收藏 like
 #### 2.5.1 商店收藏[post] (shops)
 `请求参数：`
@@ -405,7 +459,7 @@
     orders              int         店铺销量
 
 `失败返回`
-### 2.6 收藏 like
+
 #### 2.5.1 商店收藏[post] (shops)
 `请求参数：`
 

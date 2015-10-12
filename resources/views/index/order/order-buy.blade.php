@@ -120,16 +120,18 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12 padding-clear">
-                    <button class="btn btn-cancel ajax" data-url="{{ url('order-buy/cancel-sure') }}" data-method="put">
-                        取消
-                    </button>
-                    <button class="btn btn-info ajax" data-url="{{ url('order-buy/batch-finish') }}" data-method="put">
-                        已收货
-                    </button>
+            @if($orders['data'])
+                <div class="row" id="foot-nav">
+                    <div class="col-sm-12 padding-clear">
+                        <button class="btn btn-cancel ajax" data-url="{{ url('order-buy/cancel-sure') }}" data-method="put">
+                            取消
+                        </button>
+                        <button class="btn btn-info ajax" data-url="{{ url('order-buy/batch-finish') }}" data-method="put">
+                            已收货
+                        </button>
+                    </div>
                 </div>
-            </div>
+            @endif
         </form>
     </div>
 @stop

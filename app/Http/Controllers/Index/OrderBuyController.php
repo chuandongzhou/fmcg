@@ -39,8 +39,10 @@ class OrderBuyController extends OrderController
         $data['nonSure'] = Order::ofBuy($this->userId)->nonSure()->count();//未确认
         $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
         $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
+
         //默认显示所有订单订单
-        $orders = Order::ofBuy($this->userId)->paginate()->toArray();
+        $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
+            'desc')->paginate()->toArray();
 
         return view('index.order.order-buy', [
             'pay_type' => $payType,

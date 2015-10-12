@@ -206,7 +206,8 @@ class Order extends Model
      */
     public function scopeOfBuy($query, $userId)
     {
-        return $query->where('user_id', $userId)->with('shop.user', 'goods')->orderBy('id', 'desc');
+        return $query->where('user_id', $userId)->where('is_cancel', cons('order.is_cancel.off'))->with('shop.user',
+            'goods')->orderBy('id', 'desc');
     }
 
     /**
@@ -220,7 +221,7 @@ class Order extends Model
     {
         return $query->wherehas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
-        })->with('user', 'goods')->orderBy('id', 'desc');
+        })->where('is_cancel',cons('order.is_cancel.off'))->with('user', 'goods')->orderBy('id', 'desc');
     }
 
     /**
@@ -230,7 +231,7 @@ class Order extends Model
      * @param $userId
      * @return mixed
      */
-    public function scopeOfSellByShopId($query, $userId)
+    public function scopeBySellerId($query, $userId)
     {
         return $query->wherehas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);

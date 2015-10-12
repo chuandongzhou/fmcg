@@ -590,7 +590,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           position: absolute;
           top: 29px;
           width: 320px;
-          z-index: 9;
+          z-index: 10;
           background-color: $body-bg;
           border: 1px solid $gray-plain-light;
           margin-top: -1px;
@@ -669,7 +669,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     text-align: center;
     padding: 0;
     a {
-      color: $gray-light;
+      color: $gray-base;
       display: inline-block;
       width: 100%;
       padding: 10px 0;
@@ -797,7 +797,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .store-detail-wrap {
-    height: 300px;
     h3 {
       padding: 0 0 20px 0;
       border-bottom: 1px dashed $gray-light;
@@ -827,7 +826,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 30%;
     }
     .right-panel {
-      width: 50%;
+      width: 70%;
       .count {
         padding: 1px 5px;
         font-size: 16px;
@@ -850,8 +849,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     color: $gray-light;
   }
   .address-wrap {
-    padding: 20px 0 20px 30px;
+    padding: 0 0 20px 30px;
     .item {
+      margin: 10px 0;
       .address-list {
         li {
           padding: 0 0 5px 20px;
@@ -1019,6 +1019,11 @@ ul, li, p, a, h1, h2, h3, h4 {
   .product-name {
     margin-left: 10px;
     color: $gray;
+    display: inline-block;
+    max-width: 350px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .pay-detail {
     @extend .right-search;
@@ -1877,7 +1882,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           color: $gray-light;
         }
       }
-      tfoot {
+      .address{
         td {
           background-color: $gray-plain;
           .operating {
@@ -1885,6 +1890,7 @@ ul, li, p, a, h1, h2, h3, h4 {
             .control {
               width: 85%;
               padding: 3px 0;
+              vertical-align: middle;
             }
           }
           .lowest-money {
@@ -1895,6 +1901,9 @@ ul, li, p, a, h1, h2, h3, h4 {
             display: inline-block;
           }
         }
+      }
+      tfoot{
+        @extend .address;
       }
       tr {
         th {
@@ -1987,7 +1996,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   .control-panel {
     padding: 10px 15px;
     .control {
-      width: 10%;
       padding: 4px 0;
       margin-left: 10px;
       vertical-align: middle;
