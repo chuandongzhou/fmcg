@@ -226,6 +226,27 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse-ten">
+                                        首页栏目
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse-ten"
+                                 class="panel-collapse collapse {{ path_active('column/*' , 'in') }}">
+                                <div class="panel-body">
+                                    <ul>
+                                        <li><a href="{{ url('admin/column/create?type=goods') }}">商品栏目添加</a>
+                                            <a href="{{ url('admin/column?type=goods') }}" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/column/create?type=shop') }}">店铺栏目添加</a>
+                                            <a href="{{ url('admin/column?type=shop') }}" class="manger">管理</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

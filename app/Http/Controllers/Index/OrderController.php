@@ -47,6 +47,9 @@ class OrderController extends Controller
             'cancel_by' => $this->userId,
             'cancel_at' => Carbon::now()
         ]);
+        if ($status) {
+            return $this->success();
+        }
 
         return $status ? $this->success() : $this->error('操作失败');
     }
@@ -130,25 +133,30 @@ class OrderController extends Controller
             return redirect('cart');
         }
 
-        $data = $request->input('shop');
+        $data = $request->all();
 
         $payTypes = cons('pay_type');
         $codPayTypes = cons('cod_pay_type');
 
         $onlinePaymentOrder = [];   //  保存在线支付的订单
+        $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
+
+        $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data['cod_pay_type'],
+            head($codPayTypes)) : 0;
+        //TODO: 需要验证收货地址是否合法
+        $shippingAddressId = $data['shipping_address_id'];
+        //$remark = $data['remark'] ? $data['remark'] : '';
         foreach ($shops as $shop) {
-            $payType = array_get($payTypes, $data[$shop->id]['pay_type'], head($payTypes));
-            $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data[$shop->id]['cod_pay_type'],
-                head($codPayTypes)) : 0;
+            $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
                 'user_id' => auth()->user()->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
+                'status' => cons('order.status.non_send'),
                 'cod_pay_type' => $codPayType,
-                //TODO: 需要验证收货地址是否合法
-                'shipping_address_id' => $data[$shop->id]['shipping_address_id'],
-                'remark' => $data[$shop->id]['remark'] ? $data[$shop->id]['remark'] : ''
+                'shipping_address_id' => $shippingAddressId,
+                'remark' => $remark
             ];
             $order = Order::create($orderData);
             if ($order->exists) {
@@ -167,7 +175,6 @@ class OrderController extends Controller
                     }
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
-
                     return redirect('order-buy');
                 } else {
                     //TODO: 跳转页面后期修改
@@ -196,7 +203,6 @@ class OrderController extends Controller
      */
     public function getStatistics(Request $request)
     {
-
         //订单对象类型
         $objType = cons()->valueLang('user.type');
         array_forget($objType, $this->userType);

@@ -119,7 +119,7 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopeHot($query)
+    public function scopeOfHot($query)
     {
         return $query->orderBy('sales_volume', 'desc');
     }
@@ -129,9 +129,9 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopeNew($query)
+    public function scopeOfNew($query)
     {
-        return $query->where('is_new', 1);
+        return $query->orderBy('id', 'DESC');
     }
 
     /**
@@ -139,7 +139,7 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopePromotion($query)
+    public function scopeOfPromotion($query)
     {
         return $query->where('is_promotion', 1);
     }
@@ -149,7 +149,7 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopeOrderPrice($query)
+    public function scopeOfPrice($query)
     {
         return $query->orderBy('price_retailer', 'asc');
     }

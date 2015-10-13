@@ -79,51 +79,57 @@
         </div>
     </div>
     <div class="container dealer-index index">
-        <div class="row list-penal">
-            <div class="col-sm-12 title"><h3>热门商品</h3></div>
-            @foreach($hotGoods as $hot)
-                <a href="{{ url('goods/'.$hot->id) }}">
-                    <div class="col-sm-3 commodity">
-                        <div class="img-wrap">
-                            <a href="{{ url('goods/' . $hot->id) }}"><img class="commodity-img"
-                                                                          src="{{ $hot->image_url }}"></a>
-                            <span class="prompt @if($hot->is_out) lack  @elseif($hot->is_promotion) promotions @elseif($hot->is_new) new-listing @endif"></span>
-                        </div>
-                        <div class="content-panel">
-                            <p class="commodity-name"><a href="{{ url('goods/' . $hot->id) }}">{{ $hot->name }}</a></p>
+        @foreach($goodsColumns as $column)
+            <div class="row list-penal">
+                <div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>
+                <div class="col-sm-12 padding-clear">
+                    @foreach($column->goods as $goods)
+                        <div class="commodity commodity-index-img">
+                            <div class="img-wrap">
+                                <a href="{{ url('goods/' . $goods->id) }}"><img class="commodity-img"
+                                                                                src="{{ $goods->image_url }}"></a>
+                                <span class="prompt @if($goods->is_out) lack  @elseif($goods->is_promotion) promotions @elseif($goods->is_new) new-listing @endif"></span>
+                            </div>
+                            <div class="content-panel">
+                                <p class="commodity-name"><a
+                                            href="{{ url('goods/' . $goods->id) }}">{{ $goods->name }}</a></p>
 
-                            <p class="sell-panel">
-                                <span class="money">￥{{ $hot->price }}</span>
-                                <span class="sales pull-right">销量 : {{ $hot->sales_volume }}</span>
-                            </p>
+                                <p class="sell-panel">
+                                    <span class="money">￥{{ $goods->price }}</span>
+                                    <span class="sales pull-right">销量 : {{ $goods->sales_volume }}</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-        <div class="row list-penal">
-            <div class="col-sm-12 title"><h3>热门商家</h3></div>
-            @foreach($hotShops as $shop)
-                <a href="{{ url('shop/detail/'.$shop->id) }}">
-                    <div class="col-sm-3 commodity">
-                        <div class="img-wrap">
-                            <a href="{{ url('shop/' . $shop->id) }}">
-                                <img class="commodity-img" src="{{ $shop->image_url }}">
-                            </a>
-                        </div>
-                        <div class="content-panel">
-                            <p class="commodity-name"><a href="{{ url('shop/' . $shop->id) }}">{{ $shop->name }} </a>
-                            </p>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+        @foreach($shopColumns as $column)
+            <div class="row list-penal">
+                <div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>
+                <div class="col-sm-12 padding-clear">
+                    @foreach($column->shops as $shop)
+                        <div class="commodity commodity-index-img">
+                            <div class="img-wrap">
+                                <a href="{{ url('shop/' . $shop->id) }}">
+                                    <img class="commodity-img" src="{{ $shop->image_url }}">
+                                </a>
+                            </div>
+                            <div class="content-panel">
+                                <p class="commodity-name"><a
+                                            href="{{ url('shop/' . $shop->id) }}">{{ $shop->name }} </a>
+                                </p>
 
-                            <p class="sell-panel">
-                                <span class="money">最低配送额 : ￥{{ $shop->min_money }}</span>
-                                <span class="sales pull-right">销量 : 2000</span>
-                            </p>
+                                <p class="sell-panel">
+                                    <span class="money">最低配送额:￥{{ $shop->min_money }}</span>
+                                    <span class="sales pull-right">销量:2000</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
     </div>
 @stop
 

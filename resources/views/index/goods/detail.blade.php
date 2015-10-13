@@ -64,7 +64,7 @@
                                         <i  class="fa fa-star"></i> 已收藏
                                     @endif
                                 </a>
-
+                                <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
                             </li>
                         </form>
                     </ul>
@@ -78,17 +78,17 @@
             </div>
             <div class="col-sm-12 address-wrap  location box active">
                 <div class="item clearfix">
-                    <span class="pull-left title-name">商品配送区域</span>
-                    <ul class="pull-left address-list">
+                    <h5 class="title-name">商品配送区域 :</h5>
+                    <ul class="address-list">
                         @foreach($goods->deliveryArea as $area)
                             <p class="col-sm-12">{{ $area->area_name.$area->address }}</p>
                         @endforeach
                     </ul>
                 </div>
                 <div class="item">
-                    <span class="title-name pull-left">商品配送区域大概地图标识</span>
+                    <h5 class="title-name">商品配送区域大概地图标识 :</h5>
 
-                    <p class="map pull-left">
+                    <p class="map">
                         <img src="http://placehold.it/470x350">
                     </p>
                 </div>

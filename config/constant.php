@@ -57,7 +57,9 @@ return [
         'file_type' => [
             'logo' => 1,         //logo
             'license' => 2,         //营业执照
-            'images' => 3          //店铺图片
+            'images' => 3,          //店铺图片
+            'business_license' => 4, //经营许可证
+            'agency_contract' => 5 , //代理合同
         ],
         'address_type' => [
             'shop_address' => 1,        //店铺地址
@@ -150,6 +152,25 @@ return [
     'push_device' => [
         'iphone' => 1,
         'android' => 2,
-
+    ],
+    'home_column' => [
+        'type' => [
+            'goods' => 1,
+            'shop' => 2
+        ]
+    ],
+    //排序
+    'sort' => [
+        'goods' => [
+            'hot' => 1,
+            'price' => 2,
+            'new'=>3,
+        ],
+        'shop' => [
+            'hot' => 1,
+            'new' => 2
+        ]
     ]
+
+
 ];

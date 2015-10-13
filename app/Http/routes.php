@@ -1,5 +1,7 @@
 <?php
 
+$router->get('pusher', 'TestController@pusher');
+$router->get('pushIos', 'TestController@pushIos');
 $router->get('login', 'Auth\AuthController@login');
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
@@ -9,7 +11,7 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
 /**
  * 前台
  */
-$router->group(['namespace' => 'Index' ,'middleware' => 'auth'], function ($router) {
+$router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索

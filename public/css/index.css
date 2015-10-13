@@ -270,6 +270,17 @@ ul, li, p, a, h1, h2, h3, h4 {
   .list-penal .commodity .content-panel .order-count {
     color: #777777; }
 
+.list-penal .commodity-index-img {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 20%;
+  float: left;
+  padding: 0 15px; }
+
+@media screen and (max-width: 765px) {
+  .list-penal .commodity-index-img {
+    width: 100%; } }
+
 .list-penal .img-wrap {
   position: relative; }
   .list-penal .img-wrap .prompt {
@@ -473,6 +484,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: inline-block;
       color: #000;
       padding: 0 15px; }
+  .sort .sort-item-panel .list-wrap {
+    z-index: 10; }
   .sort .a-menu-panel .sort-list {
     margin: 0 3px; }
     .sort .a-menu-panel .sort-list .list-title.active {
@@ -493,7 +506,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   text-align: center;
   padding: 0; }
   .public-personal .menu a {
-    color: #777777;
+    color: #000;
     display: inline-block;
     width: 100%;
     padding: 10px 0;
@@ -584,53 +597,58 @@ ul, li, p, a, h1, h2, h3, h4 {
 .goods-detail .left-store-logo .banner .item img {
   height: 300px; }
 
-.goods-detail .store-detail-wrap {
-  height: 300px; }
-  .goods-detail .store-detail-wrap h3 {
-    padding: 0 0 20px 0;
-    border-bottom: 1px dashed #777777; }
-  .goods-detail .store-detail-wrap li {
-    padding: 10px 0; }
-  .goods-detail .store-detail-wrap .information li {
-    padding: 5px 0; }
-    .goods-detail .store-detail-wrap .information li .title-name {
-      display: inline-block;
-      width: 85px;
-      text-align: right;
-      padding-right: 10px; }
-    .goods-detail .store-detail-wrap .information li .content {
-      display: inline-block;
-      width: 85%; }
-    .goods-detail .store-detail-wrap .information li .stores-img {
-      width: 60px;
-      height: 60px; }
-  .goods-detail .store-detail-wrap .left-panel {
-    width: 30%; }
-  .goods-detail .store-detail-wrap .right-panel {
-    width: 50%; }
-    .goods-detail .store-detail-wrap .right-panel .count {
-      padding: 1px 5px;
-      font-size: 16px; }
-      .goods-detail .store-detail-wrap .right-panel .count:hover {
-        color: #fff; }
-    .goods-detail .store-detail-wrap .right-panel .collect {
-      color: #4cb9fe; }
-    .goods-detail .store-detail-wrap .right-panel .amount {
-      width: 25%;
-      padding: 3px 0;
-      vertical-align: middle; }
+.goods-detail .store-detail-wrap h3 {
+  padding: 0 0 20px 0;
+  border-bottom: 1px dashed #777777; }
+
+.goods-detail .store-detail-wrap li {
+  padding: 10px 0; }
+
+.goods-detail .store-detail-wrap .information li {
+  padding: 5px 0; }
+  .goods-detail .store-detail-wrap .information li .title-name {
+    display: inline-block;
+    width: 85px;
+    text-align: right;
+    padding-right: 10px; }
+  .goods-detail .store-detail-wrap .information li .content {
+    display: inline-block;
+    width: 85%; }
+  .goods-detail .store-detail-wrap .information li .stores-img {
+    width: 60px;
+    height: 60px; }
+
+.goods-detail .store-detail-wrap .left-panel {
+  width: 30%; }
+
+.goods-detail .store-detail-wrap .right-panel {
+  width: 70%; }
+  .goods-detail .store-detail-wrap .right-panel .count {
+    padding: 1px 5px;
+    font-size: 16px; }
+    .goods-detail .store-detail-wrap .right-panel .count:hover {
+      color: #fff; }
+  .goods-detail .store-detail-wrap .right-panel .collect {
+    color: #4cb9fe; }
+  .goods-detail .store-detail-wrap .right-panel .amount {
+    width: 25%;
+    padding: 3px 0;
+    vertical-align: middle; }
 
 .goods-detail .title-name {
   color: #777777; }
 
 .goods-detail .address-wrap {
-  padding: 20px 0 20px 30px; }
-  .goods-detail .address-wrap .item .address-list li {
-    padding: 0 0 5px 20px; }
-  .goods-detail .address-wrap .item .map {
-    max-width: 500px;
-    max-height: 380px;
-    margin-left: 10px; }
+  padding: 0 0 20px 30px; }
+  .goods-detail .address-wrap .item {
+    margin: 10px 0; }
+    .goods-detail .address-wrap .item .address-list li {
+      padding: 0 0 5px 0;
+      text-indent: 30px; }
+    .goods-detail .address-wrap .item .map {
+      max-width: 500px;
+      max-height: 380px;
+      text-indent: 30px; }
 
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
@@ -748,7 +766,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .wholesalers-management .product-name {
   margin-left: 10px;
-  color: #555555; }
+  color: #555555;
+  display: inline-block;
+  max-width: 350px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
 
 .wholesalers-management .pay-detail .item {
   display: inline-block;
@@ -867,7 +890,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .personal-center .modal .modal-body .address-detail {
   margin: 10px 0; }
 
-.personal-center .modal .address-select .address {
+.personal-center .modal .address-select .address, .personal-center .modal .address-select .table-list-row .shopping-table-list table tfoot, .table-list-row .shopping-table-list table .personal-center .modal .address-select tfoot {
   width: 90%;
   display: inline;
   margin-bottom: 5px; }
@@ -1019,7 +1042,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .order-report .content .enter-item .item {
     display: inline-block; }
-  .order-report .content .enter-item .address {
+  .order-report .content .enter-item .address, .order-report .content .enter-item .table-list-row .shopping-table-list table tfoot, .table-list-row .shopping-table-list table .order-report .content .enter-item tfoot {
     margin: 0 10px; }
   .order-report .content .enter-item .check-item {
     margin-right: 10px; }
@@ -1348,17 +1371,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     .table-list-row .shopping-table-list table thead th, .table-list-row .shopping-table-list table thead tr td, .table-list-row .shopping-table-list table tr thead td {
       background-color: #cae6f7;
       color: #777777; }
-    .table-list-row .shopping-table-list table tfoot td {
+    .table-list-row .shopping-table-list table .address td, .table-list-row .shopping-table-list table tfoot td {
       background-color: #f2f2f2; }
-      .table-list-row .shopping-table-list table tfoot td .operating {
+      .table-list-row .shopping-table-list table .address td .operating, .table-list-row .shopping-table-list table tfoot td .operating {
         padding: 5px 0; }
-        .table-list-row .shopping-table-list table tfoot td .operating .control {
+        .table-list-row .shopping-table-list table .address td .operating .control, .table-list-row .shopping-table-list table tfoot td .operating .control {
           width: 85%;
-          padding: 3px 0; }
-      .table-list-row .shopping-table-list table tfoot td .lowest-money {
+          padding: 3px 0;
+          vertical-align: middle; }
+      .table-list-row .shopping-table-list table .address td .lowest-money, .table-list-row .shopping-table-list table tfoot td .lowest-money {
         display: inline-block;
         padding: 0 30px; }
-      .table-list-row .shopping-table-list table tfoot td .total-money {
+      .table-list-row .shopping-table-list table .address td .total-money, .table-list-row .shopping-table-list table tfoot td .total-money {
         display: inline-block; }
     .table-list-row .shopping-table-list table tr th, .table-list-row .shopping-table-list table tr td {
       border: none;
@@ -1428,7 +1452,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .collect .control-panel {
   padding: 10px 15px; }
   .collect .control-panel .control {
-    width: 10%;
     padding: 4px 0;
     margin-left: 10px;
     vertical-align: middle; }

@@ -6,7 +6,7 @@
     <div class="col-sm-12 my-goods goods-detail">
         <div class="row operating">
             <div class="col-sm-1">
-                <a>< 返回</a>
+                <a href="javascript:history.back()">< 返回</a>
             </div>
             <div class="col-sm-3 col-sm-push-8 text-right btn-list">
                 <a href="{{ url('my-goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>
@@ -33,7 +33,7 @@
                         <li>{{ $key }} : {{ $attr }}</li>
                     @endforeach
                 </ul>
-                <ul class="right-list ">
+                <ul class="right-list">
                     <li>是否新品 : {{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</li>
                     <li>是否缺货 : {{ cons()->valueLang('goods.type' ,$goods->is_out) }}</li>
                     <li>即期品 : {{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</li>

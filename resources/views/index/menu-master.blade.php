@@ -46,7 +46,7 @@
             @else
                 <div class="col-sm-2 menu">
                     <ul class="name" href="#">
-                        <li><img class="avatar" src="{{ auth()->user()->shop->logo->url }}"></li>
+                        <li><img class="avatar" src="{{ auth()->user()->shop->logo ? auth()->user()->shop->logo->url : '' }}"></li>
                         <li>{{ auth()->user()->shop->name }}</li>
                     </ul>
                     <ul class="menu-list dealer-menu-list">
@@ -64,7 +64,7 @@
                         <li><a href="{{ url('order-buy/statistics') }}" class="list-item {{ path_active('order-buy/statistics') }}"><i
                                         class="fa fa-file-o"></i>
                                 统计报表</a></li>
-                        <li><a href="{{ url('personal/*') }}" class="list-item {{ path_active('personal/shop') }}"><i class="fa fa-heart-o"></i>
+                        <li><a href="{{ url('personal/shop') }}" class="list-item {{ path_active('personal/*') }}"><i class="fa fa-heart-o"></i>
                                 个人中心</a></li>
                     </ul>
                 </div>

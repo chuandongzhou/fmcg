@@ -78,11 +78,6 @@ class UserController extends Controller
         return view('admin.user.show');
     }
 
-    public function saveUser(Request $request)
-    {
-
-    }
-
     /**
      * Show the form for editing the specified resource.
      *

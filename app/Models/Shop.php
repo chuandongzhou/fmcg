@@ -13,6 +13,8 @@ class Shop extends Model
         'logo',
         'name',
         'license',
+        'business_license',
+        'agency_contract',
         'images',
         'contact_person',
         'contact_info',
@@ -93,6 +95,26 @@ class Shop extends Model
     public function license()
     {
         return $this->morphOne('App\Models\File', 'fileable')->where('type', cons('shop.file_type.license'));
+    }
+
+    /**
+     * 经营许可照
+     *
+     * @return mixed
+     */
+    public function businessLicense()
+    {
+        return $this->morphOne('App\Models\File', 'fileable')->where('type', cons('shop.file_type.business_license'));
+    }
+
+    /**
+     * 代理合同
+     *
+     * @return mixed
+     */
+    public function agencyContract()
+    {
+        return $this->morphOne('App\Models\File', 'fileable')->where('type', cons('shop.file_type.agency_contract'));
     }
 
     /**
@@ -235,7 +257,31 @@ class Shop extends Model
     public function setLicenseAttribute($license)
     {
         if ($license) {
-            return $this->associateFiles((array)upload_file($license, 'temp'), 'files', cons('shop.file_type.license'));
+            return $this->associateFile(upload_file($license, 'temp'), 'license', cons('shop.file_type.license'));
+        }
+    }
+    /**
+     * 设置经营许可证
+     *
+     * @param $license
+     * @return bool
+     */
+    public function setBusinessLicenseAttribute($license)
+    {
+        if ($license) {
+            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense', cons('shop.file_type.business_license'));
+        }
+    }
+
+    /**
+     * 设置代理合同
+     *
+     * @param $agencyContract
+     * @return bool
+     */
+    public function setAgencyContractAttribute($agencyContract){
+        if ($agencyContract) {
+            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract', cons('shop.file_type.agency_contract'));
         }
     }
 
@@ -320,6 +366,30 @@ class Shop extends Model
         $license = $this->license;
 
         return $license ? upload_file_url($license->path) : '';
+    }
+
+    /**
+     * 获取经营许可证链接
+     *
+     * @return string
+     */
+    public function getBusinessLicenseUrlAttribute()
+    {
+        $businessLicense = $this->businessLicense;
+
+        return $businessLicense ? upload_file_url($businessLicense->path) : '';
+    }
+
+    /**
+     * 获取代理合同链接
+     *
+     * @return string
+     */
+    public function getAgencyContractUrlAttribute()
+    {
+        $agencyContract = $this->agencyContract;
+
+        return $agencyContract ? upload_file_url($agencyContract->path) : '';
     }
 
     /**

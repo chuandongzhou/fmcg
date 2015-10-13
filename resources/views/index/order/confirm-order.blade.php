@@ -63,50 +63,57 @@
                             @endforeach
                             </tbody>
                             <tfoot>
-                            <tr>
-                                <td colspan="4">
-                                    <p class="operating">
-                                        <span>收货地址 :</span>
-                                        <select name="shop[{{ $shop->id }}][shipping_address_id]" class="control">
-                                            @foreach($shippingAddress as $address)
-                                                <option value="{{ $address->id }}" {{ $address->is_default ? 'selected' : '' }}>
-                                                    {{ $address->address->area_name .$address->address->address . '  ' . $address->consigner . '  ' .  $address->phone }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="operating">
-                                        <span>支付方式 :</span>
-                                        <select name="shop[{{ $shop->id }}][pay_type]" class="pay_type">
-                                            @foreach(cons('pay_type') as $key=>$type)
-                                                <option value="{{ $key }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="operating hidden">
-                                        @foreach(cons('cod_pay_type') as $key=> $type)
-                                            <input type="radio" {{ $key=='cash' ? 'checked' : '' }} disabled
-                                                   name="shop[{{ $shop->id }}][cod_pay_type]"
-                                                   value="{{ $key }}"/> {{ cons()->valueLang('cod_pay_type' , $type) }}
-                                            &nbsp;&nbsp;&nbsp;
-                                        @endforeach
-                                    </p>
-
-                                    <p class="operating">
-                                        <span>订单备注 :</span>
-                                        <input name="shop[{{ $shop->id }}][remark]" class="control" type="text">
-                                    </p>
-                                </td>
-                                <td>
-                                    <a href="{{ url('personal/shipping-address') }}" class="btn brand-cancel">管理收货地址</a>
-                                </td>
-                            </tr>
+                            <td colspan="5">
+                                <p class="operating">
+                                    <span>订单备注 :</span>
+                                    <textarea name="shop[{{ $shop->id }}][remark]" class="control"></textarea>
+                                </p>
+                            </td>
                             </tfoot>
                         </table>
                     </div>
 
                 @endforeach
+                <div class="col-sm-12 table-responsive shopping-table-list">
+                    <table class="table table-bordered">
+                        <tr class="address">
+                            <td colspan="4">
+                                <p class="operating">
+                                    <span>收货地址 :</span>
+                                    <select name="shipping_address_id" class="control">
+                                        @foreach($shippingAddress as $address)
+                                            <option value="{{ $address->id }}" {{ $address->is_default ? 'selected' : '' }}>
+                                                {{ $address->address->area_name .$address->address->address . '  ' . $address->consigner . '  ' .  $address->phone }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </p>
+                                <p class="operating">
+                                    <span>支付方式 :</span>
+                                    <select name="pay_type" class="pay_type">
+                                        @foreach(cons('pay_type') as $key=>$type)
+                                            <option value="{{ $key }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
+                                        @endforeach
+                                    </select>
+                                </p>
+                                <p class="operating hidden">
+                                    @foreach(cons('cod_pay_type') as $key=> $type)
+                                        <input type="radio" {{ $key=='cash' ? 'checked' : '' }} disabled
+                                               name="cod_pay_type"
+                                               value="{{ $key }}"/> {{ cons()->valueLang('cod_pay_type' , $type) }}
+                                        &nbsp;&nbsp;&nbsp;
+                                    @endforeach
+                                </p>
+
+                            </td>
+                            <td>
+                                <a href="{{ url('personal/shipping-address') }}" class="btn brand-cancel">管理收货地址</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 <div class="col-sm-12 text-right padding-clear">
+                    <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
                     <button class="btn btn-primary submit-order">提交订单</button>
                 </div>
             </form>

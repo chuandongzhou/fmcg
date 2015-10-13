@@ -75,13 +75,52 @@
                             <div class="progress-bar progress-bar-striped active"></div>
                         </div>
                             <span data-name="license" class="btn btn-primary btn-sm fileinput-button">
-                                请选择图片文件（可选）
+                                请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
 
                         <div class="image-preview w160">
-                            <img src="{{ $shop->license_url }}"
+                            <img src="{{ $shop->license_url }}" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="username">经营许可证:</label>
+
+                    <div class="col-sm-10 col-md-6">
+                        <div class="progress collapse">
+                            <div class="progress-bar progress-bar-striped active"></div>
+                        </div>
+                            <span data-name="business_license" class="btn btn-primary btn-sm fileinput-button">
+                                请选择图片文件
+                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
+                                       name="file">
+                            </span>
+
+                        <div class="image-preview w160">
+                            <img src="{{ $shop->business_license_url }}"
+                                 class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
+
+                    <div class="col-sm-10 col-md-6">
+                        <div class="progress collapse">
+                            <div class="progress-bar progress-bar-striped active"></div>
+                        </div>
+                            <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
+                                请选择图片文件
+                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
+                                       name="file">
+                            </span>
+
+                        <div class="image-preview w160">
+                            <img src="{{ $shop->agency_contract_url }}"
                                  class="img-thumbnail">
                         </div>
                     </div>
@@ -159,7 +198,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="username">配送区域:</label>
 
-                    <div class="col-sm-10 col-md-8">
+                    <div class="col-sm-10 col-md-8 padding-clear">
                         <div class="col-sm-12">
                             <a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"
                                data-toggle="modal" data-loading-text="地址达到最大数量">添加地址</a>
