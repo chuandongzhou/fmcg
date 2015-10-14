@@ -1,5 +1,4 @@
 <?php
-
 $router->get('login', 'Auth\AuthController@login');
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');

@@ -64,13 +64,13 @@ class OrderBuyController extends OrderController
         $search = $request->input('search_content');
         $orderId = trim($search);
         if (is_numeric($orderId)) {
-            $order = Order::ofBuy($this->userId)->find($orderId);
+            $order = Order::ofBuy($this->userId)->ofSelectOptions($search)->find($orderId);
             if (!$order) {
                 return $this->error('订单似乎不存在');
             }
             $orders['data'][0] = $order;
         } else {
-            $orders = Order::ofBuy($this->userId)->ofSellerType($search)->paginate()->toArray();
+            $orders = Order::ofBuy($this->userId)->ofSelectOptions($search)->ofSellerShopName($orderId)->paginate()->toArray();
         }
 
         return $orders;

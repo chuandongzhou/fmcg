@@ -8,45 +8,45 @@
                 <a class="btn btn-primary"
                    href="{{ url('order-buy') }}">所有订单</a>
                 <a class="btn ajax-get"
-                   data-url="{{ url('order-buy/non-sure') }}">待确认{{ $data['nonSure'] }}</a>
+                   data-url="{{ url('order-buy/non-sure') }}" data-limit="nonSure">待确认{{ $data['nonSure'] }}</a>
                 <a class="btn ajax-get"
-                   data-url="{{ url('order-buy/non-payment') }}">待付款{{ $data['nonPayment'] }}</a>
+                   data-url="{{ url('order-buy/non-payment') }}" data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
                 <a class="btn ajax-get"
-                   data-url="{{ url('order-buy/non-arrived') }}">待收货{{ $data['nonArrived'] }}</a>
+                   data-url="{{ url('order-buy/non-arrived') }}" data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
             </div>
-            <div class="col-sm-8 pay-detail">
-            <span class="item control-item">支付方式 :
-                <select name="pay_type" class="ajax-select control">
-                    <option value="">全部方式</option>
-                    @foreach($pay_type as $key => $value)
-                        <option value="{{ $key }}">{{ $value }}</option>
-                    @endforeach
-                </select>
-            </span>
-            <span class="item control-item">
-                订单状态 :
-                  <select name="status" class="ajax-select control">
-                      <option value="">全部状态</option>
-                      @foreach($order_status as $key => $value)
-                          <option value="{{ $key }}">{{ $value }}</option>
-                      @endforeach
-                  </select>
-                <input type="hidden" id="target-url" value="{{ url('order-buy/select') }}"/>
-            </span>
-            <span class="item">
-                时间段 :
-                <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
-                       data-format="YYYY-MM-DD"/>　至　
-                <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
-                       data-format="YYYY-MM-DD"/>
-            </span>
+            <div class="col-sm-8 pay-detail search-options">
+                <span class="item control-item">支付方式 :
+                    <select name="pay_type" class="ajax-select control">
+                        <option value="">全部方式</option>
+                        @foreach($pay_type as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </span>
+                <span class="item control-item">
+                    订单状态 :
+                      <select name="status" class="ajax-select control">
+                          <option value="">全部状态</option>
+                          @foreach($order_status as $key => $value)
+                              <option value="{{ $key }}">{{ $value }}</option>
+                          @endforeach
+                      </select>
+                    <input type="hidden" id="target-url" value="{{ url('order-buy/search') }}"/>
+                </span>
+                <span class="item">
+                    时间段 :
+                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
+                           data-format="YYYY-MM-DD"/>　至　
+                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
+                           data-format="YYYY-MM-DD"/>
+                </span>
             </div>
-            <div class="col-sm-4 right-search search">
+            <div class="col-sm-4 right-search search search-options">
                 <div class="input-group">
                     <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
                            aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
-                 <button class="btn btn-primary ajax-submit" type="submit" data-url="{{ url('order-buy/search') }}">搜索
+                 <button class="btn btn-primary ajax-submit">搜索
                  </button>
                 </span>
                 </div>
@@ -65,7 +65,7 @@
                                                       value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
                                         <span class="order-number">订单号:{{ $order['id'] }}</span>
                                     </th>
-                                    <th>{{ $order['user']['user_name'] or $order['shop']['user']['user_name'] }}</th>
+                                    <th>{{ $order['shop']['name'] }}</th>
                                     <th></th>
                                     <th></th>
                                     <th></th>

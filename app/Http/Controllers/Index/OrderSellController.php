@@ -40,7 +40,8 @@ class OrderSellController extends OrderController
         $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
         $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
 
-        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->paginate()->toArray();
+        $orders = Order::bySellerId($this->userId)->with('user.shop', 'goods')->orderBy('id',
+            'desc')->paginate()->toArray();
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -58,33 +59,17 @@ class OrderSellController extends OrderController
      */
     public function getSearch(Request $request)
     {
-
-        $search = $request->input('search_content');
-        $orderId = trim($search);
+        $search = $request->all();
+        $orderId = trim($search['search_content']);
         if (is_numeric($orderId)) {
-            $order = Order::ofSell($this->userId)->find($orderId);
+            $order = Order::ofSell($this->userId)->ofSelectOptions($search)->find($orderId);
             $orders['data'][0] = $order;
         } else {
-            $orders = Order::ofSell($this->userId)->ofUserType($search, $this->userType)->paginate()->toArray();
+            $orders = Order::ofSell($this->userId)->ofSelectOptions($search)->ofUserShopName($orderId)->paginate()->toArray();
         }
 
         return $orders;
     }
-
-    /**
-     * 处理select发送过来的请求
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    public function getSelect(Request $request)
-    {
-        $search = $request->all();
-        $orders = Order::ofSell($this->userId)->ofSelectOptions($search)->paginate()->toArray();
-
-        return $orders;
-    }
-
     /**
      * 获取待确认订单列表
      *

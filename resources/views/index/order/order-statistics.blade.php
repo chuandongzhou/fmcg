@@ -11,7 +11,7 @@
             <div class="col-sm-12 enter-item">
                 时间段
                 <input class="enter datetimepicker" name="start_at" placeholder="{{ empty($search['start_at'])? '开始时间' : $search['start_at']}}" type="text" value="{{ $search['start_at'] or '' }}">至
-                <input class="enter datetimepicker" name="end_at" placeholder="{{ empty($search['end_at']) ? '开始时间' : $search['end_at']}}" type="text" value="{{ $search['end_at'] or '' }}">
+                <input class="enter datetimepicker" name="end_at" placeholder="{{ empty($search['end_at']) ? '结束时间' : $search['end_at']}}" type="text" value="{{ $search['end_at'] or '' }}">
                 <select class="enter" name="pay_type">
                     <option value="">全部方式</option>
                     @foreach($pay_type as $key => $value)
@@ -26,23 +26,30 @@
                             <option value="{{ $key }}" {{ ($key==(isset($search['obj_type']) ? $search['obj_type'] : '')) ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </select>
+                @else
+
                 @endif
                 <button class="btn" type="submit" >统计</button>
-                <button id="export" class="btn btn-primary">统计导出</button>
+                @unless(empty($statistics))
+                <a id="export" class="btn btn-primary">统计导出</a>
+                @endunless
             </div>
             <div class="col-sm-12 enter-item">
-                <div class="check-item"><span class="span-checkbox"><i class="fa {{$search['checkbox_flag']==1 ? 'fa-check' : ''}}"></i></span>
-                    <input class="inp-checkbox" type="checkbox" {{$search['checkbox_flag']==1 ? 'checked' : ''}}>显示商品</div>
-                <input type="hidden" class="checkbox-flag" value="{{ $search['checkbox_flag'] }}" name="checkbox_flag" />
-                <input type="text" class="enter" name="goods_name" placeholder="{{ empty($search['goods_name']) ? '商品名称' : $search['goods_name']}}">
-                <input type="text" class="enter" name="seller_name" placeholder="{{ empty($search['seller_name']) ? '商家名称' : $search['seller_name']}}">
+
+                <div class="item">
+                    <p class="check-item"><span class="span-checkbox"><i class="fa {{$search['checkbox_flag']==1 ? 'fa-check' : ''}}"></i></span>
+                        <input class="inp-checkbox" type="checkbox" {{$search['checkbox_flag']==1 ? 'checked' : ''}}>显示商品</p>
+                    <input type="hidden" class="checkbox-flag" value="{{ $search['checkbox_flag'] }}" name="checkbox_flag" />
+                    <input type="text" class="enter" name="goods_name" placeholder="商品名称" value="{{ $search['goods_name'] or '' }}">
+                    <input type="text" class="enter" name="user_name" placeholder="{{ $showObjName }}" value="{{ $search['user_name'] or '' }}">
+                </div>
                 @if(Auth()->user()->type == cons('user.type.retailer'))
-                    <p class="item address" >商家地址 :
+                    <div class="item" >商家地址 :
                         <select data-id="{{ $search['province_id'] or 0 }}" class="enter address-province" name="province_id"></select>
                         <select data-id="{{ $search['city_id'] or 0 }}" class="enter address-city" name="city_id"></select>
                         <select data-id="{{ $search['district_id'] or 0 }}" class="enter address-district" name="district_id"></select>
                         <input type="hidden" class="enter address-street" />
-                    </p>
+                    </div>
                 @endif
             </div>
             <input type="hidden" name="order_page_num" value="{{ $orderCurrent or 1 }}"/>
@@ -57,7 +64,7 @@
                         <td>收件人</td>
                         <td>支付方式</td>
                         <td>订单状态</td>
-                        <td>时间</td>
+                        <td>创建时间</td>
                         <td>订单金额</td>
                         @if($search['checkbox_flag'])
                         <td>商品编号</td>
@@ -87,7 +94,7 @@
                                 @else
                                     <tr>
                                         <td>{{ $order['id'] }}</td>
-                                        <td>{{ $order['shipping_address']['consigner'] }}</td>
+                                        <td>{{ $order['shippingAddress']['consigner'] }}</td>
                                         <td>{{ $order['payment_type'] }}</td>
                                         <td>{{ $order['status_name'] }}</td>
                                         <td>{{ $order['created_at'] }}</td>
@@ -102,7 +109,7 @@
                         @else
                             <tr>
                                 <td>{{ $order['id'] }}</td>
-                                <td>{{ $order['shipping_address']['consigner'] }}</td>
+                                <td>{{ $order['shippingAddress']['consigner'] }}</td>
                                 <td>{{ $order['payment_type'] }}</td>
                                 <td>{{ $order['status_name'] }}</td>
                                 <td>{{ $order['created_at'] }}</td>
@@ -175,51 +182,10 @@
 @stop
 @section('js-lib')
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
+@stop
+@section('js')
+    @parent
     <script>
-        $('.span-checkbox').click(function(){
-            var isCheck=$(this).siblings('.inp-checkbox').is(':checked');
-            if(isCheck==false){
-                $(this).children('.fa').addClass('fa-check');
-                $(this).siblings('.inp-checkbox').prop('checked',true);
-                $('.checkbox-flag').val(1);
-            }else{
-                $(this).children('.fa').removeClass('fa-check');
-                $(this).siblings('.inp-checkbox').prop('checked',false);
-                $('.checkbox-flag').val(0);
-            }
-            //提交表单
-            $('form').submit();
-        });
-
-        $('#export').click(function(){
-            var url = '{{ url("order/export") }}';
-            $('form').attr('action',url);
-            $('form').attr('method','post');
-            $('form').submit();
-        });
-        $('.next0').on('click',function(){
-            var target = $('input[name="order_page_num"]');
-            var target_value = parseInt(target.attr('value'));
-            target.attr('value',target_value+1);
-            $('form').submit();
-        });
-        $('.prev0').on('click',function(){
-            var target = $('input[name="order_page_num"]');
-            var target_value = parseInt(target.attr('value'));
-            target.attr('value',target_value-1);
-            $('form').submit();
-        });
-        $('.next1').on('click',function(){
-            var target = $('input[name="goods_page_num"]');
-            var target_value = parseInt(target.attr('value'));
-            target.attr('value',target_value+1);
-            $('form').submit();
-        });
-        $('.prev1').on('click',function(){
-            var target = $('input[name="goods_page_num"]');
-            var target_value = parseInt(target.attr('value'));
-            target.attr('value',target_value-1);
-            $('form').submit();
-        });
+        statisticsFunc();
     </script>
 @stop

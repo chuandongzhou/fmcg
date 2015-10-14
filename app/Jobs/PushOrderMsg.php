@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Job;
 use App\Services\PushOrderService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,10 +23,20 @@ class PushOrderMsg extends Job implements SelfHandling, ShouldQueue
     }
 
     /**
+     * 执行任务
+     *
      * @param \App\Services\PushOrderService $push
      */
     public function handle(PushOrderService $push)
     {
         $push->push($this->targetUserId);
+    }
+
+    /**
+     * 删除失败的任务
+     */
+    public function failed()
+    {
+        $this->delete();
     }
 }

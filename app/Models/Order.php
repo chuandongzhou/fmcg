@@ -31,6 +31,7 @@ class Order extends Model
     protected $appends = ['status_name', 'payment_type', 'step_num',];
 
     protected $hidden = [];
+
     /**
      * 该订单下所有商品
      *
@@ -172,11 +173,11 @@ class Order extends Model
      * @param $search
      * @return mixed
      */
-    public function scopeOfUserType($query, $search)
+    public function scopeOfUserShopName($query, $search)
     {
-        return $query->wherehas('user', function ($query) use ($search) {
+        return $query->wherehas('user.shop', function ($query) use ($search) {
 
-            $query->where('user_name', $search);
+            $query->where('name', 'like', '%' . $search . '%');
         });
     }
 
@@ -187,11 +188,11 @@ class Order extends Model
      * @param $search
      * @return mixed
      */
-    public function scopeOfSellerType($query, $search)
+    public function scopeOfSellerShopName($query, $search)
     {
-        return $query->wherehas('shop.user', function ($query) use ($search) {
+        return $query->wherehas('shop', function ($query) use ($search) {
 
-            $query->where('user_name', $search['search_content']);
+            $query->where('name', 'like', '%' . $search . '%');
 
 
         });
@@ -221,7 +222,7 @@ class Order extends Model
     {
         return $query->wherehas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
-        })->where('is_cancel',cons('order.is_cancel.off'))->with('user', 'goods')->orderBy('id', 'desc');
+        })->where('is_cancel', cons('order.is_cancel.off'))->with('user.shop', 'goods')->orderBy('id', 'desc');
     }
 
     /**

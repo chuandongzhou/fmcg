@@ -14,7 +14,7 @@
             <a class="btn ajax-get"
                data-url="{{ url('order-sell/pending-collection') }}">待收款{{ $data['pendingCollection'] }}</a>
         </div>
-        <div class="col-sm-8 pay-detail">
+        <div class="col-sm-8 pay-detail search-options">
             <span class="item control-item">支付方式 :
                 <select name="pay_type" class="ajax-select control">
                     <option value="">全部方式</option>
@@ -31,7 +31,7 @@
                           <option value="{{ $key }}">{{ $value }}</option>
                       @endforeach
                   </select>
-                 <input type="hidden" id="target-url" value="{{ url('order-sell/select') }}" />
+                 <input type="hidden" id="target-url" value="{{ url('order-sell/search') }}" />
             </span>
             <span class="item">
                 时间段 :
@@ -39,11 +39,11 @@
                 <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at" data-format="YYYY-MM-DD" />
             </span>
         </div>
-        <div class="col-sm-4 right-search search">
+        <div class="col-sm-4 right-search search search-options">
             <div class="input-group">
                 <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号" aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
-                    <button class="btn btn-primary ajax-submit" type="submit" data-url="{{ url('order-sell/search') }}">搜索</button>
+                    <button class="btn btn-primary ajax-submit">搜索</button>
                 </span>
             </div>
         </div>
@@ -60,7 +60,7 @@
                                     <label><input type="checkbox" name="order_id[]" value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
                                     <span class="order-number">订单号:{{ $order['id'] }}</span>
                                 </th>
-                                <th>{{ $order['user']['user_name'] or $order['shop']['user']['user_name'] }}</th>
+                                <th>{{ $order['user']['shop']['name'] }}</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -110,7 +110,7 @@
             </div>
         </div>
         @if($orders['data'])
-        <div class="row">
+        <div class="row" id="foot-nav">
             <div class="col-sm-12 padding-clear">
                 <button class="btn btn-danger ajax" data-url="{{ url('order-sell/batch-sure') }}" data-method="put">确认</button>
                 <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}" data-method="put">取消</button>

@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -210,7 +212,7 @@ class OrderController extends Controller
         $statistics = $this->_searchAllOrderByOptions($search);
         $orderCount = $statistics->count();//订单总数
         $stat = $statistics->forPage($orderCurrent, $per);
-        $res = $this->_orderStatistics($statistics->toArray());
+        $res = $this->_orderStatistics($statistics);
         $goodsCount = count($res['goods']);//商品总数
         $otherStat = $res['stat'];
         $statGoods = collect($res['goods'])->forPage($goodsCurrent, $per);
@@ -219,33 +221,63 @@ class OrderController extends Controller
 
         $orderNav = $this->_pageNav($orderCurrent, $per, $orderCount);
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
+        $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
+        $showObjName = $this->_inputName($objOfShow);
 
         return view('index.order.order-statistics', [
             'search' => $search,
             'pay_type' => $payType,
             'obj_type' => $objType,
-            'statistics' => $stat->toArray(),
+            'statistics' => $stat,
             'otherStat' => $otherStat,
-            'goods' => $statGoods->toArray(),
+            'goods' => $statGoods,
             'orderNav' => $orderNav,
             'goodsNav' => $goodsNav,
             'orderCurrent' => $orderCurrent,
-            'goodsCurrent' => $goodsCurrent
+            'goodsCurrent' => $goodsCurrent,
+            'showObjName' => $showObjName
         ]);
     }
 
+    /**
+     * user_name显示信息
+     *
+     * @param $objType
+     * @return string
+     */
+    private function _inputName($objType)
+    {
+        if ($this->userType == cons('user.type.retailer')
+            || ($this->userType == cons('user.type.wholesaler')
+                && $objType == cons('user.type.supplier'))
+        ) {
+            return '卖家名称';
+        }
+
+        return '买家名称';
+    }
+
+    /**
+     * 分页
+     *
+     * @param $pageNum
+     * @param $per
+     * @param $pageCount
+     * @param int $flag
+     * @return string
+     */
     private function _pageNav($pageNum, $per, $pageCount, $flag = 0)
     {
-        $html = '';
+        $html = '<ul class="pager">';
         if ($pageNum > 1) {
-            $html .= '<button class="prev' . $flag . '">上一页</button>';
+            $html .= '<li><a class="prev' . $flag . '">上一页</a></li>';
         }
 
         if (($pageCount / $per) > $pageNum) {
-            $html .= '<button class="next' . $flag . '">下一页</button>';
+            $html .= '<li><a class="next' . $flag . '">下一页</a></li>';
         }
 
-        return $html;
+        return $html . '</ul>';
     }
 
     /**
@@ -256,7 +288,7 @@ class OrderController extends Controller
      */
     private function _searchAllOrderByOptions($search)
     {
-        return Order::where(function ($query) use ($search) {
+        $query = Order::where(function ($query) use ($search) {
             //付款方式
             if (empty($search['pay_type'])) {
                 $query->where(function ($query) {
@@ -273,28 +305,47 @@ class OrderController extends Controller
                     $query->ofHasSend();
                 }
             }
-            //查询买家
-            if (!empty($search['obj_type']) && $search['obj_type'] < $this->userId) {
-                $query->where('user_id', intval($search['obj_type']));
+        });
+        //查询买家
+        if (!empty($search['obj_type']) && $search['obj_type'] < $this->userId) {
+            $query->wherehas('user', function ($q) use ($search) {
+                $q->where('type', intval($search['obj_type']));
+            });
+        }
+
+        //查询卖家
+        if (!empty($search['obj_type']) && $search['obj_type'] > $this->userId) {
+            $query->wherehas('shop.user', function ($q) use ($search) {
+                $q->where('type', intval($search['obj_type']));
+            });
+        }
+        //時間
+        if (!empty($search['start_at']) && !empty($search['end_at'])) {
+            $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
+        }
+
+        if (!empty($search['goods_name'])) {
+            $query->wherehas('goods', function ($q) use ($search) {
+                $q->where('name', trim($search['goods_name']));
+
+            });
+        }
+        if (!empty($search['user_name'])) {
+            if ($this->userType == cons('user.type.retailer')
+                || (isset($search['action_type'])
+                    && $search['action_type'] == 'sell')
+            ) {
+                $query->wherehas('shop.user', function ($q) use ($search) {
+                    $q->where('user_name', trim($search['user_name']));
+                });
+            } else {
+                $query->wherehas('user', function ($q) use ($search) {
+                    $q->where('user_name', trim($search['user_name']));
+                });
             }
-            //時間
-            if (!empty($search['start_at']) && !empty($search['end_at'])) {
-                $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
-            }
+        }
 
-        })->wherehas('goods', function ($query) use ($search) {
-
-            empty($search['goods_name']) ?: $query->where('name', trim($search['goods_name']));
-
-        })->wherehas('shop.user', function ($query) use ($search) {//根据卖家姓名,类型查询
-
-            empty($search['seller_name']) ?: $query->where('user_name', trim($search['seller_name']));
-
-            //查询卖家
-            if (!empty($search['obj_type']) && $search['obj_type'] > $this->userId) {
-                $query->where('id', intval($search['obj_type']));
-            }
-        })->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
+        $query->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
 
             empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
 
@@ -304,7 +355,9 @@ class OrderController extends Controller
 
             empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
 
-        })->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->get();
+        });
+
+        return $query->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -313,7 +366,7 @@ class OrderController extends Controller
      * @param array $res
      * @return mixed
      */
-    private function _orderStatistics(array $res)
+    private function _orderStatistics($res)
     {
         $stat['totalNum'] = count($res);//订单总数
         $stat['totalAmount'] = 0;//订单总金额
@@ -366,19 +419,7 @@ class OrderController extends Controller
     {
         $redis = Redis::connection();
 
-        //遍历redis键,过期时间小于5分钟的放入推送列表
-        $targetUserIds = $redis->keys('push:user:*');
-        $targetSellerIds = $redis->keys('push:seller:*');
-        $ids = array_merge($targetUserIds, $targetSellerIds);
-        if (empty($ids)) {
-            return response()->json([]);
-        }
-        foreach ($ids as $id) {
-            if ($redis->ttl($id) < 300) {
-                $this->dispatch(new PushOrderMsg(substr($id, strrpos($id, ':') + 1)));
-                $redis->del($id);
-            }
-        }
+
         //push:user:$user_id买家是否有提醒
         if ($redis->exists('push:user:' . $this->userId)) {
             $redis->del('push:user:' . $this->userId);
@@ -398,14 +439,193 @@ class OrderController extends Controller
         return response()->json([]);
     }
 
-    public function postExport(Request $request)
+    /**
+     * 导出订单统计,excel
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function postStatExport(Request $request)
     {
         //查询条件判断
         $search = $request->all();
-
         $stat = $this->_searchAllOrderByOptions($search);
+        $otherStat = $this->_orderStatistics($stat);
 
-        $otherStat = $this->_orderStatistics($stat['data']);
-        dd($stat, $otherStat);
+        Excel::create('订单统计', function ($excel) use ($stat, $search, $otherStat) {
+
+            $excel->sheet('sheet1', function ($sheet) use ($stat, $search, $otherStat) {
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                //打印条件
+                $options = $this->_spliceOptions($search);
+                //订单信息统计
+                $orderContent = $this->_spliceOrderContent($stat, $search['checkbox_flag']);
+                //商品信息统计
+                $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
+                //订单汇总统计
+                $orderStat = $this->_spliceOrderStat($otherStat['stat']);
+
+                $out = array_merge($options, $orderContent, $goodsContent, $orderStat);
+
+                $sheet->rows($out);
+
+            });
+
+        })->export('xls');
+    }
+
+    /**
+     * 拼接过滤信息
+     *
+     * @param $search
+     * @return array
+     */
+    private function _spliceOptions($search)
+    {
+        $options = [];
+        if (!empty($search['start_at'])) {
+            $options[] = ["开始时间:", $search['start_at']];
+            if (!empty($search['end_at'])) {
+                $options[] = ["结束时间:", $search['end_at']];
+            }
+        }
+        empty($search['pay_type']) ?: $options[] = [
+            "支付方式:",
+            cons()->valueLang('pay_type')[$search['pay_type']]
+        ];
+        empty($search['obj_type']) ?: $options[] = [
+            "订单对象:",
+            cons()->valueLang('user.type')[$search['obj_type']]
+        ];
+        empty($search['goods_name']) ?: $options[] = ["商品名称:", $search['goods_name']];
+        if (!empty($search['user_name'])) {
+            $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
+            $showObjName = $this->_inputName($objOfShow);
+            $options[] = [$showObjName . ":", $search['user_name']];
+        }
+
+        if (!empty($search['province_id'])) {
+            $options[] = ['省市:', DB::table('address')->select('name')->find(intval($search['province_id']))];
+        }
+        if (!empty($search['city_id'])) {
+            $options[] = ['城市:', DB::table('address')->select('name')->find(intval($search['city_id']))];
+        }
+        if (!empty($search['district_id'])) {
+            $options[] = ['区县:', DB::table('address')->select('name')->find(intval($search['district_id']))];
+        }
+
+        return $options;
+    }
+
+    /**
+     * 拼接订单统计详情
+     *
+     * @param $orders
+     * @param $flag
+     * @return array
+     */
+    private function _spliceOrderContent($orders, $flag)
+    {
+        $orderContent[] = ['订单号', '收件人', '支付方式', '订单状态', '创建时间', '订单金额'];
+        if ($flag) {
+            $orderContent[0] = array_merge($orderContent[0], ['商品编号', '商品名称', '商品单价', '商品数量']);
+        }
+
+        foreach ($orders as $order) {
+            if ($flag) {
+                foreach ($order['goods'] as $key => $value) {
+                    if ($key) {
+                        $orderContent[] = [
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            $value['id'],
+                            $value['name'],
+                            '￥' . $value['pivot']['price'],
+                            $value['pivot']['num']
+                        ];
+                    } else {
+                        $orderContent[] = [
+                            $order['id'],
+                            $order['shippingAddress']['consigner'],
+                            $order['payment_type'],
+                            $order['status_name'],
+                            $order['created_at'],
+                            '￥' . $order['price'],
+                            $value['id'],
+                            $value['name'],
+                            '￥' . $value['pivot']['price'],
+                            $value['pivot']['num']
+                        ];
+                    }
+                }
+            } else {
+                $orderContent[] = [
+                    $order['id'],
+                    $order['shippingAddress']['consigner'],
+                    $order['payment_type'],
+                    $order['status_name'],
+                    $order['created_at'],
+                    '￥' . $order['price'],
+                ];
+            }
+        }
+
+        return $orderContent;
+    }
+
+    /**
+     * 拼接商品统计详情
+     *
+     * @param $goods
+     * @return array
+     */
+    private function _spliceGoodsContent($goods)
+    {
+        $goodsContent[] = ['商品总计'];
+        $goodsContent[] = ['商品编号', '商品名称', '平均单价', '商品数量', '商品支出金额'];
+
+        foreach ($goods as $good) {
+            $goodsContent[] = [$good['id'], $good['name'], $good['price'] / $good['num'], $good['num'], $good['price']];
+        }
+
+        return $goodsContent;
+    }
+
+    /**
+     * 拼接订单汇总详情
+     *
+     * @param $stat
+     * @return array
+     */
+    private function _spliceOrderStat($stat)
+    {
+        $res[] = ['订单总计'];
+        $res[] = [
+            '订单数',
+            '总金额',
+            '在线支付订单数',
+            '在线支付订单总金额',
+            '货到付款订单数',
+            '货到付款总金额',
+            '货到付款实收金额',
+            '货到付款未收金额'
+        ];
+        $res[] = [
+            $stat['totalNum'],
+            $stat['totalAmount'],
+            $stat['onlineNum'],
+            $stat['onlineAmount'],
+            $stat['codNum'],
+            $stat['codAmount'],
+            $stat['codReceiveAmount'],
+            $stat['codAmount'] - $stat['codReceiveAmount']
+        ];
+
+        return $res;
     }
 }
