@@ -1348,17 +1348,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     .table-list-row .shopping-table-list table thead th, .table-list-row .shopping-table-list table thead tr td, .table-list-row .shopping-table-list table tr thead td {
       background-color: #cae6f7;
       color: #777777; }
-    .table-list-row .shopping-table-list table tfoot td {
+    .table-list-row .shopping-table-list table .address td, .table-list-row .shopping-table-list table tfoot td {
       background-color: #f2f2f2; }
-      .table-list-row .shopping-table-list table tfoot td .operating {
+      .table-list-row .shopping-table-list table .address td .operating, .table-list-row .shopping-table-list table tfoot td .operating {
         padding: 5px 0; }
-        .table-list-row .shopping-table-list table tfoot td .operating .control {
+        .table-list-row .shopping-table-list table .address td .operating .control, .table-list-row .shopping-table-list table tfoot td .operating .control {
           width: 85%;
-          padding: 3px 0; }
-      .table-list-row .shopping-table-list table tfoot td .lowest-money {
+          padding: 3px 0;
+          vertical-align: middle; }
+      .table-list-row .shopping-table-list table .address td .lowest-money, .table-list-row .shopping-table-list table tfoot td .lowest-money {
         display: inline-block;
         padding: 0 30px; }
-      .table-list-row .shopping-table-list table tfoot td .total-money {
+      .table-list-row .shopping-table-list table .address td .total-money, .table-list-row .shopping-table-list table tfoot td .total-money {
         display: inline-block; }
     .table-list-row .shopping-table-list table tr th, .table-list-row .shopping-table-list table tr td {
       border: none;
@@ -1428,7 +1429,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .collect .control-panel {
   padding: 10px 15px; }
   .collect .control-panel .control {
-    width: 10%;
     padding: 4px 0;
     margin-left: 10px;
     vertical-align: middle; }
