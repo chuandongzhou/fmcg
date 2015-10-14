@@ -33,8 +33,7 @@
             </div>
         </div>
         <div class="row login-wrap">
-            <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8"
-                  data-done-then="referer">
+            <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8">
                 <div class="col-sm-12 item">
                     <h1 class="pull-left login"><a>登录</a></h1>
                     <a class="pull-right reg" href="#">注册</a>

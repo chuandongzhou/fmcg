@@ -32,7 +32,8 @@ class MyGoodsController extends Controller
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
 
-        $goods = Goods::with('images')->select([
+
+        $goods = auth()->user()->shop->goods()->with('images')->select([
             'id',
             'name',
             'sales_volume',
@@ -42,7 +43,7 @@ class MyGoodsController extends Controller
             'is_promotion',
             'cate_level_1',
             'cate_level_2'
-        ])->where('user_type', auth()->user()->type);
+        ]);
 
         $result = GoodsService::getGoodsBySearch($data, $goods);
 

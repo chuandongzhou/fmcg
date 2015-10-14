@@ -29,7 +29,7 @@
             <label class="col-sm-2 control-label">所在地</label>
 
             <div class="col-sm-3">
-                <select name="province_id" data-id="{{ $shippingAddress['address']['province_id']  }}"
+                <select name="province_id" data-id="{{ $shippingAddress->address->province_id  }}"
                         class="address-province form-control address">
                     <option selected="selected" value="">请选择省市/其他...</option>
                 </select>

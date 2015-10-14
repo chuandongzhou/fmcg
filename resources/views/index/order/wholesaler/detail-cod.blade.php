@@ -127,11 +127,13 @@
                             @if(!$order['is_cancel'])
                                 @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
                                     <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
-                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</button>
+                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
+                                    </button>
                                 @endif
                                 @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.send') )
                                     <button class="btn btn-primary ajax" data-url="{{ url('order-buy/batch-finish') }}"
-                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>已收货</button>
+                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>已收货
+                                    </button>
                                 @endif
                                 @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
                                     {{--跳转支付页面--}}
@@ -144,16 +146,21 @@
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
                                 @if($order['status'] == cons('order.status.non_sure'))
-                                    <button class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"
-                                            data-data='{"order_id":{{ $order['id'] }}}'>确认</button>
+                                    <button class="btn btn-danger ajax" data-method='put'
+                                            data-url="{{ url('order-sell/batch-sure') }}"
+                                            data-data='{"order_id":{{ $order['id'] }}}'>确认
+                                    </button>
                                 @endif
                                 @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
                                     <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
-                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</button>
+                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
+                                    </button>
                                 @endif
                                 @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
-                                    <button class="btn btn-primary ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
-                                            data-data='{"order_id":{{ $order['id'] }}}'>发货</button>
+                                    <button class="btn btn-primary ajax" data-method='put'
+                                            data-url="{{ url('order-sell/batch-send') }}"
+                                            data-data='{"order_id":{{ $order['id'] }}}'>发货
+                                    </button>
                                     <button class="btn btn-success">导出</button>
                                 @endif
                             @endif
@@ -165,10 +172,12 @@
             <div class="col-sm-12 receiving-information">
                 <ul>
                     <li class="title">收货人信息</li>
-                    <li>终端商名称 : {{ $order['user']['user_name'] }}<li>
+                    <li>终端商名称 : {{ $order['user']['user_name'] }}
+                    <li>
                     <li>联系人 : {{ $order['shipping_address']['consigner'] }}</li>
                     <li>联系电话 : {{ $order['shipping_address']['phone'] }}</li>
-                    <li>联系地址 : {{ $order['shipping_address']['address']['address'] }}</li>
+                    <li>联系地址
+                        : {{ $order['shipping_address']['address']['area_name'] . $order['shipping_address']['address']['address'] }}</li>
                 </ul>
             </div>
         </div>
@@ -176,28 +185,28 @@
             <div class="col-sm-12 table-responsive table-col">
                 <table class="table table-bordered">
                     <thead>
-                        <tr>
-                            <th>商品编号</th>
-                            <th>商品图片</th>
-                            <th>商品名称</th>
-                            <th>商品价格</th>
-                            <th>商品数量</th>
-                            <th>金额</th>
-                            <th>操作</th>
-                        </tr>
+                    <tr>
+                        <th>商品编号</th>
+                        <th>商品图片</th>
+                        <th>商品名称</th>
+                        <th>商品价格</th>
+                        <th>商品数量</th>
+                        <th>金额</th>
+                        <th>操作</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach($order['goods'] as $item)
-                            <tr>
-                                <td>{{ $item['id'] }}</td>
-                                <td><img src={{ $item['image_url'] }} /></td>
-                                <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['pivot']['price'] }}</td>
-                                <td>{{ $item['pivot']['num'] }}</td>
-                                <td>{{ $item['pivot']['total_price'] }}</td>
-                                <td>修改</td>
-                            </tr>
-                        @endforeach
+                    @foreach($order['goods'] as $item)
+                        <tr>
+                            <td>{{ $item['id'] }}</td>
+                            <td><img src={{ $item['image_url'] }} /></td>
+                            <td>{{ $item['name'] }}</td>
+                            <td>{{ $item['pivot']['price'] }}</td>
+                            <td>{{ $item['pivot']['num'] }}</td>
+                            <td>{{ $item['pivot']['total_price'] }}</td>
+                            <td>修改</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

@@ -40,7 +40,7 @@ return [
     'user' => [
         'type' => [
             'wholesaler' => '批发商',
-            'retailer' => '零售商',
+            'retailer' => '终端商',
             'supplier' => '供应商',
         ],
     ],
@@ -119,6 +119,25 @@ return [
             'import_and_export' => '进口/国产',
             'packing' => '包装',
             'place' => '产地'
+        ]
+    ],
+    // 前台栏目
+    'home_column' => [
+        'type' => [
+            'goods' => '商品',
+            'shop' => '店铺'
+        ]
+    ],
+    //排序
+    'sort' => [
+        'goods' => [
+            'hot' => '热门',
+            'price_retail' => '价格',
+            'new' => '最新'
+        ],
+        'shop' => [
+            'hot' => '热门',
+            'new' => '最新'
         ]
     ]
 ];

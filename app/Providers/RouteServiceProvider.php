@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\UserBank' => 'bank',
         'App\Models\DeliveryMan' => 'delivery-man',
         'App\Models\ShippingAddress' => 'shipping-address',
+        'App\Models\HomeColumn' => 'column',
 
     ];
 

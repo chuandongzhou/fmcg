@@ -87,12 +87,14 @@
                         <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
 
                     </div>
-                    <p class="commodity-name"><a href="{{ url($url . '/' . $item->id) }}">{{ $item->name }}</a></p>
+                    <div class="content-panel">
+                        <p class="commodity-name"><a href="{{ url($url . '/' . $item->id) }}">{{ $item->name }}</a></p>
 
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
-                    </p>
+                        <p class="sell-panel">
+                            <span class="money">￥{{ $item->price }}</span>
+                            <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
+                        </p>
+                    </div>
                 </div>
             @endforeach
             <div class="col-xs-12 text-right">

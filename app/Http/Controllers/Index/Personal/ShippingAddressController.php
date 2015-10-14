@@ -50,6 +50,7 @@ class ShippingAddressController extends Controller
      */
     public function edit($shippingAddress)
     {
+        $shippingAddress->load('address');
         return view('index.personal.shipping-address',
             ['shippingAddress' => $shippingAddress]);
     }
