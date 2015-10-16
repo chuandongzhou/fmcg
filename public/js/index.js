@@ -33,14 +33,7 @@ function getOrderList() {
     });
     //搜索按钮方式
     $('button.ajax-submit').on('click', function () {
-        data = {};
-        targetUrl = $(this).data('url');
-        var value = $('input[name="search_content"]').val();
-        if (value == '') {
-            return false;
-        }
-        data['search_content'] = value;
-        _ajaxGet(targetUrl, data);
+        _getArgs();
     });
     //待办事项动态加载详情
     $('a.ajax-get').on('click', function () {
@@ -48,6 +41,8 @@ function getOrderList() {
         $(this).addClass('btn-primary');
         $(this).siblings('a').removeClass('btn-primary');
         targetUrl = $(this).data('url');
+        //删除查询条件栏
+        $('.pay-detail,.search').remove();
         _ajaxGet(targetUrl);
     });
 }
@@ -78,7 +73,9 @@ function _getArgs() {
         alert('开始时间不能晚于结束时间');
         return false;
     }
-    _ajaxGet(targetUrl, data)
+    var value = $('input[name="search_content"]').val()
+    data['search_content'] = value;
+    _ajaxGet(targetUrl, data);
 }
 /**
  * get方式，动态获取订单信息并显示到指定区域
@@ -93,16 +90,20 @@ function _ajaxGet(targetUrl, data) {
         data: data,
         dataType: 'json',
         success: function (list) {
+            if (list.data.length) {
+                $('#foot-nav').show();
+            } else {
+                $('#foot-nav').hide();
+            }
 
             var str = '';
-
             $.each(list.data, function (index, result) {
 
                 str += '<table class="table table-bordered">'
                     + '     <thead><tr><th>'
                     + '         <label><input type="checkbox" name="order_id[]" value="' + result.id + '"/>' + result.created_at + '</label>'
                     + '         <span class="order-number">订单号:' + result.id + '</span></th>'
-                    + '         <th>' + (result.user_id == SITE.USER.id ? result.shop.user.user_name : result.user.user_name) + '</th>'
+                    + '         <th>' + (result.user_id == SITE.USER.id ? result.shop.name : result.user.shop.name) + '</th>'
                     + '     <th></th><th></th><th></th>'
                     + '     </tr>'
                     + '         </thead><tbody>';
@@ -120,13 +121,13 @@ function _ajaxGet(targetUrl, data) {
                             + '     </td>'
                             + '     <td rowspan="' + result.goods.length + '" class="operating text-center">';
                         if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
-                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail/' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
                                 if (result.pay_status == 0 && result.status == 1) {
                                     str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
-                                if (result.pay_status == 0 && result.status == 0 && result.pay_type == 1) {
+                                if (result.pay_status == 0 && result.status == 1 && result.pay_type == 1) {
                                     str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
                                 } else if (result.pay_type == 1 && result.status == 2) {
                                     str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
@@ -134,7 +135,7 @@ function _ajaxGet(targetUrl, data) {
                                 }
                             }
                         } else {//卖家
-                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail-' + (result.pay_type == 1 ? 'online' : 'cod') + '/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail/' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
                                 if (result.status == 0) {
                                     str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
@@ -149,7 +150,7 @@ function _ajaxGet(targetUrl, data) {
                                     str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
                                 }
-                                str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id='+ result.id +'">导出</a></p>';
+                                str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id=' + result.id + '">导出</a></p>';
                             }
                         }
                         str += '             </td>';
@@ -538,4 +539,134 @@ function displayList() {
         }
     })
 
+}
+
+//--order-statistics--
+/**
+ * 统计页面js处理
+ */
+function statisticsFunc() {
+    $('.span-checkbox').click(function () {
+        var inp_checkbox = $(this).siblings('.inp-checkbox');
+        var isCheck = inp_checkbox.is(':checked');
+        var fa = $(this).children('.fa');
+        if (isCheck == false) {
+            fa.addClass('fa-check');
+            inp_checkbox.prop('checked', true);
+            $('.checkbox-flag').val(1);
+        } else {
+            fa.removeClass('fa-check');
+            inp_checkbox.prop('checked', false);
+            $('.checkbox-flag').val(0);
+        }
+        //提交表单
+        $('form').submit();
+    });
+
+    $('#export').click(function () {
+        var oldUrl = $('form').attr('action');
+        var newUrl = '{{ url("order/stat-export") }}';
+        $('form').attr('action', newUrl).attr('method', 'post').submit();
+        //初始化设置
+        $('form').attr('action', oldUrl).attr('method', 'get');
+
+    });
+
+    var target = $('input[name="order_page_num"]');
+    var target_value = parseInt(target.attr('value'));
+    $('.next0,.next1').on('click', function () {
+        target.attr('value', target_value + 1);
+        $('form').submit();
+    });
+
+    $('.prev0,.prev1').on('click', function () {
+        target.attr('value', target_value - 1);
+        $('form').submit();
+    });
+}
+
+/**
+ * address页面百度地图相关Js
+ */
+function baiDuMap() {
+    //初始化这个变量,防止百度地图重复实例化所导致的显示错误问题
+    var flag = false;
+    if (!flag) {
+        var map = new BMap.Map("map");
+    }
+    var point = new BMap.Point(116.331398, 39.897445);
+    map.centerAndZoom(point, 12);
+
+    //添加地址点击时载入当前位置的地图
+    $('#add-address').click(function () {
+        if (!flag) {
+            //默认定位到当前浏览器位置
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function (r) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    //重置中心点
+                    map.addOverlay(new BMap.Marker(r.point));
+                    map.panTo(r.point);
+                }
+            }, {enableHighAccuracy: true});
+            flag = true;
+        }
+    });
+
+    $('.address-select select').on('change', function () {
+        var elem = $(this);
+        if (elem.val()) {
+            var num = 6;
+            if (elem.hasClass('address-city')) {
+                num = 12;
+            }
+            if (elem.hasClass('address-district')) {
+                num = 14;
+            }
+            if (elem.hasClass('address-street')) {
+                num = 16;
+            }
+            var areaName = elem.find('option:checked').text();
+            if (areaName != '其它区') {
+                //删除之前的覆盖物
+                map.clearOverlays();
+                // 创建地址解析器实例
+                var myGeo = new BMap.Geocoder();
+                // 将地址解析结果显示在地图上,并调整地图视野
+                myGeo.getPoint(areaName, function (newPoint) {
+                    if (newPoint) {
+                        point = newPoint;
+                        map.centerAndZoom(newPoint, num);
+
+                        //重置中心点
+                        map.addOverlay(new BMap.Marker(newPoint));
+                        // 设置矩形区域
+                        var stepLang = 0.01;
+                        if (elem.hasClass('address-street')) {
+                            stepLang = 0.005;
+                        }
+                        if (!elem.hasClass('address-province')) {
+                            polygon = new BMap.Polygon([
+                                new BMap.Point(parseFloat(point.lng - stepLang), parseFloat(point.lat + stepLang)),
+                                new BMap.Point(parseFloat(point.lng + stepLang), parseFloat(point.lat + stepLang)),
+                                new BMap.Point(parseFloat(point.lng + stepLang), parseFloat(point.lat - stepLang)),
+                                new BMap.Point(parseFloat(point.lng - stepLang), parseFloat(point.lat - stepLang))
+                            ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});  //创建多边形
+                            map.addOverlay(polygon);   //将图形添加到地图
+                            polygon.addEventListener('lineupdate', function () {
+                                var coordinate = polygon.getBounds();
+                                $('input[name="coordinate_alx"]').val(coordinate.al.lng);
+                                $('input[name="coordinate_aly"]').val(coordinate.al.lat);
+                                $('input[name="coordinate_rlx"]').val(coordinate.rl.lng);
+                                $('input[name="coordinate_rly"]').val(coordinate.rl.lat);
+                                //console.log($('input[name="coordinate"]').val());
+                            });
+                        }
+                    }
+                }, areaName);
+
+            }
+        }
+
+    });
 }

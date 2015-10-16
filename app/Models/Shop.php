@@ -35,7 +35,7 @@ class Shop extends Model
 
     protected $appends = ['image_url', 'orders'];
 
-    protected $hidden = ['created_at' , 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     /**
      * 用户表
@@ -260,6 +260,7 @@ class Shop extends Model
             return $this->associateFile(upload_file($license, 'temp'), 'license', cons('shop.file_type.license'));
         }
     }
+
     /**
      * 设置经营许可证
      *
@@ -269,7 +270,8 @@ class Shop extends Model
     public function setBusinessLicenseAttribute($license)
     {
         if ($license) {
-            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense', cons('shop.file_type.business_license'));
+            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense',
+                cons('shop.file_type.business_license'));
         }
     }
 
@@ -279,9 +281,11 @@ class Shop extends Model
      * @param $agencyContract
      * @return bool
      */
-    public function setAgencyContractAttribute($agencyContract){
+    public function setAgencyContractAttribute($agencyContract)
+    {
         if ($agencyContract) {
-            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract', cons('shop.file_type.agency_contract'));
+            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract',
+                cons('shop.file_type.agency_contract'));
         }
     }
 
@@ -338,12 +342,12 @@ class Shop extends Model
             foreach ($areaArr as $data) {
                 $areas[] = new DeliveryArea($data);
             }
+//            dd($areas);
             $this->deliveryArea()->saveMany($areas);
         }
 
         return true;
     }
-
     /**
      * 获取logo链接
      *

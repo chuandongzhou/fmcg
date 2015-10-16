@@ -212,6 +212,11 @@
                                 <input type="hidden" name="area[street_id][]" value=""/>
                                 <input type="hidden" name="area[area_name][]" value=""/>
                                 <input type="hidden" name="area[address][]" value=""/>
+                                {{--区域经纬度--}}
+                                <input type="hidden" name="area[alx][]" value=""/>
+                                <input type="hidden" name="area[aly][]" value=""/>
+                                <input type="hidden" name="area[rlx][]" value=""/>
+                                <input type="hidden" name="area[rly][]" value=""/>
                             </div>
                             @foreach ($shop->deliveryArea as $area)
                                 <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
@@ -223,6 +228,11 @@
                                     <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
                                     <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                                     <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
+                                    {{--区域经纬度--}}
+                                    <input type="hidden" name="area[alx][]" value=""/>
+                                    <input type="hidden" name="area[aly][]" value=""/>
+                                    <input type="hidden" name="area[rlx][]" value=""/>
+                                    <input type="hidden" name="area[rly][]" value=""/>
                                 </div>
                             @endforeach
                         </div>

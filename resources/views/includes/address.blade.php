@@ -4,15 +4,18 @@
         .modal .modal .address-select {
             width: 30%;
             display: inline;
-            margin-bottom: 5px; }
+            margin-bottom: 5px;
+        }
 
         .modal .modal-body .address-detail {
-            margin: 10px 0; }
+            margin: 10px 0;
+        }
 
         .modal .address-select .address {
             width: 90%;
             display: inline;
-            margin-bottom: 5px; }
+            margin-bottom: 5px;
+        }
     </style>
 @stop
 
@@ -23,7 +26,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
+                            aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="cropperModalLabel">选择要添加的地址<span class="extra-text"></span></h4>
                 </div>
                 <div class="modal-body address-select">
@@ -51,12 +54,21 @@
                         </div>
 
                     </div>
-
+                    {{--区域经纬度--}}
+                    <input type="hidden" name="coordinate_alx" value=""/>
+                    <input type="hidden" name="coordinate_aly" value=""/>
+                    <input type="hidden" name="coordinate_rlx" value=""/>
+                    <input type="hidden" name="coordinate_rly" value=""/>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加
                         </button>
                     </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm " onclick="polygon.enableEditing();">开启编辑功能</button>
+                        <button class="btn btn-primary btn-sm " onclick="polygon.disableEditing();">关闭编辑功能</button>
+                    </div>
+                    <div id="map" style="overflow:hidden;zoom:1;position:relative;width: 100%;height: 400px;"></div>
 
                 </div>
             </div>
@@ -67,12 +79,14 @@
 @section('js-lib')
     @parent
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
 @stop
 @section('js')
     @parent
     <script>
         $(function () {
             addAddFunc();
+            baiDuMap();
         });
     </script>
 @stop

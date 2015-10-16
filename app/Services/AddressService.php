@@ -16,6 +16,7 @@ class AddressService
     public function __construct($array)
     {
         $this->array = $array;
+
         return $this;
     }
 
@@ -40,10 +41,21 @@ class AddressService
                     'district_id' => $array['district_id'][$key],
                     'street_id' => $array['street_id'][$key],
                     'area_name' => $array['area_name'][$key],
-                    'address' => $array['address'][$key]
+                    'address' => $array['address'][$key],
+                    'coordinate' => [
+                            'al_lng' => $array['alx'][$key],
+                            'al_lat' => $array['aly'][$key],
+                            'rl_lng' => $array['rlx'][$key],
+                            'rl_lat' => $array['rly'][$key]
+                    ]
+                ];
+
+                $coordinate[] = [
+
                 ];
             }
         }
+
         return $addressArr;
     }
 }

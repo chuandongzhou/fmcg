@@ -189,12 +189,11 @@ var noop = function () {
 };
 
 
-function setCookie(name,value)
-{
+function setCookie(name, value) {
     var Days = 30;
     var exp = new Date();
-    exp.setTime(exp.getTime() + Days*24*60*60*1000);
-    document.cookie = name + "="+ value + ";expires=" + exp.toGMTString();
+    exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+    document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
 }
 
 /**
@@ -555,14 +554,14 @@ var addAddFunc = function () {
         }
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
-            districtText =district.is(':visible') ? district.find("option:selected").text() : '',
+            districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = street.is(':visible') ? street.find("option:selected").text() : '',
             addressText = address.val(),
             areaName = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText
         $('.btn-close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border">' +
-            areaName+
+            areaName +
             addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
@@ -570,8 +569,12 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
             '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
             '<span class="fa fa-times-circle pull-right close"></span>' +
-            '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>'+
-            '<input type="hidden" name="area[address][]" value="' + addressText + '"/>',
+            '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
+            '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
+            '<input type="hidden" name="area[alx][]" value="' + $('input[name="coordinate_alx"]').val() + '"/>' +
+            '<input type="hidden" name="area[aly][]" value="' + $('input[name="coordinate_aly"]').val() + '"/>' +
+            '<input type="hidden" name="area[rlx][]" value="' + $('input[name="coordinate_rlx"]').val() + '"/>' +
+            '<input type="hidden" name="area[rly][]" value="' + $('input[name="coordinate_rly"]').val() + '"/>' +
             '</div>'
         );
         changeAddButtonStatus();
