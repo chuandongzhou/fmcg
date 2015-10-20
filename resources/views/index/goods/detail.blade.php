@@ -81,7 +81,7 @@
                     <h5 class="title-name">商品配送区域 :</h5>
                     <ul class="address-list">
                         @foreach($goods->deliveryArea as $area)
-                            <p class="col-sm-12">{{ $area->area_name.$area->address }}</p>
+                            <p class="col-sm-12">{{ $area->address_name }}</p>
                         @endforeach
                     </ul>
                 </div>

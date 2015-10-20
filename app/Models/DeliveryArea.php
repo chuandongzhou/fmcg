@@ -24,6 +24,7 @@ class DeliveryArea extends Model
         'created_at',
         'updated_at'
     ];
+
     /**
      * 复用模型关系
      *
@@ -32,5 +33,15 @@ class DeliveryArea extends Model
     public function addressable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * 获取地址详情
+     *
+     * @return string
+     */
+    public function getAddressNameAttribute()
+    {
+        return $this->area_name . $this->address;
     }
 }

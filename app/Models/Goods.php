@@ -10,7 +10,6 @@ namespace App\Models;
 
 use App\Services\ImageUploadService;
 use DB;
-use Auth;
 
 class Goods extends Model
 {
@@ -34,11 +33,13 @@ class Goods extends Model
         'introduce',
         'shop_id',
         'images',
+        'user_type'
     ];
 
-    public $appends = ['image_url'];
+    public $appends = ['images_url' ,'image_url'];
 
     protected $hidden = [
+        'images',
         'created_at',
         'updated_at',
     ];
@@ -174,6 +175,11 @@ class Goods extends Model
         return $query->orderBy('name', 'asc');
     }
 
+    public function scopeOrderPrice($query)
+    {
+        return $query->orderBy('price_retailer', 'asc');
+    }
+
     /**
      * 配送地址
      *
@@ -239,12 +245,12 @@ class Goods extends Model
     public function scopeOfAttr($query, $attr)
     {
         $goodsAttr = DB::table('attr_goods')->select(DB::raw('goods_id ,count(attr_id) as num'))->whereIn('attr_id',
-            $attr)->groupBy('goods_id')->get();
-
+            (array)$attr)->groupBy('goods_id')->get();
         $goodsAttr = array_filter($goodsAttr, function ($item) use ($attr) {
             return $item->num == count($attr);
         });
         $goodsIds = array_pluck($goodsAttr, 'goods_id');
+
 
         return $query->whereIn('id', $goodsIds);
     }
@@ -264,7 +270,7 @@ class Goods extends Model
         });
 
         static::creating(function ($model) {
-            $model->user_type = Auth::User()->type;
+            $model->user_type = auth()->user()->type;
         });
     }
 
@@ -299,7 +305,9 @@ class Goods extends Model
      */
     public function getPriceAttribute()
     {
-        return auth()->user()->type == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer;
+        $userType = auth()->user()->type;
+
+        return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
     }
 
     /**
@@ -322,7 +330,21 @@ class Goods extends Model
     {
         $image = $this->images->first();
 
-        return $image ? upload_file_url($image->path) : '';
+        return $image ? $image->url : '';
+    }
+
+    /**
+     * 格式化图片地址
+     */
+    public function getImagesUrlAttribute()
+    {
+        $images = $this->images ? $this->images : [];
+        $result = [];
+        foreach ($images as $key => $image) {
+            $result[$key]['name'] = $image['name'];
+            $result[$key]['path'] = $image->url;
+        }
+        return $result;
     }
 
     /**
@@ -334,4 +356,6 @@ class Goods extends Model
     {
         return $this->cate_level_3 ? $this->cate_level_3 : ($this->cate_level_2 ? $this->cate_level_2 : $this->cate_level_1);
     }
+
+
 }

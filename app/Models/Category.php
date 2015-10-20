@@ -5,14 +5,17 @@ namespace App\Models;
 
 class Category extends Model
 {
-    protected $table = 'category';
     public $timestamps = false;
-    protected $fillable = ['pid', 'name', 'status', 'level'];
-    public $hidden = ['status' , 'sort'];
+    public $hidden = ['status', 'sort', 'icon_pic_url', 'icon'];
+    protected $table = 'category';
+    protected $fillable = ['pid', 'name', 'status', 'level', 'icon'];
+    protected $appends = ['icon_url'];
 
-    public static function boot(){
+
+    public static function boot()
+    {
         parent::boot();
-        static :: deleted(function ($model) {
+        static:: deleted(function ($model) {
             $model->attrs->delete();
         });
     }
@@ -26,5 +29,36 @@ class Category extends Model
     {
         return $this->hasMany('App\Models\Attr');
     }
+
+    /**
+     *  图标
+     */
+    public function icon()
+    {
+        return $this->morphOne('App\Models\File', 'fileable');
+    }
+
+    /**
+     * 设置图标
+     *
+     * @param $icon
+     * @return bool
+     */
+    public function setIconAttribute($icon)
+    {
+        return $this->associateFile(upload_file($icon, 'temp'), 'icon');
+    }
+
+    /**
+     * 获取icon
+     * @return string
+     */
+    public function getIconUrlAttribute()
+    {
+        $icon = $this->icon;
+
+        return $icon ? upload_file_url($icon->path) : '';
+    }
+
 
 }

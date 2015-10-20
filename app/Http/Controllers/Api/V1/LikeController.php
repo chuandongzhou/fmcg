@@ -64,7 +64,7 @@ class LikeController extends Controller
             $shops = $shops->OfDeliveryArea($data);
         }
         dd($shops->get()->toArray());
-        return $this->success(['shops' => $shops->simplePaginate()->toArray()]);
+        return $this->success(['shops' => $shops->paginate()->toArray()]);
     }
 
     /**
@@ -79,21 +79,22 @@ class LikeController extends Controller
         $goods = auth()->user()->likeGoods();
 
         if (isset($data['name'])) {
-            $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
+            $goods->where('name', 'like', '%' . $data['name'] . '%');
         }
         if (!empty($data['province_id'])) {
-            $goods = $goods->OfDeliveryArea($data);
+           $goods->OfDeliveryArea($data);
         }
         //获取需要显示的分类ID
-        $array = array_unique($goods->simplePaginate()->pluck('cate_level_2')->all());
-        $cateArr = Category::whereIn('id', $array)->get();
+        $array = array_unique($goods->get()->pluck('cate_level_2')->all());
+        $cateArr = Category::whereIn('id', $array)->with('icon')->get();
         //加入分类过滤条件
         if (!empty($data['cate_level_2'])) {
-            $goods = $goods->ofCategory($data['cate_level_2'], 2);
+           $goods->ofCategory($data['cate_level_2'], 2);
         }
 
+        //dd($cateArr);
         return $this->success([
-            'goods' => $goods->simplePaginate(),
+            'goods' => $goods->paginate()->toArray(),
             'cateArr' => $cateArr
         ]);
     }

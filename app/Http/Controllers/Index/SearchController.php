@@ -25,6 +25,7 @@ class SearchController extends Controller
             'price_wholesaler',
             'is_new',
             'is_promotion',
+            'is_out',
             'cate_level_1',
             'cate_level_2'
         ])->where('user_type', '>', auth()->user()->type);
@@ -32,7 +33,7 @@ class SearchController extends Controller
         $result = GoodsService::getGoodsBySearch($data, $goods);
         return view('index.search.index',
             [
-                'goods' => $result['goods']->paginate(),
+                'goods' => $goods->paginate(),
                 'categories' => $result['categories'],
                 'attrs' => $result['attrs'],
                 'searched' => $result['searched'],

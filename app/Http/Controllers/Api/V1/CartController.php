@@ -30,7 +30,6 @@ class CartController extends Controller
             $carts = (new CartService($carts))->formatCarts();
         }
 
-        dd($carts->toArray());
         return $this->success(['shops'=>$carts->toArray()]);
     }
 

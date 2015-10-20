@@ -47,7 +47,7 @@
 
                         <div class="address-detail">
                             <label class="control-label">详细地址:</label>
-                            <input type="text" placeholder="请输入详细地址" class="form-control address">
+                            <input type="text" placeholder="请输入详细地址" class="form-control detail-address">
                         </div>
 
                     </div>

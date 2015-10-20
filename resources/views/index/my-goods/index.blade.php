@@ -50,7 +50,7 @@
 
     </div>
     <div class="row sort">
-        @if (!empty(array_except($get , 'name')))
+        @if (!empty(array_except($get , ['name' , 'sort'])))
             <div class="col-sm-12 a-menu-panel">
                 <div class="sort-item">
                     <a href="{{ url('my-goods') }}" class="pull-left all-results"><span
@@ -67,7 +67,7 @@
 
                                 <div class="list-wrap">
                                     @foreach($category as $key => $item)
-                                        <a href="{{ url('my-goods?category_id=' . $item['level'].$item['id']) }}"
+                                        <a href="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"
                                            class="btn  control">
                                             {{ $item['name'] }}
                                         </a>
@@ -97,7 +97,7 @@
                     <div class="clearfix all-sort-panel">
                         <p class="pull-left all-sort">
                             @foreach($categories as $key => $category)
-                                <a href="{{ url('my-goods?category_id=' . $category['level'].$category['id']) }}"
+                                <a href="{{ url('my-goods?category_id=' . $category['level'].$category['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"
                                    class="btn  control">
                                     {{ $category['name'] }}
                                 </a>
@@ -164,9 +164,12 @@
     <div class="row list-penal">
         @foreach($goods  as $item)
             <div class="col-sm-3 commodity">
-                <a href="{{ url('my-goods/' . $item->id) }}">
-                    <img class="commodity-img" src="{{ $item->image_url }}">
-                </a>
+                <div class="img-wrap">
+                    <a href="{{ url('goods/' . $item->id) }}">
+                        <img class="commodity-img" src="{{ $item->image_url }}">
+                    </a>
+                    <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
+                </div>
                 <div class="content-panel">
                     <p class="commodity-name">
                         <a href="{{ url('my-goods/' . $item->id) }}">

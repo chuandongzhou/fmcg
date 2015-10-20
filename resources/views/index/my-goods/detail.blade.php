@@ -23,25 +23,25 @@
                 <img class="commodity" src="{{ $goods->image_url }}">
             </div>
             <div class="col-sm-9 detail-list-wrap">
-                <ul>
-                    <li>名称 : {{ $goods->name }}</li>
-                    <li>价格 : <span class="red">￥{{ $goods->price }}</span></li>
-                </ul>
+                <div class="store-name">
+                    <span class="title-name">名称 :</span> <b>{{ $goods->name }}</b>
+                </div>
                 <ul class="left-list pull-left">
-                    <li>状态 : <span class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</span></li>
+                    <li><span class="title-name">价格 :</span> <b class="red">￥{{ $goods->price }}</b></li>
+                    <li><span class="title-name">状态 :</span> <b class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</b></li>
                     @foreach($attrs as $key => $attr)
-                        <li>{{ $key }} : {{ $attr }}</li>
+                        <li><span class="title-name">{{ $key }} :</span> <b>{{ $attr }}</b></li>
                     @endforeach
                 </ul>
                 <ul class="right-list">
-                    <li>是否新品 : {{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</li>
-                    <li>是否缺货 : {{ cons()->valueLang('goods.type' ,$goods->is_out) }}</li>
-                    <li>即期品 : {{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</li>
+                    <li><span class="title-name">是否新品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</b></li>
+                    <li><span class="title-name">是否缺货 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_out) }}</b></li>
+                    <li><span class="title-name">即期品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b></li>
                     @if( $goods->is_back || $goods->is_change)
-                        <li>退换货 : {{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</li>
+                        <li><span class="title-name">退换货 :</span> <b>{{ $goods->is_back ? '可退货' : '' }}</b>  <b>{{  $goods->is_change ? '可换货' : ''  }}</b></li>
                     @endif
                     @if($goods->is_promotion)
-                        <li>促销信息 : {{ $goods->promotion_info }}</li>
+                        <li><span class="title-name">促销信息 :</span> <b>{{ $goods->promotion_info }}</b></li>
                     @endif
                 </ul>
             </div>
@@ -55,16 +55,22 @@
                 <a id="location" class="active">配送区域</a>
                 <a id="graphic-details">图文详情</a>
             </div>
-            <div class="col-sm-12 location box">
-                <p>商品配送区域 :</p>
-                @foreach($goods->deliveryArea as $area)
-                    <p class="col-sm-12">{{ $area->area_name.$area->address }}</p>
-                @endforeach
-                <p>商品配送区域大概地图标识 :</p>
+            <div class="col-sm-12 address-wrap location box">
+                <div class="item">
+                    <h5 class="title-name">商品配送区域 :</h5>
+                    <ul class="address-list">
+                        @foreach($goods->deliveryArea as $area)
+                            <li>{{ $area->address_name }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="item">
+                    <h5 class="title-name">商品配送区域大概地图标识 :</h5>
 
-                <p class="address-map">
-                    <img src="http://placehold.it/300x250/CDF" alt="" title=""/>
-                </p>
+                    <p class="map">
+                        <img src="http://placehold.it/300x250/CDF" alt="" title=""/>
+                    </p>
+                </div>
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}

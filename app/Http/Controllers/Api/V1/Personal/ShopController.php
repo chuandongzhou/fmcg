@@ -17,7 +17,6 @@ class ShopController extends Controller
         if (Gate::denies('validate-shop',$shop)){
             return $this->error('保存失败');
         }
-
         if ($shop->fill($request->all())->save()) {
             return $this->success('保存店铺成功');
         }

@@ -327,7 +327,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-top: 1px dashed #b4b4b4;
     margin-top: -1px; }
     .wholesalers-index .store .address-panel ul {
-      padding: 10px 0; }
+      padding: 10px 0;
+      clear: both; }
       .wholesalers-index .store .address-panel ul .address-panel-item {
         margin-left: 80px; }
         .wholesalers-index .store .address-panel ul .address-panel-item .panel-name {
@@ -348,8 +349,8 @@ ul, li, p, a, h1, h2, h3, h4 {
         margin-left: 20px; }
       .wholesalers-index .store .address-panel ul .icon-tel {
         background-position: 0 0; }
-      .wholesalers-index .store .address-panel ul .icon-address {
-        background-position: 0 -100px; }
+      .wholesalers-index .store .address-panel ul .icon-seller {
+        background-position: 0 -63px; }
       .wholesalers-index .store .address-panel ul .icon-address {
         background-position: 0 -128px; }
 
@@ -439,6 +440,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         .sort .sort-item .sort-list .list-title.active {
           border: 1px solid #e0e0e0;
           border-bottom-color: #fff;
+          background-color: #fff;
           z-index: 10; }
         .sort .sort-item .sort-list .list-title .title-txt {
           display: inline-block;
@@ -490,6 +492,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin: 0 3px; }
     .sort .a-menu-panel .sort-list .list-title.active {
       border: 1px solid #fff;
+      border-bottom: none;
       color: #4cb9fe; }
     .sort .a-menu-panel .sort-list .list-wrap {
       margin-top: 0;
@@ -554,7 +557,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .goods-detail .good-wrap .commodity-img .commodity {
       width: 90%;
       height: 90%; }
-  .goods-detail .good-wrap .detail-list-wrap li {
+  .goods-detail .good-wrap .detail-list-wrap .store-name, .goods-detail .good-wrap .detail-list-wrap li {
     padding: 5px 0; }
   .goods-detail .good-wrap .detail-list-wrap .left-list {
     margin-right: 50px; }
@@ -1041,7 +1044,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .order-report .content .enter-item {
   padding: 0; }
   .order-report .content .enter-item .item {
-    display: inline-block; }
+    display: inline-block;
+    padding: 5px 0; }
   .order-report .content .enter-item .address, .order-report .content .enter-item .table-list-row .shopping-table-list table tfoot, .table-list-row .shopping-table-list table .order-report .content .enter-item tfoot {
     margin: 0 10px; }
   .order-report .content .enter-item .check-item {

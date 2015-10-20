@@ -33,9 +33,9 @@ class Shop extends Model
         'nickname'
     ];
 
-    protected $appends = ['image_url', 'orders'];
+    protected $appends = ['images_url', 'orders', 'logo_url'];
 
-    protected $hidden = ['created_at' , 'updated_at'];
+    protected $hidden = ['images', 'created_at', 'updated_at'];
 
     /**
      * 用户表
@@ -260,6 +260,7 @@ class Shop extends Model
             return $this->associateFile(upload_file($license, 'temp'), 'license', cons('shop.file_type.license'));
         }
     }
+
     /**
      * 设置经营许可证
      *
@@ -269,7 +270,8 @@ class Shop extends Model
     public function setBusinessLicenseAttribute($license)
     {
         if ($license) {
-            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense', cons('shop.file_type.business_license'));
+            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense',
+                cons('shop.file_type.business_license'));
         }
     }
 
@@ -279,9 +281,11 @@ class Shop extends Model
      * @param $agencyContract
      * @return bool
      */
-    public function setAgencyContractAttribute($agencyContract){
+    public function setAgencyContractAttribute($agencyContract)
+    {
         if ($agencyContract) {
-            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract', cons('shop.file_type.agency_contract'));
+            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract',
+                cons('shop.file_type.agency_contract'));
         }
     }
 
@@ -315,11 +319,16 @@ class Shop extends Model
      */
     public function setAddressAttribute($address)
     {
-
-        $this->shopAddress()->delete();
+        $relate = $this->shopAddress();
+        $relate->delete();
         $address['type'] = cons('shop.address_type.shop_address');
-        $this->shopAddress()->create($address);
-
+        if ($this->exists) {
+            $relate->create($address);
+        } else {
+            static::created(function ($model) use ($relate, $address) {
+                $model->$relate()->save($address);
+            });
+        }
         return true;
     }
 
@@ -405,13 +414,27 @@ class Shop extends Model
     }
 
     /**
+     * 格式化图片地址
+     */
+    public function getImagesUrlAttribute()
+    {
+        $images = $this->images ? $this->images : [];
+        $result = [];
+        foreach ($images as $key => $image) {
+            $result[$key]['name'] = $image['name'];
+            $result[$key]['path'] = $image->url;
+        }
+        return $result;
+    }
+
+    /**
      * 获取地址
      *
      * @return string
      */
     public function getAddressAttribute()
     {
-        return is_null($this->shopAddress) ? '' : $this->shopAddress->area_name . ' ' . $this->shopAddress->address;
+        return is_null($this->shopAddress) ? '' : $this->shopAddress->address_name;
     }
 
 }

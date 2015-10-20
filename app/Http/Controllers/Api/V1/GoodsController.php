@@ -7,6 +7,8 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\HomeColumn;
+use App\Models\Shop;
 use App\Services\AttrService;
 use Gate;
 use App\Models\Goods;
@@ -20,19 +22,9 @@ class GoodsController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function anyHotGoods()
+    public function getGoods()
     {
-        $type = auth()->user()->type;
-        //热门商品
-        $hotGoods = Goods::hot()->where('user_type', '>', $type)->select([
-            'id',
-            'name',
-            'price_retailer',
-            'price_wholesaler',
-            'is_new',
-            'is_promotion'
-        ])->simplePaginate()->toArray();
-        return $this->success($hotGoods);
+        return $this->success(['goodsColumns' => GoodsService::getGoodsColumn()]);
     }
 
     /**
@@ -44,8 +36,24 @@ class GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
-        $result = GoodsService::getGoodsBySearch($gets, '>');
-        return $this->success($result['goods']->simplePaginate()->toArray());
+        $goods = Goods::with('images')->select([
+            'id',
+            'name',
+            'sales_volume',
+            'price_retailer',
+            'price_wholesaler',
+            'is_new',
+            'is_promotion',
+            'is_out',
+            'cate_level_1',
+            'cate_level_2'
+        ])->where('user_type', '>', auth()->user()->type);
+
+        $result = GoodsService::getGoodsBySearch($gets, $goods, false);
+        return $this->success([
+            'goods' => $result['goods']->paginate()->toArray(),
+            'categories' => $result['categories']
+        ]);
     }
 
     /**
@@ -64,9 +72,9 @@ class GoodsController extends Controller
         $isLike = auth()->user()->whereHas('likeGoods', function ($q) use ($goods) {
             $q->where('id', $goods->id);
         })->pluck('id');
+        $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         $goods->is_like = $isLike ? true : false;
-        dd($goods->toArray());
-        return $this->success($goods);
+        return $this->success(['goods' => $goods]);
     }
 }

@@ -18,25 +18,37 @@
 
                     <p class="pull-right">
                         <span>配送区域</span>
-                        <select name="province_id" data-id="{{ $address['province_id'] or 0 }}" class="address-province address"></select>
-                        <select name="city_id" data-id="{{ $address['city_id'] or 0 }}" class="address-city address"></select>
-                        <select name="district_id" data-id="{{ $address['district_id'] or 0 }}" class="address-district address"> </select>
-                        <select name="street_id" data-id="{{ $address['street_id'] or 0 }}" class="address-street address"> </select>
+                        <select name="province_id" data-id="{{ $address['province_id'] or 0 }}"
+                                class="address-province address"></select>
+                        <select name="city_id" data-id="{{ $address['city_id'] or 0 }}"
+                                class="address-city address"></select>
+                        <select name="district_id" data-id="{{ $address['district_id'] or 0 }}"
+                                class="address-district address"> </select>
+                        <select name="street_id" data-id="{{ $address['street_id'] or 0 }}"
+                                class="address-street address"> </select>
                     </p>
                 </div>
             </div>
         </div>
         <div class="row list-penal">
-            @foreach($shops  as $item)
+            @foreach($shops  as $shop)
                 <div class="col-sm-3 commodity">
-                    <div class="img-wrap"><img class="commodity-img" src="{{ $item->image_url }}"></div>
+                    <div class="img-wrap">
+                        <a href="{{ url('shop/' . $shop->id) }}">
+                            <img class="commodity-img" src="{{ $shop->image_url }}">
+                        </a>
+                    </div>
                     <div class="content-panel">
                         <p class="sell-panel">
                             <span class="sales ">最底配送额</span>
-                            <span class="money pull-right">￥{{ $item->min_money }}</span>
+                            <span class="money pull-right">￥{{ $shop->min_money }}</span>
                         </p>
 
-                        <p class="commodity-name">{{ $item->name }}</p>
+                        <p class="commodity-name">
+                            <a href="{{ url('shop/' . $shop->id) }}">
+                                {{ $shop->name }}
+                            </a>
+                        </p>
 
                         <p class="order-count">订单量 : <span>10010</span></p>
                     </div>

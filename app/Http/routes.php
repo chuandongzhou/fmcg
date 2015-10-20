@@ -1,8 +1,10 @@
 <?php
 
-$router->get('login', 'Auth\AuthController@login');
+$router->get('pusher', 'TestController@pusher');
+$router->get('pushIos', 'TestController@pushIos');
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
+    $router->get('register', 'AuthController@register');
     $router->get('logout', 'AuthController@logout');
 });
 
@@ -46,6 +48,8 @@ $router->group(['namespace' => 'Index' ,'middleware' => 'auth'], function ($rout
  * 后台
  */
 $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router) {
+
+    $router->get('auth/login', ['uses' => 'AuthController@login']);  // 后台首页
     // 首页
     $router->get('/', ['uses' => 'HomeController@getIndex']);  // 后台首页
     $router->delete('admin/batch', 'AdminController@deleteBatch');//批量删除
@@ -99,6 +103,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         ]);
 
         $router->controller('goods', 'GoodsController');                           //商品
+        //$router->controller('shop', 'ShopController');                           //商品
+        $router->get('shop/shops', 'ShopController@shops');                        //热门店铺
+        $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');;                        //店铺详细
+        $router->get('shop/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');;                   //店铺商品
+        $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');;                   //店铺商品
+
+
+
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类

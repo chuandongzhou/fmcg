@@ -30,7 +30,7 @@ class OrderController extends Controller
     public function getListOfBuy()
     {
         $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
-            'desc')->simplePaginate()->toArray();
+            'desc')->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -43,7 +43,7 @@ class OrderController extends Controller
     public function getListOfSell()
     {
         $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
-            'desc')->simplePaginate()->toArray();
+            'desc')->paginate()->toArray();
 
 
         return $this->success($orders);
@@ -61,7 +61,7 @@ class OrderController extends Controller
         if ($redis->exists('push:user:' . $this->userId)) {
             $redis->del('push:user:' . $this->userId);
         }
-        $orders = Order::ofBuy($this->userId)->nonPayment()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -73,7 +73,7 @@ class OrderController extends Controller
      */
     public function getNonSureOfBuy()
     {
-        $orders = Order::ofBuy($this->userId)->nonSure()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonSure()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -90,7 +90,7 @@ class OrderController extends Controller
             $redis->del('push:seller' . $this->userId);
         }
 
-        $orders = Order::ofSell($this->userId)->nonSure()->simplePaginate()->toArray();
+        $orders = Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -102,7 +102,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->userId)->nonArrived()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonArrived()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -114,7 +114,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->userId)->nonSend()->simplePaginate()->toArray();
+        $orders = Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -199,8 +199,6 @@ class OrderController extends Controller
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
         $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
-
-        dd($shippingAddress->toArray());
 
         return $this->success(['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
