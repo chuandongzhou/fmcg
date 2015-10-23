@@ -247,7 +247,7 @@
     name                string      图片名
     path                string      图片地址
 
-#### 2.3.3 店铺扩展信息[get]   ({shop_id}/extend)
+#### 2.3.4 店铺扩展信息[get]   ({shop_id}/extend)
 `请求参数：`
 
 `成功返回：`
@@ -295,16 +295,16 @@
     format              bool        是否格式化标签  (非必须参数)
 
 `成功返回：`
-
-   attr_id              int         标签id
-   name                 string      标签名
-   pid                  int         父级id
-   child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
+	
+	attr_id              int         标签id
+    name                 string      标签名
+    pid                  int         父级id
+    child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
 
 `失败返回：`
 
 ### 2.5 购物车 cart
-#### 2.5.1 查看购物车[post] (index)
+#### 2.5.1 查看购物车[get] (index)
 `请求参数：`
 
 `成功返回：`
@@ -436,7 +436,7 @@
 `失败返回`
 
 
-#### 2.5.4 买家获取订单列表[get] (list-of-buy)
+#### 2.6.4 买家获取订单列表[get] (list-of-buy)
 `请求参数：`
 
     page                int         分页
@@ -485,7 +485,7 @@
 `失败返回`
 
 
-#### 2.5.5 买家待付款订单列表[get] (non-payment)(仅显示在线支付订单)
+#### 2.6.5 买家待付款订单列表[get] (non-payment)(仅显示在线支付订单)
 `请求参数：`
 
 	page 				int			分页
@@ -497,7 +497,7 @@
 `失败返回`
 
 
-#### 2.5.7 买家待收货订单列表[get] (non-arrived)
+#### 2.6.6 买家待收货订单列表[get] (non-arrived)
 `请求参数：`
 
 	page 				int			分页
@@ -508,7 +508,7 @@
 
 `失败返回`
 
-#### 2.5.10 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)
+#### 2.6.7 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -518,7 +518,7 @@
 
 `失败返回：`
 
-#### 2.5.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)
+#### 2.6.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)
 `请求参数：`
 
 	order_id			int			订单号
@@ -561,7 +561,7 @@
 `失败返回`
 
 
-#### 2.5.4 卖家获取订单列表[get] (list-of-sell)
+#### 2.6.9 卖家获取订单列表[get] (list-of-sell)
 `请求参数：`
 
     page                int         分页
@@ -605,7 +605,7 @@
 `失败返回`
 
 
-#### 2.5.9 卖家待发货订单列表[get] (non-send)
+#### 2.6.10 卖家待发货订单列表[get] (non-send)
 `请求参数：`
 
 	page                int         分页
@@ -617,7 +617,7 @@
 `失败返回：`
 
 
-#### 2.5.9 卖家待收款订单列表[get] (pending-collnection)(仅针对货到付款订单)
+#### 2.6.11 卖家待收款订单列表[get] (pending-collnection)(仅针对货到付款订单)
 `请求参数：`
 
 	page                int         分页
@@ -629,7 +629,7 @@
 `失败返回：`
 
 
-#### 2.5.9 卖家获取订单详情[get] (detail-of-sell)
+#### 2.6.12 卖家获取订单详情[get] (detail-of-sell)
 `请求参数：`
 
 	order_id  			int			订单id
@@ -673,7 +673,7 @@
 `失败返回：`
 
 
-#### 2.5.10 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)
+#### 2.6.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -684,7 +684,7 @@
 `失败返回：`
 
 
-#### 2.5.10 卖家批量发货[put] (batch-send)
+#### 2.6.14 卖家批量发货[put] (batch-send)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -695,7 +695,7 @@
 
 `失败返回：`
 
-#### 2.5.9 买家/卖家批量取消订单[put] (cancel-sure)
+#### 2.6.15 买家/卖家批量取消订单[put] (cancel-sure)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -706,8 +706,8 @@
 `失败返回：`
 
 
-### 2.6 收藏 like
-#### 2.5.1 商店收藏[post] (shops)
+### 2.7 收藏 like
+#### 2.7.1 商店收藏[post] (shops)
 `请求参数：`
 
     province_id         int         省id
@@ -761,8 +761,8 @@
 `失败返回:`
 
 
-### 2.10 配送信息 delivery-man
-#### 2.10.1 配送人员列表[get] 
+### 2.8 配送信息 delivery-man
+#### 2.8.1 配送人员列表[get] 
 `请求参数:`
 
 `成功返回:`
@@ -777,7 +777,7 @@
 
 `失败返回:`
 
-#### 2.10.2 添加配送人员[post] 
+#### 2.8.2 添加配送人员[post] 
 `请求参数:`
 	
 	name				string		姓名
@@ -787,7 +787,7 @@
 
 `失败返回:`
 
-#### 2.10.3 编辑配送人员信息[put] 
+#### 2.8.3 编辑配送人员信息[put] 
 `请求参数:`
 	
 	id					int			配送人员ID
@@ -799,7 +799,7 @@
 	
 `失败返回:`
 
-#### 2.10.4 删除配送人员[delete] 
+#### 2.8.4 删除配送人员[delete] 
 `请求参数:`
 	
 	id					int			配送人员ID
