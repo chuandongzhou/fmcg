@@ -118,7 +118,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 ['only' => ['store', 'update', 'destroy']]);          //收货地址
 
             $router->resource('delivery-man', 'DeliveryManController',
-                ['only' => ['store', 'update', 'destroy']]);          //提现账号
+                ['only' => ['index','store', 'update', 'destroy']]);          //提现账号
         });
         $router->controller('cart', 'CartController');
         $router->controller('order', 'OrderController');

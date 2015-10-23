@@ -11,24 +11,37 @@ use App\Models\PushDevice;
 class PushOrderService
 {
 
-    public function push($targetUserId)
+    /**
+     * 推送信息到指定用户最近使用的移动设备
+     *
+     * @param $targetUserId
+     * @return bool
+     */
+    public function push($targetUserId,$msg)
     {
         //只推送最近使用的移动设备
         $device = PushDevice::where('user_id', $targetUserId)->orderBy('updated_at', 'desc')->first();
         if (!$device) {
             return false;
         }
-        $msg = ['title' => 'hi', 'body' => 'you have a new order'];
+        $msgArray = ['title' => '', 'body' => $msg];
         if ($device->type == cons('push_device.iphone')) {
-            $res = $this->pushIos($device->token, $msg);
+            $res = $this->pushIos($device->token, $msgArray);
         } else {
-            $res = $this->pushAndroid($device->token, $msg);
+            $res = $this->pushAndroid($device->token, $msgArray);
         }
 
         return $res;
 
     }
 
+    /**
+     * 推送到android设备
+     *
+     * @param $channelId
+     * @param array $msg
+     * @return mixed
+     */
     public function pushAndroid($channelId, array $msg)
     {
         // 消息内容.
@@ -48,6 +61,13 @@ class PushOrderService
 
     }
 
+    /**
+     * 推送到Ios设备
+     *
+     * @param $channelId
+     * @param array $msg
+     * @return mixed
+     */
     public function pushIos($channelId, array $msg)
     {
         return PushNotification::app('IOS')->to($channelId)->send($msg['title'] . $msg['body']);

@@ -142,4 +142,4 @@ function logstr($orderid,$str,$hmac)
     fclose($james);
 }
 
-?> 
+

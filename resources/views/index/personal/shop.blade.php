@@ -162,7 +162,7 @@
                     </div>
                 @endif
 
-                <div class="form-group">
+                <div class="form-group shop-address">
                     <label class="col-sm-2 control-label">所在地</label>
 
                     <div class="col-sm-3">
@@ -185,7 +185,6 @@
                                 class="address-street form-control address"></select>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="address" class="col-sm-2 control-label">详细地址</label>
 
@@ -193,7 +192,11 @@
                         <input type="hidden" name="address[area_name]" value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}" />
                         <input type="text" placeholder="请输入详细地址" name="address[address]" id="address" class="form-control"
                                value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
+                        <input type="hidden" name="x_lng" value=""/>
+                        <input type="hidden" name="y_lat" value=""/>
+                        <div id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"> </div>
                     </div>
+
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="username">配送区域:</label>
@@ -213,13 +216,13 @@
                                 <input type="hidden" name="area[area_name][]" value=""/>
                                 <input type="hidden" name="area[address][]" value=""/>
                                 {{--区域经纬度--}}
-                                <input type="hidden" name="area[alx][]" value=""/>
-                                <input type="hidden" name="area[aly][]" value=""/>
-                                <input type="hidden" name="area[rlx][]" value=""/>
-                                <input type="hidden" name="area[rly][]" value=""/>
+                                <input type="hidden" name="area[blx][]" value=""/>
+                                <input type="hidden" name="area[bly][]" value=""/>
+                                <input type="hidden" name="area[slx][]" value=""/>
+                                <input type="hidden" name="area[sly][]" value=""/>
                             </div>
                             @foreach ($shop->deliveryArea as $area)
-                                <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
+                                <div class="col-sm-12 fa-border show-map">{{ $area->area_name.$area->address }}
                                     <span class="fa fa-times-circle pull-right close"></span>
                                     <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                                     <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
@@ -229,16 +232,21 @@
                                     <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                                     <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                                     {{--区域经纬度--}}
-                                    <input type="hidden" name="area[alx][]" value=""/>
-                                    <input type="hidden" name="area[aly][]" value=""/>
-                                    <input type="hidden" name="area[rlx][]" value=""/>
-                                    <input type="hidden" name="area[rly][]" value=""/>
+                                    <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
+                                    <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
+                                    <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
+                                    <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">地图标识 :</label>
+                    <div class="col-sm-10">
+                        <div id="map"></div>
+                    </div>
+                </div>
                 <div class="col-sm-12 text-center save">
                     <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
                     <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
@@ -251,14 +259,14 @@
         </form>
     </div>
 @stop
-@section('js-lib')
-    @parent
-    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
-@stop
-
 @section('js')
     @parent
     <script type="text/javascript">
+        $(document).ready(function(){
+            getCoordinateMap({!! $coordinates or '' !!});
+            getShopAddressMap({{$shop->x_lng or 0}},{{ $shop->y_lat or 0 }});
+
+        });
         $(function () {
             picFunc();
             $('select.address').change(function () {

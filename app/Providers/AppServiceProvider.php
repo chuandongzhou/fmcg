@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
-use App\Models\DeliveryArea;
 
 class AppServiceProvider extends ServiceProvider
 {

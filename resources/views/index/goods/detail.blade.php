@@ -88,9 +88,7 @@
                 <div class="item">
                     <h5 class="title-name">商品配送区域大概地图标识 :</h5>
 
-                    <p class="map">
-                        <img src="http://placehold.it/470x350">
-                    </p>
+                   <div id="map"></div>
                 </div>
             </div>
             <div class="col-sm-12 box graphic-details">
@@ -110,6 +108,7 @@
             numChange({{ $goods->min_num }});
             tabBox();
             likeFunc();
+            getCoordinateMap({!! $coordinates !!});
         });
     </script>
 @stop

@@ -7,8 +7,8 @@
         <div class="col-sm-12 notice-bar">
             <a class="btn btn-primary"
                href="{{ url('order-sell') }}">所有订单</a>
-            <a class="btn ajax-get"
-               data-url="{{ url('order-sell/non-sure') }}">待确认{{ $data['nonSure'] }}</a>
+            {{--<a class="btn ajax-get"--}}
+               {{--data-url="{{ url('order-sell/non-sure') }}">待确认{{ $data['nonSure'] }}</a>--}}
             <a class="btn ajax-get"
                data-url="{{ url('order-sell/non-send') }}">待发货{{ $data['nonSend'] }}</a>
             <a class="btn ajax-get"
@@ -49,6 +49,7 @@
         </div>
     </div>
     <form class="form" method="get" action="{{ url('order-sell/export') }}">
+        <input type="hidden" name="order_id" value="" />
         <div class="row order-table-list">
             <div class="col-sm-12 table-responsive table-col">
                 <div class="content">
@@ -82,24 +83,28 @@
                                             <p>订单金额 :<span class="red">￥{{ $order['price'] }}</span></p>
                                         </td>
                                         <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
-                                            <p><a href="{{ url('order-sell/detail/'.$order['id']) }}" class="btn btn-primary">查看</a></p>
+                                            <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}" class="btn btn-primary">查看</a></p>
                                             @if(!$order['is_cancel'])
-                                                @if($order['status'] == cons('order.status.non_sure'))
-                                                    <p><a class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"
-                                                          data-data='{"order_id":{{ $order['id'] }}}'>确认</a></p>
-                                                @elseif($order['pay_type'] == cons('order.pay_type.online') && $order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
+                                                {{--@if($order['status'] == cons('order.status.non_sure'))--}}
+                                                    {{--<p><a class="btn btn-danger ajax" data-method = 'put' data-url="{{ url('order-sell/batch-sure') }}"--}}
+                                                          {{--data-data='{"order_id":{{ $order['id'] }}}'>确认</a></p>--}}
+                                                {{--@endif--}}
+                                                @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
                                                     <p><a class="btn btn-cancel ajax" data-method = 'put' data-url="{{ url('order-sell/cancel-sure') }}"
                                                           data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
-                                                @elseif(($order['pay_type'] == cons('pay_type.online')&& $order['pay_status'] == cons('order.pay_status.payment_success') && $order['status'] ==  cons('order.status.non_send'))
+                                                @endif
+                                                @if(($order['pay_type'] == cons('pay_type.online')&& $order['pay_status'] == cons('order.pay_status.payment_success') && $order['status'] ==  cons('order.status.non_send'))
                                                  || ($order['pay_type'] == cons('pay_type.cod')&& $order['status'] == cons('order.status.non_send')))
-                                                    <p><a class="btn btn-warning ajax" data-method = 'put' data-url="{{ url('order-sell/batch-send') }}"
-                                                          data-data='{"order_id":{{ $order['id'] }}}'>发货</a></p>
-                                                @elseif($order['pay_type'] == cons('pay_type.cod') && $order['pay_status'] == cons('order.pay_status.payment_success') && $order['status'] == cons('order.status.send'))
+                                                    <p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal" data-data="{{ $order['id'] }}">发货</a></p>
+                                                @elseif($order['pay_type'] == cons('pay_type.cod') && $order['status'] == cons('order.status.send'))
                                                     <p><a class="btn btn-info ajax" data-method = 'put' data-url="{{ url('order-sell/batch-finish') }}"
-                                                          data-data='{"order_id":{{ $order['id'] }}}'>收款</a></p>
+                                                          data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
+                                                @endif
+                                                @if($order['status'] == cons('order.status.send'))
+                                                    <p><a target="_blank" class="btn btn-success" href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a></p>
                                                 @endif
                                             @endif
-                                            <p><a target="_blank" class="btn btn-success" href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a></p>
+
                                     @endif
                                 </tr>
                             @endforeach
@@ -112,14 +117,40 @@
         @if($orders['data'])
         <div class="row" id="foot-nav">
             <div class="col-sm-12 padding-clear">
-                <button class="btn btn-danger ajax" data-url="{{ url('order-sell/batch-sure') }}" data-method="put">确认</button>
-                <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}" data-method="put">取消</button>
+                <input type="checkbox" id="check-all"/>
+                {{--<button class="btn btn-danger ajax" data-url="{{ url('order-sell/batch-sure') }}" data-method="put">确认</button>--}}
+                <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}" data-method="put">批量取消</button>
+                <a class="btn btn-warning"  data-target="#sendModal" data-toggle="modal">批量发货</a>
+                {{--<button class="btn btn-warning ajax" data-url="{{ url('order-sell/batch-send') }}" data-method="put">批量发货</button>--}}
+                <button class="btn btn-info ajax" data-url="{{ url('order-sell/batch-finish') }}" data-method="put">确认收款</button>
                 <button class="btn btn-success" >导出</button>
-                <button class="btn btn-warning ajax" data-url="{{ url('order-sell/batch-send') }}" data-method="put">发货</button>
-                <button class="btn btn-info ajax" data-url="{{ url('order-sell/batch-finish') }}" data-method="put">收款</button>
             </div>
         </div>
         @endif
+        <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="width:70%;margin:auto">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <p class="modal-title" id="cropperModalLabel">选择配送人员:
+                            <span class="extra-text">
+                              <select name="delivery_man_id">
+                                  @foreach($delivery_man as $index => $item)
+                                      <option value="{{ $index }}">{{ $item }}</option>
+                                  @endforeach
+                              </select>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('order-sell/batch-send') }}" data-method="put">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 @stop
@@ -128,6 +159,7 @@
     <script type="text/javascript">
         $(function () {
             getOrderList();
+            getOrderButtonEvent();
         })
     </script>
 @stop

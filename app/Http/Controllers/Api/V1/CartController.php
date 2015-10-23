@@ -18,7 +18,7 @@ class CartController extends Controller
     /**
      * 购物车首页
      */
-    public function postIndex()
+    public function getIndex()
     {
         $myCarts = auth()->user()->carts();
         $carts = $myCarts->with('goods')->get();
@@ -30,8 +30,7 @@ class CartController extends Controller
             $carts = (new CartService($carts))->formatCarts();
         }
 
-        dd($carts->toArray());
-        return $this->success(['shops'=>$carts->toArray()]);
+        return $this->success(['shops' => $carts->toArray()]);
     }
 
     /**
@@ -52,18 +51,17 @@ class CartController extends Controller
         if ($goodsInfo->min_num > $buyNum) {
             return $this->error('不能小于购买量');
         }
-
-        /**
-         * 查询是否有相同的商品
-         */
+        //查询是否有相同的商品,存在则合并
         $cart = $user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('id'))) {
             $cart->increment('num', $buyNum);
+
             return $this->success('加入购物车成功');
         }
         if ($user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {
             return $this->success('加入购物车成功');
         }
+
         return $this->error('加入购物车失败');
     }
 
@@ -80,6 +78,7 @@ class CartController extends Controller
         if (!is_null($cart)) {
             $cart->delete();
         }
+
         return $this->success('删除成功');
     }
 

@@ -67,14 +67,14 @@ class ShopController extends Controller
         }
         $goods = $goods->paginate();
         $url = Gate::denies('validate-shop', $shop) ? 'goods' : 'my-goods';
-        return view('index.shop.shop',
-            [
-                'shop' => $shop,
-                'goods' => $goods,
-                'sort' => $sort,
-                'isLike' => $isLike,
-                'url' => $url
-            ]);
+
+        return view('index.shop.shop', [
+            'shop' => $shop,
+            'goods' => $goods,
+            'sort' => $sort,
+            'isLike' => $isLike,
+            'url' => $url
+        ]);
     }
 
 
@@ -89,8 +89,13 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return back()->withInput();
         }
+        $coordinate = $shop->deliveryArea->each(function ($area) {
+            $area->coordinate;
+        });
+
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
-        return view('index.shop.detail', ['shop' => $shop, 'isLike' => $isLike]);
+
+        return view('index.shop.detail', ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate->toJson()]);
     }
 
     /**
@@ -109,17 +114,16 @@ class ShopController extends Controller
 
         $result = GoodsService::getGoodsBySearch($data, $goods);
 
-        return view('index.shop.search',
-            [
-                'shop' => $shop,
-                'goods' => $goods->paginate(),
-                'categories' => $result['categories'],
-                'attrs' => $result['attrs'],
-                'searched' => $result['searched'],
-                'moreAttr' => $result['moreAttr'],
-                'get' => $gets,
-                'data' => $data
-            ]);
+        return view('index.shop.search', [
+            'shop' => $shop,
+            'goods' => $goods->paginate(),
+            'categories' => $result['categories'],
+            'attrs' => $result['attrs'],
+            'searched' => $result['searched'],
+            'moreAttr' => $result['moreAttr'],
+            'get' => $gets,
+            'data' => $data
+        ]);
     }
 
     /**
@@ -139,6 +143,7 @@ class ShopController extends Controller
                 $data[$key] = $val;
             }
         }
+
         return $data;
     }
 }

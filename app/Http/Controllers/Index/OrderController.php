@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Jobs\PushOrderMsg;
 use App\Models\OrderGoods;
 use App\Services\CartService;
 use Carbon\Carbon;
@@ -39,21 +38,35 @@ class OrderController extends Controller
     public function putCancelSure(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where(function ($query) {
+        $orders = Order::where(function ($query) {
             $query->wherehas('shop.user', function ($query) {
                 $query->where('id', $this->userId);
             })->orWhere('user_id', $this->userId);
-        })->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.non_payment'))->nonCancel()->nonSend()->update([
-            'is_cancel' => cons('order.is_cancel.on'),
-            'cancel_by' => $this->userId,
-            'cancel_at' => Carbon::now()
-        ]);
-        if ($status) {
-            return $this->success();
-        }
+        })->where('status', cons('order.status.non_send'))->where('pay_status',
+            cons('order.pay_status.non_payment'))->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
+        $orders->each(function ($model) use ($redis) {
+            $model->update([
+                'is_cancel' => cons('order.is_cancel.on'),
+                'cancel_by' => $this->userId,
+                'cancel_at' => Carbon::now()
+            ]);
+            //推送通知
+            if ($model->user_id == $this->userId) {
+                $redisKey = 'push:seller:' .$model->shop->user->id ;
+                $msg = 'buyer';
+            } else {
+                $redisKey = 'push:user:' .$model->user_id ;
+                $msg = 'seller';
+            }
 
-        return $status ? $this->success() : $this->error('操作失败');
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '订单:' . $model->id . cons()->lang('push_msg.cancel_by_' . $msg));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+        });
+
+        return $this->success();
     }
 
 
@@ -66,7 +79,6 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $attributes = $request->all();
-
         $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
         foreach ($attributes['goods_id'] as $goodsId) {
             if ($attributes['num'][$goodsId] > 0) {
@@ -148,6 +160,7 @@ class OrderController extends Controller
         //TODO: 需要验证收货地址是否合法
         $shippingAddressId = $data['shipping_address_id'];
         //$remark = $data['remark'] ? $data['remark'] : '';
+        $redis = Redis::connection();
         foreach ($shops as $shop) {
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
@@ -161,7 +174,7 @@ class OrderController extends Controller
                 'remark' => $remark
             ];
             $order = Order::create($orderData);
-            if ($order->exists) {
+            if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
@@ -174,9 +187,17 @@ class OrderController extends Controller
                 if ($order->orderGoods()->saveMany($orderGoods)) {
                     if ($payType == $payTypes['online']) {
                         $onlinePaymentOrder[] = $order->id;
+                    } else {
+                        //货到付款订单直接通知卖家发货
+                        $redisKey = 'push:seller:' . $shop->user->id;
+                        if (!$redis->exists($redisKey)) {
+                            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
+                            $redis->expire($redisKey, cons('push_time.msg_life'));
+                        }
                     }
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
+
                     return redirect('order-buy');
                 } else {
                     //TODO: 跳转页面后期修改
@@ -190,10 +211,16 @@ class OrderController extends Controller
                 return redirect('cart');
             }
         }
-        // TODO: 跳至支付页面->写入到redis,同时设置过期时间.
-        //set push:seller:$seller_id
-        //expire push:seller:$seller_id 600  (10分钟)
-        dd($onlinePaymentOrder);
+
+        // TODO: 跳至支付页面
+
+        //TODO:支付成功后加入提示信息
+//        //在线支付成功通知卖家发货
+//        $redisKey = 'push:seller:' . $shop->user()->id;
+//        if (!$redis->exists($redisKey)) {
+//            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
+//            $redis->expire($redisKey, cons('push_time.msg_life'));
+//        }
 
     }
 
@@ -214,7 +241,7 @@ class OrderController extends Controller
         $search = $request->all();
         $orderCurrent = isset($search['order_page_num']) ? intval($search['order_page_num']) : 1;
         $goodsCurrent = isset($search['goods_page_num']) ? intval($search['goods_page_num']) : 1;
-        $per = 2;//分页数
+        $per = cons('statistics_per');//分页数
         $statistics = $this->_searchAllOrderByOptions($search);
         $orderCount = $statistics->count();//订单总数
         $stat = $statistics->forPage($orderCurrent, $per);
@@ -425,21 +452,20 @@ class OrderController extends Controller
     {
         $redis = Redis::connection();
 
-
         //push:user:$user_id买家是否有提醒
         if ($redis->exists('push:user:' . $this->userId)) {
+            $content = $redis->get('push:user:' . $this->userId);
             $redis->del('push:user:' . $this->userId);
 
-            return response()->json(['type' => 'user', 'data' => $this->userId]);
+            return response()->json(['type' => 'user', 'data' => $content]);
         }
+
         //push:seller:$seller_id卖家是否有提醒
-        $shopId = session('shop_id');
-
         if ($redis->exists('push:seller:' . $this->userId)) {
-
+            $content = $redis->get('push:seller:' . $this->userId);
             $redis->del('push:seller:' . $this->userId);
 
-            return response()->json(['type' => 'shop', 'data' => $shopId]);
+            return response()->json(['type' => 'seller', 'data' => $content]);
         }
 
         return response()->json([]);

@@ -25,7 +25,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .padding-clear {
   padding: 0;
 }
-.margin-clear{
+
+.margin-clear {
   margin: 0;
 }
 
@@ -58,7 +59,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .login-banner-slide {
   .carousel-inner {
     img {
-      @include size(100%,480px);
+      @include size(100%, 480px);
     }
   }
 }
@@ -147,14 +148,14 @@ ul, li, p, a, h1, h2, h3, h4 {
   z-index: 100;
   .ui-stepBar {
     position: relative;
-    @include size(90%,5px);
+    @include size(90%, 5px);
     background: #b4b4b4;
     top: 50px;
     left: 6%;
     z-index: 101;
     .ui-stepProcess {
       position: relative;
-      @include size(0,5px);
+      @include size(0, 5px);
       background: #4cb9fe;
       top: 0;
       left: 0;
@@ -163,7 +164,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .ui-stepInfo-wrap {
     margin: 0 auto;
-    @include size(90%,100%);
+    @include size(90%, 100%);
     .ui-stepInfo {
       position: relative;
       float: left;
@@ -229,8 +230,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: inline-block;
     }
   }
-  .shopping-car{
-    padding:10px 0
+  .shopping-car {
+    padding: 10px 0
   }
   @at-root .search {
     .form-control {
@@ -244,7 +245,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   .menu-list-wrap {
     display: none;
     position: relative;
-    @include size(100%,auto);
+    @include size(100%, auto);
     .menu-wrap {
       height: auto;
       text-align: center;
@@ -259,7 +260,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       top: 0;
       left: inherit;
       right: -599px;
-      @include size(600px,auto);
+      @include size(600px, auto);
       text-align: left;
     }
   }
@@ -368,15 +369,15 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .commodity-index-img{
-    box-sizing:border-box;
-    -webkit-box-sizing:border-box;
+  .commodity-index-img {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     width: 20%;
     float: left;
     padding: 0 15px;
   }
   @media screen and (max-width: 765px) {
-    .commodity-index-img{
+    .commodity-index-img {
       width: 100%;
     }
   }
@@ -408,7 +409,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .item {
         padding: 0;
         img {
-          @include size(100%,370px);
+          @include size(100%, 370px);
           max-width: 1000px;
           border: 1px solid $gray-lighter;
         }
@@ -523,7 +524,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .search {
         margin-bottom: 3px;
       }
-      .add-goods{
+      .add-goods {
         @extend .search;
         margin-left: 50px;
       }
@@ -645,11 +646,13 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0 15px;
       }
     }
-    .sort-item-panel{
-      .list-wrap{
+
+    .sort-item-panel {
+      .list-wrap {
         z-index: 10;
       }
     }
+
     .a-menu-panel {
       .sort-list {
         margin: 0 3px;
@@ -898,7 +901,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .progress-wrap {
       margin: 8px 0 7px 20%;
-      @include size(50%,10px);
+      @include size(50%, 10px);
     }
   }
 }
@@ -1622,7 +1625,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $gray-lighter;
         padding: 5px 2px;
         position: relative;
-        @include size(68px,33px);
+        @include size(68px, 33px);
         .selected {
           span {
             display: inline-block;
@@ -1654,7 +1657,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
       .control {
-        @include size(78%,33px);
+        @include size(78%, 33px);
         border: none;
         outline: none;
       }
@@ -1903,7 +1906,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           color: $gray-light;
         }
       }
-      .address{
+      .address {
         td {
           background-color: $gray-plain;
           .operating {
@@ -1923,7 +1926,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
       }
-      tfoot{
+      tfoot {
         @extend .address;
       }
       tr {
@@ -1949,7 +1952,7 @@ ul, li, p, a, h1, h2, h3, h4 {
             font-size: 18px;
           }
           .num {
-            @include size(40px,25px);
+            @include size(40px, 25px);
             text-align: center;
           }
           .avatar {
@@ -2042,3 +2045,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 /*==================================================================================dealer end======================================================================*/
+
+/*======================================baidu map======================================*/
+#map,#map-modal {
+  overflow: hidden;
+  zoom: 1;
+  position: relative;
+  width: 100%;
+  height: 400px;
+}

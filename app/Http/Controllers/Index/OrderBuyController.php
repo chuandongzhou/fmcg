@@ -36,7 +36,7 @@ class OrderBuyController extends OrderController
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
 
-        $data['nonSure'] = Order::ofBuy($this->userId)->nonSure()->count();//未确认
+//        $data['nonSure'] = Order::ofBuy($this->userId)->nonSure()->count();//未确认
         $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
         $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
 
@@ -97,12 +97,6 @@ class OrderBuyController extends OrderController
      */
     public function getNonPayment()
     {
-        //清除redis中买家的提醒消息
-        $redis = Redis::connection();
-        if ($redis->exists('push:user:' . $this->userId)) {
-            $redis->del('push:user:' . $this->userId);
-        }
-
         return Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
     }
 
@@ -111,10 +105,10 @@ class OrderBuyController extends OrderController
      *
      * @return mixed
      */
-    public function getNonSure()
-    {
-        return Order::ofBuy($this->userId)->nonSure()->paginate()->toArray();
-    }
+//    public function getNonSure()
+//    {
+//        return Order::ofBuy($this->userId)->nonSure()->paginate()->toArray();
+//    }
 
     /**
      * 获取待收货订单列表
@@ -127,7 +121,7 @@ class OrderBuyController extends OrderController
     }
 
     /**
-     * 订单完成，订单必须付款成功，状态是已发货，买家才能做完成操作，否则失败，主要是防止误操作
+     * 订单完成，订单必须付款成功，状态是已发货，买家才能做完成操作，否则失败，主要是防止误操作;只能是在线支付订单
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -136,16 +130,27 @@ class OrderBuyController extends OrderController
     public function putBatchFinish(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::where('user_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->where('status', cons('order.status.send'))->nonCancel()->update([
-            'status' => cons('order.status.finished'),
-            'finished_at' => Carbon::now()
-        ]);
-        if ($status) {
-            return $this->success();
-        }
+        $orders = Order::where('user_id', $this->userId)->where('pay_type',
+            cons('pay_type.online'))->where('pay_status', cons('order.pay_status.payment_success'))->where('status',
+            cons('order.status.send'))->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
 
-        return $this->error('操作失败');
+
+        $orders->each(function ($model) use ($redis) {
+            $redisKey = 'push:seller:' . $model->shop->user->id;
+
+            $model->update([
+                'status' => cons('order.status.finished'),
+                'finished_at' => Carbon::now()
+            ]);
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '您的订单:' . $model->id . ',', cons()->lang('push_msg.finished'));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+        });
+
+
+        return $this->success();
     }
 
     /**
@@ -154,10 +159,10 @@ class OrderBuyController extends OrderController
      * @param $id
      * @return \Illuminate\View\View
      */
-    public function getDetail($id)
+    public function getDetail(Request $request)
     {
         $detail = Order::where('user_id', $this->userId)->with('user', 'shippingAddress', 'shop', 'goods',
-            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($id);
+            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
         if (!$detail) {
             return $this->error('订单不存在');
         }

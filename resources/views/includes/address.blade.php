@@ -55,20 +55,20 @@
 
                     </div>
                     {{--区域经纬度--}}
-                    <input type="hidden" name="coordinate_alx" value=""/>
-                    <input type="hidden" name="coordinate_aly" value=""/>
-                    <input type="hidden" name="coordinate_rlx" value=""/>
-                    <input type="hidden" name="coordinate_rly" value=""/>
+                    <input type="hidden" name="coordinate_blx" value=""/>
+                    <input type="hidden" name="coordinate_bly" value=""/>
+                    <input type="hidden" name="coordinate_slx" value=""/>
+                    <input type="hidden" name="coordinate_sly" value=""/>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary btn-sm " onclick="polygon.enableEditing();">开启编辑功能</button>
-                        <button class="btn btn-primary btn-sm " onclick="polygon.disableEditing();">关闭编辑功能</button>
+                        <button class="btn btn-primary btn-sm " onclick="polygon_modal.enableEditing();">开启编辑功能</button>
+                        <button class="btn btn-primary btn-sm " onclick="polygon_modal.disableEditing();">关闭编辑功能</button>
                     </div>
-                    <div id="map" style="overflow:hidden;zoom:1;position:relative;width: 100%;height: 400px;"></div>
+                    <div id="map-modal"></div>
 
                 </div>
             </div>

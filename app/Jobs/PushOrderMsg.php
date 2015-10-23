@@ -12,14 +12,16 @@ class PushOrderMsg extends Job implements SelfHandling, ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    public $targetUserId;
+    protected $targetUserId;
+    protected $msgBody;
 
     /**
      * @param $targetUserId
      */
-    public function __construct($targetUserId)
+    public function __construct($targetUserId, $msg)
     {
         $this->targetUserId = $targetUserId;
+        $this->msgBody = $msg;
     }
 
     /**
@@ -29,7 +31,7 @@ class PushOrderMsg extends Job implements SelfHandling, ShouldQueue
      */
     public function handle(PushOrderService $push)
     {
-        $push->push($this->targetUserId);
+        $push->push($this->targetUserId, $this->msgBody);
     }
 
     /**

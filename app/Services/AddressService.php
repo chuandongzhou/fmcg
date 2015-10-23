@@ -43,15 +43,11 @@ class AddressService
                     'area_name' => $array['area_name'][$key],
                     'address' => $array['address'][$key],
                     'coordinate' => [
-                            'al_lng' => $array['alx'][$key],
-                            'al_lat' => $array['aly'][$key],
-                            'rl_lng' => $array['rlx'][$key],
-                            'rl_lat' => $array['rly'][$key]
+                        'bl_lng' => $array['blx'][$key],
+                        'bl_lat' => $array['bly'][$key],
+                        'sl_lng' => $array['slx'][$key],
+                        'sl_lat' => $array['sly'][$key]
                     ]
-                ];
-
-                $coordinate[] = [
-
                 ];
             }
         }

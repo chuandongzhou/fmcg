@@ -139,9 +139,14 @@
                         <input type="hidden" name="area[street_id][]" value=""/>
                         <input type="hidden" name="area[area_name][]" value=""/>
                         <input type="hidden" name="area[address][]" value=""/>
+                        {{--区域经纬度--}}
+                        <input type="hidden" name="area[blx][]" value=""/>
+                        <input type="hidden" name="area[bly][]" value=""/>
+                        <input type="hidden" name="area[slx][]" value=""/>
+                        <input type="hidden" name="area[sly][]" value=""/>
                     </div>
                     @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border">{{ $area->area_name.$area->address }}
+                        <div class="col-sm-12 fa-border show-map">{{ $area->area_name.$area->address }}
                             <span class="fa fa-times-circle pull-right close"></span>
                             <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                             <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
@@ -150,6 +155,11 @@
                             <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
                             <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                             <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
+                            {{--区域经纬度--}}
+                            <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
+                            <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
+                            <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
+                            <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
                         </div>
                     @endforeach
 
@@ -157,9 +167,10 @@
                 <div class="col-sm-12 map">
                     <p><label>地图标识 :</label></p>
 
-                    <p class="address-map">
-                        <img src="http://placehold.it/300x250/CDF" alt="" title=""/>
-                    </p>
+                    {{--<p class="address-map">--}}
+                        {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
+                    {{--</p>--}}
+                    <div id="map"></div>
                 </div>
                 <div class="col-sm-12 map">
                     <label>商品图片 :</label>
@@ -206,6 +217,10 @@
 @section('js')
     @parent
     <script type="text/javascript">
+        $(document).ready(function(){
+            getCoordinateMap({!! $coordinates or '' !!});
+        });
+
         //上传图片处理
         picFunc();
         //获取下级分类

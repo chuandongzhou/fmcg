@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Coordinate;
 use App\Models\DeliveryArea;
 use App\Models\Goods;
 
@@ -101,13 +102,22 @@ class MyGoodsController extends Controller
         if (count($nowArea) == count(array_filter($area['province_id']))) {
             return true;
         }
-        $model->deliveryArea()->delete();
+        //删除原有配送区域信息
+        $model->deliveryArea->each(function ($address) {
+            $address->delete();
+        });
         if (!empty($areaArr)) {
-           $data = [];
-            foreach ($areaArr as $area) {
-                $data[] = new DeliveryArea($area);
+            foreach ($areaArr as $data) {
+                if (isset($data['coordinate'])) {
+                    $coordinate = $data['coordinate'];
+                    unset($data['coordinate']);
+                }
+                $areas = new DeliveryArea($data);
+                $areaModel = $model->deliveryArea()->save($areas);
+                if (isset($coordinate)) {
+                    $areaModel->coordinate()->save(new Coordinate($coordinate));
+                }
             }
-            $model->deliveryArea()->saveMany($data);
         }
         return true;
     }

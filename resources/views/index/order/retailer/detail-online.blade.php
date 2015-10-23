@@ -30,11 +30,6 @@
                                         <li class="ui-stepInfo">
                                             <a class="ui-stepSequence"></a>
 
-                                            <p class="ui-stepName">未确认</p>
-                                        </li>
-                                        <li class="ui-stepInfo">
-                                            <a class="ui-stepSequence"></a>
-
                                             <p class="ui-stepName">未付款</p>
                                         </li>
                                         <li class="ui-stepInfo">
@@ -72,21 +67,6 @@
                                 <td>{{ $order['created_at'] }}</td>
                                 <td>{{ $order['user']['user_name'] }}</td>
                             </tr>
-
-                            @if((int)$order['confirmed_at'])
-                                <tr>
-                                    <td>确认订单</td>
-                                    <td>{{ $order['confirmed_at'] }}</td>
-                                    <td>{{ $order['shop']['contact_person'] }}</td>
-                                </tr>
-                            @endif
-                            @if($order['is_cancel'])
-                                <tr>
-                                    <td>取消订单</td>
-                                    <td>{{ $order['cancel_at'] }}</td>
-                                    <td>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</td>
-                                </tr>
-                            @endif
                             @if((int)$order['paid_at'])
                                 <tr>
                                     <td>付款</td>
@@ -110,6 +90,13 @@
                                     <td>付款</td>
                                     <td>{{ $order['finished_at'] }}</td>
                                     <td>{{ $order['user']['user_name'] }}</td>
+                                </tr>
+                            @endif
+                            @if($order['is_cancel'])
+                                <tr>
+                                    <td>取消订单</td>
+                                    <td>{{ $order['cancel_at'] }}</td>
+                                    <td>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</td>
                                 </tr>
                             @endif
                             </tbody>

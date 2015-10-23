@@ -26,7 +26,7 @@ return [
             'refund_failed' => '退款失败',
         ],
         'status' => [ //订单状态
-            'non_sure' => '未确认',
+//            'non_sure' => '未确认',
             'non_send' => '未发货',
             'send' => '已发货',
             'finished' => '已完成',
@@ -139,5 +139,16 @@ return [
             'hot' => '热门',
             'new' => '最新'
         ]
-    ]
+    ],
+    //推送信息
+    'push_msg' => [
+        'non_send' => [
+            'online' => '买家已完成在线支付,请发货',
+            'cod' => '买家已提交货到付款订单,请发货'
+        ],
+        'finished' => '买家已确认收货',
+        'send' => '卖家已发货,请注意查收',
+        'cancel_by_buyer' => '被买家取消了~~',
+        'cancel_by_seller' => '被卖家取消了~~'
+    ],
 ];

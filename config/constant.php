@@ -26,7 +26,7 @@ return [
             'refund_failed' => 5,
         ],
         'status' => [ //订单状态
-            'non_sure' => 0, //未确认
+//            'non_sure' => 0, //未确认
             'non_send' => 1, //未发货
             'send' => 2, //已发货
             'finished' => 3, //完成
@@ -59,7 +59,7 @@ return [
             'license' => 2,         //营业执照
             'images' => 3,          //店铺图片
             'business_license' => 4, //经营许可证
-            'agency_contract' => 5 , //代理合同
+            'agency_contract' => 5, //代理合同
         ],
         'address_type' => [
             'shop_address' => 1,        //店铺地址
@@ -164,13 +164,19 @@ return [
         'goods' => [
             'hot' => 1,
             'price' => 2,
-            'new'=>3,
+            'new' => 3,
         ],
         'shop' => [
             'hot' => 1,
             'new' => 2
         ]
-    ]
-
+    ],
+    //统计页的两个分页单页显示条数
+    'statistics_per' => 5,
+    //推送信息生命时间
+    'push_time' => [//单位都是秒(s)
+        'when_push' => 300,//当存在时间小于该时间时送入到推送队列
+        'msg_life' => 600//信息在redis中存在的生命周期
+    ],
 
 ];

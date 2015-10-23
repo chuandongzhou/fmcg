@@ -498,10 +498,10 @@ var addAddFunc = function () {
         , street = $('.add-street')
         , address = $('.address');
 
-    $('#addressModal').on('hidden.bs.modal', function (e) {
-        //TODO 初始化地址
-        address.val('');
-    });
+    //$('#addressModal').on('hidden.bs.modal', function (e) {
+    //    //TODO 初始化地址
+    //    address.val('');
+    //});
     // 地址限制
     var changeAddButtonStatus = function () {
         if (container.children('div:visible').length >= addLimit) {
@@ -526,6 +526,7 @@ var addAddFunc = function () {
             $(this).remove();
 
             changeAddButtonStatus();
+            dynamicShowMap();
         });
     });
 
@@ -557,10 +558,10 @@ var addAddFunc = function () {
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = street.is(':visible') ? street.find("option:selected").text() : '',
             addressText = address.val(),
-            areaName = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText
+            areaName = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText;
         $('.btn-close').trigger('click');
         container.prepend(
-            '<div class="col-sm-12 fa-border">' +
+            '<div class="col-sm-12 fa-border show-map">' +
             areaName +
             addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
@@ -571,15 +572,17 @@ var addAddFunc = function () {
             '<span class="fa fa-times-circle pull-right close"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-            '<input type="hidden" name="area[alx][]" value="' + $('input[name="coordinate_alx"]').val() + '"/>' +
-            '<input type="hidden" name="area[aly][]" value="' + $('input[name="coordinate_aly"]').val() + '"/>' +
-            '<input type="hidden" name="area[rlx][]" value="' + $('input[name="coordinate_rlx"]').val() + '"/>' +
-            '<input type="hidden" name="area[rly][]" value="' + $('input[name="coordinate_rly"]').val() + '"/>' +
+            '<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
+            '<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
+            '<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
+            '<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
             '</div>'
         );
         changeAddButtonStatus();
+        dynamicShowMap();
     });
-}
+};
+
 
 var getCategory = function (url) {
     var level1 = $('select[name="cate_level_1"]')

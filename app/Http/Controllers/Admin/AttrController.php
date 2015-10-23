@@ -80,7 +80,6 @@ class AttrController extends Controller
             }
         }
 
-        //dd(array_pluck($attr, 'attr_id'));
         return view('admin.attr.attr',
             [
                 'categories' => $categories,

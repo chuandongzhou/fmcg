@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 
 use App\Http\Requests;
+use App\Models\DeliveryMan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -36,18 +37,20 @@ class OrderSellController extends OrderController
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
-        $data['nonSure'] = Order::ofSell($this->userId)->nonSure()->count();//未确认
+//        $data['nonSure'] = Order::ofSell($this->userId)->nonSure()->count();//未确认
         $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
         $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
 
         $orders = Order::bySellerId($this->userId)->with('user.shop', 'goods')->orderBy('id',
             'desc')->paginate()->toArray();
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop->id)->lists('name', 'id');
 
         return view('index.order.order-sell', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,
             'data' => $data,
-            'orders' => $orders
+            'orders' => $orders,
+            'delivery_man' => $deliveryMan
         ]);
     }
 
@@ -75,15 +78,15 @@ class OrderSellController extends OrderController
      *
      * @return mixed
      */
-    public function getNonSure()
-    {
-        $redis = Redis::connection();
-        if ($redis->exists('push:seller:' . $this->userId)) {
-            $redis->del('push:seller' . $this->userId);
-        }
-
-        return Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
-    }
+//    public function getNonSure()
+//    {
+//        $redis = Redis::connection();
+//        if ($redis->exists('push:seller:' . $this->userId)) {
+//            $redis->del('push:seller' . $this->userId);
+//        }
+//
+//        return Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
+//    }
 
     /**
      * 获取待发货订单列表
@@ -96,7 +99,7 @@ class OrderSellController extends OrderController
     }
 
     /**
-     * 获取待收款订单列表
+     * 获取待收款订单列表,针对货到付款
      *
      * @return mixed
      */
@@ -111,31 +114,31 @@ class OrderSellController extends OrderController
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function putBatchSure(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        //检查数组中未确认的订单
-        $nonSure = Order::select('id', 'user_id')->where('shop_id', session('shop_id'))->where('status',
-            cons('order.status.non_sure'))->whereIn('id', $orderIds)->nonCancel()->get();
-        if ($nonSure->isEmpty()) {
-            return $this->error('操作失败');
-        }
-        //写入redis
-        $userIds = $nonSure->pluck('user_id');
-        $redis = Redis::connection();
-        foreach ($userIds as $item) {
-            $redis->exists('push:user:' . $item) ?: $redis->set('push:user:' . $item, 1);
-            $redis->expire('push:user:' . $item, 600);
-        }
-        //修改订单状态
-        $ids = $nonSure->pluck('id');
-        $status = Order::whereIn('id', $ids)->update([
-            'status' => cons('order.status.non_send'),
-            'confirmed_at' => Carbon::now()
-        ]);
-
-        return $status ? $this->success() : $this->error('操作失败');
-    }
+//    public function putBatchSure(Request $request)
+//    {
+//        $orderIds = (array)$request->input('order_id');
+//        //检查数组中未确认的订单
+//        $nonSure = Order::select('id', 'user_id')->where('shop_id', session('shop_id'))->where('status',
+//            cons('order.status.non_sure'))->whereIn('id', $orderIds)->nonCancel()->get();
+//        if ($nonSure->isEmpty()) {
+//            return $this->error('操作失败');
+//        }
+//        //写入redis
+//        $userIds = $nonSure->pluck('user_id');
+//        $redis = Redis::connection();
+//        foreach ($userIds as $item) {
+//            $redis->exists('push:user:' . $item) ?: $redis->set('push:user:' . $item, 1);
+//            $redis->expire('push:user:' . $item, 600);
+//        }
+//        //修改订单状态
+//        $ids = $nonSure->pluck('id');
+//        $status = Order::whereIn('id', $ids)->update([
+//            'status' => cons('order.status.non_send'),
+//            'confirmed_at' => Carbon::now()
+//        ]);
+//
+//        return $status ? $this->success() : $this->error('操作失败');
+//    }
 
     /**
      * 批量修改发货状态。不区分付款状态
@@ -146,15 +149,39 @@ class OrderSellController extends OrderController
     public function putBatchSend(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::bySellerId($this->userId)->whereIn('id',
-            $orderIds)->nonCancel()->update(['status' => cons('order.status.send'), 'send_at' => Carbon::now()]);
+        $deliveryManId = intval($request->input('delivery_man_id'));
+        //判断送货人员是否是该店铺的
+        if (!DeliveryMan::find($deliveryManId)) {
+            return $this->error('操作失败');
+        }
+        $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
+            $query->where(function ($query) {
+                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
+            })->orwhere(function ($query) {
+                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
+            });
+        })->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
+        $orderModel->each(function ($model) use ($redis, $deliveryManId) {
+            $redisKey = 'push:user:' . $model->user_id;
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '您的订单' . $model->id . ',' . cons()->lang('push_msg.send'));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+            $model->update([
+                'delivery_man_id' => $deliveryManId,
+                'status' => cons('order.status.send'),
+                'send_at' => Carbon::now()
+            ]);
+        });
 
-        return $status ? $this->success() : $this->error('操作失败');
+        return $this->success();
 
     }
 
     /**
-     * 批量修改订单完成状态，无论在线支付还是货到付款都需要确认付款状态是否是付款成功
+     * 批量修改订单完成状态，货到付款不需要确认付款状态是否是付款成功,因为货到付款有可能是线下现金交易的
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -162,13 +189,15 @@ class OrderSellController extends OrderController
     public function putBatchFinish(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->nonCancel()->update([
+        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
+            cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
+            'pay_status' => cons('order.pay_status.payment_success'),
+            'paid_at' => Carbon::now(),
             'status' => cons('order.status.finished'),
             'finished_at' => Carbon::now()
         ]);
 
-        return $status ? $this->success() : $this->error('请确认买家是否付款');
+        return $status ? $this->success() : $this->error('操作失败');
     }
 
     /**
@@ -185,7 +214,6 @@ class OrderSellController extends OrderController
             return $this->error('订单不存在');
         }
         $detail = $detail->toArray();
-
         //拼接需要调用的模板名字
         $folderName = array_flip(cons('user.type'))[$this->userType];
         $payType = $detail['pay_type'];
@@ -208,7 +236,8 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $res = Order::with('shippingAddress', 'shippingAddress.address',
-            'goods')->bySellerId($this->userId)->whereIn('id', $orderIds)->get()->toArray();
+            'goods')->bySellerId($this->userId)->where('status', cons('order.status.send'))->whereIn('id',
+            $orderIds)->get()->toArray();
         if (empty($res)) {
             return $this->error('没有该订单信息');
         }
@@ -225,15 +254,24 @@ class OrderSellController extends OrderController
     {
         // Creating the new document...
         $phpWord = new PhpWord();
-        $phpWord->addTableStyle('tStyle', ['borderSize' => 1], ['size' => 18, 'align' => 'center']);
+
+        $phpWord->setDefaultFontName('仿宋');
+        $phpWord->setDefaultFontSize(12);
+        $phpWord->addTableStyle('table', ['borderSize' => 1], ['name' => '仿宋', 'size' => 20, 'align ' => 'center']);
         // Adding an empty Section to the document...
+
+        $phpWord->addParagraphStyle('Normal', [
+            'spaceBefore' => 0,
+            'spaceAfter' => 0,
+            'lineHeight' => 1.2,  // 行间距
+        ]);
 
         foreach ($res as $item) {
             $section = $phpWord->addSection();
-            $table = $section->addTable('tStyle');
+            $table = $section->addTable('table');
             //表头
-            $table->addRow();
-            $cell = $table->addCell(9000, ['align' => 'center', 'size' => 20]);
+            $table->addRow(16, ['align' => 'center']);
+            $cell = $table->addCell(9000);
             $cell->getStyle()->setGridSpan(6);
             $cell->addText('送货单');
             $table->addRow();
@@ -241,7 +279,7 @@ class OrderSellController extends OrderController
             $cell->getStyle()->setGridSpan(6);
             $cell->addText('订单号:' . $item['id']);
 
-            $table->addRow(20);
+            $table->addRow(20, ['align' => 'center']);
             $table->addCell(1500)->addText('货号');
             $table->addCell(1800)->addText('商品名称');
             $table->addCell(3300)->addText('促销信息');

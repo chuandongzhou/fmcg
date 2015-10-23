@@ -62,21 +62,28 @@
                 <div class="item">
                     <span class="title-name pull-left">商品配送区域大概地图标识</span>
 
-                    <p class="map pull-left">
-                        <img class="img-thumbnail" src="http://placehold.it/470x350">
-                    </p>
+                    {{--<p class="map pull-left">--}}
+                        {{--<img class="img-thumbnail" src="http://placehold.it/470x350">--}}
+
+                    {{--</p>--}}
+                    <div id="map"></div>
                 </div>
             </div>
         </div>
     </div>
 @stop
 
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
+@stop
 @section('js')
     <script type="text/javascript">
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 2000
-            })
+            });
+            getCoordinateMap({!! $coordinates !!});
         });
     </script>
 @stop

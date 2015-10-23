@@ -15,11 +15,6 @@
                                 <li class="ui-stepInfo">
                                     <a class="ui-stepSequence"></a>
 
-                                    <p class="ui-stepName">未确认</p>
-                                </li>
-                                <li class="ui-stepInfo">
-                                    <a class="ui-stepSequence"></a>
-
                                     <p class="ui-stepName">未发货</p>
                                 </li>
                                 <li class="ui-stepInfo">
@@ -56,26 +51,6 @@
                     </li>
                     <li>{{ $order['user']['user_name'] }}</li>
                 </ul>
-                @if((int)$order['confirmed_at'])
-                    <ul class="submit-detail-item">
-                        <li>确认订单</li>
-                        <li class="time">
-                            <span class="date">{{ $order['confirmed_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
-                        </li>
-                        <li>{{ $order['shop']['contact_person'] }}</li>
-                    </ul>
-                @endif
-                @if($order['is_cancel'])
-                    <ul class="submit-detail-item">
-                        <li>取消订单</li>
-                        <li class="time">
-                            <span class="date">{{ $order['cancel_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
-                        </li>
-                        <li>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</li>
-                    </ul>
-                @endif
                 @if((int)$order['send_at'])
                     <ul class="submit-detail-item">
                         <li>发货</li>
@@ -104,6 +79,16 @@
                             {{--<span class="clock">11:20</span>--}}
                         </li>
                         <li>{{ $order['user']['user_name'] }}</li>
+                    </ul>
+                @endif
+                @if($order['is_cancel'])
+                    <ul class="submit-detail-item">
+                        <li>取消订单</li>
+                        <li class="time">
+                            <span class="date">{{ $order['cancel_at'] }}</span>
+                            {{--<span class="clock">11:20</span>--}}
+                        </li>
+                        <li>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</li>
                     </ul>
                 @endif
             </div>

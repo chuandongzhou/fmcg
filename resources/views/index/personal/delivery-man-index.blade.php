@@ -33,7 +33,7 @@
                                        class="btn btn-primary">
                                         <i class="fa fa-edit"></i> 编辑
                                     </a>
-                                    <a data-url="{{ url('index/personal/delivery-man/'. $man->id) }}"
+                                    <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
                                        data-method="delete" class="btn btn-danger ajax" type="button">
                                         <i class="fa fa-trash-o"></i> 删除
                                     </a>

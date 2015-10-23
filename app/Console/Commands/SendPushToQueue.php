@@ -41,9 +41,11 @@ class SendPushToQueue extends Command
         $targetSellerIds = $this->redis->keys('push:seller:*');
         $ids = array_merge($targetUserIds, $targetSellerIds);
         if (!empty($ids)) {
+            $whenPush = cons('push_time.when_push');
             foreach ($ids as $id) {
-                if ($this->redis->ttl($id) < 300) {
-                    $job = (new PushOrderMsg(substr($id, strrpos($id, ':') + 1)))->onQueue('pushNotice');
+                if ($this->redis->ttl($id) < $whenPush) {
+                    $job = (new PushOrderMsg(substr($id, strrpos($id, ':') + 1),
+                        $this->redis->get($id)))->onQueue('pushNotice');
                     $this->dispatch($job);
                     $this->redis->del($id);
                 }

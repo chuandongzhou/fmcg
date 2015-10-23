@@ -1041,7 +1041,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .order-report .content .enter-item {
   padding: 0; }
   .order-report .content .enter-item .item {
-    display: inline-block; }
+    display: inline-block;
+    padding: 5px 0; }
   .order-report .content .enter-item .address, .order-report .content .enter-item .table-list-row .shopping-table-list table tfoot, .table-list-row .shopping-table-list table .order-report .content .enter-item tfoot {
     margin: 0 10px; }
   .order-report .content .enter-item .check-item {
@@ -1468,3 +1469,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding-left: 240px !important; }
 
 /*==================================================================================dealer end======================================================================*/
+/*======================================baidu map======================================*/
+#map, #map-modal {
+  overflow: hidden;
+  zoom: 1;
+  position: relative;
+  width: 100%;
+  height: 400px; }

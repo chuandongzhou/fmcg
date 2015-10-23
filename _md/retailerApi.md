@@ -230,7 +230,9 @@
 `成功返回：`
 
      shops                array       商店列表
-     shippingAddress      array       收货地址列表
+     shipping_address     array       收货地址列表
+	 pay_type			  array		  支付方式
+	 cod_pay_type		  array		  货到付款的支付方式
 
     shops 子字段说明
 
@@ -255,7 +257,7 @@
             price_retailer      decimal     价格（对于终端商）
             price_wholesaler    decimal     价格（对于批发商）
 
-     shippingAddress    子字段说明
+     shipping_address    子字段说明
 
      id                 int         收货地址id
      consigner          string      收货人
@@ -277,7 +279,7 @@
 
 `失败返回`
 
-#### 2.5.3 提交订单[get] (confirm-order)
+#### 2.5.3 提交订单[post] (submit-order)
 `请求参数：`
 
     shop                array       商店
@@ -307,14 +309,14 @@
 	id					int			订单ID号
 	price               string      订单总金额
 	status_name			string		订单显示状态
-	payment_type		string      支付方式
+	payment_type		string      支付方式(如:在线支付;货到付款)
+	cod_pay_type		int			货到付款支付方式(1:现金;2:刷卡)
+	pay_type			int			支付方式(1:在线支付;2:货到付款)
+	pay_status			int			支付状态(0:未付款;1:已付款)
+	status				int			订单状态(1:未发货;2:已发货;3:完成)
 	is_cancel			int			订单是否被取消(1取消,0未取消)
-	confirmed_at     	string 		确认时间
-	paid_at				string		支付时间
-	send_at				string		发货时间
-	finished_at			string		完成时间
-	shop                array       店铺详细信息
-    goods    			array		商品详细信息
+	shop                array       店铺信息
+    goods    			array		商品信息
 
 	shop 字段子集说明
 		
@@ -341,7 +343,8 @@
 	
 `失败返回`
 
-#### 2.5.5 待付款订单列表[get] (non-payment)()
+
+#### 2.5.5 买家待付款订单列表[get] (non-payment)(仅显示在线支付订单)
 `请求参数：`
 
 	page 				int			分页
@@ -352,7 +355,8 @@
 
 `失败返回`
 
-#### 2.5.6 待确认订单列表[get] (non-sure-of-buy)
+
+#### 2.5.7 买家待收货订单列表[get] (non-arrived)
 `请求参数：`
 
 	page 				int			分页
@@ -363,18 +367,17 @@
 
 `失败返回`
 
-#### 2.5.7 待收货订单列表[get] (non-arrived)
+#### 2.5.10 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)
 `请求参数：`
 
-	page 				int			分页
+	order_id  				array		订单id
 
 `成功返回：`
-	
-	返回信息同上
 
-`失败返回`
 
-#### 2.5.8 订单详情[get] (detail-of-buy)
+`失败返回：`
+
+#### 2.5.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)
 `请求参数：`
 
 	order_id			int			订单号
@@ -388,7 +391,6 @@
 	is_cancel			int			订单是否被取消(1取消,0未取消)
 	remark				string		订单备注信息
 	created_at			string		创建时间
-	confirmed_at     	string 		确认时间
 	paid_at				string		支付时间
 	send_at				string		发货时间
 	finished_at			string		完成时间
@@ -417,7 +419,142 @@
 
 `失败返回`
 
-#### 2.5.9 批量取消订单[put] (cancel-sure)
+
+#### 2.5.4 卖家获取订单列表[get] (list-of-sell)
+`请求参数：`
+
+    page                int         分页
+
+`成功返回：`
+
+	data                array       订单信息
+
+	data 字段子集说明
+	
+	id					int			订单ID号
+	price               string      订单总金额
+	status_name			string		订单显示状态
+	payment_type		string      支付方式(如:在线支付;货到付款)
+	cod_pay_type		int			货到付款支付方式(1:现金;2:刷卡)
+	pay_type			int			支付方式(1:在线支付;2:货到付款)
+	pay_status			int			支付状态(0:未付款;1:已付款)
+	status				int			订单状态(1:未发货;2:已发货;3:完成)
+	is_cancel			int			订单是否被取消(1取消,0未取消)
+	user                array       买家信息
+    goods    			array		商品信息
+
+	user 字段子集说明
+		
+	user_name			string		买家名字
+	
+	
+	goods 字段子集说明
+	
+	id  				int 		商品ID
+	name                string 		商品名称
+	introduce			string		商品描述信息
+	image_url			string		商品图片地址
+	pivot				array		该商品在本订单中的详细信息
+
+		pivot 字段子集说明
+
+		price			string		商品价格
+		num				int			商品数量
+		
+`失败返回`
+
+
+#### 2.5.9 卖家待发货订单列表[get] (non-send)
+`请求参数：`
+
+	page                int         分页
+
+`成功返回：`
+
+	返回信息同上
+
+`失败返回：`
+
+
+#### 2.5.9 卖家待收款订单列表[get] (pending-collnection)(仅针对货到付款订单)
+`请求参数：`
+
+	page                int         分页
+
+`成功返回：`
+
+	返回信息同上
+
+`失败返回：`
+
+
+#### 2.5.9 卖家获取订单详情[get] (detail-of-sell)
+`请求参数：`
+
+	order_id  			int			订单id
+
+`成功返回：`
+
+	id					int			订单ID号
+	price               string      订单总金额
+	status_name			string		订单显示状态
+	payment_type		string      支付方式(显示)
+	pay_type			int			支付方式
+	cod_pay_type		int			货到付款方式
+	is_cancel			int			订单是否被取消(1取消,0未取消)
+	remark				string		订单备注信息
+	created_at			string		创建时间
+	paid_at				string		支付时间
+	send_at				string		发货时间
+	finished_at			string		完成时间
+	shipping_address    array       收货信息
+    goods    			array		商品详细信息
+
+	delivery_man 字段子集说明
+
+	name     			string		送货人姓名
+	phone				string		送货人电话
+
+	shipping_address 字段子集说明
+
+	consigner			string		收货人姓名
+	phone				string		收货人电话
+	address				array		收货地址信息
+		
+		address 字段子集说明
+		
+		province_id         int         省id
+		city_id             int         市id
+    	district_id         int         县id
+    	street              int         街道id
+		address				string		详细地址
+
+`失败返回：`
+
+
+#### 2.5.10 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)
+`请求参数：`
+
+	order_id  				array		订单id
+	
+`成功返回：`
+
+
+`失败返回：`
+
+
+#### 2.5.10 卖家批量发货[put] (batch-send)
+`请求参数：`
+
+	order_id  				array		订单id
+	delivery_man_id			int			配送员id号
+	
+`成功返回：`
+
+
+`失败返回：`
+
+#### 2.5.9 买家/卖家批量取消订单[put] (cancel-sure)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -427,15 +564,6 @@
 
 `失败返回：`
 
-#### 2.5.10 批量确认订单完成[put] (batch-finish)
-`请求参数：`
-
-	order_id  				array		订单id
-
-`成功返回：`
-
-
-`失败返回：`
 
 ### 2.6 收藏 like
 #### 2.5.1 商店收藏[post] (shops)
@@ -480,10 +608,53 @@
     image_url           string      店铺图片
     orders              int         店铺销量
 
-`失败返回`
+`失败返回:`
 
 
+### 2.10 配送信息 delivery-man
+#### 2.10.1 配送人员列表[get] 
+`请求参数:`
 
+`成功返回:`
 
+	delivery_man		array		配送人员信息
+	
+	delivery_man 字段子集说明
+	
+	id					int			配送人员ID
+	name				string		姓名
+	phone				string		电话
 
+`失败返回:`
 
+#### 2.10.2 添加配送人员[post] 
+`请求参数:`
+	
+	name				string		姓名
+	phone				int			电话(长度7~14位)
+
+`成功返回:`
+
+`失败返回:`
+
+#### 2.10.3 编辑配送人员信息[put] 
+`请求参数:`
+	
+	id					int			配送人员ID
+	name				string		姓名
+	phone				int			电话(长度7~14位)
+
+`成功返回:`
+
+	
+`失败返回:`
+
+#### 2.10.4 删除配送人员[delete] 
+`请求参数:`
+	
+	id					int			配送人员ID
+
+`成功返回:`
+
+	
+`失败返回:`

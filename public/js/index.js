@@ -73,7 +73,7 @@ function _getArgs() {
         alert('开始时间不能晚于结束时间');
         return false;
     }
-    var value = $('input[name="search_content"]').val()
+    var value = $('input[name="search_content"]').val();
     data['search_content'] = value;
     _ajaxGet(targetUrl, data);
 }
@@ -90,6 +90,8 @@ function _ajaxGet(targetUrl, data) {
         data: data,
         dataType: 'json',
         success: function (list) {
+            //重置全选按钮
+            $('#check-all').prop('checked', false);
             if (list.data.length) {
                 $('#foot-nav').show();
             } else {
@@ -121,36 +123,39 @@ function _ajaxGet(targetUrl, data) {
                             + '     </td>'
                             + '     <td rowspan="' + result.goods.length + '" class="operating text-center">';
                         if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
-                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail?order_id=' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
                                 if (result.pay_status == 0 && result.status == 1) {
                                     str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
-                                if (result.pay_status == 0 && result.status == 1 && result.pay_type == 1) {
+                                if (result.pay_status == 0 && result.pay_type == 1) {
                                     str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
                                 } else if (result.pay_type == 1 && result.status == 2) {
                                     str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
-                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>已收货</a></p>';
+                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>确认收货</a></p>';
                                 }
                             }
                         } else {//卖家
-                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail/' + result.id + '" class="btn btn-primary">查看</a></p>';
+                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail?order_id' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
-                                if (result.status == 0) {
-                                    str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
-                                        'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
-                                } else if (result.pay_type == 1 && result.pay_status == 0 && result.status == 1) {
+                                //if (result.status == 0) {
+                                //    str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
+                                //        'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
+                                //}
+                                if (result.pay_status == 0 && result.status == 1) {
                                     str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
-                                } else if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
-                                    str += '<p><a class="btn btn-warning ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-send" ' +
-                                        'data-data=\'{"order_id"' + result.id + '}\'>发货</a></p>';
-                                } else if (result.pay_type == 2 && result.pay_status == 1 && result.status == 2) {
-                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
-                                        'data-data=\'{"order_id":' + result.id + '}\'>收款</a></p>';
                                 }
-                                str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id=' + result.id + '">导出</a></p>';
+                                if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
+                                    str += '<p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal">发货</a></p>';
+                                } else if (result.pay_type == 2 && result.status == 2) {
+                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
+                                        'data-data=\'{"order_id":' + result.id + '}\'>确认收款</a></p>';
+                                }
+                                if (result.status == 2) {
+                                    str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id=' + result.id + '">导出</a></p>';
+                                }
                             }
                         }
                         str += '             </td>';
@@ -164,6 +169,37 @@ function _ajaxGet(targetUrl, data) {
             });
 
             $('.content').html(str);
+
+        }
+    });
+}
+/**
+ * 订单管理界面
+ */
+function getOrderButtonEvent() {
+    $('.content')
+        .on('click', '.send-goods', function () {
+            $('input[name="order_id"]').val($(this).data('data'));
+            $('.btn-close').click();
+        })
+        .on('click', 'input[name="order_id[]"]', function () {
+            $('#check-all').prop('checked', true);
+            $('input[name="order_id[]"]').each(function () {
+                if (!$(this).is(':checked')) {
+                    $('#check-all').prop('checked', false);
+                }
+            });
+        })
+    ;
+    $('.btn-add').on('click', function () {
+        $('.btn-close').click();
+    });
+    $('#check-all').on('click', function () {
+        var orders = $('input[name="order_id[]"]');
+        if ($(this).is(':checked')) {//选中
+            orders.prop('checked', true);
+        } else {//取消选中
+            orders.prop('checked', false);
         }
     });
 }
@@ -592,21 +628,21 @@ function baiDuMap() {
     //初始化这个变量,防止百度地图重复实例化所导致的显示错误问题
     var flag = false;
     if (!flag) {
-        var map = new BMap.Map("map");
+        var map_modal = new BMap.Map("map-modal");
     }
-    var point = new BMap.Point(116.331398, 39.897445);
-    map.centerAndZoom(point, 12);
+    var point_modal = new BMap.Point(106, 35);
+    map_modal.centerAndZoom(point_modal, 12);
 
     //添加地址点击时载入当前位置的地图
     $('#add-address').click(function () {
         if (!flag) {
             //默认定位到当前浏览器位置
-            var geolocation = new BMap.Geolocation();
-            geolocation.getCurrentPosition(function (r) {
+            var geolocation_modal = new BMap.Geolocation();
+            geolocation_modal.getCurrentPosition(function (r) {
                 if (this.getStatus() == BMAP_STATUS_SUCCESS) {
                     //重置中心点
-                    map.addOverlay(new BMap.Marker(r.point));
-                    map.panTo(r.point);
+                    map_modal.addOverlay(new BMap.Marker(r.point));
+                    map_modal.panTo(r.point);
                 }
             }, {enableHighAccuracy: true});
             flag = true;
@@ -627,39 +663,43 @@ function baiDuMap() {
                 num = 16;
             }
             var areaName = elem.find('option:checked').text();
-            if (areaName != '其它区') {
+            if (areaName != '其它区' && areaName!='海外') {
                 //删除之前的覆盖物
-                map.clearOverlays();
+                map_modal.clearOverlays();
                 // 创建地址解析器实例
                 var myGeo = new BMap.Geocoder();
                 // 将地址解析结果显示在地图上,并调整地图视野
                 myGeo.getPoint(areaName, function (newPoint) {
                     if (newPoint) {
-                        point = newPoint;
-                        map.centerAndZoom(newPoint, num);
+                        point_modal = newPoint;
+                        map_modal.centerAndZoom(newPoint, num);
 
                         //重置中心点
-                        map.addOverlay(new BMap.Marker(newPoint));
+                        map_modal.addOverlay(new BMap.Marker(newPoint));
                         // 设置矩形区域
                         var stepLang = 0.01;
                         if (elem.hasClass('address-street')) {
                             stepLang = 0.005;
                         }
                         if (!elem.hasClass('address-province')) {
-                            polygon = new BMap.Polygon([
-                                new BMap.Point(parseFloat(point.lng - stepLang), parseFloat(point.lat + stepLang)),
-                                new BMap.Point(parseFloat(point.lng + stepLang), parseFloat(point.lat + stepLang)),
-                                new BMap.Point(parseFloat(point.lng + stepLang), parseFloat(point.lat - stepLang)),
-                                new BMap.Point(parseFloat(point.lng - stepLang), parseFloat(point.lat - stepLang))
-                            ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});  //创建多边形
-                            map.addOverlay(polygon);   //将图形添加到地图
-                            polygon.addEventListener('lineupdate', function () {
-                                var coordinate = polygon.getBounds();
-                                $('input[name="coordinate_alx"]').val(coordinate.al.lng);
-                                $('input[name="coordinate_aly"]').val(coordinate.al.lat);
-                                $('input[name="coordinate_rlx"]').val(coordinate.rl.lng);
-                                $('input[name="coordinate_rly"]').val(coordinate.rl.lat);
-                                //console.log($('input[name="coordinate"]').val());
+                            polygon_modal = new BMap.Polygon([
+                                new BMap.Point(parseFloat(point_modal.lng - stepLang), parseFloat(point_modal.lat + stepLang)),
+                                new BMap.Point(parseFloat(point_modal.lng + stepLang), parseFloat(point_modal.lat + stepLang)),
+                                new BMap.Point(parseFloat(point_modal.lng + stepLang), parseFloat(point_modal.lat - stepLang)),
+                                new BMap.Point(parseFloat(point_modal.lng - stepLang), parseFloat(point_modal.lat - stepLang))
+                            ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
+                            map_modal.addOverlay(polygon_modal);   //将图形添加到地图
+                            var coordinate = polygon_modal.getBounds();
+                            $('input[name="coordinate_blx"]').val(coordinate.bl.lng);
+                            $('input[name="coordinate_bly"]').val(coordinate.bl.lat);
+                            $('input[name="coordinate_slx"]').val(coordinate.sl.lng);
+                            $('input[name="coordinate_sly"]').val(coordinate.sl.lat);
+                            polygon_modal.addEventListener('lineupdate', function () {
+                                coordinate = polygon_modal.getBounds();
+                                $('input[name="coordinate_blx"]').val(coordinate.bl.lng);
+                                $('input[name="coordinate_bly"]').val(coordinate.bl.lat);
+                                $('input[name="coordinate_slx"]').val(coordinate.sl.lng);
+                                $('input[name="coordinate_sly"]').val(coordinate.sl.lat);
                             });
                         }
                     }
@@ -668,5 +708,124 @@ function baiDuMap() {
             }
         }
 
+    });
+}
+
+function dynamicShowMap() {
+    map.clearOverlays();
+    $('.show-map').each(function () {
+        var blx = $(this).find('input[name="area[blx][]"]').val();
+        var bly = $(this).find('input[name="area[bly][]"]').val();
+        var slx = $(this).find('input[name="area[slx][]"]').val();
+        var sly = $(this).find('input[name="area[sly][]"]').val();
+        var point_lng = parseFloat(slx) + (blx - slx) / 2;
+        var point_lat = parseFloat(sly) + (bly - sly) / 2;
+        var point = new BMap.Point(point_lng, point_lat);
+        var marker = new BMap.Marker(point);  // 创建标注
+        map.addOverlay(marker);               // 将标注添加到地图中
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+        var polygon = new BMap.Polygon([
+            new BMap.Point(slx, bly),//左上
+            new BMap.Point(blx, bly),//右上
+            new BMap.Point(blx, sly),//右下
+            new BMap.Point(slx, sly)//左下
+
+        ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
+        map.addOverlay(polygon);   //将图形添加到地图
+    });
+}
+/**
+ * 根据配送区域显示相应地图
+ *
+ * @param data
+ */
+function getCoordinateMap(data) {
+    map = new BMap.Map("map");
+    if(data && data.length){
+        $.each(data, function (index, value) {
+            var point_lng = parseFloat(value['coordinate']['sl_lng']) + (value['coordinate']['bl_lng'] - value['coordinate']['sl_lng']) / 2;
+            var point_lat = parseFloat(value['coordinate']['sl_lat']) + (value['coordinate']['bl_lat'] - value['coordinate']['sl_lat']) / 2;
+            var point = new BMap.Point(point_lng, point_lat);
+            if (!index) {
+                //map.centerAndZoom(point,5);//取第一个中心点为地图默认中心
+                map.centerAndZoom(new BMap.Point(106, 35), 5);
+            }
+            var marker = new BMap.Marker(point);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+            var polygon = new BMap.Polygon([
+                new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['bl_lat']),//左上
+                new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['bl_lat']),//右上
+                new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['sl_lat']),//右下
+                new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['sl_lat'])//左下
+
+            ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
+            map.addOverlay(polygon);   //将图形添加到地图
+        });
+    }else{
+        map.centerAndZoom(new BMap.Point(106, 35), 5);
+
+    }
+}
+
+function getShopAddressMap(lng,lat){
+    var addressMap = new BMap.Map('address-map');
+    if(lng && lat){
+        var point_address = new BMap.Point(lng, lat);
+        addressMap.centerAndZoom(point_address, 12);
+        addressMap.addOverlay(new BMap.Marker(point_address));
+    }else{
+        var point_address = new BMap.Point(106, 35);
+        addressMap.centerAndZoom(point_address, 12);
+        var geolocation_address = new BMap.Geolocation();
+        geolocation_address.getCurrentPosition(function (r) {
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                //重置中心点
+                addressMap.addOverlay(new BMap.Marker(r.point));
+                addressMap.panTo(r.point);
+            }
+        }, {enableHighAccuracy: true});
+    }
+    $('.shop-address').on('change','select',function(){
+        var elem = $(this);
+        var areaName = elem.find('option:checked').text();
+        var num = 6;
+        if (elem.hasClass('address-city')) {
+            num = 12;
+        }
+        if (elem.hasClass('address-district')) {
+            num = 14;
+        }
+        if (elem.hasClass('address-street')) {
+            num = 16;
+        }
+        if (areaName != '其它区' && areaName!='海外') {
+            //删除之前的覆盖物
+            addressMap.clearOverlays();
+            // 创建地址解析器实例
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(areaName, function (newPoint) {
+                if (newPoint) {
+                    point_address = newPoint;
+                    addressMap.centerAndZoom(newPoint, num);
+                    var newMarker = new BMap.Marker(point_address);
+                    //重置中心点
+                    addressMap.addOverlay(newMarker);
+                    var pointPosition = newMarker.getPosition();
+                    $('input[name="x_lng"]').val(pointPosition.lng);
+                    $('input[name="y_lat"]').val(pointPosition.lat);
+                    newMarker.enableDragging();//可拖拽点
+                    newMarker.addEventListener('dragend',function(){
+                        pointPosition = newMarker.getPosition();
+                        $('input[name="x_lng"]').val(pointPosition.lng);
+                        $('input[name="y_lat"]').val(pointPosition.lat);
+                    });
+                }
+            }, areaName);
+
+        }
     });
 }

@@ -36,20 +36,6 @@ class OrderController extends Controller
     }
 
     /**
-     * 卖家查询订单列表
-     *
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function getListOfSell()
-    {
-        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
-            'desc')->simplePaginate()->toArray();
-
-
-        return $this->success($orders);
-    }
-
-    /**
      * 查询待付款订单列表
      *
      * @return \WeiHeng\Responses\Apiv1Response
@@ -66,34 +52,6 @@ class OrderController extends Controller
         return $this->success($orders);
     }
 
-    /**
-     * 买家查询待确认订单
-     *
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function getNonSureOfBuy()
-    {
-        $orders = Order::ofBuy($this->userId)->nonSure()->simplePaginate()->toArray();
-
-        return $this->success($orders);
-    }
-
-    /**
-     * 卖家查询待确定订单
-     *
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function getNonSureOfSell()
-    {
-        $redis = Redis::connection();
-        if ($redis->exists('push:seller:' . $this->userId)) {
-            $redis->del('push:seller' . $this->userId);
-        }
-
-        $orders = Order::ofSell($this->userId)->nonSure()->simplePaginate()->toArray();
-
-        return $this->success($orders);
-    }
 
     /**
      * 获取待收货信息--买家操作
@@ -103,6 +61,34 @@ class OrderController extends Controller
     public function getNonArrived()
     {
         $orders = Order::ofBuy($this->userId)->nonArrived()->simplePaginate()->toArray();
+
+        return $this->success($orders);
+    }
+
+
+    /**
+     * 买家获取订单详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getDetailOfBuy(Request $request)
+    {
+        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods', 'goods.images',
+            'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
+
+        return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
+    }
+
+    /**
+     * 卖家查询订单列表
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getListOfSell()
+    {
+        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
+            'desc')->simplePaginate()->toArray();
 
         return $this->success($orders);
     }
@@ -120,19 +106,17 @@ class OrderController extends Controller
     }
 
     /**
-     * 买家获取订单详情
+     * 获取待收款订单列表,针对货到付款
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \WeiHeng\Responses\Apiv1Response
+     * @return mixed
      */
-    public function getDetailOfBuy(Request $request)
+    public function getPendingCollection()
     {
-        $id = $request->input('order_id');
-        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods', 'goods.images',
-            'deliveryMan', 'shippingAddress.address')->find($id);
+        $orders = Order::ofSell($this->userId)->getPayment()->simplePaginate()->toArray();
 
-        return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
+        return $this->success($orders);
     }
+
 
     /**
      * 卖家查询订单详情
@@ -148,6 +132,159 @@ class OrderController extends Controller
             'shippingAddress.address')->find($id);
 
         return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
+    }
+
+    /**
+     * 批量取消订单确认状态，在线支付：确认但未付款，可取消；货到付款：确认但未发货，可取消
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putCancelSure(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $orders = Order::where(function ($query) {
+            $query->wherehas('shop.user', function ($query) {
+                $query->where('id', $this->userId);
+            })->orWhere('user_id', $this->userId);
+        })->where('status', cons('order.status.non_send'))->where('pay_status',
+            cons('order.pay_status.non_payment'))->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
+        $orders->each(function ($model) use ($redis) {
+            $model->update([
+                'is_cancel' => cons('order.is_cancel.on'),
+                'cancel_by' => $this->userId,
+                'cancel_at' => Carbon::now()
+            ]);
+            //推送通知
+            if ($model->user_id == $this->userId) {
+                $redisKey = 'push:seller:' . $model->shop->user->id;
+                $msg = 'buyer';
+            } else {
+                $redisKey = 'push:user:' . $model->user_id;
+                $msg = 'seller';
+            }
+
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '订单:' . $model->id . cons()->lang('push_msg.cancel_by_' . $msg));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+        });
+
+        return $this->success();
+    }
+
+    /**
+     * 买家批量确认订单完成,仅针对在线支付订单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putBatchFinishOfBuy(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $orders = Order::where('user_id', $this->userId)->where('pay_type',
+            cons('pay_type.online'))->where('pay_status', cons('order.pay_status.payment_success'))->where('status',
+            cons('order.status.send'))->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
+
+
+        $orders->each(function ($model) use ($redis) {
+            $redisKey = 'push:seller:' . $model->shop->user->id;
+
+            $model->update([
+                'status' => cons('order.status.finished'),
+                'finished_at' => Carbon::now()
+            ]);
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '您的订单:' . $model->id . ',', cons()->lang('push_msg.finished'));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+        });
+
+        return $this->success('操作成功');
+    }
+
+    /**
+     * 卖家批量确认订单完成,仅针对货到付款有效
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putBatchFinishOfSell(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
+            cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
+            'pay_status' => cons('order.pay_status.payment_success'),
+            'paid_at' => Carbon::now(),
+            'status' => cons('order.status.finished'),
+            'finished_at' => Carbon::now()
+        ]);
+
+        return $status ? $this->success() : $this->error('操作失败');
+    }
+
+
+    /**
+     * 批量修改发货状态。不区分付款状态
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function putBatchSend(Request $request)
+    {
+        $orderIds = (array)$request->input('order_id');
+        $deliveryManId = intval($request->input('delivery_man_id'));
+        //判断送货人员是否是该店铺的
+        if (!DeliveryMan::find($deliveryManId)) {
+            return $this->error('操作失败');
+        }
+        $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
+            $query->where(function ($query) {
+                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
+            })->orwhere(function ($query) {
+                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
+            });
+        })->whereIn('id', $orderIds)->nonCancel()->get();
+        $redis = Redis::connection();
+        $orderModel->each(function ($model) use ($redis, $deliveryManId) {
+            $redisKey = 'push:user:' . $model->user_id;
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '您的订单' . $model->id . ',' . cons()->lang('push_msg.send'));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
+            $model->update([
+                'delivery_man_id' => $deliveryManId,
+                'status' => cons('order.status.send'),
+                'send_at' => Carbon::now()
+            ]);
+        });
+
+        return $this->success();
+
+    }
+
+    /**
+     * 获取确认订单页
+     *
+     * @return \Illuminate\View\View
+     */
+    public function getConfirmOrder()
+    {
+        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $shops = (new CartService($carts))->formatCarts();
+        //收货地址
+        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
+        $payType = cons()->valueLang('pay_type');//支付方式
+        $codPayType = cons()->valueLang('cod_pay_type');//货到付款支付方式
+        return $this->success([
+            'shops' => $shops,
+            'shipping_address' => $shippingAddress,
+            'pay_type' => $payType,
+            'cod_pay_type' => $codPayType
+        ]);
     }
 
     /**
@@ -186,23 +323,6 @@ class OrderController extends Controller
         } else {
             return $this->error('确认订单失败');
         }
-    }
-
-    /**
-     * 确认订单页
-     *
-     * @return \Illuminate\View\View
-     */
-    public function getConfirmOrder()
-    {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
-        $shops = (new CartService($carts))->formatCarts();
-        //收货地址
-        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
-
-        dd($shippingAddress->toArray());
-
-        return $this->success(['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
 
     /**
@@ -284,44 +404,4 @@ class OrderController extends Controller
 
     }
 
-    /**
-     * 批量取消订单确认状态，在线支付：确认但未付款，可取消；货到付款：确认但未发货，可取消
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function putCancelSure(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        $status = Order::where(function ($query) {
-            $query->wherehas('shop.user', function ($query) {
-                $query->where('id', $this->userId);
-            })->orWhere('user_id', $this->userId);
-        })->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.non_payment'))->nonCancel()->nonSend()->update([
-            'is_cancel' => cons('order.is_cancel.on'),
-            'cancel_by' => $this->userId,
-            'cancel_at' => Carbon::now()
-        ]);
-
-        return $status ? $this->success('操作成功') : $this->error('操作失败');
-    }
-
-    /**
-     * 买家批量确认订单完成,仅针对在线支付订单
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function putBatchFinish(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        $status = Order::where('user_id', $this->userId)->whereIn('id', $orderIds)->where('pay_status',
-            cons('order.pay_status.payment_success'))->where('status', cons('order.status.send'))->nonCancel()->update([
-            'status' => cons('order.status.finished'),
-            'finished_at' => Carbon::now()
-        ]);
-
-        return $status ? $this->success('操作成功') : $this->error('操作失败');
-    }
 }

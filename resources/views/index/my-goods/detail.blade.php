@@ -1,4 +1,5 @@
 @extends('index.menu-master')
+@include('includes.loadMapJs')
 
 @section('subtitle', '商品详情')
 
@@ -62,9 +63,10 @@
                 @endforeach
                 <p>商品配送区域大概地图标识 :</p>
 
-                <p class="address-map">
-                    <img src="http://placehold.it/300x250/CDF" alt="" title=""/>
-                </p>
+                {{--<p class="address-map">--}}
+                    {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
+                {{--</p>--}}
+                <div id="map"></div>
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}
@@ -78,6 +80,11 @@
     <script type="text/javascript">
         $(function () {
             tabBox();
-        })
+        });
+        $(document).ready(function () {
+            @if(isset($coordinates))
+               getCoordinateMap({!! $coordinates !!});
+            @endif
+        });
     </script>
 @stop

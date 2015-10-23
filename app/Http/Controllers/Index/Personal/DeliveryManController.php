@@ -18,8 +18,7 @@ class DeliveryManController extends Controller
      */
     public function index()
     {
-        // TODO: shop_id
-        $deliveryMen = DeliveryMan::where('shop_id', 1)->get();
+        $deliveryMen = auth()->user()->shop->deliveryMans;
         return view('index.personal.delivery-man-index', ['deliveryMen' => $deliveryMen]);
     }
 

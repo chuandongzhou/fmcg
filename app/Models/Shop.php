@@ -30,7 +30,9 @@ class Shop extends Model
         'delivery_location',
         'user_id',
         'license_num',
-        'nickname'
+        'nickname',
+        'x_lng',
+        'y_lat'
     ];
 
     protected $appends = ['image_url', 'orders'];
@@ -336,18 +338,24 @@ class Shop extends Model
     public function setAreaAttribute($area)
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
-        $this->deliveryArea()->delete();
+        $this->deliveryArea->each(function ($address) {
+            $address->delete();
+        });
         if (!empty($areaArr)) {
-            $areas = [];
             foreach ($areaArr as $data) {
-                $areas[] = new DeliveryArea($data);
+                if (isset($data['coordinate'])) {
+                    $coordinate = $data['coordinate'];
+                    unset($data['coordinate']);
+                }
+                $areas = new DeliveryArea($data);
+                $areaModel = $this->deliveryArea()->save($areas);
+                if (isset($coordinate)) {
+                    $areaModel->coordinate()->create($coordinate);
+                }
             }
-//            dd($areas);
-            $this->deliveryArea()->saveMany($areas);
         }
-
-        return true;
     }
+
     /**
      * 获取logo链接
      *

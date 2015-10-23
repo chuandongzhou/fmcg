@@ -47,16 +47,15 @@ class MyGoodsController extends Controller
 
         $result = GoodsService::getGoodsBySearch($data, $goods);
 
-        return view('index.my-goods.index',
-            [
-                'goods' => $result['goods']->paginate(),
-                'categories' => $result['categories'],
-                'attrs' => $result['attrs'],
-                'searched' => $result['searched'],
-                'moreAttr' => $result['moreAttr'],
-                'get' => $gets,
-                'data' => $data
-            ]);
+        return view('index.my-goods.index', [
+            'goods' => $result['goods']->paginate(),
+            'categories' => $result['categories'],
+            'attrs' => $result['attrs'],
+            'searched' => $result['searched'],
+            'moreAttr' => $result['moreAttr'],
+            'get' => $gets,
+            'data' => $data
+        ]);
 
     }
 
@@ -70,6 +69,7 @@ class MyGoodsController extends Controller
         $firstCategory = Category::where('pid', 0)->pluck('id');
         $goods = new Goods;
         $goods->cate_level_1 = $firstCategory;
+
         return view('index.my-goods.goods', ['goods' => $goods, 'attrs' => []]);
     }
 
@@ -86,8 +86,13 @@ class MyGoodsController extends Controller
             abort(403);
         }
 
-        $attrs = (new AttrService())->getAttrByGoods($goods ,true);
-        return view('index.my-goods.detail', ['goods' => $goods, 'attrs' => $attrs]);
+        $attrs = (new AttrService())->getAttrByGoods($goods, true);
+        $coordinate = $goods->deliveryArea->each(function ($area) {
+            $area->coordinate;
+        });
+
+        return view('index.my-goods.detail',
+            ['goods' => $goods, 'attrs' => $attrs, 'coordinates' => $coordinate->toJson()]);
     }
 
     /**
@@ -106,22 +111,23 @@ class MyGoodsController extends Controller
         }
 
         $attrIds = array_pluck($attrGoods, 'attr_pid');
-        $attrResults = Attr::select(['attr_id', 'pid', 'name'])
-            ->where('category_id', $goods->category_id)
-            ->where(function ($query) use ($attrIds) {
-                $query->whereIn('attr_id', $attrIds)
-                    ->orWhere(function ($query) use ($attrIds) {
-                        $query->whereIn('pid', $attrIds);
-                    });
-            })
-            ->get()->toArray();
+        $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
+            $goods->category_id)->where(function ($query) use ($attrIds) {
+            $query->whereIn('attr_id', $attrIds)->orWhere(function ($query) use ($attrIds) {
+                $query->whereIn('pid', $attrIds);
+            });
+        })->get()->toArray();
         $attrResults = (new AttrService($attrResults))->format();
+        $coordinates = $goods->deliveryArea->each(function ($area) {
+            $area->coordinate;
+        });
+
         return view('index.my-goods.goods', [
-                'goods' => $goods,
-                'attrs' => $attrResults,
-                'attrGoods' => $attrGoods
-            ]
-        );
+            'goods' => $goods,
+            'attrs' => $attrResults,
+            'attrGoods' => $attrGoods,
+            'coordinates' => $coordinates
+        ]);
     }
 
     /**
@@ -141,6 +147,7 @@ class MyGoodsController extends Controller
                 $data[$key] = $val;
             }
         }
+
         return $data;
     }
 
