@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function getAttr(Request $request, $id)
     {
         $data = $request->all();
-        if (!isset($data['format'])) {
+        if (!isset($data['format']) || $data['format'] != 'true') {
             $categoryPid = Category::where('id', $id)->pluck('pid');
 
             $result = Attr::where('pid', 0)->whereIn('category_id', [$categoryPid, $id])->lists('name', 'attr_id');
@@ -47,18 +47,18 @@ class CategoryController extends Controller
      */
     public function getCategory(Request $request)
     {
-        $pid = $request->get('pid');
+        $pid = $request->input('pid');
         $categories = '';
         if ($pid) {
-            $categories = Category::where('pid', $pid)->lists('name', 'id');
-        } else {
+            $categories = Category::where('pid', $pid)->with('icon')->lists('name', 'id');
+        } elseif (is_null($pid)) {
             $post = $request->all();
             $pid = [
                 0,
                 $post['level1'],
                 $post['level2']
             ];
-            $result = Category::whereIn('pid', $pid)->select(['id', 'name', 'level'])->get();
+            $result = Category::whereIn('pid', $pid)->with('icon')->select(['id', 'name', 'level'])->get();
             foreach ($result as $category) {
                 $categories['level' . $category['level']][$category['id']] = $category['name'];
             }
@@ -74,6 +74,6 @@ class CategoryController extends Controller
      */
     public function getAllCategory()
     {
-        return $this->success(CategoryService::unlimitForLayer(Category::all()->toArray()));
+        return $this->success(CategoryService::unlimitForLayer(Category::with('icon')->get()->toArray()));
     }
 }

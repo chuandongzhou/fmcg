@@ -35,9 +35,9 @@ class Shop extends Model
         'y_lat'
     ];
 
-    protected $appends = ['image_url', 'orders'];
+    protected $appends = ['images_url', 'orders', 'logo_url'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['images', 'created_at', 'updated_at'];
 
     /**
      * 用户表
@@ -321,11 +321,16 @@ class Shop extends Model
      */
     public function setAddressAttribute($address)
     {
-
-        $this->shopAddress()->delete();
+        $relate = $this->shopAddress();
+        $relate->delete();
         $address['type'] = cons('shop.address_type.shop_address');
-        $this->shopAddress()->create($address);
-
+        if ($this->exists) {
+            $relate->create($address);
+        } else {
+            static::created(function ($model) use ($relate, $address) {
+                $model->$relate()->save($address);
+            });
+        }
         return true;
     }
 
@@ -417,13 +422,27 @@ class Shop extends Model
     }
 
     /**
+     * 格式化图片地址
+     */
+    public function getImagesUrlAttribute()
+    {
+        $images = $this->images ? $this->images : [];
+        $result = [];
+        foreach ($images as $key => $image) {
+            $result[$key]['name'] = $image['name'];
+            $result[$key]['path'] = $image->url;
+        }
+        return $result;
+    }
+
+    /**
      * 获取地址
      *
      * @return string
      */
     public function getAddressAttribute()
     {
-        return is_null($this->shopAddress) ? '' : $this->shopAddress->area_name . ' ' . $this->shopAddress->address;
+        return is_null($this->shopAddress) ? '' : $this->shopAddress->address_name;
     }
 
 }

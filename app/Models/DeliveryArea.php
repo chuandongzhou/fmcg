@@ -5,7 +5,6 @@ namespace App\Models;
 
 class DeliveryArea extends Model
 {
-    public $coor;
     protected $table = 'delivery_area';
     protected $fillable = [
         'type',
@@ -46,6 +45,16 @@ class DeliveryArea extends Model
     public function addressable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * 获取地址详情
+     *
+     * @return string
+     */
+    public function getAddressNameAttribute()
+    {
+        return $this->area_name . $this->address;
     }
 
     /**

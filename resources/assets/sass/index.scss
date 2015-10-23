@@ -441,6 +441,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       margin-top: -1px;
       ul {
         padding: 10px 0;
+        clear: both;
         .address-panel-item {
           margin-left: 80px;
           .panel-name {
@@ -466,8 +467,8 @@ ul, li, p, a, h1, h2, h3, h4 {
         .icon-tel {
           background-position: 0 0;
         }
-        .icon-address {
-          background-position: 0 -100px;
+        .icon-seller {
+          background-position: 0 -63px;
         }
         .icon-address {
           background-position: 0 -128px;
@@ -587,6 +588,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           &.active {
             border: 1px solid $gray-plain-light;
             border-bottom-color: $body-bg;
+            background-color: $body-bg;
             z-index: 10;
           }
           .title-txt {
@@ -659,6 +661,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         .list-title {
           &.active {
             border: 1px solid $body-bg;
+            border-bottom: none;
             color: $brand-primary;
           }
         }
@@ -755,9 +758,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 
     }
     .detail-list-wrap {
-      li {
+      .store-name {
         padding: 5px 0;
-
+      }
+      li {
+        @extend .store-name;
       }
       .left-list {
         margin-right: 50px;

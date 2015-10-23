@@ -34,7 +34,7 @@ class GoodsImagesController extends Controller
             }
 
         } else {
-            $data['cate_level_1'] = Category::orderBy('id', 'ASC')->pluck('id');
+            $data['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
         }
 
         $goodsImage = GoodsImages::where($data)->with('image')->get();
@@ -48,7 +48,7 @@ class GoodsImagesController extends Controller
      */
     public function create()
     {
-        $firstCategory = Category::where('pid', 0)->pluck('id');
+        $firstCategory = Category::where('pid', 0)->with('icon')->pluck('id');
         return view('admin.images.images', ['search' => $firstCategory]);
     }
 

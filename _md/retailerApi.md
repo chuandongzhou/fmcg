@@ -2,14 +2,7 @@
 ## 1. API接口通信规定
 - 接口采用 **HTTP**, **POST** 协议
 - 请求URL **192.168.2.66/api/v1**
-- **请求需要登录的API请在请求中附带cookie请求，以便进行验证处理**
-- 数据请求必须参数
-	- *time* 发送请求时间戳
-	- *g* 项目标志 (本项目此参数通用为**ApiEducation**)
-	- *m* 模块标志
-	- *c* 方法标志
-	- ……  其他请求数据请同级追加
-- 请求返回数据格式  
+- 请求返回数据格式
 	所有数据返回都基于以下的 **JSON** 协议 
 	>失败时返回 ：{"id":'success',"message":"String|Array" ,errors: "{account: ["不是一个合法的账号"]}"}
 	id:状态值
@@ -23,9 +16,24 @@
 
 	account     string    账号
 	password      string    密码
-	type      int       登录角色(1零售，2批发 ，3供应)
 `成功返回:`
-	　
+
+	id          int             用户id
+	user_name   string          登录名
+	type        int             用户类型 (1是终端   2是批发    3是供应)
+	shop        array           商店
+
+	shop 字段子集说明
+
+	id                   int            商店id
+	name                string          商店名
+	contact_person      string          联系人
+	contact_info        string          联系方式
+	min_money           decimal         最低配送额
+	delivery_location   string          地图坐标
+	user_id             int             用户id
+	image_url           string          商店图片（第一张）
+	orders              int             订单数
 `失败返回：`
 
 	
@@ -36,16 +44,20 @@
 `接口返回：`
 
 ### 2.2 商品模块 goods
-#### 2.2.1 热门商品[get/post] (hot-goods)
+#### 2.2.1 获取商品栏目[get] (goods)
 `请求参数`
-
-    page    int     分页
 
 `成功返回：`
 
-    data    array   商品信息
+    goodsColumns    array   商品栏目信息
 
-    data字段子集说明
+    goodsColumns字段子集说明
+
+    id                  int         栏目id
+    name                string      栏目名
+    goods               array       栏目商品列表
+
+    goods字段子集说明
 
     id                  int         商品id
     name                string      商品名
@@ -56,6 +68,9 @@
     image_url           string      商品图片
 
 `失败返回：`
+
+
+
 
 #### 2.2.2 商品搜索[post] (search)
 `请求参数`
@@ -72,7 +87,11 @@
 
 `成功返回：`
 
-    data    array   商品信息
+    goods    array   商品信息
+
+    goods字段子集说明
+
+    data     array    商品列表
 
     data字段子集说明
 
@@ -80,9 +99,20 @@
     name                string      商品名
     price_retailer      decimal     价格（对于终端商）
     price_wholesaler    decimal     价格（对于批发商）
+    sales_volume        int         销量
     is_new              int         是否新品（1是 , 0不是）
-    is_promotion        int         是否促销产品
+    is_promotion        int         是否促销产品（1是 , 0不是）
+    is_out               int         是否缺货（1是 , 0不是）
     image_url           string      商品图片
+    categories          array       商品的分类
+
+    categories 字段子集说明
+
+    id                  int         分类id
+    name                string      分类名
+    level               int         分类层级
+    pid                 int         父级id
+    icon_url            string      图标地址
 
 `失败返回：`
 
@@ -93,7 +123,11 @@
 
 `成功返回：`
 
-    data    array   商品信息
+    goods    array   商品信息
+
+    goods字段子集说明
+
+    data     array    商品列表
 
     data字段子集说明
 
@@ -105,7 +139,7 @@
     price_wholesaler    decimal     价格（对于批发商）
     min_num_wholesaler  int         最低购买量 (对于批发商）
     is_new              int         是否新品（1是 , 0不是）
-    is_out              int         是否换货
+    is_out              int         是否缺货
     is_change           int         是否可换货
     is_back             int         是否可退货
     is_expire           int         是否即期品
@@ -113,40 +147,149 @@
     promotion_info      string      促销信息
     introduce           string      商品图文详情
     shop_id             int         商品所属店铺id
+    shop_name           string      商品所属店铺
     attrs               array       标签
-    images              array       商品图片
     delivery_area       array       商品配送区域
     is_like             bool        是否已关注
-    image_url           string      商品图片
+    image_url           string      商品图片('第一张')
+    images_url          array       商品全部图片
 
     attrs 子字段说明
 
     $key => $value形式    $key表示标签名， $value 表示标签值
 
-    images 子字段说明
+    delivery_area 字段子集说明
 
+        id                      int             地址id
+        province_id             int             省id
+        city_id                 int             市id
+        district_id             int             县id
+        street_id               int             街道id
+        area_name               string          省、市、县、街道名
+        address                 string          详细地址
+
+    images_url 子字段说明
+
+    name                string      图片名
     path                string      路径
 
 `失败返回：`
 
 
+### 2.3 店铺模块 shop
+
+#### 2.3.1 获取商店栏目[get] shops
+
+`成功返回：`
+
+    shopColumns    array   店铺栏目信息
+
+    shopColumns字段子集说明
+
+    id                  int         栏目id
+    name                string      栏目名
+    shops               array       栏目店铺列表
+
+    shops 字段子集说明
+
+    id                  int         店铺id
+    name                string      店铺名
+    logo_url            string      店铺logo地址
+    min_money           decimal     最低配送额
+    images_url          array       店铺图片
+
+    images_url 字段子集说明
+
+    name                string      图片名
+    path                string      图片路径
+
+#### 2.3.2 店铺详情[get]   ({shop_id})
+`请求参数：`
+
+`成功返回：`
+
+    id                  int         店铺id
+    name                string      店铺名
+    contact_person      string      联系人
+    contact_info        string      联系方式
+    introduction        string      店铺介绍
+    min_money           decimal     最低配送额
+    images_url          array       店铺图片地址
+
+    images 字段子集介绍
+
+    name                string      图片名
+    path                string      图片路径
+
+#### 2.3.3 店铺商品[get]   ({shop_id}/goods)
+`请求参数：`
+
+    page                int         分页
+
+`成功返回：`
+
+    data                array       商品列表
+
+    data 字段子集说明
+
+    id                  int         商品id
+    name                string      商品名
+    sales_volume        int         销售总量
+    price_retailer      decimal     价格（对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    is_new              int         是否新品（1是 , 0不是）
+    is_promotion        int         是否促销产品
+    is_out              int         是否缺货
+    images_url          array       商品图片
+
+    images 字段子集说明
+
+    name                string      图片名
+    path                string      图片地址
+
+#### 2.3.3 店铺扩展信息[get]   ({shop_id}/extend)
+`请求参数：`
+
+`成功返回：`
+
+    license_url             string          营业执照地址
+    business_license_url    string          商品经营许可证地址
+    agency_contract_url     string          代理合同地址
+    images_url              array           店铺图片地址
+    delivery_area           array           配送区域列表
+
+    images_url 字段子集介绍
+
+    name                    string          图片名
+    path                    string          图片地址
+
+    delivery_area 字段子集介绍
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
 
 
-### 2.3 分类 categories
-#### 2.3.1 获取所有分类[post] (all)
+### 2.4 分类 categories
+#### 2.4.1 获取所有分类[post] (all)
 `请求参数：`
 
 `成功返回：`
 
     id                  int         分类id
-    icon_pic_url        string      分类图标
+    icon_url            string      分类图标
     pid                 int         父级id
     name                string      分类名
+    level               int         分类层级
     child               array       子级分类（子级分类返回数据与当前数据相同）
 
 `失败返回：`
 
-#### 2.3.2 获取标签[get] ({categoryId}/attrs)
+#### 2.4.2 获取标签[get] ({categoryId}/attrs)
 `请求参数：`
 
     format              bool        是否格式化标签  (非必须参数)
@@ -160,8 +303,8 @@
 
 `失败返回：`
 
-### 2.4 购物车 cart
-#### 2.4.1 查看购物车[post] (index)
+### 2.5 购物车 cart
+#### 2.5.1 查看购物车[post] (index)
 `请求参数：`
 
 `成功返回：`
@@ -184,7 +327,7 @@
         images              string      商品图片
         goods               array       商品详情
 
-            cart_goods子字段说明
+            goods子字段说明
 
             id                  int         商品id
             name                string      商品名
@@ -193,9 +336,7 @@
 
 `失败返回：`
 
-
-
-#### 2.4.2 加入购物车[post] (add/{goodsId})
+#### 2.5.2 加入购物车[post] (add/{goodsId})
 `请求参数：`
 
     num                 int         购买数量
@@ -204,7 +345,7 @@
 
 `失败返回`
 
-#### 2.4.3 删除购物车[delete] (delete/{cartId})
+#### 2.5.3 删除购物车[delete] (delete/{cartId})
 `请求参数：`
 
 
@@ -212,8 +353,8 @@
 
 `失败返回`
 
-### 2.5 订单 order
-#### 2.5.1 订单订单[post] (confirm-order)
+### 2.6 订单 order
+#### 2.6.1 订单订单[post] (confirm-order)
 `请求参数：`
 
     num                 array       购买的商品和数量 （key=>value形式    key为商品id   value 为购买数量）
@@ -223,7 +364,7 @@
 
 `失败返回`
 
-#### 2.5.2 获取已确认但未提交订单信息[get] (confirm-order)
+#### 2.6.2 获取已确认但未提交订单信息[get] (confirm-order)
 `请求参数：`
 
 
@@ -279,7 +420,7 @@
 
 `失败返回`
 
-#### 2.5.3 提交订单[post] (submit-order)
+#### 2.6.3 提交订单[get] (confirm-order)
 `请求参数：`
 
     shop                array       商店
@@ -588,7 +729,7 @@
 
 `失败返回`
 
-#### 2.5.1 商店收藏[post] (shops)
+#### 2.7.2 商品收藏[post] (goods)
 `请求参数：`
 
     province_id         int         省id
@@ -598,15 +739,24 @@
 
 `成功返回：`
 
-    shops               array       商店列表
+    goods               array       商品列表
+    cateArr             array       分类列表
 
-    shops 字段说明
+    goods 字段说明
 
-    id                  int         店铺id
-    name                string      店铺名
-    min_money           decimal     最低配送额
-    image_url           string      店铺图片
-    orders              int         店铺销量
+    id                  int         商品id
+    name                string      商品名
+    price_retailer      decimal     价格（对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    is_new              int         是否新品（1是 , 0不是）
+    is_promotion        int         是否促销产品
+    image_url           string      商品图片
+
+    cateArr 字段说明
+
+    id                  int         分类id
+    name                string      分类名
+    level               string      分类层级
 
 `失败返回:`
 

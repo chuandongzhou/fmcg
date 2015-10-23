@@ -21,7 +21,7 @@ class CategoryComposer
      */
     public function compose(View $view)
     {
-        $view->with('categories',CategoryService::unlimitForLayer(Category::all()->toArray()));
+        $view->with('categories',CategoryService::unlimitForLayer(Category::with('icon')->get()->toArray()));
     }
 
 }

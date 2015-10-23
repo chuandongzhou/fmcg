@@ -40,7 +40,7 @@ class AttrController extends Controller
      */
     public function create($categoryId = 0)
     {
-        $categories = Category::all(['id', 'name', 'pid', 'level'])->toArray();
+        $categories = Category::with('icon')->select(['id', 'name', 'pid', 'level'])->get()->toArray();
         /*      if ($id) {
                   $categoryId = Attr::where('id', $id)->pluck('category_id');
                   $attr->category_id = $categoryId;
@@ -51,7 +51,7 @@ class AttrController extends Controller
             return $data['pid'] > 0;
         })['id'];
 
-        $categoryPid = Category::where('id', $firstCateId)->pluck('pid');
+        $categoryPid = Category::where('id', $firstCateId)->with('icon')->pluck('pid');
 
         // 当前分类所包含标签
         $attr = Attr::where('category_id', $firstCateId)->select([

@@ -492,11 +492,12 @@ var addAddFunc = function () {
     var container = $('.address-list')
         , addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        , addLimit = 5, province = $('.add-province')
+        , addLimit = 5
+        , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
         , street = $('.add-street')
-        , address = $('.address');
+        , address = $('.detail-address');
 
     //$('#addressModal').on('hidden.bs.modal', function (e) {
     //    //TODO 初始化地址

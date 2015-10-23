@@ -75,19 +75,19 @@
                                     @foreach($categories as $category)
                                         <li class="list1">
                                             <a class="one-title"
-                                               href="{{ url('shop/' . $shop->id . '/search?cate=1' . $category['id']) }}"><i></i>{{ $category['name'] }}
+                                               href="{{ url('shop/' . $shop->id . '/search?category_id=1' . $category['id']) }}"><i></i>{{ $category['name'] }}
                                             </a>
 
                                             <div class="menu-down-wrap menu-down-layer">
                                                 @foreach($category['child'] as $child)
                                                     <div class="item active">
                                                         <h3 class="title">
-                                                            <a href="{{ url('shop/'  . $shop->id . '/search?cate=2' . $child['id']) }}">
+                                                            <a href="{{ url('shop/'  . $shop->id . '/search?category_id=2' . $child['id']) }}">
                                                                 {{ $child['name'] }}
                                                             </a>
                                                         </h3>
                                                         @foreach($child['child'] as $grandChild)
-                                                            <a href="{{ url('shop/'  . $shop->id . '/search?cate=3' . $grandChild['id']) }}">
+                                                            <a href="{{ url('shop/'  . $shop->id . '/search?category_id=3' . $grandChild['id']) }}">
                                                                 {{ $grandChild['name'] }}
                                                             </a>
                                                         @endforeach

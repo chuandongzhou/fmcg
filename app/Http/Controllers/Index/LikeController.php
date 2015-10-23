@@ -57,7 +57,7 @@ class LikeController extends Controller
         }
         //获取需要显示的分类ID
         $array = array_unique($goods->paginate()->pluck('cate_level_2')->all());
-        $cateArr = Category::whereIn('id', $array)->get();
+        $cateArr = Category::whereIn('id', $array)->with('icon')->get();
         //加入分类过滤条件
         if (!empty($data['cate_level_2'])) {
             $goods = $goods->ofCategory($data['cate_level_2'], 2);

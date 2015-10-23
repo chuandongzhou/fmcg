@@ -60,7 +60,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->userId)->nonArrived()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonSure()->simplePaginate()->toArray();
 
         return $this->success($orders);
     }

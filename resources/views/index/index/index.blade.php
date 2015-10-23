@@ -68,8 +68,9 @@
                         <div class="carousel-inner">
                             @foreach($adverts as $key=>$advert )
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                    <a href="{{ $advert['url'] }}"><img src="{{ $advert->image_url }}"
-                                                                        alt="{{ $advert->name }}"></a>
+                                    <a href="{{ $advert['url'] }}" target="_blank">
+                                        <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
@@ -86,8 +87,9 @@
                     @foreach($column->goods as $goods)
                         <div class="commodity commodity-index-img">
                             <div class="img-wrap">
-                                <a href="{{ url('goods/' . $goods->id) }}"><img class="commodity-img"
-                                                                                src="{{ $goods->image_url }}"></a>
+                                <a href="{{ url('goods/' . $goods->id) }}">
+                                    <img class="commodity-img" src="{{ $goods->image_url }}">
+                                </a>
                                 <span class="prompt @if($goods->is_out) lack  @elseif($goods->is_promotion) promotions @elseif($goods->is_new) new-listing @endif"></span>
                             </div>
                             <div class="content-panel">

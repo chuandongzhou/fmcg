@@ -83,7 +83,7 @@
                                     <select name="shipping_address_id" class="control">
                                         @foreach($shippingAddress as $address)
                                             <option value="{{ $address->id }}" {{ $address->is_default ? 'selected' : '' }}>
-                                                {{ $address->address->area_name .$address->address->address . '  ' . $address->consigner . '  ' .  $address->phone }}
+                                                {{ $address->address->address_name . '  ' . $address->consigner . '  ' .  $address->phone }}
                                             </option>
                                         @endforeach
                                     </select>

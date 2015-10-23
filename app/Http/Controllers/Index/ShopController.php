@@ -16,6 +16,13 @@ class ShopController extends Controller
         $this->middleware('supplier', ['only' => ['index', 'search']]);
     }
 
+    /**
+     * 店铺
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $sort
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request, $sort = '')
     {
         $user = auth()->user();
@@ -113,17 +120,19 @@ class ShopController extends Controller
         $goods = $shop->goods()->with('images');
 
         $result = GoodsService::getGoodsBySearch($data, $goods);
-
-        return view('index.shop.search', [
-            'shop' => $shop,
-            'goods' => $goods->paginate(),
-            'categories' => $result['categories'],
-            'attrs' => $result['attrs'],
-            'searched' => $result['searched'],
-            'moreAttr' => $result['moreAttr'],
-            'get' => $gets,
-            'data' => $data
-        ]);
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+        return view('index.shop.search',
+            [
+                'shop' => $shop,
+                'goods' => $goods->paginate(),
+                'categories' => $result['categories'],
+                'attrs' => $result['attrs'],
+                'searched' => $result['searched'],
+                'moreAttr' => $result['moreAttr'],
+                'isLike' => $isLike,
+                'get' => $gets,
+                'data' => $data
+            ]);
     }
 
     /**

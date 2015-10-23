@@ -18,7 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all(['id', 'name', 'pid'])->toArray();
+        $categories = Category::select(['id', 'name', 'pid'])->with('icon')->get()->toArray();
         $categories = new Tree($categories);
         return view('admin.category.index', ['categories' => $categories]);
     }
@@ -30,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('level', '<', 3)->get([
+        $categories = Category::where('level', '<', 3)->with('icon')->get([
             'id',
             'name',
             'pid',
@@ -86,7 +86,7 @@ class CategoryController extends Controller
      */
     public function edit($category)
     {
-        $categories = Category::where('level', '<', 3)->get([
+        $categories = Category::where('level', '<', 3)->with('icon')->get([
             'id',
             'name',
             'pid',

@@ -36,10 +36,7 @@
             <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8">
                 <div class="col-sm-12 item">
                     <h1 class="pull-left login"><a>登录</a></h1>
-                    <a class="pull-right reg" href="#">注册</a>
-                </div>
-                <div class="col-sm-12 alert-item">
-                    <div class="alert alert-warning" role="alert">错误错误</div>
+                    <a class="pull-right reg" href="{{ url('auth/register') }}">注册</a>
                 </div>
                 <div class="col-sm-12 item">
                     <div class="form-group">

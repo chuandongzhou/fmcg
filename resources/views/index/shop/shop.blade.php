@@ -53,7 +53,7 @@
 
                             <div class="address-list">
                                 @foreach ($shop->deliveryArea as $area)
-                                    <span>{{ $area->area_name .$area->address }}</span>
+                                    <span>{{ $area->address_name }}</span>
                                 @endforeach
                             </div>
                         </li>

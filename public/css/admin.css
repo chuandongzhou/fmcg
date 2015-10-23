@@ -12,6 +12,9 @@
       #accordion ul li a, #accordion ul li a:hover {
         text-decoration: none; }
 
+.btn-cancel {
+  background-color: #b4b4b4; }
+
 /**********************************用户详情开始***************************************/
 .user-show {
   padding: 5px; }
@@ -74,3 +77,23 @@
     outline: 0 none; }
 
 /**********************************交易信息结束***************************************/
+/*========================登录开始 ==========================*/
+.login .loginBox {
+  width: 500px;
+  height: 230px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  margin-top: -165px; }
+
+.login .input-group {
+  width: 100%; }
+
+.login .submit {
+  width: 100%; }
+
+.login .logo {
+  margin-bottom: 50px; }
+
+/*========================登录结束 ==========================*/

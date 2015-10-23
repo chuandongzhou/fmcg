@@ -25,7 +25,7 @@
     }
     $(function () {//间隔30s自动加载一次
             getData(); //首次立即加载
-            window.setInterval(getData, 10000); //循环执行！！
+            window.setInterval(getData, 100000); //循环执行！！
         }
     );
 </script>

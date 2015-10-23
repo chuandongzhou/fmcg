@@ -54,7 +54,6 @@
                         @endforeach
 
                     </div>
-
                     <div class="form-group editor-item">
                         <label class="control-label">最底购买数 :</label>
                         <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer" type="text"
@@ -146,7 +145,7 @@
                         <input type="hidden" name="area[sly][]" value=""/>
                     </div>
                     @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border show-map">{{ $area->area_name.$area->address }}
+                        <div class="col-sm-12 fa-border">{{ $area->address_name }}
                             <span class="fa fa-times-circle pull-right close"></span>
                             <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                             <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
@@ -238,29 +237,35 @@
             $('p.brand-msg').html('');
         });
 
+        var attrDiv = $('.attr');
         $('select[name="cate_level_2"] , select[name="cate_level_3"]').change(function () {
             var categoryId = $(this).val() || $('select[name="cate_level_2"]').val();
 
-            $.get(site.api('categories/' + categoryId + '/attrs'), {
-                category_id: categoryId,
-                format: true
-            }, function (data) {
-                var html = '';
-                for (var index in data) {
-                    var options = '<option value="0">请选择</option>';
-                    html += '<p class="items-item">';
-                    html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" >';
-                    for (var i in data[index]['child']) {
-                        options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
+            if(categoryId > 0) {
+                $.get(site.api('categories/' + categoryId + '/attrs'), {
+                    category_id: categoryId,
+                    format: true
+                }, function (data) {
+                    var html = '';
+                    for (var index in data) {
+                        var options = '<option value="0">请选择</option>';
+                        html += '<p class="items-item">';
+                        html += '<label>' + data[index]['name'] + '</label>';
+                        html += ' <select name="attrs[' + data[index]['attr_id'] + ']" >';
+                        for (var i in data[index]['child']) {
+                            options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
+                        }
+                        html += options;
+                        html += '</select>';
+                        html += '</p>';
                     }
-                    html += options;
-                    html += '</select>';
-                    html += '</p>';
-                }
-                $('.attr').html(html);
-            }, 'json')
-        })
+                    attrDiv.html(html).css('border', '1px solid #b4b4b4');
+                }, 'json')
+            }else{
+                attrDiv.html('').css('border', '1px solid #fff');
+            }
+        });
+        attrDiv.children().length == 0  ? attrDiv.css('border', '1px solid #fff') : attrDiv.css('border', '1px solid #b4b4b4');
         //促销
         $('input[name="is_promotion"]').change(function () {
             var promotionInfo = $('textarea[name="promotion_info"]');
