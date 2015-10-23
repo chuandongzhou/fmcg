@@ -51,7 +51,7 @@ class Advert extends Model
      */
     public function setImageAttribute($image)
     {
-        return $this->associateFile(upload_file($image, 'temp'), 'image');
+        return $this->associateFile($this->convertToFile($image), 'image');
     }
 
     /**

@@ -8,6 +8,8 @@ namespace App\Services;
  * Date: 2015/8/17
  * Time: 17:45
  */
+
+
 class ImageUploadService
 {
 
@@ -20,7 +22,7 @@ class ImageUploadService
     }
 
     /**
-     * 格式化标签
+     * 格式化图片
      *
      * @return array
      */
@@ -31,6 +33,7 @@ class ImageUploadService
             return [];
         }
         $imagesArr = [];
+
         foreach ($array['id'] as $key => $imageId) {
             $imagesArr[] = [
                 'id' => $imageId,

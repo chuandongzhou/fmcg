@@ -25,28 +25,43 @@ class Model extends Eloquent
     }
 
     /**
+     * 将文件ID、路径、临时文件转成FileModel
+     *
+     * @param int|string|\SplFileInfo $file
+     * @return null|\App\Models\File
+     */
+    protected function convertToFile($file)
+    {
+        if (empty($file)) {
+            return null;
+        }
+
+        // 根据ID查询FileModel
+        if (is_numeric($file)) {
+            $file = File::where('id', $file)->where('fileable_id', 0)->first(['id']);
+        } else if (is_string($file)) {
+            if (!is_file($file)) {
+                $file = upload_file($file, 'temp');
+            }
+        }
+
+        return File::createWithFile($file);
+    }
+
+    /**
      * 模型关联一个文件
      *
-     * @param int|string|\App\Models\File $file
+     * @param \App\Models\File $file
      * @param string $relate
      * @param int $fileType
      * @return bool
      */
     public function associateFile($file, $relate, $fileType = 0)
     {
-        if ($file) {
-            if (is_numeric($file)) {
-                $file = File::where('id', $file)->where('fileable_id', 0)->first(['id']);
-            } else {
-                if (is_file($file)) {
-                    $file = File::createWithFile($file);
-                }
-            }
-
-            if (!$file instanceof File) {
-                $file = null;
-            }
+        if ($file && !$file instanceof File) {
+            throw new \LogicException('File must null or instance of FileModel.');
         }
+
         // 查出当前正在使用的附件
         if ($oldFile = $this->$relate) {
             if ($file && $oldFile->id == $file->id) {
@@ -74,7 +89,7 @@ class Model extends Eloquent
     /**
      * 模型关联多个文件
      *
-     * @param array $files [1] , [$path] , [['id'=>0 , 'path'=>'and.png']]
+     * @param array|\SplFileInfo $files $files [1] , [$path] , [['id'=>0 , 'path'=>'and.png']]
      * @param string $relate
      * @param int $fileType
      * @param bool $isOnly

@@ -67,7 +67,8 @@ return [
         ],
         'sort' => [
             'hot',
-            'new'
+            'new',
+            'price',
         ]
     ],
     // 交易相关

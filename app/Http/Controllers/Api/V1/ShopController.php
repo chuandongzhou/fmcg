@@ -63,6 +63,7 @@ class ShopController extends Controller
         $shopExtend['agency_contract_url'] = $shop->Agency_contract_url;
         $shopExtend['images_url'] = $shop->images_url;
         $shopExtend['delivery_area'] = $shop->deliveryArea;
+        $shopExtend['address'] = $shop->shopAddress;
 
         return $this->success(['extend' => $shopExtend]);
     }

@@ -32,7 +32,13 @@ class AuthController extends Controller
                 /*, 'type' => $type*/
             ], true)
         ) {
-            return $this->success(auth()->user()->load('shop')->toArray());
+
+            $user = auth()->user()->load('shop');
+           if(!is_null($user->shop)){
+               $user->shop->address_name = $user->shop->address;
+           }
+
+            return $this->success(['user' => $user]);
         }
         return $this->error('账号或密码错误');
     }

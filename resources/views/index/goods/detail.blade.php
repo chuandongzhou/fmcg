@@ -5,15 +5,15 @@
             <div class="col-sm-5 left-store-logo">
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
-                        @foreach($goods->images as $key =>$image)
+                        @foreach($goods->images_url as $key =>$image)
                             <li data-target="#myCarousel" data-slide-to="{{ $key }}"
                                 class="{{ $key == 0 ? 'active' : '' }}">
                         @endforeach
                     </ol>
                     <div class="carousel-inner banner">
-                        @foreach($goods->images as $key =>$image)
+                        @foreach($goods->images_url as $key =>$image)
                             <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image->url }}" alt="{{ $image->name }}">
+                                <img src="{{ $image['path'] }}" alt="{{ $image['name'] }}">
                             </div>
                         @endforeach
                     </div>

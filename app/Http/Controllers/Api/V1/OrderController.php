@@ -19,7 +19,7 @@ class OrderController extends Controller
 
     public function __construct()
     {
-        $this->userId = auth()->user()->id;
+        $this->userId = auth()->id();
     }
 
     /**
@@ -30,7 +30,7 @@ class OrderController extends Controller
     public function getListOfBuy()
     {
         $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
-            'desc')->simplePaginate()->toArray();
+            'desc')->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -295,14 +295,7 @@ class OrderController extends Controller
      */
     public function postConfirmOrder(Request $request)
     {
-        $attributes = $request->all();
-
-        $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
-        foreach ($attributes['goods_id'] as $goodsId) {
-            if ($attributes['num'][$goodsId] > 0) {
-                $orderGoodsNum[$goodsId] = $attributes['num'][$goodsId];
-            }
-        }
+        $orderGoodsNum = $request->input('num');
 
         if (empty($orderGoodsNum)) {
             return $this->error('选择的商品不能为空');
@@ -323,6 +316,20 @@ class OrderController extends Controller
         } else {
             return $this->error('确认订单失败');
         }
+    }
+
+    /**
+     * 确认订单页
+     *
+     * @return \Illuminate\View\View
+     */
+    public function getConfirmOrder()
+    {
+        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $shops = (new CartService($carts))->formatCarts();
+
+
+        return $this->success(['shops' => $shops]);
     }
 
     /**

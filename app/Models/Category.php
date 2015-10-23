@@ -46,7 +46,7 @@ class Category extends Model
      */
     public function setIconAttribute($icon)
     {
-        return $this->associateFile(upload_file($icon, 'temp'), 'icon');
+        return $this->associateFile($this->convertToFile($icon), 'icon');
     }
 
     /**

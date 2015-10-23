@@ -7,11 +7,38 @@ use App\Models\DeliveryArea;
 use App\Models\Goods;
 
 use App\Http\Requests;
+use App\Models\Images;
 use App\Services\AddressService;
+use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
 class MyGoodsController extends Controller
 {
+
+    public function index(Request $request){
+        $gets = $request->all();
+
+        $goods = auth()->user()->shop->goods()->with('images')->select([
+            'id',
+            'name',
+            'sales_volume',
+            'price_retailer',
+            'price_wholesaler',
+            'min_num_retailer',
+            'min_num_wholesaler',
+            'user_type',
+            'is_new',
+            'is_promotion',
+            'cate_level_1',
+            'cate_level_2'
+        ]);
+
+        $result = GoodsService::getGoodsBySearch($gets, $goods, false);
+        return $this->success([
+            'goods' => $result['goods']->paginate()->toArray(),
+            'categories' => $result['categories']
+        ]);
+    }
     /**
      * tore a newly created resource in storage.
      *
@@ -77,13 +104,37 @@ class MyGoodsController extends Controller
     public function shelve(Request $request, $goodsId)
     {
         $goods = Goods::find($goodsId);
-        $status =  intval($request->input('status'));
+        $status = intval($request->input('status'));
         $goods->status = $status;
-        $statusVal = cons()->valueLang('goods.status' ,$status);
+        $statusVal = cons()->valueLang('goods.status', $status);
         if ($goods->save()) {
-           return $this->success('商品' . $statusVal . '成功');
+            return $this->success('商品' . $statusVal . '成功');
         }
         return $this->error('商品' . $statusVal . '失败');
+    }
+
+    /**
+     * 获取商品图片
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getImages(Request $request)
+    {
+        $cate = array_filter($request->only('cate_level_1', 'cate_level_2', 'cate_level_3'));
+
+        if (empty($cate)) {
+            return $this->success(['goodsImage' => []]);
+        }
+
+        $attrs = $request->input('attrs');
+
+        $goodsImage = Images::where($cate);
+        if ($attrs) {
+            $goodsImage = $goodsImage->ofAttr($attrs);
+        }
+        $goodsImage = $goodsImage->get();
+        return $this->success(['goodsImage' => $goodsImage]);
     }
 
     /**

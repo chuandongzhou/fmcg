@@ -105,6 +105,16 @@
 }
 
 /**********************************交易信息结束***************************************/
+.attr{
+  padding: 15px 0 5px 5px;
+  margin: 0 15px 0 15px;
+  .items-item {
+    display: inline-block;
+    padding-right: 40px;
+    position: relative;
+  }
+}
+
 /*========================登录开始 ==========================*/
 .login {
   .loginBox {

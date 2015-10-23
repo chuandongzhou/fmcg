@@ -2,6 +2,8 @@
 @include('includes.cropper')
 @include('includes.address')
 
+@section('title' , '注册')
+
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
 @stop

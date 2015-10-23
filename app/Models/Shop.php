@@ -16,6 +16,7 @@ class Shop extends Model
         'business_license',
         'agency_contract',
         'images',
+        'mobile_images',
         'contact_person',
         'contact_info',
         'introduction',
@@ -247,7 +248,9 @@ class Shop extends Model
      */
     public function setLogoAttribute($logo)
     {
-        return $this->associateFiles((array)upload_file($logo, 'temp'), 'files', cons('shop.file_type.logo'));
+        if ($logo) {
+            return $this->associateFile($this->convertToFile($logo), 'logo', cons('shop.file_type.logo'));
+        }
     }
 
     /**
@@ -259,7 +262,7 @@ class Shop extends Model
     public function setLicenseAttribute($license)
     {
         if ($license) {
-            return $this->associateFile(upload_file($license, 'temp'), 'license', cons('shop.file_type.license'));
+            return $this->associateFile($this->convertToFile($license), 'license', cons('shop.file_type.license'));
         }
     }
 
@@ -272,7 +275,7 @@ class Shop extends Model
     public function setBusinessLicenseAttribute($license)
     {
         if ($license) {
-            return $this->associateFile(upload_file($license, 'temp'), 'businessLicense',
+            return $this->associateFile($this->convertToFile($license), 'businessLicense',
                 cons('shop.file_type.business_license'));
         }
     }
@@ -286,7 +289,7 @@ class Shop extends Model
     public function setAgencyContractAttribute($agencyContract)
     {
         if ($agencyContract) {
-            return $this->associateFile(upload_file($agencyContract, 'temp'), 'agencyContract',
+            return $this->associateFile($this->convertToFile($agencyContract), 'agencyContract',
                 cons('shop.file_type.agency_contract'));
         }
     }
@@ -294,7 +297,7 @@ class Shop extends Model
     /**
      *  设置店铺图片
      *
-     * @param $images ['id'=>['1' ,''] , 'path'=>'']
+     * @param $images ['id'=>['1' ,''] , 'path'=>['','']]
      * @return bool
      */
     public function setImagesAttribute($images)
@@ -314,6 +317,22 @@ class Shop extends Model
 
         return true;
     }
+
+    /**
+     * 手机传上来的图片
+     *
+     * @param $images
+     * @return bool
+     */
+    public function setMobileImagesAttribute($images)
+    {
+        if (!empty($images)) {
+            return $this->associateFiles($images, 'files', cons('shop.file_type.images'), false);
+        }
+
+        return true;
+    }
+
 
     /**
      * @param $address

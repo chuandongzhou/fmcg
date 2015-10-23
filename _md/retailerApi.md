@@ -43,6 +43,37 @@
 	　
 `接口返回：`
 
+#### 2.1.3 注册[post] (register)
+
+`请求参数：`
+
+	user_name                   string      账号
+	password                    string      密码
+	password_confirmation       string      确认密码
+    type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+    logo                        file        店家logo
+    name                        string      店铺名
+    contact_person              string      联系人
+    contact_info                string      联系方式
+    license                     file        营业执照
+    business_license            file        经营许可证
+    agency_contract             file        代理合同
+    address                     array       店铺地址
+
+     address 字段子集介绍
+
+        id                      int             地址id
+        province_id             int             省id
+        city_id                 int             市id
+        district_id             int             县id
+        street_id               int             街道id
+        area_name               string          省、市、县、街道名
+        address                 string          详细地址
+
+`成功返回:`
+
+`失败返回：`
+
 ### 2.2 商品模块 goods
 #### 2.2.1 获取商品栏目[get] (goods)
 `请求参数`
@@ -117,7 +148,7 @@
 `失败返回：`
 
 
-#### 2.2.3 商品详情[post] (detail/{goods_id})
+#### 2.2.4 商品详情[post] (detail/{goods_id})
 `请求参数`
 
 
@@ -175,10 +206,172 @@
 
 `失败返回：`
 
+### 2.3 我的商品 my-goods
 
-### 2.3 店铺模块 shop
+#### 2.3.1获取我的商品列表 [get] ()
+`请求参数`
 
-#### 2.3.1 获取商店栏目[get] shops
+    sort        string              排序 （name , price , new）
+    province_id int                 省id
+    city_id     int                 市id
+    district_id int                 县id
+    street_id   int                 街道id
+    name        string              商品名
+    category_id int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+    attr        array               标签数组
+    page        int                 分页
+
+`成功返回：`
+
+    goods    array   商品信息
+
+    goods字段子集说明
+
+    data     array    商品列表
+
+    data字段子集说明
+
+    id                  int         商品id
+    name                string      商品名
+    price_retailer      decimal     价格（对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    sales_volume        int         销量
+    is_new              int         是否新品（1是 , 0不是）
+    is_promotion        int         是否促销产品（1是 , 0不是）
+    is_out               int         是否缺货（1是 , 0不是）
+    image_url           string      商品图片
+    categories          array       商品的分类
+
+    categories 字段子集说明
+
+    id                  int         分类id
+    name                string      分类名
+    level               int         分类层级
+    pid                 int         父级id
+    icon_url            string      图标地址
+
+`失败返回：`
+
+
+
+#### 2.3.2 添加我的商品 [post] ()
+`请求参数：`
+
+    name                string      商品名
+    price_retailer      decimal     价格 （对于终端商）
+    min_num_retailer    int         最低购买量 （对于终端商）
+    price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+    min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+    is_new              int         是否新品（1是   0不是）
+    is_out              int         是否缺货 （1是   0不是）
+    is_change           int         是否可换货 （1是   0不是）
+    is_back             int         是否可退货 （1是   0不是）
+    is_expire           int         是否即将过期 （1是   0不是）
+    is_promotion        int         是否促销    （1是   0不是）
+    promotion_info      string      促销信息    （取当是促销时传入）
+    cate_level_1        int         第一层分类
+    cate_level_2        int         第二层分类
+    cate_level_3        int         第三层分类
+    attrs               array       标签数组
+    images              array       商品图片id数组
+    area                array       商品配送区域数组
+    introduce           string      商品图文介绍
+
+    area 字段子集介绍
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.3.3 更新我的商品 [put] ({goods_id})
+`请求参数：`
+
+    name                string      商品名
+    price_retailer      decimal     价格 （对于终端商）
+    min_num_retailer    int         最低购买量 （对于终端商）
+    price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+    min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+    is_new              int         是否新品（1是   0不是）
+    is_out              int         是否缺货 （1是   0不是）
+    is_change           int         是否可换货 （1是   0不是）
+    is_back             int         是否可退货 （1是   0不是）
+    is_expire           int         是否即将过期 （1是   0不是）
+    is_promotion        int         是否促销    （1是   0不是）
+    promotion_info      string      促销信息    （取当是促销时传入）
+    cate_level_1        int         第一层分类
+    cate_level_2        int         第二层分类
+    cate_level_3        int         第三层分类
+    attrs               array       标签数组
+    images              array       商品图片id数组
+    area                array       商品配送区域数组
+    introduce           string      商品图文介绍
+
+    area 字段子集介绍
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.3.4  商品上下架 [put] (shelve/{goods_id})
+`请求参数：`
+
+    status                  int         上下架状态 {1 上架   0下架}
+
+`成功返回：`
+
+#### 2.3.5 删除我的商品 [delete] ({goods_id})
+`请求参数：`
+
+`成功返回：`
+
+
+
+#### 2.3.6 获取商品图库 [get] （images）
+`请求参数：`
+
+    cate_level_1        int         第一层分类
+    cate_level_2        int         第二层分类
+    cate_level_3        int         第三层分类
+    attrs               array       标签数组
+
+`成功返回：`
+
+    goodsImages         array       商品图片列表
+
+    goodsImages 字段说明
+
+    cate_level_1        int         第一层分类
+    cate_level_2        int         第二层分类
+    cate_level_3        int         第三层分类
+    id                  int         图库id
+    image_url           string      图片地址
+
+`失败返回：`
+
+
+### 2.4 店铺模块 shop
+
+#### 2.4.1 获取商店栏目[get] shops
+`请求参数：`
+
 
 `成功返回：`
 
@@ -221,7 +414,7 @@
     name                string      图片名
     path                string      图片路径
 
-#### 2.3.3 店铺商品[get]   ({shop_id}/goods)
+#### 2.4.3 店铺商品[get]   ({shop_id}/goods)
 `请求参数：`
 
     page                int         分页
@@ -247,16 +440,17 @@
     name                string      图片名
     path                string      图片地址
 
-#### 2.3.4 店铺扩展信息[get]   ({shop_id}/extend)
+#### 2.4.3 店铺扩展信息[get]   ({shop_id}/extend)
 `请求参数：`
 
 `成功返回：`
 
     license_url             string          营业执照地址
-    business_license_url    string          商品经营许可证地址
+    business_license_url    string          店铺经营许可证地址
     agency_contract_url     string          代理合同地址
     images_url              array           店铺图片地址
     delivery_area           array           配送区域列表
+    address                 array           店铺地址
 
     images_url 字段子集介绍
 
@@ -273,9 +467,64 @@
     area_name               string          省、市、县、街道名
     address                 string          详细地址
 
+     address 字段子集介绍
 
-### 2.4 分类 categories
-#### 2.4.1 获取所有分类[post] (all)
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+
+
+#### 2.4.4 店铺修改[put] (personal/shop/{shop_id})
+`请求参数：`
+
+    logo                    string/file         店铺logo
+    name                    string              店铺名
+    contact_person          string              联系人
+    contact_info            string              联系方式
+    min_money               decimal             最低配送额
+    introduction            string              店铺介绍
+    license                 string/file         营业执照
+    business_license        string/file         经营许可证
+    agency_contract         string/file         代理合同
+    images                  array               商品图片列表(店铺已拥有)
+    mobile_images           array               新增图片数组
+    address                 array               地址
+    area                    array               配送区域列表
+
+    images  字段说明
+
+    id                      array               图片id列表 (新添加图片id应为 '')
+    path                    array               图片地址列表
+    name                    array               图片名列表
+
+    address 字段说明
+
+    province_id             int                 省id
+    city_id                 int                 市id
+    district_id             int                 县id
+    street_id               int                 街道id
+    address                 string              详细地址
+
+    area 字段说明
+
+    id                      array               配送地址id列表(新添加地址id应为 '')
+    province_id             array               省id列表
+    city_id                 array               市id列表
+    district_id             array               县id列表
+    street_id               array               街道id列表
+    area_name               array               省名+市名+县名+街道名  列表
+    address                 array               详细地址列表
+
+`成功返回：`
+
+`失败返回：`
+
+### 2.5 分类 categories
+#### 2.5.1 获取所有分类[post] (all)
 `请求参数：`
 
 `成功返回：`
@@ -295,16 +544,16 @@
     format              bool        是否格式化标签  (非必须参数)
 
 `成功返回：`
-	
-	attr_id              int         标签id
-    name                 string      标签名
-    pid                  int         父级id
-    child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
+
+   attr_id              int         标签id
+   name                 string      标签名
+   pid                  int         父级id
+   child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
 
 `失败返回：`
 
-### 2.5 购物车 cart
-#### 2.5.1 查看购物车[get] (index)
+### 2.6 购物车 cart
+#### 2.6.1 查看购物车[post] (index)
 `请求参数：`
 
 `成功返回：`
@@ -336,7 +585,7 @@
 
 `失败返回：`
 
-#### 2.5.2 加入购物车[post] (add/{goodsId})
+#### 2.6.2 加入购物车[post] (add/{goodsId})
 `请求参数：`
 
     num                 int         购买数量
@@ -345,7 +594,7 @@
 
 `失败返回`
 
-#### 2.5.3 删除购物车[delete] (delete/{cartId})
+#### 2.6.3 删除购物车[delete] (delete/{cartId})
 `请求参数：`
 
 
@@ -353,8 +602,8 @@
 
 `失败返回`
 
-### 2.6 订单 order
-#### 2.6.1 订单订单[post] (confirm-order)
+### 2.7 订单 order
+#### 2.7.1 确认订单[post] (confirm-order)
 `请求参数：`
 
     num                 array       购买的商品和数量 （key=>value形式    key为商品id   value 为购买数量）
@@ -398,7 +647,7 @@
             price_retailer      decimal     价格（对于终端商）
             price_wholesaler    decimal     价格（对于批发商）
 
-     shipping_address    子字段说明
+     shippingAddress    子字段说明
 
      id                 int         收货地址id
      consigner          string      收货人
@@ -436,7 +685,7 @@
 `失败返回`
 
 
-#### 2.6.4 买家获取订单列表[get] (list-of-buy)
+#### 2.7.4 买家获取订单列表[get] (list-of-buy)
 `请求参数：`
 
     page                int         分页
@@ -484,8 +733,7 @@
 	
 `失败返回`
 
-
-#### 2.6.5 买家待付款订单列表[get] (non-payment)(仅显示在线支付订单)
+#### 2.7.5 待付款订单列表[get] (non-payment)()
 `请求参数：`
 
 	page 				int			分页
@@ -496,8 +744,7 @@
 
 `失败返回`
 
-
-#### 2.6.6 买家待收货订单列表[get] (non-arrived)
+#### 2.7.6 待确认订单列表[get] (non-sure-of-buy)
 `请求参数：`
 
 	page 				int			分页
@@ -508,17 +755,18 @@
 
 `失败返回`
 
-#### 2.6.7 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)
+#### 2.7.7 待收货订单列表[get] (non-arrived)
 `请求参数：`
 
-	order_id  				array		订单id
+	page 				int			分页
 
 `成功返回：`
+	
+	返回信息同上
 
+`失败返回`
 
-`失败返回：`
-
-#### 2.6.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)
+#### 2.7.8 订单详情[get] (detail-of-buy)
 `请求参数：`
 
 	order_id			int			订单号
@@ -561,7 +809,7 @@
 `失败返回`
 
 
-#### 2.6.9 卖家获取订单列表[get] (list-of-sell)
+#### 2.7.9 卖家获取订单列表[get] (list-of-sell)
 `请求参数：`
 
     page                int         分页
@@ -695,7 +943,7 @@
 
 `失败返回：`
 
-#### 2.6.15 买家/卖家批量取消订单[put] (cancel-sure)
+#### 2.7.10 批量确认订单完成[put] (batch-finish)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -705,9 +953,21 @@
 
 `失败返回：`
 
+### 2.8 收藏 like
 
-### 2.7 收藏 like
-#### 2.7.1 商店收藏[post] (shops)
+#### 2.8.1 收藏 [put] (interests)
+`请求参数：`
+
+    status              int         收藏状态 （0 取消收藏 1 加入收藏）
+    type                string      收藏类型 （'shops' 商店   'goods' 商品）
+    id                  int         要收藏的id
+
+`成功返回：`
+
+
+`失败返回：`
+
+#### 2.8.2 商店收藏[post] (shops)
 `请求参数：`
 
     province_id         int         省id
@@ -729,7 +989,7 @@
 
 `失败返回`
 
-#### 2.7.2 商品收藏[post] (goods)
+#### 2.8.3 商品收藏[post] (goods)
 `请求参数：`
 
     province_id         int         省id
@@ -757,6 +1017,112 @@
     id                  int         分类id
     name                string      分类名
     level               string      分类层级
+
+`失败返回：`
+
+
+### 2.9 收货地址[personal/shipping-address]
+
+#### 2.9.1 获取收货地址列表[get] (index)
+
+`请求参数：`
+
+`成功返回：`
+
+    shoppingAddress     array       收货地址列表
+
+    shoppingAddress 字段子集介绍
+
+    id                 int         收货地址id
+    consigner          string      收货人
+    phone              string      手机号码
+    is_default         int         是否默认
+    user_id            int         用户id
+    address            array       地址详情
+
+    address    子字段说明
+
+    id                 int         地址id
+    province_id        int         省id
+    city_id            int         市id
+    district_id        int         县id
+    street_id          int         街道id
+    area_name          string      区域名
+    address            string      详细地址
+
+`失败返回：`
+
+#### 2.9.2 获取收货地址详情[get] ({id})
+
+`请求参数：`
+
+`成功返回：`
+
+    id                 int         收货地址id
+    consigner          string      收货人
+    phone              string      手机号码
+    is_default         int         是否默认
+    user_id            int         用户id
+    address            array       地址详情
+
+    address    子字段说明
+
+    id                 int         地址id
+    province_id        int         省id
+    city_id            int         市id
+    district_id        int         县id
+    street_id          int         街道id
+    area_name          string      区域名
+    address            string      详细地址
+
+#### 2.9.3 添加收货地址 [post] (index)
+`请求参数：`
+
+    consigner           string      收货人
+    phone               string      联系电话
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street_id           int         街道id
+    area_name           string      省名+市名+县名+街道名
+    address             string      详细地址
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.9.4 设置默认地址 [put] (shipping-address-default/{id})
+
+`请求参数：`
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.9.5  删除收货地址 [delete] ({id})
+
+`请求参数：`
+
+`成功返回：`
+
+`失败返回：`
+
+### 2.10  修改密码（personal/password）
+
+####2.10.1 修改密码[put] ()
+
+`请求参数：`
+
+    old_password            string          原密码
+    password                string          新密码
+    password_confirmation   string          确认新密码
+
+`成功返回：`
+
+`失败返回：`
+
+
+
 
 `失败返回:`
 

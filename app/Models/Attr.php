@@ -29,4 +29,9 @@ class Attr extends Model
     {
         return $this->belongsToMany('App\Models\Goods', 'attr_goods', 'attr_id');
     }
+
+    public function images()
+    {
+        return $this->belongsToMany('App\Models\images');
+    }
 }

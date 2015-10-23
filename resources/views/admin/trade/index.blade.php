@@ -8,7 +8,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="order_num" name="order_num" placeholder="请输入订单号"
-                       value="{{ isset($order_num) ? $order_num : '' }}">
+                       value="{{ $order_id or '' }}">
             </div>
         </div>
 
@@ -16,7 +16,7 @@
             <label for="trade_num" class="col-sm-2 control-label">交易号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{ isset($trade_num) ? $trade_num : '' }}" class="form-control" id="trade_num"
+                <input type="text" value="{{  $trade_no or  '' }}" class="form-control" id="trade_num"
                        name="trade_num" placeholder="请输入交易号">
             </div>
         </div>
@@ -81,9 +81,9 @@
                     <td>{{ cons()->valueLang('trade.type' ,$trade->type) }}</td>
                     <td>{{ cons()->valueLang('trade.pay_type' ,$trade->pay_type) }}</td>
                     <td>{{ $trade->account }}</td>
-                    <td>{{ $trade->order_num }}</td>
-                    <td>{{ $trade->trade_num }}</td>
-                    <td>{{ cons()->valueLang('trade.pay_status' ,$trade->pay_status) }}</td>
+                    <td>{{ $trade->order_id }}</td>
+                    <td>{{ $trade->trade_no }}</td>
+                    <td>{{ cons()->valueLang('order.pay_status' ,$trade->pay_status) }}</td>
                     <td>{{ $trade->amount }}</td>
                     <td>{{ cons()->valueLang('trade.trade_currency' ,$trade->trade_currency) }}</td>
                     <td>{{ $trade->callback_type }}</td>

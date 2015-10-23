@@ -192,7 +192,10 @@ class AttrController extends Controller
      */
     public function destroy($id)
     {
-        $attr = Attr::find($id);
+        $attr = Attr::whereId(6250)->first();
+        if (is_null($attr)) {
+            return $this->error('标签不存在');
+        }
         //判断有没有子分类
         $childNode = Attr::where(['category_id' => $attr->category_id, 'pid' => $id])->first();
         if (!empty($childNode)) {

@@ -80,9 +80,9 @@
                         var options = '';
                         html += '<label class="control-label col-sm-1">' + data[index]['name'] + '</label>';
                         html += '<div class="col-sm-2">';
-                        html += ' <select name="attrs[' + data[index]['id'] + ']" class="form-control">';
+                        html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="form-control">';
                         for (var i in data[index]['child']) {
-                            options += ' <option value="' + data[index]['child'][i]['id'] + '">' + data[index]['child'][i]['name'] + '</option>'
+                            options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                         }
                         html += options;
                         html += '</select>'

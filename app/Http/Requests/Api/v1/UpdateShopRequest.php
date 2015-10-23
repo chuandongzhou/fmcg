@@ -19,6 +19,7 @@ class UpdateShopRequest extends Request
             'name' => 'required|unique:shop,name,' . $shop->id,
             'contact_person' => 'required|max:10',
             'contact_info' => 'required',
+            'min_money'=>'required',
             'introduction' => 'max:200',
             'address' => 'required|max:60',
             'area' => 'sometimes|required|max:200',

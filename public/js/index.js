@@ -408,8 +408,6 @@ function selectedFunc() {
             minNum = obj.data('minNum'),
             descButton = obj.siblings('.desc-num'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
-        ;
-        ;
         if (obj.val() <= minNum) {
             descButton.prop('disabled', true);
         } else {
@@ -574,6 +572,7 @@ function displayList() {
             $(this).children('span').text('更多').siblings('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
         }
     })
+}
 
 }
 
@@ -828,4 +827,74 @@ function getShopAddressMap(lng,lat){
 
         }
     });
+}
+/**
+ * 添加商品处理
+ */
+function addGoodsFunc(cate1 , cate2, cate3) {
+    var checkedLimit = 5, goodsImgsWrap = $('.goods-imgs');
+   function loadImg(cate1 , cate2, cate3) {
+        var cate1 = cate1||  $('select[name="cate_level_1"]').val();
+        var cate2 = cate2||  $('select[name="cate_level_2"]').val();
+        var cate3 = cate3||  $('select[name="cate_level_3"]').val();
+
+        var attrs = $('.attrs');
+        var array = new Array(); //定义数组
+        attrs.each(function () {
+            var val = $(this).val();
+            if (val > 0)
+                array.push(val);
+        });
+        var data = {
+            'cate_level_1': cate1,
+            'cate_level_2': cate2,
+            'cate_level_3': cate3,
+            'attrs': array
+        };
+        $.get(site.api('my-goods/images'), data, function (data) {
+            var html = '', goodsImage = data['goodsImage'], imageBox = $('.load-img-wrap');
+            for (var index in goodsImage) {
+                html += '<div class="thumbnail col-xs-3 img-' + goodsImage[index]['id'] + '">';
+                html += '   <img alt="" src="' + goodsImage[index]['image_url'] + '" data-id="' + goodsImage[index]['id'] + '">';
+                html += '</div>';
+            }
+
+            imageBox.html(html);
+        }, 'json');
+    }
+    $('.load-img-wrap').on('click', '.thumbnail', function () {
+
+        if (goodsImgsWrap.children('.thumbnail').length >= checkedLimit) {
+            return false;
+        }
+        var obj = $(this).children('img'), imgSrc = obj.attr('src'), imgId = obj.data('id');
+        var str = '<div class="thumbnail col-xs-3">';
+        str += '<button aria-label="Close" class="close" type="button">';
+        str += '    <span aria-hidden="true">×</span>';
+        str += '</button>';
+        str += '<img alt="" src="' + imgSrc + '">';
+        str += '<input type="hidden" value="' + imgId + '" name="images[]">';
+        str += '</div>';
+        goodsImgsWrap.append(str);
+        $(this).addClass('hidden');
+    });
+    goodsImgsWrap.on('click', '.close', function () {
+        var parents = $(this).closest('.thumbnail'), imageId = parents.find('input:hidden').val();
+        parents.fadeOut(500, function () {
+            $(this).remove();
+            $('.img-' + imageId).removeClass('hidden');
+        })
+    })
+    $('select.categories').change(function () {
+        loadImg()
+    });
+    $('.attr').on('change' , '.attrs' , function () {
+        loadImg()
+    });
+    //促销
+    $('input[name="is_promotion"]').change(function () {
+        var promotionInfo = $('textarea[name="promotion_info"]');
+        $(this).val() == 1 ? promotionInfo.prop('disabled', false) : promotionInfo.prop('disabled', true);
+    });
+    loadImg(cate1 , cate2, cate3);
 }

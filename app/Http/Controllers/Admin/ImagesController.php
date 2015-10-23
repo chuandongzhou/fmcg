@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
-use App\Models\GoodsImages;
+use App\Models\Images;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class GoodsImagesController extends Controller
+class ImagesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,18 +27,23 @@ class GoodsImagesController extends Controller
             })->get()->toArray();
         $attrResults = (new AttrService($attrResults))->format();*/
         // TODO 以上代码可能会用到
-        $data = array_filter($request->all());
-        if ($data) {
-            if (isset($data['attrs'])) {
-                $data['attrs'] = json_encode($data['attrs']);
-            }
+        $cate = array_filter($request->only('cate_level_1', 'cate_level_2', 'cate_level_3'));
+        $attrs = $request->input('attrs');
 
-        } else {
-            $data['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
+        if ($cate) {
+            $goodsImage = Images::where($cate);
+            $attrs = array_filter($attrs);
+            if($attrs){
+                $goodsImage = $goodsImage->ofAttr($attrs);
+            }
+            $goodsImage = $goodsImage->paginate();
+        }
+        else {
+            $cate['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
+            $goodsImage =  Images::where('cate_level_1' , $cate['cate_level_1'])->paginate();
         }
 
-        $goodsImage = GoodsImages::where($data)->with('image')->get();
-        return view('admin.images.index', ['search' => $data, 'goodsImage' => $goodsImage]);
+        return view('admin.images.index', ['search' => $cate, 'goodsImage' => $goodsImage]);
     }
 
     /**
@@ -60,9 +65,13 @@ class GoodsImagesController extends Controller
      */
     public function store(Requests\Admin\CreateGoodsImagesRequest $request)
     {
-        $post = $request->all();
+        $attributes = $request->except('attrs');
 
-        if (GoodsImages::create($post)->exists) {
+        $images = Images::create($attributes);
+        if ($images->exists) {
+            $attrs = $request->input('attrs');
+            $images->attrs()->detach();
+            $images->attrs()->sync($attrs);
             return $this->success('添加图片成功');
         }
 
@@ -111,7 +120,7 @@ class GoodsImagesController extends Controller
      */
     public function destroy($id)
     {
-        $goodsImage = GoodsImages::find($id);
+        $goodsImage = Images::find($id);
         if ($goodsImage->delete()) {
             return $this->success('删除图片成功');
         }

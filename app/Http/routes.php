@@ -11,7 +11,7 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
 /**
  * 前台
  */
-$router->group(['namespace' => 'Index' ,'middleware' => 'auth'], function ($router) {
+$router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
@@ -70,7 +70,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->post('attr/save', 'AttrController@save');             //绑定标签到分类
     $router->resource('attr', 'AttrController');                    //标签管理
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
-    $router->resource('images', 'GoodsImagesController');                    //商品图片管理
+    $router->resource('images', 'ImagesController');                    //商品图片管理
     $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
     $router->controller('system-trade', 'SystemTradeInfoController');        //系统交易信息
     $router->controller('feedback', 'FeedbackController');             //反馈管理
@@ -79,6 +79,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
     $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
+    $router->resource('column', 'HomeColumnController');    //首页栏目
 });
 
 
@@ -110,24 +111,24 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');;                   //店铺商品
 
 
-
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
 
-        $router->post('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
+        $router->put('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
+        $router->get('my-goods/images', 'MyGoodsController@getImages');
         $router->resource('my-goods', 'MyGoodsController');
+
 
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
-            $router->put('password', 'PasswordController@password');          //修改密码
+            $router->post('password', 'PasswordController@password');          //修改密码
             $router->post('bank-default/{bank}', 'UserBankController@bankDefault');
             $router->resource('bank', 'UserBankController', ['only' => ['store', 'update', 'destroy']]);          //提现账号
-            $router->post('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');
-            $router->resource('shipping-address', 'ShippingAddressController',
-                ['only' => ['store', 'update', 'destroy']]);          //收货地址
+            $router->put('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');
+            $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['index','store', 'update', 'destroy']]);          //提现账号

@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm-3 col-sm-push-8 text-right btn-list">
                 <a href="{{ url('my-goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>
-                <a data-url="{{ url('api/v1/my-goods/shelve/' . $goods->id) }}" data-method="post"
+                <a data-url="{{ url('api/v1/my-goods/shelve/' . $goods->id) }}" data-method="put"
                    data-data='{ "status": "{{ !$goods->status }}" }' class="btn btn-info no-form ajax"
                    data-done-then="refresh">{{ cons()->valueLang('goods.status' , !$goods->status) }}</a>
                 <a class="btn btn-remove delete no-form ajax" data-method="delete"

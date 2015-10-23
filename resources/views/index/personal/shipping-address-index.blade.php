@@ -72,7 +72,7 @@
                             <td>
                                 <a class="btn btn-primary ajax"
                                    data-url="{{ url('api/v1/personal/shipping-address-default/'.$address['id']) }}"
-                                   data-method="post">
+                                   data-method="put">
                                     设置为默认
                                 </a>
                                 <a href="{{ url('personal/shipping-address/' . $address['id'] . '/edit') }}"

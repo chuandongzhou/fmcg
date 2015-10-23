@@ -26,36 +26,9 @@
                         @endif
                     </div>
 
+
                     <div class="form-group editor-item">
-                        <p class="items-item">
-                            <label class="control-label">分类 :</label>
-                            <select name="cate_level_1">
-
-                            </select>
-                            <select name="cate_level_2">
-
-                            </select>
-                            <select name="cate_level_3">
-
-                            </select>
-                        </p>
-                    </div>
-                    <div class="form-group editor-item attr">
-                        @foreach($attrs as $key=>$attr)
-                            <p class="items-item">
-                                <label>{{ $attr['name'] }}</label>
-                                <select name="attrs[{{ $attr['attr_id'] }}]">
-                                    <option value="0">请选择</option>
-                                    @foreach($attr['child'] as $child)
-                                        <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </p>
-                        @endforeach
-
-                    </div>
-                    <div class="form-group editor-item">
-                        <label class="control-label">最底购买数 :</label>
+                        <label class="control-label">最低购买数 :</label>
                         <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer" type="text"
                                required>
                         <span>(整数)</span>
@@ -161,7 +134,54 @@
                             <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
                         </div>
                     @endforeach
+                </div>
+                <div class="form-group col-sm-12" style="margin-left: 0;">
+                        <label class="control-label">分类 :</label>
+                        <select name="cate_level_1" class="categories"></select>
+                        <select name="cate_level_2" class="categories"> </select>
+                        <select name="cate_level_3" class="categories"></select>
+                </div>
+                <div class="form-group editor-item attr col-sm-12">
+                    @foreach($attrs as $key=>$attr)
+                        <p class="items-item">
+                            <label>{{ $attr['name'] }}</label>
+                            <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
+                                <option value="0">请选择</option>
+                                @foreach($attr['child'] as $child)
+                                    <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </p>
+                    @endforeach
+                </div>
 
+                <div class="col-sm-12 map">
+                    <div class="upload-img">
+                        <label>商品图片 :</label>
+                    </div>
+                    <div class="goods-imgs">
+                        @foreach($goods->images as $image)
+                            <div class="thumbnail col-xs-3">
+                                <button aria-label="Close" class="close" type="button">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <img alt="" src="{{ $image->image_url }}">
+                                <input type="hidden" value="{{ $image->id }}" name="images[]">
+
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="col-sm-12 map">
+                    <div class="upload-img">
+                        <label>选择图片 :</label>
+                        {{--<button id="refresh-images" type="button" class="btn btn-primary">--}}
+                        {{--点击刷新图片--}}
+                        {{--</button>--}}
+                    </div>
+                    <div class="load-img-wrap">
+
+                    </div>
                 </div>
                 <div class="col-sm-12 map">
                     <p><label>地图标识 :</label></p>
@@ -170,37 +190,6 @@
                         {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
                     {{--</p>--}}
                     <div id="map"></div>
-                </div>
-                <div class="col-sm-12 map">
-                    <label>商品图片 :</label>
-                    <button id="pic-upload" type="button" class="btn btn-primary" data-loading-text="图片已达到最大数量"
-                            data-toggle="modal" data-target="#cropperModal" data-width="200" data-height="200">
-                        请选择图片文件(200x200)
-                    </button>
-
-                    <div class="col-sm-10">
-                        <div class="row pictures">
-                            <div class="hidden">
-                                <input type="hidden" name="images[id][]" value="">
-                                <input type="hidden" name="images[path][]" value="">
-                                <input type="text" class="form-control input-sm" name="images[name][]" value="">
-                            </div>
-                            @foreach($goods->images as $image)
-                                <div class="col-xs-3">
-                                    <div class="thumbnail">
-                                        <button aria-label="Close" class="close" type="button"><span
-                                                    aria-hidden="true">×</span>
-                                        </button>
-                                        <img alt="" src="{{ $image->url  }}">
-                                        <input type="hidden" value="{{ $image->id }}" name="images[id][]">
-                                        <input type="hidden" value="{{ $image->path }}" name="images[path][]">
-                                        <input type="text" value="{{ $image->name }}" name="images[name][]"
-                                               class="form-control input-sm">
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
                 </div>
                 <div class="col-sm-12 graphic-wrap">
                     <p><label>商品图文介绍 :</label></p>
@@ -220,6 +209,7 @@
             getCoordinateMap({!! $coordinates or '' !!});
         });
 
+
         //上传图片处理
         picFunc();
         //获取下级分类
@@ -232,44 +222,12 @@
                 '{{ $goods->cate_level_3 }}'
         );
 
-        //获取标签
-        $('select[name="cate_level_1"]').change(function () {
-            $('p.brand-msg').html('');
-        });
+        //获取分类
+        getAttr();
 
-        var attrDiv = $('.attr');
-        $('select[name="cate_level_2"] , select[name="cate_level_3"]').change(function () {
-            var categoryId = $(this).val() || $('select[name="cate_level_2"]').val();
+        addGoodsFunc( '{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}' );
 
-            if(categoryId > 0) {
-                $.get(site.api('categories/' + categoryId + '/attrs'), {
-                    category_id: categoryId,
-                    format: true
-                }, function (data) {
-                    var html = '';
-                    for (var index in data) {
-                        var options = '<option value="0">请选择</option>';
-                        html += '<p class="items-item">';
-                        html += '<label>' + data[index]['name'] + '</label>';
-                        html += ' <select name="attrs[' + data[index]['attr_id'] + ']" >';
-                        for (var i in data[index]['child']) {
-                            options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
-                        }
-                        html += options;
-                        html += '</select>';
-                        html += '</p>';
-                    }
-                    attrDiv.html(html).css('border', '1px solid #b4b4b4');
-                }, 'json')
-            }else{
-                attrDiv.html('').css('border', '1px solid #fff');
-            }
-        });
-        attrDiv.children().length == 0  ? attrDiv.css('border', '1px solid #fff') : attrDiv.css('border', '1px solid #b4b4b4');
-        //促销
-        $('input[name="is_promotion"]').change(function () {
-            var promotionInfo = $('textarea[name="promotion_info"]');
-            $(this).val() == 1 ? promotionInfo.prop('disabled', false) : promotionInfo.prop('disabled', true);
-        })
+
+
     </script>
 @stop

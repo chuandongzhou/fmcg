@@ -50,7 +50,7 @@ class File extends Model
      */
     protected $dates = ['uploaded_at'];
 
-    public $hidden = ['fileable_id' , 'fileable_type'];
+    public $hidden = ['fileable_id', 'fileable_type'];
 
     /**
      * 复用模型关系
@@ -130,8 +130,10 @@ class File extends Model
         }
 
         $uploadFilePath = config('path.upload_file');
+
         // 根据当前日期生成目录
         $date = date('Y/m/d/');
+
         $size = $file->getSize();
         if (!($ext = $file->guessExtension())) {
             $ext = $file->getExtension();

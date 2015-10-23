@@ -78,13 +78,7 @@ class OrderController extends Controller
      */
     public function postConfirmOrder(Request $request)
     {
-        $attributes = $request->all();
-        $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
-        foreach ($attributes['goods_id'] as $goodsId) {
-            if ($attributes['num'][$goodsId] > 0) {
-                $orderGoodsNum[$goodsId] = $attributes['num'][$goodsId];
-            }
-        }
+        $orderGoodsNum = $request->input('num');
 
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();

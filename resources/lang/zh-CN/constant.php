@@ -132,7 +132,7 @@ return [
     'sort' => [
         'goods' => [
             'hot' => '热门',
-            'price_retail' => '价格',
+            'price' => '价格',
             'new' => '最新'
         ],
         'shop' => [

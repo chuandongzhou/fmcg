@@ -69,7 +69,7 @@
                                 </h4>
                             </div>
                             <div id="collapse-two"
-                                 class="panel-collapse collapse {{ path_active(['admin/user/create' , 'user'] , 'in') }}">
+                                 class="panel-collapse collapse {{ path_active(['admin/user/create' , 'admin/user/*' , 'admin/user', 'admin/shop/*'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('/admin/user/create?type=wholesaler')  }}">批发商添加</a> <a
@@ -118,8 +118,8 @@
                                 </h4>
                             </div>
                             <div id="collapse-four" class="panel-collapse collapse
-                            {{ path_active([ 'admin/advert-index/create', 'admin/advert-index', 'admin/advert-user/create',
-                                'admin/advert-user', 'admin/advert-app/create', 'admin/advert-app' ], 'in') }}">
+                            {{ path_active([ 'admin/advert-index/*', 'admin/advert-index', 'admin/advert-user/*',
+                                'admin/advert-user', 'admin/advert-app/*', 'admin/advert-app' ], 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/advert-index/create') }}">首页广告添加</a>

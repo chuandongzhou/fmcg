@@ -628,7 +628,7 @@ var getAllCategory = function (url, level1, level2, level3) {
         var level1Info = data.level1;
         var level2Info = data.level2;
         var level3Info = data.level3;
-        addOption(level1Info, $('select[name="cate_level_1"]'), level1);
+        addOption(level1Info, $('select[name="cate_level_1"]'), level1, '<option value="">请选择</option>');
         addOption(level2Info, $('select[name="cate_level_2"]'), level2, '<option value="">请选择</option>');
         addOption(level3Info, $('select[name="cate_level_3"]'), level3, '<option value="">请选择</option>');
     }, 'json');
@@ -761,6 +761,46 @@ function picFunc() {
 
         changeUploadButtonStatus();
     });
+}
+
+/**
+ * 获取标签
+ */
+function getAttr(){
+    //获取标签
+    $('select[name="cate_level_1"]').change(function () {
+        $('div.attr').html('');
+    });
+
+    var attrDiv = $('.attr');
+    $('select[name="cate_level_2"] , select[name="cate_level_3"]').change(function () {
+        var categoryId = $(this).val() || $('select[name="cate_level_2"]').val();
+
+        if (categoryId > 0) {
+            $.get(site.api('categories/' + categoryId + '/attrs'), {
+                category_id: categoryId,
+                format: true
+            }, function (data) {
+                var html = '';
+                for (var index in data) {
+                    var options = '<option value="0">请选择</option>';
+                    html += '<p class="items-item">';
+                    html += '<label>' + data[index]['name'] + '</label>';
+                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="attrs" >';
+                    for (var i in data[index]['child']) {
+                        options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
+                    }
+                    html += options;
+                    html += '</select>';
+                    html += '</p>';
+                }
+                attrDiv.html(html).css('border', '1px solid #b4b4b4');
+            }, 'json')
+        } else {
+            attrDiv.html('').css('border', '1px solid #fff');
+        }
+    });
+    attrDiv.children().length == 0 ? attrDiv.css('border', '1px solid #fff') : attrDiv.css('border', '1px solid #b4b4b4');
 }
 
 

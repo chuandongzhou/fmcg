@@ -10,6 +10,29 @@ use Gate;
 
 class ShippingAddressController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+    }
+
+    /**
+     * 收货地址首页
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $shippingAddress = $this->user->shippingAddress()->with('address')->orderBy('is_default', 'desc')->get(); //商店详情
+
+        return $this->success(['shippingAddress' => $shippingAddress]);
+    }
+
+    public function show($address){
+        $address->load('address');
+        return $this->success(['shippingAddress' => $address]);
+    }
 
     /**
      * 设置默认
@@ -72,12 +95,12 @@ class ShippingAddressController extends Controller
         if ($address->fill($request->all())->save()) {
             $address->address->fill(
                 [
-                    'province_id'=> $attributes['province_id'],
+                    'province_id' => $attributes['province_id'],
                     'city_id' => $attributes['city_id'],
                     'district_id' => $attributes['district_id'],
                     'street_id' => $attributes['street_id'],
                     'area_name' => $attributes['area_name'],
-                    'address' =>  $attributes['address']
+                    'address' => $attributes['address']
                 ])->save();
             return $this->success('保存收货地址成功');
         }

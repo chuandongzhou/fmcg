@@ -71,8 +71,7 @@ class MyGoodsController extends Controller
     {
         $firstCategory = Category::where('pid', 0)->pluck('id');
         $goods = new Goods;
-        $goods->cate_level_1 = $firstCategory;
-
+       // $goods->cate_level_1 = $firstCategory;
         return view('index.my-goods.goods', ['goods' => $goods, 'attrs' => []]);
     }
 
@@ -124,6 +123,7 @@ class MyGoodsController extends Controller
         $coordinates = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
+
 
         return view('index.my-goods.goods', [
             'goods' => $goods,

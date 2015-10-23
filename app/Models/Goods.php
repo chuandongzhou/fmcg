@@ -36,7 +36,7 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['images_url' ,'image_url'];
+    public $appends = ['images_url', 'image_url'];
 
     protected $hidden = [
         'images',
@@ -104,7 +104,7 @@ class Goods extends Model
      */
     public function images()
     {
-        return $this->morphMany('App\Models\File', 'fileable');
+        return $this->belongsToMany('App\Models\Images');
     }
 
     /**
@@ -282,7 +282,9 @@ class Goods extends Model
      */
     public function setImagesAttribute($images)
     {
-        //格式化图片数组
+        $this->images()->detach();
+        $this->images()->sync($images);
+        /*//格式化图片数组
         $imagesArr = (new ImageUploadService($images))->formatImagePost();
         //删除的图片
         $files = $this->images();
@@ -293,7 +295,7 @@ class Goods extends Model
 
         if (!empty($imagesArr)) {
             return $this->associateFiles($imagesArr, 'images', 0, false);
-        }
+        }*/
 
         return true;
     }
@@ -329,8 +331,7 @@ class Goods extends Model
     public function getImageUrlAttribute()
     {
         $image = $this->images->first();
-
-        return $image ? $image->url : '';
+        return $image ? $image->image_url : '';
     }
 
     /**
@@ -341,8 +342,8 @@ class Goods extends Model
         $images = $this->images ? $this->images : [];
         $result = [];
         foreach ($images as $key => $image) {
-            $result[$key]['name'] = $image['name'];
-            $result[$key]['path'] = $image->url;
+            $result[$key]['name'] = $image->image->name;
+            $result[$key]['path'] = $image->image_url;
         }
         return $result;
     }
@@ -356,6 +357,4 @@ class Goods extends Model
     {
         return $this->cate_level_3 ? $this->cate_level_3 : ($this->cate_level_2 ? $this->cate_level_2 : $this->cate_level_1);
     }
-
-
 }

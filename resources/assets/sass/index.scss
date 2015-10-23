@@ -897,9 +897,27 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
 .upload-progress-wrap {
-  padding-left: 83px;
   .upload-img-item {
     position: relative;
+    display: inline-block;
+    .img-item{
+      position:relative;
+      .show{
+        display: inline-block;
+      }
+      .inp-checkbox{
+        position: absolute;
+        display: inline-block;
+        right: 5px;
+        top:5px;
+        @include square(20px);
+        border: 1px solid $gray-plain;
+        line-height: 13px;
+        font-size: 17px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+    }
     .file-name {
       position: absolute;
       top: 0;
@@ -910,7 +928,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
+.load-img-wrap{
+  .thumbnail {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 20%;
+    float: left;
+  }
+}
+.goods-imgs{
+  @extend .load-img-wrap;
+}
 .upload-item {
   background-color: $gray-plain-light;
   border-radius: 1px;
@@ -918,14 +946,27 @@ ul, li, p, a, h1, h2, h3, h4 {
   @include size(60%, 25px);
   margin: 5px 0;
   line-height: 25px;
-  span {
+  .remove{
     display: inline-block;
     height: 25px;
     line-height: 25px;
+    color: $gray-base;
   }
+  span {
+   @extend .remove;
+  }
+
 }
 
 .goods-editor {
+  .attr {
+    border: 1px solid $gray-lighter;
+    padding: 5px 0 5px 38px;
+    .items-item {
+      display: inline-block;
+      padding: 5px 20px 5px 0;
+    }
+  }
   .editor-panel {
     .editor-wrap {
       padding: 10px 15px;
@@ -945,13 +986,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
       }
-      .attr {
-        border: 1px solid $gray-lighter;
-        padding: 5px 0 5px 38px;
-        .items-item {
-          padding: 5px 20px 5px 0;
-        }
-      }
+
       .promotions-msg {
         height: 80px;
         position: relative;
@@ -1987,6 +2022,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     vertical-align: middle;
     cursor: pointer;
   }
+
   .inp-checkbox {
     opacity: 0;
   }
