@@ -22,7 +22,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token', 'updated_at' , 'created_at' , 'balance', 'spreading_code', 'status'];
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'updated_at',
+        'created_at',
+        'balance',
+        'spreading_code',
+        'status'
+    ];
     protected $fillable = [
         'user_name',
         'password',
@@ -118,5 +126,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function shippingAddress()
     {
         return $this->hasMany('App\Models\ShippingAddress');
+    }
+
+    public function withdraw()
+    {
+        return $this->hasMany('App\Models\Withdraw');
     }
 }

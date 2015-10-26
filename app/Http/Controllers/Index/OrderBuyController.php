@@ -156,8 +156,8 @@ class OrderBuyController extends OrderController
     /**
      * 获取订单详情
      *
-     * @param $id
-     * @return \Illuminate\View\View
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
     public function getDetail(Request $request)
     {

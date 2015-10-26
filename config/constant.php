@@ -179,5 +179,11 @@ return [
         'when_push' => 300,//当存在时间小于该时间时送入到推送队列
         'msg_life' => 600//信息在redis中存在的生命周期
     ],
-
+    //提现状态
+    'withdraw' => [
+        'failed' => 0,
+        'review' => 1,
+        'pass' => 2,
+        'payment' => 3,
+    ],
 ];

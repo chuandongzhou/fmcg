@@ -240,6 +240,16 @@ class Order extends Model
 
     }
 
+    public function scopeExceptNonPayment($query)
+    {
+        return $query->where(function ($query) {
+            $query->where(function ($query) {
+                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                    cons('order.pay_status.payment_success'));
+            })->orwhere('pay_type', cons('pay_type.cod'));
+        });
+    }
+
     /**
      * 未确认
      *

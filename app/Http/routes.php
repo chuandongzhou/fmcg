@@ -36,6 +36,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->get('balance', 'BalanceController@index'); //账户余额
+        $router->controller('withdraw', 'WithdrawController');//提现相关操作
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
@@ -131,7 +132,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
             $router->resource('delivery-man', 'DeliveryManController',
-                ['only' => ['index','store', 'update', 'destroy']]);          //提现账号
+                ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
         });
         $router->controller('cart', 'CartController');
         $router->controller('order', 'OrderController');

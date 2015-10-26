@@ -264,7 +264,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
             getCoordinateMap({!! $coordinates or '' !!});
-            getShopAddressMap({{$shop->x_lng or 0}},{{ $shop->y_lat or 0 }});
+            getShopAddressMap({!! $shop->x_lng?:0  !!},{!! $shop->y_lat?:0  !!});
 
         });
         $(function () {

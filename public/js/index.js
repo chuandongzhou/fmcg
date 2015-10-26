@@ -561,7 +561,7 @@ function displayList() {
         } else {
             $(this).children(".all-sort-panel").children(".more").css('display', 'none')
         }
-    })
+    });
 
     $('.all-sort-panel .more').click(function () {
         if ($(this).children('span').text() == '更多') {
@@ -571,9 +571,7 @@ function displayList() {
             $(this).siblings('.all-sort').css({'maxHeight': '60px', 'overflow': 'hidden'});
             $(this).children('span').text('更多').siblings('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
         }
-    })
-}
-
+    });
 }
 
 //--order-statistics--
@@ -662,7 +660,7 @@ function baiDuMap() {
                 num = 16;
             }
             var areaName = elem.find('option:checked').text();
-            if (areaName != '其它区' && areaName!='海外') {
+            if (areaName != '其它区' && areaName != '海外') {
                 //删除之前的覆盖物
                 map_modal.clearOverlays();
                 // 创建地址解析器实例
@@ -741,7 +739,7 @@ function dynamicShowMap() {
  */
 function getCoordinateMap(data) {
     map = new BMap.Map("map");
-    if(data && data.length){
+    if (data && data.length) {
         $.each(data, function (index, value) {
             var point_lng = parseFloat(value['coordinate']['sl_lng']) + (value['coordinate']['bl_lng'] - value['coordinate']['sl_lng']) / 2;
             var point_lat = parseFloat(value['coordinate']['sl_lat']) + (value['coordinate']['bl_lat'] - value['coordinate']['sl_lat']) / 2;
@@ -763,19 +761,19 @@ function getCoordinateMap(data) {
             ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
             map.addOverlay(polygon);   //将图形添加到地图
         });
-    }else{
+    } else {
         map.centerAndZoom(new BMap.Point(106, 35), 5);
 
     }
 }
 
-function getShopAddressMap(lng,lat){
+function getShopAddressMap(lng, lat) {
     var addressMap = new BMap.Map('address-map');
-    if(lng && lat){
+    if (lng && lat) {
         var point_address = new BMap.Point(lng, lat);
         addressMap.centerAndZoom(point_address, 12);
         addressMap.addOverlay(new BMap.Marker(point_address));
-    }else{
+    } else {
         var point_address = new BMap.Point(106, 35);
         addressMap.centerAndZoom(point_address, 12);
         var geolocation_address = new BMap.Geolocation();
@@ -787,7 +785,7 @@ function getShopAddressMap(lng,lat){
             }
         }, {enableHighAccuracy: true});
     }
-    $('.shop-address').on('change','select',function(){
+    $('.shop-address').on('change', 'select', function () {
         var elem = $(this);
         var areaName = elem.find('option:checked').text();
         var num = 6;
@@ -800,7 +798,7 @@ function getShopAddressMap(lng,lat){
         if (elem.hasClass('address-street')) {
             num = 16;
         }
-        if (areaName != '其它区' && areaName!='海外') {
+        if (areaName != '其它区' && areaName != '海外') {
             //删除之前的覆盖物
             addressMap.clearOverlays();
             // 创建地址解析器实例
@@ -817,7 +815,7 @@ function getShopAddressMap(lng,lat){
                     $('input[name="x_lng"]').val(pointPosition.lng);
                     $('input[name="y_lat"]').val(pointPosition.lat);
                     newMarker.enableDragging();//可拖拽点
-                    newMarker.addEventListener('dragend',function(){
+                    newMarker.addEventListener('dragend', function () {
                         pointPosition = newMarker.getPosition();
                         $('input[name="x_lng"]').val(pointPosition.lng);
                         $('input[name="y_lat"]').val(pointPosition.lat);
@@ -831,12 +829,13 @@ function getShopAddressMap(lng,lat){
 /**
  * 添加商品处理
  */
-function addGoodsFunc(cate1 , cate2, cate3) {
+function addGoodsFunc(cate1, cate2, cate3) {
     var checkedLimit = 5, goodsImgsWrap = $('.goods-imgs');
-   function loadImg(cate1 , cate2, cate3) {
-        var cate1 = cate1||  $('select[name="cate_level_1"]').val();
-        var cate2 = cate2||  $('select[name="cate_level_2"]').val();
-        var cate3 = cate3||  $('select[name="cate_level_3"]').val();
+
+    function loadImg(cate1, cate2, cate3) {
+        var cate1 = cate1 || $('select[name="cate_level_1"]').val();
+        var cate2 = cate2 || $('select[name="cate_level_2"]').val();
+        var cate3 = cate3 || $('select[name="cate_level_3"]').val();
 
         var attrs = $('.attrs');
         var array = new Array(); //定义数组
@@ -862,6 +861,7 @@ function addGoodsFunc(cate1 , cate2, cate3) {
             imageBox.html(html);
         }, 'json');
     }
+
     $('.load-img-wrap').on('click', '.thumbnail', function () {
 
         if (goodsImgsWrap.children('.thumbnail').length >= checkedLimit) {
@@ -888,7 +888,7 @@ function addGoodsFunc(cate1 , cate2, cate3) {
     $('select.categories').change(function () {
         loadImg()
     });
-    $('.attr').on('change' , '.attrs' , function () {
+    $('.attr').on('change', '.attrs', function () {
         loadImg()
     });
     //促销
@@ -896,5 +896,63 @@ function addGoodsFunc(cate1 , cate2, cate3) {
         var promotionInfo = $('textarea[name="promotion_info"]');
         $(this).val() == 1 ? promotionInfo.prop('disabled', false) : promotionInfo.prop('disabled', true);
     });
-    loadImg(cate1 , cate2, cate3);
+    loadImg(cate1, cate2, cate3);
 }
+
+/**
+ *提现操作JS
+ */
+function getWithdraw(total_amount) {
+    var bank = $('select[name="bank"] option:selected').val();
+    var amount = 0;
+    $('input[name="amount"]').on('keyup', function () {
+        amount = $(this).val();
+
+        if (isNaN(amount)) {//不是数字
+            $('.tip').show();
+            $('.btn-add').prop('disabled', true);
+        } else if (amount > total_amount) {
+            $('.tip').text('提现金额不合法').show();
+            $('.btn-add').prop('disabled', true);
+        } else {
+            $('.tip').hide();
+            $('.btn-add').prop('disabled', false).attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+        }
+    });
+    $('#withdraw').on('change', 'select[name="bank"]', function () {
+        bank = $(this).find('option:selected').val();
+        if (bank) {
+            $('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+        } else {
+            $('.btn-add').prop('disabled', false);
+        }
+
+    })
+        //清空输入数据以及提示信息
+        .on('hidden.bs.modal', function (e) {
+            $('input[name="amount"]').val('');
+            $('.tip').hide();
+        });
+}
+function getWithdrawTimeItem() {
+    $('.table').on('click', '.show-item', function () {
+        var data = $.parseJSON($(this).attr('data-data'));
+        var content = '';
+        if (data.created_at) {
+            content += '<p>申请时间：' + data.created_at + '</p>'
+        }
+        if (data.pass_at > 0) {
+            content += '<p>审核通过时间：' + data.pass_at + '</p>'
+        }
+        if (data.payment_at > 0) {
+            content += '<p>打款时间：' + data.payment_at + '</p>'
+        }
+        if (data.failed_at > 0) {
+            content += '<p>审核不通过时间：' + data.failed_at + '</p>'
+        }
+        $('#withdraw-item').find('.text-left').html(content);
+    });
+}
+
+
+

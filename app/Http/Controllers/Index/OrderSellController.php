@@ -37,11 +37,10 @@ class OrderSellController extends OrderController
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
-//        $data['nonSure'] = Order::ofSell($this->userId)->nonSure()->count();//未确认
-        $data['nonSend'] = Order::ofSell($this->userId)->nonSend()->count();//待发货
-        $data['pendingCollection'] = Order::ofSell($this->userId)->getPayment()->count();//待收款（针对货到付款）
-
-        $orders = Order::bySellerId($this->userId)->with('user.shop', 'goods')->orderBy('id',
+        $data['nonSend'] = Order::bySellerId($this->userId)->nonSend()->count();//待发货
+        $data['pendingCollection'] = Order::bySellerId($this->userId)->getPayment()->count();//待收款（针对货到付款）
+        //卖家订单首页不显示在线支付未付款订单
+        $orders = Order::bySellerId($this->userId)->exceptNonPayment()->with('user.shop', 'goods')->orderBy('id',
             'desc')->paginate()->toArray();
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop->id)->lists('name', 'id');
 
@@ -203,13 +202,13 @@ class OrderSellController extends OrderController
     /**
      * 查询订单详情
      *
-     * @param $id
-     * @return \Illuminate\View\View
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
-    public function getDetail($id)
+    public function getDetail(Request $request)
     {
         $detail = Order::bySellerId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
-            'shippingAddress.address')->find($id);
+            'shippingAddress.address')->find(intval($request->input('order_id')));
         if (!$detail) {
             return $this->error('订单不存在');
         }

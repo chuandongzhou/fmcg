@@ -151,4 +151,11 @@ return [
         'cancel_by_buyer' => '被买家取消了~~',
         'cancel_by_seller' => '被卖家取消了~~'
     ],
+    //提现状态
+    'withdraw' => [
+        'failed' => '审核未通过',
+        'review' => '审核中',
+        'pass' => '审核通过',
+        'payment' => '已打款',
+    ],
 ];

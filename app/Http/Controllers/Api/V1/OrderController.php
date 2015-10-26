@@ -47,7 +47,7 @@ class OrderController extends Controller
         if ($redis->exists('push:user:' . $this->userId)) {
             $redis->del('push:user:' . $this->userId);
         }
-        $orders = Order::ofBuy($this->userId)->nonPayment()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -60,7 +60,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->userId)->nonSure()->simplePaginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -87,8 +87,8 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
-            'desc')->simplePaginate()->toArray();
+        $orders = Order::exceptNonPayment()->bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
+            'desc')->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -100,7 +100,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->userId)->nonSend()->simplePaginate()->toArray();
+        $orders = Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -112,7 +112,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell($this->userId)->getPayment()->simplePaginate()->toArray();
+        $orders = Order::ofSell($this->userId)->getPayment()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -316,20 +316,6 @@ class OrderController extends Controller
         } else {
             return $this->error('确认订单失败');
         }
-    }
-
-    /**
-     * 确认订单页
-     *
-     * @return \Illuminate\View\View
-     */
-    public function getConfirmOrder()
-    {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
-        $shops = (new CartService($carts))->formatCarts();
-
-
-        return $this->success(['shops' => $shops]);
     }
 
     /**

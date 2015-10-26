@@ -613,7 +613,7 @@
 
 `失败返回`
 
-#### 2.6.2 获取已确认但未提交订单信息[get] (confirm-order)
+#### 2.7.2 获取已确认但未提交订单信息[get] (confirm-order)
 `请求参数：`
 
 
@@ -669,7 +669,7 @@
 
 `失败返回`
 
-#### 2.6.3 提交订单[get] (confirm-order)
+#### 2.7.3 提交订单[get] (confirm-order)
 `请求参数：`
 
     shop                array       商店
@@ -733,7 +733,7 @@
 	
 `失败返回`
 
-#### 2.7.5 待付款订单列表[get] (non-payment)()
+#### 2.7.5 待付款订单列表[get] (non-payment)(仅显示在线支付订单)
 `请求参数：`
 
 	page 				int			分页
@@ -744,7 +744,7 @@
 
 `失败返回`
 
-#### 2.7.6 待确认订单列表[get] (non-sure-of-buy)
+#### 2.7.6 买家待收货订单列表[get] (non-arrived)
 `请求参数：`
 
 	page 				int			分页
@@ -755,18 +755,17 @@
 
 `失败返回`
 
-#### 2.7.7 待收货订单列表[get] (non-arrived)
+#### 2.7.7 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)
 `请求参数：`
 
-	page 				int			分页
+	order_id  				array		订单id
 
 `成功返回：`
-	
-	返回信息同上
 
-`失败返回`
 
-#### 2.7.8 订单详情[get] (detail-of-buy)
+`失败返回：`
+
+#### 2.7.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)
 `请求参数：`
 
 	order_id			int			订单号
@@ -853,7 +852,7 @@
 `失败返回`
 
 
-#### 2.6.10 卖家待发货订单列表[get] (non-send)
+#### 2.7.10 卖家待发货订单列表[get] (non-send)
 `请求参数：`
 
 	page                int         分页
@@ -865,7 +864,7 @@
 `失败返回：`
 
 
-#### 2.6.11 卖家待收款订单列表[get] (pending-collnection)(仅针对货到付款订单)
+#### 2.7.11 卖家待收款订单列表[get] (pending-collection)(仅针对货到付款订单)
 `请求参数：`
 
 	page                int         分页
@@ -877,7 +876,7 @@
 `失败返回：`
 
 
-#### 2.6.12 卖家获取订单详情[get] (detail-of-sell)
+#### 2.7.12 卖家获取订单详情[get] (detail-of-sell)
 `请求参数：`
 
 	order_id  			int			订单id
@@ -921,7 +920,7 @@
 `失败返回：`
 
 
-#### 2.6.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)
+#### 2.7.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -932,7 +931,7 @@
 `失败返回：`
 
 
-#### 2.6.14 卖家批量发货[put] (batch-send)
+#### 2.7.14 卖家批量发货[put] (batch-send)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -943,7 +942,7 @@
 
 `失败返回：`
 
-#### 2.7.10 批量确认订单完成[put] (batch-finish)
+#### 2.7.15 买家/卖家批量取消订单[put] (cancel-sure)
 `请求参数：`
 
 	order_id  				array		订单id
@@ -952,6 +951,7 @@
 
 
 `失败返回：`
+
 
 ### 2.8 收藏 like
 
