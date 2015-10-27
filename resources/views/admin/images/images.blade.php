@@ -16,7 +16,7 @@
 
                         </select>
                     </div>
-                    <div class="col-sm-2" id="level2" >
+                    <div class="col-sm-2" id="level2">
                         <select name="cate_level_2" class="form-control">
 
                         </select>
@@ -29,33 +29,40 @@
                 </div>
             </div>
 
-            <div class="form-group attr">
-
-            </div>
             <div class="form-group">
-                <label class="col-sm-1 control-label" for="username"></label>
+                <label class="col-sm-1 control-label"></label>
 
-                <div class="col-sm-10 col-md-6">
-                    <div class="progress collapse">
-                        <div class="progress-bar progress-bar-striped active"></div>
-                    </div>
+                <div class="attr col-sm-10">
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label" for="username"></label>
+
+            <div class="col-sm-10 col-md-6">
+                <div class="progress collapse">
+                    <div class="progress-bar progress-bar-striped active"></div>
+                </div>
                             <span data-name="image" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
 
-                    <div class="image-preview w160">
-                        <img src="" class="img-thumbnail">
-                    </div>
+                <div class="image-preview w160">
+                    <img src="" class="img-thumbnail">
                 </div>
             </div>
-            <div class="col-sm-8 text-center save">
-                <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
-                <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
-                            class="fa fa-reply"></i> 取消
-                </button>
-            </div>
+        </div>
+        <div class="col-sm-8 text-center save">
+            <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
+            <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
+                        class="fa fa-reply"></i> 取消
+            </button>
+        </div>
         </div>
     </form>
 @stop
@@ -67,30 +74,7 @@
             $('#attr').treetable({expandable: true});
             getCategory(site.api('categories'));
             getAllCategory(site.api('categories'), '{{ $search }}');
-            $('select[name="cate_level_1"]').change(function () {
-                $('div.attr').html('');
-            });
-
-            $('select[name="cate_level_2"] , select[name="cate_level_3"]').change(function () {
-                var categoryId = $(this).val() || $('select[name="cate_level_2"]').val();
-
-                $.get(site.api('categories/' + categoryId + '/attrs'), {category_id: categoryId, format: true}, function (data) {
-                    var html = '';
-                    for (var index in data) {
-                        var options = '';
-                        html += '<label class="control-label col-sm-1">' + data[index]['name'] + '</label>';
-                        html += '<div class="col-sm-2">';
-                        html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="form-control">';
-                        for (var i in data[index]['child']) {
-                            options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
-                        }
-                        html += options;
-                        html += '</select>'
-                        html += '</div>'
-                    }
-                    $('div.attr').html(html);
-                }, 'json')
-            })
+            getAttr();
         });
     </script>
 @stop

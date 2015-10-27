@@ -18,7 +18,6 @@ class CreateGoodsImagesRequest extends Request
             'cate_level_2' => 'required|numeric|min:1',
             'cate_level_3' => 'required|numeric|min:1',
             'image' => 'required',
-            'attrs' => 'required'
         ];
     }
 }

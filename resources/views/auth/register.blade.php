@@ -53,21 +53,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">店家LOGO:</label>
-
-                                    <div class="col-sm-10 col-md-6">
-                                        <button class="btn btn-primary btn-sm" data-height="100" data-width="100"
-                                                data-target="#cropperModal" data-toggle="modal" data-name="logo"
-                                                type="button">
-                                            本地上传(100x100)
-                                        </button>
-                                        <div class="image-preview">
-                                            <img class="img-thumbnail"
-                                                 src="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-2 control-label" for="name">店家名称:</label>
 
                                     <div class="col-sm-10 col-md-6">

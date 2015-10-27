@@ -32,8 +32,8 @@ class YeePayController extends Controller
         }
         $orderConfig = cons('order');
 
-        if ($order->pay_status != $orderConfig['pay_status']['non_payment'] || $order->status == $orderConfig['status']['non_sure']) {
-            return $this->error('此订单未确认或已付款');
+        if ($order->pay_status != $orderConfig['pay_status']['non_payment']) {
+            return $this->error('此订单已付款');
         }
 
 
@@ -96,32 +96,11 @@ class YeePayController extends Controller
             'pr_NeedResponse' => $pr_NeedResponse,
             'hmac' => $hmac
         ];
-        /*  $client = new Client();
-          $response = $client->request('POST', 'https://www.yeepay.com/app-merchant-proxy/node', [
-              'verify' => false,
-              'form_params' => $postData
-          ]);
 
-          $body = $response->getBody();
-  // Implicitly cast the body to a string and echo it
-          echo $body;
-
-
-          $client = new Client();
-          $response = $client->request('POST', $postUrl, [
-              'verify' => false,
-              'form_params' => $postData
-          ]);
-
-          dd();*/
-        /* var_dump($postData);
-         dd($postData);*/
         $postUrl = config('yeepay.req_url_onLine');
 
         $url = $postUrl . '?' . http_build_query($postData);
         return redirect($url);
-
-        // return view('index.yeepay.request', ['url' => $postUrl, 'data' => $postData]);
     }
 
 
@@ -131,17 +110,18 @@ class YeePayController extends Controller
 ##支付成功回调有两次，都会通知到在线支付请求参数中的p8_Url上：浏览器重定向;服务器点对点通讯.
 
 #	解析返回参数.
-        $r0_Cmd = $request->input('r0_Cmd');
-        $r1_Code = $request->input('r1_Code');
-        $r2_TrxId = $request->input('r2_TrxId');
-        $r3_Amt = $request->input('r3_Amt');
-        $r4_Cur = $request->input('r4_Cur');
-        $r5_Pid = $request->input('r5_Pid');
-        $r6_Order = $request->input('r6_Order');
-        $r7_Uid = $request->input('r7_Uid');
-        $r8_MP = $request->input('r8_MP');
-        $r9_BType = $request->input('r9_BType');
-        $hmac = $request->input('hmac');
+        $r0_Cmd = $request->input('r0_Cmd');                //固定值：Buy
+        $r1_Code = $request->input('r1_Code');              //固定值：1 - 代表支付成功
+        $r2_TrxId = $request->input('r2_TrxId');            //易宝交易流水号
+        $r3_Amt = $request->input('r3_Amt');                //支付金额
+        $r4_Cur = $request->input('r4_Cur');                //交易币种（RMB）
+        $r5_Pid = $request->input('r5_Pid');                //商品名
+        $r6_Order = $request->input('r6_Order');            //商户订单号
+        $r7_Uid = $request->input('r7_Uid');                //易宝支付会员 ID
+        $r8_MP = $request->input('r8_MP');                  //商户扩展信息
+        $r9_BType = $request->input('r9_BType');            //通知类型
+        $rq_TargetFee = $request->input('rq_TargetFee');    //商户手续费
+        $hmac = $request->input('hmac');                    //hmac
 
 #	判断返回签名是否正确（True/False）
         $bRet = CheckHmac($r0_Cmd, $r1_Code, $r2_TrxId, $r3_Amt, $r4_Cur, $r5_Pid, $r6_Order, $r7_Uid, $r8_MP,
@@ -158,7 +138,7 @@ class YeePayController extends Controller
 
                 if ($r9_BType == "1") {
                     //TODO:跳转至交易成功
-                    dd('交易成功');
+                    return redirect(url('order-buy'));
                 } elseif ($r9_BType == "2") {
                     //如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
 
@@ -187,11 +167,13 @@ class YeePayController extends Controller
                         'trade_no' => $r2_TrxId,
                         'pay_status' => $tradeConf['pay_status']['success'],
                         'amount' => $r3_Amt,
+                        'target_fee' => $rq_TargetFee,
                         'trade_currency' => $tradeConf['trade_currency']['rmb'],
                         'callback_type' => 'json',
                         'hmac' => $hmac,
                         'success_at' => Carbon::now(),
                     ]);
+                    //TODO: 增加商家余额
                     die ("success");
                 }
             }

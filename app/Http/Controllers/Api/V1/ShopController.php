@@ -41,11 +41,11 @@ class ShopController extends Controller
                     'isLike' => []
                 ]);
         }
-        $likeShops = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
-        $isLike = !is_null($likeShops);
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
+
+        $shop->is_like = $isLike ? true : false;
         return $this->success([
-            'shop' => $shop,
-            'isLike' => $isLike
+            'shop' => $shop
         ]);
     }
 

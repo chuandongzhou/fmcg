@@ -18,18 +18,18 @@
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active">
                 <li data-target="#myCarousel" data-slide-to="1">
-                <li data-target="#myCarousel" data-slide-to="2">
+                {{--<li data-target="#myCarousel" data-slide-to="2">--}}
             </ol>
             <div class="carousel-inner">
                 <div class="item active">
-                    <img src="../images/banner.png" alt="First slide">
+                    <img src="{{ asset('images/banner.jpg') }}" alt="First slide">
                 </div>
                 <div class="item">
-                    <img src="../images/banner.png" alt="Second slide">
+                    <img src="{{ asset('images/banner.jpg') }}" alt="Second slide">
                 </div>
-                <div class="item">
-                    <img src="../images/banner.png" alt="Third slide">
-                </div>
+                {{--<div class="item">--}}
+                    {{--<img src="{{ asset('images/banner.jpg') }}" alt="Third slide">--}}
+                {{--</div>--}}
             </div>
         </div>
         <div class="row login-wrap">

@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/mixins";
+@import "bootstrap/bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -15,6 +15,11 @@ ul, li, p, a, h1, h2, h3, h4 {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+table tr td, table tr th {
+  vertical-align: middle;
+  text-align: center;
 }
 
 @mixin dash-bord {
@@ -46,10 +51,19 @@ ul, li, p, a, h1, h2, h3, h4 {
   .nav-title {
     li {
       display: inline-block;
-      padding: 30px 20px;
+      padding: 20px;
       a {
+        display: inline-block;
+        vertical-align: middle;
+        color: $gray-base;
         &:hover {
           background-color: transparent;
+        }
+        &.logo-icon {
+          img {
+            width: 50px;
+            height: 45px;
+          }
         }
       }
     }
@@ -220,24 +234,37 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
-.wholesalers-top-header {
-  .logo {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    .logo-icon {
-      height: 34px;
-      line-height: 34px;
-      display: inline-block;
-    }
+.logo {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.logo-icon {
+  display: inline-block;
+  img {
+    width: 80px;
+    height: 50px;
   }
-  .shopping-car {
-    padding: 10px 0
+}
+.dealer-header{
+  .logo-icon{
+    padding-top: 8px;
   }
-  @at-root .search {
-    .form-control {
-      outline: none;
-      border: 1px solid $brand-primary;
-    }
+}
+.wholesalers-top-header{
+  .right-search{
+    padding: 20px 0;
+  }
+}
+
+.shopping-car {
+  padding: 10px 0
+}
+
+@at-root .search {
+  .form-control {
+    outline: none;
+    border: 1px solid $brand-primary;
   }
 }
 
@@ -714,8 +741,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .list-item {
         color: $gray-base;
       }
-      text-align: left;
-      padding-left: 15px;
+      text-align: center;
     }
 
     .menu-list {
@@ -723,8 +749,13 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 60%;
       margin: -1px auto auto auto;
       .menu-wrap {
-        padding-left: 15px;
         display: none;
+        margin-left: 20px;
+        li {
+          border: 1px solid red;
+          text-align: left;
+          padding-left: 15px;
+        }
       }
       .active {
         color: $brand-primary;
@@ -900,16 +931,16 @@ ul, li, p, a, h1, h2, h3, h4 {
   .upload-img-item {
     position: relative;
     display: inline-block;
-    .img-item{
-      position:relative;
-      .show{
+    .img-item {
+      position: relative;
+      .show {
         display: inline-block;
       }
-      .inp-checkbox{
+      .inp-checkbox {
         position: absolute;
         display: inline-block;
         right: 5px;
-        top:5px;
+        top: 5px;
         @include square(20px);
         border: 1px solid $gray-plain;
         line-height: 13px;
@@ -928,17 +959,21 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.load-img-wrap{
+
+.load-img-wrap {
   .thumbnail {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    width: 20%;
+    width: 19%;
     float: left;
+    margin-right: 3px;
   }
 }
-.goods-imgs{
+
+.goods-imgs {
   @extend .load-img-wrap;
 }
+
 .upload-item {
   background-color: $gray-plain-light;
   border-radius: 1px;
@@ -946,14 +981,14 @@ ul, li, p, a, h1, h2, h3, h4 {
   @include size(60%, 25px);
   margin: 5px 0;
   line-height: 25px;
-  .remove{
+  .remove {
     display: inline-block;
     height: 25px;
     line-height: 25px;
     color: $gray-base;
   }
   span {
-   @extend .remove;
+    @extend .remove;
   }
 
 }
@@ -986,7 +1021,6 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
       }
-
       .promotions-msg {
         height: 80px;
         position: relative;
@@ -1067,6 +1101,18 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
+table {
+  .product-name {
+    margin-left: 10px;
+    color: $gray;
+    display: inline-block;
+    max-width: 350px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
 .wholesalers-management {
   .notice-bar {
     padding: 0;
@@ -1079,15 +1125,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       color: $body-bg;
     }
   }
-  .product-name {
-    margin-left: 10px;
-    color: $gray;
-    display: inline-block;
-    max-width: 350px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+
   .pay-detail {
     @extend .right-search;
     .item {
@@ -1655,7 +1693,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .dealer-header {
   .search {
-    min-width: 80%;
+    min-width: 78%;
     .input-group {
       min-width: 50%;
       border: 1px solid $brand-primary;
@@ -1697,9 +1735,15 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
       .control {
-        @include size(78%, 33px);
+        @include size(75%, 33px);
         border: none;
         outline: none;
+      }
+      @media screen and (max-width: 991px) {
+        .control {
+          @include size(69%, 33px);
+          padding: 0 5px;
+        }
       }
       .search-btn {
         width: 100%;
@@ -2007,7 +2051,6 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-
   }
 }
 
@@ -2086,12 +2129,3 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 /*==================================================================================dealer end======================================================================*/
-
-/*======================================baidu map======================================*/
-#map,#map-modal {
-  overflow: hidden;
-  zoom: 1;
-  position: relative;
-  width: 100%;
-  height: 400px;
-}

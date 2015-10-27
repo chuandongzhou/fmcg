@@ -114,6 +114,7 @@ class OrderController extends Controller
         $shippingAddressId = $data['shipping_address_id'];
         //$remark = $data['remark'] ? $data['remark'] : '';
         $redis = Redis::connection();
+
         foreach ($shops as $shop) {
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
@@ -151,7 +152,6 @@ class OrderController extends Controller
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
 
-                    return redirect('order-buy');
                 } else {
                     //TODO: 跳转页面后期修改
                     $order->delete();
@@ -165,6 +165,7 @@ class OrderController extends Controller
             }
         }
 
+        return redirect('order-buy');
         // TODO: 跳至支付页面
 
         //TODO:支付成功后加入提示信息

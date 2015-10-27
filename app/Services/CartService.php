@@ -33,7 +33,7 @@ class CartService
         $shopIds = $carts->pluck('goods.shop_id');
         $shopIds = $shopIds->all();
 
-        $shops = Shop::whereIn('id', $shopIds)->select(['name', 'id', 'min_money'])->get();
+        $shops = Shop::whereIn('id', $shopIds)->select(['name', 'id', 'min_money', 'user_id'])->get();
 
         foreach ($shops as $key => $shop) {
             $sumPrice = 0;
