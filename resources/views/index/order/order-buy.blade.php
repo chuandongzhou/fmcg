@@ -7,12 +7,11 @@
             <div class="col-sm-12 notice-bar">
                 <a class="btn btn-primary"
                    href="{{ url('order-buy') }}">所有订单</a>
-                {{--<a class="btn ajax-get"--}}
-                   {{--data-url="{{ url('order-buy/non-sure') }}" data-limit="nonSure">待确认{{ $data['nonSure'] }}</a>--}}
+
                 <a class="btn ajax-get"
-                   data-url="{{ url('order-buy/non-payment') }}" data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
+                   data-url="{{ url('api/v1/order/non-payment') }}" data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
                 <a class="btn ajax-get"
-                   data-url="{{ url('order-buy/non-arrived') }}" data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
+                   data-url="{{ url('api/v1/order/non-arrived') }}" data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
             </div>
             <div class="col-sm-8 pay-detail search-options">
                 <span class="item control-item">支付方式 :
@@ -94,8 +93,8 @@
                                                       class="btn btn-primary">查看</a></p>
                                                 @if(!$order['is_cancel'])
                                                     @if($order['status'] == cons('order.status.non_send') &&$order['pay_status'] == cons('order.pay_status.non_payment') )
-                                                        <p><a class="btn btn-cancel ajax"
-                                                              data-url="{{ url('order-buy/cancel-sure') }}"
+                                                        <p><a href="javascript:void(0)" class="btn btn-cancel ajax"
+                                                              data-url="{{ url('api/v1/order/cancel-sure') }}"
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
                                                     @endif
@@ -105,7 +104,7 @@
                                                               class="btn btn-danger">付款</a></p>
                                                     @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
                                                         <p><a class="btn btn-danger ajax"
-                                                              data-url="{{ url('order-buy/batch-finish') }}"
+                                                              data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
                                                     @endif
@@ -124,10 +123,10 @@
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" id="check-all"/>
-                        <button class="btn btn-cancel ajax" data-url="{{ url('order-buy/cancel-sure') }}" data-method="put">
+                        <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}" data-method="put">
                             批量取消
                         </button>
-                        <button class="btn btn-info ajax" data-url="{{ url('order-buy/batch-finish') }}" data-method="put">
+                        <button class="btn btn-info ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}" data-method="put">
                             确认收货
                         </button>
                     </div>

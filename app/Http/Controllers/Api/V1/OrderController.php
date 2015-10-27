@@ -8,8 +8,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Services\CartService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -60,7 +62,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->userId)->paginate()->toArray();
+        $orders = Order::ofBuy($this->userId)->nonArrived()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -141,7 +143,7 @@ class OrderController extends Controller
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function putCancelSure(Request $request)
-    {
+    {dd($this->success());
         $orderIds = (array)$request->input('order_id');
         $orders = Order::where(function ($query) {
             $query->wherehas('shop.user', function ($query) {
@@ -171,7 +173,7 @@ class OrderController extends Controller
             }
         });
 
-        return $this->success();
+        return $this->success('取消成功');
     }
 
     /**
@@ -214,7 +216,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
+        Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
             cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
             'pay_status' => cons('order.pay_status.payment_success'),
             'paid_at' => Carbon::now(),
@@ -222,7 +224,7 @@ class OrderController extends Controller
             'finished_at' => Carbon::now()
         ]);
 
-        return $status ? $this->success() : $this->error('操作失败');
+        return $this->success('操作成功');
     }
 
 
@@ -262,7 +264,7 @@ class OrderController extends Controller
             ]);
         });
 
-        return $this->success();
+        return $this->success('发货成功');
 
     }
 

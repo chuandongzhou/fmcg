@@ -1,4 +1,5 @@
 @extends('index.index-master')
+@include('includes.loadMapJs')
 @section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">

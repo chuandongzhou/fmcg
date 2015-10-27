@@ -5,13 +5,9 @@ namespace App\Http\Controllers\Index;
 
 use App\Http\Requests;
 use App\Models\DeliveryMan;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Services\ExportWordService;
-use Illuminate\Support\Facades\Redis;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Style\Cell;
 
 class OrderSellController extends OrderController
 {
@@ -71,132 +67,6 @@ class OrderSellController extends OrderController
         }
 
         return $orders;
-    }
-    /**
-     * 获取待确认订单列表
-     *
-     * @return mixed
-     */
-//    public function getNonSure()
-//    {
-//        $redis = Redis::connection();
-//        if ($redis->exists('push:seller:' . $this->userId)) {
-//            $redis->del('push:seller' . $this->userId);
-//        }
-//
-//        return Order::ofSell($this->userId)->nonSure()->paginate()->toArray();
-//    }
-
-    /**
-     * 获取待发货订单列表
-     *
-     * @return mixed
-     */
-    public function getNonSend()
-    {
-        return Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
-    }
-
-    /**
-     * 获取待收款订单列表,针对货到付款
-     *
-     * @return mixed
-     */
-    public function getPendingCollection()
-    {
-        return Order::ofSell($this->userId)->getPayment()->paginate()->toArray();
-    }
-
-    /**
-     * 批量更新订单确认状态
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-//    public function putBatchSure(Request $request)
-//    {
-//        $orderIds = (array)$request->input('order_id');
-//        //检查数组中未确认的订单
-//        $nonSure = Order::select('id', 'user_id')->where('shop_id', session('shop_id'))->where('status',
-//            cons('order.status.non_sure'))->whereIn('id', $orderIds)->nonCancel()->get();
-//        if ($nonSure->isEmpty()) {
-//            return $this->error('操作失败');
-//        }
-//        //写入redis
-//        $userIds = $nonSure->pluck('user_id');
-//        $redis = Redis::connection();
-//        foreach ($userIds as $item) {
-//            $redis->exists('push:user:' . $item) ?: $redis->set('push:user:' . $item, 1);
-//            $redis->expire('push:user:' . $item, 600);
-//        }
-//        //修改订单状态
-//        $ids = $nonSure->pluck('id');
-//        $status = Order::whereIn('id', $ids)->update([
-//            'status' => cons('order.status.non_send'),
-//            'confirmed_at' => Carbon::now()
-//        ]);
-//
-//        return $status ? $this->success() : $this->error('操作失败');
-//    }
-
-    /**
-     * 批量修改发货状态。不区分付款状态
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function putBatchSend(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        $deliveryManId = intval($request->input('delivery_man_id'));
-        //判断送货人员是否是该店铺的
-        if (!DeliveryMan::find($deliveryManId)) {
-            return $this->error('操作失败');
-        }
-        $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
-            $query->where(function ($query) {
-                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
-            })->orwhere(function ($query) {
-                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
-            });
-        })->whereIn('id', $orderIds)->nonCancel()->get();
-        $redis = Redis::connection();
-        $orderModel->each(function ($model) use ($redis, $deliveryManId) {
-            $redisKey = 'push:user:' . $model->user_id;
-            if (!$redis->exists($redisKey)) {
-                $redis->set($redisKey, '您的订单' . $model->id . ',' . cons()->lang('push_msg.send'));
-                $redis->expire($redisKey, cons('push_time.msg_life'));
-            }
-            $model->update([
-                'delivery_man_id' => $deliveryManId,
-                'status' => cons('order.status.send'),
-                'send_at' => Carbon::now()
-            ]);
-        });
-
-        return $this->success();
-
-    }
-
-    /**
-     * 批量修改订单完成状态，货到付款不需要确认付款状态是否是付款成功,因为货到付款有可能是线下现金交易的
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function putBatchFinish(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        $status = Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
-            cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
-            'pay_status' => cons('order.pay_status.payment_success'),
-            'paid_at' => Carbon::now(),
-            'status' => cons('order.status.finished'),
-            'finished_at' => Carbon::now()
-        ]);
-
-        return $status ? $this->success() : $this->error('操作失败');
     }
 
     /**

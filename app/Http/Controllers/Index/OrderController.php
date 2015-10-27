@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\OrderGoods;
 use App\Services\CartService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -27,46 +26,6 @@ class OrderController extends Controller
         session(['type' => $this->userType]);
         session('shop_id') ?: session(['shop_id' => auth()->user()->shop->id]);
 
-    }
-
-    /**
-     * 批量取消订单确认状态，在线支付：确认但未付款，可取消；货到付款：确认但未发货，可取消
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function putCancelSure(Request $request)
-    {
-        $orderIds = (array)$request->input('order_id');
-        $orders = Order::where(function ($query) {
-            $query->wherehas('shop.user', function ($query) {
-                $query->where('id', $this->userId);
-            })->orWhere('user_id', $this->userId);
-        })->where('status', cons('order.status.non_send'))->where('pay_status',
-            cons('order.pay_status.non_payment'))->whereIn('id', $orderIds)->nonCancel()->get();
-        $redis = Redis::connection();
-        $orders->each(function ($model) use ($redis) {
-            $model->update([
-                'is_cancel' => cons('order.is_cancel.on'),
-                'cancel_by' => $this->userId,
-                'cancel_at' => Carbon::now()
-            ]);
-            //推送通知
-            if ($model->user_id == $this->userId) {
-                $redisKey = 'push:seller:' .$model->shop->user->id ;
-                $msg = 'buyer';
-            } else {
-                $redisKey = 'push:user:' .$model->user_id ;
-                $msg = 'seller';
-            }
-
-            if (!$redis->exists($redisKey)) {
-                $redis->set($redisKey, '订单:' . $model->id . cons()->lang('push_msg.cancel_by_' . $msg));
-                $redis->expire($redisKey, cons('push_time.msg_life'));
-            }
-        });
-
-        return $this->success();
     }
 
 

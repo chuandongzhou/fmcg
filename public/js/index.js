@@ -126,31 +126,27 @@ function _ajaxGet(targetUrl, data) {
                             str += '<p><a href="' + SITE.ROOT + '/order-buy/detail?order_id=' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
                                 if (result.pay_status == 0 && result.status == 1) {
-                                    str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                                    str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
                                 if (result.pay_status == 0 && result.pay_type == 1) {
-                                    str += '<p><a href="#" class="btn btn-danger">付款</a></p>';
+                                    str += '<p><a href="' + SITE.ROOT + '/pay/request/' + result.id + '" class="btn btn-danger">付款</a></p>';
                                 } else if (result.pay_type == 1 && result.status == 2) {
-                                    str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/order-buy/batch-finish" ' +
+                                    str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-buy" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>确认收货</a></p>';
                                 }
                             }
                         } else {//卖家
                             str += '<p><a href="' + SITE.ROOT + '/order-sell/detail?order_id' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
-                                //if (result.status == 0) {
-                                //    str += '<p><a class="btn btn-danger ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-sure" ' +
-                                //        'data-data=\'{"order_id":' + result.id + '}\'>确认</a></p>';
-                                //}
                                 if (result.pay_status == 0 && result.status == 1) {
-                                    str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/cancel-sure" ' +
+                                    str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
                                 if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
                                     str += '<p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal">发货</a></p>';
                                 } else if (result.pay_type == 2 && result.status == 2) {
-                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/order-sell/batch-finish" ' +
+                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-sell" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>确认收款</a></p>';
                                 }
                                 if (result.status == 2) {
@@ -189,11 +185,7 @@ function getOrderButtonEvent() {
                     $('#check-all').prop('checked', false);
                 }
             });
-        })
-    ;
-    $('.btn-add').on('click', function () {
-        $('.btn-close').click();
-    });
+        });
     $('#check-all').on('click', function () {
         var orders = $('input[name="order_id[]"]');
         if ($(this).is(':checked')) {//选中

@@ -303,11 +303,13 @@ class Order extends Model
      */
     public function scopeNonSend($query)
     {
-        return $query->where(function ($query) {//在线支付
-            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
-        })->orWhere(function ($query) {//货到付款
-            $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
+        return $query->where(function ($query) {
+            $query->where(function ($query) {//在线支付
+                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
+            })->orWhere(function ($query) {//货到付款
+                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
+            });
         })->nonCancel();
     }
 

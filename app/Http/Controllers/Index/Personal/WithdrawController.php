@@ -12,6 +12,12 @@ use App\Http\Controllers\Api\v1\Controller;
 class WithdrawController extends Controller
 {
 
+    /**
+     * 提现记录列表(含查询功能)
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
     public function getIndex(Request $request)
     {
 
@@ -32,7 +38,6 @@ class WithdrawController extends Controller
                 [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate(30);
         }
 
-//dd($withdraws);
         return view('index.personal.withdraw', [
             'flag' => $flag,
             'balance' => $user->balance,
