@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\DeliveryArea;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
@@ -241,7 +240,7 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $deliveryManId = intval($request->input('delivery_man_id'));
         //判断送货人员是否是该店铺的
-        if (!DeliveryArea::find($deliveryManId)) {
+        if (!DeliveryMan::find($deliveryManId)) {
             return $this->error('操作失败');
         }
         $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
