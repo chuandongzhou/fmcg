@@ -105,7 +105,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         ]);
 
         $router->controller('goods', 'GoodsController');                           //商品
-        //$router->controller('shop', 'ShopController');                           //商品
         $router->get('shop/shops', 'ShopController@shops');                        //热门店铺
         $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');;                        //店铺详细
         $router->get('shop/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');;                   //店铺商品

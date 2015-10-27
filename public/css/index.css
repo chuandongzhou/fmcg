@@ -11,6 +11,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0; }
 
+table tr td {
+  vertical-align: middle; }
+
 .padding-clear {
   padding: 0; }
 
@@ -685,8 +688,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .load-img-wrap .thumbnail, .goods-imgs .thumbnail {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  width: 20%;
-  float: left; }
+  width: 19%;
+  float: left;
+  margin-right: 3px; }
 
 .upload-item, .goods-editor .content-wrap .item {
   background-color: #e0e0e0;
@@ -782,6 +786,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
+table .product-name {
+  margin-left: 10px;
+  color: #555555;
+  display: inline-block;
+  max-width: 350px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
 .wholesalers-management .notice-bar {
   padding: 0;
   border-bottom: 1px solid #4cb9fe; }
@@ -790,15 +803,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     font-weight: bold; }
   .wholesalers-management .notice-bar .btn-primary {
     color: #fff; }
-
-.wholesalers-management .product-name {
-  margin-left: 10px;
-  color: #555555;
-  display: inline-block;
-  max-width: 350px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden; }
 
 .wholesalers-management .pay-detail .item {
   display: inline-block;
@@ -1182,7 +1186,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       background: none; }
 
 .dealer-header .search, .dealer-header .public-personal .controls .item .add-goods, .public-personal .controls .item .dealer-header .add-goods {
-  min-width: 80%; }
+  min-width: 78%; }
   .dealer-header .search .input-group, .dealer-header .public-personal .controls .item .add-goods .input-group, .public-personal .controls .item .dealer-header .add-goods .input-group {
     min-width: 50%;
     border: 1px solid #4cb9fe; }
@@ -1217,10 +1221,15 @@ ul, li, p, a, h1, h2, h3, h4 {
             display: inline-block;
             padding-bottom: 3px; }
     .dealer-header .search .input-group .control, .dealer-header .public-personal .controls .item .add-goods .input-group .control, .public-personal .controls .item .dealer-header .add-goods .input-group .control {
-      width: 78%;
+      width: 75%;
       height: 33px;
       border: none;
       outline: none; }
+    @media screen and (max-width: 991px) {
+      .dealer-header .search .input-group .control, .dealer-header .public-personal .controls .item .add-goods .input-group .control, .public-personal .controls .item .dealer-header .add-goods .input-group .control {
+        width: 69%;
+        height: 33px;
+        padding: 0 5px; } }
     .dealer-header .search .input-group .search-btn, .dealer-header .public-personal .controls .item .add-goods .input-group .search-btn, .public-personal .controls .item .dealer-header .add-goods .input-group .search-btn {
       width: 100%; }
 
@@ -1496,10 +1505,3 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding-left: 240px !important; }
 
 /*==================================================================================dealer end======================================================================*/
-/*======================================baidu map======================================*/
-#map, #map-modal {
-  overflow: hidden;
-  zoom: 1;
-  position: relative;
-  width: 100%;
-  height: 400px; }

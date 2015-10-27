@@ -26,9 +26,7 @@ class GoodsController extends Controller
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');
-        $isLike = auth()->user()->whereHas('likeGoods', function ($q) use ($goods) {
-            $q->where('id', $goods->id);
-        })->pluck('id');
+        $isLike =auth()->user()->likeGoods()->where('id',$goods->id)->pluck('id');
         $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });

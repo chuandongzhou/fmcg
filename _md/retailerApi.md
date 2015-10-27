@@ -51,7 +51,6 @@
 	password                    string      密码
 	password_confirmation       string      确认密码
     type                        int         用户类型 （1终端商 2 批发商  3 供应商）
-    logo                        file        店家logo
     name                        string      店铺名
     contact_person              string      联系人
     contact_info                string      联系方式
@@ -148,7 +147,7 @@
 `失败返回：`
 
 
-#### 2.2.4 商品详情[post] (detail/{goods_id})
+#### 2.2.3 商品详情[post] (detail/{goods_id})
 `请求参数`
 
 
@@ -396,7 +395,7 @@
     name                string      图片名
     path                string      图片路径
 
-#### 2.3.2 店铺详情[get]   ({shop_id})
+#### 2.4.2 店铺详情[get]   ({shop_id})
 `请求参数：`
 
 `成功返回：`
@@ -408,6 +407,7 @@
     introduction        string      店铺介绍
     min_money           decimal     最低配送额
     images_url          array       店铺图片地址
+    is_like             bool        是否已收藏
 
     images 字段子集介绍
 
@@ -440,7 +440,7 @@
     name                string      图片名
     path                string      图片地址
 
-#### 2.4.3 店铺扩展信息[get]   ({shop_id}/extend)
+#### 2.4.4 店铺扩展信息[get]   ({shop_id}/extend)
 `请求参数：`
 
 `成功返回：`
@@ -478,7 +478,7 @@
     address                 string          详细地址
 
 
-#### 2.4.4 店铺修改[put] (personal/shop/{shop_id})
+#### 2.4.5 店铺修改[put] (personal/shop/{shop_id})
 `请求参数：`
 
     logo                    string/file         店铺logo
@@ -538,7 +538,7 @@
 
 `失败返回：`
 
-#### 2.4.2 获取标签[get] ({categoryId}/attrs)
+#### 2.5.2 获取标签[get] ({categoryId}/attrs)
 `请求参数：`
 
     format              bool        是否格式化标签  (非必须参数)
@@ -553,7 +553,7 @@
 `失败返回：`
 
 ### 2.6 购物车 cart
-#### 2.6.1 查看购物车[post] (index)
+#### 2.6.1 查看购物车[get] (index)
 `请求参数：`
 
 `成功返回：`
@@ -678,6 +678,7 @@
 
     shipping_address_id int         收货地址id
     pay_type            string      支付方式 （online 在线 ， cod 货到付款）
+    cod_pay_type        string      货到付款方式 （仅当pay_type为cod时传入    传入'cash'为现金  传入'card'为刷卡）
     remark              string      订单备注信息
 
 `成功返回：`
@@ -1029,7 +1030,7 @@
 
 `成功返回：`
 
-    shoppingAddress     array       收货地址列表
+    shippingAddress     array       收货地址列表
 
     shoppingAddress 字段子集介绍
 
@@ -1091,7 +1092,23 @@
 
 `失败返回：`
 
-#### 2.9.4 设置默认地址 [put] (shipping-address-default/{id})
+#### 2.9.4 更新收货地址 [put] ({shipping_address_id})
+`请求参数：`
+
+    consigner           string      收货人
+    phone               string      联系电话
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street_id           int         街道id
+    area_name           string      省名+市名+县名+街道名
+    address             string      详细地址
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.9.5 设置默认地址 [put] (shipping-address-default/{id})
 
 `请求参数：`
 
@@ -1099,7 +1116,7 @@
 
 `失败返回：`
 
-#### 2.9.5  删除收货地址 [delete] ({id})
+#### 2.9.6  删除收货地址 [delete] ({id})
 
 `请求参数：`
 
@@ -1127,8 +1144,8 @@
 `失败返回:`
 
 
-### 2.8 配送信息 delivery-man
-#### 2.8.1 配送人员列表[get] 
+### 2.11 配送信息 delivery-man
+#### 2.11.1 配送人员列表[get]
 `请求参数:`
 
 `成功返回:`
@@ -1143,7 +1160,7 @@
 
 `失败返回:`
 
-#### 2.8.2 添加配送人员[post] 
+#### 2.11.2 添加配送人员[post]
 `请求参数:`
 	
 	name				string		姓名
@@ -1153,7 +1170,7 @@
 
 `失败返回:`
 
-#### 2.8.3 编辑配送人员信息[put] 
+#### 2.11.3 编辑配送人员信息[put]
 `请求参数:`
 	
 	id					int			配送人员ID
@@ -1165,7 +1182,7 @@
 	
 `失败返回:`
 
-#### 2.8.4 删除配送人员[delete] 
+#### 2.11.4 删除配送人员[delete]
 `请求参数:`
 	
 	id					int			配送人员ID

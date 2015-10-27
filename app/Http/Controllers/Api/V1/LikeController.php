@@ -63,7 +63,6 @@ class LikeController extends Controller
         if ($request->has('province_id')) {
             $shops = $shops->OfDeliveryArea($data);
         }
-        dd($shops->get()->toArray());
         return $this->success(['shops' => $shops->paginate()->toArray()]);
     }
 

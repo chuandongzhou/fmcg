@@ -69,9 +69,7 @@ class GoodsController extends Controller
             return $this->forbidden('权限不足');
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
-        $isLike = auth()->user()->whereHas('likeGoods', function ($q) use ($goods) {
-            $q->where('id', $goods->id);
-        })->pluck('id');
+        $isLike =auth()->user()->likeGoods()->where('id',$goods->id)->pluck('id');
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         $goods->is_like = $isLike ? true : false;

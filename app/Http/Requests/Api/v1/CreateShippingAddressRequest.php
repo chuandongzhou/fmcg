@@ -22,7 +22,7 @@ class CreateShippingAddressRequest extends Request
             'province_id' => 'required|numeric',
             'city_id' => 'required|numeric',
             'district_id' => 'numeric',
-            'street_id' => '|numeric',
+            'street_id' => 'numeric',
             'area_name' => 'required',
             'address' => 'required',
         ];

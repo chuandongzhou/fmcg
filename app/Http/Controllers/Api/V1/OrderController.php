@@ -8,8 +8,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\DeliveryArea;
 use App\Models\Order;
+use App\Models\OrderGoods;
 use App\Services\CartService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -77,7 +80,7 @@ class OrderController extends Controller
         $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods', 'goods.images',
             'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
 
-        return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
+        return $detail ? $this->success($detail) : $this->error('订单不存在');
     }
 
     /**
@@ -237,7 +240,7 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $deliveryManId = intval($request->input('delivery_man_id'));
         //判断送货人员是否是该店铺的
-        if (!DeliveryMan::find($deliveryManId)) {
+        if (!DeliveryArea::find($deliveryManId)) {
             return $this->error('操作失败');
         }
         $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
@@ -391,10 +394,6 @@ class OrderController extends Controller
         }
 
         return $this->success('提交订单成功');
-
-        // TODO: 跳至支付页面
-        // dd($onlinePaymentOrder);
-
     }
 
 }

@@ -42,7 +42,6 @@ class UserBankController extends Controller
      */
     public function store(Requests\Api\v1\CreateUserBankRequest $request)
     {
-        // TODO: userId 登录后添加
         if (auth()->user()->userBanks()->create($request->all())->exists) {
             return $this->success('添加账号成功');
         }

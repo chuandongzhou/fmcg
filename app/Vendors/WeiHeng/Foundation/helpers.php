@@ -219,3 +219,14 @@ if (!function_exists('multi_array_unique')) {
         return $newArr;
     }
 }
+if (!function_exists('admin_auth')) {
+    /**
+     * Get the available admin auth instance.
+     *
+     * @return \HengCaoTang\Admin\Guard
+     */
+    function admin_auth()
+    {
+        return app('admin.auth');
+    }
+}

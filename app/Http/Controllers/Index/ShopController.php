@@ -65,7 +65,7 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
-        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
 
         $goods = Goods::where($map);

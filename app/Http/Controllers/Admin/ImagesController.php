@@ -32,9 +32,8 @@ class ImagesController extends Controller
 
         if ($cate) {
             $goodsImage = Images::where($cate);
-            $attrs = array_filter($attrs);
             if($attrs){
-                $goodsImage = $goodsImage->ofAttr($attrs);
+                $goodsImage = $goodsImage->ofAttr(array_filter($attrs));
             }
             $goodsImage = $goodsImage->paginate();
         }

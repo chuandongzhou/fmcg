@@ -140,6 +140,7 @@ return [
          * Custom Service Providers...
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
+        \WeiHeng\Admin\AdminServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,
