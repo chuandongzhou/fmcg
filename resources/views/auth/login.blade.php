@@ -8,7 +8,7 @@
         <div class="container padding-clear">
             <ul class="nav-title text-center">
                 <li><a href="#">首页</a></li>
-                <li><a class="logo-icon" href="#">LOGO</a></li>
+                <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo" /></a></li>
                 <li><a href="#">关于我们</a></li>
             </ul>
         </div>
@@ -18,7 +18,7 @@
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active">
                 <li data-target="#myCarousel" data-slide-to="1">
-                {{--<li data-target="#myCarousel" data-slide-to="2">--}}
+                    {{--<li data-target="#myCarousel" data-slide-to="2">--}}
             </ol>
             <div class="carousel-inner">
                 <div class="item active">
@@ -28,7 +28,7 @@
                     <img src="{{ asset('images/banner.jpg') }}" alt="Second slide">
                 </div>
                 {{--<div class="item">--}}
-                    {{--<img src="{{ asset('images/banner.jpg') }}" alt="Third slide">--}}
+                {{--<img src="{{ asset('images/banner.jpg') }}" alt="Third slide">--}}
                 {{--</div>--}}
             </div>
         </div>
@@ -53,12 +53,14 @@
                     </div>
                 </div>
                 <div class="col-sm-12 item clearfix">
-                    <select name="type" class="role pull-left">
-                        @foreach(cons('user.type') as $val)
-                            <option value="{{ $val }}">{{ cons()->valueLang('user.type' , $val) }}</option>
-                        @endforeach
-                    </select>
-                    <button type="submit" class="btn btn-primary login-btn pull-right" data-loading-text="登录中..."
+                    {{--<select name="type" class="role pull-left">--}}
+                    {{--@foreach(cons('user.type') as $val)--}}
+                    {{--<option value="{{ $val }}">{{ cons()->valueLang('user.type' , $val) }}</option>--}}
+                    {{--@endforeach--}}
+                    {{--</select>--}}
+                    <input type="hidden" name="type"
+                           value="{{ array_get(cons('user.type') , \Request::input('type') ? \Request::input('type') : 'retailer' , head(cons('user.type'))) }}"/>
+                    <button type="submit" class="btn btn-primary login-btn" data-loading-text="登录中..."
                             data-done-text="登录成功" data-fail-text="登录失败">登录
                     </button>
                 </div>

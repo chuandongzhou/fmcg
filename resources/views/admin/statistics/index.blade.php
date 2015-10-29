@@ -60,13 +60,13 @@
                 <tr>
                     <td>历史最高注册数</td>
                     <td>{{ array_get($maxArray['max_supplier_reg_num'],'supplier_reg_num' ) }}
-                        ({{ array_get($maxArray['max_supplier_reg_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_supplier_reg_num'],'created_at') }})
                     </td>
                     <td>{{ array_get($maxArray['max_wholesaler_reg_num'],'wholesaler_reg_num' ) }}
-                        ({{ array_get($maxArray['max_wholesaler_reg_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_wholesaler_reg_num'],'created_at') }})
                     </td>
                     <td>{{ array_get($maxArray['max_retailer_reg_num'],'retailer_reg_num' ) }}
-                        ({{ array_get($maxArray['max_retailer_reg_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_retailer_reg_num'],'created_at') }})
                     </td>
                     <td>
                         {{ array_get($maxArray['max_supplier_reg_num'],'supplier_reg_num' ) +
@@ -85,13 +85,13 @@
                 <tr>
                     <td>历史最高登录数</td>
                     <td>{{ array_get($maxArray['max_supplier_login_num'],'supplier_login_num' ) }}
-                        ({{ array_get($maxArray['max_supplier_login_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_supplier_login_num'],'created_at') }})
                     </td>
                     <td>{{ array_get($maxArray['max_wholesaler_login_num'],'wholesaler_login_num' ) }}
-                        ({{ array_get($maxArray['max_wholesaler_login_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_wholesaler_login_num'],'created_at') }})
                     </td>
                     <td>{{ array_get($maxArray['max_retailer_login_num'],'retailer_login_num' ) }}
-                        ({{ array_get($maxArray['max_retailer_login_num'],'created_at')->toDateString() }})
+                        ({{ array_get($maxArray['max_retailer_login_num'],'created_at') }})
                     </td>
                     <td>
                         {{ array_get($maxArray['max_supplier_login_num'],'supplier_login_num' ) +

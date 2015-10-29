@@ -13,7 +13,8 @@
             <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-2">
                 <div class="panel panel-auth">
                     <div class="panel-body">
-                        <form class="ajax-form form-horizontal" method="post" action="{{  url('api/v1/auth/register')  }}"
+                        <form class="ajax-form form-horizontal" method="post"
+                              action="{{  url('api/v1/auth/register')  }}"
                               accept-charset="UTF-8" data-done-then="referer">
                             <fieldset>
                                 <div class="form-group">
@@ -21,7 +22,7 @@
 
                                     <div class="col-sm-10 col-md-6">
                                         <input class="form-control" id="user_name" name="user_name" placeholder="请输入用户名"
-                                               type="password">
+                                               type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -78,7 +79,23 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">营业执照:</label>
+                                    <label class="col-sm-2 control-label" for="spreading_code">推广码:</label>
+
+                                    <div class="col-sm-10 col-md-6">
+                                        <input class="form-control" id="spreading_code" name="spreading_code"
+                                               placeholder="请输入推广码" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="license_num">营业执照注册号:</label>
+
+                                    <div class="col-sm-10 col-md-6">
+                                        <input class="form-control" id="license_num" name="license_num"
+                                               placeholder="请输入执照注册号" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="license">营业执照:</label>
 
                                     <div class="col-sm-10 col-md-6">
                                         <div class="progress collapse">
@@ -98,7 +115,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">经营许可证:</label>
+                                    <label class="col-sm-2 control-label" for="username">食品流通许可证:</label>
 
                                     <div class="col-sm-10 col-md-6">
                                         <div class="progress collapse">
@@ -120,7 +137,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
+                                    <label class="col-sm-2 control-label" for="username">代理合同:</label>
 
                                     <div class="col-sm-10 col-md-6">
                                         <div class="progress collapse">
@@ -140,7 +157,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group shop-address">
                                     <label class="col-sm-2 control-label">所在地</label>
 
                                     <div class="col-sm-3">
@@ -170,6 +187,9 @@
                                         <input type="hidden" name="address[area_name]"/>
                                         <input type="text" placeholder="请输入详细地址" name="address[address]" id="address"
                                                class="form-control" value="">
+                                        <input type="hidden" name="x_lng" value=""/>
+                                        <input type="hidden" name="y_lat" value=""/>
+                                        <div id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-lg btn-block btn-submit" data-loading-text="注册中..."
@@ -190,10 +210,14 @@
     </footer>
     @parent
 @stop
+@section('js-lib')
+    <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
+@stop
 @section('js')
     @parent
     <script type="text/javascript">
         $(function () {
+            getShopAddressMap(0, 0);
             picFunc();
             $('select.address').change(function () {
                 var provinceControl = $('select[name="address[province_id]"]'),

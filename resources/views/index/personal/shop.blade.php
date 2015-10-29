@@ -136,6 +136,7 @@
                                     id="pic-upload">
                                 请选择图片文件(1000x400)
                             </button>
+
                             <div class="row pictures">
                                 <div class="hidden">
                                     <input type="hidden" value="" name="images[id][]">
@@ -192,8 +193,8 @@
                         <input type="hidden" name="address[area_name]" value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}" />
                         <input type="text" placeholder="请输入详细地址" name="address[address]" id="address" class="form-control"
                                value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
-                        <input type="hidden" name="x_lng" value=""/>
-                        <input type="hidden" name="y_lat" value=""/>
+                        <input type="hidden" name="x_lng" value="{{ $shop->x_lng }}"/>
+                        <input type="hidden" name="y_lat" value="{{ $shop->y_lat }}"/>
                         <div id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"> </div>
                     </div>
 

@@ -124,7 +124,7 @@ class File extends Model
         }
 
         // 提取用户ID
-        $userId = 1; //\AdminAuth::id();
+        $userId = admin_auth()->id();
         if (!$isAdmin = boolval($userId)) {
             $userId = auth()->id();
         }

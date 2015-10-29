@@ -30,7 +30,6 @@ class GoodsController extends Controller
         $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
-
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,

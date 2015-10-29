@@ -109,15 +109,15 @@ class AdminController extends Controller
      * 修改当前管理员密码
      *
      * @param \App\Http\Requests\Admin\UpdatePasswordRequest $request
-     * @param \App\Models\Admin $user
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function putPassword(UpdatePasswordRequest $request, Admin $user)
+    public function putPassword(UpdatePasswordRequest $request)
     {
+        $user = admin_auth()->user();
         //检查原密码是否正确
-        if (Hash::check($request->input['old_password'], $user->password)) {
+        if (Hash::check($request->input('old_password'), $user->password)) {
             //修改新密码
-            if ($user->fill(['password', $request->input['password']])->save()) {
+            if ($user->fill(['password' => $request->input('password')])->save()) {
                 return $this->success('修改密码成功');
             }
 

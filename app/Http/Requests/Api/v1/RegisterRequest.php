@@ -18,11 +18,13 @@ class RegisterRequest extends Request
             'type' => 'required|in:1,2,3',
             'logo' => 'sometimes|required',
             'name' => 'required|unique:shop',
-            'contact_person' => 'required|max:10',
+            'contact_person' => 'required',
             'contact_info' => 'required',
+            'spreading_code'=> 'alpha_num|max:20',
             'address' => 'required|max:60',
             'area' => 'sometimes|required|max:200',
             'license' => 'sometimes|required',
+            'license_num' => 'required|numeric',
             'business_license' => 'sometimes|required',
             'agency_contract' => 'sometimes|required'
         ];

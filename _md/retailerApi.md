@@ -16,6 +16,7 @@
 
 	account     string    账号
 	password      string    密码
+	type        int         用户类型 (1是终端   2是批发    3是供应)
 `成功返回:`
 
 	id          int             用户id
@@ -54,10 +55,14 @@
     name                        string      店铺名
     contact_person              string      联系人
     contact_info                string      联系方式
+    spreading_code              string      推广码
     license                     file        营业执照
-    business_license            file        经营许可证
+    license_num                 string      营业执照编号
+    business_license            file        食品经营许可证
     agency_contract             file        代理合同
     address                     array       店铺地址
+    x_lng                       float       经度
+    y_lat                       float       纬度
 
      address 字段子集介绍
 
@@ -392,10 +397,49 @@
 
     images_url 字段子集说明
 
+   name                string      图片名
+   path                string      图片路径
+   id                  int         图片id
+   url                 string      图片详细路径
+
+#### 2.4.2 根据距离排序获取所有店铺[get] all
+`请求参数：`
+
+    page                int         页码
+    x_lng               float       纬度
+    y_lat               float       经度
+
+`成功返回：`
+
+    distance            float       距离 （米）
+    id                  int         店铺id
+    name                string      店铺名
+    min_money           decimal     最低配送额
+    contact_info        string      联系方式
+    images_url          array       店铺图片
+    logo_url            string      logo地址
+    shop_address        array       店铺地址
+
+    images_url 字段子集说明
+
     name                string      图片名
     path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
-#### 2.4.2 店铺详情[get]   ({shop_id})
+    shop_address 字段子集说明
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+
+`失败返回：`
+
+#### 2.4.3 店铺详情[get]   ({shop_id})
 `请求参数：`
 
 `成功返回：`
@@ -413,8 +457,10 @@
 
     name                string      图片名
     path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
-#### 2.4.3 店铺商品[get]   ({shop_id}/goods)
+#### 2.4.4 店铺商品[get]   ({shop_id}/goods)
 `请求参数：`
 
     page                int         分页
@@ -438,9 +484,11 @@
     images 字段子集说明
 
     name                string      图片名
-    path                string      图片地址
+    path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
-#### 2.4.4 店铺扩展信息[get]   ({shop_id}/extend)
+#### 2.4.5 店铺扩展信息[get]   ({shop_id}/extend)
 `请求参数：`
 
 `成功返回：`
@@ -454,8 +502,10 @@
 
     images_url 字段子集介绍
 
-    name                    string          图片名
-    path                    string          图片地址
+    name                string      图片名
+    path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
     delivery_area 字段子集介绍
 
@@ -478,7 +528,7 @@
     address                 string          详细地址
 
 
-#### 2.4.5 店铺修改[put] (personal/shop/{shop_id})
+#### 2.4.6 店铺修改[put] (personal/shop/{shop_id})
 `请求参数：`
 
     logo                    string/file         店铺logo

@@ -14,7 +14,7 @@
                     <div class="carousel-inner banner">
                         @foreach($goods->images_url as $key =>$image)
                             <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image['path'] }}" alt="{{ $image['name'] }}">
+                                <img src="{{ $image['url'] }}" alt="{{ $image['name'] }}">
                             </div>
                         @endforeach
                     </div>
