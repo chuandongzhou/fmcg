@@ -12,6 +12,7 @@ class Withdraw extends Model
         'amount',
         'status',
         'trade_no',
+        'reason',
         'created_at',
         'failed_at',
         'pass_at',

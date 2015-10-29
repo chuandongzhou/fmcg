@@ -1,7 +1,5 @@
 <?php
 
-$router->get('pusher', 'TestController@pusher');
-$router->get('pushIos', 'TestController@pushIos');
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
     $router->get('register', 'AuthController@register');
@@ -36,7 +34,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->get('balance', 'BalanceController@index'); //账户余额
-        $router->controller('withdraw', 'WithdrawController');//提现相关操作
+        $router->get('withdraw', 'WithdrawController@index');//提现相关操作
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
@@ -74,6 +72,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function ($router)
     $router->resource('images', 'ImagesController');                    //商品图片管理
     $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
     $router->controller('system-trade', 'SystemTradeInfoController');        //系统交易信息
+    $router->controller('system-withdraw', 'SystemWithdrawInfoController');        //系统提现信息
     $router->controller('feedback', 'FeedbackController');             //反馈管理
     $router->controller('trade', 'TradeController');        //交易信息
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
@@ -130,6 +129,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
+            $router->controller('withdraw', 'WithdrawController');    //提现相关操作
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
         });

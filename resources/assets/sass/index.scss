@@ -1,5 +1,5 @@
 @import "variables";
-@import "bootstrap/bootstrap/mixins";
+@import "bootstrap/mixins";
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -16,10 +16,15 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0;
 }
-
-table tr td, table tr th {
-  vertical-align: middle;
-  text-align: center;
+.table-center{
+  tr{
+    th{
+      text-align: center;
+    }
+    td{
+      text-align: center;
+    }
+  }
 }
 
 @mixin dash-bord {
@@ -139,7 +144,7 @@ table tr td, table tr th {
         padding: 5px 0;
       }
       .login-btn {
-        width: 70%;
+        width: 100%;
         padding: 6px 0;
       }
     }
@@ -153,6 +158,86 @@ table tr td, table tr th {
 }
 
 /*======================================login end======================================*/
+/*======================================guide end======================================*/
+.guide-content{
+  background: url("../images/banner.jpg") top no-repeat;
+  background-size:cover;
+  min-height: 600px;
+  min-width: 1200px;
+  position: relative;
+  .content-panel {
+    position: absolute;
+    width: 600px;
+    bottom:80px;
+    left: 50%;
+    margin-left:-300px;
+    vertical-align: text-bottom;
+    .tabs-item {
+      float: left;
+      width: 25%;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      text-align: center;
+      cursor: pointer;
+      &:hover{
+        text-decoration: none;
+        .item-icon{
+          border:2px solid $body-bg;
+        }
+        .item-name{
+          color:$body-bg;
+        }
+      }
+      .item-icon{
+        display: inline-block;
+        border-radius:50%;
+        min-height: 94px;
+        padding: 5px;
+        .icon {
+          display: inline-block;
+          vertical-align: middle;
+          background: url("../images/guide-icons.png") no-repeat;
+          background-size:cover;
+          @include square(80px);
+
+          &.icon-car{
+            background-position:0 1px;
+          }
+          &.icon-wholesalers{
+            background-position: 0 -117px;
+          }
+          &.icon-shopping-cart{
+            background-position: 0 -234px;
+          }
+          &.icon-books{
+            background-position: 0 -352px;
+          }
+
+        }
+      }
+      .item-name{
+        display: block;
+        color: $gray-darker;
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+    }
+  }
+}
+.guide-footer{
+  min-width: 1200px;
+  .content{
+    p{
+      width: 70%;
+      margin: auto;
+      text-align: left;
+    }
+  }
+}
+
+/*======================================guide end======================================*/
 /*======================================step begin======================================*/
 .ui-stepBar-wrap {
   position: relative;
@@ -258,7 +343,7 @@ table tr td, table tr th {
 }
 
 .shopping-car {
-  padding: 10px 0
+  padding: 20px 0
 }
 
 @at-root .search {
@@ -752,7 +837,6 @@ table tr td, table tr th {
         display: none;
         margin-left: 20px;
         li {
-          border: 1px solid red;
           text-align: left;
           padding-left: 15px;
         }
@@ -1695,6 +1779,7 @@ table {
   .search {
     min-width: 78%;
     .input-group {
+      margin-top: 2px;
       min-width: 50%;
       border: 1px solid $brand-primary;
       .select-role {
@@ -1735,9 +1820,16 @@ table {
         }
       }
       .control {
-        @include size(75%, 33px);
+        @include size(79%, 33px);
+        padding: 0 5px;
         border: none;
         outline: none;
+      }
+      @media screen and (min-width: 991px) and (max-width:1200px) {
+        .control {
+          @include size(74%, 33px);
+          padding: 0 5px;
+        }
       }
       @media screen and (max-width: 991px) {
         .control {
@@ -2127,5 +2219,19 @@ table {
     padding-left: 240px !important;
   }
 }
-
 /*==================================================================================dealer end======================================================================*/
+.pagination{
+  li{
+    a{
+      cursor: pointer;
+    }
+  }
+}
+/*==============baidu map css start=================*/
+#map, #map-modal {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  margin: 0;
+}
+/*==============baidu map css end=================*/

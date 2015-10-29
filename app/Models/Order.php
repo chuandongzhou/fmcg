@@ -81,7 +81,7 @@ class Order extends Model
      */
     public function goods()
     {
-        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('price',
+        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('id','price',
             'num', 'total_price');
     }
 
@@ -251,17 +251,6 @@ class Order extends Model
     }
 
     /**
-     * 未确认
-     *
-     * @param $query
-     * @return mixed
-     */
-//    public function scopeNonSure($query)
-//    {
-//        return $query->where('status', cons('order.status.non_sure'))->nonCancel();
-//    }
-
-    /**
      * 未取消条件
      *
      * @param $query
@@ -342,8 +331,14 @@ class Order extends Model
             }
             if ($search['status']) {
                 if ($search['status'] == key(cons('order.pay_status'))) {//查询未付款
-                    $query->where('pay_status', cons('order.pay_status')[$search['status']])->whereNotIn('status', '<>',
-                        cons('order.status.non_sure'));
+                    $query->where('pay_status', cons('order.pay_status.non_payment'));
+                } elseif ($search['status'] == key(cons('order.status'))) {//未发货
+                    $query->where(function ($query) {
+                        $query->where(function ($query) {
+                            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
+                                cons('order.pay_status.payment_success'));
+                        })->orwhere('pay_type', cons('pay_type.cod'));
+                    })->where('status', cons('order.status.non_send'));
                 } else {
                     $query->where('status', cons('order.status')[$search['status']]);
                 }
@@ -351,7 +346,7 @@ class Order extends Model
             if ($search['start_at'] && $search['end_at']) {
                 $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
             }
-        });
+        })->where('is_cancel', cons('order.is_cancel.off'));
     }
 
     /**

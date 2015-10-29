@@ -147,6 +147,7 @@
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/system-trade') }}">平台交易信息</a>
+                                        <li><a href="{{ url('admin/system-withdraw') }}">平台提现申请</a>
                                     </ul>
                                 </div>
                             </div>

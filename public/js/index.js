@@ -23,18 +23,6 @@ function tips(obj, content) {
  * 动态查询订单列表
  */
 function getOrderList() {
-    //下拉列表方式
-    $('.ajax-select').on('change', function () {
-        _getArgs();
-    });
-    //时间查询方式
-    $('#end-time').on('blur', function () {
-        _getArgs();
-    });
-    //搜索按钮方式
-    $('button.ajax-submit').on('click', function () {
-        _getArgs();
-    });
     //待办事项动态加载详情
     $('a.ajax-get').on('click', function () {
         //修改选中状态
@@ -45,37 +33,10 @@ function getOrderList() {
         $('.pay-detail,.search').remove();
         _ajaxGet(targetUrl);
     });
-}
-/**
- * 获取需要查询的条件信息
- * @returns {boolean}
- * @private
- */
-function _getArgs() {
-    data = {};
-    targetUrl = $('#target-url').val();
-    //拼装查询的对象所属类型
-    data['search_role'] = $('#search-role').val();
-
-    //拼装select条件
-    $('select.ajax-select').each(function () {
-        var key = $(this).attr('name');
-        data[key] = $(this).find('option:selected').val();
-
+    $('form').on('click', '.ajax-page', function () {
+        var targetUrl = $(this).attr('data-url');
+        _ajaxGet(targetUrl, {"page": $(this).attr('data-page')});
     });
-    //拼装时间条件
-    $('input.datetimepicker').each(function () {
-        var key = $(this).attr('name');
-        data[key] = $(this).val();
-    });
-
-    if (data['start_at'] > data['end_at']) {
-        alert('开始时间不能晚于结束时间');
-        return false;
-    }
-    var value = $('input[name="search_content"]').val();
-    data['search_content'] = value;
-    _ajaxGet(targetUrl, data);
 }
 /**
  * get方式，动态获取订单信息并显示到指定区域
@@ -165,7 +126,29 @@ function _ajaxGet(targetUrl, data) {
             });
 
             $('.content').html(str);
+            var totalPage = list.total / list.per_page;
+            var pageHtml = '';
+            if (totalPage > 1) {
+                if (list.current_page == 1) {
+                    pageHtml += '<li class="disabled"><span>&laquo;</span></li> ';
+                } else {
+                    pageHtml += '<li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '" rel="prev">&laquo;</a></li>';
+                }
+                for (var i = 1; i <= totalPage; ++i) {
+                    if (i == list.current_page) {
+                        pageHtml += ' <li><a class="ajax-page active" data-url="' + targetUrl + '" data-page="' + i + '">' + i + '</a></li>';
+                    } else {
+                        pageHtml += ' <li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '">' + i + '</a></li>';
+                    }
+                }
+                if (list.current_page == list.total) {
+                    pageHtml += '<li class="disabled"><span>&raquo;</span></li> ';
+                } else {
+                    pageHtml += ' <li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '" rel="next">&raquo;</a></li>';
+                }
 
+            }
+            $('.pagination').html(pageHtml);
         }
     });
 }
@@ -176,7 +159,6 @@ function getOrderButtonEvent() {
     $('.content')
         .on('click', '.send-goods', function () {
             $('input[name="order_id"]').val($(this).data('data'));
-            $('.btn-close').click();
         })
         .on('click', 'input[name="order_id[]"]', function () {
             $('#check-all').prop('checked', true);
@@ -761,17 +743,20 @@ function getCoordinateMap(data) {
 
 function getShopAddressMap(lng, lat) {
     var addressMap = new BMap.Map('address-map');
+    var point_address  = new BMap.Point(106, 35);;
     if (lng && lat) {
-        var point_address = new BMap.Point(lng, lat);
+        point_address= new BMap.Point(lng, lat);
         addressMap.centerAndZoom(point_address, 12);
         addressMap.addOverlay(new BMap.Marker(point_address));
     } else {
-        var point_address = new BMap.Point(106, 35);
         addressMap.centerAndZoom(point_address, 12);
         var geolocation_address = new BMap.Geolocation();
         geolocation_address.getCurrentPosition(function (r) {
             if (this.getStatus() == BMAP_STATUS_SUCCESS) {
                 //重置中心点
+                $('input[name="x_lng"]').val(r.point.lng);
+                $('input[name="y_lat"]').val(r.point.lat);
+
                 addressMap.addOverlay(new BMap.Marker(r.point));
                 addressMap.panTo(r.point);
             }
@@ -876,7 +861,7 @@ function addGoodsFunc(cate1, cate2, cate3) {
             $(this).remove();
             $('.img-' + imageId).removeClass('hidden');
         })
-    })
+    });
     $('select.categories').change(function () {
         loadImg()
     });
@@ -897,26 +882,25 @@ function addGoodsFunc(cate1, cate2, cate3) {
 function getWithdraw(total_amount) {
     var bank = $('select[name="bank"] option:selected').val();
     var amount = 0;
+    $('#withdraw').find('.btn-add').prop('disabled', true);
     $('input[name="amount"]').on('keyup', function () {
         amount = $(this).val();
 
         if (isNaN(amount)) {//不是数字
             $('.tip').show();
-            $('.btn-add').prop('disabled', true);
         } else if (amount > total_amount) {
             $('.tip').text('提现金额不合法').show();
-            $('.btn-add').prop('disabled', true);
         } else {
             $('.tip').hide();
-            $('.btn-add').prop('disabled', false).attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+            $('#withdraw').find('.btn-add').prop('disabled', false).attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
         }
     });
     $('#withdraw').on('change', 'select[name="bank"]', function () {
         bank = $(this).find('option:selected').val();
         if (bank) {
-            $('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+            $('#withdraw').find('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
         } else {
-            $('.btn-add').prop('disabled', false);
+            $('#withdraw').find('.btn-add').prop('disabled', false);
         }
 
     })
@@ -926,25 +910,60 @@ function getWithdraw(total_amount) {
             $('.tip').hide();
         });
 }
+/**
+ * 动态显示提现进度
+ */
 function getWithdrawTimeItem() {
     $('.table').on('click', '.show-item', function () {
         var data = $.parseJSON($(this).attr('data-data'));
-        var content = '';
-        if (data.created_at) {
-            content += '<p>申请时间：' + data.created_at + '</p>'
+        var content = '<p>申请时间：' + data.created_at + '</p>';
+
+        if (parseInt(data.pass_at) > 0) {
+            content += '<p>审核通过时间：' + data.pass_at + '</p>';
         }
-        if (data.pass_at > 0) {
-            content += '<p>审核通过时间：' + data.pass_at + '</p>'
+        if (parseInt(data.payment_at) > 0) {
+            content += '<p>打款时间：' + data.payment_at + '</p>';
         }
-        if (data.payment_at > 0) {
-            content += '<p>打款时间：' + data.payment_at + '</p>'
-        }
-        if (data.failed_at > 0) {
-            content += '<p>审核不通过时间：' + data.failed_at + '</p>'
+        if (parseInt(data.failed_at) > 0) {
+            content += '<p>审核不通过时间：' + data.failed_at + '</p>';
+            content += '<p>审核不通过原因：' + data.reason + '</p>'
         }
         $('#withdraw-item').find('.text-left').html(content);
     });
 }
 
+/**
+ * 订单详情页发货功能事件
+ */
+function sendGoodsByDetailPage() {
+    $('#sendModal').find('.btn-add').click(function () {
+        var order_id = $('.send-goods').attr('data-data');
+        var delivery_man_id = $('select option:selected').val();
+        $(this).attr('data-data', '{"order_id":' + order_id + ',"delivery_man_id":' + delivery_man_id + '}');
+    });
+}
+/**
+ * 订单详情页修改单价功能事件
+ */
+function changePriceByDetailPage() {
+    $('#changePrice').find('.btn-add').prop('disabled', true);
+    $('.change-price').click(function(){
+        var order_id = $(this).attr('data-data');
+        var pivot_id =$(this).attr('data-pivot');
+        $('input[name="price"]').keyup(function () {
+            var price = $(this).val();
+            if (isNaN(price)) {//不是数字
+                $('.tip').show();
+            } else if (price < 0) {
+                $('.tip').text('单价输入不合法').show();
+            } else {
+                $('.tip').hide();
+                $('#changePrice').find('.btn-add').prop('disabled', false).attr('data-data', '{"price":' + price + ',"order_id":' + order_id + ',"pivot":'+pivot_id+'}');
+            }
+        });
+
+    });
 
 
+
+}

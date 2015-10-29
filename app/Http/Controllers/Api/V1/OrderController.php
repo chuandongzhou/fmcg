@@ -103,7 +103,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
+        $orders = Order::ofSell($this->userId)->nonSend()->paginate(1)->toArray();
 
         return $this->success($orders);
     }
@@ -396,4 +396,29 @@ class OrderController extends Controller
         return $this->success('提交订单成功');
     }
 
+
+    public function putChangePrice(Request $request)
+    {
+        //判断该订单是否存在
+        $order = Order::bySellerId(auth()->user()->id)->find(intval($request->input('order_id')));
+        if (!$order) {
+            $this->error('订单不存在,请确认后再试');
+        }
+        //判断输入的价格是否合法
+        $price = intval($request->input('price'));
+        if ($price < 0) {
+            $this->error('输入单价不合法,请确认后再试');
+        }
+        //判断待修改物品是否属于该订单
+        $pivot = OrderGoods::find(intval($request->input('pivot')));
+        if (!$pivot || $pivot->order_id != $order->id) {
+            $this->error('操作失败');
+        }
+        $oldTotalPrice = $pivot->total_price;
+        $newTotalPrice = $pivot->num * $price;
+        $pivot->update(['price' => $price, 'total_price' => $newTotalPrice]);
+        $order->update(['price' => $order->price - $oldTotalPrice + $newTotalPrice]);
+
+        return $this->success('修改成功');
+    }
 }

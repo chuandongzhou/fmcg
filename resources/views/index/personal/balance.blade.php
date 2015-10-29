@@ -15,7 +15,7 @@
                 <div class="personal-center">
                     <div class=" switching">
                         <a href="{{ url('personal/balance') }}" class="btn active">流水账</a>
-                        <a href="{{ url('personal/withdraw/index') }}" class="btn">提现记录</a>
+                        <a href="{{ url('personal/withdraw') }}" class="btn">提现记录</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -81,7 +81,7 @@
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('personal/withdraw/add-withdraw') }}" data-method="post">确定</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/personal/withdraw/add-withdraw') }}" data-method="post">确定</button>
                     </div>
                 </div>
             </div>

@@ -13,12 +13,14 @@
                 <a class="btn ajax-get"
                    data-url="{{ url('api/v1/order/non-arrived') }}" data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
             </div>
+        </div>
+        <form class="form" method="get" action="{{ url('order-buy/index') }}">
             <div class="col-sm-8 pay-detail search-options">
                 <span class="item control-item">支付方式 :
                     <select name="pay_type" class="ajax-select control">
                         <option value="">全部方式</option>
                         @foreach($pay_type as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
+                            <option value="{{ $key }}" {{ $key==$search['pay_type'] ? 'selected' : ''}}>{{ $value }}</option>
                         @endforeach
                     </select>
                 </span>
@@ -27,22 +29,22 @@
                       <select name="status" class="ajax-select control">
                           <option value="">全部状态</option>
                           @foreach($order_status as $key => $value)
-                              <option value="{{ $key }}">{{ $value }}</option>
+                              <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
                           @endforeach
                       </select>
                     <input type="hidden" id="target-url" value="{{ url('order-buy/search') }}"/>
                 </span>
                 <span class="item">
                     时间段 :
-                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
+                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at" value="{{ $search['start_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>　至　
-                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
+                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at" value="{{ $search['end_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>
                 </span>
             </div>
             <div class="col-sm-4 right-search search search-options">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
+                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号" value="{{ $search['search_content'] or '' }}"
                            aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
                  <button class="btn btn-primary ajax-submit">搜索
@@ -50,12 +52,11 @@
                 </span>
                 </div>
             </div>
-        </div>
-        <form class="ajax-form" method="post">
+
             <div class="row order-table-list">
                 <div class="col-sm-12 table-responsive table-col">
                     <div class="content">
-                        @foreach($orders['data'] as $order)
+                        @foreach($orders as $order)
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
@@ -119,7 +120,8 @@
                     </div>
                 </div>
             </div>
-            @if($orders['data'])
+            {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
+        @if($orders->count())
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" id="check-all"/>

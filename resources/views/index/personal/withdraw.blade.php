@@ -4,7 +4,7 @@
 
 @section('right')
     @include('index.personal.tabs')
-    <form method="get" action="{{ url('personal/withdraw/index') }}">
+    <form method="get" action="{{ url('personal/withdraw') }}">
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="account-balance">
@@ -28,11 +28,12 @@
                                type="text">
                         <input type="submit" class="btn btn-warning">
                     </p>
-                    <table class="table table-bordered text-center">
+                    <table class="table table-bordered table-center">
                         <thead>
                             <tr>
                                 <th>提现单号</th>
                                 <th>提现金额</th>
+                                <th>银行卡所有人</th>
                                 <th>银行账号</th>
                                 <th>银行名称</th>
                                 <th>状态</th>
@@ -46,12 +47,13 @@
                                     <tr>
                                         <td>{{ $withdraw->id }}</td>
                                         <td>{{ $withdraw->amount }}</td>
+                                        <td>{{ $withdraw->userBanks->card_holder }}</td>
                                         <td>{{ $withdraw->userBanks->card_number }}</td>
                                         <td>{{ cons()->valueLang('bank.type')[$withdraw->userBanks->card_type] }}</td>
                                         <td>{{ cons()->valueLang('withdraw')[$withdraw->status] }} </td>
                                         <td>{{ $withdraw->trade_no }} </td>
                                         <td><a class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString()]) !!}' >详细信息</a></td>
+                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString(),'reason'=>$withdraw->reason]) !!}' >详细信息</a></td>
                                     </tr>
                                 @endforeach
 
@@ -68,7 +70,7 @@
                                     <td>{{ cons()->valueLang('withdraw')[$withdraws->status] }} </td>
                                     <td>{{ $withdraws->trade_no }} </td>
                                     <td><a class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString()]) !!}' >详细信息</a></td>
+                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString(),'reason'=>$withdraws->reason]) !!}' >详细信息</a></td>
                                 </tr>
                             @endif
                         </tbody>
@@ -108,7 +110,7 @@
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('personal/withdraw/add-withdraw') }}" data-method="post">确定</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/personal/withdraw/add-withdraw') }}" data-method="post">确定</button>
                     </div>
                 </div>
             </div>

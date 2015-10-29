@@ -180,7 +180,7 @@
                                 @endif
                                 {{--TODO:这里需要跳转支付页面--}}
                                 @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] != cons('order.status.non_sure'))
-                                    <a href="#" class="btn btn-danger">付款</a>
+                                    <a href="#" class="btn btn-success">付款</a>
                                 @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
                                     <a class="btn btn-danger ajax" data-url="{{ url('order-buy/batch-finish') }}"
                                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>

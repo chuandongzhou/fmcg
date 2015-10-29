@@ -21,9 +21,10 @@ class OrderBuyController extends OrderController
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         //买家可执行功能列表
         //支付方式
@@ -36,54 +37,26 @@ class OrderBuyController extends OrderController
         $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
         $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
 
-        //默认显示所有订单订单
-        $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
-            'desc')->paginate()->toArray();
+        $search = $request->all();
+        $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
+        $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
+        $search['status'] = isset($search['status']) ? trim($search['status']) : '';
+        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
+        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+        $query = Order::ofBuy($this->userId)->with('shop.user', 'goods')->orderBy('id', 'desc');
+        if (is_numeric($search['search_content'])) {
+            $orders = $query->where('id', $search['search_content'])->paginate();
+        } else {
+            $orders = $query->ofSelectOptions($search)->ofSellerShopName($search['search_content'])->paginate();
+        }
 
         return view('index.order.order-buy', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,
             'data' => $data,
-            'orders' => $orders
+            'orders' => $orders,
+            'search' => $search
         ]);
-    }
-
-    /**
-     * 处理搜索按钮发送过来的请求
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    public function getSearch(Request $request)
-    {
-
-        $search = $request->input('search_content');
-        $orderId = trim($search);
-        if (is_numeric($orderId)) {
-            $order = Order::ofBuy($this->userId)->ofSelectOptions($search)->find($orderId);
-            if (!$order) {
-                return $this->error('订单似乎不存在');
-            }
-            $orders['data'][0] = $order;
-        } else {
-            $orders = Order::ofBuy($this->userId)->ofSelectOptions($search)->ofSellerShopName($orderId)->paginate()->toArray();
-        }
-
-        return $orders;
-    }
-
-    /**
-     * 处理select发送过来的请求
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    public function getSelect(Request $request)
-    {
-        $search = $request->all();
-        $orders = Order::ofBuy($this->userId)->ofSelectOptions($search)->paginate()->toArray();
-
-        return $orders;
     }
 
     /**
@@ -102,11 +75,11 @@ class OrderBuyController extends OrderController
         $detail = $detail->toArray();
 
         //拼接需要调用的模板名字
-        $folderName = array_flip(cons('user.type'))[$this->userType];
+
         $payType = $detail['pay_type'];
         $fileName = array_flip(cons('pay_type'))[$payType];
 
-        $view = 'index.order.' . $folderName . '.detail-' . $fileName;
+        $view = 'index.order.retailer.detail-' . $fileName;
 
         return view($view, [
             'order' => $detail

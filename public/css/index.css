@@ -11,8 +11,11 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0; }
 
-table tr td {
-  vertical-align: middle; }
+.table-center tr th, .table-center .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list table .table-center tr td {
+  text-align: center; }
+
+.table-center tr td {
+  text-align: center; }
 
 .padding-clear {
   padding: 0; }
@@ -33,9 +36,16 @@ table tr td {
   margin: 0; }
   .login-nav .nav-title li {
     display: inline-block;
-    padding: 30px 20px; }
-    .login-nav .nav-title li a:hover {
-      background-color: transparent; }
+    padding: 20px; }
+    .login-nav .nav-title li a {
+      display: inline-block;
+      vertical-align: middle;
+      color: #000; }
+      .login-nav .nav-title li a:hover {
+        background-color: transparent; }
+      .login-nav .nav-title li a.logo-icon img {
+        width: 50px;
+        height: 45px; }
 
 .login-banner-slide .carousel-inner img {
   width: 100%;
@@ -91,7 +101,7 @@ table tr td {
         width: 25%;
         padding: 5px 0; }
       .login-content .login-wrap .item .login-btn {
-        width: 70%;
+        width: 100%;
         padding: 6px 0; }
 
 .login-footer {
@@ -100,6 +110,69 @@ table tr td {
   padding: 30px 15px; }
 
 /*======================================login end======================================*/
+/*======================================guide end======================================*/
+.guide-content {
+  background: url("../images/banner.jpg") top no-repeat;
+  background-size: cover;
+  min-height: 600px;
+  min-width: 1200px;
+  position: relative; }
+  .guide-content .content-panel {
+    position: absolute;
+    width: 600px;
+    bottom: 80px;
+    left: 50%;
+    margin-left: -300px;
+    vertical-align: text-bottom; }
+    .guide-content .content-panel .tabs-item {
+      float: left;
+      width: 25%;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      text-align: center;
+      cursor: pointer; }
+      .guide-content .content-panel .tabs-item:hover {
+        text-decoration: none; }
+        .guide-content .content-panel .tabs-item:hover .item-icon {
+          border: 2px solid #fff; }
+        .guide-content .content-panel .tabs-item:hover .item-name {
+          color: #fff; }
+      .guide-content .content-panel .tabs-item .item-icon {
+        display: inline-block;
+        border-radius: 50%;
+        min-height: 94px;
+        padding: 5px; }
+        .guide-content .content-panel .tabs-item .item-icon .icon {
+          display: inline-block;
+          vertical-align: middle;
+          background: url("../images/guide-icons.png") no-repeat;
+          background-size: cover;
+          width: 80px;
+          height: 80px; }
+          .guide-content .content-panel .tabs-item .item-icon .icon.icon-car {
+            background-position: 0 1px; }
+          .guide-content .content-panel .tabs-item .item-icon .icon.icon-wholesalers {
+            background-position: 0 -117px; }
+          .guide-content .content-panel .tabs-item .item-icon .icon.icon-shopping-cart {
+            background-position: 0 -234px; }
+          .guide-content .content-panel .tabs-item .item-icon .icon.icon-books {
+            background-position: 0 -352px; }
+      .guide-content .content-panel .tabs-item .item-name {
+        display: block;
+        color: #222222;
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: 700;
+        letter-spacing: 2px; }
+
+.guide-footer {
+  min-width: 1200px; }
+  .guide-footer .content p {
+    width: 70%;
+    margin: auto;
+    text-align: left; }
+
+/*======================================guide end======================================*/
 /*======================================step begin======================================*/
 .ui-stepBar-wrap {
   position: relative;
@@ -170,16 +243,24 @@ table tr td {
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
-.wholesalers-top-header .logo {
+.logo {
   padding-bottom: 10px;
   padding-top: 10px; }
-  .wholesalers-top-header .logo .logo-icon {
-    height: 34px;
-    line-height: 34px;
-    display: inline-block; }
 
-.wholesalers-top-header .shopping-car {
-  padding: 10px 0; }
+.logo-icon {
+  display: inline-block; }
+  .logo-icon img {
+    width: 80px;
+    height: 50px; }
+
+.dealer-header .logo-icon {
+  padding-top: 8px; }
+
+.wholesalers-top-header .right-search, .wholesalers-top-header .wholesalers-management .pay-detail, .wholesalers-management .wholesalers-top-header .pay-detail {
+  padding: 20px 0; }
+
+.shopping-car {
+  padding: 20px 0; }
 
 .search .form-control, .public-personal .controls .item .add-goods .form-control {
   outline: none;
@@ -527,8 +608,7 @@ table tr td {
     height: 50px;
     border-radius: 50%; }
   .public-personal .menu .dealer-menu-list {
-    text-align: left;
-    padding-left: 15px; }
+    text-align: center; }
     .public-personal .menu .dealer-menu-list .list-item {
       color: #000; }
   .public-personal .menu .menu-list {
@@ -536,8 +616,11 @@ table tr td {
     width: 60%;
     margin: -1px auto auto auto; }
     .public-personal .menu .menu-list .menu-wrap {
-      padding-left: 15px;
-      display: none; }
+      display: none;
+      margin-left: 20px; }
+      .public-personal .menu .menu-list .menu-wrap li {
+        text-align: left;
+        padding-left: 15px; }
     .public-personal .menu .menu-list .active {
       color: #4cb9fe; }
 
@@ -1188,6 +1271,7 @@ table .product-name {
 .dealer-header .search, .dealer-header .public-personal .controls .item .add-goods, .public-personal .controls .item .dealer-header .add-goods {
   min-width: 78%; }
   .dealer-header .search .input-group, .dealer-header .public-personal .controls .item .add-goods .input-group, .public-personal .controls .item .dealer-header .add-goods .input-group {
+    margin-top: 2px;
     min-width: 50%;
     border: 1px solid #4cb9fe; }
     .dealer-header .search .input-group .select-role, .dealer-header .public-personal .controls .item .add-goods .input-group .select-role, .public-personal .controls .item .dealer-header .add-goods .input-group .select-role {
@@ -1221,10 +1305,16 @@ table .product-name {
             display: inline-block;
             padding-bottom: 3px; }
     .dealer-header .search .input-group .control, .dealer-header .public-personal .controls .item .add-goods .input-group .control, .public-personal .controls .item .dealer-header .add-goods .input-group .control {
-      width: 75%;
+      width: 79%;
       height: 33px;
+      padding: 0 5px;
       border: none;
       outline: none; }
+    @media screen and (min-width: 991px) and (max-width: 1200px) {
+      .dealer-header .search .input-group .control, .dealer-header .public-personal .controls .item .add-goods .input-group .control, .public-personal .controls .item .dealer-header .add-goods .input-group .control {
+        width: 74%;
+        height: 33px;
+        padding: 0 5px; } }
     @media screen and (max-width: 991px) {
       .dealer-header .search .input-group .control, .dealer-header .public-personal .controls .item .add-goods .input-group .control, .public-personal .controls .item .dealer-header .add-goods .input-group .control {
         width: 69%;
@@ -1505,3 +1595,14 @@ table .product-name {
   padding-left: 240px !important; }
 
 /*==================================================================================dealer end======================================================================*/
+.pagination li a {
+  cursor: pointer; }
+
+/*==============baidu map css start=================*/
+#map, #map-modal {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  margin: 0; }
+
+/*==============baidu map css end=================*/

@@ -48,7 +48,6 @@
                     <li>提交订单</li>
                     <li class="time">
                         <span class="date">{{ $order['created_at'] }}</span>
-                        {{--<span class="clock">11:20</span>--}}
                     </li>
                     <li>{{ $order['user']['user_name'] }}</li>
                 </ul>
@@ -57,7 +56,6 @@
                         <li>付款</li>
                         <li class="time">
                             <span class="date">{{ $order['paid_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
                         </li>
                         <li>{{ $order['user']['user_name'] }}</li>
                     </ul>
@@ -67,7 +65,6 @@
                         <li>发货</li>
                         <li class="time">
                             <span class="date">{{ $order['send_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
                         </li>
                         <li>{{ $order['shop']['contact_person'] }}</li>
                     </ul>
@@ -77,7 +74,6 @@
                         <li>完成</li>
                         <li class="time">
                             <span class="date">{{ $order['finished_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
                         </li>
                         <li>{{ $order['user']['user_name'] }}</li>
                     </ul>
@@ -87,7 +83,6 @@
                         <li>取消订单</li>
                         <li class="time">
                             <span class="date">{{ $order['cancel_at'] }}</span>
-                            {{--<span class="clock">11:20</span>--}}
                         </li>
                         <li>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</li>
                     </ul>
@@ -106,53 +101,26 @@
                         <p class="remarks-content">{{ $order['remark'] }}</p>
                     </li>
                 </ul>
-                {{--TODO: 获取当前用户ID--}}
-                @if(Auth()->user()->id == $order['user']['id'])
-                    {{--买家显示按钮，如果订单被取消则只显示导出功能按钮--}}
                     <div class="pull-right">
                         @if(!$order['is_cancel'])
-                            @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
-                                {{--跳转支付页面--}}
-                                <button class="btn btn-danger">付款</button>
-                            @endif
-                            @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
-                                <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
+                            @if($order['pay_status'] == cons('pay_type.non_payment')
+                            && $order['status'] == cons('order.status.non_send'))
+                                <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                                         data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
                                 </button>
                             @endif
-                            @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.send') )
-                                <button class="btn btn-primary ajax" data-url="{{ url('order-buy/batch-finish') }}"
-                                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>已收货
-                                </button>
+                            @if($order['pay_status'] == cons('pay_type.payment_success')
+                            && $order['status'] == cons('order.status.non_send') )
+                                    <a class="btn btn-warning send-goods"  data-target="#sendModal"
+                                       data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
                             @endif
-                        @endif
-                    </div>
-                @else
-                    {{--卖家显示按钮--}}
-                    <div class="pull-right">
-                        @if(!$order['is_cancel'])
-                            @if($order['status'] == cons('order.status.non_send'))
-                                <button class="btn btn-danger ajax" data-method='put'
-                                        data-url="{{ url('order-sell/batch-sure') }}"
-                                        data-data='{"order_id":{{ $order['id'] }}}'>确认
-                                </button>
-                            @endif
-                            @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
-                                <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
-                                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
-                                </button>
-                            @endif
-                            @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
-                                <button class="btn btn-primary ajax" data-method='put'
-                                        data-url="{{ url('order-sell/batch-send') }}"
-                                        data-data='{"order_id":{{ $order['id'] }}}'>发货
-                                </button>
-                                <button class="btn btn-success">导出</button>
+                            @if($order['status'] == cons('order.status.send'))
+                                <a target="_blank" class="btn btn-success"
+                                      href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                             @endif
                         @endif
 
                     </div>
-                @endif
             </div>
             <div class="col-sm-12 receiving-information">
                 <ul>
@@ -177,7 +145,9 @@
                         <th>商品价格</th>
                         <th>商品数量</th>
                         <th>金额</th>
-                        <th>操作</th>
+                        @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
+                            <th>操作</th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -189,7 +159,10 @@
                             <td>{{ $item['pivot']['price'] }}</td>
                             <td>{{ $item['pivot']['num'] }}</td>
                             <td>{{ $item['pivot']['price'] * $item['pivot']['num'] }}</td>
-                            <td>修改</td>
+                            @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
+                                <td><a class="change-price" data-target="#changePrice"
+                                       data-toggle="modal" data-data="{{ $order['id'] }}">修改</a></td>
+                            @endif
                         </tr>
                     @endforeach
                     </tbody>
@@ -200,5 +173,67 @@
             </div>
         </div>
     </div>
+    <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="width:70%;margin:auto">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    @if($delivery_man->count())
+                        <p class="modal-title" id="cropperModalLabel">选择配送人员:
+                            <span class="extra-text">
+                                  <select name="delivery_man_id">
+                                      @foreach($delivery_man as $index => $item)
+                                          <option value="{{ $index }}">{{ $item }}</option>
+                                      @endforeach
+                                  </select>
+
+
+                            </span>
+                        </p>
+                    @else
+                        没有配送人员信息,请设置。<a href="{{ url('personal/delivery-man') }}">去设置</a>
+                    @endif
+                </div>
+                <div class="modal-body">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
+                        @if($delivery_man->count())
+                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定</button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade in" id="changePrice" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="width:70%;margin:auto">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <p class="modal-title" id="cropperModalLabel">修改单价:
+                            <span class="extra-text">
+                                  <input type="text" name="price" />
+                                <span class="tip" style="display: none;color:red;" >请输入数字</span>
+                            </span>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/order/change-price') }}" data-method="put">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @include('includes/stepBar')
+@section('js')
+    @parent
+    <script>
+        $(function () {
+            sendGoodsByDetailPage();
+            changePriceByDetailPage();
+        })
+    </script>
+@stop

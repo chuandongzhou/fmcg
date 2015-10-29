@@ -21,23 +21,36 @@ class OrderSellController extends OrderController
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         //卖家可执行功能列表
         //支付方式
         $payType = cons()->valueLang('pay_type');
-
         //订单状态
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
+
         $data['nonSend'] = Order::bySellerId($this->userId)->nonSend()->count();//待发货
         $data['pendingCollection'] = Order::bySellerId($this->userId)->getPayment()->count();//待收款（针对货到付款）
-        //卖家订单首页不显示在线支付未付款订单
-        $orders = Order::bySellerId($this->userId)->exceptNonPayment()->with('user.shop', 'goods')->orderBy('id',
-            'desc')->paginate()->toArray();
+
+        $search = $request->all();
+        $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
+        $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
+        $search['status'] = isset($search['status']) ? trim($search['status']) : '';
+        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
+        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+        $query = Order::bySellerId($this->userId)->exceptNonPayment()->with('user.shop', 'goods');
+        if (is_numeric($search['search_content'])) {
+            $orders = $query->where('id', $search['search_content'])->paginate();
+        } else {
+            $orders = $query->ofSelectOptions($search)->orderBy('id',
+                'desc')->ofUserShopName($search['search_content'])->paginate();
+        }
+
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop->id)->lists('name', 'id');
 
         return view('index.order.order-sell', [
@@ -45,28 +58,9 @@ class OrderSellController extends OrderController
             'order_status' => $orderStatus,
             'data' => $data,
             'orders' => $orders,
-            'delivery_man' => $deliveryMan
+            'delivery_man' => $deliveryMan,
+            'search' => $search
         ]);
-    }
-
-    /**
-     * 处理搜索按钮发送过来的请求
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
-     */
-    public function getSearch(Request $request)
-    {
-        $search = $request->all();
-        $orderId = trim($search['search_content']);
-        if (is_numeric($orderId)) {
-            $order = Order::ofSell($this->userId)->ofSelectOptions($search)->find($orderId);
-            $orders['data'][0] = $order;
-        } else {
-            $orders = Order::ofSell($this->userId)->ofSelectOptions($search)->ofUserShopName($orderId)->paginate()->toArray();
-        }
-
-        return $orders;
     }
 
     /**
@@ -84,14 +78,14 @@ class OrderSellController extends OrderController
         }
         $detail = $detail->toArray();
         //拼接需要调用的模板名字
-        $folderName = array_flip(cons('user.type'))[$this->userType];
         $payType = $detail['pay_type'];
         $fileName = array_flip(cons('pay_type'))[$payType];
 
-        $view = 'index.order.' . $folderName . '.detail-' . $fileName;
+        $view = 'index.order.wholesaler.detail-' . $fileName;
 
         return view($view, [
-            'order' => $detail
+            'order' => $detail,
+            'delivery_man' => auth()->user()->shop->deliveryMans
         ]);
     }
 
