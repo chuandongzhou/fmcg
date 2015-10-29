@@ -9,9 +9,6 @@ use Hash;
 
 class PasswordController extends Controller
 {
-    protected $userId = 1;
-
-
     /**
      * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
      * @return \WeiHeng\Responses\Apiv1Response

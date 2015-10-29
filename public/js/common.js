@@ -403,7 +403,7 @@ var commonAjaxSetup = function () {
                     return;
                 }
 
-                var params = [data, textStatus, jqXHR, self];console.log(params);
+                var params = [data, textStatus, jqXHR, self];
                 if (false !== self.triggerHandler('always.hct.ajax', params)
                     && false !== form.triggerHandler('always.hct.ajax', params)
                     && !preventDefault) {

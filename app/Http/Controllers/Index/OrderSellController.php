@@ -43,7 +43,7 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId($this->userId)->exceptNonPayment()->with('user.shop', 'goods');
+        $query = Order::bySellerId($this->userId)->with('user.shop', 'goods');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {

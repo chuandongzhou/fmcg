@@ -36,7 +36,7 @@ class Shop extends Model
         'y_lat'
     ];
 
-    protected $appends = ['images_url', 'orders', 'logo_url'];
+    protected $appends = ['images_url','orders', 'logo_url'];
 
     protected $hidden = ['images', 'created_at', 'updated_at'];
 

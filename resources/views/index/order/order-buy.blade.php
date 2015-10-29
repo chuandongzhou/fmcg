@@ -93,16 +93,15 @@
                                                 <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
                                                       class="btn btn-primary">查看</a></p>
                                                 @if(!$order['is_cancel'])
-                                                    @if($order['status'] == cons('order.status.non_send') &&$order['pay_status'] == cons('order.pay_status.non_payment') )
-                                                        <p><a href="javascript:void(0)" class="btn btn-cancel ajax"
+                                                    @if($order['status'] == cons('order.status.non_send') && $order['pay_status'] == cons('order.pay_status.non_payment') )
+                                                        <p><a class="btn btn-cancel ajax"
                                                               data-url="{{ url('api/v1/order/cancel-sure') }}"
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
                                                     @endif
-                                                    {{--TODO:这里需要跳转支付页面--}}
                                                     @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['pay_type'] == cons('pay_type.online'))
                                                         <p><a href="{{ url('pay/request/' . $order['id']) }}"
-                                                              class="btn btn-danger">付款</a></p>
+                                                              class="btn btn-success">去付款</a></p>
                                                     @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
                                                         <p><a class="btn btn-danger ajax"
                                                               data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"

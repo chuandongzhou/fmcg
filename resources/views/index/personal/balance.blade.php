@@ -27,21 +27,26 @@
                                type="text">
                         <input type="submit" class="btn btn-warning">
                     </p>
-                    <table class="table table-bordered text-center">
+                    <table class="table table-bordered table-center">
                         <thead>
                             <tr>
-                                <th>交易号</th>
                                 <th>订单号</th>
-                                <th>详情</th>
+                                <th>支付金额</th>
+                                <th>手续费</th>
+                                <th>支付平台</th>
+                                <th>交易号</th>
+                                <th>交易时间</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($tradeInfo as $trade)
                                 <tr>
-                                    <td>{{ $trade->trade_no }}</td>
                                     <td>{{ $trade->order_id }}</td>
-                                    <td>{{ cons()->valueLang('trade.type' ,$trade->type) }} <b
-                                            class="red">￥{{ $trade->amount }}</b></td>
+                                    <td><b class="red">￥{{ $trade->amount }}</b></td>
+                                    <td>{{ $trade->target_fee }}</td>
+                                    <td>{{ cons()->valueLang('trade.pay_type')[$trade->pay_type] }}</td>
+                                    <td>{{ $trade->trade_no }}</td>
+                                    <td>{{ $trade->success_at }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

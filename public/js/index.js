@@ -91,7 +91,7 @@ function _ajaxGet(targetUrl, data) {
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
                                 if (result.pay_status == 0 && result.pay_type == 1) {
-                                    str += '<p><a href="' + SITE.ROOT + '/pay/request/' + result.id + '" class="btn btn-danger">付款</a></p>';
+                                    str += '<p><a href="' + SITE.ROOT + '/pay/request/' + result.id + '" class="btn btn-danger">去付款</a></p>';
                                 } else if (result.pay_type == 1 && result.status == 2) {
                                     str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-buy" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>确认收货</a></p>';
@@ -743,9 +743,10 @@ function getCoordinateMap(data) {
 
 function getShopAddressMap(lng, lat) {
     var addressMap = new BMap.Map('address-map');
-    var point_address  = new BMap.Point(106, 35);;
+    var point_address = new BMap.Point(106, 35);
+    ;
     if (lng && lat) {
-        point_address= new BMap.Point(lng, lat);
+        point_address = new BMap.Point(lng, lat);
         addressMap.centerAndZoom(point_address, 12);
         addressMap.addOverlay(new BMap.Marker(point_address));
     } else {
@@ -947,9 +948,9 @@ function sendGoodsByDetailPage() {
  */
 function changePriceByDetailPage() {
     $('#changePrice').find('.btn-add').prop('disabled', true);
-    $('.change-price').click(function(){
+    $('.change-price').click(function () {
         var order_id = $(this).attr('data-data');
-        var pivot_id =$(this).attr('data-pivot');
+        var pivot_id = $(this).attr('data-pivot');
         $('input[name="price"]').keyup(function () {
             var price = $(this).val();
             if (isNaN(price)) {//不是数字
@@ -958,12 +959,11 @@ function changePriceByDetailPage() {
                 $('.tip').text('单价输入不合法').show();
             } else {
                 $('.tip').hide();
-                $('#changePrice').find('.btn-add').prop('disabled', false).attr('data-data', '{"price":' + price + ',"order_id":' + order_id + ',"pivot":'+pivot_id+'}');
+                $('#changePrice').find('.btn-add').prop('disabled', false).attr('data-data', '{"price":' + price + ',"order_id":' + order_id + ',"pivot_id":' + pivot_id + '}');
             }
         });
 
     });
-
 
 
 }

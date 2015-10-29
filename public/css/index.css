@@ -31,6 +31,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: #fe462f; }
 
+.go-history {
+  padding: 10px 0; }
+
 /*======================================login begin======================================*/
 .login-nav {
   margin: 0; }
@@ -59,7 +62,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     box-shadow: 0 0 3px #777777;
     bottom: 20%;
     padding: 20px 0;
-    right: 15%;
+    right: 3%;
     width: 360px;
     border-radius: 4px; }
     .login-content .login-wrap .alert-item {
@@ -225,11 +228,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .judge-stepSequence-pre {
   background: #4cb9fe;
-  color: #ffffff; }
+  color: #fff; }
 
 .judge-stepSequence-hind {
   background: #b4b4b4;
-  color: #000000; }
+  color: #000; }
 
 .author {
   position: absolute;
@@ -1211,7 +1214,7 @@ table .product-name {
         text-decoration: none; }
       .dealer-top-header .city-wrap .location-panel.selected-border {
         border: 1px solid #e0e0e0;
-        border-bottom-color: #F2F2F2; }
+        border-bottom-color: #f2f2f2; }
     .dealer-top-header .city-wrap .city-list {
       border: 1px solid #e0e0e0;
       margin-top: -1px;
@@ -1414,7 +1417,7 @@ table .product-name {
       height: 400px; }
 
 .dealer-index .list-penal .title {
-  margin: 50px 0 15px 0; }
+  margin: 15px 0; }
   .dealer-index .list-penal .title h3 {
     padding: 8px 20px;
     font-size: 15px;

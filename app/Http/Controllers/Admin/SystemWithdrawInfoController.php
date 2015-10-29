@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Withdraw;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -104,6 +105,10 @@ class SystemWithdrawInfoController extends Controller
                 'failed_at' => Carbon::now(),
                 'reason' => trim($data['reason'])
             ]);
+            //返还扣掉的钱
+            $user = User::find($item->user_id);
+            $user->balance = $user->balance + $item->amount;
+            $user->save();
 
             return $this->success('操作成功');
         }

@@ -13,7 +13,7 @@
                         添加账号
                     </a>
                 </div>
-                <table class="table table-bordered text-center">
+                <table class="table table-bordered table-center">
                     <thead>
                     <tr>
                         <th>卡号</th>
@@ -52,7 +52,7 @@
                 <div>
                     <label>备用收款账号</label>
                 </div>
-                <table class="table-bordered table text-center">
+                <table class="table-bordered table table-center">
                     <thead>
                     <tr>
                         <th>卡号</th>

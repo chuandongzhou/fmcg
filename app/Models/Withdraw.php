@@ -16,9 +16,14 @@ class Withdraw extends Model
         'created_at',
         'failed_at',
         'pass_at',
-        'payment_at'
+        'payment_at',
+        'card_holder',
+        'card_number',
+        'card_type',
+        'card_address'
     ];
 
+    protected $appends = ['status_info'];
     public $timestamps = false;
     public $dates = ['created_at', 'failed_at', 'pass_at', 'payment_at'];
 
@@ -41,5 +46,15 @@ class Withdraw extends Model
     public function userBanks()
     {
         return $this->belongsTo('App\Models\UserBank', 'user_bank_id', 'id');
+    }
+
+    /**
+     * 状态信息文字方式显示
+     *
+     * @return mixed
+     */
+    public function getStatusInfoAttribute()
+    {
+        return cons()->valueLang('withdraw')[$this->attributes['status']];
     }
 }

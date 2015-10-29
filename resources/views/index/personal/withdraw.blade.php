@@ -15,7 +15,7 @@
                 <div class="personal-center">
                     <div class=" switching">
                         <a href="{{ url('personal/balance') }}" class="btn">流水账</a>
-                        <a href="{{ url('personal/withdraw/index') }}" class="btn active">提现记录</a>
+                        <a href="{{ url('personal/withdraw') }}" class="btn active">提现记录</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -47,13 +47,13 @@
                                     <tr>
                                         <td>{{ $withdraw->id }}</td>
                                         <td>{{ $withdraw->amount }}</td>
-                                        <td>{{ $withdraw->userBanks->card_holder }}</td>
-                                        <td>{{ $withdraw->userBanks->card_number }}</td>
-                                        <td>{{ cons()->valueLang('bank.type')[$withdraw->userBanks->card_type] }}</td>
-                                        <td>{{ cons()->valueLang('withdraw')[$withdraw->status] }} </td>
+                                        <td>{{ $withdraw->card_holder }}</td>
+                                        <td>{{ $withdraw->card_number }}</td>
+                                        <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
+                                        <td>{{ $withdraw->status_info }} </td>
                                         <td>{{ $withdraw->trade_no }} </td>
-                                        <td><a class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString(),'reason'=>$withdraw->reason]) !!}' >详细信息</a></td>
+                                        <td><button class="show-item" data-target="#withdraw-item" data-toggle="modal"
+                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString(),'reason'=>$withdraw->reason]) !!}' >详细信息</button></td>
                                     </tr>
                                 @endforeach
 
@@ -69,8 +69,8 @@
                                     <td>{{ cons()->valueLang('bank.type')[$withdraws->userBanks->card_type] }}</td>
                                     <td>{{ cons()->valueLang('withdraw')[$withdraws->status] }} </td>
                                     <td>{{ $withdraws->trade_no }} </td>
-                                    <td><a class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString(),'reason'=>$withdraws->reason]) !!}' >详细信息</a></td>
+                                    <td><button class="show-item" data-target="#withdraw-item" data-toggle="modal"
+                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString(),'reason'=>$withdraws->reason]) !!}' >详细信息</button></td>
                                 </tr>
                             @endif
                         </tbody>

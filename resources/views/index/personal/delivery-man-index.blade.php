@@ -9,7 +9,7 @@
                 <div class="text-right add">
                     <a href="{{ url('personal/delivery-man/create') }}" class="btn btn-primary">添加</a>
                 </div>
-                <table class="table table-bordered text-center">
+                <table class="table table-bordered table-center">
                     <thead>
                     <tr>
                         <th>姓名</th>

@@ -24,7 +24,7 @@ class WithdrawController extends Controller
             strtotime('-1 month'));;
         $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
         $user = auth()->user();
-        $withdraws = Withdraw::with('userBanks')->where('user_id', $user->id)->whereBetween('created_at',
+        $withdraws = Withdraw::where('user_id', $user->id)->whereBetween('created_at',
             [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate()->toArray();
 
 
@@ -53,7 +53,7 @@ class WithdrawController extends Controller
         if ($amount > $user->balance) {
             return $this->error('可提现金额不足,请确认后再试');
         }
-        if (!UserBank::where('user_id', $user->id)->find($bankId)) {
+        if (!$bank = UserBank::where('user_id', $user->id)->find($bankId)) {
             return $this->error('该提现账号不存在,请确认后再试');
         }
         //修改账户余额
@@ -65,7 +65,11 @@ class WithdrawController extends Controller
             'user_id' => $user->id,
             'user_bank_id' => $bankId,
             'amount' => $amount,
-            'created_at' => Carbon::now()
+            'created_at' => Carbon::now(),
+            'card_holder' => $bank->card_holder,
+            'card_number' => $bank->card_number,
+            'card_type' => $bank->card_type,
+            'card_address' => $bank->card_address
         ]) ? $this->success('申请成功,请等待审核') : $this->error('申请遇到问题,请稍后再试');
 
     }

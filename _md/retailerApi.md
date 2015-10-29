@@ -809,7 +809,7 @@
 `失败返回`
 
 
-#### 2.7.9 卖家获取订单列表[get] (list-of-sell)
+#### 2.7.9 卖家获取订单列表[get] (list-of-sell)(不显示已取消订单)
 `请求参数：`
 
     page                int         分页
@@ -947,6 +947,19 @@
 `请求参数：`
 
 	order_id  				array		订单id
+
+`成功返回：`
+
+
+`失败返回：`
+
+
+#### 2.7.16 卖家修改订单物品单价[put] (change-price)
+`请求参数：`
+
+	order_id  				int		订单id
+	price  					int		物品单价
+	pivot_id  				int		物品在order_goods表中的id
 
 `成功返回：`
 
@@ -1125,8 +1138,7 @@
 `失败返回：`
 
 ### 2.10  修改密码（personal/password）
-
-####2.10.1 修改密码[put] ()
+####2.10.1 修改密码[put]
 
 `请求参数：`
 
@@ -1144,7 +1156,7 @@
 `失败返回:`
 
 
-### 2.11 配送信息 delivery-man
+### 2.11 配送信息 [personal/delivery-man]
 #### 2.11.1 配送人员列表[get]
 `请求参数:`
 
@@ -1170,10 +1182,9 @@
 
 `失败返回:`
 
-#### 2.11.3 编辑配送人员信息[put]
+#### 2.11.3 编辑配送人员信息[put] ({id})
 `请求参数:`
 	
-	id					int			配送人员ID
 	name				string		姓名
 	phone				int			电话(长度7~14位)
 
@@ -1182,12 +1193,112 @@
 	
 `失败返回:`
 
-#### 2.11.4 删除配送人员[delete]
+#### 2.11.4 删除配送人员[delete] ({id})
 `请求参数:`
-	
-	id					int			配送人员ID
 
 `成功返回:`
 
 	
 `失败返回:`
+
+
+### 2.12 提现功能 [personal/withdraw]
+#### 2.12.1 提现申请记录[get] (index) (按提现申请的创建时间查询)
+`请求参数:`
+	
+	page				int			分页
+	start_time			string		开始时间(默认上个月的今天)	
+	end_time			string		结束时间(默认今天的24点)	
+
+`成功返回:`
+
+	balance				string		帐户可提现金额
+	withdraws			array		提现记录
+
+	withdraws 字段子集说明
+
+		data			array		提现记录
+		
+		data 字段子集说明
+			
+			id				int			提现单号
+			amount			string		本次提现金额
+			status			int			提现订单状态号
+			status_info		string		提现订单状态
+			trade_no		string		交易单号(未打款则为空字符串)
+			reason			string		审核不通过原因
+			created_at		string		创建时间
+			failed_at		string		不通过时间
+			pass_at			string		通过时间
+			payment_at		string		打款时间  (未执行到的操作对应时间格式-0001-11-30 00:00:00)
+			user_banks	array		提现银行卡信息
+			
+			user_banks 字段子集说明
+			
+				card_holder		string		持卡人姓名
+				card_number		string		卡号
+				card_type		int			银行名称(参考personal/banks [get]返回信息)
+	
+`失败返回:`
+
+#### 2.12.2 提现申请[post] (add-withdraw)
+`请求参数:`
+	
+	amount				int			提现金额
+	bank_id				int			提现账号ID
+
+`成功返回:`
+
+`失败返回:`
+
+### 2.14 提现账号  [personal/banks]
+#### 2.14.1 添加提现账号[post]
+`请求参数:`
+	
+	card_number			int				银行账号
+	card_holder			string			持卡人姓名
+	card_type			int				银行名称(参考personal/banks [get]返回信息)
+	card_address		string			开户行所在地
+	
+`成功返回:`
+
+`失败返回:`
+
+#### 2.14.2 修改提现账号[put] ({id})
+`请求参数:`
+	
+	同上
+	
+`成功返回:`
+
+`失败返回:`
+
+#### 2.14.3 删除提现账号[delete] ({id})
+`请求参数:`
+	
+`成功返回:`
+
+`失败返回:`
+
+#### 2.14.4 获取银行信息[get]
+`请求参数:`
+
+
+`成功返回:`
+
+	banks 		array			银行信息(key=>value)
+
+
+`失败返回:`
+
+
+
+
+
+
+
+
+
+
+
+

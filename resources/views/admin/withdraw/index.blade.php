@@ -54,6 +54,7 @@
                     <th>银行卡所有人</th>
                     <th>银行账号</th>
                     <th>银行名称</th>
+                    <th>开户行地址</th>
                     <th>状态</th>
                     <th>交易单号</th>
                     <th>申请时间</th>
@@ -67,14 +68,14 @@
                             <td>{{ $withdraw->id }}</td>
                             <td>{{ $withdraw->amount }}</td>
                             <td>{{ $withdraw->user->user_name }}</td>
-                            <td>{{ $withdraw->userBanks->card_holder }}</td>
-                            <td>{{ $withdraw->userBanks->card_number }}</td>
-                            <td>{{ $withdraw->userBanks->card_address }}</td>
-                            <td>{{ cons()->valueLang('withdraw')[$withdraw->status] }}</td>
+                            <td>{{ $withdraw->card_holder }}</td>
+                            <td>{{ $withdraw->card_number }}</td>
+                            <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
+                            <td>{{ $withdraw->card_address }}</td>
+                            <td>{{ $withdraw->status_info }}</td>
                             <td>{{$withdraw->trade_no }}</td>
                             <td>{{$withdraw->created_at }}</td>
                             <td>
-                                @if($withdraw->status != cons('withdraw.failed') || $withdraw->status != cons('withdraw.payment'))
                                 <div class="btn-group btn-group-xs">
                                     @if($withdraw->status == cons('withdraw.review'))
                                         <a class="btn btn-primary ajax" data-method="put"
@@ -87,13 +88,12 @@
                                         </a>
                                     @endif
                                     @if($withdraw->status == cons('withdraw.pass'))
-                                    {{--打款需要交易号，回退需要回退原因--}}
+                                    打款需要交易号，回退需要回退原因
                                     <a class="payment btn btn-success" data-target="#payment" data-toggle="modal" data-id='{{ $withdraw->id }}'>
                                         <i class="fa fa-edit"></i> 已打款
                                     </a>
                                     @endif
                                 </div>
-                                @endif
                             </td>
                         </tr>
                     @endforeach

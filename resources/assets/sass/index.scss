@@ -49,6 +49,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: $brand-danger;
 }
+.go-history{
+  padding: 10px 0;
+}
 
 /*======================================login begin======================================*/
 .login-nav {
@@ -91,7 +94,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     box-shadow: 0 0 3px $gray-light;
     bottom: 20%;
     padding: 20px 0;
-    right: 15%;
+    right: 3%;
     width: 360px;
     border-radius: 4px;
     .alert-item {
@@ -248,14 +251,14 @@ ul, li, p, a, h1, h2, h3, h4 {
   .ui-stepBar {
     position: relative;
     @include size(90%, 5px);
-    background: #b4b4b4;
+    background: $gray-lighter;
     top: 50px;
     left: 6%;
     z-index: 101;
     .ui-stepProcess {
       position: relative;
       @include size(0, 5px);
-      background: #4cb9fe;
+      background: $brand-primary;
       top: 0;
       left: 0;
       z-index: 102;
@@ -283,13 +286,13 @@ ul, li, p, a, h1, h2, h3, h4 {
       .judge-stepSequence-pre-change {
         cursor: pointer;
         &:hover {
-          box-shadow: 0 0 3px 1px #4cb9fe;
+          box-shadow: 0 0 3px 1px $brand-primary;
         }
       }
       .judge-stepSequence-hind-change {
         cursor: pointer;
         &:hover {
-          box-shadow: 0 0 3px 1px #b4b4b4;
+          box-shadow: 0 0 3px 1px $gray-lighter;
         }
       }
     }
@@ -297,13 +300,13 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .judge-stepSequence-pre {
-  background: #4cb9fe;
-  color: #ffffff;
+  background: $brand-primary;
+  color: $body-bg;
 }
 
 .judge-stepSequence-hind {
-  background: #b4b4b4;
-  color: #000000;
+  background: $gray-lighter;
+  color: $gray-base;
 }
 
 .author {
@@ -313,7 +316,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   text-align: center;
   margin: 40px auto;
   color: #1569ec;
-  text-shadow: 1px 1px 0 #e7e7e7, 0 1px 7px #fff;
+  text-shadow: 1px 1px 0 #e7e7e7, 0 1px 7px $body-bg;
 }
 
 /*======================================step begin======================================*/
@@ -1436,8 +1439,8 @@ table {
     margin-left: 30px;
     label {
       padding: 1px 4px;
-      background-color: #4cb9fe;
-      color: #fff;
+      background-color: $brand-primary;
+      color: $body-bg;
     }
   }
 
@@ -1692,8 +1695,8 @@ table {
         text-decoration: none;
       }
       &.selected-border {
-        border: 1px solid #e0e0e0;
-        border-bottom-color: #F2F2F2;
+        border: 1px solid $gray-plain-light;
+        border-bottom-color: $gray-plain;
       }
     }
     .city-list {
@@ -1735,8 +1738,8 @@ table {
         margin-top: -1px;
         vertical-align: middle;
         &.active {
-          background: #fff;
-          border: 1px solid #e0e0e0;
+          background: $body-bg;
+          border: 1px solid $gray-plain-light;
           border-bottom: none;
         }
       }
@@ -1971,7 +1974,7 @@ table {
 .dealer-index {
   .list-penal {
     .title {
-      margin: 50px 0 15px 0;
+      margin: 15px 0;
       h3 {
         padding: 8px 20px;
         font-size: 15px;

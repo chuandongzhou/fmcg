@@ -90,8 +90,8 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::exceptNonPayment()->bySellerId($this->userId)->with('user', 'goods')->orderBy('id',
-            'desc')->paginate()->toArray();
+        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->where('status',
+            cons('order.is_cancel.off'))->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -410,7 +410,7 @@ class OrderController extends Controller
             $this->error('输入单价不合法,请确认后再试');
         }
         //判断待修改物品是否属于该订单
-        $pivot = OrderGoods::find(intval($request->input('pivot')));
+        $pivot = OrderGoods::find(intval($request->input('pivot_id')));
         if (!$pivot || $pivot->order_id != $order->id) {
             $this->error('操作失败');
         }
