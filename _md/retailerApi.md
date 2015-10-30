@@ -360,8 +360,6 @@
 
     goodsImages         array       商品图片列表
 
-    goodsImages 字段说明
-
     cate_level_1        int         第一层分类
     cate_level_2        int         第二层分类
     cate_level_3        int         第三层分类
@@ -544,6 +542,8 @@
     images                  array               商品图片列表(店铺已拥有)
     mobile_images           array               新增图片数组
     address                 array               地址
+    x_lng                   float               经度
+    y_lat                   float               纬度
     area                    array               配送区域列表
 
     images  字段说明
