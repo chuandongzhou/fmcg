@@ -10,11 +10,21 @@ use App\Models\UserBank;
 class UserBankController extends Controller
 {
     protected $user;
-
     public function __construct()
     {
         $this->user = auth()->user();
 
+    }
+
+    /**
+     * 获取银行卡
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function index()
+    {
+        //获取该角色名下的所有银行账号
+       return $this->success(['user_bank_cards'=>UserBank::where('user_id',$this->user->id)->get()]);
     }
 
     /**

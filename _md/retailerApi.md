@@ -1302,8 +1302,27 @@
 
 `失败返回:`
 
-### 2.14 提现账号  [personal/banks]
-#### 2.14.1 添加提现账号[post]
+### 2.13 提现账号  [personal/bank]
+#### 2.13.1 添加提现账号[get]
+`请求参数:`
+	
+`成功返回:`
+
+	user_bank_cards		array			该用户的银行卡信息
+
+	user_bank_cards 字段子集说明
+	
+		id					int				id
+		card_number			int				银行账号
+		card_holder			string			持卡人姓名
+		card_type			int				银行名称(参考personal/banks [get]返回信息)
+		card_address		string			开户行所在地
+		is_defalut			int				是否是默认提现账号(1=>是默认提现账号,否则未0)
+	 	
+
+`失败返回:`
+
+#### 2.13.2 添加提现账号[post]
 `请求参数:`
 	
 	card_number			int				银行账号
@@ -1315,7 +1334,7 @@
 
 `失败返回:`
 
-#### 2.14.2 修改提现账号[put] ({id})
+#### 2.13.3 修改提现账号[put] ({id})
 `请求参数:`
 	
 	同上
@@ -1324,14 +1343,16 @@
 
 `失败返回:`
 
-#### 2.14.3 删除提现账号[delete] ({id})
+#### 2.13.4 删除提现账号[delete] ({id})
 `请求参数:`
 	
 `成功返回:`
 
 `失败返回:`
 
-#### 2.14.4 获取银行信息[get]
+
+### 2.14 获取银行信息  [personal/bank-info]
+#### 2.14.1 获取银行信息[get]
 `请求参数:`
 
 
