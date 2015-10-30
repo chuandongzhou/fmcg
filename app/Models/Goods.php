@@ -155,29 +155,15 @@ class Goods extends Model
         return $query->orderBy('price_retailer', 'asc');
     }
 
-    /**
-     * 查询最新
-     *
-     * @param $query
-     */
-    public function scopeOrderNew($query)
-    {
-        return $query->orderBy('id', 'desc');
-    }
 
     /**
      * 名称排序
      *
      * @param $query
      */
-    public function scopeOrderName($query)
+    public function scopeOfName($query)
     {
         return $query->orderBy('name', 'asc');
-    }
-
-    public function scopeOrderPrice($query)
-    {
-        return $query->orderBy('price_retailer', 'asc');
     }
 
     /**
@@ -340,10 +326,12 @@ class Goods extends Model
     public function getImagesUrlAttribute()
     {
         $images = $this->images ? $this->images : [];
+
         $result = [];
         foreach ($images as $key => $image) {
+            $result[$key]['id'] = $image['id'];
             $result[$key]['name'] = $image->image->name;
-            $result[$key]['path'] = $image->image_url;
+            $result[$key]['url'] = $image->image_url;
         }
         return $result;
     }

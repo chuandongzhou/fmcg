@@ -45,6 +45,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerContainerAliases();
     }
+    /**
+     * 注册容器别名
+     */
+    protected function registerContainerAliases()
+    {
+
+        $aliases = [
+            'admin.auth' => \WeiHeng\Admin\Guard::class,
+        ];
+
+        foreach ($aliases as $key => $value) {
+            foreach ((array)$value as $alias) {
+                $this->app->alias($key, $alias);
+            }
+        }
+    }
+
 }

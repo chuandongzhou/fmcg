@@ -68,7 +68,8 @@ return [
             'hot',
             'new',
             'price',
-        ]
+        ],
+        'page_per_num' => 10  //店铺每页显示数量
     ],
     // 交易相关
     'trade' => [

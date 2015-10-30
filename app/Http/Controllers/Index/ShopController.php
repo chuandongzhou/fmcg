@@ -28,7 +28,7 @@ class ShopController extends Controller
         $user = auth()->user();
         $shops = Shop::whereHas('user', function ($q) use ($user) {
             $q->where('type', '>', $user->type);
-        })->with('images');
+        })->with('images', 'logo');
 
         $shopSorts = cons('shop.sort');
 
@@ -70,7 +70,7 @@ class ShopController extends Controller
 
         $goods = Goods::where($map);
         if (in_array($sort, cons('goods.sort'))) {
-            $goods = $goods->$sort();
+            $goods = $goods->{'Of'.ucfirst($sort)}();
         }
         $goods = $goods->paginate();
         $url = Gate::denies('validate-shop', $shop) ? 'goods' : 'my-goods';

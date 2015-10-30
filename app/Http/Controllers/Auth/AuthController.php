@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use Auth;
-use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -27,7 +24,6 @@ class AuthController extends Controller
     /**
      * Create a new authentication controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -52,6 +48,10 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    public function guide(){
+        return view('auth.guide');
+    }
+
 
     /**
      * 退出登录
@@ -61,6 +61,6 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return redirect('auth/login');
+        return redirect('auth/guide');
     }
 }

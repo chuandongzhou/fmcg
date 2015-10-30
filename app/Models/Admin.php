@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class Admin extends Model
+class Admin extends Model implements AuthenticatableContract
 {
+    use Authenticatable;
+
     protected $table = 'admin';
     protected $fillable = [
         'role_id',
@@ -38,7 +41,9 @@ class Admin extends Model
     public function setPasswordAttribute($value)
     {
         if ($value) {
+
             $this->attributes['password'] = bcrypt($value);
+
         }
     }
 }

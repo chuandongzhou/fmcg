@@ -31,14 +31,15 @@ class Shop extends Model
         'delivery_location',
         'user_id',
         'license_num',
+        'spreading_code',
         'nickname',
         'x_lng',
         'y_lat'
     ];
 
-    protected $appends = ['images_url','orders', 'logo_url'];
+    protected $appends = ['images_url', 'logo_url'];
 
-    protected $hidden = ['images', 'created_at', 'updated_at'];
+    protected $hidden = ['images', 'logo', 'created_at', 'updated_at'];
 
     /**
      * 用户表
@@ -346,8 +347,8 @@ class Shop extends Model
         if ($this->exists) {
             $relate->create($address);
         } else {
-            static::created(function ($model) use ($relate, $address) {
-                $model->$relate()->save($address);
+            static::created(function ($model) use ($address) {
+                $model->shopAddress()->create($address);
             });
         }
         return true;
@@ -448,8 +449,10 @@ class Shop extends Model
         $images = $this->images ? $this->images : [];
         $result = [];
         foreach ($images as $key => $image) {
+            $result[$key]['id'] = $image['id'];
             $result[$key]['name'] = $image['name'];
-            $result[$key]['path'] = $image->url;
+            $result[$key]['path'] = $image['path'];
+            $result[$key]['url'] = $image->url;
         }
         return $result;
     }

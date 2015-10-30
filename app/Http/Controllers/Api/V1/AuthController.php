@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -24,19 +25,19 @@ class AuthController extends Controller
         //TODO: 判断account
         $account = $request->input('account');
         $password = $request->input('password');
-        // $type = $request->input('type');
+        $type = $request->input('type');
 
         if (auth()->viaRemember() || auth()->attempt([
                 'user_name' => $account,
-                'password' => $password
-                /*, 'type' => $type*/
+                'password' => $password,
+                'type' => $type
             ], true)
         ) {
 
             $user = auth()->user()->load('shop');
-           if(!is_null($user->shop)){
-               $user->shop->address_name = $user->shop->address;
-           }
+            if (!is_null($user->shop)) {
+                $user->shop->address_name = $user->shop->address;
+            }
 
             return $this->success(['user' => $user]);
         }
@@ -78,5 +79,18 @@ class AuthController extends Controller
     {
         auth()->logout();
         return $this->success();
+    }
+
+    /**
+     *  打印上传数据
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function anyRequest(Request $request)
+    {
+        $result = $request->all();
+        $result['has_file'] = count($request->file());
+        return $result;
     }
 }

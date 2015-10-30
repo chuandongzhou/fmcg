@@ -67,12 +67,13 @@
                     <p class="sequence">
                         <a class="{{ $sort == 'all' || !$sort  ? 'active' : '' }}"
                            href="{{ url('shop/' . $shop->id) }}">全部</a>
-                        <a class="{{ $sort == 'hot' ? 'active' : '' }}"
-                           href="{{ url('shop/'.$shop->id . '/hot') }}">热销</a>
-                        <a class="{{ $sort == 'new' ? 'active' : '' }}"
-                           href="{{url('shop/'.$shop->id .  '/new') }}">最新</a>
-                        <a class="{{ $sort == 'promotion' ? 'active' : '' }}"
-                           href="{{url('shop/'.$shop->id . '/promotion') }}">促销</a>
+
+                        @foreach(cons('sort.goods') as $key=>$sortName)
+                            <a class="{{ $sort == $key ? 'active' : '' }}"
+                               href="{{ url('shop/'.$shop->id . '/'.$key) }}">
+                                {{ cons()->valueLang('sort.goods' , $sortName) }}
+                            </a>
+                        @endforeach
                     </p>
                 </div>
             </div>

@@ -15,7 +15,8 @@ use App\Models\Shop;
  */
 class ShopService
 {
-    static function getShopColumn(){
+    static function getShopColumn()
+    {
         $type = auth()->user()->type;
 
         $columnTypes = cons('home_column.type');
@@ -27,7 +28,7 @@ class ShopService
             $shops = Shop::whereIn('id', $shopColumn->id_array)->whereHas('user', function ($q) use ($type) {
                 $q->where('type', '>', $type);
             }
-            )->with('images')->get();
+            )->with('images', 'logo')->get();
             $columnShopsCount = $shops->count();
             if ($columnShopsCount < 10) {
                 $columnShopsIds = $shops->pluck('id')->toArray();
@@ -35,7 +36,7 @@ class ShopService
                     ->whereHas('user', function ($q) use ($type) {
                         $q->where('type', '>', $type);
                     })
-                    ->with('images')
+                    ->with('images', 'logo')
                     ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
                     ->take(10 - $columnShopsCount)
                     ->get();

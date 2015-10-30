@@ -1,5 +1,6 @@
 @extends('admin.master')
 @include('includes.cropper')
+@include('includes.loadMapJs')
 @include('includes.address')
 @section('subtitle' , '用户管理')
 
@@ -66,6 +67,15 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-2 control-label" for="license_num">营业执照编号:</label>
+
+                <div class="col-sm-10 col-md-6">
+                    <input class="form-control" id="license_num" name="license_num" placeholder="请输入营业执照编号"
+                           value="{{ $shop->license_num }}"
+                           type="text">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-2 control-label" for="username">营业执照:</label>
 
                 <div class="col-sm-10 col-md-6">
@@ -77,7 +87,6 @@
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
-
                     <div class="image-preview w160">
                         <img src="{{ $shop->license_url }}" class="img-thumbnail">
                     </div>
