@@ -249,22 +249,27 @@ class OrderController extends Controller
      *
      * @param $pageNum
      * @param $per
-     * @param $pageCount
+     * @param $count
      * @param int $flag
      * @return string
      */
-    private function _pageNav($pageNum, $per, $pageCount, $flag = 0)
+    private function _pageNav($pageNum, $per, $count, $flag = 0)
     {
-        $html = '<ul class="pager">';
-        if ($pageNum > 1) {
-            $html .= '<li><a class="prev' . $flag . '">上一页</a></li>';
+        $pageTotal = $count / $per;
+        $html = '';
+        if ($pageTotal > 1) {
+            $html .= '<ul class="pager">';
+            if ($pageNum > 1) {
+                $html .= '<li><a class="prev' . $flag . '">上一页</a></li>';
+            }
+
+            if ($pageTotal > $pageNum) {
+                $html .= '<li><a class="next' . $flag . '">下一页</a></li>';
+            }
+            $html .= '</ul>';
         }
 
-        if (($pageCount / $per) > $pageNum) {
-            $html .= '<li><a class="next' . $flag . '">下一页</a></li>';
-        }
-
-        return $html . '</ul>';
+        return $html;
     }
 
     /**
@@ -406,20 +411,14 @@ class OrderController extends Controller
     {
         $redis = Redis::connection();
 
-        //push:user:$user_id买家是否有提醒
-        if ($redis->exists('push:user:' . $this->userId)) {
-            $content = $redis->get('push:user:' . $this->userId);
-            $redis->del('push:user:' . $this->userId);
+        foreach (['user', 'seller', 'withdraw'] as $item) {
+            $key = 'push:' . $item . ':' . $this->userId;
+            if ($redis->exists($key)) {
+                $content = $redis->get($key);
+                $redis->del($key);
 
-            return response()->json(['type' => 'user', 'data' => $content]);
-        }
-
-        //push:seller:$seller_id卖家是否有提醒
-        if ($redis->exists('push:seller:' . $this->userId)) {
-            $content = $redis->get('push:seller:' . $this->userId);
-            $redis->del('push:seller:' . $this->userId);
-
-            return response()->json(['type' => 'seller', 'data' => $content]);
+                return response()->json(['type' => $item, 'data' => $content]);
+            }
         }
 
         return response()->json([]);

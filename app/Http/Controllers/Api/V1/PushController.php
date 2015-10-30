@@ -19,7 +19,6 @@ class PushController extends Controller
     {
         $attributes = $request->all();
         $service = PushDevice::where('token', $attributes['token'])->find();
-        $attributes['type'] = cons('type.push_device')[strtolower($attributes['type'])];
         $attributes['user_id'] = auth()->user()->id;
 
         $status = isset($service->id) ? $service->fill($attributes)->save() : PushDevice::create($attributes);

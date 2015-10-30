@@ -26,7 +26,6 @@ return [
             'refund_failed' => '退款失败',
         ],
         'status' => [ //订单状态
-//            'non_sure' => '未确认',
             'non_send' => '未发货',
             'send' => '已发货',
             'finished' => '已完成',
@@ -155,7 +154,10 @@ return [
         'finished' => '买家已确认收货',
         'send' => '卖家已发货,请注意查收',
         'cancel_by_buyer' => '被买家取消了~~',
-        'cancel_by_seller' => '被卖家取消了~~'
+        'cancel_by_seller' => '被卖家取消了~~',
+        'price_changed' => '价格发生了变化',
+        'review_failed' => '审核未通过',
+        'review_payment' => '已打款,请查收'
     ],
     //提现状态
     'withdraw' => [

@@ -132,12 +132,13 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
             $router->controller('withdraw', 'WithdrawController');    //提现相关操作
             $router->resource('delivery-man', 'DeliveryManController',
-                ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
+                ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
         });
         $router->controller('cart', 'CartController');
         $router->controller('order', 'OrderController');
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
         $router->controller('auth', 'AuthController');
+        $router->controller('push', 'PushController');//推送设备
     });
 });

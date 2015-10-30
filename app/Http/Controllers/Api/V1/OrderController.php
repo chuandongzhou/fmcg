@@ -45,11 +45,6 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        //清除redis中买家提醒消息
-        $redis = Redis::connection();
-        if ($redis->exists('push:user:' . $this->userId)) {
-            $redis->del('push:user:' . $this->userId);
-        }
         $orders = Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
 
         return $this->success($orders);
@@ -251,6 +246,7 @@ class OrderController extends Controller
                 $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
             });
         })->whereIn('id', $orderIds)->nonCancel()->get();
+        //通知买家订单已发货
         $redis = Redis::connection();
         $orderModel->each(function ($model) use ($redis, $deliveryManId) {
             $redisKey = 'push:user:' . $model->user_id;
@@ -396,7 +392,12 @@ class OrderController extends Controller
         return $this->success('提交订单成功');
     }
 
-
+    /**
+     * 修改订单价格
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function putChangePrice(Request $request)
     {
         //判断该订单是否存在
@@ -418,7 +419,13 @@ class OrderController extends Controller
         $newTotalPrice = $pivot->num * $price;
         $pivot->update(['price' => $price, 'total_price' => $newTotalPrice]);
         $order->update(['price' => $order->price - $oldTotalPrice + $newTotalPrice]);
-
+        //通知买家订单价格发生了变化
+        $redis = Redis::connection();
+        $redisKey = 'push:user:' . $order->user_id;
+        if (!$redis->exists($redisKey)) {
+            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed'));
+            $redis->expire($redisKey, cons('push_time.msg_life'));
+        }
         return $this->success('修改成功');
     }
 }

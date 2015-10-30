@@ -17,7 +17,7 @@ class PushOrderService
      * @param $targetUserId
      * @return bool
      */
-    public function push($targetUserId,$msg)
+    public function push($targetUserId, $msg)
     {
         //只推送最近使用的移动设备
         $device = PushDevice::where('user_id', $targetUserId)->orderBy('updated_at', 'desc')->first();
@@ -29,6 +29,10 @@ class PushOrderService
             $res = $this->pushIos($device->token, $msgArray);
         } else {
             $res = $this->pushAndroid($device->token, $msgArray);
+        }
+        if ($res) {//推送成功,推送条数+1
+            $device->send_count += $device->send_count;
+            $device->save();
         }
 
         return $res;
@@ -53,7 +57,7 @@ class PushOrderService
         ];
         // 设置消息类型为 通知类型.
         $opts = [
-            'msg_type' => 1
+            'msg_type' => cons('push_type.notice')
         ];
 
         // 向目标设备发送一条消息

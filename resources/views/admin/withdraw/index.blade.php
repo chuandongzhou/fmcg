@@ -88,7 +88,7 @@
                                         </a>
                                     @endif
                                     @if($withdraw->status == cons('withdraw.pass'))
-                                    打款需要交易号，回退需要回退原因
+                                    {{--打款需要交易号，回退需要回退原因--}}
                                     <a class="payment btn btn-success" data-target="#payment" data-toggle="modal" data-id='{{ $withdraw->id }}'>
                                         <i class="fa fa-edit"></i> 已打款
                                     </a>

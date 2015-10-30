@@ -1292,9 +1292,27 @@
 `失败返回:`
 
 
+### 2.15 推送设备  [push]
+#### 2.15.1 添加推送设备[post] (active-token)
+`请求参数:`
+	
+	token			string			token
+	version			string			手机版本号
+	type			int				设备类型(ios=>1;android=>2)
+	
+`成功返回:`
+
+`失败返回:`
 
 
+#### 2.15.1 删除推送设备[delete] (deactive-token)
+`请求参数:`
+	
+	token			string			token
+	
+`成功返回:`
 
+`失败返回:`
 
 
 

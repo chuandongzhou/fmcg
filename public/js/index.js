@@ -962,8 +962,5 @@ function changePriceByDetailPage() {
                 $('#changePrice').find('.btn-add').prop('disabled', false).attr('data-data', '{"price":' + price + ',"order_id":' + order_id + ',"pivot_id":' + pivot_id + '}');
             }
         });
-
     });
-
-
 }

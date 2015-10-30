@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Withdraw;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 
 class SystemWithdrawInfoController extends Controller
@@ -54,7 +55,7 @@ class SystemWithdrawInfoController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function putPass(Request $request)
-    {//TODO:redis通知功能，待完成
+    {
         $withdrawId = intval($request->input('withdraw_id'));
         $item = Withdraw::where('status', cons('withdraw.review'))->find($withdrawId);
         if ($item) {
@@ -82,6 +83,8 @@ class SystemWithdrawInfoController extends Controller
                 'payment_at' => Carbon::now(),
                 'trade_no' => trim($data['trade_no'])
             ]);
+            //启动通知
+            $this->_pushMsg($item->user_id, $item->id, 'review_payment');
 
             return $this->success('操作成功');
         }
@@ -109,10 +112,28 @@ class SystemWithdrawInfoController extends Controller
             $user = User::find($item->user_id);
             $user->balance = $user->balance + $item->amount;
             $user->save();
+            //启动通知
+            $this->_pushMsg($item->user_id, $item->id, 'review_failed');
 
             return $this->success('操作成功');
         }
 
         return $this->error('操作失败');
+    }
+
+    /**
+     * 添加推送信息
+     *
+     * @param $userId
+     * @param $orderId
+     * @param $msg
+     */
+    private function _pushMsg($userId, $orderId, $msg)
+    {
+        //启动通知
+        $redis = Redis::connection();
+        $redisKey = 'push:withdraw:' . $userId;
+        $redis->set($redisKey, '您的提现订单:' . $orderId . ',' . cons()->lang('push_msg.' . $msg));
+        $redis->expire($redisKey, cons('push_time.msg_life'));
     }
 }

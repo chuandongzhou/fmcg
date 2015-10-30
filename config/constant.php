@@ -156,8 +156,13 @@ return [
     ],
     //推送设备类型
     'push_device' => [
-        'iphone' => 1,
+        'ios' => 1,
         'android' => 2,
+    ],
+    //android推送通知类型
+    'push_type' => [
+        'msg' => 0, //消息(透传)
+        'notice' => 1 //通知
     ],
     'home_column' => [
         'type' => [
