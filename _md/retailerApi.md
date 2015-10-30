@@ -415,6 +415,7 @@
     id                  int         店铺id
     name                string      店铺名
     min_money           decimal     最低配送额
+    contact_person      string      联系人
     contact_info        string      联系方式
     images_url          array       店铺图片
     logo_url            string      logo地址
