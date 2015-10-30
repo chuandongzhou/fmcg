@@ -18,7 +18,7 @@ class PushController extends Controller
     public function postActiveToken(Requests\Api\V1\CreatePushDeviceRequest $request)
     {
         $attributes = $request->all();
-        $service = PushDevice::where('token', $attributes['token'])->find();
+        $service = PushDevice::where('token', $attributes['token'])->first();
         $attributes['user_id'] = auth()->user()->id;
 
         $status = isset($service->id) ? $service->fill($attributes)->save() : PushDevice::create($attributes);

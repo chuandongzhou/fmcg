@@ -29,6 +29,7 @@
         <div class="form-group row">
             <div class="col-sm-push-2 col-sm-10">
                 <button class="btn btn-primary" type="submit">提交</button>
+                <a href="javascript:history.go(-1)" class="btn btn-cancel">取消</a>
             </div>
         </div>
     </form>

@@ -1484,7 +1484,7 @@ table {
     }
   }
   .order-receipt {
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 10px 15px;
     border: 1px solid $gray-lighter;
     .order-information {
@@ -1505,12 +1505,11 @@ table {
   }
   .table-row {
     .table-col {
-      padding: 30px 0 0 0;
+      padding: 20px 0 0 0;
       table {
         thead {
           tr {
             th {
-              text-align: center;
               border: none;
               background-color: $blue-light;
             }
@@ -1519,7 +1518,9 @@ table {
         tbody {
           tr {
             td {
-              padding: 30px;
+              img{
+                @include square(80px);
+              }
             }
           }
         }
@@ -2000,6 +2001,10 @@ table {
       color: $gray-base;
       display: inline-block;
       padding: 0 15px;
+      &.active{
+        background-color: $brand-primary;
+        color: $body-bg;
+      }
     }
   }
 }
