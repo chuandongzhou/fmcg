@@ -16,6 +16,7 @@
     "phpoffice/phpword": "dev-master",
     "riverslei/baidu-pusher": "~1.0",
     "davibennun/laravel-push-notification": "dev-laravel5",
+    "pingplusplus/pingpp-php": "dev-master",
     "guzzlehttp/guzzle": "^6.1"
   },
   "require-dev": {
