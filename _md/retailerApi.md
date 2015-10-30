@@ -1302,7 +1302,7 @@
 
 `失败返回:`
 
-### 2.13 提现账号  [personal/bank]
+### 2.13 提现账号管理  [personal/bank]
 #### 2.13.1 添加提现账号[get]
 `请求参数:`
 	
@@ -1350,9 +1350,16 @@
 
 `失败返回:`
 
+### 2.14 设置默认提现账号  [personal/bank-default]
+#### 2.14.1 设置默认提现账号[put] ({id})
+`请求参数:`
+	
+`成功返回:`
 
-### 2.14 获取银行信息  [personal/bank-info]
-#### 2.14.1 获取银行信息[get]
+`失败返回:`
+
+### 2.15 获取银行信息  [personal/bank-info]
+#### 2.15.1 获取银行信息[get]
 `请求参数:`
 
 
@@ -1364,8 +1371,8 @@
 `失败返回:`
 
 
-### 2.15 推送设备  [push]
-#### 2.15.1 添加推送设备[post] (active-token)
+### 2.16 推送设备  [push]
+#### 2.16.1 添加推送设备[post] (active-token)
 `请求参数:`
 	
 	token			string			token
@@ -1377,7 +1384,7 @@
 `失败返回:`
 
 
-#### 2.15.1 删除推送设备[delete] (deactive-token)
+#### 2.16.1 删除推送设备[delete] (deactive-token)
 `请求参数:`
 	
 	token			string			token

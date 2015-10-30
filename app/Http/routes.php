@@ -130,7 +130,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
             $router->post('password', 'PasswordController@password');          //修改密码
-            $router->post('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
+            $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
             $router->resource('bank', 'UserBankController', ['only' => ['index','store', 'update', 'destroy']]);          //提现账号
             $router->put('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');

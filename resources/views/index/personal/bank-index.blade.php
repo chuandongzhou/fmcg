@@ -80,7 +80,7 @@
                             <td>
                                 <a class="btn btn-primary ajax"
                                    data-url="{{ url('api/v1/personal/bank-default/'.$bank['id']) }}"
-                                   data-method="post">
+                                   data-method="put">
                                     设置为默认
                                 </a>
                                 <a href="{{ url('personal/bank/' . $bank['id'] . '/edit') }}"
