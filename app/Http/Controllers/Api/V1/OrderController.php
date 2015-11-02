@@ -85,7 +85,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->where('status',
+        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->where('is_cancel',
             cons('order.is_cancel.off'))->paginate()->toArray();
 
         return $this->success($orders);
