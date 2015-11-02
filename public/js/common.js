@@ -766,7 +766,7 @@ function picFunc() {
 /**
  * 获取标签
  */
-function getAttr(){
+function getAttr() {
     //获取标签
     $('select[name="cate_level_1"]').change(function () {
         $('div.attr').html('');
@@ -948,25 +948,27 @@ function getCoordinateMap(data) {
     map = new BMap.Map("map");
     if (data && data.length) {
         $.each(data, function (index, value) {
-            var point_lng = parseFloat(value['coordinate']['sl_lng']) + (value['coordinate']['bl_lng'] - value['coordinate']['sl_lng']) / 2;
-            var point_lat = parseFloat(value['coordinate']['sl_lat']) + (value['coordinate']['bl_lat'] - value['coordinate']['sl_lat']) / 2;
-            var point = new BMap.Point(point_lng, point_lat);
-            if (!index) {
-                //map.centerAndZoom(point,5);//取第一个中心点为地图默认中心
-                map.centerAndZoom(new BMap.Point(106, 35), 5);
+            if (value.coordinate) {
+                var point_lng = parseFloat(value['coordinate']['sl_lng']) + (value['coordinate']['bl_lng'] - value['coordinate']['sl_lng']) / 2;
+                var point_lat = parseFloat(value['coordinate']['sl_lat']) + (value['coordinate']['bl_lat'] - value['coordinate']['sl_lat']) / 2;
+                var point = new BMap.Point(point_lng, point_lat);
+                if (!index) {
+                    //map.centerAndZoom(point,5);//取第一个中心点为地图默认中心
+                    map.centerAndZoom(new BMap.Point(106, 35), 5);
+                }
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);               // 将标注添加到地图中
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+                var polygon = new BMap.Polygon([
+                    new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['bl_lat']),//左上
+                    new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['bl_lat']),//右上
+                    new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['sl_lat']),//右下
+                    new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['sl_lat'])//左下
+
+                ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
+                map.addOverlay(polygon);   //将图形添加到地图
             }
-            var marker = new BMap.Marker(point);  // 创建标注
-            map.addOverlay(marker);               // 将标注添加到地图中
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-
-            var polygon = new BMap.Polygon([
-                new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['bl_lat']),//左上
-                new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['bl_lat']),//右上
-                new BMap.Point(value['coordinate']['bl_lng'], value['coordinate']['sl_lat']),//右下
-                new BMap.Point(value['coordinate']['sl_lng'], value['coordinate']['sl_lat'])//左下
-
-            ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
-            map.addOverlay(polygon);   //将图形添加到地图
         });
     } else {
         map.centerAndZoom(new BMap.Point(106, 35), 5);

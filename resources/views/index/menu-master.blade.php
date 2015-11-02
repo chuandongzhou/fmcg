@@ -14,7 +14,7 @@
                         @if(auth()->user()->type == cons('user.type.wholesaler'))
                             <li>
                                 <a href="javascript:void(0)"
-                                   class="list-item {{ path_active(['order-buy' , 'order-sell']) }}"><i
+                                   class="list-item {{ path_active(['order-buy/*' , 'order-sell/*']) }}"><i
                                             class="fa fa-edit"></i> 订单管理</a>
                                 <ul class="menu-wrap">
                                     <li><a href="{{ url('order-buy') }}"><span class=""></span>供应商</a></li>
@@ -22,9 +22,9 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="list-item"><i class="fa fa-file-text-o"></i>
+                                <a href="javascript:void(0)" class="list-item {{ path_active('order/statistics*') }}"><i class="fa fa-file-text-o"></i>
                                     订单统计</a>
-                                <ul class="menu-wrap {{ path_active('statistics') }}">
+                                <ul class="menu-wrap">
                                     <li><a href="{{ url('order/statistics?obj_type=1&pay_type=1') }}">终端商</a></li>
                                     <li><a href="{{ url('order/statistics?obj_type=3&pay_type=1') }}">供应商</a></li>
                                 </ul>
@@ -38,9 +38,9 @@
                                 </ul>
                             </li>
                         @else
-                            <li><a href="{{ url('order/statistics') }}" class="{{ path_active('order/statistics') }}"><i
+                            <li><a href="{{ url('order/statistics') }}" class="{{ path_active('order/statistics*') }}"><i
                                             class="fa fa-file-text-o"></i> 订单统计</a></li>
-                            <li><a href="{{ url('order-sell') }}" class=""><i class="fa fa-edit"></i> 订单管理</a></li>
+                            <li><a href="{{ url('order-sell') }}" class="{{ path_active('order-sell*') }}"><i class="fa fa-edit"></i> 订单管理</a></li>
                         @endif
                         <li><a href="{{ url('personal/shop') }}" class="{{ path_active('personal/*') }}"><i
                                         class="fa fa-heart-o"></i> 个人中心</a></li>
@@ -68,7 +68,7 @@
                                 我的订单</a>
                         </li>
                         <li><a href="{{ url('order-buy/statistics') }}"
-                               class="list-item {{ path_active('order-buy/statistics') }}"><i
+                               class="list-item {{ path_active(['order-buy/statistics','order/statistics*']) }}"><i
                                         class="fa fa-file-o"></i>
                                 统计报表</a></li>
                         <li><a href="{{ url('personal/shop') }}" class="list-item {{ path_active('personal/*') }}"><i

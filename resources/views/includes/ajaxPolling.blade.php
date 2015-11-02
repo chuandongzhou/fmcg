@@ -6,7 +6,6 @@
                 $.get(targetUrl, function (json) {//利用ajax返回json的方式
                     var div = $('#alert-div');
                     var uri = '';
-                    console.log(json.type);
                     if (json.data != undefined) {
                         switch (json.type) {
                             case 'user':
@@ -30,7 +29,7 @@
             }
 
             getPushData(); //首次立即加载
-            window.setInterval(getPushData, 5000); //循环执行！！
+            window.setInterval(getPushData, 500000); //循环执行！！
         }
     );
 </script>
