@@ -6,7 +6,7 @@
  * Time: 11:14
  */
 
-namespace app\Http\Requests\Api\v1;
+namespace App\Http\Requests\Api\v1;
 
 
 
@@ -20,7 +20,7 @@ class DeletePushDeviceRequest extends Request
     public function rules()
     {
         return [
-            'token' => 'required|unique:push_device',
+            'token' => 'required',
         ];
     }
 }

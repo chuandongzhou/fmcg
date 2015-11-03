@@ -35,7 +35,7 @@ class PushController extends Controller
      * @param \app\Http\Requests\Api\v1\DeletePushDeviceRequest $requests
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function deleteDeactiveToken(DeletePushDeviceRequest $requests)
+    public function deleteDeactiveToken(Requests\Api\V1\DeletePushDeviceRequest $requests)
     {
         $token = $requests->input('token');
         $status = PushDevice::where('user_id', auth()->user()->id)->where('token', $token)->delete();

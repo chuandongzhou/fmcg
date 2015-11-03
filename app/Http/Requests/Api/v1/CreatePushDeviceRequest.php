@@ -14,7 +14,7 @@ class CreatePushDeviceRequest extends Request
     public function rules()
     {
         return [
-            'token' => 'required|unique:push_device',
+            'token' => 'required',
             'version' => 'required',
             'type' => 'required'    //设备类型iphone=>iPhone设备,android=>android设备
         ];
