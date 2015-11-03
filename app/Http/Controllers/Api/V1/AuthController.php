@@ -27,13 +27,7 @@ class AuthController extends Controller
         $password = $request->input('password');
         $type = $request->input('type');
 
-        if (auth()->viaRemember() || auth()->attempt([
-                'user_name' => $account,
-                'password' => $password,
-                'type' => $type
-            ], true)
-        ) {
-
+        if (auth()->attempt(['user_name' => $account, 'password' => $password, 'type' => $type], true)) {
             $user = auth()->user()->load('shop');
             if (!is_null($user->shop)) {
                 $user->shop->address_name = $user->shop->address;

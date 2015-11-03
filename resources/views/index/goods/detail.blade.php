@@ -54,15 +54,14 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
-                                   class="btn btn-primary ajax add-to-cart"
-                                   data-method="post" data-data='{"num" : {{ $goods->min_num }}}'>加入购物车</a>
+                                   class="btn btn-primary add-to-cart">加入购物车</a>
 
                                 <a href="javascript:void(0)" data-type="goods" data-method="post"
                                    class="btn btn-default btn-like" data-id="{{ $goods->id }}">
                                     @if(is_null($isLike))
                                         <i class="fa fa-star-o"></i> 加入收藏夹
                                     @else
-                                        <i  class="fa fa-star"></i> 已收藏
+                                        <i class="fa fa-star"></i> 已收藏
                                     @endif
                                 </a>
                                 <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
@@ -89,7 +88,7 @@
                 <div class="item">
                     <h5 class="title-name">商品配送区域大概地图标识 :</h5>
 
-                   <div id="map"></div>
+                    <div id="map"></div>
                 </div>
             </div>
             <div class="col-sm-12 box graphic-details">
@@ -98,6 +97,24 @@
 
         </div>
     </div>
+
+    <!--弹出层-->
+    <div class="mask-outer">
+        <div class="pop-general text-center">
+            <div class="pop-content">
+                <a class="fa fa-close pull-right colse-btn" onclick="javascript:popClose();"></a>
+
+                <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
+
+                <div class="pop-btn">
+                    <a href='javascript:history.back()' class="btn btn-default">继续购物</a>
+                    <a href="{{ url('cart') }}" class="btn btn-danger">查看购物车</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @stop
 @section('js')
     @parent
@@ -106,6 +123,36 @@
             $('.carousel').carousel({
                 interval: 2000
             });
+            $('.add-to-cart'). on('click', function () {
+
+                var obj = $(this), url = obj.data('url'), buyNum = $('input[name="num"]').val();
+                obj.button({
+                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+                    doneText: '操作成功',
+                    failText: '操作失败'
+                });
+                obj.button('loading')
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {num: buyNum}
+                }).done(function () {
+                    obj.button('done');
+                }).fail(function (jqXHR) {
+                    obj.button('fail');
+                    var json = jqXHR['responseJSON'];
+                    if (json) {
+                        setTimeout(function () {
+                            obj.html(json['message']);
+                        }, 0);
+                    }
+                }).always(function () {
+                    $(".mask-outer").css("display", "block");
+                });
+
+                return false;
+            });
+
             numChange({{ $goods->min_num }});
             tabBox();
             likeFunc();

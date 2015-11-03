@@ -146,5 +146,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('address/street', 'AddressController@street');
         $router->controller('auth', 'AuthController');
         $router->controller('push', 'PushController');//推送设备
+        $router->get('pay/{order_id}', 'PayController@pay')->where('order_id', '[0-9]+'); //易宝
     });
 });

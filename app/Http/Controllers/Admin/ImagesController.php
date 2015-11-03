@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use App\Models\Images;
+use App\Services\AttrService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,32 +18,26 @@ class ImagesController extends Controller
      */
     public function index(Request $request)
     {
-        // TODO: 查询是需要返回标签
-        /*$attrs = $goods->attrs;
-        $attrIds = array_keys($attrs);
-        $attrResults = Attr::select(['id', 'pid', 'name'])
-            ->whereIn('id', $attrIds)
-            ->orWhere(function ($query) use ($attrIds) {
-                $query->whereIn('pid', $attrIds);
-            })->get()->toArray();
-        $attrResults = (new AttrService($attrResults))->format();*/
-        // TODO 以上代码可能会用到
         $cate = array_filter($request->only('cate_level_1', 'cate_level_2', 'cate_level_3'));
         $attrs = $request->input('attrs');
-
+        $attrResults = [];
         if ($cate) {
+           //获取标签
+            $attrResults = (new AttrService())->getAttrByCategoryId(max($cate));
+
             $goodsImage = Images::where($cate);
-            if($attrs){
+            if (array_filter((array)$attrs)) {
                 $goodsImage = $goodsImage->ofAttr(array_filter($attrs));
             }
             $goodsImage = $goodsImage->paginate();
-        }
-        else {
+        } else {
             $cate['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
-            $goodsImage =  Images::where('cate_level_1' , $cate['cate_level_1'])->paginate();
+            $goodsImage = Images::where('cate_level_1', $cate['cate_level_1'])->paginate();
         }
 
-        return view('admin.images.index', ['search' => $cate, 'goodsImage' => $goodsImage]);
+        // dd($attrResults);
+        return view('admin.images.index',
+            ['search' => $cate, 'goodsImage' => $goodsImage, 'attrs' => $attrs, 'attrResult' => $attrResults]);
     }
 
     /**
@@ -75,40 +70,6 @@ class ImagesController extends Controller
         }
 
         return $this->error('添加图片时遇到错误');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request $request
-     * @param  int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

@@ -33,7 +33,15 @@
             <div class="form-group ">
                 <div class="row col-lg-12 ">
                     <div class="col-sm-12 attr">
-
+                        @foreach($attrResult as $attr)
+                            <p class="items-item"><label>{{ $attr['name'] }}</label>
+                                <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
+                                    <option value="0">请选择</option>
+                                    @foreach($attr['child'] as $key => $val)
+                                        <option value="{{ $key }}" {{ $key == $attrs[$attr['attr_id']] ? 'selected' : '' }} >{{ $val['name'] }}</option>
+                                    @endforeach
+                                </select></p>
+                        @endforeach
                     </div>
                 </div>
             </div>

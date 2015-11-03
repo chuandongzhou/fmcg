@@ -7,8 +7,6 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\HomeColumn;
-use App\Models\Shop;
 use App\Services\AttrService;
 use Gate;
 use App\Models\Goods;

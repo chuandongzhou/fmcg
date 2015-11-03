@@ -34,6 +34,55 @@ ul, li, p, a, h1, h2, h3, h4 {
 .go-history {
   padding: 10px 0; }
 
+/*======================================pop======================================*/
+.mask-outer {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5) !important;
+  filter: alpha(opacity=50); }
+  .mask-outer .pop-general {
+    width: 400px;
+    height: 200px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: -100px 0 0 -200px;
+    z-index: 9999;
+    background-color: #fff;
+    border: 5px solid #e0e0e0; }
+    .mask-outer .pop-general .pop-content {
+      position: absolute;
+      width: 100%;
+      height: 100%; }
+      .mask-outer .pop-general .pop-content .colse-btn {
+        color: #555555;
+        cursor: pointer;
+        margin-right: 3px;
+        font-size: 19px; }
+        .mask-outer .pop-general .pop-content .colse-btn:hover {
+          text-decoration: none; }
+      .mask-outer .pop-general .pop-content .pop-tips {
+        margin-top: 40px; }
+        .mask-outer .pop-general .pop-content .pop-tips .txt {
+          font-size: 17px;
+          font-weight: 700;
+          display: inline-block;
+          margin-left: 10px; }
+        .mask-outer .pop-general .pop-content .pop-tips .fa {
+          font-size: 30px;
+          vertical-align: middle;
+          color: #5cb85c; }
+      .mask-outer .pop-general .pop-content .pop-btn {
+        margin-top: 30px; }
+
+/*======================================pop======================================*/
 /*======================================login begin======================================*/
 .login-nav {
   margin: 0; }
@@ -1545,6 +1594,22 @@ table .product-name {
         color: #333333; }
     .table-list-row .shopping-table-list table tr td.total-money {
       border-left: 1px solid #e0e0e0; }
+  .table-list-row .shopping-finish .order-ok-icon {
+    font-size: 40px;
+    color: #5cb85c; }
+  .table-list-row .shopping-finish .order-ok-title {
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 17px;
+    color: #555555; }
+  .table-list-row .shopping-finish .finish-operating {
+    margin-top: 20px; }
+    .table-list-row .shopping-finish .finish-operating a {
+      color: #f0ad4e;
+      display: inline-block;
+      margin-right: 10px; }
+      .table-list-row .shopping-finish .finish-operating a:hover {
+        color: #f0ad4e; }
 
 .check-item {
   display: inline-block; }
@@ -1592,7 +1657,8 @@ table .product-name {
     width: 15%;
     padding: 4px 3px; }
   .collect .control-panel .search, .collect .control-panel .public-personal .controls .item .add-goods, .public-personal .controls .item .collect .control-panel .add-goods {
-    width: 15%;
+    height: 31px;
+    vertical-align: middle;
     background-color: #d2d2d2;
     color: #555555; }
 
@@ -1601,7 +1667,7 @@ table .product-name {
   padding-left: 240px !important; }
 
 /*==================================================================================dealer end======================================================================*/
-.pagination li a {
+.pagination li a, .pager li a {
   cursor: pointer; }
 
 /*==============baidu map css start=================*/
