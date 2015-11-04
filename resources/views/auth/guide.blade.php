@@ -22,7 +22,7 @@
                 <span class="item-icon">
                     <i class="icon icon-shopping-cart"></i>
                 </span>
-                <span class="item-name ">超市平台</span>
+                <span class="item-name ">终端平台</span>
             </a>
             <a class="tabs-item" href="{{ url('auth/login?type=retailer') }}">
                 <span class="item-icon">

@@ -39,6 +39,11 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $orderGoodsNum = $request->input('num');
+        $goodsId = $request->input('goods_id');
+
+        $orderGoodsNum = array_where($orderGoodsNum, function ($key, $value) use ($goodsId) {
+            return in_array($key, $goodsId);
+        });
 
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
@@ -86,8 +91,9 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $user = auth()->user();
 
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
             return redirect()->back()->withInput();
         }
@@ -114,12 +120,21 @@ class OrderController extends Controller
             head($codPayTypes)) : 0;
         //TODO: 需要验证收货地址是否合法
         $shippingAddressId = $data['shipping_address_id'];
-        //$remark = $data['remark'] ? $data['remark'] : '';
+
         $redis = Redis::connection();
+
+        $pid = 0;
+        if ($shops->count() > 1) {
+            $maxPid = Order::max('pid');
+            $pid = $maxPid + 1;
+        }
+
+        $successOrders = [];  //保存提交成功的订单
 
         foreach ($shops as $shop) {
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
+                'pid' => $pid,
                 'user_id' => auth()->user()->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
@@ -131,6 +146,7 @@ class OrderController extends Controller
             ];
             $order = Order::create($orderData);
             if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
+                $successOrders[] = $order;
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
@@ -151,13 +167,11 @@ class OrderController extends Controller
                             $redis->expire($redisKey, cons('push_time.msg_life'));
                         }
                     }
-                    // 删除购物车
-                    auth()->user()->carts()->where('status', 1)->delete();
-
                 } else {
                     //TODO: 跳转页面后期修改
-                    $order->delete();
-
+                    foreach ($successOrders as $successOrder) {
+                        $successOrder->delete();
+                    }
                     return redirect('cart');
                 }
 
@@ -167,18 +181,22 @@ class OrderController extends Controller
             }
         }
 
-        $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order?order_id=' . implode('.',
-                $onlinePaymentOrder));
+        // 删除购物车
+        $user->carts()->where('status', 1)->delete();
+
+        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : $onlinePaymentOrder[0]);
+
+        $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
 
         return redirect($redirectUrl);
 
         //TODO:支付成功后加入提示信息
-//        //在线支付成功通知卖家发货
-//        $redisKey = 'push:seller:' . $shop->user()->id;
-//        if (!$redis->exists($redisKey)) {
-//            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
-//            $redis->expire($redisKey, cons('push_time.msg_life'));
-//        }
+        /*  //在线支付成功通知卖家发货
+        $redisKey = 'push:seller:' . $shop->user()->id;
+        if (!$redis->exists($redisKey)) {
+            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
+            $redis->expire($redisKey, cons('push_time.msg_life'));
+        }*/
 
     }
 
@@ -190,12 +208,14 @@ class OrderController extends Controller
             return redirect(url('order-buy'));
         }
 
-        $orderIds = explode('.', $orderId);
-        $orders = Order::whereIn('id', $orderIds)->get(['pay_type', 'pay_status', 'user_id']);
+        $type = $request->input('type');
+        $field = $type == 'all' ? 'pid' : 'id';
+
+        $orders = Order::where('id', $field)->get(['pay_type', 'pay_status', 'user_id']);
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
-        return view('index.order.finish-order', ['orderId' => $orderId]);
+        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
     }
 
     /**
@@ -204,10 +224,8 @@ class OrderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
-    public
-    function getStatistics(
-        Request $request
-    ) {
+    public function getStatistics(Request $request)
+    {
         //订单对象类型
         $objType = cons()->valueLang('user.type');
         array_forget($objType, $this->userType);
@@ -254,10 +272,8 @@ class OrderController extends Controller
      * @param $objType
      * @return string
      */
-    private
-    function _inputName(
-        $objType
-    ) {
+    private function _inputName($objType)
+    {
         if ($this->userType == cons('user.type.retailer')
             || ($this->userType == cons('user.type.wholesaler')
                 && $objType == cons('user.type.supplier'))
@@ -277,13 +293,8 @@ class OrderController extends Controller
      * @param int $flag
      * @return string
      */
-    private
-    function _pageNav(
-        $pageNum,
-        $per,
-        $count,
-        $flag = 0
-    ) {
+    private function _pageNav($pageNum, $per, $count, $flag = 0)
+    {
         $pageTotal = $count / $per;
         $html = '';
         if ($pageTotal > 1) {
@@ -307,10 +318,8 @@ class OrderController extends Controller
      * @param $search
      * @return mixed
      */
-    private
-    function _searchAllOrderByOptions(
-        $search
-    ) {
+    private function _searchAllOrderByOptions($search)
+    {
         $query = Order::where(function ($query) use ($search) {
             //付款方式
             if (empty($search['pay_type'])) {
@@ -389,10 +398,8 @@ class OrderController extends Controller
      * @param array $res
      * @return mixed
      */
-    private
-    function _orderStatistics(
-        $res
-    ) {
+    private function _orderStatistics($res)
+    {
         $stat['totalNum'] = count($res);//订单总数
         $stat['totalAmount'] = 0;//订单总金额
         //在线支付订单
@@ -440,8 +447,7 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public
-    function getOrderPolling()
+    public function getOrderPolling()
     {
         $redis = Redis::connection();
 
@@ -463,10 +469,8 @@ class OrderController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      */
-    public
-    function postStatExport(
-        Request $request
-    ) {
+    public function postStatExport(Request $request)
+    {
         //查询条件判断
         $search = $request->all();
         $stat = $this->_searchAllOrderByOptions($search);
@@ -502,10 +506,8 @@ class OrderController extends Controller
      * @param $search
      * @return array
      */
-    private
-    function _spliceOptions(
-        $search
-    ) {
+    private function _spliceOptions($search)
+    {
         $options = [];
         if (!empty($search['start_at'])) {
             $options[] = ["开始时间:", $search['start_at']];
@@ -548,11 +550,8 @@ class OrderController extends Controller
      * @param $flag
      * @return array
      */
-    private
-    function _spliceOrderContent(
-        $orders,
-        $flag
-    ) {
+    private function _spliceOrderContent($orders, $flag)
+    {
         $orderContent[] = ['订单号', '收件人', '支付方式', '订单状态', '创建时间', '订单金额'];
         if ($flag) {
             $orderContent[0] = array_merge($orderContent[0], ['商品编号', '商品名称', '商品单价', '商品数量']);
@@ -610,10 +609,8 @@ class OrderController extends Controller
      * @param $goods
      * @return array
      */
-    private
-    function _spliceGoodsContent(
-        $goods
-    ) {
+    private function _spliceGoodsContent($goods)
+    {
         $goodsContent[] = ['商品总计'];
         $goodsContent[] = ['商品编号', '商品名称', '平均单价', '商品数量', '商品支出金额'];
 
@@ -636,10 +633,8 @@ class OrderController extends Controller
      * @param $stat
      * @return array
      */
-    private
-    function _spliceOrderStat(
-        $stat
-    ) {
+    private function _spliceOrderStat($stat)
+    {
         $res[] = ['订单总计'];
         $res[] = [
             '订单数',

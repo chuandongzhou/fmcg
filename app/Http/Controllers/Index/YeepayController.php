@@ -8,7 +8,6 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Order;
-use App\Models\Shop;
 use App\Models\SystemTradeInfo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,13 +17,14 @@ use Gate;
 class YeePayController extends Controller
 {
     /**
+     * @param \Illuminate\Http\Request $request
      * @param $orderId
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function getRequest($orderId)
+    public function getRequest(Request $request, $orderId)
     {
-
-        $orders = Order::whereIn('id', explode('.', $orderId))->get();
+        $field = $request->input('type') == 'all' ? 'pid' : 'id';
+        $orders = Order::where($field, $orderId)->get();
 
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect('order-buy');
@@ -54,12 +54,12 @@ class YeePayController extends Controller
         $p7_Pdesc = 'fmcg_describe';
 
 //	商户接收支付成功数据的地址,支付成功后易宝支付会向该地址发送两次成功通知.
-        $p8_Url = config('yeepay.p8_url');
+        $p8_Url = url('pay/callback');//config('yeepay.p8_url');
 
 //	商户扩展信息
 //商户可以任意填写1K 的字符串,支付成功时将原样返回.
         //商家账号
-        $pa_MP = '';
+        $pa_MP = $field;
 
 //	支付通道编码
 //默认为""，到易宝支付网关.若不需显示易宝支付的页面，直接跳转到各银行、神州行支付、骏网一卡通等支付页面，该字段可依照附录:银行列表设置参数值.
@@ -97,6 +97,10 @@ class YeePayController extends Controller
     }
 
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\Response
+     */
     public function anyCallback(Request $request)
     {
 //	只有支付成功时易宝支付才会通知商户.
@@ -138,13 +142,12 @@ class YeePayController extends Controller
                     //更改订单状态
                     $orderConf = cons('order');
 
-                    $orders = Order::whereIn('id', explode('.', $r6_Order))->get();
+                    $orders = Order::where($r8_MP, $r6_Order)->get();
 
                     foreach ($orders as $order) {
                         $order->fill([
                             'pay_status' => $orderConf['pay_status']['payment_success'],
                         ])->save();
-
 
                         $fee = ($order->price / $r3_Amt) * $rq_TargetFee;
 
@@ -161,7 +164,7 @@ class YeePayController extends Controller
                         SystemTradeInfo::create([
                             'type' => $tradeConf['type']['in'],
                             'pay_type' => $tradeConf['pay_type']['yeepay'],
-                            'account' => 'wholesaler', //TODO: 商家帐号
+                            'account' => $order->shop_id, //TODO: 商家帐号
                             'paid_at' => Carbon::now(),
                             'order_id' => $order->id,
                             'trade_no' => $r2_TrxId,

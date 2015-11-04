@@ -295,6 +295,12 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $orderGoodsNum = $request->input('num');
+     /*   $goodsId = $request->input('goods_id');
+
+        $orderGoodsNum = array_where($orderGoodsNum, function($key, $value) use($goodsId)
+        {
+            return in_array($key , $goodsId);
+        });*/
 
         if (empty($orderGoodsNum)) {
             return $this->error('选择的商品不能为空');
@@ -377,14 +383,12 @@ class OrderController extends Controller
                     // 删除购物车
                     auth()->user()->carts()->where('status', 1)->delete();
                 } else {
-                    //TODO: 跳转页面后期修改
                     $order->delete();
 
                     return $this->error('提交订单失败');
                 }
 
             } else {
-                //跳转页面后期修改
                 return $this->error('提交订单失败');
             }
         }

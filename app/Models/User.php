@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             //TODO 删除其它
             $user->carts()->delete();
             $user->likes()->delete();
-            $user->shops()->delete();
+            $user->shop()->delete();
             $user->userBanks()->delete();
             $user->shippingAddress()->delete();
         });

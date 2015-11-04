@@ -31,26 +31,10 @@
 
                 <p class="finish-operating">
                     <a href="{{ url('order-buy') }}">查看订单</a>
-                    <a href="{{ url('pay?order_id=' . $orderId) }}">点击支付</a>
+                    <a href="{{ url('pay/request/' . $orderId . ($type == 'all' ? '?type=all' : '')) }}">点击支付</a>
                 </p>
             </div>
         </div>
     </div>
 
-@stop
-
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            $('.pay_type').on('change', function () {
-                var obj = $(this), payType = obj.val(), codPayType = obj.parent().next();
-                if (payType == 'cod') {
-                    codPayType.removeClass('hidden').children('input[type="radio"]').prop('disabled', false);
-                } else {
-                    codPayType.addClass('hidden').children('input[type="radio"]').prop('disabled', true);
-                }
-            })
-        })
-    </script>
 @stop

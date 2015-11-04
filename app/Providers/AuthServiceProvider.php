@@ -52,6 +52,9 @@ class AuthServiceProvider extends ServiceProvider
                 if ($orders->pay_type != cons('pay_type.online')) {
                     return false;
                 }
+                if ($orders->is_cancel == cons('order.is_cancel.on')) {
+                    return false;
+                }
                 $orderConfig = cons('order');
 
                 if ($orders->pay_status != $orderConfig['pay_status']['non_payment']) {
@@ -65,6 +68,9 @@ class AuthServiceProvider extends ServiceProvider
                         return false;
                     }
                     if ($order->pay_type != cons('pay_type.online')) {
+                        return false;
+                    }
+                    if ($order->is_cancel == cons('order.is_cancel.on')) {
                         return false;
                     }
                     $orderConfig = cons('order');

@@ -102,7 +102,7 @@
     <div class="mask-outer">
         <div class="pop-general text-center">
             <div class="pop-content">
-                <a class="fa fa-close pull-right colse-btn" onclick="javascript:popClose();"></a>
+                <a class="fa fa-close pull-right close-btn" href="javascript:void(0)"></a>
 
                 <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
 
@@ -124,7 +124,6 @@
                 interval: 2000
             });
             $('.add-to-cart'). on('click', function () {
-
                 var obj = $(this), url = obj.data('url'), buyNum = $('input[name="num"]').val();
                 obj.button({
                     loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
@@ -152,7 +151,9 @@
 
                 return false;
             });
-
+            $('a.close-btn').on('click' , function (){
+                $(".mask-outer").css("display","none");
+            });
             numChange({{ $goods->min_num }});
             tabBox();
             likeFunc();
