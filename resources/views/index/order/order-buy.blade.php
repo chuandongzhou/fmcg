@@ -83,11 +83,11 @@
                                         <td>{{ $good['pivot']['num'] }}</td>
                                         @if(0 == $key )
                                             <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
-                                                <p>订单状态 :{{ $order['status_name'] }}</p>
+                                                <p>{{ $order['status_name'] }}</p>
 
-                                                <p>支付方式 :{{ $order['payment_type'] }}</p>
+                                                <p>{{ $order['payment_type'] }}</p>
 
-                                                <p>订单金额 :<span class="red">￥{{ $order['price'] }}</span></p>
+                                                <p><span class="red">￥{{ $order['price'] }}</span></p>
                                             </td>
                                             <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
                                                 <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"

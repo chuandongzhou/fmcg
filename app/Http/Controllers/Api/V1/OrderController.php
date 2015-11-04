@@ -98,7 +98,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->userId)->nonSend()->paginate(1)->toArray();
+        $orders = Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
 
         return $this->success($orders);
     }

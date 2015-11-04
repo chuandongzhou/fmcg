@@ -16,12 +16,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0;
 }
-.table-center{
-  tr{
-    th{
+
+.table-center {
+  tr {
+    th {
       text-align: center;
     }
-    td{
+    td {
       text-align: center;
     }
   }
@@ -49,9 +50,66 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: $brand-danger;
 }
-.go-history{
+
+.go-history {
   padding: 10px 0;
 }
+
+/*======================================pop======================================*/
+.mask-outer {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+ @include square(100%);
+  background: rgba(0, 0, 0, 0.5) !important;
+  filter: alpha(opacity=50);
+  .pop-general {
+    @include size(400px, 200px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: -100px 0 0 -200px;
+    z-index: 9999;
+    background-color: $body-bg;
+    border: 5px solid $gray-plain-light;
+    .pop-content {
+      position: absolute;
+      @include square(100%);
+      .colse-btn {
+        color: $gray;
+        cursor: pointer;
+        margin-right: 3px;
+        font-size: 19px;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      .pop-tips {
+        margin-top: 40px;
+        .txt {
+          font-size: 17px;
+          font-weight: 700;
+          display: inline-block;
+          margin-left: 10px;
+        }
+        .fa {
+          font-size: 30px;
+          vertical-align: middle;
+          color: $brand-success;
+        }
+      }
+      .pop-btn {
+        margin-top: 30px;
+      }
+    }
+  }
+}
+
+/*======================================pop======================================*/
 
 /*======================================login begin======================================*/
 .login-nav {
@@ -162,18 +220,18 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================login end======================================*/
 /*======================================guide end======================================*/
-.guide-content{
+.guide-content {
   background: url("../images/banner.jpg") top no-repeat;
-  background-size:cover;
+  background-size: cover;
   min-height: 600px;
   min-width: 1200px;
   position: relative;
   .content-panel {
     position: absolute;
     width: 600px;
-    bottom:80px;
+    bottom: 80px;
     left: 50%;
-    margin-left:-300px;
+    margin-left: -300px;
     vertical-align: text-bottom;
     .tabs-item {
       float: left;
@@ -182,43 +240,43 @@ ul, li, p, a, h1, h2, h3, h4 {
       -webkit-box-sizing: border-box;
       text-align: center;
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: none;
-        .item-icon{
-          border:2px solid $body-bg;
+        .item-icon {
+          border: 2px solid $body-bg;
         }
-        .item-name{
-          color:$body-bg;
+        .item-name {
+          color: $body-bg;
         }
       }
-      .item-icon{
+      .item-icon {
         display: inline-block;
-        border-radius:50%;
+        border-radius: 50%;
         min-height: 94px;
         padding: 5px;
         .icon {
           display: inline-block;
           vertical-align: middle;
           background: url("../images/guide-icons.png") no-repeat;
-          background-size:cover;
+          background-size: cover;
           @include square(80px);
 
-          &.icon-car{
-            background-position:0 1px;
+          &.icon-car {
+            background-position: 0 1px;
           }
-          &.icon-wholesalers{
+          &.icon-wholesalers {
             background-position: 0 -117px;
           }
-          &.icon-shopping-cart{
+          &.icon-shopping-cart {
             background-position: 0 -234px;
           }
-          &.icon-books{
+          &.icon-books {
             background-position: 0 -352px;
           }
 
         }
       }
-      .item-name{
+      .item-name {
         display: block;
         color: $gray-darker;
         font-size: 18px;
@@ -229,10 +287,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.guide-footer{
+
+.guide-footer {
   min-width: 1200px;
-  .content{
-    p{
+  .content {
+    p {
       width: 70%;
       margin: auto;
       text-align: left;
@@ -334,13 +393,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     height: 50px;
   }
 }
-.dealer-header{
-  .logo-icon{
+
+.dealer-header {
+  .logo-icon {
     padding-top: 8px;
   }
 }
-.wholesalers-top-header{
-  .right-search{
+
+.wholesalers-top-header {
+  .right-search {
     padding: 20px 0;
   }
 }
@@ -1518,7 +1579,7 @@ table {
         tbody {
           tr {
             td {
-              img{
+              img {
                 @include square(80px);
               }
             }
@@ -1829,7 +1890,7 @@ table {
         border: none;
         outline: none;
       }
-      @media screen and (min-width: 991px) and (max-width:1200px) {
+      @media screen and (min-width: 991px) and (max-width: 1200px) {
         .control {
           @include size(74%, 33px);
           padding: 0 5px;
@@ -2001,7 +2062,7 @@ table {
       color: $gray-base;
       display: inline-block;
       padding: 0 15px;
-      &.active{
+      &.active {
         background-color: $brand-primary;
         color: $body-bg;
       }
@@ -2152,6 +2213,29 @@ table {
       }
     }
   }
+  .shopping-finish {
+    .order-ok-icon {
+      font-size: 40px;
+      color: $brand-success;
+    }
+    .order-ok-title {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 17px;
+      color: $gray;
+    }
+    .finish-operating {
+      margin-top: 20px;
+      a {
+        color: $brand-warning;
+        &:hover {
+          color: $brand-warning;
+        }
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+  }
 }
 
 .check-item {
@@ -2213,7 +2297,8 @@ table {
       padding: 4px 3px;
     }
     .search {
-      width: 15%;
+      height: 31px;
+      vertical-align: middle;
       background-color: $banner-gray;
       color: $gray;
     }
@@ -2227,14 +2312,20 @@ table {
     padding-left: 240px !important;
   }
 }
+
 /*==================================================================================dealer end======================================================================*/
-.pagination{
-  li{
-    a{
+.pagination {
+  li {
+    a {
       cursor: pointer;
     }
   }
 }
+
+.pager {
+  @extend .pagination;
+}
+
 /*==============baidu map css start=================*/
 #map, #map-modal {
   width: 100%;
@@ -2242,4 +2333,5 @@ table {
   overflow: hidden;
   margin: 0;
 }
+
 /*==============baidu map css end=================*/

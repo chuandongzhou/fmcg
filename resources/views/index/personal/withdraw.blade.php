@@ -52,8 +52,8 @@
                                         <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
                                         <td>{{ $withdraw->status_info }} </td>
                                         <td>{{ $withdraw->trade_no }} </td>
-                                        <td><button class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString(),'reason'=>$withdraw->reason]) !!}' >详细信息</button></td>
+                                        <td><a class="show-item btn btn-success" data-target="#withdraw-item" data-toggle="modal"
+                                               data-data='{!! json_encode(['created_at'=>$withdraw->created_at->toDateTimeString(),'failed_at'=>$withdraw->failed_at->toDateTimeString(),'pass_at'=>$withdraw->pass_at->toDateTimeString(),'payment_at'=>$withdraw->payment_at->toDateTimeString(),'reason'=>$withdraw->reason]) !!}' >详细信息</a></td>
                                     </tr>
                                 @endforeach
 
@@ -69,8 +69,8 @@
                                     <td>{{ cons()->valueLang('bank.type')[$withdraws->userBanks->card_type] }}</td>
                                     <td>{{ cons()->valueLang('withdraw')[$withdraws->status] }} </td>
                                     <td>{{ $withdraws->trade_no }} </td>
-                                    <td><button class="show-item" data-target="#withdraw-item" data-toggle="modal"
-                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString(),'reason'=>$withdraws->reason]) !!}' >详细信息</button></td>
+                                    <td><a class="show-item btn btn-success" data-target="#withdraw-item" data-toggle="modal"
+                                           data-data='{!! json_encode(['created_at'=>$withdraws->created_at->toDateTimeString(),'failed_at'=>$withdraws->failed_at->toDateTimeString(),'pass_at'=>$withdraws->pass_at->toDateTimeString(),'payment_at'=>$withdraws->payment_at->toDateTimeString(),'reason'=>$withdraws->reason]) !!}' >详细信息</a></td>
                                 </tr>
                             @endif
                         </tbody>

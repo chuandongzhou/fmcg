@@ -78,9 +78,9 @@ function _ajaxGet(targetUrl, data) {
                         + '                 <td>' + item.pivot.num + '</td>';
                     if (0 == key) {
                         str += '         <td rowspan="' + result.goods.length + '" class="pay-detail text-center">'
-                            + '         <p>订单状态 :' + result.status_name + '</p>'
-                            + '         <p>支付方式 :' + result.payment_type + '</p>'
-                            + '         <p>订单金额 :<span class="red">￥' + result.price + '</span></p>'
+                            + '         <p>' + result.status_name + '</p>'
+                            + '         <p>' + result.payment_type + '</p>'
+                            + '         <p><span class="red">￥' + result.price + '</span></p>'
                             + '     </td>'
                             + '     <td rowspan="' + result.goods.length + '" class="operating text-center">';
                         if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
