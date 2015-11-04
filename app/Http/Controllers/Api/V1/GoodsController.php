@@ -50,6 +50,7 @@ class GoodsController extends Controller
         ])->where('user_type', '>', auth()->user()->type);
 
         $result = GoodsService::getGoodsBySearch($gets, $goods, false);
+
         return $this->success([
             'goods' => $result['goods']->paginate()->toArray(),
             'categories' => $result['categories']
@@ -69,10 +70,11 @@ class GoodsController extends Controller
             return $this->forbidden('权限不足');
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
-        $isLike =auth()->user()->likeGoods()->where('id',$goods->id)->pluck('id');
+        $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         $goods->is_like = $isLike ? true : false;
+
         return $this->success(['goods' => $goods]);
     }
 }
