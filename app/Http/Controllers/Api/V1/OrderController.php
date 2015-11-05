@@ -271,6 +271,11 @@ class OrderController extends Controller
      */
     public function getStatistics()
     {
+        $redis = Redis::connection();
+        $key = 'statistics:' . $this->userId;
+        if ($redis->exists($key)) {
+            return $this->success(json_decode($redis->get($key), true));
+        }
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
         $builder = Order::bySellerId($this->userId)->nonCancel();
@@ -289,6 +294,9 @@ class OrderController extends Controller
             'count' => $builder->count(),
             'finish' => $builder->where('status', cons('order.status.finished'))->count()
         ];
+        //存入redis
+        $redis->set($key, json_encode($statistics));
+        $redis->expire($key, 60);
 
         return $this->success($statistics);
 
