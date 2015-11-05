@@ -266,6 +266,35 @@ class OrderController extends Controller
     }
 
     /**
+     * 卖家订单统计功能
+     *
+     */
+    public function getStatistics()
+    {
+        //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
+        $today = Carbon::today();
+        $builder = Order::bySellerId($this->userId)->nonCancel();
+
+        for ($i = 6; $i >= 0; -- $i) {
+            $start = $today->copy()->addDay(- $i);
+            $end = $start->copy()->endOfDay();
+            $time = [$start, $end];
+            $statistics['sevenDay'][] = [
+                'new' => with(clone $builder)->whereBetween('created_at', $time)->count(),
+                'finish' => with(clone $builder)->whereBetween('finished_at', $time)->count()
+            ];
+        }
+        $statistics['today'] = $statistics['sevenDay'][6];
+        $statistics['all'] = [
+            'count' => $builder->count(),
+            'finish' => $builder->where('status', cons('order.status.finished'))->count()
+        ];
+
+        return $this->success($statistics);
+
+    }
+
+    /**
      * 获取确认订单页
      *
      * @return \Illuminate\View\View
@@ -295,12 +324,12 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $orderGoodsNum = $request->input('num');
-     /*   $goodsId = $request->input('goods_id');
+        /*   $goodsId = $request->input('goods_id');
 
-        $orderGoodsNum = array_where($orderGoodsNum, function($key, $value) use($goodsId)
-        {
-            return in_array($key , $goodsId);
-        });*/
+           $orderGoodsNum = array_where($orderGoodsNum, function($key, $value) use($goodsId)
+           {
+               return in_array($key , $goodsId);
+           });*/
 
         if (empty($orderGoodsNum)) {
             return $this->error('选择的商品不能为空');
@@ -430,6 +459,7 @@ class OrderController extends Controller
             $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed'));
             $redis->expire($redisKey, cons('push_time.msg_life'));
         }
+
         return $this->success('修改成功');
     }
 }

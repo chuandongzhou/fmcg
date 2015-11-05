@@ -17,7 +17,7 @@ class BalanceController extends Controller
 
         $data = $request->all();
         $startTime = isset($data['start_time']) && $data['start_time'] != '' ? $data['start_time'] : date('Y-m-d',
-            strtotime('-1 month'));;
+            strtotime('-1 month'));
         $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
 
         $tradeInfo = SystemTradeInfo::select('trade_no', 'order_id', 'type', 'amount')->where('account',

@@ -1436,6 +1436,32 @@
         <p><code>成功返回：</code></p>
 
         <p><code>失败返回：</code></p>
+        <h4>2.7.17 卖家订单统计[get] (statistics)</h4>
+
+        <p><code>请求参数：</code></p>
+
+        <p><code>成功返回：</code></p>
+<pre><code>all array 累计信息统计
+    today array 今日信息统计
+    sevenDay array 过去7天信息统计
+
+    all 字段说明
+
+    count int 累计订单数
+    finish int 累计完成订单数
+
+    today 字段说明
+
+    new int 今日新增订单数
+    finish int 今日完成订单数
+
+    sevenDay 字段子集说明
+
+    new int 当日新增订单数(按今天前第六天开始倒序排列的)
+    finish int 当然完成订单数
+</code></pre>
+
+        <p><code>失败返回：</code></p>
 
         <h3>2.8 收藏 like</h3>
         <h4>2.8.1 收藏 [put] (interests)</h4>
@@ -1555,7 +1581,7 @@
     address string 详细地址
 </code></pre>
 
-        <h4>2.9.3 添加收货地址 [post] (index)</h4>
+        <h4>2.9.3 添加收货地址 [post] ()</h4>
 
         <p><code>请求参数：</code></p>
 <pre><code>consigner string 收货人
@@ -1587,7 +1613,7 @@
         <p><code>成功返回：</code></p>
 
         <p><code>失败返回：</code></p>
-        <h4>2.9.5 设置默认地址 [put] (shipping-address-default/{id})</h4>
+        <h4>2.9.5 设置默认地址 [put] (default/{id})</h4>
 
         <p><code>请求参数：</code></p>
 

@@ -1025,6 +1025,32 @@
 
 `失败返回：`
 
+#### 2.7.17 卖家订单统计[get] (statistics)
+`请求参数：`
+
+`成功返回：`
+	
+	all						array		累计信息统计
+	today					array		今日信息统计
+	sevenDay				array		过去7天信息统计
+
+	all 字段说明
+
+	count					int			累计订单数
+	finish					int			累计完成订单数
+	
+	today 字段说明
+	
+	new						int			今日新增订单数
+	finish					int			今日完成订单数
+	
+	sevenDay 字段子集说明
+	
+		new					int			当日新增订单数(按今天前第六天开始倒序排列的)
+		finish				int			当然完成订单数
+
+`失败返回：`
+
 
 ### 2.8 收藏 like
 
