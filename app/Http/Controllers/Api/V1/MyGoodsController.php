@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Coordinate;
 use App\Models\DeliveryArea;
 use App\Models\Goods;
-
 use App\Http\Requests;
 use App\Models\Images;
 use App\Services\AddressService;
+use App\Services\AttrService;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
+use Gate;
 
 class MyGoodsController extends Controller
 {
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $gets = $request->all();
 
         $goods = auth()->user()->shop->goods()->with('images')->select([
@@ -58,6 +60,25 @@ class MyGoodsController extends Controller
             return $this->created('添加商品成功');
         }
         return $this->error('添加商品出现错误');
+    }
+
+    /**
+     *
+     *
+     * @param $goods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function show($goods)
+    {
+        $goods->load(['images', 'deliveryArea.coordinate']);
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $attrs = (new AttrService())->getAttrByGoods($goods, true);
+        $goods->shop_name = $goods->shop()->pluck('name');
+        $goods->attrs = $attrs;
+
+        return $this->success(['goods' => $goods]);
     }
 
     /**
@@ -133,7 +154,7 @@ class MyGoodsController extends Controller
         if ($attrs) {
             $goodsImage = $goodsImage->ofAttr($attrs);
         }
-        $goodsImage = $goodsImage->get();
+        $goodsImage = $goodsImage->paginate()->toArray();
         return $this->success(['goodsImage' => $goodsImage]);
     }
 
@@ -188,7 +209,7 @@ class MyGoodsController extends Controller
         foreach ($attrs as $pid => $id) {
             $attrArr[$id] = ['attr_pid' => $pid];
         }
-        if (!empty($attrArr)) {
+        if (!empty($attrArr)) { 
             $model->attr()->sync($attrArr);
         }
     }

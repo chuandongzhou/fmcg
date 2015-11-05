@@ -202,14 +202,14 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
-		coordinate				array			配送区域坐标点
-		
-		coordinate 字段子集说明
-		
-		bl_lnt					string			左上角经度
-		bl_lat					string			左上角维度
-		sl_lng					string			右下角经度
-		sl_lat					string			右下角维度
+        coordinate          array       配送区域坐标
+
+       coordinate 字段子集说明
+
+       bl_lnt					string			左上角经度
+       bl_lat					string			左上角纬度
+       sl_lng					string			右下角经度
+       sl_lat					string			右下角纬度
 
     images_url 子字段说明
 
@@ -264,9 +264,74 @@
 
 `失败返回：`
 
+#### 2.3.2 我的商品详情[get] ({goods_id})
+`请求参数`
 
 
-#### 2.3.2 添加我的商品 [post] ()
+`成功返回：`
+
+    goods    array   商品信息
+
+    goods字段子集说明
+
+    data     array    商品列表
+
+    data字段子集说明
+
+    id                  int         商品id
+    name                string      商品名
+    sales_volume        int         销售量
+    price_retailer      decimal     价格（对于终端商）
+    min_num_retailer    int         最低购买量 (对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    min_num_wholesaler  int         最低购买量 (对于批发商）
+    is_new              int         是否新品（1是 , 0不是）
+    is_out              int         是否缺货
+    is_change           int         是否可换货
+    is_back             int         是否可退货
+    is_expire           int         是否即期品
+    is_promotion        int         是否促销产品
+    promotion_info      string      促销信息
+    introduce           string      商品图文详情
+    shop_id             int         商品所属店铺id
+    shop_name           string      商品所属店铺
+    attrs               array       标签
+    delivery_area       array       商品配送区域
+    image_url           string      商品图片('第一张')
+    images_url          array       商品全部图片
+
+    attrs 子字段说明
+
+    $key => $value形式    $key表示标签名， $value 表示标签值
+
+    delivery_area 字段子集说明
+
+        id                      int             地址id
+        province_id             int             省id
+        city_id                 int             市id
+        district_id             int             县id
+        street_id               int             街道id
+        area_name               string          省、市、县、街道名
+        address                 string          详细地址
+        coordinate          array       配送区域坐标
+
+        coordinate 字段子集说明
+
+        bl_lnt					string			左上角经度
+        bl_lat					string			左上角纬度
+        sl_lng					string			右下角经度
+        sl_lat					string			右下角纬度
+
+    images_url 子字段说明
+
+    id                  int         图片id
+    name                string      图片名
+    path                string      路径
+
+`失败返回：`
+
+
+#### 2.3.3 添加我的商品 [post] ()
 `请求参数：`
 
     name                string      商品名
@@ -284,7 +349,7 @@
     cate_level_1        int         第一层分类
     cate_level_2        int         第二层分类
     cate_level_3        int         第三层分类
-    attrs               array       标签数组
+    attrs               array       标签数组 （数组下标为此标签父类id）
     images              array       商品图片id数组
     area                array       商品配送区域数组
     introduce           string      商品图文介绍
@@ -304,7 +369,7 @@
 
 `失败返回：`
 
-#### 2.3.3 更新我的商品 [put] ({goods_id})
+#### 2.3.4 更新我的商品 [put] ({goods_id})
 `请求参数：`
 
     name                string      商品名
@@ -322,7 +387,7 @@
     cate_level_1        int         第一层分类
     cate_level_2        int         第二层分类
     cate_level_3        int         第三层分类
-    attrs               array       标签数组
+    attrs               array       标签数组（数组下标为此标签父类id）
     images              array       商品图片id数组
     area                array       商品配送区域数组
     introduce           string      商品图文介绍
@@ -342,21 +407,21 @@
 
 `失败返回：`
 
-#### 2.3.4  商品上下架 [put] (shelve/{goods_id})
+#### 2.3.5  商品上下架 [put] (shelve/{goods_id})
 `请求参数：`
 
     status                  int         上下架状态 {1 上架   0下架}
 
 `成功返回：`
 
-#### 2.3.5 删除我的商品 [delete] ({goods_id})
+#### 2.3.6 删除我的商品 [delete] ({goods_id})
 `请求参数：`
 
 `成功返回：`
 
 
 
-#### 2.3.6 获取商品图库 [get] （images）
+#### 2.3.7 获取商品图库 [get] （images）
 `请求参数：`
 
     cate_level_1        int         第一层分类
@@ -403,10 +468,10 @@
 
     images_url 字段子集说明
 
-   name                string      图片名
-   path                string      图片路径
-   id                  int         图片id
-   url                 string      图片详细路径
+    name                string      图片名
+    path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
 #### 2.4.2 根据距离排序获取所有店铺[get] all
 `请求参数：`
@@ -604,10 +669,10 @@
 
 `成功返回：`
 
-   attr_id              int         标签id
-   name                 string      标签名
-   pid                  int         父级id
-   child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
+    attr_id              int         标签id
+    name                 string      标签名
+    pid                  int         父级id
+    child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
 
 `失败返回：`
 
@@ -1122,7 +1187,7 @@
 
 ### 2.9 收货地址[personal/shipping-address]
 
-#### 2.9.1 获取收货地址列表[get] (index)
+#### 2.9.1 获取收货地址列表[get] ()
 
 `请求参数：`
 
