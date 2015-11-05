@@ -202,9 +202,14 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
-        coordinate              array           配送区域坐标
+        coordinate          array       配送区域坐标
 
-        coordinate 子字段说明
+       coordinate 字段子集说明
+
+       bl_lnt					string			左上角经度
+       bl_lat					string			左上角纬度
+       sl_lng					string			右下角经度
+       sl_lat					string			右下角纬度
 
     images_url 子字段说明
 
@@ -308,6 +313,14 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
+        coordinate          array       配送区域坐标
+
+        coordinate 字段子集说明
+
+        bl_lnt					string			左上角经度
+        bl_lat					string			左上角纬度
+        sl_lng					string			右下角经度
+        sl_lat					string			右下角纬度
 
     images_url 子字段说明
 
@@ -455,10 +468,10 @@
 
     images_url 字段子集说明
 
-   name                string      图片名
-   path                string      图片路径
-   id                  int         图片id
-   url                 string      图片详细路径
+    name                string      图片名
+    path                string      图片路径
+    id                  int         图片id
+    url                 string      图片详细路径
 
 #### 2.4.2 根据距离排序获取所有店铺[get] all
 `请求参数：`
@@ -656,10 +669,10 @@
 
 `成功返回：`
 
-   attr_id              int         标签id
-   name                 string      标签名
-   pid                  int         父级id
-   child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
+    attr_id              int         标签id
+    name                 string      标签名
+    pid                  int         父级id
+    child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
 
 `失败返回：`
 
