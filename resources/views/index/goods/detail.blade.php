@@ -98,6 +98,24 @@
 
         </div>
     </div>
+
+    <!--弹出层-->
+    <div class="mask-outer">
+        <div class="pop-general text-center">
+            <div class="pop-content">
+                <a class="fa fa-close pull-right close-btn" href="javascript:void(0)"></a>
+
+                <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
+
+                <div class="pop-btn">
+                    <a href='javascript:history.back()' class="btn btn-default">继续购物</a>
+                    <a href="{{ url('cart') }}" class="btn btn-danger">查看购物车</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @stop
 @section('js')
     @parent
@@ -105,6 +123,37 @@
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 2000
+            });
+            $('.add-to-cart'). on('click', function () {
+                var obj = $(this), url = obj.data('url'), buyNum = $('input[name="num"]').val();
+                obj.button({
+                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+                    doneText: '操作成功',
+                    failText: '操作失败'
+                });
+                obj.button('loading')
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {num: buyNum}
+                }).done(function () {
+                    obj.button('done');
+                }).fail(function (jqXHR) {
+                    obj.button('fail');
+                    var json = jqXHR['responseJSON'];
+                    if (json) {
+                        setTimeout(function () {
+                            obj.html(json['message']);
+                        }, 0);
+                    }
+                }).always(function () {
+                    $(".mask-outer").css("display", "block");
+                });
+
+                return false;
+            });
+            $('a.close-btn').on('click' , function (){
+                $(".mask-outer").css("display","none");
             });
             numChange({{ $goods->min_num }});
             tabBox();

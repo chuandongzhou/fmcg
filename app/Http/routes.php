@@ -133,7 +133,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
             $router->resource('bank', 'UserBankController', ['only' => ['index','store', 'update', 'destroy']]);          //提现账号
-            $router->put('shipping-address-default/{address}', 'ShippingAddressController@addressDefault');
+            $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
             $router->controller('withdraw', 'WithdrawController');    //提现相关操作

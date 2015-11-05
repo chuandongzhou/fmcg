@@ -79,7 +79,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .pop-content {
       position: absolute;
       @include square(100%);
-      .colse-btn {
+      .close-btn {
         color: $gray;
         cursor: pointer;
         margin-right: 3px;
@@ -550,6 +550,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     -webkit-box-sizing: border-box;
     width: 20%;
     float: left;
+    margin-top: 10px;
     padding: 0 15px;
   }
   @media screen and (max-width: 765px) {
@@ -2036,7 +2037,7 @@ table {
 .dealer-index {
   .list-penal {
     .title {
-      margin: 15px 0;
+      margin: 15px 0 5px 0;
       h3 {
         padding: 8px 20px;
         font-size: 15px;

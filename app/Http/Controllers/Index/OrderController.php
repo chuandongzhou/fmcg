@@ -11,6 +11,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
+use Gate;
 
 class OrderController extends Controller
 {
@@ -38,6 +39,11 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $orderGoodsNum = $request->input('num');
+        $goodsId = $request->input('goods_id');
+
+        $orderGoodsNum = array_where($orderGoodsNum, function ($key, $value) use ($goodsId) {
+            return in_array($key, $goodsId);
+        });
 
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
@@ -84,8 +90,9 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $user = auth()->user();
 
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
             return redirect()->back()->withInput();
         }
@@ -112,12 +119,21 @@ class OrderController extends Controller
             head($codPayTypes)) : 0;
         //TODO: 需要验证收货地址是否合法
         $shippingAddressId = $data['shipping_address_id'];
-        //$remark = $data['remark'] ? $data['remark'] : '';
+
         $redis = Redis::connection();
+
+        $pid = 0;
+        if ($shops->count() > 1) {
+            $maxPid = Order::max('pid');
+            $pid = $maxPid + 1;
+        }
+
+        $successOrders = [];  //保存提交成功的订单
 
         foreach ($shops as $shop) {
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
+                'pid' => $pid,
                 'user_id' => auth()->user()->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
@@ -129,6 +145,7 @@ class OrderController extends Controller
             ];
             $order = Order::create($orderData);
             if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
+                $successOrders[] = $order;
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
@@ -149,13 +166,11 @@ class OrderController extends Controller
                             $redis->expire($redisKey, cons('push_time.msg_life'));
                         }
                     }
-                    // 删除购物车
-                    auth()->user()->carts()->where('status', 1)->delete();
-
                 } else {
                     //TODO: 跳转页面后期修改
-                    $order->delete();
-
+                    foreach ($successOrders as $successOrder) {
+                        $successOrder->delete();
+                    }
                     return redirect('cart');
                 }
 
@@ -165,17 +180,41 @@ class OrderController extends Controller
             }
         }
 
-        return redirect('order-buy');
-        // TODO: 跳至支付页面
+        // 删除购物车
+        $user->carts()->where('status', 1)->delete();
+
+        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : $onlinePaymentOrder[0]);
+
+        $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
+
+        return redirect($redirectUrl);
 
         //TODO:支付成功后加入提示信息
-//        //在线支付成功通知卖家发货
-//        $redisKey = 'push:seller:' . $shop->user()->id;
-//        if (!$redis->exists($redisKey)) {
-//            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
-//            $redis->expire($redisKey, cons('push_time.msg_life'));
-//        }
+        /*  //在线支付成功通知卖家发货
+        $redisKey = 'push:seller:' . $shop->user()->id;
+        if (!$redis->exists($redisKey)) {
+            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
+            $redis->expire($redisKey, cons('push_time.msg_life'));
+        }*/
 
+    }
+
+    public function getFinishOrder(Request $request)
+    {
+        $orderId = $request->input('order_id');
+
+        if (is_null($orderId)) {
+            return redirect(url('order-buy'));
+        }
+
+        $type = $request->input('type');
+        $field = $type == 'all' ? 'pid' : 'id';
+
+        $orders = Order::where('id', $field)->get(['pay_type', 'pay_status', 'user_id']);
+        if (Gate::denies('validate-online-orders', $orders)) {
+            return redirect(url('order-buy'));
+        }
+        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
     }
 
     /**

@@ -7,7 +7,7 @@ class Order extends Model
 {
     protected $table = 'order';
     protected $fillable = [
-        'order_id',
+        'pid',
         'price',
         'pay_type',
         'cod_pay_type',
@@ -31,6 +31,20 @@ class Order extends Model
     protected $appends = ['status_name', 'payment_type', 'step_num',];
 
     protected $hidden = [];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            // 删除所有关联文件
+           $model->orderGoods()->delete();
+        });
+    }
 
     /**
      * 该订单下所有商品

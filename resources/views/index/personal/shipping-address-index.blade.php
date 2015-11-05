@@ -71,7 +71,7 @@
                             </td>
                             <td>
                                 <a class="btn btn-primary ajax"
-                                   data-url="{{ url('api/v1/personal/shipping-address-default/'.$address['id']) }}"
+                                   data-url="{{ url('api/v1/personal/shipping-address/default/'.$address['id']) }}"
                                    data-method="put">
                                     设置为默认
                                 </a>

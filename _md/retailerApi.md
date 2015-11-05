@@ -1148,7 +1148,7 @@
     area_name          string      区域名
     address            string      详细地址
 
-#### 2.9.3 添加收货地址 [post] (index)
+#### 2.9.3 添加收货地址 [post] ()
 `请求参数：`
 
     consigner           string      收货人
@@ -1180,7 +1180,7 @@
 
 `失败返回：`
 
-#### 2.9.5 设置默认地址 [put] (shipping-address-default/{id})
+#### 2.9.5 设置默认地址 [put] (default/{id})
 
 `请求参数：`
 

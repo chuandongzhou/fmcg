@@ -61,12 +61,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       position: absolute;
       width: 100%;
       height: 100%; }
-      .mask-outer .pop-general .pop-content .colse-btn {
+      .mask-outer .pop-general .pop-content .close-btn {
         color: #555555;
         cursor: pointer;
         margin-right: 3px;
         font-size: 19px; }
-        .mask-outer .pop-general .pop-content .colse-btn:hover {
+        .mask-outer .pop-general .pop-content .close-btn:hover {
           text-decoration: none; }
       .mask-outer .pop-general .pop-content .pop-tips {
         margin-top: 40px; }
@@ -411,6 +411,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   -webkit-box-sizing: border-box;
   width: 20%;
   float: left;
+  margin-top: 10px;
   padding: 0 15px; }
 
 @media screen and (max-width: 765px) {
@@ -1466,7 +1467,7 @@ table .product-name {
       height: 400px; }
 
 .dealer-index .list-penal .title {
-  margin: 15px 0; }
+  margin: 15px 0 5px 0; }
   .dealer-index .list-penal .title h3 {
     padding: 8px 20px;
     font-size: 15px;
