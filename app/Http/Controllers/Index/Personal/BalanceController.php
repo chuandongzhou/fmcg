@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Index\Personal;
 
-use App\Http\Controllers\Api\v1\Controller;
 
+use App\Http\Controllers\Index\Controller;
 use App\Http\Requests;
 use App\Models\SystemTradeInfo;
 use Carbon\Carbon;

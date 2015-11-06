@@ -4,9 +4,9 @@
 
 @section('container')
     <div class="container dealer-index index search-page">
-        <div class="row sort">
+        <div class="row">
             <div class="col-sm-12">
-                <div class="tab-title clearfix">
+                <div class="tab-title store-tab-title clearfix">
                     <p class="pull-left sequence">
                         <a href="{{ url('shop') }}"
                            class="{{ $sort == '' ? 'active' : '' }} control">全部</a>

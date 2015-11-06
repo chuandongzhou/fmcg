@@ -142,4 +142,11 @@ function logstr($orderid,$str,$hmac)
     fclose($james);
 }
 
+// 验证 webhooks 签名
+function verify_signature($raw_data, $signature, $pub_key_path) {
+    $pub_key_contents = file_get_contents($pub_key_path);
+    // php 5.4.8 以上，第四个参数可用常量 OPENSSL_ALGO_SHA256
+    return openssl_verify($raw_data, base64_decode($signature), $pub_key_contents, 'sha256');
+}
+
 

@@ -7,11 +7,17 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('logout', 'AuthController@logout');
 });
 
+
 $router->group(['prefix' => 'admin/auth', 'namespace' => 'Admin'], function ($router) {
     $router->controller('/', 'AuthController');
 });
 
-//$router->controller('auth', 'AuthController');  // 后台首页
+
+/**
+ * 处理支付回调
+ */
+$router->controller('webhooks/pingxx', 'Index\Webhook\PingxxController');
+$router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 
 /**
  * 前台
@@ -113,7 +119,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
         $router->get('shop/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
         $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');                   //店铺商品
-        $router->get('shop/all' , 'ShopController@allShops');
+        $router->get('shop/all', 'ShopController@allShops');
 
 
         $router->controller('file', 'FileController');                              // 文件上传
@@ -132,7 +138,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('password', 'PasswordController@password');          //修改密码
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
-            $router->resource('bank', 'UserBankController', ['only' => ['index','store', 'update', 'destroy']]);          //提现账号
+            $router->resource('bank', 'UserBankController',
+                ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
@@ -146,5 +153,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('address/street', 'AddressController@street');
         $router->controller('auth', 'AuthController');
         $router->controller('push', 'PushController');//推送设备
+
+        //获取支付charge
+
+        $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
+        $router->get('pay/success-url', 'PayController@successUrl');
     });
 });

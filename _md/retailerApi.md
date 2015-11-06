@@ -796,16 +796,22 @@
 #### 2.7.3 提交订单[get] (confirm-order)
 `请求参数：`
 
+    shipping_address_id int         收货地址id
+    pay_type            string      支付方式 （online 在线 ， cod 货到付款）
+    cod_pay_type        string      货到付款方式 （仅当pay_type为cod时传入    传入'cash'为现金  传入'card'为刷卡）
     shop                array       商店
 
     shop 子字段说明（key=>value）  key为商店id
 
-    shipping_address_id int         收货地址id
-    pay_type            string      支付方式 （online 在线 ， cod 货到付款）
-    cod_pay_type        string      货到付款方式 （仅当pay_type为cod时传入    传入'cash'为现金  传入'card'为刷卡）
     remark              string      订单备注信息
 
 `成功返回：`
+
+    pay_type            string      支付方式 （online 在线 ， cod 货到付款）
+    order_id            int         订单id  (订单为在线付款时返回)
+    type                string      订单id类型  （为all是该订单id属于总订单）
+
+
 
 `失败返回`
 
@@ -1492,6 +1498,18 @@
 `成功返回:`
 
 `失败返回:`
+
+### 2.17 支付  [pay]
+#### 2.17.1 获取charge对象[get] (charge/{order_id})
+`请求参数：`
+
+    type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
+
+`成功返回：`
+
+    charge          object          charge对象
+
+`失败返回：`
 
 
 

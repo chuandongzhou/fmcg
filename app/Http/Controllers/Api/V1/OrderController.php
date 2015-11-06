@@ -276,12 +276,13 @@ class OrderController extends Controller
         if ($redis->exists($key)) {
             return $this->success(json_decode($redis->get($key), true));
         }
+
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
         $builder = Order::bySellerId($this->userId)->nonCancel();
 
-        for ($i = 6; $i >= 0; -- $i) {
-            $start = $today->copy()->addDay(- $i);
+        for ($i = 6; $i >= 0; --$i) {
+            $start = $today->copy()->addDay(-$i);
             $end = $start->copy()->endOfDay();
             $time = [$start, $end];
             $statistics['sevenDay'][] = [
@@ -368,9 +369,9 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
+        $user = auth()->user();
 
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
-
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
             return $this->error('提交订单失败');
         }
@@ -385,25 +386,45 @@ class OrderController extends Controller
             return $this->error('提交订单失败');
         }
 
-        $data = $request->input('shop');
+        $data = $request->all();
 
         $payTypes = cons('pay_type');
+        $codPayTypes = cons('cod_pay_type');
 
         $onlinePaymentOrder = [];   //  保存在线支付的订单
+        $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
+
+        $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data['cod_pay_type'],
+            head($codPayTypes)) : 0;
+        //TODO: 需要验证收货地址是否合法
+        $shippingAddressId = $data['shipping_address_id'];
+
+        $redis = Redis::connection();
+
+        $pid = 0;
+        if ($shops->count() > 1) {
+            $maxPid = Order::max('pid');
+            $pid = $maxPid + 1;
+        }
+
+        $successOrders = [];  //保存提交成功的订单
 
         foreach ($shops as $shop) {
-            $payType = array_get($payTypes, $data[$shop->id]['pay_type'], head($payTypes));
+            $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
+                'pid' => $pid,
                 'user_id' => auth()->user()->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
-                //TODO: 需要验证收货地址是否合法
-                'shipping_address_id' => $data[$shop->id]['shipping_address_id'],
-                'remark' => $data[$shop->id]['remark'] ? $data[$shop->id]['remark'] : ''
+                'status' => cons('order.status.non_send'),
+                'cod_pay_type' => $codPayType,
+                'shipping_address_id' => $shippingAddressId,
+                'remark' => $remark
             ];
             $order = Order::create($orderData);
-            if ($order->exists) {
+            if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
+                $successOrders[] = $order;
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
@@ -416,21 +437,46 @@ class OrderController extends Controller
                 if ($order->orderGoods()->saveMany($orderGoods)) {
                     if ($payType == $payTypes['online']) {
                         $onlinePaymentOrder[] = $order->id;
+                    } else {
+                        //货到付款订单直接通知卖家发货
+                        $redisKey = 'push:seller:' . $shop->user->id;
+                        if (!$redis->exists($redisKey)) {
+                            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
+                            $redis->expire($redisKey, cons('push_time.msg_life'));
+                        }
                     }
-                    // 删除购物车
-                    auth()->user()->carts()->where('status', 1)->delete();
                 } else {
-                    $order->delete();
-
-                    return $this->error('提交订单失败');
+                    //TODO: 跳转页面后期修改
+                    foreach ($successOrders as $successOrder) {
+                        $successOrder->delete();
+                    }
+                    return $this->error('提交订单时遇到问题');
                 }
 
             } else {
-                return $this->error('提交订单失败');
+                //跳转页面后期修改
+                return $this->error('提交订单时遇到问题');
             }
         }
 
-        return $this->success('提交订单成功');
+        // 删除购物车
+        $user->carts()->where('status', 1)->delete();
+
+        $returnArray = [
+            'pay_type' => $payType,
+            'type' => ""
+        ];
+
+        if ($payType == $payTypes['online']) {
+            if ($pid > 0) {
+                $returnArray['order_id'] = $pid;
+                $returnArray['type'] = 'all';
+            } else {
+                $returnArray['order_id'] = $onlinePaymentOrder[0];
+            }
+        }
+
+        return $this->success($returnArray);
     }
 
     /**

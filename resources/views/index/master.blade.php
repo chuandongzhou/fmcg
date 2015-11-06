@@ -22,7 +22,7 @@
     <![endif]-->
     <div class="container wholesalers-top-header">
         <div class="col-sm-4 logo">
-            <a href="{{ url('/') }}" class="logo-icon">LOGO</a>
+            <a href="{{ url('/') }}" class="logo-icon"><img src="{{ asset('images/logo.png') }}" /></a>
         </div>
         @if ($shop->id == auth()->user()->shop->id)
             <div class="col-sm-4 col-sm-push-4 right-search">

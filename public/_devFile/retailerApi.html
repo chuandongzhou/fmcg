@@ -1,359 +1,359 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>retailerApi</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <style type="text/css">
-            /* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
-            /* Author: Nicolas Hery - http://nicolashery.com */
-            /* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
-            /* Source: https://github.com/nicolahery/markdownpad-github */
+<head>
+<title>retailerApi</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
 
-            /* RESET
-            =============================================================================*/
+/* RESET
+=============================================================================*/
 
-            html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-                margin: 0;
-                padding: 0;
-                border: 0;
-            }
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
-            /* BODY
-            =============================================================================*/
+/* BODY
+=============================================================================*/
 
-            body {
-                font-family: Helvetica, arial, freesans, clean, sans-serif;
-                font-size: 14px;
-                line-height: 1.6;
-                color: #333;
-                background-color: #fff;
-                padding: 20px;
-                max-width: 960px;
-                margin: 0 auto;
-            }
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
 
-            body > *:first-child {
-                margin-top: 0 !important;
-            }
+body>*:first-child {
+  margin-top: 0 !important;
+}
 
-            body > *:last-child {
-                margin-bottom: 0 !important;
-            }
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
 
-            /* BLOCKS
-            =============================================================================*/
+/* BLOCKS
+=============================================================================*/
 
-            p, blockquote, ul, ol, dl, table, pre {
-                margin: 15px 0;
-            }
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
 
-            /* HEADERS
-            =============================================================================*/
+/* HEADERS
+=============================================================================*/
 
-            h1, h2, h3, h4, h5, h6 {
-                margin: 20px 0 10px;
-                padding: 0;
-                font-weight: bold;
-                -webkit-font-smoothing: antialiased;
-            }
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
 
-            h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
-                font-size: inherit;
-            }
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
 
-            h1 {
-                font-size: 28px;
-                color: #000;
-            }
+h1 {
+  font-size: 28px;
+  color: #000;
+}
 
-            h2 {
-                font-size: 24px;
-                border-bottom: 1px solid #ccc;
-                color: #000;
-            }
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
 
-            h3 {
-                font-size: 18px;
-            }
+h3 {
+  font-size: 18px;
+}
 
-            h4 {
-                font-size: 16px;
-            }
+h4 {
+  font-size: 16px;
+}
 
-            h5 {
-                font-size: 14px;
-            }
+h5 {
+  font-size: 14px;
+}
 
-            h6 {
-                color: #777;
-                font-size: 14px;
-            }
+h6 {
+  color: #777;
+  font-size: 14px;
+}
 
-            body > h2:first-child, body > h1:first-child, body > h1:first-child + h2, body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
-                margin-top: 0;
-                padding-top: 0;
-            }
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
 
-            a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
-                margin-top: 0;
-                padding-top: 0;
-            }
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
 
-            h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
-                margin-top: 10px;
-            }
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
 
-            /* LINKS
-            =============================================================================*/
+/* LINKS
+=============================================================================*/
 
-            a {
-                color: #4183C4;
-                text-decoration: none;
-            }
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
 
-            a:hover {
-                text-decoration: underline;
-            }
+a:hover {
+  text-decoration: underline;
+}
 
-            /* LISTS
-            =============================================================================*/
+/* LISTS
+=============================================================================*/
 
-            ul, ol {
-                padding-left: 30px;
-            }
+ul, ol {
+  padding-left: 30px;
+}
 
-            ul li > :first-child,
-            ol li > :first-child,
-            ul li ul:first-of-type,
-            ol li ol:first-of-type,
-            ul li ol:first-of-type,
-            ol li ul:first-of-type {
-                margin-top: 0px;
-            }
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
 
-            ul ul, ul ol, ol ol, ol ul {
-                margin-bottom: 0;
-            }
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
 
-            dl {
-                padding: 0;
-            }
+dl {
+  padding: 0;
+}
 
-            dl dt {
-                font-size: 14px;
-                font-weight: bold;
-                font-style: italic;
-                padding: 0;
-                margin: 15px 0 5px;
-            }
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
 
-            dl dt:first-child {
-                padding: 0;
-            }
+dl dt:first-child {
+  padding: 0;
+}
 
-            dl dt > :first-child {
-                margin-top: 0px;
-            }
+dl dt>:first-child {
+  margin-top: 0px;
+}
 
-            dl dt > :last-child {
-                margin-bottom: 0px;
-            }
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
 
-            dl dd {
-                margin: 0 0 15px;
-                padding: 0 15px;
-            }
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
 
-            dl dd > :first-child {
-                margin-top: 0px;
-            }
+dl dd>:first-child {
+  margin-top: 0px;
+}
 
-            dl dd > :last-child {
-                margin-bottom: 0px;
-            }
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
 
-            /* CODE
-            =============================================================================*/
+/* CODE
+=============================================================================*/
 
-            pre, code, tt {
-                font-size: 12px;
-                font-family: Consolas, "Liberation Mono", Courier, monospace;
-            }
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
 
-            code, tt {
-                margin: 0 0px;
-                padding: 0px 0px;
-                white-space: nowrap;
-                border: 1px solid #eaeaea;
-                background-color: #f8f8f8;
-                border-radius: 3px;
-            }
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
 
-            pre > code {
-                margin: 0;
-                padding: 0;
-                white-space: pre;
-                border: none;
-                background: transparent;
-            }
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
 
-            pre {
-                background-color: #f8f8f8;
-                border: 1px solid #ccc;
-                font-size: 13px;
-                line-height: 19px;
-                overflow: auto;
-                padding: 6px 10px;
-                border-radius: 3px;
-            }
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
 
-            pre code, pre tt {
-                background-color: transparent;
-                border: none;
-            }
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
 
-            kbd {
-                -moz-border-bottom-colors: none;
-                -moz-border-left-colors: none;
-                -moz-border-right-colors: none;
-                -moz-border-top-colors: none;
-                background-color: #DDDDDD;
-                background-image: linear-gradient(#F1F1F1, #DDDDDD);
-                background-repeat: repeat-x;
-                border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
-                border-image: none;
-                border-radius: 2px 2px 2px 2px;
-                border-style: solid;
-                border-width: 1px;
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                line-height: 10px;
-                padding: 1px 4px;
-            }
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
 
-            /* QUOTES
-            =============================================================================*/
+/* QUOTES
+=============================================================================*/
 
-            blockquote {
-                border-left: 4px solid #DDD;
-                padding: 0 15px;
-                color: #777;
-            }
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
 
-            blockquote > :first-child {
-                margin-top: 0px;
-            }
+blockquote>:first-child {
+  margin-top: 0px;
+}
 
-            blockquote > :last-child {
-                margin-bottom: 0px;
-            }
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
 
-            /* HORIZONTAL RULES
-            =============================================================================*/
+/* HORIZONTAL RULES
+=============================================================================*/
 
-            hr {
-                clear: both;
-                margin: 15px 0;
-                height: 0px;
-                overflow: hidden;
-                border: none;
-                background: transparent;
-                border-bottom: 4px solid #ddd;
-                padding: 0;
-            }
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
 
-            /* TABLES
-            =============================================================================*/
+/* TABLES
+=============================================================================*/
 
-            table th {
-                font-weight: bold;
-            }
+table th {
+  font-weight: bold;
+}
 
-            table th, table td {
-                border: 1px solid #ccc;
-                padding: 6px 13px;
-            }
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
 
-            table tr {
-                border-top: 1px solid #ccc;
-                background-color: #fff;
-            }
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
 
-            table tr:nth-child(2n) {
-                background-color: #f8f8f8;
-            }
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
 
-            /* IMAGES
-            =============================================================================*/
+/* IMAGES
+=============================================================================*/
 
-            img {
-                max-width: 100%
-            }
-        </style>
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script>
-            /* 此处为了生成文档目录方便把JS文件写这里了~ */
-            $(function () {
-                var body = $('body');
+img {
+  max-width: 100%
+}
+</style>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+        /* 此处为了生成文档目录方便把JS文件写这里了~ */
+        $(function () {
+            var body = $('body');
 
-                /* 创建侧边目录栏 */
-                var directoryHtml = $('<div>');
-                directoryHtml.css({
-                    position: 'fixed',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 300,
-                    backgroundColor: '#FFF',
-                    borderRight: '1px solid #CCC',
-                    overflow: 'auto',
-                    display: 'block'
-                });
-                body.prepend(directoryHtml);
+            /* 创建侧边目录栏 */
+            var directoryHtml = $('<div>');
+            directoryHtml.css({
+                position: 'fixed',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: 300,
+                backgroundColor: '#FFF',
+                borderRight: '1px solid #CCC',
+                overflow: 'auto',
+                display: 'block'
+            });
+            body.prepend(directoryHtml);
 
-                /* 创建伸缩/展开侧边目录栏 */
-                var control = $('<div>'),
+            /* 创建伸缩/展开侧边目录栏 */
+            var control = $('<div>'),
                     shrink = $('<span>'),
                     stretch = $('<span>');
-                control.css({
-                    position: 'fixed',
-                    top: -1,
-                    left: 300,
-                    padding: '6px 12px',
-                    backgroundColor: '#FFF',
-                    border: '1px solid #CCC',
-                    cursor: 'pointer'
-                });
-                shrink.css({
-                    display: 'inline-block',
-                    verticalAlign: 'middle',
-                    color: '#000',
-                    borderTop: '8px solid transparent',
-                    borderBottom: '8px solid transparent',
-                    borderRight: '10px solid'
-                });
-                stretch.css({
-                    display: 'inline-block',
-                    verticalAlign: 'middle',
-                    color: '#000',
-                    borderTop: '8px solid transparent',
-                    borderBottom: '8px solid transparent',
-                    borderLeft: '10px solid'
-                });
-                control.prepend(shrink).data('shrink', false);
-                body.prepend(control).css('padding-left', 340);
-                control.click(function () {
-                    if ($(this).data('shrink')) {
-                        directoryHtml.show();
-                        control.css('left', 300).html(shrink).data('shrink', false);
-                        body.css('padding-left', 340);
-                    } else {
-                        directoryHtml.hide();
-                        control.css('left', -1).html(stretch).data('shrink', true);
-                        body.css('padding-left', 0);
-                    }
-                });
+            control.css({
+                position: 'fixed',
+                top: -1,
+                left: 300,
+                padding: '6px 12px',
+                backgroundColor: '#FFF',
+                border: '1px solid #CCC',
+                cursor: 'pointer'
+            });
+            shrink.css({
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                color: '#000',
+                borderTop: '8px solid transparent',
+                borderBottom: '8px solid transparent',
+                borderRight: '10px solid'
+            });
+            stretch.css({
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                color: '#000',
+                borderTop: '8px solid transparent',
+                borderBottom: '8px solid transparent',
+                borderLeft: '10px solid'
+            });
+            control.prepend(shrink).data('shrink', false);
+            body.prepend(control).css('padding-left', 340);
+            control.click(function () {
+                if ($(this).data('shrink')) {
+                    directoryHtml.show();
+                    control.css('left', 300).html(shrink).data('shrink', false);
+                    body.css('padding-left', 340);
+                } else {
+                    directoryHtml.hide();
+                    control.css('left', -1).html(stretch).data('shrink', true);
+                    body.css('padding-left', 0);
+                }
+            });
 
-                var menuList = $('body').children(':header'),
+            var menuList = $('body').children(':header'),
                     menuObject = [],
                     headerObject = {
                         h1: 0,
@@ -372,1461 +372,1408 @@
                         h6: 'h5'
                     },
                     previousTagName;
-                /* 为菜单创建锚点 */
-                menuList.each(function (index, element) {
-                    var href = index ? $(element).html().split(' ')[0] : '0.',
+            /* 为菜单创建锚点 */
+            menuList.each(function (index, element) {
+                var href = index ? $(element).html().split(' ')[0] : '0.',
                         tagName = $(element)[0]['tagName'].toLowerCase();
-                    menuObject[index] = {
-                        id: href,
-                        parentId: 0,
-                        name: $(element).html(),
-                        href: '#' + href
-                    };
-                    if (tagName === previousTagName) {
-                        menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
-                    } else if (headerParentObj[tagName] === previousTagName) {
-                        menuObject[index]['parentId'] = headerObject[previousTagName];
-                    } else {
-                        menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
-                    }
-                    headerObject[tagName] = href;
-                    previousTagName = tagName;
-                    $(element).prepend('<a id="' + href + '"></a>');
-
-                });
-                /* 创建目录列表 */
-                var createMenuFunc = function (menuObject, parentId, directoryHtml) {
-                    if (menuObject.length === 0) {
-                        return;
-                    }
-                    var childList = [];
-                    for (var i in menuObject) {
-                        if (menuObject[i]['parentId'] === parentId) {
-                            childList.push(menuObject[i]);
-                        }
-                    }
-                    for (var i in childList) {
-                        var ul = $('<ul>'),
-                            li = $('<li>');
-                        ul.css({
-                            paddingLeft: 20
-                        });
-                        li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
-                        ul.append(li);
-                        directoryHtml.append(ul);
-                        createMenuFunc(menuObject, childList[i]['id'], li);
-                    }
+                menuObject[index] = {
+                    id: href,
+                    parentId: 0,
+                    name: $(element).html(),
+                    href: '#' + href
                 };
-                createMenuFunc(menuObject, 0, directoryHtml);
+                if (tagName === previousTagName) {
+                    menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
+                } else if (headerParentObj[tagName] === previousTagName) {
+                    menuObject[index]['parentId'] = headerObject[previousTagName];
+                } else {
+                    menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
+                }
+                headerObject[tagName] = href;
+                previousTagName = tagName;
+                $(element).prepend('<a id="' + href + '"></a>');
 
             });
-        </script>
-    </head>
-    <body>
-        <h1>快销品平台零售商API</h1>
+            /* 创建目录列表 */
+            var createMenuFunc = function (menuObject, parentId, directoryHtml) {
+                if (menuObject.length === 0) {
+                    return;
+                }
+                var childList = [];
+                for (var i in menuObject) {
+                    if (menuObject[i]['parentId'] === parentId) {
+                        childList.push(menuObject[i]);
+                    }
+                }
+                for (var i in childList) {
+                    var ul = $('<ul>'),
+                            li = $('<li>');
+                    ul.css({
+                        paddingLeft: 20
+                    });
+                    li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
+                    ul.append(li);
+                    directoryHtml.append(ul);
+                    createMenuFunc(menuObject, childList[i]['id'], li);
+                }
+            };
+            createMenuFunc(menuObject, 0, directoryHtml);
 
-        <h2>1. API接口通信规定</h2>
-        <ul>
-            <li>接口采用 <strong>HTTP</strong>, <strong>POST</strong> 协议</li>
-            <li>请求URL <strong>192.168.2.66/api/v1</strong></li>
-            <li>
-                请求返回数据格式
-                所有数据返回都基于以下的 <strong>JSON</strong> 协议
-                <blockquote>
-                    <p>失败时返回 ：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot; ,errors: &quot;{account:
-                        [&quot;不是一个合法的账号&quot;]}&quot;}
-                        id:状态值
-                        message :返回具体内容
-                        error : 返回具体字段不合法</p>
-                </blockquote>
-            </li>
-        </ul>
-        <h2>2. 接口详细说明</h2>
-
-        <h3>2.1 公共模块（免登录） auth</h3>
-        <h4>2.1.1 登录[post] (login)</h4>
-
-        <p><code>请求参数：</code>
-        </p>
-<pre><code>account string 账号
-    password string 密码
-    type int 用户类型 (1是终端 2是批发 3是供应)
+        });
+    </script>
+</head>
+<body>
+<h1>快销品平台零售商API</h1>
+<h2>1. API接口通信规定</h2>
+<ul>
+<li>接口采用 <strong>HTTP</strong>, <strong>POST</strong> 协议</li>
+<li>请求URL <strong>192.168.2.66/api/v1</strong></li>
+<li>
+请求返回数据格式
+所有数据返回都基于以下的 <strong>JSON</strong> 协议 
+<blockquote>
+<p>失败时返回 ：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot; ,errors: &quot;{account: [&quot;不是一个合法的账号&quot;]}&quot;}
+id:状态值
+message :返回具体内容
+error : 返回具体字段不合法</p>
+</blockquote>
+</li>
+</ul>
+<h2>2. 接口详细说明</h2>
+<h3>2.1 公共模块（免登录） auth</h3>
+<h4>2.1.1 登录[post] (login)</h4>
+<p><code>请求参数：</code>  
+</p>
+<pre><code>account     string    账号
+password      string    密码
+type        int         用户类型 (1是终端   2是批发    3是供应)
 </code></pre>
 
-        <p><code>成功返回:</code></p>
-<pre><code>id int 用户id
-    user_name string 登录名
-    type int 用户类型 (1是终端 2是批发 3是供应)
-    shop array 商店
+<p><code>成功返回:</code></p>
+<pre><code>id          int             用户id
+user_name   string          登录名
+type        int             用户类型 (1是终端   2是批发    3是供应)
+shop        array           商店
 
-    shop 字段子集说明
+shop 字段子集说明
 
-    id int 商店id
-    name string 商店名
-    contact_person string 联系人
-    contact_info string 联系方式
-    min_money decimal 最低配送额
-    delivery_location string 地图坐标
-    user_id int 用户id
-    image_url string 商店图片（第一张）
-    orders int 订单数
+id                   int            商店id
+name                string          商店名
+contact_person      string          联系人
+contact_info        string          联系方式
+min_money           decimal         最低配送额
+delivery_location   string          地图坐标
+user_id             int             用户id
+image_url           string          商店图片（第一张）
+orders              int             订单数
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.1.2 注销[get] (logout)</h4>
-
-        <p><code>请求参数：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.1.2 注销[get] (logout)</h4>
+<p><code>请求参数：</code></p>
 <pre><code>　
 </code></pre>
 
-        <p><code>接口返回：</code></p>
-        <h4>2.1.3 注册[post] (register)</h4>
+<p><code>接口返回：</code></p>
+<h4>2.1.3 注册[post] (register)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>user_name                   string      账号
+password                    string      密码
+password_confirmation       string      确认密码
+type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+name                        string      店铺名
+contact_person              string      联系人
+contact_info                string      联系方式
+spreading_code              string      推广码
+license                     file        营业执照
+license_num                 string      营业执照编号
+business_license            file        食品经营许可证
+agency_contract             file        代理合同
+address                     array       店铺地址
+x_lng                       float       经度
+y_lat                       float       纬度
 
-        <p><code>请求参数：</code></p>
-<pre><code>user_name string 账号
-    password string 密码
-    password_confirmation string 确认密码
-    type int 用户类型 （1终端商 2 批发商 3 供应商）
-    name string 店铺名
-    contact_person string 联系人
-    contact_info string 联系方式
-    spreading_code string 推广码
-    license file 营业执照
-    license_num string 营业执照编号
-    business_license file 食品经营许可证
-    agency_contract file 代理合同
-    address array 店铺地址
-    x_lng float 经度
-    y_lat float 纬度
+ address 字段子集介绍
 
-    address 字段子集介绍
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
 </code></pre>
 
-        <p><code>成功返回:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回：</code></p>
+<h3>2.2 商品模块 goods</h3>
+<h4>2.2.1 获取商品栏目[get] (goods)</h4>
+<p><code>请求参数</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>goodsColumns    array   商品栏目信息
 
-        <p><code>失败返回：</code></p>
+goodsColumns字段子集说明
 
-        <h3>2.2 商品模块 goods</h3>
-        <h4>2.2.1 获取商品栏目[get] (goods)</h4>
+id                  int         栏目id
+name                string      栏目名
+goods               array       栏目商品列表
 
-        <p><code>请求参数</code></p>
+goods字段子集说明
 
-        <p><code>成功返回：</code></p>
-<pre><code>goodsColumns array 商品栏目信息
-
-    goodsColumns字段子集说明
-
-    id int 栏目id
-    name string 栏目名
-    goods array 栏目商品列表
-
-    goods字段子集说明
-
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    is_new int 是否新品（1是 , 0不是）
-    is_promotion int 是否促销产品
-    image_url string 商品图片
+id                  int         商品id
+name                string      商品名
+price_retailer      decimal     价格（对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+is_new              int         是否新品（1是 , 0不是）
+is_promotion        int         是否促销产品
+image_url           string      商品图片
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.2.2 商品搜索[post] (search)</h4>
-
-        <p><code>请求参数</code></p>
-<pre><code>sort string 排序 （name , price , new）
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    name string 商品名
-    category_id int 商品分类id (如110000 最高位数1为层级，后面为分类id)
-    attr array 标签数组
-    page int 分页
+<p><code>失败返回：</code></p>
+<h4>2.2.2 商品搜索[post] (search)</h4>
+<p><code>请求参数</code></p>
+<pre><code>sort        string              排序 （name , price , new）
+province_id int                 省id
+city_id     int                 市id
+district_id int                 县id
+street_id   int                 街道id
+name        string              商品名
+category_id int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+attr        array               标签数组
+page        int                 分页
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>goods array 商品信息
+<p><code>成功返回：</code></p>
+<pre><code>goods    array   商品信息
 
-    goods字段子集说明
+goods字段子集说明
 
-    data array 商品列表
+data     array    商品列表
 
-    data字段子集说明
+data字段子集说明
 
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    sales_volume int 销量
-    is_new int 是否新品（1是 , 0不是）
-    is_promotion int 是否促销产品（1是 , 0不是）
-    is_out int 是否缺货（1是 , 0不是）
-    image_url string 商品图片
-    categories array 商品的分类
+id                  int         商品id
+name                string      商品名
+price_retailer      decimal     价格（对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+sales_volume        int         销量
+is_new              int         是否新品（1是 , 0不是）
+is_promotion        int         是否促销产品（1是 , 0不是）
+is_out               int         是否缺货（1是 , 0不是）
+image_url           string      商品图片
+categories          array       商品的分类
 
-    categories 字段子集说明
+categories 字段子集说明
 
-    id int 分类id
-    name string 分类名
-    level int 分类层级
-    pid int 父级id
-    icon_url string 图标地址
+id                  int         分类id
+name                string      分类名
+level               int         分类层级
+pid                 int         父级id
+icon_url            string      图标地址
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.2.3 商品详情[post] (detail/{goods_id})</h4>
+<p><code>失败返回：</code></p>
+<h4>2.2.3 商品详情[post] (detail/{goods_id})</h4>
+<p><code>请求参数</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>goods    array   商品信息
 
-        <p><code>请求参数</code></p>
+goods字段子集说明
 
-        <p><code>成功返回：</code></p>
-<pre><code>goods array 商品信息
+data     array    商品列表
 
-    goods字段子集说明
+data字段子集说明
 
-    data array 商品列表
+id                  int         商品id
+name                string      商品名
+sales_volume        int         销售量
+price_retailer      decimal     价格（对于终端商）
+min_num_retailer    int         最低购买量 (对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+min_num_wholesaler  int         最低购买量 (对于批发商）
+is_new              int         是否新品（1是 , 0不是）
+is_out              int         是否缺货
+is_change           int         是否可换货
+is_back             int         是否可退货
+is_expire           int         是否即期品
+is_promotion        int         是否促销产品
+promotion_info      string      促销信息
+introduce           string      商品图文详情
+shop_id             int         商品所属店铺id
+shop_name           string      商品所属店铺
+attrs               array       标签
+delivery_area       array       商品配送区域
+is_like             bool        是否已关注
+image_url           string      商品图片('第一张')
+images_url          array       商品全部图片
 
-    data字段子集说明
+attrs 子字段说明
 
-    id int 商品id
-    name string 商品名
-    sales_volume int 销售量
-    price_retailer decimal 价格（对于终端商）
-    min_num_retailer int 最低购买量 (对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    min_num_wholesaler int 最低购买量 (对于批发商）
-    is_new int 是否新品（1是 , 0不是）
-    is_out int 是否缺货
-    is_change int 是否可换货
-    is_back int 是否可退货
-    is_expire int 是否即期品
-    is_promotion int 是否促销产品
-    promotion_info string 促销信息
-    introduce string 商品图文详情
-    shop_id int 商品所属店铺id
-    shop_name string 商品所属店铺
-    attrs array 标签
-    delivery_area array 商品配送区域
-    is_like bool 是否已关注
-    image_url string 商品图片('第一张')
-    images_url array 商品全部图片
+$key =&gt; $value形式    $key表示标签名， $value 表示标签值
 
-    attrs 子字段说明
+delivery_area 字段子集说明
 
-    $key =&gt; $value形式 $key表示标签名， $value 表示标签值
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+    coordinate          array       配送区域坐标
 
-    delivery_area 字段子集说明
+   coordinate 字段子集说明
 
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
-    coordinate array 配送区域坐标点
+   bl_lnt                   string          左上角经度
+   bl_lat                   string          左上角纬度
+   sl_lng                   string          右下角经度
+   sl_lat                   string          右下角纬度
+
+images_url 子字段说明
+
+name                string      图片名
+path                string      路径
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h3>2.3 我的商品 my-goods</h3>
+<h4>2.3.1获取我的商品列表 [get] ()</h4>
+<p><code>请求参数</code></p>
+<pre><code>sort        string              排序 （name , price , new）
+province_id int                 省id
+city_id     int                 市id
+district_id int                 县id
+street_id   int                 街道id
+name        string              商品名
+category_id int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+attr        array               标签数组
+page        int                 分页
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>goods    array   商品信息
+
+goods字段子集说明
+
+data     array    商品列表
+
+data字段子集说明
+
+id                  int         商品id
+name                string      商品名
+price_retailer      decimal     价格（对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+sales_volume        int         销量
+is_new              int         是否新品（1是 , 0不是）
+is_promotion        int         是否促销产品（1是 , 0不是）
+is_out               int         是否缺货（1是 , 0不是）
+image_url           string      商品图片
+categories          array       商品的分类
+
+categories 字段子集说明
+
+id                  int         分类id
+name                string      分类名
+level               int         分类层级
+pid                 int         父级id
+icon_url            string      图标地址
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.3.2 我的商品详情[get] ({goods_id})</h4>
+<p><code>请求参数</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>goods    array   商品信息
+
+goods字段子集说明
+
+data     array    商品列表
+
+data字段子集说明
+
+id                  int         商品id
+name                string      商品名
+sales_volume        int         销售量
+price_retailer      decimal     价格（对于终端商）
+min_num_retailer    int         最低购买量 (对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+min_num_wholesaler  int         最低购买量 (对于批发商）
+is_new              int         是否新品（1是 , 0不是）
+is_out              int         是否缺货
+is_change           int         是否可换货
+is_back             int         是否可退货
+is_expire           int         是否即期品
+is_promotion        int         是否促销产品
+promotion_info      string      促销信息
+introduce           string      商品图文详情
+shop_id             int         商品所属店铺id
+shop_name           string      商品所属店铺
+attrs               array       标签
+delivery_area       array       商品配送区域
+image_url           string      商品图片('第一张')
+images_url          array       商品全部图片
+
+attrs 子字段说明
+
+$key =&gt; $value形式    $key表示标签名， $value 表示标签值
+
+delivery_area 字段子集说明
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+    coordinate          array       配送区域坐标
 
     coordinate 字段子集说明
 
-    bl_lnt string 左上角经度
-    bl_lat string 左上角维度
-    sl_lng string 右下角经度
-    sl_lat string 右下角维度
+    bl_lnt                  string          左上角经度
+    bl_lat                  string          左上角纬度
+    sl_lng                  string          右下角经度
+    sl_lat                  string          右下角纬度
 
-    images_url 子字段说明
+images_url 子字段说明
 
-    name string 图片名
-    path string 路径
+id                  int         图片id
+name                string      图片名
+path                string      路径
 </code></pre>
 
-        <p><code>失败返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.3.3 添加我的商品 [post] ()</h4>
+<p><code>请求参数：</code></p>
+<pre><code>name                string      商品名
+price_retailer      decimal     价格 （对于终端商）
+min_num_retailer    int         最低购买量 （对于终端商）
+price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+is_new              int         是否新品（1是   0不是）
+is_out              int         是否缺货 （1是   0不是）
+is_change           int         是否可换货 （1是   0不是）
+is_back             int         是否可退货 （1是   0不是）
+is_expire           int         是否即将过期 （1是   0不是）
+is_promotion        int         是否促销    （1是   0不是）
+promotion_info      string      促销信息    （取当是促销时传入）
+cate_level_1        int         第一层分类
+cate_level_2        int         第二层分类
+cate_level_3        int         第三层分类
+attrs               array       标签数组 （数组下标为此标签父类id）
+images              array       商品图片id数组
+area                array       商品配送区域数组
+introduce           string      商品图文介绍
 
-        <h3>2.3 我的商品 my-goods</h3>
-        <h4>2.3.1获取我的商品列表 [get] ()</h4>
+area 字段子集介绍
 
-        <p><code>请求参数</code></p>
-<pre><code>sort string 排序 （name , price , new）
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    name string 商品名
-    category_id int 商品分类id (如110000 最高位数1为层级，后面为分类id)
-    attr array 标签数组
-    page int 分页
+id                      int             地址id
+province_id             int             省id
+city_id                 int             市id
+district_id             int             县id
+street_id               int             街道id
+area_name               string          省、市、县、街道名
+address                 string          详细地址
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>goods array 商品信息
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.3.4 更新我的商品 [put] ({goods_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>name                string      商品名
+price_retailer      decimal     价格 （对于终端商）
+min_num_retailer    int         最低购买量 （对于终端商）
+price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+is_new              int         是否新品（1是   0不是）
+is_out              int         是否缺货 （1是   0不是）
+is_change           int         是否可换货 （1是   0不是）
+is_back             int         是否可退货 （1是   0不是）
+is_expire           int         是否即将过期 （1是   0不是）
+is_promotion        int         是否促销    （1是   0不是）
+promotion_info      string      促销信息    （取当是促销时传入）
+cate_level_1        int         第一层分类
+cate_level_2        int         第二层分类
+cate_level_3        int         第三层分类
+attrs               array       标签数组（数组下标为此标签父类id）
+images              array       商品图片id数组
+area                array       商品配送区域数组
+introduce           string      商品图文介绍
 
-    goods字段子集说明
+area 字段子集介绍
 
-    data array 商品列表
-
-    data字段子集说明
-
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    sales_volume int 销量
-    is_new int 是否新品（1是 , 0不是）
-    is_promotion int 是否促销产品（1是 , 0不是）
-    is_out int 是否缺货（1是 , 0不是）
-    image_url string 商品图片
-    categories array 商品的分类
-
-    categories 字段子集说明
-
-    id int 分类id
-    name string 分类名
-    level int 分类层级
-    pid int 父级id
-    icon_url string 图标地址
+id                      int             地址id
+province_id             int             省id
+city_id                 int             市id
+district_id             int             县id
+street_id               int             街道id
+area_name               string          省、市、县、街道名
+address                 string          详细地址
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.3.2 添加我的商品 [post] ()</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>name string 商品名
-    price_retailer decimal 价格 （对于终端商）
-    min_num_retailer int 最低购买量 （对于终端商）
-    price_wholesaler decimal 价格 （对于批发商 供应商时添加）
-    min_num_wholesaler int 最低购买量 （对于批发商 供应商时添加）
-    is_new int 是否新品（1是 0不是）
-    is_out int 是否缺货 （1是 0不是）
-    is_change int 是否可换货 （1是 0不是）
-    is_back int 是否可退货 （1是 0不是）
-    is_expire int 是否即将过期 （1是 0不是）
-    is_promotion int 是否促销 （1是 0不是）
-    promotion_info string 促销信息 （取当是促销时传入）
-    cate_level_1 int 第一层分类
-    cate_level_2 int 第二层分类
-    cate_level_3 int 第三层分类
-    attrs array 标签数组
-    images array 商品图片id数组
-    area array 商品配送区域数组
-    introduce string 商品图文介绍
-
-    area 字段子集介绍
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.3.5  商品上下架 [put] (shelve/{goods_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>status                  int         上下架状态 {1 上架   0下架}
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.3.3 更新我的商品 [put] ({goods_id})</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>name string 商品名
-    price_retailer decimal 价格 （对于终端商）
-    min_num_retailer int 最低购买量 （对于终端商）
-    price_wholesaler decimal 价格 （对于批发商 供应商时添加）
-    min_num_wholesaler int 最低购买量 （对于批发商 供应商时添加）
-    is_new int 是否新品（1是 0不是）
-    is_out int 是否缺货 （1是 0不是）
-    is_change int 是否可换货 （1是 0不是）
-    is_back int 是否可退货 （1是 0不是）
-    is_expire int 是否即将过期 （1是 0不是）
-    is_promotion int 是否促销 （1是 0不是）
-    promotion_info string 促销信息 （取当是促销时传入）
-    cate_level_1 int 第一层分类
-    cate_level_2 int 第二层分类
-    cate_level_3 int 第三层分类
-    attrs array 标签数组
-    images array 商品图片id数组
-    area array 商品配送区域数组
-    introduce string 商品图文介绍
-
-    area 字段子集介绍
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
+<p><code>成功返回：</code></p>
+<h4>2.3.6 删除我的商品 [delete] ({goods_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<h4>2.3.7 获取商品图库 [get] （images）</h4>
+<p><code>请求参数：</code></p>
+<pre><code>cate_level_1        int         第一层分类
+cate_level_2        int         第二层分类
+cate_level_3        int         第三层分类
+attrs               array       标签数组
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>goodsImages         array       商品图片列表
 
-        <p><code>失败返回：</code></p>
-        <h4>2.3.4 商品上下架 [put] (shelve/{goods_id})</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>status int 上下架状态 {1 上架 0下架}
+cate_level_1        int         第一层分类
+cate_level_2        int         第二层分类
+cate_level_3        int         第三层分类
+id                  int         图库id
+image_url           string      图片地址
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-        <h4>2.3.5 删除我的商品 [delete] ({goods_id})</h4>
+<p><code>失败返回：</code></p>
+<h3>2.4 店铺模块 shop</h3>
+<h4>2.4.1 获取商店栏目[get] shops</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>shopColumns    array   店铺栏目信息
 
-        <p><code>请求参数：</code></p>
+shopColumns字段子集说明
 
-        <p><code>成功返回：</code></p>
-        <h4>2.3.6 获取商品图库 [get] （images）</h4>
+id                  int         栏目id
+name                string      栏目名
+shops               array       栏目店铺列表
 
-        <p><code>请求参数：</code></p>
-<pre><code>cate_level_1 int 第一层分类
-    cate_level_2 int 第二层分类
-    cate_level_3 int 第三层分类
-    attrs array 标签数组
+shops 字段子集说明
+
+id                  int         店铺id
+name                string      店铺名
+logo_url            string      店铺logo地址
+min_money           decimal     最低配送额
+images_url          array       店铺图片
+
+images_url 字段子集说明
+
+name                string      图片名
+path                string      图片路径
+id                  int         图片id
+url                 string      图片详细路径
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>goodsImages array 商品图片列表
-
-    cate_level_1 int 第一层分类
-    cate_level_2 int 第二层分类
-    cate_level_3 int 第三层分类
-    id int 图库id
-    image_url string 图片地址
+<h4>2.4.2 根据距离排序获取所有店铺[get] all</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         页码
+x_lng               float       纬度
+y_lat               float       经度
 </code></pre>
 
-        <p><code>失败返回：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>distance            float       距离 （米）
+id                  int         店铺id
+name                string      店铺名
+min_money           decimal     最低配送额
+contact_person      string      联系人
+contact_info        string      联系方式
+images_url          array       店铺图片
+logo_url            string      logo地址
+shop_address        array       店铺地址
 
-        <h3>2.4 店铺模块 shop</h3>
-        <h4>2.4.1 获取商店栏目[get] shops</h4>
+images_url 字段子集说明
 
-        <p><code>请求参数：</code></p>
+name                string      图片名
+path                string      图片路径
+id                  int         图片id
+url                 string      图片详细路径
 
-        <p><code>成功返回：</code></p>
-<pre><code>shopColumns array 店铺栏目信息
+shop_address 字段子集说明
 
-    shopColumns字段子集说明
-
-    id int 栏目id
-    name string 栏目名
-    shops array 栏目店铺列表
-
-    shops 字段子集说明
-
-    id int 店铺id
-    name string 店铺名
-    logo_url string 店铺logo地址
-    min_money decimal 最低配送额
-    images_url array 店铺图片
-
-    images_url 字段子集说明
+id                      int             地址id
+province_id             int             省id
+city_id                 int             市id
+district_id             int             县id
+street_id               int             街道id
+area_name               string          省、市、县、街道名
+address                 string          详细地址
 </code></pre>
 
-        <p>name string 图片名
-            path string 图片路径
-            id int 图片id
-            url string 图片详细路径</p>
-        <h4>2.4.2 根据距离排序获取所有店铺[get] all</h4>
+<p><code>失败返回：</code></p>
+<h4>2.4.3 店铺详情[get]   ({shop_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>id                  int         店铺id
+name                string      店铺名
+contact_person      string      联系人
+contact_info        string      联系方式
+introduction        string      店铺介绍
+min_money           decimal     最低配送额
+images_url          array       店铺图片地址
+is_like             bool        是否已收藏
 
-        <p><code>请求参数：</code></p>
-<pre><code>page int 页码
-    x_lng float 纬度
-    y_lat float 经度
+images 字段子集介绍
+
+name                string      图片名
+path                string      图片路径
+id                  int         图片id
+url                 string      图片详细路径
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>distance float 距离 （米）
-    id int 店铺id
-    name string 店铺名
-    min_money decimal 最低配送额
-    contact_person string 联系人
-    contact_info string 联系方式
-    images_url array 店铺图片
-    logo_url string logo地址
-    shop_address array 店铺地址
-
-    images_url 字段子集说明
-
-    name string 图片名
-    path string 图片路径
-    id int 图片id
-    url string 图片详细路径
-
-    shop_address 字段子集说明
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
+<h4>2.4.4 店铺商品[get]   ({shop_id}/goods)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.4.3 店铺详情[get] ({shop_id})</h4>
+<p><code>成功返回：</code></p>
+<pre><code>data                array       商品列表
 
-        <p><code>请求参数：</code></p>
+data 字段子集说明
 
-        <p><code>成功返回：</code></p>
-<pre><code>id int 店铺id
-    name string 店铺名
-    contact_person string 联系人
-    contact_info string 联系方式
-    introduction string 店铺介绍
-    min_money decimal 最低配送额
-    images_url array 店铺图片地址
-    is_like bool 是否已收藏
+id                  int         商品id
+name                string      商品名
+sales_volume        int         销售总量
+price_retailer      decimal     价格（对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+is_new              int         是否新品（1是 , 0不是）
+is_promotion        int         是否促销产品
+is_out              int         是否缺货
+images_url          array       商品图片
 
-    images 字段子集介绍
+images 字段子集说明
 
-    name string 图片名
-    path string 图片路径
-    id int 图片id
-    url string 图片详细路径
+name                string      图片名
+path                string      图片路径
+id                  int         图片id
+url                 string      图片详细路径
 </code></pre>
 
-        <h4>2.4.4 店铺商品[get] ({shop_id}/goods)</h4>
+<h4>2.4.5 店铺扩展信息[get]   ({shop_id}/extend)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>license_url             string          营业执照地址
+business_license_url    string          店铺经营许可证地址
+agency_contract_url     string          代理合同地址
+images_url              array           店铺图片地址
+delivery_area           array           配送区域列表
+address                 array           店铺地址
 
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
+images_url 字段子集介绍
+
+name                string      图片名
+path                string      图片路径
+id                  int         图片id
+url                 string      图片详细路径
+
+delivery_area 字段子集介绍
+
+id                      int             地址id
+province_id             int             省id
+city_id                 int             市id
+district_id             int             县id
+street_id               int             街道id
+area_name               string          省、市、县、街道名
+address                 string          详细地址
+
+ address 字段子集介绍
+
+id                      int             地址id
+province_id             int             省id
+city_id                 int             市id
+district_id             int             县id
+street_id               int             街道id
+area_name               string          省、市、县、街道名
+address                 string          详细地址
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>data array 商品列表
+<h4>2.4.6 店铺修改[put] (personal/shop/{shop_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>logo                    string/file         店铺logo
+name                    string              店铺名
+contact_person          string              联系人
+contact_info            string              联系方式
+min_money               decimal             最低配送额
+introduction            string              店铺介绍
+license                 string/file         营业执照
+business_license        string/file         经营许可证
+agency_contract         string/file         代理合同
+images                  array               商品图片列表(店铺已拥有)
+mobile_images           array               新增图片数组
+address                 array               地址
+x_lng                   float               经度
+y_lat                   float               纬度
+area                    array               配送区域列表
 
-    data 字段子集说明
+images  字段说明
 
-    id int 商品id
-    name string 商品名
-    sales_volume int 销售总量
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    is_new int 是否新品（1是 , 0不是）
-    is_promotion int 是否促销产品
-    is_out int 是否缺货
-    images_url array 商品图片
+id                      array               图片id列表 (新添加图片id应为 '')
+path                    array               图片地址列表
+name                    array               图片名列表
 
-    images 字段子集说明
+address 字段说明
 
-    name string 图片名
-    path string 图片路径
-    id int 图片id
-    url string 图片详细路径
+province_id             int                 省id
+city_id                 int                 市id
+district_id             int                 县id
+street_id               int                 街道id
+address                 string              详细地址
+
+area 字段说明
+
+id                      array               配送地址id列表(新添加地址id应为 '')
+province_id             array               省id列表
+city_id                 array               市id列表
+district_id             array               县id列表
+street_id               array               街道id列表
+area_name               array               省名+市名+县名+街道名  列表
+address                 array               详细地址列表
 </code></pre>
 
-        <h4>2.4.5 店铺扩展信息[get] ({shop_id}/extend)</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>license_url string 营业执照地址
-    business_license_url string 店铺经营许可证地址
-    agency_contract_url string 代理合同地址
-    images_url array 店铺图片地址
-    delivery_area array 配送区域列表
-    address array 店铺地址
-
-    images_url 字段子集介绍
-
-    name string 图片名
-    path string 图片路径
-    id int 图片id
-    url string 图片详细路径
-
-    delivery_area 字段子集介绍
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
-
-    address 字段子集介绍
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省、市、县、街道名
-    address string 详细地址
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h3>2.5 分类 categories</h3>
+<h4>2.5.1 获取所有分类[post] (all)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>id                  int         分类id
+icon_url            string      分类图标
+pid                 int         父级id
+name                string      分类名
+level               int         分类层级
+child               array       子级分类（子级分类返回数据与当前数据相同）
 </code></pre>
 
-        <h4>2.4.6 店铺修改[put] (personal/shop/{shop_id})</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>logo string/file 店铺logo
-    name string 店铺名
-    contact_person string 联系人
-    contact_info string 联系方式
-    min_money decimal 最低配送额
-    introduction string 店铺介绍
-    license string/file 营业执照
-    business_license string/file 经营许可证
-    agency_contract string/file 代理合同
-    images array 商品图片列表(店铺已拥有)
-    mobile_images array 新增图片数组
-    address array 地址
-    x_lng float 经度
-    y_lat float 纬度
-    area array 配送区域列表
-
-    images 字段说明
-
-    id array 图片id列表 (新添加图片id应为 '')
-    path array 图片地址列表
-    name array 图片名列表
-
-    address 字段说明
-
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    address string 详细地址
-
-    area 字段说明
-
-    id array 配送地址id列表(新添加地址id应为 '')
-    province_id array 省id列表
-    city_id array 市id列表
-    district_id array 县id列表
-    street_id array 街道id列表
-    area_name array 省名+市名+县名+街道名 列表
-    address array 详细地址列表
+<p><code>失败返回：</code></p>
+<h4>2.5.2 获取标签[get] ({categoryId}/attrs)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>format              bool        是否格式化标签  (非必须参数)
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-
-        <h3>2.5 分类 categories</h3>
-        <h4>2.5.1 获取所有分类[post] (all)</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>id int 分类id
-    icon_url string 分类图标
-    pid int 父级id
-    name string 分类名
-    level int 分类层级
-    child array 子级分类（子级分类返回数据与当前数据相同）
+<p><code>成功返回：</code></p>
+<pre><code>attr_id              int         标签id
+name                 string      标签名
+pid                  int         父级id
+child                array       子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.5.2 获取标签[get] ({categoryId}/attrs)</h4>
+<p><code>失败返回：</code></p>
+<h3>2.6 购物车 cart</h3>
+<h4>2.6.1 查看购物车[get] (index)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>shops                array       商店列表
 
-        <p><code>请求参数：</code></p>
-<pre><code>format bool 是否格式化标签 (非必须参数)
-</code></pre>
+shops 子字段说明
 
-        <p><code>成功返回：</code></p>
-
-        <p>attr_id int 标签id
-            name string 标签名
-            pid int 父级id
-            child array 子级标签 （仅当format为true时返回， 子级分类返回数据与当前数据相同）</p>
-
-        <p><code>失败返回：</code></p>
-
-        <h3>2.6 购物车 cart</h3>
-        <h4>2.6.1 查看购物车[get] (index)</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>shops array 商店列表
-
-    shops 子字段说明
-
-    name string 商店名
-    id int 商店id
-    min_money decimal 最低配送额
-    cart_goods array 属于本商店的商品
+name                string      商店名
+id                  int         商店id
+min_money           decimal     最低配送额
+cart_goods          array       属于本商店的商品
 
     cart_goods子字段说明
 
-    id int 购物车id
-    goods_id int 商品id
-    user_id int 用户id
-    is_like bool 是否已收藏
-    images string 商品图片
-    goods array 商品详情
+    id                  int         购物车id
+    goods_id            int         商品id
+    user_id             int         用户id
+    is_like             bool        是否已收藏
+    images              string      商品图片
+    goods               array       商品详情
 
-    goods子字段说明
+        goods子字段说明
 
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
+        id                  int         商品id
+        name                string      商品名
+        price_retailer      decimal     价格（对于终端商）
+        price_wholesaler    decimal     价格（对于批发商）
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.6.2 加入购物车[post] (add/{goodsId})</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>num int 购买数量
+<p><code>失败返回：</code></p>
+<h4>2.6.2 加入购物车[post] (add/{goodsId})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>num                 int         购买数量
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回</code></p>
-        <h4>2.6.3 删除购物车[delete] (delete/{cartId})</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回</code></p>
-
-        <h3>2.7 订单 order</h3>
-        <h4>2.7.1 确认订单[post] (confirm-order)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>num array 购买的商品和数量 （key=&gt;value形式 key为商品id value 为购买数量）
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
+<h4>2.6.3 删除购物车[delete] (delete/{cartId})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
+<h3>2.7 订单 order</h3>
+<h4>2.7.1 确认订单[post] (confirm-order)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>num                 array       购买的商品和数量 （key=&gt;value形式    key为商品id   value 为购买数量）
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
+<h4>2.7.2 获取已确认但未提交订单信息[get] (confirm-order)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code> shops                array       商店列表
+ shipping_address     array       收货地址列表
+ pay_type             array       支付方式
+ cod_pay_type         array       货到付款的支付方式
 
-        <p><code>失败返回</code></p>
-        <h4>2.7.2 获取已确认但未提交订单信息[get] (confirm-order)</h4>
+shops 子字段说明
 
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code> shops array 商店列表
-    shipping_address array 收货地址列表
-    pay_type array 支付方式
-    cod_pay_type array 货到付款的支付方式
-
-    shops 子字段说明
-
-    name string 商店名
-    id int 商店id
-    min_money decimal 最低配送额
-    cart_goods array 属于本商店的商品
+name                string      商店名
+id                  int         商店id
+min_money           decimal     最低配送额
+cart_goods          array       属于本商店的商品
 
     cart_goods子字段说明
 
-    id int 购物车id
-    goods_id int 商品id
-    user_id int 用户id
-    is_like bool 是否已收藏
-    images string 商品图片
-    goods array 商品详情
+    id                  int         购物车id
+    goods_id            int         商品id
+    user_id             int         用户id
+    is_like             bool        是否已收藏
+    images              string      商品图片
+    goods               array       商品详情
 
-    cart_goods子字段说明
+        cart_goods子字段说明
 
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
+        id                  int         商品id
+        name                string      商品名
+        price_retailer      decimal     价格（对于终端商）
+        price_wholesaler    decimal     价格（对于批发商）
 
-    shippingAddress 子字段说明
+ shippingAddress    子字段说明
 
-    id int 收货地址id
-    consigner string 收货人
-    phone string 手机号码
-    is_default int 是否默认
-    user_id int 用户id
-    address array 地址详情
+ id                 int         收货地址id
+ consigner          string      收货人
+ phone              string      手机号码
+ is_default         int         是否默认
+ user_id            int         用户id
+ address            array       地址详情
 
-    address 子字段说明
+ address    子字段说明
 
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 区域名
-    address string 详细地址
+ id                 int         地址id
+ province_id        int         省id
+ city_id            int         市id
+ district_id        int         县id
+ street_id          int         街道id
+ area_name          string      区域名
+ address            string      详细地址
 </code></pre>
 
-        <p><code>失败返回</code></p>
-        <h4>2.7.3 提交订单[get] (confirm-order)</h4>
+<p><code>失败返回</code></p>
+<h4>2.7.3 提交订单[get] (confirm-order)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>shipping_address_id int         收货地址id
+pay_type            string      支付方式 （online 在线 ， cod 货到付款）
+cod_pay_type        string      货到付款方式 （仅当pay_type为cod时传入    传入'cash'为现金  传入'card'为刷卡）
+shop                array       商店
 
-        <p><code>请求参数：</code></p>
-<pre><code>shop array 商店
+shop 子字段说明（key=&gt;value）  key为商店id
 
-    shop 子字段说明（key=&gt;value） key为商店id
-
-    shipping_address_id int 收货地址id
-    pay_type string 支付方式 （online 在线 ， cod 货到付款）
-    cod_pay_type string 货到付款方式 （仅当pay_type为cod时传入 传入'cash'为现金 传入'card'为刷卡）
-    remark string 订单备注信息
+remark              string      订单备注信息
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回</code></p>
-        <h4>2.7.4 买家获取订单列表[get] (list-of-buy)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
+<p><code>成功返回：</code></p>
+<pre><code>pay_type            string      支付方式 （online 在线 ， cod 货到付款）
+order_id            int         订单id  (订单为在线付款时返回)
+type                string      订单id类型  （为all是该订单id属于总订单）
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>data array 订单信息
+<p><code>失败返回</code></p>
+<h4>2.7.4 买家获取订单列表[get] (list-of-buy)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
+</code></pre>
 
-    data 字段子集说明
+<p><code>成功返回：</code></p>
+<pre><code>data                array       订单信息
 
-    id int 订单ID号
-    price string 订单总金额
-    status_name string 订单显示状态
-    payment_type string 支付方式(如:在线支付;货到付款)
-    cod_pay_type int 货到付款支付方式(1:现金;2:刷卡)
-    pay_type int 支付方式(1:在线支付;2:货到付款)
-    pay_status int 支付状态(0:未付款;1:已付款)
-    status int 订单状态(1:未发货;2:已发货;3:完成)
-    is_cancel int 订单是否被取消(1取消,0未取消)
-    shop array 店铺信息
-    goods array 商品信息
+data 字段子集说明
 
-    shop 字段子集说明
+id                  int         订单ID号
+price               string      订单总金额
+status_name         string      订单显示状态
+payment_type        string      支付方式(如:在线支付;货到付款)
+cod_pay_type        int         货到付款支付方式(1:现金;2:刷卡)
+pay_type            int         支付方式(1:在线支付;2:货到付款)
+pay_status          int         支付状态(0:未付款;1:已付款)
+status              int         订单状态(1:未发货;2:已发货;3:完成)
+is_cancel           int         订单是否被取消(1取消,0未取消)
+shop                array       店铺信息
+goods               array       商品信息
 
-    name string 店铺名字
-    user array 卖家信息
+shop 字段子集说明
+
+name                string      店铺名字
+user                array       卖家信息
 
     user 字段子集说明
 
-    user_name string 卖家账户名称
-    type int 卖家角色类型
+    user_name       string      卖家账户名称
+    type            int         卖家角色类型
 
-    goods 字段子集说明
+goods 字段子集说明
 
-    id int 商品ID
-    name string 商品名称
-    introduce string 商品描述信息
-    image_url string 商品图片地址
-    pivot array 该商品在本订单中的详细信息
-
-    pivot 字段子集说明
-
-    price string 商品价格
-    num int 商品数量
-</code></pre>
-
-        <p><code>失败返回</code></p>
-        <h4>2.7.5 待付款订单列表[get] (non-payment)(仅显示在线支付订单)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
-</code></pre>
-
-        <p><code>成功返回：</code></p>
-<pre><code>返回信息同上
-</code></pre>
-
-        <p><code>失败返回</code></p>
-        <h4>2.7.6 买家待收货订单列表[get] (non-arrived)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
-</code></pre>
-
-        <p><code>成功返回：</code></p>
-<pre><code>返回信息同上
-</code></pre>
-
-        <p><code>失败返回</code></p>
-        <h4>2.7.7 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id array 订单id
-</code></pre>
-
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.7.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id int 订单号
-</code></pre>
-
-        <p><code>成功返回：</code></p>
-<pre><code>id int 订单ID号
-    price string 订单总金额
-    status_name string 订单显示状态
-    payment_type string 支付方式
-    is_cancel int 订单是否被取消(1取消,0未取消)
-    remark string 订单备注信息
-    created_at string 创建时间
-    paid_at string 支付时间
-    send_at string 发货时间
-    finished_at string 完成时间
-    delivery_man array 送货人信息(仅发货后才有,否则为Null)
-    shipping_address array 收货信息
-    goods array 商品详细信息
-
-    delivery_man 字段子集说明
-
-    name string 送货人姓名
-    phone string 送货人电话
-
-    shipping_address 字段子集说明
-
-    consigner string 收货人姓名
-    phone string 收货人电话
-    address array 收货地址信息
-
-    address 字段子集说明
-
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street int 街道id
-    address string 详细地址
-</code></pre>
-
-        <p><code>失败返回</code></p>
-        <h4>2.7.9 卖家获取订单列表[get] (list-of-sell)(不显示已取消订单)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
-</code></pre>
-
-        <p><code>成功返回：</code></p>
-<pre><code>data array 订单信息
-
-    data 字段子集说明
-
-    id int 订单ID号
-    price string 订单总金额
-    status_name string 订单显示状态
-    payment_type string 支付方式(如:在线支付;货到付款)
-    cod_pay_type int 货到付款支付方式(1:现金;2:刷卡)
-    pay_type int 支付方式(1:在线支付;2:货到付款)
-    pay_status int 支付状态(0:未付款;1:已付款)
-    status int 订单状态(1:未发货;2:已发货;3:完成)
-    is_cancel int 订单是否被取消(1取消,0未取消)
-    user array 买家信息
-    goods array 商品信息
-
-    user 字段子集说明
-
-    user_name string 买家名字
-
-
-    goods 字段子集说明
-
-    id int 商品ID
-    name string 商品名称
-    introduce string 商品描述信息
-    image_url string 商品图片地址
-    pivot array 该商品在本订单中的详细信息
+id                  int         商品ID
+name                string      商品名称
+introduce           string      商品描述信息
+image_url           string      商品图片地址
+pivot               array       该商品在本订单中的详细信息
 
     pivot 字段子集说明
 
-    price string 商品价格
-    num int 商品数量
+    price           string      商品价格
+    num             int         商品数量
 </code></pre>
 
-        <p><code>失败返回</code></p>
-        <h4>2.7.10 卖家待发货订单列表[get] (non-send)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
+<p><code>失败返回</code></p>
+<h4>2.7.5 待付款订单列表[get] (non-payment)(仅显示在线支付订单)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
 <pre><code>返回信息同上
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.7.11 卖家待收款订单列表[get] (pending-collection)(仅针对货到付款订单)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>page int 分页
+<p><code>失败返回</code></p>
+<h4>2.7.6 买家待收货订单列表[get] (non-arrived)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
 <pre><code>返回信息同上
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.7.12 卖家获取订单详情[get] (detail-of-sell)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id int 订单id
+<p><code>失败返回</code></p>
+<h4>2.7.7 买家批量确认订单完成[put] (batch-finish-of-buy)(仅针对在线支付订单)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id                array       订单id
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>id int 订单ID号
-    price string 订单总金额
-    status_name string 订单显示状态
-    payment_type string 支付方式(显示)
-    pay_type int 支付方式
-    cod_pay_type int 货到付款方式
-    is_cancel int 订单是否被取消(1取消,0未取消)
-    remark string 订单备注信息
-    created_at string 创建时间
-    paid_at string 支付时间
-    send_at string 发货时间
-    finished_at string 完成时间
-    shipping_address array 收货信息
-    goods array 商品详细信息
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.7.8 买家获取订单详情[get] (detail-of-buy)(仅发货后和完成后才能查看)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id            int         订单号
+</code></pre>
 
-    delivery_man 字段子集说明
+<p><code>成功返回：</code></p>
+<pre><code>id                  int         订单ID号
+price               string      订单总金额
+status_name         string      订单显示状态
+payment_type        string      支付方式
+is_cancel           int         订单是否被取消(1取消,0未取消)
+remark              string      订单备注信息
+created_at          string      创建时间
+paid_at             string      支付时间
+send_at             string      发货时间
+finished_at         string      完成时间
+delivery_man        array       送货人信息(仅发货后才有,否则为Null)
+shipping_address    array       收货信息
+goods               array       商品详细信息
 
-    name string 送货人姓名
-    phone string 送货人电话
+delivery_man 字段子集说明
 
-    shipping_address 字段子集说明
+name                string      送货人姓名
+phone               string      送货人电话
 
-    consigner string 收货人姓名
-    phone string 收货人电话
-    address array 收货地址信息
+shipping_address 字段子集说明
+
+consigner           string      收货人姓名
+phone               string      收货人电话
+address             array       收货地址信息
 
     address 字段子集说明
 
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street int 街道id
-    address string 详细地址
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street              int         街道id
+    address             string      详细地址
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.7.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id array 订单id
+<p><code>失败返回</code></p>
+<h4>2.7.9 卖家获取订单列表[get] (list-of-sell)(不显示已取消订单)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>data                array       订单信息
 
-        <p><code>失败返回：</code></p>
-        <h4>2.7.14 卖家批量发货[put] (batch-send)</h4>
+data 字段子集说明
 
-        <p><code>请求参数：</code></p>
-<pre><code>order_id array 订单id
-    delivery_man_id int 配送员id号
+id                  int         订单ID号
+price               string      订单总金额
+status_name         string      订单显示状态
+payment_type        string      支付方式(如:在线支付;货到付款)
+cod_pay_type        int         货到付款支付方式(1:现金;2:刷卡)
+pay_type            int         支付方式(1:在线支付;2:货到付款)
+pay_status          int         支付状态(0:未付款;1:已付款)
+status              int         订单状态(1:未发货;2:已发货;3:完成)
+is_cancel           int         订单是否被取消(1取消,0未取消)
+user                array       买家信息
+goods               array       商品信息
+
+user 字段子集说明
+
+user_name           string      买家名字
+
+
+goods 字段子集说明
+
+id                  int         商品ID
+name                string      商品名称
+introduce           string      商品描述信息
+image_url           string      商品图片地址
+pivot               array       该商品在本订单中的详细信息
+
+    pivot 字段子集说明
+
+    price           string      商品价格
+    num             int         商品数量
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.7.15 买家/卖家批量取消订单[put] (cancel-sure)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id array 订单id
+<p><code>失败返回</code></p>
+<h4>2.7.10 卖家待发货订单列表[get] (non-send)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.7.16 卖家修改订单物品单价[put] (change-price)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>order_id int 订单id
-    price int 物品单价
-    pivot_id int 物品在order_goods表中的id
+<p><code>成功返回：</code></p>
+<pre><code>返回信息同上
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.7.17 卖家订单统计[get] (statistics)</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>all array 累计信息统计
-    today array 今日信息统计
-    sevenDay array 过去7天信息统计
-
-    all 字段说明
-
-    count int 累计订单数
-    finish int 累计完成订单数
-
-    today 字段说明
-
-    new int 今日新增订单数
-    finish int 今日完成订单数
-
-    sevenDay 字段子集说明
-
-    new int 当日新增订单数(按今天前第六天开始倒序排列的)
-    finish int 当然完成订单数
+<p><code>失败返回：</code></p>
+<h4>2.7.11 卖家待收款订单列表[get] (pending-collection)(仅针对货到付款订单)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>page                int         分页
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-
-        <h3>2.8 收藏 like</h3>
-        <h4>2.8.1 收藏 [put] (interests)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>status int 收藏状态 （0 取消收藏 1 加入收藏）
-    type string 收藏类型 （'shops' 商店 'goods' 商品）
-    id int 要收藏的id
+<p><code>成功返回：</code></p>
+<pre><code>返回信息同上
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.8.2 商店收藏[post] (shops)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street int 街道id
+<p><code>失败返回：</code></p>
+<h4>2.7.12 卖家获取订单详情[get] (detail-of-sell)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id            int         订单id
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>shops array 商店列表
+<p><code>成功返回：</code></p>
+<pre><code>id                  int         订单ID号
+price               string      订单总金额
+status_name         string      订单显示状态
+payment_type        string      支付方式(显示)
+pay_type            int         支付方式
+cod_pay_type        int         货到付款方式
+is_cancel           int         订单是否被取消(1取消,0未取消)
+remark              string      订单备注信息
+created_at          string      创建时间
+paid_at             string      支付时间
+send_at             string      发货时间
+finished_at         string      完成时间
+shipping_address    array       收货信息
+goods               array       商品详细信息
 
-    shops 字段说明
+delivery_man 字段子集说明
 
-    id int 店铺id
-    name string 店铺名
-    min_money decimal 最低配送额
-    image_url string 店铺图片
-    orders int 店铺销量
+name                string      送货人姓名
+phone               string      送货人电话
+
+shipping_address 字段子集说明
+
+consigner           string      收货人姓名
+phone               string      收货人电话
+address             array       收货地址信息
+
+    address 字段子集说明
+
+    province_id         int         省id
+    city_id             int         市id
+    district_id         int         县id
+    street              int         街道id
+    address             string      详细地址
 </code></pre>
 
-        <p><code>失败返回</code></p>
-        <h4>2.8.3 商品收藏[post] (goods)</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street int 街道id
+<p><code>失败返回：</code></p>
+<h4>2.7.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id                array       订单id
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-<pre><code>goods array 商品列表
-    cateArr array 分类列表
-
-    goods 字段说明
-
-    id int 商品id
-    name string 商品名
-    price_retailer decimal 价格（对于终端商）
-    price_wholesaler decimal 价格（对于批发商）
-    is_new int 是否新品（1是 , 0不是）
-    is_promotion int 是否促销产品
-    image_url string 商品图片
-
-    cateArr 字段说明
-
-    id int 分类id
-    name string 分类名
-    level string 分类层级
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.7.14 卖家批量发货[put] (batch-send)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id                array       订单id
+delivery_man_id         int         配送员id号
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-
-        <h3>2.9 收货地址[personal/shipping-address]</h3>
-        <h4>2.9.1 获取收货地址列表[get] (index)</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>shippingAddress array 收货地址列表
-
-    shoppingAddress 字段子集介绍
-
-    id int 收货地址id
-    consigner string 收货人
-    phone string 手机号码
-    is_default int 是否默认
-    user_id int 用户id
-    address array 地址详情
-
-    address 子字段说明
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 区域名
-    address string 详细地址
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.7.15 买家/卖家批量取消订单[put] (cancel-sure)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id                array       订单id
 </code></pre>
 
-        <p><code>失败返回：</code></p>
-        <h4>2.9.2 获取收货地址详情[get] ({id})</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-<pre><code>id int 收货地址id
-    consigner string 收货人
-    phone string 手机号码
-    is_default int 是否默认
-    user_id int 用户id
-    address array 地址详情
-
-    address 子字段说明
-
-    id int 地址id
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 区域名
-    address string 详细地址
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.7.16 卖家修改订单物品单价[put] (change-price)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id                int     订单id
+price                   int     物品单价
+pivot_id                int     物品在order_goods表中的id
 </code></pre>
 
-        <h4>2.9.3 添加收货地址 [post] ()</h4>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.7.17 卖家订单统计[get] (statistics)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>all                     array       累计信息统计
+today                   array       今日信息统计
+sevenDay                array       过去7天信息统计
 
-        <p><code>请求参数：</code></p>
-<pre><code>consigner string 收货人
-    phone string 联系电话
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省名+市名+县名+街道名
-    address string 详细地址
+all 字段说明
+
+count                   int         累计订单数
+finish                  int         累计完成订单数
+
+today 字段说明
+
+new                     int         今日新增订单数
+finish                  int         今日完成订单数
+
+sevenDay 字段子集说明
+
+    new                 int         当日新增订单数(按今天前第六天开始倒序排列的)
+    finish              int         当然完成订单数
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.9.4 更新收货地址 [put] ({shipping<em>address</em>id})</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>consigner string 收货人
-    phone string 联系电话
-    province_id int 省id
-    city_id int 市id
-    district_id int 县id
-    street_id int 街道id
-    area_name string 省名+市名+县名+街道名
-    address string 详细地址
+<p><code>失败返回：</code></p>
+<h3>2.8 收藏 like</h3>
+<h4>2.8.1 收藏 [put] (interests)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>status              int         收藏状态 （0 取消收藏 1 加入收藏）
+type                string      收藏类型 （'shops' 商店   'goods' 商品）
+id                  int         要收藏的id
 </code></pre>
 
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.9.5 设置默认地址 [put] (default/{id})</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-        <h4>2.9.6 删除收货地址 [delete] ({id})</h4>
-
-        <p><code>请求参数：</code></p>
-
-        <p><code>成功返回：</code></p>
-
-        <p><code>失败返回：</code></p>
-
-        <h3>2.10 修改密码（personal/password）</h3>
-        <h4>2.10.1 修改密码[put]</h4>
-
-        <p><code>请求参数：</code></p>
-<pre><code>old_password string 原密码
-    password string 新密码
-    password_confirmation string 确认新密码
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.8.2 商店收藏[post] (shops)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>province_id         int         省id
+city_id             int         市id
+district_id         int         县id
+street              int         街道id
 </code></pre>
 
-        <p><code>成功返回：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>shops               array       商店列表
 
-        <p><code>失败返回：</code></p>
+shops 字段说明
 
-        <p><code>失败返回:</code></p>
-
-        <h3>2.11 配送信息 [personal/delivery-man]</h3>
-        <h4>2.11.1 配送人员列表[get]</h4>
-
-        <p><code>请求参数:</code></p>
-
-        <p><code>成功返回:</code></p>
-<pre><code>delivery_man array 配送人员信息
-
-    delivery_man 字段子集说明
-
-    id int 配送人员ID
-    name string 姓名
-    phone string 电话
+id                  int         店铺id
+name                string      店铺名
+min_money           decimal     最低配送额
+image_url           string      店铺图片
+orders              int         店铺销量
 </code></pre>
 
-        <p><code>失败返回:</code></p>
-        <h4>2.11.2 添加配送人员[post]</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>name string 姓名
-    phone int 电话(长度7~14位)
+<p><code>失败返回</code></p>
+<h4>2.8.3 商品收藏[post] (goods)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>province_id         int         省id
+city_id             int         市id
+district_id         int         县id
+street              int         街道id
 </code></pre>
 
-        <p><code>成功返回:</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>goods               array       商品列表
+cateArr             array       分类列表
 
-        <p><code>失败返回:</code></p>
-        <h4>2.11.3 编辑配送人员信息[put] ({id})</h4>
+goods 字段说明
 
-        <p><code>请求参数:</code></p>
-<pre><code>name string 姓名
-    phone int 电话(长度7~14位)
+id                  int         商品id
+name                string      商品名
+price_retailer      decimal     价格（对于终端商）
+price_wholesaler    decimal     价格（对于批发商）
+is_new              int         是否新品（1是 , 0不是）
+is_promotion        int         是否促销产品
+image_url           string      商品图片
+
+cateArr 字段说明
+
+id                  int         分类id
+name                string      分类名
+level               string      分类层级
 </code></pre>
 
-        <p><code>成功返回:</code></p>
+<p><code>失败返回：</code></p>
+<h3>2.9 收货地址[personal/shipping-address]</h3>
+<h4>2.9.1 获取收货地址列表[get] ()</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>shippingAddress     array       收货地址列表
 
-        <p><code>失败返回:</code></p>
-        <h4>2.11.4 删除配送人员[delete] ({id})</h4>
+shoppingAddress 字段子集介绍
 
-        <p><code>请求参数:</code></p>
+id                 int         收货地址id
+consigner          string      收货人
+phone              string      手机号码
+is_default         int         是否默认
+user_id            int         用户id
+address            array       地址详情
 
-        <p><code>成功返回:</code></p>
+address    子字段说明
 
-        <p><code>失败返回:</code></p>
-
-        <h3>2.12 提现功能 [personal/withdraw]</h3>
-        <h4>2.12.1 提现申请记录[get] (index) (按提现申请的创建时间查询)</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>page int 分页
-    start_time string 开始时间(默认上个月的今天)
-    end_time string 结束时间(默认今天的24点)
+id                 int         地址id
+province_id        int         省id
+city_id            int         市id
+district_id        int         县id
+street_id          int         街道id
+area_name          string      区域名
+address            string      详细地址
 </code></pre>
 
-        <p><code>成功返回:</code></p>
-<pre><code>balance string 帐户可提现金额
-    withdraws array 提现记录
+<p><code>失败返回：</code></p>
+<h4>2.9.2 获取收货地址详情[get] ({id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>id                 int         收货地址id
+consigner          string      收货人
+phone              string      手机号码
+is_default         int         是否默认
+user_id            int         用户id
+address            array       地址详情
 
-    withdraws 字段子集说明
+address    子字段说明
 
-    data array 提现记录
+id                 int         地址id
+province_id        int         省id
+city_id            int         市id
+district_id        int         县id
+street_id          int         街道id
+area_name          string      区域名
+address            string      详细地址
+</code></pre>
+
+<h4>2.9.3 添加收货地址 [post] ()</h4>
+<p><code>请求参数：</code></p>
+<pre><code>consigner           string      收货人
+phone               string      联系电话
+province_id         int         省id
+city_id             int         市id
+district_id         int         县id
+street_id           int         街道id
+area_name           string      省名+市名+县名+街道名
+address             string      详细地址
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.9.4 更新收货地址 [put] ({shipping<em>address</em>id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>consigner           string      收货人
+phone               string      联系电话
+province_id         int         省id
+city_id             int         市id
+district_id         int         县id
+street_id           int         街道id
+area_name           string      省名+市名+县名+街道名
+address             string      详细地址
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.9.5 设置默认地址 [put] (default/{id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.9.6  删除收货地址 [delete] ({id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h3>2.10  修改密码（personal/password）</h3>
+<h4>2.10.1 修改密码[put]</h4>
+<p><code>请求参数：</code></p>
+<pre><code>old_password            string          原密码
+password                string          新密码
+password_confirmation   string          确认新密码
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.11 配送信息 [personal/delivery-man]</h3>
+<h4>2.11.1 配送人员列表[get]</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<pre><code>delivery_man        array       配送人员信息
+
+delivery_man 字段子集说明
+
+id                  int         配送人员ID
+name                string      姓名
+phone               string      电话
+</code></pre>
+
+<p><code>失败返回:</code></p>
+<h4>2.11.2 添加配送人员[post]</h4>
+<p><code>请求参数:</code></p>
+<pre><code>name                string      姓名
+phone               int         电话(长度7~14位)
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.11.3 编辑配送人员信息[put] ({id})</h4>
+<p><code>请求参数:</code></p>
+<pre><code>name                string      姓名
+phone               int         电话(长度7~14位)
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.11.4 删除配送人员[delete] ({id})</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.12 提现功能 [personal/withdraw]</h3>
+<h4>2.12.1 提现申请记录[get] (index) (按提现申请的创建时间查询)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>page                int         分页
+start_time          string      开始时间(默认上个月的今天)  
+end_time            string      结束时间(默认今天的24点)  
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<pre><code>balance             string      帐户可提现金额
+withdraws           array       提现记录
+
+withdraws 字段子集说明
+
+    data            array       提现记录
 
     data 字段子集说明
 
-    id int 提现单号
-    amount string 本次提现金额
-    status int 提现订单状态号
-    status_info string 提现订单状态
-    trade_no string 交易单号(未打款则为空字符串)
-    reason string 审核不通过原因
-    created_at string 创建时间
-    failed_at string 不通过时间
-    pass_at string 通过时间
-    payment_at string 打款时间 (未执行到的操作对应时间格式-0001-11-30 00:00:00)
-    user_banks array 提现银行卡信息
+        id              int         提现单号
+        amount          string      本次提现金额
+        status          int         提现订单状态号
+        status_info     string      提现订单状态
+        trade_no        string      交易单号(未打款则为空字符串)
+        reason          string      审核不通过原因
+        created_at      string      创建时间
+        failed_at       string      不通过时间
+        pass_at         string      通过时间
+        payment_at      string      打款时间  (未执行到的操作对应时间格式-0001-11-30 00:00:00)
+        user_banks  array       提现银行卡信息
 
-    user_banks 字段子集说明
+        user_banks 字段子集说明
 
-    card_holder string 持卡人姓名
-    card_number string 卡号
-    card_type int 银行名称(参考personal/banks [get]返回信息)
+            card_holder     string      持卡人姓名
+            card_number     string      卡号
+            card_type       int         银行名称(参考personal/banks [get]返回信息)
 </code></pre>
 
-        <p><code>失败返回:</code></p>
-        <h4>2.12.2 提现申请[post] (add-withdraw)</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>amount int 提现金额
-    bank_id int 提现账号ID
+<p><code>失败返回:</code></p>
+<h4>2.12.2 提现申请[post] (add-withdraw)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>amount              int         提现金额
+bank_id             int         提现账号ID
 </code></pre>
 
-        <p><code>成功返回:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.13 提现账号管理  [personal/bank]</h3>
+<h4>2.13.1 获取提现账号列表[get]</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<pre><code>user_bank_cards     array           该用户的银行卡信息
 
-        <p><code>失败返回:</code></p>
+user_bank_cards 字段子集说明
 
-        <h3>2.13 提现账号管理 [personal/bank]</h3>
-        <h4>2.13.1 获取提现账号列表[get]</h4>
-
-        <p><code>请求参数:</code></p>
-
-        <p><code>成功返回:</code></p>
-<pre><code>user_bank_cards array 该用户的银行卡信息
-
-    user_bank_cards 字段子集说明
-
-    id int id
-    card_number int 银行账号
-    card_holder string 持卡人姓名
-    card_type int 银行名称(参考personal/banks [get]返回信息)
-    card_address string 开户行所在地
-    is_defalut int 是否是默认提现账号(1=&gt;是默认提现账号,否则未0)
+    id                  int             id
+    card_number         int             银行账号
+    card_holder         string          持卡人姓名
+    card_type           int             银行名称(参考personal/banks [get]返回信息)
+    card_address        string          开户行所在地
+    is_defalut          int             是否是默认提现账号(1=&gt;是默认提现账号,否则未0)
 </code></pre>
 
-        <p><code>失败返回:</code></p>
-        <h4>2.13.2 添加提现账号[post]</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>card_number int 银行账号
-    card_holder string 持卡人姓名
-    card_type int 银行名称(参考personal/banks [get]返回信息)
-    card_address string 开户行所在地
+<p><code>失败返回:</code></p>
+<h4>2.13.2 添加提现账号[post]</h4>
+<p><code>请求参数:</code></p>
+<pre><code>card_number         int             银行账号
+card_holder         string          持卡人姓名
+card_type           int             银行名称(参考personal/banks [get]返回信息)
+card_address        string          开户行所在地
 </code></pre>
 
-        <p><code>成功返回:</code></p>
-
-        <p><code>失败返回:</code></p>
-        <h4>2.13.3 修改提现账号[put] ({id})</h4>
-
-        <p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.13.3 修改提现账号[put] ({id})</h4>
+<p><code>请求参数:</code></p>
 <pre><code>同上
 </code></pre>
 
-        <p><code>成功返回:</code></p>
-
-        <p><code>失败返回:</code></p>
-        <h4>2.13.4 删除提现账号[delete] ({id})</h4>
-
-        <p><code>请求参数:</code></p>
-
-        <p><code>成功返回:</code></p>
-
-        <p><code>失败返回:</code></p>
-
-        <h3>2.14 设置默认提现账号 [personal/bank-default]</h3>
-        <h4>2.14.1 设置默认提现账号[put] ({id})</h4>
-
-        <p><code>请求参数:</code></p>
-
-        <p><code>成功返回:</code></p>
-
-        <p><code>失败返回:</code></p>
-
-        <h3>2.15 获取银行信息 [personal/bank-info]</h3>
-        <h4>2.15.1 获取银行信息[get]</h4>
-
-        <p><code>请求参数:</code></p>
-
-        <p><code>成功返回:</code></p>
-<pre><code>banks array 银行信息(key=&gt;value)
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.13.4 删除提现账号[delete] ({id})</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.14 设置默认提现账号  [personal/bank-default]</h3>
+<h4>2.14.1 设置默认提现账号[put] ({id})</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.15 获取银行信息  [personal/bank-info]</h3>
+<h4>2.15.1 获取银行信息[get]</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<pre><code>banks       array           银行信息(key=&gt;value)
 </code></pre>
 
-        <p><code>失败返回:</code></p>
-
-        <h3>2.16 推送设备 [push]</h3>
-        <h4>2.16.1 添加推送设备[post] (active-token)</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>token string token
-    version string 手机版本号
-    type int 设备类型(ios=&gt;1;android=&gt;2)
+<p><code>失败返回:</code></p>
+<h3>2.16 推送设备  [push]</h3>
+<h4>2.16.1 添加推送设备[post] (active-token)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>token           string          token
+version         string          手机版本号
+type            int             设备类型(ios=&gt;1;android=&gt;2)
 </code></pre>
 
-        <p><code>成功返回:</code></p>
-
-        <p><code>失败返回:</code></p>
-        <h4>2.16.1 删除推送设备[delete] (deactive-token)</h4>
-
-        <p><code>请求参数:</code></p>
-<pre><code>token string token
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.16.1 删除推送设备[delete] (deactive-token)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>token           string          token
 </code></pre>
 
-        <p><code>成功返回:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.17 支付  [pay]</h3>
+<h4>2.17.1 获取charge对象[get] (charge/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
+</code></pre>
 
-        <p><code>失败返回:</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>charge          object          charge对象
+</code></pre>
 
-    </body>
+<p><code>失败返回：</code></p>
+
+</body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

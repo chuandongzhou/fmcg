@@ -389,22 +389,23 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================header end======================================*/
 /*======================================index begin======================================*/
-.list-penal .commodity .commodity-img {
-  width: 100%;
-  display: inline-block; }
-
-.list-penal .commodity .content-panel {
-  padding: 10px 5px;
-  background-color: #f2f2f2; }
-  .list-penal .commodity .content-panel .commodity-name {
-    padding: 10px 0; }
-    .list-penal .commodity .content-panel .commodity-name a {
-      color: #555555; }
-  .list-penal .commodity .content-panel .sell-panel .money {
-    color: #fe462f;
-    font-weight: bolder; }
-  .list-penal .commodity .content-panel .order-count {
-    color: #777777; }
+.list-penal .commodity {
+  margin-top: 10px; }
+  .list-penal .commodity .commodity-img {
+    width: 100%;
+    display: inline-block; }
+  .list-penal .commodity .content-panel {
+    padding: 10px 5px;
+    background-color: #f2f2f2; }
+    .list-penal .commodity .content-panel .commodity-name {
+      padding: 10px 0; }
+      .list-penal .commodity .content-panel .commodity-name a {
+        color: #555555; }
+    .list-penal .commodity .content-panel .sell-panel .money {
+      color: #fe462f;
+      font-weight: bolder; }
+    .list-penal .commodity .content-panel .order-count {
+      color: #777777; }
 
 .list-penal .commodity-index-img {
   box-sizing: border-box;
@@ -1492,7 +1493,7 @@ table .product-name {
       color: #fff; }
 
 .tab-title {
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   line-height: 40px;
   padding-right: 10px;
   border: 1px solid #e0e0e0;
@@ -1511,6 +1512,9 @@ table .product-name {
     .tab-title .sequence a.active {
       background-color: #4cb9fe;
       color: #fff; }
+
+.store-tab-title {
+  margin-top: 0; }
 
 /*======================================search end======================================*/
 /*======================================shopping-car begin======================================*/
