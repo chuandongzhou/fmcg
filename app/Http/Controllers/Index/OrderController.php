@@ -183,7 +183,7 @@ class OrderController extends Controller
         // 删除购物车
         $user->carts()->where('status', 1)->delete();
 
-        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : $onlinePaymentOrder[0]);
+        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id=' . $onlinePaymentOrder[0]);
 
         $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
 

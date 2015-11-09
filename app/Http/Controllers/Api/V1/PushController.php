@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use app\Http\Requests\Api\v1\DeletePushDeviceRequest;
 use App\Models\PushDevice;
 use App\Http\Requests;
-use App\Services\PushOrderService;
 
 class PushController extends Controller
 {

@@ -9,60 +9,64 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
 use DB;
+use Gate;
+use Illuminate\Http\Request;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
 class PayController extends Controller
 {
     /**
+     * 支付
+     *
+     * @param \Illuminate\Http\Request $request
      * @param $orderId
-     * @return \Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function pay($orderId)
+    public function charge(Request $request, $orderId)
     {
-        $order = Order::find($orderId);
+        $field = $request->input('type') == 'all' ? 'pid' : 'id';
+        $orders = Order::where($field, $orderId)->get();
 
-        if (!$order) {
-            return $this->error('订单不存在');
-        }
-        if ($order->pay_type != cons('pay_type.online')) {
-            return $this->error('此订单不是在线支付订单');
-        }
-        $orderConfig = cons('order');
-
-        if ($order->pay_status != $orderConfig['pay_status']['non_payment']) {
-            return $this->error('此订单已付款');
+        if (Gate::denies('validate-online-orders', $orders)) {
+            return redirect('order-buy');
         }
 
         //配置extra
 
-        Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
+        //Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
+        Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
 
         $extra = array(
             'product_category' => '1',
-            'identity_id' => '' . auth()->id() . '',
+            'identity_id' => auth()->id() . '',
             'identity_type' => 2,
             'terminal_type' => 3,
-            'terminal_id' => auth()->id(),
-            'user_ua' => 'Mozilla/5.0 (iPod touch; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257',
-            'result_url' => 'http://fmcg.com/order-buy'
+            'terminal_id' => auth()->id() . '',
+            'user_ua' => $request->server('HTTP_USER_AGENT'),
+            'result_url' => url('api/v1/pay/success-url')
         );
 
         $charge = Charge::create(
             array(
                 'subject' => 'Your Subject',
                 'body' => 'Your Body',
-                'amount' => 1,
+                'amount' => ($orders->pluck('price')->sum()) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
                 'extra' => $extra,
                 'channel' => 'yeepay_wap',
-               // 'client_ip' => $_SERVER['REMOTE_ADDR'],
-                'client_ip' => '125.71.162.123',
+                'client_ip' => $request->server('REMOTE_ADDR'),
+                'description' => $field,
                 'app' => array('id' => 'app_1mH8m59WrrDCHSqb')
             )
         )->__toArray(true);
         return $this->success($charge);
+    }
+
+    public function successUrl()
+    {
+        return redirect('dbdfmcg://pingppwappay?result=success');
     }
 
 }

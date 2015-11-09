@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class SystemTradeInfo extends Model
 {
     protected $table = 'system_trade_info';
@@ -25,4 +27,16 @@ class SystemTradeInfo extends Model
         'success_at',
         'notice_at'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::created(function ($model) {
+            $model->paid_at = Carbon::now();
+            $model->success_at = Carbon::now();
+        });
+    }
+
 }

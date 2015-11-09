@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\DataStatistics::class,
-        \App\Console\commands\SendPushToQueue::class,
+        \App\Console\Commands\SendPushToQueue::class,
     ];
 
     /**

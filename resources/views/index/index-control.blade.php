@@ -31,6 +31,9 @@
                         <li><a class="list-name" href="{{ url('shop') }}">商家</a></li>
                     @endif
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="right"><a href="{{ url('auth/logout') }}"><i class="fa fa-sign-out"></i> 退出</a></li>
+                </ul>
             </div>
         </div>
     </nav>

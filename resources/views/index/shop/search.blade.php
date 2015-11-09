@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="container dealer-index index search-page">
-        <div class="row sort">
+        <div class="row sort search-sort">
             @if (!empty(array_except($get , ['name', 'sort'])))
                 <div class="col-sm-12 a-menu-panel">
                     <div class="sort-item">
@@ -99,6 +99,8 @@
                     </div>
                 @endif
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-12">
                 <div class="tab-title clearfix">
                     <p class="pull-left sequence">

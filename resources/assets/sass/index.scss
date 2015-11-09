@@ -521,6 +521,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================index begin======================================*/
 .list-penal {
   .commodity {
+    margin-top: 10px;
     .commodity-img {
       width: 100%;
       display: inline-block;
@@ -935,7 +936,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       .commodity {
         @include square(90%);
       }
-
     }
     .detail-list-wrap {
       .store-name {
@@ -2065,6 +2065,14 @@ table {
       padding: 0 15px;
       &.active {
         background-color: $brand-primary;
+      }
+    }
+  }
+}
+.public-personal {
+  .search-list-item {
+    a {
+      &.active {
         color: $body-bg;
       }
     }
@@ -2072,7 +2080,7 @@ table {
 }
 
 .tab-title {
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   line-height: 40px;
   padding-right: 10px;
   border: 1px solid $gray-plain-light;
@@ -2099,6 +2107,9 @@ table {
   }
 }
 
+.store-tab-title{
+  margin-top:0;
+}
 /*======================================search end======================================*/
 /*======================================shopping-car begin======================================*/
 .audit-step-outs {

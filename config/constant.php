@@ -79,7 +79,7 @@ return [
         ],
         'pay_type' => [
             'yeepay' => 1,          //易宝
-            'alipay' => 2           //支付宝
+            'pingxx' => 2           //pingxx
         ],
         'pay_status' => [
             'success' => 1,         //成功
