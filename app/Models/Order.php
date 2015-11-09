@@ -42,7 +42,7 @@ class Order extends Model
         // 注册删除事件
         static::deleted(function ($model) {
             // 删除所有关联文件
-           $model->orderGoods()->delete();
+            $model->orderGoods()->delete();
         });
     }
 
@@ -95,8 +95,18 @@ class Order extends Model
      */
     public function goods()
     {
-        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('id','price',
+        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('id', 'price',
             'num', 'total_price');
+    }
+
+    /**
+     * 关联交易信息,仅在线支付成功后有对应信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function systemTradeInfo()
+    {
+        return $this->hasOne('App\Models\SystemTradeInfo', 'order_id', 'id');
     }
 
     /**

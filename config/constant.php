@@ -88,6 +88,10 @@ return [
         'trade_currency' => [
             'rmb' => 1,             //人民币
             'foreign_currency' => 2 //外币
+        ],
+        'is_finished' => [          //用户是否确认收货(在线支付)
+            'no' => 0,              //默认为未确认
+            'yes' => 1              //确认
         ]
     ],
     'feedback' => [               //反馈

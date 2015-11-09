@@ -16,10 +16,12 @@ class SystemTradeInfo extends Model
         'trade_no',
         'pay_status',
         'amount',
+        'is_finished',
         'target_fee',
         'trade_currency',
         'callback_type',
         'hmac',
+        'finished_at',
         'success_at',
         'notice_at'
     ];

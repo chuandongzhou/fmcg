@@ -35,7 +35,7 @@
                                 <th>手续费</th>
                                 <th>支付平台</th>
                                 <th>交易号</th>
-                                <th>交易时间</th>
+                                <th>完成时间</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +46,7 @@
                                     <td>{{ $trade->target_fee }}</td>
                                     <td>{{ cons()->valueLang('trade.pay_type')[$trade->pay_type] }}</td>
                                     <td>{{ $trade->trade_no }}</td>
-                                    <td>{{ $trade->success_at }}</td>
+                                    <td>{{ $trade->finished_at }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

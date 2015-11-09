@@ -11,9 +11,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\SystemTradeInfo;
+use App\Models\User;
 use App\Services\CartService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
@@ -186,18 +189,30 @@ class OrderController extends Controller
             cons('order.status.send'))->whereIn('id', $orderIds)->nonCancel()->get();
         $redis = Redis::connection();
 
-
         $orders->each(function ($model) use ($redis) {
-            $redisKey = 'push:seller:' . $model->shop->user->id;
 
-            $model->update([
-                'status' => cons('order.status.finished'),
-                'finished_at' => Carbon::now()
-            ]);
-            if (!$redis->exists($redisKey)) {
-                $redis->set($redisKey, '您的订单:' . $model->id . ',', cons()->lang('push_msg.finished'));
-                $redis->expire($redisKey, cons('push_time.msg_life'));
-            }
+            DB::transaction(function () use ($model, $redis) {
+                $model->update([
+                    'status' => cons('order.status.finished'),
+                    'finished_at' => Carbon::now()
+                ]);
+                //更新systemTradeInfo完成状态
+                $tradeModel = $model->systemTradeInfo;
+                $tradeModel->update([
+                    'is_finished' => cons('trade.is_finished.yes'),
+                    'finished_at' => Carbon::now()
+                ]);
+                //更新用户balance
+                $shopOwner = $model->shop->user;
+                $shopOwner->balance += $tradeModel->amount;
+                $shopOwner->save();
+                //通知卖家
+                $redisKey = 'push:seller:' . $shopOwner->id;
+                if (!$redis->exists($redisKey)) {
+                    $redis->set($redisKey, '您的订单:' . $model->id . ',' . cons()->lang('push_msg.finished'));
+                    $redis->expire($redisKey, cons('push_time.msg_life'));
+                }
+            });
         });
 
         return $this->success('操作成功');

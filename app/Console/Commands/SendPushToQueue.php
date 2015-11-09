@@ -36,11 +36,8 @@ class SendPushToQueue extends Command
      */
     public function handle()
     {
-        //遍历redis键,过期时间小于5分钟的放入推送列表
-        $targetUserIds = $this->redis->keys('push:user:*');
-        $targetSellerIds = $this->redis->keys('push:seller:*');
-        $targetWithdrawIds = $this->redis->keys('push:withdraw:*');
-        $ids = array_merge($targetUserIds, $targetSellerIds,$targetWithdrawIds);
+        //遍历redis键,过期时间小于5分钟的放入推送列表push:user:*,push:seller:*,push:withdraw:*
+        $ids = $this->redis->keys('push:*');
         if (!empty($ids)) {
             $whenPush = cons('push_time.when_push');
             foreach ($ids as $id) {
