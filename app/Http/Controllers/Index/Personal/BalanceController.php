@@ -19,8 +19,9 @@ class BalanceController extends Controller
         $startTime = isset($data['start_time']) && $data['start_time'] != '' ? $data['start_time'] : date('Y-m-d',
             strtotime('-1 month'));
         $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
-        $tradeInfo = SystemTradeInfo::select('trade_no', 'order_id','pay_type', 'type', 'amount', 'target_fee',
-            'finished_at')->where('account', auth()->user()->user_name)->where('is_finished',cons('trade.is_finished.yes'))->whereBetween('finished_at',
+        $tradeInfo = SystemTradeInfo::select('trade_no', 'order_id', 'pay_type', 'type', 'amount', 'target_fee',
+            'finished_at')->where('account', auth()->user()->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->whereBetween('finished_at',
             [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('finished_at', 'DESC')->paginate(30);
         $bankInfo = auth()->user()->userBanks;
 

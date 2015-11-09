@@ -296,8 +296,8 @@ class OrderController extends Controller
         $today = Carbon::today();
         $builder = Order::bySellerId($this->userId)->nonCancel();
 
-        for ($i = 6; $i >= 0; --$i) {
-            $start = $today->copy()->addDay(-$i);
+        for ($i = 6; $i >= 0; -- $i) {
+            $start = $today->copy()->addDay(- $i);
             $end = $start->copy()->endOfDay();
             $time = [$start, $end];
             $statistics['sevenDay'][] = [
@@ -465,6 +465,7 @@ class OrderController extends Controller
                     foreach ($successOrders as $successOrder) {
                         $successOrder->delete();
                     }
+
                     return $this->error('提交订单时遇到问题');
                 }
 
