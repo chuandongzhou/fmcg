@@ -461,7 +461,6 @@ class OrderController extends Controller
                         }
                     }
                 } else {
-                    //TODO: 跳转页面后期修改
                     foreach ($successOrders as $successOrder) {
                         $successOrder->delete();
                     }
@@ -470,7 +469,6 @@ class OrderController extends Controller
                 }
 
             } else {
-                //跳转页面后期修改
                 return $this->error('提交订单时遇到问题');
             }
         }
