@@ -101,6 +101,9 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     $router->get('/', function () {
         return view('api.index');
     });
+    $router->get('/pingxx', function () {
+        return view('api.pingxx');
+    });
 
     /**
      * v1 版本

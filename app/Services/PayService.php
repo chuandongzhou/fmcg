@@ -42,6 +42,7 @@ class PayService
                     'order_id' => $order->id,
                     'trade_no' => $tradeNo,
                     'amount' => $order->price - $fee,
+                    'paid_at' => Carbon::now()
                 ]
             );
             //增加系统交易信息
@@ -63,7 +64,7 @@ class PayService
                 'hmac' => $hmac,
                 'success_at' => Carbon::now(),
             ]);
-            return true;
         }
+        return true;
     }
 }

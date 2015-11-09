@@ -14,11 +14,11 @@
                         @if(auth()->user()->type == cons('user.type.wholesaler'))
                             <li>
                                 <a href="javascript:void(0)"
-                                   class="list-item {{ path_active(['order-buy*' , 'order-sell*']) }}"><i
+                                   class="list-item"><i
                                             class="fa fa-edit"></i> 订单管理</a>
                                 <ul class="menu-wrap">
-                                    <li><a href="{{ url('order-buy') }}"><span class=""></span>供应商</a></li>
-                                    <li><a href="{{ url('order-sell') }}"><span class=""></span>终端商</a></li>
+                                    <li><a href="{{ url('order-buy') }}"  class="{{ path_active('order-buy') }}"><span class=""></span>供应商</a></li>
+                                    <li><a href="{{ url('order-sell') }}"><span class=" {{ path_active( 'order-sell') }}"></span>终端商</a></li>
                                 </ul>
                             </li>
                             <li>

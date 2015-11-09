@@ -49,7 +49,7 @@ class PingxxController extends Controller
 
                 $orderInfo = $event->data->object;
 
-                $field = $orderInfo->description;
+                $field = $orderInfo->description; //
 
                 $orders = Order::where($field, $orderInfo->order_no)->get();
                 $amount = $orderInfo->amount;
