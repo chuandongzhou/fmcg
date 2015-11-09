@@ -28,8 +28,7 @@ class DataStatistics extends Command
         $monthAgo = $nowTime->copy()->subDays(30);
         // 活跃用户数
         $activeUser = User::select(DB::raw('count(*) as num,type'))->where('last_login_at', '>',
-            $monthAgo)->groupBy('type')->lists('num',
-            'type');
+            $monthAgo)->groupBy('type')->lists('num', 'type');
         $activeUserArr = [
             array_get($activeUser, array_get($userType, 'wholesalers'), 0),
             array_get($activeUser, array_get($userType, 'retailer'), 0),
@@ -38,8 +37,8 @@ class DataStatistics extends Command
 
         $dayAgo = $nowTime->copy()->subDay();
         //今日注册数
-        $regCount = User::select(DB::raw('count(*) as num,type'))->where('created_at', '>',
-            $dayAgo)->lists('num', 'type');
+        $regCount = User::select(DB::raw('count(*) as num,type'))->where('created_at', '>', $dayAgo)->lists('num',
+            'type');
 
         $wholesalersReg = array_get($regCount, array_get($userType, 'wholesalers'), 0);
         $supplierReg = array_get($regCount, array_get($userType, 'supplier'), 0);
