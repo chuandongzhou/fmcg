@@ -104,7 +104,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if ($shop->id == auth()->user()->shop->id)
-                        <li class="right"><a href="{{ url('order-sell') }}">控制台</a></li>
+                        <li class="right"><a href="{{ url('order-sell') }}">个人中心</a></li>
                     @else
                         <li class="right">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"

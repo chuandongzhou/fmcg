@@ -232,7 +232,7 @@ function menuFunc() {
     $('#menu-list .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
         $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().
-            children('.menu-down-wrap').css('display', 'none');
+        children('.menu-down-wrap').css('display', 'none');
         $(this).children('.menu-down-wrap').css('border', '1px solid #4cb9fe');
     })
 
@@ -443,15 +443,13 @@ function selectedFunc() {
 var numChange = function (num) {
     var incButton = $('.inc-num'),
         descButton = $('.desc-num'),
-        buyInput = incButton.siblings('.num'),
-        cartBtn = $('.add-to-cart');
+        buyInput = incButton.siblings('.num');
     var changeDescButton = function () {
         if (buyInput.val() <= num) {
             descButton.prop('disabled', true);
         } else {
             descButton.prop('disabled', false);
         }
-        cartBtn.data('data', {num: buyInput.val()});
     };
     incButton.on('click', '', function () {
         buyInput.val(parseInt(buyInput.val()) + 1);
@@ -599,13 +597,14 @@ function statisticsFunc() {
 function addGoodsFunc(cate1, cate2, cate3) {
     var checkedLimit = 5, goodsImgsWrap = $('.goods-imgs');
 
-    function loadImg(cate1, cate2, cate3) {
+    function loadImg(cate1, cate2, cate3, url) {
         var cate1 = cate1 || $('select[name="cate_level_1"]').val();
         var cate2 = cate2 || $('select[name="cate_level_2"]').val();
         var cate3 = cate3 || $('select[name="cate_level_3"]').val();
+        var url = url || site.api('my-goods/images');
 
         var attrs = $('.attrs');
-        var array = new Array(); //定义数组
+        var array = new Array();
         attrs.each(function () {
             var val = $(this).val();
             if (val > 0)
@@ -614,17 +613,23 @@ function addGoodsFunc(cate1, cate2, cate3) {
         var data = {
             'cate_level_1': cate1,
             'cate_level_2': cate2,
-            'cate_level_3': cate3,
-            'attrs': array
+            'cate_level_3': cate2 ? cate3 : '',
+            'attrs': array,
         };
-        $.get(site.api('my-goods/images'), data, function (data) {
-            var html = '', goodsImage = data['goodsImage'], imageBox = $('.load-img-wrap');
-            for (var index in goodsImage) {
-                html += '<div class="thumbnail col-xs-3 img-' + goodsImage[index]['id'] + '">';
-                html += '   <img alt="" src="' + goodsImage[index]['image_url'] + '" data-id="' + goodsImage[index]['id'] + '">';
+        $.get(url, data, function (data) {
+            var html = '', goodsImage = data['goodsImage'], goodsImageData = goodsImage['data'], imageBox = $('.load-img-wrap');
+            for (var index in goodsImageData) {
+                html += '<div class="thumbnail col-xs-3 img-' + goodsImageData[index]['id'] + '">';
+                html += '   <img alt="" src="' + goodsImageData[index]['image_url'] + '" data-id="' + goodsImageData[index]['id'] + '">';
                 html += '</div>';
             }
 
+            html += '<ul class="pager col-xs-12">';
+            if (goodsImage['prev_page_url'])
+                html += '     <li><a class="prev0 page" href="javascript:void(0)" data-url="' + goodsImage['prev_page_url'] + '">上一页</a></li>'
+            if (goodsImage['next_page_url'])
+                html += '     <li><a class="next0 page"  href="javascript:void(0)" data-url="' + goodsImage['next_page_url'] + '">下一页</a></li>'
+            html += '</ul>'
             imageBox.html(html);
         }, 'json');
     }
@@ -653,10 +658,14 @@ function addGoodsFunc(cate1, cate2, cate3) {
         })
     });
     $('select.categories').change(function () {
+        $('.attr').html('');
         loadImg()
     });
     $('.attr').on('change', '.attrs', function () {
         loadImg()
+    });
+    $('.load-img-wrap').on('click', '.page', function () {
+        loadImg(null, null, null, $(this).data('url'));
     });
     //促销
     $('input[name="is_promotion"]').change(function () {
@@ -686,14 +695,14 @@ function getWithdraw(total_amount) {
         }
     });
     $('#withdraw').on('change', 'select[name="bank"]', function () {
-        bank = $(this).find('option:selected').val();
-        if (bank) {
-            $('#withdraw').find('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
-        } else {
-            $('#withdraw').find('.btn-add').prop('disabled', false);
-        }
+            bank = $(this).find('option:selected').val();
+            if (bank) {
+                $('#withdraw').find('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+            } else {
+                $('#withdraw').find('.btn-add').prop('disabled', false);
+            }
 
-    })
+        })
         //清空输入数据以及提示信息
         .on('hidden.bs.modal', function (e) {
             $('input[name="amount"]').val('');

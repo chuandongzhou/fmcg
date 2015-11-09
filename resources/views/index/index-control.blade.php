@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a class="list-name" href="{{ url('/') }}">首页</a></li>
-                    @if(auth()->user()->type<=cons('user.type.wholesaler'))
+                    @if(auth()->user()->type <= cons('user.type.wholesaler'))
                         <li><a class="list-name" href="{{ url('shop') }}">商家</a></li>
                     @endif
                 </ul>

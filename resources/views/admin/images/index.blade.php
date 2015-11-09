@@ -33,16 +33,29 @@
             <div class="form-group ">
                 <div class="row col-lg-12 ">
                     <div class="col-sm-12 attr">
-
+                        @foreach($attrResult as $attr)
+                            <p class="items-item"><label>{{ $attr['name'] }}</label>
+                                <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
+                                    <option value="0">请选择</option>
+                                    @if (isset($attr['child']))
+                                        @foreach($attr['child'] as $key => $val)
+                                            <option value="{{ $key }}" {{ $key == $attrs[$attr['attr_id']] ? 'selected' : '' }} >{{ $val['name'] }}</option>
+                                        @endforeach
+                                    @endif
+                                </select></p>
+                        @endforeach
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-10">
                     @foreach($goodsImage as $id => $image)
-                        <div class="row shop-pictures">
+                        <div class="row goods-pictures">
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="thumbnail">
+                                    <span class="cate-name">
+                                        {{ $categories[$image['cate_level_1']] .($image['cate_level_2'] ? '>' . $categories[$image['cate_level_2']] : '' )  .($image['cate_level_3'] ? '>' . $categories[$image['cate_level_3']] : '' ) }}
+                                    </span>
                                     <a aria-label="Close" class="close btn ajax" type="button"
                                        data-url="{{ url('admin/images',[$image->id]) }}"
                                        data-method="delete">

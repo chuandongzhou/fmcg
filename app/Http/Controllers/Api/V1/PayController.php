@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
+use App\Models\SystemTradeInfo;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
@@ -16,6 +17,11 @@ use Pingpp\Pingpp;
 
 class PayController extends Controller
 {
+    public function __construct()
+    {
+        Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
+    }
+
     /**
      * 支付
      *
@@ -35,7 +41,7 @@ class PayController extends Controller
         //配置extra
 
         //Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
-        Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
+        // Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
 
         $extra = array(
             'product_category' => '1',
@@ -64,6 +70,28 @@ class PayController extends Controller
         return $this->success($charge);
     }
 
+    public function refundCharge(Request $request, $orderId)
+    {
+        $amount = $request->input('amount');
+        $order = Order::where('user_id', auth()->id())->find($orderId);
+
+        $tradeConf = cons('trade');
+        if (!$order || $order->pay_type != cons('pay_type.online') || $order->pay_status != $tradeConf['pay_status']['success']) {
+            return $this->error('订单不存在');
+        }
+        $tradeId = SystemTradeInfo::where('order_id', $orderId)->select([
+            'pay_type',
+            'amount',
+            'charge_id'
+        ])->first();
+        dd($tradeId);
+    }
+
+    /**
+     * 移动端页面跳转
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function successUrl()
     {
         return redirect('dbdfmcg://pingppwappay?result=success');

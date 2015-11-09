@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use App\Models\Images;
+use App\Services\AttrService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,38 +12,32 @@ use App\Http\Requests;
 class ImagesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 图片列表
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request)
     {
-        // TODO: 查询是需要返回标签
-        /*$attrs = $goods->attrs;
-        $attrIds = array_keys($attrs);
-        $attrResults = Attr::select(['id', 'pid', 'name'])
-            ->whereIn('id', $attrIds)
-            ->orWhere(function ($query) use ($attrIds) {
-                $query->whereIn('pid', $attrIds);
-            })->get()->toArray();
-        $attrResults = (new AttrService($attrResults))->format();*/
-        // TODO 以上代码可能会用到
         $cate = array_filter($request->only('cate_level_1', 'cate_level_2', 'cate_level_3'));
         $attrs = $request->input('attrs');
-
+        $attrResults = [];
         if ($cate) {
-            $goodsImage = Images::where($cate);
-            if($attrs){
+            //获取标签
+            $attrResults = (new AttrService())->getAttrByCategoryId(max($cate));
+
+            $goodsImage = Images::with('image')->where($cate);
+            if (array_filter((array)$attrs)) {
                 $goodsImage = $goodsImage->ofAttr(array_filter($attrs));
             }
             $goodsImage = $goodsImage->paginate();
-        }
-        else {
+        } else {
             $cate['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
-            $goodsImage =  Images::where('cate_level_1' , $cate['cate_level_1'])->paginate();
+            $goodsImage = Images::with('image')->where('cate_level_1', $cate['cate_level_1'])->paginate();
         }
 
-        return view('admin.images.index', ['search' => $cate, 'goodsImage' => $goodsImage]);
+        return view('admin.images.index',
+            ['search' => $cate, 'goodsImage' => $goodsImage, 'attrs' => $attrs, 'attrResult' => $attrResults, 'categories' => Category::lists('name' , 'id')]);
     }
 
     /**

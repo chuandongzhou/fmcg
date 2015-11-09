@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         /**
-         * 验证订单
+         * 验证在线付款订单
          */
         $gate->define('validate-online-orders', function ($user, $orders) {
             if ($orders instanceof Order) {
@@ -83,5 +83,6 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+
     }
 }

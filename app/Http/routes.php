@@ -160,6 +160,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //获取支付charge
 
         $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
+        $router->get('pay/refund-charge/{order_id}', 'PayController@refundCharge')->where('order_id', '[0-9]+');
         $router->get('pay/success-url', 'PayController@successUrl');
     });
 });

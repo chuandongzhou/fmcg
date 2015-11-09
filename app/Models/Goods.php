@@ -268,8 +268,17 @@ class Goods extends Model
      */
     public function setImagesAttribute($images)
     {
-        $this->images()->detach();
-        $this->images()->sync($images);
+        if ($this->exists) {
+            $this->images()->detach();
+            $this->images()->sync($images);
+        }else {
+            static::created(function ($model) use ($images) {
+                $model->images()->detach();
+                $model->images()->sync($images);
+            });
+        }
+
+
         /*//格式化图片数组
         $imagesArr = (new ImageUploadService($images))->formatImagePost();
         //删除的图片

@@ -1489,8 +1489,10 @@ table .product-name {
     display: inline-block;
     padding: 0 15px; }
     .search-page .search-list-item a.active {
-      background-color: #4cb9fe;
-      color: #fff; }
+      background-color: #4cb9fe; }
+
+.public-personal .search-list-item a.active {
+  color: #fff; }
 
 .tab-title {
   margin: 20px 0 10px 0;

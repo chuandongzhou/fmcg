@@ -51,17 +51,23 @@ class PingxxController extends Controller
 
                 $field = $orderInfo->description; //
 
+                $chargeId = $orderInfo->id;
+
                 $orders = Order::where($field, $orderInfo->order_no)->get();
-                $amount = $orderInfo->amount;
+                $amount = $orderInfo->amount / 100; //单位为分
                 //TODO: 订单手续费
-                $orderFee = $amount - $orderInfo->amount_settle;
+                $orderFee = sprintf("%.2f", $amount * 3 / 1000);
                 $tradeNo = $orderInfo->transaction_no;
 
                 //修改订单状态以及添加交易信息
-                (new PayService)->addTradeInfo($orders, $amount, $orderFee,'pingxx', $tradeNo);
 
-
-                header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                $result = (new PayService)->addTradeInfo($orders, $amount, $orderFee, $tradeNo, 'pingxx', '',
+                    $chargeId);
+                if ($result) {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                } else {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+                }
                 break;
             case "refund.succeeded":
                 // 开发者在此处加入对退款异步通知的处理代码

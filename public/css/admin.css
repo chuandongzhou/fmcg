@@ -105,3 +105,13 @@
   margin-bottom: 50px; }
 
 /*========================登录结束 ==========================*/
+/*======================商品图片开始 ========================*/
+.goods-pictures .cate-name {
+  display: inline-block;
+  width: 80%;
+  padding: 7px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+/*======================商品图片结束 ========================*/

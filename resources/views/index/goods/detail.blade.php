@@ -54,8 +54,7 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
-                                   class="btn btn-primary ajax add-to-cart"
-                                   data-method="post" data-data='{"num" : {{ $goods->min_num }}}'>加入购物车</a>
+                                   class="btn btn-primary add-to-cart">加入购物车</a>
 
                                 <a href="javascript:void(0)" data-type="goods" data-method="post"
                                    class="btn btn-default btn-like" data-id="{{ $goods->id }}">

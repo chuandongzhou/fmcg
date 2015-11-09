@@ -85,7 +85,7 @@
                         <a href="{{ url($url . '/' . $item->id) }}">
                             <img class="commodity-img" src="{{  $item->image_url }}">
                         </a>
-                        <span class="prompt @if($item->is_out) 'lack'  @elseif($item->is_promotion) 'promotions' @elseif($item->is_new) 'new-listing' @endif  new-listing"></span>
+                        <span class="@if($item->is_out) 'prompt lack'  @elseif($item->is_promotion) 'prompt promotions' @elseif($item->is_new) 'prompt new-listing' @endif"></span>
 
                     </div>
                     <div class="content-panel">
