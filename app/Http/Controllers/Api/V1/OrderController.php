@@ -518,18 +518,22 @@ class OrderController extends Controller
         if (!$pivot || $pivot->order_id != $order->id) {
             $this->error('操作失败');
         }
-        $oldTotalPrice = $pivot->total_price;
-        $newTotalPrice = $pivot->num * $price;
-        $pivot->update(['price' => $price, 'total_price' => $newTotalPrice]);
-        $order->update(['price' => $order->price - $oldTotalPrice + $newTotalPrice]);
-        //通知买家订单价格发生了变化
-        $redis = Redis::connection();
-        $redisKey = 'push:user:' . $order->user_id;
-        if (!$redis->exists($redisKey)) {
-            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed'));
-            $redis->expire($redisKey, cons('push_time.msg_life'));
-        }
+        $flag = DB::transaction(function () use ($pivot, $order, $price) {
+            $oldTotalPrice = $pivot->total_price;
+            $newTotalPrice = $pivot->num * $price;
+            $pivot->update(['price' => $price, 'total_price' => $newTotalPrice]);
+            $order->update(['price' => $order->price - $oldTotalPrice + $newTotalPrice]);
+            //通知买家订单价格发生了变化
+            $redis = Redis::connection();
+            $redisKey = 'push:user:' . $order->user_id;
+            if (!$redis->exists($redisKey)) {
+                $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed'));
+                $redis->expire($redisKey, cons('push_time.msg_life'));
+            }
 
-        return $this->success('修改成功');
+            return true;
+        });
+
+        return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
 }
