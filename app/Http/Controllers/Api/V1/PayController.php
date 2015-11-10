@@ -31,11 +31,12 @@ class PayController extends Controller
      */
     public function charge(Request $request, $orderId)
     {
-        $field = $request->input('type') == 'all' ? 'pid' : 'id';
+        $type = $request->input('type');
+        $field = $type == 'all' ? 'pid' : 'id';
         $orders = Order::where($field, $orderId)->get();
 
         if (Gate::denies('validate-online-orders', $orders)) {
-            return redirect('order-buy');
+            return $this->error('获取失败，请重试');
         }
 
         //配置extra
@@ -55,15 +56,15 @@ class PayController extends Controller
 
         $charge = Charge::create(
             array(
-                'subject' => 'Your Subject',
-                'body' => 'Your Body',
+                'subject' => '成都订百达科技有限公司',
+                'body' => $orders->implode(''),
                 'amount' => ($orders->pluck('price')->sum()) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
                 'extra' => $extra,
                 'channel' => 'yeepay_wap',
                 'client_ip' => $request->server('REMOTE_ADDR'),
-                'description' => $field,
+                'description' => $type,
                 'app' => array('id' => 'app_1mH8m59WrrDCHSqb')
             )
         )->__toArray(true);

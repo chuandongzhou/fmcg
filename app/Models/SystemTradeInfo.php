@@ -32,8 +32,7 @@ class SystemTradeInfo extends Model
     {
         parent::boot();
 
-        // 注册删除事件
-        static::created(function ($model) {
+        static::creating(function ($model) {
             $model->paid_at = Carbon::now();
             $model->success_at = Carbon::now();
         });

@@ -8,8 +8,6 @@ use App\Http\Requests;
 
 class ShopController extends Controller
 {
-    protected $shopId = 1;
-
     /**
      * 商家信息
      *
@@ -21,7 +19,6 @@ class ShopController extends Controller
         $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
-
         return view('index.personal.shop', ['shop' => $shop, 'coordinates' => $coordinate->toJson()]);
     }
 

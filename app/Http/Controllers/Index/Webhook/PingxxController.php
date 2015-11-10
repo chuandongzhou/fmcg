@@ -29,9 +29,6 @@ class PingxxController extends Controller
         // 验证 webhooks 签名
         $result = verify_signature($raw_data, $signature, $pub_key_path);
 
-        info($result);
-
-
         if ($result !== 1) {
             return $this->error('verification failed');
         }
@@ -46,10 +43,9 @@ class PingxxController extends Controller
         switch ($event->type) {
             case "charge.succeeded":
                 // 开发者在此处加入对支付异步通知的处理代码
-
                 $orderInfo = $event->data->object;
-
-                $field = $orderInfo->description; //
+                $type = $orderInfo->description;
+                $field = $type == 'all' ? 'pid' : 'id';
 
                 $chargeId = $orderInfo->id;
 

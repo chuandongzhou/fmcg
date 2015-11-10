@@ -28,7 +28,7 @@
                 <tr>
                     <td>总用户数</td>
                     <td>{{ array_get($totleUser, cons('user.type.supplier'), 0) }}</td>
-                    <td>{{ array_get($totleUser, cons('user.type.wholesalers'), 0) }}</td>
+                    <td>{{ array_get($totleUser, cons('user.type.wholesaler'), 0) }}</td>
                     <td>{{ array_get($totleUser, cons('user.type.retailer'), 0) }}</td>
                     <td>{{ array_sum($totleUser->toArray()) }}</td>
                 </tr>

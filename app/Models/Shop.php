@@ -327,6 +327,7 @@ class Shop extends Model
      */
     public function setMobileImagesAttribute($images)
     {
+
         if (!empty($images)) {
             return $this->associateFiles($images, 'files', cons('shop.file_type.images'), false);
         }
@@ -336,6 +337,8 @@ class Shop extends Model
 
 
     /**
+     * 设置店铺地址信息
+     *
      * @param $address
      * @return bool
      */

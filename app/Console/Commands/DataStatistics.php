@@ -40,7 +40,7 @@ class DataStatistics extends Command
         $regCount = User::select(DB::raw('count(*) as num,type'))->where('created_at', '>', $dayAgo)->lists('num',
             'type');
 
-        $wholesalersReg = array_get($regCount, array_get($userType, 'wholesalers'), 0);
+        $wholesalersReg = array_get($regCount, array_get($userType, 'wholesaler'), 0);
         $supplierReg = array_get($regCount, array_get($userType, 'supplier'), 0);
         $retailerReg = array_get($regCount, array_get($userType, 'retailer'), 0);
 
