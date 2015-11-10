@@ -42,7 +42,7 @@ class OrderController extends Controller
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
         }
-        $confirmedGoods = auth()->user()->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
+        $confirmedGoods = $this->user->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
 
         $carts = $confirmedGoods->with('goods')->get();
 
@@ -67,10 +67,10 @@ class OrderController extends Controller
      */
     public function getConfirmOrder()
     {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $carts = $this->user->carts()->where('status', 1)->with('goods')->get();
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
-        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
+        $shippingAddress = $this->user->shippingAddress()->with('address')->get();
 
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
@@ -84,9 +84,7 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-        $user = auth()->user();
-
-        $carts = $user->carts()->where('status', 1)->with('goods')->get();
+        $carts = $this->user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
             return redirect()->back()->withInput();
         }
@@ -128,7 +126,7 @@ class OrderController extends Controller
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
                 'pid' => $pid,
-                'user_id' => auth()->user()->id,
+                'user_id' => $this->user->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
@@ -161,7 +159,6 @@ class OrderController extends Controller
                         }
                     }
                 } else {
-                    //TODO: 跳转页面后期修改
                     foreach ($successOrders as $successOrder) {
                         $successOrder->delete();
                     }
@@ -176,7 +173,7 @@ class OrderController extends Controller
         }
 
         // 删除购物车
-        $user->carts()->where('status', 1)->delete();
+        $this->user->carts()->where('status', 1)->delete();
 
         $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
             . $onlinePaymentOrder[0]);
@@ -184,15 +181,6 @@ class OrderController extends Controller
         $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
 
         return redirect($redirectUrl);
-
-        //TODO:支付成功后加入提示信息
-        /*  //在线支付成功通知卖家发货
-        $redisKey = 'push:seller:' . $shop->user()->id;
-        if (!$redis->exists($redisKey)) {
-            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
-            $redis->expire($redisKey, cons('push_time.msg_life'));
-        }*/
-
     }
 
     public function getFinishOrder(Request $request)

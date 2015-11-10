@@ -40,20 +40,17 @@
 
         </div>
         <div class="form-group">
-            <label class="col-sm-1 control-label" for="username"></label>
+            <label class="col-sm-1 control-label"></label>
 
-            <div class="col-sm-10 col-md-6">
-                <div class="progress collapse">
-                    <div class="progress-bar progress-bar-striped active"></div>
-                </div>
-                            <span data-name="image" class="btn btn-primary btn-sm fileinput-button">
-                                请选择图片文件
-                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
-                                       name="file">
-                            </span>
+            <div class="col-sm-10">
+                <button data-height="400" data-width="400" data-target="#cropperModal" data-toggle="modal"
+                        data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
+                        id="pic-upload">
+                    请选择图片文件
+                </button>
 
-                <div class="image-preview w160">
-                    <img src="" class="img-thumbnail">
+                <div class="row pictures">
+
                 </div>
             </div>
         </div>
@@ -75,6 +72,7 @@
             getCategory(site.api('categories'));
             getAllCategory(site.api('categories'), '{{ $search }}');
             getAttr();
+            picFunc();
         });
     </script>
 @stop

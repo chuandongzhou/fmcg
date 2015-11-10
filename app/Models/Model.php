@@ -30,7 +30,7 @@ class Model extends Eloquent
      * @param int|string|\SplFileInfo $file
      * @return null|\App\Models\File
      */
-    protected function convertToFile($file)
+    public function convertToFile($file)
     {
         if (empty($file)) {
             return null;

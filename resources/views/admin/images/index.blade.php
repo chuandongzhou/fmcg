@@ -49,8 +49,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-10">
-                    @foreach($goodsImage as $id => $image)
                         <div class="row goods-pictures">
+                            @foreach($goodsImage as $id => $image)
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="thumbnail">
                                     <span class="cate-name">

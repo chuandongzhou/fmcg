@@ -14,7 +14,22 @@ class Images extends Model
         'image'
     ];
     public $appends = ['image_url'];
-    public $hidden = ['image' , 'created_at', 'updated_at'];
+    public $hidden = ['image', 'created_at', 'updated_at'];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            // 删除所有关联文件
+            $model->image() && $model->image()->delete();
+            $model->attrs()->detach();
+        });
+    }
 
     /**
      * 关联文件表

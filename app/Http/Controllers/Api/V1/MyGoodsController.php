@@ -150,7 +150,7 @@ class MyGoodsController extends Controller
 
         $attrs = $request->input('attrs');
 
-        $goodsImage = Images::where($cate);
+        $goodsImage = Images::where($cate)->with('image');
         if ($attrs) {
             $goodsImage = $goodsImage->ofAttr($attrs);
         }
@@ -209,7 +209,7 @@ class MyGoodsController extends Controller
         foreach ($attrs as $pid => $id) {
             $attrArr[$id] = ['attr_pid' => $pid];
         }
-        if (!empty($attrArr)) { 
+        if (!empty($attrArr)) {
             $model->attr()->sync($attrArr);
         }
     }

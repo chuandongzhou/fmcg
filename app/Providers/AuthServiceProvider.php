@@ -26,14 +26,23 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $post->user_id;
         });
 
+        /**
+         * 要显示的商品
+         */
         $gate->define('validate-goods', function ($user, $goods) {
             return $user->type < $goods->user_type && $goods->status == cons('status.on');
         });
 
+        /**
+         * 我的商品
+         */
         $gate->define('validate-my-goods', function ($user, $goods) {
             return $user->type == $goods->user_type;
         });
 
+        /**
+         * 我的商店
+         */
         $gate->define('validate-shop', function ($user, $shop) {
             return $user->shop->id === $shop->id;
         });

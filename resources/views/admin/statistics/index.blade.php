@@ -12,7 +12,7 @@
             <a href="#home" data-toggle="tab">活跃统计</a>
         </li>
         <li><a href="#data" data-toggle="tab">当日数据统计</a></li>
-        <li><a href="#order" data-toggle="tab">当日订单统计</a></li>
+        {{--<li><a href="#order" data-toggle="tab">当日订单统计</a></li>--}}
 
     </ul>
     <div id="myTabContent" class="tab-content">
@@ -101,8 +101,8 @@
                 </tr>
             </table>
         </div>
-        <div class="tab-pane fade" id="order">
-            <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
-        </div>
+        {{--<div class="tab-pane fade" id="order">--}}
+            {{--<p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>--}}
+        {{--</div>--}}
     </div>
 @stop

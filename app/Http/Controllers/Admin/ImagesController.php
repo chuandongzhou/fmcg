@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Models\Images;
 use App\Services\AttrService;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -37,7 +38,13 @@ class ImagesController extends Controller
         }
 
         return view('admin.images.index',
-            ['search' => $cate, 'goodsImage' => $goodsImage, 'attrs' => $attrs, 'attrResult' => $attrResults, 'categories' => Category::lists('name' , 'id')]);
+            [
+                'search' => $cate,
+                'goodsImage' => $goodsImage,
+                'attrs' => $attrs,
+                'attrResult' => $attrResults,
+                'categories' => Category::lists('name', 'id')
+            ]);
     }
 
     /**
@@ -59,17 +66,29 @@ class ImagesController extends Controller
      */
     public function store(Requests\Admin\CreateGoodsImagesRequest $request)
     {
-        $attributes = $request->except('attrs');
 
-        $images = Images::create($attributes);
-        if ($images->exists) {
-            $attrs = $request->input('attrs');
-            $images->attrs()->detach();
-            $images->attrs()->sync($attrs);
-            return $this->success('添加图片成功');
+        $images = $request->input('images');
+
+        $images = (new ImageUploadService($images))->formatImagePost();
+
+
+        $attributes = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3']);
+        foreach ($images as $item) {
+            $image = Images::create($attributes);
+            if ($image->exists) {
+                $attrs = $request->input('attrs');
+                $image->attrs()->detach();
+                if (!empty($attrs)) {
+                    $image->attrs()->sync(array_filter($attrs));
+                }
+
+                $image->associateFile($image->convertToFile($item['path']), 'image', cons('shop.file_type.logo'));
+            } else {
+                return $this->error('添加图片时遇到错误');
+            }
         }
+        return $this->success('添加图片成功');
 
-        return $this->error('添加图片时遇到错误');
     }
 
     /**

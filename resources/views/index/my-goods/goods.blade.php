@@ -208,8 +208,6 @@
         $(document).ready(function(){
             getCoordinateMap({!! $coordinates or '' !!});
         });
-
-
         //上传图片处理
         picFunc();
         //获取下级分类
@@ -221,13 +219,9 @@
                 '{{ $goods->cate_level_2 }}',
                 '{{ $goods->cate_level_3 }}'
         );
-
         //获取分类
         getAttr();
-
         addGoodsFunc( '{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}' );
-
-
 
     </script>
 @stop
