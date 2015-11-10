@@ -34,8 +34,8 @@ class OrderSellController extends OrderController
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
 
-        $data['nonSend'] = Order::bySellerId($this->userId)->nonSend()->count();//待发货
-        $data['pendingCollection'] = Order::bySellerId($this->userId)->getPayment()->count();//待收款（针对货到付款）
+        $data['nonSend'] = Order::bySellerId($this->user->id)->nonSend()->count();//待发货
+        $data['pendingCollection'] = Order::bySellerId($this->user->id)->getPayment()->count();//待收款（针对货到付款）
 
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
@@ -43,7 +43,7 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId($this->userId)->with('user.shop', 'goods');
+        $query = Order::bySellerId($this->user->id)->with('user.shop', 'goods');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -71,7 +71,7 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $detail = Order::bySellerId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
+        $detail = Order::bySellerId($this->user->id)->with('shippingAddress', 'user', 'shop.user', 'goods',
             'shippingAddress.address')->find(intval($request->input('order_id')));
         if (!$detail) {
             return $this->error('订单不存在');
@@ -99,7 +99,7 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $res = Order::with('shippingAddress', 'shippingAddress.address',
-            'goods')->bySellerId($this->userId)->where('status', cons('order.status.send'))->whereIn('id',
+            'goods')->bySellerId($this->user->id)->where('status', cons('order.status.send'))->whereIn('id',
             $orderIds)->get()->toArray();
         if (empty($res)) {
             return $this->error('没有该订单信息');

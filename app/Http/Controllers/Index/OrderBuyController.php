@@ -34,8 +34,8 @@ class OrderBuyController extends OrderController
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
-        $data['nonPayment'] = Order::ofBuy($this->userId)->nonPayment()->count();//待付款
-        $data['nonArrived'] = Order::ofBuy($this->userId)->nonArrived()->count();//待收货
+        $data['nonPayment'] = Order::ofBuy($this->user->id)->nonPayment()->count();//待付款
+        $data['nonArrived'] = Order::ofBuy($this->user->id)->nonArrived()->count();//待收货
 
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
@@ -43,7 +43,7 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::ofBuy($this->userId)->with('shop.user', 'goods')->orderBy('id', 'desc');
+        $query = Order::ofBuy($this->user->id)->with('shop.user', 'goods')->orderBy('id', 'desc');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -67,7 +67,7 @@ class OrderBuyController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $detail = Order::where('user_id', $this->userId)->with('user', 'shippingAddress', 'shop', 'goods',
+        $detail = Order::where('user_id', $this->user->id)->with('user', 'shippingAddress', 'shop', 'goods',
             'goods.images', 'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
         if (!$detail) {
             return $this->error('订单不存在');

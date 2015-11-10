@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\PushOrderMsg;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Redis\Database as Redis;
 
 class SendPushToQueue extends Command
 {
@@ -19,14 +19,14 @@ class SendPushToQueue extends Command
 
 
     /**
-     * Create a new command instance.
+     * SendPushToQueue constructor.
      *
-     * @param \Illuminate\Support\Facades\Redis $redis
+     * @param \Illuminate\Redis\Database $redis
      */
     public function __construct(Redis $redis)
     {
         parent::__construct();
-        $this->redis = $redis;
+        $this->redis = $redis->connection();
     }
 
     /**

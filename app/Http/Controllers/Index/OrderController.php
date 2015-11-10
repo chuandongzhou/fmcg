@@ -15,18 +15,12 @@ use Gate;
 
 class OrderController extends Controller
 {
-    public $userId;//用户ID
-    public $userType;//用户类型
+    public $user;
 
 
     public function __construct()
     {
-        $this->userId = auth()->user()->id;
-        $this->userType = auth()->user()->type;
-        session(['id' => $this->userId]);
-        session(['type' => $this->userType]);
-        session('shop_id') ?: session(['shop_id' => auth()->user()->shop->id]);
-
+        $this->user = auth()->user();
     }
 
 
@@ -171,6 +165,7 @@ class OrderController extends Controller
                     foreach ($successOrders as $successOrder) {
                         $successOrder->delete();
                     }
+
                     return redirect('cart');
                 }
 
@@ -183,7 +178,8 @@ class OrderController extends Controller
         // 删除购物车
         $user->carts()->where('status', 1)->delete();
 
-        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id=' . $onlinePaymentOrder[0]);
+        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
+            . $onlinePaymentOrder[0]);
 
         $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
 
@@ -214,6 +210,7 @@ class OrderController extends Controller
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
+
         return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
     }
 
@@ -227,7 +224,7 @@ class OrderController extends Controller
     {
         //订单对象类型
         $objType = cons()->valueLang('user.type');
-        array_forget($objType, $this->userType);
+        array_forget($objType, $this->user->type);
         //支付类型
         $payType = cons()->valueLang('pay_type');
         //查询条件判断
@@ -273,8 +270,8 @@ class OrderController extends Controller
      */
     private function _inputName($objType)
     {
-        if ($this->userType == cons('user.type.retailer')
-            || ($this->userType == cons('user.type.wholesaler')
+        if ($this->user->type == cons('user.type.retailer')
+            || ($this->user->type == cons('user.type.wholesaler')
                 && $objType == cons('user.type.supplier'))
         ) {
             return '卖家名称';
@@ -338,14 +335,14 @@ class OrderController extends Controller
             }
         });
         //查询买家
-        if (!empty($search['obj_type']) && $search['obj_type'] < $this->userId) {
+        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->id) {
             $query->wherehas('user', function ($q) use ($search) {
                 $q->where('type', intval($search['obj_type']));
             });
         }
 
         //查询卖家
-        if (!empty($search['obj_type']) && $search['obj_type'] > $this->userId) {
+        if (!empty($search['obj_type']) && $search['obj_type'] > $this->user->id) {
             $query->wherehas('shop.user', function ($q) use ($search) {
                 $q->where('type', intval($search['obj_type']));
             });
@@ -362,7 +359,7 @@ class OrderController extends Controller
             });
         }
         if (!empty($search['user_name'])) {
-            if ($this->userType == cons('user.type.retailer')
+            if ($this->user->type == cons('user.type.retailer')
                 || (isset($search['action_type'])
                     && $search['action_type'] == 'sell')
             ) {
@@ -451,7 +448,7 @@ class OrderController extends Controller
         $redis = Redis::connection();
 
         foreach (['user', 'seller', 'withdraw'] as $item) {
-            $key = 'push:' . $item . ':' . $this->userId;
+            $key = 'push:' . $item . ':' . $this->user->id;
             if ($redis->exists($key)) {
                 $content = $redis->get($key);
                 $redis->del($key);

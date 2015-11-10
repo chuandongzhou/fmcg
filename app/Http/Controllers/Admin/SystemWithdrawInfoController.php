@@ -59,7 +59,7 @@ class SystemWithdrawInfoController extends Controller
         $withdrawId = intval($request->input('withdraw_id'));
         $item = Withdraw::where('status', cons('withdraw.review'))->find($withdrawId);
         if ($item) {
-            $item->update(['status' => cons('withdraw.pass'), 'pass_at' => Carbon::now()]);
+            $item->fill(['status' => cons('withdraw.pass'), 'pass_at' => Carbon::now()])->save();
 
             return $this->success('操作成功');
         }
@@ -78,11 +78,11 @@ class SystemWithdrawInfoController extends Controller
         $data = $request->all();
         $item = Withdraw::where('status', cons('withdraw.pass'))->find(intval($data['withdraw_id']));
         if ($item) {
-            $item->update([
+            $item->fill([
                 'status' => cons('withdraw.payment'),
                 'payment_at' => Carbon::now(),
                 'trade_no' => trim($data['trade_no'])
-            ]);
+            ])->save();
             //启动通知
             $this->_pushMsg($item->user_id, $item->id, 'review_payment');
 
@@ -103,11 +103,11 @@ class SystemWithdrawInfoController extends Controller
         $data = $request->all();
         $item = Withdraw::where('status', cons('withdraw.review'))->find(intval($data['withdraw_id']));
         if ($item) {
-            $item->update([
+            $item->fill([
                 'status' => cons('withdraw.failed'),
                 'failed_at' => Carbon::now(),
                 'reason' => trim($data['reason'])
-            ]);
+            ])->save();
             //返还扣掉的钱
             $user = User::find($item->user_id);
             $user->balance = $user->balance + $item->amount;

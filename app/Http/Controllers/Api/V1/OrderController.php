@@ -11,8 +11,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
-use App\Models\SystemTradeInfo;
-use App\Models\User;
 use App\Services\CartService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,11 +19,11 @@ use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
 {
-    private $userId;
+    private $user;
 
     public function __construct()
     {
-        $this->userId = auth()->id();
+        $this->user = auth()->user();
     }
 
     /**
@@ -35,7 +33,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::where('user_id', $this->userId)->with('shop.user', 'goods')->orderBy('id',
+        $orders = Order::where('user_id', $this->user->id)->with('shop.user', 'goods')->orderBy('id',
             'desc')->paginate()->toArray();
 
         return $this->success($orders);
@@ -48,7 +46,7 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        $orders = Order::ofBuy($this->userId)->nonPayment()->paginate()->toArray();
+        $orders = Order::ofBuy($this->user->id)->nonPayment()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -61,7 +59,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->userId)->nonArrived()->paginate()->toArray();
+        $orders = Order::ofBuy($this->user->id)->nonArrived()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -75,7 +73,7 @@ class OrderController extends Controller
      */
     public function getDetailOfBuy(Request $request)
     {
-        $detail = Order::where('user_id', $this->userId)->with('shippingAddress', 'goods', 'goods.images',
+        $detail = Order::where('user_id', $this->user->id)->with('shippingAddress', 'goods', 'goods.images',
             'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
 
         return $detail ? $this->success($detail) : $this->error('订单不存在');
@@ -88,7 +86,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->userId)->with('user', 'goods')->orderBy('id', 'desc')->where('is_cancel',
+        $orders = Order::bySellerId($this->user->id)->with('user', 'goods')->orderBy('id', 'desc')->where('is_cancel',
             cons('order.is_cancel.off'))->paginate()->toArray();
 
         return $this->success($orders);
@@ -101,7 +99,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->userId)->nonSend()->paginate()->toArray();
+        $orders = Order::ofSell($this->user->id)->nonSend()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -113,7 +111,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell($this->userId)->getPayment()->paginate()->toArray();
+        $orders = Order::ofSell($this->user->id)->getPayment()->paginate()->toArray();
 
         return $this->success($orders);
     }
@@ -128,9 +126,9 @@ class OrderController extends Controller
 
     public function getDetailOfSell(Request $request)
     {
-        $id = $request->input('order_id');
-        $detail = Order::bySellerId($this->userId)->with('shippingAddress', 'user', 'shop.user', 'goods',
-            'shippingAddress.address')->find($id);
+        $orderId = $request->input('order_id');
+        $detail = Order::bySellerId($this->user->id)->with('shippingAddress', 'user', 'shop.user', 'goods',
+            'shippingAddress.address')->find($orderId);
 
         return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
     }
@@ -146,31 +144,31 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $orders = Order::where(function ($query) {
             $query->wherehas('shop.user', function ($query) {
-                $query->where('id', $this->userId);
-            })->orWhere('user_id', $this->userId);
+                $query->where('id', $this->user->id);
+            })->orWhere('user_id', $this->user->id);
         })->where('status', cons('order.status.non_send'))->where('pay_status',
             cons('order.pay_status.non_payment'))->whereIn('id', $orderIds)->nonCancel()->get();
         $redis = Redis::connection();
-        $orders->each(function ($model) use ($redis) {
-            $model->update([
+        foreach ($orders as $order) {
+            $order->forceFill([
                 'is_cancel' => cons('order.is_cancel.on'),
-                'cancel_by' => $this->userId,
+                'cancel_by' => $this->user->id,
                 'cancel_at' => Carbon::now()
-            ]);
+            ])->save();
             //推送通知
-            if ($model->user_id == $this->userId) {
-                $redisKey = 'push:seller:' . $model->shop->user->id;
+            if ($order->user_id == $this->user->id) {
+                $redisKey = 'push:seller:' . $order->shop->user->id;
                 $msg = 'buyer';
             } else {
-                $redisKey = 'push:user:' . $model->user_id;
+                $redisKey = 'push:user:' . $order->user_id;
                 $msg = 'seller';
             }
 
             if (!$redis->exists($redisKey)) {
-                $redis->set($redisKey, '订单:' . $model->id . cons()->lang('push_msg.cancel_by_' . $msg));
+                $redis->set($redisKey, '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg));
                 $redis->expire($redisKey, cons('push_time.msg_life'));
             }
-        });
+        }
 
         return $this->success('取消成功');
     }
@@ -184,36 +182,34 @@ class OrderController extends Controller
     public function putBatchFinishOfBuy(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where('user_id', $this->userId)->where('pay_type',
+        $orders = Order::where('user_id', $this->user->id)->where('pay_type',
             cons('pay_type.online'))->where('pay_status', cons('order.pay_status.payment_success'))->where('status',
             cons('order.status.send'))->whereIn('id', $orderIds)->nonCancel()->get();
         $redis = Redis::connection();
-
-        $orders->each(function ($model) use ($redis) {
-
-            DB::transaction(function () use ($model, $redis) {
-                $model->update([
+        foreach ($orders as $order) {
+            DB::transaction(function () use ($order, $redis) {
+                $order->forceFill([
                     'status' => cons('order.status.finished'),
                     'finished_at' => Carbon::now()
-                ]);
+                ])->save();
                 //更新systemTradeInfo完成状态
-                $tradeModel = $model->systemTradeInfo;
-                $tradeModel->update([
+                $tradeModel = $order->systemTradeInfo;
+                $tradeModel->forceFill([
                     'is_finished' => cons('trade.is_finished.yes'),
                     'finished_at' => Carbon::now()
-                ]);
+                ])->save();
                 //更新用户balance
-                $shopOwner = $model->shop->user;
+                $shopOwner = $order->shop->user;
                 $shopOwner->balance += $tradeModel->amount;
                 $shopOwner->save();
                 //通知卖家
                 $redisKey = 'push:seller:' . $shopOwner->id;
                 if (!$redis->exists($redisKey)) {
-                    $redis->set($redisKey, '您的订单:' . $model->id . ',' . cons()->lang('push_msg.finished'));
+                    $redis->set($redisKey, '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished'));
                     $redis->expire($redisKey, cons('push_time.msg_life'));
                 }
             });
-        });
+        }
 
         return $this->success('操作成功');
     }
@@ -227,7 +223,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        Order::bySellerId($this->userId)->whereIn('id', $orderIds)->where('status',
+        Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->where('status',
             cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
             'pay_status' => cons('order.pay_status.payment_success'),
             'paid_at' => Carbon::now(),
@@ -253,7 +249,7 @@ class OrderController extends Controller
         if (!DeliveryMan::find($deliveryManId)) {
             return $this->error('操作失败');
         }
-        $orderModel = Order::bySellerId($this->userId)->where(function ($query) {
+        $orders = Order::bySellerId($this->user->id)->where(function ($query) {
             $query->where(function ($query) {
                 $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
                     cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
@@ -263,18 +259,18 @@ class OrderController extends Controller
         })->whereIn('id', $orderIds)->nonCancel()->get();
         //通知买家订单已发货
         $redis = Redis::connection();
-        $orderModel->each(function ($model) use ($redis, $deliveryManId) {
-            $redisKey = 'push:user:' . $model->user_id;
+        foreach ($orders as $order) {
+            $redisKey = 'push:user:' . $order->user_id;
             if (!$redis->exists($redisKey)) {
-                $redis->set($redisKey, '您的订单' . $model->id . ',' . cons()->lang('push_msg.send'));
+                $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.send'));
                 $redis->expire($redisKey, cons('push_time.msg_life'));
             }
-            $model->update([
+            $order->forceFill([
                 'delivery_man_id' => $deliveryManId,
                 'status' => cons('order.status.send'),
                 'send_at' => Carbon::now()
-            ]);
-        });
+            ])->save();
+        }
 
         return $this->success('发货成功');
 
@@ -287,14 +283,14 @@ class OrderController extends Controller
     public function getStatistics()
     {
         $redis = Redis::connection();
-        $key = 'statistics:' . $this->userId;
+        $key = 'statistics:' . $this->user->id;
         if ($redis->exists($key)) {
             return $this->success(json_decode($redis->get($key), true));
         }
 
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
-        $builder = Order::bySellerId($this->userId)->nonCancel();
+        $builder = Order::bySellerId($this->user->id)->nonCancel();
 
         for ($i = 6; $i >= 0; -- $i) {
             $start = $today->copy()->addDay(- $i);
@@ -502,7 +498,7 @@ class OrderController extends Controller
     public function putChangePrice(Request $request)
     {
         //判断该订单是否存在
-        $order = Order::bySellerId(auth()->user()->id)->find(intval($request->input('order_id')));
+        $order = Order::bySellerId($this->user->id)->find(intval($request->input('order_id')));
         if (!$order) {
             $this->error('订单不存在,请确认后再试');
         }
@@ -512,15 +508,15 @@ class OrderController extends Controller
             $this->error('输入单价不合法,请确认后再试');
         }
         //判断待修改物品是否属于该订单
-        $pivot = OrderGoods::find(intval($request->input('pivot_id')));
-        if (!$pivot || $pivot->order_id != $order->id) {
+        $orderGoods = OrderGoods::find(intval($request->input('pivot_id')));
+        if (!$orderGoods || $orderGoods->order_id != $order->id) {
             $this->error('操作失败');
         }
-        $flag = DB::transaction(function () use ($pivot, $order, $price) {
-            $oldTotalPrice = $pivot->total_price;
-            $newTotalPrice = $pivot->num * $price;
-            $pivot->update(['price' => $price, 'total_price' => $newTotalPrice]);
-            $order->update(['price' => $order->price - $oldTotalPrice + $newTotalPrice]);
+        $flag = DB::transaction(function () use ($orderGoods, $order, $price) {
+            $oldTotalPrice = $orderGoods->total_price;
+            $newTotalPrice = $orderGoods->num * $price;
+            $orderGoods->forceFill(['price' => $price, 'total_price' => $newTotalPrice])->save();
+            $order->forceFill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
             //通知买家订单价格发生了变化
             $redis = Redis::connection();
             $redisKey = 'push:user:' . $order->user_id;
