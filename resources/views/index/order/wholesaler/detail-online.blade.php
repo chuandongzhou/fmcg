@@ -2,7 +2,7 @@
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
-            <a class="go-back" href="{{ url('order-') }}"><i class="fa fa-reply"></i> 返回</a>
+            <a class="go-back" href="{{ url('order-sell') }}"><i class="fa fa-reply"></i> 返回</a>
         </div>
         <div class="col-sm-12">
             <div class="row order-tracking">
@@ -107,18 +107,16 @@
                     </ul>
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
-                                @if($order['pay_status'] == cons('pay_type.non_payment')
-                                && $order['status'] == cons('order.status.non_send'))
+                                @if($order['can_cancel'])
                                     <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                                             data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
                                     </button>
                                 @endif
-                                @if($order['pay_status'] == cons('pay_type.payment_success')
-                                && $order['status'] == cons('order.status.non_send') )
+                                @if($order['can_send'])
                                         <a class="btn btn-warning send-goods"  data-target="#sendModal"
                                            data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
                                 @endif
-                                @if($order['status'] == cons('order.status.send'))
+                                @if($order['can_export'])
                                     <a target="_blank" class="btn btn-success"
                                           href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                                 @endif

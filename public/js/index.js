@@ -86,13 +86,13 @@ function _ajaxGet(targetUrl, data) {
                         if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
                             str += '<p><a href="' + SITE.ROOT + '/order-buy/detail?order_id=' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
-                                if (result.pay_status == 0 && result.status == 1) {
+                                if (result.can_cancel) {
                                     str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
-                                if (result.pay_status == 0 && result.pay_type == 1) {
+                                if (result.can_payment) {
                                     str += '<p><a href="' + SITE.ROOT + '/pay/request/' + result.id + '" class="btn btn-danger">去付款</a></p>';
-                                } else if (result.pay_type == 1 && result.status == 2) {
+                                } else if (result.can_confirm_arrived) {
                                     str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-buy" ' +
                                         'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>确认收货</a></p>';
                                 }
@@ -100,17 +100,17 @@ function _ajaxGet(targetUrl, data) {
                         } else {//卖家
                             str += '<p><a href="' + SITE.ROOT + '/order-sell/detail?order_id' + result.id + '" class="btn btn-primary">查看</a></p>';
                             if (!result.is_cancel) {
-                                if (result.pay_status == 0 && result.status == 1) {
+                                if (result.can_cancel) {
                                     str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
                                 }
-                                if ((result.pay_type == 1 && result.pay_status == 1 && result.status == 1) || (result.pay_type == 2 && result.status == 1)) {
+                                if (result.can_send) {
                                     str += '<p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal">发货</a></p>';
-                                } else if (result.pay_type == 2 && result.status == 2) {
+                                } else if (result.can_confirm_collections) {
                                     str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-sell" ' +
                                         'data-data=\'{"order_id":' + result.id + '}\'>确认收款</a></p>';
                                 }
-                                if (result.status == 2) {
+                                if (result.can_export) {
                                     str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id=' + result.id + '">导出</a></p>';
                                 }
                             }
@@ -161,20 +161,11 @@ function getOrderButtonEvent() {
             $('input[name="order_id"]').val($(this).data('data'));
         })
         .on('click', 'input[name="order_id[]"]', function () {
-            $('#check-all').prop('checked', true);
-            $('input[name="order_id[]"]').each(function () {
-                if (!$(this).is(':checked')) {
-                    $('#check-all').prop('checked', false);
-                }
-            });
+            var child = $('input[name="order_id[]"]');
+            $('#check-all').prop('checked', child.length === child.filter(':checked').length);
         });
     $('#check-all').on('click', function () {
-        var orders = $('input[name="order_id[]"]');
-        if ($(this).is(':checked')) {//选中
-            orders.prop('checked', true);
-        } else {//取消选中
-            orders.prop('checked', false);
-        }
+        $('input[name="order_id[]"]').prop('checked', $(this).prop('checked'));
     });
 }
 /*function tabBox() {

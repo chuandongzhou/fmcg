@@ -1,5 +1,4 @@
 <?php
-
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
     $router->get('guide', 'AuthController@guide');
@@ -89,6 +88,8 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
+    $router->resource('version-record', 'VersionRecordController');    //版本更新记录
+    $router->post('app-url', 'AppUrlController@postAppUrl');//app下载地址管理
     $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
     $router->resource('column', 'HomeColumnController');    //首页栏目
 });
@@ -124,6 +125,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');                   //店铺商品
         $router->get('shop/all', 'ShopController@allShops');
 
+        $router->get('version', 'VersionInfoController@getIndex');
 
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签

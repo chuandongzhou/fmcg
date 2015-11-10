@@ -171,7 +171,7 @@
 
         <p>
             @if(!$order['is_cancel'])
-                @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
+                @if($order['can_cancel'])
                     <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                 @endif

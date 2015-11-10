@@ -174,13 +174,13 @@
 
         <p>
             @if(!$order['is_cancel'])
-                @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
+                @if($order['can_cancel'])
                     <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/change-price') }}"
                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                 @endif
-                @if($order['pay_status'] == cons('order.pay_status.non_payment'))
+                @if($order['can_payment'])
                     <a href="{{ url('pay/request/' . $order['id']) }}" class="btn btn-success">去付款</a>
-                @elseif($order['pay_type'] == cons('pay_type.online') && $order['status'] == cons('order.status.send'))
+                @elseif($order['can_confirm_arrived'])
                     <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
                 @endif

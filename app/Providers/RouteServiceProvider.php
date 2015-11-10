@@ -29,6 +29,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\DeliveryMan' => 'delivery-man',
         'App\Models\ShippingAddress' => 'shipping-address',
         'App\Models\HomeColumn' => 'column',
+        'App\Models\VersionRecord' => 'version-record',
 
     ];
 

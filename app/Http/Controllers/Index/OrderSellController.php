@@ -71,17 +71,13 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $detail = Order::bySellerId($this->user->id)->with('shippingAddress', 'user', 'shop.user', 'goods',
+        $detail = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods',
             'shippingAddress.address')->find(intval($request->input('order_id')));
         if (!$detail) {
             return $this->error('订单不存在');
         }
-        $detail = $detail->toArray();
         //拼接需要调用的模板名字
-        $payType = $detail['pay_type'];
-        $fileName = array_flip(cons('pay_type'))[$payType];
-
-        $view = 'index.order.wholesaler.detail-' . $fileName;
+        $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$detail->pay_type];
 
         return view($view, [
             'order' => $detail,

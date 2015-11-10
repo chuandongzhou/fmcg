@@ -83,18 +83,17 @@
                                             <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
                                                 <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}" class="btn btn-primary">查看</a></p>
                                                 @if(!$order['is_cancel'])
-                                                    @if($order['pay_status'] == cons('order.pay_status.non_payment') && $order['status'] == cons('order.status.non_send'))
+                                                    @if($order['can_cancel'])
                                                         <p><a class="btn btn-cancel ajax" data-method = 'put' data-url="{{ url('api/v1/order/cancel-sure') }}"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
                                                     @endif
-                                                    @if(($order['pay_type'] == cons('pay_type.online')&& $order['pay_status'] == cons('order.pay_status.payment_success') && $order['status'] ==  cons('order.status.non_send'))
-                                                     || ($order['pay_type'] == cons('pay_type.cod')&& $order['status'] == cons('order.status.non_send')))
+                                                    @if($order['can_send'])
                                                         <p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal" data-data="{{ $order['id'] }}">发货</a></p>
-                                                    @elseif($order['pay_type'] == cons('pay_type.cod') && $order['status'] == cons('order.status.send'))
+                                                    @elseif($order['can_confirm_collections'])
                                                         <p><a class="btn btn-info ajax" data-method = 'put' data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
                                                     @endif
-                                                    @if($order['status'] == cons('order.status.send'))
+                                                    @if($order['can_export'])
                                                         <p><a target="_blank" class="btn btn-success" href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a></p>
                                                     @endif
                                                 @endif

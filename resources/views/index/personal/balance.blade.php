@@ -31,7 +31,7 @@
                         <thead>
                             <tr>
                                 <th>订单号</th>
-                                <th>支付金额</th>
+                                <th>实收金额</th>
                                 <th>手续费</th>
                                 <th>支付平台</th>
                                 <th>交易号</th>

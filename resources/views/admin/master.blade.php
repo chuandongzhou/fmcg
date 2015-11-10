@@ -223,6 +223,9 @@
                                         <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a
                                                     href="{{ url('admin/operation-record') }}" class="manger">管理</a>
                                         </li>
+                                        <li><a href="{{ url('admin/version-record/create') }}">版本信息添加</a>|<a
+                                                href="{{ url('admin/version-record') }}" class="manger">管理</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

@@ -28,7 +28,17 @@ class Order extends Model
         'cancel_at'
     ];
 
-    protected $appends = ['status_name', 'payment_type', 'step_num',];
+    protected $appends = [
+        'status_name',
+        'payment_type',
+        'step_num',
+        'can_cancel',
+        'can_send',
+        'can_confirm_collections',
+        'can_export',
+        'can_payment',
+        'can_confirm_arrived'
+    ];
 
     protected $hidden = [];
 
@@ -175,19 +185,80 @@ class Order extends Model
         $payStatus = $this->attributes['pay_status'];//支付状态
         $status = $this->attributes['status'];//订单状态
         if ($payType == cons('pay_type.online')) {//在线支付
-            if ($payStatus) {
-                return $status + 1;
-            }
-
-            return $status;
-        } else {//货到付款
-            if ($payStatus) {
-                return $status + 1;
-            }
-            if ($status <= cons('order.status.send')) {
-                return $status;
-            }
+            return $payStatus ? ($status + 1) : $status;
         }
+        //货到付款
+        if ($payStatus) {
+            return $status + 1;
+        }
+        if ($status <= cons('order.status.send')) {
+            return $status;
+        }
+    }
+
+    /**
+     * 是否可取消
+     *
+     * @return bool
+     */
+    public function getCanCancelAttribute()
+    {
+        return $this->attributes['pay_status'] == cons('pay_type.non_payment')
+        && $this->attributes['status'] == cons('order.status.non_send');
+    }
+
+    /**
+     * 是否可发货(卖家)
+     *
+     * @return bool
+     */
+    public function getCanSendAttribute()
+    {
+        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status']
+            == cons('order.pay_status.payment_success') : true)
+        && $this->attributes['status'] == cons('order.status.non_send');
+    }
+
+    /**
+     * 是否已收款(卖家)
+     *
+     * @return bool
+     */
+    public function getCanConfirmCollectionsAttribute()
+    {
+        return $this->attributes['pay_type'] == cons('pay_type.cod')
+        && $this->attributes['status'] == cons('order.status.send');
+    }
+
+    /**
+     * 是否可导出(卖家)
+     *
+     * @return bool
+     */
+    public function getCanExportAttribute()
+    {
+        return $this->attributes['status'] == cons('order.status.send');
+    }
+
+    /**
+     * 是否可付款(买家在线支付)
+     *
+     * @return bool
+     */
+    public function getCanPaymentAttribute()
+    {
+        return $this->attributes['pay_status'] == cons('order.pay_status.non_payment');
+    }
+
+    /**
+     * 是否可确认收货(买家在线支付)
+     *
+     * @return bool
+     */
+    public function getCanConfirmArrivedAttribute()
+    {
+        return $this->attributes['pay_type'] == cons('pay_type.online')
+        && $this->attributes['status'] == cons('order.status.send');
     }
 
     /**

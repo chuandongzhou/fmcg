@@ -109,21 +109,21 @@
                         {{--卖家显示按钮--}}
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
-                                @if($order['pay_status'] == cons('pay_type.non_payment') && $order['status'] == cons('order.status.non_send'))
+                                @if($order['can_cancel'])
                                     <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
                                             data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
                                     </button>
                                 @endif
-                                @if($order['pay_status'] == cons('pay_type.payment_success') && $order['status'] == cons('order.status.non_send') )
+                                @if($order['can_send'])
                                         <a class="btn btn-warning send-goods"  data-target="#sendModal"
                                            data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
-                                @elseif($order['pay_type'] == cons('pay_type.cod') && $order['status'] == cons('order.status.send'))
+                                @elseif($order['can_confirm_collections'])
                                         <button class="btn btn-primary ajax" data-method='put'
                                                 data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                                 data-data='{"order_id":{{ $order['id'] }}}'>确认收款
                                         </button>
                                 @endif
-                                @if($order['status'] == cons('order.status.send'))
+                                @if($order['can_export'])
                                     <a target="_blank" class="btn btn-success"
                                           href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                                 @endif

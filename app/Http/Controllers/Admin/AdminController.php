@@ -148,11 +148,7 @@ class AdminController extends Controller
      */
     public function putSwitch(Request $request)
     {
-        if ($request->input('status')) {
-            $status = cons('status.on');
-        } else {
-            $status = cons('status.off');
-        }
+        $status = $request->input('status') ? cons('status.on') : cons('status.off');
         if (Admin::whereIn('id', $request->input('ids'))->update(['status' => $status])) {
             return $this->success('操作成功');
         }

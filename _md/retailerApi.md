@@ -836,6 +836,9 @@
 	pay_status			int			支付状态(0:未付款;1:已付款)
 	status				int			订单状态(1:未发货;2:已发货;3:完成)
 	is_cancel			int			订单是否被取消(1取消,0未取消)
+	can_cancel			bool		是否可取消(是true,否false)
+	can_payment			bool		是否可在线支付
+	can_confirm_arrived bool		是否可确认收货(针对在线支付)
 	shop                array       店铺信息
     goods    			array		商品信息
 
@@ -913,6 +916,9 @@
 	paid_at				string		支付时间
 	send_at				string		发货时间
 	finished_at			string		完成时间
+	can_cancel			bool		是否可取消(是true,否false)
+	can_payment			bool		是否可在线支付
+	can_confirm_arrived bool		是否可确认收货(针对在线支付)
 	delivery_man		array		送货人信息(仅发货后才有,否则为Null)
 	shipping_address    array       收货信息
     goods    			array		商品详细信息
@@ -942,23 +948,26 @@
 #### 2.7.9 卖家获取订单列表[get] (list-of-sell)(不显示已取消订单)
 `请求参数：`
 
-    page                int         分页
+    page               		 int         分页
 
 `成功返回：`
 
-	data                array       订单信息
+	data               		 array       订单信息
 
 	data 字段子集说明
 	
-	id					int			订单ID号
-	price               string      订单总金额
-	status_name			string		订单显示状态
-	payment_type		string      支付方式(如:在线支付;货到付款)
-	cod_pay_type		int			货到付款支付方式(1:现金;2:刷卡)
-	pay_type			int			支付方式(1:在线支付;2:货到付款)
-	pay_status			int			支付状态(0:未付款;1:已付款)
-	status				int			订单状态(1:未发货;2:已发货;3:完成)
-	is_cancel			int			订单是否被取消(1取消,0未取消)
+	id						 	int			订单ID号
+	price              		 	string      订单总金额
+	status_name					string		订单显示状态
+	payment_type				string      支付方式(如:在线支付;货到付款)
+	cod_pay_type				int			货到付款支付方式(1:现金;2:刷卡)
+	pay_type					int			支付方式(1:在线支付;2:货到付款)
+	pay_status					int			支付状态(0:未付款;1:已付款)
+	status						int			订单状态(1:未发货;2:已发货;3:完成)
+	is_cancel					int			订单是否被取消(1取消,0未取消)
+	can_cancel					bool		是否可取消(是true,否false)
+	can_send					bool		是否可发货
+	can_confirm_collections 	bool		是否可确认收款(针对货到付款)
 	user                array       买家信息
     goods    			array		商品信息
 
@@ -1010,24 +1019,27 @@
 #### 2.7.12 卖家获取订单详情[get] (detail-of-sell)
 `请求参数：`
 
-	order_id  			int			订单id
+	order_id  				int			订单id
 
 `成功返回：`
 
-	id					int			订单ID号
-	price               string      订单总金额
-	status_name			string		订单显示状态
-	payment_type		string      支付方式(显示)
-	pay_type			int			支付方式
-	cod_pay_type		int			货到付款方式
-	is_cancel			int			订单是否被取消(1取消,0未取消)
-	remark				string		订单备注信息
-	created_at			string		创建时间
-	paid_at				string		支付时间
-	send_at				string		发货时间
-	finished_at			string		完成时间
-	shipping_address    array       收货信息
-    goods    			array		商品详细信息
+	id						int			订单ID号
+	price               	string      订单总金额
+	status_name				string		订单显示状态
+	payment_type			string      支付方式(显示)
+	pay_type				int			支付方式
+	cod_pay_type			int			货到付款方式
+	is_cancel				int			订单是否被取消(1取消,0未取消)
+	remark					string		订单备注信息
+	created_at				string		创建时间
+	paid_at					string		支付时间
+	send_at					string		发货时间
+	finished_at				string		完成时间
+	can_cancel				bool		是否可取消(是true,否false)
+	can_send				bool		是否可发货
+	can_confirm_collections bool		是否可确认收款(针对货到付款)
+	shipping_address    	array       收货信息
+    goods    				array		商品详细信息
 
 	delivery_man 字段子集说明
 
@@ -1512,7 +1524,24 @@
 `失败返回：`
 
 
+### 2.18 获取版本信息  [version]
+#### 2.18.1 获取版本信息 [get] 
+`请求参数：`
+	type            	int             移动端类型(1:ios;2:android)
 
+`成功返回：`
+
+    android_url         string          android最新版本下载地址
+	ios_url        		string          iso最新版本下载地址
+	record				array			最新版相关详情
+
+	record 字段说明
+		
+		version_name		string		版本名
+		version_no			string		版本号
+		content				string		更新内容							 
+
+`失败返回：`
 
 
 
