@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Category;
-use App\Models\Goods;
 use App\Models\HomeColumn;
 use App\Models\Shop;
 

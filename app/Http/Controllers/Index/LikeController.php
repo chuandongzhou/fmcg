@@ -30,7 +30,7 @@ class LikeController extends Controller
             $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
         }
         if ($request->has('province_id')) {
-            $shops = $shops->OfDeliveryArea($data);
+            $shops = $shops->OfDeliveryArea(array_filter($data));
         }
         return view('index.like.shop', [
             'shops' => $shops->paginate(),

@@ -19,7 +19,7 @@
                     <div class="list-wrap">
                         @foreach($provinces as $provinceId => $province)
                             <div class="item">
-                                <a class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
+                                <a title="{{ $province }}" class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
                                    href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
                             </div>
                         @endforeach

@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
+use App\Models\Shop;
 use App\Models\SystemTradeInfo;
 use DB;
 use Gate;
@@ -19,7 +20,7 @@ class PayController extends Controller
 {
     public function __construct()
     {
-        Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
+        Pingpp::setApiKey('sk_test_ynfvfL4084KSz9eHOSaXf9OC');
     }
 
     /**
@@ -34,15 +35,20 @@ class PayController extends Controller
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
         $orders = Order::where($field, $orderId)->get();
+        if ($orders->isEmpty()) {
+            return $this->error('获取失败，请重试');
+        }
 
         if (Gate::denies('validate-online-orders', $orders)) {
             return $this->error('获取失败，请重试');
         }
+        $orderIds = $orders->pluck('shop_id')->all();
+
+        $orderNames = Shop::whereIn('id', $orderIds)->get()->implode('name', ',');
 
         //配置extra
 
         //Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
-        // Pingpp::setApiKey('sk_test_zvX9OG0uLuP8G4GCWHzHirf1');
 
         $extra = array(
             'product_category' => '1',
@@ -53,11 +59,10 @@ class PayController extends Controller
             'user_ua' => $request->server('HTTP_USER_AGENT'),
             'result_url' => url('api/v1/pay/success-url')
         );
-
         $charge = Charge::create(
             array(
                 'subject' => '成都订百达科技有限公司',
-                'body' => $orders->implode(''),
+                'body' => $orderNames,
                 'amount' => ($orders->pluck('price')->sum()) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
@@ -68,6 +73,7 @@ class PayController extends Controller
                 'app' => array('id' => 'app_1mH8m59WrrDCHSqb')
             )
         )->__toArray(true);
+
         return $this->success($charge);
     }
 

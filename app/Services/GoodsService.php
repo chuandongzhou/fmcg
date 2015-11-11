@@ -123,7 +123,7 @@ class GoodsService
                 $goodsBySort = Goods::whereNotIn('id', $columnGoodsIds)
                     ->where('user_type', '>', $type)
                     ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
-                    ->with('images')
+                    ->with('images.image')
                     ->select($goodsFields)
                     ->take(10 - $columnGoodsCount)
                     ->get();

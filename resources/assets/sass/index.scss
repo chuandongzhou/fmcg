@@ -64,7 +64,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   bottom: 0;
   left: 0;
   z-index: 999;
- @include square(100%);
+  @include square(100%);
   background: rgba(0, 0, 0, 0.5) !important;
   filter: alpha(opacity=50);
   .pop-general {
@@ -713,6 +713,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin-bottom: 30px;
     color: $gray-light;
     .sort-item {
+      @include clearfix;
       border: 1px solid $gray-lighter;
       margin-top: -1px;
       padding: 0 5px;
@@ -1568,6 +1569,7 @@ table {
   .table-row {
     .table-col {
       padding: 20px 0 0 0;
+
       table {
         thead {
           tr {
@@ -1580,6 +1582,7 @@ table {
         tbody {
           tr {
             td {
+              vertical-align: middle;
               img {
                 @include square(80px);
               }
@@ -1753,6 +1756,14 @@ table {
       border: 1px solid $gray-plain;
       position: relative;
       z-index: 999;
+      .city-value{
+        display: inline-block;
+        vertical-align: bottom;
+        max-width: 45px;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
       .location-text {
         color: $gray;
         text-decoration: none;
@@ -1776,10 +1787,15 @@ table {
           padding: 10px 0;
           text-align: center;
           a {
-            padding: 5px 8px;
+            padding: 2px;
             color: $gray;
             text-decoration: none;
             font-size: 13px;
+            display: inline-block;
+            width:45px;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
             &:hover {
               background-color: $gray-plain;
             }
@@ -2069,6 +2085,7 @@ table {
     }
   }
 }
+
 .public-personal {
   .search-list-item {
     a {
@@ -2107,9 +2124,10 @@ table {
   }
 }
 
-.store-tab-title{
-  margin-top:0;
+.store-tab-title {
+  margin-top: 0;
 }
+
 /*======================================search end======================================*/
 /*======================================shopping-car begin======================================*/
 .audit-step-outs {

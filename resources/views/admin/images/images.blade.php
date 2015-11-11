@@ -28,7 +28,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="col-sm-1 control-label"></label>
 
@@ -36,8 +35,6 @@
 
                 </div>
             </div>
-
-
         </div>
         <div class="form-group">
             <label class="col-sm-1 control-label"></label>
@@ -56,8 +53,8 @@
         </div>
         <div class="col-sm-8 text-center save">
             <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
-            <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
-                        class="fa fa-reply"></i> 取消
+            <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)">
+                <i class="fa fa-reply"></i> 取消
             </button>
         </div>
         </div>
