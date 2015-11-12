@@ -211,7 +211,7 @@ ul, li, p, a, h1, h2, h3, h4 {
             background-position: 0 -352px; }
       .guide-content .content-panel .tabs-item .item-name {
         display: block;
-        color: #222222;
+        color: #fff;
         font-size: 18px;
         margin-top: 10px;
         font-weight: 700;

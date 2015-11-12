@@ -36,7 +36,8 @@
 @section('footer')
     <footer class="panel-footer login-footer guide-footer">
         <div class="container text-center content">
-            <p>Copyright2015成都订百达科技有限公司</p>
+            Copyright2015成都订百达科技有限公司<br />
+            联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
         </div>
     </footer>
     @parent

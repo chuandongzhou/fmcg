@@ -39,7 +39,7 @@
                                     <div class="col-sm-10 col-md-6">
                                         <input class="form-control" id="password_confirmation"
                                                name="password_confirmation" placeholder="请重复输入密码"
-                                               type="text">
+                                               type="password">
                                     </div>
                                 </div>
                                 <div class="form-group">
