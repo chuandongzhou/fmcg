@@ -304,7 +304,7 @@ class Order extends Model
     public function scopeOfBuy($query, $userId)
     {
         return $query->where('user_id', $userId)->where('is_cancel', cons('order.is_cancel.off'))->with('shop.user',
-            'goods')->orderBy('id', 'desc');
+            'goods.image')->orderBy('id', 'desc');
     }
 
     /**
@@ -318,7 +318,7 @@ class Order extends Model
     {
         return $query->wherehas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
-        })->where('is_cancel', cons('order.is_cancel.off'))->with('user.shop', 'goods')->orderBy('id', 'desc');
+        })->where('is_cancel', cons('order.is_cancel.off'))->with('user.shop', 'goods.image')->orderBy('id', 'desc');
     }
 
     /**
