@@ -247,7 +247,8 @@ class Order extends Model
      */
     public function getCanPaymentAttribute()
     {
-        return $this->attributes['pay_status'] == cons('order.pay_status.non_payment');
+        return $this->attributes['pay_type'] == cons('pay_type.online')
+        && $this->attributes['pay_status'] == cons('order.pay_status.non_payment');
     }
 
     /**

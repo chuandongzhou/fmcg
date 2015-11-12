@@ -15,7 +15,7 @@
 `请求参数：`  
 
 	account     string    账号
-	password      string    密码
+	password    string    密码
 	type        int         用户类型 (1是终端   2是批发    3是供应)
 `成功返回:`
 
@@ -26,7 +26,7 @@
 
 	shop 字段子集说明
 
-	id                   int            商店id
+	id                  int            商店id
 	name                string          商店名
 	contact_person      string          联系人
 	contact_info        string          联系方式
@@ -110,15 +110,15 @@
 #### 2.2.2 商品搜索[post] (search)
 `请求参数`
 
-    sort        string              排序 （name , price , new）
-    province_id int                 省id
-    city_id     int                 市id
-    district_id int                 县id
-    street_id   int                 街道id
-    name        string              商品名
-    category_id int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
-    attr        array               标签数组
-    page        int                 分页
+    sort        	string              排序 （name , price , new）
+    province_id 	int                 省id
+    city_id     	int                 市id
+    district_id 	int                 县id
+    street_id   	int                 街道id
+    name        	string              商品名
+    category_id 	int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+    attr        	array               标签数组
+    page        	int                 分页
 
 `成功返回：`
 
