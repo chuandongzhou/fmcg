@@ -33,7 +33,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::where('user_id', $this->user->id)->with('shop.user', 'goods.image')->orderBy('id',
+        $orders = Order::where('user_id', $this->user->id)->with('shop.user', 'goods.images')->orderBy('id',
             'desc')->paginate();
 
         return $this->success($orders);
@@ -73,7 +73,7 @@ class OrderController extends Controller
      */
     public function getDetailOfBuy(Request $request)
     {
-        $detail = Order::where('user_id', $this->user->id)->with('shippingAddress', 'goods.images', 'deliveryMan',
+        $detail = Order::where('user_id', $this->user->id)->with('goods.images', 'deliveryMan',
             'shippingAddress.address')->find($request->input('order_id'));
 
         return $detail ? $this->success($detail) : $this->error('订单不存在');
@@ -86,7 +86,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->user->id)->with('user', 'goods.image')->orderBy('id',
+        $orders = Order::bySellerId($this->user->id)->with('user', 'goods.images')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
         return $this->success($orders);
@@ -127,7 +127,7 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $detail = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods',
+        $detail = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images',
             'shippingAddress.address')->find($orderId);
 
         return $detail ? $this->success($detail->toArray()) : $this->error('订单不存在');
