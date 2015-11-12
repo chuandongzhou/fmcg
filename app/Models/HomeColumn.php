@@ -26,7 +26,7 @@ class HomeColumn extends Model
      *
      * @return array
      */
-    public function getIdArrayAttribute($idList)
+    public function getIdListAttribute($idList)
     {
         return $idList ? explode('|', $idList) : '';
     }

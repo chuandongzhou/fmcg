@@ -3,16 +3,17 @@
 @include('includes.timepicker')
 @section('right-container')
 
-    <form  class="form-horizontal" action="{{ url('admin/data-statistics') }}" method="get">
-        <label for="time">时间:</label> <input type="text" name="time" class="time inline-control datetimepicker" data-format="YYYY-MM-DD" value="{{ $time }}" />
-        <input type="submit" class="btn btn-default" value="查询" />
+    <form class="form-horizontal" action="{{ url('admin/data-statistics') }}" method="get">
+        <label for="time">时间:</label> <input type="text" name="time" class="time inline-control datetimepicker"
+                                             data-format="YYYY-MM-DD" value="{{ $time }}"/>
+        <input type="submit" class="btn btn-default" value="查询"/>
     </form>
     <ul id="myTab" class="nav nav-tabs">
         <li class="active">
             <a href="#home" data-toggle="tab">活跃统计</a>
         </li>
         <li><a href="#data" data-toggle="tab">当日数据统计</a></li>
-        {{--<li><a href="#order" data-toggle="tab">当日订单统计</a></li>--}}
+        <li><a href="#order" data-toggle="tab">当日订单统计</a></li>
 
     </ul>
     <div id="myTabContent" class="tab-content">
@@ -51,7 +52,7 @@
                     <th>总计</th>
                 </tr>
                 <tr>
-                    <td>今日注册数</td>
+                    <td>当日注册数</td>
                     <td>{{ array_get($statistics,'supplier_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'wholesaler_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'retailer_reg_num' ,0) }}</td>
@@ -75,7 +76,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>今日登录数</td>
+                    <td>当日登录数</td>
                     <td>{{ array_get($statistics,'supplier_login_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'wholesaler_login_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'retailer_login_num' ,0) }}</td>
@@ -101,8 +102,99 @@
                 </tr>
             </table>
         </div>
-        {{--<div class="tab-pane fade" id="order">--}}
-            {{--<p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>--}}
-        {{--</div>--}}
+        <div class="tab-pane fade" id="order">
+            <div class="col-sm-10">
+                <table class="table  table-bordered">
+                    <tr>
+                        <th></th>
+                        <th>批发商</th>
+                        <th>终端商</th>
+                    </tr>
+                    <tr>
+                        <td>当日下单数</td>
+                        <td>{!! $orderEveryday['wholesaler']['count'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['count'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>当日下单总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['amount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['amount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线上总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['onlineAmount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['onlineAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线上完成总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['onlineSuccessAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线下总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['codAmount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['codAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线下完成总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['codSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['codSuccessAmount'] or 0 !!}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-10">
+                <table class="table  table-bordered">
+                    <tr>
+                        <th></th>
+                        <th>批发商</th>
+                        <th colspan="2">供应商</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>对于终端商</th>
+                        <th>对于终端商</th>
+                        <th>对于批发商</th>
+                    </tr>
+                    <tr>
+                        <td>成单数</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['count'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['count'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['count'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>今日成单总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['amount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['amount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['amount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线上总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['onlineAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['onlineAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['onlineAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线上完成总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线下总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['codAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['codAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['codAmount'] or 0 !!}</td>
+                    </tr>
+                    <tr>
+                        <td>线下完成总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['codSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] or 0 !!}</td>
+                        </td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] or 0 !!}</td>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 @stop

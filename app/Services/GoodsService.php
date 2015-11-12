@@ -25,7 +25,7 @@ class GoodsService
     {
         //排序
         if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
-            $goods->{'Order' . ucfirst($data['sort'])}();
+            $goods->{'Of' . ucfirst($data['sort'])}();
         }
         // 省市县
         if (isset($data['province_id'])) {
@@ -115,7 +115,7 @@ class GoodsService
             'sales_volume'
         ];
         foreach ($goodsColumns as $goodsColumn) {
-            $goods = Goods::whereIn('id', $goodsColumn->id_array)->where('user_type', '>',
+            $goods = Goods::whereIn('id', $goodsColumn->id_list)->where('user_type', '>',
                 $type)->with('images')->select($goodsFields)->get();
             $columnGoodsCount = $goods->count();
             if ($columnGoodsCount < 10) {

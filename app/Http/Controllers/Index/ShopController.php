@@ -65,10 +65,12 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
+        $shop->load('images');
+
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
 
-        $goods = Goods::where($map);
+        $goods = Goods::where($map)->with('images.image');
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $goods->{'Of'.ucfirst($sort)}();
         }

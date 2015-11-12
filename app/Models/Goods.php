@@ -136,16 +136,6 @@ class Goods extends Model
     }
 
     /**
-     * 查询促销产品
-     *
-     * @param $query
-     */
-    public function scopeOfPromotion($query)
-    {
-        return $query->where('is_promotion', 1);
-    }
-
-    /**
      * 价格由低到高
      *
      * @param $query
@@ -165,6 +155,18 @@ class Goods extends Model
     {
         return $query->orderBy('name', 'asc');
     }
+
+
+    /**
+     * 查询促销产品
+     *
+     * @param $query
+     */
+    public function scopeOfPromotion($query)
+    {
+        return $query->where('is_promotion', 1);
+    }
+
 
     /**
      * 配送地址
@@ -271,7 +273,7 @@ class Goods extends Model
         if ($this->exists) {
             $this->images()->detach();
             $this->images()->sync($images);
-        }else {
+        } else {
             static::created(function ($model) use ($images) {
                 $model->images()->detach();
                 $model->images()->sync($images);

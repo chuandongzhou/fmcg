@@ -66,10 +66,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($order['goods'] as $key => $good)
+                                @foreach($order->goods as $key => $good)
                                     <tr>
                                         <td>
-                                            <img class="store-img" src="{{ $good['image_url'] }}">
+                                            <img class="store-img" src="{{ $good->image_url }}">
                                             <a class="product-name" href="{{  url('goods/'.$good['id']) }}">{{ $good['name'] }}</a>
                                         </td>
                                         <td class="red">￥{{ $good['pivot']['price'] }}</td>

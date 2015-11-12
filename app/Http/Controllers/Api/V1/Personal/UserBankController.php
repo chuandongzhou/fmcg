@@ -10,6 +10,7 @@ use App\Models\UserBank;
 class UserBankController extends Controller
 {
     protected $user;
+
     public function __construct()
     {
         $this->user = auth()->user();
@@ -24,7 +25,7 @@ class UserBankController extends Controller
     public function index()
     {
         //获取该角色名下的所有银行账号
-       return $this->success(['user_bank_cards'=>UserBank::where('user_id',$this->user->id)->get()]);
+        return $this->success(['user_bank_cards' => UserBank::where('user_id', $this->user->id)->get()]);
     }
 
     /**
@@ -81,11 +82,11 @@ class UserBankController extends Controller
     /**
      * 修改
      *
-     * @param \App\Http\Requests\Api\v1\CreateUserBankRequest $request
+     * @param \App\Http\Requests\Api\v1\UpdateUserBankRequest $request
      * @param $userBank
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Api\v1\CreateUserBankRequest $request, $userBank)
+    public function update(Requests\Api\v1\UpdateUserBankRequest $request, $userBank)
     {
         if ($userBank->fill($request->all())->save()) {
             return $this->success('保存成功');
@@ -104,7 +105,7 @@ class UserBankController extends Controller
     public function destroy(UserBank $bank)
     {
         //检查提现订单中是否有已通过但是还未打款的
-        if ($bank->withdraws()->whereIn('status', [cons('withdraw.review'),cons('withdraw.pass')])->get()->count()) {
+        if ($bank->withdraws()->whereIn('status', [cons('withdraw.review'), cons('withdraw.pass')])->get()->count()) {
             return $this->error('该账号下有提现订单未打款,暂不能删除');
         }
         if ($bank->delete()) {

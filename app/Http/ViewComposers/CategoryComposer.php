@@ -9,7 +9,9 @@ namespace App\Http\ViewComposers;
 
 use App\Models\Category;
 use App\Services\CategoryService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Cache;
 
 class CategoryComposer
 {
@@ -21,7 +23,18 @@ class CategoryComposer
      */
     public function compose(View $view)
     {
-        $view->with('categories',CategoryService::unlimitForLayer(Category::with('icon')->get()->toArray()));
+        $categories = [];
+        if (Cache::has('categories')) {
+            $categories = Cache::get('categories');
+        } else {
+            $categories = CategoryService::unlimitForLayer(Category::get()->each(function ($category) {
+                $category->setAppends([]);
+            })->toArray());
+            $expiresAt = Carbon::now()->addDays(1);
+            Cache::put('categories', $categories, $expiresAt);
+        }
+
+        $view->with('categories', $categories);
     }
 
 }

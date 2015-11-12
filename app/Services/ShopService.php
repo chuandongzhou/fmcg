@@ -23,7 +23,7 @@ class ShopService
         $shopColumns = HomeColumn::where('type', $columnTypes['shop'])->get();
 
         foreach ($shopColumns as $shopColumn) {
-            $shops = Shop::whereIn('id', $shopColumn->id_array)->whereHas('user', function ($q) use ($type) {
+            $shops = Shop::whereIn('id', $shopColumn->id_list)->whereHas('user', function ($q) use ($type) {
                 $q->where('type', '>', $type);
             }
             )->with('images', 'logo')->get();
