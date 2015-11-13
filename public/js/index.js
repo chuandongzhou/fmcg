@@ -561,7 +561,7 @@ function statisticsFunc() {
 
     $('#export').click(function () {
         var oldUrl = $('form').attr('action');
-        var newUrl = '{{ url("order/stat-export") }}';
+        var newUrl = SITE.ROOT+"/order/stat-export";
         $('form').attr('action', newUrl).attr('method', 'post').submit();
         //初始化设置
         $('form').attr('action', oldUrl).attr('method', 'get');

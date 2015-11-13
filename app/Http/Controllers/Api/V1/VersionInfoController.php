@@ -20,7 +20,7 @@ class VersionInfoController extends Controller
         $redis = Redis::connection();
 
         return $this->success([
-            'version' => VersionRecord::where('type', $request->input('type'))->orderBy('created_at', 'DESC')->first(),
+            'record' => VersionRecord::where('type', $request->input('type'))->orderBy('created_at', 'DESC')->first(),
             'android_url' => $redis->get('android_url'),
             'ios_url' => $redis->get('ios_url')
         ]);

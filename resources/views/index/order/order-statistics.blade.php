@@ -26,8 +26,6 @@
                             <option value="{{ $key }}" {{ ($key==(isset($search['obj_type']) ? $search['obj_type'] : '')) ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </select>
-                @else
-
                 @endif
                 <button class="btn" type="submit" >统计</button>
                 @unless(empty($statistics))
@@ -61,7 +59,9 @@
                 <thead>
                     <tr>
                         <td>订单号</td>
-                        <td>收件人</td>
+                        <td>
+                           商家名称
+                        </td>
                         <td>支付方式</td>
                         <td>订单状态</td>
                         <td>创建时间</td>

@@ -234,7 +234,7 @@ class OrderController extends Controller
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
         $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
         $showObjName = $this->_inputName($objOfShow);
-
+//dd();
         return view('index.order.order-statistics', [
             'search' => $search,
             'pay_type' => $payType,
