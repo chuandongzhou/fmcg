@@ -1,7 +1,7 @@
 @extends('master')
 
 
-@section('title')@yield('subtitle') | 快销后台管理@stop
+@section('title')@yield('subtitle') | 订百达后台管理@stop
 
 
 @section('css')
@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url('admin') }}">快销系统</a>
+                <a class="navbar-brand" href="{{ url('admin') }}">订百达</a>
             </div>
             <!--/.nav-collapse -->
         </div>

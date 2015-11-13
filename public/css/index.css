@@ -34,6 +34,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .go-history {
   padding: 10px 0; }
 
+.contents {
+  padding-bottom: 20px; }
+
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
@@ -211,7 +214,7 @@ ul, li, p, a, h1, h2, h3, h4 {
             background-position: 0 -352px; }
       .guide-content .content-panel .tabs-item .item-name {
         display: block;
-        color: #fff;
+        color: #222222;
         font-size: 18px;
         margin-top: 10px;
         font-weight: 700;
@@ -369,7 +372,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .panel-footer {
   position: absolute;
   bottom: 0;
-  width: 100%; }
+  width: 100%;
+  margin-top: 20px; }
 
 .modal .address-wrap {
   height: 80px;
@@ -393,7 +397,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin-top: 10px; }
   .list-penal .commodity .commodity-img {
     width: 100%;
-    display: inline-block; }
+    display: inline-block;
+    height: 200px; }
   .list-penal .commodity .content-panel {
     padding: 10px 5px;
     background-color: #f2f2f2; }
