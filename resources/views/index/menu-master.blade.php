@@ -18,13 +18,13 @@
                                     <i class="fa fa-edit"></i> 订单管理</a>
                                 <ul class="menu-wrap" {!!  request()->is('order-buy', 'order-sell') ? 'style="display:block"' : '' !!}>
                                     <li>
+                                        <a href="{{ url('order-sell') }}" class=" {{ path_active('order-sell') }}">
+                                            <span></span>终端商</a>
+                                    </li>
+                                    <li>
                                         <a href="{{ url('order-buy') }}" class="{{ path_active('order-buy') }}">
                                             <span class=""></span>供应商
                                         </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('order-sell') }}" class=" {{ path_active('order-sell') }}">
-                                            <span></span>终端商</a>
                                     </li>
                                 </ul>
                             </li>
@@ -56,11 +56,11 @@
                                 </ul>
                             </li>
                         @else
-                            <li><a href="{{ url('order/statistics') }}"
-                                   class="{{ path_active('order/statistics*') }}"><i
-                                            class="fa fa-file-text-o"></i> 订单统计</a></li>
                             <li><a href="{{ url('order-sell') }}" class="{{ path_active('order-sell*') }}"><i
                                             class="fa fa-edit"></i> 订单管理</a></li>
+                            <li><a href="{{ url('order/statistics') }}"
+                                   class="{{ path_active('order/statistics*') }}"><i
+                                        class="fa fa-file-text-o"></i> 订单统计</a></li>
                         @endif
                         <li><a href="{{ url('personal/shop') }}" class="{{ path_active('personal/*') }}"><i
                                         class="fa fa-heart-o"></i> 个人中心</a></li>
@@ -85,12 +85,12 @@
                         <li>
                             <a href="{{ url('order-buy') }}" class="list-item {{ path_active('order-buy') }}"><i
                                         class="fa fa-file-text-o"></i>
-                                我的订单</a>
+                                订单管理</a>
                         </li>
                         <li><a href="{{ url('order-buy/statistics') }}"
                                class="list-item {{ path_active(['order-buy/statistics','order/statistics*']) }}"><i
                                         class="fa fa-file-o"></i>
-                                统计报表</a></li>
+                                订单统计</a></li>
                         <li><a href="{{ url('personal/shop') }}" class="list-item {{ path_active('personal/*') }}"><i
                                         class="fa fa-heart-o"></i>
                                 个人中心</a></li>
