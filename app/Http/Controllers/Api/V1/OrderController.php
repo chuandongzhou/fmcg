@@ -12,6 +12,7 @@ use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
 use App\Services\CartService;
+use App\Services\GoodsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -471,6 +472,8 @@ class OrderController extends Controller
 
         // 删除购物车
         $user->carts()->where('status', 1)->delete();
+        // 增加商品销量
+        GoodsService::addGoodsSalesVolume($orderGoodsNum);
 
         $returnArray = [
             'pay_type' => $payType,

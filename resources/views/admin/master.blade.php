@@ -47,13 +47,13 @@
                                  class="panel-collapse collapse {{ path_active([ 'admin' , 'admin/admin/*' , 'admin/admin'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="#">角色添加</a> <a href="#" class="manger">管理</a></li>
-                                        <li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>
+                                        <li><a href="{{ url('admin/role/create') }}">角色添加</a> <a href="{{ url('admin/role') }}" class="manger">管理</a></li>
+                                        {{--<li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>--}}
                                         <li>
-                                            <a href="{{url('admin/admin/create')}}">管理员添加</a>
-                                            <a href="{{url('admin/admin')}}" class="manger">管理</a>
+                                            <a href="{{ url('admin/admin/create') }}">管理员添加</a>
+                                            <a href="{{ url('admin/admin') }}" class="manger">管理</a>
                                         </li>
-                                        <li><a href="{{url('admin/admin/password')}}">密码修改</a></li>
+                                        <li><a href="{{ url('admin/admin/password' )}}">密码修改</a></li>
 
                                     </ul>
                                 </div>
@@ -143,7 +143,7 @@
                                 </h4>
                             </div>
                             <div id="collapse-five"
-                                 class="panel-collapse collapse {{ path_active(['admin/system-trade'] , 'in') }}">
+                                 class="panel-collapse collapse {{ path_active(['admin/system-trade', 'admin/system-withdraw'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/system-trade') }}">平台交易信息</a>
@@ -180,7 +180,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapse-seven" class="panel-collapse collapse {{ path_active(['admin/data-statistics' , 'admin/trade'] , 'in') }}">
+                            <div id="collapse-seven"
+                                 class="panel-collapse collapse {{ path_active(['admin/data-statistics'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/data-statistics') }}">运营数据统计</a></li>
@@ -217,14 +218,14 @@
                                 </h4>
                             </div>
                             <div id="collapse-nine"
-                                 class="panel-collapse collapse {{ path_active(['admin/operation-record/create','admin/operation-record'] , 'in') }}">
+                                 class="panel-collapse collapse {{ path_active(['admin/operation-record/create','admin/operation-record', 'admin/version-record', 'admin/version-record/create'] , 'in') }}">
                                 <div class="panel-body" class="fa-border">
                                     <ul>
                                         <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a
                                                     href="{{ url('admin/operation-record') }}" class="manger">管理</a>
                                         </li>
                                         <li><a href="{{ url('admin/version-record/create') }}">版本信息添加</a>|<a
-                                                href="{{ url('admin/version-record') }}" class="manger">管理</a>
+                                                    href="{{ url('admin/version-record') }}" class="manger">管理</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -240,7 +241,7 @@
                                 </h4>
                             </div>
                             <div id="collapse-ten"
-                                 class="panel-collapse collapse {{ path_active('column/*' , 'in') }}">
+                                 class="panel-collapse collapse {{ path_active(['admin/column/*' , 'admin/column'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{ url('admin/column/create?type=goods') }}">商品栏目添加</a>

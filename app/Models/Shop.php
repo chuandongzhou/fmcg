@@ -466,4 +466,13 @@ class Shop extends Model
         return is_null($this->shopAddress) ? '' : $this->shopAddress->address_name;
     }
 
+    /**
+     * 获取商家销量
+     *
+     * @return mixed
+     */
+    public function getSalesVolumeAttribute(){
+        return $this->goods()->sum('sales_volume');
+    }
+
 }

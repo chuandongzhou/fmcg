@@ -128,7 +128,7 @@
 
                                     <p class="sell-panel">
                                         <span class="money">最低配送额:￥{{ $shop->min_money }}</span>
-                                        <span class="sales pull-right">销量:2000</span>
+                                        <span class="sales pull-right">销量:{{ $shop->sales_volume }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -144,8 +144,8 @@
 
 @section('footer')
     <footer class="panel-footer">
-        <div class="container text-center content">
-            Copyright2015成都订百达科技有限公司<br />
+        <div class="container text-center">
+            Copyright2015成都订百达科技有限公司<br/>
             联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
         </div>
     </footer>

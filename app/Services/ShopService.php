@@ -26,7 +26,9 @@ class ShopService
             $shops = Shop::whereIn('id', $shopColumn->id_list)->whereHas('user', function ($q) use ($type) {
                 $q->where('type', '>', $type);
             }
-            )->with('images', 'logo')->get();
+            )->with('images', 'logo')->get()->each(function($shop) {
+                $shop->setAppends([]);
+            });
             $columnShopsCount = $shops->count();
             if ($columnShopsCount < 10) {
                 $columnShopsIds = $shops->pluck('id')->toArray();
@@ -37,7 +39,9 @@ class ShopService
                     ->with('images', 'logo')
                     ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
                     ->take(10 - $columnShopsCount)
-                    ->get();
+                    ->get()->each(function($shop) {
+                        $shop->setAppends([]);
+                    });;
                 $shops = $shops->merge($ShopsBySort);
             }
             $shopColumn->shops = $shops;

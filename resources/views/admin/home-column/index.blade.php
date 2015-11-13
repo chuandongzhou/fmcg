@@ -4,7 +4,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/column/') }}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{ url('admin/column') }}" data-help-class="col-sm-push-2 col-sm-10">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -18,7 +18,7 @@
             @foreach($homeColumns as $homeColumn)
                 <tr>
                     <td>{{ $homeColumn->name }}</td>
-                    <td>{{ $homeColumn->id_list }}</td>
+                    <td>{{ implode('|' ,$homeColumn->id_list) }}</td>
                     <td>{{  cons()->valueLang('sort.' . $type ,array_get(cons('sort.' . $type) ,$homeColumn->sort)) }}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">

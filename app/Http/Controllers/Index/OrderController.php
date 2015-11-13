@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\Goods;
 use App\Models\OrderGoods;
 use App\Services\CartService;
+use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -92,6 +94,7 @@ class OrderController extends Controller
         foreach ($carts as $cart) {
             $orderGoodsNum[$cart->goods_id] = $cart->num;
         }
+
         //验证
         $cartService = new CartService($carts);
 
@@ -172,8 +175,11 @@ class OrderController extends Controller
             }
         }
 
+
         // 删除购物车
         $this->user->carts()->where('status', 1)->delete();
+        // 增加商品销量
+        GoodsService::addGoodsSalesVolume($orderGoodsNum);
 
         $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
             . $onlinePaymentOrder[0]);
@@ -398,10 +404,10 @@ class OrderController extends Controller
             //订单相关统计
             $stat['totalAmount'] += $value['price'];
             if ($value['pay_type'] == cons('pay_type.online')) {
-                ++ $stat['onlineNum'];
+                ++$stat['onlineNum'];
                 $stat['onlineAmount'] += $value['price'];
             } else {
-                ++ $stat['codNum'];
+                ++$stat['codNum'];
                 $stat['codAmount'] += $value['price'];
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
                     $stat['codReceiveAmount'] += $value['price'];
@@ -637,4 +643,5 @@ class OrderController extends Controller
 
         return $res;
     }
+
 }

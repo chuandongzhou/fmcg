@@ -73,7 +73,7 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::with('nodes')->find($id);
-        return view('admin.role.create', ['role' => $role , 'node'=>$role['node']]);
+        return view('admin.role.role', ['role' => $role , 'node'=>$role['node']]);
     }
 
     /**

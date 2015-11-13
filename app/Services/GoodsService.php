@@ -134,5 +134,21 @@ class GoodsService
 
         return $goodsColumns;
     }
+    /**
+     * 增加商品销量
+     *
+     * @param $orderGoodsNum
+     * @return bool
+     */
+    static function addGoodsSalesVolume($orderGoodsNum)
+    {
+        if (empty($orderGoodsNum)) {
+            return false;
+        }
+        foreach ($orderGoodsNum as $goodsId => $goodsNum) {
+            Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
+        }
+        return true;
+    }
 
 }
