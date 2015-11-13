@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\SystemTradeInfo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -20,6 +21,7 @@ class SystemTradeInfoController extends Controller
         $attributes = array_filter($request->all());
 
         $result = $this->getTrade($attributes);
+
         return view('admin.trade.index',
             array_merge(
                 [
@@ -115,8 +117,8 @@ class SystemTradeInfoController extends Controller
         if (isset($attributes['pay_type']) && $attributes['pay_type']) {
             $map['pay_type'] = $attributes['pay_type'];
         }
-        $startedAt = isset($attributes['started_at']) ? $attributes['started_at'] : date('Y-m-01 00:00:00 ');
-        $endedAt = isset($attributes['ended_at']) ? $attributes['ended_at'] : date('Y-m-d 00:00:00 ');
+        $startedAt = isset($attributes['started_at']) ? $attributes['started_at'] : Carbon::now()->startOfMonth();
+        $endedAt = isset($attributes['ended_at']) ? $attributes['ended_at'] : Carbon::now();
 
         $trades = SystemTradeInfo::where($map)->whereBetween('success_at', [$startedAt, $endedAt])->paginate();
 
