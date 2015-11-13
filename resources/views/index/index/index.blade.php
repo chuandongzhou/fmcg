@@ -2,7 +2,7 @@
 
 
 
-@section('title')@yield('subtitle') | 订百达@stop
+@section('title')首页 | 订百达@stop
 
 
 

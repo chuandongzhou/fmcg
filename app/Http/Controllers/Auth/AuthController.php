@@ -48,10 +48,10 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function guide(){
+    public function guide()
+    {
         return view('auth.guide');
     }
-
 
     /**
      * 退出登录

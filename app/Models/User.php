@@ -132,4 +132,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany('App\Models\Withdraw');
     }
+
+    /**
+     * 获取登录的店铺id
+     *
+     * @return mixed
+     */
+    /*public function getShopIdAttribute()
+    {
+        $session = request()->session();
+        if (!$session->has('shop_id')) {
+            $session->put('shop_id', $this->shop->id);
+        }
+        return $session->get('shop_id');
+    }*/
 }

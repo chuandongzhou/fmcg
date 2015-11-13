@@ -47,7 +47,7 @@
                                  class="panel-collapse collapse {{ path_active([ 'admin' , 'admin/admin/*' , 'admin/admin'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a href="{{ url('admin/role/create') }}">角色添加</a> <a href="{{ url('admin/role') }}" class="manger">管理</a></li>
+                                        {{--<li><a href="{{ url('admin/role/create') }}">角色添加</a> <a href="{{ url('admin/role') }}" class="manger">管理</a></li>--}}
                                         {{--<li><a href="#">菜单添加</a> <a href="#" class="manger">管理</a></li>--}}
                                         <li>
                                             <a href="{{ url('admin/admin/create') }}">管理员添加</a>

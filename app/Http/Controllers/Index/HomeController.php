@@ -3,15 +3,9 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
-use App\Models\Goods;
-use App\Models\HomeColumn;
-use App\Models\Shop;
 use App\Services\GoodsService;
 use App\Services\ShopService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use DB;
 
 class HomeController extends Controller
 {

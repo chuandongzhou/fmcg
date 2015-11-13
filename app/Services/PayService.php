@@ -7,6 +7,7 @@
  */
 namespace App\Services;
 
+use App\Models\Shop;
 use App\Models\SystemTradeInfo;
 use Carbon\Carbon;
 use DB;
@@ -30,12 +31,19 @@ class PayService
     {
         //更改订单状态
         $result = DB::transaction(function () use ($orders, $amount, $orderFee, $tradeNo, $payType, $hmac, $chargeId) {
+            //找出所有卖家的帐号
+            $shopIds = $orders->pluck('shop_id')->all();
+            $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get();
+            $accountArr = [];
+            foreach ($shops as $shop) {
+                $accountArr[$shop->id] = $shop->user->user_name;
+            }
+
             $orderConf = cons('order');
             foreach ($orders as $order) {
                 $order->fill([
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                 ])->save();
-
                 $fee = ($order->price / $amount) * $orderFee;
                 $fee = sprintf("%.2f", $fee);
                 // 增加易宝支付log
@@ -54,7 +62,7 @@ class PayService
                 SystemTradeInfo::create([
                     'type' => $tradeConf['type']['in'],
                     'pay_type' => $payType,
-                    'account' => $order->shop_id, //TODO: 商家帐号
+                    'account' => $accountArr[$order->shop_id],
                     'order_id' => $order->id,
                     'charge_id' => $chargeId,
                     'trade_no' => $tradeNo,
