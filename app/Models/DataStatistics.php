@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class DataStatistics extends Model
 {
     protected $table = 'data_statistics';
@@ -17,6 +19,20 @@ class DataStatistics extends Model
         'supplier_reg_num',
         'created_at'
     ];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::creating(function ($model) {
+            // 删除所有关联文件
+           $model->created_at = (new Carbon())->subDay();
+        });
+    }
 
     /**
      * 获取活跃用户

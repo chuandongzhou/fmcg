@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    <div class="container dealer-index index">
+    <div class="container dealer-index index contents">
 
         @foreach($goodsColumns as $column)
             @if(!$column->goods->isEmpty())
