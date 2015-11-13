@@ -17,8 +17,18 @@ class CreateOperationRecordRequest extends Request
             'name' => 'required',
             'reason' => 'required',
             'content' => 'required',
-            'start_at' =>'required|date',
+            'start_at' => 'required|date',
             'end_at' => 'required|date|after:started_at'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'name' => '操作人姓名'
         ];
     }
 }

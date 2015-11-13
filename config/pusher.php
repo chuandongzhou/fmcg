@@ -13,14 +13,14 @@ return [
      * 当代码中未设置apikey时,使用此apikey
      * @var string
      */
-    'default_apiKey' => 'OG4vmvs5nuzBRpbVBTjw29NS',
+    'default_apiKey' => 'jfr9qZc3D19DwVKsyOea6Zk8',
     
     /**
      * 开发者当前secretKey, 在应用重新生成secret key后, 旧的secret key将失效, 由开发者中心(http://developer.baidu.com)获取.
      * 当代码中未设置apikey时,使用此secretkey
      * @var string
      */
-    'default_secretkey' => 'eCAOhMnSo8RRddMFk8P2jBG7K2XA4GbV',
+    'default_secretkey' => 'a6dpq4BXtEHsHueTfZ2QPOHiKdOaxV1X',
     
     /**
      * 默认发送的devicetype

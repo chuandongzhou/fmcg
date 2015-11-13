@@ -20,4 +20,15 @@ class CreateHomeColumnRequest extends Request
             'sort' => 'required'
         ];
     }
+
+    /**
+     * @return array
+     */
+
+    public function attributes()
+    {
+        return [
+            'name' => '栏目名'
+        ];
+    }
 }

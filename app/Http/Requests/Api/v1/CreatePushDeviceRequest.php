@@ -19,4 +19,14 @@ class CreatePushDeviceRequest extends Request
             'type' => 'required'    //设备类型iphone=>iPhone设备,android=>android设备
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'type' => '设备类型'
+        ];
+    }
 }
