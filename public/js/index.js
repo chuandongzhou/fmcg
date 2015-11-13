@@ -542,6 +542,10 @@ function displayList() {
  * 统计页面js处理
  */
 function statisticsFunc() {
+    var target0 = $('input[name="order_page_num"]');
+    var target_value0 = parseInt(target0.attr('value'));
+    var target1 = $('input[name="goods_page_num"]');
+    var target_value1 = parseInt(target1.attr('value'));
     $('.span-checkbox').click(function () {
         var inp_checkbox = $(this).siblings('.inp-checkbox');
         var isCheck = inp_checkbox.is(':checked');
@@ -558,25 +562,35 @@ function statisticsFunc() {
         //提交表单
         $('form').submit();
     });
-
     $('#export').click(function () {
-        var oldUrl = $('form').attr('action');
-        var newUrl = SITE.ROOT+"/order/stat-export";
-        $('form').attr('action', newUrl).attr('method', 'post').submit();
+        var form = $('form');
+        var oldUrl = form.attr('action');
+        var newUrl = SITE.ROOT + "/order/stat-export";
+        form.attr('action', newUrl).attr('method', 'post').submit();
         //初始化设置
-        $('form').attr('action', oldUrl).attr('method', 'get');
+        form.attr('action', oldUrl).attr('method', 'get');
 
     });
-
-    var target = $('input[name="order_page_num"]');
-    var target_value = parseInt(target.attr('value'));
-    $('.next0,.next1').on('click', function () {
-        target.attr('value', target_value + 1);
+    $('#submitBtn').click(function () {
+        target0.attr('value', 1);
+        target1.attr('value', 1);
+    });
+    //order_page_num
+    $('.next0').on('click', function () {
+        target0.attr('value', target_value0 + 1);
         $('form').submit();
     });
-
-    $('.prev0,.prev1').on('click', function () {
-        target.attr('value', target_value - 1);
+    $('.prev0').on('click', function () {
+        target0.attr('value', target_value0 - 1);
+        $('form').submit();
+    });
+    //goods_page_num
+    $('.next1').on('click', function () {
+        target1.attr('value', target_value1 + 1);
+        $('form').submit();
+    });
+    $('.prev1').on('click', function () {
+        target1.attr('value', target_value1 - 1);
         $('form').submit();
     });
 }

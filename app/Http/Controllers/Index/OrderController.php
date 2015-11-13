@@ -209,7 +209,7 @@ class OrderController extends Controller
     }
 
     /**
-     * 订单统计
+     * 订单统计,全部显示商家名字
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
@@ -240,11 +240,12 @@ class OrderController extends Controller
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
         $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
         $showObjName = $this->_inputName($objOfShow);
-//dd();
+
         return view('index.order.order-statistics', [
             'search' => $search,
             'pay_type' => $payType,
             'obj_type' => $objType,
+            'objCurrentType' => $request->input('obj_type') ? $request->input('obj_type') : '',
             'statistics' => $stat,
             'otherStat' => $otherStat,
             'goods' => $statGoods,
@@ -328,58 +329,65 @@ class OrderController extends Controller
                 }
             }
         });
-        //查询买家
-        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->id) {
-            $query->wherehas('user', function ($q) use ($search) {
-                $q->where('type', intval($search['obj_type']));
-            });
-        }
 
-        //查询卖家
-        if (!empty($search['obj_type']) && $search['obj_type'] > $this->user->id) {
+        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->type
+            || $this->user->type == cons('user.type.supplier')
+        ) {//查询买家
             $query->wherehas('shop.user', function ($q) use ($search) {
-                $q->where('type', intval($search['obj_type']));
+                $q->where('id', $this->user->id);
             });
+            if (!empty($search['obj_type'])) {
+                $query->wherehas('user', function ($q) use ($search) {
+                    $q->where('type', $search['obj_type']);
+
+                });
+            }
         }
-        //時間
+        if (!empty($search['obj_type']) && $search['obj_type'] > $this->user->type
+            || $this->user->type == cons('user.type.retailer')
+        ) {//查询卖家
+            $query->where('user_id', $this->user->id);
+            if (!empty($search['obj_type'])) {
+                $query->wherehas('shop.user', function ($q) use ($search) {
+                    $q->where('type', $search['obj_type']);
+                });
+            }
+        }
+        //时间
         if (!empty($search['start_at']) && !empty($search['end_at'])) {
             $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
         }
-
+        //商品名
         if (!empty($search['goods_name'])) {
             $query->wherehas('goods', function ($q) use ($search) {
                 $q->where('name', trim($search['goods_name']));
 
             });
         }
+        //用户名
         if (!empty($search['user_name'])) {
             if ($this->user->type == cons('user.type.retailer')
                 || (isset($search['action_type'])
                     && $search['action_type'] == 'sell')
-            ) {
-                $query->wherehas('shop.user', function ($q) use ($search) {
-                    $q->where('user_name', trim($search['user_name']));
+            ) {//查询卖家
+                $query->wherehas('shop', function ($q) use ($search) {
+                    $q->where('name', trim($search['user_name']));
                 });
-            } else {
-                $query->wherehas('user', function ($q) use ($search) {
-                    $q->where('user_name', trim($search['user_name']));
+            } else {//查询买家
+                $query->wherehas('user.shop', function ($q) use ($search) {
+                    $q->where('name', trim($search['user_name']));
                 });
             }
         }
-
+        //地址
         $query->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
-
             empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
-
-
             empty($search['city_id']) ?: $query->where('city_id', $search['city_id']);
-
-
             empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
-
         });
 
-        return $query->nonCancel()->with('user', 'shippingAddress', 'goods')->orderBy('id', 'desc')->get();
+        return $query->nonCancel()->with('user.shop', 'shop', 'goods')->orderBy('id',
+            'desc')->get();//第一个是买家的店铺,第二个是卖的店铺
     }
 
     /**
