@@ -152,6 +152,7 @@ class Order extends Model
         $payStatus = $this->attributes['pay_status'];
         $payType = $this->attributes['pay_type'];
         $isCancel = $this->attributes['is_cancel'];
+        $payStatusArr = cons('order.pay_status');
         if ($isCancel) {
             return cons()->lang('order.is_cancel.on');
         }
@@ -159,7 +160,7 @@ class Order extends Model
             if (!$status) {//显示未确认
                 return cons()->valueLang('order.status')[$status];
             }
-            if (!$payStatus) {//显示未支付
+            if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
                 return cons()->valueLang('order.pay_status')[$payStatus];
             }
         }

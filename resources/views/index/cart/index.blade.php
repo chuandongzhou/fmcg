@@ -1,5 +1,7 @@
 @extends('index.index-master')
 
+@section('subtitle' , '购物车')
+
 @section('container')
     <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post">
         {{ csrf_field() }}

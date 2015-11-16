@@ -1,5 +1,7 @@
 @extends('master')
 
+@section('title' , '登录 | 订百达')
+
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
 @stop

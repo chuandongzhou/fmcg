@@ -15,6 +15,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
+use WeiHeng\Yeepay\YeepayClient;
 
 class PayController extends Controller
 {
@@ -77,21 +78,38 @@ class PayController extends Controller
         return $this->success($charge);
     }
 
-    public function refundCharge(Request $request, $orderId)
+    public function refund($orderId)
     {
-        $amount = $request->input('amount');
         $order = Order::where('user_id', auth()->id())->find($orderId);
 
-        $tradeConf = cons('trade');
-        if (!$order || $order->pay_type != cons('pay_type.online') || $order->pay_status != $tradeConf['pay_status']['success']) {
-            return $this->error('订单不存在');
+        if (Gate::denies('validate-refund-order', $order)) {
+            return $this->error('订单不存在或不能退款');
         }
-        $tradeId = SystemTradeInfo::where('order_id', $orderId)->select([
+        $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
             'pay_type',
             'amount',
-            'charge_id'
+            'charge_id',
+            'trade_no'
         ])->first();
-        dd($tradeId);
+
+        if (!$tradeInfo) {
+            return $this->error('订单不存在或不能退款');
+        }
+
+        if ($tradeInfo->pay_type == cons('trade.pay_type.yeepay')) {
+            if ($this->_refundByYeepay($tradeInfo)) {
+                // 更新订单状态
+                $order->fill(['pay_status' => cons('order.pay_status.refund_success')])->save();
+                return $this->success('退款成功');
+            } else {
+                return $this->error('退款时遇到错误');
+            }
+        } else {
+
+            $result = $this->_refundByPingxx($order);
+            return $result ? $this->success('退款成功') : $this->error('退款时遇到错误');
+        }
+
     }
 
     /**
@@ -104,4 +122,137 @@ class PayController extends Controller
         return redirect('dbdfmcg://pingppwappay?result=success');
     }
 
+    /**
+     * Pingxx退款
+     *
+     * @param $tradeInfo
+     * @return bool
+     */
+    private function _refundByPingxx($tradeInfo)
+    {
+        $ch = Charge::retrieve($tradeInfo->charge_id);
+        $ch->refunds->create(
+            array(
+                'amount' => $tradeInfo->amount * 100,
+                'description' => 'Refund Description'
+            )
+        );
+        return true;
+    }
+
+    /**
+     * @param $tradeInfo
+     * @return bool
+     */
+    private function _refundByYeepay($tradeInfo)
+    {
+
+        $yeepayConf = config('yeepay');
+
+        $params = array(
+            'p0_Cmd' => "RefundOrd",
+            'p1_MerId' => $yeepayConf['p1_mer_id'],
+            'pb_TrxId' => $tradeInfo->trade_no,
+            'p3_Amt' => $tradeInfo->amount,
+            'p4_Cur' => "CNY",
+            'p5_Desc' => 'Refund Description',
+        );
+        //RefundOrd715201233826542I18.00CNYRefund Description
+        $hmac = $this->_getYeepayHamc($params);
+        $params['hmac'] = $hmac;
+
+        $yeepayClient = new YeepayClient($yeepayConf['ref_url_online']);
+        $pageContents = $yeepayClient->quickPost($yeepayConf['ref_url_online'], $params);
+
+        //$pageContents = "r0_Cmd=RefundOrd\nr1_Code=1\nr2_TrxId=715201233826542I\nr4_Order=yeepay_86263891\nr3_Amt=0.01\nrf_fee=0.0\nr4_Cur=RMB\nhmac=c9b63e32132df69d56b2bdd59b2e1948\n";
+        $result = explode("\n", $pageContents);
+
+        return $pageContents && $this->_validateYeepayRefundResult($result);
+
+    }
+
+
+    /**
+     *  获取hamc
+     *
+     * @param $params
+     * @return string
+     */
+    private function _getYeepayHamc($params)
+    {
+        //	加入订单查询请求，固定值"QueryOrdDetail"
+        $sbOld = $params['p0_Cmd'];
+        //	加入商户编号
+        $sbOld = $sbOld . $params['p1_MerId'];
+        //	加入易宝支付交易流水号
+        $sbOld = $sbOld . $params['pb_TrxId'];
+        //	加入退款金额
+        $sbOld = $sbOld . $params['p3_Amt'];
+        //	加入交易币种
+        $sbOld = $sbOld . $params['p4_Cur'];
+        //	加入退款说明
+        $sbOld = $sbOld . $params['p5_Desc'];
+
+        $hmac = HmacMd5($sbOld, config('yeepay.merchant_key'));
+
+        return $hmac;
+    }
+
+    private function _validateYeepayRefundResult($result)
+    {
+        $params = [];
+        $hmac = '';
+        foreach ($result as $val) {//数组循环
+            $val = trim($val);
+            if (strlen($val) == 0) {
+                continue;
+            }
+            $aryReturn = explode("=", $val);
+            $sKey = $aryReturn[0];
+            //$sValue = urldecode($aryReturn[1]);
+            $sValue = $aryReturn[1];
+
+            if ($sKey == "r0_Cmd") {                                            //业务类型
+                $params['r0_Cmd'] = $sValue;
+            } elseif ($sKey == "r1_Code") {                                //退款申请结果
+                if ($sValue != 1) {
+                    return false;
+                }
+                $params['r1_Code'] = $sValue;
+            } elseif ($sKey == "r2_TrxId") {                    //易宝支付交易流水号
+                $params['r2_TrxId'] = $sValue;
+            } elseif ($sKey == "r3_Amt") {                      //退款金额
+                $params['r3_Amt'] = $sValue;
+            } elseif ($sKey == "r4_Cur") {                      //交易币种
+                $params['r4_Cur'] = $sValue;
+            } elseif ($sKey == "hmac") {                                    //取得签名数据
+                $hmac = $sValue;
+            }
+        }
+
+        return $this->_validateRefundHamc($params, $hmac);
+    }
+
+    /**
+     * 验证退款hamc
+     */
+    private function _validateRefundHamc($params, $hmac)
+    {
+        //进行校验码检查 取得加密前的字符串
+        $sbOld = "";
+        //加入业务类型
+        $sbOld = $sbOld . $params['r0_Cmd'];
+        //加入退款申请是否成功
+        $sbOld = $sbOld . $params['r1_Code'];
+        //加入易宝支付交易流水号
+        $sbOld = $sbOld . $params['r2_TrxId'];
+        //加入退款金额
+        $sbOld = $sbOld . $params['r3_Amt'];
+        //加入交易币种
+        $sbOld = $sbOld . $params['r4_Cur'];
+
+        $sNewString = HmacMd5($sbOld, config('yeepay.merchant_key'));
+
+        return $sNewString == $hmac;
+    }
 }

@@ -13,7 +13,10 @@ return [
     //测试使用
 
     'log_name' => storage_path() . "/logs/YeePay_HTML.log",
-    'req_url_onLine' => "https://www.yeepay.com/app-merchant-proxy/node",
+    'req_url_online' => "https://www.yeepay.com/app-merchant-proxy/node",
+
+    'ref_url_online' => "https://www.yeepay.com/app-merchant-proxy/command",//退款正式地址
+    'ref_url_test' => "http://tech.yeepay.com:8080/robot/debug.action",     //退款测试地址
     // 业务类型
     // 支付请求，固定值"Buy" .
     'p0_cmd' => "Buy",

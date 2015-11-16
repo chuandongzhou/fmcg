@@ -12,14 +12,15 @@
             <div class="col-sm-4 city-wrap">
                 <div class="location-panel">
                     <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                            class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
-                            class="fa fa-angle-down up-down"></span></a>
+                                class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
+                                class="fa fa-angle-down up-down"></span></a>
                 </div>
                 <div class="city-list clearfix">
                     <div class="list-wrap">
                         @foreach($provinces as $provinceId => $province)
                             <div class="item">
-                                <a title="{{ $province }}" class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
+                                <a title="{{ $province }}"
+                                   class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
                                    href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
                             </div>
                         @endforeach
@@ -41,7 +42,7 @@
                     <ul class="nav navbar-nav navbar-right operating-wrap">
                         @if(auth()->user()->type == cons('user.type.wholesaler'))
                             <li><a href="{{ url('shop/' .auth()->user()->shop->id) }}"><span
-                                        class="fa fa-heart-o"></span>我的店面</a>
+                                            class="fa fa-heart-o"></span>我的店面</a>
                             </li>
                         @endif
                         <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
@@ -52,13 +53,16 @@
                         @endif
                         <li class="collect-select">
                             <a class="collect-selected"><span class="selected">收藏夹</span> <span
-                                    class="fa fa-angle-down"></span></a>
+                                        class="fa fa-angle-down"></span></a>
                             <ul class="select-list">
                                 <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
                                 <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ url('auth/logout') }}"><span class="fa fa-ban"></span> 退出</a></li>
+                        <li class="user-name-wrap">
+                            <a href="{{ url('personal/shop') }}" class="name-panel"><span class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }})</a>
+                            <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -76,7 +80,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand logo-icon" href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}" /> </a>
+            <a class="navbar-brand logo-icon" href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}"/> </a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search"
@@ -84,7 +88,7 @@
                 <div class="input-group">
                     <div class="select-role pull-left">
                         <a href="javascript:void(0)" class="selected"><span>商品</span><i
-                                class="fa fa-angle-down"></i></a>
+                                    class="fa fa-angle-down"></i></a>
                         <ul class="select-list">
                             <li><a href="javascript:void(0)" data-url="search">商品</a></li>
                             <li><a href="javascript:void(0)" data-url="shop">商家</a></li>

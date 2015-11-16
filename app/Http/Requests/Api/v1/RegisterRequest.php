@@ -24,7 +24,7 @@ class RegisterRequest extends Request
             'address' => 'required|max:60',
             'area' => 'sometimes|required|max:200',
             'license' => 'sometimes|required',
-            'license_num' => 'required|numeric',
+            'license_num' => 'required|numeric|unique:shop',
             'business_license' => 'sometimes|required',
             'agency_contract' => 'sometimes|required'
         ];

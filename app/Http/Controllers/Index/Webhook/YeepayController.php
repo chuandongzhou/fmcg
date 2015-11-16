@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 class YeepayController extends Controller
 {
 
-    public function getSuccess(Request $request)
+    public function anySuccess(Request $request)
     {
 //	只有支付成功时易宝支付才会通知商户.
 //支付成功回调有两次，都会通知到在线支付请求参数中的p8_Url上：浏览器重定向;服务器点对点通讯.
@@ -56,8 +56,11 @@ class YeepayController extends Controller
                     return redirect(url('order-buy'));
                 } elseif ($r9_BType == "2") {
                     //如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
+                    $field = $r8_MP == 'all' ? 'pid' : 'id';
 
-                    $orders = Order::where($r8_MP, $r6_Order)->get();
+                    info('应答机制成功' . $field);
+                    $orders = Order::where($field, $r6_Order)->get();
+                    info($orders);
 
                     $result = (new PayService)->addTradeInfo($orders, $r3_Amt, $rq_TargetFee, $r2_TrxId, 'yeepay',
                         $hmac);

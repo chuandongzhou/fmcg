@@ -177,6 +177,11 @@ function getOrderButtonEvent() {
  }*/
 $(function () {
     menuFunc();
+    //新消息提示框
+    //$(".msg-channel").css("bottom", "5px");
+    $(".msg-channel .close-btn").click(function () {
+        $(this).closest('.msg-channel').css('display', 'none');
+    })
 })
 function menuFunc() {
     //city-menu begin

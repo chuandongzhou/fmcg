@@ -67,7 +67,15 @@ class PingxxController extends Controller
                 break;
             case "refund.succeeded":
                 // 开发者在此处加入对退款异步通知的处理代码
-                header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                $orderInfo = $event->data->object;
+                info($orderInfo);
+                $orderId = $orderInfo->order_no;
+                $order = Order::find($orderId);
+                if ($order->fill(['pay_status' => cons('order.pay_status.refund_success')])->save()) {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                } else {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+                }
                 break;
             default:
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');

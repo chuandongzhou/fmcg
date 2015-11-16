@@ -3,7 +3,7 @@
 @section('subtitle', '首页')
 
 @section('container')
-    <div class="container wholesalers-index index">
+    <div class="container wholesalers-index index contents">
         <div class="row">
             <div class="col-sm-8 left-store-logo">
                 <div id="myCarousel" class="carousel slide banner banner-slide">
@@ -16,7 +16,7 @@
                     <div class="carousel-inner banner">
                         @foreach($shop->images as $key=>$image)
                             <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image->url }}">
+                                <img src="{{ $image->url }}" alt="{{ $image->name }}">
                             </div>
                         @endforeach
                     </div>
@@ -85,7 +85,7 @@
                         <a href="{{ url($url . '/' . $item->id) }}">
                             <img class="commodity-img" src="{{  $item->image_url }}">
                         </a>
-                        <span class="@if($item->is_out) 'prompt lack'  @elseif($item->is_promotion) 'prompt promotions' @elseif($item->is_new) 'prompt new-listing' @endif"></span>
+                        <span class="@if($item->is_out) prompt lack  @elseif($item->is_promotion) prompt promotions @elseif($item->is_new) prompt new-listing @endif"></span>
 
                     </div>
                     <div class="content-panel">

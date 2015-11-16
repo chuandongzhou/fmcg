@@ -3,7 +3,7 @@
 @include('includes.timepicker')
 
 @section('right-container')
-    <form class="form-horizontal ajax-form" method="post"
+    <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
           action="{{ url('admin/advert-' . $type . '/' . $advert->id) }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-then="referer">
         <div class="form-group">
@@ -61,7 +61,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-bg btn-success" data-method="put">修改</button>
+                <button type="submit" class="btn btn-bg btn-success">{{ $advert->id ? '修改' : '添加' }}</button>
                 <a href="{{ url('admin/advert-' . $type) }}" class="btn btn-bg btn-primary">返回</a>
 
             </div>

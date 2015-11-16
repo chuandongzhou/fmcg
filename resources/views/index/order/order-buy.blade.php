@@ -9,9 +9,11 @@
                    href="{{ url('order-buy') }}">所有订单</a>
 
                 <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/non-payment') }}" data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
+                   data-url="{{ url('api/v1/order/non-payment') }}"
+                   data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
                 <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/non-arrived') }}" data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
+                   data-url="{{ url('api/v1/order/non-arrived') }}"
+                   data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
             </div>
         </div>
         <form class="form" method="get" action="{{ url('order-buy/index') }}">
@@ -36,15 +38,18 @@
                 </span>
                 <span class="item">
                     时间段 :
-                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at" value="{{ $search['start_at'] or '' }}"
+                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
+                           value="{{ $search['start_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>　至　
-                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at" value="{{ $search['end_at'] or '' }}"
+                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
+                           value="{{ $search['end_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>
                 </span>
             </div>
             <div class="col-sm-4 right-search search search-options">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号" value="{{ $search['search_content'] or '' }}"
+                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
+                           value="{{ $search['search_content'] or '' }}"
                            aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
                  <button class="btn btn-primary ajax-submit">搜索
@@ -61,14 +66,13 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        <label><input type="checkbox" name="order_id[]"
-                                                      value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
-                                        <span class="order-number">订单号:{{ $order['id'] }}</span>
+                                        <label>
+                                            <input type="checkbox" name="order_id[]" value="{{ $order['id'] }}">
+                                            {{ $order['created_at'] }}
+                                        </label>
+                                        <span class="order-number"> 订单号 : {{ $order['id'] }}</span>
                                     </th>
-                                    <th>{{ $order['shop']['name'] }}</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <th colspan="4"> {{ $order['shop']['name'] }} </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -76,12 +80,14 @@
                                     <tr>
                                         <td>
                                             <img class="store-img" src="{{ $good['image_url'] }}">
-                                            <a class="product-name"
-                                               href="{{  url('goods/'.$good['id']) }}">{{ $good['name'] }}</a>
+                                            <a class="product-name" href="{{  url('goods/' . $good['id']) }}">
+                                                {{ $good['name'] }}
+                                            </a>
                                         </td>
                                         <td class="red">￥{{ $good['pivot']['price'] }}</td>
                                         <td>{{ $good['pivot']['num'] }}</td>
-                                        @if(0 == $key )
+
+                                        @if(0 == $key)
                                             <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
                                                 <p>{{ $order['status_name'] }}</p>
 
@@ -108,6 +114,15 @@
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
                                                     @endif
+                                                    @if ($order->can_send)
+                                                        <p>
+                                                            <a class="btn btn-danger ajax"
+                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}"
+                                                               data-method="put">
+                                                                退款
+                                                            </a>
+                                                        </p>
+                                                    @endif
                                                 @endif
                                             </td>
                                         @endif
@@ -120,14 +135,16 @@
                 </div>
             </div>
             {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
-        @if($orders->count())
+            @if($orders->count())
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" id="check-all"/>
-                        <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}" data-method="put">
+                        <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                data-method="put">
                             批量取消
                         </button>
-                        <button class="btn btn-info ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}" data-method="put">
+                        <button class="btn btn-info ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                                data-method="put">
                             确认收货
                         </button>
                     </div>

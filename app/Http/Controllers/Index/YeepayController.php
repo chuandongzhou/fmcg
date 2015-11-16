@@ -21,7 +21,8 @@ class YeePayController extends Controller
      */
     public function getRequest(Request $request, $orderId)
     {
-        $field = $request->input('type') == 'all' ? 'pid' : 'id';
+        $type = $request->input('type');
+        $field = $type == 'all' ? 'pid' : 'id';
         $orders = Order::where($field, $orderId)->get();
 
         if (Gate::denies('validate-online-orders', $orders)) {
@@ -52,12 +53,12 @@ class YeePayController extends Controller
         $p7_Pdesc = 'fmcg_describe';
 
 //	商户接收支付成功数据的地址,支付成功后易宝支付会向该地址发送两次成功通知.
-        $p8_Url = url('pay/callback');//config('yeepay.p8_url');
+        $p8_Url = url('webhooks/yeepay/success');//config('yeepay.p8_url');
 
 //	商户扩展信息
 //商户可以任意填写1K 的字符串,支付成功时将原样返回.
         //商家账号
-        $pa_MP = $field;
+        $pa_MP = $type;
 
 //	支付通道编码
 //默认为""，到易宝支付网关.若不需显示易宝支付的页面，直接跳转到各银行、神州行支付、骏网一卡通等支付页面，该字段可依照附录:银行列表设置参数值.
@@ -88,14 +89,9 @@ class YeePayController extends Controller
             'hmac' => $hmac
         ];
 
-        $postUrl = config('yeepay.req_url_onLine');
+        $postUrl = config('yeepay.req_url_online');
 
         $url = $postUrl . '?' . http_build_query($postData);
         return redirect($url);
-    }
-
-
-    public function anyMobileCallback(){
-        dd('233');
     }
 }

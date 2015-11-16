@@ -3,7 +3,7 @@
 @section('subtitle', '首页')
 
 @section('container')
-    <div class="container dealer-index index search-page">
+    <div class="container dealer-index index search-page contents">
         <div class="row">
             <div class="col-sm-12">
                 <div class="tab-title store-tab-title clearfix">

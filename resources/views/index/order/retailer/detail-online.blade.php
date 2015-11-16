@@ -7,13 +7,13 @@
     </div>
     <div class="col-sm-12 order-panel">
         <ul>
-            <li><span class="title-name">订单号 :</span> {{ $order['id'] }}</li>
-            <li><span class="title-name">订单金额 :</span><span class="red">￥{{ $order['price'] }}</span>
+            <li><span class="title-name">订单号 : </span> {{ $order['id'] }}</li>
+            <li><span class="title-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
             </li>
-            <li><span class="title-name">支付方式 :</span>{{ $order['payment_type'] }}</li>
-            <li><span class="title-name">订单状态 :</span><span
+            <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
+            <li><span class="title-name">订单状态 : </span><span
                         class="red">{{ $order['status_name'] }}</span></li>
-            <li><span class="title-name">订单备注 :</span>
+            <li><span class="title-name">订单备注 : </span>
 
                 <p class="remarks-content">{{ $order['remark'] }}</p>
             </li>

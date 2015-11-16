@@ -54,9 +54,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 .go-history {
   padding: 10px 0;
 }
-.contents{
-  padding-bottom:20px;
+
+.contents {
+  padding-bottom: 20px;
 }
+
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
@@ -247,9 +249,6 @@ ul, li, p, a, h1, h2, h3, h4 {
         .item-icon {
           border: 2px solid $body-bg;
         }
-        .item-name {
-          color: $body-bg;
-        }
       }
       .item-icon {
         display: inline-block;
@@ -280,7 +279,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
       .item-name {
         display: block;
-        color: $gray-darker;
+        color: $body-bg;
         font-size: 18px;
         margin-top: 10px;
         font-weight: 700;
@@ -523,22 +522,20 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .list-penal {
-
   .commodity {
     margin-top: 10px;
     .commodity-img {
       width: 100%;
       display: inline-block;
-      height:200px;
     }
     .content-panel {
       padding: 10px 5px;
       background-color: $gray-plain;
+      a {
+        color: $gray;
+      }
       .commodity-name {
         padding: 10px 0;
-        a {
-          color: $gray;
-        }
       }
       .sell-panel {
         .money {
@@ -583,6 +580,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     .new-listing {
       background-position: 0 -300px;
     }
+  }
+}
+.dealer-commodity-wrap{
+  .commodity-img {
+    height: 100px;
   }
 }
 
@@ -715,7 +717,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   @at-root .sort {
-    margin-bottom: 30px;
+    /*margin-bottom: 30px;*/
     color: $gray-light;
     .sort-item {
       @include clearfix;
@@ -1761,11 +1763,11 @@ table {
       border: 1px solid $gray-plain;
       position: relative;
       z-index: 999;
-      .city-value{
+      .city-value {
         display: inline-block;
         vertical-align: bottom;
         max-width: 45px;
-        text-overflow:ellipsis;
+        text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
       }
@@ -1797,8 +1799,8 @@ table {
             text-decoration: none;
             font-size: 13px;
             display: inline-block;
-            width:45px;
-            text-overflow:ellipsis;
+            width: 45px;
+            text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
             &:hover {
@@ -1850,7 +1852,25 @@ table {
         }
       }
     }
-
+    .user-name-wrap{
+      a{
+        display: inline-block;
+        &.name-panel{
+          padding: 0;
+          .user-name{
+            display: inline-block;
+            max-width: 100px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            vertical-align: top;
+          }
+        }
+        &.exit{
+          padding-left: 8px;
+        }
+      }
+    }
     a {
       color: $gray-light;
       padding-top: 10px;
@@ -2332,7 +2352,7 @@ table {
       padding: 4px 3px;
     }
     .search {
-      height: 31px;
+      /*height: 31px;*/
       vertical-align: middle;
       background-color: $banner-gray;
       color: $gray;
@@ -2370,3 +2390,43 @@ table {
 }
 
 /*==============baidu map css end=================*/
+
+.msg-channel {
+  width: 300px;
+  height: 150px;
+  background-color: $gray-plain;
+  border-radius: 8px;
+  position: fixed;
+  right: 5px;
+  bottom: -160px;
+  text-align: center;
+  z-index: 99;
+  color: black;
+  transition: bottom 1s ease 0s;
+  .title {
+    height: 40px;
+    line-height: 40px;
+    background-color: $brand-primary;
+    border-radius: 8px  8px 0 0;
+    span{
+      display: inline-block;
+      font-size: 16px;
+      padding: 0 5px;
+      color:$body-bg;
+    }
+    .close-btn{
+      @extend span;
+      line-height: 40px;
+      cursor: pointer;
+      &:hover{
+        text-decoration: none;
+      }
+    }
+  }
+  .check {
+    display: inline-block;
+    height: 110px;
+    padding-top: 35px;
+    width: 100%;
+  }
+}

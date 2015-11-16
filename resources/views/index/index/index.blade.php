@@ -111,7 +111,7 @@
         @endforeach
         @foreach($shopColumns as $column)
             @if(!$column->shops->isEmpty())
-                <div class="row list-penal">
+                <div class="row list-penal dealer-commodity-wrap">
                     <div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>
                     <div class="col-sm-12 padding-clear">
                         @foreach($column->shops as $shop)

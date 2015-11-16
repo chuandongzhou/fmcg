@@ -2,7 +2,7 @@
 @include('includes.cropper')
 @include('includes.address')
 
-@section('title' , '注册')
+@section('title' , '注册 | 订百达')
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
