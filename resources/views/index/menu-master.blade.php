@@ -34,13 +34,13 @@
                                 </a>
                                 <ul class="menu-wrap" {!!  request()->is('order/statistics') ? 'style="display:block"' : '' !!}>
                                     <li>
-                                        <a class="{{ path_active('order/statistics') }}"
+                                        <a class="{{ request()->input('obj_type') == 1 ? 'active' : '' }}"
                                            href="{{ url('order/statistics?obj_type=1&pay_type=1') }}">
                                             终端商
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="{{ path_active('order/statistics') }}"
+                                        <a class="{{ request()->input('obj_type') == 3 ? 'active' : '' }}"
                                            href="{{ url('order/statistics?obj_type=3&pay_type=1') }}">
                                             供应商
                                         </a>
