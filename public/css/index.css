@@ -445,14 +445,14 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-index .left-store-logo .banner .item img {
     width: 100%;
-    height: 370px;
+    height: 400px;
     max-width: 1000px;
     border: 1px solid #b4b4b4; }
 
 .wholesalers-index .store {
   border-top: 1px dashed #b4b4b4;
   border-bottom: 1px dashed #b4b4b4;
-  height: 370px;
+  height: 400px;
   padding: 0; }
   .wholesalers-index .store .store-panel {
     width: 100%;
@@ -748,8 +748,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 .goods-detail .graphic-details {
   padding: 15px; }
 
-.goods-detail .left-store-logo .banner .item img {
-  height: 300px; }
+.goods-detail .goods-detail-banner .banner .item img {
+  max-height: 400px;
+  max-width: 450px;
+  width: 100%; }
 
 .goods-detail .store-detail-wrap h3 {
   padding: 0 0 20px 0;
@@ -767,7 +769,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding-right: 10px; }
   .goods-detail .store-detail-wrap .information li .content {
     display: inline-block;
-    width: 85%; }
+    width: 75%; }
   .goods-detail .store-detail-wrap .information li .stores-img {
     width: 60px;
     height: 60px; }
@@ -1183,7 +1185,7 @@ table .product-name {
       height: 50px; }
 
 .order-detail .store-msg {
-  margin: 50px 0 5px 0;
+  margin: 30px 0 5px 0;
   padding: 8px;
   border: 1px solid #e0e0e0; }
   .order-detail .store-msg .item {
@@ -1203,6 +1205,9 @@ table .product-name {
     padding: 10px 0; }
     .order-detail .bottom-content p .btn {
       padding: 5px 25px; }
+
+.title-info-name {
+  color: #777777; }
 
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/

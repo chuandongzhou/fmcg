@@ -7,7 +7,7 @@
     <div class="col-sm-12 my-goods goods-detail">
         <div class="row operating">
             <div class="col-sm-1">
-                <a href="javascript:history.back()">< 返回</a>
+                <a href="javascript:history.back()"><i class="fa fa-reply"></i> 返回</a>
             </div>
             <div class="col-sm-3 col-sm-push-8 text-right btn-list">
                 <a href="{{ url('my-goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>

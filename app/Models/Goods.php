@@ -227,6 +227,8 @@ class Goods extends Model
     }
 
     /**
+     *  按标签查询
+     *
      * @param $query
      * @param $attr
      */
@@ -243,6 +245,18 @@ class Goods extends Model
         return $query->whereIn('id', $goodsIds);
     }
 
+    /**
+     * 商品状态
+     *
+     * @param $query
+     * @param $status
+     * @return mixed
+     */
+    public function scopeOfStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
 
     /**
      * 模型启动事件
@@ -251,9 +265,7 @@ class Goods extends Model
     {
         parent::boot();
 
-        // 注册删除事件
         static::deleted(function ($model) {
-            // 删除所有关联文件
             $model->deliveryArea->delete();
         });
 
@@ -328,7 +340,7 @@ class Goods extends Model
     public function getImageUrlAttribute()
     {
         $image = $this->images->first();
-        return $image ? $image->image_url : '';
+        return $image ? $image->image_url : asset('images/goods_default.png');
     }
 
     /**

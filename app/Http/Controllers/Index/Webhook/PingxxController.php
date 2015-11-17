@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Index\Webhook;
 use App\Http\Controllers\Index\Controller;
 use App\Models\Order;
 use App\Services\PayService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PingxxController extends Controller
@@ -68,10 +69,14 @@ class PingxxController extends Controller
             case "refund.succeeded":
                 // 开发者在此处加入对退款异步通知的处理代码
                 $orderInfo = $event->data->object;
-                info($orderInfo);
-                $orderId = $orderInfo->order_no;
+                $orderId = $orderInfo->metadata->order_no;
+                //info($orderId);
                 $order = Order::find($orderId);
-                if ($order->fill(['pay_status' => cons('order.pay_status.refund_success')])->save()) {
+                if ($order->fill([
+                    'pay_status' => cons('order.pay_status.refund_success'),
+                    'refund_at' => Carbon::now()
+                ])->save()
+                ) {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');

@@ -70,7 +70,7 @@ class ShopController extends Controller
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
 
-        $goods = Goods::where($map)->with('images.image');
+        $goods = Goods::where($map)->ofStatus(cons('goods.status.on'))->with('images.image');
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $goods->{'Of'.ucfirst($sort)}();
         }

@@ -114,7 +114,7 @@
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
                                                     @endif
-                                                    @if ($order->can_send)
+                                                    @if ($order->can_refund)
                                                         <p>
                                                             <a class="btn btn-danger ajax"
                                                                data-url="{{ url('api/v1/pay/refund/' . $order->id) }}"

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\SystemTradeInfo;
+use Carbon\Carbon;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
@@ -86,6 +87,7 @@ class PayController extends Controller
             return $this->error('订单不存在或不能退款');
         }
         $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
+            'order_id',
             'pay_type',
             'amount',
             'charge_id',
@@ -99,14 +101,17 @@ class PayController extends Controller
         if ($tradeInfo->pay_type == cons('trade.pay_type.yeepay')) {
             if ($this->_refundByYeepay($tradeInfo)) {
                 // 更新订单状态
-                $order->fill(['pay_status' => cons('order.pay_status.refund_success')])->save();
+                $order->fill([
+                    'pay_status' => cons('order.pay_status.refund_success'),
+                    'refund_at' => Carbon::now()
+                ])->save();
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
             }
         } else {
 
-            $result = $this->_refundByPingxx($order);
+            $result = $this->_refundByPingxx($tradeInfo);
             return $result ? $this->success('退款成功') : $this->error('退款时遇到错误');
         }
 
@@ -134,7 +139,8 @@ class PayController extends Controller
         $ch->refunds->create(
             array(
                 'amount' => $tradeInfo->amount * 100,
-                'description' => 'Refund Description'
+                'description' => 'Refund Description',
+                'metadata' => ['order_no' => $tradeInfo->order_id]
             )
         );
         return true;

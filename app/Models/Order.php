@@ -21,6 +21,7 @@ class Order extends Model
         'shop_id',
         'paid_at',
         'send_at',
+        'refund_at',
         'confirmed_at',
         'finished_at',
         'is_cancel',
@@ -218,6 +219,16 @@ class Order extends Model
         return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status']
             == cons('order.pay_status.payment_success') : true)
         && $this->attributes['status'] == cons('order.status.non_send');
+    }
+
+    /**
+     * 是否可退款
+     *
+     * @return bool
+     */
+    public function getCanRefundAttribute()
+    {
+        return $this->attributes['pay_type'] == cons('pay_type.online') && $this->attributes['pay_status'] == cons('order.pay_status.payment_success') && $this->attributes['status'] == cons('order.status.non_send');
     }
 
     /**

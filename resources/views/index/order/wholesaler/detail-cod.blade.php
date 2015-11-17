@@ -97,11 +97,14 @@
                 <div class="col-sm-12">
                     <ul class="pull-left order-information">
                         <li class="title">订单信息</li>
-                        <li>订单号 : {{ $order['id'] }}</li>
-                        <li>订单金额 : <span class="red">￥{{ $order['price'] }}</span></li>
-                        <li>支付方式 : {{ $order['payment_type'] }}</li>
-                        <li>订单状态 : <span class="red">{{ $order['status_name'] }}</span></li>
-                        <li>订单备注 :
+                        <li><span class="title-info-name">订单号 : </span>{{ $order['id'] }}</li>
+                        <li><span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
+                        </li>
+                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
+                        <li><span class="title-info-name">订单状态 : </span><span
+                                    class="red">{{ $order['status_name'] }}</span></li>
+                        <li><span class="title-info-name">订单备注 :</span>
+
                             <p class="remarks-content">{{ $order['remark'] }}</p>
                         </li>
                     </ul>
@@ -115,17 +118,17 @@
                                     </button>
                                 @endif
                                 @if($order['can_send'])
-                                        <a class="btn btn-warning send-goods"  data-target="#sendModal"
-                                           data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
+                                    <a class="btn btn-warning send-goods" data-target="#sendModal"
+                                       data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
                                 @elseif($order['can_confirm_collections'])
-                                        <button class="btn btn-primary ajax" data-method='put'
-                                                data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
-                                                data-data='{"order_id":{{ $order['id'] }}}'>确认收款
-                                        </button>
+                                    <button class="btn btn-primary ajax" data-method='put'
+                                            data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
+                                            data-data='{"order_id":{{ $order['id'] }}}'>确认收款
+                                    </button>
                                 @endif
                                 @if($order['can_export'])
                                     <a target="_blank" class="btn btn-success"
-                                          href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
+                                       href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                                 @endif
                             @endif
                         </div>
@@ -134,18 +137,20 @@
                 <div class="col-sm-12 receiving-information">
                     <ul>
                         <li class="title">收货人信息</li>
-                        <li>终端商名称 : {{ $order['user']['user_name'] }}
+                        <li><span class="title-info-name">终端商名称 : </span>{{ $order['user']['user_name'] }} </li>
+                        <li><span class="title-info-name">联系人 : </span>{{ $order['shipping_address']['consigner'] }}
+                        </li>
+                        <li><span class="title-info-name">联系电话 : </span>{{ $order['shipping_address']['phone'] }}</li>
                         <li>
-                        <li>联系人 : {{ $order['shipping_address']['consigner'] }}</li>
-                        <li>联系电话 : {{ $order['shipping_address']['phone'] }}</li>
-                        <li>联系地址
-                            : {{ $order['shipping_address']['address']['area_name'] . $order['shipping_address']['address']['address'] }}</li>
+                            <span class="title-info-name">联系地址: </span>
+                            {{ $order['shipping_address']['address']['area_name'] . $order['shipping_address']['address']['address'] }}
+                        </li>
                     </ul>
                 </div>
             </div>
             <div class="row table-row">
                 <div class="col-sm-12 table-responsive table-col">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-center">
                         <thead>
                         <tr>
                             <th>商品编号</th>
@@ -155,7 +160,7 @@
                             <th>商品数量</th>
                             <th>金额</th>
                             @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
-                            <th>操作</th>
+                                <th>操作</th>
                             @endif
                         </tr>
                         </thead>
@@ -170,7 +175,8 @@
                                 <td>{{ $item['pivot']['total_price'] }}</td>
                                 @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
                                     <td><a class="change-price" data-target="#changePrice"
-                                           data-toggle="modal" data-data="{{ $order['id'] }}" data-pivot="{{  $item['pivot']['id'] }}">修改</a></td>
+                                           data-toggle="modal" data-data="{{ $order['id'] }}"
+                                           data-pivot="{{  $item['pivot']['id'] }}">修改</a></td>
                                 @endif
 
                             </tr>
@@ -185,11 +191,13 @@
         </div>
     </div>
 
-    <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     @if($delivery_man->count())
                         <p class="modal-title" id="cropperModalLabel">选择配送人员:
                             <span class="extra-text">
@@ -210,30 +218,35 @@
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
                         @if($delivery_man->count())
-                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定</button>
+                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
+                                    data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定
+                            </button>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade in" id="changePrice" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="changePrice" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <p class="modal-title" id="cropperModalLabel">修改单价:
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <p class="modal-title" id="cropperModalLabel">修改单价:
                             <span class="extra-text">
-                                  <input type="text" name="price" />
-                                <span class="tip" style="display: none;color:red;" >请输入数字</span>
+                                  <input type="text" name="price"/>
+                                <span class="tip" style="display: none;color:red;">请输入数字</span>
                             </span>
-                        </p>
+                    </p>
                 </div>
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
-                                data-url="{{ url('api/v1/order/change-price') }}" data-method="put">确定</button>
+                                data-url="{{ url('api/v1/order/change-price') }}" data-method="put">确定
+                        </button>
                     </div>
                 </div>
             </div>
@@ -245,8 +258,8 @@
     @parent
     <script>
         $(function () {
-           sendGoodsByDetailPage();
-           changePriceByDetailPage();
+            sendGoodsByDetailPage();
+            changePriceByDetailPage();
         })
     </script>
-    @stop
+@stop

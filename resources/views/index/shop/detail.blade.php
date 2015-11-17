@@ -5,7 +5,7 @@
 @section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
-            <div class="col-sm-5 left-store-logo">
+            <div class="col-sm-8 left-store-logo">
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($shop->images as $key=>$image)
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-7 store-detail-wrap">
+            <div class="col-sm-4 store-detail-wrap">
                 <ul class="store-detail information">
                     <li><span class="title-name">店家图片 </span><img class="stores-img"
                                                                   src="{{ $shop->logo ? $shop->logo->url : '' }}"></li>

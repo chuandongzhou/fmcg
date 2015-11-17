@@ -10,7 +10,7 @@
                class="btn {{ path_active(['personal/balance','personal/withdraw']) }}">账号余额</a>
             <a href="{{ url('personal/bank') }}"
                class="btn {{ path_active('personal/bank*') }}">提现账号</a>
-            <a href="#" class="btn">人员管理</a>
+            {{--<a href="#" class="btn">人员管理</a>--}}
             <a href="{{ url('personal/delivery-man') }}"
                class="btn {{ path_active('personal/delivery-man*') }}">配送人员</a>
         @endif

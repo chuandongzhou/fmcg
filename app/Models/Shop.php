@@ -437,7 +437,7 @@ class Shop extends Model
     {
         $image = $this->images->first();
 
-        return $image ? upload_file_url($image->path) : '';
+        return $image ? upload_file_url($image->path) : asset('images/shop_default.png');
     }
 
     /**

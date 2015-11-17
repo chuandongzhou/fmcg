@@ -3,7 +3,7 @@
 @section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
-            <div class="col-sm-5 left-store-logo">
+            <div class="col-sm-5 goods-detail-banner">
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($goods->images_url as $key =>$image)
@@ -50,7 +50,7 @@
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
                                 <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">
                                 <button class="btn count btn-cancel inc-num">+</button>
-                                <span class="title-name">最底购买量:{{ $goods->min_num }}</span>
+                                <span class="title-name"> 最低购买量 : {{ $goods->min_num }}</span>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"

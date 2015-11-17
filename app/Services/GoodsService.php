@@ -115,13 +115,18 @@ class GoodsService
             'sales_volume'
         ];
         foreach ($goodsColumns as $goodsColumn) {
-            $goods = Goods::whereIn('id', $goodsColumn->id_list)->where('user_type', '>',
-                $type)->with('images')->select($goodsFields)->get();
+            $goods = Goods::whereIn('id', $goodsColumn->id_list)
+                ->where('user_type', '>', $type)
+                ->ofStatus(cons('goods.status.on'))
+                ->with('images')
+                ->select($goodsFields)
+                ->get();
             $columnGoodsCount = $goods->count();
             if ($columnGoodsCount < 10) {
                 $columnGoodsIds = $goods->pluck('id')->toArray();
                 $goodsBySort = Goods::whereNotIn('id', $columnGoodsIds)
                     ->where('user_type', '>', $type)
+                    ->ofStatus(cons('goods.status.on'))
                     ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
                     ->with('images.image')
                     ->select($goodsFields)

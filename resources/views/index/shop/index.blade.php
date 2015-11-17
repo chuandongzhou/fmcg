@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="row list-penal">
+        <div class="row list-penal dealer-commodity-wrap">
             @foreach($shops  as $shop)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="content-panel">
                         <p class="sell-panel">
-                            <span class="sales ">最底配送额</span>
+                            <span class="sales ">最低配送额</span>
                             <span class="money pull-right">￥{{ $shop->min_money }}</span>
                         </p>
 
@@ -50,7 +50,7 @@
                             </a>
                         </p>
 
-                        <p class="order-count">订单量 : <span>10010</span></p>
+                        <p class="order-count">订单量 : <span>{{ $shop->sales_volume }}</span></p>
                     </div>
                 </div>
             @endforeach

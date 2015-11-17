@@ -107,15 +107,15 @@
             <label class="pull-left title-name">商家信息</label>
             <ul class="pull-left">
                 <li>
-                    <span>商家名称 :</span>
+                    <span class="title-info-name">商家名称 :</span>
                     <span>{{ $order['shop']['name'] }}</span>
                 </li>
                 <li>
-                    <span>联系人 :</span>
+                    <span class="title-info-name">联系人 :</span>
                     <span>{{ $order['shop']['contact_person'] }}</span>
                 </li>
                 <li>
-                    <span>联系电话 :</span>
+                    <span class="title-info-name">联系电话 :</span>
                     <span>{{ $order['shop']['contact_info'] }}</span>
                 </li>
             </ul>
@@ -124,15 +124,15 @@
             <label class="pull-left title-name">配送人信息</label>
             <ul class="pull-left">
                 <li>
-                    <span>联系人 :</span>
+                    <span class="title-info-name">联系人 :</span>
                     <span>{{ $order['delivery_man']['name'] }}</span>
                 </li>
                 <li>
-                    <span>联系电话 :</span>
+                    <span class="title-info-name">联系电话 :</span>
                     <span>{{ $order['delivery_man']['phone'] }}</span>
                 </li>
                 <li>
-                    <span>预计到达 :</span>
+                    <span class="title-info-name">预计到达 :</span>
                     <span>2015年8月28日 16:45</span>
                 </li>
             </ul>
@@ -143,7 +143,7 @@
         </div>
         <div class="table-responsive order-table clearfix item">
             <label class="pull-left title-name">商品清单</label>
-            <table class=" table table-bordered ">
+            <table class=" table table-bordered table-center">
                 <thead>
                 <tr>
                     <td>商品编号</td>

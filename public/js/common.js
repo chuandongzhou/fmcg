@@ -894,16 +894,22 @@ function baiDuMap() {
                             ], {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.1});  //创建多边形
                             map_modal.addOverlay(polygon_modal);   //将图形添加到地图
                             var coordinate = polygon_modal.getBounds();
-                            $('input[name="coordinate_blx"]').val(coordinate.bl.lng);
-                            $('input[name="coordinate_bly"]').val(coordinate.bl.lat);
-                            $('input[name="coordinate_slx"]').val(coordinate.sl.lng);
-                            $('input[name="coordinate_sly"]').val(coordinate.sl.lat);
+
+                            var northEast = coordinate.getNorthEast();
+                            var southWest = coordinate.getSouthWest();
+                            $('input[name="coordinate_blx"]').val(northEast.lng);
+                            $('input[name="coordinate_bly"]').val(northEast.lat);
+                            $('input[name="coordinate_slx"]').val(southWest.lng);
+                            $('input[name="coordinate_sly"]').val(southWest.lat);
                             polygon_modal.addEventListener('lineupdate', function () {
                                 coordinate = polygon_modal.getBounds();
-                                $('input[name="coordinate_blx"]').val(coordinate.bl.lng);
-                                $('input[name="coordinate_bly"]').val(coordinate.bl.lat);
-                                $('input[name="coordinate_slx"]').val(coordinate.sl.lng);
-                                $('input[name="coordinate_sly"]').val(coordinate.sl.lat);
+                                northEast = coordinate.getNorthEast();
+                                southWest = coordinate.getSouthWest();
+
+                                $('input[name="coordinate_blx"]').val(northEast.lng);
+                                $('input[name="coordinate_bly"]').val(northEast.lat);
+                                $('input[name="coordinate_slx"]').val(southWest.lng);
+                                $('input[name="coordinate_sly"]').val(southWest.lat);
                             });
                         }
                     }
@@ -945,7 +951,10 @@ function dynamicShowMap() {
  * @param data
  */
 function getCoordinateMap(data) {
-    map = new BMap.Map("map");
+    map = new BMap.Map("map"/*,{minZoom:4,maxZoom:8}*/);
+    var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+    map.addControl(top_left_navigation);
+
     if (data && data.length) {
         $.each(data, function (index, value) {
             if (value.coordinate) {
@@ -954,7 +963,8 @@ function getCoordinateMap(data) {
                 var point = new BMap.Point(point_lng, point_lat);
                 if (!index) {
                     //map.centerAndZoom(point,5);//取第一个中心点为地图默认中心
-                    map.centerAndZoom(new BMap.Point(106, 35), 5);
+                    map.centerAndZoom(new BMap.Point(point_lng, point_lat), 13);
+                    map.setZoom(13); //默认到市
                 }
                 var marker = new BMap.Marker(point);  // 创建标注
                 map.addOverlay(marker);               // 将标注添加到地图中
@@ -970,6 +980,7 @@ function getCoordinateMap(data) {
                 map.addOverlay(polygon);   //将图形添加到地图
             }
         });
+
     } else {
         map.centerAndZoom(new BMap.Point(106, 35), 5);
 

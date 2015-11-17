@@ -140,7 +140,7 @@
         </div>
         <div class="table-responsive order-table clearfix item">
             <label class="pull-left title-name">商品清单</label>
-            <table class=" table table-bordered ">
+            <table class=" table table-bordered table-center">
                 <thead>
                 <tr>
                     <td>商品编号</td>

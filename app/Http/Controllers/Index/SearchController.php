@@ -28,7 +28,7 @@ class SearchController extends Controller
             'is_out',
             'cate_level_1',
             'cate_level_2'
-        ])->where('user_type', '>', auth()->user()->type);
+        ])->where('user_type', '>', auth()->user()->type)->ofStatus(cons('goods.status.on'));
 
         $result = GoodsService::getGoodsBySearch($data, $goods);
         return view('index.search.index',

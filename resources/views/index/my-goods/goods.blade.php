@@ -33,7 +33,7 @@
                                required>
                         <span>(整数)</span>
                         @if (auth()->user()->type == cons('user.type.supplier'))
-                            <label class="control-label">最底购买数(批发商) :</label>
+                            <label class="control-label">最低购买数(批发商) :</label>
                             <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
                                    type="text" required>
                             <span>(整数)</span>

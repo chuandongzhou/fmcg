@@ -916,6 +916,7 @@
 	paid_at				string		支付时间
 	send_at				string		发货时间
 	finished_at			string		完成时间
+	refund_at           string      退款时间
 	can_cancel			bool		是否可取消(是true,否false)
 	can_payment			bool		是否可在线支付
 	can_confirm_arrived bool		是否可确认收货(针对在线支付)
@@ -1034,6 +1035,7 @@
 	created_at				string		创建时间
 	paid_at					string		支付时间
 	send_at					string		发货时间
+	refund_at               string      退款时间
 	finished_at				string		完成时间
 	can_cancel				bool		是否可取消(是true,否false)
 	can_send				bool		是否可发货
@@ -1523,7 +1525,7 @@
 
 `失败返回：`
 
-#### 2.17.2 获取charge对象[get] (refund/{order_id})
+#### 2.17.2 退款[get] (refund/{order_id})
 `请求参数：`
 
 `成功返回：`
