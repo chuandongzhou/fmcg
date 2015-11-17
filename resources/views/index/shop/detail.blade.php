@@ -30,7 +30,7 @@
                     <li><span class="title-name">联系方式 </span><b>{{ $shop->contact_info }}</b></li>
                     <li><span class="title-name">最低配送额 </span><b class="red">￥{{ $shop->min_money }}</b></li>
                     <li><span class="title-name">店家地址 </span><b class="red">{{ $shop->address }}</b></li>
-                    <li><span class="title-name pull-left">店家介绍 </span><p class="content pull-left">{{ $shop->introduction }}</p>
+                    <li><span class="title-name pull-left">店家介绍 </span><p class="content">{{ $shop->introduction }}</p>
                     </li>
                 </ul>
             </div>

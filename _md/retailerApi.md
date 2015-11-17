@@ -464,14 +464,7 @@
     name                string      店铺名
     logo_url            string      店铺logo地址
     min_money           decimal     最低配送额
-    images_url          array       店铺图片
-
-    images_url 字段子集说明
-
-    name                string      图片名
-    path                string      图片路径
-    id                  int         图片id
-    url                 string      图片详细路径
+    image_url           string      店铺图片
 
 #### 2.4.2 根据距离排序获取所有店铺[get] all
 `请求参数：`

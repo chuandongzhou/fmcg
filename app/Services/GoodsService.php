@@ -120,7 +120,9 @@ class GoodsService
                 ->ofStatus(cons('goods.status.on'))
                 ->with('images')
                 ->select($goodsFields)
-                ->get();
+                ->get()->each(function ($goods) {
+                    $goods->setAppends(['image_url']);
+                });
             $columnGoodsCount = $goods->count();
             if ($columnGoodsCount < 10) {
                 $columnGoodsIds = $goods->pluck('id')->toArray();
@@ -131,7 +133,9 @@ class GoodsService
                     ->with('images.image')
                     ->select($goodsFields)
                     ->take(10 - $columnGoodsCount)
-                    ->get();
+                    ->get()->each(function ($goods) {
+                        $goods->setAppends(['image_url']);
+                    });
                 $goods = $goods->merge($goodsBySort);
             }
             $goodsColumn->goods = $goods;

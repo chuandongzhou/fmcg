@@ -768,8 +768,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     text-align: right;
     padding-right: 10px; }
   .goods-detail .store-detail-wrap .information li .content {
-    display: inline-block;
-    width: 75%; }
+    margin-left: 85px; }
   .goods-detail .store-detail-wrap .information li .stores-img {
     width: 60px;
     height: 60px; }

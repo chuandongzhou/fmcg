@@ -37,7 +37,7 @@ class Shop extends Model
         'y_lat'
     ];
 
-    protected $appends = ['images_url', 'logo_url'];
+    protected $appends = ['images_url', 'logo_url', 'image_url'];
 
     protected $hidden = ['images', 'logo', 'created_at', 'updated_at'];
 
@@ -203,7 +203,7 @@ class Shop extends Model
 
     public function scopeOfDeliveryArea($query, $data)
     {
-        if (isset($data['province_id'])&& isset($data['city_id'])&& isset($data['district_id']) && isset($data['street_id']) ) {
+        if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])) {
             $query->whereHas('deliveryArea', function ($query) use ($data) {
                 $query->where([
                     'province_id' => $data['province_id'],
@@ -471,7 +471,8 @@ class Shop extends Model
      *
      * @return mixed
      */
-    public function getSalesVolumeAttribute(){
+    public function getSalesVolumeAttribute()
+    {
         return $this->goods()->sum('sales_volume');
     }
 

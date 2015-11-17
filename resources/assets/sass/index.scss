@@ -582,7 +582,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.dealer-commodity-wrap{
+
+.dealer-commodity-wrap {
   .commodity-img {
     height: 100px;
   }
@@ -594,7 +595,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .item {
         padding: 0;
         img {
-         @include size(100%,400px);
+          @include size(100%, 400px);
           max-width: 1000px;
           border: 1px solid $gray-lighter;
         }
@@ -1029,8 +1030,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           padding-right: 10px;
         }
         .content {
-          display: inline-block;
-          width: 75%;
+          margin-left: 85px;
         }
         .stores-img {
           @include square(60px);
@@ -1667,9 +1667,11 @@ table {
     }
   }
 }
-.title-info-name{
-  color:$gray-light;
+
+.title-info-name {
+  color: $gray-light;
 }
+
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
@@ -1856,12 +1858,12 @@ table {
         }
       }
     }
-    .user-name-wrap{
-      a{
+    .user-name-wrap {
+      a {
         display: inline-block;
-        &.name-panel{
+        &.name-panel {
           padding: 0;
-          .user-name{
+          .user-name {
             display: inline-block;
             max-width: 100px;
             text-overflow: ellipsis;
@@ -1870,7 +1872,7 @@ table {
             vertical-align: top;
           }
         }
-        &.exit{
+        &.exit {
           padding-left: 8px;
         }
       }
@@ -2411,18 +2413,18 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px  8px 0 0;
-    span{
+    border-radius: 8px 8px 0 0;
+    span {
       display: inline-block;
       font-size: 16px;
       padding: 0 5px;
-      color:$body-bg;
+      color: $body-bg;
     }
-    .close-btn{
+    .close-btn {
       @extend span;
       line-height: 40px;
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: none;
       }
     }
