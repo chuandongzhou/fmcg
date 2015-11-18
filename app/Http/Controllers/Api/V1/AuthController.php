@@ -47,7 +47,7 @@ class AuthController extends Controller
      */
     public function postRegister(RegisterRequest $request)
     {
-        $userInput = $request->only('username', 'password', 'type');
+        $userInput = $request->only('user_name', 'password', 'type');
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店

@@ -47,9 +47,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         // 注册删除事件
         static::deleted(function ($user) {
-            //TODO 删除其它
             $user->carts()->delete();
-            $user->likes()->delete();
+            $user->likeShops()->delete();
+            $user->likeGoods()->delete();
             $user->shop()->delete();
             $user->userBanks()->delete();
             $user->shippingAddress()->delete();

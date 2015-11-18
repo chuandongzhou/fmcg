@@ -15,7 +15,7 @@
                     <div class="panel-body">
                         <form class="ajax-form form-horizontal" method="post"
                               action="{{  url('api/v1/auth/register')  }}"
-                              accept-charset="UTF-8" data-done-then="referer">
+                              accept-charset="UTF-8" data-done-url="{{ url('auth/guide') }}">
                             <fieldset>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="user_name">用户名:</label>
@@ -83,7 +83,7 @@
 
                                     <div class="col-sm-10 col-md-6">
                                         <input class="form-control" id="spreading_code" name="spreading_code"
-                                               placeholder="请输入推广码" type="text">
+                                               placeholder="推广码(可选)" type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -101,7 +101,8 @@
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
-                                        <span data-name="license" class="btn btn-primary btn-sm fileinput-button">
+                                        <span data-name="license" class="btn btn-primary btn-sm fileinput-button"
+                                              name="license">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
@@ -115,14 +116,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">食品流通许可证:</label>
+                                    <label class="col-sm-2 control-label" for="business_license">食品流通许可证:</label>
 
                                     <div class="col-sm-10 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
                                         <span data-name="business_license"
-                                              class="btn btn-primary btn-sm fileinput-button">
+                                              class="btn btn-primary btn-sm fileinput-button" name="business_license">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
@@ -189,7 +190,9 @@
                                                class="form-control" value="">
                                         <input type="hidden" name="x_lng" value=""/>
                                         <input type="hidden" name="y_lat" value=""/>
-                                        <div id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
+
+                                        <div id="address-map"
+                                             style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-lg btn-block btn-submit" data-loading-text="注册中..."
