@@ -87,6 +87,7 @@
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
+
                     <div class="image-preview w160">
                         <img src="{{ $shop->license_url }}" class="img-thumbnail">
                     </div>
@@ -112,79 +113,84 @@
                     </div>
                 </div>
             </div>
+            @if($shop->user_type > cons('user.type.retailer'))
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
-
-                <div class="col-sm-10 col-md-6">
-                    <div class="progress collapse">
-                        <div class="progress-bar progress-bar-striped active"></div>
-                    </div>
+                    <div class="col-sm-10 col-md-6">
+                        <div class="progress collapse">
+                            <div class="progress-bar progress-bar-striped active"></div>
+                        </div>
                             <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
 
-                    <div class="image-preview w160">
-                        <img src="{{ $shop->agency_contract_url }}"
-                             class="img-thumbnail">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">图片</label>
-
-                <div class="col-sm-10">
-                    <button data-height="400" data-width="1000" data-target="#cropperModal" data-toggle="modal"
-                            data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
-                            id="pic-upload">
-                        请选择图片文件(1000x400)
-                    </button>
-                    <div class="row pictures">
-                        <div class="hidden">
-                            <input type="hidden" value="" name="images[id][]">
-                            <input type="hidden" value="" name="images[path][]">
-                            <input type="text" value="" name="images[name][]"
-                                   class="form-control input-sm">
+                        <div class="image-preview w160">
+                            <img src="{{ $shop->agency_contract_url }}"
+                                 class="img-thumbnail">
                         </div>
-                        @foreach($shop->images as $image)
-                            <div class="col-xs-3">
-                                <div class="thumbnail">
-                                    <button aria-label="Close" class="close" type="button"><span
-                                                aria-hidden="true">×</span>
-                                    </button>
-                                    <img alt="" src="{{ $image->url  }}">
-                                    <input type="hidden" value="{{ $image->id }}" name="images[id][]">
-                                    <input type="hidden" value="{{ $image->path }}" name="images[path][]">
-                                    <input type="text" value="{{ $image->name }}" name="images[name][]"
-                                           class="form-control input-sm">
-                                </div>
-                            </div>
-                        @endforeach
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片</label>
+
+                    <div class="col-sm-10">
+                        <button data-height="400" data-width="1000" data-target="#cropperModal" data-toggle="modal"
+                                data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
+                                id="pic-upload">
+                            请选择图片文件(1000x400)
+                        </button>
+                        <div class="row pictures">
+                            <div class="hidden">
+                                <input type="hidden" value="" name="images[id][]">
+                                <input type="hidden" value="" name="images[path][]">
+                                <input type="text" value="" name="images[name][]"
+                                       class="form-control input-sm">
+                            </div>
+                            @foreach($shop->images as $image)
+                                <div class="col-xs-3">
+                                    <div class="thumbnail">
+                                        <button aria-label="Close" class="close" type="button"><span
+                                                    aria-hidden="true">×</span>
+                                        </button>
+                                        <img alt="" src="{{ $image->url  }}">
+                                        <input type="hidden" value="{{ $image->id }}" name="images[id][]">
+                                        <input type="hidden" value="{{ $image->path }}" name="images[path][]">
+                                        <input type="text" value="{{ $image->name }}" name="images[name][]"
+                                               class="form-control input-sm">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="form-group">
                 <label class="col-sm-2 control-label">所在地</label>
 
                 <div class="col-sm-3">
-                    <select data-group="shop" name="address[province_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
+                    <select data-group="shop" name="address[province_id]"
+                            data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
                             class="address-province form-control address">
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    <select data-group="shop" name="address[city_id]" data-id="{{  $shop->shopAddress ? $shop->shopAddress->city_id : '' }}"
+                    <select data-group="shop" name="address[city_id]"
+                            data-id="{{  $shop->shopAddress ? $shop->shopAddress->city_id : '' }}"
                             class="address-city form-control address">
                     </select>
                 </div>
                 <div class="col-sm-2">
-                    <select data-group="shop" name="address[district_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->district_id : '' }}"
+                    <select data-group="shop" name="address[district_id]"
+                            data-id="{{ $shop->shopAddress ? $shop->shopAddress->district_id : '' }}"
                             class="address-district form-control address">
                     </select>
                 </div>
                 <div class="col-sm-2">
-                    <select data-group="shop" name="address[street_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
+                    <select data-group="shop" name="address[street_id]"
+                            data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
                             class="address-street form-control address"></select>
                 </div>
             </div>
@@ -193,7 +199,8 @@
                 <label for="address" class="col-sm-2 control-label">详细地址</label>
 
                 <div class="col-sm-10 col-md-6">
-                    <input type="hidden" name="address[area_name]" value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}" />
+                    <input type="hidden" name="address[area_name]"
+                           value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}"/>
                     <input type="text" placeholder="请输入详细地址" name="address[address]" id="address" class="form-control"
                            value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
                 </div>

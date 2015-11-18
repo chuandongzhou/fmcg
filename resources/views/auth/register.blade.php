@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group hidden">
                                     <label class="col-sm-2 control-label" for="username">代理合同:</label>
 
                                     <div class="col-sm-10 col-md-6">
@@ -145,11 +145,11 @@
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
                                         <span data-name="agency_contract"
-                                              class="btn btn-primary btn-sm fileinput-button">
+                                              class="btn btn-primary btn-sm fileinput-button" name="agency_contract">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
-                                                   name="file">
+                                                   name="file" disabled>
                                         </span>
 
                                         <div class="image-preview w160">
@@ -232,6 +232,14 @@
                         districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="address[area_name]"]').val(provinceVal + ' ' + cityVal + ' ' + districtVal + ' ' + streetVal);
+            })
+            $('select[name="type"]').change(function () {
+                var type = $(this).val(), retailerType = '{{ cons('user.type.retailer') }}', agencyContract = $('span[name="agency_contract"]');
+                if (type == retailerType) {
+                    agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
+                } else {
+                    agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
+                }
             })
         })
     </script>

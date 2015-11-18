@@ -105,28 +105,27 @@
                         </div>
                     </div>
                 </div>
+                @if(auth()->user()->type > cons('user.type.retailer'))
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
-
-                    <div class="col-sm-10 col-md-6">
-                        <div class="progress collapse">
-                            <div class="progress-bar progress-bar-striped active"></div>
-                        </div>
+                        <div class="col-sm-10 col-md-6">
+                            <div class="progress collapse">
+                                <div class="progress-bar progress-bar-striped active"></div>
+                            </div>
                             <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
 
-                        <div class="image-preview w160">
-                            <img src="{{ $shop->agency_contract_url }}"
-                                 class="img-thumbnail">
+                            <div class="image-preview w160">
+                                <img src="{{ $shop->agency_contract_url }}"
+                                     class="img-thumbnail">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                @if(auth()->user()->type > cons('user.type.retailer'))
                     <div class="form-group">
                         <label class="col-sm-2 control-label">图片</label>
 
@@ -167,22 +166,26 @@
                     <label class="col-sm-2 control-label">所在地</label>
 
                     <div class="col-sm-3">
-                        <select data-group="shop" name="address[province_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
+                        <select data-group="shop" name="address[province_id]"
+                                data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
                                 class="address-province form-control address">
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <select data-group="shop" name="address[city_id]" data-id="{{  $shop->shopAddress ? $shop->shopAddress->city_id : '' }}"
+                        <select data-group="shop" name="address[city_id]"
+                                data-id="{{  $shop->shopAddress ? $shop->shopAddress->city_id : '' }}"
                                 class="address-city form-control address">
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select data-group="shop" name="address[district_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->district_id : '' }}"
+                        <select data-group="shop" name="address[district_id]"
+                                data-id="{{ $shop->shopAddress ? $shop->shopAddress->district_id : '' }}"
                                 class="address-district form-control address">
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select data-group="shop" name="address[street_id]" data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
+                        <select data-group="shop" name="address[street_id]"
+                                data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
                                 class="address-street form-control address"></select>
                     </div>
                 </div>
@@ -190,12 +193,16 @@
                     <label for="address" class="col-sm-2 control-label">详细地址</label>
 
                     <div class="col-sm-10 col-md-6">
-                        <input type="hidden" name="address[area_name]" value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}" />
-                        <input type="text" placeholder="请输入详细地址" name="address[address]" id="address" class="form-control"
+                        <input type="hidden" name="address[area_name]"
+                               value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}"/>
+                        <input type="text" placeholder="请输入详细地址" name="address[address]" id="address"
+                               class="form-control"
                                value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
                         <input type="hidden" name="x_lng" value="{{ $shop->x_lng }}"/>
                         <input type="hidden" name="y_lat" value="{{ $shop->y_lat }}"/>
-                        <div id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"> </div>
+
+                        <div id="address-map"
+                             style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
                     </div>
 
                 </div>
@@ -233,10 +240,14 @@
                                     <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                                     <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                                     {{--区域经纬度--}}
-                                    <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
-                                    <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
-                                    <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
-                                    <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
+                                    <input type="hidden" name="area[blx][]"
+                                           value="{{ $area->coordinate->bl_lng or '' }}"/>
+                                    <input type="hidden" name="area[bly][]"
+                                           value="{{ $area->coordinate->bl_lat or '' }}"/>
+                                    <input type="hidden" name="area[slx][]"
+                                           value="{{ $area->coordinate->sl_lng or '' }}"/>
+                                    <input type="hidden" name="area[sly][]"
+                                           value="{{ $area->coordinate->sl_lat or '' }}"/>
                                 </div>
                             @endforeach
                         </div>
@@ -244,6 +255,7 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">地图标识 :</label>
+
                     <div class="col-sm-10">
                         <div id="map"></div>
                     </div>
@@ -263,9 +275,9 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             getCoordinateMap({!! $coordinates or '' !!});
-            getShopAddressMap({!! $shop->x_lng?:0  !!},{!! $shop->y_lat?:0  !!});
+            getShopAddressMap({!! $shop->x_lng?:0  !!}, {!! $shop->y_lat?:0  !!});
 
         });
         $(function () {

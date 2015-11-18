@@ -16,6 +16,7 @@ class ShopController extends Controller
      */
     public function edit($shop)
     {
+        $shop->user_type = $shop->user()->pluck('type');
         return view('admin.shop.shop', ['shop' => $shop]);
     }
 
