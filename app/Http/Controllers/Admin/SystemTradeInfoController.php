@@ -83,8 +83,8 @@ class SystemTradeInfoController extends Controller
                         'type' => cons()->valueLang('trade.type', $trade['type']),
                         'pay_type' => cons()->valueLang('trade.pay_type', $trade['pay_type']),
                         'account' => $trade['account'],
-                        'order_num' => $trade['order_id'],
-                        'trade_num' => $trade['trade_no'],
+                        'order_id' => $trade['order_id'],
+                        'trade_no' => $trade['trade_no'],
                         'pay_status' => cons()->valueLang('trade.pay_status', $trade['pay_status']),
                         'amount' => $trade['amount'],
                         'trade_currency' => cons()->valueLang('trade.trade_currency', $trade['trade_currency']),
@@ -104,11 +104,11 @@ class SystemTradeInfoController extends Controller
     private function getTrade($attributes)
     {
         $map = [];
-        if (isset($attributes['order_num']) && $attributes['order_num'] != '') {
-            $map['order_num'] = $attributes['order_num'];
+        if (isset($attributes['order_id']) && $attributes['order_id'] != '') {
+            $map['order_id'] = $attributes['order_id'];
         }
-        if (isset($attributes['trade_num']) && $attributes['trade_num']) {
-            $map['trade_num'] = $attributes['trade_num'];
+        if (isset($attributes['trade_no']) && $attributes['trade_no']) {
+            $map['trade_no'] = $attributes['trade_no'];
         }
 
         if (isset($attributes['account']) && $attributes['account']) {

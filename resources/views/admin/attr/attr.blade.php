@@ -93,7 +93,7 @@
                 str += '    <td>&nbsp;│&nbsp;└&nbsp;<input type="text" class="attr-name"/>';
                 str += '<button type="button" data-pid="' + pid;
                 str += '" data-cate-id="' + cateId;
-                str += '" class="btn btn-sm btn-default add-attr" onclick="addAttr(this)"><span class="fa fa-ok text-success"></span></button>';
+                str += '" class="btn btn-sm btn-default add-attr" onclick="addAttr(this)"><span class="fa fa-check text-success">确定</span></button>';
                 str += '<button type="button" class="btn btn-sm btn-default js-close" onclick="deleteAttr(this)"><span class="fa fa-remove text-danger"></span></button></td>';
                 str += '<td class=" btn-group-xs">';
                 str += '   </td>';

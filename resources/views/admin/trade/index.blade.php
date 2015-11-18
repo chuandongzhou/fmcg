@@ -4,20 +4,20 @@
     <form class="form-horizontal" method="get" action="{{ url('admin/system-trade') }}">
 
         <div class="form-group">
-            <label for="order_num" class="col-sm-2 control-label">订单号：</label>
+            <label for="order_id" class="col-sm-2 control-label">订单号：</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="order_num" name="order_num" placeholder="请输入订单号"
+                <input type="text" class="form-control" id="order_id" name="order_id" placeholder="请输入订单号"
                        value="{{ $order_id or '' }}">
             </div>
         </div>
 
         <div class="form-group">
-            <label for="trade_num" class="col-sm-2 control-label">交易号：</label>
+            <label for="trade_no" class="col-sm-2 control-label">交易号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{  $trade_no or  '' }}" class="form-control" id="trade_num"
-                       name="trade_num" placeholder="请输入交易号">
+                <input type="text" value="{{  $trade_no or  '' }}" class="form-control" id="trade_no"
+                       name="trade_no" placeholder="请输入交易号">
             </div>
         </div>
 

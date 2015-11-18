@@ -13,7 +13,7 @@ class Admin extends Model implements AuthenticatableContract
     protected $fillable = [
         'role_id',
         'name',
-        'realname',
+        'real_name',
         'password',
         'last_login_ip',
         'last_login_time',

@@ -22,7 +22,9 @@
                 </button>
                 <a class="navbar-brand" href="{{ url('admin') }}">订百达</a>
             </div>
-            <!--/.nav-collapse -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="right"><a href="{{ url('admin/auth/logout') }}"><i class="fa fa-sign-out"></i> 退出</a></li>
+            </ul>
         </div>
     </nav>
 @stop

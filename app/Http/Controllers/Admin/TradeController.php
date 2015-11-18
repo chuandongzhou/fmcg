@@ -20,12 +20,12 @@ class TradeController extends Controller
         $map = [];
         $trades = [];
         // TODO: 搜索可优化
-        if (isset($data['order_num']) || isset($data['trade_num'])) {
-            if (isset($data['order_num']) && $data['order_num'] != '') {
-                $map['order_num'] = $data['order_num'];
+        if (isset($data['order_id']) || isset($data['trade_no'])) {
+            if (isset($data['order_id']) && $data['order_id'] != '') {
+                $map['order_id'] = $data['order_id'];
             }
-            if (isset($data['trade_num']) && $data['trade_num']) {
-                $map['trade_num'] = $data['trade_num'];
+            if (isset($data['trade_no']) && $data['trade_no']) {
+                $map['trade_no'] = $data['trade_no'];
             }
             if (isset($attributes['pay_type']) && $attributes['pay_type']) {
                 $map['pay_type'] = $attributes['pay_type'];
