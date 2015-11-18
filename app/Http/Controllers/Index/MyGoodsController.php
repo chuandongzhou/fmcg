@@ -69,18 +69,19 @@ class MyGoodsController extends Controller
      */
     public function create()
     {
-        //$firstCategory = Category::where('pid', 0)->pluck('id');
-        // $goods->cate_level_1 = $firstCategory;
-
         //默认加入店铺配送地址
-        $shop = auth()->user()->shop()->with(['images', 'deliveryArea.coordinate', 'shopAddress'])->first();
+        $shop = auth()->user()->shop()->with(['deliveryArea.coordinate'])->first();
         $shopDelivery = $shop->deliveryArea->each(function ($area) {
             $area->id = '';
             $area->coordinate;
         });
         $goods = new Goods;
         $goods->deliveryArea = $shopDelivery;
-        return view('index.my-goods.goods', ['goods' => $goods, 'attrs' => []]);
+        return view('index.my-goods.goods', [
+            'goods' => $goods,
+            'attrs' => [],
+            'coordinates' => $shopDelivery
+        ]);
     }
 
 
@@ -131,8 +132,6 @@ class MyGoodsController extends Controller
         $coordinates = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
-
-
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => $attrResults,

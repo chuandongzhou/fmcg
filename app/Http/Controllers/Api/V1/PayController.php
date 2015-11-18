@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\SystemTradeInfo;
+use App\Services\RedisService;
 use Carbon\Carbon;
 use DB;
 use Gate;
@@ -105,14 +106,28 @@ class PayController extends Controller
                     'pay_status' => cons('order.pay_status.refund_success'),
                     'refund_at' => Carbon::now()
                 ])->save();
+                //通知卖家已退款
+                $shop = Shop::find($order->shop_id);
+                $redisKey = 'push:seller:' . $shop->user->id;
+                $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
+                RedisService::setRedis($redisKey, $redisVal);
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
             }
         } else {
-
             $result = $this->_refundByPingxx($tradeInfo);
-            return $result ? $this->success('退款成功') : $this->error('退款时遇到错误');
+
+            if($result) {
+                //通知卖家已退款
+                $shop = Shop::find($order->shop_id);
+                $redisKey = 'push:seller:' . $shop->user->id;
+                $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
+                RedisService::setRedis($redisKey, $redisVal);
+                $this->success('退款成功');
+            }else {
+                $this->error('退款时遇到错误');
+            }
         }
 
     }

@@ -138,12 +138,12 @@
                     <ul>
                         <li class="title">收货人信息</li>
                         <li><span class="title-info-name">终端商名称 : </span>{{ $order['user']['user_name'] }} </li>
-                        <li><span class="title-info-name">联系人 : </span>{{ $order['shipping_address']['consigner'] }}
+                        <li><span class="title-info-name">联系人 : </span>{{ $order['shippingAddress']['consigner'] }}
                         </li>
-                        <li><span class="title-info-name">联系电话 : </span>{{ $order['shipping_address']['phone'] }}</li>
+                        <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
                         <li>
                             <span class="title-info-name">联系地址: </span>
-                            {{ $order['shipping_address']['address']['area_name'] . $order['shipping_address']['address']['address'] }}
+                            {{ $order['shipping_address']['address']['area_name'] . $order['shippingAddress']['address']['address'] }}
                         </li>
                     </ul>
                 </div>

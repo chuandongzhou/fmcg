@@ -157,7 +157,8 @@ return [
         'cancel_by_seller' => '被卖家取消了~~',
         'price_changed' => '价格发生了变化',
         'review_failed' => '审核未通过',
-        'review_payment' => '已打款,请查收'
+        'review_payment' => '已打款,请查收',
+        'refund' => '买家已退款',
     ],
     //提现状态
     'withdraw' => [

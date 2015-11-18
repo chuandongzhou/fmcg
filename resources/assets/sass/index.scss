@@ -524,6 +524,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 .list-penal {
   .commodity {
     margin-top: 10px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 20%;
+    float: left;
+    padding: 0 15px;
     .commodity-img {
       width: 100%;
       display: inline-block;
@@ -548,16 +553,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .commodity-index-img {
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    width: 20%;
-    float: left;
-    margin-top: 10px;
-    padding: 0 15px;
-  }
+
   @media screen and (max-width: 765px) {
-    .commodity-index-img {
+    .commodity {
       width: 100%;
     }
   }
@@ -582,8 +580,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
-.dealer-commodity-wrap {
+.dealer-commodity-wrap{
   .commodity-img {
     height: 100px;
   }
@@ -595,7 +592,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .item {
         padding: 0;
         img {
-          @include size(100%, 400px);
+         @include size(100%,400px);
           max-width: 1000px;
           border: 1px solid $gray-lighter;
         }
@@ -1667,11 +1664,9 @@ table {
     }
   }
 }
-
-.title-info-name {
-  color: $gray-light;
+.title-info-name{
+  color:$gray-light;
 }
-
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
@@ -1858,12 +1853,12 @@ table {
         }
       }
     }
-    .user-name-wrap {
-      a {
+    .user-name-wrap{
+      a{
         display: inline-block;
-        &.name-panel {
+        &.name-panel{
           padding: 0;
-          .user-name {
+          .user-name{
             display: inline-block;
             max-width: 100px;
             text-overflow: ellipsis;
@@ -1872,7 +1867,7 @@ table {
             vertical-align: top;
           }
         }
-        &.exit {
+        &.exit{
           padding-left: 8px;
         }
       }
@@ -2413,18 +2408,18 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px 8px 0 0;
-    span {
+    border-radius: 8px  8px 0 0;
+    span{
       display: inline-block;
       font-size: 16px;
       padding: 0 5px;
-      color: $body-bg;
+      color:$body-bg;
     }
-    .close-btn {
+    .close-btn{
       @extend span;
       line-height: 40px;
       cursor: pointer;
-      &:hover {
+      &:hover{
         text-decoration: none;
       }
     }

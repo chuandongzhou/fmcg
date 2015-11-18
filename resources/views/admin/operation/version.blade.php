@@ -52,7 +52,7 @@
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
                             <a type="button" class="btn btn-danger ajax" data-method="delete"
-                                   data-url="{{ url('admin/operation-record/' . $record->id) }}">
+                                   data-url="{{ url('admin/version-record/' . $record->id) }}">
                                 <i class="fa fa-trash-o"></i> 删除
                             </a>
                             <a type="button" class="btn btn-success ajax disabled" data-method="delete"

@@ -913,6 +913,7 @@
 	can_cancel			bool		是否可取消(是true,否false)
 	can_payment			bool		是否可在线支付
 	can_confirm_arrived bool		是否可确认收货(针对在线支付)
+	trade_no            string      付款成功时交易流水号
 	delivery_man		array		送货人信息(仅发货后才有,否则为Null)
 	shipping_address    array       收货信息
     goods    			array		商品详细信息
@@ -1033,6 +1034,7 @@
 	can_cancel				bool		是否可取消(是true,否false)
 	can_send				bool		是否可发货
 	can_confirm_collections bool		是否可确认收款(针对货到付款)
+	trade_no            string      付款成功时交易流水号
 	shipping_address    	array       收货信息
     goods    				array		商品详细信息
 

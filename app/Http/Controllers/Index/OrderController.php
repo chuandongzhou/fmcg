@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Goods;
 use App\Models\OrderGoods;
 use App\Services\CartService;
 use App\Services\GoodsService;
+use App\Services\RedisService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -114,9 +114,6 @@ class OrderController extends Controller
             head($codPayTypes)) : 0;
         //TODO: 需要验证收货地址是否合法
         $shippingAddressId = $data['shipping_address_id'];
-
-        $redis = Redis::connection();
-
         $pid = 0;
         if ($shops->count() > 1) {
             $maxPid = Order::max('pid');
@@ -156,10 +153,8 @@ class OrderController extends Controller
                     } else {
                         //货到付款订单直接通知卖家发货
                         $redisKey = 'push:seller:' . $shop->user->id;
-                        if (!$redis->exists($redisKey)) {
-                            $redis->set($redisKey, '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod'));
-                            $redis->expire($redisKey, cons('push_time.msg_life'));
-                        }
+                        $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
+                        RedisService::setRedis($redisKey, $redisVal);
                     }
                 } else {
                     foreach ($successOrders as $successOrder) {
@@ -454,7 +449,6 @@ class OrderController extends Controller
             if ($redis->exists($key)) {
                 $content = $redis->get($key);
                 $redis->del($key);
-
                 return response()->json(['type' => $item, 'data' => $content]);
             }
         }

@@ -18,7 +18,7 @@ class CartController extends Controller
         $carts = $myCarts->with('goods')->get();
         if (!empty($carts[0])) {
             // 将所有状态更新为零
-            $myCarts->fill(['status' => 0])->save();
+            $myCarts->update(['status' => 0]);
 
             $carts = (new CartService($carts))->formatCarts();
         }

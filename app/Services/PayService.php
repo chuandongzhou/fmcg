@@ -40,9 +40,11 @@ class PayService
             }
 
             $orderConf = cons('order');
+            $newTimestamp = Carbon::now();
             foreach ($orders as $order) {
                 $order->fill([
                     'pay_status' => $orderConf['pay_status']['payment_success'],
+                    'paid_at' => $newTimestamp
                 ])->save();
                 $fee = ($order->price / $amount) * $orderFee;
                 $fee = sprintf("%.2f", $fee);
@@ -52,7 +54,7 @@ class PayService
                         'order_id' => $order->id,
                         'trade_no' => $tradeNo,
                         'amount' => $order->price - $fee,
-                        'paid_at' => Carbon::now()
+                        'paid_at' => $newTimestamp
                     ]
                 );
                 //增加系统交易信息
