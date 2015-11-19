@@ -125,11 +125,11 @@
             <ul class="pull-left">
                 <li>
                     <span class="title-info-name">联系人 :</span>
-                    <span>{{ $order['delivery_man']['name'] }}</span>
+                    <span>{{ $order['deliveryMan']['name'] }}</span>
                 </li>
                 <li>
                     <span class="title-info-name">联系电话 :</span>
-                    <span>{{ $order['delivery_man']['phone'] }}</span>
+                    <span>{{ $order['deliveryMan']['phone'] }}</span>
                 </li>
                 <li>
                     <span class="title-info-name">预计到达 :</span>
@@ -139,7 +139,7 @@
         </div>
         <div class="item">
             <label class="title-name">收货地址</label>
-            <span>{{ $order['shipping_address']['address']['area_name'] . $order['shipping_address']['address']['address'] }}</span>
+            <span>{{ $order->shippingAddress->address->address_name }}</span>
         </div>
         <div class="table-responsive order-table clearfix item">
             <label class="pull-left title-name">商品清单</label>

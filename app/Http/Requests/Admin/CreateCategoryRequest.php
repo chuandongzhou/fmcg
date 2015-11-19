@@ -14,7 +14,7 @@ class CreateCategoryRequest extends Request
     public function rules()
     {
         return [
-            'pid' =>'required|exists:category,pid',
+            'pid' =>'required|exists:category,id',
             'name'=>'required|unique:category'
         ];
     }

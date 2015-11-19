@@ -1,4 +1,6 @@
 @extends('index.menu-master')
+
+@section('subtitle', '店铺收藏')
 @section('right')
 <div class="row my-goods index">
     <div class="col-sm-12 collect">
@@ -17,7 +19,7 @@
             </div>
         </div>
         @if(isset($shops))
-            <div class="row list-penal">
+            <div class="row list-penal commodity-other">
                 @foreach($shops as $shop)
                     <div class="col-sm-3 commodity">
                         <div class="img-wrap">
@@ -32,7 +34,7 @@
 
                                 <p class="sell-panel">
                                     <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
-                                    <span class="sales pull-right">订单量 : {{ $shop['orders'] }}</span>
+                                    <span class="sales pull-right">销量 : {{ $shop['orders'] }}</span>
                                 </p>
                             </a>
                         </div>

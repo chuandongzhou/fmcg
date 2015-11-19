@@ -58,6 +58,14 @@ ul, li, p, a, h1, h2, h3, h4 {
 .contents {
   padding-bottom: 20px;
 }
+.carousel-indicators{
+  li{
+    margin:0 4px;
+    &.active{
+      margin:0 4px;
+    }
+  }
+}
 
 /*======================================pop======================================*/
 .mask-outer {
@@ -143,7 +151,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .login-banner-slide {
   .carousel-inner {
     img {
-      @include size(100%, 480px);
+      width: 100%;
     }
   }
 }
@@ -154,10 +162,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: absolute;
     background-color: $body-bg;
     box-shadow: 0 0 3px $gray-light;
-    bottom: 20%;
+    top: 20%;
     padding: 20px 0;
     right: 3%;
     width: 360px;
+    /*width: 26%;*/
     border-radius: 4px;
     .alert-item {
       padding: 0 25px;
@@ -219,7 +228,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .login-footer {
   background-color: $body-bg;
   border: none;
-  padding: 30px 15px;
 }
 
 /*======================================login end======================================*/
@@ -227,70 +235,66 @@ ul, li, p, a, h1, h2, h3, h4 {
 .guide-content {
   background: url("../images/banner.jpg") top no-repeat;
   background-size: cover;
-  min-height: 600px;
-  min-width: 1200px;
-  position: relative;
-  .content-panel {
-    position: absolute;
-    width: 600px;
-    bottom: 80px;
-    left: 50%;
-    margin-left: -300px;
-    vertical-align: text-bottom;
-    .tabs-item {
-      float: left;
-      width: 25%;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      text-align: center;
-      cursor: pointer;
-      &:hover {
-        text-decoration: none;
+  position: absolute;
+  height: 85%;
+  width: 100%;
+  .guide-container {
+    height: 100%;
+    position: relative;
+    .content-panel {
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+      .tabs-item {
+        float: left;
+        width: 25%;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+          text-decoration: none;
+          .item-icon {
+            img {
+              border: 2px solid $body-bg;
+            }
+
+          }
+        }
         .item-icon {
-          border: 2px solid $body-bg;
-        }
-      }
-      .item-icon {
-        display: inline-block;
-        border-radius: 50%;
-        min-height: 94px;
-        padding: 5px;
-        .icon {
           display: inline-block;
-          vertical-align: middle;
-          background: url("../images/guide-icons.png") no-repeat;
-          background-size: cover;
-          @include square(80px);
-
-          &.icon-car {
-            background-position: 0 1px;
+          min-height: 101px;
+          min-width: 101px;
+          width: 50%;
+          img {
+            border-radius: 50%;
+            padding: 5px;
+            width: 100%;
+            height: auto;
           }
-          &.icon-wholesalers {
-            background-position: 0 -117px;
-          }
-          &.icon-shopping-cart {
-            background-position: 0 -234px;
-          }
-          &.icon-books {
-            background-position: 0 -352px;
-          }
-
         }
-      }
-      .item-name {
-        display: block;
-        color: $body-bg;
-        font-size: 18px;
-        margin-top: 10px;
-        font-weight: 700;
-        letter-spacing: 2px;
+        .item-name {
+          display: block;
+          color: $body-bg;
+          font-size: 18px;
+          margin-top: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+        }
       }
     }
   }
 }
 
+@media (min-width: 1400px) {
+  .guide-content {
+    .item-icon {
+      width: 80% !important;
+    }
+  }
+}
+
 .guide-footer {
-  min-width: 1200px;
   .content {
     p {
       width: 70%;
@@ -580,7 +584,14 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.dealer-commodity-wrap{
+
+.commodity-other {
+  .commodity {
+    width: 25%;
+  }
+}
+
+.dealer-commodity-wrap {
   .commodity-img {
     height: 100px;
   }
@@ -592,7 +603,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .item {
         padding: 0;
         img {
-         @include size(100%,400px);
+          @include size(100%, 400px);
           max-width: 1000px;
           border: 1px solid $gray-lighter;
         }
@@ -1664,9 +1675,11 @@ table {
     }
   }
 }
-.title-info-name{
-  color:$gray-light;
+
+.title-info-name {
+  color: $gray-light;
 }
+
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
@@ -1853,12 +1866,12 @@ table {
         }
       }
     }
-    .user-name-wrap{
-      a{
+    .user-name-wrap {
+      a {
         display: inline-block;
-        &.name-panel{
+        &.name-panel {
           padding: 0;
-          .user-name{
+          .user-name {
             display: inline-block;
             max-width: 100px;
             text-overflow: ellipsis;
@@ -1867,7 +1880,7 @@ table {
             vertical-align: top;
           }
         }
-        &.exit{
+        &.exit {
           padding-left: 8px;
         }
       }
@@ -2408,18 +2421,18 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px  8px 0 0;
-    span{
+    border-radius: 8px 8px 0 0;
+    span {
       display: inline-block;
       font-size: 16px;
       padding: 0 5px;
-      color:$body-bg;
+      color: $body-bg;
     }
-    .close-btn{
+    .close-btn {
       @extend span;
       line-height: 40px;
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: none;
       }
     }

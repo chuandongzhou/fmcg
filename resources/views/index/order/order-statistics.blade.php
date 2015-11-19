@@ -1,5 +1,7 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
+
+@section('subtitle', '订单统计')
 @section('right')
     <div class="row my-goods order-report">
         <div class="col-sm-12 content">

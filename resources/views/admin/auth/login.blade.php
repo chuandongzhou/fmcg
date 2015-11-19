@@ -1,5 +1,7 @@
 @extends('master')
 
+@section('title', '后台 | 登录')
+
 @section('css')
     <link href="{{ asset('css/admin.css?v=1.0.0') }}" rel="stylesheet">
 @stop

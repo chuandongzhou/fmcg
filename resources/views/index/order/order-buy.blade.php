@@ -1,6 +1,8 @@
 @include('includes.timepicker')
 @extends('index.menu-master')
 
+@section('subtitle', '订单管理')
+
 @section('right')
     <div class="col-sm-12 wholesalers-management">
         <div class="row">

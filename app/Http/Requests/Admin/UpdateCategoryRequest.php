@@ -14,7 +14,7 @@ class UpdateCategoryRequest extends Request
     {
         $category = $this->route('category');
         return [
-            'pid' => 'required|exists:category,pid',
+            'pid' => 'required|exists:category,id',
             'name' => 'required|unique:category,name,' . $category->id
         ];
     }

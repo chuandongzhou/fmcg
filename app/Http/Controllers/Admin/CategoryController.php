@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateCategoryRequest;
+use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Models\Attr;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 use WeiHeng\Foundation\Tree;
 
@@ -68,17 +68,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * how the form for editing the specified resource.
      *
      * @param $category
@@ -97,11 +86,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * 更新分类
+     *
+     * @param \App\Http\Requests\Admin\UpdateCategoryRequest $request
      * @param $category
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(Request $request, $category)
+    public function update(UpdateCategoryRequest $request, $category)
     {
         if ($category->fill($request->all())->save()) {
             return $this->success('更新分类成功');
@@ -125,6 +116,11 @@ class CategoryController extends Controller
         return $this->error('删除分类时遇到错误');
     }
 
+    /**
+     * 添加默认标签
+     * @param $model
+     * @return mixed
+     */
     private function _addDefaultAttr($model)
     {
         $attr = [];

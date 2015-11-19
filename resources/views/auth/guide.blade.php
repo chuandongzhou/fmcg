@@ -7,38 +7,42 @@
 @stop
 @section('body')
     <div class="guide-content">
-        <div class="content-panel">
-            <a class="tabs-item" href="{{ url('auth/login?type=supplier') }}">
-                <span class="item-icon">
-                    <i class="icon icon-car"></i>
-                </span>
-                <span class="item-name">供应商平台</span>
-            </a>
-            <a class="tabs-item" href="{{ url('auth/login?type=wholesaler') }}">
-                <span class="item-icon">
-                    <i class="icon icon-wholesalers"></i>
-                </span>
-                <span class="item-name">批发平台</span>
-            </a>
-            <a class="tabs-item" href="{{ url('auth/login?type=retailer') }}">
-                <span class="item-icon">
-                    <i class="icon icon-shopping-cart"></i>
-                </span>
-                <span class="item-name ">终端平台</span>
-            </a>
-            <a class="tabs-item" href="{{ url('auth/login?type=retailer') }}">
-                <span class="item-icon">
-                    <i class="icon icon-books"></i>
-                </span>
-                <span class="item-name">零售商城</span>
-            </a>
+        <div class="container guide-container">
+            <div class="row content-panel">
+                <div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+                    <a class="tabs-item" href="{{ url('auth/login?type=supplier') }}">
+                        <div class="item-icon">
+                            <img src="{{ asset('images/guide-icons-1.png') }}">
+                        </div>
+                        <span class="item-name">供应商平台</span>
+                    </a>
+                    <a class="tabs-item" href="{{ url('auth/login?type=wholesaler') }}">
+                        <div class="item-icon">
+                            <img src="{{ asset('images/guide-icons-2.png') }}">
+                        </div>
+                        <span class="item-name">批发平台</span>
+                    </a>
+                    <a class="tabs-item" href="{{ url('auth/login?type=retailer') }}">
+                        <div class="item-icon">
+                            <img src="{{ asset('images/guide-icons-3.png') }}">
+                        </div>
+                        <span class="item-name ">终端平台</span>
+                    </a>
+                    <a class="tabs-item" href="{{ url('auth/login?type=retailer') }}">
+                        <div class="item-icon">
+                            <img src="{{ asset('images/guide-icons-4.png') }}">
+                        </div>
+                        <span class="item-name">零售商城</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 @stop
 @section('footer')
     <footer class="panel-footer login-footer guide-footer">
         <div class="container text-center content text-muted">
-            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br />
+            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br/>
             联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
         </div>
     </footer>

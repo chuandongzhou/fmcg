@@ -50,7 +50,7 @@
                             </a>
                         </p>
 
-                        <p class="order-count">订单量 : <span>{{ $shop->sales_volume }}</span></p>
+                        <p class="order-count">销量 : <span>{{ $shop->sales_volume }}</span></p>
                     </div>
                 </div>
             @endforeach

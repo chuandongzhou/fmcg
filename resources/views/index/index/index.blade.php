@@ -127,8 +127,8 @@
                                     </p>
 
                                     <p class="sell-panel">
-                                        <span class="money">最低配送额:￥{{ $shop->min_money }}</span>
-                                        <span class="sales pull-right">销量:{{ $shop->sales_volume }}</span>
+                                        <span class="money">最低配送额 : ￥{{ $shop->min_money }}</span>
+                                        <span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>
                                     </p>
                                 </div>
                             </div>

@@ -51,8 +51,10 @@
                                 <a href="javascript:void(0)" class="list-item "><i
                                             class="fa fa-star-o"></i> 我的收藏</a>
                                 <ul class="menu-wrap" {!!  request()->is('like/*') ? 'style="display:block"' : '' !!}>
-                                    <li><a class="{{ path_active('like/shops') }}" href="{{ url('like/shops') }}">店铺收藏</a></li>
-                                    <li><a class="{{ path_active('like/goods') }}" href="{{ url('like/goods') }}">商品收藏</a></li>
+                                    <li><a class="{{ path_active('like/shops') }}"
+                                           href="{{ url('like/shops') }}">店铺收藏</a></li>
+                                    <li><a class="{{ path_active('like/goods') }}"
+                                           href="{{ url('like/goods') }}">商品收藏</a></li>
                                 </ul>
                             </li>
                         @else
@@ -60,7 +62,7 @@
                                             class="fa fa-edit"></i> 订单管理</a></li>
                             <li><a href="{{ url('order/statistics') }}"
                                    class="{{ path_active('order/statistics*') }}"><i
-                                        class="fa fa-file-text-o"></i> 订单统计</a></li>
+                                            class="fa fa-file-text-o"></i> 订单统计</a></li>
                         @endif
                         <li><a href="{{ url('personal/shop') }}" class="{{ path_active('personal/*') }}"><i
                                         class="fa fa-heart-o"></i> 个人中心</a></li>
@@ -75,11 +77,13 @@
                     </ul>
                     <ul class="menu-list dealer-menu-list">
                         <li>
-                            <a href="javascript:void(0)" class="list-item {{ path_active('like/*') }}"><i
+                            <a href="javascript:void(0)" class="list-item "><i
                                         class="fa fa-star-o"></i> 我的收藏</a>
-                            <ul class="menu-wrap">
-                                <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
-                                <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
+                            <ul class="menu-wrap" {!!  request()->is('like/*') ? 'style="display:block"' : '' !!}>
+                                <li><a class="{{ path_active('like/shops') }}"
+                                       href="{{ url('like/shops') }}">店铺收藏</a></li>
+                                <li><a class="{{ path_active('like/goods') }}"
+                                       href="{{ url('like/goods') }}">商品收藏</a></li>
                             </ul>
                         </li>
                         <li>
