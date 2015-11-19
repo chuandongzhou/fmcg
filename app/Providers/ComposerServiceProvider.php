@@ -26,7 +26,8 @@ class ComposerServiceProvider extends ServiceProvider
                     'master'
                 ],
                 ProvinceComposer::class => [
-                    'index.index-top'
+                    'index.index-top',
+                    'index.master'
                 ]
             ]);
     }

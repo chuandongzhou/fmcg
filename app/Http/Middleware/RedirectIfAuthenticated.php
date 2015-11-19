@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
     {
         if ($this->auth->check()) {
             $user = $this->auth->user();
-            $redirectUrl = $user->type <= cons('user.type.wholesaler') ? '/' : ('/shop/' . $user->shop->id);
+            $redirectUrl = $user->type < cons('user.type.wholesaler') ? '/' : url('personal/shop');
             return redirect($redirectUrl);
         }
 

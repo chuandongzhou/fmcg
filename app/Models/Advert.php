@@ -36,11 +36,11 @@ class Advert extends Model
         return $this->morphOne('App\Models\File', 'fileable');
     }
 
-    public function scopeOfTime($query, $nowTime)
+    public function scopeOfTime($query, $nowTime, $limit = 4)
     {
         return $query->where('start_at', '<', $nowTime)->Where(function ($query) use ($nowTime) {
             $query->where('end_at', '>', $nowTime)->orWhere('end_at', null);
-        })->orderBy('id' , 'desc')->take(4);
+        })->orderBy('id' , 'desc')->take($limit);
     }
 
     /**

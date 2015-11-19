@@ -71,16 +71,16 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $detail = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images',
+        $order = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images',
             'shippingAddress.address')->find(intval($request->input('order_id')));
-        if (!$detail) {
+        if (!$order) {
             return $this->error('订单不存在');
         }
         //拼接需要调用的模板名字
-        $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$detail->pay_type];
+        $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$order->pay_type];
 
         return view($view, [
-            'order' => $detail,
+            'order' => $order,
             'delivery_man' => auth()->user()->shop->deliveryMans
         ]);
     }

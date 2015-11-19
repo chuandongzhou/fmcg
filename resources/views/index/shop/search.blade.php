@@ -90,9 +90,11 @@
                                 <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
 
                                 <div class="list-wrap">
-                                    @foreach($attr['child'] as $child)
-                                        <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
-                                    @endforeach
+                                    @if(isset($attr['child']))
+                                        @foreach($attr['child'] as $child)
+                                            <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

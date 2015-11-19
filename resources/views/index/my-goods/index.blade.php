@@ -12,7 +12,7 @@
                 <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                    class="btn  control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'btn-primary' : 'btn-default' }}">价格</a>
                 {{--<a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"--}}
-                   {{--class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>--}}
+                {{--class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>--}}
             </div>
             <form action="{{ url('my-goods') }}"
                   method="get">
@@ -78,7 +78,7 @@
                         @endforeach
                     @endif
 
-                @foreach($searched as $attrId => $name)
+                    @foreach($searched as $attrId => $name)
                         <div class="sort-list">
                             <a class="last-category"
                                href="{{ url('my-goods?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}"> {{ $name }}
@@ -129,7 +129,7 @@
             @endforeach
 
             @if(!empty($moreAttr))
-                <div class="search-list-item sort-item">
+                <div class="sort-item">
                     <span class="pull-left title-name">更多筛选项 : </span>
 
                     @foreach($moreAttr as $attr)
@@ -137,9 +137,11 @@
                             <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
 
                             <div class="list-wrap">
-                                @foreach($attr['child'] as $child)
-                                    <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
-                                @endforeach
+                                @if(isset($attr['child']))
+                                    @foreach($attr['child'] as $child)
+                                        <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     @endforeach
@@ -161,7 +163,7 @@
             </div>
         </div>
     </div>
-    <div class="row list-penal">
+    <div class="row list-penal commodity-other">
         @foreach($goods  as $item)
             <div class="col-sm-3 commodity">
                 <div class="img-wrap">

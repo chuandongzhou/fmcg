@@ -12,12 +12,6 @@
                     <a href="{{ url('like/goods?cate_level_2='.$cate['id']) }}" class="btn control {{ (isset($data['cate_level_2']) && $cate['id'] == $data['cate_level_2']) ? 'active' : '' }}">{{ $cate['name'] }}</a>
                     @endforeach
                 </p>
-                {{--<p class="search-list-item">--}}
-                    {{--<label>包装 : </label>--}}
-                    {{--<a href="#" class="active">全部</a>--}}
-                    {{--<a href="#">箱装</a>--}}
-                    {{--<a href="#">优惠装</a>--}}
-                {{--</p>--}}
             </div>
             <form action="{{ url('like/goods') }}" method="get">
                 <div class="col-sm-12 control-panel">
@@ -31,7 +25,7 @@
                 </div>
             </form>
         </div>
-        <div class="row list-penal">
+        <div class="row list-penal commodity-other">
             @foreach($goods as $good)
                 <div class="col-sm-3 commodity new-listing">
                     <div class="img-wrap">

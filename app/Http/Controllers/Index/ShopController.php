@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\Advert;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Services\GoodsService;
+use Carbon\Carbon;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class ShopController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('supplier', ['only' => ['index', 'search']]);
+        $this->middleware('supplier', ['only' => ['index']]);
     }
 
     /**
@@ -67,12 +69,17 @@ class ShopController extends Controller
         }
         $shop->load('images');
 
+        if ($shop->images->isEmpty()) {
+            $nowTime = Carbon::now();
+            $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
+            $shop->images[0] = $advert->image;
+        }
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
 
         $goods = Goods::where($map)->ofStatus(cons('goods.status.on'))->with('images.image');
         if (in_array($sort, cons('goods.sort'))) {
-            $goods = $goods->{'Of'.ucfirst($sort)}();
+            $goods = $goods->{'Of' . ucfirst($sort)}();
         }
         $goods = $goods->paginate();
         $url = Gate::denies('validate-shop', $shop) ? 'goods' : 'my-goods';
@@ -104,7 +111,8 @@ class ShopController extends Controller
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
-        return view('index.shop.detail', ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate->toJson()]);
+        return view('index.shop.detail',
+            ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate->toJson()]);
     }
 
     /**

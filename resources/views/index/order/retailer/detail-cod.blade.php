@@ -6,11 +6,11 @@
         </div>
         <div class="col-sm-12 order-panel">
             <ul>
-                <li><span class="title-name">订单号 :</span> {{ $order['id'] }}</li>
-                <li><span class="title-name">订单金额 :</span><span class="red">￥{{ $order['price'] }}</span></li>
-                <li><span class="title-name">支付方式 :</span>{{ $order['payment_type'] }}</li>
-                <li><span class="title-name">订单状态 :</span><span class="red">{{ $order['status_name'] }}</span></li>
-                <li><span class="title-name">订单备注 :</span>
+                <li><span class="title-name">订单号 : </span> {{ $order['id'] }}</li>
+                <li><span class="title-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span></li>
+                <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
+                <li><span class="title-name">订单状态 : </span><span class="red">{{ $order['status_name'] }}</span></li>
+                <li><span class="title-name">订单备注 : </span>
 
                     <p class="remarks-content">{{ $order['remark'] }}</p>
                 </li>
@@ -62,38 +62,36 @@
                 <tr>
                     <td>提交订单</td>
                     <td>{{ $order['created_at'] }}</td>
-                    <td>{{ $order['user']['user_name'] }}</td>
+                    <td>{{ $order->user->shop->name }}</td>
                 </tr>
                 @if((int)$order['send_at'])
                     <tr>
                         <td>
-                            <p>订单发货、配送人:{{ $order['delivery_man']['name'] }}</p>
-
-                            <p>联系方式:{{ $order['delivery_man']['phone'] }}</p>
+                            订单发货
                         </td>
                         <td>{{ $order['send_at'] }}</td>
-                        <td>{{ $order['shop']['contact_person'] }}</td>
+                        <td>{{ $order->shop->name }}</td>
                     </tr>
                 @endif
                 @if((int)$order['paid_at'])
                     <tr>
                         <td>付款</td>
                         <td>{{ $order['paid_at'] }}</td>
-                        <td>{{ $order['user']['user_name'] }}</td>
+                        <td>{{ $order->user->shop->name }}</td>
                     </tr>
                 @endif
                 @if((int)$order['finished_at'])
                     <tr>
                         <td>完成</td>
                         <td>{{ $order['finished_at'] }}</td>
-                        <td>{{ $order['shop']['contact_person'] }}</td>
+                        <td>{{ $order->shop->name }}</td>
                     </tr>
                 @endif
                 @if($order['is_cancel'])
                     <tr>
                         <td>取消订单</td>
                         <td>{{ $order['cancel_at'] }}</td>
-                        <td>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</td>
+                        <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</td>
                     </tr>
                 @endif
                 </tbody>

@@ -66,20 +66,21 @@
                                                          {{ $goods->is_change ? 'checked' : '' }} type="checkbox">可换货</label>
                         </p>
 
-                        <p class="items-item right-item">
-                            <label class="control-label">是否促销 :</label>
-                            <label class="checks"><input name="is_promotion" value="1" checked type="radio">是</label>
-                            <label class="checks"><input name="is_promotion" value="0"
-                                                         {{ $goods->is_promotion ? '' : 'checked' }} type="radio">否</label>
-                        </p>
-                    </div>
-                    <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">是否即将过期 :</label>
                             <label class="checks"><input name="is_expire" value="1"
                                                          {{ $goods->is_expire ? 'checked' : '' }} type="radio">是</label>
                             <label class="checks"><input name="is_expire" checked value="0"
                                                          {{ $goods->is_expire ? '' : 'checked' }} type="radio">否</label>
+                        </p>
+
+                    </div>
+                    <div class="form-group editor-item">
+                        <p class="items-item right-item">
+                            <label class="control-label">是否促销 :</label>
+                            <label class="checks"><input name="is_promotion" value="1" checked type="radio">是</label>
+                            <label class="checks"><input name="is_promotion" value="0"
+                                                         {{ $goods->is_promotion ? '' : 'checked' }} type="radio">否</label>
                         </p>
                     </div>
 
@@ -92,54 +93,13 @@
                 <div class="col-sm-2 right-save">
                     <button type="submit" class="btn btn-primary">保存</button>
                 </div>
-
             </div>
             <div class="row content-wrap">
-                <div class="col-sm-12 add-address">
-                    <label>商品配送区域 : </label>
-                    <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
-                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
-                    </button>
-                    (最多5条配送区域)
-                </div>
-                <div class="col-sm-8 address-list">
-                    <div class="hidden">
-                        <input type="hidden" name="area[id][]" value=""/>
-                        <input type="hidden" name="area[province_id][]" value=""/>
-                        <input type="hidden" name="area[city_id][]" value=""/>
-                        <input type="hidden" name="area[district_id][]" value=""/>
-                        <input type="hidden" name="area[street_id][]" value=""/>
-                        <input type="hidden" name="area[area_name][]" value=""/>
-                        <input type="hidden" name="area[address][]" value=""/>
-                        {{--区域经纬度--}}
-                        <input type="hidden" name="area[blx][]" value=""/>
-                        <input type="hidden" name="area[bly][]" value=""/>
-                        <input type="hidden" name="area[slx][]" value=""/>
-                        <input type="hidden" name="area[sly][]" value=""/>
-                    </div>
-                    @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border">{{ $area->address_name }}
-                            <span class="fa fa-times-circle pull-right close"></span>
-                            <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
-                            <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
-                            <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
-                            <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
-                            <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
-                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
-                            {{--区域经纬度--}}
-                            <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
-                            <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
-                            <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
-                            <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
-                        </div>
-                    @endforeach
-                </div>
                 <div class="form-group col-sm-12" style="margin-left: 0;">
-                        <label class="control-label">分类 :</label>
-                        <select name="cate_level_1" class="categories"></select>
-                        <select name="cate_level_2" class="categories"> </select>
-                        <select name="cate_level_3" class="categories"></select>
+                    <label class="control-label">分类 :</label>
+                    <select name="cate_level_1" class="categories"></select>
+                    <select name="cate_level_2" class="categories"> </select>
+                    <select name="cate_level_3" class="categories"></select>
                 </div>
                 <div class="form-group editor-item attr col-sm-12">
                     @foreach($attrs as $key=>$attr)
@@ -183,11 +143,51 @@
 
                     </div>
                 </div>
+                <div class="col-sm-12 add-address">
+                    <label>商品配送区域 : </label>
+                    <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
+                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
+                    </button>
+                    (最多5条配送区域)
+                </div>
+                <div class="col-sm-8 address-list">
+                    <div class="hidden">
+                        <input type="hidden" name="area[id][]" value=""/>
+                        <input type="hidden" name="area[province_id][]" value=""/>
+                        <input type="hidden" name="area[city_id][]" value=""/>
+                        <input type="hidden" name="area[district_id][]" value=""/>
+                        <input type="hidden" name="area[street_id][]" value=""/>
+                        <input type="hidden" name="area[area_name][]" value=""/>
+                        <input type="hidden" name="area[address][]" value=""/>
+                        {{--区域经纬度--}}
+                        <input type="hidden" name="area[blx][]" value=""/>
+                        <input type="hidden" name="area[bly][]" value=""/>
+                        <input type="hidden" name="area[slx][]" value=""/>
+                        <input type="hidden" name="area[sly][]" value=""/>
+                    </div>
+                    @foreach ($goods->deliveryArea as $area)
+                        <div class="col-sm-12 fa-border">{{ $area->address_name }}
+                            <span class="fa fa-times-circle pull-right close"></span>
+                            <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
+                            <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
+                            <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
+                            <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
+                            <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
+                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
+                            {{--区域经纬度--}}
+                            <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
+                            <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
+                            <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
+                            <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
+                        </div>
+                    @endforeach
+                </div>
                 <div class="col-sm-12 map">
                     <p><label>地图标识 :</label></p>
 
                     {{--<p class="address-map">--}}
-                        {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
+                    {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
                     {{--</p>--}}
                     <div id="map"></div>
                 </div>
@@ -205,7 +205,7 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             getCoordinateMap({!! $coordinates or '' !!});
         });
         //上传图片处理
@@ -221,7 +221,7 @@
         );
         //获取分类
         getAttr();
-        addGoodsFunc( '{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}' );
+        addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');
 
     </script>
 @stop

@@ -53,7 +53,7 @@
                         <li class="time">
                             <span class="date">{{ $order['created_at'] }}</span>
                         </li>
-                        <li>{{ $order['user']['user_name'] }}</li>
+                        <li>{{ $order->user->shop->name }}</li>
                     </ul>
                     @if((int)$order['paid_at'])
                         <ul class="submit-detail-item">
@@ -61,7 +61,7 @@
                             <li class="time">
                                 <span class="date">{{ $order['paid_at'] }}</span>
                             </li>
-                            <li>{{ $order['user']['user_name'] }}</li>
+                            <li>{{ $order->user->shop->name }}</li>
                         </ul>
                     @endif
                     @if((int)$order['refund_at'])
@@ -70,7 +70,7 @@
                             <li class="time">
                                 <span class="date">{{ $order['refund_at'] }}</span>
                             </li>
-                            <li>{{ $order['user']['user_name'] }}</li>
+                            <li>{{ $order->user->shop->name }}</li>
                         </ul>
                     @endif
                     @if((int)$order['send_at'])
@@ -79,7 +79,7 @@
                             <li class="time">
                                 <span class="date">{{ $order['send_at'] }}</span>
                             </li>
-                            <li>{{ $order['shop']['contact_person'] }}</li>
+                            <li>{{ $order->shop->name }}</li>
                         </ul>
                     @endif
                     @if((int)$order['finished_at'])
@@ -88,7 +88,7 @@
                             <li class="time">
                                 <span class="date">{{ $order['finished_at'] }}</span>
                             </li>
-                            <li>{{ $order['user']['user_name'] }}</li>
+                            <li>{{ $order->user->shop->name }}</li>
                         </ul>
                     @endif
                     @if((int)$order['is_cancel'])
@@ -97,7 +97,7 @@
                             <li class="time">
                                 <span class="date">{{ $order['cancel_at'] }}</span>
                             </li>
-                            <li>{{ $order['cancel_by'] == $order['user']['user_name'] ? $order['user']['user_name'] : $order['shop']['contact_person'] }}</li>
+                            <li>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</li>
                         </ul>
                     @endif
                 </div>
@@ -141,7 +141,7 @@
                 <div class="col-sm-12 receiving-information">
                     <ul>
                         <li class="title">收货人信息</li>
-                        <li><span class="title-info-name">终端商名称 : </span>{{ $order['user']['user_name'] }}</li>
+                        <li><span class="title-info-name">终端商名称 : </span>{{ $order->user->shop->name }}</li>
                         <li><span class="title-info-name">联系人 : </span>{{ $order['shippingAddress']['consigner'] }}</li>
                         <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
                         <li><span class="title-info-name">联系地址 : </span>{{ $order['shippingAddress']['address']['area_name'] . $order['shipping_address']['address']['address'] }}</li>

@@ -20,9 +20,76 @@
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
     <![endif]-->
+    <div class="dealer-top-header">
+        <div class="container ">
+            <div class="row">
+                <div class="col-sm-4 city-wrap">
+                    <div class="location-panel">
+                        <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
+                                    class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
+                                    class="fa fa-angle-down up-down"></span></a>
+                    </div>
+                    <div class="city-list clearfix">
+                        <div class="list-wrap">
+                            @foreach($provinces as $provinceId => $province)
+                                <div class="item">
+                                    <a title="{{ $province }}"
+                                       class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
+                                       href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
+                         aria-expanded="false" style="height: 1px;">
+                        <ul class="nav navbar-nav navbar-right operating-wrap">
+                            @if(auth()->user()->type == cons('user.type.wholesaler'))
+                                <li><a href="{{ url('shop/' .auth()->user()->shop->id) }}"><span
+                                                class="fa fa-heart-o"></span>我的店面</a>
+                                </li>
+                            @endif
+                            <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
+                            <li>
+                                <a href="{{ auth()->user()->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
+                                    <span class="fa fa-file-text-o"></span> 我的订单
+                                </a>
+                            </li>
+                            @if(auth()->user()->type < cons('user.type.supplier'))
+                                <li class="collect-select">
+                                    <a class="collect-selected"><span class="selected">收藏夹</span> <span
+                                                class="fa fa-angle-down"></span></a>
+                                    <ul class="select-list">
+                                        <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
+                                        <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
+                                    </ul>
+                                </li>
+                            @endif
+                            <li class="user-name-wrap">
+                                <a href="{{ url('personal/shop') }}" class="name-panel"><span
+                                            class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }}
+                                    )</a>
+                                <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container wholesalers-top-header">
         <div class="col-sm-4 logo">
-            <a href="{{ url('/') }}" class="logo-icon"><img src="{{ asset('images/logo.png') }}" /></a>
+            <a href="{{ url('/') }}" class="logo-icon"><img src="{{ asset('images/logo.png') }}"/></a>
         </div>
         @if ($shop->id == auth()->user()->shop->id)
             <div class="col-sm-4 col-sm-push-4 right-search">
@@ -104,7 +171,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if ($shop->id == auth()->user()->shop->id)
-                        <li class="right"><a href="{{ url('order-sell') }}">个人中心</a></li>
+                        <li class="right"><a href="{{ url('personal/shop') }}">个人中心</a></li>
                     @else
                         <li class="right">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"
@@ -132,7 +199,7 @@
 @section('footer')
     <footer class="panel-footer">
         <div class="container text-center text-muted">
-            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br />
+            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br/>
             联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
         </div>
     </footer>
