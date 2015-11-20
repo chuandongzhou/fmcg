@@ -58,7 +58,7 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <label><input type="checkbox" name="order_id[]" value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
+                                        <label><input type="checkbox" class="order_id" name="order_id[]" value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
                                         <span class="order-number">订单号:{{ $order['id'] }}</span>
                                     </th>
                                     <th>{{ $order['user']['shop']['name'] }}</th>
@@ -114,10 +114,10 @@
         <div class="row" id="foot-nav">
             <div class="col-sm-12 padding-clear">
                 <input type="checkbox" id="check-all"/>
-                <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}" data-method="put">批量取消</button>
+                <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}" data-method="put" data-done-then="none">批量取消</button>
                 <a class="btn btn-warning"  data-target="#sendModal" data-toggle="modal">批量发货</a>
-                <button class="btn btn-info ajax" data-url="{{ url('order-sell/batch-finish') }}" data-method="put">确认收款</button>
-                <button class="btn btn-success" >导出</button>
+                <button class="btn btn-info ajax btn-receive" data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款</button>
+                <button class="btn btn-success export" data-url="{{ url('order-sell/export') }}" data-method="get">导出</button>
             </div>
         </div>
         @endif
@@ -134,8 +134,6 @@
                                           <option value="{{ $index }}">{{ $item }}</option>
                                       @endforeach
                                   </select>
-
-
                             </span>
                         </p>
                         @else
@@ -146,7 +144,7 @@
                         <div class="text-right">
                             <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
                             @if($delivery_man->count())
-                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定</button>
+                                <button type="button" class="btn btn-primary btn-sm btn-add ajax btn-send" data-text="确定" data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定</button>
                             @endif
                         </div>
                     </div>

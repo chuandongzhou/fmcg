@@ -37,6 +37,16 @@ function getOrderList() {
         var targetUrl = $(this).attr('data-url');
         _ajaxGet(targetUrl, {"page": $(this).attr('data-page')});
     });
+    $('.export').click(function () {
+        var obj = $(this), form = obj.closest('form'), url = obj.data('url'), method = obj.data('method');
+
+        var orderIds = form.find('input.order_id:checked').length;
+        if (!orderIds) {
+            alert('请选择要导出的订单');
+            return false;
+        }
+        form.attr('action', url).attr('method', method);
+    })
 }
 /**
  * get方式，动态获取订单信息并显示到指定区域
@@ -167,6 +177,22 @@ function getOrderButtonEvent() {
     $('#check-all').on('click', function () {
         $('input[name="order_id[]"]').prop('checked', $(this).prop('checked'));
     });
+    $('.btn-cancel').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
+        if (textStatus.failOrderIds.length) {
+            alert('取消失败的订单id : '+ textStatus.failOrderIds);
+            site.refresh(true);
+        }
+    });
+    $('.btn-receive').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
+        if (textStatus.failIds.length) {
+            alert('确认失败的订单id : '+ textStatus.failIds);
+        }
+    });
+    $('.btn-send').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
+        if (textStatus.failIds.length) {
+            alert('发货失败的订单id : '+ textStatus.failIds);
+        }
+    })
 }
 /*function tabBox() {
  $(".switching a").click(function () {

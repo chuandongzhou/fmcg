@@ -416,6 +416,8 @@ var commonAjaxSetup = function () {
                                 site.refresh(true);
                             } else if (doneThen == 'referer') {
                                 site.redirectReferer();
+                            }else {
+                                self.button('reset');
                             }
                             return;
                         }

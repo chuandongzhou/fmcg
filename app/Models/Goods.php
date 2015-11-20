@@ -8,11 +8,13 @@
 namespace App\Models;
 
 
-use App\Services\ImageUploadService;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
 class Goods extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'goods';
     protected $fillable = [
         'name',
@@ -43,6 +45,7 @@ class Goods extends Model
         'created_at',
         'updated_at',
     ];
+    protected $dates = ['deleted_at'];
 
     /**
      * 所属店铺
@@ -266,7 +269,10 @@ class Goods extends Model
         parent::boot();
 
         static::deleted(function ($model) {
-            $model->deliveryArea->delete();
+            $model->deliveryArea()->delete();   //配送区域
+            $model->carts()->delete();           //购物车
+            $model->attr()->detach();           //商品标签
+            //$model->images()->detach();         //商品图片
         });
 
         static::creating(function ($model) {

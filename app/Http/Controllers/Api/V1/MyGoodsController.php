@@ -70,10 +70,11 @@ class MyGoodsController extends Controller
      */
     public function show($goods)
     {
-        $goods->load(['images', 'deliveryArea.coordinate']);
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
+        $goods->load(['images', 'deliveryArea.coordinate']);
+
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
@@ -90,6 +91,9 @@ class MyGoodsController extends Controller
      */
     public function update(Requests\Api\v1\UpdateGoodsRequest $request, $goods)
     {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
         $attributes = $request->all();
         if ($goods->fill($attributes)->save()) {
             // 更新配送地址
@@ -109,10 +113,13 @@ class MyGoodsController extends Controller
      */
     public function destroy($goods)
     {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
         if ($goods->delete()) {
             return $this->success('删除商品成功');
         }
-        return $this->error('删除商品时遇到问');
+        return $this->error('删除商品时遇到问题');
     }
 
     /**
@@ -125,6 +132,9 @@ class MyGoodsController extends Controller
     public function shelve(Request $request, $goodsId)
     {
         $goods = Goods::find($goodsId);
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
         $status = intval($request->input('status'));
         $goods->status = $status;
         $statusVal = cons()->valueLang('goods.status', $status);

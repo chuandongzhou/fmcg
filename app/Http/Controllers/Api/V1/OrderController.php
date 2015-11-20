@@ -148,13 +148,21 @@ class OrderController extends Controller
     public function putCancelSure(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where(function ($query) {
-            $query->wherehas('shop.user', function ($query) {
-                $query->where('id', $this->user->id);
-            })->orWhere('user_id', $this->user->id);
-        })->where('status', cons('order.status.non_send'))->where('pay_status',
-            cons('order.pay_status.non_payment'))->whereIn('id', $orderIds)->nonCancel()->get();
+
+        if (!$orderIds) {
+            return $this->error('请选择需要取消的订单');
+        }
+
+        $orders = Order::with('shop.user')->whereIn('id', $orderIds)->nonCancel()->get();
+
+        $failOrderIds = [];
         foreach ($orders as $order) {
+            if (($order->status != cons('order.status.non_send') || $order->pay_status != cons('order.pay_status.non_payment'))
+                || !($order->shop->user->id == $this->user->id || $order->user_id == $this->user->id)
+            ) {
+                $failOrderIds[] = $order->id;
+                continue;
+            }
             $order->fill([
                 'is_cancel' => cons('order.is_cancel.on'),
                 'cancel_by' => $this->user->id,
@@ -173,7 +181,7 @@ class OrderController extends Controller
             RedisService::setRedis($redisKey, $redisVal);
         }
 
-        return $this->success('取消成功');
+        return $this->success(['failOrderIds' => $failOrderIds]);
     }
 
     /**
@@ -185,15 +193,22 @@ class OrderController extends Controller
     public function putBatchFinishOfBuy(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where('user_id', $this->user->id)->where('pay_type',
-            cons('pay_type.online'))->where('pay_status', cons('order.pay_status.payment_success'))->where('status',
-            cons('order.status.send'))->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::where('user_id', $this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+
+        if ($orders->isEmpty()) {
+            return $this->error('确认收货失败');
+        }
+
+        $failIds = [];
         foreach ($orders as $order) {
-            DB::transaction(function () use ($order) {
-                $order->fill([
-                    'status' => cons('order.status.finished'),
-                    'finished_at' => Carbon::now()
-                ])->save();
+            if ($order->pay_type != cons('pay_type.online') || $order->pay_status != cons('order.pay_status.payment_success') || $order->status != cons('order.status.send')) {
+                if (count($orders) == 1) {
+                    return $this->error('确认收货失败');
+                }
+                $failIds[] = $order->id;
+                continue;
+            }
+            if ($order->fill(['status' => cons('order.status.finished'), 'finished_at' => Carbon::now()])->save()) {
                 //更新systemTradeInfo完成状态
                 $tradeModel = $order->systemTradeInfo;
                 $tradeModel->fill([
@@ -209,10 +224,11 @@ class OrderController extends Controller
                 $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
                 RedisService::setRedis($redisKey, $redisVal);
-            });
+            } else {
+                $failIds[] = $order->id;
+            }
         }
-
-        return $this->success('操作成功');
+        return $this->success(['failIds' => $failIds]);
     }
 
     /**
@@ -224,15 +240,32 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->where('status',
-            cons('order.status.send'))->where('pay_type', cons('pay_type.cod'))->nonCancel()->update([
-            'pay_status' => cons('order.pay_status.payment_success'),
-            'paid_at' => Carbon::now(),
-            'status' => cons('order.status.finished'),
-            'finished_at' => Carbon::now()
-        ]);
+        $orders = Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+        if ($orders->isEmpty()) {
+            return $this->error('确认收款失败');
+        }
 
-        return $this->success('操作成功');
+        $failIds = []; //失败订单id
+        $nowTime = Carbon::now();
+        foreach ($orders as $order) {
+            if ($order->status != cons('order.status.send') || $order->pay_type != cons('pay_type.cod')) {
+                if (count($orders) == 1) {
+                    return $this->error('确认收款失败');
+                }
+                $failIds[] = $order->id;
+                continue;
+            }
+            if (!$order->fill([
+                'pay_status' => cons('order.pay_status.payment_success'),
+                'paid_at' => $nowTime,
+                'status' => cons('order.status.finished'),
+                'finished_at' => $nowTime
+            ])->save()
+            ) {
+                $failIds[] = $order->id;
+            }
+        }
+        return $this->success(['failIds' => $failIds]);
     }
 
 
@@ -247,19 +280,32 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $deliveryManId = intval($request->input('delivery_man_id'));
         //判断送货人员是否是该店铺的
-        if (!DeliveryMan::find($deliveryManId)) {
+        if (!DeliveryMan::where('shop_id', $this->user->shop()->pluck('id'))->find($deliveryManId)) {
             return $this->error('操作失败');
         }
-        $orders = Order::bySellerId($this->user->id)->where(function ($query) {
-            $query->where(function ($query) {
-                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
-            })->orwhere(function ($query) {
-                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
-            });
-        })->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+
+        if ($orders->isEmpty()) {
+            return $this->error('操作失败');
+        }
+
         //通知买家订单已发货
+        $failIds = [];
         foreach ($orders as $order) {
+            if ($order->pay_type == cons('pay_type.online') && !($order->pay_status == cons('order.pay_status.payment_success') && $order->status == cons('order.status.non_send'))) {
+                if (count($orders) == 1) {
+                    return $this->error('操作失败');
+                }
+                $failIds[] = $order->id;
+                continue;
+            } elseif ($order->pay_type == cons('pay_type.cod') && $order->status != cons('order.status.non_send')) {
+                if (count($orders) == 1) {
+                    return $this->error('操作失败');
+                }
+                $failIds[] = $order->id;
+                continue;
+            }
+
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
             RedisService::setRedis($redisKey, $redisVal);
@@ -271,7 +317,7 @@ class OrderController extends Controller
             ])->save();
         }
 
-        return $this->success('发货成功');
+        return $this->success(['failIds' => $failIds]);
 
     }
 

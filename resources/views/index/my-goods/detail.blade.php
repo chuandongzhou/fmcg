@@ -15,7 +15,7 @@
                    data-data='{ "status": "{{ !$goods->status }}" }' class="btn btn-info no-form ajax"
                    data-done-then="refresh">{{ cons()->valueLang('goods.status' , !$goods->status) }}</a>
                 <a class="btn btn-remove delete no-form ajax" data-method="delete"
-                   data-url="{{ url('api/v1/my-goods/' . $goods->id) }}" data-done-url="{{ url('goods') }}">删除</a>
+                   data-url="{{ url('api/v1/my-goods/' . $goods->id) }}" data-done-url="{{ url('my-goods') }}">删除</a>
             </div>
         </div>
 
@@ -53,8 +53,8 @@
 
         <div class="row delivery-wrap">
             <div class="col-sm-12 switching">
-                <a id="location" class="active">配送区域</a>
-                <a id="graphic-details">图文详情</a>
+                <a href="javascript:void(0)" id="location" class="active">配送区域</a>
+                <a href="javascript:void(0)" id="graphic-details">图文详情</a>
             </div>
             <div class="col-sm-12 address-wrap location box">
                 <div class="item">

@@ -109,7 +109,7 @@
                                                     @endif
                                                     @if($order['can_payment'])
                                                         <p><a href="{{ url('pay/request/' . $order['id']) }}"
-                                                              class="btn btn-success">去付款</a></p>
+                                                              class="btn btn-success" target="_blank">去付款</a></p>
                                                     @elseif($order['can_confirm_arrived'])
                                                         <p><a class="btn btn-danger ajax"
                                                               data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
@@ -145,7 +145,7 @@
                                 data-method="put">
                             批量取消
                         </button>
-                        <button class="btn btn-info ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                        <button class="btn btn-info ajax btn-receive" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                                 data-method="put">
                             确认收货
                         </button>

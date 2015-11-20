@@ -106,7 +106,8 @@ class Order extends Model
      */
     public function goods()
     {
-        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id', 'goods_id')->withPivot('id', 'price',
+        return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id',
+            'goods_id')->withTrashed()->withPivot('id', 'price',
             'num', 'total_price');
     }
 

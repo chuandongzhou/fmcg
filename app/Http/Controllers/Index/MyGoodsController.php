@@ -93,7 +93,7 @@ class MyGoodsController extends Controller
      */
     public function show($goods)
     {
-        if (!Gate::denies('validate-goods', $goods)) {
+        if (Gate::denies('validate-my-goods', $goods)) {
             abort(403);
         }
 
@@ -114,6 +114,9 @@ class MyGoodsController extends Controller
      */
     public function edit($goods)
     {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            abort(403);
+        }
         $goodsAttr = $goods->attr;
         //获取所有标签
         $attrGoods = [];
