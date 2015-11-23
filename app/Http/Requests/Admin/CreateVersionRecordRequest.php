@@ -15,7 +15,7 @@ class CreateVersionRecordRequest extends Request
     public function rules()
     {
         return [
-            'version_name' => 'required|unique',
+            'version_name' => 'required|unique:version_record',
             'version_no' => 'required',
             'type' => 'required|numeric',
             'content' => 'required'

@@ -42,6 +42,12 @@ return [
             'wholesaler' => 2,       //批发商
             'supplier' => 3,       //供应商
         ],
+        //审核状态
+        'audit_status' => [
+            'not_audit' => 0,       //未审核
+            'pass'      => 1,       //通过
+            'not_pass'  => 2,       //未通过
+        ]
     ],
     //广告表类型
     'advert' => [

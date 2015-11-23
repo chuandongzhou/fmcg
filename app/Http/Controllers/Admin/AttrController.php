@@ -61,7 +61,6 @@ class AttrController extends Controller
             'pid'
         ])->get()->toArray();
 
-
         // 父级分类所包含标签
         $parentCateOfAttr = Attr::where('category_id', $categoryPid)->select([
             'status',
@@ -79,7 +78,6 @@ class AttrController extends Controller
                 array_push($allAttrs, $parentAttr);
             }
         }
-
         return view('admin.attr.attr',
             [
                 'categories' => $categories,

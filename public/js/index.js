@@ -653,19 +653,22 @@ function addGoodsFunc(cate1, cate2, cate3) {
             'attrs': array,
         };
         $.get(url, data, function (data) {
+
             var html = '', goodsImage = data['goodsImage'], goodsImageData = goodsImage['data'], imageBox = $('.load-img-wrap');
             for (var index in goodsImageData) {
                 html += '<div class="thumbnail col-xs-3 img-' + goodsImageData[index]['id'] + '">';
                 html += '   <img alt="" src="' + goodsImageData[index]['image_url'] + '" data-id="' + goodsImageData[index]['id'] + '">';
                 html += '</div>';
             }
+            if (goodsImage['prev_page_url'] || goodsImage['next_page_url']) {
+                html += '<ul class="pager col-xs-12">';
+                if (goodsImage['prev_page_url'])
+                    html += '     <li><a class="prev0 page" href="javascript:void(0)" data-url="' + goodsImage['prev_page_url'] + '">上一页</a></li>'
+                if (goodsImage['next_page_url'])
+                    html += '     <li><a class="next0 page"  href="javascript:void(0)" data-url="' + goodsImage['next_page_url'] + '">下一页</a></li>'
+                html += '</ul>';
+            }
 
-            html += '<ul class="pager col-xs-12">';
-            if (goodsImage['prev_page_url'])
-                html += '     <li><a class="prev0 page" href="javascript:void(0)" data-url="' + goodsImage['prev_page_url'] + '">上一页</a></li>'
-            if (goodsImage['next_page_url'])
-                html += '     <li><a class="next0 page"  href="javascript:void(0)" data-url="' + goodsImage['next_page_url'] + '">下一页</a></li>'
-            html += '</ul>'
             imageBox.html(html);
         }, 'json');
     }

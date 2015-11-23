@@ -22,7 +22,8 @@ class UserController extends Controller
         $types = cons('user.type');
         $type = (string)$request->input('type');
 
-        $users = User::where('type', array_get($types, $type, head($types)))->with('shop')->paginate();
+        $users = User::where('type', array_get($types, $type, head($types)))->where('audit_status',
+            cons('user.audit_status.pass'))->with('shop')->paginate();
 
         return view('admin.user.index', [
             'users' => $users,
@@ -114,6 +115,27 @@ class UserController extends Controller
     public function destroy($user)
     {
         return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
+    }
+
+    public function audit()
+    {
+        $auditStatus = cons('user.audit_status');
+        $users = User::whereIn('audit_status', array_except($auditStatus, 'pass'))->with('shop')->paginate();
+        return view('admin.user.audit', [
+            'users' => $users,
+        ]);
+    }
+
+    public function auditUpdate(Request $request, $user)
+    {
+        $auditStatus = cons('user.audit_status');
+        $status = (string)$request->input('status');
+        $auditStatus = in_array($status, $auditStatus) ? $status : head($auditStatus);
+
+        if ($user->fill(['audit_status' => $auditStatus])->save()) {
+            return $this->success('操作成功');
+        }
+        return $this->error('操作失败');
     }
 
     /**

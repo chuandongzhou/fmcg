@@ -83,6 +83,9 @@
                                         <li><a href="{{ url('/admin/user/create?type=supplier')  }}">供应商添加</a> <a
                                                     href="{{ url('/admin/user?type=supplier')  }}" class="manger">管理</a>
                                         </li>
+                                        <li>
+                                            <a href="{{ url('/admin/user/audit')  }}">账号审核</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

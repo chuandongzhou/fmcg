@@ -42,6 +42,12 @@ return [
             'retailer' => '终端商',
             'supplier' => '供应商',
         ],
+        // 审核状态
+        'audit_status' => [
+            'not_audit' => '未审核',
+            'pass'      => '通过',
+            'not_pass'  => '未通过'
+        ]
     ],
     //广告表类型
     'advert' => [

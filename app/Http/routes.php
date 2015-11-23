@@ -70,6 +70,8 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('advert-user', 'AdvertUserController'); // 用户端广告
     $router->resource('advert-app', 'AdvertAppController'); // APP广告
     $router->resource('role', 'RoleController');
+    $router->get('user/audit', 'UserController@audit');    //未审核账号列表
+    $router->put('user/audit/{user}', 'UserController@auditUpdate');    //审核账号
     $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
     $router->put('user/switch', 'UserController@putSwitch');//批量修改用户
     $router->resource('user', 'UserController');            //用户管理

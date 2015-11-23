@@ -11,6 +11,7 @@ use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Hash;
 
 class AuthController extends Controller
 {
@@ -27,15 +28,25 @@ class AuthController extends Controller
         $password = $request->input('password');
         $type = $request->input('type');
 
-        if (auth()->attempt(['user_name' => $account, 'password' => $password, 'type' => $type], true)) {
-            $user = auth()->user()->load('shop');
-            if (!is_null($user->shop)) {
-                $user->shop->address_name = $user->shop->address;
-            }
+        $user = User::where('user_name', $account)->first();
 
-            return $this->success(['user' => $user]);
+        if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
+            return $this->error('账号或密码错误');
         }
-        return $this->error('账号或密码错误');
+
+        if ($user->status != cons('status.on')) {
+            return $this->error('账号已锁定');
+        }
+
+        if ($user->audit_status != cons('user.audit_status.pass')) {
+            return $this->error('账户未审核或审核失败');
+        }
+        $user->load('shop');
+        if (!is_null($user->shop)) {
+            $user->shop->address_name = $user->shop->address;
+        }
+        auth()->login($user, true);
+        return $this->success(['user' => $user]);
     }
 
     /**

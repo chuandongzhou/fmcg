@@ -41,6 +41,59 @@
 
                     </div>
 
+
+                </div>
+                <div class="col-sm-2 right-save">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+                <div class="row content-wrap">
+                <div class="form-group col-sm-12" style="margin-left: 0;">
+                    <label class="control-label">分类 :</label>
+                    <select name="cate_level_1" class="categories"></select>
+                    <select name="cate_level_2" class="categories"> </select>
+                    <select name="cate_level_3" class="categories"></select>
+                </div>
+                <div class="form-group  attr col-sm-12">
+                    @foreach($attrs as $key=>$attr)
+                        <p class="items-item">
+                            <label>{{ $attr['name'] }}</label>
+                            <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
+                                <option value="0">请选择</option>
+                                @foreach($attr['child'] as $child)
+                                    <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </p>
+                    @endforeach
+                </div>
+
+                <div class="col-sm-12 map">
+                    <div class="upload-img">
+                        <label>商品图片 :</label>
+                    </div>
+                    <div class="goods-imgs">
+                        @foreach($goods->images as $image)
+                            <div class="thumbnail col-xs-3">
+                                <button aria-label="Close" class="close" type="button">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <img alt="" src="{{ $image->image_url }}">
+                                <input type="hidden" value="{{ $image->id }}" name="images[]">
+
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="col-sm-12 map">
+                    <div class="upload-img">
+                        <label>选择图片 :</label>
+                    </div>
+                    <div class="load-img-wrap">
+
+                    </div>
+                </div>
+                <div class="col-sm-12 editor-wrap">
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">是否新货 :</label>
@@ -90,107 +143,7 @@
                                   {{ $goods->is_promotion ? '' : 'disabled' }} id="promotion_info">{{ $goods->promotion_info }}</textarea>
                     </div>
                 </div>
-                <div class="col-sm-2 right-save">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-            <div class="row content-wrap">
-                <div class="form-group col-sm-12" style="margin-left: 0;">
-                    <label class="control-label">分类 :</label>
-                    <select name="cate_level_1" class="categories"></select>
-                    <select name="cate_level_2" class="categories"> </select>
-                    <select name="cate_level_3" class="categories"></select>
-                </div>
-                <div class="form-group editor-item attr col-sm-12">
-                    @foreach($attrs as $key=>$attr)
-                        <p class="items-item">
-                            <label>{{ $attr['name'] }}</label>
-                            <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
-                                <option value="0">请选择</option>
-                                @foreach($attr['child'] as $child)
-                                    <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
-                                @endforeach
-                            </select>
-                        </p>
-                    @endforeach
-                </div>
 
-                <div class="col-sm-12 map">
-                    <div class="upload-img">
-                        <label>商品图片 :</label>
-                    </div>
-                    <div class="goods-imgs">
-                        @foreach($goods->images as $image)
-                            <div class="thumbnail col-xs-3">
-                                <button aria-label="Close" class="close" type="button">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <img alt="" src="{{ $image->image_url }}">
-                                <input type="hidden" value="{{ $image->id }}" name="images[]">
-
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="col-sm-12 map">
-                    <div class="upload-img">
-                        <label>选择图片 :</label>
-                        {{--<button id="refresh-images" type="button" class="btn btn-primary">--}}
-                        {{--点击刷新图片--}}
-                        {{--</button>--}}
-                    </div>
-                    <div class="load-img-wrap">
-
-                    </div>
-                </div>
-                <div class="col-sm-12 add-address">
-                    <label>商品配送区域 : </label>
-                    <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
-                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
-                    </button>
-                    (最多5条配送区域)
-                </div>
-                <div class="col-sm-8 address-list">
-                    <div class="hidden">
-                        <input type="hidden" name="area[id][]" value=""/>
-                        <input type="hidden" name="area[province_id][]" value=""/>
-                        <input type="hidden" name="area[city_id][]" value=""/>
-                        <input type="hidden" name="area[district_id][]" value=""/>
-                        <input type="hidden" name="area[street_id][]" value=""/>
-                        <input type="hidden" name="area[area_name][]" value=""/>
-                        <input type="hidden" name="area[address][]" value=""/>
-                        {{--区域经纬度--}}
-                        <input type="hidden" name="area[blx][]" value=""/>
-                        <input type="hidden" name="area[bly][]" value=""/>
-                        <input type="hidden" name="area[slx][]" value=""/>
-                        <input type="hidden" name="area[sly][]" value=""/>
-                    </div>
-                    @foreach ($goods->deliveryArea as $area)
-                        <div class="col-sm-12 fa-border">{{ $area->address_name }}
-                            <span class="fa fa-times-circle pull-right close"></span>
-                            <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
-                            <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
-                            <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
-                            <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
-                            <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
-                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
-                            {{--区域经纬度--}}
-                            <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
-                            <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
-                            <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
-                            <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="col-sm-12 map">
-                    <p><label>地图标识 :</label></p>
-
-                    {{--<p class="address-map">--}}
-                    {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
-                    {{--</p>--}}
-                    <div id="map"></div>
-                </div>
                 <div class="col-sm-12 graphic-wrap">
                     <p><label>商品图文介绍 :</label></p>
 
@@ -198,7 +151,56 @@
                         <textarea class="introduce tinymce-editor" name="introduce">{{ $goods->introduce }}</textarea>
                     </p>
                 </div>
+                    <div class="col-sm-12 add-address">
+                        <label>商品配送区域 : </label>
+                        <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
+                                data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
+                        </button>
+                        (最多5条配送区域)
+                    </div>
+                    <div class="col-sm-8 address-list">
+                        <div class="hidden">
+                            <input type="hidden" name="area[id][]" value=""/>
+                            <input type="hidden" name="area[province_id][]" value=""/>
+                            <input type="hidden" name="area[city_id][]" value=""/>
+                            <input type="hidden" name="area[district_id][]" value=""/>
+                            <input type="hidden" name="area[street_id][]" value=""/>
+                            <input type="hidden" name="area[area_name][]" value=""/>
+                            <input type="hidden" name="area[address][]" value=""/>
+                            {{--区域经纬度--}}
+                            <input type="hidden" name="area[blx][]" value=""/>
+                            <input type="hidden" name="area[bly][]" value=""/>
+                            <input type="hidden" name="area[slx][]" value=""/>
+                            <input type="hidden" name="area[sly][]" value=""/>
+                        </div>
+                        @foreach ($goods->deliveryArea as $area)
+                            <div class="col-sm-12 fa-border">{{ $area->address_name }}
+                                <span class="fa fa-times-circle pull-right close"></span>
+                                <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
+                                <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
+                                <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
+                                <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
+                                <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
+                                <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                                <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
+                                {{--区域经纬度--}}
+                                <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
+                                <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
+                                <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
+                                <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="col-sm-12 map">
+                        <p><label>地图标识 :</label></p>
+
+                        {{--<p class="address-map">--}}
+                        {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
+                        {{--</p>--}}
+                        <div id="map"></div>
+                    </div>
             </div>
+
         </form>
     </div>
 @stop

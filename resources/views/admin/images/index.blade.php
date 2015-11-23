@@ -48,9 +48,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-10">
-                        <div class="row goods-pictures">
-                            @foreach($goodsImage as $id => $image)
+                <div class="col-sm-12">
+                    <div class="row goods-pictures">
+                        @foreach($goodsImage as $id => $image)
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="thumbnail">
                                     <span class="cate-name">
@@ -65,14 +65,15 @@
                                     <label class="form-control">{{ $image->image['name'] }}</label>
                                 </div>
                             </div>
-                            @endforeach
-                        </div>
+                        @endforeach
+                    </div>
+                    {!! $goodsImage->render() !!}
                 </div>
             </div>
         </div>
     </form>
 @stop
-{!! $goodsImage->render() !!}
+
 @section('js')
     @parent
     <script>
