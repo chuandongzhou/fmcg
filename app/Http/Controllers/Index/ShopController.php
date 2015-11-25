@@ -28,9 +28,11 @@ class ShopController extends Controller
     public function index(Request $request, $sort = '')
     {
         $user = auth()->user();
-        $shops = Shop::whereHas('user', function ($q) use ($user) {
-            $q->where('type', '>', $user->type);
-        })->with('images', 'logo');
+        $type = (string)$request->input('type');
+
+        $userTypes = cons('user.type');
+        $type = array_get($userTypes, $type, last($userTypes));
+        $shops = Shop::OfUser($user->type, $type)->with('images');
 
         $shopSorts = cons('shop.sort');
 
@@ -112,7 +114,7 @@ class ShopController extends Controller
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
         return view('index.shop.detail',
-            ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate->toJson()]);
+            ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate]);
     }
 
     /**

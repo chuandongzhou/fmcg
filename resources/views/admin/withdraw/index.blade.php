@@ -39,7 +39,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-10">
+            <div class="col-sm-offset-3 col-sm-9">
                 <button type="submit" class="btn btn-bg btn-primary">查询</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 {{--<a href="{{ url('admin/system-trade/export-to-excel?' . $linkUrl) }}" class="btn btn-bg btn-warning">导出</a>--}}
@@ -47,68 +47,75 @@
         </div>
         <table class="table table-striped table-center">
             <thead>
-                <tr>
-                    <th>提现单号</th>
-                    <th>提现金额</th>
-                    <th>商家账号</th>
-                    <th>银行卡所有人</th>
-                    <th>银行账号</th>
-                    <th>银行名称</th>
-                    <th>开户行地址</th>
-                    <th>状态</th>
-                    <th>交易单号</th>
-                    <th>申请时间</th>
-                    <th>操作</th>
-                </tr>
+            <tr>
+                <th>提现单号</th>
+                <th>提现金额</th>
+                <th>商家账号</th>
+                <th>银行卡所有人</th>
+                <th>银行账号</th>
+                <th>银行名称</th>
+                <th>开户行地址</th>
+                <th>状态</th>
+                <th>交易单号</th>
+                <th>申请时间</th>
+                <th>操作</th>
+            </tr>
             </thead>
             <tbody>
-                @if($withdraws->count())
-                    @foreach($withdraws as $withdraw)
-                        <tr>
-                            <td>{{ $withdraw->id }}</td>
-                            <td>{{ $withdraw->amount }}</td>
-                            <td>{{ $withdraw->user->user_name }}</td>
-                            <td>{{ $withdraw->card_holder }}</td>
-                            <td>{{ $withdraw->card_number }}</td>
-                            <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
-                            <td>{{ $withdraw->card_address }}</td>
-                            <td>{{ $withdraw->status_info }}</td>
-                            <td>{{$withdraw->trade_no }}</td>
-                            <td>{{$withdraw->created_at }}</td>
-                            <td>
-                                <div class="btn-group btn-group-xs">
-                                    @if($withdraw->status == cons('withdraw.review'))
-                                        <a class="btn btn-primary ajax" data-method="put"
-                                           data-url="{{ url('admin/system-withdraw/pass') }}" data-data={!! json_encode(['withdraw_id'=>$withdraw->id]) !!}
-                                            >
-                                            <i class="fa fa-edit"></i> 通过
-                                        </a>
-                                        <a class="rollback btn btn-danger" data-target="#rollback" data-toggle="modal" data-id='{{ $withdraw->id }}'>
-                                            <i class="fa fa-trash-o"></i> 回退
-                                        </a>
-                                    @endif
-                                    @if($withdraw->status == cons('withdraw.pass'))
+            @if($withdraws->count())
+                @foreach($withdraws as $withdraw)
+                    <tr>
+                        <td>{{ $withdraw->id }}</td>
+                        <td>{{ $withdraw->amount }}</td>
+                        <td>{{ $withdraw->user->user_name }}</td>
+                        <td>{{ $withdraw->card_holder }}</td>
+                        <td>{{ $withdraw->card_number }}</td>
+                        <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
+                        <td>{{ $withdraw->card_address }}</td>
+                        <td>{{ $withdraw->status_info }}</td>
+                        <td>{{$withdraw->trade_no }}</td>
+                        <td>{{$withdraw->created_at }}</td>
+                        <td>
+                            <div class="btn-group btn-group-xs">
+                                @if($withdraw->status == cons('withdraw.review'))
+                                    <a class="btn btn-primary ajax" data-method="put"
+                                       data-url="{{ url('admin/system-withdraw/pass') }}"
+                                       data-data={!! json_encode(['withdraw_id'=>$withdraw->id]) !!}
+                                    >
+                                        <i class="fa fa-edit"></i> 通过
+                                    </a>
+                                    <a class="rollback btn btn-danger" data-target="#rollback" data-toggle="modal"
+                                       data-id='{{ $withdraw->id }}'>
+                                        <i class="fa fa-trash-o"></i> 回退
+                                    </a>
+                                @endif
+                                @if($withdraw->status == cons('withdraw.pass'))
                                     {{--打款需要交易号，回退需要回退原因--}}
-                                    <a class="payment btn btn-success" data-target="#payment" data-toggle="modal" data-id='{{ $withdraw->id }}'>
+                                    <a class="payment btn btn-success" data-target="#payment" data-toggle="modal"
+                                       data-id='{{ $withdraw->id }}'>
                                         <i class="fa fa-edit"></i> 已打款
                                     </a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>没有符合条件的信息</tr>
-                @endif
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td>没有符合条件的信息</td>
+                </tr>
+            @endif
             </tbody>
         </table>
     </form>
     {!! $withdraws->render() !!}
-    <div class="modal fade in" id="rollback" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="rollback" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     <p class="modal-title">回退原因:</p>
                 </div>
                 <div class="modal-body">
@@ -119,25 +126,31 @@
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('admin/system-withdraw/failed') }}" data-method="put">确定</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
+                                data-url="{{ url('admin/system-withdraw/failed') }}" data-method="put">确定
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade in" id="payment" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="payment" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     <p class="modal-title">交易单号:
-                        <input type="text" name="tradeNo" />
+                        <input type="text" name="tradeNo"/>
                     </p>
                 </div>
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('admin/system-withdraw/payment') }}" data-method="put">确定</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
+                                data-url="{{ url('admin/system-withdraw/payment') }}" data-method="put">确定
+                        </button>
                     </div>
                 </div>
             </div>
@@ -152,4 +165,4 @@
             withdrawOperateEvents();
         });
     </script>
-    @stop
+@stop

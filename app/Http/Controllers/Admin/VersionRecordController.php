@@ -45,10 +45,19 @@ class VersionRecordController extends Controller
      */
     public function store(CreateVersionRecordRequest $request)
     {
-        $data = $request->all();
-        $data['user_name'] = auth()->user()->user_name;
+        $attributes = $request->all();
+        $attributes['user_name'] = auth()->user()->user_name;
 
-        return VersionRecord::create($data)->exists ? $this->success('添加成功') : $this->error('添加失败');
+        $exist = VersionRecord::where([
+            'type' => $attributes['type'],
+            'version_name' => $attributes['version_name']
+        ])->pluck('id');
+
+        if ($exist) {
+            return $this->error('版本名已存在');
+        }
+
+        return VersionRecord::create($attributes)->exists ? $this->success('添加成功') : $this->error('添加失败');
     }
 
     /**

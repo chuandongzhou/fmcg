@@ -1,10 +1,10 @@
-body {
-  font-family: "Microsoft YaHei", Arial, sans-serif;
-  margin-bottom: 60px; }
-
 html {
   position: relative;
   min-height: 100%; }
+
+body {
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  margin-bottom: 60px; }
 
 ul, li, p, a, h1, h2, h3, h4 {
   list-style: none;
@@ -16,6 +16,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .table-center tr td {
   text-align: center; }
+
+.table-middle tr th, .table-middle .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list table .table-middle tr td {
+  vertical-align: middle; }
+
+.table-middle tr td {
+  vertical-align: middle; }
 
 .padding-clear {
   padding: 0; }
@@ -42,6 +48,28 @@ ul, li, p, a, h1, h2, h3, h4 {
   .carousel-indicators li.active {
     margin: 0 4px; }
 
+/*======================================head======================================*/
+.personal-header .logo-img {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 15px 0 0 20px; }
+  .personal-header .logo-img img {
+    width: 70px;
+    height: 51px; }
+
+.personal-header .items-item {
+  margin-top: 50px; }
+  .personal-header .items-item .item {
+    padding: 0 50px; }
+    .personal-header .items-item .item a {
+      padding: 0; }
+      .personal-header .items-item .item a:hover {
+        background: none; }
+
+.personal-hr {
+  margin-top: -10px; }
+
+/*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
@@ -107,11 +135,11 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 50px;
         height: 45px; }
 
-.login-banner-slide .carousel-inner img {
-  width: 100%; }
-
 .login-content {
-  position: relative; }
+  position: absolute;
+  width: 100%;
+  height: 67%;
+  z-index: 999; }
   .login-content .login-wrap {
     position: absolute;
     background-color: #fff;
@@ -119,8 +147,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     top: 20%;
     padding: 20px 0;
     right: 3%;
-    width: 360px;
-    /*width: 26%;*/
+    width: 25%;
     border-radius: 4px; }
     .login-content .login-wrap .alert-item {
       padding: 0 25px; }
@@ -164,17 +191,48 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 100%;
         padding: 6px 0; }
 
+@media (min-width: 1400px) {
+  .login-content {
+    height: 85%; } }
+
+.login-banner-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%; }
+  .login-banner-slide .carousel-inner {
+    height: 100%; }
+    .login-banner-slide .carousel-inner img {
+      width: 100%;
+      height: 100%;
+      min-height: 500px; }
+
 .login-footer {
   background-color: #fff;
   border: none; }
 
 /*======================================login end======================================*/
+/*======================================register begin======================================*/
+.register .nav-title li {
+  padding: 10px 20px; }
+
+.register .address-map {
+  margin-top: 20px;
+  overflow: hidden;
+  zoom: 1;
+  position: relative;
+  width: 100%;
+  height: 350px; }
+
+.register-hr {
+  margin: 0 0 10px 0; }
+
+/*======================================register end======================================*/
 /*======================================guide end======================================*/
 .guide-content {
   background: url("../images/banner.jpg") top no-repeat;
   background-size: cover;
   position: absolute;
-  height: 85%;
+  height: 78%;
   width: 100%; }
   .guide-content .guide-container {
     height: 100%;
@@ -215,11 +273,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 @media (min-width: 1400px) {
   .guide-content .item-icon {
     width: 80% !important; } }
-
-.guide-footer .content p {
-  width: 70%;
-  margin: auto;
-  text-align: left; }
 
 /*======================================guide end======================================*/
 /*======================================step begin======================================*/
@@ -368,6 +421,17 @@ ul, li, p, a, h1, h2, h3, h4 {
   bottom: 0;
   width: 100%;
   margin-top: 20px; }
+  .panel-footer .qr-code {
+    display: inline-block;
+    vertical-align: middle; }
+    .panel-footer .qr-code img {
+      width: 80px;
+      height: 80px; }
+  .panel-footer .txt-content {
+    display: inline-block;
+    padding-left: 20px; }
+    .panel-footer .txt-content .sign {
+      padding-bottom: 5px; }
 
 .modal .address-wrap {
   height: 80px;
@@ -441,57 +505,12 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-index .left-store-logo .banner .item img {
     width: 100%;
-    height: 400px;
-    max-width: 1000px;
     border: 1px solid #b4b4b4; }
 
-.wholesalers-index .store {
-  border-top: 1px dashed #b4b4b4;
-  border-bottom: 1px dashed #b4b4b4;
-  height: 400px;
-  padding: 0; }
-  .wholesalers-index .store .store-panel {
-    width: 100%;
-    padding: 8px 0 15px 0; }
-    .wholesalers-index .store .store-panel .avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      float: left; }
-    .wholesalers-index .store .store-panel .store-msg {
-      margin-left: 80px; }
-      .wholesalers-index .store .store-panel .store-msg li {
-        padding: 1px 0; }
-  .wholesalers-index .store .address-panel {
-    border-top: 1px dashed #b4b4b4;
-    margin-top: -1px; }
-    .wholesalers-index .store .address-panel ul {
-      padding: 10px 0;
-      clear: both; }
-      .wholesalers-index .store .address-panel ul .address-panel-item {
-        margin-left: 80px; }
-        .wholesalers-index .store .address-panel ul .address-panel-item .panel-name {
-          display: block;
-          color: #777777;
-          margin-bottom: 5px; }
-        .wholesalers-index .store .address-panel ul .address-panel-item .address-list {
-          display: inline-block; }
-          .wholesalers-index .store .address-panel ul .address-panel-item .address-list span, .wholesalers-index .store .address-panel ul .address-panel-item .address-list .msg-channel .title .close-btn, .msg-channel .title .wholesalers-index .store .address-panel ul .address-panel-item .address-list .close-btn {
-            display: block;
-            padding: 2px; }
-      .wholesalers-index .store .address-panel ul .icon {
-        background: url("../images/address-icon.png") no-repeat center;
-        width: 50px;
-        height: 50px;
-        display: inline-block;
-        float: left;
-        margin-left: 20px; }
-      .wholesalers-index .store .address-panel ul .icon-tel {
-        background-position: 0 0; }
-      .wholesalers-index .store .address-panel ul .icon-seller {
-        background-position: 0 -63px; }
-      .wholesalers-index .store .address-panel ul .icon-address {
-        background-position: 0 -128px; }
+.wholesalers-index .store-info-logo {
+  padding-left: 0; }
+  .wholesalers-index .store-info-logo .banner img {
+    height: 400px; }
 
 .wholesalers-index .nav-wrap {
   background-color: #f2f2f2;
@@ -514,6 +533,67 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-color: #f2f2f2;
       color: #4cb9fe;
       border-bottom: 2px solid #4cb9fe; }
+
+.store {
+  border-top: 1px dashed #b4b4b4;
+  border-bottom: 1px dashed #b4b4b4;
+  height: 400px;
+  padding: 0; }
+  .store .store-panel, .store .public-personal {
+    width: 100%;
+    padding: 8px 0 15px 0; }
+    .store .store-panel .avatar, .store .public-personal .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      float: left; }
+    .store .store-panel .store-msg, .store .public-personal .store-msg {
+      margin-left: 80px; }
+      .store .store-panel .store-msg li, .store .public-personal .store-msg li {
+        padding: 1px 0; }
+  .store .address-panel {
+    border-top: 1px dashed #b4b4b4;
+    margin-top: -1px; }
+    .store .address-panel ul {
+      padding: 10px 0;
+      clear: both; }
+      .store .address-panel ul .address-panel-item {
+        margin-left: 80px; }
+        .store .address-panel ul .address-panel-item .panel-name {
+          display: block;
+          color: #777777;
+          margin-bottom: 5px; }
+        .store .address-panel ul .address-panel-item .content {
+          max-height: 135px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 7;
+          -webkit-box-orient: vertical; }
+        .store .address-panel ul .address-panel-item .address-list {
+          display: inline-block; }
+          .store .address-panel ul .address-panel-item .address-list span, .store .address-panel ul .address-panel-item .address-list .msg-channel .title .close-btn, .msg-channel .title .store .address-panel ul .address-panel-item .address-list .close-btn {
+            display: block;
+            padding: 2px; }
+      .store .address-panel ul .icon {
+        background: url("../images/address-icon.png") no-repeat center;
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        float: left;
+        margin-left: 20px; }
+      .store .address-panel ul .icon-tel {
+        background-position: 0 0; }
+      .store .address-panel ul .icon-seller {
+        background-position: 0 -63px; }
+      .store .address-panel ul .icon-address {
+        background-position: 0 -128px; }
+
+.personal-store {
+  border: none;
+  height: auto; }
+  .personal-store .address-panel {
+    border: none; }
 
 /*======================================index end======================================*/
 /*======================================my-goods begin======================================*/
@@ -1379,7 +1459,8 @@ table .product-name {
       height: 33px; }
       .dealer-header .search .input-group .select-role .selected span, .dealer-header .public-personal .controls .item .add-goods .input-group .select-role .selected span, .public-personal .controls .item .dealer-header .add-goods .input-group .select-role .selected span, .dealer-header .search .input-group .select-role .selected .msg-channel .title .close-btn, .msg-channel .title .dealer-header .search .input-group .select-role .selected .close-btn, .dealer-header .public-personal .controls .item .add-goods .input-group .select-role .selected .msg-channel .title .close-btn, .msg-channel .title .dealer-header .public-personal .controls .item .add-goods .input-group .select-role .selected .close-btn, .public-personal .controls .item .dealer-header .add-goods .input-group .select-role .selected .msg-channel .title .close-btn, .msg-channel .title .public-personal .controls .item .dealer-header .add-goods .input-group .select-role .selected .close-btn {
         display: inline-block;
-        width: 80%; }
+        width: 80%;
+        height: 100%; }
       .dealer-header .search .input-group .select-role a, .dealer-header .public-personal .controls .item .add-goods .input-group .select-role a, .public-personal .controls .item .dealer-header .add-goods .input-group .select-role a {
         text-decoration: none;
         color: #000;
@@ -1388,7 +1469,7 @@ table .product-name {
         display: none;
         position: absolute;
         background-color: #f2f2f2;
-        bottom: -44px;
+        top: 33px;
         left: 0;
         width: 100%;
         z-index: 99999; }

@@ -35,16 +35,14 @@ class ShopController extends Controller
     {
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
-        $userType = auth()->user()->type;
+        $type = auth()->user()->type;
 
         $shops = Shop::select(DB::raw('(6370996.81 * ACOS( COS(' . $yLat . ' * PI() / 180)
              * COS(y_lat * PI() / 180) * COS(' . $xLng . ' * PI() / 180 - x_lng * PI() / 180 )
               + SIN(' . $yLat . ' * PI() / 180) * SIN(y_lat * PI() / 180)  ) ) distance'), 'id',
             'name', 'min_money', 'contact_person', 'contact_info')
             ->with('images', 'logo', 'shopAddress')
-            ->whereHas('user', function ($q) use ($userType) {
-                $q->where('type', '>', $userType);
-            })->orderBy('distance')->paginate();
+            ->OfUser($type)->orderBy('distance')->paginate();
         return $this->success($shops->toArray());
     }
 

@@ -42,6 +42,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
+        $router->get('info', 'InfoController@index');          //商家信息
         $router->get('password', 'PasswordController@index');          //修改密码
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
@@ -72,6 +73,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('role', 'RoleController');
     $router->get('user/audit', 'UserController@audit');    //未审核账号列表
     $router->put('user/audit/{user}', 'UserController@auditUpdate');    //审核账号
+    $router->put('user/multi_audit', 'UserController@multiAudit');    //批量审核
     $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
     $router->put('user/switch', 'UserController@putSwitch');//批量修改用户
     $router->resource('user', 'UserController');            //用户管理

@@ -13,30 +13,38 @@
 
 
 @section('header')
-    <nav class="navbar navbar-default wholesalers-header">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false">
+    <nav class="navbar personal-header">
+        <div class="container" >
+            <div class="navbar-header" >
+                <button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
+                    </button>
+                        <a class="logo-img"><img src="{{ asset('images/personal-logo.png') }}" ></a>
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="nav navbar-nav">
-                    @if(auth()->user()->type < cons('user.type.wholesaler'))
-                        <li class="active"><a class="list-name" href="{{ url('/') }}">首页</a></li>
-                        <li><a class="list-name" href="{{ url('shop') }}">商家</a></li>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav items-item">
+                    @if($user->type < cons('user.type.wholesaler'))
+                        <li class="item"><a href="{{ url('/') }}">首页</a></li>
+                        <li class="item"><a href="{{ url('shop') }}">商家</a></li>
+                    @else
+                        <li class="item">
+                            <a href="{{ url('shop/' . $user->shop->id) }}">
+                                <i class="fa fa-angle-left"></i>
+                                商店首页
+                            </a></li>
                     @endif
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="right"><a href="{{ url('auth/logout') }}"><i class="fa fa-sign-out"></i> 退出</a></li>
+                <ul class="nav navbar-right items-item" >
+                    <li class="item"><a href="{{ url('auth/logout') }}"><i class="fa fa-sign-out"></i>退出</a></li>
                 </ul>
             </div>
         </div>
     </nav>
+    <hr class="personal-hr" />
 
 @stop
 

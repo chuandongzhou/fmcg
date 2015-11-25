@@ -328,7 +328,7 @@ var commonAjaxSetup = function () {
 
     // 通用异步表单提交
     $(document.body)
-        // 按钮提交
+    // 按钮提交
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form')
@@ -416,7 +416,7 @@ var commonAjaxSetup = function () {
                                 site.refresh(true);
                             } else if (doneThen == 'referer') {
                                 site.redirectReferer();
-                            }else {
+                            } else {
                                 self.button('reset');
                             }
                             return;
@@ -446,7 +446,7 @@ var commonUploadSetup = function () {
 
     // 通用文件上传
     $('.fileinput-button > [type="file"]').each(function (index, obj) {
-        var $this = $(obj), parent = $this.parent();
+        var $this = $(obj), parent = $this.parent(), multi = $this.data('multi'), container = $('.pictures');
 
         $this.fileupload({
             dataType: 'json',
@@ -456,13 +456,29 @@ var commonUploadSetup = function () {
                 parent.siblings('.fileinput-error').remove();
             },
             done: function (e, data) {
-                var result = data.result, name = parent.data('name') || 'image';
-                // 设置图片预览
-                parent.siblings('.image-preview').children('img').attr('src', result.url);
-                // 设置隐藏域
-                parent.siblings('.uploader-hidden').remove();
-                parent.after('<input type="hidden" class="uploader-hidden" name="' + name + '" value="' + result.path + '">');
-
+                var result = data.result;
+                if (multi) {
+                    var name = result.org_name;
+                    name = name.substr(0, name.lastIndexOf('.')) || name;
+                    container.prepend('' +
+                        '<div class="col-xs-3"> ' +
+                        '   <div class="thumbnail"> ' +
+                        '       <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button> ' +
+                        '       <img src="' + result.url + '" alt=""> ' +
+                        '       <input type="hidden" name="images[id][]" value=""> ' +
+                        '       <input type="hidden" name="images[path][]" value="' + result.path + '"> ' +
+                        '       <input type="hidden" name="images[org_name][]" value="' + result.org_name + '"> ' +
+                        '       <input type="text" class="form-control input-sm" name="images[name][]" value="' + name + '"> ' +
+                        '   </div>' +
+                        '</div>');
+                } else {
+                   var  name = parent.data('name') || 'image';
+                    // 设置图片预览
+                    parent.siblings('.image-preview').children('img').attr('src', result.url);
+                    // 设置隐藏域
+                    parent.siblings('.uploader-hidden').remove();
+                    parent.after('<input type="hidden" class="uploader-hidden" name="' + name + '" value="' + result.path + '">');
+                }
             },
             fail: function (e, data) {
                 var json = data.jqXHR['responseJSON'], text = '文件上传失败';
@@ -485,6 +501,7 @@ var commonUploadSetup = function () {
             }
         });
     });
+
 };
 
 /**
@@ -694,7 +711,7 @@ var commonMethodSetup = function () {
 
     // 通用表格全选 反选
     $(document.body)
-        // 全选
+    // 全选
         .on('click', '.common-select-all', function () {
             $(this).closest('tr').siblings('tr').find('td:first-child input[type="checkbox"]').prop('checked', true);
         })
@@ -717,10 +734,10 @@ var commonMethodSetup = function () {
 /**
  * 添加图片
  */
-function picFunc() {
+function picFunc(uploadLimit) {
     var container = $('.pictures')
         , uploadButton = $('#pic-upload')
-        , uploadLimit = 5;
+        , uploadLimit = uploadLimit || 5;
 
     // 图片上传限制
     var changeUploadButtonStatus = function () {
@@ -991,6 +1008,8 @@ function getCoordinateMap(data) {
 
 function getShopAddressMap(lng, lat) {
     var addressMap = new BMap.Map('address-map');
+    var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+    addressMap.addControl(top_left_navigation);
     if (lng && lat) {
         var point_address = new BMap.Point(lng, lat);
         addressMap.centerAndZoom(point_address, 12);

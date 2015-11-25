@@ -4,7 +4,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/admin/') }}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{ url('admin/user/multi_audit') }}" data-help-class="col-sm-push-2 col-sm-10">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -57,15 +57,15 @@
             </button>
         </div>
         <div class="btn-group btn-group-xs" role="group">
-            <button type="button" class="btn btn-primary ajax" data-method="put" data-data='{"status":1}'
-                    data-url="{{ url('admin/user/switch') }}">
-                <i class="fa fa-adjust"></i> 启用
+            <button type="button" class="btn btn-primary ajax" data-method="put"
+                    data-data={"status":"{{ cons('user.audit_status.pass') }}"}>
+                <i class="fa fa-adjust"></i> 批量审核通过
             </button>
         </div>
         <div class="btn-group btn-group-xs" role="group">
-            <button type="button" class="btn btn-danger ajax" data-method="put" data-data='{"status":0}'
-                    data-url="{{ url('admin/user/switch') }}">
-                <i class="fa fa-trash-o"></i> 禁用
+            <button type="button" class="btn btn-danger ajax" data-method="put"
+                    data-data={"status":"{{ cons('user.audit_status.not_pass') }}"}>
+                <i class="fa fa-trash-o"></i> 批量审核不通过
             </button>
         </div>
     </form>

@@ -37,16 +37,16 @@ class ShippingAddressController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    /*public function create()
     {
         return view('index.personal.shipping-address', ['shippingAddress' => new ShippingAddress]);
-    }
+    }*/
 
     /**
      * 编辑
      *
-     * @param $ShippingAddress
-     * @return \Illuminate\View\View
+     * @param $shippingAddress
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($shippingAddress)
     {

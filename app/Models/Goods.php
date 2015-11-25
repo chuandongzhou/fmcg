@@ -35,6 +35,7 @@ class Goods extends Model
         'introduce',
         'shop_id',
         'images',
+        'status',
         'user_type'
     ];
 

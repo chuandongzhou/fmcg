@@ -117,6 +117,11 @@ class UserController extends Controller
         return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
     }
 
+    /**
+     *  账号审核页
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function audit()
     {
         $auditStatus = cons('user.audit_status');
@@ -126,6 +131,13 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * 账号审核处理
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $user
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function auditUpdate(Request $request, $user)
     {
         $auditStatus = cons('user.audit_status');
@@ -133,6 +145,26 @@ class UserController extends Controller
         $auditStatus = in_array($status, $auditStatus) ? $status : head($auditStatus);
 
         if ($user->fill(['audit_status' => $auditStatus])->save()) {
+            return $this->success('操作成功');
+        }
+        return $this->error('操作失败');
+    }
+
+    /**
+     * 批量审核
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function multiAudit(Request $request){
+        $auditStatus = cons('user.audit_status');
+        $status = (string)$request->input('status');
+        $auditStatus = in_array($status, $auditStatus) ? $status : head($auditStatus);
+        $userIds = $request->input('uid');
+        if (is_null($userIds)) {
+            return $this->error('请选择要审核的用户');
+        }
+        if (User::whereIn('id' , $userIds)->update(['audit_status' => $auditStatus])) {
             return $this->success('操作成功');
         }
         return $this->error('操作失败');

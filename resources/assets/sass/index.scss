@@ -1,14 +1,13 @@
 @import "variables";
 @import "bootstrap/mixins";
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
   margin-bottom: 60px;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
 }
 
 ul, li, p, a, h1, h2, h3, h4 {
@@ -24,6 +23,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     td {
       text-align: center;
+    }
+  }
+}
+
+.table-middle {
+  tr {
+    th {
+      vertical-align: middle;
+    }
+    td {
+      vertical-align: middle;
     }
   }
 }
@@ -66,7 +76,34 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
+/*======================================head======================================*/
+.personal-header{
+    .logo-img {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 15px 0 0 20px;
+      img {
+        width: 70px;
+        height: 51px;
+      }
+    }
+  .items-item {
+    margin-top: 50px;
+    .item {
+      padding: 0 50px;
+      a{
+        padding: 0;
+        &:hover{
+          background: none;
+        }
+      }
+    }
+  }
+}
+.personal-hr{
+  margin-top: -10px;
+}
+/*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
@@ -120,7 +157,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
 /*======================================pop======================================*/
 
 /*======================================login begin======================================*/
@@ -147,17 +183,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
-.login-banner-slide {
-  .carousel-inner {
-    img {
-      width: 100%;
-    }
-  }
-}
-
 .login-content {
-  position: relative;
+  position: absolute;
+  width: 100%;
+  height: 67%;
+  z-index: 999;
   .login-wrap {
     position: absolute;
     background-color: $body-bg;
@@ -165,8 +195,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     top: 20%;
     padding: 20px 0;
     right: 3%;
-    width: 360px;
-    /*width: 26%;*/
+    width: 25%;
     border-radius: 4px;
     .alert-item {
       padding: 0 25px;
@@ -224,6 +253,25 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+@media (min-width: 1400px) {
+  .login-content{
+    height: 85%;
+  }
+}
+.login-banner-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  .carousel-inner {
+    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+    }
+  }
+}
+
 
 .login-footer {
   background-color: $body-bg;
@@ -231,16 +279,39 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 /*======================================login end======================================*/
+/*======================================register begin======================================*/
+.register {
+  .nav-title {
+    li {
+      padding: 10px 20px;
+    }
+  }
+  .address-map {
+    margin-top: 20px;
+    overflow: hidden;
+    zoom: 1;
+    position: relative;
+    width: 100%;
+    height: 350px;
+  }
+}
+
+.register-hr {
+  margin: 0 0 10px 0;
+}
+
+/*======================================register end======================================*/
+
 /*======================================guide end======================================*/
 .guide-content {
   background: url("../images/banner.jpg") top no-repeat;
   background-size: cover;
-  position: absolute;
-  height: 85%;
+  position:absolute;
+  height: 78%;
   width: 100%;
   .guide-container {
     height: 100%;
-    position: relative;
+    position:relative;
     .content-panel {
       position: absolute;
       bottom: 10%;
@@ -285,21 +356,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
-@media (min-width: 1400px) {
-  .guide-content {
-    .item-icon {
+@media (min-width:1400px ){
+  .guide-content{
+    .item-icon{
       width: 80% !important;
-    }
-  }
-}
-
-.guide-footer {
-  .content {
-    p {
-      width: 70%;
-      margin: auto;
-      text-align: left;
     }
   }
 }
@@ -500,6 +560,20 @@ ul, li, p, a, h1, h2, h3, h4 {
   bottom: 0;
   width: 100%;
   margin-top: 20px;
+  .qr-code{
+    display: inline-block;
+    vertical-align: middle;
+    img{
+      @include square(80px);
+    }
+  }
+  .txt-content{
+    display: inline-block;
+    padding-left: 20px;
+    .sign{
+      padding-bottom: 5px;
+    }
+  }
 }
 
 .modal {
@@ -584,14 +658,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
-.commodity-other {
-  .commodity {
+.commodity-other{
+  .commodity{
     width: 25%;
   }
 }
-
-.dealer-commodity-wrap {
+.dealer-commodity-wrap{
   .commodity-img {
     height: 100px;
   }
@@ -603,70 +675,17 @@ ul, li, p, a, h1, h2, h3, h4 {
       .item {
         padding: 0;
         img {
-          @include size(100%, 400px);
-          max-width: 1000px;
+          width: 100%;
           border: 1px solid $gray-lighter;
         }
       }
     }
   }
-  .store {
-    @include dash-bord;
-    height: 400px;
-    padding: 0;
-    .store-panel {
-      width: 100%;
-      padding: 8px 0 15px 0;
-      .avatar {
-        @include square(70px);
-        border-radius: 50%;
-        float: left;
-      }
-      .store-msg {
-        margin-left: 80px;
-        li {
-          padding: 1px 0;
-        }
-      }
-    }
-
-    .address-panel {
-      border-top: 1px dashed $gray-lighter;
-      margin-top: -1px;
-      ul {
-        padding: 10px 0;
-        clear: both;
-        .address-panel-item {
-          margin-left: 80px;
-          .panel-name {
-            display: block;
-            color: $gray-light;
-            margin-bottom: 5px;
-          }
-          .address-list {
-            display: inline-block;
-            span {
-              display: block;
-              padding: 2px;
-            }
-          }
-        }
-        .icon {
-          background: url('../images/address-icon.png') no-repeat center;
-          @include square(50px);
-          display: inline-block;
-          float: left;
-          margin-left: 20px;
-        }
-        .icon-tel {
-          background-position: 0 0;
-        }
-        .icon-seller {
-          background-position: 0 -63px;
-        }
-        .icon-address {
-          background-position: 0 -128px;
-        }
+  .store-info-logo{
+    padding-left: 0;
+    .banner {
+      img {
+        height: 400px;
       }
     }
   }
@@ -700,9 +719,82 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-
 }
+.store {
+  @include dash-bord;
+  height: 400px;
+  padding: 0;
+  .store-panel {
+    width: 100%;
+    padding: 8px 0 15px 0;
+    .avatar {
+      @include square(70px);
+      border-radius: 50%;
+      float: left;
+    }
+    .store-msg {
+      margin-left: 80px;
+      li {
+        padding: 1px 0;
+      }
+    }
+  }
 
+  .address-panel {
+    border-top: 1px dashed $gray-lighter;
+    margin-top: -1px;
+    ul {
+      padding: 10px 0;
+      clear: both;
+      .address-panel-item {
+        margin-left: 80px;
+        .panel-name {
+          display: block;
+          color: $gray-light;
+          margin-bottom: 5px;
+        }
+        .content{
+          max-height: 135px;
+          overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 7;
+          -webkit-box-orient: vertical;
+        }
+        .address-list {
+          display: inline-block;
+          span {
+            display: block;
+            padding: 2px;
+          }
+        }
+      }
+      .icon {
+        background: url('../images/address-icon.png') no-repeat center;
+        @include square(50px);
+        display: inline-block;
+        float: left;
+        margin-left: 20px;
+      }
+      .icon-tel {
+        background-position: 0 0;
+      }
+      .icon-seller {
+        background-position: 0 -63px;
+      }
+      .icon-address {
+        background-position: 0 -128px;
+      }
+    }
+  }
+}
+.personal-store{
+  border:none;
+  height:auto;
+  .address-panel{
+    border:none;
+  }
+}
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/
@@ -929,6 +1021,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
+  @extend .store-panel;
 }
 
 /*======================================my-goods end======================================*/
@@ -1676,11 +1769,9 @@ table {
     }
   }
 }
-
-.title-info-name {
-  color: $gray-light;
+.title-info-name{
+  color:$gray-light;
 }
-
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
@@ -1867,12 +1958,12 @@ table {
         }
       }
     }
-    .user-name-wrap {
-      a {
+    .user-name-wrap{
+      a{
         display: inline-block;
-        &.name-panel {
+        &.name-panel{
           padding: 0;
-          .user-name {
+          .user-name{
             display: inline-block;
             max-width: 100px;
             text-overflow: ellipsis;
@@ -1881,7 +1972,7 @@ table {
             vertical-align: top;
           }
         }
-        &.exit {
+        &.exit{
           padding-left: 8px;
         }
       }
@@ -1915,6 +2006,7 @@ table {
           span {
             display: inline-block;
             width: 80%;
+            height: 100%;
           }
         }
         a {
@@ -1926,7 +2018,7 @@ table {
           display: none;
           position: absolute;
           background-color: $gray-plain;
-          bottom: -44px;
+          top:33px;
           left: 0;
           width: 100%;
           z-index: 99999;
@@ -2422,18 +2514,18 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px 8px 0 0;
-    span {
+    border-radius: 8px  8px 0 0;
+    span{
       display: inline-block;
       font-size: 16px;
       padding: 0 5px;
-      color: $body-bg;
+      color:$body-bg;
     }
-    .close-btn {
+    .close-btn{
       @extend span;
       line-height: 40px;
       cursor: pointer;
-      &:hover {
+      &:hover{
         text-decoration: none;
       }
     }

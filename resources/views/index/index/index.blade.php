@@ -20,8 +20,11 @@
                 <a class="btn btn-primary">全部商品分类</a>
             </div>
             <div class="col-sm-10">
-                <a href="{{ url('/') }}" class="btn">首页</a>
-                <a href="{{ url('shop') }}" class="btn">商家</a>
+                {{--<a href="{{ url('/') }}" class="btn">首页</a>--}}
+                @if($user->type == cons('user.type.retailer'))
+                    <a href="{{ url('shop?type=wholesaler') }}" class="btn">批发商</a>
+                @endif
+                <a href="{{ url('shop?type=supplier') }}" class="btn">供应商</a>
             </div>
         </div>
     </div>

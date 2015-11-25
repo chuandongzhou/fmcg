@@ -3,7 +3,6 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    @include('index.personal.tabs')
     <form method="get" action="{{ url('personal/withdraw') }}">
         <div class="row">
             <div class="col-sm-12 ">
@@ -20,14 +19,15 @@
                 </div>
                 <div class="table-responsive">
                     <p class="time">
-                        提现单号:<input type="text" name="withdrawId" value="" />
-                        时间段:<input class="datetimepicker" name="start_time" data-format="YYYY-MM-DD" type="text"
+                        提现单号 : <input type="text" name="withdrawId" value="" />
+                        时间段 : <input class="datetimepicker" name="start_time" data-format="YYYY-MM-DD" type="text"
                                    value="{{ $startTime }}"> 至
                         <input class="datetimepicker" name="end_time" data-format="YYYY-MM-DD"
                                value="{{ $endTime }}"
                                type="text">
-                        <input type="submit" class="btn btn-warning">
+                        <input type="submit" class="btn btn-warning" value="查看">
                     </p>
+
                     <table class="table table-bordered table-center">
                         <thead>
                             <tr>

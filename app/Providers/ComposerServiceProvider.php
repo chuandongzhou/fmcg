@@ -17,19 +17,24 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composers([
-                CategoryComposer::class => [
-                    'index.master',
-                    'index.index.index',
-                    'index.index-master'
-                ],
-                UserComposer::class => [
-                    'master'
-                ],
-                ProvinceComposer::class => [
-                    'index.index-top',
-                    'index.master'
-                ]
-            ]);
+            CategoryComposer::class => [
+                'index.master',
+                'index.index.index',
+                'index.index-master'
+            ],
+            UserComposer::class => [
+                'master',
+                'index.index.index',
+                'index.index-top',
+                'index.menu-master',
+                'index.index-control',
+                'index.personal.tabs'
+            ],
+            ProvinceComposer::class => [
+                'index.index-top',
+                'index.master'
+            ]
+        ]);
     }
 
     /**

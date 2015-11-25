@@ -19,16 +19,16 @@
         <div id="myCarousel" class="row carousel slide login-banner-slide">
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active">
-                <li data-target="#myCarousel" data-slide-to="1">
+                {{--<li data-target="#myCarousel" data-slide-to="1">--}}
                     {{--<li data-target="#myCarousel" data-slide-to="2">--}}
             </ol>
             <div class="carousel-inner">
                 <div class="item active">
                     <img src="{{ asset('images/banner.jpg') }}" alt="First slide">
                 </div>
-                <div class="item">
-                    <img src="{{ asset('images/banner.jpg') }}" alt="Second slide">
-                </div>
+                {{--<div class="item">--}}
+                    {{--<img src="{{ asset('images/banner.jpg') }}" alt="Second slide">--}}
+                {{--</div>--}}
                 {{--<div class="item">--}}
                 {{--<img src="{{ asset('images/banner.jpg') }}" alt="Third slide">--}}
                 {{--</div>--}}
@@ -71,10 +71,16 @@
     </div>
 @stop
 @section('footer')
-    <footer class="panel-footer login-footer">
-        <div class="container text-center content text-muted">
-            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br />
-            联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
+    <footer class="panel-footer login-footer guide-footer footer">
+        <div class="container text-center text-muted" >
+            <div class="text-right qr-code">
+                <img src="{{ asset('images/qr-code.png') }}">
+                <p class="text-center">APP下载</p>
+            </div>
+            <div class="txt-content">
+                <p class="text-left sign">Copyright2015成都订百达科技有限公司  蜀ICP备15031748号-1</p>
+                <p>成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;13829262065(霍女士)</p>
+            </div>
         </div>
     </footer>
     @parent

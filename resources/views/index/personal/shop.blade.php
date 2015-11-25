@@ -4,11 +4,17 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    @include('index.personal.tabs')
     <div class="col-sm-12 personal-center">
         <form class="form-horizontal ajax-form" method="put"
               action="{{ url('api/v1/personal/shop/'.$shop->id) }}" data-help-class="col-sm-push-2 col-sm-10">
             <div class="col-sm-12 user-show">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="id">店家ID:</label>
+
+                    <div class="col-sm-10 col-md-6">
+                        <span class="form-control" style="border: none; box-shadow: none">{{ $shop->id }}</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="username">店家LOGO:</label>
 

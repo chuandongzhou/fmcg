@@ -60,7 +60,9 @@
                             </ul>
                         </li>
                         <li class="user-name-wrap">
-                            <a href="{{ url('personal/shop') }}" class="name-panel"><span class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }})</a>
+                            <a href="{{ url('personal/shop') }}" class="name-panel"><span
+                                        class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }}
+                                )</a>
                             <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
                         </li>
                     </ul>
@@ -91,7 +93,10 @@
                                     class="fa fa-angle-down"></i></a>
                         <ul class="select-list">
                             <li><a href="javascript:void(0)" data-url="search">商品</a></li>
-                            <li><a href="javascript:void(0)" data-url="shop">商家</a></li>
+                            @if($user->type == cons('user.type.retailer'))
+                                <li><a href="javascript:void(0)" data-url="shop?type=wholesaler">批发商</a></li>
+                            @endif
+                            <li><a href="javascript:void(0)" data-url="shop?type=supplier">供应商</a></li>
                         </ul>
                     </div>
                     <input type="text" name="name" class="control pull-right" aria-describedby="course-search">

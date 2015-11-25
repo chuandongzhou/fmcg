@@ -16,6 +16,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->type == cons('user.type.supplier')) {
+            return redirect('personal/shop');
+        }
+
         $nowTime = Carbon::now();
         //广告
         $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->get();

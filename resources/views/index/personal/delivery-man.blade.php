@@ -2,7 +2,6 @@
 @section('subtitle', '个人中心-提现账号')
 
 @section('right')
-    @include('index.personal.tabs')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man/' . $deliveryMan->id) }}"
           method="{{ $deliveryMan->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-url="{{ url('personal/delivery-man') }}">

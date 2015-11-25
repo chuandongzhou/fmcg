@@ -52,7 +52,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-10">
+            <div class="col-sm-offset-3 col-sm-9">
                 <button type="submit" class="btn btn-bg btn-primary">查询</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="{{ url('admin/system-trade/export-to-excel?' . $linkUrl) }}" class="btn btn-bg btn-warning">导出</a>

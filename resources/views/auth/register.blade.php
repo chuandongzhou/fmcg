@@ -8,96 +8,114 @@
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
 @stop
 @section('body')
+    <nav class="navbar login-nav">
+        <div class="container padding-clear register">
+            <ul class="nav-title text-center">
+                <li><a href="{{ url('auth/login') }}">首页</a></li>
+                <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
+                <li><a href="#">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+    <hr class="register-hr">
     <div class="container">
         <div class="row vertical-offset-100">
             <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-2">
-                <div class="panel panel-auth">
+                <div class="panel panel-auth register">
                     <div class="panel-body">
                         <form class="ajax-form form-horizontal" method="post"
                               action="{{  url('api/v1/auth/register')  }}"
                               accept-charset="UTF-8" data-done-url="{{ url('auth/guide') }}">
                             <fieldset>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="user_name">用户名:</label>
 
-                                    <div class="col-sm-10 col-md-6">
-                                        <input class="form-control" id="user_name" name="user_name" placeholder="请输入用户名"
+                                    <label class="col-sm-3 control-label" for="user_name"><span class="red ">*</span>
+                                        用户账号:</label>
+
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" id="user_name" name="user_name"
+                                               placeholder="请输入用户账号"
                                                type="text">
                                     </div>
+
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="password">密码:</label>
+                                    <label class="col-sm-3 control-label" for="password"><span class="red">*</span>
+                                        用户密码:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="password" name="password" placeholder="请输入密码"
                                                type="password">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="password_confirmation">确认密码:</label>
+                                    <label class="col-sm-3 control-label" for="password_confirmation"><span class="red">*</span>
+                                        确认密码:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="password_confirmation"
                                                name="password_confirmation" placeholder="请重复输入密码"
                                                type="password">
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="password_confirmation">类型:</label>
+                                    <label class="col-sm-3 control-label" for="password_confirmation"> <span
+                                                class="red">*</span> 用户类型:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <select name="type" class="form-control" id="type">
                                             @foreach(cons('user.type') as $val)
                                                 <option value="{{ $val }}">{{ cons()->valueLang('user.type' , $val) }}</option>
                                             @endforeach
                                         </select>
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="name">店家名称:</label>
+                                    <label class="col-sm-3 control-label" for="name"><span class="red">*</span>
+                                        店家名称:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="name" name="name" placeholder="请输入店家名称"
                                                value=""
                                                type="text">
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="username">联系人:</label>
+                                    <label class="col-sm-3 control-label" for="username"><span class="red">*</span> 联系人:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="contact_person" name="contact_person"
                                                placeholder="请输入联系人" type="text">
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="contact_info">联系方式:</label>
+                                    <label class="col-sm-3 control-label" for="contact_info"><span class="red">*</span>
+                                        联系方式:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="contact_info" name="contact_info"
                                                placeholder="请输入联系方式" type="text">
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="spreading_code">推广码:</label>
+                                    <label class="col-sm-3 control-label" for="license_num"><span class="red">*</span>
+                                        营业执照注册号:</label>
 
-                                    <div class="col-sm-10 col-md-6">
-                                        <input class="form-control" id="spreading_code" name="spreading_code"
-                                               placeholder="推广码(可选)" type="text">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="license_num">营业执照注册号:</label>
-
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input class="form-control" id="license_num" name="license_num"
                                                placeholder="请输入执照注册号" type="text">
+
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="license">营业执照:</label>
+                                    <label class="col-sm-3 control-label" for="license"><span class="red">*</span> 营业执照:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
@@ -109,6 +127,7 @@
                                                    name="file">
                                         </span>
 
+
                                         <div class="image-preview w160">
                                             <img src="" class="img-thumbnail">
                                         </div>
@@ -116,9 +135,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="business_license">食品流通许可证:</label>
+                                    <label class="col-sm-3 control-label" for="business_license"><span
+                                                class="red">*</span> 食品流通许可证:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
@@ -130,6 +150,7 @@
                                                    name="file">
                                         </span>
 
+
                                         <div class="image-preview w160">
                                             <img src=""
                                                  class="img-thumbnail">
@@ -138,9 +159,9 @@
                                 </div>
 
                                 <div class="form-group hidden">
-                                    <label class="col-sm-2 control-label" for="username">代理合同:</label>
+                                    <label class="col-sm-3 control-label" for="username">代理合同:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
@@ -151,6 +172,7 @@
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
                                                    name="file" disabled>
                                         </span>
+                                        <span class="red"> *</span>
 
                                         <div class="image-preview w160">
                                             <img src=""
@@ -159,14 +181,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group shop-address">
-                                    <label class="col-sm-2 control-label">所在地</label>
+                                    <label class="col-sm-3 control-label"><span class="red">*</span> 所在地:</label>
 
                                     <div class="col-sm-3">
                                         <select data-group="shop" name="address[province_id]"
                                                 class="address-province form-control address">
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2 padding-clear">
                                         <select data-group="shop" name="address[city_id]"
                                                 class="address-city form-control address">
                                         </select>
@@ -176,28 +198,42 @@
                                                 class="address-district form-control address">
                                         </select>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-2  padding-clear">
                                         <select data-group="shop" name="address[street_id]"
                                                 class="address-street form-control address"></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="address" class="col-sm-2 control-label">详细地址</label>
+                                    <label for="address" class="col-sm-3 control-label"><span class="red">*</span> 详细地址:</label>
 
-                                    <div class="col-sm-10 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <input type="hidden" name="address[area_name]"/>
                                         <input type="text" placeholder="请输入详细地址" name="address[address]" id="address"
                                                class="form-control" value="">
                                         <input type="hidden" name="x_lng" value=""/>
                                         <input type="hidden" name="y_lat" value=""/>
 
-                                        <div id="address-map"
-                                             style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
+                                    </div>
+                                    <div class="col-sm-8 col-sm-push-3">
+                                        <div id="address-map" class="address-map"></div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-lg btn-block btn-submit" data-loading-text="注册中..."
-                                        data-done-text="注册成功" data-fail-text="注册失败">注册
-                                </button>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="spreading_code">推广码:</label>
+
+                                    <div class="col-sm-9 col-md-6">
+                                        <input class="form-control" id="spreading_code" name="spreading_code"
+                                               placeholder="推广码(可选)" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-8 col-sm-offset-3">
+                                        <button type="submit" class="btn btn-lg btn-warning btn-block btn-submit"
+                                                data-loading-text="注册中..."
+                                                data-done-text="注册成功" data-fail-text="注册失败">注册
+                                        </button>
+                                    </div>
+                                </div>
                             </fieldset>
                         </form>
                     </div>

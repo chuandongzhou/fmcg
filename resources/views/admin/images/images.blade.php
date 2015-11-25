@@ -43,8 +43,17 @@
                 <button data-height="400" data-width="400" data-target="#cropperModal" data-toggle="modal"
                         data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
                         id="pic-upload">
-                    请选择图片文件
+                    请选择图片文件(裁剪)
                 </button>
+
+                <div class="progress collapse">
+                    <div class="progress-bar progress-bar-striped active"></div>
+                </div>
+                 <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
+                        请选择图片文件(批量)
+                       <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}" name="file" data-multi="multi"
+                              multiple>
+                  </span>
 
                 <div class="row pictures">
 
@@ -69,7 +78,7 @@
             getCategory(site.api('categories'));
             getAllCategory(site.api('categories'), '{{ $search }}');
             getAttr();
-            picFunc();
+            picFunc(10000);
         });
     </script>
 @stop

@@ -56,7 +56,7 @@
                                     <span class="cate-name">
                                         {{ $categories[$image['cate_level_1']] .($image['cate_level_2'] ? '>' . $categories[$image['cate_level_2']] : '' )  .($image['cate_level_3'] ? '>' . $categories[$image['cate_level_3']] : '' ) }}
                                     </span>
-                                    <a aria-label="Close" class="close btn ajax" type="button"
+                                    <a aria-label="Cloa'ue" class="close btn ajax" type="button"
                                        data-url="{{ url('admin/images',[$image->id]) }}"
                                        data-method="delete">
                                         <span aria-hidden="true" type="button">×</span>

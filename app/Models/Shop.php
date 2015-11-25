@@ -236,6 +236,24 @@ class Shop extends Model
         }
     }
 
+    /**
+     * search shop by User
+     *
+     * @param $query
+     * @param $myType
+     * @param $shopType
+     * @return mixed
+     */
+    public function scopeOfUser($query, $myType, $shopType = 0)
+    {
+        return $query->whereHas('user', function ($q) use ($myType, $shopType) {
+            $q->where('type', '>', $myType)->where('status', cons('status.on'))->where('audit_status',
+                cons('user.audit_status.pass'));
+            if ($shopType) {
+                $q->where('type', $shopType);
+            }
+        });
+    }
 
     /**
      * 设置logo

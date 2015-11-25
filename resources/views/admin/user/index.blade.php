@@ -25,7 +25,7 @@
                     <td>{{ $user->created_at }}</td>
                     <td>{{ cons()->valueLang('status', $user->status) }}</td>
                     <td>
-                        <div class="btn-group btn-group-xs" role="group">
+                        <div class="btn-group-xs" role="group">
                             <a class="btn btn-primary" href="{{ url('admin/user/' . $user->id . '/edit') }}">
                                 <i class="fa fa-edit"></i> 编辑
                             </a>

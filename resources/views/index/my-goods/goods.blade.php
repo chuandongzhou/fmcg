@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 @include('includes.address')
 @include('includes.cropper')
-@include('includes.tinymce')
+@include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
 
@@ -10,7 +10,7 @@
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
               action="{{ url('api/v1/my-goods/'.$goods->id) }}"
               data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('my-goods') }}">
-            <div class="row editor-panel">
+            <div class="row editor-panel content-wrap">
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">
                         <label for="name" class="control-label">名称 :</label>
@@ -18,36 +18,42 @@
                     </div>
 
                     <div class="form-group editor-item">
-                        <label class="control-label">价格 :</label>
-                        <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+                        <p class="items-item">
+                            <label class="control-label">价格 :</label>
+                            <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+                        </p>
                         @if (auth()->user()->type == cons('user.type.supplier'))
-                            <label class="control-label">价格(批发商) :</label>
-                            <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text" required>
+                            <p class="items-item right-item">
+                                <label class="control-label">价格(批发商) :</label>
+                                <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
+                                       required>
+                            </p>
                         @endif
                     </div>
 
 
                     <div class="form-group editor-item">
-                        <label class="control-label">最低购买数 :</label>
-                        <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer" type="text"
-                               required>
-                        <span>(整数)</span>
-                        @if (auth()->user()->type == cons('user.type.supplier'))
-                            <label class="control-label">最低购买数(批发商) :</label>
-                            <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
-                                   type="text" required>
+                        <p class="items-item">
+                            <label class="control-label">最低购买数 :</label>
+                            <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
+                                   type="text"
+                                   required>
                             <span>(整数)</span>
+                        </p>
+
+                        @if (auth()->user()->type == cons('user.type.supplier'))
+                            <p class="items-item right-item">
+                                <label class="control-label">最低购买数(批发商) :</label>
+                                <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
+                                       type="text" required>
+                                <span>(整数)</span>
+                            </p>
                         @endif
 
                     </div>
 
 
                 </div>
-                <div class="col-sm-2 right-save">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-                <div class="row content-wrap">
                 <div class="form-group col-sm-12" style="margin-left: 0;">
                     <label class="control-label">分类 :</label>
                     <select name="cate_level_1" class="categories"></select>
@@ -151,56 +157,62 @@
                         <textarea class="introduce tinymce-editor" name="introduce">{{ $goods->introduce }}</textarea>
                     </p>
                 </div>
-                    <div class="col-sm-12 add-address">
-                        <label>商品配送区域 : </label>
-                        <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
-                                data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
-                        </button>
-                        (最多5条配送区域)
+                <div class="col-sm-12 add-address">
+                    <label>商品配送区域 : </label>
+                    <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
+                            data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
+                    </button>
+                    (最多5条配送区域)
+                </div>
+                <div class="col-sm-8 address-list">
+                    <div class="hidden">
+                        <input type="hidden" name="area[id][]" value=""/>
+                        <input type="hidden" name="area[province_id][]" value=""/>
+                        <input type="hidden" name="area[city_id][]" value=""/>
+                        <input type="hidden" name="area[district_id][]" value=""/>
+                        <input type="hidden" name="area[street_id][]" value=""/>
+                        <input type="hidden" name="area[area_name][]" value=""/>
+                        <input type="hidden" name="area[address][]" value=""/>
+                        {{--区域经纬度--}}
+                        <input type="hidden" name="area[blx][]" value=""/>
+                        <input type="hidden" name="area[bly][]" value=""/>
+                        <input type="hidden" name="area[slx][]" value=""/>
+                        <input type="hidden" name="area[sly][]" value=""/>
                     </div>
-                    <div class="col-sm-8 address-list">
-                        <div class="hidden">
-                            <input type="hidden" name="area[id][]" value=""/>
-                            <input type="hidden" name="area[province_id][]" value=""/>
-                            <input type="hidden" name="area[city_id][]" value=""/>
-                            <input type="hidden" name="area[district_id][]" value=""/>
-                            <input type="hidden" name="area[street_id][]" value=""/>
-                            <input type="hidden" name="area[area_name][]" value=""/>
-                            <input type="hidden" name="area[address][]" value=""/>
+                    @foreach ($goods->deliveryArea as $area)
+                        <div class="col-sm-12 fa-border">{{ $area->address_name }}
+                            <span class="fa fa-times-circle pull-right close"></span>
+                            <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
+                            <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
+                            <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
+                            <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
+                            <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
+                            <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
+                            <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                             {{--区域经纬度--}}
-                            <input type="hidden" name="area[blx][]" value=""/>
-                            <input type="hidden" name="area[bly][]" value=""/>
-                            <input type="hidden" name="area[slx][]" value=""/>
-                            <input type="hidden" name="area[sly][]" value=""/>
+                            <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
+                            <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
+                            <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
+                            <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
                         </div>
-                        @foreach ($goods->deliveryArea as $area)
-                            <div class="col-sm-12 fa-border">{{ $area->address_name }}
-                                <span class="fa fa-times-circle pull-right close"></span>
-                                <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
-                                <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
-                                <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
-                                <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
-                                <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                                <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
-                                <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
-                                {{--区域经纬度--}}
-                                <input type="hidden" name="area[blx][]" value="{{ $area->coordinate->bl_lng or '' }}"/>
-                                <input type="hidden" name="area[bly][]" value="{{ $area->coordinate->bl_lat or '' }}"/>
-                                <input type="hidden" name="area[slx][]" value="{{ $area->coordinate->sl_lng or '' }}"/>
-                                <input type="hidden" name="area[sly][]" value="{{ $area->coordinate->sl_lat or '' }}"/>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="col-sm-12 map">
-                        <p><label>地图标识 :</label></p>
+                    @endforeach
+                </div>
+                <div class="col-sm-12 map">
+                    <p><label>地图标识 :</label></p>
 
-                        {{--<p class="address-map">--}}
-                        {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
-                        {{--</p>--}}
-                        <div id="map"></div>
-                    </div>
+                    <div id="map"></div>
+                </div>
             </div>
-
+            <div class="col-sm-12 text-center save">
+                @if (!$goods->id)
+                    <a class="btn btn-bg btn-success ajax" data-data='{"status":"1"}' type="submit"><i
+                                class="fa fa-level-up"></i> 立即上架</a>
+                @endif
+                <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
+                            class="fa fa-reply"></i> 取消
+                </button>
+            </div>
         </form>
     </div>
 @stop

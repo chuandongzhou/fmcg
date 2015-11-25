@@ -226,10 +226,10 @@
                                  class="panel-collapse collapse {{ path_active(['admin/operation-record/create','admin/operation-record', 'admin/version-record', 'admin/version-record/create'] , 'in') }}">
                                 <div class="panel-body" class="fa-border">
                                     <ul>
-                                        <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a>|<a
+                                        <li><a href="{{ url('admin/operation-record/create') }}">操作记录添加</a><a
                                                     href="{{ url('admin/operation-record') }}" class="manger">管理</a>
                                         </li>
-                                        <li><a href="{{ url('admin/version-record/create') }}">版本信息添加</a>|<a
+                                        <li><a href="{{ url('admin/version-record/create') }}">版本信息添加</a><a
                                                     href="{{ url('admin/version-record') }}" class="manger">管理</a>
                                         </li>
                                     </ul>

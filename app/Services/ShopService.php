@@ -23,19 +23,15 @@ class ShopService
         $shopColumns = HomeColumn::where('type', $columnTypes['shop'])->get();
 
         foreach ($shopColumns as $shopColumn) {
-            $shops = Shop::whereIn('id', $shopColumn->id_list)->whereHas('user', function ($q) use ($type) {
-                $q->where('type', '>', $type);
-            }
-            )->with('images', 'logo')->get()->each(function ($shop) {
+            $shops = Shop::whereIn('id', $shopColumn->id_list)->OfUser($type)->with('images',
+                'logo')->get()->each(function ($shop) {
                 $shop->setAppends(['image_url', 'logo']);
             });
             $columnShopsCount = $shops->count();
             if ($columnShopsCount < 10) {
                 $columnShopsIds = $shops->pluck('id')->toArray();
                 $ShopsBySort = Shop::whereNotIn('id', $columnShopsIds)
-                    ->whereHas('user', function ($q) use ($type) {
-                        $q->where('type', '>', $type);
-                    })
+                    ->OfUser($type)
                     ->with('images', 'logo')
                     ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
                     ->take(10 - $columnShopsCount)

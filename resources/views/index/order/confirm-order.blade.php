@@ -1,6 +1,7 @@
 @extends('index.index-master')
 
 @section('container')
+    @include('includes.shipping-address')
     <div class="container dealer-index index">
         <div class="row audit-step-outs">
             <div class="col-sm-3 step ">
@@ -107,7 +108,9 @@
 
                             </td>
                             <td>
-                                <a href="{{ url('personal/shipping-address') }}" class="btn brand-cancel">管理收货地址</a>
+                                <a class="btn brand-cancel" id="add-address" href="javascript:void(0)" type="button" data-target="#shippingAddressModal"
+                                   data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加收货地址
+                                </a>
                             </td>
                         </tr>
                     </table>

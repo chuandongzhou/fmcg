@@ -2,16 +2,21 @@
 @section('subtitle', '个人中心-收货地址')
 
 @section('right')
-    @include('index.personal.tabs')
+    @include('includes.shipping-address')
     <form action="#" method="post">
         <div class="row">
             <div class="col-sm-12 table-responsive">
                 <div>
                     <label>默认收货地址</label>
-                    <a class="add" href="{{ url('personal/shipping-address/create') }}">
-                        <label><span class="fa fa-plus"></span></label>
-                        添加地址
+
+                    <a class="add" id="add-address" href="javascript:void(0)" type="button" data-target="#shippingAddressModal"
+                            data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加地址
                     </a>
+
+                    {{--<a class="add" href="{{ url('personal/shipping-address/create') }}" data-target="#addressModal">--}}
+                        {{--<label><span class="fa fa-plus"></span></label>--}}
+                        {{--添加地址--}}
+                    {{--</a>--}}
                 </div>
                 <table class="table table-bordered table-center">
                     <thead>

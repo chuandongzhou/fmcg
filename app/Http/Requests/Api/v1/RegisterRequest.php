@@ -21,10 +21,11 @@ class RegisterRequest extends Request
             'contact_person' => 'required',
             'contact_info' => ['required' , 'regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/'] ,
             'spreading_code'=> 'alpha_num|max:20',
-            'address' => 'required|max:60',
+            'address[address]' => 'required|max:60',
+            'address[city_id]' => 'required',
             'area' => 'sometimes|required|max:200',
             'license' => 'required',
-            'license_num' => 'required|numeric|unique:shop',
+            'license_num' => 'required|numeric|unique:shop|digits:15',
             'business_license' => 'required',
             'agency_contract' => 'sometimes|required'
         ];

@@ -158,7 +158,7 @@
                     <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                        class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
                     <a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                       class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">新增商品</a>
+                       class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
                 </p>
             </div>
         </div>

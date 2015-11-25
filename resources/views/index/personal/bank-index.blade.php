@@ -1,16 +1,16 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-提现账号')
+@include('includes.bank')
 
 @section('right')
-    @include('index.personal.tabs')
     <form action="#" method="post">
         <div class="row">
             <div class="col-sm-12 table-responsive">
                 <div>
                     <label>默认收款账号</label>
-                    <a class="add" href="{{ url('personal/bank/create') }}">
-                        <label><span class="fa fa-plus"></span></label>
-                        添加账号
+
+                    <a class="add" id="add-bank" href="javascript:void(0)" type="button" data-target="#bankModal"
+                       data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加账号
                     </a>
                 </div>
                 <table class="table table-bordered table-center">
