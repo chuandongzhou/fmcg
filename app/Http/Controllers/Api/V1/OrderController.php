@@ -90,9 +90,17 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->user->id)->with('user', 'goods.images')->orderBy('id',
+        $orders = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
+
+        $orders->each(function ($order) {
+            $order->goods->each(function ($goods) {
+                $goods->addHidden(['introduce', 'images_url']);
+            });
+            $order->user->setVisible(['id', 'shop']);
+            $order->user->shop->setVisible(['name'])->setAppends([]);
+        });
         return $this->success($orders);
     }
 
@@ -131,8 +139,14 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images',
+        $order = Order::bySellerId($this->user->id)->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
             'shippingAddress.address')->find($orderId);
+
+        //过滤字段
+        $order->shop->setAppends([]);
+        $order->goods->each(function ($goods) {
+            $goods->addHidden(['introduce', 'images_url']);
+        });
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
 

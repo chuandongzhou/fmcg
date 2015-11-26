@@ -61,6 +61,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-danger;
 }
 
+.prompt{
+  color: $gray-light;
+}
+
 .go-history {
   padding: 10px 0;
 }
@@ -184,9 +188,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 .login-content {
-  position: absolute;
+  position: relative;
   width: 100%;
-  height: 67%;
   z-index: 999;
   .login-wrap {
     position: absolute;
@@ -250,8 +253,20 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 100%;
         padding: 6px 0;
       }
+      .forgot-pwd {
+        @extend .login-btn;
+      }
+    }
+    .login {
+      padding: 15px 25px 15px 5px;
+    }
+    .forgot {
+      padding: 15px 5px 15px 25px;
     }
   }
+}
+.forgot-modal-title{
+  font-weight: 700;
 }
 @media (min-width: 1400px) {
   .login-content{
@@ -259,14 +274,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 .login-banner-slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
   .carousel-inner {
-    height: 100%;
     img {
       width: 100%;
-      height: 100%;
+      height: auto;
       min-height: 500px;
     }
   }
@@ -287,12 +298,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .address-map {
-    margin-top: 20px;
     overflow: hidden;
     zoom: 1;
     position: relative;
     width: 100%;
     height: 350px;
+  }
+  .prompt-item{
+    font-size: 10px;
+  }
+  .prompt-title{
+    color: $gray-lighter;
   }
 }
 

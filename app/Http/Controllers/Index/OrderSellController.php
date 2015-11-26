@@ -43,7 +43,7 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images');
+        $query = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -71,11 +71,17 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images',
+        $order = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images.image',
             'shippingAddress.address')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');
         }
+        //过滤字段
+        $order->shop->setAppends([]);
+        $order->goods->each(function ($goods) {
+            $goods->addHidden(['introduce', 'images_url']);
+        });
+
         //拼接需要调用的模板名字
         $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$order->pay_type];
 

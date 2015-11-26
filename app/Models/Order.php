@@ -75,7 +75,7 @@ class Order extends Model
      */
     public function shippingAddress()
     {
-        return $this->belongsTo('App\Models\ShippingAddress');
+        return $this->belongsTo('App\Models\ShippingAddress')->withTrashed();
     }
 
     /**
@@ -128,7 +128,7 @@ class Order extends Model
      */
     public function deliveryMan()
     {
-        return $this->belongsTo('App\Models\DeliveryMan');
+        return $this->belongsTo('App\Models\DeliveryMan')->withTrashed();
     }
 
     /**

@@ -147,6 +147,16 @@
                         </li>
                     </ul>
                 </div>
+                @if((int)$order['send_at'])
+                    <div class="col-sm-12 receiving-information">
+                        <ul>
+                            <li class="title">配送人信息</li>
+                            <li><span class="title-info-name">联系人 : </span>{{ $order['deliveryMan']['name'] }}
+                            </li>
+                            <li><span class="title-info-name">联系电话 : </span>{{ $order['deliveryMan']['phone'] }}</li>
+                        </ul>
+                    </div>
+                @endif
             </div>
             <div class="row table-row">
                 <div class="col-sm-12 table-responsive table-col">

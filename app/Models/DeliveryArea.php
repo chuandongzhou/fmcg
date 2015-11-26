@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-
 class DeliveryArea extends Model
 {
+
     protected $table = 'delivery_area';
+
     protected $fillable = [
         'type',
         'addressable_id',

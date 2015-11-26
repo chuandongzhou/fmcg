@@ -12,7 +12,7 @@
             <div class="col-sm-4 city-wrap">
                 <div class="location-panel">
                     <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
+                                class="city-value">{{  $provinces[\Request::cookie('province_id')] or '' }}</span> <span
                                 class="fa fa-angle-down up-down"></span></a>
                 </div>
                 <div class="city-list clearfix">
@@ -45,7 +45,7 @@
                                             class="fa fa-heart-o"></span>我的店面</a>
                             </li>
                         @endif
-                        <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
+                        <li><a href="{{ url('personal/info') }}"><span class="fa fa-heart-o"></span>管理中心</a></li>
                         @if(auth()->user()->type == cons('user.type.retailer'))
                             <li><a href="{{ url('order-buy') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
                         @else
@@ -111,3 +111,30 @@
         </div>
     </div>
 </nav>
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
+@stop
+@section('js')
+    @parent
+    <script>
+        if (!Cookies.get('province_id')) {
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function (r) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    setProvince(r.point.lng, r.point.lat);
+                }
+                else {
+                    alert('failed' + this.getStatus());
+                }
+            }, {enableHighAccuracy: true})
+
+            function setProvince(lng, lat) {
+                var myGeo = new BMap.Geocoder();
+                myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
+                    $('span.city-value').html(result.addressComponents.province);
+                });
+            }
+        }
+    </script>
+@stop

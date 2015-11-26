@@ -55,6 +55,7 @@
     name                        string      店铺名
     contact_person              string      联系人
     contact_info                string      联系方式
+    backup_mobile               string      密保手机
     spreading_code              string      推广码
     license                     file        营业执照
     license_num                 string      营业执照编号
@@ -968,7 +969,11 @@
 
 	user 字段子集说明
 		
-	user_name			string		买家名字
+	    shop                array       买家店铺
+
+	    shop 字段子集说明
+
+	    name                string      店铺名
 	
 	
 	goods 字段子集说明

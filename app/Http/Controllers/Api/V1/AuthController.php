@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\Api\v1\BackupPasswordRequest;
 use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
@@ -58,11 +59,11 @@ class AuthController extends Controller
      */
     public function postRegister(RegisterRequest $request)
     {
-        $userInput = $request->only('user_name', 'password', 'type');
+        $userInput = $request->only('user_name', 'password', 'backup_mobile', 'type');
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店
-            $shopInput = $request->except('username', 'password', 'type');
+            $shopInput = $request->except('username', 'password', 'backup_mobile', 'type');
             $shopModel = $user->shop();
 
             if ($shopModel->create($shopInput)->exists) {
@@ -73,6 +74,22 @@ class AuthController extends Controller
             }
         }
         return $this->error('添加用户时遇到问题');
+    }
+
+    public function postBackup(BackupPasswordRequest $request)
+    {
+        $data = $request->all();
+        $user = User::with('shop')->where('user_name', $data['user_name'])->first();
+        if (!$user || $user->backup_mobile != $data['backup_mobile']) {
+            return $this->error('用户不存在或密保手机不正确');
+        }
+        if ($user->shop->license_num != $data['license_num']) {
+            return $this->error('营业执照编号不正确');
+        }
+        if ($user->fill(['password' => $data['password']])->save()) {
+            return $this->success('修改密码成功');
+        }
+        return $this->success('修改密码时出现错误');
     }
 
     /**

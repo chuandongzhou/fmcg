@@ -124,23 +124,21 @@
                     </li>
                 </ul>
             </div>
-            <div class="clearfix item">
-                <label class="pull-left title-name">配送人信息</label>
-                <ul class="pull-left">
-                    <li>
-                        <span class="title-info-name">联系人 :</span>
-                        <span>{{ $order['deliveryMan']['name'] }}</span>
-                    </li>
-                    <li>
-                        <span class="title-info-name">联系电话 :</span>
-                        <span>{{ $order['deliveryMan']['phone'] }}</span>
-                    </li>
-                    <li>
-                        <span class="title-info-name">预计到达 :</span>
-                        <span>2015年8月28日 16:45</span>
-                    </li>
-                </ul>
-            </div>
+            @if((int)$order['send_at'])
+                <div class="clearfix item">
+                    <label class="pull-left title-name">配送人信息</label>
+                    <ul class="pull-left">
+                        <li>
+                            <span class="title-info-name">联系人 :</span>
+                            <span>{{ $order['deliveryMan']['name'] }}</span>
+                        </li>
+                        <li>
+                            <span class="title-info-name">联系电话 :</span>
+                            <span>{{ $order['deliveryMan']['phone'] }}</span>
+                        </li>
+                    </ul>
+                </div>
+            @endif
             <div class="item">
                 <label class="title-name">收货地址</label>
                 <span>{{ $order->shippingAddress->address->address_name }}</span>

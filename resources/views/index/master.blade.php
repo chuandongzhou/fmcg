@@ -54,18 +54,13 @@
                     <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                          aria-expanded="false" style="height: 1px;">
                         <ul class="nav navbar-nav navbar-right operating-wrap">
-                            @if(auth()->user()->type == cons('user.type.wholesaler'))
-                                <li><a href="{{ url('shop/' .auth()->user()->shop->id) }}"><span
-                                                class="fa fa-heart-o"></span>我的店面</a>
-                                </li>
-                            @endif
-                            <li><a href="{{ url('personal/shop') }}"><span class="fa fa-heart-o"></span>个人中心</a></li>
+                            <li><a href="{{ url('personal/info') }}"><span class="fa fa-heart-o"></span> 管理中心</a></li>
                             <li>
-                                <a href="{{ auth()->user()->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
+                                <a href="{{ $user->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
                                     <span class="fa fa-file-text-o"></span> 我的订单
                                 </a>
                             </li>
-                            @if(auth()->user()->type < cons('user.type.supplier'))
+                            @if($user->type < cons('user.type.supplier'))
                                 <li class="collect-select">
                                     <a class="collect-selected"><span class="selected">收藏夹</span> <span
                                                 class="fa fa-angle-down"></span></a>
@@ -77,7 +72,7 @@
                             @endif
                             <li class="user-name-wrap">
                                 <a href="{{ url('personal/shop') }}" class="name-panel"><span
-                                            class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }}
+                                            class="user-name">{{ $user->shop->name }}</span>({{ cons()->valueLang('user.type' , $user->type) }}
                                     )</a>
                                 <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
                             </li>
@@ -91,7 +86,7 @@
         <div class="col-sm-4 logo">
             <a href="{{ url('/') }}" class="logo-icon"><img src="{{ asset('images/logo.png') }}"/></a>
         </div>
-        @if ($shop->id == auth()->user()->shop->id)
+        @if ($shop->id == $user->shop->id)
             <div class="col-sm-4 col-sm-push-4 right-search">
                 <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search">
                     <div class="input-group">
@@ -170,9 +165,7 @@
                     <li><a href="{{ url('shop/' . $shop->id . '/detail') }}">店家信息</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @if ($shop->id == auth()->user()->shop->id)
-                        <li class="right"><a href="{{ url('personal/shop') }}">个人中心</a></li>
-                    @else
+                    @if ($shop->id != $user->shop->id)
                         <li class="right">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"
                                class="btn btn-like" data-id="{{ $shop->id }}">

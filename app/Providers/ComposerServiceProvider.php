@@ -24,6 +24,7 @@ class ComposerServiceProvider extends ServiceProvider
             ],
             UserComposer::class => [
                 'master',
+                'index.master',
                 'index.index.index',
                 'index.index-top',
                 'index.menu-master',

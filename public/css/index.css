@@ -37,6 +37,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .red {
   color: #fe462f; }
 
+.prompt {
+  color: #777777; }
+
 .go-history {
   padding: 10px 0; }
 
@@ -136,9 +139,8 @@ ul, li, p, a, h1, h2, h3, h4 {
         height: 45px; }
 
 .login-content {
-  position: absolute;
+  position: relative;
   width: 100%;
-  height: 67%;
   z-index: 999; }
   .login-content .login-wrap {
     position: absolute;
@@ -187,24 +189,25 @@ ul, li, p, a, h1, h2, h3, h4 {
       .login-content .login-wrap .item .role {
         width: 25%;
         padding: 5px 0; }
-      .login-content .login-wrap .item .login-btn {
+      .login-content .login-wrap .item .login-btn, .login-content .login-wrap .item .forgot-pwd {
         width: 100%;
         padding: 6px 0; }
+    .login-content .login-wrap .login {
+      padding: 15px 25px 15px 5px; }
+    .login-content .login-wrap .forgot {
+      padding: 15px 5px 15px 25px; }
+
+.forgot-modal-title {
+  font-weight: 700; }
 
 @media (min-width: 1400px) {
   .login-content {
     height: 85%; } }
 
-.login-banner-slide {
-  position: absolute;
+.login-banner-slide .carousel-inner img {
   width: 100%;
-  height: 100%; }
-  .login-banner-slide .carousel-inner {
-    height: 100%; }
-    .login-banner-slide .carousel-inner img {
-      width: 100%;
-      height: 100%;
-      min-height: 500px; }
+  height: auto;
+  min-height: 500px; }
 
 .login-footer {
   background-color: #fff;
@@ -216,12 +219,17 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 10px 20px; }
 
 .register .address-map {
-  margin-top: 20px;
   overflow: hidden;
   zoom: 1;
   position: relative;
   width: 100%;
   height: 350px; }
+
+.register .prompt-item {
+  font-size: 10px; }
+
+.register .prompt-title {
+  color: #b4b4b4; }
 
 .register-hr {
   margin: 0 0 10px 0; }

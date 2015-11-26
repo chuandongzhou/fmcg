@@ -107,6 +107,7 @@ return [
         //api
         'name' => '名称',
         'phone' => '电话号码',
+        'backup_mobile' => '密保手机',
         'price_retailer' => '终端商价格',
         'min_num_retailer' => '终端商最低购买数',
         'price_wholesaler' => '批发商价格',
@@ -167,8 +168,8 @@ return [
         'contact' => '联系方式',
         'version_name' => '版本名称',
         'version_no' => '版本号',
-        'address[province_id]'=> '省',
-        'address[city_id]'=> '市',
+        'address[province_id]' => '省',
+        'address[city_id]' => '市',
         'address[address]' => '地址'
     ],
 

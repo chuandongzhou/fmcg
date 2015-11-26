@@ -103,6 +103,18 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="contact_info"><span class="red">*</span>
+                                        密保手机:</label>
+
+                                    <div class="col-sm-9 col-md-6">
+                                        <input class="form-control" id="" name="backup_mobile" placeholder="密保手机号码"
+                                               type="text">
+
+                                        <p class="prompt-item red">(作为密码找回重要依据和接收信息提醒,不可二次修改)</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label" for="license_num"><span class="red">*</span>
                                         营业执照注册号:</label>
 
@@ -159,7 +171,8 @@
                                 </div>
 
                                 <div class="form-group hidden">
-                                    <label class="col-sm-3 control-label" for="username">代理合同:</label>
+                                    <label class="col-sm-3 control-label" for="username"><span class="red">*</span>
+                                        代理合同:</label>
 
                                     <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
@@ -172,7 +185,6 @@
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"
                                                    name="file" disabled>
                                         </span>
-                                        <span class="red"> *</span>
 
                                         <div class="image-preview w160">
                                             <img src=""
@@ -214,8 +226,12 @@
                                         <input type="hidden" name="y_lat" value=""/>
 
                                     </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-sm-8 col-sm-push-3">
-                                        <div id="address-map" class="address-map"></div>
+                                        <p class="prompt-title prompt-item">(拖动图标可手动调整地图地址)</p>
+
+                                        <div id="address-map" class="address-map margin-clear"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
