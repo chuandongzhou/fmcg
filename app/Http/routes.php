@@ -3,6 +3,7 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
     $router->get('guide', 'AuthController@guide');
     $router->get('register', 'AuthController@register');
+    $router->get('reg-success', 'AuthController@regSuccess');
     $router->get('logout', 'AuthController@logout');
 });
 

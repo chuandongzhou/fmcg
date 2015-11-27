@@ -43,7 +43,6 @@
     </table>
         <div class="btn-group btn-group-xs" role="group">
             <input type="checkbox" id="parent" class="checkbox-inline"/>
-            <label for="parent">全选</label>
         </div>
         <div class="btn-group btn-group-xs" role="group">
             <button type="button" class="btn btn-danger ajax" data-method="delete"

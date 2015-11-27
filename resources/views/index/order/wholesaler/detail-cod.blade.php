@@ -113,7 +113,7 @@
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
                                 @if($order['can_cancel'])
-                                    <button class="btn btn-cancel ajax" data-url="{{ url('order-sell/cancel-sure') }}"
+                                    <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                                             data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
                                     </button>
                                 @endif

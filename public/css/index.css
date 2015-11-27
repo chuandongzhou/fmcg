@@ -4,7 +4,8 @@ html {
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
-  margin-bottom: 60px; }
+  margin-bottom: 60px;
+  width: 100%; }
 
 ul, li, p, a, h1, h2, h3, h4 {
   list-style: none;
@@ -150,6 +151,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 20px 0;
     right: 3%;
     width: 25%;
+    min-width: 360px;
     border-radius: 4px; }
     .login-content .login-wrap .alert-item {
       padding: 0 25px; }
@@ -210,7 +212,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   min-height: 500px; }
 
 .login-footer {
-  background-color: #fff;
   border: none; }
 
 /*======================================login end======================================*/
@@ -235,52 +236,59 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0 0 10px 0; }
 
 /*======================================register end======================================*/
+/*======================================passed begin======================================*/
+.passed-ok {
+  margin-top: 30px;
+  padding: 10px 0;
+  color: #5bc0de; }
+
+.passed-item {
+  padding: 10px 0; }
+
+/*======================================passed end======================================*/
 /*======================================guide end======================================*/
-.guide-content {
-  background: url("../images/banner.jpg") top no-repeat;
-  background-size: cover;
-  position: absolute;
+.guide-container {
   height: 78%;
-  width: 100%; }
-  .guide-content .guide-container {
-    height: 100%;
-    position: relative; }
-    .guide-content .guide-container .content-panel {
-      position: absolute;
-      bottom: 10%;
-      width: 100%; }
-      .guide-content .guide-container .content-panel .tabs-item {
-        float: left;
-        width: 25%;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        text-align: center;
-        cursor: pointer; }
-        .guide-content .guide-container .content-panel .tabs-item:hover {
-          text-decoration: none; }
-          .guide-content .guide-container .content-panel .tabs-item:hover .item-icon img {
-            border: 2px solid #fff; }
-        .guide-content .guide-container .content-panel .tabs-item .item-icon {
-          display: inline-block;
-          min-height: 101px;
-          min-width: 101px;
-          width: 50%; }
-          .guide-content .guide-container .content-panel .tabs-item .item-icon img {
-            border-radius: 50%;
-            padding: 5px;
-            width: 100%;
-            height: auto; }
-        .guide-content .guide-container .content-panel .tabs-item .item-name {
-          display: block;
-          color: #fff;
-          font-size: 18px;
-          margin-top: 10px;
-          font-weight: 700;
-          letter-spacing: 2px; }
+  position: relative; }
+  .guide-container .banner img {
+    width: 100%; }
+  .guide-container .content-panel {
+    position: absolute;
+    bottom: 10%;
+    width: 100%; }
+    .guide-container .content-panel .tabs-item {
+      float: left;
+      width: 25%;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      text-align: center;
+      cursor: pointer; }
+      .guide-container .content-panel .tabs-item:hover {
+        text-decoration: none; }
+        .guide-container .content-panel .tabs-item:hover .item-icon img {
+          border: 2px solid #fff; }
+      .guide-container .content-panel .tabs-item .item-icon {
+        display: inline-block;
+        width: 50%; }
+        .guide-container .content-panel .tabs-item .item-icon img {
+          border-radius: 50%;
+          padding: 5px;
+          width: 100%;
+          height: auto; }
+      .guide-container .content-panel .tabs-item .item-name {
+        display: block;
+        color: #fff;
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: 700;
+        letter-spacing: 2px; }
 
 @media (min-width: 1400px) {
   .guide-content .item-icon {
     width: 80% !important; } }
+
+.guide-footer {
+  background-color: #fff; }
 
 /*======================================guide end======================================*/
 /*======================================step begin======================================*/

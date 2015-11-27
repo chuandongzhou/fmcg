@@ -16,23 +16,11 @@ class ShopController extends Controller
      */
     public function edit($shop)
     {
-        $shop->user_type = $shop->user()->pluck('type');
-        return view('admin.shop.shop', ['shop' => $shop]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param $shop
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function update(Requests\Admin\UpdateShopRequest $request, $shop)
-    {
-        if ($shop->fill($request->all())->save()) {
-            return $this->success('保存店铺成功');
-        }
-        return $this->error('保存店铺时出现错误');
+        $shop = auth()->user()->shop()->with(['images', 'deliveryArea.coordinate', 'shopAddress'])->first();
+        $coordinate = $shop->deliveryArea->each(function ($area) {
+            $area->coordinate;
+        });
+        return view('admin.shop.shop', ['shop' => $shop, 'coordinates' => $coordinate->toJson()]);
     }
 
 }

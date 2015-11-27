@@ -136,10 +136,10 @@
                         <label class="col-sm-2 control-label">图片</label>
 
                         <div class="col-sm-10">
-                            <button data-height="400" data-width="1000" data-target="#cropperModal" data-toggle="modal"
+                            <button data-height="300" data-width="1000" data-target="#cropperModal" data-toggle="modal"
                                     data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
                                     id="pic-upload">
-                                请选择图片文件(1000x400)
+                                请选择图片文件(1000x300)
                             </button>
 
                             <div class="row pictures">

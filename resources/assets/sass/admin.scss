@@ -155,3 +155,12 @@
 textarea{
   resize: none;
 }
+
+/*==============baidu map css start=================*/
+#map, #map-modal {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  margin: 0;
+}
+/*==============baidu map css end=================*/

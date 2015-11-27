@@ -13,7 +13,7 @@
             <ul class="nav-title text-center">
                 <li><a href="{{ url('auth/login') }}">首页</a></li>
                 <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li><a href="#">关于我们</a></li>
+                <li><a href="{{ url('auth/reg-success') }}">关于我们</a></li>
             </ul>
         </div>
     </nav>
@@ -25,7 +25,7 @@
                     <div class="panel-body">
                         <form class="ajax-form form-horizontal" method="post"
                               action="{{  url('api/v1/auth/register')  }}"
-                              accept-charset="UTF-8" data-done-url="{{ url('auth/guide') }}">
+                              accept-charset="UTF-8" data-done-url="{{ url('auth/reg-success') }}">
                             <fieldset>
                                 <div class="form-group">
 
@@ -260,10 +260,12 @@
 
 @stop
 @section('footer')
-    <footer class="panel-footer login-footer">
-        <div class="container text-center text-muted">&copy;2003-2015 版权所有</div>
+    <footer class="panel-footer">
+        <div class="container text-center text-muted">
+            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br />
+            联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式:13829262065(霍女士)
+        </div>
     </footer>
-    @parent
 @stop
 @section('js-lib')
     <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>

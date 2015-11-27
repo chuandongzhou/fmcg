@@ -279,7 +279,7 @@ var commonJQueryExtendSetup = function () {
          * @returns {$.fn}
          */
         $.fn.formValidate = function (validates, state) {
-            var self = this;
+            var self = this, firstControl = true;
 
             // 清空之前的表单错误信息
             this.find('[class*="has-"]').removeClass(function (index, css) {
@@ -291,8 +291,14 @@ var commonJQueryExtendSetup = function () {
             }
 
             state = state || 'error';
+
             $.each(validates, function (name, messages) {
-                var formGroup = self.find('[name="' + name + '"]').closest('.form-group').addClass('has-' + state)
+                var control = self.find('[name="' + name + '"]');
+                if (firstControl) {
+                    control.focus();
+                    firstControl = false;
+                }
+                var formGroup = control.closest('.form-group').addClass('has-' + state)
                     , helpBlock = formGroup.find('.ajax-error');
 
                 if (!helpBlock.length) {
@@ -472,7 +478,7 @@ var commonUploadSetup = function () {
                         '   </div>' +
                         '</div>');
                 } else {
-                   var  name = parent.data('name') || 'image';
+                    var name = parent.data('name') || 'image';
                     // 设置图片预览
                     parent.siblings('.image-preview').children('img').attr('src', result.url);
                     // 设置隐藏域

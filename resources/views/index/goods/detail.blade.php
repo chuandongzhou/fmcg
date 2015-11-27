@@ -25,32 +25,33 @@
 
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
-                        <li><span class="title-name">价格 </span><b>￥{{ $goods->price }}</b></li>
+                        <li><span class="prompt">商品ID </span> : <b>{{ $goods->id }}</b></li>
+                        <li><span class="prompt">价格 </span> : <b>￥{{ $goods->price }}</b></li>
                         @foreach($attrs as $key=>$attr)
                             <li>
-                                <span class="title-name">{{ $key }} </span><b>{{ $attr }}</b>
+                                <span class="prompt">{{ $key }} </span> : <b>{{ $attr }}</b>
                             </li>
                         @endforeach
 
-                        <li><span class="title-name">累计销售量 </span><b>{{ $goods->sales_volume }}</b></li>
+                        <li><span class="prompt">累计销售量 </span> : <b>{{ $goods->sales_volume }}</b></li>
                     </ul>
                     <ul class="pull-left right-panel">
                         @if($goods->is_promotion)
-                            <li><span class="title-name">促销信息 </span> : <b>{{ $goods->promotion_info }}</b></li>
+                            <li><span class="prompt">促销信息 </span> : <b>{{ $goods->promotion_info }}</b></li>
                         @endif
                         <li>
-                            <span class="title-name">退换货 </span><b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
+                            <span class="prompt">退换货 </span> : <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
                         </li>
                         <li>
-                            <span class="title-name">即期品 </span><b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
+                            <span class="prompt">即期品 </span> : <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
-                        <li><span class="title-name">商家 </span><b>{{ $goods->shop->name }}</b></li>
+                        <li><span class="prompt">商家 </span> : <b>{{ $goods->shop->name }}</b></li>
                         <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post">
                             <li>
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
                                 <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">
                                 <button class="btn count btn-cancel inc-num">+</button>
-                                <span class="title-name"> 最低购买量 : {{ $goods->min_num }}</span>
+                                <span class="prompt"> 最低购买量</span> : {{ $goods->min_num }}
                             </li>
                             <li>
                                 <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
@@ -78,7 +79,7 @@
             </div>
             <div class="col-sm-12 address-wrap  location box active">
                 <div class="item clearfix">
-                    <h5 class="title-name">商品配送区域 :</h5>
+                    <h5 class="prompt">商品配送区域 :</h5>
                     <ul class="address-list">
                         @foreach($goods->deliveryArea as $area)
                             <p class="col-sm-12">{{ $area->address_name }}</p>
@@ -86,7 +87,7 @@
                     </ul>
                 </div>
                 <div class="item">
-                    <h5 class="title-name">商品配送区域大概地图标识 :</h5>
+                    <h5 class="prompt">商品配送区域大概地图标识 :</h5>
 
                    <div id="map"></div>
                 </div>

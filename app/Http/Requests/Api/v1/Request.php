@@ -40,7 +40,6 @@ abstract class Request extends BaseRequest
     protected function defaultValidator($factory)
     {
         $rules = $this->container->call([$this, 'rules']);
-
         return $factory->make($this->all(), $rules, $this->messages(), $this->attributes());
     }
 

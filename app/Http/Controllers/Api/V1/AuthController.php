@@ -67,13 +67,14 @@ class AuthController extends Controller
             $shopModel = $user->shop();
 
             if ($shopModel->create($shopInput)->exists) {
-                return $this->success('添加用户成功');
+                session(['shop.name' => $shopInput['name']]);
+                return $this->success('注册成功');
             } else {
                 $user->delete();
-                return $this->error('添加用户时遇到问题');
+                return $this->error('注册用户时遇到问题');
             }
         }
-        return $this->error('添加用户时遇到问题');
+        return $this->error('注册用户时遇到问题');
     }
 
     public function postBackup(BackupPasswordRequest $request)

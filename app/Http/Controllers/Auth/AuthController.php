@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -48,9 +48,28 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    /**
+     * 引导页
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function guide()
     {
         return view('auth.guide');
+    }
+
+    /**
+     * 注册成功
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
+    public function regSuccess(Request $request)
+    {
+        if (!session('shop.name')) {
+            return $this->error('请先注册', 'auth/register');
+        }
+        return view('auth.reg-success');
     }
 
     /**

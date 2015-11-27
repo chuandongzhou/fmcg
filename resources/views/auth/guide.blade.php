@@ -4,10 +4,11 @@
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+    <style>body{margin-bottom:100px}</style>
 @stop
 @section('body')
-    <div class="guide-content">
-        <div class="container guide-container">
+        <div class="container-fluid guide-container padding-clear">
+            <div class="banner"><img src="{{ asset('images/banner.jpg') }}"></div>
             <div class="row content-panel">
                 <div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
                     <a class="tabs-item" href="{{ url('auth/login?type=supplier') }}">
@@ -37,10 +38,9 @@
                 </div>
             </div>
         </div>
-    </div>
 @stop
 @section('footer')
-    <footer class="panel-footer login-footer guide-footer footer">
+    <footer class="panel-footer login-footer guide-footer">
         <div class="container text-center text-muted" >
             <div class="text-right qr-code">
                 <img src="{{ asset('images/qr-code.png') }}">

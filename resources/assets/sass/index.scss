@@ -1,5 +1,6 @@
 @import "variables";
 @import "bootstrap/mixins";
+
 html {
   position: relative;
   min-height: 100%;
@@ -8,6 +9,7 @@ html {
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
   margin-bottom: 60px;
+  width: 100%;
 }
 
 ul, li, p, a, h1, h2, h3, h4 {
@@ -61,7 +63,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-danger;
 }
 
-.prompt{
+.prompt {
   color: $gray-light;
 }
 
@@ -72,41 +74,45 @@ ul, li, p, a, h1, h2, h3, h4 {
 .contents {
   padding-bottom: 20px;
 }
-.carousel-indicators{
-  li{
-    margin:0 4px;
-    &.active{
-      margin:0 4px;
+
+.carousel-indicators {
+  li {
+    margin: 0 4px;
+    &.active {
+      margin: 0 4px;
     }
   }
 }
+
 /*======================================head======================================*/
-.personal-header{
-    .logo-img {
-      display: inline-block;
-      vertical-align: middle;
-      margin: 15px 0 0 20px;
-      img {
-        width: 70px;
-        height: 51px;
-      }
+.personal-header {
+  .logo-img {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 15px 0 0 20px;
+    img {
+      width: 70px;
+      height: 51px;
     }
+  }
   .items-item {
     margin-top: 50px;
     .item {
       padding: 0 50px;
-      a{
+      a {
         padding: 0;
-        &:hover{
+        &:hover {
           background: none;
         }
       }
     }
   }
 }
-.personal-hr{
+
+.personal-hr {
   margin-top: -10px;
 }
+
 /*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
@@ -161,6 +167,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 /*======================================pop======================================*/
 
 /*======================================login begin======================================*/
@@ -187,6 +194,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 .login-content {
   position: relative;
   width: 100%;
@@ -199,6 +207,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 20px 0;
     right: 3%;
     width: 25%;
+    min-width: 360px;
     border-radius: 4px;
     .alert-item {
       padding: 0 25px;
@@ -265,14 +274,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.forgot-modal-title{
+
+.forgot-modal-title {
   font-weight: 700;
 }
+
 @media (min-width: 1400px) {
-  .login-content{
+  .login-content {
     height: 85%;
   }
 }
+
 .login-banner-slide {
   .carousel-inner {
     img {
@@ -283,9 +295,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-
 .login-footer {
-  background-color: $body-bg;
   border: none;
 }
 
@@ -304,10 +314,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 100%;
     height: 350px;
   }
-  .prompt-item{
+  .prompt-item {
     font-size: 10px;
   }
-  .prompt-title{
+  .prompt-title {
     color: $gray-lighter;
   }
 }
@@ -317,67 +327,80 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 /*======================================register end======================================*/
+/*======================================passed begin======================================*/
+.passed-ok {
+  margin-top: 30px;
+  padding: 10px 0;
+  color: #5bc0de
+}
+
+.passed-item {
+  padding: 10px 0;
+}
+
+/*======================================passed end======================================*/
 
 /*======================================guide end======================================*/
-.guide-content {
-  background: url("../images/banner.jpg") top no-repeat;
-  background-size: cover;
-  position:absolute;
+.guide-container {
   height: 78%;
-  width: 100%;
-  .guide-container {
-    height: 100%;
-    position:relative;
-    .content-panel {
-      position: absolute;
-      bottom: 10%;
+  position: relative;
+  .banner{
+    img{
       width: 100%;
-      .tabs-item {
-        float: left;
-        width: 25%;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        text-align: center;
-        cursor: pointer;
-        &:hover {
-          text-decoration: none;
-          .item-icon {
-            img {
-              border: 2px solid $body-bg;
-            }
-
-          }
-        }
+    }
+  }
+  .content-panel {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    .tabs-item {
+      float: left;
+      width: 25%;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        text-decoration: none;
         .item-icon {
-          display: inline-block;
-          min-height: 101px;
-          min-width: 101px;
-          width: 50%;
           img {
-            border-radius: 50%;
-            padding: 5px;
-            width: 100%;
-            height: auto;
+            border: 2px solid $body-bg;
           }
+
         }
-        .item-name {
-          display: block;
-          color: $body-bg;
-          font-size: 18px;
-          margin-top: 10px;
-          font-weight: 700;
-          letter-spacing: 2px;
+      }
+      .item-icon {
+        display: inline-block;
+        width: 50%;
+        img {
+          border-radius: 50%;
+          padding: 5px;
+          width: 100%;
+          height: auto;
         }
+      }
+      .item-name {
+        display: block;
+        color: $body-bg;
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
       }
     }
   }
 }
-@media (min-width:1400px ){
-  .guide-content{
-    .item-icon{
+
+@media (min-width: 1400px) {
+  .guide-content {
+    .item-icon {
       width: 80% !important;
     }
   }
+}
+
+.guide-footer {
+  background-color: $body-bg;
 }
 
 /*======================================guide end======================================*/
@@ -576,17 +599,17 @@ ul, li, p, a, h1, h2, h3, h4 {
   bottom: 0;
   width: 100%;
   margin-top: 20px;
-  .qr-code{
+  .qr-code {
     display: inline-block;
     vertical-align: middle;
-    img{
+    img {
       @include square(80px);
     }
   }
-  .txt-content{
+  .txt-content {
     display: inline-block;
     padding-left: 20px;
-    .sign{
+    .sign {
       padding-bottom: 5px;
     }
   }
@@ -674,12 +697,14 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.commodity-other{
-  .commodity{
+
+.commodity-other {
+  .commodity {
     width: 25%;
   }
 }
-.dealer-commodity-wrap{
+
+.dealer-commodity-wrap {
   .commodity-img {
     height: 100px;
   }
@@ -697,7 +722,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .store-info-logo{
+  .store-info-logo {
     padding-left: 0;
     .banner {
       img {
@@ -736,6 +761,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 .store {
   @include dash-bord;
   height: 400px;
@@ -769,9 +795,9 @@ ul, li, p, a, h1, h2, h3, h4 {
           color: $gray-light;
           margin-bottom: 5px;
         }
-        .content{
+        .content {
           max-height: 135px;
-          overflow : hidden;
+          overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-line-clamp: 7;
@@ -804,13 +830,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.personal-store{
-  border:none;
-  height:auto;
-  .address-panel{
-    border:none;
+
+.personal-store {
+  border: none;
+  height: auto;
+  .address-panel {
+    border: none;
   }
 }
+
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/
@@ -1186,7 +1214,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     .item {
       margin: 10px 0;
       .address-list {
-
         li {
           padding: 0 0 5px 0;
           text-indent: 30px;
@@ -1266,7 +1293,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   span {
     @extend .remove;
   }
-
 }
 
 .goods-editor {
@@ -1785,9 +1811,11 @@ table {
     }
   }
 }
-.title-info-name{
-  color:$gray-light;
+
+.title-info-name {
+  color: $gray-light;
 }
+
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
@@ -1974,12 +2002,12 @@ table {
         }
       }
     }
-    .user-name-wrap{
-      a{
+    .user-name-wrap {
+      a {
         display: inline-block;
-        &.name-panel{
+        &.name-panel {
           padding: 0;
-          .user-name{
+          .user-name {
             display: inline-block;
             max-width: 100px;
             text-overflow: ellipsis;
@@ -1988,7 +2016,7 @@ table {
             vertical-align: top;
           }
         }
-        &.exit{
+        &.exit {
           padding-left: 8px;
         }
       }
@@ -2034,7 +2062,7 @@ table {
           display: none;
           position: absolute;
           background-color: $gray-plain;
-          top:33px;
+          top: 33px;
           left: 0;
           width: 100%;
           z-index: 99999;
@@ -2530,18 +2558,18 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px  8px 0 0;
-    span{
+    border-radius: 8px 8px 0 0;
+    span {
       display: inline-block;
       font-size: 16px;
       padding: 0 5px;
-      color:$body-bg;
+      color: $body-bg;
     }
-    .close-btn{
+    .close-btn {
       @extend span;
       line-height: 40px;
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: none;
       }
     }
