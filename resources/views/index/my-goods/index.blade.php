@@ -43,7 +43,7 @@
                     <input class="control" name="name" value="{{ isset($get['name']) ? $get['name'] : '' }}"
                            type="text">
                     <button class="btn btn-primary control search" type="submit">搜索</button>
-                    <a href="{{ url('my-goods/create') }}" class="btn btn-primary control add-goods">新增商品</a>
+                    {{--<a href="{{ url('my-goods/create') }}" class="btn btn-primary control add-goods">新增商品</a>--}}
                 </div>
             </form>
         </div>
@@ -167,14 +167,14 @@
         @foreach($goods  as $item)
             <div class="col-sm-3 commodity">
                 <div class="img-wrap">
-                    <a href="{{ url('my-goods/' . $item->id) }}">
+                    <a href="{{ url('my-goods/' . $item->id) }}"  target="_blank">
                         <img class="commodity-img" src="{{ $item->image_url }}">
                     </a>
                     <span class=" @if($item->is_out)prompt lack @elseif($item->is_promotion) prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
                 </div>
                 <div class="content-panel">
                     <p class="commodity-name">
-                        <a href="{{ url('my-goods/' . $item->id) }}">
+                        <a href="{{ url('my-goods/' . $item->id) }}"  target="_blank">
                             {{ $item->name }}
                         </a>
                     </p>

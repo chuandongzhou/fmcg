@@ -34,7 +34,7 @@
             @foreach($shops  as $shop)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <a href="{{ url('shop/' . $shop->id) }}">
+                        <a href="{{ url('shop/' . $shop->id) }}"  target="_blank">
                             <img class="commodity-img" src="{{ $shop->image_url }}">
                         </a>
                     </div>
@@ -45,7 +45,7 @@
                         </p>
 
                         <p class="commodity-name">
-                            <a href="{{ url('shop/' . $shop->id) }}">
+                            <a href="{{ url('shop/' . $shop->id) }}"  target="_blank">
                                 {{ $shop->name }}
                             </a>
                         </p>

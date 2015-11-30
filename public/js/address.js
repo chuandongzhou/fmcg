@@ -4505,7 +4505,7 @@ function Address(provinceObj, cityObj, districtObj, streetObj) {
         }
     };
     this.updateSourceForStreet = function (obj, pid, selected, prefix) {
-        if (!$(obj).length) {
+        if (!$(obj).length || $(obj).hasClass('useless-control')) {
             return;
         }
         prefix = prefix || '';
@@ -4548,7 +4548,7 @@ function Address(provinceObj, cityObj, districtObj, streetObj) {
         }
 
         var pid = this.province.children('option:selected').val();
-        this.updateSource(city, pid, this['cityVal'] , prefix);
+        this.updateSource(city, pid, this['cityVal'], prefix);
 
         var html = city.html();
 
@@ -4660,7 +4660,7 @@ Address.prototype = {
             that.updateStreetSource();
         });
     },
-    setStreetObject:function (obj, val) {
+    setStreetObject: function (obj, val) {
         (val === undefined) && (val = obj.data('id'));
         return this.setObject('street', obj, val)
     }

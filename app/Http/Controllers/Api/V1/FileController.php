@@ -49,7 +49,7 @@ class FileController extends Controller
             'ext' => $ext,
             'size' => $target->getSize(),
             'url' => upload_url($path . $name, 'temp')
-        ]);
+        ], ['Content-Type' => 'text/html']);
     }
 
     /**

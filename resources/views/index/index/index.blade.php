@@ -92,14 +92,14 @@
                         @foreach($column->goods as $goods)
                             <div class="commodity commodity-index-img">
                                 <div class="img-wrap">
-                                    <a href="{{ url('goods/' . $goods->id) }}">
+                                    <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
                                         <img class="commodity-img" src="{{ $goods->image_url }}">
                                     </a>
                                     <span class="@if($goods->is_out) prompt lack @elseif($goods->is_promotion) prompt promotions @elseif($goods->is_new) prompt new-listing @endif"></span>
                                 </div>
                                 <div class="content-panel">
-                                    <p class="commodity-name"><a
-                                                href="{{ url('goods/' . $goods->id) }}">{{ $goods->name }}</a></p>
+                                    <p class="commodity-name">
+                                        <a  href="{{ url('goods/' . $goods->id) }}" target="_blank">{{ $goods->name }}</a></p>
 
                                     <p class="sell-panel">
                                         <span class="money">￥{{ $goods->price }}</span>
@@ -120,13 +120,13 @@
                         @foreach($column->shops as $shop)
                             <div class="commodity commodity-index-img">
                                 <div class="img-wrap">
-                                    <a href="{{ url('shop/' . $shop->id) }}">
+                                    <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
                                         <img class="commodity-img" src="{{ $shop->image_url }}">
                                     </a>
                                 </div>
                                 <div class="content-panel">
-                                    <p class="commodity-name"><a
-                                                href="{{ url('shop/' . $shop->id) }}">{{ $shop->name }} </a>
+                                    <p class="commodity-name">
+                                        <a href="{{ url('shop/' . $shop->id) }}" target="_blank">{{ $shop->name }} </a>
                                     </p>
 
                                     <p class="sell-panel">

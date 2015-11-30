@@ -31,7 +31,7 @@
                 </div>
                 <div class="modal-body address-select">
                     <div>
-                        <label class="control-label">&nbsp;&nbsp;&nbsp;所在地:</label>
+                        <label class="control-label">&nbsp;&nbsp;&nbsp;配送区域 : </label>
                         <select class="address-province inline-control add-province">
                             <option selected="selected" value="">请选择省市/其他...</option>
                         </select>
@@ -44,13 +44,13 @@
                             <option selected="selected" value="">请选择区/县...</option>
                         </select>
 
-                        <select class="address-street inline-control add-street">
+                        <select class="address-street inline-control add-street useless-control">
                             <option selected="selected" value="">请选择街道...</option>
                         </select>
 
                         <div class="address-detail">
-                            <label class="control-label">详细地址:</label>
-                            <input type="text" placeholder="请输入详细地址" class="form-control detail-address">
+                            <label class="control-label">&nbsp;&nbsp;&nbsp;详细区域 : </label>
+                            <input type="text" placeholder="请输入详细区域" class="form-control detail-address">
                         </div>
 
                     </div>

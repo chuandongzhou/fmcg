@@ -32,7 +32,7 @@ class RegisterRequest extends Request
             'address[city_id]' => '',
             'area' => 'sometimes|required|max:200',
             'license' => 'required',
-            'license_num' => 'required|unique:shop|size:15',
+            'license_num' => 'required|unique:shop|between:15,18',
             'business_license' => 'required',
             'agency_contract' => 'sometimes|required'
         ];

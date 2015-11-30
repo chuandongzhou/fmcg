@@ -82,7 +82,7 @@
             @foreach($goods as $item)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <a href="{{ url($url . '/' . $item->id) }}">
+                        <a href="{{ url($url . '/' . $item->id) }}" target="_blank">
                             <img class="commodity-img" src="{{  $item->image_url }}">
                         </a>
                         <span class="@if($item->is_out) prompt lack  @elseif($item->is_promotion) prompt promotions @elseif($item->is_new) prompt new-listing @endif"></span>

@@ -23,13 +23,13 @@
                 @foreach($shops as $shop)
                     <div class="col-sm-3 commodity">
                         <div class="img-wrap">
-                            <a href="{{ url('shop/'.$shop['id'].'/detail') }}">
+                            <a href="{{ url('shop/'.$shop['id'].'/detail') }}"  target="_blank">
                                 <img class="commodity-img" src="{{ $shop['image_url'] }}">
                                 {{--<span class="prompt"></span>--}}
                             </a>
                         </div>
                         <div class="content-panel">
-                            <a href="{{ url('shop/'.$shop['id'].'/detail') }}">
+                            <a href="{{ url('shop/'.$shop['id'].'/detail') }}"  target="_blank">
                                 <p class="commodity-name">{{ $shop['name'] }}</p>
 
                                 <p class="sell-panel">

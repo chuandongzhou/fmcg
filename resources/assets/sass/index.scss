@@ -101,8 +101,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 0 50px;
       a {
         padding: 0;
-        &:hover {
-          background: none;
+        &:hover, &:focus{
+          background-color:transparent ;
         }
       }
     }
@@ -2025,8 +2025,8 @@ table {
       color: $gray-light;
       padding-top: 10px;
       padding-bottom: 10px;
-      &:hover {
-        background: none;
+      &:hover ,&:focus{
+        background-color:transparent;
       }
     }
   }

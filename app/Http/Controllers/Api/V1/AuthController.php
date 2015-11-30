@@ -11,6 +11,7 @@ use App\Http\Requests\Api\v1\BackupPasswordRequest;
 use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Hash;
 
@@ -46,6 +47,10 @@ class AuthController extends Controller
         if (!is_null($user->shop)) {
             $user->shop->address_name = $user->shop->address;
         }
+        $nowTime = Carbon::now();
+
+        $user->fill(['last_login_at' => $nowTime])->save();
+
         auth()->login($user, true);
         return $this->success(['user' => $user]);
     }

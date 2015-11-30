@@ -29,13 +29,13 @@
             @foreach($goods as $good)
                 <div class="col-sm-3 commodity new-listing">
                     <div class="img-wrap">
-                        <a href="{{ url('goods/'.$good['id']) }}">
+                        <a href="{{ url('goods/'.$good['id']) }}"  target="_blank">
                             <img class="commodity-img" src="{{ $good->image_url }}">
                             <span class="prompt new-listing"></span>
                         </a>
                     </div>
                     <div class="content-panel">
-                        <a href="{{ url('goods/'.$good['id']) }}">
+                        <a href="{{ url('goods/'.$good['id']) }}" target="_blank">
                             <p class="commodity-name">{{ $good->name }}</p>
                             <p class="sell-panel">
                                 <span class="money">￥{{ $good->price }}</span>

@@ -2,16 +2,18 @@
 @section('subtitle', '个人中心-店铺介绍')
 
 @section('right')
-    <div class="col-sm-10 store goods-detail  wholesalers-index personal-store">
-        <div class="store-panel">
-            <img class="avatar" src="{{ $shop->logo_url }}">
-            <ul class="store-msg">
-                <li>店家姓名 : {{ $shop->name }}</li>
-                <li>联系人 : {{ $shop->contact_person }}</li>
-                <li>最低配送额 : {{ $shop->min_money }}</li>
-            </ul>
-        </div>
-        <div class="address-panel">
+    <div class="col-sm-12 store goods-detail  wholesalers-index personal-store">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="store-panel">
+                    <img class="avatar" src="{{ $shop->logo_url }}">
+                    <ul class="store-msg">
+                        <li>店家姓名 : {{ $shop->name }}</li>
+                        <li>联系人 : {{ $shop->contact_person }}</li>
+                        <li>最低配送额 : {{ $shop->min_money }}</li>
+                    </ul>
+                </div>
+                <div class="address-panel">
             <ul>
                 <i class="icon icon-tel"></i>
                 <li class="address-panel-item">
@@ -36,6 +38,11 @@
                     </div>
                 </li>
             </ul>
+        </div>
+            </div>
+            <div class="col-sm-2 text-center">
+                <a href="{{ url('personal/shop') }}" class="btn btn-primary">编辑</a>
+            </div>
         </div>
         <div class="row nav-wrap">
             <div class="col-sm-12 switching">

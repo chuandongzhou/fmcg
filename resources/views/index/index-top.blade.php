@@ -40,17 +40,18 @@
                 <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                      aria-expanded="false" style="height: 1px;">
                     <ul class="nav navbar-nav navbar-right operating-wrap">
-                        @if(auth()->user()->type == cons('user.type.wholesaler'))
-                            <li><a href="{{ url('shop/' .auth()->user()->shop->id) }}"><span
-                                            class="fa fa-heart-o"></span>我的店面</a>
+                        @if($user->type <= cons('user.type.wholesaler'))
+                            <li><a href="{{ url('/') }}"><span class="fa fa-home"></span> 订百达首页</a></li>
+                        @endif
+                        @if($user->type == cons('user.type.wholesaler'))
+                            <li>
+                                <a href="{{ url('shop/' .$user->shop->id) }}">
+                                    <span class="fa fa-heart-o"></span> 我的店面</a>
                             </li>
                         @endif
-                        <li><a href="{{ url('personal/info') }}"><span class="fa fa-heart-o"></span>管理中心</a></li>
-                        @if(auth()->user()->type == cons('user.type.retailer'))
-                            <li><a href="{{ url('order-buy') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
-                        @else
-                            <li><a href="{{ url('order-sell') }}"><span class="fa fa-file-text-o"></span> 我的订单</a></li>
-                        @endif
+                        <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
+                        <li><a href="{{ url($user->type == cons('user.type.retailer') ? 'order-buy' : 'order-sell') }}"><span
+                                        class="fa fa-file-text-o"></span> 我的订单</a></li>
                         <li class="collect-select">
                             <a class="collect-selected"><span class="selected">收藏夹</span> <span
                                         class="fa fa-angle-down"></span></a>
@@ -60,9 +61,11 @@
                             </ul>
                         </li>
                         <li class="user-name-wrap">
-                            <a href="{{ url('personal/shop') }}" class="name-panel"><span
-                                        class="user-name">{{ auth()->user()->shop->name }}</span>({{ cons()->valueLang('user.type' , auth()->user()->type) }}
-                                )</a>
+                            <a href="{{ url('personal/shop') }}" class="name-panel" target="_blank">
+                                <span class="user-name">
+                                    {{ $user->shop->name }}
+                                </span>
+                                ( {{ cons()->valueLang('user.type' , $user->type) }} )</a>
                             <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
                         </li>
                     </ul>
@@ -134,6 +137,7 @@
                 myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
                     $('span.city-value').html(result.addressComponents.province);
                 });
+
             }
         }
     </script>

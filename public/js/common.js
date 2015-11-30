@@ -377,6 +377,7 @@ var commonAjaxSetup = function () {
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
                     isButton && self.button('done');
+                    self.hasClass('login-btn') || alert(self.data('doneText') || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
@@ -458,7 +459,8 @@ var commonUploadSetup = function () {
             dataType: 'json',
             formData: $this.data('data'),
             submit: function (e, data) {
-                parent.addClass('disabled').prop('disabled', true).siblings('.progress').show();
+                $(this).fileupload('disable');
+                parent.addClass('disabled').siblings('.progress').show();
                 parent.siblings('.fileinput-error').remove();
             },
             done: function (e, data) {
@@ -498,6 +500,7 @@ var commonUploadSetup = function () {
                 // 隐藏进度条并开放按钮
                 parent.removeClass('disabled').siblings('.progress').hide()
                     .children('.progress-bar').css('width', '0');
+                $(this).fileupload('enable');
             },
             progressall: function (e, data) {
                 var progress = Math.round(data.loaded / data.total * 1000) / 10,
@@ -857,7 +860,7 @@ function baiDuMap() {
     //初始化这个变量,防止百度地图重复实例化所导致的显示错误问题
     var flag = false;
     if (!flag) {
-        var map_modal = new BMap.Map("map-modal");
+        var map_modal = new BMap.Map("map-modal", {enableMapClick: false});
     }
     var point_modal = new BMap.Point(106, 35);
     map_modal.centerAndZoom(point_modal, 12);
@@ -1013,7 +1016,7 @@ function getCoordinateMap(data) {
 }
 
 function getShopAddressMap(lng, lat) {
-    var addressMap = new BMap.Map('address-map');
+    var addressMap = new BMap.Map('address-map',{enableMapClick: false});
     var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
     addressMap.addControl(top_left_navigation);
     if (lng && lat) {

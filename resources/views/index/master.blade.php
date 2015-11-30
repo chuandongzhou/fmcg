@@ -26,7 +26,7 @@
                 <div class="col-sm-4 city-wrap">
                     <div class="location-panel">
                         <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                    class="city-value">{{  $provinces[\Request::cookie('province_id')] or head($provinces) }}</span> <span
+                                    class="city-value">{{  $provinces[\Request::cookie('province_id')] or '' }}</span> <span
                                     class="fa fa-angle-down up-down"></span></a>
                     </div>
                     <div class="city-list clearfix">
@@ -54,7 +54,10 @@
                     <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                          aria-expanded="false" style="height: 1px;">
                         <ul class="nav navbar-nav navbar-right operating-wrap">
-                            <li><a href="{{ url('personal/info') }}"><span class="fa fa-heart-o"></span> 管理中心</a></li>
+                            @if($user->type <= cons('user.type.wholesaler'))
+                                <li><a href="{{ url('/') }}"><span class="fa fa-home"></span> 订百达首页</a></li>
+                            @endif
+                            <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
                             <li>
                                 <a href="{{ $user->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
                                     <span class="fa fa-file-text-o"></span> 我的订单
@@ -72,7 +75,7 @@
                             @endif
                             <li class="user-name-wrap">
                                 <a href="{{ url('personal/shop') }}" class="name-panel"><span
-                                            class="user-name">{{ $user->shop->name }}</span>({{ cons()->valueLang('user.type' , $user->type) }}
+                                            class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
                                     )</a>
                                 <a href="{{ url('auth/logout') }}" class="exit"><span class="fa fa-ban"></span> 退出</a>
                             </li>
@@ -200,11 +203,31 @@
 
 @section('js-lib')
     <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
 @stop
 @section('js')
     <script type="text/javascript">
         $(function () {
             likeFunc();
+
+            if (!Cookies.get('province_id')) {
+                var geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function (r) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                        setProvince(r.point.lng, r.point.lat);
+                    }
+                    else {
+                        alert('failed' + this.getStatus());
+                    }
+                }, {enableHighAccuracy: true})
+
+                function setProvince(lng, lat) {
+                    var myGeo = new BMap.Geocoder();
+                    myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
+                        $('span.city-value').html(result.addressComponents.province);
+                    });
+                }
+            }
         })
     </script>
 @stop

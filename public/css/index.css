@@ -67,8 +67,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding: 0 50px; }
     .personal-header .items-item .item a {
       padding: 0; }
-      .personal-header .items-item .item a:hover {
-        background: none; }
+      .personal-header .items-item .item a:hover, .personal-header .items-item .item a:focus {
+        background-color: transparent; }
 
 .personal-hr {
   margin-top: -10px; }
@@ -1456,8 +1456,8 @@ table .product-name {
     color: #777777;
     padding-top: 10px;
     padding-bottom: 10px; }
-    .dealer-top-header .operating-wrap a:hover {
-      background: none; }
+    .dealer-top-header .operating-wrap a:hover, .dealer-top-header .operating-wrap a:focus {
+      background-color: transparent; }
 
 .dealer-header .search, .dealer-header .public-personal .controls .item .add-goods, .public-personal .controls .item .dealer-header .add-goods {
   min-width: 78%; }

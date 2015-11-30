@@ -72,8 +72,7 @@ class ShopController extends Controller
         $shop->load('images');
 
         if ($shop->images->isEmpty()) {
-            $nowTime = Carbon::now();
-            $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
+            $advert = $this->_getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
@@ -107,6 +106,12 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return back()->withInput();
         }
+
+        if ($shop->images->isEmpty()) {
+            $advert = $this->_getAdvertFirstImage();
+            $shop->images[0] = $advert->image;
+        }
+
         $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
@@ -166,5 +171,17 @@ class ShopController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * 商店图片为空时获取首页广告的第一张图
+     *
+     * @return mixed
+     */
+    private function _getAdvertFirstImage()
+    {
+        $nowTime = Carbon::now();
+        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
+        return $advert;
     }
 }

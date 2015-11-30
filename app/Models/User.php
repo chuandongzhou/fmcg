@@ -37,7 +37,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'backup_mobile',
         'type',
         'audit_status',
-        'spreading_code'
+        'spreading_code',
+        'last_login_at'
     ];
 
     /**
