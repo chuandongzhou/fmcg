@@ -1,7 +1,7 @@
 @extends('admin.master')
 @include('includes.timepicker')
 @section('right-container')
-    <form class="form-horizontal" method="get" action="{{ url('admin/system-trade') }}">
+    <form class="form-horizontal" method="get" action="{{ url('admin/system-trade') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="order_id" class="col-sm-2 control-label">订单号：</label>

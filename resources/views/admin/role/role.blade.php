@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form method="post" action="{{  url('admin/role')  }}">
+<form method="post" action="{{  url('admin/role')  }}" autocomplete="off">
     {!! csrf_field() !!}
     <input type="text" name="name" />
     <input type="submit" />

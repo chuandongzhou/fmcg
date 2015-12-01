@@ -21,8 +21,10 @@ $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 
 /**
  * 前台
+ *
  */
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
+    $router->get('/test', 'HomeController@test');              //商家管理首页
     $router->get('/', 'HomeController@index');              //商家管理首页
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索

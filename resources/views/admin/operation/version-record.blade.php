@@ -7,7 +7,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
           action="{{ url('admin/version-record') }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/version-record') }}">
+          data-done-url="{{ url('admin/version-record') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="type" class="col-sm-2 control-label">终端类型</label>

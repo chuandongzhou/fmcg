@@ -1,7 +1,7 @@
 @extends('admin.master')
 
 @section('right-container')
-        <form class="form-horizontal ajax-form" method="post" action="{{url('admin/role')}}" data-help-class="col-sm-push-2 col-sm-10" >
+        <form class="form-horizontal ajax-form" method="post" action="{{url('admin/role')}}" data-help-class="col-sm-push-2 col-sm-10"  autocomplete="off">
             <table class="table table-hover table-striped">
                 <tr>
                     <th>#</th>

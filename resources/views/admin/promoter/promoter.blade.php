@@ -3,7 +3,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $promoter->id ? 'put' : 'post' }}"
           action="{{ url('admin/promoter/' . $promoter->id) }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/promoter') }}">
+          data-done-url="{{ url('admin/promoter') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">推广人员姓名</label>

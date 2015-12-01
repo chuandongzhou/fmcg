@@ -4,7 +4,7 @@
 
 @section('right')
     <form class="form-horizontal ajax-form" method="put"
-          action="{{ url('api/v1/personal/password') }}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{ url('api/v1/personal/password') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
         <div class="col-sm-9 user-show">
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="password-old">旧密码:</label>

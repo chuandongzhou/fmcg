@@ -54,9 +54,9 @@
                     </li>
                     <li class="active"><a class="list-name" href="{{ url('/') }}">首页</a></li>
                     @if(auth()->user()->type == cons('user.type.retailer'))
-                        <li><a href="{{ url('shop?type=wholesaler') }}" class="btn">批发商</a></li>
+                        <li><a href="{{ url('shop?type=wholesaler') }}" class="btn list-name">批发商</a></li>
                     @endif
-                    <li><a href="{{ url('shop?type=supplier') }}" class="btn">供应商</a></li>
+                    <li><a href="{{ url('shop?type=supplier') }}" class="btn list-name">供应商</a></li>
                 </ul>
             </div>
         </div>

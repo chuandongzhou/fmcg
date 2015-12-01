@@ -16,8 +16,8 @@ use App\Services\GoodsService;
 use App\Services\RedisService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use DB;
 
 class OrderController extends Controller
 {
@@ -171,9 +171,10 @@ class OrderController extends Controller
 
         $failOrderIds = [];
         foreach ($orders as $order) {
-            if (($order->status != cons('order.status.non_send') || $order->pay_status != cons('order.pay_status.non_payment'))
-                || !($order->shop->user->id == $this->user->id || $order->user_id == $this->user->id)
-            ) {
+            if (!$order->can_cancel) {
+                if (count($orders) == 1) {
+                    return $this->error('取消失败');
+                }
                 $failOrderIds[] = $order->id;
                 continue;
             }
@@ -199,6 +200,27 @@ class OrderController extends Controller
     }
 
     /**
+     * 卖家确认订单信息
+     *
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putOrderConfirm($orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+        if (!$order->can_confirm) {
+            return $this->error('订单不能确认');
+        }
+        if ($order->fill(['status' => cons('order.status.non_send'), 'confirm_at' => Carbon::now()])->save()) {
+            return $this->success('订单确认成功');
+        }
+        return $this->error('订单确认失败，请重试');
+    }
+
+    /**
      * 买家批量确认订单完成,仅针对在线支付订单
      *
      * @param \Illuminate\Http\Request $request
@@ -215,7 +237,7 @@ class OrderController extends Controller
 
         $failIds = [];
         foreach ($orders as $order) {
-            if ($order->pay_type != cons('pay_type.online') || $order->pay_status != cons('order.pay_status.payment_success') || $order->status != cons('order.status.send')) {
+            if (!$order->can_confirm_arrived) {
                 if (count($orders) == 1) {
                     return $this->error('确认收货失败');
                 }
@@ -306,13 +328,7 @@ class OrderController extends Controller
         //通知买家订单已发货
         $failIds = [];
         foreach ($orders as $order) {
-            if ($order->pay_type == cons('pay_type.online') && !($order->pay_status == cons('order.pay_status.payment_success') && $order->status == cons('order.status.non_send'))) {
-                if (count($orders) == 1) {
-                    return $this->error('操作失败');
-                }
-                $failIds[] = $order->id;
-                continue;
-            } elseif ($order->pay_type == cons('pay_type.cod') && $order->status != cons('order.status.non_send')) {
+            if (!$order->can_send) {
                 if (count($orders) == 1) {
                     return $this->error('操作失败');
                 }

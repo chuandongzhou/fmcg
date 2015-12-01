@@ -26,6 +26,7 @@ return [
             'refund_failed' => '退款失败',
         ],
         'status' => [ //订单状态
+            'non_confirm' => '未确认',
             'non_send' => '未发货',
             'send' => '已发货',
             'finished' => '已完成',

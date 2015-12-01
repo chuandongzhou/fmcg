@@ -7,7 +7,7 @@
 @section('right-container')
     <div class="col-sm-12 personal-center">
         <form class="form-horizontal ajax-form" method="put"
-              action="{{ url('api/v1/personal/shop/'.$shop->id) }}" data-help-class="col-sm-push-2 col-sm-10">
+              action="{{ url('api/v1/personal/shop/'.$shop->id) }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
             <div class="col-sm-12 user-show">
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="id">店家ID:</label>

@@ -25,7 +25,7 @@
                     <div class="panel-body">
                         <form class="ajax-form form-horizontal" method="post"
                               action="{{  url('api/v1/auth/register')  }}"
-                              accept-charset="UTF-8" data-done-url="{{ url('auth/reg-success') }}">
+                              accept-charset="UTF-8" data-done-url="{{ url('auth/reg-success') }}" autocomplete="off">
                             <fieldset>
                                 <div class="form-group">
 

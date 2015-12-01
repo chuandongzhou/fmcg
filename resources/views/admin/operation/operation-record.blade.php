@@ -7,7 +7,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $record->id ? 'put' : 'post' }}"
           action="{{ url('admin/operation-record/' . $record->id) }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/operation-record') }}">
+          data-done-url="{{ url('admin/operation-record') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">操作人姓名</label>

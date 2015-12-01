@@ -10,7 +10,7 @@
                     </h4>
                 </div>
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/auth/backup') }}" method="post"
-                      data-help-class="col-sm-push-3 col-sm-10">
+                      data-help-class="col-sm-push-3 col-sm-10" autocomplete="off">
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="user_name">

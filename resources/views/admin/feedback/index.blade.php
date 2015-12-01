@@ -5,7 +5,7 @@
 @section('subtitle' , '用户反馈管理')
 
 @section('right-container')
-    <form class="form-horizontal" method="get" action="{{ url('admin/feedback') }}">
+    <form class="form-horizontal" method="get" action="{{ url('admin/feedback') }}" autocomplete="off">
         <div class="form-group">
             <label class="col-sm-1 control-label" for="feed_time">时间</label>
             <input type="text" class="datetimepicker inline-control" value="{{ $feedTime }}" data-format="YYYY-MM-DD" name="feed_time">

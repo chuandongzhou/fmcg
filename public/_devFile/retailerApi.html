@@ -1381,6 +1381,7 @@
     status int 订单状态(1:未发货;2:已发货;3:完成)
     is_cancel int 订单是否被取消(1取消,0未取消)
     can_cancel bool 是否可取消(是true,否false)
+    can_confirm bool 是否可确认订单(是true,否false)
     can_send bool 是否可发货
     can_confirm_collections bool 是否可确认收款(针对货到付款)
     user array 买家信息
@@ -1432,7 +1433,16 @@
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.12 卖家获取订单详情[get] (detail-of-sell)</h4>
+<h4>2.7.12 卖家确认订单[put] (order-confirm/{order_id}) (确认后不可取消，不可退款)</h4>
+
+<p><code>请求参数：</code></p>
+
+<p><code>成功返回：</code></p>
+<pre><code>返回信息同上
+</code></pre>
+
+<p>`失败返回：</p>
+<h4>2.7.13 卖家获取订单详情[get] (detail-of-sell)</h4>
 
 <p><code>请求参数：</code></p>
 <pre><code>order_id int 订单id
@@ -1480,7 +1490,7 @@
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.13 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)</h4>
+<h4>2.7.14 卖家批量确认订单完成[put] (batch-finish-of-sell)(仅针对货到付款订单)</h4>
 
 <p><code>请求参数：</code></p>
 <pre><code>order_id array 订单id
@@ -1489,7 +1499,7 @@
 <p><code>成功返回：</code></p>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.14 卖家批量发货[put] (batch-send)</h4>
+<h4>2.7.15 卖家批量发货[put] (batch-send)</h4>
 
 <p><code>请求参数：</code></p>
 <pre><code>order_id array 订单id
@@ -1499,7 +1509,7 @@
 <p><code>成功返回：</code></p>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.15 买家/卖家批量取消订单[put] (cancel-sure)</h4>
+<h4>2.7.16 买家/卖家批量取消订单[put] (cancel-sure)</h4>
 
 <p><code>请求参数：</code></p>
 <pre><code>order_id array 订单id
@@ -1508,7 +1518,7 @@
 <p><code>成功返回：</code></p>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.16 卖家修改订单物品单价[put] (change-price)</h4>
+<h4>2.7.17 卖家修改订单物品单价[put] (change-price)</h4>
 
 <p><code>请求参数：</code></p>
 <pre><code>order_id int 订单id
@@ -1519,7 +1529,7 @@
 <p><code>成功返回：</code></p>
 
 <p><code>失败返回：</code></p>
-<h4>2.7.17 卖家订单统计[get] (statistics)</h4>
+<h4>2.7.18 卖家订单统计[get] (statistics)</h4>
 
 <p><code>请求参数：</code></p>
 

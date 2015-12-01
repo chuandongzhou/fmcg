@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Order;
 use App\Services\GoodsService;
 use App\Services\ShopService;
 use Carbon\Carbon;
+use DB;
 
 class HomeController extends Controller
 {
@@ -28,5 +30,15 @@ class HomeController extends Controller
             'shopColumns' => ShopService::getShopColumn(),
             'adverts' => $adverts
         ]);
+    }
+    public function test() {
+
+        /*$orders = Order::where([
+            'pay_type' => cons('pay_type.online'),
+            'status' => cons('order.status.send'),
+            'pay_status' => cons('order.pay_status.payment_success'),
+        ])->where('send_at', '<=', Carbon::now()->subDays(3))->nonCancel()->get();
+
+        dd($orders);*/
     }
 }

@@ -6,6 +6,7 @@ use App\Models\DataStatistics;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\User;
+use App\Services\DataStatisticsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -23,24 +24,35 @@ class DataStatisticsController extends Controller
     public function getIndex(Request $request)
     {
         $carbon = new Carbon($request->input('time'));
+
         $dayEnd = $carbon->copy()->endOfDay();
         $dayStart = $carbon->copy()->startOfDay();
+        $nowTime = Carbon::now();
+
         /**
          * 总用户数
          */
         $totleUser = User::select(DB::raw('count(*) as num , type'))->where('created_at', '<=',
             $dayEnd)->groupBy('type')->lists('num', 'type');
 
-        $statistics = DataStatistics::where('created_at', $dayEnd->toDateString())->first();
+
+        if ($dayStart == $nowTime->startOfDay()) {
+            $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay());
+        } else {
+            $statistics = DataStatistics::where('created_at', $dayEnd->toDateString())->first();
+        }
+
+
         //历史最高注册数和登录数
 
         /**
-         *  'wholesaler' => 1,       //批发商
+         * 'wholesaler' => 1,       //批发商
          * 'retailer' => 2,       //零售商
          * 'supplier' => 3,
          */
 
         $dataStatistics = DataStatistics::where('created_at', '<=', $dayEnd)->get();
+
 
         $maxArray = [
             'max_wholesaler_login_num' => $dataStatistics->sortByDesc('wholesaler_login_num')->first(),

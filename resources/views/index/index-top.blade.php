@@ -89,7 +89,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search"
-                  type="get">
+                  type="get" autocomplete="off">
                 <div class="input-group">
                     <div class="select-role pull-left">
                         <a href="javascript:void(0)" class="selected"><span>商品</span><i

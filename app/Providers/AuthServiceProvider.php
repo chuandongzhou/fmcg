@@ -58,33 +58,10 @@ class AuthServiceProvider extends ServiceProvider
          */
         $gate->define('validate-online-orders', function ($user, $orders) {
             if ($orders instanceof Order) {
-                if ($orders->pay_type != cons('pay_type.online')) {
-                    return false;
-                }
-                if ($orders->is_cancel == cons('order.is_cancel.on')) {
-                    return false;
-                }
-                $orderConfig = cons('order');
-
-                if ($orders->pay_status != $orderConfig['pay_status']['non_payment']) {
-                    return false;
-                }
-
-                return $user->id == $orders->user_id;
+                return $orders->can_payment;
             } else if ($orders instanceof Collection) {
                 foreach ($orders as $order) {
-                    if ($user->id != $order->user_id) {
-                        return false;
-                    }
-                    if ($order->pay_type != cons('pay_type.online')) {
-                        return false;
-                    }
-                    if ($order->is_cancel == cons('order.is_cancel.on')) {
-                        return false;
-                    }
-                    $orderConfig = cons('order');
-
-                    if ($order->pay_status != $orderConfig['pay_status']['non_payment']) {
+                    if (!$order->can_payment) {
                         return false;
                     }
                 }

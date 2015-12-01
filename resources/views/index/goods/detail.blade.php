@@ -46,7 +46,7 @@
                             <span class="prompt">即期品 </span> : <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
                         <li><span class="prompt">商家 </span> : <b>{{ $goods->shop->name }}</b></li>
-                        <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post">
+                        <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post" autocomplete="off">
                             <li>
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
                                 <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">

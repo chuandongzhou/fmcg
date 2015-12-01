@@ -130,7 +130,6 @@ class OrderController extends Controller
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
-                'status' => cons('order.status.non_send'),
                 'cod_pay_type' => $codPayType,
                 'shipping_address_id' => $shippingAddressId,
                 'remark' => $remark

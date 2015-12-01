@@ -3,7 +3,7 @@
 @include('includes.timepicker')
 @section('right-container')
 
-    <form class="form-horizontal" action="{{ url('admin/data-statistics') }}" method="get">
+    <form class="form-horizontal" action="{{ url('admin/data-statistics') }}" method="get" autocomplete="off">
         <label for="time">时间:</label> <input type="text" name="time" class="time inline-control datetimepicker"
                                              data-format="YYYY-MM-DD" value="{{ $time }}"/>
         <input type="submit" class="btn btn-default" value="查询"/>
@@ -23,7 +23,7 @@
                     <th></th>
                     <th>供应商</th>
                     <th>批发商</th>
-                    <th>经销商</th>
+                    <th>终端商</th>
                     <th>总计</th>
                 </tr>
                 <tr>
@@ -48,7 +48,7 @@
                     <th></th>
                     <th>供应商</th>
                     <th>批发商</th>
-                    <th>经销商</th>
+                    <th>终端商</th>
                     <th>总计</th>
                 </tr>
                 <tr>

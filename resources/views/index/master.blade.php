@@ -91,7 +91,7 @@
         </div>
         @if ($shop->id == $user->shop->id)
             <div class="col-sm-4 col-sm-push-4 right-search">
-                <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search">
+                <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search" autocomplete="off">
                     <div class="input-group">
                         <input type="text" name="name" class="form-control" aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
@@ -102,7 +102,7 @@
             </div>
         @else
             <div class="col-sm-4  right-search">
-                <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search">
+                <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search" autocomplete="off">
                     <div class="input-group">
                         <input type="text" class="form-control" aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">

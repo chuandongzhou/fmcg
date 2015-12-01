@@ -6,7 +6,7 @@
 @section('right-container')
     <div id="container">
         <div class="row">
-            <form action="{{ url('admin/attr') }}" method="get" class="categories">
+            <form action="{{ url('admin/attr') }}" method="get" class="categories" autocomplete="off">
                 <div class="form-group">
                     <div class="col-sm-2">
                         <select name="cate_level_1" class="address-province form-control">

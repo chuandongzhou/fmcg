@@ -979,7 +979,7 @@ function dynamicShowMap() {
  * @param data
  */
 function getCoordinateMap(data) {
-    map = new BMap.Map("map"/*,{minZoom:4,maxZoom:8}*/);
+    map = new BMap.Map("map", {enableMapClick: false});
     var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
     map.addControl(top_left_navigation);
 
@@ -1016,7 +1016,7 @@ function getCoordinateMap(data) {
 }
 
 function getShopAddressMap(lng, lat) {
-    var addressMap = new BMap.Map('address-map',{enableMapClick: false});
+    var addressMap = new BMap.Map('address-map', {enableMapClick: false});
     var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
     addressMap.addControl(top_left_navigation);
     if (lng && lat) {

@@ -3,7 +3,7 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    <form method="get" action="{{ url('personal/balance') }}">
+    <form method="get" action="{{ url('personal/balance') }}" autocomplete="off">
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="account-balance">

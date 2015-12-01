@@ -5,7 +5,7 @@
 @section('right')
     <div class="row my-goods order-report">
         <div class="col-sm-12 content">
-            <form action="{{ url('order/statistics') }}" method="get">
+            <form action="{{ url('order/statistics') }}" method="get" autocomplete="off">
                 <div class="col-sm-12 enter-item">
                     时间段
                     <input class="enter datetimepicker" name="start_at" placeholder="{{ empty($search['start_at'])? '开始时间' : $search['start_at']}}" type="text" value="{{ $search['start_at'] or '' }}">至

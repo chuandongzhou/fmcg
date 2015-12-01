@@ -20,6 +20,7 @@ class Order extends Model
         'user_id',
         'shop_id',
         'paid_at',
+        'confirm_at',
         'send_at',
         'refund_at',
         'confirmed_at',
@@ -34,6 +35,7 @@ class Order extends Model
         'payment_type',
         'step_num',
         'can_cancel',
+        'can_confirm',
         'can_send',
         'can_confirm_collections',
         'can_export',
@@ -159,9 +161,9 @@ class Order extends Model
             return cons()->lang('order.is_cancel.on');
         }
         if ($payType == cons('pay_type.online')) {//在线支付
-            if (!$status) {//显示未确认
+            /*if (!$status) {//显示未确认
                 return cons()->valueLang('order.status')[$status];
-            }
+            }*/
             if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
                 return cons()->valueLang('order.pay_status')[$payStatus];
             }
@@ -206,8 +208,22 @@ class Order extends Model
      */
     public function getCanCancelAttribute()
     {
-        return $this->attributes['pay_status'] == cons('pay_type.non_payment')
-        && $this->attributes['status'] == cons('order.status.non_send');
+        $orderConf = cons('order');
+        return $this->attributes['status'] == $orderConf['status']['non_confirm']
+        && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
+        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']
+        && ($this->attributes['user_id'] == auth()->id() || $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id'));
+    }
+
+    /**
+     * 是否可确认订单(卖家)
+     *
+     * @return bool
+     */
+    public function getCanConfirmAttribute()
+    {
+        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status'] == cons('order.pay_status.payment_success') : true)
+        && $this->attributes['status'] == cons('order.status.non_confirm') && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id');
     }
 
     /**
@@ -217,9 +233,8 @@ class Order extends Model
      */
     public function getCanSendAttribute()
     {
-        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status']
-            == cons('order.pay_status.payment_success') : true)
-        && $this->attributes['status'] == cons('order.status.non_send');
+        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status'] == cons('order.pay_status.payment_success') : true)
+        && $this->attributes['status'] == cons('order.status.non_send') && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id');
     }
 
     /**
@@ -229,7 +244,10 @@ class Order extends Model
      */
     public function getCanRefundAttribute()
     {
-        return $this->attributes['pay_type'] == cons('pay_type.online') && $this->attributes['pay_status'] == cons('order.pay_status.payment_success') && $this->attributes['status'] == cons('order.status.non_send');
+        return $this->attributes['pay_type'] == cons('pay_type.online')
+        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
+        && $this->attributes['status'] == cons('order.status.non_confirm')
+        && $this->attributes['user_id'] == auth()->id();
     }
 
     /**
@@ -260,8 +278,10 @@ class Order extends Model
      */
     public function getCanPaymentAttribute()
     {
-        return $this->attributes['pay_type'] == cons('pay_type.online')
-        && $this->attributes['pay_status'] == cons('order.pay_status.non_payment');
+        return $this->attributes['user_id'] == auth()->id()
+        && $this->attributes['pay_type'] == cons('pay_type.online')
+        && $this->attributes['pay_status'] == cons('order.pay_status.non_payment')
+        && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
     }
 
     /**
@@ -272,7 +292,9 @@ class Order extends Model
     public function getCanConfirmArrivedAttribute()
     {
         return $this->attributes['pay_type'] == cons('pay_type.online')
-        && $this->attributes['status'] == cons('order.status.send');
+        && $this->attributes['status'] == cons('order.status.send')
+        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
+        && $this->attributes['user_id'] == auth()->id();
     }
 
     /**

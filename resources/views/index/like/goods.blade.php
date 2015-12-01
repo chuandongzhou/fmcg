@@ -13,7 +13,7 @@
                     @endforeach
                 </p>
             </div>
-            <form action="{{ url('like/goods') }}" method="get">
+            <form action="{{ url('like/goods') }}" method="get" autocomplete="off">
                 <div class="col-sm-12 control-panel">
                     <label>配送区域</label>
                     <select data-id="{{ $data['province_id'] or 0 }}" class="control address-province" name="province_id"></select>

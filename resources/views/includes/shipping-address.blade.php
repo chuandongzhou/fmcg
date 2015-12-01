@@ -11,7 +11,7 @@
                 <div class="modal-body address-select">
                     <form class="form-horizontal ajax-form"
                           action="{{ url('api/v1/personal/shipping-address') }}"
-                          method="post" data-help-class="col-sm-push-2 col-sm-10">
+                          method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="card_number">收货人:</label>
 

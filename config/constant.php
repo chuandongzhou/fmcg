@@ -26,6 +26,7 @@ return [
             'refund_failed' => 5,
         ],
         'status' => [ //订单状态
+            'non_confirm'=> 0, //未确认
             'non_send' => 1, //未发货
             'send' => 2, //已发货
             'finished' => 3, //完成
@@ -33,7 +34,8 @@ return [
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
             'on' => 1,
-        ]
+        ],
+        'auto_receive_time' => 72, //自动收货时间  （小时）
     ],
     //用户类别
     'user' => [
@@ -45,8 +47,8 @@ return [
         //审核状态
         'audit_status' => [
             'not_audit' => 0,       //未审核
-            'pass'      => 1,       //通过
-            'not_pass'  => 2,       //未通过
+            'pass' => 1,       //通过
+            'not_pass' => 2,       //未通过
         ]
     ],
     //广告表类型

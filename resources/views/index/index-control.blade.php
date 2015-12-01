@@ -29,7 +29,8 @@
                 <ul class="nav navbar-nav items-item">
                     @if($user->type < cons('user.type.wholesaler'))
                         <li class="item"><a href="{{ url('/') }}">首页</a></li>
-                        <li class="item"><a href="{{ url('shop') }}">商家</a></li>
+                        <li class="item"><a href="{{ url('shop?type=wholesaler') }}">批发商</a></li>
+                        <li class="item"><a href="{{ url('shop?type=supplier') }}">供应商</a></li>
                     @else
                         <li class="item">
                             <a href="{{ url('shop/' . $user->shop->id) }}">

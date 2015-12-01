@@ -5,7 +5,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="put"
           action="{{ url('admin/attr/' . $attr->id) }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/attr') }}">
+          data-done-url="{{ url('admin/attr') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">标签名称</label>

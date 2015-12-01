@@ -1,6 +1,6 @@
 @extends('admin.master')
 @section('right-container')
-    <form class="form-horizontal" method="get" action="{{ url('admin/trade') }}">
+    <form class="form-horizontal" method="get" action="{{ url('admin/trade') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="order_num" class="col-sm-2 control-label">订单号：</label>

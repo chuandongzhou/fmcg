@@ -4,7 +4,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/column') }}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{ url('admin/column') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
         <table class="table table-striped">
             <thead>
             <tr>

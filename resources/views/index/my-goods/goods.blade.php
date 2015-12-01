@@ -9,7 +9,7 @@
     <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
               action="{{ url('api/v1/my-goods/'.$goods->id) }}"
-              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('my-goods') }}">
+              data-help-class="col-sm-push-1 col-sm-10" data-done-url="{{ url('my-goods') }}" autocomplete="off">
             <div class="row editor-panel content-wrap">
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">

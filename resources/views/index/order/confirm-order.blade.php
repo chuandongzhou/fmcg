@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row table-list-row">
-            <form class="form-horizontal" action="{{ url('order/submit-order') }}" method="post">
+            <form class="form-horizontal" action="{{ url('order/submit-order') }}" method="post" autocomplete="off">
                 {{ csrf_field() }}
                 @foreach($shops as $shop)
                     <div class="col-sm-12 table-responsive shopping-table-list">

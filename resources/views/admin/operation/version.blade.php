@@ -5,7 +5,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
           action="{{ url('admin/app-url') }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/version-record') }}">
+          data-done-url="{{ url('admin/version-record') }}" autocomplete="off">
         <div class="form-group">
             <label for="android_url" class="col-sm-2 control-label">android下载地址</label>
 
@@ -28,8 +28,7 @@
     </form>
 
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/operation-record/') }}" data-help-class="col-sm-push-2 col-sm-10">
-        {{csrf_field()}}
+          action="{{ url('admin/operation-record/') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
         <table class="table table-striped">
             <thead>
             <tr>

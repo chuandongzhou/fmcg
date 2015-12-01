@@ -2,7 +2,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{url('admin/admin')}}" data-help-class="col-sm-push-2 col-sm-10">
+          action="{{url('admin/admin')}}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
 
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">管理员账号:</label>

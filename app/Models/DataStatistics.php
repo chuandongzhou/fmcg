@@ -30,12 +30,26 @@ class DataStatistics extends Model
         // 注册删除事件
         static::creating(function ($model) {
             // 删除所有关联文件
-           $model->created_at = (new Carbon())->subDay();
+            $model->created_at = (new Carbon())->subDay();
         });
     }
 
     /**
+     * 设置活跃用户
+     *
+     * @param $activeUser
+     */
+    public function setActiveUserAttribute($activeUser)
+    {
+        if ($activeUser) {
+            $this->attributes['active_user'] = implode(',', $activeUser);
+        }
+
+    }
+
+    /**
      * 获取活跃用户
+     *
      * @param $activeUser
      * @return array
      */

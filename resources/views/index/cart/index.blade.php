@@ -3,7 +3,7 @@
 @section('subtitle' , '购物车')
 
 @section('container')
-    <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post">
+    <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
         {{ csrf_field() }}
         <div class="container dealer-index index shopping-cart">
             <div class="row audit-step-outs">

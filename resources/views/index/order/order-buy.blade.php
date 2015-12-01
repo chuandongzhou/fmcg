@@ -18,7 +18,7 @@
                    data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
             </div>
         </div>
-        <form class="form" method="get" action="{{ url('order-buy/index') }}">
+        <form class="form" method="get" action="{{ url('order-buy/index') }}" autocomplete="off">
             <div class="col-sm-8 pay-detail search-options">
                 <span class="item control-item">支付方式 :
                     <select name="pay_type" class="ajax-select control">

@@ -4,7 +4,7 @@
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man/' . $deliveryMan->id) }}"
           method="{{ $deliveryMan->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('personal/delivery-man') }}">
+          data-done-url="{{ url('personal/delivery-man') }}" autocomplete="off">
         <div class="form-group row">
             <label class="col-sm-2 control-label" for="name">姓名:</label>
 

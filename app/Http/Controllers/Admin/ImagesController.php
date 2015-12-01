@@ -31,14 +31,15 @@ class ImagesController extends Controller
             if (array_filter((array)$attrs)) {
                 $goodsImage = $goodsImage->ofAttr(array_filter($attrs));
             }
-            $goodsImage = $goodsImage->paginate();
+            $goodsImage = $goodsImage->paginate(2);
         } else {
             $cate['cate_level_1'] = Category::orderBy('id', 'ASC')->with('icon')->pluck('id');
-            $goodsImage = Images::with('image')->where('cate_level_1', $cate['cate_level_1'])->paginate();
+            $goodsImage = Images::with('image')->where('cate_level_1', $cate['cate_level_1'])->paginate(2);
         }
 
         return view('admin.images.index',
             [
+                'data' => array_filter($request->all()),
                 'search' => $cate,
                 'goodsImage' => $goodsImage,
                 'attrs' => $attrs,

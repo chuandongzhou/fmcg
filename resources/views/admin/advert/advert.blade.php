@@ -5,7 +5,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
           action="{{ url('admin/advert-' . $type . '/' . $advert->id) }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-then="referer">
+          data-done-then="referer" autocomplete="off">
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">广告名称</label>
 

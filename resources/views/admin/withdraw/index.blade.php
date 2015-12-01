@@ -1,7 +1,7 @@
 @extends('admin.master')
 @include('includes.timepicker')
 @section('right-container')
-    <form class="form-horizontal" method="get" action="{{ url('admin/system-withdraw') }}">
+    <form class="form-horizontal" method="get" action="{{ url('admin/system-withdraw') }}" autocomplete="off">
 
         <div class="form-group">
             <label for="order_num" class="col-sm-2 control-label">提现单号：</label>

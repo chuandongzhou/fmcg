@@ -6,7 +6,7 @@
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $category->id ? 'put' : 'post' }}"
           action="{{ url('admin/category/' . $category->id) }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-then="referer">
+          data-done-then="referer" autocomplete="off">
 
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">上级分类</label>

@@ -14,8 +14,7 @@
                 {{--<a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"--}}
                 {{--class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>--}}
             </div>
-            <form action="{{ url('my-goods') }}"
-                  method="get">
+            <form action="{{ url('my-goods') }}" method="get" autocomplete="off">
                 <div class="item control-delivery">
                     <label>配送区域:</label>
                     <select class="address-province" name="province_id"

@@ -5,7 +5,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" action="{{ url('admin/images') }}" method="post"
-          data-help-class="col-sm-push-2 col-sm-10" data-done-url="{{ url('admin/images') }}">
+          data-help-class="col-sm-push-2 col-sm-10" data-done-url="{{ url('admin/images') }}" autocomplete="off">
         <div id="container">
             <div class="form-group">
                 <div class="row col-lg-12">

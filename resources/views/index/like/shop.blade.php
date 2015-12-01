@@ -6,7 +6,7 @@
     <div class="col-sm-12 collect">
         <div class="row">
             <div class="col-sm-12 control-panel">
-                <form action="{{ url('like/shops') }}" method="get">
+                <form action="{{ url('like/shops') }}" method="get" autocomplete="off">
                     <label>配送区域</label>
                     <select data-id="{{ $data['province_id'] or 0 }}" class="control address-province" name="province_id"></select>
                     <select data-id="{{ $data['city_id'] or 0 }}" class="control address-city" name="city_id"> </select>

@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\DataStatistics::class,
         \App\Console\Commands\SendPushToQueue::class,
+        \App\Console\Commands\OrderAutoReceive::class,
     ];
 
     /**
@@ -27,7 +28,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('inspire')->hourly();
-        $schedule->command('data-statistics')->daily();
+        $schedule->command('data:statistics')->daily();
         $schedule->command('queue:push')->everyFiveMinutes();
+        $schedule->command('order:auto:receive')->hourly();
     }
 }
