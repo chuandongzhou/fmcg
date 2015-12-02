@@ -32,7 +32,7 @@ class AuthController extends Controller
         if (admin_auth()->attempt(['name' => $account, 'password' => $password])) {
             return redirect()->intended('admin');
         }
-        return $this->error('账号或密码错误');
+        return redirect('admin/auth/login');
     }
 
     /**

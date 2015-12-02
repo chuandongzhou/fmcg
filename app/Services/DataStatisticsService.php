@@ -24,11 +24,13 @@ class DataStatisticsService
         $userType = cons('user.type');
         $monthAgo = $nowTime->copy()->subDays(30);
         // 活跃用户数
+
+
         $activeUser = User::select(DB::raw('count(*) as num,type'))->where('last_login_at', '>',
             $monthAgo)->groupBy('type')->lists('num', 'type');
         $activeUserArr = [
+            array_get($activeUser, array_get($userType, 'supplier'), 0),
             array_get($activeUser, array_get($userType, 'wholesaler'), 0),
-            array_get($activeUser, array_get($userType, 'retailer'), 0),
             array_get($activeUser, array_get($userType, 'retailer'), 0)
         ];
 

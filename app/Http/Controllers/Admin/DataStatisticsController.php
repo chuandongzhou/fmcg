@@ -40,8 +40,17 @@ class DataStatisticsController extends Controller
             $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay());
         } else {
             $statistics = DataStatistics::where('created_at', $dayEnd->toDateString())->first();
-        }
+            $monthAgo = $carbon->copy()->subDays(30);
 
+            // 活跃用户数
+            $activeUser = DataStatistics::where('created_at', '>',
+                $monthAgo)->select(DB::raw('sum(retailer_login_num) as active_retailer_num ,sum(wholesaler_login_num) as active_wholesaler_num ,sum(supplier_login_num) as active_supplier_num'))->first();
+            $statistics['active_user'] = [
+                array_get($activeUser, 'active_supplier_num', 0),
+                array_get($activeUser, 'active_wholesaler_num', 0),
+                array_get($activeUser, 'active_retailer_num', 0)
+            ];
+        }
 
         //历史最高注册数和登录数
 
