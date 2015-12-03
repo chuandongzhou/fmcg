@@ -7,9 +7,9 @@
  */
 return [
     //	商户编号p1_MerId,以及密钥merchantKey 需要从易宝支付平台获得
-    'p1_mer_id' => "10001126856",
+    'p1_mer_id' => "10012687856",
     //测试使用
-    'merchant_key' => "69cl522AV6q613Ii4W6u8K6XuW8vM1N6bFgyv769220IuYe9u37N4y7rI4Pl",
+    'merchant_key' => "rb6pb8W6DR6c04dE1cP9F96597AcQdw5A1L4XLwW7K64j254sXXU1B48V8Zz",
     //测试使用
 
     'log_name' => storage_path() . "/logs/YeePay_HTML.log",

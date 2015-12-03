@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\HomeColumn;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Created by PhpStorm.
@@ -101,48 +102,61 @@ class GoodsService
         $type = auth()->user()->type;
 
         $columnTypes = cons('home_column.type');
-        //商品
-        $goodsColumns = HomeColumn::where('type', $columnTypes['goods'])->get();
+        $homeColumnGoodsConf = cons('home_column.goods');
+        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
+        
+        $goodsColumns = [];
+        if (Cache::has($cacheKey)) {
+            $goodsColumns = Cache::get($cacheKey);
+        } else {
 
-        $goodsFields = [
-            'id',
-            'name',
-            'price_retailer',
-            'price_wholesaler',
-            'is_new',
-            'is_out',
-            'is_promotion',
-            'sales_volume'
-        ];
-        foreach ($goodsColumns as $goodsColumn) {
-            $goods = Goods::whereIn('id', $goodsColumn->id_list)
-                ->where('user_type', '>', $type)
-                ->ofStatus(cons('goods.status.on'))
-                ->with('images')
-                ->select($goodsFields)
-                ->get()->each(function ($goods) {
-                    $goods->setAppends(['image_url']);
-                });
-            $columnGoodsCount = $goods->count();
-            if ($columnGoodsCount < 10) {
-                $columnGoodsIds = $goods->pluck('id')->toArray();
-                $goodsBySort = Goods::whereNotIn('id', $columnGoodsIds)
+            //商品
+
+            $goodsColumns = HomeColumn::where('type', $columnTypes['goods'])->get();
+            $goodsFields = [
+                'id',
+                'name',
+                'price_retailer',
+                'price_wholesaler',
+                'is_new',
+                'is_out',
+                'is_promotion',
+                'sales_volume'
+            ];
+            $displayCount = $homeColumnGoodsConf['count']; //显示条数
+            foreach ($goodsColumns as $goodsColumn) {
+                $goods = Goods::whereIn('id', $goodsColumn->id_list)
                     ->where('user_type', '>', $type)
                     ->ofStatus(cons('goods.status.on'))
-                    ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
-                    ->with('images.image')
+                    ->with('images')
                     ->select($goodsFields)
-                    ->take(10 - $columnGoodsCount)
                     ->get()->each(function ($goods) {
                         $goods->setAppends(['image_url']);
                     });
-                $goods = $goods->merge($goodsBySort);
+                $columnGoodsCount = $goods->count();
+
+                if ($columnGoodsCount < $displayCount) {
+                    $columnGoodsIds = $goods->pluck('id')->toArray();
+                    $goodsBySort = Goods::whereNotIn('id', $columnGoodsIds)
+                        ->where('user_type', '>', $type)
+                        ->ofStatus(cons('goods.status.on'))
+                        ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
+                        ->with('images.image')
+                        ->select($goodsFields)
+                        ->take($displayCount - $columnGoodsCount)
+                        ->get()->each(function ($goods) {
+                            $goods->setAppends(['image_url']);
+                        });
+                    $goods = $goods->merge($goodsBySort);
+                }
+                $goodsColumn->goods = $goods;
             }
-            $goodsColumn->goods = $goods;
+            Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
         }
 
         return $goodsColumns;
     }
+
     /**
      * 增加商品销量
      *

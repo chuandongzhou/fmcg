@@ -14,56 +14,58 @@
                     </ul>
                 </div>
                 <div class="address-panel">
-            <ul>
-                <i class="icon icon-tel"></i>
-                <li class="address-panel-item">
-                    <span class="panel-name">联系方式</span>
-                    <span>{{ $shop->contact_info }}</span>
-                </li>
-            </ul>
-            <ul>
-                <i class="icon icon-seller"></i>
-                <li class="address-panel-item">
-                    <span class="panel-name">店家地址</span>
-                    <span>{{ $shop->address }}</span>
-                </li>
-            </ul>
-            <ul>
-                <i class="icon icon-address"></i>
-                <li class="address-panel-item">
-                    <span class="panel-name">店家介绍</span>
+                    <ul>
+                        <i class="icon icon-tel"></i>
+                        <li class="address-panel-item">
+                            <span class="panel-name">联系方式</span>
+                            <span>{{ $shop->contact_info }}</span>
+                        </li>
+                    </ul>
+                    <ul>
+                        <i class="icon icon-seller"></i>
+                        <li class="address-panel-item">
+                            <span class="panel-name">店家地址</span>
+                            <span>{{ $shop->address }}</span>
+                        </li>
+                    </ul>
+                    <ul>
+                        <i class="icon icon-address"></i>
+                        <li class="address-panel-item">
+                            <span class="panel-name">店家介绍</span>
 
-                    <div class="content">
-                        {{ $shop->introduction }}
-                    </div>
-                </li>
-            </ul>
-        </div>
+                            <div class="content">
+                                {{ $shop->introduction }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="col-sm-2 text-center">
                 <a href="{{ url('personal/shop') }}" class="btn btn-primary">编辑</a>
             </div>
         </div>
-        <div class="row nav-wrap">
-            <div class="col-sm-12 switching">
-                <a href="#" class="active">配送区域</a>
-            </div>
-            <div class="col-sm-12 address-wrap">
-                <div class="item clearfix">
-                    <h5 class="title-name">商品配送区域</h5>
-                    <ul class="address-list">
-                        @foreach($shop->deliveryArea as $area)
-                            <li>{{ $area->address_name }}</li>
-                        @endforeach
-                    </ul>
+        @if($shop->user->type != cons('user.type.retailer'))
+            <div class="row nav-wrap">
+                <div class="col-sm-12 switching">
+                    <a href="#" class="active">配送区域</a>
                 </div>
-                <div class="item">
-                    <h5 class="title-name">商品配送区域大概地图标识</h5>
+                <div class="col-sm-12 address-wrap">
+                    <div class="item clearfix">
+                        <h5 class="title-name">商品配送区域</h5>
+                        <ul class="address-list">
+                            @foreach($shop->deliveryArea as $area)
+                                <li>{{ $area->address_name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="item">
+                        <h5 class="title-name">商品配送区域大概地图标识</h5>
 
-                    <div id="map"></div>
+                        <div id="map"></div>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 @stop
 @section('js-lib')

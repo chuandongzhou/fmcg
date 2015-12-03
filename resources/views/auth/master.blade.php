@@ -1,5 +1,9 @@
 @extends('master')
 
+@section('js-lib')
+    <script src="{{ asset('js/index.js') }}"></script>
+@stop
+
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
     <style>

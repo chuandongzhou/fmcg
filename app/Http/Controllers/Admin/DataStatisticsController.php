@@ -32,9 +32,8 @@ class DataStatisticsController extends Controller
         /**
          * 总用户数
          */
-        $totleUser = User::select(DB::raw('count(*) as num , type'))->where('created_at', '<=',
+        $totalUser = User::select(DB::raw('count(*) as num , type'))->where('created_at', '<=',
             $dayEnd)->groupBy('type')->lists('num', 'type');
-
 
         if ($dayStart == $nowTime->startOfDay()) {
             $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay());
@@ -43,8 +42,11 @@ class DataStatisticsController extends Controller
             $monthAgo = $carbon->copy()->subDays(30);
 
             // 活跃用户数
-            $activeUser = DataStatistics::where('created_at', '>',
-                $monthAgo)->select(DB::raw('sum(retailer_login_num) as active_retailer_num ,sum(wholesaler_login_num) as active_wholesaler_num ,sum(supplier_login_num) as active_supplier_num'))->first();
+            $activeUser = DataStatistics::whereBetween('created_at', [
+                $monthAgo,
+                $dayEnd
+            ])->select(DB::raw('sum(`retailer_login_num`) as active_retailer_num ,sum(`wholesaler_login_num`) as active_wholesaler_num ,sum(`supplier_login_num`) as active_supplier_num'))->first();
+
             $statistics['active_user'] = [
                 array_get($activeUser, 'active_supplier_num', 0),
                 array_get($activeUser, 'active_wholesaler_num', 0),
@@ -196,7 +198,7 @@ class DataStatisticsController extends Controller
         }
         return view('admin.statistics.index',
             [
-                'totleUser' => $totleUser,
+                'totalUser' => $totalUser,
                 'statistics' => $statistics,
                 'maxArray' => $maxArray,
                 'time' => $dayEnd,

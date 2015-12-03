@@ -45,7 +45,7 @@ class DataStatisticsService
 
         //今日登录数
         $loginCount = User::select(DB::raw('count(*) as num , type'))->where('last_login_at', '>',
-            $dayAgo)->lists('num', 'type');
+            $dayAgo)->groupBy('type')->lists('num', 'type');
 
         $wholesalersLogin = array_get($loginCount, array_get($userType, 'wholesaler'), 0);
         $supplierLogin = array_get($loginCount, array_get($userType, 'supplier'), 0);

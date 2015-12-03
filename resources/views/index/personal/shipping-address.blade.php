@@ -85,7 +85,7 @@
                         cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
                         districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
-                $('input[name="area_name"]').val(provinceVal + ' ' + cityVal + ' ' + districtVal + ' ' + streetVal);
+                $('input[name="area_name"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
         })
     </script>

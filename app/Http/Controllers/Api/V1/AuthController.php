@@ -8,12 +8,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
+use App\Http\Requests\Api\v1\BackupSendSmsRequest;
 use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
+use App\Services\RedisService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Hash;
+use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
@@ -41,7 +44,7 @@ class AuthController extends Controller
         }
 
         if ($user->audit_status != cons('user.audit_status.pass')) {
-            return $this->error('账户未审核或审核失败');
+            return $this->error('账户未审核或审核不通过');
         }
         $user->load('shop');
         if (!is_null($user->shop)) {
@@ -82,6 +85,12 @@ class AuthController extends Controller
         return $this->error('注册用户时遇到问题');
     }
 
+    /**
+     * 找回密码
+     *
+     * @param \App\Http\Requests\Api\v1\BackupPasswordRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function postBackup(BackupPasswordRequest $request)
     {
         $data = $request->all();
@@ -92,10 +101,54 @@ class AuthController extends Controller
         if ($user->shop->license_num != $data['license_num']) {
             return $this->error('营业执照编号不正确');
         }
+        $validateCodeConf = cons('validate_code');
+        $redisKey = $validateCodeConf['backup']['pre_name'] . $data['user_name'];
+
+        $code = $request->input('code');
+        $redis = Redis::connection();
+        if (!$redis->exists($redisKey) || $redis->get($redisKey) != $code) {
+            return $this->error('验证码错误');
+        }
+        $redis->del($redisKey);
         if ($user->fill(['password' => $data['password']])->save()) {
             return $this->success('修改密码成功');
         }
         return $this->success('修改密码时出现错误');
+    }
+
+    /**
+     * 发送短信验证码
+     *
+     * @param \App\Http\Requests\Api\v1\BackupSendSmsRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postSendSms(BackupSendSmsRequest $request)
+    {
+        $data = $request->all();
+        $user = User::with('shop')->where('user_name', $data['user_name'])->first();
+        if ($user->status != cons('status.on')) {
+            return $this->error('账号已锁定');
+        }
+
+        if ($user->audit_status != cons('user.audit_status.pass')) {
+            return $this->error('账户未审核');
+        }
+        if (!$user || $user->backup_mobile != $data['backup_mobile']) {
+            return $this->error('密保手机错误');
+        }
+        if ($user->shop->license_num != $data['license_num']) {
+            return $this->error('营业执照错误');
+        }
+        $validateCodeConf = cons('validate_code');
+        $redisKey = $validateCodeConf['backup']['pre_name'] . $data['user_name'];
+        $redis = Redis::connection();
+        if ($redis->exists($redisKey)) {
+           return  $this->error('短信发送过于频繁');
+        }
+        $code = str_random($validateCodeConf['length']);
+        RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
+        $result = app('pushbox.sms')->send('code', $data['backup_mobile'], $code);
+        return empty($result) ? $this->error('发送失败,请重试') : $this->success('发送成功');
     }
 
     /**

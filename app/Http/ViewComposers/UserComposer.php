@@ -21,7 +21,7 @@ class UserComposer
      */
     public function compose(View $view)
     {
-        $view->with('user',auth()->user());
+        $view->with('user', auth()->user());
     }
 
 }

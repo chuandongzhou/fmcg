@@ -160,6 +160,8 @@ if (!function_exists('path_active')) {
     }
 }
 
+
+
 if (!function_exists('request_info')) {
     /**
      * Write some information with request to the log.
@@ -223,7 +225,7 @@ if (!function_exists('admin_auth')) {
     /**
      * Get the available admin auth instance.
      *
-     * @return \HengCaoTang\Admin\Guard
+     * @return \Weiheng\Admin\Guard
      */
     function admin_auth()
     {

@@ -7,21 +7,18 @@
  */
 namespace App\Http\Requests\Api\v1;
 
-class BackupPasswordRequest extends Request
+class BackupSendSmsRequest extends Request
 {
 
     public function authorize()
     {
         return true;
     }
-
     public function rules()
     {
         return [
             'user_name' => 'required|alpha_num|between:4,16|exists:user',
-            'password' => 'required|min:6|confirmed',
             'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/',
-            'code' => 'required|size:4',
             'license_num' => 'required|between:15,18'
         ];
     }

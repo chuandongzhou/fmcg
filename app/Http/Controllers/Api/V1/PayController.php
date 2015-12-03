@@ -23,7 +23,7 @@ class PayController extends Controller
 {
     public function __construct()
     {
-        Pingpp::setApiKey('sk_test_ynfvfL4084KSz9eHOSaXf9OC');
+        Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
     }
 
     /**
@@ -51,7 +51,6 @@ class PayController extends Controller
 
         //配置extra
 
-        //Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
 
         $extra = array(
             'product_category' => '1',

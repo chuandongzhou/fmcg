@@ -76,6 +76,7 @@ class SystemWithdrawInfoController extends Controller
     {
         $data = $request->all();
         $item = Withdraw::where('status', cons('withdraw.pass'))->find(intval($data['withdraw_id']));
+
         if ($item) {
             $item->fill([
                 'status' => cons('withdraw.payment'),
@@ -88,6 +89,11 @@ class SystemWithdrawInfoController extends Controller
 
             RedisService::setRedis($redisKey, $redisVal);
 
+            app('pushbox.sms')->send('withdraw', $item->user->backup_mobile,
+                [
+                    'withdraw_id' => $data['withdraw_id'],
+                    'trade_no' => $data['trade_no'],
+                ]);
             return $this->success('操作成功');
         }
 

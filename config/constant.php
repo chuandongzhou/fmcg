@@ -26,7 +26,7 @@ return [
             'refund_failed' => 5,
         ],
         'status' => [ //订单状态
-            'non_confirm'=> 0, //未确认
+            'non_confirm' => 0, //未确认
             'non_send' => 1, //未发货
             'send' => 2, //已发货
             'finished' => 3, //完成
@@ -51,6 +51,27 @@ return [
             'not_pass' => 2,       //未通过
         ]
     ],
+    //首页栏目
+    'home_column' => [
+        'goods' => [
+            'count' => 10, //显示商品条数
+            'cache' => [
+                'pre_name' => 'home_column:goods:',
+                'expire' => 10
+            ]
+        ],
+        'shop' => [
+            'count' => 10,  //显示店铺条数
+            'cache' => [
+                'pre_name' => 'home_column:shops:',
+                'expire' => 10
+            ]
+        ],
+        'type' => [
+            'goods' => 1,
+            'shop' => 2
+        ]
+    ],
     //广告表类型
     'advert' => [
         'type' => [
@@ -58,6 +79,12 @@ return [
             'user' => 2, // 用户(内则)广告
             'app' => 3, // app广告(启动页)
         ],
+        'cache' => [
+            'index' => [
+                'name' => 'advert:index',
+                'expire' => 10,
+            ]
+        ]
     ],
     // 店铺图片分类
     'shop' => [
@@ -177,12 +204,6 @@ return [
         'msg' => 0, //消息(透传)
         'notice' => 1 //通知
     ],
-    'home_column' => [
-        'type' => [
-            'goods' => 1,
-            'shop' => 2
-        ]
-    ],
     //排序
     'sort' => [
         'goods' => [
@@ -209,4 +230,12 @@ return [
         'pass' => 2,
         'payment' => 3,
     ],
+    // 验证码数
+    'validate_code' => [
+        'length' => 4,
+        'backup' => [
+            'pre_name' => 'backup:code:',
+            'expire' => 120,
+        ]
+    ]
 ];

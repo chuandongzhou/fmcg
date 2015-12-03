@@ -1,22 +1,15 @@
-@include('includes.timepicker')
 @extends('index.menu-master')
-
+@include('includes.timepicker')
 @section('subtitle', '订单管理')
 
 @section('right')
     <div class="col-sm-12 wholesalers-management">
         <div class="row">
-            <div class="col-sm-12 notice-bar">
-                <a class="btn btn-primary"
-                   href="{{ url('order-sell') }}">所有订单</a>
-                <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/non-send') }}">待发货{{ $data['nonSend'] }}</a>
-                <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/pending-collection') }}">待收款{{ $data['pendingCollection'] }}</a>
-            </div>
+            @include('index.order.order-sell-menu')
         </div>
-        <form class="form" method="get" action="{{ url('order-sell/index') }}" autocomplete="off">
-            <div class="col-sm-8 pay-detail search-options">
+        <form class="form" method="get" action="{{ url('order-sell') }}" autocomplete="off">
+            @if (\Request::is('order-sell'))
+                <div class="col-sm-8 pay-detail search-options">
             <span class="item control-item">支付方式 :
                 <select name="pay_type" class="ajax-select control">
                     <option value="">全部方式</option>
@@ -30,7 +23,7 @@
                   <select name="status" class="ajax-select control">
                       <option value="">全部状态</option>
                       @foreach($order_status as $key => $value)
-                          <option value="{{ $key }} " {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
+                          <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
                       @endforeach
                   </select>
             </span>
@@ -41,19 +34,17 @@
                 <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
                        data-format="YYYY-MM-DD" value="{{ $search['end_at'] or '' }}"/>
             </span>
-            </div>
-            <div class="col-sm-4 right-search search search-options">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
-                           aria-describedby="course-search" value="{{ $search['search_content'] or '' }}">
+                </div>
+                <div class="col-sm-4 right-search search search-options">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
+                               aria-describedby="course-search" value="{{ $search['search_content'] or '' }}">
                 <span class="input-group-btn btn-primary">
                     <button class="btn btn-primary ajax-submit">搜索</button>
                 </span>
+                    </div>
                 </div>
-            </div>
-
-            <input type="hidden" name="order_id" value=""/>
-
+            @endif
             <div class="row order-table-list">
                 <div class="col-sm-12 table-responsive table-col">
                     <div class="content">
@@ -110,9 +101,13 @@
                                                         </a>
                                                     @endif
                                                     @if($order['can_send'])
-                                                        <p><a class="btn btn-warning send-goods"
-                                                              data-target="#sendModal" data-toggle="modal"
-                                                              data-data="{{ $order['id'] }}">发货</a></p>
+                                                        <p>
+                                                            <a class="btn btn-warning send-goods"
+                                                               data-target="#sendModal" data-toggle="modal"
+                                                               data-data="{{ $order['id'] }}">
+                                                                发货
+                                                            </a>
+                                                        </p>
                                                     @elseif($order['can_confirm_collections'])
                                                         <p><a class="btn btn-info ajax" data-method='put'
                                                               data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
@@ -122,9 +117,9 @@
                                                         <p><a target="_blank" class="btn btn-success"
                                                               href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                                                         </p>
-                                        @endif
-                                        @endif
-
+                                                    @endif
+                                                @endif
+                                            </td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -134,8 +129,12 @@
                     </div>
                 </div>
             </div>
-            {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
-            @if($orders->count())
+            @if(\Request::is('order-sell'))
+                {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
+            @else
+                {!! $orders->render() !!}
+            @endif
+            @if(\Request::is('order-sell') && $orders->count() )
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" id="check-all"/>
@@ -152,6 +151,7 @@
                     </div>
                 </div>
             @endif
+
             <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
                  aria-hidden="true" style="padding-right: 17px;">
                 <div class="modal-dialog modal-lg">
@@ -159,7 +159,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">×</span></button>
-                            @if($delivery_man->count())
+                            @if(isset($delivery_man) && $delivery_man->count())
                                 <p class="modal-title" id="cropperModalLabel">选择配送人员:
                             <span class="extra-text">
                                   <select name="delivery_man_id">
@@ -177,7 +177,8 @@
                             <div class="text-right">
                                 <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消
                                 </button>
-                                @if($delivery_man->count())
+                                @if(isset($delivery_man) && $delivery_man->count())
+                                    <input type="hidden" name="order_id" value=""/>
                                     <button type="button" class="btn btn-primary btn-sm btn-add ajax btn-send"
                                             data-text="确定" data-url="{{ url('api/v1/order/batch-send') }}"
                                             data-method="put">确定

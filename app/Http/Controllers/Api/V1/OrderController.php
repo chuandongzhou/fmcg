@@ -484,7 +484,6 @@ class OrderController extends Controller
         //TODO: 需要验证收货地址是否合法
         $shippingAddressId = $data['shipping_address_id'];
 
-
         $pid = 0;
         if ($shops->count() > 1) {
             $maxPid = Order::max('pid');
@@ -501,7 +500,6 @@ class OrderController extends Controller
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
-                'status' => cons('order.status.non_send'),
                 'cod_pay_type' => $codPayType,
                 'shipping_address_id' => $shippingAddressId,
                 'remark' => $remark
@@ -531,7 +529,6 @@ class OrderController extends Controller
                     foreach ($successOrders as $successOrder) {
                         $successOrder->delete();
                     }
-
                     return $this->error('提交订单时遇到问题');
                 }
 

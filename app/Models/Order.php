@@ -393,7 +393,7 @@ class Order extends Model
     }
 
     /**
-     * 未付款,只针对在线支付
+     * 待确认
      *
      * @param $query
      * @return mixed
@@ -402,6 +402,22 @@ class Order extends Model
     {
         return $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
             cons('order.pay_status.non_payment'));
+    }
+
+    /**
+     * 待确认
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWaitConfirm($query)
+    {
+        return $query->where(function ($query) {
+            $query->where([
+                'pay_type' => cons('pay_type.online'),
+                'pay_status' => cons('order.pay_status.payment_success')
+            ])->orWhere('pay_type', cons('pay_type.cod'));
+        })->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
 
     /**
@@ -424,13 +440,11 @@ class Order extends Model
     public function scopeNonSend($query)
     {
         return $query->where(function ($query) {
-            $query->where(function ($query) {//在线支付
-                $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                    cons('order.pay_status.payment_success'))->where('status', cons('order.status.non_send'));
-            })->orWhere(function ($query) {//货到付款
-                $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.non_send'));
-            });
-        })->nonCancel();
+            $query->where([
+                'pay_type' => cons('pay_type.online'),
+                'pay_status' => cons('order.pay_status.payment_success')
+            ])->orWhere('pay_type', cons('pay_type.cod'));
+        })->where('status', cons('order.status.non_send'))->nonCancel();
     }
 
 
@@ -461,14 +475,25 @@ class Order extends Model
                 $query->where('pay_type', $search['pay_type']);
             }
             if ($search['status']) {
-                if ($search['status'] == key(cons('order.pay_status'))) {//查询未付款
-                    $query->where('pay_status', cons('order.pay_status.non_payment'));
-                } elseif ($search['status'] == key(cons('order.status'))) {//未发货
+                if ($search['status'] == key(cons('order.pay_status'))) {
+                    //查询未付款
+                    $query->where('pay_status', cons('order.pay_status.non_payment'))
+                        ->where('pay_type', cons('pay_type.online'));
+                } elseif ($search['status'] == key(cons('order.status'))) {
+                    //未确认
+                    $query->where('status', cons('order.status.non_confirm'))
+                        ->where(function ($query) {
+                            $query->where([
+                                'pay_type' => cons('pay_type.online'),
+                                'pay_status' => cons('order.pay_status.payment_success')
+                            ])->orWhere('pay_type', cons('pay_type.cod'));
+                        });
+                } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {
-                        $query->where(function ($query) {
-                            $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-                                cons('order.pay_status.payment_success'));
-                        })->orwhere('pay_type', cons('pay_type.cod'));
+                        $query->where([
+                            'pay_type' => cons('pay_type.online'),
+                            'pay_status' => cons('order.pay_status.payment_success')
+                        ])->orWhere(['pay_type' => cons('pay_type.cod')]);
                     })->where('status', cons('order.status.non_send'));
                 } else {
                     $query->where('status', cons('order.status')[$search['status']]);

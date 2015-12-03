@@ -83,7 +83,6 @@
         </div>
     </div>
     <div class="container dealer-index index contents">
-
         @foreach($goodsColumns as $column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">

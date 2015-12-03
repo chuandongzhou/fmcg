@@ -28,10 +28,10 @@
                 </tr>
                 <tr>
                     <td>总用户数</td>
-                    <td>{{ array_get($totleUser, cons('user.type.supplier'), 0) }}</td>
-                    <td>{{ array_get($totleUser, cons('user.type.wholesaler'), 0) }}</td>
-                    <td>{{ array_get($totleUser, cons('user.type.retailer'), 0) }}</td>
-                    <td>{{ array_sum($totleUser->toArray()) }}</td>
+                    <td>{{ array_get($totalUser, cons('user.type.supplier'), 0) }}</td>
+                    <td>{{ array_get($totalUser, cons('user.type.wholesaler'), 0) }}</td>
+                    <td>{{ array_get($totalUser, cons('user.type.retailer'), 0) }}</td>
+                    <td>{{ array_sum($totalUser->toArray()) }}</td>
                 </tr>
                 <tr>
                     <td>活跃用户数</td>

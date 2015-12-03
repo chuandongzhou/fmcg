@@ -377,7 +377,7 @@ var commonAjaxSetup = function () {
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
                     isButton && self.button('done');
-                    self.hasClass('login-btn') || alert(self.data('doneText') || '操作成功');
+                    self.hasClass('login-btn') || self.hasClass('send-sms') || alert(self.data('doneText') || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
@@ -388,7 +388,6 @@ var commonAjaxSetup = function () {
 
                     var json = jqXHR['responseJSON'];
                     if (json) {
-                        console.log(json);
                         if (json['id'] == 'invalid_params') {
                             form.formValidate(json['errors']);
                         } else {
@@ -587,7 +586,7 @@ var addAddFunc = function () {
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = street.is(':visible') ? street.find("option:selected").text() : '',
             addressText = address.val(),
-            areaName = provinceText + ' ' + cityText + ' ' + districtText + ' ' + streetText;
+            areaName = provinceText + cityText + districtText + streetText;
         $('.btn-close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border show-map">' +

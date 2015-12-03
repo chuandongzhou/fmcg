@@ -108,6 +108,7 @@ return [
         'name' => '名称',
         'phone' => '电话号码',
         'backup_mobile' => '密保手机',
+        'code' => '验证码',
         'price_retailer' => '终端商价格',
         'min_num_retailer' => '终端商最低购买数',
         'price_wholesaler' => '批发商价格',

@@ -34,9 +34,6 @@ class OrderSellController extends OrderController
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
 
-        $data['nonSend'] = Order::bySellerId($this->user->id)->nonSend()->count();//待发货
-        $data['pendingCollection'] = Order::bySellerId($this->user->id)->getPayment()->count();//待收款（针对货到付款）
-
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
         $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
@@ -51,17 +48,60 @@ class OrderSellController extends OrderController
                 'desc')->ofUserShopName($search['search_content'])->paginate();
         }
 
-        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop->id)->lists('name', 'id');
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
+        $orders->each(function ($order) {
+            $order->user->shop->setAppends([]);
+        });
         return view('index.order.order-sell', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,
-            'data' => $data,
+            'data' => $this->_getOrderNum(),
             'orders' => $orders,
             'delivery_man' => $deliveryMan,
             'search' => $search
         ]);
     }
+
+    //TODO: 以下查询待优化
+    /**
+     * 待发货订单
+     */
+    public function getWaitSend()
+    {
+        $orders = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image')->NonSend();
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        return view('index.order.order-sell', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum($orders->count()),
+            'delivery_man' => $deliveryMan,
+        ]);
+    }
+
+    /**
+     * 待收款订单
+     */
+    public function getWaitReceive()
+    {
+         $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->getPayment();
+        return view('index.order.order-sell', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum(-1, $orders->count())
+        ]);
+    }
+
+    /**
+     * 待确认订单
+     */
+    public function getWaitConfirm()
+    {
+        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->WaitConfirm();
+        return view('index.order.order-sell', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum(-1, -1, $orders->count())
+        ]);
+    }
+
 
     /**
      * 查询订单详情
@@ -182,5 +222,26 @@ class OrderSellController extends OrderController
         }
         $name = date('Ymd') . strtotime('now') . '.docx';
         $phpWord->save($name, 'Word2007', true);
+    }
+
+    /**
+     * 获取不同状态订单数
+     * @param int $nonSend
+     * @param int $waitReceive
+     * @param int $waitConfirm
+     * @return array
+     */
+    private function _getOrderNum($nonSend = -1, $waitReceive = -1, $waitConfirm = -1)
+    {
+        $data = [
+            'nonSend' => $nonSend >= 0 ? $nonSend : Order::bySellerId($this->user->id)->nonSend()->count(),
+            //待发货
+            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::bySellerId($this->user->id)->getPayment()->count(),
+            //待收款（针对货到付款）
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($this->user->id)->WaitConfirm()->count(),
+            //待确认
+        ];
+
+        return $data;
     }
 }

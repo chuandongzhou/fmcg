@@ -1,6 +1,6 @@
 <?php
 
-namespace Recharge\Pushbox;
+namespace WeiHeng\Recharge\Pushbox;
 
 use Illuminate\Contracts\Queue\Queue;
 use Tinpont\Pushbox\Adapter;

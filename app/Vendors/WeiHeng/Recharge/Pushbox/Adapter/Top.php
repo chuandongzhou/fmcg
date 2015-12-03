@@ -1,6 +1,6 @@
 <?php
 
-namespace Recharge\Pushbox\Adapter;
+namespace WeiHeng\Recharge\Pushbox\Adapter;
 
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
@@ -115,6 +115,56 @@ class Top extends Adapter
 
         return $this->push(new Message('recharged', ['item' => $text]));
     }
+
+    /**
+     * 发送验证码
+     *
+     * @param $text
+     * @return \Tinpont\Pushbox\Adapter
+     */
+    public function pushCode($text)
+    {
+        is_array($text) && $text = head($text);
+
+        return $this->push(new Message('code', ['code' => $text]));
+    }
+
+    /**
+     * 审核用户
+     *
+     * @param $text
+     * @return \Tinpont\Pushbox\Adapter
+     */
+    public function pushAudit($text)
+    {
+        $template = 'audit_passed';
+
+        $options = [
+            'account' => $text['account'],
+        ];
+        if (!$text['result']) {
+            $template = 'audit_not_passed';
+            $options['error'] = isset($text['error']) ? $text['error'] : '资料不完整';
+        }
+
+        return $this->push(new Message($template, $options));
+    }
+
+    /**
+     * 提现通知
+     *
+     * @param $text
+     * @return \Tinpont\Pushbox\Adapter
+     */
+    public function pushWithdraw($text)
+    {
+        $options = [
+            'number' => $text['withdraw_id'],
+            'trading_number' => $text['trade_no']
+        ];
+        return $this->push(new Message('withdraw', $options));
+    }
+
 
     /**
      * 发送短信

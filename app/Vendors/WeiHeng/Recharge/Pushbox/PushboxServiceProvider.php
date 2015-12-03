@@ -1,10 +1,10 @@
 <?php
 
-namespace Recharge\Pushbox;
+namespace WeiHeng\Recharge\Pushbox;
 
 use Illuminate\Support\ServiceProvider;
-use Recharge\Pushbox\Adapter\Top;
-use Recharge\Pushbox\Sms;
+use WeiHeng\Recharge\Pushbox\Adapter\Top;
+use WeiHeng\Recharge\Pushbox\Sms;
 
 class PushboxServiceProvider extends ServiceProvider
 {

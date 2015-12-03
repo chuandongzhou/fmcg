@@ -6,20 +6,11 @@
 @section('right')
     <div class="col-sm-12 wholesalers-management">
         <div class="row">
-            <div class="col-sm-12 notice-bar">
-                <a class="btn btn-primary"
-                   href="{{ url('order-buy') }}">所有订单</a>
-
-                <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/non-payment') }}"
-                   data-limit="nonPayment">待付款{{ $data['nonPayment'] }}</a>
-                <a class="btn ajax-get"
-                   data-url="{{ url('api/v1/order/non-arrived') }}"
-                   data-limit="nonArrived">待收货{{ $data['nonArrived'] }}</a>
-            </div>
+            @include('index.order.order-buy-menu')
         </div>
-        <form class="form" method="get" action="{{ url('order-buy/index') }}" autocomplete="off">
-            <div class="col-sm-8 pay-detail search-options">
+        <form class="form" method="get" action="{{ url('order-buy') }}" autocomplete="off">
+            @if(\Request::is('order-buy'))
+                <div class="col-sm-8 pay-detail search-options">
                 <span class="item control-item">支付方式 :
                     <select name="pay_type" class="ajax-select control">
                         <option value="">全部方式</option>
@@ -47,19 +38,19 @@
                            value="{{ $search['end_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>
                 </span>
-            </div>
-            <div class="col-sm-4 right-search search search-options">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
-                           value="{{ $search['search_content'] or '' }}"
-                           aria-describedby="course-search">
+                </div>
+                <div class="col-sm-4 right-search search search-options">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
+                               value="{{ $search['search_content'] or '' }}"
+                               aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
                  <button class="btn btn-primary ajax-submit">搜索
                  </button>
                 </span>
+                    </div>
                 </div>
-            </div>
-
+            @endif
             <div class="row order-table-list">
                 <div class="col-sm-12 table-responsive table-col">
                     <div class="content">
@@ -136,8 +127,13 @@
                     </div>
                 </div>
             </div>
-            {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
-            @if($orders->count())
+            @if(\Request::is('order-buy'))
+                {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
+            @else
+                {!! $orders->render() !!}
+            @endif
+
+            @if(\Request::is('order-buy') && $orders->count())
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" id="check-all"/>
@@ -145,7 +141,8 @@
                                 data-method="put">
                             批量取消
                         </button>
-                        <button class="btn btn-info ajax btn-receive" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                        <button class="btn btn-info ajax btn-receive"
+                                data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                                 data-method="put">
                             确认收货
                         </button>

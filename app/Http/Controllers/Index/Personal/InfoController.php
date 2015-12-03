@@ -15,7 +15,7 @@ class InfoController extends Controller
     public function index()
     {
 
-        $shop = auth()->user()->shop->load('shopAddress', 'deliveryArea')->setAppends(['logo_url']);
+        $shop = auth()->user()->shop->load('shopAddress', 'deliveryArea', 'user')->setAppends(['logo_url']);
         $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });

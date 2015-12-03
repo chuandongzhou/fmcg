@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Shop;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 
@@ -142,9 +143,11 @@ class UserController extends Controller
     {
         $auditStatus = cons('user.audit_status');
         $status = (string)$request->input('status');
-        $auditStatus = in_array($status, $auditStatus) ? $status : head($auditStatus);
+        $error = $request->input('reason');
+        $result = in_array($status, $auditStatus) ? $status : head($auditStatus);
 
-        if ($user->fill(['audit_status' => $auditStatus])->save()) {
+        if ($user->fill(['audit_status' => $result])->save()) {
+            $this->_sendAuditSms($user, $result == $auditStatus['pass'], $error);
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
@@ -156,15 +159,25 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function multiAudit(Request $request){
+    public function multiAudit(Request $request)
+    {
         $auditStatus = cons('user.audit_status');
         $status = (string)$request->input('status');
-        $auditStatus = in_array($status, $auditStatus) ? $status : head($auditStatus);
+        $result = in_array($status, $auditStatus) ? $status : head($auditStatus);
         $userIds = $request->input('uid');
         if (is_null($userIds)) {
             return $this->error('请选择要审核的用户');
         }
-        if (User::whereIn('id' , $userIds)->update(['audit_status' => $auditStatus])) {
+
+        if (User::whereIn('id', $userIds)->update(['audit_status' => $result])) {
+            $error = $request->input('reason');
+
+            $users = User::whereIn('id', $userIds)->get(['user_name', 'backup_mobile']);
+            foreach ($users as $user) {
+                $this->_sendAuditSms($user, $result == $auditStatus['pass'], $error);
+            }
+
+
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
@@ -201,5 +214,22 @@ class UserController extends Controller
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
+    }
+
+    /**
+     * 发送审核短信
+     *
+     * @param $user
+     * @param $result
+     * @param $reason
+     */
+    private function _sendAuditSms($user, $result, $reason)
+    {
+        app('pushbox.sms')->send('audit', $user->backup_mobile,
+            [
+                'account' => $user->user_name,
+                'result' => $result,
+                'error' => $reason
+            ]);
     }
 }

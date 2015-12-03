@@ -34,8 +34,6 @@ class OrderBuyController extends OrderController
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
         $orderStatus = array_merge($payStatus, $orderStatus);
-        $data['nonPayment'] = Order::ofBuy($this->user->id)->nonPayment()->count();//待付款
-        $data['nonArrived'] = Order::ofBuy($this->user->id)->nonArrived()->count();//待收货
 
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
@@ -43,7 +41,7 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::ofBuy($this->user->id)->with('shop.user', 'goods')->orderBy('id', 'desc');
+        $query = Order::ofBuy($this->user->id)->orderBy('id', 'desc');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -52,9 +50,46 @@ class OrderBuyController extends OrderController
         return view('index.order.order-buy', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,
-            'data' => $data,
+            'data' => $this->_getOrderNum(),
             'orders' => $orders,
             'search' => $search
+        ]);
+    }
+
+    //TODO: 以下查询待优化
+    /**
+     * 待发货订单
+     */
+    public function getWaitPay()
+    {
+        $orders = Order::ofBuy($this->user->id)->nonPayment();
+        return view('index.order.order-buy', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum($orders->count()),
+        ]);
+    }
+
+    /**
+     * 待收货订单
+     */
+    public function getWaitReceive()
+    {
+        $orders = Order::ofBuy($this->user->id)->nonArrived();
+        return view('index.order.order-buy', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum(-1, $orders->count())
+        ]);
+    }
+
+    /**
+     * 待确认订单
+     */
+    public function getWaitConfirm()
+    {
+        $orders = Order::ofBuy($this->user->id)->WaitConfirm();
+        return view('index.order.order-buy', [
+            'orders' => $orders->paginate(),
+            'data' => $this->_getOrderNum(-1, -1, $orders->count())
         ]);
     }
 
@@ -77,5 +112,25 @@ class OrderBuyController extends OrderController
         return view($view, [
             'order' => $detail
         ]);
+    }
+    /**
+     * 获取不同状态订单数
+     * @param int $nonSend
+     * @param int $waitReceive
+     * @param int $waitConfirm
+     * @return array
+     */
+    private function _getOrderNum($nonSend = -1, $waitReceive = -1, $waitConfirm = -1)
+    {
+        $data = [
+            'waitPay' => $nonSend >= 0 ? $nonSend : Order::ofBuy($this->user->id)->nonPayment()->count(),
+            //待发货
+            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::ofBuy($this->user->id)->nonArrived()->count(),
+            //待收款（针对货到付款）
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::ofBuy($this->user->id)->waitConfirm()->count(),
+            //待确认
+        ];
+
+        return $data;
     }
 }
