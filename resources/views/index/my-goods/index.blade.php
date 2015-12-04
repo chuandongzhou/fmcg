@@ -41,7 +41,7 @@
                     <label>名称:</label>
                     <input class="control" name="name" value="{{ isset($get['name']) ? $get['name'] : '' }}"
                            type="text">
-                    <button class="btn btn-primary control search" type="submit">搜索</button>
+                    <button class="btn btn-primary control search search-by-get" type="submit">搜索</button>
                     {{--<a href="{{ url('my-goods/create') }}" class="btn btn-primary control add-goods">新增商品</a>--}}
                 </div>
             </form>
@@ -196,5 +196,6 @@
     @parent
     <script type="text/javascript">
         displayList();
+        formSubmitByGet();
     </script>
 @stop

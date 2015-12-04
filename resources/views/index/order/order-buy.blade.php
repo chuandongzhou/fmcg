@@ -45,7 +45,7 @@
                                value="{{ $search['search_content'] or '' }}"
                                aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">
-                 <button class="btn btn-primary ajax-submit">搜索
+                 <button class="btn btn-primary ajax-submit search-by-get">搜索
                  </button>
                 </span>
                     </div>
@@ -156,8 +156,8 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            getOrderList();
             getOrderButtonEvent();
+            formSubmitByGet();
         })
     </script>
 @stop

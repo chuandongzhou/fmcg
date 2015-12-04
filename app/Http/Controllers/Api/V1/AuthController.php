@@ -46,7 +46,7 @@ class AuthController extends Controller
         if ($user->audit_status != cons('user.audit_status.pass')) {
             return $this->error('账户未审核或审核不通过');
         }
-        $user->load('shop');
+        $user->setVisible(['id', 'user_name', 'type', 'audit_status', 'backup_mobile', 'shop']);
         if (!is_null($user->shop)) {
             $user->shop->address_name = $user->shop->address;
         }
@@ -143,7 +143,7 @@ class AuthController extends Controller
         $redisKey = $validateCodeConf['backup']['pre_name'] . $data['user_name'];
         $redis = Redis::connection();
         if ($redis->exists($redisKey)) {
-           return  $this->error('短信发送过于频繁');
+            return $this->error('短信发送过于频繁');
         }
         $code = str_random($validateCodeConf['length']);
         RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);

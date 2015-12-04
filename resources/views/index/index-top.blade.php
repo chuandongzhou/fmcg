@@ -41,7 +41,7 @@
                      aria-expanded="false" style="height: 1px;">
                     <ul class="nav navbar-nav navbar-right operating-wrap">
                         @if($user->type <= cons('user.type.wholesaler'))
-                            <li><a href="{{ url('/') }}"><span class="fa fa-home"></span> 订百达首页</a></li>
+                            <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a></li>
                         @endif
                         @if($user->type == cons('user.type.wholesaler'))
                             <li>

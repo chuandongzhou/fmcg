@@ -69,13 +69,5 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
-
-        /**
-         * 验证是否可退款
-         */
-        $gate->define('validate-refund-order', function ($user, $order) {
-            return $order->pay_type == cons('pay_type.online') && $order->pay_status == cons('trade.pay_status.success') && $order->status == cons('order.status.non_send') && $order->user_id == $user->id;
-        });
-
     }
 }

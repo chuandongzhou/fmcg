@@ -122,6 +122,28 @@
 
                         <li>
                             <a href="javascript:void(0)" class="list-item">
+                                <i class="fa fa-users"></i> 客户列表
+                            </a>
+                            <ul class="menu-wrap" {!!  request()->is('personal/customer/*') ? 'style="display:block"' : '' !!}>
+                                <li>
+                                    <a class="{{ path_active('personal/customer/retailer') }}"
+                                       href="{{ url('personal/customer/retailer') }}">
+                                        终端客户
+                                    </a>
+                                </li>
+                                @if ($user->type == cons('user.type.supplier'))
+                                    <li>
+                                        <a class="{{ path_active('personal/customer/wholesaler') }}"
+                                           href="{{ url('personal/customer/wholesaler') }}">
+                                            批发客户
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-money"></i> 财务管理
                             </a>
                             <ul class="menu-wrap" {!!  request()->is('personal/balance','personal/bank') ? 'style="display:block"' : '' !!}>
@@ -139,7 +161,6 @@
                             </ul>
                         </li>
 
-
                     </ul>
                 </div>
             @else
@@ -152,7 +173,7 @@
                             <a href="javascript:void(0)" class="list-item ">
                                 <i class="fa fa-star-o"></i> 我的收藏
                             </a>
-                            <ul class="menu-wrap"  style="display:block">
+                            <ul class="menu-wrap" style="display:block">
                                 <li>
                                     <a class="{{ path_active('like/shops') }}" href="{{ url('like/shops') }}">
                                         店铺收藏
@@ -169,7 +190,7 @@
                             <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-file-text-o"></i> 订单管理
                             </a>
-                            <ul class="menu-wrap"  style="display:block">
+                            <ul class="menu-wrap" style="display:block">
                                 <li>
                                     <a href="{{ url('order-buy') }}"
                                        class="{{ path_active(['order-buy' , 'order-buy/*']) }}">

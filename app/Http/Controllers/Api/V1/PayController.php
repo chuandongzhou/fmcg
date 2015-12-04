@@ -79,11 +79,16 @@ class PayController extends Controller
         return $this->success($charge);
     }
 
+    /**
+     * 退款
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function refund($orderId)
     {
         $order = Order::where('user_id', auth()->id())->find($orderId);
 
-        if (Gate::denies('validate-refund-order', $order)) {
+        if ($order->can_refund) {
             return $this->error('订单不存在或不能退款');
         }
         $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
@@ -177,14 +182,12 @@ class PayController extends Controller
             'p4_Cur' => "CNY",
             'p5_Desc' => 'Refund Description',
         );
-        //RefundOrd715201233826542I18.00CNYRefund Description
         $hmac = $this->_getYeepayHamc($params);
         $params['hmac'] = $hmac;
 
         $yeepayClient = new YeepayClient($yeepayConf['ref_url_online']);
         $pageContents = $yeepayClient->quickPost($yeepayConf['ref_url_online'], $params);
 
-        //$pageContents = "r0_Cmd=RefundOrd\nr1_Code=1\nr2_TrxId=715201233826542I\nr4_Order=yeepay_86263891\nr3_Amt=0.01\nrf_fee=0.0\nr4_Cur=RMB\nhmac=c9b63e32132df69d56b2bdd59b2e1948\n";
         $result = explode("\n", $pageContents);
 
         return $pageContents && $this->_validateYeepayRefundResult($result);
@@ -218,6 +221,12 @@ class PayController extends Controller
         return $hmac;
     }
 
+    /**
+     * 验证易宝
+     *
+     * @param $result
+     * @return bool
+     */
     private function _validateYeepayRefundResult($result)
     {
         $params = [];
@@ -255,6 +264,10 @@ class PayController extends Controller
 
     /**
      * 验证退款hamc
+     *
+     * @param $params
+     * @param $hmac
+     * @return bool
      */
     private function _validateRefundHamc($params, $hmac)
     {

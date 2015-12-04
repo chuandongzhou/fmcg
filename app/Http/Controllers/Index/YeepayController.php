@@ -53,7 +53,7 @@ class YeePayController extends Controller
         $p7_Pdesc = 'fmcg_describe';
 
 //	商户接收支付成功数据的地址,支付成功后易宝支付会向该地址发送两次成功通知.
-        $p8_Url = url('webhooks/yeepay/success');//config('yeepay.p8_url');
+        $p8_Url = url('webhooks/yeepay/success');
 
 //	商户扩展信息
 //商户可以任意填写1K 的字符串,支付成功时将原样返回.

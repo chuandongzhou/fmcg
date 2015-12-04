@@ -3,7 +3,7 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    <form method="get" action="{{ url('personal/balance') }}" autocomplete="off">
+    <form method="get" action="{{ url('personal/balance') }}" autocomplete="off" class="form-horizontal">
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="account-balance">
@@ -18,16 +18,18 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <p class="time">
-                        时间段： <input class="datetimepicker" name="start_time" data-format="YYYY-MM-DD" type="text"
-                                   value="{{ $startTime }}"> 至
-                        <input class="datetimepicker" name="end_time" data-format="YYYY-MM-DD"
+                    <div class="time form-group">
+                        时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
+                                    type="text"
+                                    value="{{ $startTime }}"> 至
+                        <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
                                value="{{ $endTime }}"
                                type="text">
-                        <input type="submit" class="btn btn-warning">
-                    </p>
-                    <table class="table table-bordered table-center">
-                        <thead>
+                        <input type="submit" class="btn btn-default search-by-get">
+                    </div>
+                    <div class="time form-group">
+                        <table class="table table-bordered table-center">
+                            <thead>
                             <tr>
                                 <th>订单号</th>
                                 <th>实收金额</th>
@@ -36,8 +38,8 @@
                                 <th>交易号</th>
                                 <th>完成时间</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             @foreach($tradeInfo as $trade)
                                 <tr>
                                     <td>{{ $trade->order_id }}</td>
@@ -48,33 +50,37 @@
                                     <td>{{ $trade->finished_at }}</td>
                                 </tr>
                             @endforeach
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
-    <div class="modal fade in" id="withdraw" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel" aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="withdraw" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     <p class="modal-title">提现金额:
                             <span class="extra-text">
-                              ￥<input type="text" name="amount" />
+                              ￥<input type="text" name="amount"/>
                             </span>
-                        <span class="tip" style="display: none;color:red;" >请输入数字</span>
+                        <span class="tip" style="display: none;color:red;">请输入数字</span>
                     </p>
                 </div>
                 <div class="modal-header">
-                   <p class="modal-title">提现账号:
+                    <p class="modal-title">提现账号:
                             <span class="extra-text">
                                 @if(empty($bankInfo))
-                                    没得账号
+                                    没有账号
                                 @else
-                                    <select name="bank" >
+                                    <select name="bank">
                                         @foreach($bankInfo as $bank)
-                                            <option {{$bank->is_default == 1 ? 'selected' :""}} value="{{ $bank->id }}">{{ $bank->card_holder }}--{{ $bank->card_number }}--{{ $bank->card_address }}</option>
+                                            <option {{$bank->is_default == 1 ? 'selected' :""}} value="{{ $bank->id }}">{{ $bank->card_holder }}
+                                                --{{ $bank->card_number }}--{{ $bank->card_address }}</option>
                                         @endforeach
                                     </select>
                                 @endif
@@ -85,7 +91,9 @@
                 <div class="modal-body">
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定" data-url="{{ url('api/v1/personal/withdraw/add-withdraw') }}" data-method="post">确定</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
+                                data-url="{{ url('api/v1/personal/withdraw/add-withdraw') }}" data-method="post">确定
+                        </button>
                     </div>
                 </div>
             </div>
@@ -99,6 +107,7 @@
         $(function () {
             picFunc();
             getWithdraw({{ $balance }});
+            formSubmitByGet();
         });
     </script>
 @stop

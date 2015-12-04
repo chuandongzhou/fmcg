@@ -35,7 +35,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-bg btn-primary">查询</button>
+                <button type="submit" class="btn btn-bg btn-primary search-by-get">查询</button>
             </div>
         </div>
         <table class="table table-striped">
@@ -78,4 +78,11 @@
     @if(!empty($trades))
         {!! $trades->render() !!}
     @endif
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        formSubmitByGet();
+    </script>
+
 @stop

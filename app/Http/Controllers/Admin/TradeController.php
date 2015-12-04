@@ -37,7 +37,7 @@ class TradeController extends Controller
             array_merge(
                 [
                     'trades' => $trades,
-                ], $map)
+                ], $data)
         );
     }
 

@@ -19,7 +19,7 @@
             <label for="id_list" class="col-sm-2 control-label">默认显示的id</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="id_list" name="id_list" value="{{ implode('|' , $homeColumn->id_list) }}"
+                <input type="text" class="form-control" id="id_list" name="id_list" value="{{ $homeColumn->id_list ? implode('|' , $homeColumn->id_list) : '' }}"
                        placeholder="默认显示的id">( 按 '|' 隔开，最多10条)
             </div>
         </div>

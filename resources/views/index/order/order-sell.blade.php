@@ -40,7 +40,7 @@
                         <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
                                aria-describedby="course-search" value="{{ $search['search_content'] or '' }}">
                 <span class="input-group-btn btn-primary">
-                    <button class="btn btn-primary ajax-submit">搜索</button>
+                    <button class="btn btn-primary ajax-submit search-by-get">搜索</button>
                 </span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                                     <th>
                                         <label><input type="checkbox" class="order_id" name="order_id[]"
                                                       value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
-                                        <span class="order-number">订单号:{{ $order['id'] }}</span>
+                                        <span class="order-number">订单号 : {{ $order['id'] }}</span>
                                     </th>
                                     <th>{{ $order['user']['shop']['name'] }}</th>
                                     <th></th>
@@ -196,8 +196,8 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            getOrderList();
             getOrderButtonEvent();
+            formSubmitByGet(['delivery_man_id']);
         })
     </script>
 @stop

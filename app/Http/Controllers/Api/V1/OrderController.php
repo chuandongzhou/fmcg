@@ -38,7 +38,7 @@ class OrderController extends Controller
         $orders = Order::where('user_id', $this->user->id)->with('shop.user', 'goods.images')->orderBy('id',
             'desc')->paginate();
 
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
     }
 
     /**
@@ -50,7 +50,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofBuy($this->user->id)->nonPayment()->paginate();
 
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
     }
 
 
@@ -63,7 +63,29 @@ class OrderController extends Controller
     {
         $orders = Order::ofBuy($this->user->id)->nonArrived()->paginate();
 
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
+    }
+
+    /**
+     * 获取买家待确认订单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getWaitConfirmByUser()
+    {
+        $orders = Order::ofBuy($this->user->id)->WaitConfirm()->paginate();
+        return $this->success($this->_hiddenAttr($orders));
+    }
+
+    /**
+     * 获取卖家待确认订单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getWaitConfirmBySeller()
+    {
+        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
+        return $this->success($this->_hiddenAttr($orders));
     }
 
 
@@ -94,14 +116,7 @@ class OrderController extends Controller
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
 
-        $orders->each(function ($order) {
-            $order->goods->each(function ($goods) {
-                $goods->addHidden(['introduce', 'images_url']);
-            });
-            $order->user->setVisible(['id', 'shop']);
-            $order->user->shop->setVisible(['name'])->setAppends([]);
-        });
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
     }
 
     /**
@@ -113,7 +128,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell($this->user->id)->nonSend()->paginate();
 
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
     }
 
     /**
@@ -125,7 +140,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell($this->user->id)->getPayment()->paginate();
 
-        return $this->success($orders);
+        return $this->success($this->_hiddenAttr($orders));
     }
 
 
@@ -610,5 +625,20 @@ class OrderController extends Controller
         $tradeNo = $order->systemTradeInfo()->pluck('trade_no');
 
         return $tradeNo ? $tradeNo : '';
+    }
+
+    /**
+     * @param $orders
+     */
+    private function _hiddenAttr($orders)
+    {
+        $orders->each(function ($order) {
+            $order->goods->each(function ($goods) {
+                $goods->addHidden(['introduce', 'images_url']);
+            });
+            $order->user->setVisible(['id', 'shop']);
+            $order->user->shop->setVisible(['name'])->setAppends([]);
+        });
+        return $orders;
     }
 }

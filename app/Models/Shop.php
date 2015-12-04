@@ -96,6 +96,7 @@ class Shop extends Model
      *
      * @return mixed
      */
+
     public function license()
     {
         return $this->morphOne('App\Models\File', 'fileable')->where('type', cons('shop.file_type.license'));
@@ -195,16 +196,16 @@ class Shop extends Model
     }
 
     /**
-     * 配送地址
+     * 过滤地址或配送区域
      *
      * @param $query
      * @param $data
+     * @param string $relation
      */
-
-    public function scopeOfDeliveryArea($query, $data)
+    public function scopeOfDeliveryArea($query, $data, $relation = 'deliveryArea')
     {
         if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])) {
-            $query->whereHas('deliveryArea', function ($query) use ($data) {
+            $query->whereHas($relation, function ($query) use ($data) {
                 $query->where([
                     'province_id' => $data['province_id'],
                     'city_id' => $data['city_id'],
@@ -213,7 +214,7 @@ class Shop extends Model
                 ]);
             });
         } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
-            $query->whereHas('deliveryArea', function ($query) use ($data) {
+            $query->whereHas($relation, function ($query) use ($data) {
                 $query->where([
                     'province_id' => $data['province_id'],
                     'city_id' => $data['city_id'],
@@ -221,14 +222,14 @@ class Shop extends Model
                 ]);
             });
         } elseif (isset($data['province_id']) && isset($data['city_id'])) {
-            $query->whereHas('deliveryArea', function ($query) use ($data) {
+            $query->whereHas($relation, function ($query) use ($data) {
                 $query->where([
                     'province_id' => $data['province_id'],
                     'city_id' => $data['city_id']
                 ]);
             });
         } elseif (isset($data['province_id'])) {
-            $query->whereHas('deliveryArea', function ($query) use ($data) {
+            $query->whereHas($relation, function ($query) use ($data) {
                 $query->where([
                     'province_id' => $data['province_id']
                 ]);

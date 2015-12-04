@@ -49,8 +49,8 @@
                             <div class="col-sm-12 menu-down-layer menu-down-item">
                                 @foreach($category['child'] as $child)
                                     <div class="item">
-                                        <h3 class="title"><a
-                                                    href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a>
+                                        <h3 class="title">
+                                            <a href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a>
                                         </h3>
                                         @foreach($child['child'] as $grandChild)
                                             <a href="{{ url('search?category_id=3'. $grandChild['id']) }}">{{ $grandChild['name'] }}</a>

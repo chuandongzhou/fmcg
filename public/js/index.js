@@ -19,149 +19,7 @@ function tips(obj, content) {
         tips.fadeOut(1500);
     });
 }
-/**
- * 动态查询订单列表
- */
-function getOrderList() {
-    //待办事项动态加载详情
-    $('a.ajax-get').on('click', function () {
-        //修改选中状态
-        $(this).addClass('btn-primary');
-        $(this).siblings('a').removeClass('btn-primary');
-        targetUrl = $(this).data('url');
-        //删除查询条件栏
-        $('.pay-detail,.search').remove();
-        _ajaxGet(targetUrl);
-    });
-    $('form').on('click', '.ajax-page', function () {
-        var targetUrl = $(this).attr('data-url');
-        _ajaxGet(targetUrl, {"page": $(this).attr('data-page')});
-    });
-    $('.export').click(function () {
-        var obj = $(this), form = obj.closest('form'), url = obj.data('url'), method = obj.data('method');
 
-        var orderIds = form.find('input.order_id:checked').length;
-        if (!orderIds) {
-            alert('请选择要导出的订单');
-            return false;
-        }
-        form.attr('action', url).attr('method', method);
-    })
-}
-/**
- * get方式，动态获取订单信息并显示到指定区域
- * @param targetUrl
- * @param data
- * @private
- */
-function _ajaxGet(targetUrl, data) {
-    $.ajax({
-        type: 'get',
-        url: targetUrl,
-        data: data,
-        dataType: 'json',
-        success: function (list) {
-            //重置全选按钮
-            $('#check-all').prop('checked', false);
-            if (list.data.length) {
-                $('#foot-nav').show();
-            } else {
-                $('#foot-nav').hide();
-            }
-
-            var str = '';
-            $.each(list.data, function (index, result) {
-
-                str += '<table class="table table-bordered">'
-                    + '     <thead><tr><th>'
-                    + '         <label><input type="checkbox" name="order_id[]" value="' + result.id + '"/>' + result.created_at + '</label>'
-                    + '         <span class="order-number">订单号:' + result.id + '</span></th>'
-                    + '         <th>' + (result.user_id == SITE.USER.id ? result.shop.name : result.user.shop.name) + '</th>'
-                    + '     <th></th><th></th><th></th>'
-                    + '     </tr>'
-                    + '         </thead><tbody>';
-                $.each(result.goods, function (key, item) {
-                    str += '            <tr><td>'
-                        + '                 <img class="store-img" src="' + item.image_url + '">'
-                        + '                 <a class="product-name" href="' + SITE.ROOT + '/goods/' + item.id + '">' + item.name + '</a>'
-                        + '                 <td class="red">￥' + item.pivot.price + '</td>'
-                        + '                 <td>' + item.pivot.num + '</td>';
-                    if (0 == key) {
-                        str += '         <td rowspan="' + result.goods.length + '" class="pay-detail text-center">'
-                            + '         <p>' + result.status_name + '</p>'
-                            + '         <p>' + result.payment_type + '</p>'
-                            + '         <p><span class="red">￥' + result.price + '</span></p>'
-                            + '     </td>'
-                            + '     <td rowspan="' + result.goods.length + '" class="operating text-center">';
-                        if (SITE.USER.id == result.user_id) {//买家----需要修改参照order-buy/sell
-                            str += '<p><a href="' + SITE.ROOT + '/order-buy/detail?order_id=' + result.id + '" class="btn btn-primary">查看</a></p>';
-                            if (!result.is_cancel) {
-                                if (result.can_cancel) {
-                                    str += ' <p><a class="btn btn-cancel ajax" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
-                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
-                                }
-                                if (result.can_payment) {
-                                    str += '<p><a href="' + SITE.ROOT + '/pay/request/' + result.id + '" class="btn btn-danger">去付款</a></p>';
-                                } else if (result.can_confirm_arrived) {
-                                    str += '<p><a class="btn btn-danger ajax" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-buy" ' +
-                                        'data-method="put" data-data=\'{"order_id":' + result.id + '}\'>确认收货</a></p>';
-                                }
-                            }
-                        } else {//卖家
-                            str += '<p><a href="' + SITE.ROOT + '/order-sell/detail?order_id' + result.id + '" class="btn btn-primary">查看</a></p>';
-                            if (!result.is_cancel) {
-                                if (result.can_cancel) {
-                                    str += '<p><a class="btn btn-cancel ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/cancel-sure" ' +
-                                        'data-data=\'{"order_id":' + result.id + '}\'>取消</a></p>';
-                                }
-                                if (result.can_send) {
-                                    str += '<p><a class="btn btn-warning send-goods"  data-target="#sendModal" data-toggle="modal">发货</a></p>';
-                                } else if (result.can_confirm_collections) {
-                                    str += '<p><a class="btn btn-info ajax" data-method="put" data-url="' + SITE.ROOT + '/api/v1/order/batch-finish-of-sell" ' +
-                                        'data-data=\'{"order_id":' + result.id + '}\'>确认收款</a></p>';
-                                }
-                                if (result.can_export) {
-                                    str += '<p><a class="btn btn-success" href="' + SITE.ROOT + '/order-sell/export?order_id=' + result.id + '">导出</a></p>';
-                                }
-                            }
-                        }
-                        str += '             </td>';
-                    }
-
-                    str += '             </tr>';
-                });
-
-                str += '             </tbody></table>';
-
-            });
-
-            $('.content').html(str);
-            var totalPage = list.total / list.per_page;
-            var pageHtml = '';
-            if (totalPage > 1) {
-                if (list.current_page == 1) {
-                    pageHtml += '<li class="disabled"><span>&laquo;</span></li> ';
-                } else {
-                    pageHtml += '<li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '" rel="prev">&laquo;</a></li>';
-                }
-                for (var i = 1; i <= totalPage; ++i) {
-                    if (i == list.current_page) {
-                        pageHtml += ' <li><a class="ajax-page active" data-url="' + targetUrl + '" data-page="' + i + '">' + i + '</a></li>';
-                    } else {
-                        pageHtml += ' <li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '">' + i + '</a></li>';
-                    }
-                }
-                if (list.current_page == list.total) {
-                    pageHtml += '<li class="disabled"><span>&raquo;</span></li> ';
-                } else {
-                    pageHtml += ' <li><a class="ajax-page" data-url="' + targetUrl + '" data-page="' + i + '" rel="next">&raquo;</a></li>';
-                }
-
-            }
-            $('.pagination').html(pageHtml);
-        }
-    });
-}
 /**
  * 订单管理界面
  */
@@ -192,6 +50,16 @@ function getOrderButtonEvent() {
         if (textStatus.failIds.length) {
             alert('发货失败的订单id : '+ textStatus.failIds);
         }
+    });
+    $('.export').click(function () {
+        var obj = $(this), form = obj.closest('form'), url = obj.data('url'), method = obj.data('method');
+
+        var orderIds = form.find('input.order_id:checked').length;
+        if (!orderIds) {
+            alert('请选择要导出的订单');
+            return false;
+        }
+        form.attr('action', url).attr('method', method);
     })
 }
 /*function tabBox() {
