@@ -153,6 +153,7 @@ return [
         'old_password' => '原密码',
         'min_money' => '最低配送额',
         'introduction' => '介绍',
+        'bar_code' => '商品条形码',
         //后台
         'real_name' => '真实名字',
         'role_id' => '角色分组ID',

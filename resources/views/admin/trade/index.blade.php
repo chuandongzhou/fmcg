@@ -16,7 +16,7 @@
             <label for="trade_no" class="col-sm-2 control-label">交易号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{  $trade_no or  '' }}" class="form-control" id="trade_no"
+                <input type="text" value="{{  $data['trade_no'] or  '' }}" class="form-control" id="trade_no"
                        name="trade_no" placeholder="请输入交易号">
             </div>
         </div>
@@ -25,7 +25,7 @@
             <label for="account" class="col-sm-2 control-label">商家账号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{ isset($account) ? $account : '' }}" class="form-control" id="account"
+                <input type="text" value="{{  $data['account'] or  '' }}" class="form-control" id="account"
                        name="account" placeholder="请输入商家账号">
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="col-sm-4 pay_type">
                 <input type="radio" name="pay_type" value="0" checked/> 全部 &nbsp;&nbsp;&nbsp;
                 @foreach (cons()->valueLang('trade.pay_type') as $key=>$value)
-                    <input type="radio" {{ isset($pay_type) && $key == $pay_type ? 'checked' : '' }}  name="pay_type"
+                    <input type="radio" {{ isset($data['pay_type']) && $key == $data['pay_type'] ? 'checked' : '' }}  name="pay_type"
                            value="{{ $key }}"/> {{ $value }} &nbsp;&nbsp;&nbsp;
                 @endforeach
             </div>
@@ -46,8 +46,8 @@
             <label for="account" class="col-sm-2 control-label">已付款确认时间：</label>
 
             <div class="col-sm-6 time-limit">
-                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $startedAt }}"> 至
-                <input type="text" class="inline-control datetimepicker" name="ended_at" value="{{ $endedAt }}">
+                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $data['started_at'] or '' }}"> 至
+                <input type="text" class="inline-control datetimepicker" name="ended_at" value="{{ $data['ended_at'] or '' }}">
             </div>
         </div>
 
@@ -96,7 +96,7 @@
             </tbody>
         </table>
     </form>
-    {!! $trades->render() !!}
+    {!! $trades->appends($data)->render() !!}
 @stop
 @section('js')
     @parent

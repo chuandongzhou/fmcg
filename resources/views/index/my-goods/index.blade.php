@@ -186,7 +186,7 @@
             </div>
         @endforeach
     </div>
-
+    {!! $goods->appends($data)->render() !!}
 @stop
 @section('js-lib')
     @parent

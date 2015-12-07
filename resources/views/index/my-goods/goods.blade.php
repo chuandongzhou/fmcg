@@ -21,24 +21,40 @@
                         <p class="items-item">
                             <label class="control-label">价格 :</label>
                             <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+
+                            <label class="control-label">单位 :</label>
+                            <select name="pieces_retailer" class="pieces" data-change-class="pieces-retailer">
+                                @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
+                                    <option value="{{ $key }}" {{ $key == $goods->pieces_retailer ? 'selected' : '' }}>{{ $piece }}</option>
+                                @endforeach
+                            </select>
                         </p>
                         @if (auth()->user()->type == cons('user.type.supplier'))
                             <p class="items-item right-item">
                                 <label class="control-label">价格(批发商) :</label>
                                 <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
                                        required>
+                                <label class="control-label">单位(批发商) :</label>
+                                <select name="pieces_wholesaler" class="pieces" data-change-class="pieces-wholesaler">
+                                    @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
+                                        <option value="{{ $key }}" {{ $key == $goods->pieces_wholesaler ? 'selected' : '' }}>{{ $piece }}</option>
+                                    @endforeach
+                                </select>
                             </p>
                         @endif
                     </div>
+                    <div class="form-group editor-item">
 
-
+                    </div>
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">最低购买数 :</label>
                             <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
                                    type="text"
                                    required>
-                            <span>(整数)</span>
+                            <span>
+                                (<span class="pieces-retailer">{{ $goods->pieces_retailer or head(cons()->valueLang('goods.pieces')) }}</span>)
+                            </span>
                         </p>
 
                         @if (auth()->user()->type == cons('user.type.supplier'))
@@ -46,34 +62,42 @@
                                 <label class="control-label">最低购买数(批发商) :</label>
                                 <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
                                        type="text" required>
-                                <span>(整数)</span>
+                                <span>
+                                    (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler or head(cons()->valueLang('goods.pieces')) }}</span>)
+                                </span>
                             </p>
                         @endif
-
                     </div>
+                    <div class="form-group editor-item">
+                        <p class="items-item right-item">
+                            <label class="control-label">商品条形码 :</label>
+                            <input value="{{ $goods->bar_code }}" name="bar_code"
+                                   type="text" required>
 
-
-                </div>
-                <div class="form-group col-sm-12" style="margin-left: 0;">
-                    <label class="control-label">分类 :</label>
-                    <select name="cate_level_1" class="categories"></select>
-                    <select name="cate_level_2" class="categories"> </select>
-                    <select name="cate_level_3" class="categories"></select>
-                </div>
-                <div class="form-group  attr col-sm-12">
-                    @foreach($attrs as $key=>$attr)
-                        <p class="items-item">
-                            <label>{{ $attr['name'] }}</label>
-                            <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
-                                <option value="0">请选择</option>
-                                @foreach($attr['child'] as $child)
-                                    <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
-                                @endforeach
-                            </select>
                         </p>
-                    @endforeach
+                    </div>
+                    <div class="form-group editor-item">
+                        <p class="items-item">
+                            <label class="control-label">分类 :</label>
+                            <select name="cate_level_1" class="categories"></select>
+                            <select name="cate_level_2" class="categories"> </select>
+                            <select name="cate_level_3" class="categories"></select>
+                        </p>
+                    </div>
+                    <div class="form-group  attr editor-item">
+                        @foreach($attrs as $key=>$attr)
+                            <p class="items-item">
+                                <label>{{ $attr['name'] }}</label>
+                                <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
+                                    <option value="0">请选择</option>
+                                    @foreach($attr['child'] as $child)
+                                        <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </p>
+                        @endforeach
+                    </div>
                 </div>
-
                 <div class="col-sm-12 map">
                     <div class="upload-img">
                         <label>商品图片 :</label>
@@ -236,6 +260,9 @@
         //获取分类
         getAttr();
         addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');
-
+        $('.pieces').change(function () {
+            var obj = $(this), changeClass = obj.data('changeClass'), pieces = obj.find("option:selected").text();
+            $('.' + changeClass).html(pieces);
+        })
     </script>
 @stop

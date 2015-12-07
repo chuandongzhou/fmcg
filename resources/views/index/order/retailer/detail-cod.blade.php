@@ -148,14 +148,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($order['goods'] as $good)
+                    @foreach($order['goods'] as $goods)
                         <tr>
-                            <td>{{ $good['id'] }}</td>
-                            <td><img class="store-img" src="{{ $good['image_url'] }}"></td>
-                            <td>{{ $good['name'] }}</td>
-                            <td>￥{{ $good['pivot']['price'] }}</td>
-                            <td>{{ $good['pivot']['num'] }}</td>
-                            <td>￥{{ $good['pivot']['total_price'] }}</td>
+                            <td>{{ $goods['id'] }}</td>
+                            <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
+                            <td>{{ $goods['name'] }}</td>
+                            <td>￥{{ $goods['pivot']['price'] . ' / ' . $goods->pieces  }}</td>
+                            <td>{{ $goods['pivot']['num'] }}</td>
+                            <td>￥{{ $goods['pivot']['total_price'] }}</td>
                         </tr>
                     @endforeach
                     </tbody>

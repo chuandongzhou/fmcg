@@ -149,6 +149,16 @@ return [
             'name',
             'price',
             'new'
+        ],
+        'pieces' => [
+            'box' => 0,
+            'bottle' => 1,
+            'boxes' => 2,
+            'tin' => 3,
+            'rope' => 4,
+            'bag' => 5,
+            'pot' => 6,
+            'packet' => 7
         ]
     ],
     // 银行列表
@@ -230,7 +240,7 @@ return [
         'pass' => 2,
         'payment' => 3,
     ],
-    // 验证码数
+    // 手机验证码
     'validate_code' => [
         'length' => 4,
         'backup' => [

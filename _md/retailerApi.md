@@ -172,8 +172,12 @@
     sales_volume        int         销售量
     price_retailer      decimal     价格（对于终端商）
     min_num_retailer    int         最低购买量 (对于终端商）
+    pieces_retailer     int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
     price_wholesaler    decimal     价格（对于批发商）
     min_num_wholesaler  int         最低购买量 (对于批发商）
+    pieces_wholesaler   int         单位编号 （对于批发商）
+    pieces              string      单位名 （根据不同登录角色区分）
+    bar_code            string      商品条形码
     is_new              int         是否新品（1是 , 0不是）
     is_out              int         是否缺货
     is_change           int         是否可换货
@@ -280,26 +284,31 @@
     data字段子集说明
 
     id                  int         商品id
-    name                string      商品名
-    sales_volume        int         销售量
-    price_retailer      decimal     价格（对于终端商）
-    min_num_retailer    int         最低购买量 (对于终端商）
-    price_wholesaler    decimal     价格（对于批发商）
-    min_num_wholesaler  int         最低购买量 (对于批发商）
-    is_new              int         是否新品（1是 , 0不是）
-    is_out              int         是否缺货
-    is_change           int         是否可换货
-    is_back             int         是否可退货
-    is_expire           int         是否即期品
-    is_promotion        int         是否促销产品
-    promotion_info      string      促销信息
-    introduce           string      商品图文详情
-    shop_id             int         商品所属店铺id
-    shop_name           string      商品所属店铺
-    attrs               array       标签
-    delivery_area       array       商品配送区域
-    image_url           string      商品图片('第一张')
-    images_url          array       商品全部图片
+        name                string      商品名
+        sales_volume        int         销售量
+        price_retailer      decimal     价格（对于终端商）
+        min_num_retailer    int         最低购买量 (对于终端商）
+        pieces_retailer     int         单位编号 （对于终端商）
+        price_wholesaler    decimal     价格（对于批发商）
+        min_num_wholesaler  int         最低购买量 (对于批发商）
+        pieces_wholesaler   int         单位编号 （对于批发商）
+        pieces              string      单位名 （根据不同登录角色区分）
+        bar_code            string      商品条形码
+        is_new              int         是否新品（1是 , 0不是）
+        is_out              int         是否缺货
+        is_change           int         是否可换货
+        is_back             int         是否可退货
+        is_expire           int         是否即期品
+        is_promotion        int         是否促销产品
+        promotion_info      string      促销信息
+        introduce           string      商品图文详情
+        shop_id             int         商品所属店铺id
+        shop_name           string      商品所属店铺
+        attrs               array       标签
+        delivery_area       array       商品配送区域
+        is_like             bool        是否已关注
+        image_url           string      商品图片('第一张')
+        images_url          array       商品全部图片
 
     attrs 子字段说明
 
@@ -338,8 +347,11 @@
     name                string      商品名
     price_retailer      decimal     价格 （对于终端商）
     min_num_retailer    int         最低购买量 （对于终端商）
+    pieces_retailer     int         单位编号 （对于终端商）
     price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+    pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
+    bar_code            string      商品条形码
     is_new              int         是否新品（1是   0不是）
     is_out              int         是否缺货 （1是   0不是）
     is_change           int         是否可换货 （1是   0不是）
@@ -376,8 +388,11 @@
     name                string      商品名
     price_retailer      decimal     价格 （对于终端商）
     min_num_retailer    int         最低购买量 （对于终端商）
+    pieces_retailer     int         单位编号 （对于终端商）
     price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+    pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
+    bar_code            string      商品条形码
     is_new              int         是否新品（1是   0不是）
     is_out              int         是否缺货 （1是   0不是）
     is_change           int         是否可换货 （1是   0不是）

@@ -61,18 +61,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * 密码自动转换
-     *
-     * @param $value
-     */
-    public function setPasswordAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['password'] = bcrypt($value);
-        }
-    }
-
-    /**
      * 购物车ﳵ
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -132,9 +120,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('App\Models\ShippingAddress');
     }
 
+    /**
+     * 提现
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function withdraw()
     {
         return $this->hasMany('App\Models\Withdraw');
     }
 
+    /**
+     * 密码自动转换
+     *
+     * @param $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }
+
+    /**
+     * 获取用户类型名
+     *
+     * @return mixed
+     */
+    public function getTypeNameAttribute()
+    {
+        return array_search($this->type, cons('user.type'));
+    }
 }

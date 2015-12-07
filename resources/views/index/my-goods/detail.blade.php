@@ -28,8 +28,9 @@
                     <span class="prompt">名称 :</span> <b>{{ $goods->name }}</b>
                 </div>
                 <ul class="left-list pull-left">
-                    <span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b>
-                    <li><span class="prompt">价格 :</span> <b class="red">￥{{ $goods->price }}</b></li>
+                    <li><span class="prompt">商品ID :</span>{{ $goods->id }}</li>
+                    <li><span class="prompt">条形码 :</span>{{ $goods->bar_code }}</li>
+                    <li><span class="prompt">价格 :</span> <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b></li>
                     <li><span class="prompt">状态 :</span> <b class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</b></li>
                     @foreach($attrs as $key => $attr)
                         <li><span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b></li>

@@ -53,7 +53,7 @@ class PayController extends Controller
 
 
         $extra = array(
-            'product_category' => '1',
+            'product_category' => '7',
             'identity_id' => auth()->id() . '',
             'identity_type' => 2,
             'terminal_type' => 3,

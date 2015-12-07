@@ -69,23 +69,20 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($order['goods'] as $key => $good)
+                                @foreach($order['goods'] as $key => $goods)
                                     <tr>
                                         <td>
-                                            <img class="store-img" src="{{ $good['image_url'] }}">
-                                            <a class="product-name" href="{{  url('goods/' . $good['id']) }}">
-                                                {{ $good['name'] }}
+                                            <img class="store-img" src="{{ $goods['image_url'] }}">
+                                            <a class="product-name" href="{{  url('goods/' . $goods['id']) }}">
+                                                {{ $goods['name'] }}
                                             </a>
                                         </td>
-                                        <td class="red">￥{{ $good['pivot']['price'] }}</td>
-                                        <td>{{ $good['pivot']['num'] }}</td>
-
+                                        <td><span class="red">￥{{ $goods['pivot']['price'] }}</span> / {{ $goods->pieces }}</td>
+                                        <td>{{ $goods['pivot']['num'] }}</td>
                                         @if(0 == $key)
                                             <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
                                                 <p>{{ $order['status_name'] }}</p>
-
                                                 <p>{{ $order['payment_type'] }}</p>
-
                                                 <p><span class="red">￥{{ $order['price'] }}</span></p>
                                             </td>
                                             <td rowspan="{{ count($order['goods'])}}" class="operating text-center">

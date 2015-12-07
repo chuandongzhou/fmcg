@@ -21,9 +21,9 @@
                     <div class="time form-group">
                         时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
                                     type="text"
-                                    value="{{ $startTime }}"> 至
+                                    value="{{ $data['start_time'] }}"> 至
                         <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
-                               value="{{ $endTime }}"
+                               value="{{ $data['end_time'] }}"
                                type="text">
                         <input type="submit" class="btn btn-default search-by-get">
                     </div>
@@ -53,6 +53,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {!! $tradeInfo->appends($data)->render() !!}
                 </div>
             </div>
         </div>

@@ -40,7 +40,8 @@ class Order extends Model
         'can_confirm_collections',
         'can_export',
         'can_payment',
-        'can_confirm_arrived'
+        'can_confirm_arrived',
+        'pieces'
     ];
 
     protected $hidden = [];
@@ -295,6 +296,19 @@ class Order extends Model
         && $this->attributes['status'] == cons('order.status.send')
         && $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
         && $this->attributes['user_id'] == auth()->id();
+    }
+
+
+    /**
+     * 根据不同角色获取单位
+     *
+     * @return mixed
+     */
+    public function getPiecesAttribute()
+    {
+        $userType = $this->user->type;
+        $piece = $userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer;
+        return cons()->valueLang('goods.pieces', $piece);
     }
 
     /**

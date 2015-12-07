@@ -124,10 +124,10 @@ class OrderSellController extends OrderController
 
         //拼接需要调用的模板名字
         $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$order->pay_type];
-
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view($view, [
             'order' => $order,
-            'delivery_man' => auth()->user()->shop->deliveryMans
+            'delivery_man' => $deliveryMan
         ]);
     }
 

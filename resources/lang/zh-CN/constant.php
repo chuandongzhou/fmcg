@@ -46,8 +46,8 @@ return [
         // 审核状态
         'audit_status' => [
             'not_audit' => '未审核',
-            'pass'      => '通过',
-            'not_pass'  => '未通过'
+            'pass' => '通过',
+            'not_pass' => '未通过'
         ]
     ],
     //广告表类型
@@ -92,6 +92,17 @@ return [
         'status' => [
             'on' => '上架',
             'off' => '下架'
+        ],
+        // 单位
+        'pieces' => [
+            'box' => '盒',
+            'bottle' => '瓶',
+            'boxes' => '箱',
+            'tin' => '听',
+            'rope' => '条',
+            'bag' => '袋',
+            'pot' => '罐',
+            'packet' => '包'
         ]
     ],
     // 银行列表

@@ -32,12 +32,11 @@ class TradeController extends Controller
             }
             $trades = SystemTradeInfo::where($map)->paginate();
         }
-
         return view('admin.trade.select',
-            array_merge(
-                [
-                    'trades' => $trades,
-                ], $data)
+            [
+                'trades' => $trades,
+                'data' => $data
+            ]
         );
     }
 

@@ -23,8 +23,8 @@ class SystemWithdrawInfoController extends Controller
         $withdrawId = isset($data['withdraw_id']) && $data['withdraw_id'] != '' ? intval($data['withdraw_id']) : '';
         $tradeNo = isset($data['trade_no']) && $data['trade_no'] != '' ? trim($data['trade_no']) : '';
         $userName = isset($data['user_name']) && $data['user_name'] != '' ? trim($data['user_name']) : '';
-        $startAt = isset($data['started_at']) && $data['started_at'] != '' ? $data['started_at'] : Carbon::now()->startOfMonth();
-        $endAt = isset($data['end_at']) && $data['end_at'] != '' ? $data['end_at'] : Carbon::now();
+        $data['started_at'] = isset($data['started_at']) && $data['started_at'] != '' ? $data['started_at'] : Carbon::now()->startOfMonth();
+        $data['end_at'] = isset($data['end_at']) && $data['end_at'] != '' ? $data['end_at'] : Carbon::now();
         $query = Withdraw::with('userBanks', 'user');
         if ($withdrawId) {
             $query->where('id', $withdrawId);
@@ -37,13 +37,12 @@ class SystemWithdrawInfoController extends Controller
                 $query->where('user_name', $userName);
             });
         }
-        $withdraws = $query->whereBetween('created_at', [$startAt, (new Carbon($endAt))->endOfDay()])->orderBy('id',
+        $withdraws = $query->whereBetween('created_at', [$data['started_at'], (new Carbon($data['end_at']))->endOfDay()])->orderBy('id',
             'DESC')->paginate();
 
         return view('admin.withdraw.index', [
-            'startedAt' => $startAt,
-            'endAt' => $endAt,
             'withdraws' => $withdraws,
+            'data' => $data
         ]);
     }
 

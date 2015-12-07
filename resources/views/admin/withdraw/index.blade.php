@@ -8,7 +8,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" name="withdraw_id" placeholder="请输入订单号"
-                       value="{{ $withdrawId or '' }}">
+                       value="{{ $data['withdraw_id'] or '' }}">
             </div>
         </div>
 
@@ -16,7 +16,7 @@
             <label for="trade_num" class="col-sm-2 control-label">交易单号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{  $tradeNo or  '' }}" class="form-control"
+                <input type="text" value="{{  $data['trade_no'] or  '' }}" class="form-control"
                        name="trade_no" placeholder="请输入交易号">
             </div>
         </div>
@@ -25,7 +25,7 @@
             <label for="account" class="col-sm-2 control-label">商家账号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{ $userName or '' }}" class="form-control"
+                <input type="text" value="{{ $data['user_name'] or '' }}" class="form-control"
                        name="user_name" placeholder="请输入商家账号">
             </div>
         </div>
@@ -33,8 +33,8 @@
             <label for="account" class="col-sm-2 control-label">申请时间：</label>
 
             <div class="col-sm-6 time-limit">
-                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $startedAt  }}"> 至
-                <input type="text" class="inline-control datetimepicker" name="end_at" value="{{ $endAt }}">
+                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $data['started_at'] or ''  }}"> 至
+                <input type="text" class="inline-control datetimepicker" name="end_at" value="{{ $data['end_at'] or '' }}">
             </div>
         </div>
 
@@ -108,7 +108,7 @@
             </tbody>
         </table>
     </form>
-    {!! $withdraws->render() !!}
+    {!! $withdraws->appends($data)->render() !!}
     <div class="modal fade in" id="rollback" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
          aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">

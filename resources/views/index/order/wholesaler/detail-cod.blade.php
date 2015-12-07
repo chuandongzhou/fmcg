@@ -175,18 +175,18 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($order['goods'] as $item)
+                        @foreach($order['goods'] as $goods)
                             <tr>
-                                <td>{{ $item['id'] }}</td>
-                                <td><img class="store-img" src={{ $item['image_url'] }} /></td>
-                                <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['pivot']['price'] }}</td>
-                                <td>{{ $item['pivot']['num'] }}</td>
-                                <td>{{ $item['pivot']['total_price'] }}</td>
+                                <td>{{ $goods['id'] }}</td>
+                                <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
+                                <td>{{ $goods['name'] }}</td>
+                                <td>{{ $goods['pivot']['price'] }} / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}</td>
+                                <td>{{ $goods['pivot']['num'] }}</td>
+                                <td>{{ $goods['pivot']['total_price'] }}</td>
                                 @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
-                                    <td><a class="change-price" data-target="#changePrice"
+                                    <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
                                            data-toggle="modal" data-data="{{ $order['id'] }}"
-                                           data-pivot="{{  $item['pivot']['id'] }}">修改</a></td>
+                                           data-pivot="{{  $goods['pivot']['id'] }}">修改</a></td>
                                 @endif
 
                             </tr>
@@ -200,68 +200,8 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade in" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-         aria-hidden="true" style="padding-right: 17px;">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="width:70%;margin:auto">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    @if($delivery_man->count())
-                        <p class="modal-title" id="cropperModalLabel">选择配送人员:
-                            <span class="extra-text">
-                                  <select name="delivery_man_id">
-                                      @foreach($delivery_man as  $item)
-                                          <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                      @endforeach
-                                  </select>
-
-
-                            </span>
-                        </p>
-                    @else
-                        没有配送人员信息,请设置。<a href="{{ url('personal/delivery-man') }}">去设置</a>
-                    @endif
-                </div>
-                <div class="modal-body">
-                    <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        @if($delivery_man->count())
-                            <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
-                                    data-url="{{ url('api/v1/order/batch-send') }}" data-method="put">确定
-                            </button>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade in" id="changePrice" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-         aria-hidden="true" style="padding-right: 17px;">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="width:70%;margin:auto">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <p class="modal-title" id="cropperModalLabel">修改单价:
-                            <span class="extra-text">
-                                  <input type="text" name="price"/>
-                                <span class="tip" style="display: none;color:red;">请输入数字</span>
-                            </span>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
-                                data-url="{{ url('api/v1/order/change-price') }}" data-method="put">确定
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('includes.order-select-delivery_man')
+    @include('includes.order-change-price')
 @stop
 @include('includes.stepBar')
 @section('js')

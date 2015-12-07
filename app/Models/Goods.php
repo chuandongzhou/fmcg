@@ -19,9 +19,12 @@ class Goods extends Model
     protected $fillable = [
         'name',
         'price_retailer',
+        'pieces_retailer',
         'min_num_retailer',
         'price_wholesaler',
+        'pieces_wholesaler',
         'min_num_wholesaler',
+        'bar_code',
         'cate_level_1',
         'cate_level_2',
         'cate_level_3',
@@ -39,7 +42,7 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['images_url', 'image_url'];
+    public $appends = ['images_url', 'image_url', 'pieces'];
 
     protected $hidden = [
         'images',
@@ -326,6 +329,18 @@ class Goods extends Model
         $userType = auth()->user()->type;
 
         return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
+    }
+
+    /**
+     * 根据不同角色获取单位
+     *
+     * @return mixed
+     */
+    public function getPiecesAttribute()
+    {
+        $userType = auth()->user()->type;
+        $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
+        return cons()->valueLang('goods.pieces', $piece);
     }
 
     /**

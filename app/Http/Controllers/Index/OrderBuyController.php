@@ -47,6 +47,7 @@ class OrderBuyController extends OrderController
         } else {
             $orders = $query->ofSelectOptions($search)->ofSellerShopName($search['search_content'])->paginate();
         }
+
         return view('index.order.order-buy', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,

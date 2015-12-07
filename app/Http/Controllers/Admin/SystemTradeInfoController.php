@@ -23,13 +23,12 @@ class SystemTradeInfoController extends Controller
         $result = $this->getTrade($attributes);
 
         return view('admin.trade.index',
-            array_merge(
-                [
-                    'trades' => $result['trades'],
-                    'startedAt' => $result['startedAt'],
-                    'endedAt' => $result['endedAt'],
-                    'linkUrl' => http_build_query($attributes)
-                ], $result['map'])
+
+            [
+                'trades' => $result['trades'],
+                'linkUrl' => http_build_query($attributes),
+                'data' => $result['map']
+            ]
         );
     }
 
@@ -77,7 +76,7 @@ class SystemTradeInfoController extends Controller
                     'L' => 30
                 ]);
 
-                $sheet->row('2',$sub_titles);
+                $sheet->row('2', $sub_titles);
                 foreach ($trades['data'] as $trade) {
                     $array = [
                         'type' => cons()->valueLang('trade.type', $trade['type']),
@@ -117,16 +116,15 @@ class SystemTradeInfoController extends Controller
         if (isset($attributes['pay_type']) && $attributes['pay_type']) {
             $map['pay_type'] = $attributes['pay_type'];
         }
-        $startedAt = isset($attributes['started_at']) ? $attributes['started_at'] : Carbon::now()->startOfMonth();
-        $endedAt = isset($attributes['ended_at']) ? $attributes['ended_at'] : Carbon::now();
+        $time['started_at'] = isset($attributes['started_at']) ? $attributes['started_at'] : Carbon::now()->startOfMonth();
+        $time['ended_at'] = isset($attributes['ended_at']) ? $attributes['ended_at'] : Carbon::now();
 
-        $trades = SystemTradeInfo::where($map)->whereBetween('success_at', [$startedAt, $endedAt])->paginate();
+        $trades = SystemTradeInfo::where($map)->whereBetween('success_at',
+            [$time['started_at'], $time['ended_at']])->paginate();
 
         return [
-            'startedAt' => $startedAt,
-            'endedAt' => $endedAt,
             'trades' => $trades,
-            'map' => $map
+            'map' => array_merge($map, $time)
         ];
     }
 }

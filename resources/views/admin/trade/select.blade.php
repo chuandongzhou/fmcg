@@ -7,7 +7,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="order_num" name="order_num" placeholder="请输入订单号"
-                       value="{{ isset($order_id) ? $order_id : '' }}">
+                       value="{{ $data['order_id'] or '' }}">
             </div>
         </div>
 
@@ -15,7 +15,7 @@
             <label for="trade_no" class="col-sm-2 control-label">交易号：</label>
 
             <div class="col-sm-4">
-                <input type="text" value="{{ isset($trade_no) ? $trade_no : '' }}" class="form-control" id="trade_no"
+                <input type="text" value="{{ $data['trade_no'] or '' }}" class="form-control" id="trade_no"
                        name="trade_no" placeholder="请输入交易号">
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="col-sm-4 pay_type">
                 <input type="radio" name="pay_type" value="0" checked/> 全部 &nbsp;&nbsp;&nbsp;
                 @foreach (cons()->valueLang('trade.pay_type') as $key=>$value)
-                    <input type="radio" {{ isset($pay_type) && $key == $pay_type ? 'checked' : '' }}  name="pay_type"
+                    <input type="radio" {{ isset($data['pay_type']) && $key == $data['pay_type'] ? 'checked' : '' }}  name="pay_type"
                            value="{{ $key }}"/> {{ $value }} &nbsp;&nbsp;&nbsp;
                 @endforeach
             </div>
@@ -76,7 +76,7 @@
         </table>
     </form>
     @if(!empty($trades))
-        {!! $trades->render() !!}
+        {!! $trades->appends($data)->render() !!}
     @endif
 @stop
 @section('js')
