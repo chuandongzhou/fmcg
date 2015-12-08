@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\BarcodeWithoutImages;
 use App\Models\Coordinate;
 use App\Models\DeliveryArea;
 use App\Models\Goods;
@@ -23,6 +24,7 @@ class MyGoodsController extends Controller
         $goods = auth()->user()->shop->goods()->with('images')->select([
             'id',
             'name',
+            'bar_code',
             'sales_volume',
             'price_retailer',
             'price_wholesaler',
@@ -41,8 +43,9 @@ class MyGoodsController extends Controller
             'categories' => $result['categories']
         ]);
     }
+
     /**
-     * tore a newly created resource in storage.
+     * store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Api\v1\CreateGoodsRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -57,6 +60,8 @@ class MyGoodsController extends Controller
 
             // 更新标签
             $this->updateAttrs($goods, $attributes['attrs']);
+            //保存没有图片的条形码
+            $this->saveWithoutImageOfBarCode($goods->bar_code);
             return $this->created('添加商品成功');
         }
         return $this->error('添加商品出现错误');
@@ -100,6 +105,8 @@ class MyGoodsController extends Controller
             $this->updateDeliveryArea($goods, $attributes['area']);
             // 更新标签
             $this->updateAttrs($goods, $attributes['attrs']);
+
+            $this->saveWithoutImageOfBarCode($goods->bar_code);
             return $this->success('更新商品成功');
         }
         return $this->error('更新商品时遇到问题');
@@ -152,19 +159,12 @@ class MyGoodsController extends Controller
      */
     public function getImages(Request $request)
     {
-        $cate = array_filter($request->only('cate_level_1', 'cate_level_2', 'cate_level_3'));
-
-        if (empty($cate)) {
-            return $this->success(['goodsImage' => []]);
+        $barCode = $request->input('bar_code');
+        if (!$barCode) {
+            return $this->error('暂无商品图片');
         }
+        $goodsImage = Images::with('image')->where('bar_code', 'LIKE', '%' . $barCode . '%')->paginate()->toArray();
 
-        $attrs = $request->input('attrs');
-
-        $goodsImage = Images::where($cate)->with('image');
-        if ($attrs) {
-            $goodsImage = $goodsImage->ofAttr($attrs);
-        }
-        $goodsImage = $goodsImage->paginate()->toArray();
         return $this->success(['goodsImage' => $goodsImage]);
     }
 
@@ -222,5 +222,20 @@ class MyGoodsController extends Controller
         if (!empty($attrArr)) {
             $model->attr()->sync($attrArr);
         }
+    }
+
+    /**
+     *  保存没有图片的条形码
+     *
+     * @param $barCode
+     * @return bool
+     */
+    private function saveWithoutImageOfBarCode($barCode)
+    {
+        $imagesCount = Images::where('bar_code', $barCode)->count();
+        if (!$imagesCount) {
+            BarcodeWithoutImages::create(['barcode' => $barCode]);
+        }
+        return true;
     }
 }

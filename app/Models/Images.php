@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-use DB;
-
 class Images extends Model
 {
     protected $table = 'images';
     protected $fillable = [
-        'cate_level_1',
-        'cate_level_2',
-        'cate_level_3',
-        'image'
+        'bar_code'
     ];
     public $appends = ['image_url'];
     public $hidden = ['image', 'created_at', 'updated_at'];
@@ -27,7 +22,7 @@ class Images extends Model
         static::deleted(function ($model) {
             // 删除所有关联文件
             $model->image() && $model->image()->delete();
-            $model->attrs()->detach();
+            // $model->attrs()->detach();
         });
     }
 
@@ -48,35 +43,9 @@ class Images extends Model
      */
     public function goods()
     {
-        return $this->belongsToMany('App\Models\Goods');
+        return $this->belongsToMany('App\Models\Goods', 'goods', 'bar_code', 'bar_code');
     }
 
-    /**
-     * 关联标签表
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function attrs()
-    {
-        return $this->belongsToMany('App\Models\Attr', 'images_attr');
-    }
-
-    /**
-     * @param $query
-     * @param $attr
-     */
-    public function scopeOfAttr($query, $attr)
-    {
-        $goodsAttr = DB::table('images_attr')->select(DB::raw('images_id ,count(attr_id) as num'))->whereIn('attr_id',
-            (array)$attr)->groupBy('images_id')->get();
-        $goodsAttr = array_filter($goodsAttr, function ($item) use ($attr) {
-            return $item->num == count($attr);
-        });
-        $goodsIds = array_pluck($goodsAttr, 'images_id');
-
-
-        return $query->whereIn('id', $goodsIds);
-    }
 
     /**
      * 保存图片
@@ -88,20 +57,6 @@ class Images extends Model
     {
         return $this->associateFile($this->convertToFile($image), 'image');
     }
-
-    /**
-     * 设置标签搜索
-     *
-     * @param $attr
-     */
-//    public function setAttrsAttribute($attr)
-//    {
-//        if (is_array($attr)) {
-//            $this->attributes['attrs'] = json_encode($attr);
-//        } else {
-//            $this->attributes['attrs'] = '';
-//        }
-//    }
 
     /**
      * 获取图片链接

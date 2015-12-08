@@ -28,9 +28,10 @@ class Model extends Eloquent
      * 将文件ID、路径、临时文件转成FileModel
      *
      * @param int|string|\SplFileInfo $file
+     * @param string $originalName
      * @return null|\App\Models\File
      */
-    public function convertToFile($file)
+    public function convertToFile($file, $originalName = null)
     {
         if (empty($file)) {
             return null;
@@ -45,7 +46,7 @@ class Model extends Eloquent
             }
         }
 
-        return File::createWithFile($file);
+        return File::createWithFile($file, $originalName);
     }
 
     /**

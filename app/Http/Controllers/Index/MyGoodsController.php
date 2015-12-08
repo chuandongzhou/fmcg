@@ -37,6 +37,7 @@ class MyGoodsController extends Controller
         $goods = auth()->user()->shop->goods()->with('images')->select([
             'id',
             'name',
+            'bar_code',
             'sales_volume',
             'price_retailer',
             'price_wholesaler',
@@ -97,7 +98,6 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             abort(403);
         }
-
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;

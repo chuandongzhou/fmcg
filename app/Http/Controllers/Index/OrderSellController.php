@@ -83,7 +83,7 @@ class OrderSellController extends OrderController
      */
     public function getWaitReceive()
     {
-         $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->getPayment();
+        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->getPayment();
         return view('index.order.order-sell', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, $orders->count())
@@ -142,8 +142,8 @@ class OrderSellController extends OrderController
         $orderIds = (array)$request->input('order_id');
         $res = Order::with('shippingAddress', 'shippingAddress.address',
             'goods.images')->bySellerId($this->user->id)->where('status', cons('order.status.send'))->whereIn('id',
-            $orderIds)->get()->toArray();
-        if (empty($res)) {
+            $orderIds)->get();
+        if ($res->isEmpty()) {
             return $this->error('没有该订单信息');
         }
         $this->_getContent($res);
@@ -191,22 +191,23 @@ class OrderSellController extends OrderController
             $table->addCell(700)->addText('数量');
             $table->addCell(1500)->addText('单价');
             $table->addCell(1500)->addText('小计');
-            foreach ($item['goods'] as $good) {
+            foreach ($item->goods as $goods) {
                 $table->addRow(20);
-                $table->addCell(1500)->addText($good['id']);
-                $table->addCell(1800)->addText($good['name']);
-                $table->addCell(3300)->addText(mb_substr($good['promotion_info'], 0, 20));
-                $table->addCell(700)->addText($good['pivot']['num']);
-                $table->addCell(1500)->addText($good['pivot']['price']);
-                $table->addCell(1500)->addText($good['pivot']['total_price']);
+                $table->addCell(1500)->addText($goods->id);
+                $table->addCell(1800)->addText($goods->name);
+                $table->addCell(3300)->addText(mb_substr($goods->promotion_info, 0, 20));
+                $table->addCell(700)->addText($goods->pivot->num);
+                $table->addCell(1500)->addText($goods->pivot->price . '/' . cons()->valueLang('goods.pieces',
+                        $goods['pieces_' . $item->user->type_name]));
+                $table->addCell(1500)->addText($goods->pivot->total_price);
             }
             $info = [
-                '付款方式:   ' . $item['payment_type'],
-                '备注:   ' . $item['remark'],
-                '合计:   ' . $item['price'],
-                '收货人:   ' . $item['shipping_address']['consigner'],
-                '电话:   ' . $item['shipping_address']['phone'],
-                '地址:   ' . $item['shipping_address']['address']['address']
+                '付款方式:   ' . $item->payment_type,
+                '备注:   ' . $item->remark,
+                '合计:   ' . $item->price,
+                '收货人:   ' . $item->shippingAddress->consigner,
+                '电话:   ' . $item->shippingAddress->phone,
+                '地址:   ' . $item->shippingAddress->address->address
             ];
             foreach ($info as $v) {
                 $table->addRow();
@@ -226,6 +227,7 @@ class OrderSellController extends OrderController
 
     /**
      * 获取不同状态订单数
+     *
      * @param int $nonSend
      * @param int $waitReceive
      * @param int $waitConfirm

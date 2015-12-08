@@ -1,5 +1,7 @@
 @extends('index.index-master')
 @include('includes.loadMapJs')
+
+@section('subtitle', '商品详情')
 @section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
@@ -42,13 +44,16 @@
                         @endif
 
                         <li>
-                            <span class="prompt">退换货 </span> : <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
+                            <span class="prompt">退换货 </span> :
+                            <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
                         </li>
                         <li>
-                            <span class="prompt">即期品 </span> : <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
+                            <span class="prompt">即期品 </span> :
+                            <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
                         <li><span class="prompt">条形码 </span> : <b>{{ $goods->bar_code }}</b></li>
-                        <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post" autocomplete="off">
+                        <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post"
+                              autocomplete="off">
                             <li>
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
                                 <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">
@@ -64,7 +69,7 @@
                                     @if(is_null($isLike))
                                         <i class="fa fa-star-o"></i> 加入收藏夹
                                     @else
-                                        <i  class="fa fa-star"></i> 已收藏
+                                        <i class="fa fa-star"></i> 已收藏
                                     @endif
                                 </a>
                                 <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
@@ -91,7 +96,7 @@
                 <div class="item">
                     <h5 class="prompt">商品配送区域大概地图标识 :</h5>
 
-                   <div id="map"></div>
+                    <div id="map"></div>
                 </div>
             </div>
             <div class="col-sm-12 box graphic-details">
@@ -154,8 +159,8 @@
 
                 return false;
             });
-            $('a.close-btn').on('click' , function (){
-                $(".mask-outer").css("display","none");
+            $('a.close-btn').on('click', function () {
+                $(".mask-outer").css("display", "none");
             });
             numChange({{ $goods->min_num }});
             tabBox();

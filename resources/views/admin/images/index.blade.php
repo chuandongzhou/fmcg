@@ -3,47 +3,15 @@
 @section('subtitle' , '图片管理')
 
 @section('right-container')
-    <form class="form-horizontal" action="{{ url('admin/images') }}" method="get"
-          data-help-class="col-sm-push-2 col-sm-10" data-done-url="{{ url('admin/images') }}" autocomplete="off">
+    <form class="form-horizontal" action="{{ url('admin/images') }}" method="get" autocomplete="off">
         <div id="container">
             <div class="form-group">
                 <div class="row col-lg-12">
-                    <div class="col-sm-2">
-                        <select name="cate_level_1" class="address-province form-control">
-
-                        </select>
-                    </div>
-                    <div class="col-sm-2" id="level2">
-                        <select name="cate_level_2" class="address-city form-control">
-
-                        </select>
+                    <div class="col-sm-4">
+                        <input type="text" name="bar_code" class="form-control" value="{{ $barCode }}" placeholder="请输入条形码"/>
                     </div>
                     <div class="col-sm-2">
-                        <select name="cate_level_3" class="address-district form-control">
-                            <option selected="selected" value="0">请选择</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="submit">搜索</button></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group ">
-                <div class="row col-lg-12 ">
-                    <div class="col-sm-12 attr">
-                        @foreach($attrResult as $attr)
-                            <p class="items-item"><label>{{ $attr['name'] }}</label>
-                                <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
-                                    <option value="0">请选择</option>
-                                    @if (isset($attr['child']))
-                                        @foreach($attr['child'] as $key => $val)
-                                            <option value="{{ $key }}" {{ $key == $attrs[$attr['attr_id']] ? 'selected' : '' }} >{{ $val['name'] }}</option>
-                                        @endforeach
-                                    @endif
-                                </select></p>
-                        @endforeach
+                        <input type="submit" class="btn btn-default" value="查询">
                     </div>
                 </div>
             </div>
@@ -53,9 +21,6 @@
                         @foreach($goodsImage as $id => $image)
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="thumbnail">
-                                    <span class="cate-name">
-                                        {{ $categories[$image['cate_level_1']] .($image['cate_level_2'] ? '>' . $categories[$image['cate_level_2']] : '' )  .($image['cate_level_3'] ? '>' . $categories[$image['cate_level_3']] : '' ) }}
-                                    </span>
                                     <a aria-label="Cloa'ue" class="close btn ajax" type="button"
                                        data-url="{{ url('admin/images',[$image->id]) }}"
                                        data-method="delete">
@@ -67,7 +32,7 @@
                             </div>
                         @endforeach
                     </div>
-                    {!! $goodsImage->appends($data)->render() !!}
+                    {!! $goodsImage->appends($barCode ? ['bar_code'=> $barCode] : [])->render() !!}
                 </div>
             </div>
         </div>

@@ -116,6 +116,7 @@ class GoodsService
             $goodsFields = [
                 'id',
                 'name',
+                'bar_code',
                 'price_retailer',
                 'price_wholesaler',
                 'is_new',

@@ -111,7 +111,7 @@ class Goods extends Model
      */
     public function images()
     {
-        return $this->belongsToMany('App\Models\Images');
+        return $this->hasMany('App\Models\Images','bar_code' , 'bar_code');
     }
 
     /**

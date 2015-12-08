@@ -363,7 +363,6 @@
     cate_level_2        int         第二层分类
     cate_level_3        int         第三层分类
     attrs               array       标签数组 （数组下标为此标签父类id）
-    images              array       商品图片id数组
     area                array       商品配送区域数组
     introduce           string      商品图文介绍
 
@@ -404,7 +403,6 @@
     cate_level_2        int         第二层分类
     cate_level_3        int         第三层分类
     attrs               array       标签数组（数组下标为此标签父类id）
-    images              array       商品图片id数组
     area                array       商品配送区域数组
     introduce           string      商品图文介绍
 
@@ -440,18 +438,12 @@
 #### 2.3.7 获取商品图库 [get] （images）
 `请求参数：`
 
-    cate_level_1        int         第一层分类
-    cate_level_2        int         第二层分类
-    cate_level_3        int         第三层分类
-    attrs               array       标签数组
+    bar_code            string      商品条形码
 
 `成功返回：`
 
     goodsImages         array       商品图片列表
 
-    cate_level_1        int         第一层分类
-    cate_level_2        int         第二层分类
-    cate_level_3        int         第三层分类
     id                  int         图库id
     image_url           string      图片地址
 

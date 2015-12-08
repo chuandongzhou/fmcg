@@ -1,10 +1,6 @@
 @extends('master')
 
-
-
 @section('title')@yield('subtitle') | 订百达@stop
-
-
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">

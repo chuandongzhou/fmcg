@@ -44,9 +44,6 @@
                         @endif
                     </div>
                     <div class="form-group editor-item">
-
-                    </div>
-                    <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">最低购买数 :</label>
                             <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
@@ -113,14 +110,6 @@
 
                             </div>
                         @endforeach
-                    </div>
-                </div>
-                <div class="col-sm-12 map">
-                    <div class="upload-img">
-                        <label>选择图片 :</label>
-                    </div>
-                    <div class="load-img-wrap">
-
                     </div>
                 </div>
                 <div class="col-sm-12 editor-wrap">
@@ -259,7 +248,8 @@
         );
         //获取分类
         getAttr();
-        addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');
+        {{--addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');--}}
+        loadGoodsImages('{{ $goods->bar_code }}');
         $('.pieces').change(function () {
             var obj = $(this), changeClass = obj.data('changeClass'), pieces = obj.find("option:selected").text();
             $('.' + changeClass).html(pieces);

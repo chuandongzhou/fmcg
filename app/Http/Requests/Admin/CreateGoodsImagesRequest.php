@@ -14,9 +14,7 @@ class CreateGoodsImagesRequest extends Request
     public function rules()
     {
         return [
-            'cate_level_1' => 'required|numeric|min:1',
-            'cate_level_2' => 'required|numeric|min:1',
-            'cate_level_3' => 'required|numeric|min:1',
+            'bar_code' => 'required|digits_between:13,18',
             'images' => 'required',
         ];
     }
