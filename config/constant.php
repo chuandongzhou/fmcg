@@ -159,6 +159,10 @@ return [
             'bag' => 5,
             'pot' => 6,
             'packet' => 7
+        ],
+        'import_allow_ext' => [
+            'xls',
+            'xlsx'
         ]
     ],
     // 银行列表

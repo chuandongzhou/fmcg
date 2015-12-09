@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Attr;
-use App\Models\Category;
 use App\Models\Goods;
 use App\Services\GoodsService;
-use DB;
-use Gate;
-
-
 use App\Http\Requests;
 use App\Services\AttrService;
 use Illuminate\Http\Request;
+use DB;
+use Gate;
+use Illuminate\Support\Facades\Response;
+
 
 class MyGoodsController extends Controller
 {
@@ -86,6 +85,16 @@ class MyGoodsController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating some new resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function batchCreate()
+    {
+        return view('index.my-goods.batch-create');
+    }
+
 
     /**
      * Display the specified resource.
@@ -142,6 +151,22 @@ class MyGoodsController extends Controller
             'attrGoods' => $attrGoods,
             'coordinates' => $coordinates
         ]);
+    }
+
+    /**
+     * 模块下载
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function downloadTemplate()
+    {
+        $userType = auth()->user()->type;
+        $fileName = array_search($userType, cons('user.type'));
+        $file = config('path.upload_file') . $fileName . '.xls';
+        if (is_file($file)) {
+            return Response::download($file);
+        }
+        return $this->error('文件不存在');
     }
 
     /**

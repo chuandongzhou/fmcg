@@ -120,8 +120,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 0 50px;
       a {
         padding: 0;
-        &:hover, &:focus{
-          background-color:transparent ;
+        &:hover, &:focus {
+          background-color: transparent;
         }
       }
     }
@@ -363,8 +363,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .guide-container {
   height: 78%;
   position: relative;
-  .banner{
-    img{
+  .banner {
+    img {
       width: 100%;
     }
   }
@@ -1085,6 +1085,20 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   @extend .store-panel;
+}
+
+.import-goods-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
 }
 
 /*======================================my-goods end======================================*/
@@ -2044,11 +2058,11 @@ table {
       color: $gray-light;
       padding-top: 10px;
       padding-bottom: 10px;
-      &:hover ,&:focus{
-        background-color:transparent;
+      &:hover, &:focus {
+        background-color: transparent;
       }
-      &.home{
-        color:$brand-warning;
+      &.home {
+        color: $brand-warning;
       }
     }
   }

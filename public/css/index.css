@@ -797,6 +797,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     .public-personal .menu .menu-list .active {
       color: #4cb9fe; }
 
+.import-goods-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block; }
+  .import-goods-btn input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer; }
+
 /*======================================my-goods end======================================*/
 /*======================================goods-detail begin======================================*/
 .goods-detail .operating {

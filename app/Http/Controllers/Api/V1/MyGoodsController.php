@@ -11,7 +11,9 @@ use App\Models\Images;
 use App\Services\AddressService;
 use App\Services\AttrService;
 use App\Services\GoodsService;
+use App\Services\ImportService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Gate;
 
 class MyGoodsController extends Controller
@@ -168,6 +170,87 @@ class MyGoodsController extends Controller
         return $this->success(['goodsImage' => $goodsImage]);
     }
 
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+
+        $postAttr = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3', 'status']);
+        $attrs = $request->input('attrs');
+        $importResult = $this->importGoods($file, $postAttr, $attrs);
+
+        return $importResult ? $this->success('导入成功') : $this->error('导入错误，请重试');
+    }
+
+
+    /**
+     * 导入商品
+     *
+     * @param $file
+     * @param $postAttr
+     * @param $attrs
+     * @return bool
+     */
+    public function importGoods($file, $postAttr, $attrs)
+    {
+        $filePath = $this->uploadExcel($file);
+        if (!$filePath) {
+            return false;
+        }
+        $results = Excel::selectSheetsByIndex(0)->load($filePath, function ($reader) {
+        })->skip(1)->toArray();
+
+        $shop = auth()->user()->shop->load(['deliveryArea.coordinate']);
+        foreach ($results as $goods) {
+            $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr);
+            $goodsModel = $shop->goods()->create($goodsAttr);
+            if ($goodsModel->exists) {
+                $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
+                $this->updateAttrs($goodsModel, $attrs);
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+
+    /**
+     * upload excel for goods
+     *
+     * @param $file
+     * @return bool|string
+     */
+    protected function uploadExcel($file)
+    {
+        $tempPath = config('path.upload_temp');
+
+        // 判断文件是否有效
+        if (!is_object($file) || !$file->isValid()) {
+            return false;
+        }
+        $ext = $file->getClientOriginalExtension();
+
+        if (!in_array($ext, cons('goods.import_allow_ext'))) {
+            return false;
+        }
+
+        $path = date('Y/m/d/');
+        $name = uniqid() . '.' . $ext;
+
+        try {
+            // 移动到目录
+            $file->move($tempPath . $path, $name);
+        } catch (FileException $e) {
+            info($e);
+
+            return false;
+        }
+        return $tempPath . $path . $name;
+    }
+
     /**
      * 更新配送地址处理
      *
@@ -202,6 +285,53 @@ class MyGoodsController extends Controller
             }
         }
         return true;
+    }
+
+    /**
+     * 复制商店配送区域至商品配送区域
+     *
+     * @param $goodsModel
+     * @return bool
+     */
+    private function _copyShopDeliveryAreaForImport($goodsModel, $shop)
+    {
+        if (!$goodsModel instanceof Goods) {
+            return false;
+        }
+
+        $shop->deliveryArea->each(function ($area) use ($goodsModel) {
+            $areaModel = $goodsModel->deliveryArea()->save(new DeliveryArea(array_except($area->toArray(),
+                'coordinate')));
+            if (isset($area->coordinate)) {
+                $areaModel->coordinate()->save(new Coordinate($area->coordinate->toArray()));
+            }
+            unset($areaModel);
+        });
+        return true;
+    }
+
+    /**
+     * 获取商品字段
+     *
+     * @param $goodsArr
+     * @return array
+     */
+    private function _getGoodsAttrForImport($goodsArr, $postAttr)
+    {
+
+        $goods = [
+            'name' => $goodsArr[0],
+            'bar_code' => $goodsArr[1],
+            'price_retailer' => $goodsArr[2],
+            'min_num_retailer' => $goodsArr[3],
+            'pieces_retailer' => $goodsArr[4],
+        ];
+        if (auth()->user()->type == cons('user_type.supplier')) {
+            $goods['price_supplier'] = isset($goodsArr[5]) ? $goodsArr[5] : $goodsArr[2];
+            $goods['min_num_supplier'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[3];
+            $goods['pieces_supplier'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[4];
+        }
+        return array_merge($goods, $postAttr);
     }
 
     /**

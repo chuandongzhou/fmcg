@@ -35,6 +35,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->controller('order', 'OrderController');//订单统计
     $router->controller('order-buy', 'OrderBuyController');  //买家订单管理
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
+    $router->get('my-goods/batch-create', 'MyGoodsController@batchCreate');  //批量增加商品
+    $router->get('my-goods/download-template', 'MyGoodsController@downloadTemplate');  //批量增加商品
     $router->resource('my-goods', 'MyGoodsController');          //商品管理
     $router->get('goods/{goods}', 'GoodsController@detail')->where('goods', '[0-9]+');          //商品详情
     $router->get('cart', 'CartController@index');          // 购物车
@@ -146,6 +148,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
         $router->put('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
         $router->get('my-goods/images', 'MyGoodsController@getImages');
+        $router->post('my-goods/import', 'MyGoodsController@import');
         $router->resource('my-goods', 'MyGoodsController');
 
 

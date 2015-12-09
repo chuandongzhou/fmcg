@@ -614,6 +614,74 @@ var loadGoodsImages = function (barCode) {
 //    loadImg(cate1, cate2, cate3);
 //}
 
+function goodsBatchUpload() {
+    $('#upload_file').change(function () {
+        var fileName = $(this).val();
+        var arr = fileName.split('\\');
+        fileName = arr[arr.length - 1];
+        $(this).closest('span').next('span').remove().end().after('<span>&nbsp;&nbsp;&nbsp;' + fileName + '</span>');
+    });
+    $('#upload_file').fileupload({
+        dataType: 'json',
+        add: function (e, data) {
+            $(".save-btn").off('click').on('click', function () {
+                var obj = $('#upload_file');
+                obj.fileupload('disable');
+                obj.parent().addClass('disabled').siblings('.progress').show();
+                obj.parent().siblings('.fileinput-error').remove();
+
+                var $this = $(this),
+                    cateLevel1 = $('select[name="cate_level_1"]').val(),
+                    cateLevel2 = $('select[name="cate_level_2"]').val(),
+                    cateLevel3 = $('select[name="cate_level_3"]').val() || 0,
+                    status = $this.data('status') || 0
+                if (!cateLevel1 || !cateLevel2) {
+                    alert('请把分类选择完整');
+                    return false;
+                }
+                var formData = {
+                    'status': status,
+                    'cate_level_1': cateLevel1,
+                    'cate_level_2': cateLevel2,
+                    'cate_level_3': cateLevel3,
+                };
+
+                $('.attrs').each(function () {
+                    var obj = $(this);
+                    if (obj.val()) {
+                        formData[obj.attr('name')] = obj.val();
+                    }
+                });
+
+                data.formData = formData;
+                data.submit();
+            });
+        }, fail: function (e, data) {
+            var json = data.jqXHR['responseJSON'], text = '文件上传失败';
+            if (json && json['message']) {
+                text = json['message'];
+            }
+
+            $(this).parent().after('<span class="fileinput-error"> ' + text + '</span>');
+        },
+        done: function (e, data) {
+            $(this).parent().after('<span class="fileinput-error"> 保存成功</span>');
+        }, always: function (e, data) {
+            // 隐藏进度条并开放按钮
+            $(this).parent().removeClass('disabled').siblings('.progress').hide()
+                .children('.progress-bar').css('width', '0');
+            $(this).fileupload('enable');
+        },
+        progressall: function (e, data) {
+            var progress = Math.round(data.loaded / data.total * 1000) / 10,
+                text = isNaN(progress) ? '100.0%' : (progress.toFixed(1) + '%');
+            $(this).parent().siblings('.progress')
+                .children('.progress-bar').css('width', text).html(text);
+        }
+    });
+}
+
+
 /**
  *提现操作JS
  */

@@ -74,7 +74,7 @@
                             <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-heart-o"></i> 商品管理
                             </a>
-                            <ul class="menu-wrap" {!!  request()->is('my-goods','my-goods/create') ? 'style="display:block"' : '' !!}>
+                            <ul class="menu-wrap" {!!  request()->is('my-goods','my-goods/*') ? 'style="display:block"' : '' !!}>
                                 <li>
                                     <a class="{{ path_active('my-goods') }}" href="{{ url('my-goods') }}">
                                         我的商品
@@ -83,6 +83,11 @@
                                 <li>
                                     <a class="{{ path_active('my-goods/create') }}" href="{{ url('my-goods/create') }}">
                                         新增商品
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="{{ path_active('my-goods/batch-create') }}" href="{{ url('my-goods/batch-create') }}">
+                                        批量导入
                                     </a>
                                 </li>
                             </ul>

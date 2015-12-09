@@ -105,7 +105,7 @@ return array(
     |
     */
 
-    'creator'    => 'Maatwebsite',
+    'creator'    => 'dingbaida.com',
 
     'csv'        => array(
         /*
@@ -362,7 +362,7 @@ return array(
         |
         */
 
-        'heading'                 => 'slugged',
+        'heading'                 => 'numeric',
 
         /*
         |--------------------------------------------------------------------------

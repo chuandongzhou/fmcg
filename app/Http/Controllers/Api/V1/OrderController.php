@@ -115,7 +115,6 @@ class OrderController extends Controller
         $orders = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
-
         return $this->success($this->_hiddenAttr($orders));
     }
 
@@ -159,6 +158,7 @@ class OrderController extends Controller
 
         //过滤字段
         $order->shop->setAppends([]);
+        $order->user->setVisible(['id', 'shop', 'type']);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url']);
         });
@@ -636,7 +636,7 @@ class OrderController extends Controller
             $order->goods->each(function ($goods) {
                 $goods->addHidden(['introduce', 'images_url']);
             });
-            $order->user->setVisible(['id', 'shop']);
+            $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
         });
         return $orders;
