@@ -50,7 +50,7 @@
                                    type="text"
                                    required>
                             <span>
-                                (<span class="pieces-retailer">{{ $goods->pieces_retailer or head(cons()->valueLang('goods.pieces')) }}</span>)
+                                (<span class="pieces-retailer">{{ $goods->pieces_retailer ? cons()->valueLang('goods.pieces',$goods->pieces_retailer) : head(cons()->valueLang('goods.pieces')) }}</span>)
                             </span>
                         </p>
 
@@ -60,7 +60,7 @@
                                 <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
                                        type="text" required>
                                 <span>
-                                    (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler or head(cons()->valueLang('goods.pieces')) }}</span>)
+                                    (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler ? cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) : head(cons()->valueLang('goods.pieces')) }}</span>)
                                 </span>
                             </p>
                         @endif
@@ -70,7 +70,6 @@
                             <label class="control-label">商品条形码 :</label>
                             <input value="{{ $goods->bar_code }}" name="bar_code"
                                    type="text" required>
-
                         </p>
                     </div>
                     <div class="form-group editor-item">
@@ -88,7 +87,7 @@
                                 <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs">
                                     <option value="0">请选择</option>
                                     @foreach($attr['child'] as $child)
-                                        <option value="{{ $child['attr_id'] }}" {{ $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                        <option value="{{ $child['attr_id'] }}" {{ isset($attrGoods[$attr['attr_id']]) && $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
                                     @endforeach
                                 </select>
                             </p>
@@ -254,5 +253,9 @@
             var obj = $(this), changeClass = obj.data('changeClass'), pieces = obj.find("option:selected").text();
             $('.' + changeClass).html(pieces);
         })
+        $('input[name="is_promotion"]').change(function () {
+            var promotionInfo = $('textarea[name="promotion_info"]');
+            $(this).val() == 1 ? promotionInfo.prop('disabled', false) : promotionInfo.prop('disabled', true);
+        });
     </script>
 @stop

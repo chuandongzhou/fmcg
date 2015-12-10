@@ -40,7 +40,7 @@ class BarcodeWithoutImagesController extends Controller
                 $sub_titles = [
                     '条形码ID',
                     '条形码',
-                    '添加时间时间',
+                    '添加时间',
                 ];
                 $sheet->setWidth([
                     'A' => 30,
@@ -74,7 +74,7 @@ class BarcodeWithoutImagesController extends Controller
     }
 
     /**
-     * 批量删除记录
+     * Batch  remove the specified resource from storage.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response

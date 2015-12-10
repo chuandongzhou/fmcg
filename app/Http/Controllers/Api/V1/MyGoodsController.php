@@ -326,10 +326,10 @@ class MyGoodsController extends Controller
             'min_num_retailer' => $goodsArr[3],
             'pieces_retailer' => $goodsArr[4],
         ];
-        if (auth()->user()->type == cons('user_type.supplier')) {
-            $goods['price_supplier'] = isset($goodsArr[5]) ? $goodsArr[5] : $goodsArr[2];
-            $goods['min_num_supplier'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[3];
-            $goods['pieces_supplier'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[4];
+        if (auth()->user()->type == cons('user.type.supplier')) {
+            $goods['price_wholesaler'] = isset($goodsArr[5]) ? $goodsArr[5] : $goodsArr[2];
+            $goods['min_num_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[3];
+            $goods['pieces_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[4];
         }
         return array_merge($goods, $postAttr);
     }

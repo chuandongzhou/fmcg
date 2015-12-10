@@ -100,7 +100,7 @@
                                 </h4>
                             </div>
                             <div id="collapse-three" class="panel-collapse collapse
-                            {{ path_active(['admin/category/create' , 'admin/attr/create' , 'admin/images/create' , 'admin/category' , 'admin/attr' , 'admin/images'] , 'in') }}">
+                            {{ path_active(['admin/category/create' , 'admin/attr/create' , 'admin/images/create' , 'admin/category' , 'admin/attr' , 'admin/images','admin/barcode-without-images'] , 'in') }}">
                                 <div class="panel-body">
                                     <ul>
                                         <li><a href="{{  url('admin/category/create')  }}">商品分类添加</a> <a
@@ -109,6 +109,7 @@
                                                     href="{{  url('admin/attr')  }}" class="manger">管理</a></li>
                                         <li><a href="{{  url('admin/images/create')  }}">商品图片添加</a> <a
                                                     href="{{  url('admin/images')  }}" class="manger">管理</a></li>
+                                        <li><a href="{{  url('admin/barcode-without-images')  }}">无图片条形码</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -116,8 +117,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion"
-                                       href="#collapse-four">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse-four">
                                         广告投放
                                     </a>
                                 </h4>

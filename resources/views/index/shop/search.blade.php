@@ -13,7 +13,7 @@
                         @if (isset($get['category_id']))
                             @foreach($categories as $category)
                                 <div class="sort-list">
-                                    <a class="list-title" href="#">
+                                    <a class="list-title" href="javascript:">
                                         <span class="title-txt">{{ isset($category['selected']) ? $category['selected']['name'] : '请选择' }}</span><i
                                                 class="fa fa-angle-down"></i>
                                     </a>
@@ -56,7 +56,7 @@
                                     </a>
                                 @endforeach
                             </p>
-                            <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                            <a class="more pull-right" href="javascript:"><span>更多</span> <i class="fa fa-angle-down"></i></a>
                         </div>
                     </div>
                 @endif
@@ -75,7 +75,7 @@
                                         </a>
                                     @endforeach
                                 </p>
-                                <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                                <a class="more pull-right" href="javascript:"><span>更多</span> <i class="fa fa-angle-down"></i></a>
                             </div>
                         </div>
                     @endif

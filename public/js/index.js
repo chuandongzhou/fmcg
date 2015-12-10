@@ -646,13 +646,13 @@ function goodsBatchUpload() {
                     'cate_level_3': cateLevel3,
                 };
 
+
                 $('.attrs').each(function () {
                     var obj = $(this);
                     if (obj.val()) {
                         formData[obj.attr('name')] = obj.val();
                     }
                 });
-
                 data.formData = formData;
                 data.submit();
             });

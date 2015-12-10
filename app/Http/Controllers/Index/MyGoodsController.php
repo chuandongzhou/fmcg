@@ -134,14 +134,11 @@ class MyGoodsController extends Controller
             $attrGoods[$attr->pid] = $attr->pivot->toArray();
         }
 
-        $attrIds = array_pluck($attrGoods, 'attr_pid');
         $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
-            $goods->category_id)->where(function ($query) use ($attrIds) {
-            $query->whereIn('attr_id', $attrIds)->orWhere(function ($query) use ($attrIds) {
-                $query->whereIn('pid', $attrIds);
-            });
-        })->get()->toArray();
+            $goods->category_id)->get()->toArray();
+
         $attrResults = (new AttrService($attrResults))->format();
+
         $coordinates = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });
@@ -162,8 +159,7 @@ class MyGoodsController extends Controller
     {
         $userType = auth()->user()->type;
         $fileName = array_search($userType, cons('user.type'));
-        $file = public_path('images\\') . $fileName . '.xls';
-
+        $file = public_path('images/') . $fileName . '.xls';
         if (is_file($file)) {
             return Response::download($file);
         }
