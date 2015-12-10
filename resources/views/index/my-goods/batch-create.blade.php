@@ -37,7 +37,7 @@
                                        data-url="{{ url('api/v1/my-goods/import') }}" id="upload_file"
                                        name="file">
                             </span>
-                        <a class="control-label" href="{{ url('my-goods/download-template') }}">下载模板</a>
+                        <a class="control-label btn btn-warning btn-sm" href="{{ url('my-goods/download-template') }}"><i class="fa fa-download"></i> 下载模板</a>
                         </p>
                     </div>
                 </div>

@@ -45,7 +45,7 @@ class YeePayController extends Controller
 
 //	商品名称
 //用于支付时显示在易宝支付网关左侧的订单产品信息.
-        $p5_Pid = iconv('UTF-8', 'GB2312', '商品名');
+        $p5_Pid = iconv('UTF-8', 'GB2312', '成都订百达科技有限公司');
 //	商品种类
         $p6_Pcat = 'fmcg_type';
 

@@ -154,7 +154,7 @@ class MyGoodsController extends Controller
     }
 
     /**
-     * 模块下载
+     * 模板下载
      *
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -162,7 +162,8 @@ class MyGoodsController extends Controller
     {
         $userType = auth()->user()->type;
         $fileName = array_search($userType, cons('user.type'));
-        $file = config('path.upload_file') . $fileName . '.xls';
+        $file = public_path('images\\') . $fileName . '.xls';
+
         if (is_file($file)) {
             return Response::download($file);
         }
