@@ -279,9 +279,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       -webkit-box-sizing: border-box;
       text-align: center;
       cursor: pointer; }
-      .guide-container .content-panel .tabs-item:hover {
+      .guide-container .content-panel .tabs-item:hover, .guide-container .content-panel .tabs-item:focus {
         text-decoration: none; }
-        .guide-container .content-panel .tabs-item:hover .item-icon img {
+        .guide-container .content-panel .tabs-item:hover .item-icon img, .guide-container .content-panel .tabs-item:focus .item-icon img {
           border: 2px solid #fff; }
       .guide-container .content-panel .tabs-item .item-icon {
         display: inline-block;
@@ -764,38 +764,47 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .public-personal .menu {
   text-align: center;
-  padding: 0; }
+  padding: 0;
+  min-width: 120px; }
   .public-personal .menu a {
     color: #000;
     display: inline-block;
     width: 100%;
     padding: 10px 0;
     text-decoration: none; }
+    .public-personal .menu a:hover {
+      background-color: #f2f2f2; }
   .public-personal .menu .go-back, .public-personal .menu .name {
-    padding: 10px 5px;
-    width: 60%;
-    display: inline-block;
-    border: 1px solid #b4b4b4; }
-  .public-personal .menu .name .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%; }
+    padding: 5px 5px;
+    border: 1px solid #b4b4b4;
+    background-color: #f2f2f2; }
+  .public-personal .menu .name a:hover {
+    color: #4cb9fe; }
   .public-personal .menu .dealer-menu-list {
     text-align: center; }
     .public-personal .menu .dealer-menu-list .list-item {
       color: #000; }
   .public-personal .menu .menu-list {
     border: 1px solid #b4b4b4;
-    width: 60%;
     margin: -1px auto auto auto; }
     .public-personal .menu .menu-list .menu-wrap {
       display: none;
       margin-left: 20px; }
       .public-personal .menu .menu-list .menu-wrap li {
         text-align: left;
-        padding-left: 15px; }
+        padding-left: 27px; }
+        .public-personal .menu .menu-list .menu-wrap li a:hover {
+          background-color: inherit;
+          color: #777777; }
     .public-personal .menu .menu-list .active {
       color: #4cb9fe; }
+
+@media (min-width: 1000px) {
+  .public-personal .menu .name {
+    width: 70%;
+    margin: 0 auto; }
+  .public-personal .menu .menu-list {
+    width: 70%; } }
 
 .import-goods-btn {
   position: relative;

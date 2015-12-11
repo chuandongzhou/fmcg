@@ -991,7 +991,7 @@ function getCoordinateMap(data) {
                 if (!index) {
                     //map.centerAndZoom(point,5);//取第一个中心点为地图默认中心
                     map.centerAndZoom(new BMap.Point(point_lng, point_lat), 13);
-                    map.setZoom(13); //默认到市
+                    map.setZoom(12); //默认到市
                 }
                 var marker = new BMap.Marker(point);  // 创建标注
                 map.addOverlay(marker);               // 将标注添加到地图中

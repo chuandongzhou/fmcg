@@ -384,7 +384,7 @@ function likeFunc() {
             data: {status: !status ? 1 : 0, type: type, id: id}
         }).done(function (data, textStatus, jqXHR) {
             if ($.isPlainObject(data)) {
-                status = data.message.id;
+                status = data.id;
             } else {
                 status = null;
             }

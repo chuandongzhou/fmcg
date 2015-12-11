@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateRoleRequest;
 use App\Models\Node;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use WeiHeng\Foundation\Tree;
 
 
 class RoleController extends Controller
@@ -29,8 +30,12 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $node = Node::all();
-        return view('admin.role.create', ['node' => $node, 'role' => new Role]);
+        $nodes = Node::all()->toArray();
+        return view('admin.role.role', [
+            'nodes' => new Tree($nodes),
+            'role' => new Role,
+            'role_node' => []
+        ]);
     }
 
     /**
@@ -73,7 +78,12 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::with('nodes')->find($id);
-        return view('admin.role.role', ['role' => $role , 'node'=>$role['node']]);
+        $nodes = Node::all()->toArray();
+        return view('admin.role.role', [
+            'role' => $role,
+            'role_node' => $role->nodes->pluck('pivot')->pluck('node_id')->toArray(),
+            'nodes' => new Tree($nodes),
+        ]);
     }
 
     /**
@@ -89,15 +99,17 @@ class RoleController extends Controller
         if (!$role) {
             $this->error('要修改的角色不存在');
         }
-        $data = $request->all();
-        $role = Role::create(['name' => $data['name'], 'id' => $id]);
-        $nodes = $request['node'];
-        if (!empty($nodes)) {
-            $role->nodes()->detach()->sync($nodes);
+        $name = $request->input('name');
+        if ($role->fill(['name' => $name])) {
+            $nodes = $request->input('node');
+            if (!empty($nodes)) {
+                $role->nodes()->detach();
+                $role->nodes()->sync($nodes);
+            }
+            return $this->success('修改成功');
         }
 
-
-        return $this->success('添加成功');
+        return $this->success('修改角色时出现错误');
     }
 
     /**

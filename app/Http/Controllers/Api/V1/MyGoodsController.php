@@ -102,6 +102,9 @@ class MyGoodsController extends Controller
             return $this->forbidden('权限不足');
         }
         $attributes = $request->all();
+        //是否退换货补充
+        $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
+        $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
         if ($goods->fill($attributes)->save()) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $attributes['area']);

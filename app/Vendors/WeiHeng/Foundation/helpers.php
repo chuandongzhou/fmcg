@@ -71,7 +71,7 @@ if (!function_exists('upload_file_url')) {
     {
         $relatePath = str_replace(public_path(), '', config('path.upload_file'));
 
-        return str_replace('\\', '/',asset($relatePath . $path, $secure));
+        return str_replace('\\', '/', asset($relatePath . $path, $secure));
     }
 
 }
@@ -156,10 +156,12 @@ if (!function_exists('path_active')) {
      */
     function path_active($path, $class = 'active')
     {
+        $path = array_map(function ($p) {
+            return explode('?', $p)[0];
+        }, (array)$path);
         return call_user_func_array('\Request::is', (array)$path) ? $class : '';
     }
 }
-
 
 
 if (!function_exists('request_info')) {

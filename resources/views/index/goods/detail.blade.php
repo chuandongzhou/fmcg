@@ -72,7 +72,6 @@
                                         <i class="fa fa-star"></i> 已收藏
                                     @endif
                                 </a>
-                                <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
                             </li>
                         </form>
                     </ul>
@@ -115,7 +114,7 @@
                 <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
 
                 <div class="pop-btn">
-                    <a href='javascript:history.back()' class="btn btn-default">继续购物</a>
+                    <a href='{{ url('/') }}' class="btn btn-default">继续购物</a>
                     <a href="{{ url('cart') }}" class="btn btn-danger">查看购物车</a>
                 </div>
             </div>

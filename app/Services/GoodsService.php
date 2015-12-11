@@ -83,10 +83,14 @@ class GoodsService
             //手机端有搜索名字时才返回
             $categories = isset($data['name']) ? $categories : new \stdClass();
         }
+
         return [
             'goods' => $goods,
             'attrs' => $attrs,
-            'categories' => isset($data['category_id']) ? $resultCategories : $categories,
+            'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
+                function ($key, $value) {
+                    return $value['pid'] === 0;
+                }),
             'searched' => $searched,
             'moreAttr' => $moreAttr
         ];
@@ -104,7 +108,7 @@ class GoodsService
         $columnTypes = cons('home_column.type');
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
-        
+
         $goodsColumns = [];
         if (Cache::has($cacheKey)) {
             $goodsColumns = Cache::get($cacheKey);

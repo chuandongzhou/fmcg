@@ -46,4 +46,11 @@ class Admin extends Model implements AuthenticatableContract
 
         }
     }
+
+    public function getNodeIdsAttribute()
+    {
+        $admin = admin_auth()->user();
+        $nodeIds = $admin->name == cons('admin.super_admin_name') ? Node::all()->pluck('id') : $admin->role->nodes->pluck('id');
+        return $nodeIds;
+    }
 }

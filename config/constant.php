@@ -51,6 +51,10 @@ return [
             'not_pass' => 2,       //未通过
         ]
     ],
+    //后台配置
+    'admin' => [
+        'super_admin_name' => 'admin'
+    ],
     //首页栏目
     'home_column' => [
         'goods' => [

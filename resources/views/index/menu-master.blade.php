@@ -3,7 +3,7 @@
     <div class="container public-personal contents">
         <div class="row">
             @if($user->type > cons('user.type.retailer'))
-                <div class="col-sm-2 menu">
+                <div class="col-sm-2 col-xs-3 menu">
                     <ul class="name" href="#">
                         <li><a href="{{ url('personal/info') }}">{{ $user->shop->name }}</a></li>
                     </ul>
@@ -177,7 +177,7 @@
                     </ul>
                 </div>
             @else
-                <div class="col-sm-2 menu">
+                <div class="col-sm-2 col-xs-3 menu">
                     <ul class="name" href="#">
                         <li><a href="{{ url('personal/info') }}">{{ $user->shop->name }}</a></li>
                     </ul>
@@ -245,7 +245,7 @@
                     </ul>
                 </div>
             @endif
-            <div class="col-sm-10">
+            <div class="col-sm-10  col-xs-9">
                 @yield('right')
             </div>
         </div>
