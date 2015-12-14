@@ -53,13 +53,15 @@
                                         <div class="panel-body">
                                             <ul>
                                                 @foreach($node['child'] as $childNode)
-                                                    <li>
-                                                        <a href="{{ url($childNode['url']) }}">{{ $childNode['name'] }}</a>
-                                                        @if($childNode['manage_url'])
-                                                            <a href="{{ url($childNode['manage_url']) }}"
-                                                               class="manger">管理</a>
-                                                        @endif
-                                                    </li>
+                                                    @if($childNode['active'])
+                                                        <li>
+                                                            <a href="{{ url($childNode['url']) }}">{{ $childNode['name'] }}</a>
+                                                            @if($childNode['manage_url'])
+                                                                <a href="{{ url($childNode['manage_url']) }}"
+                                                                   class="manger">管理</a>
+                                                            @endif
+                                                        </li>
+                                                    @endif
                                                 @endforeach
                                             </ul>
                                         </div>

@@ -39,6 +39,14 @@ class AdminAuthenticate
             } else {
                 return redirect()->guest('admin/auth/login');
             }
+        }else {
+            $admin = admin_auth()->user();
+            if ($request->method() == 'GET') {
+                $nodeUrls = $admin->node_urls;
+                if (empty($nodeUrls) || !call_user_func_array('\Request::is', $nodeUrls)) {
+                    return  redirect()->guest('admin');
+                }
+            }
         }
 
         return $next($request);

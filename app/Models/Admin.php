@@ -47,10 +47,38 @@ class Admin extends Model implements AuthenticatableContract
         }
     }
 
+    /**
+     * 获取所有节点id
+     *
+     * @return static
+     */
     public function getNodeIdsAttribute()
     {
         $admin = admin_auth()->user();
         $nodeIds = $admin->name == cons('admin.super_admin_name') ? Node::all()->pluck('id') : $admin->role->nodes->pluck('id');
         return $nodeIds;
     }
+
+    /**
+     * 获取所有节点路径
+     *
+     * @return static
+     */
+    public function getNodeUrlsAttribute()
+    {
+        $admin = admin_auth()->user();
+        $isSuperAdmin = $admin->name == cons('admin.super_admin_name');
+
+        if ($isSuperAdmin) {
+            $node = Node::all();
+        } else {
+            $node = $admin->role->nodes;
+        }
+        $url = $node->pluck('url')->all();
+        $manageUrl = $node->pluck('manage_url')->all();
+        return array_map(function ($p) {
+            return explode('?', $p)[0];
+        }, array_merge($url, $manageUrl, ['admin']));
+    }
+
 }

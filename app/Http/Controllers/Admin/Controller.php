@@ -2,27 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Node;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use WeiHeng\Responses\AdminResponse;
 
 abstract class Controller extends BaseController
 {
-
-    /*public function __construct(Request $request)
-    {
-        $requestUrl = substr(request()->getRequestUri(), 1);
-
-        echo $requestUrl;
-
-        $nodeId = Node::where('url', $requestUrl)->orWhere('manage_url', $requestUrl)->pluck('id');
-
-        if ($request->method() == 'GET' && !admin_auth()->user()->node_ids->has($nodeId)) {
-
-        }
-    }*/
-
     /**
      * 返回成功提示
      *
