@@ -38,7 +38,7 @@
         <div class="row login-wrap">
             <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8">
                 <div class="col-sm-12 item">
-                    <h1 class="pull-left login"><a>登录</a></h1>
+                    <h1 class="pull-left"><a>登录</a></h1>
                     <a class="pull-right reg" href="{{ url('auth/register') }}">注册</a>
                 </div>
                 <div class="col-sm-12 item">
@@ -56,12 +56,12 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6 item forgot ">
+                <div class="col-sm-6 col-xs-6 item forgot ">
                     <button type="button" class="btn btn-warning forgot-pwd" data-toggle="modal" data-target="#backupModal">
                         找回密码
                     </button>
                 </div>
-                <div class="col-sm-6 item login ">
+                <div class="col-sm-6 col-xs-6 item login ">
                     <input type="hidden" name="type"
                            value="{{ array_get(cons('user.type') , \Request::input('type') ? \Request::input('type') : 'retailer' , head(cons('user.type'))) }}"/>
                     <button type="submit" class="btn btn-primary login-btn" data-loading-text="登录中..."

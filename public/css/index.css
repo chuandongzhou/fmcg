@@ -511,7 +511,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 100%; } }
 
 .list-penal .img-wrap {
-  position: relative; }
+  position: relative;
+  border: 1px solid #f2f2f2; }
   .list-penal .img-wrap .prompt {
     position: absolute;
     display: inline-block;
@@ -537,7 +538,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0; }
   .wholesalers-index .left-store-logo .banner .item img {
     width: 100%;
-    border: 1px solid #b4b4b4; }
+    border: 1px solid #b4b4b4;
+    max-height: 400px; }
 
 .wholesalers-index .store-info-logo {
   padding-left: 0; }
