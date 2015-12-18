@@ -1,6 +1,6 @@
 @extends('index.master')
 
-@section('subtitle', '店铺详情')
+@section('subtitle', '店家详情')
 
 @section('container')
     <div class="container wholesalers-index goods-detail">

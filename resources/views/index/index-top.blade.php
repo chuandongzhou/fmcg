@@ -43,12 +43,12 @@
                         @if($user->type <= cons('user.type.wholesaler'))
                             <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a></li>
                         @endif
-                        @if($user->type == cons('user.type.wholesaler'))
-                            <li>
-                                <a href="{{ url('shop/' .$user->shop->id) }}">
-                                    <span class="fa fa-heart-o"></span> 我的店面</a>
-                            </li>
-                        @endif
+                        {{--@if($user->type == cons('user.type.wholesaler'))--}}
+                            {{--<li>--}}
+                                {{--<a href="{{ url('shop/' .$user->shop->id) }}">--}}
+                                    {{--<span class="fa fa-heart-o"></span> 我的店面</a>--}}
+                            {{--</li>--}}
+                        {{--@endif--}}
                         <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
                         <li><a href="{{ url($user->type == cons('user.type.retailer') ? 'order-buy' : 'order-sell') }}"><span
                                         class="fa fa-file-text-o"></span> 我的订单</a></li>
@@ -88,8 +88,7 @@
             <a class="navbar-brand logo-icon" href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}"/> </a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search"
-                  type="get" autocomplete="off">
+            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search" method="get">
                 <div class="input-group">
                     <div class="select-role pull-left">
                         <a href="javascript:void(0)" class="selected"><span>商品</span><i
@@ -97,14 +96,14 @@
                         <ul class="select-list">
                             <li><a href="javascript:void(0)" data-url="search">商品</a></li>
                             @if($user->type == cons('user.type.retailer'))
-                                <li><a href="javascript:void(0)" data-url="shop?type=wholesaler">批发商</a></li>
+                                <li><a href="javascript:void(0)" data-type="wholesaler">批发商</a></li>
                             @endif
-                            <li><a href="javascript:void(0)" data-url="shop?type=supplier">供应商</a></li>
+                            <li><a href="javascript:void(0)" data-type="supplier">供应商</a></li>
                         </ul>
                     </div>
                     <input type="text" name="name" class="control pull-right" aria-describedby="course-search">
                     <span class="input-group-btn btn-primary">
-                        <button class="btn btn-primary search-btn" type="submit">搜索</button>
+                        <button class="btn btn-primary search-btn search-by-get" type="submit">搜索</button>
                     </span>
                 </div>
             </form>
@@ -137,8 +136,8 @@
                 myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
                     $('span.city-value').html(result.addressComponents.province);
                 });
-
             }
         }
+        formSubmitByGet();
     </script>
 @stop

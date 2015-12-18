@@ -76,6 +76,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $body-bg;
   background-color: $brand-cancel;
   border-color: $brand-cancel;
+  &:hover {
+    color: $body-bg;
+  }
 }
 
 .red {
@@ -254,6 +257,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
       h1 {
         font-size: 20px;
+        color: $gray-base;
       }
       a {
         color: $gray;
@@ -563,7 +567,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       text-align: left;
     }
   }
-
 }
 
 #other-page-categories {
@@ -690,11 +693,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 
-  @media screen and (max-width: 765px) {
-    .commodity {
-      width: 100%;
-    }
-  }
   .img-wrap {
     position: relative;
     border: 1px solid $gray-plain;
@@ -730,6 +728,19 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
+@media screen and (max-width: 765px) {
+  .list-penal {
+    .commodity {
+      width: 100%;
+    }
+  }
+  .dealer-commodity-wrap {
+    .commodity-img {
+      height: auto;
+    }
+  }
+}
+
 .wholesalers-index {
   .left-store-logo {
     .banner {
@@ -737,8 +748,8 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0;
         img {
           width: 100%;
+          max-height: 400px;
           border: 1px solid $gray-lighter;
-          max-height:400px;
         }
       }
     }
@@ -883,7 +894,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   @at-root .sort {
-    /*margin-bottom: 30px;*/
     color: $gray-light;
     .sort-item {
       @include clearfix;
@@ -1091,6 +1101,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .active {
         color: $brand-primary;
       }
+      .fa-primary {
+        color: $brand-primary;
+      }
     }
   }
   @media (min-width: 1000px) {
@@ -1104,7 +1117,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-
   @extend .store-panel;
 }
 
@@ -2195,23 +2207,34 @@ table {
     position: absolute;
     left: 0;
     @include size(100%, 401px);
-    background-color: $blue-lighter;
+    border: 1px solid $banner-gray;
     z-index: 666;
     li {
-      padding: 10px 0 10px 55px;
+      margin-top: 1px;
       color: $body-bg;
       cursor: pointer;
+      text-align: center;
       .one-title {
         display: inline-block;
         @include square(100%);
-        color: $body-bg;
+        padding: 10px 0 10px 0;
+        border-bottom:1px solid $banner-gray;
+        height:100%;width:80%;
+        margin-bottom:-1px;
+        color: $gray-base;
         text-decoration: none;
+        .icon{
+          height: 20px;
+          width:20px;
+          margin-right:3px;
+          vertical-align: middle
+        }
       }
     }
     .hover-effect {
-      background-color: $gray-plain;
+      background-color: $blue-lighter;
       .one-title {
-        color: $blue !important;
+        color: $body-bg;
       }
     }
   }
@@ -2220,7 +2243,9 @@ table {
     position: absolute;
     left: 0;
     z-index: 666;
-    background-color: $gray-plain;
+    background-color: $body-bg;
+    border: 1px solid $blue-lighter;
+    margin: -1px;
     padding-left: 10px;
     @include size(100%, min(401px));
     .item {
@@ -2289,10 +2314,11 @@ table {
     .title {
       margin: 15px 0 5px 0;
       h3 {
-        padding: 8px 20px;
+        padding: 8px 0;
         font-size: 15px;
         font-weight: bold;
-        background-color: $gray-plain-light;
+        color: $brand-warning;
+        border-bottom: 1px solid $brand-warning;
       }
     }
 

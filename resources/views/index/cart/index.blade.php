@@ -37,7 +37,8 @@
                                     <div class="check-item">
                                         <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
                                         <input class="inp-checkbox parent-checkbox" type="checkbox"
-                                               checked>{{ $shop->name }}
+                                               checked><a
+                                                href="{{ url('shop',['id'=> $shop->id]) }}">{{ $shop->name }}</a>
                                     </div>
                                 </th>
                                 <th class="text-center">商品单价</th>
@@ -58,7 +59,7 @@
                                                    value="{{ $cartGoods->goods_id }}" type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
-                                        {{ $cartGoods->goods->name }}
+                                        <a href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}">{{ $cartGoods->goods->name }}</a>
                                     </td>
                                     <td class="text-center">￥<span
                                                 class="goods-price">{{ $cartGoods->goods->price }}</span>

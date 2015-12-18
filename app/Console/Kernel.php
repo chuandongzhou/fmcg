@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\DataStatistics::class,
         \App\Console\Commands\SendPushToQueue::class,
         \App\Console\Commands\OrderAutoReceive::class,
+        \App\Console\Commands\OrderAutoCancel::class,
     ];
 
     /**
@@ -30,6 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('inspire')->hourly();
         $schedule->command('data:statistics')->daily();
         $schedule->command('queue:push')->everyFiveMinutes();
-        $schedule->command('order:auto:receive')->hourly();
+        $schedule->command('order:auto:receive')->hourly();    //订单超过3天未收货自动收货
+        $schedule->command('order:auto:cancel')->hourly();     //订单超过24小时未付款自动取消
     }
 }

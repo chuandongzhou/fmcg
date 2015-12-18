@@ -32,11 +32,12 @@
                         <li class="item"><a href="{{ url('shop?type=wholesaler') }}">批发商</a></li>
                         <li class="item"><a href="{{ url('shop?type=supplier') }}">供应商</a></li>
                     @else
-                        <li class="item">
-                            <a href="{{ url('shop/' . $user->shop->id) }}">
-                                <i class="fa fa-angle-left"></i>
-                                商店首页
-                            </a></li>
+                        {{--<li class="item">--}}
+                            {{--<a href="{{ url('shop/' . $user->shop->id) }}">--}}
+                                {{--<i class="fa fa-angle-left"></i>--}}
+                                {{--商店首页--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                     @endif
                 </ul>
                 <ul class="nav navbar-right items-item" >

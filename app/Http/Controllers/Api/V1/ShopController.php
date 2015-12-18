@@ -8,9 +8,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 
-use App\Models\Goods;
+use App\Models\Advert;
 use App\Models\Shop;
 use App\Services\ShopService;
+use Carbon\Carbon;
 use Gate;
 use DB;
 use Illuminate\Http\Request;
@@ -65,6 +66,10 @@ class ShopController extends Controller
         }
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
+        if ($shop->images->isEmpty()) {
+            $advert = $this->_getAdvertFirstImage();
+            $shop->images[0] = $advert->image;
+        }
         $shop->is_like = $isLike ? true : false;
         return $this->success([
             'shop' => $shop
@@ -89,6 +94,12 @@ class ShopController extends Controller
         return $this->success(['extend' => $shopExtend]);
     }
 
+    /**
+     * 获取店铺商品
+     *
+     * @param $shop
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function goods($shop)
     {
         if (Gate::denies('validate-allow', $shop)) {
@@ -103,14 +114,27 @@ class ShopController extends Controller
         $goods = $shop->goods()->select([
             'id',
             'name',
+            'bar_code',
             'sales_volume',
             'price_retailer',
             'price_wholesaler',
             'is_new',
             'is_promotion',
             'is_out',
-        ])->paginate()->toArray();
+        ])->ofStatus(cons('goods.status.on'))->with('images.image')->paginate()->toArray();
         return $this->success(['goods' => $goods]);
+    }
+
+    /**
+     * 商店图片为空时获取首页广告的第一张图
+     *
+     * @return mixed
+     */
+    private function _getAdvertFirstImage()
+    {
+        $nowTime = Carbon::now();
+        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
+        return $advert;
     }
 
 }

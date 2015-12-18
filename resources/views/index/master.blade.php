@@ -130,7 +130,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a class="list-name" href="{{ url('shop/' . $shop->id) }}">商店首页</a></li>
+                    <li class="active"><a class="list-name" href="{{ url('shop/' . $shop->id) }}">店家商品</a></li>
                     {{--<li class="menu-list" id="menu-list">--}}
                         {{--<a href="#" class="menu-wrap-title list-name">商品分类</a>--}}
 

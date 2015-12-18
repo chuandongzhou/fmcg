@@ -153,8 +153,15 @@ function menuFunc() {
     })
 
     $('.dealer-header .select-list li a').click(function () {
-        var obj = $(this), url = obj.data('url') || 'search';
-        obj.closest('form').attr('action', url);
+        var obj = $(this), type = obj.data('type');
+        $('input[name="type"]').remove();
+        if (type) {
+            obj.closest('form').attr('action', 'shop');
+            $('input[name="name"]').after('<input type="hidden" name="type" value="' + type + '">');
+        } else {
+            obj.closest('form').attr('action', 'search');
+        }
+
         $('.dealer-header .selected span').text(obj.text());
         $('.dealer-header .select-list').css('display', 'none');
     })
@@ -207,7 +214,7 @@ function selectedFunc() {
             obj.find('.goods-list').each(function () {
                 var tag = $(this);
                 if (tag.find('.inp-checkbox').is(':checked')) {
-                    var money = parseInt(tag.find('.goods-all-money').html());
+                    var money = parseFloat(tag.find('.goods-all-money').html());
                     shopSumPrice += money;
                     cartSumPrice += money;
                 }
@@ -248,7 +255,7 @@ function selectedFunc() {
         } else {
             descButton.prop('disabled', false);
         }
-        var goodsAllMoney = buyInput.val() * parseInt(buyInput.data('price'));
+        var goodsAllMoney = buyInput.val() * parseFloat(buyInput.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -263,7 +270,7 @@ function selectedFunc() {
         } else {
             obj.prop('disabled', false);
         }
-        var goodsAllMoney = buyInput.val() * parseInt(buyInput.data('price'));
+        var goodsAllMoney = buyInput.val() * parseFloat(buyInput.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -277,7 +284,7 @@ function selectedFunc() {
         } else {
             descButton.prop('disabled', false);
         }
-        var goodsAllMoney = obj.val() * parseInt(obj.data('price'));
+        var goodsAllMoney = obj.val() * parseFloat(obj.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
