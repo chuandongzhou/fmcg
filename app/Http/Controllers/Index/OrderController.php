@@ -88,7 +88,7 @@ class OrderController extends Controller
     {
         $carts = $this->user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
-            return redirect()->back()->withInput();
+            return redirect('cart');
         }
         $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
         foreach ($carts as $cart) {
