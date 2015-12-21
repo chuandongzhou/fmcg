@@ -15,7 +15,7 @@ class CartController extends Controller
     public function index()
     {
         $myCarts = auth()->user()->carts();
-        $carts = $myCarts->with('goods')->get();
+        $carts = $myCarts->with('goods.images.image')->get();
         if (!empty($carts[0])) {
             // 将所有状态更新为零
             $myCarts->update(['status' => 0]);

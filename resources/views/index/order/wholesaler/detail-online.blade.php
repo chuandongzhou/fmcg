@@ -1,4 +1,5 @@
 @extends('index.menu-master')
+@section('subtitle' , '订单详情')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -6,7 +7,6 @@
         </div>
         <div class="col-sm-12">
             <div class="row order-tracking">
-
                 <div class="col-sm-12">
                     <p><label>订单跟踪 :</label></p>
 
@@ -15,7 +15,7 @@
                             <div class="ui-stepProcess"></div>
                         </div>
                         <div class="ui-stepInfo-wrap">
-                            <div class="ui-stepLayout" border="0" cellpadding="0" cellspacing="0">
+                            <div class="ui-stepLayout">
                                 <ul>
                                     <li class="ui-stepInfo">
                                         <a class="ui-stepSequence"></a>
@@ -106,15 +106,21 @@
                 <div class="col-sm-12">
                     <ul class="pull-left order-information">
                         <li class="title">订单信息</li>
-                        <li><span class="title-info-name">订单号 :</span> {{ $order['id'] }}</li>
-                        <li><span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
+                        <li>
+                            <span class="title-info-name">订单号 :</span> {{ $order['id'] }}
                         </li>
-                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
+                        <li>
+                            <span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
+                        </li>
+                        <li>
+                            <span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}
+                        </li>
                         <li>
                             <span class="title-info-name">订单状态 : </span>
                             <span class="red">{{ $order['status_name'] }}</span>
                         </li>
-                        <li><span class="title-info-name">订单备注 :</span>
+                        <li>
+                            <span class="title-info-name">订单备注 :</span>
 
                             <p class="remarks-content">{{ $order['remark'] }}</p>
                         </li>
@@ -135,7 +141,6 @@
                                    href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
                             @endif
                         @endif
-
                     </div>
                 </div>
                 <div class="col-sm-12 receiving-information">
@@ -181,7 +186,7 @@
                             <tr>
                                 <td>{{ $goods['id'] }}</td>
                                 <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
-                                <td>{{ $goods['name'] }}</td>
+                                <td><a href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods['name'] }}</a></td>
                                 <td>{{ $goods['pivot']['price'] }}
                                     / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}</td>
                                 <td>{{ $goods['pivot']['num'] }}</td>

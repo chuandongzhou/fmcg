@@ -1,4 +1,5 @@
 @extends('index.menu-master')
+@section('subtitle' , '订单详情')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -15,7 +16,7 @@
                             <div class="ui-stepProcess"></div>
                         </div>
                         <div class="ui-stepInfo-wrap">
-                            <div class="ui-stepLayout" border="0" cellpadding="0" cellspacing="0">
+                            <div class="ui-stepLayout">
                                 <ul>
                                     <li class="ui-stepInfo">
                                         <a class="ui-stepSequence"></a>
@@ -179,8 +180,9 @@
                             <tr>
                                 <td>{{ $goods['id'] }}</td>
                                 <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
-                                <td>{{ $goods['name'] }}</td>
-                                <td>{{ $goods['pivot']['price'] }} / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}</td>
+                                <td><a href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods['name'] }}</a></td>
+                                <td>{{ $goods['pivot']['price'] }}
+                                    / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}</td>
                                 <td>{{ $goods['pivot']['num'] }}</td>
                                 <td>{{ $goods['pivot']['total_price'] }}</td>
                                 @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))

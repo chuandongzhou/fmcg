@@ -18,9 +18,8 @@
             <label for="username" class="col-sm-2 control-label">权限分配:</label>
 
             <div class="col-sm-8">
-                <div class="col-sm-8 first-attr" id="first-attr">
+                <div class="col-sm-6">
                     <table id="node" class="table">
-
                         @foreach( $nodes as $id => $node )
                             <tr data-tt-id="{{ $id  }}" data-tt-parent-id="{{  $nodes->data('pid')  }}">
                                 <td>

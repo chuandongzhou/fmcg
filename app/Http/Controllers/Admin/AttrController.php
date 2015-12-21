@@ -36,10 +36,12 @@ class AttrController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create($categoryId = 0)
+    public function create(Request $request)
     {
+        $categoryId = $request->input('cate_id' , 0);
         $categories = Category::with('icon')->select(['id', 'name', 'pid', 'level'])->get()->toArray();
         /*      if ($id) {
                   $categoryId = Attr::where('id', $id)->pluck('category_id');

@@ -7,6 +7,7 @@ use App\Http\ViewComposers\CategoryComposer;
 use App\Http\ViewComposers\UserComposer;
 use App\Http\ViewComposers\ProvinceComposer;
 use App\Http\ViewComposers\NodeComposer;
+use App\Http\ViewComposers\CartComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,10 @@ class ComposerServiceProvider extends ServiceProvider
             ],
             NodeComposer::class => [
                 'admin.master'
+            ],
+            CartComposer::class => [
+                'index.index-top',
+                'index.master'
             ]
         ]);
     }

@@ -1,5 +1,5 @@
 @extends('index.menu-master')
-
+@section('subtitle' , '订单详情')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -31,7 +31,7 @@
                     <div class="ui-stepProcess"></div>
                 </div>
                 <div class="ui-stepInfo-wrap">
-                    <div class="ui-stepLayout" border="0" cellpadding="0" cellspacing="0">
+                    <div class="ui-stepLayout">
                         <ul>
                             <li class="ui-stepInfo">
                                 <a class="ui-stepSequence"></a>
@@ -112,7 +112,7 @@
                 <ul class="pull-left">
                     <li>
                         <span class="title-info-name">商家名称 :</span>
-                        <span>{{ $order['shop']['name'] }}</span>
+                        <span><a href="{{ url('shop/' . $order['shop']['id']) }}" target="_blank">{{ $order['shop']['name'] }}</a></span>
                     </li>
                     <li>
                         <span class="title-info-name">联系人 :</span>
@@ -161,7 +161,7 @@
                         <tr>
                             <td>{{ $goods['id'] }}</td>
                             <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
-                            <td>{{ $goods['name'] }}</td>
+                            <td><a href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods['name'] }}</a></td>
                             <td>￥{{ $goods['pivot']['price'] . ' / ' . $goods->pieces }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
                             <td>￥{{ $goods['pivot']['total_price'] }}</td>

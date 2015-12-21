@@ -200,7 +200,7 @@ return [
         ],
         'model' => [
             'goods' => App\Models\Goods::class,
-            'shop' => App\Models\Shop::class
+            'shops' => App\Models\Shop::class
         ]
     ],
     //标签

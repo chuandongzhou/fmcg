@@ -112,7 +112,7 @@
                 </form>
             </div>
             <div class="col-sm-4 text-right shopping-car">
-                <a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车</a>
+                <a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车  <span class="badge">{{ $cartNum }}</span></a>
             </div>
         @endif
     </div>

@@ -549,11 +549,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: none;
     position: relative;
     @include size(100%, auto);
+    margin-top:2px;
     .menu-wrap {
       height: auto;
       text-align: center;
+      background-color: $body-bg;
       li {
-        padding: 10px 0;
+        padding:0;
         position: relative;
         z-index: 10;
       }
@@ -566,17 +568,10 @@ ul, li, p, a, h1, h2, h3, h4 {
       @include size(600px, auto);
       text-align: left;
     }
+
   }
 }
 
-#other-page-categories {
-  li {
-    &:hover {
-      border: 1px solid $brand-primary;
-      border-right-color: $body-bg;
-    }
-  }
-}
 
 .right-search {
   padding: 10px 0;
@@ -2175,9 +2170,13 @@ table {
       height: 100%;
       padding: 10px;
       .btn {
-        padding: 6px 15px;
+        padding: 6px 10px 6px 15px;
         &:hover {
           background-color: $brand-primary;
+        }
+        .badge{
+          color:$brand-danger;
+          background-color: $body-bg;
         }
       }
     }
@@ -2206,6 +2205,7 @@ table {
   .menu-wrap {
     position: absolute;
     left: 0;
+    text-align: center;
     @include size(100%, 401px);
     border: 1px solid $banner-gray;
     z-index: 666;
@@ -2213,13 +2213,13 @@ table {
       margin-top: 1px;
       color: $body-bg;
       cursor: pointer;
-      text-align: center;
       .one-title {
         display: inline-block;
-        @include square(100%);
-        padding: 10px 0 10px 0;
+        padding: 10px 0 10px 5px;
         border-bottom:1px solid $banner-gray;
-        height:100%;width:80%;
+        height:100%;
+        width:80%;
+        text-align: center;
         margin-bottom:-1px;
         color: $gray-base;
         text-decoration: none;

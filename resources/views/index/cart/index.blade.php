@@ -59,7 +59,7 @@
                                                    value="{{ $cartGoods->goods_id }}" type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
-                                        <a href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}">{{ $cartGoods->goods->name }}</a>
+                                        <a href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}" target="_blank">{{ $cartGoods->goods->name }}</a>
                                     </td>
                                     <td class="text-center">￥<span
                                                 class="goods-price">{{ $cartGoods->goods->price }}</span>

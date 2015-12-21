@@ -9,7 +9,7 @@
     <form class="form-signin" method="post" action="{{ url('admin/auth/login') }}" accept-charset="UTF-8">
         <div class="container login">
             <section class="loginBox row-fluid">
-               {{ csrf_field() }}
+                {{ csrf_field() }}
 
                 <p class="input-group">
                     <input type="text" class="form-control input" name="account" placeholder="请输入登录名" required/>
@@ -20,9 +20,18 @@
                 </p>
 
                 <p class="input-group">
-                    <button type="submit" class="btn btn-primary submit">登录</button>
+                    <button type="submit" class="btn btn-primary submit">
+                        登录
+                    </button>
                 </p>
             </section>
         </div>
     </form>
+@stop
+@section('js')
+    <script type="text/javascript">
+        @if(session('message'))
+            alert("{{ session('message') }}");
+        @endif
+    </script>
 @stop

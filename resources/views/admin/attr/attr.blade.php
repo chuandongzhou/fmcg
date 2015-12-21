@@ -75,7 +75,7 @@
             table.treetable({expandable: true});
             $('#category_id').change(function () {
                 var cateId = $(this).val();
-                window.location.href = "{{ url('admin/attr/create') }}" + '/' + cateId;
+                window.location.href = "{{ url('admin/attr/create') }}" + '?cate_id=' + cateId;
             });
             $('.add-attr-btn').on('click', function () {
                 var obj = $(this), pid = obj.data('pid'), cateId = obj.data('cateId');

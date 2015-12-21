@@ -11,9 +11,11 @@ use App\Http\Requests\Api\v1\LoginRequest;
 
 class AuthController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('admin.guest', ['except' => 'getLogout']);
     }
+
     /**
      * 后台登录页
      *
@@ -24,7 +26,12 @@ class AuthController extends Controller
         return view('admin.auth.login');
     }
 
-
+    /**
+     * 后台登录处理
+     *
+     * @param \App\Http\Requests\Api\v1\LoginRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postLogin(LoginRequest $request)
     {
         $account = $request->input('account');
@@ -32,7 +39,7 @@ class AuthController extends Controller
         if (admin_auth()->attempt(['name' => $account, 'password' => $password])) {
             return redirect()->intended('admin');
         }
-        return redirect('admin/auth/login');
+        return redirect('admin/auth/login')->with('message', '账号或密码错误');
     }
 
     /**

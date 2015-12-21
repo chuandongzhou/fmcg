@@ -31,9 +31,10 @@ class CartService
     {
         $carts = is_null($carts) ? $this->data : $carts;
         $shopIds = $carts->pluck('goods.shop_id');
-        $shopIds = $shopIds->all();
+        $shopIds = array_unique($shopIds->all());
 
         $shops = Shop::whereIn('id', $shopIds)->select(['name', 'id', 'min_money', 'user_id'])->get();
+        $userLikeGoodsIds = auth()->user()->likeGoods()->pluck('id');
 
         foreach ($shops as $key => $shop) {
             $sumPrice = 0;
@@ -41,16 +42,15 @@ class CartService
                 if (Gate::denies('validate-goods', $cart->goods)) {
                     continue;
                 }
-                $cart->is_like = !is_null( auth()->user()->likeGoods()->where('id' , $cart->goods_id)->first());
+                $cart->is_like = in_array($cart->goods_id, (array)$userLikeGoodsIds);
                 $cart->image = $cart->goods->image_url;
                 if ($cart->goods->shop_id == $shop->id) {
-
                     $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,
                         [$cart]) : [$cart];
                     $sumPrice += $cart->goods->price * $cart->num;
                 }
             }
-            $sumPrice > 0 ? $shops[$key]->sum_price = $sumPrice : array_except($shops ,$key);
+            $sumPrice > 0 ? $shops[$key]->sum_price = $sumPrice : array_except($shops, $key);
         }
         return $shops;
     }
@@ -62,7 +62,7 @@ class CartService
      * @param bool|false $updateNum
      * @return bool
      */
-    public function validateOrder($num , $updateNum = false)
+    public function validateOrder($num, $updateNum = false)
     {
         $carts = $this->data;
         if (empty($carts[0]) || empty($num)) {

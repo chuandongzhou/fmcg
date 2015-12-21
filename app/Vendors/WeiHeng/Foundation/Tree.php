@@ -59,7 +59,8 @@ class Tree extends RecursiveTreeIterator
         }
 
         // 初始化
-        parent::__construct(new \RecursiveArrayIterator($tempTree[0]), $flags, $cit_flags, $mode);
+        $tree = json_decode(json_encode($tempTree[0]), true);
+        parent::__construct(new \RecursiveArrayIterator($tree), $flags, $cit_flags, $mode);
 
         // 设置前缀
         $prefixParts = [
@@ -107,24 +108,5 @@ class Tree extends RecursiveTreeIterator
     public function getPrefix()
     {
         return str_replace(' ', '&nbsp;', parent::getPrefix());
-    }
-
-    /**
-     * 组合多维数组
-     * @param $cate
-     * @param int $pid
-     * @param string $name
-     * @return array
-     */
-    static function unlimitedForLayer($cate, $pid = 0, $name= 'child'){
-        $arr = array();
-        foreach ($cate as $v){
-            if($v['pid'] == $pid){
-                $v[$name] = self::unlimitedForLayer($cate, $v['id'], $name);
-                $arr[] = $v;
-            }
-        }
-
-        return $arr;
     }
 }
