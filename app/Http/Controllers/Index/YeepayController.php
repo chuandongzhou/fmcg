@@ -38,7 +38,7 @@ class YeePayController extends Controller
 
 //	支付金额,必填.
 //单位:元，精确到分.
-        $p3_Amt = 0.01;//$orders->pluck('price')->sum();
+        $p3_Amt = $orders->pluck('price')->sum();
 
 //	交易币种,固定值"CNY".
         $p4_Cur = config('yeepay.p4_cur');

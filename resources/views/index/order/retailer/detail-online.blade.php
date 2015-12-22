@@ -112,7 +112,8 @@
                 <ul class="pull-left">
                     <li>
                         <span class="title-info-name">商家名称 :</span>
-                        <span><a href="{{ url('shop/' . $order['shop']['id']) }}" target="_blank">{{ $order['shop']['name'] }}</a></span>
+                        <span><a href="{{ url('shop/' . $order['shop']['id']) }}"
+                                 target="_blank">{{ $order['shop']['name'] }}</a></span>
                     </li>
                     <li>
                         <span class="title-info-name">联系人 :</span>
@@ -161,7 +162,12 @@
                         <tr>
                             <td>{{ $goods['id'] }}</td>
                             <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
-                            <td><a href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods['name'] }}</a></td>
+                            <td>
+                                <div class="product-panel" >
+                                    <a  class="product-name" href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods->name }}</a>
+                                    {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                </div>
+                            </td>
                             <td>￥{{ $goods['pivot']['price'] . ' / ' . $goods->pieces }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
                             <td>￥{{ $goods['pivot']['total_price'] }}</td>

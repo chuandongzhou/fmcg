@@ -68,8 +68,10 @@
                                     <tr>
                                         <td>
                                             <img class="store-img" src="{{ $goods->image_url }}">
-                                            <a class="product-name"
-                                               href="{{  url('my-goods/'.$goods['id']) }}">{{ $goods['name'] }}</a>
+                                            <div class="product-panel" >
+                                                <a class="product-name ellipsis" href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+                                                {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                            </div>
                                         </td>
                                         <td>
                                             <span class="red">￥{{ $goods['pivot']['price'] }}</span>
@@ -133,7 +135,7 @@
                 </div>
             </div>
             @if(\Request::is('order-sell'))
-                {!! $orders->appends(['pay_type' => $search['pay_type'],'status'=>$search['status'],'start_at'=>$search['start_at'],'end_at'=>$search['end_at'],'search_content'=>$search['search_content']])->render() !!}
+                {!! $orders->appends(array_filter($search))->render() !!}
             @else
                 {!! $orders->render() !!}
             @endif

@@ -668,11 +668,12 @@ function goodsBatchUpload() {
             if (json && json['message']) {
                 text = json['message'];
             }
-
             $(this).parent().after('<span class="fileinput-error"> ' + text + '</span>');
+            alert(text);
         },
         done: function (e, data) {
-            $(this).parent().after('<span class="fileinput-error"> 保存成功</span>');
+            $(this).parent().after('<span class="fileinput-error"> 上传成功</span>');
+            alert('上传成功');
         }, always: function (e, data) {
             // 隐藏进度条并开放按钮
             $(this).parent().removeClass('disabled').siblings('.progress').hide()
@@ -761,17 +762,19 @@ function sendGoodsByDetailPage() {
 function changePriceByDetailPage() {
     $('#changePrice').find('.btn-add').prop('disabled', true);
     $('.change-price').click(function () {
-        var order_id = $(this).attr('data-data');
-        var pivot_id = $(this).attr('data-pivot');
+        var order_id = $(this).data('data');
+        var pivot_id = $(this).data('pivot');
         $('input[name="price"]').keyup(function () {
             var price = $(this).val();
-            if (isNaN(price)) {//不是数字
+            if (isNaN(price) || !parseFloat(price)) {//不是数字
                 $('.tip').show();
             } else if (price < 0) {
                 $('.tip').text('单价输入不合法').show();
             } else {
                 $('.tip').hide();
-                $('#changePrice').find('.btn-add').prop('disabled', false).attr('data-data', '{"price":' + price + ',"order_id":' + order_id + ',"pivot_id":' + pivot_id + '}');
+                $('#changePrice').find('.btn-add').prop('disabled', false);
+                $('input[name="order_id"]').val(order_id);
+                $('input[name="pivot_id"]').val(pivot_id);
             }
         });
     });

@@ -174,6 +174,12 @@ class MyGoodsController extends Controller
     }
 
 
+    /**
+     * 商品批量导入
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function import(Request $request)
     {
         $file = $request->file('file');
@@ -208,6 +214,7 @@ class MyGoodsController extends Controller
             $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr);
             $goodsModel = $shop->goods()->create($goodsAttr);
             if ($goodsModel->exists) {
+                $this->saveWithoutImageOfBarCode($goodsModel->bar_code);
                 $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
                 $this->updateAttrs($goodsModel, $attrs);
             } else {

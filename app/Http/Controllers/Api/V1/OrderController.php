@@ -584,18 +584,18 @@ class OrderController extends Controller
     {
         //判断该订单是否存在
         $order = Order::bySellerId($this->user->id)->find(intval($request->input('order_id')));
-        if (!$order) {
-            $this->error('订单不存在,请确认后再试');
+        if (!$order || !$order->can_change_price) {
+            return $this->error('订单不存在或不能修改');
         }
         //判断输入的价格是否合法
-        $price = intval($request->input('price'));
+        $price = floatval($request->input('price'));
         if ($price < 0) {
-            $this->error('输入单价不合法,请确认后再试');
+            return $this->error('输入单价不合法');
         }
         //判断待修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($request->input('pivot_id')));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
-            $this->error('操作失败');
+            return $this->error('操作失败');
         }
         $flag = DB::transaction(function () use ($orderGoods, $order, $price) {
             $oldTotalPrice = $orderGoods->total_price;

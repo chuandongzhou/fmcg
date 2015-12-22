@@ -70,6 +70,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   .carousel-indicators li.active {
     margin: 0 4px; }
 
+.btn .badge {
+  color: #fe462f;
+  background-color: #fff; }
+
 /*======================================head======================================*/
 .personal-header .logo-img {
   display: inline-block;
@@ -407,7 +411,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   display: none;
   position: relative;
   width: 100%;
-  height: auto; }
+  height: auto;
+  margin-top: 2px; }
   #menu-list .menu-list-wrap .menu-wrap {
     height: auto;
     text-align: center;
@@ -499,7 +504,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     .list-penal .commodity .content-panel a {
       color: #555555; }
     .list-penal .commodity .content-panel .commodity-name {
-      padding: 10px 0; }
+      padding: 10px 0;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: middle; }
     .list-penal .commodity .content-panel .sell-panel .money {
       color: #fe462f;
       font-weight: bolder; }
@@ -1072,14 +1082,24 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
-table .product-name {
-  margin-left: 10px;
-  color: #555555;
-  display: inline-block;
-  max-width: 350px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden; }
+table .product-panel {
+  vertical-align: middle;
+  display: inline-block; }
+  table .product-panel .ellipsis {
+    display: inline-block;
+    max-width: 350px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle; }
+  table .product-panel .product-name {
+    margin-left: 10px;
+    color: #555555;
+    display: inline-block; }
+  table .product-panel .promotions {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #b4b4b4; }
 
 .wholesalers-management .notice-bar {
   padding: 0;
@@ -1503,6 +1523,18 @@ table .product-name {
     .dealer-top-header .operating-wrap a.home {
       color: #f0ad4e; }
 
+.search-keyword {
+  margin: auto;
+  height: 21px;
+  overflow: hidden; }
+  .search-keyword a {
+    margin-right: 8px;
+    color: #b4b4b4;
+    font-size: 13px;
+    text-decoration: none; }
+    .search-keyword a:hover {
+      color: #4cb9fe; }
+
 .dealer-header .search, .dealer-header .public-personal .controls .item .add-goods, .public-personal .controls .item .dealer-header .add-goods {
   min-width: 78%; }
   .dealer-header .search .input-group, .dealer-header .public-personal .controls .item .add-goods .input-group, .public-personal .controls .item .dealer-header .add-goods .input-group {
@@ -1558,6 +1590,9 @@ table .product-name {
         padding: 0 5px; } }
     .dealer-header .search .input-group .search-btn, .dealer-header .public-personal .controls .item .add-goods .input-group .search-btn, .public-personal .controls .item .dealer-header .add-goods .input-group .search-btn {
       width: 100%; }
+  .dealer-header .search .search-keyword, .dealer-header .public-personal .controls .item .add-goods .search-keyword, .public-personal .controls .item .dealer-header .add-goods .search-keyword {
+    width: 50%;
+    padding-left: 70px; }
 
 .dealer-header .right-btn li {
   height: 100%;
@@ -1566,9 +1601,6 @@ table .product-name {
     padding: 6px 10px 6px 15px; }
     .dealer-header .right-btn li .btn:hover {
       background-color: #4cb9fe; }
-    .dealer-header .right-btn li .btn .badge {
-      color: #fe462f;
-      background-color: #fff; }
 
 .categories-btn {
   background-color: #4cb9fe;
@@ -1667,7 +1699,7 @@ table .product-name {
 .dealer-index .list-penal .title {
   margin: 15px 0 5px 0; }
   .dealer-index .list-penal .title h3 {
-    padding: 8px 0;
+    padding: 8px 2px;
     font-size: 15px;
     font-weight: bold;
     color: #f0ad4e;
@@ -1829,6 +1861,8 @@ table .product-name {
     cursor: pointer; }
   .check-item .inp-checkbox {
     opacity: 0; }
+  .check-item .shop-name {
+    color: inherit; }
 
 .fixed-bottom {
   position: fixed;

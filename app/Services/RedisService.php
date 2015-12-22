@@ -14,7 +14,7 @@ class RedisService
 {
 
     /**
-     * 设置推送Redis
+     * 设置Redis
      *
      * @param $redisKey
      * @param $redisValue
@@ -32,6 +32,38 @@ class RedisService
             $redis->expire($redisKey, $expire);
         }
 
+    }
+
+    /**
+     *  判断redis是否含有
+     *
+     * @param $key
+     * @return mixed
+     */
+    public static function has($key)
+    {
+        static $redis;
+        if (!$redis) {
+            $redis = Redis::connection();
+        }
+        return $redis->has($key);
+    }
+
+    /**
+     * 增加值
+     *
+     * @param $key
+     * @param int $num
+     * @param int $userId
+     * @return mixed
+     */
+    public static function increment($key, $num = 1, $userId = 0)
+    {
+        static $redis;
+        if (!$redis) {
+            $redis = Redis::connection();
+        }
+        return $redis->zincrby($key, $num, $userId);
     }
 
 }

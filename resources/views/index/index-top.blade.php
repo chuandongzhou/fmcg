@@ -44,10 +44,10 @@
                             <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a></li>
                         @endif
                         {{--@if($user->type == cons('user.type.wholesaler'))--}}
-                            {{--<li>--}}
-                                {{--<a href="{{ url('shop/' .$user->shop->id) }}">--}}
-                                    {{--<span class="fa fa-heart-o"></span> 我的店面</a>--}}
-                            {{--</li>--}}
+                        {{--<li>--}}
+                        {{--<a href="{{ url('shop/' .$user->shop->id) }}">--}}
+                        {{--<span class="fa fa-heart-o"></span> 我的店面</a>--}}
+                        {{--</li>--}}
                         {{--@endif--}}
                         <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
                         <li><a href="{{ url($user->type == cons('user.type.retailer') ? 'order-buy' : 'order-sell') }}"><span
@@ -88,7 +88,8 @@
             <a class="navbar-brand logo-icon" href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}"/> </a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search" method="get">
+            <form action="{{ url('search') }}" class="navbar-form navbar-left search text-center" role="search"
+                  method="get">
                 <div class="input-group">
                     <div class="select-role pull-left">
                         <a href="javascript:void(0)" class="selected"><span>商品</span><i
@@ -106,9 +107,15 @@
                         <button class="btn btn-primary search-btn search-by-get" type="submit">搜索</button>
                     </span>
                 </div>
+                <div class="text-left search-keyword">
+                    @foreach($keywords as $key=>$val)
+                        <a href="{{ url('search?name=' . $key) }}">{{ $key }}</a>
+                    @endforeach
+                </div>
             </form>
             <ul class="nav navbar-nav navbar-right right-btn">
-                <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车 <span class="badge">{{ $cartNum }}</span></a></li>
+                <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车 <span
+                                class="badge">{{ $cartNum }}</span></a></li>
             </ul>
         </div>
     </div>

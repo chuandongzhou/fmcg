@@ -99,7 +99,7 @@
                 </div>
             @endforeach
             <div class="col-xs-12 text-right">
-                {{ $goods->render() }}
+               {!! $goods->render() !!}
             </div>
         </div>
     </div>

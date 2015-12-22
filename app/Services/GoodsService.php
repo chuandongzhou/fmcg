@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\HomeColumn;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -53,7 +54,15 @@ class GoodsService
         }
 
         // 名称
-        if (isset($data['name'])) {
+        if (isset($data['name']) && $data['name']) {
+            $cachePre = cons('goods.cache.keywords_pre');
+
+            $cacheKey = $cachePre . 'sort';
+            $keywords = Cache::get($cacheKey);
+            $keywords[(string)$data['name']] = isset($keywords[$data['name']]) ? $keywords[$data['name']] + 1 : 1;
+            $expiresAt = Carbon::now()->addDays(1);
+            Cache::put($cacheKey, $keywords, $expiresAt);
+
             $goods->where('name', 'like', '%' . $data['name'] . '%')->get();
 
             $categoryIds = array_unique($goods->lists('cate_level_2')->toArray());

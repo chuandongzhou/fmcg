@@ -167,6 +167,10 @@ return [
         'import_allow_ext' => [
             'xls',
             'xlsx'
+        ],
+        'cache' => [
+            'keywords_pre' => 'goods:keywords:',
+            'num' => 8
         ]
     ],
     // 银行列表

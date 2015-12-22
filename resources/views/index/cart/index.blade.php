@@ -36,9 +36,8 @@
                                 <th>
                                     <div class="check-item">
                                         <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
-                                        <input class="inp-checkbox parent-checkbox" type="checkbox"
-                                               checked><a
-                                                href="{{ url('shop',['id'=> $shop->id]) }}">{{ $shop->name }}</a>
+                                        <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
+                                        <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">{{ $shop->name }}</a>
                                     </div>
                                 </th>
                                 <th class="text-center">商品单价</th>
@@ -59,7 +58,11 @@
                                                    value="{{ $cartGoods->goods_id }}" type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
-                                        <a href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}" target="_blank">{{ $cartGoods->goods->name }}</a>
+                                        <div class="product-panel" >
+                                            <a class="product-name ellipsis" href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}" target="_blank">{{ $cartGoods->goods->name }}</a>
+                                            {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
+                                        </div>
+
                                     </td>
                                     <td class="text-center">￥<span
                                                 class="goods-price">{{ $cartGoods->goods->price }}</span>

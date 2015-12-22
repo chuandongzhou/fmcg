@@ -180,12 +180,17 @@
                             <tr>
                                 <td>{{ $goods['id'] }}</td>
                                 <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
-                                <td><a href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods['name'] }}</a></td>
+                                <td>
+                                    <div class="product-panel" >
+                                        <a  class="product-name" href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                        {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                    </div>
+                                </td>
                                 <td>{{ $goods['pivot']['price'] }}
                                     / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}</td>
                                 <td>{{ $goods['pivot']['num'] }}</td>
                                 <td>{{ $goods['pivot']['total_price'] }}</td>
-                                @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
+                                @if($order->can_change_price)
                                     <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
                                            data-toggle="modal" data-data="{{ $order['id'] }}"
                                            data-pivot="{{  $goods['pivot']['id'] }}">修改</a></td>

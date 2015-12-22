@@ -106,6 +106,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
+.btn {
+  .badge {
+    color: $brand-danger;
+    background-color: $body-bg;
+  }
+}
+
 /*======================================head======================================*/
 .personal-header {
   .logo-img {
@@ -549,13 +556,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: none;
     position: relative;
     @include size(100%, auto);
-    margin-top:2px;
+    margin-top: 2px;
     .menu-wrap {
       height: auto;
       text-align: center;
       background-color: $body-bg;
       li {
-        padding:0;
+        padding: 0;
         position: relative;
         z-index: 10;
       }
@@ -568,10 +575,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       @include size(600px, auto);
       text-align: left;
     }
-
   }
 }
-
 
 .right-search {
   padding: 10px 0;
@@ -675,6 +680,11 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
       .commodity-name {
         padding: 10px 0;
+        width: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: middle;
       }
       .sell-panel {
         .money {
@@ -1466,14 +1476,27 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
 table {
-  .product-name {
-    margin-left: 10px;
-    color: $gray;
+  .product-panel {
+    vertical-align: middle;
     display: inline-block;
-    max-width: 350px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    .ellipsis{
+      display: inline-block;
+      max-width: 350px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    .product-name {
+      margin-left: 10px;
+      color: $gray;
+      display: inline-block;
+    }
+    .promotions {
+      margin-left: 10px;
+      font-size: 12px;
+      color: #b4b4b4;
+    }
   }
 }
 
@@ -2097,6 +2120,21 @@ table {
 
 }
 
+.search-keyword {
+  margin: auto;
+  height: 21px;
+  overflow: hidden;
+  a {
+    margin-right: 8px;
+    color: $gray-lighter;
+    font-size: 13px;
+    text-decoration: none;
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+}
+
 .dealer-header {
   .search {
     min-width: 78%;
@@ -2164,6 +2202,10 @@ table {
         width: 100%;
       }
     }
+    .search-keyword {
+      width: 50%;
+      padding-left: 70px;
+    }
   }
   .right-btn {
     li {
@@ -2174,10 +2216,7 @@ table {
         &:hover {
           background-color: $brand-primary;
         }
-        .badge{
-          color:$brand-danger;
-          background-color: $body-bg;
-        }
+
       }
     }
   }
@@ -2216,17 +2255,17 @@ table {
       .one-title {
         display: inline-block;
         padding: 10px 0 10px 5px;
-        border-bottom:1px solid $banner-gray;
-        height:100%;
-        width:80%;
+        border-bottom: 1px solid $banner-gray;
+        height: 100%;
+        width: 80%;
         text-align: center;
-        margin-bottom:-1px;
+        margin-bottom: -1px;
         color: $gray-base;
         text-decoration: none;
-        .icon{
+        .icon {
           height: 20px;
-          width:20px;
-          margin-right:3px;
+          width: 20px;
+          margin-right: 3px;
           vertical-align: middle
         }
       }
@@ -2314,14 +2353,13 @@ table {
     .title {
       margin: 15px 0 5px 0;
       h3 {
-        padding: 8px 0;
+        padding: 8px 2px;
         font-size: 15px;
         font-weight: bold;
         color: $brand-warning;
         border-bottom: 1px solid $brand-warning;
       }
     }
-
   }
 }
 
@@ -2539,10 +2577,13 @@ table {
     vertical-align: middle;
     cursor: pointer;
   }
-
   .inp-checkbox {
     opacity: 0;
   }
+  .shop-name {
+    color: inherit;
+  }
+
 }
 
 .fixed-bottom {

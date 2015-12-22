@@ -7,9 +7,6 @@
  */
 namespace App\Http\ViewComposers;
 
-use App\Models\Category;
-use App\Models\Node;
-use App\Services\CategoryService;
 use Illuminate\Contracts\View\View;
 
 class CartComposer

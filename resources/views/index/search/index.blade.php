@@ -99,43 +99,44 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-            <div class="tab-title clearfix">
-                <p class="pull-left sequence">
-                    <a href="{{ url('search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"
-                       class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>
-                    <a href="{{ url('search?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                       class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
-                    <a href="{{ url('search?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                       class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
-                    <a href="{{ url('search?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                       class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
-                </p>
+                <div class="tab-title clearfix">
+                    <p class="pull-left sequence">
+                        <a href="{{ url('search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"
+                           class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>
+                        <a href="{{ url('search?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                           class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
+                        <a href="{{ url('search?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                           class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
+                        <a href="{{ url('search?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                           class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
+                    </p>
 
-                <p class="pull-right">
-                    <span>配送区域</span>
-                    <select name="province_id" data-id="{{ $data['province_id'] or 0 }}"
-                            class="address-province address"></select>
-                    <select name="city_id" data-id="{{ $data['city_id'] or 0 }}"
-                            class="address-city address"></select>
-                    <select name="district_id" data-id="{{ $data['district_id'] or 0 }}"
-                            class="address-district address"> </select>
-                    <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
-                            class="address-street address"> </select>
-                </p>
+                    <p class="pull-right">
+                        <span>配送区域</span>
+                        <select name="province_id" data-id="{{ $data['province_id'] or 0 }}"
+                                class="address-province address"></select>
+                        <select name="city_id" data-id="{{ $data['city_id'] or 0 }}"
+                                class="address-city address"></select>
+                        <select name="district_id" data-id="{{ $data['district_id'] or 0 }}"
+                                class="address-district address"> </select>
+                        <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
+                                class="address-street address"> </select>
+                    </p>
+                </div>
             </div>
-        </div>
         </div>
         <div class="row list-penal">
             @foreach($goods  as $item)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <a href="{{ url('goods/' . $item->id) }}"  target="_blank">
+                        <a href="{{ url('goods/' . $item->id) }}" target="_blank">
                             <img class="commodity-img" src="{{ $item->image_url }}">
                         </a>
                         <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
                     </div>
                     <div class="content-panel">
-                        <p class="commodity-name"><a href="{{ url('goods/' . $item->id) }}"  target="_blank">{{ $item->name }}</a></p>
+                        <p class="commodity-name"><a href="{{ url('goods/' . $item->id) }}"
+                                                     target="_blank">{{ $item->name }}</a></p>
 
                         <p class="sell-panel">
                             <span class="money">￥{{ $item->price }}</span>
@@ -148,7 +149,7 @@
 
         <div class="row">
             <div class="col-xs-12 text-right">
-                {{ $goods->render() }}
+                {!! $goods->render() !!}
             </div>
         </div>
     </div>

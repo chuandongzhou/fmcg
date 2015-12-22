@@ -156,7 +156,11 @@
                         <tr>
                             <td>{{ $goods['id'] }}</td>
                             <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
-                            <td><a href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods['name'] }}</a>
+                            <td>
+                                <div class="product-panel" >
+                                    <a class="product-name" href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods->name }}</a>
+                                    {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                </div>
                             </td>
                             <td>￥{{ $goods['pivot']['price'] . ' / ' . $goods->pieces  }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>

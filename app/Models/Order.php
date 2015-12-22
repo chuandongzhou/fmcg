@@ -300,6 +300,19 @@ class Order extends Model
 
 
     /**
+     * 是否可修改单价
+     *
+     * @return bool
+     */
+    public function getCanChangePriceAttribute()
+    {
+        $orderConf = cons('order');
+        return $this->attributes['status'] < $orderConf['status']['send']
+        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']
+        && $this->attributes['shop_id'] == auth()->user()->shop->id;
+    }
+
+    /**
      * 根据不同角色获取单位
      *
      * @return mixed

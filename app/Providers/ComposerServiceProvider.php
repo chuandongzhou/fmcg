@@ -8,6 +8,7 @@ use App\Http\ViewComposers\UserComposer;
 use App\Http\ViewComposers\ProvinceComposer;
 use App\Http\ViewComposers\NodeComposer;
 use App\Http\ViewComposers\CartComposer;
+use App\Http\ViewComposers\KeywordsComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -40,6 +41,10 @@ class ComposerServiceProvider extends ServiceProvider
                 'admin.master'
             ],
             CartComposer::class => [
+                'index.index-top',
+                'index.master'
+            ],
+            KeywordsComposer::class => [
                 'index.index-top',
                 'index.master'
             ]
