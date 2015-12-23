@@ -53,8 +53,10 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        <label><input type="checkbox" class="order_id" name="order_id[]"
-                                                      value="{{ $order['id'] }}">{{ $order['created_at'] }}</label>
+                                        <label>
+                                            <input type="checkbox" class="order_id" name="order_id[]"
+                                                   value="{{ $order['id'] }}">{{ $order['created_at'] }}
+                                        </label>
                                         <span class="order-number">订单号 : {{ $order['id'] }}</span>
                                     </th>
                                     <th>{{ $order['user']['shop']['name'] }}</th>
@@ -68,8 +70,10 @@
                                     <tr>
                                         <td>
                                             <img class="store-img" src="{{ $goods->image_url }}">
-                                            <div class="product-panel" >
-                                                <a class="product-name ellipsis" href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+
+                                            <div class="product-panel">
+                                                <a class="product-name ellipsis"
+                                                   href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
                                                 {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>

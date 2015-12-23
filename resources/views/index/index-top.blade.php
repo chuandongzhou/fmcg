@@ -128,22 +128,7 @@
     @parent
     <script>
         if (!Cookies.get('province_id')) {
-            var geolocation = new BMap.Geolocation();
-            geolocation.getCurrentPosition(function (r) {
-                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                    setProvince(r.point.lng, r.point.lat);
-                }
-                else {
-                    alert('failed' + this.getStatus());
-                }
-            }, {enableHighAccuracy: true})
-
-            function setProvince(lng, lat) {
-                var myGeo = new BMap.Geocoder();
-                myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
-                    $('span.city-value').html(result.addressComponents.province);
-                });
-            }
+            setProvinceName();
         }
         formSubmitByGet();
     </script>

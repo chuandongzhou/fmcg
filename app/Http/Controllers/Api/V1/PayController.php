@@ -81,6 +81,7 @@ class PayController extends Controller
 
     /**
      * 退款
+     *
      * @param $orderId
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -88,7 +89,7 @@ class PayController extends Controller
     {
         $order = Order::where('user_id', auth()->id())->find($orderId);
 
-        if ($order->can_refund) {
+        if (!$order || !$order->can_refund || $order->user_id != auth()->id()) {
             return $this->error('订单不存在或不能退款');
         }
         $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
@@ -122,14 +123,14 @@ class PayController extends Controller
         } else {
             $result = $this->_refundByPingxx($tradeInfo);
 
-            if($result) {
+            if ($result) {
                 //通知卖家已退款
                 $shop = Shop::find($order->shop_id);
                 $redisKey = 'push:seller:' . $shop->user->id;
                 $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
                 RedisService::setRedis($redisKey, $redisVal);
                 $this->success('退款成功');
-            }else {
+            } else {
                 $this->error('退款时遇到错误');
             }
         }

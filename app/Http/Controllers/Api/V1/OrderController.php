@@ -186,7 +186,7 @@ class OrderController extends Controller
 
         $failOrderIds = [];
         foreach ($orders as $order) {
-            if (!$order->can_cancel) {
+            if (!$order->can_cancel || !($order->user_id == auth()->id() || $order->shop_id == auth()->user()->shop()->pluck('id'))) {
                 if (count($orders) == 1) {
                     return $this->error('取消失败');
                 }
@@ -226,7 +226,7 @@ class OrderController extends Controller
         if (!$order) {
             return $this->error('订单不存在');
         }
-        if (!$order->can_confirm) {
+        if (!$order->can_confirm || $order->shop_id != auth()->user()->shop->id) {
             return $this->error('订单不能确认');
         }
         if ($order->fill(['status' => cons('order.status.non_send'), 'confirm_at' => Carbon::now()])->save()) {
@@ -252,7 +252,7 @@ class OrderController extends Controller
 
         $failIds = [];
         foreach ($orders as $order) {
-            if (!$order->can_confirm_arrived) {
+            if (!$order->can_confirm_arrived || $order->user_id != auth()->id()) {
                 if (count($orders) == 1) {
                     return $this->error('确认收货失败');
                 }
@@ -343,7 +343,7 @@ class OrderController extends Controller
         //通知买家订单已发货
         $failIds = [];
         foreach ($orders as $order) {
-            if (!$order->can_send) {
+            if (!$order->can_send || $order->shop_id != auth()->user()->shop->id) {
                 if (count($orders) == 1) {
                     return $this->error('操作失败');
                 }
@@ -584,7 +584,7 @@ class OrderController extends Controller
     {
         //判断该订单是否存在
         $order = Order::bySellerId($this->user->id)->find(intval($request->input('order_id')));
-        if (!$order || !$order->can_change_price) {
+        if (!$order || !$order->can_change_price || $order->shop_id != auth()->user()->shop->id) {
             return $this->error('订单不存在或不能修改');
         }
         //判断输入的价格是否合法

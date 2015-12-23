@@ -50,7 +50,9 @@ class PingxxController extends Controller
 
                 $chargeId = $orderInfo->id;
 
-                $orders = Order::where($field, $orderInfo->order_no)->get();
+                $orders = Order::where($field, $orderInfo->order_no)->get()->each(function ($order) {
+                    $order->setAppends([]);
+                });
                 $amount = $orderInfo->amount / 100; //单位为分
                 //TODO: 订单手续费
                 $orderFee = sprintf("%.2f", $amount * 3 / 1000);
@@ -72,6 +74,7 @@ class PingxxController extends Controller
                 $orderId = $orderInfo->metadata->order_no;
                 //info($orderId);
                 $order = Order::find($orderId);
+                $order->setAppends([]);
                 if ($order->fill([
                     'pay_status' => cons('order.pay_status.refund_success'),
                     'refund_at' => Carbon::now()

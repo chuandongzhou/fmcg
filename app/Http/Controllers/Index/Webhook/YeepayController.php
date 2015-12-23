@@ -59,7 +59,9 @@ class YeepayController extends Controller
                     $field = $r8_MP == 'all' ? 'pid' : 'id';
 
                     info('应答机制成功' . $field);
-                    $orders = Order::where($field, $r6_Order)->get();
+                    $orders = Order::where($field, $r6_Order)->get()->each(function ($order) {
+                        $order->setAppends([]);
+                    });
                     info($orders);
 
                     $result = (new PayService)->addTradeInfo($orders, $r3_Amt, $rq_TargetFee, $r2_TrxId, 'yeepay',

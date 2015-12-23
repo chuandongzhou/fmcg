@@ -504,12 +504,14 @@ ul, li, p, a, h1, h2, h3, h4 {
     .list-penal .commodity .content-panel a {
       color: #555555; }
     .list-penal .commodity .content-panel .commodity-name {
-      padding: 10px 0;
+      margin: 10px 0;
       width: 100%;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      height: 40px;
       overflow: hidden;
-      vertical-align: middle; }
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; }
     .list-penal .commodity .content-panel .sell-panel .money {
       color: #fe462f;
       font-weight: bolder; }

@@ -13,7 +13,7 @@
     "predis/predis": "~1.0",
     "intervention/image": "~2.1",
     "maatwebsite/excel": "~2.0",
-    "phpoffice/phpword": "dev-master",
+    "phpoffice/phpword": "dev-develop",
     "riverslei/baidu-pusher": "~1.0",
     "davibennun/laravel-push-notification": "dev-laravel5",
     "pingplusplus/pingpp-php": "dev-master",

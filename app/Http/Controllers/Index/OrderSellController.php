@@ -47,7 +47,6 @@ class OrderSellController extends OrderController
             $orders = $query->ofSelectOptions($search)->orderBy('id',
                 'desc')->ofUserShopName($search['search_content'])->paginate();
         }
-
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
         $orders->each(function ($order) {
@@ -111,7 +110,7 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::bySellerId($this->user->id)->with('user', 'shop.user', 'goods.images.image',
+        $order = Order::bySellerId($this->user->id)->with('user.shop', 'shop.user', 'goods.images.image',
             'shippingAddress.address')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');

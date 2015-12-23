@@ -98,7 +98,8 @@
                                 </div>
                                 <div class="content-panel">
                                     <p class="commodity-name">
-                                        <a  href="{{ url('goods/' . $goods->id) }}" target="_blank">{{ $goods->name }}</a></p>
+                                        <a href="{{ url('goods/' . $goods->id) }}"
+                                           target="_blank">{{ $goods->name }}</a></p>
 
                                     <p class="sell-panel">
                                         <span class="money">￥{{ $goods->price }}</span>
@@ -125,7 +126,8 @@
                                 </div>
                                 <div class="content-panel">
                                     <p class="commodity-name">
-                                        <a href="{{ url('shop/' . $shop->id) }}" target="_blank">{{ $shop->name }} </a>
+                                        <a href="{{ url('shop/' . $shop->id) }}"
+                                           target="_blank">{{ $shop->name. ' (' . cons()->valueLang('user.type',  $shop->user->type) . ')' }} </a>
                                     </p>
 
                                     <p class="sell-panel">

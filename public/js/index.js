@@ -780,6 +780,35 @@ function changePriceByDetailPage() {
     });
 }
 
+/**
+ * 定位
+ */
+function setProvinceName() {
+    var geolocation = new BMap.Geolocation();
+    geolocation.getCurrentPosition(function (r) {
+        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            setProvince(r.point.lng, r.point.lat);
+        }
+        else {
+            alert('failed' + this.getStatus());
+        }
+    }, {enableHighAccuracy: true})
+
+    function setProvince(lng, lat) {
+        var myGeo = new BMap.Geocoder();
+        myGeo.getLocation(new BMap.Point(lng, lat), function (result) {
+            var provinceName = result.addressComponents.province;
+            $('span.city-value').html(provinceName);
+            $.post(site.api('address/province-id'), {name: provinceName}, function (data) {
+                if (data.provinceId) {
+                    setCookie('province_id', data.provinceId);
+                }
+            }, 'json')
+        });
+    }
+
+}
+
 
 /**
  * 方便的多次重复调用函数

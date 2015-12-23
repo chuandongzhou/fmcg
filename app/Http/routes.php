@@ -170,6 +170,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('order', 'OrderController');
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
+        $router->post('address/province-id', 'AddressController@getProvinceIdByName');
         $router->controller('auth', 'AuthController');
         $router->controller('push', 'PushController');//推送设备
 

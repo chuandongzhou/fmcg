@@ -69,10 +69,11 @@
                 <th>交易号</th>
                 <th>支付结果</th>
                 <th>支付金额</th>
+                <th>手续费</th>
                 <th>交易币种</th>
                 <th>交易返回类型</th>
                 <th>交易成功时间</th>
-                <th>交易结果通知</th>
+                {{--<th>交易结果通知</th>--}}
                 <th>hamc</th>
             </tr>
             </thead>
@@ -86,10 +87,11 @@
                     <td>{{ $trade->trade_no }}</td>
                     <td>{{ cons()->valueLang('order.pay_status' ,$trade->pay_status) }}</td>
                     <td>{{ $trade->amount }}</td>
+                    <td>{{ $trade->target_fee }}</td>
                     <td>{{ cons()->valueLang('trade.trade_currency' ,$trade->trade_currency) }}</td>
                     <td>{{ $trade->callback_type }}</td>
                     <td>{{ $trade->success_at }}</td>
-                    <td>{{ $trade->notice_at }}</td>
+                    {{--<td>{{ $trade->notice_at }}</td>--}}
                     <td>{{ $trade->hmac }}</td>
                 </tr>
             @endforeach
