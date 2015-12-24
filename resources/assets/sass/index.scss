@@ -1481,6 +1481,7 @@ table {
   .product-panel {
     vertical-align: middle;
     display: inline-block;
+    table-layout:fixed;
     .ellipsis{
       display: inline-block;
       max-width: 350px;
@@ -1497,7 +1498,7 @@ table {
     .promotions {
       margin-left: 10px;
       font-size: 12px;
-      color: #b4b4b4;
+      color: $gray-lighter;
     }
   }
 }
@@ -1761,7 +1762,6 @@ table {
 /*======================================order-detail begin======================================*/
 .order-detail {
   .order-tracking {
-    background-color: $gray-plain-light;
     border: 1px solid $brand-primary;
     padding: 10px 15px;
     .orders-submit-detail {
@@ -1847,6 +1847,7 @@ table {
   .order-table {
     .little-table {
       width: 50%;
+      margin:5px auto;
     }
     table {
       margin: auto;
@@ -2289,6 +2290,7 @@ table {
     margin: -1px;
     padding-left: 10px;
     @include size(100%, min(401px));
+    overflow-y: auto;
     .item {
       padding: 0 10px 5px 0;
       margin-top: 5px;

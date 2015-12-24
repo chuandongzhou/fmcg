@@ -1561,6 +1561,7 @@
 
 #### 2.17.2 退款[get] (refund/{order_id})
 `请求参数：`
+    reason         string           退款原因
 
 `成功返回：`
 

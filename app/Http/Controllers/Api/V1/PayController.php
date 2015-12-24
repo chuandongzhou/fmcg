@@ -82,12 +82,16 @@ class PayController extends Controller
     /**
      * 退款
      *
+     * @param \Illuminate\Http\Request $request
      * @param $orderId
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function refund($orderId)
+    public function refund(Request $request, $orderId)
     {
+        $reason = $request->input('reason', 'no reason');
+
         $order = Order::where('user_id', auth()->id())->find($orderId);
+
 
         if (!$order || !$order->can_refund || $order->user_id != auth()->id()) {
             return $this->error('订单不存在或不能退款');
@@ -104,8 +108,13 @@ class PayController extends Controller
             return $this->error('订单不存在或不能退款');
         }
 
+        if (!$order->fill(['pay_status' => cons('order.pay_status.refund')])->save()) {
+            return $this->error('退款失败,请稍后再试');
+        }
+
         if ($tradeInfo->pay_type == cons('trade.pay_type.yeepay')) {
-            if ($this->_refundByYeepay($tradeInfo)) {
+            if ($this->_refundByYeepay($tradeInfo, $reason)) {
+                $order->orderRefund()->create(['reason'=>$reason]);
                 // 更新订单状态
                 $order->fill([
                     'pay_status' => cons('order.pay_status.refund_success'),
@@ -121,10 +130,12 @@ class PayController extends Controller
                 return $this->error('退款时遇到错误');
             }
         } else {
-            $result = $this->_refundByPingxx($tradeInfo);
+            $result = $this->_refundByPingxx($tradeInfo, $reason);
 
             if ($result) {
                 //通知卖家已退款
+                $order->orderRefund()->create(['reason'=>$reason]);
+
                 $shop = Shop::find($order->shop_id);
                 $redisKey = 'push:seller:' . $shop->user->id;
                 $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
@@ -153,24 +164,25 @@ class PayController extends Controller
      * @param $tradeInfo
      * @return bool
      */
-    private function _refundByPingxx($tradeInfo)
+    private function _refundByPingxx($tradeInfo, $reason)
     {
         $ch = Charge::retrieve($tradeInfo->charge_id);
-        $ch->refunds->create(
+        $result = $ch->refunds->create(
             array(
                 'amount' => $tradeInfo->amount * 100,
-                'description' => 'Refund Description',
+                'description' => $reason,
                 'metadata' => ['order_no' => $tradeInfo->order_id]
             )
         );
-        return true;
+        //info($result);
+        return !is_null($result->failure_code);
     }
 
     /**
      * @param $tradeInfo
      * @return bool
      */
-    private function _refundByYeepay($tradeInfo)
+    private function _refundByYeepay($tradeInfo, $reason)
     {
 
         $yeepayConf = config('yeepay');
@@ -181,7 +193,7 @@ class PayController extends Controller
             'pb_TrxId' => $tradeInfo->trade_no,
             'p3_Amt' => $tradeInfo->amount,
             'p4_Cur' => "CNY",
-            'p5_Desc' => 'Refund Description',
+            'p5_Desc' => $reason,
         );
         $hmac = $this->_getYeepayHamc($params);
         $params['hmac'] = $hmac;

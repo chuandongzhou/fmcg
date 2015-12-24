@@ -259,9 +259,7 @@ class OrderController extends Controller
      */
     private function _inputName($objType)
     {
-        if ($this->user->type == cons('user.type.retailer')
-            || ($this->user->type == cons('user.type.wholesaler')
-                && $objType == cons('user.type.supplier'))
+        if ($this->user->type == cons('user.type.retailer') || ($this->user->type == cons('user.type.wholesaler')  && $objType == cons('user.type.supplier'))
         ) {
             return '卖家名称';
         }
@@ -285,11 +283,11 @@ class OrderController extends Controller
         if ($pageTotal > 1) {
             $html .= '<ul class="pager">';
             if ($pageNum > 1) {
-                $html .= '<li><a class="prev' . $flag . '">上一页</a></li>';
+                $html .= '<li><a class="prev' . $flag . ' search-by-get">上一页</a></li>';
             }
 
             if ($pageTotal > $pageNum) {
-                $html .= '<li><a class="next' . $flag . '">下一页</a></li>';
+                $html .= '<li><a class="next' . $flag . ' search-by-get">下一页</a></li>';
             }
             $html .= '</ul>';
         }
@@ -324,9 +322,8 @@ class OrderController extends Controller
             }
         });
 
-        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->type
-            || $this->user->type == cons('user.type.supplier')
-        ) {//查询买家
+        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->type || $this->user->type == cons('user.type.supplier')) {
+            //查询买家
             $query->wherehas('shop.user', function ($q) use ($search) {
                 $q->where('id', $this->user->id);
             });
@@ -336,10 +333,8 @@ class OrderController extends Controller
 
                 });
             }
-        }
-        if (!empty($search['obj_type']) && $search['obj_type'] > $this->user->type
-            || $this->user->type == cons('user.type.retailer')
-        ) {//查询卖家
+        }elseif (!empty($search['obj_type']) && $search['obj_type'] > $this->user->type || $this->user->type == cons('user.type.retailer')  ) {
+            //查询卖家
             $query->where('user_id', $this->user->id);
             if (!empty($search['obj_type'])) {
                 $query->wherehas('shop.user', function ($q) use ($search) {
@@ -355,15 +350,12 @@ class OrderController extends Controller
         if (!empty($search['goods_name'])) {
             $query->wherehas('goods', function ($q) use ($search) {
                 $q->where('name', trim($search['goods_name']));
-
             });
         }
         //用户名
         if (!empty($search['user_name'])) {
-            if ($this->user->type == cons('user.type.retailer')
-                || (isset($search['action_type'])
-                    && $search['action_type'] == 'sell')
-            ) {//查询卖家
+            if ($this->user->type == cons('user.type.retailer')) {
+                //查询卖家
                 $query->wherehas('shop', function ($q) use ($search) {
                     $q->where('name', trim($search['user_name']));
                 });
@@ -374,11 +366,11 @@ class OrderController extends Controller
             }
         }
         //地址
-        $query->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
-            empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
-            empty($search['city_id']) ?: $query->where('city_id', $search['city_id']);
-            empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
-        });
+        /*  $query->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
+              empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
+              empty($search['city_id']) ?: $query->where('city_id', $search['city_id']);
+              empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
+          });*/
 
         return $query->nonCancel()->with('user.shop', 'shop', 'goods')->orderBy('id',
             'desc')->get();//第一个是买家的店铺,第二个是卖的店铺

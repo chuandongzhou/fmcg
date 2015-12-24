@@ -1086,7 +1086,8 @@ function formSubmitByGet(exceptName) {
                 query.push(o.name + '=' + o.value);
             }
         });
-        var queryString =query.length ? '?' + query.join('&') : '';
+
+        var povit = action.indexOf('?') >= 0 ? '&' : '?', queryString = query.length ? povit + query.join('&') : '';
         window.location.href = action + queryString;
         return false;
     })

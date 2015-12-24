@@ -107,11 +107,13 @@
                         <button class="btn btn-primary search-btn search-by-get" type="submit">搜索</button>
                     </span>
                 </div>
-                <div class="text-left search-keyword">
-                    @foreach($keywords as $key=>$val)
-                        <a href="{{ url('search?name=' . $key) }}">{{ $key }}</a>
-                    @endforeach
-                </div>
+                @if ($keywords)
+                    <div class="text-left search-keyword">
+                        @foreach($keywords as $key=>$val)
+                            <a href="{{ url('search?name=' . $key) }}">{{ $key }}</a>
+                        @endforeach
+                    </div>
+                @endif
             </form>
             <ul class="nav navbar-nav navbar-right right-btn">
                 <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车 <span

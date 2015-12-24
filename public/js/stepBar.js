@@ -87,7 +87,7 @@ var stepBar = {
             this.itemWidth = Math.floor((this.barWidth * 0.9) / (this.itemCount - 1));
             this.bar.find(".ui-stepLayout").width(Math.floor(this.barWidth * 0.9 + this.itemWidth));
             this.item.width(this.itemWidth);
-            this.bar.find(".ui-stepLayout").css({"margin-left": -Math.floor(this.itemWidth / 2) + 10 });
+            this.bar.find(".ui-stepLayout").css({"margin-left": -Math.floor(this.itemWidth / 2) + 2 });
             if(this.change){
                 this._event();
             }

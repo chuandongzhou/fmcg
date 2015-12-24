@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            @if(auth()->user()->type > cons('user.type.retailer'))
+            @if($shop->user->type > cons('user.type.retailer'))
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
 

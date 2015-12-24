@@ -19,6 +19,13 @@
                     <span class="title-name">订单状态 : </span>
                     <span class="red">{{ $order['status_name'] }}</span>
                 </li>
+                @if($order->orderRefund)
+                    <li>
+                        <span class="title-name">退款原因 : </span>
+                        <span class="red">{{ $order->orderRefund->reason }}</span>
+                    </li>
+                @endif
+
                 <li><span class="title-name">订单备注 : </span>
 
                     <p class="remarks-content">{{ $order['remark'] }}</p>
@@ -64,7 +71,7 @@
                 <tr>
                     <td>订单操作</td>
                     <td>操作时间</td>
-                    <td>订单操作</td>
+                    <td>操作人</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -80,6 +87,20 @@
                         <td>{{ $order->user->shop->name }}</td>
                     </tr>
                 @endif
+                @if($order->pay_status == cons('order.pay_status.refund')  || $order->pay_status == cons('order.pay_status.refund_success'))
+                    <tr>
+                        <td>申请退款</td>
+                        <td>{{ $order->orderRefund->created_at }}</td>
+                        <td>{{ $order->user->shop->name }}</td>
+                    </tr>
+                @endif
+                @if($order->pay_status == cons('order.pay_status.refund_success'))
+                    <tr>
+                        <td>退款成功</td>
+                        <td>{{ $order->refund_at }}</td>
+                        <td>{{ $order->shop->name }}</td>
+                    </tr>
+                @endif
                 @if((int)$order['send_at'])
                     <tr>
                         <td>
@@ -91,7 +112,7 @@
                 @endif
                 @if((int)$order['finished_at'])
                     <tr>
-                        <td>付款</td>
+                        <td>已完成</td>
                         <td>{{ $order['finished_at'] }}</td>
                         <td>{{ $order->user->shop->name }}</td>
                     </tr>
@@ -163,8 +184,9 @@
                             <td>{{ $goods['id'] }}</td>
                             <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
                             <td>
-                                <div class="product-panel" >
-                                    <a  class="product-name" href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods->name }}</a>
+                                <div class="product-panel">
+                                    <a class="product-name" href="{{ url('goods/'. $goods['id']) }}"
+                                       target="_blank">{{ $goods->name }}</a>
                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                 </div>
                             </td>

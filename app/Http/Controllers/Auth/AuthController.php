@@ -33,11 +33,17 @@ class AuthController extends Controller
     /**
      * 登录验证
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function login()
+    public function login(Request $request)
     {
-        return view('auth.login');
+        $type = $request->input('type');
+
+        if (!$type || !$typeId = array_get(cons('user.type') ,$type)) {
+            return redirect('auth/guide');
+        }
+        return view('auth.login', ['type' => $typeId]);
     }
 
     /**

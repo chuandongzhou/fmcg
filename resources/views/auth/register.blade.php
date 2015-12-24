@@ -11,9 +11,9 @@
     <nav class="navbar login-nav">
         <div class="container padding-clear register">
             <ul class="nav-title text-center">
-                <li><a href="{{ url('auth/login') }}">首页</a></li>
+                <li><a href="{{ url('auth/guide') }}">首页</a></li>
                 <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li><a href="{{ url('auth/reg-success') }}">关于我们</a></li>
+                <li><a href="javascript:">关于我们</a></li>
             </ul>
         </div>
     </nav>

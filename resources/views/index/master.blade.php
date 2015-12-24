@@ -112,11 +112,13 @@
                             <button class="btn btn-primary" type="submit">搜本店</button>
                         </span>
                     </div>
-                    <div class="text-left search-keyword">
-                        @foreach($keywords as $key=>$val)
-                            <a href="{{ url('shop/' . $shop->id . '/search?name=' . $key) }}">{{ $key }}</a>
-                        @endforeach
-                    </div>
+                    @if ($keywords)
+                        <div class="text-left search-keyword">
+                            @foreach($keywords as $key=>$val)
+                                <a href="{{ url('shop/' . $shop->id . '/search?name=' . $key) }}">{{ $key }}</a>
+                            @endforeach
+                        </div>
+                    @endif
                 </form>
             </div>
             <div class="col-sm-4 text-right shopping-car">

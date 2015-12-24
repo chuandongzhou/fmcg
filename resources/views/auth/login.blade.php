@@ -4,13 +4,15 @@
 
 @section('css')
     @parent
-    <style>body {margin-bottom: 120px}</style>
+    <style>body {
+            margin-bottom: 120px
+        }</style>
 @stop
 @section('body')
     <nav class="navbar login-nav">
         <div class="container padding-clear">
             <ul class="nav-title text-center">
-                <li><a href="#">首页</a></li>
+                <li><a href="{{ url('auth/guide') }}">首页</a></li>
                 <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
                 <li><a href="#">关于我们</a></li>
             </ul>
@@ -57,13 +59,13 @@
                 </div>
 
                 <div class="col-sm-6 col-xs-6 item forgot ">
-                    <button type="button" class="btn btn-warning forgot-pwd" data-toggle="modal" data-target="#backupModal">
+                    <button type="button" class="btn btn-warning forgot-pwd" data-toggle="modal"
+                            data-target="#backupModal">
                         找回密码
                     </button>
                 </div>
                 <div class="col-sm-6 col-xs-6 item login ">
-                    <input type="hidden" name="type"
-                           value="{{ array_get(cons('user.type') , \Request::input('type') ? \Request::input('type') : 'retailer' , head(cons('user.type'))) }}"/>
+                    <input type="hidden" name="type" value="{{ $type }}"/>
                     <button type="submit" class="btn btn-primary login-btn" data-loading-text="登录中..."
                             data-done-text="登录成功" data-fail-text="登录失败">登录
                     </button>

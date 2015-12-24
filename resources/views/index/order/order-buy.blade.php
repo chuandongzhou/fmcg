@@ -1,6 +1,6 @@
-@include('includes.timepicker')
 @extends('index.menu-master')
-
+@include('includes.timepicker')
+@include('includes.order-refund')
 @section('subtitle', '订单管理')
 
 @section('right')
@@ -74,8 +74,9 @@
                                         <td>
                                             <img class="store-img" src="{{ $goods['image_url'] }}">
 
-                                            <div class="product-panel" >
-                                                <a class="product-name ellipsis" href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+                                            <div class="product-panel">
+                                                <a class="product-name ellipsis"
+                                                   href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
                                                 {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
 
@@ -112,9 +113,9 @@
                                                     @endif
                                                     @if ($order->can_refund)
                                                         <p>
-                                                            <a class="btn btn-danger ajax"
-                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}"
-                                                               data-method="put">
+                                                            <a class="btn btn-danger refund" data-target="#refund"
+                                                               data-toggle="modal"
+                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
                                                                 退款
                                                             </a>
                                                         </p>
@@ -154,6 +155,7 @@
             @endif
         </form>
     </div>
+
 @stop
 @section('js')
     @parent
@@ -161,6 +163,10 @@
         $(function () {
             getOrderButtonEvent();
             formSubmitByGet();
+            $('.refund').click(function () {
+                var obj = $(this), url = obj.data('url');
+                $('.modal-body').find('button[type="submit"]').attr('data-url', url);
+            })
         })
     </script>
 @stop

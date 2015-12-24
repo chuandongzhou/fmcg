@@ -484,20 +484,16 @@ function statisticsFunc() {
     //order_page_num
     $('.next0').on('click', function () {
         target0.attr('value', target_value0 + 1);
-        $('form').submit();
     });
     $('.prev0').on('click', function () {
         target0.attr('value', target_value0 - 1);
-        $('form').submit();
     });
     //goods_page_num
     $('.next1').on('click', function () {
         target1.attr('value', target_value1 + 1);
-        $('form').submit();
     });
     $('.prev1').on('click', function () {
         target1.attr('value', target_value1 - 1);
-        $('form').submit();
     });
 }
 

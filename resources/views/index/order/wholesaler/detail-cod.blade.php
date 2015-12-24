@@ -43,55 +43,53 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 orders-submit-detail">
-                    <ul class="submit-detail-item">
-                        <li>订单操作</li>
-                        <li>操作时间</li>
-                        <li>操作人</li>
-                    </ul>
-                    <ul class="submit-detail-item">
-                        <li>提交订单</li>
-                        <li class="time">
-                            <span class="date">{{ $order['created_at'] }}</span>
-                        </li>
-                        <li>{{ $order->user->shop->name }}</li>
-                    </ul>
-                    @if((int)$order['send_at'])
-                        <ul class="submit-detail-item">
-                            <li>发货</li>
-                            <li class="time">
-                                <span class="date">{{ $order['send_at'] }}</span>
-                            </li>
-                            <li>{{ $order->shop->name }}</li>
-                        </ul>
-                    @endif
-                    @if((int)$order['paid_at'])
-                        <ul class="submit-detail-item">
-                            <li>付款</li>
-                            <li class="time">
-                                <span class="date">{{ $order['paid_at'] }}</span>
-                            </li>
-                            <li>{{ $order->user->shop->name }}</li>
-                        </ul>
-                    @endif
-                    @if((int)$order['finished_at'])
-                        <ul class="submit-detail-item">
-                            <li>完成</li>
-                            <li class="time">
-                                <span class="date">{{ $order['finished_at'] }}</span>
-                            </li>
-                            <li>{{ $order->user->shop->name }}</li>
-                        </ul>
-                    @endif
-                    @if($order['is_cancel'])
-                        <ul class="submit-detail-item">
-                            <li>取消订单</li>
-                            <li class="time">
-                                <span class="date">{{ $order['cancel_at'] }}</span>
-                            </li>
-                            <li>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</li>
-                        </ul>
-                    @endif
+                <div class="col-sm-12 order-table table-responsive text-center">
+                    <table class="table table-bordered little-table">
+                        <thead>
+                        <tr>
+                            <td>订单操作</td>
+                            <td>操作时间</td>
+                            <td>操作人</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>提交订单</td>
+                            <td>{{ $order['created_at'] }}</td>
+                            <td>{{ $order->user->shop->name }}</td>
+                        </tr>
+                        @if((int)$order['paid_at'])
+                            <tr>
+                                <td>付款</td>
+                                <td>{{ $order['paid_at'] }}</td>
+                                <td>{{ $order->user->shop->name }}</td>
+                            </tr>
+                        @endif
+                        @if((int)$order['send_at'])
+                            <tr>
+                                <td>
+                                    订单发货
+                                </td>
+                                <td>{{ $order['send_at'] }}</td>
+                                <td>{{ $order->shop->name }}</td>
+                            </tr>
+                        @endif
+                        @if((int)$order['finished_at'])
+                            <tr>
+                                <td>已完成</td>
+                                <td>{{ $order['finished_at'] }}</td>
+                                <td>{{ $order->user->shop->name }}</td>
+                            </tr>
+                        @endif
+                        @if($order['is_cancel'])
+                            <tr>
+                                <td>取消订单</td>
+                                <td>{{ $order['cancel_at'] }}</td>
+                                <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row order-receipt">
