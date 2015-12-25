@@ -28,8 +28,15 @@
                                     <option value="{{ $key }}" {{ $key == $goods->pieces_retailer ? 'selected' : '' }}>{{ $piece }}</option>
                                 @endforeach
                             </select>
+
+                            <label class="control-label">规格 :</label>
+                            <input name="specification_retailer" value="{{ $goods->specification_retailer }}" type="text"
+                                   required>
+
                         </p>
-                        @if (auth()->user()->type == cons('user.type.supplier'))
+                    </div>
+                    @if (auth()->user()->type == cons('user.type.supplier'))
+                        <div class="form-group editor-item">
                             <p class="items-item right-item">
                                 <label class="control-label">价格(批发商) :</label>
                                 <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
@@ -40,9 +47,13 @@
                                         <option value="{{ $key }}" {{ $key == $goods->pieces_wholesaler ? 'selected' : '' }}>{{ $piece }}</option>
                                     @endforeach
                                 </select>
+                                <label class="control-label">规格 :</label>
+                                <input name="specification_wholesaler" value="{{ $goods->specification_wholesaler }}" type="text"
+                                       required>
                             </p>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
+
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">最低购买数 :</label>

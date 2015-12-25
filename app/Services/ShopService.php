@@ -31,19 +31,19 @@ class ShopService
 
             foreach ($shopColumns as $shopColumn) {
                 $shops = Shop::whereIn('id', $shopColumn->id_list)->OfUser($type)->with('images',
-                    'logo')->get()->each(function ($shop) {
-                    $shop->setAppends(['image_url', 'logo', 'user']);
+                    'logo', 'user')->get()->each(function ($shop) {
+                    $shop->setAppends(['image_url', 'logo']);
                 });
                 $columnShopsCount = $shops->count();
                 if ($columnShopsCount < 10) {
                     $columnShopsIds = $shops->pluck('id')->toArray();
                     $ShopsBySort = Shop::whereNotIn('id', $columnShopsIds)
                         ->OfUser($type)
-                        ->with('images', 'logo')
+                        ->with('images', 'logo', 'user')
                         ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
                         ->take(10 - $columnShopsCount)
                         ->get()->each(function ($shop) {
-                            $shop->setAppends(['image_url', 'logo', 'user']);
+                            $shop->setAppends(['image_url', 'logo']);
                         });
                     $shops = $shops->merge($ShopsBySort);
                 }

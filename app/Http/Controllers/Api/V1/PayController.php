@@ -175,7 +175,7 @@ class PayController extends Controller
             )
         );
         //info($result);
-        return !is_null($result->failure_code);
+        return is_null($result->failure_code);
     }
 
     /**

@@ -188,7 +188,7 @@ class MyGoodsController extends Controller
         $attrs = $request->input('attrs');
         $importResult = $this->importGoods($file, $postAttr, $attrs);
 
-        return $importResult ? $this->success('导入成功') : $this->error('导入错误，请重试');
+        return $importResult['type'] ? $this->success($importResult['info']) : $this->error($importResult['info']);
     }
 
 
@@ -203,10 +203,10 @@ class MyGoodsController extends Controller
     public function importGoods($file, $postAttr, $attrs)
     {
         $filePath = $this->uploadExcel($file);
-        if (!$filePath) {
-            return false;
+        if (!$filePath['type']) {
+            return $filePath;
         }
-        $results = Excel::selectSheetsByIndex(0)->load($filePath, function ($reader) {
+        $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
         })->skip(1)->toArray();
 
         $shop = auth()->user()->shop->load(['deliveryArea.coordinate']);
@@ -218,11 +218,11 @@ class MyGoodsController extends Controller
                 $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
                 $this->updateAttrs($goodsModel, $attrs);
             } else {
-                return false;
+                return $this->setImportResult('文件格式不正确');
             }
         }
 
-        return true;
+        return $this->setImportResult('上传成功', true);
 
     }
 
@@ -239,12 +239,12 @@ class MyGoodsController extends Controller
 
         // 判断文件是否有效
         if (!is_object($file) || !$file->isValid()) {
-            return false;
+            return $this->setImportResult('无效的文件');
         }
         $ext = $file->getClientOriginalExtension();
 
         if (!in_array($ext, cons('goods.import_allow_ext'))) {
-            return false;
+            return $this->setImportResult('文件类型错误');
         }
 
         $path = date('Y/m/d/');
@@ -256,9 +256,9 @@ class MyGoodsController extends Controller
         } catch (FileException $e) {
             info($e);
 
-            return false;
+            return $this->setImportResult('上传失败');
         }
-        return $tempPath . $path . $name;
+        return $this->setImportResult($tempPath . $path . $name, true);
     }
 
     /**
@@ -335,11 +335,13 @@ class MyGoodsController extends Controller
             'price_retailer' => $goodsArr[2],
             'min_num_retailer' => $goodsArr[3],
             'pieces_retailer' => $goodsArr[4],
+            'specification_retailer' => $goodsArr[5]
         ];
         if (auth()->user()->type == cons('user.type.supplier')) {
-            $goods['price_wholesaler'] = isset($goodsArr[5]) ? $goodsArr[5] : $goodsArr[2];
-            $goods['min_num_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[3];
-            $goods['pieces_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[4];
+            $goods['price_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[2];
+            $goods['min_num_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[3];
+            $goods['pieces_wholesaler'] = isset($goodsArr[8]) ? $goodsArr[8] : $goodsArr[4];
+            $goods['specification_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[5];
         }
         return array_merge($goods, $postAttr);
     }
@@ -377,5 +379,20 @@ class MyGoodsController extends Controller
             BarcodeWithoutImages::create(['barcode' => $barCode]);
         }
         return true;
+    }
+
+    /**
+     * 设置导入错误信息
+     *
+     * @param $msg
+     * @param $type
+     * @return array
+     */
+    private function setImportResult($msg, $type = false)
+    {
+        return [
+            'info' => $msg,
+            'type' => $type
+        ];
     }
 }

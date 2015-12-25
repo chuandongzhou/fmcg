@@ -52,7 +52,7 @@ class MyGoodsController extends Controller
         $result = GoodsService::getGoodsBySearch($data, $goods);
 
         return view('index.my-goods.index', [
-            'goods' => $result['goods']->paginate(),
+            'goods' => $result['goods']->paginate(16),
             'categories' => $result['categories'],
             'attrs' => $result['attrs'],
             'searched' => $result['searched'],

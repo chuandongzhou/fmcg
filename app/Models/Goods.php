@@ -21,9 +21,11 @@ class Goods extends Model
         'price_retailer',
         'pieces_retailer',
         'min_num_retailer',
+        'specification_retailer',
         'price_wholesaler',
         'pieces_wholesaler',
         'min_num_wholesaler',
+        'specification_wholesaler',
         'bar_code',
         'cate_level_1',
         'cate_level_2',
@@ -111,7 +113,7 @@ class Goods extends Model
      */
     public function images()
     {
-        return $this->hasMany('App\Models\Images','bar_code' , 'bar_code');
+        return $this->hasMany('App\Models\Images', 'bar_code', 'bar_code');
     }
 
     /**
@@ -341,6 +343,18 @@ class Goods extends Model
         $userType = auth()->user()->type;
         $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
         return cons()->valueLang('goods.pieces', $piece);
+    }
+
+    /**
+     * 根据不同角色获取规格
+     *
+     * @return mixed
+     */
+    public function getSpecificationAttribute()
+    {
+        $userType = auth()->user()->type;
+        $specification = $userType == $this->user_type ? $this->specification_retailer : ($userType == cons('user.type.wholesaler') ? $this->specification_wholesaler : $this->specification_retailer);
+        return $specification;
     }
 
     /**

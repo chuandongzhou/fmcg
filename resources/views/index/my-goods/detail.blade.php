@@ -30,19 +30,52 @@
                 <ul class="left-list pull-left">
                     <li><span class="prompt">商品ID :</span>{{ $goods->id }}</li>
                     <li><span class="prompt">条形码 :</span>{{ $goods->bar_code }}</li>
-                    <li><span class="prompt">价格 :</span> <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b></li>
-                    <li><span class="prompt">状态 :</span> <b class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</b></li>
+                    @if(auth()->user()->type==cons('user.type.wholesaler'))
+                        <li>
+                            <span class="prompt">价格 :</span>
+                            <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b>
+                        </li>
+                    @else
+                        <li>
+                            <span class="prompt">价格(终端商) :</span>
+                            <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b>
+                        </li>
+                        <li>
+                            <span class="prompt">价格(批发商) :</span>
+                            <b class="red">￥{{ $goods->price_wholesaler .' / ' . cons()->valueLang('goods.pieces',$goods->pieces_wholesaler)  }}</b>
+                        </li>
+                    @endif
+                    <li><span class="prompt">状态 :</span> <b
+                                class="red">已{{ cons()->valueLang('goods.status' ,$goods->status) }}</b></li>
                     @foreach($attrs as $key => $attr)
                         <li><span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b></li>
                     @endforeach
                 </ul>
                 <ul class="right-list">
-                    <li><span class="prompt">是否新品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</b></li>
-                    <li><span class="prompt">是否缺货 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_out) }}</b></li>
-                    <li><span class="prompt">即期品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b></li>
+                    <li><span class="prompt">是否新品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</b>
+                    </li>
+                    <li>
+                        <span class="prompt">是否缺货 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_out) }}</b>
+                    </li>
+                    <li><span class="prompt">即期品 :</span>
+                        <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b></li>
                     @if( $goods->is_back || $goods->is_change)
-                        <li><span class="prompt">退换货 :</span> <b>{{ $goods->is_back ? '可退货' : '' }}</b>  <b>{{  $goods->is_change ? '可换货' : ''  }}</b></li>
+                        <li><span class="prompt">退换货 :</span> <b>{{ $goods->is_back ? '可退货' : '' }}</b>
+                            <b>{{  $goods->is_change ? '可换货' : ''  }}</b></li>
                     @endif
+                    @if(auth()->user()->type==cons('user.type.wholesaler'))
+                        <li>
+                            <span class="prompt">规格 :</span> <b>{{ $goods->specification or '暂无' }}</b>
+                        </li>
+                    @else
+                        <li>
+                            <span class="prompt">规格(终端商) :</span> <b>{{ $goods->specification or '暂无' }}</b>
+                        </li>
+                        <li>
+                            <span class="prompt">规格(批发商) :</span> <b>{{ $goods->specification_wholesaler or '暂无' }}</b>
+                        </li>
+                    @endif
+
                     @if($goods->is_promotion)
                         <li><span class="prompt">促销信息 :</span> <b>{{ $goods->promotion_info }}</b></li>
                     @endif
@@ -70,11 +103,11 @@
                 <div class="item">
                     <h5 class="prompt">商品配送区域大概地图标识 :</h5>
 
-                {{--<p class="address-map">--}}
+                    {{--<p class="address-map">--}}
                     {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
-                {{--</p>--}}
-                <div id="map"></div>
-            </div>
+                    {{--</p>--}}
+                    <div id="map"></div>
+                </div>
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}
@@ -93,6 +126,11 @@
             @if(isset($coordinates))
                getCoordinateMap({!! $coordinates !!});
             @endif
+
+
+
+
+
         });
     </script>
 @stop

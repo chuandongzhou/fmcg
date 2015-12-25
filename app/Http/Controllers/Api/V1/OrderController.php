@@ -98,7 +98,7 @@ class OrderController extends Controller
     public function getDetailOfBuy(Request $request)
     {
         $order = Order::where('user_id', $this->user->id)->with('goods.images', 'deliveryMan',
-            'shippingAddress.address')->find($request->input('order_id'));
+            'shippingAddress.address', 'orderRefund')->find($request->input('order_id'));
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
@@ -154,9 +154,7 @@ class OrderController extends Controller
     {
         $orderId = $request->input('order_id');
         $order = Order::bySellerId($this->user->id)->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
-            'shippingAddress.address')->find($orderId);
-
-        //过滤字段
+            'shippingAddress.address', 'orderRefund')->find($orderId);
         $order->shop->setAppends([]);
         $order->user->setVisible(['id', 'shop', 'type']);
         $order->goods->each(function ($goods) {

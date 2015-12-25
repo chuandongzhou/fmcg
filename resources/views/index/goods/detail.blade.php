@@ -1,4 +1,4 @@
-@extends('index.index-master')
+    @extends('index.index-master')
 @include('includes.loadMapJs')
 
 @section('subtitle', '商品详情')
@@ -39,6 +39,7 @@
                     </ul>
                     <ul class="pull-left right-panel">
                         <li><span class="prompt">商家 </span> : <b>{{ $goods->shop->name }}</b></li>
+                        <li><span class="prompt">条形码 </span> : <b>{{ $goods->bar_code }}</b></li>
                         @if($goods->is_promotion)
                             <li><span class="prompt">促销信息 </span> : <b>{{ $goods->promotion_info }}</b></li>
                         @endif
@@ -51,7 +52,7 @@
                             <span class="prompt">即期品 </span> :
                             <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
-                        <li><span class="prompt">条形码 </span> : <b>{{ $goods->bar_code }}</b></li>
+                        <li><span class="prompt">规格 </span> : <b>{{ $goods->specification or '暂无' }}</b></li>
                         <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post"
                               autocomplete="off">
                             <li>

@@ -213,6 +213,17 @@ class Order extends Model
     }
 
     /**
+     * 获取退款原因
+     *
+     * @return string
+     */
+    public function getRefundReasonAttribute()
+    {
+        $refund = $this->orderRefund;
+        return $refund ? $refund->reason : '';
+    }
+
+    /**
      * 是否可取消
      *
      * @return bool
