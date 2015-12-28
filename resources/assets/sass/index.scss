@@ -8,7 +8,7 @@ html {
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
   width: 100%;
 }
 
@@ -1300,7 +1300,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
+.promotions-content{
+  margin-left:60px;
+  font-weight: 600;
+}
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
 .upload-progress-wrap {
@@ -2558,12 +2561,18 @@ table {
     }
     .finish-operating {
       margin-top: 20px;
-      a {
+      .pay{
+        margin-right: 40px;
+        padding:5px 20px;
+        font-size: 17px;
+      }
+      .check-order {
         color: $brand-warning;
+        display: inline-block;
+        vertical-align: bottom;
         &:hover {
           color: $brand-warning;
         }
-        display: inline-block;
         margin-right: 10px;
       }
     }

@@ -4,7 +4,7 @@ html {
 
 body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
   width: 100%; }
 
 ul, li, p, a, h1, h2, h3, h4 {
@@ -951,6 +951,10 @@ ul, li, p, a, h1, h2, h3, h4 {
       max-height: 380px;
       text-indent: 30px; }
 
+.promotions-content {
+  margin-left: 60px;
+  font-weight: 600; }
+
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
 .upload-progress-wrap .upload-img-item, .goods-editor .content-wrap .upload-wrap .upload-img-item {
@@ -1845,11 +1849,16 @@ table .product-panel {
     color: #555555; }
   .table-list-row .shopping-finish .finish-operating {
     margin-top: 20px; }
-    .table-list-row .shopping-finish .finish-operating a {
+    .table-list-row .shopping-finish .finish-operating .pay {
+      margin-right: 40px;
+      padding: 5px 20px;
+      font-size: 17px; }
+    .table-list-row .shopping-finish .finish-operating .check-order {
       color: #f0ad4e;
       display: inline-block;
+      vertical-align: bottom;
       margin-right: 10px; }
-      .table-list-row .shopping-finish .finish-operating a:hover {
+      .table-list-row .shopping-finish .finish-operating .check-order:hover {
         color: #f0ad4e; }
 
 .check-item {

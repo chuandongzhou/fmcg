@@ -8,7 +8,7 @@
                 <div class="store-panel">
                     <img class="avatar" src="{{ $shop->logo_url }}">
                     <ul class="store-msg">
-                        <li>店家姓名 : {{ $shop->name }}</li>
+                        <li>店家名称 : {{ $shop->name }}</li>
                         <li>联系人 : {{ $shop->contact_person }}</li>
                         <li>最低配送额 : {{ $shop->min_money }}</li>
                     </ul>

@@ -30,6 +30,9 @@ class GoodsService
             $goods->{'Of' . ucfirst($data['sort'])}();
         }
         // 省市县
+
+        $data['province_id'] = isset($data['province_id']) ? $data['province_id'] : (request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province'));
+
         if (isset($data['province_id'])) {
             $goods->OfDeliveryArea($data);
         }
@@ -115,17 +118,19 @@ class GoodsService
         $type = auth()->user()->type;
 
         $columnTypes = cons('home_column.type');
+
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
 
         $goodsColumns = [];
-        if (Cache::has($cacheKey)) {
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+
+        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
             $goodsColumns = Cache::get($cacheKey);
         } else {
-
             //商品
-
             $goodsColumns = HomeColumn::where('type', $columnTypes['goods'])->get();
+
             $goodsFields = [
                 'id',
                 'name',
@@ -156,6 +161,7 @@ class GoodsService
                         ->ofStatus(cons('goods.status.on'))
                         ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
                         ->with('images.image')
+                        ->OfDeliveryArea(['province_id' => $provinceId])
                         ->select($goodsFields)
                         ->take($displayCount - $columnGoodsCount)
                         ->get()->each(function ($goods) {
@@ -164,10 +170,10 @@ class GoodsService
                     $goods = $goods->merge($goodsBySort);
                 }
                 $goodsColumn->goods = $goods;
+                $goodsColumn->province_id = $provinceId;
             }
             Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
         }
-
         return $goodsColumns;
     }
 

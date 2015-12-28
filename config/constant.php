@@ -259,5 +259,8 @@ return [
             'pre_name' => 'backup:code:',
             'expire' => 120,
         ]
+    ],
+    'location' => [
+        'default_province' => 510000,
     ]
 ];

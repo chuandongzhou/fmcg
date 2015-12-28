@@ -20,6 +20,7 @@ class SearchController extends Controller
         $goods = Goods::with('images')->select([
             'id',
             'name',
+            'bar_code',
             'sales_volume',
             'price_retailer',
             'price_wholesaler',

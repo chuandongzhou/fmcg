@@ -42,9 +42,12 @@ class ShopController extends Controller
         }
 
         //配送区域
-        $address = $request->except('name');
-        if (!empty($address)) {
-            $shops = $shops->OfDeliveryArea($address);
+        $data = $request->except('name');
+
+        $data['province_id'] = isset($data['province_id']) ? $data['province_id'] : ($request->cookie('province_id') ? $request->cookie('province_id') : cons('location.default_province'));
+
+        if (!empty($data)) {
+            $shops = $shops->OfDeliveryArea($data);
         }
         // 名称
         $name = $request->input('name');
@@ -54,7 +57,7 @@ class ShopController extends Controller
         }
 
 
-        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $address]);
+        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data]);
     }
 
     /**

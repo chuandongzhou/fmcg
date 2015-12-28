@@ -23,7 +23,8 @@ class ShopService
         $cacheKey = $homeColumnShopConf['cache']['pre_name'] . $type;
 
         $shopColumns = [];
-        if (Cache::has($cacheKey)) {
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
             $shopColumns = Cache::get($cacheKey);
         } else {
             //商家
@@ -41,6 +42,7 @@ class ShopService
                         ->OfUser($type)
                         ->with('images', 'logo', 'user')
                         ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
+                        ->OfDeliveryArea(['province_id' => $provinceId])
                         ->take(10 - $columnShopsCount)
                         ->get()->each(function ($shop) {
                             $shop->setAppends(['image_url', 'logo']);
@@ -48,6 +50,7 @@ class ShopService
                     $shops = $shops->merge($ShopsBySort);
                 }
                 $shopColumn->shops = $shops;
+                $shopColumn->province_id = $provinceId;
             }
             Cache::put($cacheKey, $shopColumns, $homeColumnShopConf['cache']['expire']);
         }

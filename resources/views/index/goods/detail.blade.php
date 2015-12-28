@@ -27,39 +27,39 @@
 
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
-                        <li><span class="prompt">商品ID </span> : <b>{{ $goods->id }}</b></li>
-                        <li><span class="prompt">价格 </span> : <b>￥{{ $goods->price .' / ' . $goods->pieces }}</b></li>
+                        <li><span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b></li>
+                        <li><span class="prompt">价格 :</span> <b>￥{{ $goods->price .' / ' . $goods->pieces }}</b></li>
                         @foreach($attrs as $key=>$attr)
                             <li>
-                                <span class="prompt">{{ $key }} </span> : <b>{{ $attr }}</b>
+                                <span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b>
                             </li>
                         @endforeach
 
-                        <li><span class="prompt">累计销售量 </span> : <b>{{ $goods->sales_volume }}</b></li>
+                        <li><span class="prompt">累计销售量 :</span> <b>{{ $goods->sales_volume }}</b></li>
                     </ul>
                     <ul class="pull-left right-panel">
-                        <li><span class="prompt">商家 </span> : <b>{{ $goods->shop->name }}</b></li>
-                        <li><span class="prompt">条形码 </span> : <b>{{ $goods->bar_code }}</b></li>
+                        <li><span class="prompt">商家 :</span> <b>{{ $goods->shop->name }}</b></li>
+                        <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
                         @if($goods->is_promotion)
-                            <li><span class="prompt">促销信息 </span> : <b>{{ $goods->promotion_info }}</b></li>
+                            <li class="clearfix"><span class="prompt pull-left">促销信息 : </span><p class="promotions-content">{{ $goods->promotion_info }}</p></li>
                         @endif
 
                         <li>
-                            <span class="prompt">退换货 </span> :
+                            <span class="prompt">退换货 :</span>
                             <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
                         </li>
                         <li>
-                            <span class="prompt">即期品 </span> :
+                            <span class="prompt">即期品 :</span>
                             <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
-                        <li><span class="prompt">规格 </span> : <b>{{ $goods->specification or '暂无' }}</b></li>
+                        <li><span class="prompt">规格 :</span> <b>{{ $goods->specification or '暂无' }}</b></li>
                         <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post"
                               autocomplete="off">
                             <li>
                                 <button disabled class="btn count btn-cancel desc-num">-</button>
                                 <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">
                                 <button class="btn count btn-cancel inc-num">+</button>
-                                <span class="prompt"> 最低购买量</span> : {{ $goods->min_num }}
+                                <span class="prompt"> 最低购买量 :</span> {{ $goods->min_num }}
                             </li>
                             <li>
                                 <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
@@ -161,6 +161,7 @@
             });
             $('a.close-btn,a.go-shopping').on('click', function () {
                 $(".mask-outer").css("display", "none");
+                $('.add-to-cart').html('加入购物车');
             });
             numChange({{ $goods->min_num }});
             tabBox();
