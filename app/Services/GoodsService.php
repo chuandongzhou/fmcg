@@ -147,6 +147,7 @@ class GoodsService
                 $goods = Goods::whereIn('id', $goodsColumn->id_list)
                     ->where('user_type', '>', $type)
                     ->ofStatus(cons('goods.status.on'))
+                    ->OfDeliveryArea(['province_id' => $provinceId])
                     ->with('images')
                     ->select($goodsFields)
                     ->get()->each(function ($goods) {

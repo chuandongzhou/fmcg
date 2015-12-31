@@ -31,8 +31,12 @@ class ShopService
             $shopColumns = HomeColumn::where('type', $columnTypes['shop'])->get();
 
             foreach ($shopColumns as $shopColumn) {
-                $shops = Shop::whereIn('id', $shopColumn->id_list)->OfUser($type)->with('images',
-                    'logo', 'user')->get()->each(function ($shop) {
+                $shops = Shop::whereIn('id', $shopColumn->id_list)
+                    ->OfUser($type)
+                    ->OfDeliveryArea(['province_id' => $provinceId])
+                    ->with('images', 'logo', 'user')
+                    ->get()
+                    ->each(function ($shop) {
                     $shop->setAppends(['image_url', 'logo']);
                 });
                 $columnShopsCount = $shops->count();
