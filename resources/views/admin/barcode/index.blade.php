@@ -12,6 +12,7 @@
                 <th>#</th>
                 <th>条形码id</th>
                 <th>条形码</th>
+                <th>商品名</th>
                 <th>上传时间</th>
                 <th class="text-nowrap">操作</th>
             </tr>
@@ -22,6 +23,7 @@
                     <td><input type="checkbox" class="child" name="ids[]" value="{{$code->id}}"/></td>
                     <td>{{$code->id}}</td>
                     <td>{{$code->barcode}}</td>
+                    <td>{{$code->goods_name}}</td>
                     <td>{{$code->created_at}}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">

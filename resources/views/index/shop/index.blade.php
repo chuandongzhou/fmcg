@@ -8,11 +8,11 @@
             <div class="col-sm-12">
                 <div class="tab-title store-tab-title clearfix">
                     <p class="pull-left sequence">
-                        <a href="{{ url('shop') }}"
+                        <a href="{{ url('shop'. ($type ? '?type='.$type : '')) }}"
                            class="{{ $sort == '' ? 'active' : '' }} control">全部</a>
-                        <a href="{{ url('shop/hot') }}"
+                        <a href="{{ url('shop/hot'. ($type ? '?type='.$type : '')) }}"
                            class="control {{ $sort == 'hot' ? 'active' : '' }}">热门</a>
-                        <a href="{{ url('shop/new') }}"
+                        <a href="{{ url('shop/new'. ($type ? '?type='.$type : '')) }}"
                            class="control {{ $sort == 'new' ? 'active' : '' }}">最新</a>
                     </p>
 
@@ -34,7 +34,7 @@
             @foreach($shops  as $shop)
                 <div class="col-sm-3 commodity">
                     <div class="img-wrap">
-                        <a href="{{ url('shop/' . $shop->id) }}"  target="_blank">
+                        <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
                             <img class="commodity-img" src="{{ $shop->image_url }}">
                         </a>
                     </div>
@@ -45,7 +45,7 @@
                         </p>
 
                         <p class="commodity-name">
-                            <a href="{{ url('shop/' . $shop->id) }}"  target="_blank">
+                            <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
                                 {{ $shop->name }}
                             </a>
                         </p>
@@ -75,7 +75,10 @@
                     cityControl = $('select[name="city_id"]'),
                     districtControl = $('select[name="district_id"]'),
                     streetControl = $('select[name="street_id"]'),
-                    address = provinceControl.val() ? '?province_id=' + provinceControl.val() : '';
+                    type = '{{ $type }}',
+                    address = type ? '?type=' + type : '',
+                    join = type ? '&' : '?';
+            address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';
             address += cityControl.val() ? '&city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() ? '&street_id=' + streetControl.val() : '';

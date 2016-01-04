@@ -31,8 +31,8 @@ class ShopController extends Controller
         $type = (string)$request->input('type');
 
         $userTypes = cons('user.type');
-        $type = array_get($userTypes, $type, last($userTypes));
-        $shops = Shop::OfUser($user->type, $type)->with('images');
+        $typeId = array_get($userTypes, $type, last($userTypes));
+        $shops = Shop::OfUser($user->type, $typeId)->with('images');
 
         $shopSorts = cons('shop.sort');
 
@@ -57,7 +57,8 @@ class ShopController extends Controller
         }
 
 
-        return view('index.shop.index', ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data]);
+        return view('index.shop.index',
+            ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data, 'type' => $type]);
     }
 
     /**

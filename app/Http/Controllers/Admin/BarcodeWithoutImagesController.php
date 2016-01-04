@@ -40,12 +40,14 @@ class BarcodeWithoutImagesController extends Controller
                 $sub_titles = [
                     '条形码ID',
                     '条形码',
+                    '商品名',
                     '添加时间',
                 ];
                 $sheet->setWidth([
                     'A' => 30,
                     'B' => 30,
                     'C' => 30,
+                    'D' => 30,
                 ]);
 
                 $sheet->row('2', $sub_titles);
@@ -53,6 +55,7 @@ class BarcodeWithoutImagesController extends Controller
                     $array = [
                         'id' => $code->id,
                         'barcode' => $code->barcode,
+                        'goods_name' => $code->goods_name,
                         'created_at' => $code->created_at,
                     ];
                     $sheet->appendRow($array);

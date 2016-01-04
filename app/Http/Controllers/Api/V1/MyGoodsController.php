@@ -63,7 +63,7 @@ class MyGoodsController extends Controller
             // 更新标签
             $this->updateAttrs($goods, $attributes['attrs']);
             //保存没有图片的条形码
-            $this->saveWithoutImageOfBarCode($goods->bar_code);
+            $this->saveWithoutImageOfBarCode($goods);
             return $this->created('添加商品成功');
         }
         return $this->error('添加商品出现错误');
@@ -111,7 +111,7 @@ class MyGoodsController extends Controller
             // 更新标签
             $this->updateAttrs($goods, $attributes['attrs']);
 
-            $this->saveWithoutImageOfBarCode($goods->bar_code);
+            $this->saveWithoutImageOfBarCode($goods);
             return $this->success('更新商品成功');
         }
         return $this->error('更新商品时遇到问题');
@@ -214,7 +214,7 @@ class MyGoodsController extends Controller
             $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr);
             $goodsModel = $shop->goods()->create($goodsAttr);
             if ($goodsModel->exists) {
-                $this->saveWithoutImageOfBarCode($goodsModel->bar_code);
+                $this->saveWithoutImageOfBarCode($goodsModel);
                 $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
                 $this->updateAttrs($goodsModel, $attrs);
             } else {
@@ -367,16 +367,17 @@ class MyGoodsController extends Controller
     }
 
     /**
-     *  保存没有图片的条形码
+     * 保存没有图片的条形码
      *
-     * @param $barCode
+     * @param \App\Models\Goods $goods
      * @return bool
      */
-    private function saveWithoutImageOfBarCode($barCode)
+    private function saveWithoutImageOfBarCode(Goods $goods)
     {
+        $barCode = $goods->bar_code;
         $imagesCount = Images::where('bar_code', $barCode)->count();
         if (!$imagesCount) {
-            BarcodeWithoutImages::create(['barcode' => $barCode]);
+            BarcodeWithoutImages::create(['barcode' => $barCode, 'goods_name' => $goods->name]);
         }
         return true;
     }

@@ -10,5 +10,5 @@ namespace App\Models;
 class BarcodeWithoutImages extends Model
 {
     protected $table = 'barcode_without_images';
-    protected $fillable = ['barcode'];
+    protected $fillable = ['barcode', 'goods_name'];
 }
