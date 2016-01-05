@@ -58,6 +58,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
 
+    $router->get('help', 'HelpController@index'); // 帮助中心
+
 
 });
 

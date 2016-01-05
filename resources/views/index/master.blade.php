@@ -74,6 +74,7 @@
                                     </ul>
                                 </li>
                             @endif
+                            <li><a href="{{ url('help') }}"><span class="fa "></span> 帮助中心</a></li>
                             <li class="user-name-wrap">
                                 <a href="{{ url('personal/shop') }}" class="name-panel"><span
                                             class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}

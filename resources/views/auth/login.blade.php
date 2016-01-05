@@ -41,7 +41,8 @@
             <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8">
                 <div class="col-sm-12 item">
                     <h1 class="pull-left"><a>登录</a></h1>
-                    <a class="pull-right reg" href="{{ url('auth/register') }}">注册</a>
+                    <a href="javascript:" class="pull-right reg" data-toggle="modal"
+                            data-target="#myModal-agreement">注册</a>
                 </div>
                 <div class="col-sm-12 item">
                     <div class="form-group">
@@ -74,6 +75,7 @@
         </div>
     </div>
     @include('includes.backup-password')
+    @include('includes.agreement')
 @stop
 
 

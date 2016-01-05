@@ -51,6 +51,17 @@ ul, li, p, a, h1, h2, h3, h4 {
 .table-middle {
   tr {
     th {
+      vertical-align: middle !important;
+    }
+    td {
+      vertical-align: middle !important;
+    }
+  }
+}
+
+.table-middle {
+  tr {
+    th {
       vertical-align: middle;
     }
     td {
@@ -679,9 +690,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $gray;
       }
       .commodity-name {
-        margin:10px 0;
+        margin: 10px 0;
         width: 100%;
-        height:40px;
+        height: 40px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -1300,10 +1311,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.promotions-content{
-  margin-left:60px;
+
+.promotions-content {
+  margin-left: 68px;
   font-weight: 600;
 }
+
 /*======================================goods-detail end======================================*/
 /*======================================goods-editor begin======================================*/
 .upload-progress-wrap {
@@ -1484,8 +1497,8 @@ table {
   .product-panel {
     vertical-align: middle;
     display: inline-block;
-    table-layout:fixed;
-    .ellipsis{
+    table-layout: fixed;
+    .ellipsis {
       display: inline-block;
       max-width: 350px;
       text-overflow: ellipsis;
@@ -1510,6 +1523,7 @@ table {
   .notice-bar {
     padding: 0;
     border-bottom: 1px solid $brand-primary;
+    margin-bottom: 10px;
     .btn {
       color: $gray;
       font-weight: bold;
@@ -1850,7 +1864,7 @@ table {
   .order-table {
     .little-table {
       width: 50%;
-      margin:5px auto;
+      margin: 5px auto;
     }
     table {
       margin: auto;
@@ -2010,6 +2024,7 @@ table {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        font-size: 13px;
       }
       .location-text {
         color: $gray;
@@ -2115,6 +2130,7 @@ table {
       color: $gray-light;
       padding-top: 10px;
       padding-bottom: 10px;
+      font-size: 13px;
       &:hover, &:focus {
         background-color: transparent;
       }
@@ -2561,9 +2577,9 @@ table {
     }
     .finish-operating {
       margin-top: 20px;
-      .pay{
+      .pay {
         margin-right: 40px;
-        padding:5px 20px;
+        padding: 5px 20px;
         font-size: 17px;
       }
       .check-order {
@@ -2659,6 +2675,7 @@ table {
 
 /*==================================================================================dealer end======================================================================*/
 .pagination {
+  margin-bottom: 0 !important;
   li {
     a {
       cursor: pointer;
@@ -2719,3 +2736,118 @@ table {
     width: 100%;
   }
 }
+
+/*==============help begin=================*/
+.help-menu-list {
+  background-color: $gray-plain;
+  border-radius: 4px;
+  padding: 5px 0;
+  .title {
+    display: inline-block;
+    font-size: 17px;
+    padding: 5px 15px;
+    color: $gray-base;
+  }
+  .menu-wrap {
+    text-indent: 1em;
+    li {
+      padding: 6px 15px;
+      &.active {
+        background-color: $body-bg;
+        a {
+          color: $brand-primary;
+        }
+      }
+      a {
+        color: $gray-dark;
+        font-size: 14px;
+        &:hover {
+          color: $brand-primary;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .common-problem {
+    width: 100%;
+    &:hover {
+      text-decoration: none;
+    }
+    &.active {
+      background-color: $body-bg;
+      color: $brand-primary;
+    }
+  }
+}
+
+.right-content-wrap {
+  /*border:1px solid $gray-plain-light;*/
+  border-radius: 2px;
+  .content-title {
+    font-size: 15px;
+    padding-top: 5px;
+    border-bottom: 2px solid $gray-plain;
+    span {
+      display: inline-block;
+      padding: 5px;
+      color: $brand-primary;
+      border-bottom: 2px solid $brand-primary;
+      margin-bottom: -2px;
+    }
+  }
+  .content-panel {
+    padding-left: 10px;
+    .padding-2em {
+      padding-left: 2em;
+    }
+    .title-name {
+      color: $gray;
+      font-weight: 600;
+    }
+    img {
+      max-width: 100%;
+    }
+    .max-img {
+      img {
+        width: 100%;
+      }
+    }
+    p {
+      padding: 5px 0;
+    }
+  }
+}
+
+#modal-agreement {
+  width: 90%;
+  height: 90%;
+  margin:30px auto auto auto;
+  .modal-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    .modal-body {
+      position: absolute;
+      overflow-y: auto;
+      width: 100%;
+      top: 55px;
+      bottom: 64px;
+      z-index: 888;
+      p{
+        padding: 5px 0;
+      }
+      h4{
+        font-weight: 600;
+        padding: 5px 0;
+      }
+    }
+    .modal-footer {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      z-index: 999;
+    }
+  }
+}
+
+/*==============help end=================*/

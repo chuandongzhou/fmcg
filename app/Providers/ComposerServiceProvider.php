@@ -31,7 +31,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.index-top',
                 'index.menu-master',
                 'index.index-control',
-                'index.personal.tabs'
+                'index.personal.tabs',
+                'index.help.master'
             ],
             ProvinceComposer::class => [
                 'index.index-top',

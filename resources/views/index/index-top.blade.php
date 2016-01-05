@@ -60,6 +60,7 @@
                                 <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
                             </ul>
                         </li>
+                        <li><a href="{{ url('help') }}"><span class="fa "></span> 帮助中心</a></li>
                         <li class="user-name-wrap">
                             <a href="{{ url('personal/shop') }}" class="name-panel" target="_blank">
                                 <span class="user-name">
