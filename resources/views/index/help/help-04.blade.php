@@ -13,8 +13,8 @@
 
         <p>2. 如何查看已收藏商铺</p>
 
-        <p>点击网站头部<img src="../images/help-images/20.jpg">收藏夹中店铺收藏进入，可查看已收藏商铺(如下图)。</p>
+        <p>点击网站头部<img src="{{ asset('images/help-images/20.jpg') }}">收藏夹中店铺收藏进入，可查看已收藏商铺(如下图)。</p>
 
-        <p><img src="../images/help-images/21.jpg"></p>
+        <p><img src="{{ asset('images/help-images/21.jpg') }}"></p>
     </div>
 @stop

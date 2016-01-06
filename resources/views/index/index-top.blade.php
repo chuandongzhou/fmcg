@@ -52,6 +52,7 @@
                         <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
                         <li><a href="{{ url($user->type == cons('user.type.retailer') ? 'order-buy' : 'order-sell') }}"><span
                                         class="fa fa-file-text-o"></span> 我的订单</a></li>
+                        <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
                         <li class="collect-select">
                             <a class="collect-selected"><span class="selected">收藏夹</span> <span
                                         class="fa fa-angle-down"></span></a>
@@ -60,7 +61,6 @@
                                 <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ url('help') }}"><span class="fa "></span> 帮助中心</a></li>
                         <li class="user-name-wrap">
                             <a href="{{ url('personal/shop') }}" class="name-panel" target="_blank">
                                 <span class="user-name">

@@ -11,12 +11,12 @@
 
         <p>1. 如何收藏商品<br>可在商品详情页或购物车中，点击加入收藏。</p>
 
-        <p class="max-img"><img src="../images/help-images/17.jpg"></p>
+        <p class="max-img"><img src="{{ asset('images/help-images/17.jpg') }}"></p>
 
         <p>2. 如何查看已收藏商品</p>
 
-        <p>可点击网站头部<img src="../images/help-images/18.jpg">收藏夹中商品收藏进入，可查看已收藏商品(如下图)。</p>
+        <p>可点击网站头部<img src="{{ asset('images/help-images/18.jpg') }}">收藏夹中商品收藏进入，可查看已收藏商品(如下图)。</p>
 
-        <p><img src="../images/help-images/19.jpg"></p>
+        <p><img src="{{ asset('images/help-images/19.jpg') }}"></p>
     </div>
 @stop

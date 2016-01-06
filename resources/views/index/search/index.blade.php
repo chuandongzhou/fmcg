@@ -1,5 +1,7 @@
 @extends('index.index-master')
 
+@section('subtitle' , '搜索')
+
 @section('container')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
@@ -171,7 +173,7 @@
             address += cityControl.val() ? '&city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() && address ? '&street_id=' + streetControl.val() : '';
-            var url = '{{ url('search'  . (empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '' :  '?' . http_build_query(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])))) }}' + address;
+            var url = '{!! url('search'  . (empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '' :  '?' . http_build_query(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])))) !!}' + address;
 
             location.href = url;
         })
