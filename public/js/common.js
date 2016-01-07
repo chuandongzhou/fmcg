@@ -517,9 +517,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-        , addButton = $('#add-address')
+        //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        , addLimit = 5
+        //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -531,7 +531,7 @@ var addAddFunc = function () {
     //    address.val('');
     //});
     // 地址限制
-    var changeAddButtonStatus = function () {
+   /* var changeAddButtonStatus = function () {
         if (container.children('div:visible').length >= addLimit) {
             addButton.button('loading');
             return true;
@@ -539,7 +539,7 @@ var addAddFunc = function () {
 
         addButton.button('reset');
         return false;
-    };
+    };*/
     var changeBtnAddhtml = function (html) {
         btnAdd.html(html);
         setTimeout(function () {
@@ -547,13 +547,13 @@ var addAddFunc = function () {
         }, 3000)
     };
 
-    changeAddButtonStatus();
+    //changeAddButtonStatus();
     // 删除地址
     container.on('click', '.close', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
 
-            changeAddButtonStatus();
+            //changeAddButtonStatus();
             dynamicShowMap();
         });
     });
@@ -573,10 +573,10 @@ var addAddFunc = function () {
             return false;
         }
 
-        if (street.is(':visible') && !street.val()) {
-            changeBtnAddhtml('请选择街道...');
-            return false;
-        }
+        /* if (street.is(':visible') && !street.val()) {
+         changeBtnAddhtml('请选择街道...');
+         return false;
+         }*/
         if (!address.val()) {
             changeBtnAddhtml('请输入详细地址');
             return false;
@@ -584,7 +584,7 @@ var addAddFunc = function () {
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
-            streetText = street.is(':visible') ? street.find("option:selected").text() : '',
+            streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
             areaName = provinceText + cityText + districtText + streetText;
         $('.btn-close').trigger('click');
@@ -606,7 +606,7 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
             '</div>'
         );
-        changeAddButtonStatus();
+        //changeAddButtonStatus();
         dynamicShowMap();
     });
 };

@@ -32,7 +32,8 @@
                         @foreach($searched as $attrId => $name)
                             <div class="sort-list">
                                 <a class="last-category"
-                                   href="{{ url('search?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}"> {{ $name }}
+                                   href="{{ url('search?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}">
+                                    {{ $name }}
                                     <i class="fa fa-times"></i></a>
                             </div>
                         @endforeach
@@ -96,8 +97,6 @@
                     </div>
                 @endif
             </div>
-
-
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -133,8 +132,8 @@
                     <div class="img-wrap">
                         <a href="{{ url('goods/' . $item->id) }}" target="_blank">
                             <img class="commodity-img" src="{{ $item->image_url }}">
+                            <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
                         </a>
-                        <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
                     </div>
                     <div class="content-panel">
                         <p class="commodity-name"><a href="{{ url('goods/' . $item->id) }}"

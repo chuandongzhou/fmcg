@@ -28,7 +28,7 @@ class AddressService
     public function formatAddressPost()
     {
         $array = $this->array;
-        if (!is_array($array)) {
+        if (!is_array($array) || empty($array['id'])) {
             return [];
         }
         $addressArr = [];

@@ -107,7 +107,7 @@ class MyGoodsController extends Controller
         $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
         if ($goods->fill($attributes)->save()) {
             // 更新配送地址
-            $this->updateDeliveryArea($goods, $attributes['area']);
+            $this->updateDeliveryArea($goods, $request->input('area'));
             // 更新标签
             $this->updateAttrs($goods, $attributes['attrs']);
 
@@ -270,13 +270,11 @@ class MyGoodsController extends Controller
      */
     private function updateDeliveryArea($model, $area)
     {
-        //配送区域添加
-        $areaArr = (new AddressService($area))->formatAddressPost();
-
-        $nowArea = $model->deliveryArea;
-        if (count($nowArea) == count(array_filter($area['province_id']))) {
+        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
             return true;
         }
+        //配送区域添加
+        $areaArr = (new AddressService($area))->formatAddressPost();
         //删除原有配送区域信息
         $model->deliveryArea->each(function ($address) {
             $address->delete();

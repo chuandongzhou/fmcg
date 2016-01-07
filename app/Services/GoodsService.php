@@ -31,7 +31,7 @@ class GoodsService
         }
         // 省市县
 
-        $data['province_id'] = isset($data['province_id']) ? $data['province_id'] : (request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province'));
+       // $data['province_id'] = isset($data['province_id']) ? $data['province_id'] : (request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province'));
 
         if (isset($data['province_id'])) {
             $goods->OfDeliveryArea($data);

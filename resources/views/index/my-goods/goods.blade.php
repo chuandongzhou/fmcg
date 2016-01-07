@@ -185,23 +185,22 @@
                     <button class="btn btn-primary" id="add-address" type="button" data-target="#addressModal"
                             data-toggle="modal" data-loading-text="地址达到最大数量">添加地址
                     </button>
-                    (最多5条配送区域)
                 </div>
                 <div class="col-sm-8 address-list">
-                    <div class="hidden">
-                        <input type="hidden" name="area[id][]" value=""/>
-                        <input type="hidden" name="area[province_id][]" value=""/>
-                        <input type="hidden" name="area[city_id][]" value=""/>
-                        <input type="hidden" name="area[district_id][]" value=""/>
-                        <input type="hidden" name="area[street_id][]" value=""/>
-                        <input type="hidden" name="area[area_name][]" value=""/>
-                        <input type="hidden" name="area[address][]" value=""/>
+                    {{--<div class="hidden">--}}
+                        {{--<input type="hidden" name="area[id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[province_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[city_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[district_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[street_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[area_name][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[address][]" value=""/>--}}
                         {{--区域经纬度--}}
-                        <input type="hidden" name="area[blx][]" value=""/>
-                        <input type="hidden" name="area[bly][]" value=""/>
-                        <input type="hidden" name="area[slx][]" value=""/>
-                        <input type="hidden" name="area[sly][]" value=""/>
-                    </div>
+                        {{--<input type="hidden" name="area[blx][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[bly][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[slx][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[sly][]" value=""/>--}}
+                    {{--</div>--}}
                     @foreach ($goods->deliveryArea as $area)
                         <div class="col-sm-12 fa-border">{{ $area->address_name }}
                             <span class="fa fa-times-circle pull-right close"></span>

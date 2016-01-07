@@ -100,7 +100,8 @@
                                 </a>
                             @endforeach
                         </p>
-                        <a class="more pull-right" href="javascript:"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                        <a class="more pull-right" href="javascript:"><span>更多</span> <i
+                                    class="fa fa-angle-down"></i></a>
                     </div>
                 </div>
             @endif
@@ -119,7 +120,8 @@
                                     </a>
                                 @endforeach
                             </p>
-                            <a class="more pull-right" href="javascript:"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                            <a class="more pull-right" href="javascript:"><span>更多</span> <i
+                                        class="fa fa-angle-down"></i></a>
                         </div>
                     </div>
                 @endif
@@ -166,12 +168,12 @@
                 <div class="img-wrap">
                     <a href="{{ url('my-goods/' . $item->id) }}">
                         <img class="commodity-img" src="{{ $item->image_url }}">
+                        <span class=" @if($item->is_out)prompt lack @elseif($item->is_promotion) prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
                     </a>
-                    <span class=" @if($item->is_out)prompt lack @elseif($item->is_promotion) prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
                 </div>
                 <div class="content-panel">
                     <p class="commodity-name">
-                        <a href="{{ url('my-goods/' . $item->id) }}"  target="_blank">
+                        <a href="{{ url('my-goods/' . $item->id) }}" target="_blank">
                             {{ $item->name }}
                         </a>
                     </p>

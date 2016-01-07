@@ -44,7 +44,7 @@
                             <option selected="selected" value="">请选择区/县...</option>
                         </select>
 
-                        <select class="address-street inline-control add-street useless-control">
+                        <select class="address-street inline-control add-street">
                             <option selected="selected" value="">请选择街道...</option>
                         </select>
 
