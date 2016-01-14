@@ -38,10 +38,10 @@
                     @if (auth()->user()->type == cons('user.type.supplier'))
                         <div class="form-group editor-item">
                             <p class="items-item right-item">
-                                <label class="control-label">价格(批发商) :</label>
+                                <label class="control-label">价格(批发) :</label>
                                 <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
                                        required>
-                                <label class="control-label">单位(批发商) :</label>
+                                <label class="control-label">单位(批发) :</label>
                                 <select name="pieces_wholesaler" class="pieces" data-change-class="pieces-wholesaler">
                                     @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
                                         <option value="{{ $key }}" {{ $key == $goods->pieces_wholesaler ? 'selected' : '' }}>{{ $piece }}</option>
@@ -67,7 +67,7 @@
 
                         @if (auth()->user()->type == cons('user.type.supplier'))
                             <p class="items-item right-item">
-                                <label class="control-label">最低购买数(批发商) :</label>
+                                <label class="control-label">最低购买数(批发) :</label>
                                 <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
                                        type="text" required>
                                 <span>

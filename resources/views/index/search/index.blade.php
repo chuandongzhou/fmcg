@@ -84,15 +84,17 @@
                         <span class="pull-left title-name">更多筛选项 : </span>
 
                         @foreach($moreAttr as $attr)
-                            <div class="sort-list">
-                                <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
+                            @if(isset($attr['child']))
+                                <div class="sort-list">
+                                    <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
 
-                                <div class="list-wrap">
-                                    @foreach($attr['child'] as $child)
-                                        <a href="{{ url('search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
-                                    @endforeach
+                                    <div class="list-wrap">
+                                        @foreach($attr['child'] as $child)
+                                            <a href="{{ url('search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
                     </div>
                 @endif

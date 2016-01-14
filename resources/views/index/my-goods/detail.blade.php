@@ -1,5 +1,4 @@
 @extends('index.menu-master')
-@include('includes.loadMapJs')
 
 @section('subtitle', '商品详情')
 
@@ -37,11 +36,11 @@
                         </li>
                     @else
                         <li>
-                            <span class="prompt">价格(终端商) :</span>
+                            <span class="prompt">价格(终端) :</span>
                             <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b>
                         </li>
                         <li>
-                            <span class="prompt">价格(批发商) :</span>
+                            <span class="prompt">价格(批发) :</span>
                             <b class="red">￥{{ $goods->price_wholesaler .' / ' . cons()->valueLang('goods.pieces',$goods->pieces_wholesaler)  }}</b>
                         </li>
                     @endif
@@ -116,6 +115,10 @@
         </div>
     </div>
 @stop
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
+@stop
 @section('js')
     @parent
     <script type="text/javascript">
@@ -126,11 +129,6 @@
             @if(isset($coordinates))
                getCoordinateMap({!! $coordinates !!});
             @endif
-
-
-
-
-
         });
     </script>
 @stop

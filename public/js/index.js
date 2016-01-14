@@ -52,14 +52,19 @@ function getOrderButtonEvent() {
         }
     });
     $('.export').click(function () {
-        var obj = $(this), form = obj.closest('form'), url = obj.data('url'), method = obj.data('method');
+        var obj = $(this), url = obj.data('url'), form = obj.closest('form');
 
-        var orderIds = form.find('input.order_id:checked').length;
-        if (!orderIds) {
+        var orders = form.find('input.order_id:checked');
+        if (!orders.length) {
             alert('请选择要导出的订单');
             return false;
         }
-        form.attr('action', url).attr('method', method);
+        var query = '';
+        orders.each(function () {
+            var orderId = $(this).val();
+            query = query ? query + '&order_id[]=' + orderId : '?order_id[]=' + orderId;
+        });
+        window.location.href = url + query;
     })
 }
 /*function tabBox() {
@@ -161,7 +166,7 @@ function menuFunc() {
         } else {
             obj.closest('form').attr('action', 'search');
         }
-
+        obj.parent().addClass('hide').siblings().removeClass('hide');
         $('.dealer-header .selected span').text(obj.text());
         $('.dealer-header .select-list').css('display', 'none');
     })

@@ -1,5 +1,4 @@
-    @extends('index.index-master')
-@include('includes.loadMapJs')
+@extends('index.index-master')
 
 @section('subtitle', '商品详情')
 @section('container')
@@ -121,8 +120,10 @@
             </div>
         </div>
     </div>
-
-
+@stop
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
 @stop
 @section('js')
     @parent

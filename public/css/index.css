@@ -504,25 +504,45 @@ ul, li, p, a, h1, h2, h3, h4 {
   .list-penal .commodity .commodity-img {
     width: 100%;
     display: inline-block; }
-  .list-penal .commodity .content-panel {
-    padding: 10px 5px;
-    background-color: #f2f2f2; }
-    .list-penal .commodity .content-panel a {
-      color: #555555; }
-    .list-penal .commodity .content-panel .commodity-name {
-      margin: 10px 0;
-      width: 100%;
-      height: 40px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical; }
-    .list-penal .commodity .content-panel .sell-panel .money {
-      color: #fe462f;
-      font-weight: bolder; }
-    .list-penal .commodity .content-panel .order-count {
-      color: #777777; }
+
+.list-penal .content-panel {
+  padding: 10px 5px;
+  background-color: #f2f2f2; }
+  .list-penal .content-panel a {
+    color: #555555; }
+  .list-penal .content-panel .commodity-name {
+    margin: 10px 0;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; }
+  .list-penal .content-panel .sell-panel .money {
+    color: #fe462f;
+    font-weight: bolder; }
+  .list-penal .content-panel .order-count {
+    color: #777777; }
+
+.list-penal .thumbnail .img-wrap .commodity-img {
+  width: 130px !important;
+  height: inherit !important; }
+
+.list-penal .thumbnail .store-content {
+  background-color: inherit !important;
+  padding: 0 0 0 20px !important;
+  margin-left: 130px; }
+  .list-penal .thumbnail .store-content .commodity-name {
+    margin: 0 0 10px 0 !important;
+    font-size: 16px;
+    height: inherit !important; }
+  .list-penal .thumbnail .store-content .item {
+    padding-bottom: 5px; }
+  .list-penal .thumbnail .store-content .store-presentation {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; }
 
 .list-penal .img-wrap {
   position: relative;

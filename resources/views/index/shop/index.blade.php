@@ -32,25 +32,33 @@
         </div>
         <div class="row list-penal dealer-commodity-wrap">
             @foreach($shops  as $shop)
-                <div class="col-sm-3 commodity">
-                    <div class="img-wrap">
-                        <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
-                            <img class="commodity-img" src="{{ $shop->image_url }}">
-                        </a>
-                    </div>
-                    <div class="content-panel">
-                        <p class="sell-panel">
-                            <span class="sales ">最低配送额</span>
-                            <span class="money pull-right">￥{{ $shop->min_money }}</span>
-                        </p>
-
-                        <p class="commodity-name">
+                <div class="col-sm-6">
+                    <div class="thumbnail clearfix">
+                        <div class="img-wrap pull-left">
                             <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
-                                {{ $shop->name }}
+                                <img class="commodity-img" src="{{ $shop->logo_url }}">
                             </a>
-                        </p>
+                        </div>
+                        <div class="content-panel store-content" style="">
+                            <p class="commodity-name item">
+                                <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
+                                    {{ $shop->name }}
+                                </a>
+                            </p>
 
-                        <p class="order-count">销量 : <span>{{ $shop->sales_volume }}</span></p>
+                            <p class="sell-panel item">
+                                <span class="sales">最低配送额 : </span>
+                                <span class="money">￥{{ $shop->min_money }}</span>
+                            </p>
+
+                            <p class="order-count item">销量 : <span>{{ $shop->sales_volume }}</span></p>
+
+                            <p class="item order-count"><span>联系地址 : </span><span>{{ $shop->address }}</span></p>
+
+                            <p class="item order-count store-presentation"><span>店铺介绍 : </span>
+                                <span title="{{ $shop->introduction }}">{{ $shop->introduction }}</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             @endforeach

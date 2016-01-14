@@ -37,7 +37,10 @@
                                     <div class="check-item">
                                         <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
                                         <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
-                                        <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">{{ $shop->name }}</a>
+                                        <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">
+                                            {{ $shop->name }}
+                                            ({{ cons()->valueLang('user.type' ,$shop->user->type)  }})
+                                        </a>
                                     </div>
                                 </th>
                                 <th class="text-center">商品单价</th>
@@ -58,8 +61,11 @@
                                                    value="{{ $cartGoods->goods_id }}" type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
-                                        <div class="product-panel" >
-                                            <a class="product-name ellipsis" href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}" target="_blank">{{ $cartGoods->goods->name }}</a>
+
+                                        <div class="product-panel">
+                                            <a class="product-name ellipsis"
+                                               href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}"
+                                               target="_blank">{{ $cartGoods->goods->name }}</a>
                                             {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
                                         </div>
 
@@ -131,7 +137,7 @@
             $(window).scroll(function () {
                 fixedBottom();
             });
-            likeFunc('goods');
+            likeFunc();
             // deleteFunc('cart');
         })
     </script>

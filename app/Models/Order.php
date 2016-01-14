@@ -390,7 +390,7 @@ class Order extends Model
     public function scopeOfBuy($query, $userId)
     {
         return $query->where('user_id', $userId)->where('is_cancel', cons('order.is_cancel.off'))->with('shop.user',
-            'goods.images')->orderBy('id', 'desc');
+            'goods.images.image')->orderBy('id', 'desc');
     }
 
     /**

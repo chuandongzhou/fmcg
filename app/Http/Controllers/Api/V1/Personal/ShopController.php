@@ -18,10 +18,11 @@ ShopController extends Controller
      */
     public function shop(Requests\Api\v1\UpdateShopRequest $request, $shop)
     {
+        $attributes = $request->all();
         if (Gate::denies('validate-shop', $shop)) {
             return $this->error('保存失败');
         }
-        if ($shop->fill($request->all())->save()) {
+        if ($shop->fill(array_except($attributes, 'id'))->save()) {
             return $this->success('保存店铺成功');
         }
         return $this->error('保存店铺时出现错误');

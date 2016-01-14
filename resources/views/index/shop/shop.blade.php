@@ -3,6 +3,7 @@
 @section('subtitle', '店家商品')
 
 @section('container')
+    @include('index.shop-search')
     <div class="container wholesalers-index index contents">
         <div class="row">
             <div class="col-sm-12 left-store-logo">
@@ -108,6 +109,7 @@
     @parent
     <script type="text/javascript">
         $(document).ready(function () {
+            likeFunc();
             $('.carousel').carousel({
                 interval: 2000
             })

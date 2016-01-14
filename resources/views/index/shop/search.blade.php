@@ -1,6 +1,7 @@
 @extends('index.master')
 
 @section('container')
+    @include('index.shop-search')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
             @if (!empty(array_except($get , ['name', 'sort'])))

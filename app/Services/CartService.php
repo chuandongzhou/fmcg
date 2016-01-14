@@ -33,7 +33,7 @@ class CartService
         $shopIds = $carts->pluck('goods.shop_id');
         $shopIds = array_unique($shopIds->all());
 
-        $shops = Shop::whereIn('id', $shopIds)->select(['name', 'id', 'min_money', 'user_id'])->get();
+        $shops = Shop::whereIn('id', $shopIds)->select(['name', 'id', 'min_money', 'user_id'])->with('user')->get();
         $userLikeGoodsIds = auth()->user()->likeGoods()->pluck('id');
 
         foreach ($shops as $key => $shop) {

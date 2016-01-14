@@ -17,22 +17,7 @@
         <div class="container ">
             <div class="row">
                 <div class="col-sm-4 city-wrap">
-                    <div class="location-panel">
-                        <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                    class="city-value">{{  $provinces[\Request::cookie('province_id')] or '' }}</span> <span
-                                    class="fa fa-angle-down up-down"></span></a>
-                    </div>
-                    <div class="city-list clearfix">
-                        <div class="list-wrap">
-                            @foreach($provinces as $provinceId => $province)
-                                <div class="item">
-                                    <a title="{{ $province }}"
-                                       class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
-                                       href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+
                 </div>
                 <div class="col-sm-8">
                     <div class="navbar-header">
@@ -48,26 +33,12 @@
                          aria-expanded="false" style="height: 1px;">
                         <ul class="nav navbar-nav navbar-right operating-wrap">
                             @if($user->type <= cons('user.type.wholesaler'))
-                                <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
+                                <li>
+                                    <a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
                                 </li>
+                                <li><a href="{{ url('cart') }}"><span class="fa fa-shopping-cart"></span> 购物车</a></li>
                             @endif
-                            <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
-                            <li>
-                                <a href="{{ $user->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
-                                    <span class="fa fa-file-text-o"></span> 我的订单
-                                </a>
-                            </li>
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
-                            @if($user->type < cons('user.type.supplier'))
-                                <li class="collect-select">
-                                    <a class="collect-selected"><span class="selected">收藏夹</span> <span
-                                                class="fa fa-angle-down"></span></a>
-                                    <ul class="select-list">
-                                        <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
-                                        <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
-                                    </ul>
-                                </li>
-                            @endif
                             <li class="user-name-wrap">
                                 <a href="{{ url('personal/shop') }}" class="name-panel"><span
                                             class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}

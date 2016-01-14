@@ -3,6 +3,7 @@
 @section('subtitle', '店家详情')
 
 @section('container')
+    @include('index.shop-search')
     <div class="container wholesalers-index goods-detail">
         <div class="row margin-clear">
             <div class="col-sm-8 left-store-logo store-info-logo">
@@ -94,6 +95,7 @@
             $('.carousel').carousel({
                 interval: 2000
             });
+            likeFunc();
             getCoordinateMap({!! $coordinates !!});
         });
     </script>

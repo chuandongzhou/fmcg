@@ -179,8 +179,15 @@
                     </p>
 
                     <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
+                        <span class="money">
+                            ￥{{ $item->price }}
+                            @if(auth()->user()->type == cons('user.type.supplier'))
+                                ￥{{ $item->price_wholesaler }}(批)
+                            @endif
+                        </span>
+                    </p>
+                    <p>
+                        <span class="sales">销量 : {{ $item->sales_volume }}</span>
                     </p>
                 </div>
             </div>

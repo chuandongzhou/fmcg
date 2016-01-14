@@ -27,26 +27,29 @@ class ComposerServiceProvider extends ServiceProvider
             UserComposer::class => [
                 'master',
                 'index.master',
+                'index.manage-master',
                 'index.index.index',
-                'index.index-top',
+                'index.search',
+                'index.shop-search',
                 'index.menu-master',
-                'index.index-control',
                 'index.personal.tabs',
                 'index.help.master'
             ],
             ProvinceComposer::class => [
-                'index.index-top',
+                'index.search',
                 'index.master'
             ],
             NodeComposer::class => [
                 'admin.master'
             ],
             CartComposer::class => [
-                'index.index-top',
+                'index.search',
+                'index.shop-search',
                 'index.master'
             ],
             KeywordsComposer::class => [
-                'index.index-top',
+                'index.search',
+                'index.shop-search',
                 'index.master'
             ]
         ]);

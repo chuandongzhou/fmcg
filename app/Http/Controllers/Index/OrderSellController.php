@@ -145,7 +145,7 @@ class OrderSellController extends OrderController
         if ($res->isEmpty()) {
             return $this->error('没有该订单信息');
         }
-        $this->_getContent($res);
+        return $this->_getContent($res);
     }
 
     /**

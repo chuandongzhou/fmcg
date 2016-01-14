@@ -154,9 +154,9 @@
                         <button class="btn btn-info ajax btn-receive"
                                 data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                         </button>
-                        <button class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
+                        <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
                                 data-method="get">导出
-                        </button>
+                        </a>
                     </div>
                 </div>
             @endif

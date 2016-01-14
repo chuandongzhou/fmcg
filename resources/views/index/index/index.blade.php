@@ -1,19 +1,10 @@
-@extends('master')
+@extends('index.master')
 
-
-
-@section('title')首页 | 订百达@stop
-
-
-
-@section('css')
-    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
-@stop
-
-
+@section('subtitle', '首页')
 
 @section('header')
-    @include('index.index-top')
+    @parent
+    @include('index.search')
     <div class="container">
         <div class="row margin-clear">
             <div class="col-sm-2 categories-btn">
@@ -30,7 +21,7 @@
     </div>
 @stop
 
-@section('body')
+@section('container')
     <div class="banner-wrap">
         <div class="container dealer-index-banner">
             <div class="row categories-menu-item margin-clear">
@@ -146,18 +137,8 @@
 @stop
 
 
-
-@section('footer')
-    <footer class="panel-footer">
-        <div class="container text-center text-muted">
-            Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br/>
-            联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式 : 13829262065(霍女士)
-        </div>
-    </footer>
-@stop
-
 @section('js')
-    <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
+    @parent
     <script type="text/javascript">
         $(document).ready(function () {
             $('.carousel').carousel({
