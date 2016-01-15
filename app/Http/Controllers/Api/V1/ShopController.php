@@ -42,8 +42,8 @@ class ShopController extends Controller
         $shops = Shop::select(DB::raw('(6370996.81 * ACOS( COS(' . $yLat . ' * PI() / 180)
              * COS(y_lat * PI() / 180) * COS(' . $xLng . ' * PI() / 180 - x_lng * PI() / 180 )
               + SIN(' . $yLat . ' * PI() / 180) * SIN(y_lat * PI() / 180)  ) ) distance'), 'id',
-            'name', 'min_money', 'contact_person', 'contact_info')
-            ->with('images', 'logo', 'shopAddress')
+            'name', 'min_money', 'user_id', 'contact_person', 'contact_info', 'x_lng', 'y_lat')
+            ->with('images', 'logo', 'shopAddress', 'user')
             ->OfUser($type)->ofDeliveryArea($data)->orderBy('distance')->paginate();
         return $this->success($shops->toArray());
     }

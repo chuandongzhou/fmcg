@@ -44,7 +44,7 @@ class ShopController extends Controller
         //配送区域
         $data = $request->except('name');
 
-        $data['province_id'] = isset($data['province_id']) ? $data['province_id'] : ($request->cookie('province_id') ? $request->cookie('province_id') : cons('location.default_province'));
+        $data['province_id'] = $request->cookie('province_id') ? $request->cookie('province_id') : cons('location.default_province');
 
         if (!empty($data)) {
             $shops = $shops->OfDeliveryArea($data);
@@ -135,9 +135,8 @@ class ShopController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-
-        $goods = $shop->goods()->with('images');
-
+        $goods = $shop->goods()->ofStatus(cons('goods.status.on'))->with('images');
+        $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $result = GoodsService::getGoodsBySearch($data, $goods);
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
         return view('index.shop.search',

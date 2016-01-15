@@ -19,7 +19,7 @@
                     <p class="pull-right">
                         <span>配送区域</span>
                         <select name="province_id" data-id="{{ $address['province_id'] or 0 }}"
-                                class="address-province address"></select>
+                                class="address-province address hide"></select>
                         <select name="city_id" data-id="{{ $address['city_id'] or 0 }}"
                                 class="address-city address"></select>
                         <select name="district_id" data-id="{{ $address['district_id'] or 0 }}"
@@ -55,7 +55,7 @@
 
                             <p class="item order-count"><span>联系地址 : </span><span>{{ $shop->address }}</span></p>
 
-                            <p class="item order-count store-presentation"><span>店铺介绍 : </span>
+                            <p class="order-count store-presentation"><span>店铺介绍 : </span>
                                 <span title="{{ $shop->introduction }}">{{ $shop->introduction }}</span>
                             </p>
                         </div>
@@ -65,7 +65,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12 text-right">
-                {{--{{ $shops->render() }}--}}
+                {{ $shops->appends($address)->render() }}
             </div>
         </div>
     </div>
@@ -79,15 +79,15 @@
     @parent
     <script type="text/javascript">
         $('select.address').change(function () {
-            var provinceControl = $('select[name="province_id"]'),
+            var/* provinceControl = $('select[name="province_id"]'),*/
                     cityControl = $('select[name="city_id"]'),
                     districtControl = $('select[name="district_id"]'),
                     streetControl = $('select[name="street_id"]'),
                     type = '{{ $type }}',
                     address = type ? '?type=' + type : '',
                     join = type ? '&' : '?';
-            address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';
-            address += cityControl.val() ? '&city_id=' + cityControl.val() : '';
+          /*  address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';*/
+            address += cityControl.val() ? join + 'city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() ? '&street_id=' + streetControl.val() : '';
             var url = '{{ url('shop/' . $sort ) }}' + address;

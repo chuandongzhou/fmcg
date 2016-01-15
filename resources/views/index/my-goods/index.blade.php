@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class="row sort">
-        @if (!empty(array_except($get , ['name' , 'sort'])))
+        @if (!empty(array_except($get , ['name' , 'sort', 'page'])))
             <div class="col-sm-12 a-menu-panel">
                 <div class="sort-item">
                     <a href="{{ url('my-goods') }}" class="pull-left all-results"><span

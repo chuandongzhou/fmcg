@@ -31,6 +31,7 @@ class SearchController extends Controller
             'cate_level_2'
         ])->where('user_type', '>', auth()->user()->type)->ofStatus(cons('goods.status.on'));
 
+        $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $result = GoodsService::getGoodsBySearch($data, $goods);
         return view('index.search.index',
             [

@@ -492,6 +492,9 @@
     images_url          array       店铺图片
     logo_url            string      logo地址
     shop_address        array       店铺地址
+    x_lng               float       纬度
+    y_lat               float       经度
+    user                array       用户
 
     images_url 字段子集说明
 
@@ -509,6 +512,10 @@
     street_id               int             街道id
     area_name               string          省、市、县、街道名
     address                 string          详细地址
+
+    user 字段子集说明
+
+    type                    int             店铺所属用户类型
 
 `失败返回：`
 

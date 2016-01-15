@@ -5,7 +5,7 @@
 @section('container')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
-            @if (!empty(array_except($get , ['name' , 'sort'])))
+            @if (!empty(array_except($get , ['name' , 'sort', 'page'])))
                 <div class="col-sm-12 a-menu-panel">
                     <div class="search-list-item sort-item">
                         <a href="{{ url('search') }}" class="pull-left all-results"><span class="fa fa-th-large"></span></a>
@@ -117,7 +117,7 @@
                     <p class="pull-right">
                         <span>配送区域</span>
                         <select name="province_id" data-id="{{ $data['province_id'] or 0 }}"
-                                class="address-province address"></select>
+                                class="address-province address hide"></select>
                         <select name="city_id" data-id="{{ $data['city_id'] or 0 }}"
                                 class="address-city address"></select>
                         <select name="district_id" data-id="{{ $data['district_id'] or 0 }}"
@@ -152,7 +152,7 @@
 
         <div class="row">
             <div class="col-xs-12 text-right">
-                {!! $goods->render() !!}
+                {!! $goods->appends(array_filter($get))->render() !!}
             </div>
         </div>
     </div>
@@ -166,12 +166,12 @@
     <script type="text/javascript">
         displayList();
         $('select.address').change(function () {
-            var provinceControl = $('select[name="province_id"]'),
+            var /*provinceControl = $('select[name="province_id"]'),*/
                     cityControl = $('select[name="city_id"]'),
                     districtControl = $('select[name="district_id"]'),
                     streetControl = $('select[name="street_id"]'),
-                    address = provinceControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}province_id=' + provinceControl.val() : '';
-            address += cityControl.val() ? '&city_id=' + cityControl.val() : '';
+                    /*address = provinceControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}province_id=' + provinceControl.val() : '';*/
+            address = cityControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() && address ? '&street_id=' + streetControl.val() : '';
             var url = '{!! url('search'  . (empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '' :  '?' . http_build_query(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])))) !!}' + address;

@@ -54,15 +54,4 @@
             </div>
         </div>
     </nav>
-
-@stop
-
-@section('js')
-    <script type="text/javascript">
-        $(function () {
-            if (!Cookies.get('province_id')) {
-                setProvinceName();
-            }
-        })
-    </script>
 @stop

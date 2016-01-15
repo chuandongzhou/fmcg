@@ -22,7 +22,7 @@ class GoodsController extends Controller
     public function detail($goods)
     {
         if (Gate::denies('validate-goods', $goods)) {
-            abort(403);
+            return redirect(url('search'));
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');

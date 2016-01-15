@@ -105,7 +105,7 @@ class MyGoodsController extends Controller
     public function show($goods)
     {
         if (Gate::denies('validate-my-goods', $goods)) {
-            abort(403);
+            return redirect(url('my-goods'));
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $coordinate = $goods->deliveryArea->each(function ($area) {
@@ -125,7 +125,7 @@ class MyGoodsController extends Controller
     public function edit($goods)
     {
         if (Gate::denies('validate-my-goods', $goods)) {
-            abort(403);
+            return redirect(url('my-goods'));
         }
         $goodsAttr = $goods->attr;
         //获取所有标签
