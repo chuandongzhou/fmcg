@@ -159,14 +159,17 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
+
             $router->resource('bank', 'UserBankController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
+            $router->resource('delivery-man', 'DeliveryManController',
+                ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
+
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
             $router->controller('withdraw', 'WithdrawController');    //提现相关操作
-            $router->resource('delivery-man', 'DeliveryManController',
-                ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
+
         });
         $router->controller('cart', 'CartController');
         $router->controller('order', 'OrderController');
@@ -181,5 +184,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
         $router->any('pay/refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
         $router->get('pay/success-url', 'PayController@successUrl');
+        $router->controller('pos' , 'PosController');             //pos机付款
     });
 });

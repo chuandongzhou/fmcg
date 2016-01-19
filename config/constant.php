@@ -23,7 +23,6 @@ return [
             'payment_failed' => 2,
             'refund' => 3,
             'refund_success' => 4,
-            'refund_failed' => 5,
         ],
         'status' => [ //订单状态
             'non_confirm' => 0, //未确认
@@ -262,5 +261,43 @@ return [
     ],
     'location' => [
         'default_province' => 510000,
+    ],
+    //pos机
+    'pos' => [
+        'key' => 'DFE23HLAW198820SQWE1224SDAQQ3319203945',
+        //业务编码
+        'service_code' => [
+            'login' => 'COD201',     //登录
+            'retrieve' => 'COD402',    //查询
+            'pay' => 'COD403',       //支付
+            'receive' => 'COD404',   //签收
+            'cancel' => 'COD406',   //撤销
+            'refund' => 'COD407'    //退款
+        ],
+        //返回码
+        'result_code' => [
+            'password_error' => 10,
+            'no_user' => 11,
+            'receive_error' => 3,
+            'hmac_error' => 4,
+            'success' => 2
+        ],
+        'order_status' => [
+            'no_order' => 20,
+            'signed' => 21,
+            'received_no_sign' => 22,
+            'no_pay_no_sign' => 23
+        ]
+    ],
+
+    //系统信息
+    'system' => [
+        'employee_name' => '订百达',
+        'company_code' => 'dingbaida',
+        'company_name' => '成都订百达科技有限公司',
+        'company_addr' => '成都市高新区天府大道中段1388号美年广场A座1248号',
+        'company_tel' => '13829262065',
+        'company_ceo' => '霍女士'
     ]
+
 ];

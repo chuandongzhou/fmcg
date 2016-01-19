@@ -172,7 +172,8 @@ return [
         'version_no' => '版本号',
         'address[province_id]' => '省',
         'address[city_id]' => '市',
-        'address[address]' => '地址'
+        'address[address]' => '地址',
+        'pos_sign' => 'POS机编号'
     ],
 
 ];

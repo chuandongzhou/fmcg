@@ -234,3 +234,49 @@ if (!function_exists('admin_auth')) {
         return app('admin.auth');
     }
 }
+
+if (!function_exists('array_to_xml')) {
+    /**
+     * 数组转xml
+     * @param array $arr
+     * @param \SimpleXMLElement $xml
+     * @return \SimpleXMLElement
+     */
+    function array_to_xml(array $arr, SimpleXMLElement $xml) {
+        foreach ($arr as $k => $v) {
+
+            $attrArr = array();
+            $kArray = explode(' ',$k);
+            $tag = array_shift($kArray);
+
+            if (count($kArray) > 0) {
+                foreach($kArray as $attrValue) {
+                    $attrArr[] = explode('=',$attrValue);
+                }
+            }
+
+            if (is_array($v)) {
+                if (is_numeric($k)) {
+                    array_to_xml($v, $xml);
+                } else {
+                    $child = $xml->addChild($tag);
+                    if (isset($attrArr)) {
+                        foreach($attrArr as $attrArrV) {
+                            $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                        }
+                    }
+                    array_to_xml($v, $child);
+                }
+            } else {
+                $child = $xml->addChild($tag, $v);
+                if (isset($attrArr)) {
+                    foreach($attrArr as $attrArrV) {
+                        $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                    }
+                }
+            }
+        }
+
+        return $xml;
+    }
+}

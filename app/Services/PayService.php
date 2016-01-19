@@ -25,12 +25,33 @@ class PayService
      * @param $payType
      * @param string $hmac
      * @param string $chargeId
+     * @param int $payStatus
+     * @param string $bankCardNo
      * @return bool
      */
-    public function addTradeInfo($orders, $amount, $orderFee, $tradeNo, $payType, $hmac = '', $chargeId = '')
-    {
+    public function addTradeInfo(
+        $orders,
+        $amount,
+        $orderFee,
+        $tradeNo,
+        $payType,
+        $hmac = '',
+        $chargeId = '',
+        $payStatus = 1,
+        $bankCardNo = ''
+    ) {
         //更改订单状态
-        $result = DB::transaction(function () use ($orders, $amount, $orderFee, $tradeNo, $payType, $hmac, $chargeId) {
+        $result = DB::transaction(function () use (
+            $orders,
+            $amount,
+            $orderFee,
+            $tradeNo,
+            $payType,
+            $hmac,
+            $chargeId,
+            $payStatus,
+            $bankCardNo
+        ) {
             //找出所有卖家的帐号
             $shopIds = $orders->pluck('shop_id')->all();
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get();
@@ -67,8 +88,9 @@ class PayService
                     'account' => $accountArr[$order->shop_id],
                     'order_id' => $order->id,
                     'charge_id' => $chargeId,
+                    'bank_card_no' => $bankCardNo,
                     'trade_no' => $tradeNo,
-                    'pay_status' => $tradeConf['pay_status']['success'],
+                    'pay_status' => $payStatus,
                     'amount' => $order->price - $fee,
                     'target_fee' => $fee,
                     'trade_currency' => $tradeConf['trade_currency']['rmb'],

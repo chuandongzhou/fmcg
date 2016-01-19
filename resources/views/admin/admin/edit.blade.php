@@ -8,7 +8,7 @@
             <label for="username" class="col-sm-2 control-label">管理员账号:</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名"
+                <input type="text" class="form-control" id="name" name="name" placeholder="请输入用户名"
                        value="{{ $user->name }}">
             </div>
         </div>

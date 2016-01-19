@@ -23,7 +23,6 @@ return [
             'payment_failed' => '付款失败',
             'refund' => '退款中',
             'refund_success' => '退款成功',
-            'refund_failed' => '退款失败',
         ],
         'status' => [ //订单状态
             'non_confirm' => '未确认',
@@ -184,5 +183,23 @@ return [
         'review' => '审核中',
         'pass' => '审核通过',
         'payment' => '已打款',
+    ],
+    //pos机
+    'pos' => [
+        //返回码
+        'result_code' => [
+            'password_error' => '账户名或密码错误',
+            'no_user' => '没有该用户',
+            'receive_error' => '接收失败',
+            'hmac_error' => '报文检验失败',
+            'success' => '成功'
+        ],
+        //订单状态
+        'order_status' => [
+            'no_order' => '查无此单',
+            'signed' => '订单已签收',
+            'received_no_sign' => '已收款，未签收',
+            'no_pay_no_sign' => '未支付，未签收'
+        ]
     ],
 ];

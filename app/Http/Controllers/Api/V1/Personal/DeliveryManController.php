@@ -31,7 +31,8 @@ class DeliveryManController extends Controller
      */
     public function store(Requests\Api\v1\CreateDeliveryManRequest $request)
     {
-        if (auth()->user()->shop->deliveryMans()->create($request->all())->exists) {
+        $attributes = $request->all();
+        if (auth()->user()->shop->deliveryMans()->create(array_filter($attributes))->exists) {
             return $this->success('添加成功');
         }
 
@@ -41,11 +42,11 @@ class DeliveryManController extends Controller
     /**
      * 保存
      *
-     * @param \App\Http\Requests\Api\v1\CreateDeliveryManRequest $request
-     * @param $userBank
+     * @param \App\Http\Requests\Api\v1\UpdateDeliveryManRequest $request
+     * @param $deliveryMan
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Api\v1\CreateDeliveryManRequest $request, $deliveryMan)
+    public function update(Requests\Api\v1\UpdateDeliveryManRequest $request, $deliveryMan)
     {
         if ($deliveryMan->fill($request->all())->save()) {
             return $this->success('保存成功');

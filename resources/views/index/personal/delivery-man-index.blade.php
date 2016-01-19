@@ -16,6 +16,8 @@
                     <tr>
                         <th>姓名</th>
                         <th>联系方式</th>
+                        <th>POS机登录名</th>
+                        <th>POS机编号</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -27,6 +29,12 @@
                             </td>
                             <td>
                                 {{ $man->phone }}
+                            </td>
+                            <td>
+                                {{ $man->user_name }}
+                            </td>
+                            <td>
+                                {{ $man->pos_sign }}
                             </td>
                             <td>
 

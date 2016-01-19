@@ -30,6 +30,42 @@
                                        type="text">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="user_name">POS机登录名:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="user_name" name="user_name" placeholder="请输入POS机登录名（必须为6位数字）"
+                                       value=""
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="password">POS机登录密码:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="password" name="password" placeholder="请输入POS机登录密码"
+                                       value=""
+                                       type="password">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="password_confirmation">POS机密码确认:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="password_confirmation" name="password_confirmation" placeholder="请输入POS机登录密码"
+                                       value=""
+                                       type="password">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="name">POS机编号:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="pos_sign" name="pos_sign" placeholder="请输入POS机编号"
+                                       value=""
+                                       type="text">
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <div class="modal-footer">

@@ -54,8 +54,8 @@ class PingxxController extends Controller
                     $order->setAppends([]);
                 });
                 $amount = $orderInfo->amount / 100; //单位为分
-                //TODO: 订单手续费
-                $orderFee = sprintf("%.2f", $amount * 3 / 1000);
+                //TODO: 订单手续费暂定千分之六
+                $orderFee = sprintf("%.2f", $amount * 6 / 1000);
                 $tradeNo = $orderInfo->transaction_no;
 
                 //修改订单状态以及添加交易信息

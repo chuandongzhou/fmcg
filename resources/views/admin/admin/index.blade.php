@@ -21,7 +21,7 @@
                     <td><input type="checkbox" class="child" name="ids[]" value="{{$admin->id}}"/> </td>
                     <td>{{$admin->id}}</td>
                     <td>{{$admin->name}}</td>
-                    <td>{{$admin->realname}}</td>
+                    <td>{{$admin->real_name}}</td>
                     <td>{{$admin->role->name}}</td>
                     <td>
                         {{ $admin->status ? '启用' : '禁用' }}

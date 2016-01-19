@@ -16,6 +16,7 @@ class SystemTradeInfo extends Model
         'paid_at',
         'order_id',
         'charge_id',
+        'bank_card_no',
         'trade_no',
         'pay_status',
         'amount',

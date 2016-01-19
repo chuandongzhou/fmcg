@@ -12,10 +12,11 @@ class UpdateAdminRequest extends Request
      */
     public function rules()
     {
+        $admin = $this->route('admin');
         return [
-            'user_name' => 'required|max:20',
+            'name' => 'required|max:20|unique:admin,name,' . $admin->id,
             'real_name' => 'required|max:32|min:2',
-            'password'  => 'min:6|confirmed',
+            'password' => 'min:6|confirmed',
         ];
     }
 }
