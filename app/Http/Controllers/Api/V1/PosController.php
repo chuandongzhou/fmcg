@@ -20,10 +20,8 @@ class PosController extends Controller
     {
         $xmlData = file_get_contents("php://input");
         $hmac = $this->_hmac($xmlData);
-        $data = (array)simplexml_load_string($xmlData);
-        $ms = $data['COD-MS'];
+        $ms = xml_to_array($xmlData);
         $posConf = cons('pos.service_code');
-
         switch ($ms['SessionHead']['ServiceCode']) {
             case $posConf['login'] :
                 //登录
@@ -36,7 +34,7 @@ class PosController extends Controller
                 return $this->pay($ms, $hmac);
                 break;
             case $posConf['receive'] :
-
+                return $this->receive($ms, $hmac);
                 break;
             case $posConf['cancel'] :
 
@@ -59,12 +57,12 @@ class PosController extends Controller
     {
         $head = $data['SessionHead'];
         $body = $data['SessionBody'];
-        $resultCodeArr = cos('pos.result_code');
+        $resultCodeArr = cons('pos.result_code');
 
         $array = [
             'SessionHead' => array_except($head, ['ReqTime', 'HMAC'])
         ];
-        if ($hmac != $head['hmac']) {
+        if ($hmac != $head['HMAC']) {
             //报文验证
             $array['SessionHead']['ResultCode'] = $resultCodeArr['hmac_error'];
             $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
@@ -72,14 +70,14 @@ class PosController extends Controller
 
         } else {
             //验证账户名和密码
-            $user = DeliveryMan::where(['pos_sign' => $body['PosSn'], 'user_name' => $body['Employee_ID']])->find();
+            $user = DeliveryMan::where(['pos_sign' => $body['PosSn'], 'user_name' => $body['Employee_ID']])->first();
             if (!$user || $user->password !== $body['Password']) {
                 $array['SessionHead']['ResultCode'] = $resultCodeArr['password_error'];
                 $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
                     $resultCodeArr['password_error']);
             } else {
                 //验证成功
-                $user->fill('last_login_at', Carbon::now())->save();
+                $user->fill(['last_login_at' => Carbon::now()])->save();
 
                 $systemConf = cons('system');
                 $array['SessionHead']['ResultCode'] = $resultCodeArr['success'];
@@ -90,7 +88,7 @@ class PosController extends Controller
                 $array['SessionBody']['ExtendAtt'] = [
                     'Employee_Name' => $systemConf['employee_name'],
                     'Company_Code' => $systemConf['company_code'],
-                    'Company_Name' => $systemConf['Company_name'],
+                    'Company_Name' => $systemConf['company_name'],
                     'Company_Addr' => $systemConf['company_addr'],
                     'Company_Tel' => $systemConf['company_tel'],
                 ];
@@ -113,13 +111,13 @@ class PosController extends Controller
     {
         $head = $data['SessionHead'];
         $body = $data['SessionBody'];
-        $resultCodeArr = cos('pos.result_code');
+        $resultCodeArr = cons('pos.result_code');
         $orderStatusArr = cons('pos.order_status');
 
         $array = [
             'SessionHead' => array_except($head, ['ReqTime', 'HMAC'])
         ];
-        if ($hmac != $head['hmac']) {
+        if ($hmac != $head['HMAC']) {
             //报文验证
             $array['SessionHead']['ResultCode'] = $resultCodeArr['hmac_error'];
             $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
@@ -171,13 +169,13 @@ class PosController extends Controller
     {
         $head = $data['SessionHead'];
         $body = $data['SessionBody'];
-        $resultCodeArr = cos('pos.result_code');
+        $resultCodeArr = cons('pos.result_code');
         //$orderStatusArr = cons('pos.order_status');
 
         $array = [
             'SessionHead' => array_except($head, ['ReqTime', 'HMAC'])
         ];
-        if ($hmac != $head['hmac']) {
+        if ($hmac != $head['HMAC']) {
             //报文验证
             $array['SessionHead']['ResultCode'] = $resultCodeArr['receive_error'];
             $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
@@ -188,7 +186,7 @@ class PosController extends Controller
 
             //增加平台交易记录
             $result = (new PayService)->addTradeInfo($order, $body['Amount'], 0, $body['YeepayOrderNo'], 'yeepay',
-                $head['HMAC'], $head['ReferNo'], cons('pos.order_status.received_no_sign'), $body['BankCardNo']);
+                $head['HMAC'], $body['ReferNo'], cons('pos.order_status.received_no_sign'), $body['BankCardNo']);
 
             // TODO: 增加卖家平台余额
 
@@ -214,13 +212,13 @@ class PosController extends Controller
     {
         $head = $data['SessionHead'];
         $body = $data['SessionBody'];
-        $resultCodeArr = cos('pos.result_code');
+        $resultCodeArr = cons('pos.result_code');
         //$orderStatusArr = cons('pos.order_status');
 
         $array = [
             'SessionHead' => array_except($head, ['ReqTime', 'HMAC'])
         ];
-        if ($hmac != $head['hmac']) {
+        if ($hmac != $head['HMAC']) {
             //报文验证
             $array['SessionHead']['ResultCode'] = $resultCodeArr['receive_error'];
             $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
@@ -258,9 +256,9 @@ class PosController extends Controller
     {
         //去除xml里面的头部以及<COD-MS>
         $pattern = '/<COD\-MS>(.+)<\/COD\-MS>/';
-        $key = cos('pos.key');
+        $key = cons('pos.key');
         preg_match_all($pattern, $xml, $matchs, PREG_PATTERN_ORDER);
-        if (count($matchs) < 2) {
+        if (empty($matchs[1])) {
             return '';
         }
 
@@ -282,11 +280,11 @@ class PosController extends Controller
     private function _posReturn($array)
     {
         $xml = array_to_xml($array,
-            new \SimpleXMLElement('<COD-MS />'))->asXML();
+            new \SimpleXMLElement('<?xml version=\'1.0\' encoding=\'utf-8\'?><COD-MS />'))->asXML();
         $hmac = $this->_hmac($xml);
 
         //添加hmac至SessionHead
-        $array['SessionHead']['hmac'] = $hmac;
+        $array['SessionHead']['HMAC'] = $hmac;
 
         return array_to_xml($array,
             new \SimpleXMLElement('<?xml version=\'1.0\' encoding=\'utf-8\'?><COD-MS />'))->asXML();

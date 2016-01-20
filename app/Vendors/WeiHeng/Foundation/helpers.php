@@ -238,20 +238,22 @@ if (!function_exists('admin_auth')) {
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml
+     *
      * @param array $arr
      * @param \SimpleXMLElement $xml
      * @return \SimpleXMLElement
      */
-    function array_to_xml(array $arr, SimpleXMLElement $xml) {
+    function array_to_xml(array $arr, SimpleXMLElement $xml)
+    {
         foreach ($arr as $k => $v) {
 
             $attrArr = array();
-            $kArray = explode(' ',$k);
+            $kArray = explode(' ', $k);
             $tag = array_shift($kArray);
 
             if (count($kArray) > 0) {
-                foreach($kArray as $attrValue) {
-                    $attrArr[] = explode('=',$attrValue);
+                foreach ($kArray as $attrValue) {
+                    $attrArr[] = explode('=', $attrValue);
                 }
             }
 
@@ -261,8 +263,8 @@ if (!function_exists('array_to_xml')) {
                 } else {
                     $child = $xml->addChild($tag);
                     if (isset($attrArr)) {
-                        foreach($attrArr as $attrArrV) {
-                            $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                        foreach ($attrArr as $attrArrV) {
+                            $child->addAttribute($attrArrV[0], $attrArrV[1]);
                         }
                     }
                     array_to_xml($v, $child);
@@ -270,13 +272,27 @@ if (!function_exists('array_to_xml')) {
             } else {
                 $child = $xml->addChild($tag, $v);
                 if (isset($attrArr)) {
-                    foreach($attrArr as $attrArrV) {
-                        $child->addAttribute($attrArrV[0],$attrArrV[1]);
+                    foreach ($attrArr as $attrArrV) {
+                        $child->addAttribute($attrArrV[0], $attrArrV[1]);
                     }
                 }
             }
         }
 
         return $xml;
+    }
+}
+if (!function_exists('xml_to_array')) {
+    /**
+     * xml转化为array
+     *
+     * @param $xmlData
+     * @return mixed|\SimpleXMLElement
+     */
+    function xml_to_array($xmlData)
+    {
+        $array = simplexml_load_string($xmlData, null, LIBXML_NOCDATA);
+        $array = json_decode(json_encode($array), true);
+        return $array;
     }
 }
