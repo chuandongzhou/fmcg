@@ -11,12 +11,11 @@ use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Services\PayService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class PosController extends Controller
 {
 
-    public function anyIndex(Request $request)
+    public function anyIndex()
     {
         $xmlData = file_get_contents("php://input");
         $hmac = $this->_hmac($xmlData);
@@ -28,12 +27,15 @@ class PosController extends Controller
                 return $this->login($ms, $hmac);
                 break;
             case $posConf['retrieve'] :
+                //查询
                 return $this->retrieve($ms, $hmac);
                 break;
             case $posConf['pay'] :
+                //付款
                 return $this->pay($ms, $hmac);
                 break;
             case $posConf['receive'] :
+                //签收
                 return $this->receive($ms, $hmac);
                 break;
             case $posConf['cancel'] :
@@ -92,11 +94,9 @@ class PosController extends Controller
                     'Company_Addr' => $systemConf['company_addr'],
                     'Company_Tel' => $systemConf['company_tel'],
                 ];
-
             }
         }
         return $this->_posReturn($array);
-
     }
 
 

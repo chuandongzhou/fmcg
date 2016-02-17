@@ -115,6 +115,11 @@
                         <li>
                             <span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
                         </li>
+                        @if(!is_null($order->systemTradeInfo))
+                            <li>
+                                <span class="title-info-name">订单手续费 : </span><span class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                            </li>
+                        @endif
                         <li>
                             <span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}
                         </li>

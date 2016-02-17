@@ -111,7 +111,7 @@ class OrderSellController extends OrderController
     public function getDetail(Request $request)
     {
         $order = Order::bySellerId($this->user->id)->with('user.shop', 'shop.user', 'goods.images.image',
-            'shippingAddress.address')->find(intval($request->input('order_id')));
+            'shippingAddress.address', 'systemTradeInfo')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');
         }

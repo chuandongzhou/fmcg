@@ -140,9 +140,9 @@ class PayController extends Controller
                 $redisKey = 'push:seller:' . $shop->user->id;
                 $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
                 RedisService::setRedis($redisKey, $redisVal);
-                $this->success('退款成功');
+                return $this->success('退款成功');
             } else {
-                $this->error('退款时遇到错误');
+                return $this->error('退款时遇到错误');
             }
         }
 

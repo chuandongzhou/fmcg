@@ -1,5 +1,7 @@
 @extends('index.index-master')
 
+@section('subtitle' , '提交成功')
+
 @section('container')
     <div class="container dealer-index index shopping-cart">
         <div class="row audit-step-outs">
@@ -36,5 +38,4 @@
             </div>
         </div>
     </div>
-
 @stop

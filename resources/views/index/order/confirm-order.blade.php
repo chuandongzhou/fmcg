@@ -1,5 +1,7 @@
 @extends('index.index-master')
 
+@section('subtitle' , '确认订单')
+
 @section('container')
     @include('includes.shipping-address')
     <div class="container dealer-index index">
