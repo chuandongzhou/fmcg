@@ -33,8 +33,10 @@
             <label for="account" class="col-sm-2 control-label">申请时间：</label>
 
             <div class="col-sm-6 time-limit">
-                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $data['started_at'] or ''  }}"> 至
-                <input type="text" class="inline-control datetimepicker" name="end_at" value="{{ $data['end_at'] or '' }}">
+                <input type="text" class="inline-control datetimepicker" name="started_at"
+                       value="{{ $data['started_at'] or ''  }}"> 至
+                <input type="text" class="inline-control datetimepicker" name="end_at"
+                       value="{{ $data['end_at'] or '' }}">
             </div>
         </div>
 
@@ -45,70 +47,72 @@
                 {{--<a href="{{ url('admin/system-trade/export-to-excel?' . $linkUrl) }}" class="btn btn-bg btn-warning">导出</a>--}}
             </div>
         </div>
-        <table class="table table-striped table-center">
-            <thead>
-            <tr>
-                <th>提现单号</th>
-                <th>提现金额</th>
-                <th>商家账号</th>
-                <th>银行卡所有人</th>
-                <th>银行账号</th>
-                <th>银行名称</th>
-                <th>开户行地址</th>
-                <th>状态</th>
-                <th>交易单号</th>
-                <th>申请时间</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if($withdraws->count())
-                @foreach($withdraws as $withdraw)
-                    <tr>
-                        <td>{{ $withdraw->id }}</td>
-                        <td>{{ $withdraw->amount }}</td>
-                        <td>{{ $withdraw->user->user_name }}</td>
-                        <td>{{ $withdraw->card_holder }}</td>
-                        <td>{{ $withdraw->card_number }}</td>
-                        <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
-                        <td>{{ $withdraw->card_address }}</td>
-                        <td>{{ $withdraw->status_info }}</td>
-                        <td>{{$withdraw->trade_no }}</td>
-                        <td>{{$withdraw->created_at }}</td>
-                        <td>
-                            <div class="btn-group btn-group-xs">
-                                @if($withdraw->status == cons('withdraw.review'))
-                                    <a class="btn btn-primary ajax" data-method="put"
-                                       data-url="{{ url('admin/system-withdraw/pass') }}"
-                                       data-data={!! json_encode(['withdraw_id'=>$withdraw->id]) !!}
-                                    >
-                                        <i class="fa fa-edit"></i> 通过
-                                    </a>
-                                    <a class="rollback btn btn-danger" data-target="#rollback" data-toggle="modal"
-                                       data-id='{{ $withdraw->id }}'>
-                                        <i class="fa fa-trash-o"></i> 回退
-                                    </a>
-                                @endif
-                                @if($withdraw->status == cons('withdraw.pass'))
-                                    {{--打款需要交易号，回退需要回退原因--}}
-                                    <a class="payment btn btn-success" data-target="#payment" data-toggle="modal"
-                                       data-id='{{ $withdraw->id }}'>
-                                        <i class="fa fa-edit"></i> 已打款
-                                    </a>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td>没有符合条件的信息</td>
-                </tr>
-            @endif
-            </tbody>
-        </table>
     </form>
+    <table class="table table-striped table-center">
+        <thead>
+        <tr>
+            <th>单号</th>
+            <th>金额</th>
+            <th>商家账号</th>
+            <th>开户人</th>
+            <th>银行账号</th>
+            <th>银行名称</th>
+            <th>开户行地址</th>
+            <th>状态</th>
+            <th>交易单号</th>
+            <th>申请时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if($withdraws->count())
+            @foreach($withdraws as $withdraw)
+                <tr>
+                    <td>{{ $withdraw->id }}</td>
+                    <td>{{ $withdraw->amount }}</td>
+                    <td>{{ $withdraw->user->user_name }}</td>
+                    <td>{{ $withdraw->card_holder }}</td>
+                    <td>{{ $withdraw->card_number }}</td>
+                    <td>{{ cons()->valueLang('bank.type')[$withdraw->card_type] }}</td>
+                    <td>{{ $withdraw->card_address }}</td>
+                    <td>{{ $withdraw->status_info }}</td>
+                    <td>{{$withdraw->trade_no }}</td>
+                    <td>{{$withdraw->created_at }}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            @if($withdraw->status == cons('withdraw.review'))
+                                <a class="btn btn-primary ajax" data-method="put"
+                                   data-url="{{ url('admin/system-withdraw/pass') }}"
+                                   data-data={!! json_encode(['withdraw_id'=>$withdraw->id]) !!}
+                                >
+                                    <i class="fa fa-edit"></i> 通过
+                                </a>
+                                <a class="rollback btn btn-danger" data-target="#rollback" data-toggle="modal"
+                                   data-id='{{ $withdraw->id }}'>
+                                    <i class="fa fa-reply"></i> 回退
+                                </a>
+                            @endif
+                            @if($withdraw->status == cons('withdraw.pass'))
+                                {{--打款需要交易号，回退需要回退原因--}}
+                                <a class="payment btn btn-success" data-target="#payment" data-toggle="modal"
+                                   data-id='{{ $withdraw->id }}'>
+                                    <i class="fa fa-edit"></i> 已打款
+                                </a>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td>没有符合条件的信息</td>
+            </tr>
+        @endif
+        </tbody>
+    </table>
+
     {!! $withdraws->appends($data)->render() !!}
+
     <div class="modal fade in" id="rollback" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
          aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">

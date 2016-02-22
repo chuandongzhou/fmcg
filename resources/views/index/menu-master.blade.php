@@ -105,7 +105,7 @@
                             </a>
                             <ul class="menu-wrap" {!! path_active(['my-goods','my-goods/*'], 'style="display:block"') !!}>
                                 <li>
-                                    <a class="{{ path_active('my-goods') }}" href="{{ url('my-goods') }}">
+                                    <a class="{{ path_active(['my-goods','my-goods/*']) }}" href="{{ url('my-goods') }}">
                                         我的商品
                                     </a>
                                 </li>

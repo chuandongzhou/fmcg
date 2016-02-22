@@ -14,7 +14,7 @@
                 <select name="district_id" data-id="{{ $data['district_id'] or 0 }}"
                         class="address-district address inline-control"> </select>
                 <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
-                        class="address-street address useless-control inline-control"> </select>
+                        class="address-street address useless-control inline-control hide"> </select>
             </span>
             <span class="item control-item">
                 店铺名称 : <input class="inline-control" type="text" name="name" value="{{ $data['name'] or '' }}">

@@ -51,10 +51,10 @@ class WithdrawController extends Controller
         $bankId = $request->input('bank_id');
         $user = auth()->user();
         if ($amount > $user->balance) {
-            return $this->error('可提现金额不足,请确认后再试');
+            return $this->error('可提现金额不足');
         }
         if (!$bank = UserBank::where('user_id', $user->id)->find($bankId)) {
-            return $this->error('该提现账号不存在,请确认后再试');
+            return $this->error('该提现账号不存在');
         }
         //修改账户余额
         $user->balance = $user->balance - $amount;
@@ -70,7 +70,7 @@ class WithdrawController extends Controller
             'card_number' => $bank->card_number,
             'card_type' => $bank->card_type,
             'card_address' => $bank->card_address
-        ]) ? $this->success('申请成功,请等待审核') : $this->error('申请遇到问题,请稍后再试');
+        ]) ? $this->success('申请成功,请等待审核') : $this->error('申请遇到问题');
 
     }
 }

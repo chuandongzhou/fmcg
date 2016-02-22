@@ -85,9 +85,8 @@
                     <div class="img-wrap">
                         <a href="{{ url($url . '/' . $item->id) }}" {{ $shop->user->id == auth()->id() ? '' : 'target="_blank"' }} >
                             <img class="commodity-img" src="{{  $item->image_url }}">
+                            <span class="@if($item->is_out) prompt lack  @elseif($item->is_promotion) prompt promotions @elseif($item->is_new) prompt new-listing @endif"></span>
                         </a>
-                        <span class="@if($item->is_out) prompt lack  @elseif($item->is_promotion) prompt promotions @elseif($item->is_new) prompt new-listing @endif"></span>
-
                     </div>
                     <div class="content-panel">
                         <p class="commodity-name"><a href="{{ url($url . '/' . $item->id) }}">{{ $item->name }}</a></p>

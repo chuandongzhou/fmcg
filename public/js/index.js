@@ -695,32 +695,23 @@ function goodsBatchUpload() {
  *提现操作JS
  */
 function getWithdraw(total_amount) {
-    var bank = $('select[name="bank"] option:selected').val();
-    var amount = 0;
-    $('#withdraw').find('.btn-add').prop('disabled', true);
+    var btnAdd =  $('#withdraw').find('.btn-add');
+    btnAdd.prop('disabled', true);
     $('input[name="amount"]').on('keyup', function () {
-        amount = $(this).val();
-
+       var  amount = $(this).val();
         if (isNaN(amount)) {//不是数字
             $('.tip').show();
+            btnAdd.prop('disabled', true);
         } else if (amount > total_amount) {
             $('.tip').text('提现金额不合法').show();
+            btnAdd.prop('disabled', true);
         } else {
             $('.tip').hide();
-            $('#withdraw').find('.btn-add').prop('disabled', false).attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
+            btnAdd.prop('disabled', false);
         }
     });
-    $('#withdraw').on('change', 'select[name="bank"]', function () {
-            bank = $(this).find('option:selected').val();
-            if (bank) {
-                $('#withdraw').find('.btn-add').attr('data-data', '{"amount":' + amount + ',"bank_id":' + bank + '}');
-            } else {
-                $('#withdraw').find('.btn-add').prop('disabled', false);
-            }
-
-        })
-        //清空输入数据以及提示信息
-        .on('hidden.bs.modal', function (e) {
+    //清空输入数据以及提示信息
+    $('#withdraw').on('hidden.bs.modal', function (e) {
             $('input[name="amount"]').val('');
             $('.tip').hide();
         });

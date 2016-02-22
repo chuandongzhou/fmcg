@@ -268,6 +268,7 @@
     </footer>
 @stop
 @section('js-lib')
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
     <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
 @stop
 @section('js')
