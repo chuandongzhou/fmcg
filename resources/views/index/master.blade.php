@@ -96,7 +96,7 @@
     <footer class="panel-footer">
         <div class="container text-center text-muted">
             Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1<br/>
-            联系地址：成都市高新区天府大道中段1388号美年广场A座1248号&nbsp;&nbsp;联系方式：13829262065(霍女士)
+            联系地址：成都市高新区天华路299号英郡三期6栋1单元905&nbsp;&nbsp;联系方式：13980537732（马先生）
         </div>
     </footer>
 @stop

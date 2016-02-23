@@ -18,16 +18,16 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <div class="time form-group">
+                    <div class="time form-group margin-clear">
                         时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
                                     type="text"
-                                    value="{{ $data['start_time'] }}"> 至
+                                    value="{{ $data['start_time'] or '' }}"> 至
                         <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
-                               value="{{ $data['end_time'] }}"
+                               value="{{ $data['end_time'] or '' }}"
                                type="text">
                         <input type="submit" class="btn btn-default search-by-get">
                     </div>
-                    <div class="time form-group">
+                    <div class="time form-group  margin-clear">
                         <table class="table table-bordered table-center">
                             <thead>
                             <tr>
@@ -45,7 +45,7 @@
                                     <td>{{ $trade->order_id }}</td>
                                     <td><b class="red">￥{{ $trade->amount }}</b></td>
                                     <td>{{ $trade->target_fee }}</td>
-                                    <td>{{ cons()->valueLang('trade.pay_type')[$trade->pay_type] }}</td>
+                                    <td>{{ cons()->valueLang('trade.pay_type' , $trade->pay_type) }}</td>
                                     <td>{{ $trade->trade_no }}</td>
                                     <td>{{ $trade->finished_at }}</td>
                                 </tr>
