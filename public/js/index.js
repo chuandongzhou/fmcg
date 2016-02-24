@@ -260,7 +260,7 @@ function selectedFunc() {
         } else {
             descButton.prop('disabled', false);
         }
-        var goodsAllMoney = buyInput.val() * parseFloat(buyInput.data('price'));
+        var goodsAllMoney = buyInput.val() * (buyInput.data('price') * 100) / 100;
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -275,7 +275,7 @@ function selectedFunc() {
         } else {
             obj.prop('disabled', false);
         }
-        var goodsAllMoney = buyInput.val() * parseFloat(buyInput.data('price'));
+        var goodsAllMoney = buyInput.val() * (buyInput.data('price') * 100) / 100;
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -289,7 +289,7 @@ function selectedFunc() {
         } else {
             descButton.prop('disabled', false);
         }
-        var goodsAllMoney = obj.val() * parseFloat(obj.data('price'));
+        var goodsAllMoney = obj.val() * (buyInput.data('price') * 100) / 100;
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -341,7 +341,10 @@ function selectedFunc() {
     initMoney();
 }
 
-
+/**
+ *
+ * @param num
+ */
 var numChange = function (num) {
     var incButton = $('.inc-num'),
         descButton = $('.desc-num'),
@@ -695,10 +698,10 @@ function goodsBatchUpload() {
  *提现操作JS
  */
 function getWithdraw(total_amount) {
-    var btnAdd =  $('#withdraw').find('.btn-add');
+    var btnAdd = $('#withdraw').find('.btn-add');
     btnAdd.prop('disabled', true);
     $('input[name="amount"]').on('keyup', function () {
-       var  amount = $(this).val();
+        var amount = $(this).val();
         if (isNaN(amount)) {//不是数字
             $('.tip').show();
             btnAdd.prop('disabled', true);
@@ -712,9 +715,9 @@ function getWithdraw(total_amount) {
     });
     //清空输入数据以及提示信息
     $('#withdraw').on('hidden.bs.modal', function (e) {
-            $('input[name="amount"]').val('');
-            $('.tip').hide();
-        });
+        $('input[name="amount"]').val('');
+        $('.tip').hide();
+    });
 }
 /**
  * 动态显示提现进度

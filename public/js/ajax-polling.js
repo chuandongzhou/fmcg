@@ -28,6 +28,6 @@ $(function () {//间隔30s自动加载一次
         }
 
         getPushData(); //首次立即加载
-        window.setInterval(getPushData, 500000); //循环执行！！
+        window.setInterval(getPushData, 10000); //循环执行！！
     }
 );
