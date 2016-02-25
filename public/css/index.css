@@ -830,13 +830,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin: -1px auto auto auto; }
     .public-personal .menu .menu-list .menu-wrap {
       display: none;
-      margin-left: 20px; }
-      .public-personal .menu .menu-list .menu-wrap li {
-        text-align: left;
-        padding-left: 27px; }
-        .public-personal .menu .menu-list .menu-wrap li a:hover {
-          background-color: inherit;
-          color: #777777; }
+      padding-left: 20px; }
+      .public-personal .menu .menu-list .menu-wrap li a:hover {
+        background-color: inherit;
+        color: #777777; }
     .public-personal .menu .menu-list .active {
       color: #4cb9fe; }
     .public-personal .menu .menu-list .fa-primary {

@@ -33,7 +33,6 @@
         </div>
     </nav>
     <hr class="personal-hr"/>
-
 @stop
 @section('container')
     <div class="container public-personal contents">
@@ -105,7 +104,7 @@
                             </a>
                             <ul class="menu-wrap" {!! path_active(['my-goods','my-goods/*'], 'style="display:block"') !!}>
                                 <li>
-                                    <a class="{{ path_active(['my-goods','my-goods/*']) }}"
+                                    <a class="{{ path_active('my-goods') }}"
                                        href="{{ url('my-goods') }}">
                                         我的商品
                                     </a>
@@ -136,7 +135,7 @@
                                     <i class="fa fa-file-text-o {!!  request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3 ? 'active' : '' !!}"></i>
                                     进货管理
                                 </a>
-                                <ul class="menu-wrap" {!!  request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3 || request()->input('obj_type') == 2 ? 'style="display:block"' : '' !!}>
+                                <ul class="menu-wrap" {!!  request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3? 'style="display:block"' : '' !!}>
                                     <li>
                                         <a href="{{ url('order-buy') }}"
                                            class="{{ path_active(['order-buy' , 'order-buy/*']) }}">
@@ -144,7 +143,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="{{ request()->input('obj_type') == 3 || request()->input('obj_type') == 2 ? 'active' : '' }}"
+                                        <a class="{{ request()->input('obj_type') == 3 && request()->is('order/statistics') ? 'active' : '' }}"
                                            href="{{ url('order/statistics?obj_type=3') }}">
                                             订单统计
                                         </a>
@@ -155,17 +154,17 @@
                         {{--订单管理--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-edit {!!  request()->is('order-sell', 'order-sell/*') || is_null(request()->input('obj_type')) || request()->input('obj_type') < 3 ? 'active' : '' !!}"></i>
+                                <i class="fa fa-edit {!!  request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'active' : '' !!}"></i>
                                 订单管理
                             </a>
-                            <ul class="menu-wrap" {!!  request()->is('order-sell', 'order-sell/*') || is_null(request()->input('obj_type')) || request()->input('obj_type') < 3 ? 'style="display:block"' : '' !!}>
+                            <ul class="menu-wrap" {!!   request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'style="display:block"' : '' !!}>
                                 <li>
                                     <a href="{{ url('order-sell') }}"
                                        class=" {{ path_active(['order-sell' ,'order-sell/*' ]) }}">
                                         <span></span>订单列表</a>
                                 </li>
                                 <li>
-                                    <a class="{{ is_null(request()->input('obj_type')) || request()->input('obj_type') < 3 ? 'active' : '' }}"
+                                    <a class="{{  request()->is('order/statistics') && request()->input('obj_type') < 3 ? 'active' : '' }}"
                                        href="{{ url('order/statistics') }}">
                                         订单统计
                                     </a>
@@ -224,7 +223,7 @@
                     <ul class="menu-list dealer-menu-list">
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-smile-o {!!  path_active('personal/shop' ,'personal/shipping-address' ,'personal/password') !!}"></i>
+                                <i class="fa fa-smile-o {!!  path_active(['personal/shop' ,'personal/shipping-address' ,'personal/password']) !!}"></i>
                                 个人中心
                             </a>
                             <ul class="menu-wrap" style="display:block">
@@ -266,7 +265,7 @@
                         </li>
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-file-text-o {!!  request()->is('order-buy', 'order-buy/*') || is_null(request()->input('obj_type')) ||  request()->input('obj_type') > 1 ? 'active' : '' !!}"></i>
+                                <i class="fa fa-file-text-o {!!  request()->is('order-buy', 'order-buy/*') || (is_null(request()->input('obj_type')) && request()->is('order/statistics')) ||  request()->input('obj_type') > 1 ? 'active' : '' !!}"></i>
                                 订单管理
                             </a>
                             <ul class="menu-wrap" style="display:block">
@@ -277,7 +276,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="{{ is_null(request()->input('obj_type')) ||  request()->input('obj_type') > 1  ? 'active' : '' }}"
+                                    <a class="{{ (is_null(request()->input('obj_type')) && request()->is('order/statistics')) ||  request()->input('obj_type') > 1  ? 'active' : '' }}"
                                        href="{{ url('order/statistics') }}">
                                         订单统计
                                     </a>
