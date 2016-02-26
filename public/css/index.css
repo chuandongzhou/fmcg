@@ -812,19 +812,23 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: inline-block;
     width: 100%;
     padding: 10px 0;
-    text-decoration: none; }
+    text-decoration: none;
+    font-size: 12px; }
     .public-personal .menu a:hover {
       background-color: #f2f2f2; }
   .public-personal .menu .go-back, .public-personal .menu .name {
     padding: 5px 5px;
     border: 1px solid #b4b4b4;
     background-color: #f2f2f2; }
-  .public-personal .menu .name a:hover {
-    color: #4cb9fe; }
+  .public-personal .menu .name a {
+    font-size: inherit; }
+    .public-personal .menu .name a:hover {
+      color: #4cb9fe; }
   .public-personal .menu .dealer-menu-list {
     text-align: center; }
     .public-personal .menu .dealer-menu-list .list-item {
-      color: #000; }
+      color: #000;
+      font-size: inherit; }
   .public-personal .menu .menu-list {
     border: 1px solid #b4b4b4;
     margin: -1px auto auto auto; }
@@ -1036,6 +1040,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: inline-block;
     padding: 5px 20px 5px 0; }
 
+.goods-editor .goods-imgs {
+  margin-left: 83px; }
+
 .goods-editor .editor-item {
   padding: 5px 0;
   margin: 0; }
@@ -1045,23 +1052,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: inline-block;
     padding-right: 40px;
     position: relative; }
-    .goods-editor .editor-item .items-item .checks {
-      display: inline-block;
-      width: 60px; }
+  .goods-editor .editor-item .check-item {
+    display: inherit; }
+    .goods-editor .editor-item .check-item label {
+      padding-right: 10px; }
 
 .goods-editor .promotions-msg {
-  height: 80px;
   position: relative; }
-  .goods-editor .promotions-msg label {
-    height: 100%;
-    display: inline-block;
-    position: absolute;
-    line-height: 80px;
-    top: 0; }
-  .goods-editor .promotions-msg textarea {
-    margin-left: 70px;
-    width: 65%;
-    height: 100%; }
+  .goods-editor .promotions-msg input {
+    width: 40%; }
 
 .goods-editor .editor-panel .editor-wrap {
   padding: 10px 15px; }
@@ -1108,6 +1107,11 @@ ul, li, p, a, h1, h2, h3, h4 {
 .goods-editor .content-wrap .graphic-wrap textarea {
   width: 80%;
   height: 100px; }
+
+.goods-editor .save-btn {
+  padding: 10px 0; }
+  .goods-editor .save-btn .btn {
+    width: 40%; }
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/

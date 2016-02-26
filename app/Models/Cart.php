@@ -29,6 +29,10 @@ class Cart extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    /**
+     * 商品
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function goods(){
         return $this->belongsTo('App\Models\Goods');
     }

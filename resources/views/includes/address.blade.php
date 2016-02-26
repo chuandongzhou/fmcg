@@ -31,6 +31,7 @@
                 </div>
                 <div class="modal-body address-select">
                     <div>
+
                         <label class="control-label">&nbsp;&nbsp;&nbsp;配送区域 : </label>
                         <select class="address-province inline-control add-province">
                             <option selected="selected" value="">请选择省市/其他...</option>
@@ -47,6 +48,7 @@
                         <select class="address-street inline-control add-street">
                             <option selected="selected" value="">请选择街道...</option>
                         </select>
+                        <button type="button" class="btn btn-primary btn-sm btn-add  pull-right" data-text="添加">添加</button>
 
                         <div class="address-detail">
                             <label class="control-label">&nbsp;&nbsp;&nbsp;详细区域 : </label>
@@ -59,11 +61,10 @@
                     <input type="hidden" name="coordinate_bly" value=""/>
                     <input type="hidden" name="coordinate_slx" value=""/>
                     <input type="hidden" name="coordinate_sly" value=""/>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加
-                        </button>
-                    </div>
+                    {{--<div class="modal-footer">--}}
+                        {{--<button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>--}}
+                        {{--<button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>--}}
+                    {{--</div>--}}
                     <div class="modal-footer">
                         <button class="btn btn-primary btn-sm " onclick="polygon_modal.enableEditing();">开启编辑功能</button>
                         <button class="btn btn-primary btn-sm " onclick="polygon_modal.disableEditing();">关闭编辑功能</button>

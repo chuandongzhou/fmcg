@@ -136,6 +136,8 @@ class GoodsService
                 'bar_code',
                 'price_retailer',
                 'price_wholesaler',
+                'min_num_retailer',
+                'min_num_wholesaler',
                 'is_new',
                 'is_out',
                 'is_promotion',

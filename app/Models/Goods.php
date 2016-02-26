@@ -183,7 +183,6 @@ class Goods extends Model
      * @param $query
      * @param $data
      */
-
     public function scopeOfDeliveryArea($query, $data)
     {
         if (isset($data['province_id'])

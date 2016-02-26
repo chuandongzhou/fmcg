@@ -587,7 +587,7 @@ var addAddFunc = function () {
             streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
             areaName = provinceText + cityText + districtText + streetText;
-        $('.btn-close').trigger('click');
+        $('.close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border show-map">' +
             areaName +
@@ -860,6 +860,10 @@ function baiDuMap() {
     var flag = false;
     if (!flag) {
         var map_modal = new BMap.Map("map-modal", {enableMapClick: false});
+        map_modal.addControl(new BMap.NavigationControl());
+        map_modal.addControl(new BMap.ScaleControl());
+        map_modal.addControl(new BMap.OverviewMapControl());
+        map_modal.addControl(new BMap.MapTypeControl());
     }
     var point_modal = new BMap.Point(106, 35);
     map_modal.centerAndZoom(point_modal, 12);
@@ -979,8 +983,11 @@ function dynamicShowMap() {
  */
 function getCoordinateMap(data) {
     map = new BMap.Map("map", {enableMapClick: false});
-    var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
-    map.addControl(top_left_navigation);
+     //左上角，添加默认缩放平移控件
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl());
+    map.addControl(new BMap.OverviewMapControl());
+    map.addControl(new BMap.MapTypeControl());
 
     if (data && data.length) {
         $.each(data, function (index, value) {

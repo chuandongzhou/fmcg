@@ -1103,6 +1103,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 100%;
       padding: 10px 0;
       text-decoration: none;
+      font-size:12px;
       &:hover {
         background-color: $gray-plain;
       }
@@ -1114,13 +1115,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .name {
       @extend .go-back;
-      a:hover {
-        color: $brand-primary;
+      a {
+        font-size: inherit;
+        &:hover {
+          color: $brand-primary;
+        }
       }
+
     }
     .dealer-menu-list {
       .list-item {
         color: $gray-base;
+        font-size: inherit;
       }
       text-align: center;
     }
@@ -1418,35 +1424,33 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 5px 20px 5px 0;
     }
   }
+  .goods-imgs{
+    margin-left: 83px;
+  }
   .editor-item {
     padding: 5px 0;
     margin: 0;
     .narrow {
       width: 80px;
     }
+
     .items-item {
       display: inline-block;
       padding-right: 40px;
       position: relative;
-      .checks {
-        display: inline-block;
-        width: 60px;
+
+    }
+    .check-item{
+      display: inherit;
+      label{
+        padding-right: 10px;
       }
     }
   }
   .promotions-msg {
-    height: 80px;
     position: relative;
-    label {
-      height: 100%;
-      display: inline-block;
-      position: absolute;
-      line-height: 80px;
-      top: 0;
-    }
-    textarea {
-      margin-left: 70px;
-      @include size(65%, 100%)
+    input{
+      width:40%;
     }
   }
   .editor-panel {
@@ -1511,6 +1515,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       textarea {
         @include size(80%, 100px);
       }
+    }
+  }
+  .save-btn{
+    padding:10px 0;
+    .btn{
+      width:40%;
     }
   }
 }

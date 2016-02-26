@@ -8,8 +8,9 @@
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($goods->images_url as $key =>$image)
-                            <li data-target="#myCarousel" data-slide-to="{{ $key }}"
-                                class="{{ $key == 0 ? 'active' : '' }}">
+                            <li data-target="#myCarousel" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}">
+
+                            </li>
                         @endforeach
                     </ol>
                     <div class="carousel-inner banner">
@@ -27,7 +28,7 @@
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
                         <li><span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b></li>
-                        <li><span class="prompt">价格 :</span> <b>￥{{ $goods->price .' / ' . $goods->pieces }}</b></li>
+                        <li><span class="prompt">价格 :</span> <b>￥{{ $goods->price . ' / ' . $goods->pieces }}</b></li>
                         @foreach($attrs as $key=>$attr)
                             <li>
                                 <span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b>
@@ -40,7 +41,9 @@
                         <li><span class="prompt">商家 :</span> <b>{{ $goods->shop->name }}</b></li>
                         <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
                         @if($goods->is_promotion)
-                            <li class="clearfix"><span class="prompt pull-left">促销信息 : </span><p class="promotions-content">{{ $goods->promotion_info }}</p></li>
+                            <li class="clearfix"><span class="prompt pull-left">促销信息 : </span>
+
+                                <p class="promotions-content">{{ $goods->promotion_info }}</p></li>
                         @endif
 
                         <li>
@@ -99,9 +102,8 @@
                 </div>
             </div>
             <div class="col-sm-12 box graphic-details">
-                {!!$goods->introduce !!}
+                {!! $goods->introduce !!}
             </div>
-
         </div>
     </div>
 
@@ -135,7 +137,7 @@
                     doneText: '操作成功',
                     failText: '操作失败'
                 });
-                obj.button('loading')
+                obj.button('loading');
                 $.ajax({
                     url: url,
                     method: 'post',
@@ -158,7 +160,8 @@
             });
             $('a.close-btn,a.go-shopping').on('click', function () {
                 $(".mask-outer").css("display", "none");
-                $('.add-to-cart').html('加入购物车');
+                // $('.add-to-cart').html('加入购物车');
+                window.location.reload();
             });
             numChange({{ $goods->min_num }});
             tabBox();

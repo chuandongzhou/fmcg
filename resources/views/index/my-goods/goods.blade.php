@@ -13,75 +13,27 @@
             <div class="row editor-panel content-wrap">
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">
-                        <label for="name" class="control-label">名称 :</label>
+                        <label for="name" class="control-label">商品名称 :</label>
                         <input type="text" name="name" value="{{ $goods->name }}" required>
-                    </div>
-
-                    <div class="form-group editor-item">
-                        <p class="items-item">
-                            <label class="control-label">价格 :</label>
-                            <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
-
-                            <label class="control-label">单位 :</label>
-                            <select name="pieces_retailer" class="pieces" data-change-class="pieces-retailer">
-                                @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
-                                    <option value="{{ $key }}" {{ $key == $goods->pieces_retailer ? 'selected' : '' }}>{{ $piece }}</option>
-                                @endforeach
-                            </select>
-
-                            <label class="control-label">规格 :</label>
-                            <input name="specification_retailer" value="{{ $goods->specification_retailer }}" type="text"
-                                   required>
-
-                        </p>
-                    </div>
-                    @if (auth()->user()->type == cons('user.type.supplier'))
-                        <div class="form-group editor-item">
-                            <p class="items-item right-item">
-                                <label class="control-label">价格(批发) :</label>
-                                <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
-                                       required>
-                                <label class="control-label">单位(批发) :</label>
-                                <select name="pieces_wholesaler" class="pieces" data-change-class="pieces-wholesaler">
-                                    @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
-                                        <option value="{{ $key }}" {{ $key == $goods->pieces_wholesaler ? 'selected' : '' }}>{{ $piece }}</option>
-                                    @endforeach
-                                </select>
-                                <label class="control-label">规格 :</label>
-                                <input name="specification_wholesaler" value="{{ $goods->specification_wholesaler }}" type="text"
-                                       required>
-                            </p>
-                        </div>
-                    @endif
-
-                    <div class="form-group editor-item">
-                        <p class="items-item">
-                            <label class="control-label">最低购买数 :</label>
-                            <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
-                                   type="text"
-                                   required>
-                            <span>
-                                (<span class="pieces-retailer">{{ $goods->pieces_retailer ? cons()->valueLang('goods.pieces',$goods->pieces_retailer) : head(cons()->valueLang('goods.pieces')) }}</span>)
-                            </span>
-                        </p>
-
-                        @if (auth()->user()->type == cons('user.type.supplier'))
-                            <p class="items-item right-item">
-                                <label class="control-label">最低购买数(批发) :</label>
-                                <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
-                                       type="text" required>
-                                <span>
-                                    (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler ? cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) : head(cons()->valueLang('goods.pieces')) }}</span>)
-                                </span>
-                            </p>
-                        @endif
                     </div>
                     <div class="form-group editor-item">
                         <p class="items-item right-item">
                             <label class="control-label">商品条形码 :</label>
-                            <input value="{{ $goods->bar_code }}" name="bar_code"
-                                   type="text" required>
+                            <input value="{{ $goods->bar_code }}" name="bar_code" placeholder="输入包装上商品条形码" type="text"
+                                   required>
                         </p>
+                    </div>
+                    <div class="form-group goods-imgs">
+                        @foreach($goods->images as $image)
+                            <div class="thumbnail col-xs-3">
+                                <button aria-label="Close" class="close" type="button">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <img alt="" src="{{ $image->image_url }}">
+                                <input type="hidden" value="{{ $image->id }}" name="images[]">
+
+                            </div>
+                        @endforeach
                     </div>
                     <div class="form-group editor-item">
                         <p class="items-item">
@@ -104,74 +56,101 @@
                             </p>
                         @endforeach
                     </div>
-                </div>
-                <div class="col-sm-12 map">
-                    <div class="upload-img">
-                        <label>商品图片 :</label>
-                    </div>
-                    <div class="goods-imgs">
-                        @foreach($goods->images as $image)
-                            <div class="thumbnail col-xs-3">
-                                <button aria-label="Close" class="close" type="button">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <img alt="" src="{{ $image->image_url }}">
-                                <input type="hidden" value="{{ $image->id }}" name="images[]">
-
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="col-sm-12 editor-wrap">
-                    <div class="form-group editor-item">
-                        <p class="items-item">
-                            <label class="control-label">是否新货 :</label>
-                            <label class="checks"><input name="is_new" value="1" checked type="radio">是</label>
-                            <label class="checks"><input name="is_new" value="0"
-                                                         {{ $goods->is_new ? '' : 'checked' }} type="radio">否</label>
-                        </p>
-
-                        <p class="items-item right-item">
-                            <label class="control-label">是否缺货 :</label>
-                            <label class="checks"><input name="is_out" value="1" checked type="radio">是</label>
-                            <label class="checks"><input name="is_out" value="0"
-                                                         {{ $goods->is_out ? '' : 'checked' }} type="radio">否</label>
-                        </p>
-                    </div>
 
                     <div class="form-group editor-item">
                         <p class="items-item">
-                            <label class="control-label">退换货　:</label>
-                            <label class="checks"><input name="is_back" value="1"
-                                                         {{ $goods->is_back ? 'checked' : '' }} type="checkbox">可退货</label>
-                            <label class="checks"><input name="is_change" value="1"
-                                                         {{ $goods->is_change ? 'checked' : '' }} type="checkbox">可换货</label>
-                        </p>
+                            <label class="control-label">价格 :</label>
+                            <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
 
-                        <p class="items-item">
-                            <label class="control-label">是否即将过期 :</label>
-                            <label class="checks"><input name="is_expire" value="1"
-                                                         {{ $goods->is_expire ? 'checked' : '' }} type="radio">是</label>
-                            <label class="checks"><input name="is_expire" checked value="0"
-                                                         {{ $goods->is_expire ? '' : 'checked' }} type="radio">否</label>
+                            <label class="control-label">单位 :</label>
+                            <select name="pieces_retailer" class="pieces" data-change-class="pieces-retailer">
+                                @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
+                                    <option value="{{ $key }}" {{ $key == $goods->pieces_retailer ? 'selected' : '' }}>{{ $piece }}</option>
+                                @endforeach
+                            </select>
                         </p>
-
                     </div>
                     <div class="form-group editor-item">
-                        <p class="items-item right-item">
-                            <label class="control-label">是否促销 :</label>
-                            <label class="checks"><input name="is_promotion" value="1" checked type="radio">是</label>
-                            <label class="checks"><input name="is_promotion" value="0"
-                                                         {{ $goods->is_promotion ? '' : 'checked' }} type="radio">否</label>
+                        <label class="control-label">最低购买数 :</label>
+                        <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
+                               type="text"
+                               required>
+                            <span>
+                                (<span class="pieces-retailer">{{ $goods->pieces_retailer ? cons()->valueLang('goods.pieces',$goods->pieces_retailer) : head(cons()->valueLang('goods.pieces')) }}</span>)
+                            </span>
+                    </div>
+
+                    <div class="form-group editor-item">
+                        <label class="control-label">规格 :</label>
+                        <input name="specification_retailer" value="{{ $goods->specification_retailer }}" type="text"
+                               required>
+                    </div>
+
+                    @if (auth()->user()->type == cons('user.type.supplier'))
+                        <div class="form-group editor-item">
+                            <p class="items-item">
+                                <label class="control-label">价格(批发) :</label>
+                                <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
+                                       required>
+
+                                <label class="control-label">单位(批发) :</label>
+                                <select name="pieces_wholesaler" class="pieces" data-change-class="pieces-wholesaler">
+                                    @foreach(cons()->valueLang('goods.pieces') as $key=> $piece)
+                                        <option value="{{ $key }}" {{ $key == $goods->pieces_wholesaler ? 'selected' : '' }}>{{ $piece }}</option>
+                                    @endforeach
+                                </select>
+                            </p>
+                        </div>
+                        <div class="form-group editor-item">
+                            <label class="control-label">最低购买数(批发) :</label>
+                            <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
+                                   type="text"
+                                   required>
+                            <span>
+                                (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler ? cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) : head(cons()->valueLang('goods.pieces')) }}</span>)
+                            </span>
+                        </div>
+
+                        <div class="form-group editor-item">
+                            <label class="control-label">规格(批发) :</label>
+                            <input name="specification_wholesaler" value="{{ $goods->specification_wholesaler }}"
+                                   type="text"
+                                   required>
+                        </div>
+                    @endif
+                    <div class="form-group editor-item">
+                        <p class="check-item">
+                            <label class="control-label"><input name="is_new" value="1"
+                                                                {{ $goods->is_new ? 'checked' : '' }}
+                                                                type="checkbox"> 新品</label>
+                            <label class="control-label"><input name="is_out" value="1"
+                                                                {{ $goods->is_out ? 'checked' : '' }}
+                                                                type="checkbox"> 缺货</label>
+                            <label class="control-label"><input name="is_expire" value="1"
+                                                                {{ $goods->is_expire ? 'checked' : '' }}
+                                                                type="checkbox"> 即期品</label>
+                        </p>
+
+                        <p class="check-item">
+                            <label class="control-label"><input name="is_back" value="1"
+                                                                {{ $goods->is_back ? 'checked' : '' }} type="checkbox">
+                                可换货</label>
+                            <label class="control-label"><input name="is_back" value="1"
+                                                                {{ $goods->is_change ? 'checked' : '' }} type="checkbox">
+                                可退货</label>
+                            <label class="control-label"><input name="is_promotion" value="1"
+                                                                {{ $goods->is_promotion ? 'checked' : '' }} type="checkbox">
+                                促销</label>
                         </p>
                     </div>
 
-                    <div class="form-group editor-item promotions-msg">
-                        <label class="control-label">促销信息 :</label>
-                        <textarea name="promotion_info"
-                                  {{ $goods->is_promotion ? '' : 'disabled' }} id="promotion_info">{{ $goods->promotion_info }}</textarea>
+                    <div class="form-group editor-item promotions-msg {{ $goods->is_promotion ? '' : 'hide' }}">
+                        <label class="control-label">促销信息 : </label>
+                        <input type="text" name="promotion_info" value="{{ $goods->promotion_info }}"
+                               {{ $goods->is_promotion ? '' : 'disabled' }} id="promotion_info">
                     </div>
                 </div>
+
 
                 <div class="col-sm-12 graphic-wrap">
                     <p><label>商品图文介绍 :</label></p>
@@ -188,18 +167,18 @@
                 </div>
                 <div class="col-sm-8 address-list">
                     {{--<div class="hidden">--}}
-                        {{--<input type="hidden" name="area[id][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[province_id][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[city_id][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[district_id][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[street_id][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[area_name][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[address][]" value=""/>--}}
-                        {{--区域经纬度--}}
-                        {{--<input type="hidden" name="area[blx][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[bly][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[slx][]" value=""/>--}}
-                        {{--<input type="hidden" name="area[sly][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[id][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[province_id][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[city_id][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[district_id][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[street_id][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[area_name][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[address][]" value=""/>--}}
+                    {{--区域经纬度--}}
+                    {{--<input type="hidden" name="area[blx][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[bly][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[slx][]" value=""/>--}}
+                    {{--<input type="hidden" name="area[sly][]" value=""/>--}}
                     {{--</div>--}}
                     @foreach ($goods->deliveryArea as $area)
                         <div class="col-sm-12 fa-border">{{ $area->address_name }}
@@ -225,15 +204,13 @@
                     <div id="map"></div>
                 </div>
             </div>
-            <div class="col-sm-12 text-center save">
+            <div class="col-sm-12 text-center save padding-clear">
                 @if (!$goods->id)
-                    <a class="btn btn-bg btn-success ajax" data-data='{"status":"1"}' type="submit"><i
-                                class="fa fa-level-up"></i> 立即上架</a>
+                    <label><input type="checkbox" name="status" value="1">立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
                 @endif
-                <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
-                <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
-                            class="fa fa-reply"></i> 取消
-                </button>
+                <p class="save-btn">
+                    <button class="btn btn-bg btn-primary" type="submit"> 保存</button>
+                </p>
             </div>
         </form>
     </div>
@@ -264,8 +241,8 @@
             $('.' + changeClass).html(pieces);
         })
         $('input[name="is_promotion"]').change(function () {
-            var promotionInfo = $('textarea[name="promotion_info"]');
-            $(this).val() == 1 ? promotionInfo.prop('disabled', false) : promotionInfo.prop('disabled', true);
+            var promotionInfo = $('input[name="promotion_info"]');
+            $(this).is(':checked') ? promotionInfo.prop('disabled', false).parents('.promotions-msg').removeClass('hide') : promotionInfo.prop('disabled', true).parents('.promotions-msg').addClass('hide');
         });
     </script>
 @stop

@@ -105,6 +105,15 @@ class MyGoodsController extends Controller
         //是否退换货补充
         $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
         $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
+        $attributes['is_new'] = isset($attributes['is_new']) ? $attributes['is_new'] : 0;
+        $attributes['is_out'] = isset($attributes['is_out']) ? $attributes['is_out'] : 0;
+        $attributes['is_expire'] = isset($attributes['is_expire']) ? $attributes['is_expire'] : 0;
+
+        if (!isset($attributes['is_promotion'])) {
+            $attributes['is_promotion'] = 0;
+            $attributes['promotion_info'] = '';
+        }
+
         if ($goods->fill($attributes)->save()) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));

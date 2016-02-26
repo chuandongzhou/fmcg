@@ -27,8 +27,8 @@
                     <span class="prompt">名称 :</span> <b>{{ $goods->name }}</b>
                 </div>
                 <ul class="left-list pull-left">
-                    <li><span class="prompt">商品ID :</span>{{ $goods->id }}</li>
-                    <li><span class="prompt">条形码 :</span>{{ $goods->bar_code }}</li>
+                    <li><span class="prompt">商品ID : </span>{{ $goods->id }}</li>
+                    <li><span class="prompt">条形码 : </span>{{ $goods->bar_code }}</li>
                     @if(auth()->user()->type==cons('user.type.wholesaler'))
                         <li>
                             <span class="prompt">价格 :</span>
@@ -76,7 +76,10 @@
                     @endif
 
                     @if($goods->is_promotion)
-                        <li class="clearfix"><span class="prompt pull-left">促销信息 :</span> <p class="promotions-content">{{ $goods->promotion_info }}</p></li>
+                        <li class="clearfix">
+                            <span class="prompt pull-left">促销信息 :&nbsp;</span>
+                            <p class="promotions-content"> {{ $goods->promotion_info }}</p>
+                        </li>
                     @endif
                 </ul>
             </div>
