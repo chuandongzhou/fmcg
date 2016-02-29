@@ -52,7 +52,9 @@
             </div>
         </div>
     </form>
-    {!!  $users->appends(array_filter($data))->render() !!}
+    <div class="text-right">
+        {!!  $users->appends(array_filter($data))->render() !!}
+    </div>
     @parent
 @stop
 @section('js-lib')

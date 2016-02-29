@@ -1135,7 +1135,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       border: 1px solid $gray-lighter;
       margin: -1px auto auto auto;
       .menu-wrap {
-        display: none;
+        display: block;
         padding-left: 20px;
         li {
           a {
@@ -1518,7 +1518,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .save-btn{
-    padding:10px 0;
+    padding:10px;
     .btn{
       width:40%;
     }

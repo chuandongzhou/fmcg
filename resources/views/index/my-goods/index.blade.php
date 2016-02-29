@@ -186,6 +186,7 @@
                             @endif
                         </span>
                     </p>
+
                     <p>
                         <span class="sales">销量 : {{ $item->sales_volume }}</span>
                     </p>
@@ -193,7 +194,9 @@
             </div>
         @endforeach
     </div>
-    {!! $goods->appends($data)->render() !!}
+    <div class="text-right">
+        {!! $goods->appends($data)->render() !!}
+    </div>
 @stop
 @section('js-lib')
     @parent

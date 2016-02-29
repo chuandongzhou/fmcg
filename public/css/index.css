@@ -833,7 +833,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     border: 1px solid #b4b4b4;
     margin: -1px auto auto auto; }
     .public-personal .menu .menu-list .menu-wrap {
-      display: none;
+      display: block;
       padding-left: 20px; }
       .public-personal .menu .menu-list .menu-wrap li a:hover {
         background-color: inherit;
@@ -1109,7 +1109,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   height: 100px; }
 
 .goods-editor .save-btn {
-  padding: 10px 0; }
+  padding: 10px; }
   .goods-editor .save-btn .btn {
     width: 40%; }
 

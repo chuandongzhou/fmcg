@@ -49,7 +49,7 @@
                                 <i class="fa fa-smile-o {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password']) !!}"></i>
                                 个人中心
                             </a>
-                            <ul class="menu-wrap" {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password'] , 'style="display:block"') !!}>
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('personal/shop') }}" href="{{ url('personal/shop') }}">
                                         店铺信息
@@ -83,7 +83,7 @@
                                 <a href="javascript:void(0)" class="list-item ">
                                     <i class="fa fa-star-o {!!  path_active('like/*') !!}"></i> 我的收藏
                                 </a>
-                                <ul class="menu-wrap" {!!  path_active('like/*' ,'style="display:block"') !!}>
+                                <ul class="menu-wrap">
                                     <li>
                                         <a class="{{ path_active('like/shops') }}" href="{{ url('like/shops') }}">
                                             店铺收藏
@@ -102,7 +102,7 @@
                             <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-heart-o {!! path_active(['my-goods','my-goods/*']) !!}"></i> 商品管理
                             </a>
-                            <ul class="menu-wrap" {!! path_active(['my-goods','my-goods/*'], 'style="display:block"') !!}>
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('my-goods') }}"
                                        href="{{ url('my-goods') }}">
@@ -125,7 +125,7 @@
                         @if($user->type == cons('user.type.wholesaler'))
                             {{--进货中心--}}
                             <li>
-                                <a href="{{ url('/') }}" target="_blank">
+                                <a class="list-item" href="{{ url('/') }}" target="_blank">
                                     <i class="fa fa-shopping-cart"></i> 进货中心
                                 </a>
                             </li>
@@ -135,7 +135,7 @@
                                     <i class="fa fa-file-text-o {!!  request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3 ? 'active' : '' !!}"></i>
                                     进货管理
                                 </a>
-                                <ul class="menu-wrap" {!!  request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3? 'style="display:block"' : '' !!}>
+                                <ul class="menu-wrap">
                                     <li>
                                         <a href="{{ url('order-buy') }}"
                                            class="{{ path_active(['order-buy' , 'order-buy/*']) }}">
@@ -157,7 +157,7 @@
                                 <i class="fa fa-edit {!!  request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'active' : '' !!}"></i>
                                 订单管理
                             </a>
-                            <ul class="menu-wrap" {!!   request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'style="display:block"' : '' !!}>
+                            <ul class="menu-wrap">
                                 <li>
                                     <a href="{{ url('order-sell') }}"
                                        class=" {{ path_active(['order-sell' ,'order-sell/*' ]) }}">
@@ -177,7 +177,7 @@
                                 <i class="fa fa-money {!!  path_active(['personal/balance','personal/bank'] ) !!}"></i>
                                 财务管理
                             </a>
-                            <ul class="menu-wrap" {!!  path_active(['personal/balance','personal/bank'] ,'style="display:block"' ) !!}>
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('personal/balance') }}"
                                        href="{{ url('personal/balance') }}">
@@ -196,7 +196,7 @@
                             <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-users {!! path_active('personal/customer/*') !!}"></i> 客户列表
                             </a>
-                            <ul class="menu-wrap" {!! path_active('personal/customer/*' , 'style="display:block"') !!}>
+                            <ul class="menu-wrap" >
                                 <li>
                                     <a class="{{ path_active('personal/customer/retailer') }}"
                                        href="{{ url('personal/customer/retailer') }}">
@@ -226,7 +226,7 @@
                                 <i class="fa fa-smile-o {!!  path_active(['personal/shop' ,'personal/shipping-address' ,'personal/password']) !!}"></i>
                                 个人中心
                             </a>
-                            <ul class="menu-wrap" style="display:block">
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('personal/shop') }}" href="{{ url('personal/shop') }}">
                                         店铺信息
@@ -250,7 +250,7 @@
                             <a href="javascript:void(0)" class="list-item ">
                                 <i class="fa fa-star-o {!!  path_active('like/*') !!}"></i> 我的收藏
                             </a>
-                            <ul class="menu-wrap" style="display:block">
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('like/shops') }}" href="{{ url('like/shops') }}">
                                         店铺收藏
@@ -268,7 +268,7 @@
                                 <i class="fa fa-file-text-o {!!  request()->is('order-buy', 'order-buy/*') || (is_null(request()->input('obj_type')) && request()->is('order/statistics')) ||  request()->input('obj_type') > 1 ? 'active' : '' !!}"></i>
                                 订单管理
                             </a>
-                            <ul class="menu-wrap" style="display:block">
+                            <ul class="menu-wrap">
                                 <li>
                                     <a href="{{ url('order-buy') }}"
                                        class="{{ path_active(['order-buy' , 'order-buy/*']) }}">

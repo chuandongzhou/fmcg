@@ -78,7 +78,6 @@ class Goods extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-
     public function orders()
     {
         return $this->belongsToMany('App\Models\Order', 'order_goods', 'goods_id', 'order_id');
@@ -153,7 +152,6 @@ class Goods extends Model
     {
         return $query->orderBy('price_retailer', 'asc');
     }
-
 
     /**
      * 名称排序

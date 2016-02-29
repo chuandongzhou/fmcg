@@ -53,7 +53,9 @@
                             </tbody>
                         </table>
                     </div>
-                    {!! $tradeInfo->appends($data)->render() !!}
+                    <div class="text-right">
+                        {!! $tradeInfo->appends($data)->render() !!}
+                    </div>
                 </div>
             </div>
         </div>

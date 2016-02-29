@@ -151,7 +151,6 @@
                     </div>
                 </div>
 
-
                 <div class="col-sm-12 graphic-wrap">
                     <p><label>商品图文介绍 :</label></p>
 

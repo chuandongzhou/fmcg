@@ -131,11 +131,13 @@
                     </div>
                 </div>
             </div>
-            @if(\Request::is('order-buy'))
-                {!! $orders->appends(array_filter($search))->render() !!}
-            @else
-                {!! $orders->render() !!}
-            @endif
+            <div class="text-right">
+                @if(\Request::is('order-buy'))
+                    {!! $orders->appends(array_filter($search))->render() !!}
+                @else
+                    {!! $orders->render() !!}
+                @endif
+            </div>
 
             @if(\Request::is('order-buy') && $orders->count())
                 <div class="row" id="foot-nav">

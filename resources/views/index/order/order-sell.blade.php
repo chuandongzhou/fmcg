@@ -138,11 +138,13 @@
                     </div>
                 </div>
             </div>
-            @if(\Request::is('order-sell'))
-                {!! $orders->appends(array_filter($search))->render() !!}
-            @else
-                {!! $orders->render() !!}
-            @endif
+            <div class="text-right">
+                @if(\Request::is('order-sell'))
+                    {!! $orders->appends(array_filter($search))->render() !!}
+                @else
+                    {!! $orders->render() !!}
+                @endif
+            </div>
             @if(\Request::is('order-sell') && $orders->count() )
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
@@ -155,7 +157,7 @@
                                 data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                         </button>
                         <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
-                                data-method="get">导出
+                           data-method="get">导出
                         </a>
                     </div>
                 </div>
