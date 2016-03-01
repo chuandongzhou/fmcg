@@ -175,18 +175,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     z-index: 9999;
     background-color: $body-bg;
     border: 5px solid $gray-plain-light;
+    .close-btn {
+      color: $gray;
+      cursor: pointer;
+      margin-right: 3px;
+      font-size: 19px;
+      &:hover {
+        text-decoration: none;
+      }
+    }
     .pop-content {
       position: absolute;
       @include square(100%);
-      .close-btn {
-        color: $gray;
-        cursor: pointer;
-        margin-right: 3px;
-        font-size: 19px;
-        &:hover {
-          text-decoration: none;
-        }
-      }
       .pop-tips {
         margin-top: 40px;
         .txt {
@@ -206,6 +206,28 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
+  #pop-pay{
+    .modal-header{
+      background-color: $brand-info;
+      .modal-title{
+        text-align: left!important;
+        color:$gray-plain;
+      }
+      .close-btn{
+        color: $gray-plain;
+      }
+    }
+    @include size(500px, 250px);
+    margin: -125px 0 0 -250px;
+    .pop-tips{
+      font-size: 15px;
+    }
+    .pop-btn{
+      margin-top:50px;
+    }
+
+  }
+
 }
 
 /*======================================pop======================================*/
@@ -1178,6 +1200,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     right: 0;
     margin: 0;
     opacity: 0;
+    filter:alpha(opacity=0);
     cursor: pointer;
   }
 }
@@ -1417,8 +1440,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .goods-editor {
   .attr {
     border: 1px solid $gray-lighter;
-    padding: 5px 0 5px 15px;
-    margin: 0;
+    padding: 5px 0 5px 15px !important;
+    margin: 0 !important;
     .items-item {
       display: inline-block;
       padding: 5px 20px 5px 0;
@@ -1498,6 +1521,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           top: 0;
           @include square(100%);
           opacity: 0;
+          filter:alpha(opacity=0);
         }
       }
     }
@@ -2642,6 +2666,7 @@ table {
   }
   .inp-checkbox {
     opacity: 0;
+    filter:alpha(opacity=0);
   }
   .shop-name {
     color: inherit;

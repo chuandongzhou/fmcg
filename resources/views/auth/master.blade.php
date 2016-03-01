@@ -22,9 +22,9 @@
                 <p class="text-center">APP下载</p>
             </div>
             <div class="txt-content">
-                <p class="text-left sign">Copyright2015成都订百达科技有限公司 蜀ICP备15031748号-1</p>
+                <p class="text-left sign">Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}</p>
 
-                <p>成都市高新区天华路299号英郡三期6栋1单元905&nbsp;&nbsp;联系方式：13980537732 028-83233316</p>
+                <p>{{ cons('system.company_addr') }}&nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</p>
             </div>
         </div>
     </footer>

@@ -295,9 +295,11 @@ return [
         'employee_name' => '订百达',
         'company_code' => 'dingbaida',
         'company_name' => '成都订百达科技有限公司',
-        'company_addr' => '成都市高新区天府大道中段1388号美年广场A座1248号',
-        'company_tel' => '13829262065',
-        'company_ceo' => '霍女士'
+        'company_addr' => '成都市高新区天华路299号英郡三期6栋1单元905',
+        'company_tel' => '028-83233316',
+        'company_mobile' => '13980537732',
+        'company_ceo' => '马先生',
+        'company_record' => '蜀ICP备15031748号-1'
     ]
 
 ];

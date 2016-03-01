@@ -92,7 +92,7 @@ class PosController extends Controller
                     'Company_Code' => $systemConf['company_code'],
                     'Company_Name' => $systemConf['company_name'],
                     'Company_Addr' => $systemConf['company_addr'],
-                    'Company_Tel' => $systemConf['company_tel'],
+                    'Company_Tel' => $systemConf['company_mobile'],
                 ];
             }
         }

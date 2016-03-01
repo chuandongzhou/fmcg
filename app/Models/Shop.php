@@ -381,10 +381,10 @@ class Shop extends Model
     public function setAreaAttribute($area)
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
-        $this->deliveryArea->each(function ($address) {
-            $address->delete();
-        });
         if (!empty($areaArr)) {
+            $this->deliveryArea->each(function ($address) {
+                $address->delete();
+            });
             foreach ($areaArr as $data) {
                 if (isset($data['coordinate'])) {
                     $coordinate = $data['coordinate'];

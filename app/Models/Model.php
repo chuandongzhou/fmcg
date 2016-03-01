@@ -109,7 +109,7 @@ class Model extends Eloquent
                     $file = File::createWithFile($fileItem['path']);
                 }
             } else {
-                //文件地址
+                //文件地址或文件
                 $file = File::createWithFile($fileItem);
             }
             // 查出当前正在使用的附件

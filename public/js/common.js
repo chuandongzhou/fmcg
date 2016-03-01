@@ -376,7 +376,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.button('done');
+                    isButton && self.html('操作成功');
                     self.hasClass('login-btn') || self.hasClass('send-sms') || alert(self.data('doneText') || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -384,7 +384,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.button('fail');
+                    isButton && self.html('操作失败');
 
                     var json = jqXHR['responseJSON'];
                     if (json) {
@@ -517,9 +517,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-        //, addButton = $('#add-address')
+    //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        //, addLimit = 500   //最大地址限制
+    //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -531,15 +531,15 @@ var addAddFunc = function () {
     //    address.val('');
     //});
     // 地址限制
-   /* var changeAddButtonStatus = function () {
-        if (container.children('div:visible').length >= addLimit) {
-            addButton.button('loading');
-            return true;
-        }
+    /* var changeAddButtonStatus = function () {
+     if (container.children('div:visible').length >= addLimit) {
+     addButton.button('loading');
+     return true;
+     }
 
-        addButton.button('reset');
-        return false;
-    };*/
+     addButton.button('reset');
+     return false;
+     };*/
     var changeBtnAddhtml = function (html) {
         btnAdd.html(html);
         setTimeout(function () {
@@ -982,8 +982,8 @@ function dynamicShowMap() {
  * @param data
  */
 function getCoordinateMap(data) {
-    map = new BMap.Map("map", {enableMapClick: false});
-     //左上角，添加默认缩放平移控件
+    var map = new BMap.Map("map", {enableMapClick: false});
+    //左上角，添加默认缩放平移控件
     map.addControl(new BMap.NavigationControl());
     map.addControl(new BMap.ScaleControl());
     map.addControl(new BMap.OverviewMapControl());

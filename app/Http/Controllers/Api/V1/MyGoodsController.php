@@ -61,7 +61,7 @@ class MyGoodsController extends Controller
             $this->updateDeliveryArea($goods, $request->input('area'));
 
             // 更新标签
-            $this->updateAttrs($goods, $attributes['attrs']);
+            isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
             //保存没有图片的条形码
             $this->saveWithoutImageOfBarCode($goods);
             return $this->created('添加商品成功');
@@ -118,7 +118,7 @@ class MyGoodsController extends Controller
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
             // 更新标签
-            $this->updateAttrs($goods, $attributes['attrs']);
+            isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
 
             $this->saveWithoutImageOfBarCode($goods);
             return $this->success('更新商品成功');
@@ -225,7 +225,7 @@ class MyGoodsController extends Controller
             if ($goodsModel->exists) {
                 $this->saveWithoutImageOfBarCode($goodsModel);
                 $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
-                $this->updateAttrs($goodsModel, $attrs);
+                !is_null($attrs) && $this->updateAttrs($goodsModel, $attrs);
             } else {
                 return $this->setImportResult('文件格式不正确');
             }

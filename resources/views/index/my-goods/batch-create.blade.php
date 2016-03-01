@@ -5,7 +5,7 @@
 
 @section('right')
     <div class="col-sm-12 goods-editor">
-        <form class="form-horizontal ajax-form" method="post" action="{{ url('api/v1/my-goods') }}" autocomplete="off">
+        <form class="form-horizontal ajax-form" method="post" action="" autocomplete="off">
             <div class="row editor-panel content-wrap">
                 <div class="col-sm-12 editor-wrap">
                     <div class="form-group">
@@ -56,10 +56,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 text-center save">
-                <a class="btn btn-bg btn-success save-btn" data-status="1">
-                    <i class="fa fa-level-up"></i> 立即上架</a>
-                <a class="btn btn-bg btn-primary save-btn" href="javascript:;"><i class="fa fa-save"></i> 保存</a>
+            <div class="col-sm-12 text-center save padding-clear">
+                <label><input type="checkbox" name="status" value="1"> 立即上架<span
+                            class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
+
+                <p class="save-btn">
+                    <a class="btn btn-bg btn-primary"> 保存</a>
+                </p>
             </div>
         </form>
     </div>

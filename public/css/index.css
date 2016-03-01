@@ -125,17 +125,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     z-index: 9999;
     background-color: #fff;
     border: 5px solid #e0e0e0; }
+    .mask-outer .pop-general .close-btn {
+      color: #555555;
+      cursor: pointer;
+      margin-right: 3px;
+      font-size: 19px; }
+      .mask-outer .pop-general .close-btn:hover {
+        text-decoration: none; }
     .mask-outer .pop-general .pop-content {
       position: absolute;
       width: 100%;
       height: 100%; }
-      .mask-outer .pop-general .pop-content .close-btn {
-        color: #555555;
-        cursor: pointer;
-        margin-right: 3px;
-        font-size: 19px; }
-        .mask-outer .pop-general .pop-content .close-btn:hover {
-          text-decoration: none; }
       .mask-outer .pop-general .pop-content .pop-tips {
         margin-top: 40px; }
         .mask-outer .pop-general .pop-content .pop-tips .txt {
@@ -149,6 +149,21 @@ ul, li, p, a, h1, h2, h3, h4 {
           color: #5cb85c; }
       .mask-outer .pop-general .pop-content .pop-btn {
         margin-top: 30px; }
+  .mask-outer #pop-pay {
+    width: 500px;
+    height: 250px;
+    margin: -125px 0 0 -250px; }
+    .mask-outer #pop-pay .modal-header {
+      background-color: #5bc0de; }
+      .mask-outer #pop-pay .modal-header .modal-title {
+        text-align: left !important;
+        color: #f2f2f2; }
+      .mask-outer #pop-pay .modal-header .close-btn {
+        color: #f2f2f2; }
+    .mask-outer #pop-pay .pop-tips {
+      font-size: 15px; }
+    .mask-outer #pop-pay .pop-btn {
+      margin-top: 50px; }
 
 /*======================================pop======================================*/
 /*======================================login begin======================================*/
@@ -860,6 +875,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     right: 0;
     margin: 0;
     opacity: 0;
+    filter: alpha(opacity=0);
     cursor: pointer; }
 
 /*======================================my-goods end======================================*/
@@ -1097,7 +1113,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     top: 0;
     width: 100%;
     height: 100%;
-    opacity: 0; }
+    opacity: 0;
+    filter: alpha(opacity=0); }
 
 .goods-editor .content-wrap .preview-wrap, .goods-editor .content-wrap .graphic-wrap {
   padding: 15px; }
@@ -1903,7 +1920,8 @@ table .product-panel {
     vertical-align: middle;
     cursor: pointer; }
   .check-item .inp-checkbox {
-    opacity: 0; }
+    opacity: 0;
+    filter: alpha(opacity=0); }
   .check-item .shop-name {
     color: inherit; }
 

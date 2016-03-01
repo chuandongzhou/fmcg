@@ -21,6 +21,7 @@
     <!--[if lt IE 9]>
         <script src="{{ asset('js/html5shiv.min.js') }}"></script>
         <script src="{{ asset('js/respond.min.js') }}"></script>
+        <script src="{{ asset('js/selectivizr.js') }}"></script>
         <![endif]-->
         <script>
             var SITE = {

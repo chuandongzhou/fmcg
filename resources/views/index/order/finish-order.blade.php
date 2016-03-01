@@ -11,7 +11,7 @@
                 <span class="triangle-right first"></span>
                 <span class="triangle-right last"></span>
             </div>
-            <div class="col-sm-3 step ">
+            <div class="col-sm-3 step">
                 2.确认订单消息
                 <span class="triangle-right first"></span>
                 <span class="triangle-right last"></span>
@@ -32,10 +32,12 @@
                 <p class="order-ok-title">订单已提交，请于24小时内完成支付</p>
 
                 <p class="finish-operating">
-                    <a href="{{ url('pay/request/' . $orderId . ($type == 'all' ? '?type=all' : '')) }}" class="btn btn-danger pay">前往支付</a>
-                    <a href="{{ url('order-buy') }}" class="check-order" >查看订单</a>
+                    <a href="{{ url('pay/request/' . $orderId . ($type == 'all' ? '?type=all' : '')) }}"
+                       class="btn btn-danger pay" onclick="showPaySuccess()" target="_blank">前往支付</a>
+                    <a href="{{ url('order-buy') }}" class="check-order">查看订单</a>
                 </p>
             </div>
         </div>
     </div>
+    @include('includes.pay-success')
 @stop

@@ -269,10 +269,10 @@ function selectedFunc() {
             buyInput = obj.siblings('.num'),
             minNum = buyInput.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
-        buyInput.val(parseInt(buyInput.val()) - 1);
         if (buyInput.val() <= minNum) {
             obj.prop('disabled', true);
         } else {
+            buyInput.val(parseInt(buyInput.val()) - 1);
             obj.prop('disabled', false);
         }
         var goodsAllMoney = buyInput.val() * (buyInput.data('price') * 100) / 100;
@@ -536,7 +536,13 @@ var loadGoodsImages = function (barCode) {
     }
 
     $('input[name="bar_code"]').on('blur', function () {
-        LoadImg($(this).val());
+        var barCode = $(this).val();
+        if (barCode.length >= 7) {
+            LoadImg(barCode);
+        } else {
+            $('.goods-imgs').html('<div class="col-sm-12">条形码必须大于7位</div>');
+        }
+
     });
     LoadImg(barCode);
 };
@@ -638,9 +644,6 @@ function goodsBatchUpload() {
             $(".save-btn").off('click').on('click', function () {
                 var obj = $('#upload_file');
                 obj.fileupload('disable');
-                obj.parent().addClass('disabled').siblings('.progress').show();
-                obj.parent().siblings('.fileinput-error').remove();
-
                 var $this = $(this),
                     cateLevel1 = $('select[name="cate_level_1"]').val(),
                     cateLevel2 = $('select[name="cate_level_2"]').val(),
@@ -650,6 +653,9 @@ function goodsBatchUpload() {
                     alert('请把分类选择完整');
                     return false;
                 }
+                obj.parent().addClass('disabled').siblings('.progress').show();
+                obj.parent().siblings('.fileinput-error').remove();
+                $(this).children('a').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
                 var formData = {
                     'status': status,
                     'cate_level_1': cateLevel1,
@@ -683,6 +689,7 @@ function goodsBatchUpload() {
             $(this).parent().removeClass('disabled').siblings('.progress').hide()
                 .children('.progress-bar').css('width', '0');
             $(this).fileupload('enable');
+            $(".save-btn a").html('保存');
         },
         progressall: function (e, data) {
             var progress = Math.round(data.loaded / data.total * 1000) / 10,

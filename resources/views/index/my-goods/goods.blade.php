@@ -14,13 +14,12 @@
                 <div class="col-sm-10 editor-wrap">
                     <div class="form-group editor-item">
                         <label for="name" class="control-label">商品名称 :</label>
-                        <input type="text" name="name" value="{{ $goods->name }}" required>
+                        <input type="text" name="name" value="{{ $goods->name }}" placeholder="请输入商品名称" >
                     </div>
                     <div class="form-group editor-item">
                         <p class="items-item right-item">
                             <label class="control-label">商品条形码 :</label>
-                            <input value="{{ $goods->bar_code }}" name="bar_code" placeholder="输入包装上商品条形码" type="text"
-                                   required>
+                            <input value="{{ $goods->bar_code }}" name="bar_code" placeholder="输入包装上商品条形码" type="text">
                         </p>
                     </div>
                     <div class="form-group goods-imgs">
@@ -60,7 +59,7 @@
                     <div class="form-group editor-item">
                         <p class="items-item">
                             <label class="control-label">价格 :</label>
-                            <input name="price_retailer" value="{{ $goods->price_retailer }}" type="text" required>
+                            <input name="price_retailer" value="{{ $goods->price_retailer }}" placeholder="请输入价格" type="text" >
 
                             <label class="control-label">单位 :</label>
                             <select name="pieces_retailer" class="pieces" data-change-class="pieces-retailer">
@@ -73,8 +72,7 @@
                     <div class="form-group editor-item">
                         <label class="control-label">最低购买数 :</label>
                         <input class="narrow" value="{{ $goods->min_num_retailer }}" name="min_num_retailer"
-                               type="text"
-                               required>
+                               type="text" placeholder="如1、2">
                             <span>
                                 (<span class="pieces-retailer">{{ $goods->pieces_retailer ? cons()->valueLang('goods.pieces',$goods->pieces_retailer) : head(cons()->valueLang('goods.pieces')) }}</span>)
                             </span>
@@ -82,16 +80,14 @@
 
                     <div class="form-group editor-item">
                         <label class="control-label">规格 :</label>
-                        <input name="specification_retailer" value="{{ $goods->specification_retailer }}" type="text"
-                               required>
+                        <input name="specification_retailer" value="{{ $goods->specification_retailer }}" type="text" placeholder="如250ml*24、250ml">
                     </div>
 
                     @if (auth()->user()->type == cons('user.type.supplier'))
                         <div class="form-group editor-item">
                             <p class="items-item">
                                 <label class="control-label">价格(批发) :</label>
-                                <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text"
-                                       required>
+                                <input name="price_wholesaler" value="{{ $goods->price_wholesaler }}" type="text" placeholder="请输入批发价格">
 
                                 <label class="control-label">单位(批发) :</label>
                                 <select name="pieces_wholesaler" class="pieces" data-change-class="pieces-wholesaler">
@@ -104,8 +100,7 @@
                         <div class="form-group editor-item">
                             <label class="control-label">最低购买数(批发) :</label>
                             <input class="narrow" value="{{ $goods->min_num_wholesaler }}" name="min_num_wholesaler"
-                                   type="text"
-                                   required>
+                                   type="text" placeholder="如1、2">
                             <span>
                                 (<span class="pieces-wholesaler">{{ $goods->pieces_wholesaler ? cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) : head(cons()->valueLang('goods.pieces')) }}</span>)
                             </span>
@@ -114,14 +109,13 @@
                         <div class="form-group editor-item">
                             <label class="control-label">规格(批发) :</label>
                             <input name="specification_wholesaler" value="{{ $goods->specification_wholesaler }}"
-                                   type="text"
-                                   required>
+                                   type="text" placeholder="如250ml*24、250ml">
                         </div>
                     @endif
                     <div class="form-group editor-item">
                         <p class="check-item">
-                            <label class="control-label"><input name="is_new" value="1"
-                                                                {{ $goods->is_new ? 'checked' : '' }}
+                            <label class="control-label">
+                                <input name="is_new" value="1" {{ $goods->is_new ? 'checked' : '' }}
                                                                 type="checkbox"> 新品</label>
                             <label class="control-label"><input name="is_out" value="1"
                                                                 {{ $goods->is_out ? 'checked' : '' }}
@@ -205,7 +199,7 @@
             </div>
             <div class="col-sm-12 text-center save padding-clear">
                 @if (!$goods->id)
-                    <label><input type="checkbox" name="status" value="1">立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
+                    <label><input type="checkbox" name="status" value="1"> 立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
                 @endif
                 <p class="save-btn">
                     <button class="btn btn-bg btn-primary" type="submit"> 保存</button>
