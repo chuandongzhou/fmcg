@@ -108,12 +108,12 @@ class MyGoodsController extends Controller
             return redirect(url('my-goods'));
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
-        $coordinate = $goods->deliveryArea->each(function ($area) {
+       /* $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
-        });
+        });*/
 
         return view('index.my-goods.detail',
-            ['goods' => $goods, 'attrs' => $attrs, 'coordinates' => $coordinate->toJson()]);
+            ['goods' => $goods, 'attrs' => $attrs/*, 'coordinates' => $coordinate->toJson()*/]);
     }
 
     /**

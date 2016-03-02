@@ -6,8 +6,7 @@ use App\Http\Controllers\Api\V1\Controller;
 use Gate;
 use App\Http\Requests;
 
-class
-ShopController extends Controller
+class ShopController extends Controller
 {
     /**
      * 保存店铺

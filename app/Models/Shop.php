@@ -277,7 +277,7 @@ class Shop extends Model
      */
     public function setLicenseAttribute($license)
     {
-        if ($license) {
+        if ($license && !$this->license) {
             return $this->associateFile($this->convertToFile($license), 'license', cons('shop.file_type.license'));
         }
     }
@@ -290,7 +290,7 @@ class Shop extends Model
      */
     public function setBusinessLicenseAttribute($license)
     {
-        if ($license) {
+        if ($license && !$this->businessLicense) {
             return $this->associateFile($this->convertToFile($license), 'businessLicense',
                 cons('shop.file_type.business_license'));
         }
@@ -304,7 +304,7 @@ class Shop extends Model
      */
     public function setAgencyContractAttribute($agencyContract)
     {
-        if ($agencyContract) {
+        if ($agencyContract && !$this->agencyContract) {
             return $this->associateFile($this->convertToFile($agencyContract), 'agencyContract',
                 cons('shop.file_type.agency_contract'));
         }
@@ -385,18 +385,29 @@ class Shop extends Model
             $this->deliveryArea->each(function ($address) {
                 $address->delete();
             });
+            $areas = [];
             foreach ($areaArr as $data) {
-                if (isset($data['coordinate'])) {
-                    $coordinate = $data['coordinate'];
-                    unset($data['coordinate']);
-                }
-                $areas = new DeliveryArea($data);
-                $areaModel = $this->deliveryArea()->save($areas);
-                if (isset($coordinate)) {
-                    $areaModel->coordinate()->create($coordinate);
-                }
+                /*  if (isset($data['coordinate'])) {
+                      $coordinate = $data['coordinate'];
+                      unset($data['coordinate']);
+                  }*/
+                unset($data['coordinate']);
+                $areas[] = new DeliveryArea($data);
+
+                /* if (isset($coordinate)) {
+                     $areaModel->coordinate()->create($coordinate);
+                 }*/
+            }
+
+            if ($this->exists) {
+                $this->deliveryArea()->saveMany($areas);
+            } else {
+                static::created(function ($model) use ($areas) {
+                    $model->deliveryArea()->saveMany($areas);
+                });
             }
         }
+        return true;
     }
 
     /**

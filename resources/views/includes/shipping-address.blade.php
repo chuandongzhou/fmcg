@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                                aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="cropperModalLabel">选择要添加的地址<span class="extra-text"></span></h4>
                 </div>
                 <div class="modal-body address-select">
@@ -30,7 +30,7 @@
                                        type="text">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group shop-address">
                             <label class="col-sm-2 control-label">所在地</label>
 
                             <div class="col-sm-3">
@@ -49,7 +49,9 @@
                                 </select>
                             </div>
                             <div class="col-sm-2">
-                                <select name="street_id"   class="address-street form-control address"></select>
+                                <select name="street_id" class="address-street form-control address">
+
+                                </select>
                             </div>
                         </div>
 
@@ -58,14 +60,25 @@
 
                             <div class="col-sm-10 col-md-6">
                                 <input type="hidden" name="area_name" value=""/>
-                                <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control"
-                                       value="">
+                                <input type="text" placeholder="请输入详细地址" name="address" id="address"
+                                       class="form-control" value="">
+                                <input type="hidden" name="x_lng" value=""/>
+                                <input type="hidden" name="y_lat" value=""/>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-sm-push-2 col-sm-10">
+                                <div  id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;height: 350px;width:100%;">
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div class="form-group row">
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>
-                                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -93,7 +106,8 @@
                         districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="area_name"]').val(provinceVal + cityVal + districtVal + streetVal);
-            })
+            });
+            getShopAddressMap({!! $shop->x_lng or 0  !!}, {!! $shop->y_lat or 0  !!});
         })
     </script>
 @stop

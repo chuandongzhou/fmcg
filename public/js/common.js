@@ -552,9 +552,8 @@ var addAddFunc = function () {
     container.on('click', '.close', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
-
             //changeAddButtonStatus();
-            dynamicShowMap();
+            //dynamicShowMap();
         });
     });
 
@@ -587,7 +586,7 @@ var addAddFunc = function () {
             streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
             areaName = provinceText + cityText + districtText + streetText;
-        $('.close').trigger('click');
+        $('.modal-header .close').trigger('click');
         container.prepend(
             '<div class="col-sm-12 fa-border show-map">' +
             areaName +
@@ -600,14 +599,14 @@ var addAddFunc = function () {
             '<span class="fa fa-times-circle pull-right close"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-            '<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
-            '<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
-            '<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
-            '<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
+                //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
+                //'<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
+                //'<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
+                //'<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
             '</div>'
         );
         //changeAddButtonStatus();
-        dynamicShowMap();
+        //dynamicShowMap();
     });
 };
 
@@ -928,19 +927,19 @@ function baiDuMap() {
 
                             var northEast = coordinate.getNorthEast();
                             var southWest = coordinate.getSouthWest();
-                            $('input[name="coordinate_blx"]').val(northEast.lng);
-                            $('input[name="coordinate_bly"]').val(northEast.lat);
-                            $('input[name="coordinate_slx"]').val(southWest.lng);
-                            $('input[name="coordinate_sly"]').val(southWest.lat);
+                            $('input[name="bl_lng"]').val(northEast.lng);
+                            $('input[name="bl_lat"]').val(northEast.lat);
+                            $('input[name="sl_lng"]').val(southWest.lng);
+                            $('input[name="sl_lat"]').val(southWest.lat);
                             polygon_modal.addEventListener('lineupdate', function () {
                                 coordinate = polygon_modal.getBounds();
                                 northEast = coordinate.getNorthEast();
                                 southWest = coordinate.getSouthWest();
 
-                                $('input[name="coordinate_blx"]').val(northEast.lng);
-                                $('input[name="coordinate_bly"]').val(northEast.lat);
-                                $('input[name="coordinate_slx"]').val(southWest.lng);
-                                $('input[name="coordinate_sly"]').val(southWest.lat);
+                                $('input[name="bl_lng"]').val(northEast.lng);
+                                $('input[name="bl_lat"]').val(northEast.lat);
+                                $('input[name="sl_lng"]').val(southWest.lng);
+                                $('input[name="sl_lat"]').val(southWest.lat);
                             });
                         }
                     }

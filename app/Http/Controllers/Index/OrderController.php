@@ -17,15 +17,6 @@ use Gate;
 
 class OrderController extends Controller
 {
-    public $user;
-
-
-    public function __construct()
-    {
-        $this->user = auth()->user();
-    }
-
-
     /**
      * 确认订单消息
      *
@@ -44,7 +35,7 @@ class OrderController extends Controller
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
         }
-        $confirmedGoods = $this->user->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
+        $confirmedGoods = auth()->user()->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
 
         $carts = $confirmedGoods->with('goods')->get();
 
@@ -69,10 +60,11 @@ class OrderController extends Controller
      */
     public function getConfirmOrder()
     {
-        $carts = $this->user->carts()->where('status', 1)->with('goods')->get();
+        $user = auth()->user();
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
-        $shippingAddress = $this->user->shippingAddress()->with('address')->get();
+        $shippingAddress = $user->shippingAddress()->with('address')->get();
 
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
@@ -86,7 +78,8 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-        $carts = $this->user->carts()->where('status', 1)->with('goods')->get();
+        $user = auth()->user();
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         if (empty($carts[0])) {
             return redirect('cart');
         }
@@ -126,7 +119,7 @@ class OrderController extends Controller
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
             $orderData = [
                 'pid' => $pid,
-                'user_id' => $this->user->id,
+                'user_id' => $user->id,
                 'shop_id' => $shop->id,
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
@@ -171,7 +164,7 @@ class OrderController extends Controller
 
 
         // 删除购物车
-        $this->user->carts()->where('status', 1)->delete();
+        $user->carts()->where('status', 1)->delete();
         // 增加商品销量
         GoodsService::addGoodsSalesVolume($orderGoodsNum);
 
@@ -212,7 +205,7 @@ class OrderController extends Controller
     {
         //订单对象类型
         $objType = cons()->valueLang('user.type');
-        array_forget($objType, $this->user->type);
+        array_forget($objType, auth()->user()->type);
         //支付类型
         $payType = cons()->valueLang('pay_type');
         //查询条件判断
@@ -259,7 +252,8 @@ class OrderController extends Controller
      */
     private function _inputName($objType)
     {
-        if ($this->user->type == cons('user.type.retailer') || ($this->user->type == cons('user.type.wholesaler')  && $objType == cons('user.type.supplier'))
+        $user = auth()->user();
+        if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && $objType == cons('user.type.supplier'))
         ) {
             return '卖家名称';
         }
@@ -303,6 +297,7 @@ class OrderController extends Controller
      */
     private function _searchAllOrderByOptions($search)
     {
+        $user = auth()->user();
         $query = Order::where(function ($query) use ($search) {
             //付款方式
             if (empty($search['pay_type'])) {
@@ -322,10 +317,10 @@ class OrderController extends Controller
             }
         });
 
-        if (!empty($search['obj_type']) && $search['obj_type'] < $this->user->type || $this->user->type == cons('user.type.supplier')) {
+        if (!empty($search['obj_type']) && $search['obj_type'] < $user->type || $user->type == cons('user.type.supplier')) {
             //查询买家
-            $query->wherehas('shop.user', function ($q) use ($search) {
-                $q->where('id', $this->user->id);
+            $query->wherehas('shop.user', function ($q) use ($search, $user) {
+                $q->where('id', $user->id);
             });
             if (!empty($search['obj_type'])) {
                 $query->wherehas('user', function ($q) use ($search) {
@@ -333,9 +328,9 @@ class OrderController extends Controller
 
                 });
             }
-        }elseif (!empty($search['obj_type']) && $search['obj_type'] > $this->user->type || $this->user->type == cons('user.type.retailer')  ) {
+        } elseif (!empty($search['obj_type']) && $search['obj_type'] > $user->type || $user->type == cons('user.type.retailer')) {
             //查询卖家
-            $query->where('user_id', $this->user->id);
+            $query->where('user_id', $user->id);
             if (!empty($search['obj_type'])) {
                 $query->wherehas('shop.user', function ($q) use ($search) {
                     $q->where('type', $search['obj_type']);
@@ -354,7 +349,7 @@ class OrderController extends Controller
         }
         //用户名
         if (!empty($search['user_name'])) {
-            if ($this->user->type == cons('user.type.retailer')) {
+            if ($user->type == cons('user.type.retailer')) {
                 //查询卖家
                 $query->wherehas('shop', function ($q) use ($search) {
                     $q->where('name', trim($search['user_name']));
@@ -436,7 +431,7 @@ class OrderController extends Controller
         $redis = Redis::connection();
 
         foreach (['user', 'seller', 'withdraw'] as $item) {
-            $key = 'push:' . $item . ':' . $this->user->id;
+            $key = 'push:' . $item . ':' . auth()->user()->id;
             if ($redis->exists($key)) {
                 $content = $redis->get($key);
                 $redis->del($key);

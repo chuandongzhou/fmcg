@@ -4710,7 +4710,7 @@ Address.prototype = {
     $('.address-province, .address-city, .address-district, .address-street').each(function () {
         var $this = $(this), group = $this.data('group') || 'default';
         addressGroup[group] = (addressGroup[group] || $()).add($this);
-    });
+});
 
     $.each(addressGroup, function (group, addresses) {
         var province = addresses.filter('.address-province'),

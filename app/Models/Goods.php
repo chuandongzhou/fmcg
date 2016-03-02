@@ -263,6 +263,16 @@ class Goods extends Model
         return $query->where('status', $status);
     }
 
+    /**
+     * 未上线商品
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfNotOn($query)
+    {
+        return $this->scopeOfStatus($query, 0);
+    }
 
     /**
      * 模型启动事件

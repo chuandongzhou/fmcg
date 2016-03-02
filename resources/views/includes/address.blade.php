@@ -26,13 +26,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="cropperModalLabel">选择要添加的地址<span class="extra-text"></span></h4>
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="cropperModalLabel">选择要添加的配送区域<span class="extra-text"></span></h4>
                 </div>
                 <div class="modal-body address-select">
-                    <div>
-
-                        <label class="control-label">&nbsp;&nbsp;&nbsp;配送区域 : </label>
+                    <div class="address-group">
+                        <label class="control-label">配送区域 : </label>
                         <select class="address-province inline-control add-province">
                             <option selected="selected" value="">请选择省市/其他...</option>
                         </select>
@@ -45,32 +44,37 @@
                             <option selected="selected" value="">请选择区/县...</option>
                         </select>
 
-                        <select class="address-street inline-control add-street">
+                        <select class="address-street inline-control add-street useless-control">
                             <option selected="selected" value="">请选择街道...</option>
                         </select>
-                        <button type="button" class="btn btn-primary btn-sm btn-add  pull-right" data-text="添加">添加</button>
+{{--
+
+                        <button type="button" class="btn btn-primary btn-sm btn-more  pull-right" data-text="添加">添加
+                        </button>
+--}}
 
                         <div class="address-detail">
-                            <label class="control-label">&nbsp;&nbsp;&nbsp;详细区域 : </label>
-                            <input type="text" placeholder="请输入详细区域" class="form-control detail-address">
+                            <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注 : </label>
+                            <input type="text" placeholder="请输入备注" class="inline-control detail-address" style=" width: 500px">
                         </div>
-
                     </div>
+
                     {{--区域经纬度--}}
-                    <input type="hidden" name="coordinate_blx" value=""/>
-                    <input type="hidden" name="coordinate_bly" value=""/>
-                    <input type="hidden" name="coordinate_slx" value=""/>
-                    <input type="hidden" name="coordinate_sly" value=""/>
-                    {{--<div class="modal-footer">--}}
-                        {{--<button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>--}}
-                        {{--<button type="button" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>--}}
-                    {{--</div>--}}
-                    <div class="modal-footer">
-                        <button class="btn btn-primary btn-sm " onclick="polygon_modal.enableEditing();">开启编辑功能</button>
-                        <button class="btn btn-primary btn-sm " onclick="polygon_modal.disableEditing();">关闭编辑功能</button>
-                    </div>
-                    <div id="map-modal"></div>
+                    {{--<input type="hidden" name="coordinate_blx" value=""/>--}}
+                    {{--<input type="hidden" name="coordinate_bly" value=""/>--}}
+                    {{--<input type="hidden" name="coordinate_slx" value=""/>--}}
+                    {{--<input type="hidden" name="coordinate_sly" value=""/>--}}
 
+                    {{--<div class="modal-footer">--}}
+                    {{--<button class="btn btn-primary btn-sm " onclick="polygon_modal.enableEditing();">开启编辑功能</button>--}}
+                    {{--<button class="btn btn-primary btn-sm " onclick="polygon_modal.disableEditing();">关闭编辑功能</button>--}}
+                    {{--</div>--}}
+                    {{--<div id="map-modal"></div>--}}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm btn-add  pull-right" data-text="保存">保存
+                    </button>
                 </div>
             </div>
         </div>
@@ -86,7 +90,7 @@
     <script>
         $(function () {
             addAddFunc();
-            baiDuMap();
+//            baiDuMap();
         });
     </script>
 @stop

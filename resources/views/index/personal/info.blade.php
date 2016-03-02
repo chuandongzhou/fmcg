@@ -58,20 +58,22 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="item">
-                        <h5 class="title-name">商品配送区域大概地图标识</h5>
+                    {{--<div class="item">--}}
+                        {{--<h5 class="title-name">商品配送区域大概地图标识</h5>--}}
 
-                        <div id="map"></div>
-                    </div>
+                        {{--<div id="map"></div>--}}
+                    {{--</div>--}}
                 </div>
             </div>
         @endif
     </div>
 @stop
+{{--
 @section('js')
     @parent
     <script type="text/javascript">
         getCoordinateMap({!! $coordinates !!});
     </script>
 @stop
+--}}
 

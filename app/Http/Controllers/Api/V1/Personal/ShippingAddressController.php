@@ -29,7 +29,8 @@ class ShippingAddressController extends Controller
         return $this->success(['shippingAddress' => $shippingAddress]);
     }
 
-    public function show($address){
+    public function show($address)
+    {
         $address->load('address');
         return $this->success(['shippingAddress' => $address]);
     }
@@ -66,10 +67,12 @@ class ShippingAddressController extends Controller
      */
     public function store(Requests\Api\v1\CreateShippingAddressRequest $request)
     {
-        $attributes = $request->all();
-        $shippingAddress = auth()->user()->shippingAddress()->create($attributes);
+        $address = $request->except(['province_id', 'city_id', 'province_id', 'street_id', 'area_name', 'address']);
+        $shippingAddress = auth()->user()->shippingAddress()->create($address);
         if ($shippingAddress->exists) {
-            if ($shippingAddress->address()->create($attributes)->exists) {
+            $shipping =  $request->only(['province_id', 'city_id', 'province_id', 'street_id', 'area_name', 'address']);
+            $addressModel = $shippingAddress->address()->create($shipping);
+            if ($addressModel->exists) {
                 return $this->success('添加成功');
             }
             $shippingAddress->delete();
@@ -87,21 +90,14 @@ class ShippingAddressController extends Controller
      */
     public function update(Requests\Api\v1\CreateShippingAddressRequest $request, $address)
     {
-        $attributes = $request->all();
+        $shippingAddress = $request->except(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
         if (Gate::denies('validate-user', $address)) {
             return $this->error('保存收货地址时出现问题');
         }
 
-        if ($address->fill($request->all())->save()) {
-            $address->address->fill(
-                [
-                    'province_id' => $attributes['province_id'],
-                    'city_id' => $attributes['city_id'],
-                    'district_id' => $attributes['district_id'],
-                    'street_id' => $attributes['street_id'],
-                    'area_name' => $attributes['area_name'],
-                    'address' => $attributes['address']
-                ])->save();
+        if ($address->fill($shippingAddress)->save()) {
+            $shipping =  $request->only(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
+            $address->address->fill($shipping)->save();
             return $this->success('保存收货地址成功');
         }
         return $this->error('保存收货地址时出现问题');

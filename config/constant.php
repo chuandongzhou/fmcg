@@ -151,7 +151,8 @@ return [
         'sort' => [
             'name',
             'price',
-            'new'
+            'new',
+            'not_on'
         ],
         'pieces' => [
             'box' => 0,

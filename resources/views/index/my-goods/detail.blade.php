@@ -102,14 +102,14 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="item">
-                    <h5 class="prompt">商品配送区域大概地图标识 :</h5>
+                {{--<div class="item">--}}
+                    {{--<h5 class="prompt">商品配送区域大概地图标识 :</h5>--}}
 
                     {{--<p class="address-map">--}}
                     {{--<img src="http://placehold.it/300x250/CDF" alt="" title=""/>--}}
                     {{--</p>--}}
-                    <div id="map"></div>
-                </div>
+                    {{--<div id="map"></div>--}}
+                {{--</div>--}}
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}
@@ -124,10 +124,10 @@
         $(function () {
             tabBox();
         });
-        $(document).ready(function () {
-            @if(isset($coordinates))
-               getCoordinateMap({!! $coordinates !!});
-            @endif
-        });
+        {{--$(document).ready(function () {--}}
+            {{--@if(isset($coordinates))--}}
+               {{--getCoordinateMap({!! $coordinates !!});--}}
+            {{--@endif--}}
+        {{--});--}}
     </script>
 @stop

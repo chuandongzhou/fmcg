@@ -16,10 +16,10 @@ class ShopController extends Controller
     public function index()
     {
         $shop = auth()->user()->shop()->with(['images', 'deliveryArea.coordinate', 'shopAddress'])->first();
-        $coordinate = $shop->deliveryArea->each(function ($area) {
+       /* $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
-        });
-        return view('index.personal.shop', ['shop' => $shop, 'coordinates' => $coordinate->toJson()]);
+        });*/
+        return view('index.personal.shop', ['shop' => $shop/*, 'coordinates' => $coordinate->toJson()*/]);
     }
 
 

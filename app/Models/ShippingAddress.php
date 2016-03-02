@@ -12,7 +12,9 @@ class ShippingAddress extends Model
         'consigner',
         'phone',
         'is_default',
-        'user_id'
+        'user_id',
+        'x_lng',
+        'y_lat'
     ];
     protected $hidden = [
         'created_at',

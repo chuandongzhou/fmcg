@@ -21,6 +21,14 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label" for="license_num">
+                                <span class="prompt">营业执照注册号:</span></label>
+
+                            <div class="col-sm-8">
+                                <input class="form-control" name="license_num" placeholder="请输入营业执照注册号" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label" for="backup_mobile">
                                 <span class="prompt">密保手机:</span></label>
 
@@ -30,7 +38,7 @@
                             <div class="col-sm-3">
                                 <button type="submit" class="btn btn-success ajax form-control send-sms"
                                         data-url="{{ url('api/v1/auth/send-sms') }}" data-method="post"
-                                        data-done-then="none" data-prevent-default="true">发送短信
+                                        data-done-then="none" data-prevent-default="false">发送短信
                                 </button>
                             </div>
                         </div>
@@ -42,14 +50,7 @@
                                 <input class="form-control" name="code" placeholder="请输入短信验证码" type="text">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="license_num">
-                                <span class="prompt">营业执照注册号:</span></label>
 
-                            <div class="col-sm-8">
-                                <input class="form-control" name="license_num" placeholder="请输入营业执照注册号" type="text">
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="password">
                                 <span class="prompt">新密码:</span></label>
@@ -99,20 +100,20 @@
                 passwordConfirm.val('');
             });
             $('.send-sms').on('always.hct.ajax', function (data, textStatus) {
-                if (textStatus.status < 200 && textStatus.status >= 300) {
-                    return false;
+                if (textStatus.status >= 200 && textStatus.status < 300) {
+                    var $this = $(this);
+                    // 成功进行倒计时
+                    timeIntervalFunc({
+                        tick: function (i) {
+                            $this.html(i + ' 秒后重试');
+                        },
+                        done: function () {
+                            $this.button('reset');
+                        },
+                        count: 120
+                    });
                 }
-                var $this = $(this);
-                // 成功进行倒计时
-                timeIntervalFunc({
-                    tick: function (i) {
-                        $this.html(i + ' 秒后重试');
-                    },
-                    done: function () {
-                        $this.button('reset');
-                    },
-                    count: 120
-                });
+                return true;
 
             })
         });

@@ -158,6 +158,8 @@
                        class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
                     <a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                        class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
+                    <a href="{{ url('my-goods?sort=not_on'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                       class="control {{ isset($get['sort']) && $get['sort']=='not_on' ? 'active' : '' }}">未上架</a>
                 </p>
             </div>
         </div>

@@ -80,7 +80,7 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $goods->load(['images', 'deliveryArea.coordinate']);
+        $goods->load(['images', 'deliveryArea']);
 
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->shop_name = $goods->shop()->pluck('name');
@@ -289,17 +289,20 @@ class MyGoodsController extends Controller
             $address->delete();
         });
         if (!empty($areaArr)) {
+            $areas = [];
             foreach ($areaArr as $data) {
-                if (isset($data['coordinate'])) {
-                    $coordinate = $data['coordinate'];
-                    unset($data['coordinate']);
-                }
-                $areas = new DeliveryArea($data);
-                $areaModel = $model->deliveryArea()->save($areas);
-                if (isset($coordinate)) {
-                    $areaModel->coordinate()->save(new Coordinate($coordinate));
-                }
+                /* if (isset($data['coordinate'])) {
+                     $coordinate = $data['coordinate'];
+                     unset($data['coordinate']);
+                 }*/
+                unset($data['coordinate']);
+                $areas[] = new DeliveryArea($data);
+
+                /* if (isset($coordinate)) {
+                     $areaModel->coordinate()->save(new Coordinate($coordinate));
+                 }*/
             }
+            $model->deliveryArea()->saveMany($areas);
         }
         return true;
     }

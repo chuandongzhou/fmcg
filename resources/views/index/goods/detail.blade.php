@@ -95,11 +95,11 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="item">
+            {{--    <div class="item">
                     <h5 class="prompt">商品配送区域大概地图标识 :</h5>
 
                     <div id="map"></div>
-                </div>
+                </div>--}}
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}
@@ -166,7 +166,7 @@
             numChange({{ $goods->min_num }});
             tabBox();
             likeFunc();
-            getCoordinateMap({!! $coordinates !!});
+            //getCoordinateMap({{--{!! $coordinates !!}--}});
         });
     </script>
 @stop

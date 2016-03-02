@@ -24,7 +24,7 @@
                        type="text">
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group shop-address">
             <label class="col-sm-2 control-label">所在地</label>
 
             <div class="col-sm-3">
@@ -58,7 +58,16 @@
                 <input type="hidden" name="area_name" value="{{ $shippingAddress['address']['area_name'] }}"/>
                 <input type="text" placeholder="请输入详细地址" name="address" id="address" class="form-control"
                        value="{{ $shippingAddress['address']['address'] }}">
+                <input type="hidden" name="x_lng" value="{{ $shippingAddress->x_lng }}"/>
+                <input type="hidden" name="y_lat" value="{{ $shippingAddress->y_lat }}"/>
             </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-push-2 col-sm-10">
+                <div  id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;height: 350px;width:100%;">
+                </div>
+            </div>
+
         </div>
         <div class="form-group row">
             <div class="col-sm-push-2 col-sm-10">
@@ -70,6 +79,7 @@
     @parent
 @stop
 @section('js-lib')
+    @parent
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop
 @section('js')
@@ -87,6 +97,7 @@
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="area_name"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
+            getShopAddressMap({!! $shippingAddress->x_lng or 0  !!}, {!! $shippingAddress->y_lat or 0  !!});
         })
     </script>
 @stop

@@ -27,7 +27,7 @@ class GoodsService
     {
         //排序
         if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
-            $goods->{'Of' . ucfirst($data['sort'])}();
+            $goods->{'Of' . ucfirst(camel_case($data['sort']))}();
         }
         // 省市县
 

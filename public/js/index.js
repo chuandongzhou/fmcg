@@ -684,6 +684,7 @@ function goodsBatchUpload() {
         done: function (e, data) {
             $(this).parent().after('<span class="fileinput-error"> 上传成功</span>');
             alert('上传成功');
+            location.reload();
         }, always: function (e, data) {
             // 隐藏进度条并开放按钮
             $(this).parent().removeClass('disabled').siblings('.progress').hide()

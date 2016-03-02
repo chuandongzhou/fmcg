@@ -68,15 +68,16 @@
         <label class="col-sm-2 control-label" for="username">营业执照:</label>
 
         <div class="col-sm-10 col-md-6">
-            <div class="progress collapse">
-                <div class="progress-bar progress-bar-striped active"></div>
-            </div>
-                            <span data-name="license" class="btn btn-primary btn-sm fileinput-button">
+            @if(!$shop->license)
+                <div class="progress collapse">
+                    <div class="progress-bar progress-bar-striped active"></div>
+                </div>
+                <span data-name="license" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
-
+            @endif
             <div class="image-preview w160">
                 <img src="{{ $shop->license_url }}" class="img-thumbnail">
             </div>
@@ -87,15 +88,16 @@
         <label class="col-sm-2 control-label" for="username">经营许可证:</label>
 
         <div class="col-sm-10 col-md-6">
-            <div class="progress collapse">
-                <div class="progress-bar progress-bar-striped active"></div>
-            </div>
-                            <span data-name="business_license" class="btn btn-primary btn-sm fileinput-button">
+            @if(!$shop->businessLicense)
+                <div class="progress collapse">
+                    <div class="progress-bar progress-bar-striped active"></div>
+                </div>
+                <span data-name="business_license" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
-
+            @endif
             <div class="image-preview w160">
                 <img src="{{ $shop->business_license_url }}"
                      class="img-thumbnail">
@@ -107,15 +109,16 @@
             <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
 
             <div class="col-sm-10 col-md-6">
-                <div class="progress collapse">
-                    <div class="progress-bar progress-bar-striped active"></div>
-                </div>
-                            <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
+                @if(!$shop->agencyContract)
+                    <div class="progress collapse">
+                        <div class="progress-bar progress-bar-striped active"></div>
+                    </div>
+                    <span data-name="agency_contract" class="btn btn-primary btn-sm fileinput-button">
                                 请选择图片文件
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>
-
+                @endif
                 <div class="image-preview w160">
                     <img src="{{ $shop->agency_contract_url }}"
                          class="img-thumbnail">
@@ -210,7 +213,7 @@
             <div class="col-sm-10 col-md-8 padding-clear">
                 <div class="col-sm-12">
                     <a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"
-                       data-toggle="modal" data-loading-text="地址达到最大数量">添加地址</a>
+                       data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
                 </div>
                 <div class="address-list col-lg-12">
                     <div class="hidden">
@@ -222,10 +225,10 @@
                         <input type="hidden" name="area[area_name][]" value=""/>
                         <input type="hidden" name="area[address][]" value=""/>
                         {{--区域经纬度--}}
-                        <input type="hidden" name="area[blx][]" value=""/>
-                        <input type="hidden" name="area[bly][]" value=""/>
-                        <input type="hidden" name="area[slx][]" value=""/>
-                        <input type="hidden" name="area[sly][]" value=""/>
+                        {{--<input type="hidden" name="area[blx][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[bly][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[slx][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[sly][]" value=""/>--}}
                     </div>
                     @foreach ($shop->deliveryArea as $area)
                         <div class="col-sm-12 fa-border show-map">{{ $area->address_name }}
@@ -238,26 +241,26 @@
                             <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                             <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
                             {{--区域经纬度--}}
-                            <input type="hidden" name="area[blx][]"
-                                   value="{{ $area->coordinate->bl_lng or '' }}"/>
-                            <input type="hidden" name="area[bly][]"
-                                   value="{{ $area->coordinate->bl_lat or '' }}"/>
-                            <input type="hidden" name="area[slx][]"
-                                   value="{{ $area->coordinate->sl_lng or '' }}"/>
-                            <input type="hidden" name="area[sly][]"
-                                   value="{{ $area->coordinate->sl_lat or '' }}"/>
+                            {{--<input type="hidden" name="area[blx][]"--}}
+                            {{--value="{{ $area->coordinate->bl_lng or '' }}"/>--}}
+                            {{--<input type="hidden" name="area[bly][]"--}}
+                            {{--value="{{ $area->coordinate->bl_lat or '' }}"/>--}}
+                            {{--<input type="hidden" name="area[slx][]"--}}
+                            {{--value="{{ $area->coordinate->sl_lng or '' }}"/>--}}
+                            {{--<input type="hidden" name="area[sly][]"--}}
+                            {{--value="{{ $area->coordinate->sl_lat or '' }}"/>--}}
                         </div>
                     @endforeach
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">地图标识 :</label>
+        {{--<div class="form-group">--}}
+        {{--<label class="col-sm-2 control-label">地图标识 :</label>--}}
 
-            <div class="col-sm-10">
-                <div id="map"></div>
-            </div>
-        </div>
+        {{--<div class="col-sm-10">--}}
+        {{--<div id="map"></div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
     @endif
     <div class="col-sm-12 text-center save">
         <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
@@ -271,10 +274,10 @@
     @parent
     <script type="text/javascript">
         $(document).ready(function () {
-            @if($shop->user->type != cons('user.type.retailer'))
-                getCoordinateMap({!! $coordinates or '' !!});
-            @endif
-            getShopAddressMap({!! $shop->x_lng?:0  !!}, {!! $shop->y_lat?:0  !!});
+            {{--@if($shop->user->type != cons('user.type.retailer'))--}}
+            {{--getCoordinateMap({!! $coordinates or '' !!});--}}
+            {{--@endif--}}
+            getShopAddressMap('{!! $shop->x_lng?:0  !!}', '{!! $shop->y_lat?:0  !!}');
 
         });
         $(function () {

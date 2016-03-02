@@ -25,16 +25,16 @@ class GoodsController extends Controller
             return redirect(url('search'));
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
-        $goods->load('images', 'images')->load('deliveryArea', 'deliveryArea');
+        $goods->load('images', 'images')->load('deliveryArea');
         $isLike =auth()->user()->likeGoods()->where('id',$goods->id)->pluck('id');
-        $coordinate = $goods->deliveryArea->each(function ($area) {
+      /*  $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
-        });
+        });*/
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,
             'isLike' => $isLike,
-            'coordinates' => $coordinate->toJson()
+         /*   'coordinates' => $coordinate->toJson()*/
         ]);
     }
 }
