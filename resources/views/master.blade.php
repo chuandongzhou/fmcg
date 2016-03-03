@@ -12,8 +12,8 @@
         @yield('meta')
         <title>@yield('title')</title>
 
-        <link href="/favicon.ico" rel="shortcut icon">
-        <link href="/favicon.ico" type="image/x-icon" rel="bookmark">
+        <link href="{{ asset('favicon.ico') }}" rel="shortcut icon">
+        <link href="{{ asset('favicon.ico') }}" type="image/x-icon" rel="bookmark">
         <link href="{{ asset('css/style.css?v=1.0.0') }}" rel="stylesheet">
         <script src="{{ asset('js/js.cookie.js') }}"></script>
         @yield('css')

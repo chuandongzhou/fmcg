@@ -14,6 +14,7 @@ use App\Models\OrderGoods;
 use App\Services\CartService;
 use App\Services\GoodsService;
 use App\Services\RedisService;
+use App\Services\ShippingAddressService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -514,9 +515,15 @@ class OrderController extends Controller
                 'price' => $shop->sum_price,
                 'pay_type' => $payType,
                 'cod_pay_type' => $codPayType,
-                'shipping_address_id' => $shippingAddressId,
+                'shipping_address_id' => (new ShippingAddressService)->copyToSnapshot($shippingAddressId),
                 'remark' => $remark
             ];
+            if (!$orderData['shipping_address_id']) {
+                foreach ($successOrders as $successOrder) {
+                    $successOrder->delete();
+                }
+                return $this->error('提交订单时遇到问题');
+            }
             $order = Order::create($orderData);
             if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
                 $successOrders[] = $order;

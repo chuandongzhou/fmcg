@@ -16,7 +16,7 @@ class OrderSellController extends OrderController
      */
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
         $this->middleware('retailer');
     }
 
@@ -40,7 +40,7 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image');
+        $query = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -68,7 +68,7 @@ class OrderSellController extends OrderController
      */
     public function getWaitSend()
     {
-        $orders = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image')->NonSend();
+        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image')->NonSend();
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view('index.order.order-sell', [
             'orders' => $orders->paginate(),
@@ -82,7 +82,7 @@ class OrderSellController extends OrderController
      */
     public function getWaitReceive()
     {
-        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->getPayment();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->getPayment();
         return view('index.order.order-sell', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, $orders->count())
@@ -94,7 +94,7 @@ class OrderSellController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->WaitConfirm();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm();
         return view('index.order.order-sell', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, -1, $orders->count())
@@ -110,7 +110,7 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::bySellerId($this->user->id)->with('user.shop', 'shop.user', 'goods.images.image',
+        $order = Order::bySellerId(auth()->id())->with('user.shop', 'shop.user', 'goods.images.image',
             'shippingAddress.address', 'systemTradeInfo')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');
@@ -140,7 +140,7 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
         $res = Order::with('shippingAddress', 'shippingAddress.address',
-            'goods.images')->bySellerId($this->user->id)->where('status', cons('order.status.send'))->whereIn('id',
+            'goods.images')->bySellerId(auth()->id())->where('status', cons('order.status.send'))->whereIn('id',
             $orderIds)->get();
         if ($res->isEmpty()) {
             return $this->error('没有该订单信息');
@@ -234,12 +234,13 @@ class OrderSellController extends OrderController
      */
     private function _getOrderNum($nonSend = -1, $waitReceive = -1, $waitConfirm = -1)
     {
+        $userId = auth()->id();
         $data = [
-            'nonSend' => $nonSend >= 0 ? $nonSend : Order::bySellerId($this->user->id)->nonSend()->count(),
+            'nonSend' => $nonSend >= 0 ? $nonSend : Order::bySellerId($userId)->nonSend()->count(),
             //待发货
-            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::bySellerId($this->user->id)->getPayment()->count(),
+            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::bySellerId($userId)->getPayment()->count(),
             //待收款（针对货到付款）
-            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($this->user->id)->WaitConfirm()->count(),
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($userId)->WaitConfirm()->count(),
             //待确认
         ];
 

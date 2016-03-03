@@ -575,11 +575,11 @@ var addAddFunc = function () {
         /* if (street.is(':visible') && !street.val()) {
          changeBtnAddhtml('请选择街道...');
          return false;
-         }*/
+         }
         if (!address.val()) {
             changeBtnAddhtml('请输入详细地址');
             return false;
-        }
+        }*/
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',

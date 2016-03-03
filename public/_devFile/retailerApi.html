@@ -759,9 +759,11 @@ path                string      路径
 price_retailer      decimal     价格 （对于终端商）
 min_num_retailer    int         最低购买量 （对于终端商）
 pieces_retailer     int         单位编号 （对于终端商）
+specification_retailer  int     规格  （对于终端商）
 price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
 min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
 pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
+specification_wholesaler    int 规格  （对于批发商）
 bar_code            string      商品条形码
 is_new              int         是否新品（1是   0不是）
 is_out              int         是否缺货 （1是   0不是）
@@ -1612,6 +1614,8 @@ consigner          string      收货人
 phone              string      手机号码
 is_default         int         是否默认
 user_id            int         用户id
+x_lng               float       经度
+y_lat               float       纬度
 address            array       地址详情
 
 address    子字段说明
@@ -1633,6 +1637,8 @@ province_id         int         省id
 city_id             int         市id
 district_id         int         县id
 street_id           int         街道id
+x_lng               float       经度
+y_lat               float       纬度
 area_name           string      省名+市名+县名+街道名
 address             string      详细地址
 </code></pre>
@@ -1643,6 +1649,8 @@ address             string      详细地址
 <p><code>请求参数：</code></p>
 <pre><code>consigner           string      收货人
 phone               string      联系电话
+x_lng               float       经度
+y_lat               float       纬度
 province_id         int         省id
 city_id             int         市id
 district_id         int         县id

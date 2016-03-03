@@ -53,8 +53,6 @@
                         <div class="form-group row">
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>
-                                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭
-                                </button>
                             </div>
                         </div>
                     </form>

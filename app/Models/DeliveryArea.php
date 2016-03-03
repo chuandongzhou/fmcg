@@ -34,7 +34,6 @@ class DeliveryArea extends Model
         // 注册删除事件
         static::deleting(function ($model) {
             $model->coordinate()->delete();
-
         });
     }
 

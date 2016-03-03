@@ -277,7 +277,7 @@
             {{--@if($shop->user->type != cons('user.type.retailer'))--}}
             {{--getCoordinateMap({!! $coordinates or '' !!});--}}
             {{--@endif--}}
-            getShopAddressMap('{!! $shop->x_lng?:0  !!}', '{!! $shop->y_lat?:0  !!}');
+            getShopAddressMap({!! $shop->x_lng?:0  !!}, {!! $shop->y_lat?:0  !!});
 
         });
         $(function () {

@@ -68,7 +68,8 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-push-2 col-sm-10">
-                                <div  id="address-map" style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;height: 350px;width:100%;">
+                                <div id="address-map"
+                                     style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;height: 350px;width:100%;">
                                 </div>
                             </div>
 
@@ -77,8 +78,6 @@
                         <div class="form-group row">
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>
-                                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭
-                                </button>
                             </div>
                         </div>
                     </form>
@@ -107,7 +106,9 @@
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="area_name"]').val(provinceVal + cityVal + districtVal + streetVal);
             });
-            getShopAddressMap({!! $shop->x_lng or 0  !!}, {!! $shop->y_lat or 0  !!});
+            $('#shippingAddressModal').on('shown.bs.modal', function (e) {
+                getShopAddressMap(0, 0);
+            });
         })
     </script>
 @stop

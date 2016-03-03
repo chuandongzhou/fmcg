@@ -1,5 +1,6 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单详情')
+@include('includes.shipping-address-map')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -147,8 +148,10 @@
                         </li>
                         <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
                         <li>
-                            <span class="title-info-name">联系地址: </span>
-                            {{ $order['shipping_address']['address']['area_name'] . $order['shippingAddress']['address']['address'] }}
+                            <span class="title-info-name">联系地址 : </span>
+                            {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
+                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal" ><i class="fa fa-map-marker"></i> 查看地图</a>
+
                         </li>
                     </ul>
                 </div>

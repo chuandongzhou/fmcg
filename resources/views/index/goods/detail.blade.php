@@ -8,7 +8,8 @@
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($goods->images_url as $key =>$image)
-                            <li data-target="#myCarousel" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}">
+                            <li data-target="#myCarousel" data-slide-to="{{ $key }}"
+                                class="{{ $key == 0 ? 'active' : '' }}">
 
                             </li>
                         @endforeach
@@ -38,7 +39,14 @@
                         <li><span class="prompt">累计销售量 :</span> <b>{{ $goods->sales_volume }}</b></li>
                     </ul>
                     <ul class="pull-left right-panel">
-                        <li><span class="prompt">商家 :</span> <b>{{ $goods->shop->name }}</b></li>
+                        <li>
+                            <span class="prompt">商家 :</span>
+                            <b>
+                                <a href="{{ url('shop/' . $goods->shop->id) }}" target="_blank">
+                                    {{ $goods->shop->name }}
+                                </a>
+                            </b>
+                        </li>
                         <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
                         @if($goods->is_promotion)
                             <li class="clearfix"><span class="prompt pull-left">促销信息 : </span>
@@ -95,11 +103,11 @@
                         @endforeach
                     </ul>
                 </div>
-            {{--    <div class="item">
-                    <h5 class="prompt">商品配送区域大概地图标识 :</h5>
+                {{--<div class="item">--}}
+                {{--<h5 class="prompt">商品配送区域大概地图标识 :</h5>--}}
 
-                    <div id="map"></div>
-                </div>--}}
+                {{--<div id="map"></div>--}}
+                {{--</div>--}}
             </div>
             <div class="col-sm-12 box graphic-details">
                 {!! $goods->introduce !!}
@@ -166,7 +174,7 @@
             numChange({{ $goods->min_num }});
             tabBox();
             likeFunc();
-            //getCoordinateMap({{--{!! $coordinates !!}--}});
+            {{--getCoordinateMap(--}}{{--{!! $coordinates !!}--}}{{--);--}}
         });
     </script>
 @stop

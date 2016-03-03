@@ -15,7 +15,7 @@ class OrderBuyController extends OrderController
      */
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
         //供应商无购买商品功能
         $this->middleware('supplier');
     }
@@ -41,7 +41,7 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::ofBuy($this->user->id)->orderBy('id', 'desc');
+        $query = Order::ofBuy(auth()->id())->orderBy('id', 'desc');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -63,7 +63,7 @@ class OrderBuyController extends OrderController
      */
     public function getWaitPay()
     {
-        $orders = Order::ofBuy($this->user->id)->nonPayment();
+        $orders = Order::ofBuy(auth()->id())->nonPayment();
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum($orders->count()),
@@ -75,7 +75,7 @@ class OrderBuyController extends OrderController
      */
     public function getWaitReceive()
     {
-        $orders = Order::ofBuy($this->user->id)->nonArrived();
+        $orders = Order::ofBuy(auth()->id())->nonArrived();
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, $orders->count())
@@ -87,7 +87,7 @@ class OrderBuyController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofBuy($this->user->id)->WaitConfirm();
+        $orders = Order::ofBuy(auth()->id())->WaitConfirm();
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, -1, $orders->count())
@@ -102,7 +102,7 @@ class OrderBuyController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::where('user_id', $this->user->id)->with('user', 'shippingAddress', 'shop', 'goods',
+        $order = Order::where('user_id', auth()->id())->with('user', 'shippingAddress', 'shop', 'goods',
             'goods.images', 'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
         if (!$order) {
             return $this->error('订单不存在');
@@ -124,12 +124,13 @@ class OrderBuyController extends OrderController
      */
     private function _getOrderNum($nonSend = -1, $waitReceive = -1, $waitConfirm = -1)
     {
+        $userId = auth()->id();
         $data = [
-            'waitPay' => $nonSend >= 0 ? $nonSend : Order::ofBuy($this->user->id)->nonPayment()->count(),
+            'waitPay' => $nonSend >= 0 ? $nonSend : Order::ofBuy($userId)->nonPayment()->count(),
             //待发货
-            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::ofBuy($this->user->id)->nonArrived()->count(),
+            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::ofBuy($userId)->nonArrived()->count(),
             //待收款（针对货到付款）
-            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::ofBuy($this->user->id)->waitConfirm()->count(),
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::ofBuy($userId)->waitConfirm()->count(),
             //待确认
         ];
 

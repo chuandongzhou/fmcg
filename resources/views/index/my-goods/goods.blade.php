@@ -1,6 +1,5 @@
 @extends('index.menu-master')
 @include('includes.address')
-@include('includes.cropper')
 @include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
@@ -191,11 +190,11 @@
                         </div>
                     @endforeach
                 </div>
-               {{-- <div class="col-sm-12 map">
-                    <p><label>地图标识 :</label></p>
+                {{--<div class="col-sm-12 map">--}}
+                    {{--<p><label>地图标识 :</label></p>--}}
 
-                    <div id="map"></div>
-                </div>--}}
+                    {{--<div id="map"></div>--}}
+                {{--</div>--}}
             </div>
             <div class="col-sm-12 text-center save padding-clear">
                 @if (!$goods->id)
@@ -211,9 +210,9 @@
 @section('js')
     @parent
     <script type="text/javascript">
-      /*  $(document).ready(function () {
+        {{--$(document).ready(function () {--}}
             {{--getCoordinateMap({!! $coordinates or '' !!});--}}
-        });*/
+        {{--});--}}
         //上传图片处理
         picFunc();
         //获取下级分类

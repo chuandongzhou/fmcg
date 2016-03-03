@@ -16,7 +16,7 @@ class UpdateGoodsRequest extends Request
             'name' => 'required',
             'price_retailer' => 'required|numeric|min:0',
             'price_wholesaler' => 'sometimes|required|numeric|min:0',
-            'bar_code' => 'required|digits_between:13,18',
+            'bar_code' => 'required|digits_between:7,18',
             'cate_level_1' => 'required|numeric|min:0',
             'cate_level_2' => 'required|numeric|min:1',
            /* 'is_new' => 'required|boolean',

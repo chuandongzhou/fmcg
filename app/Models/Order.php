@@ -88,7 +88,7 @@ class Order extends Model
      */
     public function shippingAddress()
     {
-        return $this->belongsTo('App\Models\ShippingAddress')->withTrashed();
+        return $this->belongsTo('App\Models\ShippingAddressSnapshot');
     }
 
     /**

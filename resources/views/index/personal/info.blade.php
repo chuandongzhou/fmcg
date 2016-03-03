@@ -68,12 +68,10 @@
         @endif
     </div>
 @stop
-{{--
-@section('js')
-    @parent
-    <script type="text/javascript">
-        getCoordinateMap({!! $coordinates !!});
-    </script>
-@stop
---}}
+{{--@section('js')--}}
+    {{--@parent--}}
+    {{--<script type="text/javascript">--}}
+        {{--getCoordinateMap({!! $coordinates !!});--}}
+    {{--</script>--}}
+{{--@stop--}}
 

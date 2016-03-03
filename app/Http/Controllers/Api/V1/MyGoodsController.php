@@ -177,7 +177,7 @@ class MyGoodsController extends Controller
         if (!$barCode) {
             return $this->error('暂无商品图片');
         }
-        $goodsImage = Images::with('image')->where('bar_code', 'LIKE', '%' . $barCode . '%')->paginate()->toArray();
+        $goodsImage = Images::with('image')->where('bar_code',  $barCode)->paginate()->toArray();
 
         return $this->success(['goodsImage' => $goodsImage]);
     }
