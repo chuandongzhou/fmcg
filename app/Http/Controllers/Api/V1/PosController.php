@@ -146,7 +146,7 @@ class PosController extends Controller
                     'OrderNo' => $orderId,
                     'ReceiverOrderNo' => $orderId,
                     'ReceiverName' => $order->shippingAddress->consigner,
-                    'RceiverAddr' => $order->shippingAddress->address->address,
+                    'RceiverAddr' => is_null($order->shippingAddress->address) ? '' : $order->shippingAddress->address->address,
                     'RceiverTel' => $order->shippingAddress->phone,
                     'Amount' => $order->price,
                     'OrderStatus' => $orderStatus,

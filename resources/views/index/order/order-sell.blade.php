@@ -172,6 +172,10 @@
         $(function () {
             getOrderButtonEvent();
             formSubmitByGet(['delivery_man_id']);
+            @if(session('export_error'))
+                alert('{{ session('export_error') }}');
+            @endif
+
         })
     </script>
 @stop

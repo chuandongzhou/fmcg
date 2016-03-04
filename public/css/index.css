@@ -1050,8 +1050,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor .attr {
   border: 1px solid #b4b4b4;
-  padding: 5px 0 5px 15px;
-  margin: 0; }
+  padding: 5px 0 5px 15px !important;
+  margin: 0 !important; }
   .goods-editor .attr .items-item {
     display: inline-block;
     padding: 5px 20px 5px 0; }
@@ -1129,6 +1129,11 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 10px; }
   .goods-editor .save-btn .btn {
     width: 40%; }
+
+.address-list .close {
+  color: #f00; }
+  .address-list .close:hover {
+    color: #f00; }
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/

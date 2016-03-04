@@ -142,8 +142,8 @@ class OrderSellController extends OrderController
         $res = Order::with('shippingAddress', 'shippingAddress.address',
             'goods.images')->bySellerId(auth()->id())->where('status', cons('order.status.send'))->whereIn('id',
             $orderIds)->get();
-        if ($res->isEmpty()) {
-            return $this->error('没有该订单信息');
+        if (empty($orderIds) || $res->count() !== count($orderIds)) {
+            return $this->error('无订单消息或存在不能导出的订单', null, ['export_error' => '无订单消息或存在不能导出的订单']);
         }
         return $this->_getContent($res);
     }
@@ -206,7 +206,7 @@ class OrderSellController extends OrderController
                 '合计:   ' . $item->price,
                 '收货人:   ' . $item->shippingAddress->consigner,
                 '电话:   ' . $item->shippingAddress->phone,
-                '地址:   ' . $item->shippingAddress->address->address
+                '地址:   ' . is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address
             ];
             foreach ($info as $v) {
                 $table->addRow();
