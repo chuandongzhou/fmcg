@@ -106,7 +106,7 @@ class Model extends Eloquent
                     $file = File::where(['id' => $id])->first(['id']);
                     $file && ($file->name = $fileItem['name']);
                 } else {
-                    $file = File::createWithFile($fileItem['path']);
+                    $file = File::createWithFile($fileItem['path'], $fileItem['name'] ?: '');
                 }
             } else {
                 //文件地址或文件

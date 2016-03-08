@@ -61,14 +61,15 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $('#pid').change(function(){
-           if ($(this).val() == 0){
-               $('.fileinput-button').removeClass('btn-cancel').addClass('btn-primary');
-               $('input[name="file"]').prop('disabled' , false);
-           }else{
-               $('.fileinput-button').addClass('btn-cancel').removeClass('btn-primary');
-               $('input[name="file"]').prop('disabled' , true);
-           }
-        })
+        $('#pid').change(function () {
+            if ($(this).val() == 0) {
+                $('.fileinput-button').removeClass('btn-cancel').addClass('btn-primary');
+                $('input[name="file"]').prop('disabled', false);
+            } else {
+                $('.fileinput-button').addClass('btn-cancel').removeClass('btn-primary');
+                $('input[name="file"]').prop('disabled', true);
+            }
+        });
+        picFunc(5);
     </script>
 @stop

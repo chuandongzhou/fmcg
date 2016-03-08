@@ -75,13 +75,14 @@ class CategoryController extends Controller
      */
     public function edit($category)
     {
-        $categories = Category::where('level', '<', 3)->with('icon')->get([
+        $categories = Category::where('level', '<', 3)->get([
             'id',
             'name',
             'pid',
             'level'
         ])->toArray();
         $categories = new Tree($categories);
+        $category->load('icon');
         return view('admin.category.category', ['categories' => $categories, 'category' => $category]);
     }
 
@@ -94,7 +95,20 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, $category)
     {
-        if ($category->fill($request->all())->save()) {
+        $attributes = $request->all();
+
+        $pid = $attributes['pid'];
+        $attributes['level'] = 1;
+        if ($pid) {
+            $parentCategory = Category::find($pid);
+            $attributes['level'] = $parentCategory->level + 1;
+            $category->images->each(function($image){
+               $image->delete();
+            });
+            $category->icon->delete();
+        }
+
+        if ($category->fill($attributes)->save()) {
             return $this->success('更新分类成功');
         }
         return $this->success('更新分类失败');
@@ -118,6 +132,7 @@ class CategoryController extends Controller
 
     /**
      * 添加默认标签
+     *
      * @param $model
      * @return mixed
      */

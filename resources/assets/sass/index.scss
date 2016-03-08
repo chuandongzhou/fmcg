@@ -227,7 +227,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
 
   }
-
 }
 
 /*======================================pop======================================*/
@@ -304,6 +303,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         &.reg {
           text-decoration: underline;
           color: $brand-primary;
+          &:hover, &:focus {
+            outline: none;
+          }
         }
       }
       .icon {
@@ -404,6 +406,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================passed end======================================*/
 
 /*======================================guide end======================================*/
+.container{
+  width: 1200px;
+}
 .guide-container {
   height: 78%;
   position: relative;
@@ -416,6 +421,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: absolute;
     bottom: 10%;
     width: 100%;
+    margin:auto;
     .tabs-item {
       float: left;
       width: 25%;
@@ -461,7 +467,32 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
+@media (max-width: 736px) {
+  .guide-container{
+    position:absolute;
+    top:50%;
+    width: 100%;
+    height: 400px;
+    margin-top:-200px;
+    .banner {
+      img {
+       display: none;
+      }
+    }
+    .item-name{
+      color:$gray-base !important;
+      font-size: 12px!important;
+    }
+    .tabs-item{
+      width:50%!important;
+    }
+  }
+  .guide-footer{
+    position:absolute;
+    bottom:0;
+    min-width: inherit !important;
+  }
+}
 .guide-footer {
   background-color: $body-bg;
 }
@@ -562,6 +593,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .dealer-header {
+  margin: 30px 0 30px 0;
   .logo-icon {
     padding-top: 8px;
   }
@@ -653,6 +685,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   position: absolute;
   bottom: 0;
   width: 100%;
+  min-width: 1000px;
   margin-top: 20px;
   .qr-code {
     display: inline-block;
@@ -694,8 +727,25 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .list-penal {
+  .banner-slide{
+    margin-left:0;
+    .carousel-inner{
+      .item{
+        max-height:390px;
+        img{
+          width: 100%;
+          max-height:390px;
+        }
+      }
+    }
+  }
+  .commodity-panel{
+    margin-top:10px;
+    &:first-of-type{
+      margin-top:0!important;
+    }
+  }
   .commodity {
-    margin-top: 10px;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     width: 20%;
@@ -705,18 +755,28 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 100%;
       display: inline-block;
     }
-
+    &:last-of-type{
+      padding-right:0;
+    }
+  }
+  .commodity-index-panel{
+    padding-bottom: -10px !important;
+  }
+  .commodity-index-img{
+    width:25% !important;
+    padding:0 3px !important;
+    margin-bottom:5px;
   }
   .content-panel {
-    padding: 10px 5px;
+    padding: 2px 5px;
     background-color: $gray-plain;
     a {
       color: $gray;
     }
     .commodity-name {
-      margin: 10px 0;
       width: 100%;
-      height: 40px;
+      height: 35px;
+      font-size: 12px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -724,6 +784,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       -webkit-box-orient: vertical;
     }
     .sell-panel {
+      font-size: 12px;
       .money {
         color: $brand-danger;
         font-weight: bolder;
@@ -732,27 +793,43 @@ ul, li, p, a, h1, h2, h3, h4 {
     .order-count {
       color: $gray-light;
     }
+    .address-panel{
+      height:40px;
+      position: relative;
+      .address{
+        margin-left: 65px;
+        position: absolute;
+        top:0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
   }
   .thumbnail {
-    .img-wrap{
-      .commodity-img{
-        width: 130px!important;
-        height: inherit!important;
-      }
+    .img-wrap .commodity-img {
+      width: 130px !important;
+      height: inherit !important;
     }
     .store-content {
       background-color: inherit !important;
-      padding: 0 0 0 20px!important;
+      padding: 0 0 0 20px !important;
       margin-left: 130px;
       .commodity-name {
         margin: 0 0 10px 0 !important;
         font-size: 16px;
         height: inherit !important;
       }
+      p {
+        padding: 0;
+        margin: 0;
+      }
       .item {
         padding-bottom: 5px;
       }
-      .store-presentation{
+      .store-presentation {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -797,7 +874,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 @media screen and (max-width: 765px) {
   .list-penal {
     .commodity {
-      width: 100%;
+      /*width: 100%;*/
     }
   }
   .dealer-commodity-wrap {
@@ -879,7 +956,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-
   .address-panel {
     border-top: 1px dashed $gray-lighter;
     margin-top: -1px;
@@ -906,6 +982,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           span {
             display: block;
             padding: 2px;
+
           }
         }
       }
@@ -941,6 +1018,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================my-goods begin======================================*/
 .public-personal {
+  min-width: 1000px;
   .controls {
     padding: 20px 0;
     .item {
@@ -968,7 +1046,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 0 5px;
       .title-name {
         display: inline-block;
-        padding: 3px 0 0 10px;
+        padding: 5px 0 0 10px;
         width: 90px;
         text-align: right;
       }
@@ -1106,11 +1184,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $banner-gray;
       }
     }
-
     .sort-name {
       margin-top: -1px;
     }
-
     .package {
       @extend .sort-name;
     }
@@ -1125,7 +1201,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 100%;
       padding: 10px 0;
       text-decoration: none;
-      font-size:12px;
+      font-size: 12px;
       &:hover {
         background-color: $gray-plain;
       }
@@ -1143,7 +1219,6 @@ ul, li, p, a, h1, h2, h3, h4 {
           color: $brand-primary;
         }
       }
-
     }
     .dealer-menu-list {
       .list-item {
@@ -1157,7 +1232,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       border: 1px solid $gray-lighter;
       margin: -1px auto auto auto;
       .menu-wrap {
-        display: block;
         padding-left: 20px;
         li {
           a {
@@ -1441,13 +1515,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   .attr {
     border: 1px solid $gray-lighter;
     padding: 5px 0 5px 15px !important;
-    margin: 0 !important;
+    margin: 10px 0 !important;
     .items-item {
       display: inline-block;
       padding: 5px 20px 5px 0;
     }
   }
-  .goods-imgs{
+  .goods-imgs {
     margin-left: 83px;
   }
   .editor-item {
@@ -1456,24 +1530,22 @@ ul, li, p, a, h1, h2, h3, h4 {
     .narrow {
       width: 80px;
     }
-
     .items-item {
       display: inline-block;
       padding-right: 40px;
       position: relative;
-
     }
-    .check-item{
+    .check-item {
       display: inherit;
-      label{
+      label {
         padding-right: 10px;
       }
     }
   }
   .promotions-msg {
     position: relative;
-    input{
-      width:40%;
+    input {
+      width: 40%;
     }
   }
   .editor-panel {
@@ -1541,10 +1613,10 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .save-btn{
-    padding:10px;
-    .btn{
-      width:40%;
+  .save-btn {
+    padding: 10px;
+    .btn {
+      width: 40%;
     }
   }
   .save{
@@ -2076,14 +2148,14 @@ table {
 /*======================================index begin======================================*/
 .dealer-top-header {
   width: 100%;
-  background-color: $gray-plain;
+  background-color: $brand-primary;
   .city-wrap {
     position: relative;
     .location-panel {
       padding: 5px 3px;
       width: 135px;
       line-height: 31px;
-      border: 1px solid $gray-plain;
+      border: 1px solid $brand-primary;
       position: relative;
       z-index: 999;
       .city-value {
@@ -2096,12 +2168,13 @@ table {
         font-size: 13px;
       }
       .location-text {
-        color: $gray;
+        color: $gray-base;
         text-decoration: none;
       }
       &.selected-border {
         border: 1px solid $gray-plain-light;
-        border-bottom-color: $gray-plain;
+        border-bottom-color: $body-bg;
+        background-color: $body-bg;
       }
     }
     .city-list {
@@ -2143,7 +2216,7 @@ table {
     .collect-select {
       position: relative;
       .collect-selected {
-        border: 1px solid $gray-plain;
+        border: 1px solid $brand-primary;
         border-bottom: none;
         margin-top: -1px;
         vertical-align: middle;
@@ -2192,20 +2265,22 @@ table {
         }
         &.exit {
           padding-left: 8px;
+          color:$brand-danger;
         }
       }
     }
     a {
-      color: $gray-light;
+      color: $gray-base;
       padding-top: 10px;
       padding-bottom: 10px;
       font-size: 13px;
       &:hover, &:focus {
         background-color: transparent;
+        color: $gray-dark;
       }
-      &.home {
+      /*&.home {
         color: $brand-warning;
-      }
+      }*/
     }
   }
 
@@ -2305,27 +2380,41 @@ table {
       .btn {
         padding: 6px 10px 6px 15px;
         &:hover {
-          background-color: $brand-primary;
+          background-color: $brand-danger;
         }
-
+        .shopping-num{
+          color:$brand-warning;
+        }
       }
     }
   }
 }
 
 .categories-btn {
-  background-color: $brand-primary;
-  padding: 0;
+  background-color:  $blue-lighter;
+  padding-top:10px;
+  box-shadow: 1px -1px 15px $gray-light;
+  position:relative;
+  z-index: 99;
   .btn {
     width: 100%;
+    background-color: $blue-lighter;
+    border:1px solid $blue-lighter;
+    &:hover{
+      background-color: $blue-lighter;
+      border:1px solid $blue-lighter;
+    }
   }
+
 }
 
 .nav-name {
+  background-color: $brand-primary;
+  margin-top: 10px;
   a {
-    color: $gray;
+    color: $body-bg;
     &:hover {
-      color: $brand-primary;
+
     }
   }
 }
@@ -2428,6 +2517,23 @@ table {
       }
     }
   }
+  .index-slide{
+    .carousel-indicators {
+      li {
+        border-radius: inherit !important;
+        @include square(16px);
+        font-size: 10px;
+        padding:0 5px;
+        background-color:$gray-light!important;
+        color:$body-bg!important;
+        border:none !important;
+        &.active{
+          color:$gray-base!important;
+          background-color: $body-bg !important;
+        }
+      }
+    }
+  }
   .dealer-index-banner {
     .carousel-inner {
       .item {
@@ -2436,6 +2542,20 @@ table {
           @include size(100%, 400px);
         }
       }
+    }
+  }
+  .upcoming-events{
+    height:401px;
+    border:1px solid $banner-gray;
+    margin-left: -1px;
+    h3{
+      font-size: 18px;
+      padding: 15px 0;
+    }
+    p{
+      font-size: 13px;
+      margin: 10px 0;
+      word-break:break-all;
     }
   }
 }
@@ -2448,8 +2568,39 @@ table {
         padding: 8px 2px;
         font-size: 15px;
         font-weight: bold;
-        color: $brand-warning;
-        border-bottom: 1px solid $brand-warning;
+        color: $brand-primary;
+        border-bottom: 1px solid $brand-primary;
+        a{
+          font-size: 13px;
+          display: inline-block;
+          margin-left: 10px;
+        }
+      }
+    }
+    .carousel-indicators{
+      position: relative !important;
+      height: 40px;
+      bottom: 0 !important;
+      margin-left: inherit !important;
+      width: inherit !important;
+      left: inherit !important;
+      li{
+        color:$body-bg;
+        display: inline-block;
+        float: left;
+        height: 40px!important;
+        margin:0 !important;
+        text-indent: 0!important;
+        border-radius: 0 !important;
+        border:0 !important;
+        line-height: 35px;
+        text-align: center;
+        background-color: $blue-lighter;
+        &.active{
+          background-color: $brand-primary !important;
+          height: inherit !important;
+          color:$body-bg;
+        }
       }
     }
   }
@@ -2835,6 +2986,10 @@ table {
           color: $brand-primary;
           text-decoration: none;
         }
+        &:focus {
+          text-decoration: none;
+        }
+
       }
     }
   }
@@ -2851,7 +3006,6 @@ table {
 }
 
 .right-content-wrap {
-  /*border:1px solid $gray-plain-light;*/
   border-radius: 2px;
   .content-title {
     font-size: 15px;
@@ -2891,7 +3045,7 @@ table {
 #modal-agreement {
   width: 90%;
   height: 90%;
-  margin:30px auto auto auto;
+  margin: 30px auto auto auto;
   .modal-content {
     position: absolute;
     width: 100%;
@@ -2903,10 +3057,10 @@ table {
       top: 55px;
       bottom: 64px;
       z-index: 888;
-      p{
+      p {
         padding: 5px 0;
       }
-      h4{
+      h4 {
         font-weight: 600;
         padding: 5px 0;
       }

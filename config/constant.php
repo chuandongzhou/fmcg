@@ -57,7 +57,7 @@ return [
     //首页栏目
     'home_column' => [
         'goods' => [
-            'count' => 10, //显示商品条数
+            'count' => 8, //显示商品条数
             'cache' => [
                 'pre_name' => 'home_column:goods:',
                 'expire' => 10
@@ -81,6 +81,7 @@ return [
             'index' => 1, // 首页(外侧)广告
             'user' => 2, // 用户(内则)广告
             'app' => 3, // app广告(启动页)
+            'category' => 4 //商品分类广告
         ],
         'cache' => [
             'index' => [
@@ -88,6 +89,16 @@ return [
                 'expire' => 10,
             ]
         ]
+    ],
+    //公告
+    'notice' => [
+        'index' => [
+            'cache' => [
+                'name' => 'notice:index',
+                'expire' => 10,
+            ],
+            'count' => 3
+        ],
     ],
     // 店铺图片分类
     'shop' => [

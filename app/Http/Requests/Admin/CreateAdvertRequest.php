@@ -13,6 +13,7 @@ class CreateAdvertRequest extends Request
     public function rules()
     {
         return [
+            'category_id' => 'sometimes|required|exists:category,id',
             'name' => 'required',
             'image' => 'required',
             'url' => 'required|url',

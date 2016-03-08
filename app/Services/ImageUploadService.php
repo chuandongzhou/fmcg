@@ -34,7 +34,6 @@ class ImageUploadService
         }
         $imagesArr = [];
         foreach ($array['id'] as $key => $imageId) {
-
             $imagesArr[] = [
                 'id' => $imageId,
                 'path' => upload_file($array['path'][$key], 'temp'),

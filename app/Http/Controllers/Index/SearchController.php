@@ -41,6 +41,8 @@ class SearchController extends Controller
                 'searched' => $result['searched'],
                 'moreAttr' => $result['moreAttr'],
                 'get' => $gets,
+                'keywords' => $this->_getKeywordsBySearch($result['categories'],
+                    isset($data['name']) ? $data['name'] : null),
                 'data' => $data
             ]);
     }
@@ -55,13 +57,36 @@ class SearchController extends Controller
     {
         $data = [];
         foreach ($get as $key => $val) {
-            if (starts_with($key, 'attr_')) {
-                $pid = explode('_', $key)[1];
-                $data['attr'][$pid] = $val;
+            if (starts_with($key, 'attr')) {
+                if (isset(explode('_', $key)[1])) {
+                    $pid = explode('_', $key)[1];
+                    $data['attr'][$pid] = $val;
+                }
             } else {
                 $data[$key] = $val;
             }
         }
         return $data;
+    }
+
+    /**
+     * 获取搜索关键词
+     *
+     * @param $categories
+     * @param null $name
+     * @return null|string
+     */
+    private function _getKeywordsBySearch($categories, $name = null)
+    {
+        if ($name) {
+            return $name;
+        }
+        $keyword = '';
+        foreach ($categories as $category) {
+            if (isset($category['selected'])) {
+                $keyword = $category['selected']['name'];
+            }
+        }
+        return $keyword;
     }
 }

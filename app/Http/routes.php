@@ -78,6 +78,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('advert-index', 'AdvertIndexController'); // 首页广告
     $router->resource('advert-user', 'AdvertUserController'); // 用户端广告
     $router->resource('advert-app', 'AdvertAppController'); // APP广告
+    $router->resource('advert-category', 'AdvertCategoryController'); // 商品分类广告
     $router->resource('role', 'RoleController');
     $router->get('user/audit', 'UserController@audit');    //未审核账号列表
     $router->put('user/audit/{user}', 'UserController@auditUpdate');    //审核账号
@@ -107,6 +108,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->delete('barcode-without-images/batch', 'BarcodeWithoutImagesController@batch'); //批量删除前台用户添加商品时没有图片的条形码
     $router->get('barcode-without-images/export', 'BarcodeWithoutImagesController@export'); //导出没有图片的条形码
     $router->resource('barcode-without-images', 'BarcodeWithoutImagesController'); //前台用户添加商品时没有图片的条形码
+    $router->resource('notice', 'NoticeController'); //前台用户添加商品时没有图片的条形码
 });
 
 
@@ -184,6 +186,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
         $router->any('pay/refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
         $router->get('pay/success-url', 'PayController@successUrl');
-        $router->controller('pos' , 'PosController');             //pos机付款
+        $router->controller('pos', 'PosController');             //pos机付款
     });
 });

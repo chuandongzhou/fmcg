@@ -1,6 +1,8 @@
 @extends('index.index-master')
 
-@section('subtitle' , '搜索')
+@section('subtitle')
+    {{ $keywords }}
+@stop
 
 @section('container')
     <div class="container dealer-index index search-page">
@@ -170,8 +172,8 @@
                     cityControl = $('select[name="city_id"]'),
                     districtControl = $('select[name="district_id"]'),
                     streetControl = $('select[name="street_id"]'),
-                    /*address = provinceControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}province_id=' + provinceControl.val() : '';*/
-            address = cityControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}city_id=' + cityControl.val() : '';
+            /*address = provinceControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}province_id=' + provinceControl.val() : '';*/
+                    address = cityControl.val() ? '{!! empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '?' : '&' !!}city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() && address ? '&street_id=' + streetControl.val() : '';
             var url = '{!! url('search'  . (empty(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])) ? '' :  '?' . http_build_query(array_except($get , ['province_id', 'city_id', 'district_id', 'street_id'])))) !!}' + address;

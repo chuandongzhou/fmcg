@@ -40,7 +40,7 @@
                 @endif
             </form>
             <ul class="nav navbar-nav navbar-right right-btn">
-                <li><a href="{{ url('cart') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 购物车 <span
+                <li><a href="{{ url('cart') }}" class="btn btn-danger"><i class="fa fa-shopping-cart"></i> 购物车 <span
                                 class="badge">{{ $cartNum }}</span></a></li>
             </ul>
         </div>

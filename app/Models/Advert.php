@@ -17,7 +17,7 @@ class Advert extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'type', 'url', 'start_at', 'end_at', 'image'];
+    protected $fillable = ['category_id', 'name', 'type', 'url', 'start_at', 'end_at', 'image'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -40,7 +40,7 @@ class Advert extends Model
     {
         return $query->where('start_at', '<', $nowTime)->Where(function ($query) use ($nowTime) {
             $query->where('end_at', '>', $nowTime)->orWhere('end_at', null);
-        })->orderBy('id' , 'desc')->take($limit);
+        })->orderBy('id', 'desc')->take($limit);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Notice;
 use App\Models\Order;
 use App\Services\GoodsService;
 use App\Services\ShopService;
@@ -33,11 +34,20 @@ class HomeController extends Controller
             $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->get();
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
-
+        // 公告
+        $indexNoticeConf = cons('notice.index.cache');
+        $notices = [];
+        if (Cache::has($indexNoticeConf['name'])) {
+            $notices = Cache::get($indexNoticeConf['name']);
+        } else {
+            $notices = Notice::orderBy('id', 'desc')->take(cons('notice.index.count'))->get();
+            Cache::put($indexNoticeConf['name'], $notices, $indexNoticeConf['expire']);
+        }
         return view('index.index.index', [
-            'goodsColumns' => GoodsService::getGoodsColumn(),
-            'shopColumns' => ShopService::getShopColumn(),
-            'adverts' => $adverts
+            'goodsColumns' => GoodsService::getNewGoodsColumn(),
+//            'shopColumns' => ShopService::getShopColumn(),
+            'adverts' => $adverts,
+            'notices' => $notices
         ]);
     }
 

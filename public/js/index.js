@@ -648,7 +648,7 @@ function goodsBatchUpload() {
                     cateLevel1 = $('select[name="cate_level_1"]').val(),
                     cateLevel2 = $('select[name="cate_level_2"]').val(),
                     cateLevel3 = $('select[name="cate_level_3"]').val() || 0,
-                    status = $this.data('status') || 0
+                    status = $('input[name="status"]').is(':checked') ? 1 : 0;
                 if (!cateLevel1 || !cateLevel2) {
                     alert('请把分类选择完整');
                     return false;

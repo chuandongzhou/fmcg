@@ -6,6 +6,20 @@
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
           action="{{ url('admin/advert-' . $type . '/' . $advert->id) }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-then="referer" autocomplete="off">
+        @if($type == 'category')
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">商品分类</label>
+
+                <div class="col-sm-4">
+                    <select name="category_id" class="form-control" id="category_id">
+                        <option value="">---请选择商品分类---</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ $advert->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        @endif
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">广告名称</label>
 
@@ -35,7 +49,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="url" name="url" placeholder="请输入广告URL"
-                       value="{{ $advert->url }}">
+                       value="{{ $advert->url or 'http://' }}">
             </div>
             <div class="col-sm-push-2 col-sm-10">
                 <p class="help-block">必须以http://开头</p>

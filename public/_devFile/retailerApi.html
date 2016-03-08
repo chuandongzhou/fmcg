@@ -603,9 +603,11 @@
     price_retailer decimal 价格（对于终端商）
     min_num_retailer int 最低购买量 (对于终端商）
     pieces_retailer int 单位编号 （对于终端商 0盒 1瓶 2箱 3听 4条 5袋 6罐 7包）
+    specification_retailer string 规格 （对于终端商）
     price_wholesaler decimal 价格（对于批发商）
     min_num_wholesaler int 最低购买量 (对于批发商）
     pieces_wholesaler int 单位编号 （对于批发商）
+    specification_wholesaler string 规格 （对于批发商）
     pieces string 单位名 （根据不同登录角色区分）
     bar_code string 商品条形码
     is_new int 是否新品（1是 , 0不是）
@@ -718,9 +720,11 @@
     price_retailer decimal 价格（对于终端商）
     min_num_retailer int 最低购买量 (对于终端商）
     pieces_retailer int 单位编号 （对于终端商）
+    specification_retailer string 规格 （对于终端商）
     price_wholesaler decimal 价格（对于批发商）
     min_num_wholesaler int 最低购买量 (对于批发商）
     pieces_wholesaler int 单位编号 （对于批发商）
+    specification_wholesaler string 规格 （对于批发商）
     pieces string 单位名 （根据不同登录角色区分）
     bar_code string 商品条形码
     is_new int 是否新品（1是 , 0不是）
@@ -776,11 +780,11 @@
     price_retailer decimal 价格 （对于终端商）
     min_num_retailer int 最低购买量 （对于终端商）
     pieces_retailer int 单位编号 （对于终端商）
-    specification_retailer int 规格 （对于终端商）
+    specification_retailer string 规格 （对于终端商）
     price_wholesaler decimal 价格 （对于批发商 供应商时添加）
     min_num_wholesaler int 最低购买量 （对于批发商 供应商时添加）
     pieces_wholesaler int 单位编号 （对于批发商 供应商时添加）
-    specification_wholesaler int 规格 （对于批发商）
+    specification_wholesaler string 规格 （对于批发商 供应商时添加）
     bar_code string 商品条形码
     is_new int 是否新品（1是 0不是）
     is_out int 是否缺货 （1是 0不是）
@@ -817,9 +821,11 @@
     price_retailer decimal 价格 （对于终端商）
     min_num_retailer int 最低购买量 （对于终端商）
     pieces_retailer int 单位编号 （对于终端商）
+    specification_retailer string 规格 （对于终端商）
     price_wholesaler decimal 价格 （对于批发商 供应商时添加）
     min_num_wholesaler int 最低购买量 （对于批发商 供应商时添加）
     pieces_wholesaler int 单位编号 （对于批发商 供应商时添加）
+    specification_wholesaler string 规格 （对于批发商 供应商时添加）
     bar_code string 商品条形码
     is_new int 是否新品（1是 0不是）
     is_out int 是否缺货 （1是 0不是）
@@ -1502,6 +1508,8 @@
     consigner string 收货人姓名
     phone string 收货人电话
     address array 收货地址信息
+    x_lng float 经度
+    y_lat float 纬度
 
     address 字段子集说明
 

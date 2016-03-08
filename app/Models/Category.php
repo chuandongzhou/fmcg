@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class Category extends Model
 {
     public $timestamps = false;
@@ -39,6 +41,17 @@ class Category extends Model
     }
 
     /**
+     * 广告
+     *
+     * @return mixed
+     */
+    public function adverts()
+    {
+        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.category'))->ofTime(Carbon::now(),
+            5);
+    }
+
+    /**
      * 设置图标
      *
      * @param $icon
@@ -49,8 +62,10 @@ class Category extends Model
         return $this->associateFile($this->convertToFile($icon), 'icon');
     }
 
+
     /**
      * 获取icon
+     *
      * @return string
      */
     public function getIconUrlAttribute()
@@ -59,6 +74,5 @@ class Category extends Model
 
         return $icon ? upload_file_url($icon->path) : '';
     }
-
 
 }

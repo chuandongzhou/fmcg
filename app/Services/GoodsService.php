@@ -82,7 +82,7 @@ class GoodsService
         if ($isWeb) {
             // 已搜索的标签
             foreach ($attrs as $key => $attr) {
-                if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys($data['attr']))) {
+                if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys((array)$data['attr']))) {
                     $searched[$attr['attr_id']] = array_get($attr['child'], $data['attr'][$attr['attr_id']])['name'];
                     unset($attrs[$key]);
                 } elseif (!in_array($attr['name'], $defaultAttrName)) {
@@ -105,6 +105,59 @@ class GoodsService
             'searched' => $searched,
             'moreAttr' => $moreAttr
         ];
+    }
+
+    static function getNewGoodsColumn()
+    {
+        $type = auth()->user()->type;
+
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+        $homeColumnGoodsConf = cons('home_column.goods');
+        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
+
+        $goodsColumns = [];
+        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
+            $goodsColumns = Cache::get($cacheKey);
+        } else {
+            //商品
+            $goodsColumns = Category::where(['pid' => 0, 'status' => 1])->with('adverts')->get([
+                'id',
+                'level',
+                'pid',
+                'name'
+            ]);
+            $displayCount = $homeColumnGoodsConf['count']; //显示条数
+
+            $goodsFields = [
+                'id',
+                'name',
+                'bar_code',
+                'price_retailer',
+                'price_wholesaler',
+                'min_num_retailer',
+                'min_num_wholesaler',
+                'is_new',
+                'is_out',
+                'is_promotion',
+                'sales_volume'
+            ];
+            foreach ($goodsColumns as $category) {
+                $goods = Goods::where('cate_level_1', $category['id'])
+                    ->where('user_type', '>', $type)
+                    ->ofStatus(cons('goods.status.on'))
+                    ->OfDeliveryArea(['province_id' => $provinceId])
+                    ->with('images')
+                    ->select($goodsFields)
+                    ->take($displayCount)
+                    ->get()->each(function ($goods) {
+                        $goods->setAppends(['image_url']);
+                    });
+                $category->goods = $goods;
+                $category->province_id = $provinceId;
+            }
+            Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
+        }
+        return $goodsColumns;
     }
 
     /**

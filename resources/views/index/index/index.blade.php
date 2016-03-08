@@ -10,7 +10,7 @@
             <div class="col-sm-2 categories-btn">
                 <a class="btn btn-primary">全部商品分类</a>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-10 nav-name">
                 {{--<a href="{{ url('/') }}" class="btn">首页</a>--}}
                 @if($user->type == cons('user.type.retailer'))
                     <a href="{{ url('shop?type=wholesaler') }}" class="btn">批发商</a>
@@ -34,7 +34,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="col-sm-10 menu-down-wrap">
+                <div class="col-sm-8 menu-down-wrap">
                     <div class="row">
                         @foreach($categories as $category)
                             <div class="col-sm-12 menu-down-layer menu-down-item">
@@ -52,7 +52,7 @@
                         @endforeach
                     </div>
 
-                    <div id="myCarousel" class="carousel row slide banner-slide">
+                    <div id="myCarousel" class="carousel row slide banner-slide index-slide">
                         <ol class="carousel-indicators">
                             @foreach($adverts as $key=>$advert )
                                 <li class="{{ $key == 0 ? 'active' : '' }}" data-target="#myCarousel"
@@ -70,6 +70,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xs-2 upcoming-events">
+                    <h3 class="text-center">活动公告</h3>
+
+                    @foreach($notices as $key=>$notice)
+                        <p>{{ ($key+1). '.' .$notice->title }}</p>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
@@ -77,62 +84,90 @@
         @foreach($goodsColumns as $column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
-                    <div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>
-                    <div class="col-sm-12 padding-clear">
-                        @foreach($column->goods as $goods)
-                            <div class="commodity commodity-index-img">
-                                <div class="img-wrap">
-                                    <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
-                                        <img class="commodity-img" src="{{ $goods->image_url }}" 、>
-
-                                        <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
-                                    </a>
-                                </div>
-                                <div class="content-panel">
-                                    <p class="commodity-name">
-                                        <a href="{{ url('goods/' . $goods->id) }}"
-                                           target="_blank">{{ $goods->name }}</a></p>
-
-                                    <p class="sell-panel">
-                                        <span class="money">￥{{ $goods->price }}</span>
-                                        <span class="sales pull-right">最低购买量 : {{ $goods->min_num }}</span>
-                                    </p>
+                    <div class="col-xs-12 title"><h3>{{ $column->name }} <a
+                                    href="{{ url('search?category_id=' . $column->level.$column->id) }}">进入>></a></h3>
+                    </div>
+                    <div class="col-xs-12 padding-clear">
+                        <div class="row margin-clear">
+                            <div class="col-xs-4">
+                                <div id="myCarousel1" class="row carousel slide banner-slide">
+                                    <div class="carousel-inner">
+                                        @foreach($column->adverts as $key => $advert)
+                                            <div class="item {{ $key == 0 ? 'active' : '' }}">
+                                                <a href="{{ $advert->url }}" target="_blank">
+                                                    <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <ul class="carousel-indicators" id="carousel-indicators">
+                                        @foreach($column->adverts as $key=>$image)
+                                            <li data-target="#myCarousel1" data-slide-to="{{ $key }}"
+                                                class="{{ $key == 0 ? 'active' : '' }}">{{ $image->name }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
-                        @endforeach
+                            <div class="col-xs-8">
+                                <div class="col-xs-12 commodity-panel padding-clear">
+                                    @foreach($column->goods as $goods)
+                                        <div class="commodity commodity-index-img">
+                                            <div class="img-wrap">
+                                                <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
+                                                    <img class="commodity-img" src="{{ $goods->image_url }}" 、>
+
+                                                    <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
+                                                </a>
+                                            </div>
+                                            <div class="content-panel">
+                                                <p class="commodity-name">
+                                                    <a href="{{ url('goods/' . $goods->id) }}"
+                                                       target="_blank">{{ $goods->name }}</a></p>
+
+                                                <p class="sell-panel">
+                                                    <span class="money">￥{{ $goods->price }}</span>
+                                                    <span class="sales pull-right">最低购买量 : {{ $goods->min_num }}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             @endif
         @endforeach
-        @foreach($shopColumns as $column)
-            @if(!$column->shops->isEmpty())
-                <div class="row list-penal dealer-commodity-wrap">
-                    <div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>
-                    <div class="col-sm-12 padding-clear">
-                        @foreach($column->shops as $shop)
-                            <div class="commodity commodity-index-img">
-                                <div class="img-wrap">
-                                    <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
-                                        <img class="commodity-img" src="{{ $shop->image_url }}">
-                                    </a>
-                                </div>
-                                <div class="content-panel">
-                                    <p class="commodity-name">
-                                        <a href="{{ url('shop/' . $shop->id) }}"
-                                           target="_blank">{{ $shop->name. ' (' . cons()->valueLang('user.type',  $shop->user->type) . ')' }} </a>
-                                    </p>
+        {{--@foreach($shopColumns as $column)--}}
+        {{--@if(!$column->shops->isEmpty())--}}
+        {{--<div class="row list-penal dealer-commodity-wrap">--}}
+        {{--<div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>--}}
+        {{--<div class="col-sm-12 padding-clear">--}}
+        {{--@foreach($column->shops as $shop)--}}
+        {{--<div class="commodity commodity-index-img">--}}
+        {{--<div class="img-wrap">--}}
+        {{--<a href="{{ url('shop/' . $shop->id) }}" target="_blank">--}}
+        {{--<img class="commodity-img" src="{{ $shop->image_url }}">--}}
+        {{--</a>--}}
+        {{--</div>--}}
+        {{--<div class="content-panel">--}}
+        {{--<p class="commodity-name">--}}
+        {{--<a href="{{ url('shop/' . $shop->id) }}"--}}
+        {{--target="_blank">{{ $shop->name. ' (' . cons()->valueLang('user.type',  $shop->user->type) . ')' }} </a>--}}
+        {{--</p>--}}
 
-                                    <p class="sell-panel">
-                                        <span class="money">最低配送额 : ￥{{ $shop->min_money }}</span>
-                                        {{--<span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>--}}
-                                    </p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-        @endforeach
+        {{--<p class="sell-panel">--}}
+        {{--<span class="money">最低配送额 : ￥{{ $shop->min_money }}</span>--}}
+        {{--<span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>--}}
+        {{--</p>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--@endforeach--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--@endif--}}
+        {{--@endforeach--}}
     </div>
 @stop
 
@@ -144,6 +179,7 @@
             $('.carousel').carousel({
                 interval: 2000
             })
+            $("#carousel-indicators li").css("width", ($("#carousel-indicators").width() / $("#carousel-indicators li").length) + "px");
         });
     </script>
 @stop

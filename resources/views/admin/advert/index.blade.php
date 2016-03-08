@@ -5,6 +5,9 @@
         <thead>
         <tr>
             <th>广告类型</th>
+            @if($type == 'category')
+                <th>商品分类ID</th>
+            @endif
             <th>名称</th>
             <th>开始时间</th>
             <th>结束时间</th>
@@ -16,6 +19,9 @@
         @foreach($adverts as $advert)
             <tr>
                 <td>{{ cons()->valueLang('advert.type', $advert->type) }}</td>
+                @if($type == 'category')
+                    <td>{{ $advert->category_id }}</td>
+                @endif
                 <td>{{ $advert->name }}</td>
                 <td>{{ $advert->start_at }}</td>
                 <td>{{ $advert->end_at }}</td>

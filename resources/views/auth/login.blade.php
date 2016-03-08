@@ -1,6 +1,6 @@
 @extends('auth.master')
 
-@section('title' , '登录 | 订百达')
+@section('title' , '订百达 - 订货首选')
 
 @section('css')
     @parent

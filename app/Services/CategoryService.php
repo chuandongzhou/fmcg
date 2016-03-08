@@ -128,6 +128,9 @@ class CategoryService
 
         $parentNode = self::getParents($categories, $categoryId);
 
+        if (empty($parentNode)) {
+            return [];
+        }
         $childNode = self::getChild($categories, $categoryId);
         $categoryArr[] = self::getSiblings($categories, $parentNode[0]['pid'], $parentNode[0]['id']);;
         if (count($parentNode) == 1) {

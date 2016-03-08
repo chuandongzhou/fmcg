@@ -1,6 +1,6 @@
 @extends('auth.master')
 
-@section('title' , '导航 | 订百达')
+@section('title' , '订百达 - 订货首选')
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">

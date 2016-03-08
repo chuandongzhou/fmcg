@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\UpdateAdvertRequest;
 use App\Http\Requests\Admin\CreateAdvertRequest;
 use App\Models\Advert;
+use App\Models\Category;
 
 
 abstract class AdvertController extends Controller
@@ -38,9 +39,13 @@ abstract class AdvertController extends Controller
      */
     public function create()
     {
+        if ($this->type == 'category') {
+            $categories = Category::where('pid' , 0)->get();
+        }
         return view('admin.advert.advert', [
             'type' => $this->type,
             'advert' => new Advert,
+            'categories' => isset($categories) ? $categories : []
         ]);
     }
 
@@ -81,9 +86,13 @@ abstract class AdvertController extends Controller
      */
     public function edit($advert)
     {
+        if ($this->type == 'category') {
+            $categories = Category::where('pid' , 0)->get();
+        }
         return view('admin.advert.advert', [
             'type' => $this->type,
             'advert' => $advert,
+            'categories' => isset($categories) ? $categories : []
         ]);
 
     }

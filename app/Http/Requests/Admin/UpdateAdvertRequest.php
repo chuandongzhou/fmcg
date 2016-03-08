@@ -13,6 +13,7 @@ class UpdateAdvertRequest extends Request
     public function rules()
     {
         return [
+            'category_id' => 'sometimes|required|exists:category,id',
             'name' => 'sometimes|required',
             'image' => 'sometimes|required',
             'url' => 'sometimes|required|url',
