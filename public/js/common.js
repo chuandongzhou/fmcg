@@ -810,15 +810,15 @@ function getAttr() {
                 var html = '';
                 for (var index in data) {
                     var options = '<option value="0">请选择</option>';
-                    html += '<p class="items-item">';
+                    html += '<div class="items-item">';
                     html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="attrs" >';
+                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="attrs inline-control" >';
                     for (var i in data[index]['child']) {
                         options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                     }
                     html += options;
                     html += '</select>';
-                    html += '</p>';
+                    html += '</div>';
                 }
                 attrDiv.html(html).css('border', '1px solid #b4b4b4');
             }, 'json')

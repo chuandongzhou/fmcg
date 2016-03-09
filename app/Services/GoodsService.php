@@ -18,6 +18,8 @@ class GoodsService
 {
 
     /**
+     * 根据搜索获取商品
+     *
      * @param $data
      * @param $goods
      * @param bool|true $isWeb
@@ -107,6 +109,11 @@ class GoodsService
         ];
     }
 
+    /**
+     * 新版商品栏目
+     *
+     * @return array
+     */
     static function getNewGoodsColumn()
     {
         $type = auth()->user()->type;
@@ -247,6 +254,44 @@ class GoodsService
             Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
         }
         return true;
+    }
+
+
+    /**
+     * 根据goods获取所有分类
+     *
+     * @param \App\Models\Goods $goods
+     * @return array
+     */
+    static function getGoodsCate(Goods $goods)
+    {
+
+        $cacheConf = cons('goods.cache');
+
+        $cacheKey = $cacheConf['cate_name'] . $goods->id;
+
+        $goodsCates = [];
+
+        if (Cache::has($cacheKey)) {
+            $goodsCates = Cache::get($cacheKey);
+        } else {
+            $cateIds = [
+                $goods->cate_level_1,
+                $goods->cate_level_2,
+                $goods->cate_level_3,
+            ];
+
+            $goodsCates = Category::whereIn('id', array_filter($cateIds))->orderBy('level', 'ASC')->get([
+                'id',
+                'name',
+                'level'
+            ])->keyBy('id');
+            Cache::put($cacheKey, $goodsCates, $cacheConf['cate_name_expire']);
+        }
+
+
+        return $goodsCates;
+
     }
 
 }

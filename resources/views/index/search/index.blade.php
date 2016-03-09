@@ -136,7 +136,7 @@
                     <div class="img-wrap">
                         <a href="{{ url('goods/' . $item->id) }}" target="_blank">
                             <img class="commodity-img" src="{{ $item->image_url }}">
-                            <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
+                            <span class="@if($item->is_out)prompt  lack  @elseif($item->is_promotion)prompt  promotions @elseif($item->is_new)prompt  new-listing @endif"></span>
                         </a>
                     </div>
                     <div class="content-panel">

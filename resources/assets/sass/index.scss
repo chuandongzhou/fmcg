@@ -206,24 +206,24 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  #pop-pay{
-    .modal-header{
+  #pop-pay {
+    .modal-header {
       background-color: $brand-info;
-      .modal-title{
-        text-align: left!important;
-        color:$gray-plain;
+      .modal-title {
+        text-align: left !important;
+        color: $gray-plain;
       }
-      .close-btn{
+      .close-btn {
         color: $gray-plain;
       }
     }
     @include size(500px, 250px);
     margin: -125px 0 0 -250px;
-    .pop-tips{
+    .pop-tips {
       font-size: 15px;
     }
-    .pop-btn{
-      margin-top:50px;
+    .pop-btn {
+      margin-top: 50px;
     }
 
   }
@@ -406,9 +406,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================passed end======================================*/
 
 /*======================================guide end======================================*/
-.container{
+.container {
   width: 1200px;
 }
+
 .guide-container {
   height: 78%;
   position: relative;
@@ -421,7 +422,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: absolute;
     bottom: 10%;
     width: 100%;
-    margin:auto;
+    margin: auto;
     .tabs-item {
       float: left;
       width: 25%;
@@ -467,32 +468,34 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 @media (max-width: 736px) {
-  .guide-container{
-    position:absolute;
-    top:50%;
-    width: 100%;
+  .guide-container {
+    position: absolute;
+    top: 50%;
+    width: 100% !important;
     height: 400px;
-    margin-top:-200px;
+    margin-top: -300px;
     .banner {
       img {
-       display: none;
+        display: none;
       }
     }
-    .item-name{
-      color:$gray-base !important;
-      font-size: 12px!important;
+    .item-name {
+      color: $gray-base !important;
+      font-size: 12px !important;
     }
-    .tabs-item{
-      width:50%!important;
+    .tabs-item {
+      width: 50% !important;
     }
   }
-  .guide-footer{
-    position:absolute;
-    bottom:0;
+  .guide-footer {
+    position: absolute;
+    bottom: 0;
     min-width: inherit !important;
   }
 }
+
 .guide-footer {
   background-color: $body-bg;
 }
@@ -648,6 +651,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .wholesalers-header {
+  min-height: 35px !important;
   .container {
     padding: 0;
     .collapse {
@@ -664,7 +668,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0;
         .list-name {
           width: 100%;
-          padding: 15px 55px;
+          padding: 0 15px;
+          height: 35px;
+          line-height: 35px;
         }
       }
     }
@@ -672,12 +678,14 @@ ul, li, p, a, h1, h2, h3, h4 {
       .btn {
         padding-top: 5px;
         padding-bottom: 5px;
-        margin-top: 10px;
-        background-color: $body-bg;
-        color: $brand-primary;
+        color: $body-bg;
         vertical-align: middle;
       }
     }
+  }
+  .menu-list {
+    min-width: 195px;
+    text-align: center;
   }
 }
 
@@ -727,22 +735,22 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .list-penal {
-  .banner-slide{
-    margin-left:0;
-    .carousel-inner{
-      .item{
-        max-height:390px;
-        img{
+  .banner-slide {
+    margin-left: 0;
+    .carousel-inner {
+      .item {
+        max-height: 400px;
+        img {
           width: 100%;
-          max-height:390px;
+          max-height: 400px;
         }
       }
     }
   }
-  .commodity-panel{
-    margin-top:10px;
-    &:first-of-type{
-      margin-top:0!important;
+  .commodity-panel {
+    margin-top: 10px;
+    &:first-of-type {
+      margin-top: 0 !important;
     }
   }
   .commodity {
@@ -751,21 +759,19 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 20%;
     float: left;
     padding: 0 15px;
+    margin-bottom: 10px;
     .commodity-img {
       width: 100%;
       display: inline-block;
     }
-    &:last-of-type{
-      padding-right:0;
-    }
   }
-  .commodity-index-panel{
+  .commodity-index-panel {
     padding-bottom: -10px !important;
   }
-  .commodity-index-img{
-    width:25% !important;
-    padding:0 3px !important;
-    margin-bottom:5px;
+  .commodity-index-img {
+    width: 25% !important;
+    padding: 0 3px !important;
+    margin-bottom: 5px !important;
   }
   .content-panel {
     padding: 2px 5px;
@@ -793,13 +799,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     .order-count {
       color: $gray-light;
     }
-    .address-panel{
-      height:40px;
+    .address-panel {
+      height: 40px;
       position: relative;
-      .address{
+      .address {
         margin-left: 65px;
         position: absolute;
-        top:0;
+        top: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -1019,6 +1025,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================my-goods begin======================================*/
 .public-personal {
   min-width: 1000px;
+  margin-top: 40px;
   .controls {
     padding: 20px 0;
     .item {
@@ -1184,9 +1191,11 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $banner-gray;
       }
     }
+
     .sort-name {
       margin-top: -1px;
     }
+
     .package {
       @extend .sort-name;
     }
@@ -1274,7 +1283,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     right: 0;
     margin: 0;
     opacity: 0;
-    filter:alpha(opacity=0);
+    filter: alpha(opacity=0);
     cursor: pointer;
   }
 }
@@ -1369,9 +1378,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .store-detail-wrap {
-    h3 {
-      padding: 0 0 20px 0;
+    .store-title{
       border-bottom: 1px dashed $gray-light;
+      h3 {
+        padding: 0 0 10px 0;
+      }
+      .title-content{
+        padding-bottom: 10px;
+        font-size: 11px;
+      }
     }
     li {
       padding: 10px 0;
@@ -1521,9 +1536,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 5px 20px 5px 0;
     }
   }
-  .goods-imgs {
-    margin-left: 83px;
-  }
   .editor-item {
     padding: 5px 0;
     margin: 0;
@@ -1541,6 +1553,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding-right: 10px;
       }
     }
+    .pieces {
+      line-height: 2em;
+    }
   }
   .promotions-msg {
     position: relative;
@@ -1550,7 +1565,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .editor-panel {
     .editor-wrap {
-      padding: 10px 15px;
+      padding: 10px 0;
     }
     .right-save {
       padding: 15px 0;
@@ -1593,7 +1608,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           top: 0;
           @include square(100%);
           opacity: 0;
-          filter:alpha(opacity=0);
+          filter: alpha(opacity=0);
         }
       }
     }
@@ -1619,15 +1634,16 @@ ul, li, p, a, h1, h2, h3, h4 {
       width: 40%;
     }
   }
-  .save{
-    margin-top:20px;
+  .save {
+    margin-top: 20px;
   }
 }
-.address-list{
-  .close{
-    color:$red;
-    &:hover{
-      color:$red;
+
+.address-list {
+  .close {
+    color: $red;
+    &:hover {
+      color: $red;
     }
   }
 }
@@ -2149,6 +2165,12 @@ table {
 .dealer-top-header {
   width: 100%;
   background-color: $brand-primary;
+  .top-title{
+    padding: 7px 0;
+    color:#fff;
+    font-size: 16px;
+    font-weight: bold;
+  }
   .city-wrap {
     position: relative;
     .location-panel {
@@ -2265,7 +2287,7 @@ table {
         }
         &.exit {
           padding-left: 8px;
-          color:$brand-danger;
+          color: $brand-danger;
         }
       }
     }
@@ -2382,8 +2404,8 @@ table {
         &:hover {
           background-color: $brand-danger;
         }
-        .shopping-num{
-          color:$brand-warning;
+        .shopping-num {
+          color: $brand-warning;
         }
       }
     }
@@ -2391,18 +2413,18 @@ table {
 }
 
 .categories-btn {
-  background-color:  $blue-lighter;
-  padding-top:10px;
+  background-color: $blue-lighter;
+  padding-top: 10px;
   box-shadow: 1px -1px 15px $gray-light;
-  position:relative;
+  position: relative;
   z-index: 99;
   .btn {
     width: 100%;
     background-color: $blue-lighter;
-    border:1px solid $blue-lighter;
-    &:hover{
+    border: 1px solid $blue-lighter;
+    &:hover {
       background-color: $blue-lighter;
-      border:1px solid $blue-lighter;
+      border: 1px solid $blue-lighter;
     }
   }
 
@@ -2517,18 +2539,18 @@ table {
       }
     }
   }
-  .index-slide{
+  .index-slide {
     .carousel-indicators {
       li {
         border-radius: inherit !important;
         @include square(16px);
         font-size: 10px;
-        padding:0 5px;
-        background-color:$gray-light!important;
-        color:$body-bg!important;
-        border:none !important;
-        &.active{
-          color:$gray-base!important;
+        padding: 0 5px;
+        background-color: $gray-light !important;
+        color: $body-bg !important;
+        border: none !important;
+        &.active {
+          color: $gray-base !important;
           background-color: $body-bg !important;
         }
       }
@@ -2544,18 +2566,18 @@ table {
       }
     }
   }
-  .upcoming-events{
-    height:401px;
-    border:1px solid $banner-gray;
+  .upcoming-events {
+    height: 401px;
+    border: 1px solid $banner-gray;
     margin-left: -1px;
-    h3{
+    h3 {
       font-size: 18px;
       padding: 15px 0;
     }
-    p{
+    p {
       font-size: 13px;
       margin: 10px 0;
-      word-break:break-all;
+      word-break: break-all;
     }
   }
 }
@@ -2570,36 +2592,37 @@ table {
         font-weight: bold;
         color: $brand-primary;
         border-bottom: 1px solid $brand-primary;
-        a{
+        a {
           font-size: 13px;
           display: inline-block;
           margin-left: 10px;
         }
       }
     }
-    .carousel-indicators{
+    .carousel-indicators {
       position: relative !important;
       height: 40px;
       bottom: 0 !important;
       margin-left: inherit !important;
-      width: inherit !important;
+      width: 100% !important;
       left: inherit !important;
-      li{
-        color:$body-bg;
+      background-color: $blue-lighter;
+      li {
+        color: $body-bg;
         display: inline-block;
         float: left;
-        height: 40px!important;
-        margin:0 !important;
-        text-indent: 0!important;
+        height: 40px !important;
+        margin: 0 !important;
+        text-indent: 0 !important;
         border-radius: 0 !important;
-        border:0 !important;
+        border: 0 !important;
         line-height: 35px;
         text-align: center;
         background-color: $blue-lighter;
-        &.active{
+        &.active {
           background-color: $brand-primary !important;
           height: inherit !important;
-          color:$body-bg;
+          color: $body-bg;
         }
       }
     }
@@ -2828,7 +2851,7 @@ table {
   }
   .inp-checkbox {
     opacity: 0;
-    filter:alpha(opacity=0);
+    filter: alpha(opacity=0);
   }
   .shop-name {
     color: inherit;

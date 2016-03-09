@@ -111,7 +111,6 @@ class MyGoodsController extends Controller
        /* $coordinate = $goods->deliveryArea->each(function ($area) {
             $area->coordinate;
         });*/
-
         return view('index.my-goods.detail',
             ['goods' => $goods, 'attrs' => $attrs/*, 'coordinates' => $coordinate->toJson()*/]);
     }

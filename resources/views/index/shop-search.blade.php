@@ -90,11 +90,11 @@
                     {{--</div>--}}
                     {{--</div>--}}
                     {{--</li>--}}
-                    <li><a href="{{ url('shop/' . $shop->id . '/detail') }}">店家信息</a></li>
+                    <li><a class="list-name" href="{{ url('shop/' . $shop->id . '/detail') }}">店家信息</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if ($shop->id != $user->shop->id)
-                        <li class="right">
+                        <li class="collect">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"
                                class="btn btn-like" data-id="{{ $shop->id }}">
                                 @if(is_null($isLike))

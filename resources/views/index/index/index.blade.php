@@ -1,6 +1,7 @@
 @extends('index.master')
 
 @section('subtitle', '首页')
+@include('includes.notice')
 
 @section('header')
     @parent
@@ -57,6 +58,8 @@
                             @foreach($adverts as $key=>$advert )
                                 <li class="{{ $key == 0 ? 'active' : '' }}" data-target="#myCarousel"
                                     data-slide-to="{{ $key }}">
+                                    {{ $key + 1 }}
+                                </li>
                             @endforeach
                         </ol>
                         <div class="carousel-inner">
@@ -74,7 +77,12 @@
                     <h3 class="text-center">活动公告</h3>
 
                     @foreach($notices as $key=>$notice)
-                        <p>{{ ($key+1). '.' .$notice->title }}</p>
+                        <p>
+                            <a class="content-title" href="javascript:" data-target="#noticeModal" data-toggle="modal"
+                               data-content="{{ $notice->content }}"
+                               title="{{ $notice->title }}">{{ ($key+1). '.' .$notice->title }}
+                            </a>
+                        </p>
                     @endforeach
                 </div>
             </div>
@@ -89,7 +97,7 @@
                     </div>
                     <div class="col-xs-12 padding-clear">
                         <div class="row margin-clear">
-                            <div class="col-xs-4">
+                            <div class="col-xs-5">
                                 <div id="myCarousel1" class="row carousel slide banner-slide">
                                     <div class="carousel-inner">
                                         @foreach($column->adverts as $key => $advert)
@@ -108,7 +116,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-xs-8">
+                            <div class="col-xs-7">
                                 <div class="col-xs-12 commodity-panel padding-clear">
                                     @foreach($column->goods as $goods)
                                         <div class="commodity commodity-index-img">
@@ -180,6 +188,11 @@
                 interval: 2000
             })
             $("#carousel-indicators li").css("width", ($("#carousel-indicators").width() / $("#carousel-indicators li").length) + "px");
+            $('.content-title').on('click', function () {
+                var obj = $(this);
+                $('.modal-title').html(obj.attr('title'));
+                $('.notice-content').html(obj.data('content'));
+            })
         });
     </script>
 @stop

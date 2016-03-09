@@ -173,7 +173,9 @@ return [
         'address[province_id]' => '省',
         'address[city_id]' => '市',
         'address[address]' => '地址',
-        'pos_sign' => 'POS机编号'
+        'pos_sign' => 'POS机编号',
+        'num' => '数量',
+        'price' => '价格',
     ],
 
 ];

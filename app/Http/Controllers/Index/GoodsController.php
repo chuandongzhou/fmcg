@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Services\AttrService;
+use App\Services\GoodsService;
 use Gate;
 
 class GoodsController extends Controller
@@ -34,6 +35,7 @@ class GoodsController extends Controller
             'goods' => $goods,
             'attrs' => $attrs,
             'isLike' => $isLike,
+            'categoriesName' => GoodsService::getGoodsCate($goods)
          /*   'coordinates' => $coordinate->toJson()*/
         ]);
     }

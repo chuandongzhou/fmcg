@@ -16,10 +16,10 @@
     <div class="dealer-top-header">
         <div class="container ">
             <div class="row">
-                <div class="col-sm-4 city-wrap">
-
+                <div class="col-sm-2 text-center top-title">
+                    管理中心
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-10">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"
                                 data-target="#bs-example-navbar-collapse-9" aria-expanded="false">

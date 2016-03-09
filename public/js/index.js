@@ -519,7 +519,7 @@ var loadGoodsImages = function (barCode) {
         $.get(url, {'bar_code': barCode}, function (data) {
             var html = '', goodsImage = data['goodsImage'], goodsImageData = goodsImage['data'], imageBox = $('.goods-imgs');
             for (var index in goodsImageData) {
-                html += '<div class="thumbnail col-xs-3 img-' + goodsImageData[index]['id'] + '">';
+                html += '<div class="thumbnail col-xs-3">';
                 html += '   <img alt="" src="' + goodsImageData[index]['image_url'] + '" data-id="' + goodsImageData[index]['id'] + '">';
                 html += '</div>';
             }
@@ -544,7 +544,6 @@ var loadGoodsImages = function (barCode) {
         }
 
     });
-    LoadImg(barCode);
 };
 
 //function addGoodsFunc(cate1, cate2, cate3) {
@@ -648,7 +647,7 @@ function goodsBatchUpload() {
                     cateLevel1 = $('select[name="cate_level_1"]').val(),
                     cateLevel2 = $('select[name="cate_level_2"]').val(),
                     cateLevel3 = $('select[name="cate_level_3"]').val() || 0,
-                    status = $('input[name="status"]').is(':checked') ? 1 : 0;
+                    status = /*$('input[name="status"]').is(':checked') ? 1 :*/ 0;
                 if (!cateLevel1 || !cateLevel2) {
                     alert('请把分类选择完整');
                     return false;
@@ -763,23 +762,16 @@ function sendGoodsByDetailPage() {
  * 订单详情页修改单价功能事件
  */
 function changePriceByDetailPage() {
-    $('#changePrice').find('.btn-add').prop('disabled', true);
     $('.change-price').click(function () {
-        var order_id = $(this).data('data');
-        var pivot_id = $(this).data('pivot');
-        $('input[name="price"]').keyup(function () {
-            var price = $(this).val();
-            if (isNaN(price) || !parseFloat(price)) {//不是数字
-                $('.tip').show();
-            } else if (price < 0) {
-                $('.tip').text('单价输入不合法').show();
-            } else {
-                $('.tip').hide();
-                $('#changePrice').find('.btn-add').prop('disabled', false);
-                $('input[name="order_id"]').val(order_id);
-                $('input[name="pivot_id"]').val(pivot_id);
-            }
-        });
+        var obj = $(this),
+            order_id = obj.data('id'),
+            pivot_id = obj.data('pivot'),
+            price = obj.data('price'),
+            num = obj.data('num');
+        $('input[name="order_id"]').val(order_id);
+        $('input[name="pivot_id"]').val(pivot_id);
+        $('input[name="price"]').val(price);
+        $('input[name="num"]').val(num);
     });
 }
 

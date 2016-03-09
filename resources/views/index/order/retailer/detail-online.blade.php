@@ -168,7 +168,7 @@
             @endif
             <div class="item">
                 <label class="title-name">收货地址</label>
-                <span>{{ $order->shippingAddress->address->address_name }}</span>
+                <span>{{ $order->shippingAddress->address ? $order->shippingAddress->address->address_name : '' }}</span>
             </div>
             <div class="table-responsive order-table clearfix item">
                 <label class="pull-left title-name">商品清单</label>

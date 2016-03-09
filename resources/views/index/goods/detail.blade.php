@@ -1,6 +1,8 @@
 @extends('index.index-master')
 
-@section('subtitle', '商品详情')
+@section('subtitle')
+    {{ $goods->name }}
+@stop
 @section('container')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
@@ -24,12 +26,25 @@
                 </div>
             </div>
             <div class="col-sm-7 store-detail-wrap">
-                <h3 class="store-name">{{ $goods->name }}</h3>
+                <div class="store-title">
+                    <h3 class="store-name">{{ $goods->name }}</h3>
+
+                    <p class="title-content prompt">
+                        @foreach($categoriesName as $cate)
+                            <a href="{{ url('search?category_id=' . $cate->level . $cate->id) }}" target="_blank">
+                                {{ $cate->name }}
+                            </a>
+                            {{ $cate == $categoriesName->last() ? '' : ' -> ' }}
+                        @endforeach
+
+                    </p>
+                </div>
 
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
                         <li><span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b></li>
                         <li><span class="prompt">价格 :</span> <b>￥{{ $goods->price . ' / ' . $goods->pieces }}</b></li>
+                        <li><span class="prompt">保质期 :</span> <b>{{ $goods->shelf_life}}</b></li>
                         @foreach($attrs as $key=>$attr)
                             <li>
                                 <span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b>
@@ -56,7 +71,7 @@
 
                         <li>
                             <span class="prompt">退换货 :</span>
-                            <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ''  }}</b>
+                            <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ($goods->is_back ? '' : '不可退 不可换')  }}</b>
                         </li>
                         <li>
                             <span class="prompt">即期品 :</span>

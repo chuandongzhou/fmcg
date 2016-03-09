@@ -8,6 +8,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>公告标题</th>
                 <th>公告内容</th>
                 <th class="text-nowrap">操作</th>
             </tr>
@@ -16,6 +17,11 @@
             @foreach($notices as $notice)
                 <tr>
                     <td>{{ $notice->title }}</td>
+                    <td>
+                        <div style="text-overflow: ellipsis; white-space: nowrap;  overflow: hidden; width:600px">
+                            {{ $notice->content }}
+                        </div>
+                       </td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
                             <a class="btn btn-primary" href="{{ url('admin/notice/' . $notice->id . '/edit') }}">

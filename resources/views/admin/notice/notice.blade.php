@@ -6,17 +6,26 @@
           data-done-then="referer" autocomplete="off">
 
         <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">公告内容</label>
+            <label for="name" class="col-sm-2 control-label">公告标题</label>
 
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="title" name="title" placeholder="请输入公告内容"
+                <input type="text" class="form-control" id="title" name="title" placeholder="请输入公告标题"
                        value="{{ $notice->title }}">
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">公告内容</label>
+
+            <div class="col-sm-6">
+                <textarea class="form-control" rows="5" id="content" name="content" placeholder="请输入公告内容">
+                    {{ $notice->content }}
+                </textarea>
+            </div>
+        </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-sm-offset-2 col-sm-4">
                 <button type="submit" class="btn btn-bg btn-primary">{{ $notice->id ? '修改' : '添加' }}</button>
             </div>
         </div>

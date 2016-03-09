@@ -167,7 +167,8 @@
                         <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
                         <li>
                             <span class="title-info-name">联系地址 : </span>{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
-                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal" ><i class="fa fa-map-marker"></i> 查看地图</a>
+                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"><i
+                                        class="fa fa-map-marker"></i> 查看地图</a>
                         </li>
                     </ul>
                 </div>
@@ -216,8 +217,10 @@
                                 <td>{{ $goods['pivot']['price'] * $goods['pivot']['num'] }}</td>
                                 @if($order->can_change_price)
                                     <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
-                                           data-toggle="modal" data-data="{{ $order['id'] }}"
-                                           data-pivot="{{  $goods['pivot']['id'] }}">修改</a></td>
+                                           data-toggle="modal" data-id="{{ $order->id }}"
+                                           data-price="{{ $goods->pivot->price }}"
+                                           data-num="{{ $goods->pivot->num }}"
+                                           data-pivot="{{  $goods->pivot->id }}">修改</a></td>
                                 @endif
                             </tr>
                         @endforeach

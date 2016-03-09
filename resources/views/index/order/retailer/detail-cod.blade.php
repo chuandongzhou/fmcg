@@ -13,7 +13,8 @@
                 <li><span class="title-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span></li>
                 @if(!is_null($order->systemTradeInfo))
                     <li>
-                        <span class="title-name">订单手续费 : </span><span class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                        <span class="title-name">订单手续费 : </span><span
+                                class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                     </li>
                 @endif
                 <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
@@ -131,18 +132,18 @@
                     <ul class="pull-left">
                         <li>
                             <span>联系人 :</span>
-                            <span>{{ $order['deliveryMan']['name'] }}</span>
+                            <span>{{ $order['deliveryMan']['name']}}</span>
                         </li>
                         <li>
                             <span>联系电话 :</span>
-                            <span>{{ $order['deliveryMan']['phone'] }}</span>
+                            <span>{{ $order['deliveryMan']['phone']  }}</span>
                         </li>
                     </ul>
                 </div>
             @endif
             <div class="item">
                 <label class="title-name">收货地址</label>
-                <span>{{ $order->shippingAddress->address->address_name }}</span>
+                <span>{{ $order->shippingAddress->address ? $order->shippingAddress->address->address_name : '' }}</span>
             </div>
             <div class="table-responsive order-table clearfix item">
                 <label class="pull-left title-name">商品清单</label>
@@ -163,8 +164,9 @@
                             <td>{{ $goods['id'] }}</td>
                             <td><img class="store-img" src="{{ $goods['image_url'] }}"></td>
                             <td>
-                                <div class="product-panel" >
-                                    <a class="product-name" href="{{ url('goods/'. $goods['id']) }}" target="_blank">{{ $goods->name }}</a>
+                                <div class="product-panel">
+                                    <a class="product-name" href="{{ url('goods/'. $goods['id']) }}"
+                                       target="_blank">{{ $goods->name }}</a>
                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                 </div>
                             </td>

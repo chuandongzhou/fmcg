@@ -17,6 +17,6 @@ class Notice extends Model
      *
      * @var array
      */
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'content'];
 
 }

@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
@@ -580,12 +581,12 @@ class OrderController extends Controller
     }
 
     /**
-     * 修改订单价格
+     * 修改订单
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\v1\UpdateOrderRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function putChangePrice(Request $request)
+    public function putChangeOrder(UpdateOrderRequest $request)
     {
         //判断该订单是否存在
         $order = Order::bySellerId($this->user->id)->find(intval($request->input('order_id')));
@@ -593,19 +594,18 @@ class OrderController extends Controller
             return $this->error('订单不存在或不能修改');
         }
         //判断输入的价格是否合法
-        $price = floatval($request->input('price'));
-        if ($price < 0) {
-            return $this->error('输入单价不合法');
-        }
+        $price = $request->input('price');
+        $num = $request->input('num');
+
         //判断待修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($request->input('pivot_id')));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
             return $this->error('操作失败');
         }
-        $flag = DB::transaction(function () use ($orderGoods, $order, $price) {
+        $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num) {
             $oldTotalPrice = $orderGoods->total_price;
-            $newTotalPrice = $orderGoods->num * $price;
-            $orderGoods->fill(['price' => $price, 'total_price' => $newTotalPrice])->save();
+            $newTotalPrice = $num * $price;
+            $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
             //通知买家订单价格发生了变化
 

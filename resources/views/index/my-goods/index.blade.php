@@ -5,15 +5,6 @@
 @section('right')
     <div class="row controls">
         <div class="col-sm-12">
-            <div class="item control-sequence">
-                <label>排序:</label>
-                <a href="{{ url('my-goods?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                   class="btn {{ !isset($get['sort']) || $get['sort'] == 'name' ? 'btn-primary' : 'btn-default' }} control">名称</a>
-                <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
-                   class="btn  control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'btn-primary' : 'btn-default' }}">价格</a>
-                {{--<a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"--}}
-                {{--class="btn  control {{ isset($get['sort']) && $get['sort']=='new' ? 'btn-primary' : 'btn-default' }}">新增商品</a>--}}
-            </div>
             <form action="{{ url('my-goods') }}" method="get" autocomplete="off">
                 <div class="item control-delivery">
                     <label>配送区域:</label>
@@ -152,13 +143,13 @@
                 <p class="pull-left sequence">
                     <a href="{{ url('my-goods'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"
                        class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>
-                    <a href="{{ url('my-goods?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                    <a href="{{ url('my-goods?sort=name'  . (empty(array_except($get , ['sort' , 'page'])) ? '' :  '&' . http_build_query(array_except($get , ['sort', 'page'])))) }}"
                        class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
-                    <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                    <a href="{{ url('my-goods?sort=price'  . (empty(array_except($get , ['sort' , 'page'])) ? '' :  '&' . http_build_query(array_except($get , ['sort', 'page'])))) }}"
                        class="control {{ isset($get['sort']) && $get['sort'] == 'price' ? 'active' : '' }}">价格</a>
-                    <a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                    <a href="{{ url('my-goods?sort=new'  . (empty(array_except($get , ['sort', 'page'])) ? '' :  '&' . http_build_query(array_except($get , ['sort', 'page'])))) }}"
                        class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
-                    <a href="{{ url('my-goods?sort=not_on'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
+                    <a href="{{ url('my-goods?sort=not_on'  . (empty(array_except($get , ['sort', 'page'])) ? '' :  '&' . http_build_query(array_except($get , ['sort', 'page'])))) }}"
                        class="control {{ isset($get['sort']) && $get['sort']=='not_on' ? 'active' : '' }}">未上架</a>
                 </p>
             </div>

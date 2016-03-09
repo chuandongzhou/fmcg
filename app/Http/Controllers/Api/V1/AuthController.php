@@ -146,9 +146,14 @@ class AuthController extends Controller
             return $this->error('短信发送过于频繁');
         }
         $code = str_random($validateCodeConf['length']);
-        RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
+
         $result = app('pushbox.sms')->send('code', $data['backup_mobile'], $code);
-        return empty($result) ? $this->error('发送失败,请重试') : $this->success('发送成功');
+        if(empty($result)) {
+            return $this->error('发送失败,请重试');
+        }else{
+            RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
+            return $this->success('发送成功');
+        }
     }
 
     /**

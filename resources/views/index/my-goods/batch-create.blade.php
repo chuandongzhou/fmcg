@@ -57,9 +57,9 @@
                 </div>
             </div>
             <div class="col-sm-12 text-center save padding-clear">
-                <label>
-                    <input type="checkbox" name="status" value="1"> 立即上架<span
-                            class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
+                {{--<label>--}}
+                    {{--<input type="checkbox" name="status" value="1"> 立即上架<span--}}
+                            {{--class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>--}}
 
                 <p class="save-btn">
                     <a class="btn btn-bg btn-primary"> 保存</a>

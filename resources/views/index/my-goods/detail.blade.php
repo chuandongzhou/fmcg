@@ -36,11 +36,11 @@
                         </li>
                     @else
                         <li>
-                            <span class="prompt">价格(终端) :</span>
+                            <span class="prompt">价格(终端商) :</span>
                             <b class="red">￥{{ $goods->price .' / ' . $goods->pieces  }}</b>
                         </li>
                         <li>
-                            <span class="prompt">价格(批发) :</span>
+                            <span class="prompt">价格(批发商) :</span>
                             <b class="red">￥{{ $goods->price_wholesaler .' / ' . cons()->valueLang('goods.pieces',$goods->pieces_wholesaler)  }}</b>
                         </li>
                     @endif
@@ -51,6 +51,8 @@
                     @endforeach
                 </ul>
                 <ul class="right-list">
+                    <li><span class="prompt">保质期 :</span> <b>{{ $goods->shelf_life }}</b>
+                    </li>
                     <li><span class="prompt">是否新品 :</span> <b>{{ cons()->valueLang('goods.type' ,$goods->is_new ) }}</b>
                     </li>
                     <li>
@@ -60,7 +62,7 @@
                         <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b></li>
                     @if( $goods->is_back || $goods->is_change)
                         <li><span class="prompt">退换货 :</span> <b>{{ $goods->is_back ? '可退货' : '' }}</b>
-                            <b>{{  $goods->is_change ? '可换货' : ''  }}</b></li>
+                            <b>{{  $goods->is_change ? '可换货' : ($goods->is_back ? '' : '不可退 不可换')  }}</b></li>
                     @endif
                     @if(auth()->user()->type==cons('user.type.wholesaler'))
                         <li>

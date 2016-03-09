@@ -181,7 +181,9 @@ return [
         ],
         'cache' => [
             'keywords_pre' => 'goods:keywords:',
-            'num' => 8
+            'num' => 8,
+            'cate_name' => 'goods:cate_name:',
+            'cate_name_expire' => 10
         ]
     ],
     // 银行列表
@@ -268,7 +270,7 @@ return [
         'length' => 4,
         'backup' => [
             'pre_name' => 'backup:code:',
-            'expire' => 120,
+            'expire' => 60,
         ]
     ],
     'location' => [

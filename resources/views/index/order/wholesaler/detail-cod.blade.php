@@ -103,7 +103,8 @@
                         </li>
                         @if(!is_null($order->systemTradeInfo))
                             <li>
-                                <span class="title-info-name">订单手续费 : </span><span class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                                <span class="title-info-name">订单手续费 : </span><span
+                                        class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                             </li>
                         @endif
                         <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
@@ -150,7 +151,8 @@
                         <li>
                             <span class="title-info-name">联系地址 : </span>
                             {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
-                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal" ><i class="fa fa-map-marker"></i> 查看地图</a>
+                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"><i
+                                        class="fa fa-map-marker"></i> 查看地图</a>
 
                         </li>
                     </ul>
@@ -188,8 +190,9 @@
                                 <td>{{ $goods['id'] }}</td>
                                 <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
                                 <td>
-                                    <div class="product-panel" >
-                                        <a  class="product-name" href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                    <div class="product-panel">
+                                        <a class="product-name"
+                                           href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
                                         {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                     </div>
                                 </td>
@@ -199,7 +202,9 @@
                                 <td>{{ $goods['pivot']['total_price'] }}</td>
                                 @if($order->can_change_price)
                                     <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
-                                           data-toggle="modal" data-data="{{ $order['id'] }}"
+                                           data-toggle="modal" data-id="{{ $order['id'] }}"
+                                           data-price="{{ $goods->pivot->price }}" ,
+                                           data-num="{{ $goods->pivot->num }}"
                                            data-pivot="{{  $goods['pivot']['id'] }}">修改</a></td>
                                 @endif
 

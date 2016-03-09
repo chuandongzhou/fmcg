@@ -36,8 +36,8 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-        $title = $request->input('title');
-        if (Notice::create(['title' => $title])->exists) {
+        $attributes = $request->all();
+        if (Notice::create(['title' => $attributes['title'], 'content' => $attributes['content']])->exists) {
             return $this->success('添加公告成功');
         }
         return $this->error('添加公告时出现问题');
@@ -63,8 +63,8 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $notice)
     {
-        $title = $request->input('title');
-        if ($notice->fill(['title' => $title])->save()) {
+        $attributes = $request->all();
+        if ($notice->fill(['title' => $attributes['title'], 'content' => $attributes['content']])->save()) {
             return $this->success('更新公告成功');
         }
         return $this->error('更新公告时出现问题');

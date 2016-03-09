@@ -26,6 +26,7 @@ class Goods extends Model
         'pieces_wholesaler',
         'min_num_wholesaler',
         'specification_wholesaler',
+        'shelf_life',
         'bar_code',
         'cate_level_1',
         'cate_level_2',
