@@ -45,7 +45,6 @@
     @parent
     <script>
         $(function () {
-
             picFunc(10000);
         });
     </script>

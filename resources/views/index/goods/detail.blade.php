@@ -36,7 +36,6 @@
                             </a>
                             {{ $cate == $categoriesName->last() ? '' : ' -> ' }}
                         @endforeach
-
                     </p>
                 </div>
 

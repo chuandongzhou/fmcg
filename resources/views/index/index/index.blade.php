@@ -99,21 +99,23 @@
                         <div class="row margin-clear">
                             <div class="col-xs-5">
                                 <div id="myCarousel1" class="row carousel slide banner-slide">
-                                    <div class="carousel-inner">
-                                        @foreach($column->adverts as $key => $advert)
-                                            <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                                <a href="{{ $advert->url }}" target="_blank">
-                                                    <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <ul class="carousel-indicators" id="carousel-indicators">
-                                        @foreach($column->adverts as $key=>$image)
-                                            <li data-target="#myCarousel1" data-slide-to="{{ $key }}"
-                                                class="{{ $key == 0 ? 'active' : '' }}">{{ $image->name }}</li>
-                                        @endforeach
-                                    </ul>
+                                    @if(!$column->adverts->isEmpty())
+                                        <div class="carousel-inner">
+                                            @foreach($column->adverts as $key => $advert)
+                                                <div class="item {{ $key == 0 ? 'active' : '' }}">
+                                                    <a href="{{ $advert->url }}" target="_blank">
+                                                        <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <ul class="carousel-indicators" id="carousel-indicators">
+                                            @foreach($column->adverts as $key=>$image)
+                                                <li data-target="#myCarousel1" data-slide-to="{{ $key }}"
+                                                    class="{{ $key == 0 ? 'active' : '' }}">{{ $image->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-xs-7">

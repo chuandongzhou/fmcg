@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Attr;
+use App\Models\Category;
 use App\Models\Goods;
 use App\Services\GoodsService;
 use App\Http\Requests;
@@ -31,8 +32,6 @@ class MyGoodsController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-
-
         $goods = auth()->user()->shop->goods()->with('images')->select([
             'id',
             'name',
@@ -44,15 +43,24 @@ class MyGoodsController extends Controller
             'min_num_wholesaler',
             'user_type',
             'is_new',
+            'status',
             'is_promotion',
             'cate_level_1',
-            'cate_level_2'
+            'cate_level_2',
+            'cate_level_3',
+            'updated_at'
         ]);
-
         $result = GoodsService::getGoodsBySearch($data, $goods);
+        $myGoods = $result['goods']->paginate();
+        $cateIds = [];
+        foreach ($myGoods as $item) {
+            $cateIds[$item->id] = $item->category_id;
+        }
+        $cateName = Category::whereIn('id', $cateIds)->lists('name', 'id');
 
         return view('index.my-goods.index', [
-            'goods' => $result['goods']->paginate(16),
+            'goods' => $myGoods,
+            'goodsCateName' => $cateName,
             'categories' => $result['categories'],
             'attrs' => $result['attrs'],
             'searched' => $result['searched'],
@@ -108,9 +116,9 @@ class MyGoodsController extends Controller
             return redirect(url('my-goods'));
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
-       /* $coordinate = $goods->deliveryArea->each(function ($area) {
-            $area->coordinate;
-        });*/
+        /* $coordinate = $goods->deliveryArea->each(function ($area) {
+             $area->coordinate;
+         });*/
         return view('index.my-goods.detail',
             ['goods' => $goods, 'attrs' => $attrs/*, 'coordinates' => $coordinate->toJson()*/]);
     }

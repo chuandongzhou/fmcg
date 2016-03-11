@@ -167,7 +167,7 @@
             formSubmitByGet();
             $('.refund').click(function () {
                 var obj = $(this), url = obj.data('url');
-                $('.modal-body').find('button[type="submit"]').attr('data-url', url);
+                $('.modal-footer').find('button[type="submit"]').attr('data-url', url);
             })
         })
     </script>

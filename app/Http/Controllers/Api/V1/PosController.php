@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Services\PayService;
+use App\Services\RedisService;
 use Carbon\Carbon;
 
 class PosController extends Controller
@@ -112,7 +113,7 @@ class PosController extends Controller
         $head = $data['SessionHead'];
         $body = $data['SessionBody'];
         $resultCodeArr = cons('pos.result_code');
-        $orderStatusArr = cons('pos.order_status');
+        $orderStatusArr = cons('trade.pay_status');
 
         $array = [
             'SessionHead' => array_except($head, ['ReqTime', 'HMAC'])
@@ -125,13 +126,16 @@ class PosController extends Controller
 
         } else {
             $orderId = $body['OrderNo'];
-            $order = Order::where('delivery_man_id', $body['EmployeeID'])->where('pay_type',
+
+            $deliveryId = DeliveryMan::where('user_name', $body['EmployeeID'])->pluck('id');
+
+            $order = Order::where('delivery_man_id', $deliveryId)->where('pay_type',
                 cons('pay_type.cod'))->with('deliveryMan', 'shippingAddress.address',
                 'systemTradeInfo')->NonCancel()->find($orderId);
             if (!$order) {
                 $array['SessionBody'] = [
                     'OrderStatus' => $orderStatusArr['no_order'],
-                    'OrderStatusMsg' => cons()->valueLang('pos.order_status',
+                    'OrderStatusMsg' => cons()->valueLang('trade.pay_status',
                         $orderStatusArr['no_order'])
                 ];
             } else {
@@ -150,7 +154,7 @@ class PosController extends Controller
                     'RceiverTel' => $order->shippingAddress->phone,
                     'Amount' => $order->price,
                     'OrderStatus' => $orderStatus,
-                    'OrderStatusMsg' => cons()->valueLang('pos.order_status', $orderStatus)
+                    'OrderStatusMsg' => cons()->valueLang('trade.pay_status', $orderStatus)
                 ];
             }
 
@@ -185,18 +189,40 @@ class PosController extends Controller
             $order = Order::where('id', $body['OrderNo'])->get();
 
             //增加平台交易记录
-            $result = (new PayService)->addTradeInfo($order, $body['Amount'], 0, $body['YeepayOrderNo'], 'yeepay',
-                $head['HMAC'], $body['ReferNo'], cons('pos.order_status.received_no_sign'), $body['BankCardNo']);
+            $orderFee = sprintf("%.2f", $body['Amount'] * 78 / 10000);
+            $maxFee = cons('pos.max_fee');
 
-            // TODO: 增加卖家平台余额
+            $orderFee = $orderFee <= $maxFee ?: $maxFee;
 
-            $array['SessionHead']['ResultCode'] = $resultCodeArr['success'];
-            $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
-                $resultCodeArr['success']);
-            $array['SessionBody'] = [
-                'OrderNo' => $body['OrderNo'],
-                'ReferNo' => $body['ReferNo']
-            ];
+            $result = (new PayService)->addTradeInfo($order, $body['Amount'], $orderFee, $body['YeepayOrderNo'], 'pos',
+                $head['HMAC'], $body['ReferNo'], cons('trade.pay_status.received_no_sign'), $body['BankCardNo']);
+
+            if ($result) {
+                //pos机支付成功更新用户余额
+                $shopOwner = $order->first()->shop->user;
+                $shopOwner->balance += $body['Amount'] - $orderFee;
+                $shopOwner->save();
+                //通知卖家
+                $redisKey = 'push:seller:' . $shopOwner->id;
+                $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
+
+                RedisService::setRedis($redisKey, $redisVal);
+
+                //返回支付成功报文
+                $array['SessionHead']['ResultCode'] = $resultCodeArr['success'];
+                $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
+                    $resultCodeArr['success']);
+                $array['SessionBody'] = [
+                    'OrderNo' => $body['OrderNo'],
+                    'ReferNo' => $body['ReferNo']
+                ];
+            } else {
+                $array['SessionHead']['ResultCode'] = $resultCodeArr['receive_error'];
+                $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
+                    $resultCodeArr['receive_error']);
+            }
+
+
         }
         return $this->_posReturn($array);
     }
@@ -227,7 +253,7 @@ class PosController extends Controller
         } else {
             $order = Order::find($body['OrderNo']);
             $trade = $order->systemTradeInfo;
-            if (!$order || !$trade || $trade->pay_status != cons('pos.order_status.received_no_sign')) {
+            if (!$order || !$trade || $trade->pay_status != cons('trade.pay_status.received_no_sign')) {
                 //报文验证
                 $array['SessionHead']['ResultCode'] = $resultCodeArr['receive_error'];
                 $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
@@ -239,7 +265,7 @@ class PosController extends Controller
                 $array['SessionBody'] = [
                     'OrderNo' => $body['OrderNo']
                 ];
-                $trade->fill(['pay_status' => cons('pos.order_status.signed')])->save();
+                $trade->fill(['pay_status' => cons('trade.pay_status.signed')])->save();
             }
         }
         return $this->_posReturn($array);

@@ -62,6 +62,8 @@ class AttrService
             if (is_null($category)) {
                 return [];
             }
+        }else{
+            return [];
         }
 
         $attrs = $category->attrs()->select(['attr_id', 'pid', 'name'])->get()->toArray();

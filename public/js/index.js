@@ -424,7 +424,9 @@ function tabBox() {
     })
 }
 
-
+/**
+ * 商品显示与收起
+ */
 function displayList() {
     $(".sort-item-panel").each(function () {
         var height = $(this).children(".all-sort-panel").height();
@@ -448,6 +450,82 @@ function displayList() {
             $(this).siblings('.all-sort').css({'maxHeight': '60px', 'overflow': 'hidden'});
             $(this).children('span').text('更多').siblings('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
         }
+    });
+}
+/**
+ * 我的商品列表
+ */
+function myGoodsFunc() {
+    $('.shelve').button({
+        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+        downText: '下架',
+        upText: '上架'
+    });
+    $('.delete-goods').button({
+        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+    });
+
+    /**
+     * 商品上下架
+     */
+    $(document).on('click', '.shelve', function () {
+        var self = $(this),
+            id = self.data('id'),
+            status = self.html() == '下架';
+        // 判断登录
+        if (!site.isLogin()) {
+            site.redirect('auth/login');
+            return;
+        }
+
+        self.button('loading');
+        $.ajax({
+            url: site.api('my-goods/shelve'),
+            method: 'put',
+            data: {status: !status ? 1 : 0, id: id}
+        }).done(function (data, textStatus, jqXHR) {
+            if ($.isPlainObject(data)) {
+                status = data.message;
+            } else {
+                status = null;
+            }
+            self.data('status', status).button(status ? 'down' : 'up');
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            self.button(status ? 'up' : 'down');
+            if (errorThrown == 'Unauthorized') {
+                site.redirect('auth/login');
+            } else {
+                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-goods', function () {
+        var self = $(this),
+            url = self.data('url'),
+            method = self.data('method');
+        // 判断登录
+        if (!site.isLogin()) {
+            site.redirect('auth/login');
+            return;
+        }
+
+        self.button('loading');
+        $.ajax({
+            url: url,
+            method: method,
+            data: {}
+        }).done(function (data, textStatus, jqXHR) {
+            self.parents('tr').slideUp(function () {
+                self.remove();
+            })
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (errorThrown == 'Unauthorized') {
+                site.redirect('auth/login');
+            } else {
+                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
+            }
+        });
     });
 }
 
@@ -517,7 +595,7 @@ var loadGoodsImages = function (barCode) {
         }
         var url = url || site.api('my-goods/images');
         $.get(url, {'bar_code': barCode}, function (data) {
-            var html = '', goodsImage = data['goodsImage'], goodsImageData = goodsImage['data'], imageBox = $('.goods-imgs');
+            var html = '', goodsImage = data['goodsImage'], goodsImageData = goodsImage['data'], imageBox = $('.goods-imgs'), uploadWrap = $('.image-upload');
             for (var index in goodsImageData) {
                 html += '<div class="thumbnail col-xs-3">';
                 html += '   <img alt="" src="' + goodsImageData[index]['image_url'] + '" data-id="' + goodsImageData[index]['id'] + '">';
@@ -531,7 +609,13 @@ var loadGoodsImages = function (barCode) {
                     html += '     <li><a class="next0 page"  href="javascript:void(0)" data-url="' + goodsImage['next_page_url'] + '">下一页</a></li>'
                 html += '</ul>';
             }
-            imageBox.html(html || '<div class="col-sm-12">暂无商品图片</div>');
+            if (html) {
+                imageBox.html(html);
+                uploadWrap.addClass('hide').find('.pictures').html('');
+            } else {
+                imageBox.html('');
+                uploadWrap.removeClass('hide');
+            }
         }, 'json');
     }
 
@@ -701,31 +785,6 @@ function goodsBatchUpload() {
 }
 
 
-/**
- *提现操作JS
- */
-function getWithdraw(total_amount) {
-    var btnAdd = $('#withdraw').find('.btn-add');
-    btnAdd.prop('disabled', true);
-    $('input[name="amount"]').on('keyup', function () {
-        var amount = $(this).val();
-        if (isNaN(amount)) {//不是数字
-            $('.tip').show();
-            btnAdd.prop('disabled', true);
-        } else if (amount > total_amount) {
-            $('.tip').text('提现金额不合法').show();
-            btnAdd.prop('disabled', true);
-        } else {
-            $('.tip').hide();
-            btnAdd.prop('disabled', false);
-        }
-    });
-    //清空输入数据以及提示信息
-    $('#withdraw').on('hidden.bs.modal', function (e) {
-        $('input[name="amount"]').val('');
-        $('.tip').hide();
-    });
-}
 /**
  * 动态显示提现进度
  */

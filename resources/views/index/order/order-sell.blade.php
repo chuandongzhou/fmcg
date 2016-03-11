@@ -1,5 +1,6 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
+@include('includes.order-refund')
 @section('subtitle', '订单管理')
 
 @section('right')
@@ -104,10 +105,19 @@
                                                         </p>
                                                     @endif
                                                     @if($order->can_confirm)
-                                                        <a class="btn btn-warning ajax" data-method='put'
-                                                           data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
-                                                            确认订单
-                                                        </a>
+                                                        <p>
+                                                            <a class="btn btn-warning ajax" data-method='put'
+                                                               data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
+                                                                确认订单
+                                                            </a>
+                                                        </p>
+                                                        <p>
+                                                            <a class="btn btn-danger refund" data-target="#refund"
+                                                               data-toggle="modal"
+                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                                取消并退款
+                                                            </a>
+                                                        </p>
                                                     @endif
                                                     @if($order['can_send'])
                                                         <p>
@@ -176,6 +186,10 @@
                 alert('{{ session('export_error') }}');
             @endif
 
+            $('.refund').click(function () {
+                var obj = $(this), url = obj.data('url');
+                $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');
+            })
         })
     </script>
 @stop

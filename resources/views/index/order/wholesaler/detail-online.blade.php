@@ -148,7 +148,12 @@
                                         data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
                                 </button>
                             @endif
-                            @if($order['can_send'])
+                            @if($order->can_confirm)
+                                <a class="btn btn-warning ajax" data-method='put'
+                                   data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
+                                    确认订单
+                                </a>
+                            @elseif($order['can_send'])
                                 <a class="btn btn-warning send-goods" data-target="#sendModal"
                                    data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
                             @endif
@@ -166,7 +171,7 @@
                         <li><span class="title-info-name">联系人 : </span>{{ $order['shippingAddress']['consigner'] }}</li>
                         <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
                         <li>
-                            <span class="title-info-name">联系地址 : </span>{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
+                            <span class="title-info-name">收货地址 : </span>{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
                             <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"><i
                                         class="fa fa-map-marker"></i> 查看地图</a>
                         </li>

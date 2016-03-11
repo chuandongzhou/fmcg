@@ -588,9 +588,8 @@ var addAddFunc = function () {
             areaName = provinceText + cityText + districtText + streetText;
         $('.modal-header .close').trigger('click');
         container.prepend(
-            '<div class="col-sm-12 fa-border show-map">' +
-            areaName +
-            addressText +
+            '<div class="col-sm-10 fa-border show-map">' +
+            areaName +  addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
@@ -1024,6 +1023,7 @@ function getShopAddressMap(lng, lat) {
     var addressMap = new BMap.Map('address-map', {enableMapClick: false});
     var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
     addressMap.addControl(top_left_navigation);
+    addressMap.enableScrollWheelZoom(true)
     if (lng && lat) {
         var point_address = new BMap.Point(lng, lat);
         addressMap.centerAndZoom(point_address, 12);
@@ -1080,7 +1080,10 @@ function getShopAddressMap(lng, lat) {
         }
     });
 }
-
+/**
+ * get提交form处理
+ * @param exceptName
+ */
 function formSubmitByGet(exceptName) {
     exceptName = exceptName || [];
 
@@ -1098,6 +1101,24 @@ function formSubmitByGet(exceptName) {
         return false;
     })
 }
+
+/**
+ * 全选
+ * @param parent_selectors
+ * @param target_selectors
+ */
+function onCheckChange(parent_selectors, target_selectors) {
+    var parents = $(parent_selectors);
+    var targets = $(target_selectors);
+    parents.change(function () {
+        targets.prop('checked', $(this).prop('checked'));
+    });
+
+    targets.change(function () {
+        parents.prop('checked', targets.length === targets.filter(':checked').length);
+    });
+}
+
 
 if (!window.console) {
     var console = {

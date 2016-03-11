@@ -8,8 +8,10 @@
         </div>
         <div class="pop-content">
             <p class="pop-tips">请您在新打开的网上银行页面进行支付,支付完成前请不要关闭该窗口</p>
+
             <div class="pop-btn">
-                <a href="{{ url('order-buy/detail?order_id=' . $orderId)}}" class="btn pay-success btn-default">已完成支付</a>
+                <a href="{{ url('order-buy/detail?order_id=' . $orderId)}}"
+                   class="btn pay-success btn-default">已完成支付</a>
                 <a href="javascript:" onclick="popClose()" class="btn btn-default">支付未成功</a>
             </div>
         </div>
@@ -23,8 +25,8 @@
             var box = $('.mask-outer');
             box.css('display', 'block');
         }
-        function popClose(){
-            $('.mask-outer').css("display","none");
+        function popClose() {
+            $('.mask-outer').css("display", "none");
         }
     </script>
 @stop

@@ -36,7 +36,8 @@
             <div class="col-sm-4 pay_type">
                 <input type="radio" name="pay_type" value="0" checked/> 全部 &nbsp;&nbsp;&nbsp;
                 @foreach (cons()->valueLang('trade.pay_type') as $key=>$value)
-                    <input type="radio" {{ isset($data['pay_type']) && $key == $data['pay_type'] ? 'checked' : '' }}  name="pay_type"
+                    <input type="radio"
+                           {{ isset($data['pay_type']) && $key == $data['pay_type'] ? 'checked' : '' }}  name="pay_type"
                            value="{{ $key }}"/> {{ $value }} &nbsp;&nbsp;&nbsp;
                 @endforeach
             </div>
@@ -46,8 +47,10 @@
             <label for="account" class="col-sm-2 control-label">已付款确认时间：</label>
 
             <div class="col-sm-6 time-limit">
-                <input type="text" class="inline-control datetimepicker" name="started_at" value="{{ $data['started_at'] or '' }}"> 至
-                <input type="text" class="inline-control datetimepicker" name="ended_at" value="{{ $data['ended_at'] or '' }}">
+                <input type="text" class="inline-control datetimepicker" name="started_at"
+                       value="{{ $data['started_at'] or '' }}"> 至
+                <input type="text" class="inline-control datetimepicker" name="ended_at"
+                       value="{{ $data['ended_at'] or '' }}">
             </div>
         </div>
 
@@ -85,7 +88,9 @@
                     <td>{{ $trade->account }}</td>
                     <td>{{ $trade->order_id }}</td>
                     <td>{{ $trade->trade_no }}</td>
-                    <td>{{ cons()->valueLang('order.pay_status' ,$trade->pay_status) }}</td>
+                    <td>
+                        {{ cons()->valueLang('trade.pay_status' ,$trade->pay_status) }}
+                    </td>
                     <td>{{ $trade->amount }}</td>
                     <td>{{ $trade->target_fee }}</td>
                     <td>{{ cons()->valueLang('trade.trade_currency' ,$trade->trade_currency) }}</td>

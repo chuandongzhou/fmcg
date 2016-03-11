@@ -46,7 +46,6 @@ class GoodsService
             $level = substr($data['category_id'], 0, 1);
             $categoryId = substr($data['category_id'], 1);
             $resultCategories = CategoryService::formatCategoryForSearch($categories, $categoryId);
-
             $attrs = (new AttrService([]))->getAttrByCategoryId($categoryId);
             $goods->OfCategory($categoryId, $level);
         }
@@ -288,8 +287,6 @@ class GoodsService
             ])->keyBy('id');
             Cache::put($cacheKey, $goodsCates, $cacheConf['cate_name_expire']);
         }
-
-
         return $goodsCates;
 
     }

@@ -63,10 +63,16 @@ class PayService
             $orderConf = cons('order');
             $newTimestamp = Carbon::now();
             foreach ($orders as $order) {
-                $order->fill([
+                $orderAttr = [
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                     'paid_at' => $newTimestamp
-                ])->save();
+                ];
+                if ($payType == 'pos') {
+                    $orderAttr['status'] = $orderConf['status']['finished'];
+                    $orderAttr['finished_at'] = $newTimestamp;
+                }
+
+                $order->fill($orderAttr)->save();
                 $fee = ($order->price / $amount) * $orderFee;
                 $fee = sprintf("%.2f", $fee);
                 // 增加易宝支付log
@@ -82,7 +88,8 @@ class PayService
                 $tradeConf = cons('trade');
 
                 $payType = array_get($tradeConf['pay_type'], $payType, head($tradeConf['pay_type']));
-                SystemTradeInfo::create([
+
+                $systemTradeInfoAttr = [
                     'type' => $tradeConf['type']['in'],
                     'pay_type' => $payType,
                     'account' => $accountArr[$order->shop_id],
@@ -96,7 +103,14 @@ class PayService
                     'trade_currency' => $tradeConf['trade_currency']['rmb'],
                     'callback_type' => 'json',
                     'hmac' => $hmac,
-                ]);
+                ];
+
+                if ($payType == 'pos') {
+                    $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
+                    $systemTradeInfoAttr['finished_at'] = $newTimestamp;
+                }
+
+                SystemTradeInfo::create($systemTradeInfoAttr);
             }
             return 'success';
         });

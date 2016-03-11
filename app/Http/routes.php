@@ -92,6 +92,9 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->post('attr/save', 'AttrController@save');             //绑定标签到分类
     $router->resource('attr', 'AttrController');                    //标签管理
     $router->get('attr/create/{id}', 'AttrController@create')->where('id', '[0-9]+'); //添加子标签
+    $router->get('images/check', 'ImagesController@check');          //商品图片审核
+    $router->put('images/check-handle', 'ImagesController@checkHandle');          //商品图片审核
+    $router->delete('images/batch-delete', 'ImagesController@batchDelete');          //商品图片审核
     $router->resource('images', 'ImagesController');                    //商品图片管理
     $router->resource('shop', 'ShopController', ['only' => ['edit', 'update']]); //店铺管理
     $router->controller('system-trade', 'SystemTradeInfoController');        //系统交易信息
@@ -150,7 +153,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
 
-        $router->put('my-goods/shelve/{goods_id}', 'MyGoodsController@shelve');
+        $router->put('my-goods/shelve', 'MyGoodsController@shelve');                //商品上下架
+        $router->put('my-goods/batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
         $router->get('my-goods/images', 'MyGoodsController@getImages');
         $router->post('my-goods/import', 'MyGoodsController@import');
         $router->resource('my-goods', 'MyGoodsController');

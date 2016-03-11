@@ -67,10 +67,15 @@ return [
         'pay_type' => [
             'yeepay' => '易宝',
             'pingxx' => 'pingxx',
+            'pos' => 'pos机'
         ],
-        'pay_info' => [
+        'pay_status' => [
             'success' => '成功',
-            'failed' => '失败'
+            'failed' => '失败',
+            'no_order' => '查无此单',
+            'signed' => '订单已签收',
+            'received_no_sign' => '已收款，未签收',
+            'no_pay_no_sign' => '未支付，未签收'
         ],
         'trade_currency' => [
             'rmb' => '人民币',
@@ -176,7 +181,7 @@ return [
         'price_changed' => '价格发生了变化',
         'review_failed' => '审核未通过',
         'review_payment' => '已打款,请查收',
-        'refund' => '买家已退款',
+        'refund' => '已取消并退款',
     ],
     //提现状态
     'withdraw' => [
@@ -195,12 +200,5 @@ return [
             'hmac_error' => '报文检验失败',
             'success' => '成功'
         ],
-        //订单状态
-        'order_status' => [
-            'no_order' => '查无此单',
-            'signed' => '订单已签收',
-            'received_no_sign' => '已收款，未签收',
-            'no_pay_no_sign' => '未支付，未签收'
-        ]
     ],
 ];

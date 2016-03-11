@@ -176,6 +176,8 @@ return [
         'pos_sign' => 'POS机编号',
         'num' => '数量',
         'price' => '价格',
+        'amount' => '金额',
+        'bank_id' => '银行'
     ],
 
 ];

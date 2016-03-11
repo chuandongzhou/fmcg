@@ -113,7 +113,7 @@ class Goods extends Model
      */
     public function images()
     {
-        return $this->hasMany('App\Models\Images', 'bar_code', 'bar_code');
+        return $this->hasMany('App\Models\Images', 'bar_code', 'bar_code')->where('status', 1);
     }
 
     /**
@@ -300,34 +300,34 @@ class Goods extends Model
      * @param $images ['id'=>['1' ,''] , 'path'=>'']
      * @return bool
      */
-    public function setImagesAttribute($images)
-    {
-        if ($this->exists) {
-            $this->images()->detach();
-            $this->images()->sync($images);
-        } else {
-            static::created(function ($model) use ($images) {
-                $model->images()->detach();
-                $model->images()->sync($images);
-            });
-        }
-
-
-        /*//格式化图片数组
-        $imagesArr = (new ImageUploadService($images))->formatImagePost();
-        //删除的图片
-        $files = $this->images();
-        if (!empty (array_filter($images['id']))) {
-            $files = $files->whereNotIn('id', array_filter($images['id']));
-        }
-        $files->delete();
-
-        if (!empty($imagesArr)) {
-            return $this->associateFiles($imagesArr, 'images', 0, false);
-        }*/
-
-        return true;
-    }
+//    public function setImagesAttribute($images)
+//    {
+//        if ($this->exists) {
+//            $this->images()->detach();
+//            $this->images()->sync($images);
+//        } else {
+//            static::created(function ($model) use ($images) {
+//                $model->images()->detach();
+//                $model->images()->sync($images);
+//            });
+//        }
+//
+//
+//        /*//格式化图片数组
+//        $imagesArr = (new ImageUploadService($images))->formatImagePost();
+//        //删除的图片
+//        $files = $this->images();
+//        if (!empty (array_filter($images['id']))) {
+//            $files = $files->whereNotIn('id', array_filter($images['id']));
+//        }
+//        $files->delete();
+//
+//        if (!empty($imagesArr)) {
+//            return $this->associateFiles($imagesArr, 'images', 0, false);
+//        }*/
+//
+//        return true;
+//    }
 
     /**
      * 根据不同角色获取价格

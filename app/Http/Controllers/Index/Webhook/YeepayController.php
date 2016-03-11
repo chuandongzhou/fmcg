@@ -62,7 +62,6 @@ class YeepayController extends Controller
                     $orders = Order::where($field, $r6_Order)->get()->each(function ($order) {
                         $order->setAppends([]);
                     });
-                    info($orders);
 
                     $result = (new PayService)->addTradeInfo($orders, $r3_Amt, $rq_TargetFee, $r2_TrxId, 'yeepay',
                         $hmac);

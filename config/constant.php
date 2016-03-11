@@ -128,11 +128,16 @@ return [
         ],
         'pay_type' => [
             'yeepay' => 1,          //易宝
-            'pingxx' => 2           //pingxx
+            'pingxx' => 2,           //pingxx
+            'pos' =>3               //pos机
         ],
         'pay_status' => [
             'success' => 1,         //成功
-            'failed' => 2           //失败
+            'failed' => 2,           //失败
+            'no_order' => 20,
+            'signed' => 21,
+            'received_no_sign' => 22,
+            'no_pay_no_sign' => 23
         ],
         'trade_currency' => [
             'rmb' => 1,             //人民币
@@ -296,12 +301,7 @@ return [
             'hmac_error' => 4,
             'success' => 2
         ],
-        'order_status' => [
-            'no_order' => 20,
-            'signed' => 21,
-            'received_no_sign' => 22,
-            'no_pay_no_sign' => 23
-        ]
+        'max_fee' => 26,   //pos机支付最高手续费
     ],
 
     //系统信息

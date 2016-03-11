@@ -90,12 +90,15 @@ class PayController extends Controller
     {
         $reason = $request->input('reason', 'no reason');
 
-        $order = Order::where('user_id', auth()->id())->find($orderId);
+        $refundBySeller = $request->input('is_seller');
 
+        $order = $refundBySeller ? Order::where('shop_id',
+            auth()->user()->shop->id)->find($orderId) : Order::where('user_id', auth()->id())->find($orderId);
 
-        if (!$order || !$order->can_refund || $order->user_id != auth()->id()) {
+        if (!$order || !$order->can_refund) {
             return $this->error('订单不存在或不能退款');
         }
+
         $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
             'order_id',
             'pay_type',
@@ -114,17 +117,14 @@ class PayController extends Controller
 
         if ($tradeInfo->pay_type == cons('trade.pay_type.yeepay')) {
             if ($this->_refundByYeepay($tradeInfo, $reason)) {
-                $order->orderRefund()->create(['reason'=>$reason]);
+                $order->orderRefund()->create(['reason' => $reason]);
                 // 更新订单状态
                 $order->fill([
                     'pay_status' => cons('order.pay_status.refund_success'),
                     'refund_at' => Carbon::now()
                 ])->save();
-                //通知卖家已退款
-                $shop = Shop::find($order->shop_id);
-                $redisKey = 'push:seller:' . $shop->user->id;
-                $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
-                RedisService::setRedis($redisKey, $redisVal);
+                //通知 卖家/买 已退款
+               $this->_setRefundNotice($order , $refundBySeller);
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
@@ -133,13 +133,9 @@ class PayController extends Controller
             $result = $this->_refundByPingxx($tradeInfo, $reason);
 
             if ($result) {
-                //通知卖家已退款
-                $order->orderRefund()->create(['reason'=>$reason]);
-
-                $shop = Shop::find($order->shop_id);
-                $redisKey = 'push:seller:' . $shop->user->id;
-                $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
-                RedisService::setRedis($redisKey, $redisVal);
+                $order->orderRefund()->create(['reason' => $reason]);
+                //通知 卖家/买 已退款
+                $this->_setRefundNotice($order , $refundBySeller);
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
@@ -300,5 +296,24 @@ class PayController extends Controller
         $sNewString = HmacMd5($sbOld, config('yeepay.merchant_key'));
 
         return $sNewString == $hmac;
+    }
+
+    /**
+     * 设置订单退款通知
+     *
+     * @param $order
+     * @param bool|false $refundBySeller
+     */
+    private function _setRefundNotice($order, $refundBySeller = false)
+    {
+        $redisKey = '';
+        if ($refundBySeller) {
+            $redisKey = 'push:user:' . $order->user->id;
+        } else {
+            $redisKey = 'push:seller:' . $order->shop->user->id;
+        }
+
+        $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
+        RedisService::setRedis($redisKey, $redisVal);
     }
 }

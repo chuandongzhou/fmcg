@@ -16,7 +16,7 @@ class BarcodeWithoutImagesController extends Controller
      */
     public function index()
     {
-        $barcode = BarcodeWithoutImages::orderBy('id', 'DESC')->get();
+        $barcode = BarcodeWithoutImages::orderBy('id', 'DESC')->paginate();
         return view('admin.barcode.index', ['barcode' => $barcode]);
     }
 

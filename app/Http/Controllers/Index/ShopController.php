@@ -114,14 +114,14 @@ class ShopController extends Controller
             $shop->images[0] = $advert->image;
         }
 
-        $coordinate = $shop->deliveryArea->each(function ($area) {
+     /*   $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
-        });
+        });*/
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
         return view('index.shop.detail',
-            ['shop' => $shop, 'isLike' => $isLike, 'coordinates' => $coordinate]);
+            ['shop' => $shop, 'isLike' => $isLike/*, 'coordinates' => $coordinate*/]);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Personal;
 
+use App\Http\Requests\Api\v1\CreateWithdrawRequest;
+use App\Models\SystemTradeInfo;
 use App\Models\UserBank;
 use App\Models\Withdraw;
 use Carbon\Carbon;
@@ -37,20 +39,21 @@ class WithdrawController extends Controller
     /**
      * 提现操作
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\v1\CreateWithdrawRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function postAddWithdraw(Request $request)
+    public function postAddWithdraw(CreateWithdrawRequest $request)
     {
-        //验证提现金额与提现账户
-        $this->validate($request, [
-            'amount' => 'required|Numeric',
-            'bank_id' => 'required|Numeric'
-        ]);
         $amount = $request->input('amount');
         $bankId = $request->input('bank_id');
         $user = auth()->user();
-        if ($amount > $user->balance) {
+
+        //获取该用户受保护的金额
+
+        $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->where('finished_at', '>=',  Carbon::now()->startOfDay())->sum('amount');
+
+        if ($amount > $user->balance - $protectedBalance) {
             return $this->error('可提现金额不足');
         }
         if (!$bank = UserBank::where('user_id', $user->id)->find($bankId)) {

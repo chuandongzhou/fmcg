@@ -11,6 +11,7 @@ use App\Models\Images;
 use App\Services\AddressService;
 use App\Services\AttrService;
 use App\Services\GoodsService;
+use App\Services\ImageUploadService;
 use App\Services\ImportService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -54,11 +55,16 @@ class MyGoodsController extends Controller
      */
     public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
-        $attributes = $request->all();
+        $attributes = $request->except('images');
         $goods = auth()->user()->shop->goods()->create($attributes);
         if ($goods->exists) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
+
+            $images = $request->input('images');
+            if (!is_null($images)) {
+                $this->_setImages($images, $goods->bar_code);
+            }
 
             // 更新标签
             isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
@@ -98,10 +104,12 @@ class MyGoodsController extends Controller
      */
     public function update(Requests\Api\v1\UpdateGoodsRequest $request, $goods)
     {
+
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $attributes = $request->all();
+        $attributes = $request->except('images');
+
         //是否退换货补充
         $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
         $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
@@ -117,6 +125,12 @@ class MyGoodsController extends Controller
         if ($goods->fill($attributes)->save()) {
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
+
+            $images = $request->input('images');
+            if (!is_null($images)) {
+                $this->_setImages($images, $goods->bar_code);
+            }
+
             // 更新标签
             isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
 
@@ -147,11 +161,11 @@ class MyGoodsController extends Controller
      * 商品上下架
      *
      * @param \Illuminate\Http\Request $request
-     * @param $goodsId
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function shelve(Request $request, $goodsId)
+    public function shelve(Request $request)
     {
+        $goodsId = $request->input('id');
         $goods = Goods::find($goodsId);
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
@@ -160,9 +174,37 @@ class MyGoodsController extends Controller
         $goods->status = $status;
         $statusVal = cons()->valueLang('goods.status', $status);
         if ($goods->save()) {
-            return $this->success('商品' . $statusVal . '成功');
+            if ($status) {
+                return $this->success('商品' . $statusVal . '成功');
+            } else {
+                return $this->success(null);
+            }
         }
         return $this->error('商品' . $statusVal . '失败');
+    }
+
+    /**
+     * 商品批量上下架
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function batchShelve(Request $request)
+    {
+        $goodsIds = $request->input('ids');
+        $goods = Goods::where('shop_id', auth()->user()->shop()->pluck('id'))->whereIn('id', $goodsIds)->get();
+
+        if ($goods->isEmpty()) {
+            return $this->error('请选择商品');
+        }
+        $status = intval($request->input('status'));
+
+        $goods->each(function ($item) use ($status) {
+            $item->fill(['status' => $status])->save();
+        });
+
+        $statusVal = cons()->valueLang('goods.status', $status);
+        return $this->success('商品' . $statusVal . '成功');
     }
 
     /**
@@ -177,7 +219,7 @@ class MyGoodsController extends Controller
         if (!$barCode) {
             return $this->error('暂无商品图片');
         }
-        $goodsImage = Images::with('image')->where('bar_code',  $barCode)->paginate()->toArray();
+        $goodsImage = Images::with('image')->where('bar_code', $barCode)->paginate()->toArray();
 
         return $this->success(['goodsImage' => $goodsImage]);
     }
@@ -405,5 +447,25 @@ class MyGoodsController extends Controller
             'info' => $msg,
             'type' => $type
         ];
+    }
+
+    /**
+     * 设置图片
+     *
+     * @param $images
+     * @param $name
+     * @return bool
+     */
+    private function _setImages($images, $name)
+    {
+        $images = (new ImageUploadService($images))->formatImagePost();
+
+        foreach ($images as $item) {
+            $image = Images::create(['bar_code' => $name]);
+            if ($image->exists) {
+                $image->associateFile($image->convertToFile($item['path'], $item['name']), 'image');
+            }
+        }
+        return true;
     }
 }

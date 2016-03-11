@@ -22,7 +22,7 @@ class GoodsController extends Controller
      */
     public function getGoods()
     {
-        return $this->success(['goodsColumns' => GoodsService::getGoodsColumn()]);
+        return $this->success(['goodsColumns' => GoodsService::getNewGoodsColumn()]);
     }
 
     /**

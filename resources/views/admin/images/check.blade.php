@@ -4,13 +4,13 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/barcode-without-images') }}" data-help-class="col-sm-push-2 col-sm-10"
+          action="{{ url('admin/images') }}" data-help-class="col-sm-push-2 col-sm-10"
           autocomplete="off">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>#</th>
-                <th>条形码id</th>
+                <th>图片</th>
                 <th>条形码</th>
                 <th>商品名</th>
                 <th>上传时间</th>
@@ -18,19 +18,23 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($barcode as $code)
+            @foreach($goodsImages as $goodsImage)
                 <tr>
-                    <td><input type="checkbox" class="child" name="ids[]" value="{{$code->id}}"/></td>
-                    <td>{{$code->id}}</td>
-                    <td>{{$code->barcode}}</td>
-                    <td>{{$code->goods_name}}</td>
-                    <td>{{$code->created_at}}</td>
+                    <td><input type="checkbox" class="child" name="ids[]" value="{{$goodsImage->id}}"/></td>
+                    <td><img src="{{$goodsImage->image_url}}" width="80px" height="80px"></td>
+                    <td>{{$goodsImage->bar_code}}</td>
+                    <td>{{$goodsImage->goods->name}}</td>
+                    <td>{{$goodsImage->created_at}}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
-                            <button type="button" class="btn btn-danger ajax" data-method="delete"
-                                    data-url="{{ url('admin/barcode-without-images/'.$code->id) }}">
-                                <i class="fa fa-trash-o"></i> 删除
-                            </button>
+                            <a class="close btn ajax" type="button"
+                               data-url="{{ url('admin/images/check-handle') }}"
+                               data-data='{"ids" : "{{$goodsImage->id }}"}'
+                               data-method="put">审核通过</a>
+
+                            <a class="close btn ajax" type="button"
+                               data-url="{{ url('admin/images',[$goodsImage->id]) }}"
+                               data-method="delete">删除</a>
                         </div>
                     </td>
                 </tr>
@@ -38,22 +42,23 @@
             </tbody>
         </table>
         <div class="pager">
-            {!! $barcode->render() !!}
+            {!! $goodsImages->render() !!}
         </div>
         <div class="btn-group btn-group-xs" role="group">
             <input type="checkbox" id="parent" class="checkbox-inline"/>
         </div>
         <div class="btn-group btn-group-xs" role="group">
             <button type="button" class="btn btn-danger ajax" data-method="delete"
-                    data-url="{{ url('admin/barcode-without-images/batch') }}">
+                    data-url="{{ url('admin/images/batch-delete') }}">
                 <i class="fa fa-trash-o"></i> 批量删除
             </button>
         </div>
 
         <div class="btn-group btn-group-xs" role="group">
-            <a class="btn btn-bg btn-warning" href="{{ url('admin/barcode-without-images/export') }}">
-                <i class="fa"></i> 导出
-            </a>
+            <button type="button" class="btn btn-default ajax" data-method="put"
+                    data-url="{{ url('admin/images/check-handle') }}">
+                <i class="fa fa-ok"></i> 批量审核通过
+            </button>
         </div>
     </form>
 @stop

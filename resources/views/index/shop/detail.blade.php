@@ -75,10 +75,10 @@
                         @endforeach
                     </ul>
                 </div>
-                <div class="item">
-                    <h5 class="title-name">商品配送区域大概地图标识</h5>
-                    <div id="map"></div>
-                </div>
+                {{--<div class="item">--}}
+                    {{--<h5 class="title-name">商品配送区域大概地图标识</h5>--}}
+                    {{--<div id="map"></div>--}}
+                {{--</div>--}}
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@
                 interval: 2000
             });
             likeFunc();
-            getCoordinateMap({!! $coordinates !!});
+            {{--getCoordinateMap({!! $coordinates !!});--}}
         });
     </script>
 @stop

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index\Personal;
 
+use App\Models\SystemTradeInfo;
 use App\Models\Withdraw;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,9 +38,13 @@ class WithdrawController extends Controller
                 [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate();
         }
 
+        $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
+
         return view('index.personal.withdraw', [
             'flag' => $flag,
             'balance' => $user->balance,
+            'protectedBalance' => $protectedBalance,
             'startTime' => $startTime,
             'endTime' => $endTime,
             'bankInfo' => $user->userBanks,
