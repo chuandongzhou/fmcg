@@ -168,12 +168,19 @@
                     <ul>
                         <li class="title">收货人信息</li>
                         <li><span class="title-info-name">终端商名称 : </span>{{ $order->user->shop->name }}</li>
-                        <li><span class="title-info-name">联系人 : </span>{{ $order['shippingAddress']['consigner'] }}</li>
-                        <li><span class="title-info-name">联系电话 : </span>{{ $order['shippingAddress']['phone'] }}</li>
+                        <li><span class="title-info-name">联系人 : </span>{{$order->shippingAddress->consigner }}</li>
+                        <li><span class="title-info-name">联系电话 : </span>{{  $order->shippingAddress->phone }}</li>
                         <li>
                             <span class="title-info-name">收货地址 : </span>{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
-                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"><i
-                                        class="fa fa-map-marker"></i> 查看地图</a>
+                            <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"
+                               data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
+                               data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
+                               data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
+                               data-consigner="{{ $order->shippingAddress->consigner }}"
+                               data-phone= {{ $order->shippingAddress->phone }}
+                            >
+                                <i class="fa fa-map-marker"></i> 查看地图
+                            </a>
                         </li>
                     </ul>
                 </div>

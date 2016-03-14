@@ -176,7 +176,7 @@ class OrderController extends Controller
         // 增加商品销量
         GoodsService::addGoodsSalesVolume($orderGoodsNum);
 
-        $query = $pid > 0 ? '?type-all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
+        $query = $pid > 0 ? '?type=all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
             . $onlinePaymentOrder[0]);
 
         $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);

@@ -2329,10 +2329,12 @@ table {
       padding-top: 10px;
       padding-bottom: 10px;
       font-size: 13px;
-      &:hover, &:focus {
+      &:hover
+      , &:focus {
         background-color: transparent;
         color: $gray-dark;
       }
+
       /*&.home {
         color: $brand-warning;
       }*/
@@ -3234,3 +3236,50 @@ table {
 }
 
 /*==============help end=================*/
+/*==============message begin=================*/
+.user-list-wrap{
+    border:1px solid $gray-lighter;
+  .user-list-panel{
+    background-color: $gray-plain;
+    height: 500px;
+    overflow-y: auto;
+    border-radius: 4px;
+    ul{
+      li{
+        padding:10px;
+        border-bottom: 1px solid #e9e7e7;
+        &:hover{
+          background-color: $gray-plain-light;
+          cursor: pointer;
+        }
+        &:last-of-type{
+          border:none;
+        }
+        .avatar{
+          border-radius: 50%;
+          -webkit-border-radius: 50%;
+          @include square(40px);
+        }
+        .user-name{
+          display: inline-block;
+          padding:0 5px;
+          font-size: 12px;
+          font-weight: bolder;
+        }
+        .badge{
+          background-color: $brand-primary!important;
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+  #msgWrap{
+    width: 700px;
+    height: 500px;
+  }
+}
+/*==============message end=================*/
+.msg-strom-detail{
+  font-size: 14px;
+  text-indent: 2em;
+}

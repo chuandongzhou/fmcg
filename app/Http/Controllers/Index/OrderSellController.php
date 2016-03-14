@@ -40,7 +40,8 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image');
+        $query = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image',
+            'shippingAddress.address.coordinate');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -206,7 +207,7 @@ class OrderSellController extends OrderController
                 '合计:   ' . $item->price,
                 '收货人:   ' . $item->shippingAddress->consigner,
                 '电话:   ' . $item->shippingAddress->phone,
-                '地址:   ' . is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address
+                '地址:   ' . is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name
             ];
             foreach ($info as $v) {
                 $table->addRow();

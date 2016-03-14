@@ -54,6 +54,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('balance', 'BalanceController@index'); //账户余额
         $router->get('withdraw', 'WithdrawController@index');//提现相关操作
         $router->get('customer/{user_type}', 'CustomerController@index'); // 客户列表
+        $router->controller('message', 'MessageController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });

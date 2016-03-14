@@ -15,7 +15,7 @@ class ShopController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('supplier', ['only' => ['index']]);
+        //$this->middleware('supplier', ['only' => ['index']]);
     }
 
     /**
@@ -32,7 +32,10 @@ class ShopController extends Controller
 
         $userTypes = cons('user.type');
         $typeId = array_get($userTypes, $type, last($userTypes));
-        $shops = Shop::OfUser($user->type, $typeId)->with('images', 'shopAddress');
+        //供应商暂时与批发商一致
+        $userType = $user->type <= $userTypes['wholesaler'] ? $user->type : $userTypes['wholesaler'];
+
+        $shops = Shop::OfUser($userType, $typeId)->with('images', 'shopAddress');
 
         $shopSorts = cons('shop.sort');
 

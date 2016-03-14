@@ -18,7 +18,7 @@ class Category extends Model
     {
         parent::boot();
         static:: deleted(function ($model) {
-            $model->attrs->delete();
+            $model->attrs()->delete();
         });
     }
 

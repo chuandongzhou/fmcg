@@ -1684,7 +1684,8 @@ table .product-panel {
     /*&.home {
         color: $brand-warning;
       }*/ }
-    .dealer-top-header .operating-wrap a:hover, .dealer-top-header .operating-wrap a:focus {
+    .dealer-top-header .operating-wrap a:hover
+, .dealer-top-header .operating-wrap a:focus {
       background-color: transparent;
       color: #333333; }
 
@@ -2351,3 +2352,40 @@ table .product-panel {
       z-index: 999; }
 
 /*==============help end=================*/
+/*==============message begin=================*/
+.user-list-wrap {
+  border: 1px solid #b4b4b4; }
+  .user-list-wrap .user-list-panel {
+    background-color: #f2f2f2;
+    height: 500px;
+    overflow-y: auto;
+    border-radius: 4px; }
+    .user-list-wrap .user-list-panel ul li {
+      padding: 10px;
+      border-bottom: 1px solid #e9e7e7; }
+      .user-list-wrap .user-list-panel ul li:hover {
+        background-color: #e0e0e0;
+        cursor: pointer; }
+      .user-list-wrap .user-list-panel ul li:last-of-type {
+        border: none; }
+      .user-list-wrap .user-list-panel ul li .avatar {
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 40px;
+        height: 40px; }
+      .user-list-wrap .user-list-panel ul li .user-name {
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 12px;
+        font-weight: bolder; }
+      .user-list-wrap .user-list-panel ul li .badge {
+        background-color: #4cb9fe !important;
+        margin-top: 8px; }
+  .user-list-wrap #msgWrap {
+    width: 700px;
+    height: 500px; }
+
+/*==============message end=================*/
+.msg-strom-detail {
+  font-size: 14px;
+  text-indent: 2em; }

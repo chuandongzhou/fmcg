@@ -23,7 +23,7 @@
                     <td><input type="checkbox" class="child" name="ids[]" value="{{$goodsImage->id}}"/></td>
                     <td><img src="{{$goodsImage->image_url}}" width="80px" height="80px"></td>
                     <td>{{$goodsImage->bar_code}}</td>
-                    <td>{{$goodsImage->goods->name}}</td>
+                    <td>{{$goodsImage->goods ? $goodsImage->goods->name : ''}}</td>
                     <td>{{$goodsImage->created_at}}</td>
                     <td>
                         <div class="btn-group btn-group-xs" role="group">

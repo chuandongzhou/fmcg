@@ -32,10 +32,10 @@
                     <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                          aria-expanded="false" style="height: 1px;">
                         <ul class="nav navbar-nav navbar-right operating-wrap">
+                            <li>
+                                <a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
+                            </li>
                             @if($user->type <= cons('user.type.wholesaler'))
-                                <li>
-                                    <a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
-                                </li>
                                 <li><a href="{{ url('cart') }}"><span class="fa fa-shopping-cart"></span> 购物车</a></li>
                             @endif
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>

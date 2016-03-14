@@ -1,6 +1,7 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @include('includes.order-refund')
+@include('includes.shipping-address-map')
 @section('subtitle', '订单管理')
 
 @section('right')
@@ -56,14 +57,23 @@
                                     <th>
                                         <label>
                                             <input type="checkbox" class="order_id" name="order_id[]"
-                                                   value="{{ $order['id'] }}">{{ $order['created_at'] }}
+                                                   value="{{ $order['id'] }}"> {{ $order['created_at'] }}
                                         </label>
                                         <span class="order-number">订单号 : {{ $order['id'] }}</span>
                                     </th>
                                     <th>{{ $order['user']['shop']['name'] }}</th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
+                                    <th class="text-right">
+                                        <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"
+                                           data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
+                                           data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
+                                           data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
+                                           data-consigner="{{  isset($order->shippingAddress) ? $order->shippingAddress->consigner : '' }}"
+                                           data-phone= {{ isset($order->shippingAddress) ? $order->shippingAddress->phone : '' }}
+                                        >
+                                            <i class="fa fa-map-marker"></i> 查看收货地址
+                                        </a></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -111,13 +121,15 @@
                                                                 确认订单
                                                             </a>
                                                         </p>
-                                                        <p>
-                                                            <a class="btn btn-danger refund" data-target="#refund"
-                                                               data-toggle="modal"
-                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                                取消并退款
-                                                            </a>
-                                                        </p>
+                                                        @if($order->pay_type == cons('pay_type.online'))
+                                                            <p>
+                                                                <a class="btn btn-danger refund" data-target="#refund"
+                                                                   data-toggle="modal"
+                                                                   data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                                    取消并退款
+                                                                </a>
+                                                            </p>
+                                                        @endif
                                                     @endif
                                                     @if($order['can_send'])
                                                         <p>

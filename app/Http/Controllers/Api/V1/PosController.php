@@ -186,7 +186,7 @@ class PosController extends Controller
                 $resultCodeArr['receive_error']);
 
         } else {
-            $order = Order::where('id', $body['OrderNo'])->get();
+            $orders = Order::where('id', $body['OrderNo'])->get();
 
             //增加平台交易记录
             $orderFee = sprintf("%.2f", $body['Amount'] * 78 / 10000);
@@ -194,17 +194,17 @@ class PosController extends Controller
 
             $orderFee = $orderFee <= $maxFee ?: $maxFee;
 
-            $result = (new PayService)->addTradeInfo($order, $body['Amount'], $orderFee, $body['YeepayOrderNo'], 'pos',
+            $result = (new PayService)->addTradeInfo($orders, $body['Amount'], $orderFee, $body['YeepayOrderNo'], 'pos',
                 $head['HMAC'], $body['ReferNo'], cons('trade.pay_status.received_no_sign'), $body['BankCardNo']);
 
             if ($result) {
                 //pos机支付成功更新用户余额
-                $shopOwner = $order->first()->shop->user;
+                $shopOwner = $orders->first()->shop->user;
                 $shopOwner->balance += $body['Amount'] - $orderFee;
                 $shopOwner->save();
                 //通知卖家
                 $redisKey = 'push:seller:' . $shopOwner->id;
-                $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
+                $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
 
                 RedisService::setRedis($redisKey, $redisVal);
 

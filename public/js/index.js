@@ -471,7 +471,8 @@ function myGoodsFunc() {
     $(document).on('click', '.shelve', function () {
         var self = $(this),
             id = self.data('id'),
-            status = self.html() == '下架';
+            status = self.html() == '下架',
+            statusInfo = self.closest('td').prev();
         // 判断登录
         if (!site.isLogin()) {
             site.redirect('auth/login');
@@ -489,7 +490,16 @@ function myGoodsFunc() {
             } else {
                 status = null;
             }
-            self.data('status', status).button(status ? 'down' : 'up');
+            if (status) {
+                self.data('status', status).button('down');
+                statusInfo.html('已上架');
+            }else{
+                self.data('status', status).button('up');
+                statusInfo.html('已下架');
+            }
+
+
+
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.button(status ? 'up' : 'down');
             if (errorThrown == 'Unauthorized') {

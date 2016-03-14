@@ -17,6 +17,11 @@ class SearchController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
+
+        //供应商暂时与批发商一致
+        $type = auth()->user()->type;
+        $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
+
         $goods = Goods::with('images')->select([
             'id',
             'name',
@@ -30,7 +35,7 @@ class SearchController extends Controller
             'is_out',
             'cate_level_1',
             'cate_level_2'
-        ])->where('user_type', '>', auth()->user()->type)->ofStatus(cons('goods.status.on'));
+        ])->where('user_type', '>', $type)->ofStatus(cons('goods.status.on'));
 
         $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $result = GoodsService::getGoodsBySearch($data, $goods);

@@ -1,7 +1,7 @@
 @extends('index.index-master')
 
 @section('subtitle')
-    {{ $keywords }}
+    {{ $keywords ? : '商品搜索' }}
 @stop
 
 @section('container')

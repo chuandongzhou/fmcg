@@ -117,6 +117,9 @@ class GoodsService
     {
         $type = auth()->user()->type;
 
+        //供应商暂时与批发商一致
+        $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
+
         $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;

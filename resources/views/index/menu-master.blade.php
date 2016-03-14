@@ -3,34 +3,34 @@
 @section('header')
     @parent
     {{--<nav class="navbar personal-header">--}}
-        {{--<div class="container">--}}
-            {{--<div class="navbar-header">--}}
-                {{--<button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"--}}
-                        {{--data-target="#bs-example-navbar-collapse-1" aria-expanded="false">--}}
-                    {{--<span class="sr-only">Toggle navigation</span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                    {{--<span class="icon-bar"></span>--}}
-                {{--</button>--}}
-                {{--<a class="logo-img"><img src="{{ asset('images/personal-logo.png') }}"></a>--}}
-            {{--</div>--}}
-            {{--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">--}}
-                {{--<ul class="nav navbar-nav items-item">--}}
-                    {{--@if($user->type < cons('user.type.wholesaler'))--}}
-                        {{--<li class="item"><a href="{{ url('/') }}">首页</a></li>--}}
-                        {{--<li class="item"><a href="{{ url('shop?type=wholesaler') }}">批发商</a></li>--}}
-                        {{--<li class="item"><a href="{{ url('shop?type=supplier') }}">供应商</a></li>--}}
-                    {{--@else--}}
-                        {{--<li class="item">--}}
-                        {{--<a href="{{ url('shop/' . $user->shop->id) }}">--}}
-                        {{--<i class="fa fa-angle-left"></i>--}}
-                        {{--商店首页--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
-                    {{--@endif--}}
-                {{--</ul>--}}
-            {{--</div>--}}
-        {{--</div>--}}
+    {{--<div class="container">--}}
+    {{--<div class="navbar-header">--}}
+    {{--<button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"--}}
+    {{--data-target="#bs-example-navbar-collapse-1" aria-expanded="false">--}}
+    {{--<span class="sr-only">Toggle navigation</span>--}}
+    {{--<span class="icon-bar"></span>--}}
+    {{--<span class="icon-bar"></span>--}}
+    {{--<span class="icon-bar"></span>--}}
+    {{--</button>--}}
+    {{--<a class="logo-img"><img src="{{ asset('images/personal-logo.png') }}"></a>--}}
+    {{--</div>--}}
+    {{--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">--}}
+    {{--<ul class="nav navbar-nav items-item">--}}
+    {{--@if($user->type < cons('user.type.wholesaler'))--}}
+    {{--<li class="item"><a href="{{ url('/') }}">首页</a></li>--}}
+    {{--<li class="item"><a href="{{ url('shop?type=wholesaler') }}">批发商</a></li>--}}
+    {{--<li class="item"><a href="{{ url('shop?type=supplier') }}">供应商</a></li>--}}
+    {{--@else--}}
+    {{--<li class="item">--}}
+    {{--<a href="{{ url('shop/' . $user->shop->id) }}">--}}
+    {{--<i class="fa fa-angle-left"></i>--}}
+    {{--商店首页--}}
+    {{--</a>--}}
+    {{--</li>--}}
+    {{--@endif--}}
+    {{--</ul>--}}
+    {{--</div>--}}
+    {{--</div>--}}
     {{--</nav>--}}
     {{--<hr class="personal-hr"/>--}}
 @stop
@@ -196,7 +196,7 @@
                             <a href="javascript:void(0)" class="list-item">
                                 <i class="fa fa-users {!! path_active('personal/customer/*') !!}"></i> 客户列表
                             </a>
-                            <ul class="menu-wrap" >
+                            <ul class="menu-wrap">
                                 <li>
                                     <a class="{{ path_active('personal/customer/retailer') }}"
                                        href="{{ url('personal/customer/retailer') }}">
@@ -213,6 +213,20 @@
                                 @endif
                             </ul>
                         </li>
+                        {{--消息列表--}}
+                        {{--<li>--}}
+                            {{--<a href="javascript:void(0)" class="list-item">--}}
+                                {{--<i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表--}}
+                            {{--</a>--}}
+                            {{--<ul class="menu-wrap">--}}
+                                {{--<li>--}}
+                                    {{--<a class="{{ path_active('personal/message') }}"--}}
+                                       {{--href="{{ url('personal/message') }}">--}}
+                                        {{--消息列表--}}
+                                    {{--</a>--}}
+                                {{--</li>--}}
+                            {{--</ul>--}}
+                        {{--</li>--}}
                     </ul>
                 </div>
             @else
@@ -286,6 +300,7 @@
                     </ul>
                 </div>
             @endif
+
             <div class="col-sm-10  col-xs-9">
                 @yield('right')
             </div>

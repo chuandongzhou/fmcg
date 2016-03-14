@@ -242,6 +242,21 @@
                                                placeholder="推广码(可选)" type="text">
                                     </div>
                                 </div>
+                                <div class="form-group hidden">
+                                    <label class="col-sm-3 control-label" for="area">配送区域:</label>
+
+                                    <div class="col-sm-9 col-md-8 padding-clear">
+                                        <div class="col-sm-12">
+                                            <a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"
+                                               data-toggle="modal" data-loading-text="地址达到最大数量" >添加配送区域</a>
+                                        </div>
+                                        <div class="address-list col-lg-12">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group">
                                     <div class="col-sm-8 col-sm-offset-3">
                                         <button type="submit" class="btn btn-lg btn-warning btn-block btn-submit"
@@ -290,11 +305,16 @@
                 $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
             $('select[name="type"]').change(function () {
-                var type = $(this).val(), retailerType = '{{ cons('user.type.retailer') }}', agencyContract = $('span[name="agency_contract"]');
+                var type = $(this).val(),
+                        retailerType = '{{ cons('user.type.retailer') }}',
+                        agencyContract = $('span[name="agency_contract"]'),
+                        addAddress = $('#add-address');
                 if (type == retailerType) {
                     agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
+                    addAddress.prop('disabled' , true).closest('.form-group').addClass('hidden').find('.address-list').html('');
                 } else {
                     agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
+                    addAddress.prop('disabled' , false).closest('.form-group').removeClass('hidden');
                 }
             })
         })

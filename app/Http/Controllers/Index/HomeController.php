@@ -20,9 +20,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->type == cons('user.type.supplier')) {
+       /* if (auth()->user()->type == cons('user.type.supplier')) {
             return redirect('personal/info');
-        }
+        }*/
 
         $nowTime = Carbon::now();
         //广告

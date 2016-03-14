@@ -105,7 +105,7 @@ class PayService
                     'hmac' => $hmac,
                 ];
 
-                if ($payType == 'pos') {
+                if ($payType == $tradeConf['pay_type']['pos']) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $newTimestamp;
                 }
