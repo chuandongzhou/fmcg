@@ -113,6 +113,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('barcode-without-images/export', 'BarcodeWithoutImagesController@export'); //导出没有图片的条形码
     $router->resource('barcode-without-images', 'BarcodeWithoutImagesController'); //前台用户添加商品时没有图片的条形码
     $router->resource('notice', 'NoticeController'); //前台用户添加商品时没有图片的条形码
+    $router->get('message', 'MessageController@index'); // 消息
 });
 
 

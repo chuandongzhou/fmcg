@@ -49,6 +49,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 .padding-clear {
   padding: 0; }
 
+.pd-left-clear {
+  padding-left: 0; }
+
+.pd-right-clear {
+  padding-right: 0; }
+
 .margin-clear {
   margin: 0 !important; }
 
@@ -1317,14 +1323,16 @@ table .product-panel {
     border: none;
     background-color: #cae6f7;
     color: #777777;
-    vertical-align: middle; }
+    vertical-align: middle;
+    font-size: 14px; }
     .wholesalers-management .order-table-list .table-col table tr th .order-number, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number {
       display: inline-block;
       margin-left: 20px; }
   .wholesalers-management .order-table-list .table-col table tr td {
     border-right: none;
     border-left: none;
-    vertical-align: middle; }
+    vertical-align: middle;
+    font-size: 14px; }
     .wholesalers-management .order-table-list .table-col table tr td .store-img {
       width: 100px;
       height: 100px; }
@@ -1684,8 +1692,7 @@ table .product-panel {
     /*&.home {
         color: $brand-warning;
       }*/ }
-    .dealer-top-header .operating-wrap a:hover
-, .dealer-top-header .operating-wrap a:focus {
+    .dealer-top-header .operating-wrap a:hover, .dealer-top-header .operating-wrap a:focus {
       background-color: transparent;
       color: #333333; }
 
@@ -2384,6 +2391,13 @@ table .product-panel {
   .user-list-wrap #msgWrap {
     width: 700px;
     height: 500px; }
+
+.message-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 700px;
+  height: 470px; }
 
 /*==============message end=================*/
 .msg-strom-detail {

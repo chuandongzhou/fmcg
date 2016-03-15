@@ -78,7 +78,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 .padding-clear {
   padding: 0;
 }
-
+.pd-left-clear{
+  padding-left:0;
+}
+.pd-right-clear{
+  padding-right:0;
+}
 .margin-clear {
   margin: 0 !important;
 }
@@ -152,6 +157,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .personal-hr {
   margin-top: -10px;
 }
+
 .panel-footer {
   position: absolute;
   bottom: 0;
@@ -173,6 +179,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
+
 /*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
@@ -254,8 +261,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================login begin======================================*/
 .login-nav {
   margin: 0;
-  .container{
-    width: 100%!important;
+  .container {
+    width: 100% !important;
   }
   .nav-title {
     li {
@@ -386,7 +393,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 .login-footer {
   border: none;
   min-width: 100% !important;
-  .container{
+  .container {
     width: 100% !important;
   }
 }
@@ -438,7 +445,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .guide-container {
-  width: auto!important;
+  width: auto !important;
   height: 78%;
   position: relative;
   .banner {
@@ -520,9 +527,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: absolute;
     bottom: 0;
     width: auto !important;
-    min-width: 100%!important;
-    .container{
-      width:100% !important;
+    min-width: 100% !important;
+    .container {
+      width: 100% !important;
     }
   }
 }
@@ -719,8 +726,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-
-
 .modal {
   .address-wrap {
     height: 80px;
@@ -890,12 +895,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 @media screen and (max-width: 765px) {
   .login-content {
     height: 85%;
-    .login-banner-slide{
+    .login-banner-slide {
       display: none;
     }
-    .login-wrap{
-      right: 50%!important;
-      margin-right: -180px!important;
+    .login-wrap {
+      right: 50% !important;
+      margin-right: -180px !important;
     }
   }
   .panel-footer {
@@ -1808,6 +1813,7 @@ table {
             background-color: $blue-light;;
             color: $gray-light;
             vertical-align: middle;
+            font-size: 14px;
             .order-number {
               display: inline-block;
               margin-left: 20px;
@@ -1817,6 +1823,7 @@ table {
             border-right: none;
             border-left: none;
             vertical-align: middle;
+            font-size: 14px;
             .store-img {
               @include square(100px);
             }
@@ -2193,7 +2200,7 @@ table {
 
 /*======================================index begin======================================*/
 .dealer-top-header {
-  .container{
+  .container {
     background-color: $brand-primary;
   }
   width: 100%;
@@ -2329,8 +2336,7 @@ table {
       padding-top: 10px;
       padding-bottom: 10px;
       font-size: 13px;
-      &:hover
-      , &:focus {
+      &:hover, &:focus {
         background-color: transparent;
         color: $gray-dark;
       }
@@ -2755,8 +2761,8 @@ table {
   .operating {
     height: 40px;
     line-height: 40px;
-    .pagination{
-      margin:0;
+    .pagination {
+      margin: 0;
     }
     .all-check {
       vertical-align: middle;
@@ -2803,12 +2809,12 @@ table {
             border-bottom: 1px dashed $gray-plain-light !important;
             text-align: center;
             font-size: 12px;
-            &:first-of-type{
-              text-align: left!important;
+            &:first-of-type {
+              text-align: left !important;
             }
-            .product-name{
+            .product-name {
               display: inline-block;
-              width:90px;
+              width: 90px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
@@ -3237,49 +3243,57 @@ table {
 
 /*==============help end=================*/
 /*==============message begin=================*/
-.user-list-wrap{
-    border:1px solid $gray-lighter;
-  .user-list-panel{
+.user-list-wrap {
+  border: 1px solid $gray-lighter;
+
+  .user-list-panel {
     background-color: $gray-plain;
     height: 500px;
     overflow-y: auto;
     border-radius: 4px;
-    ul{
-      li{
-        padding:10px;
+    ul {
+      li {
+        padding: 10px;
         border-bottom: 1px solid #e9e7e7;
-        &:hover{
+        &:hover {
           background-color: $gray-plain-light;
           cursor: pointer;
         }
-        &:last-of-type{
-          border:none;
+        &:last-of-type {
+          border: none;
         }
-        .avatar{
+        .avatar {
           border-radius: 50%;
           -webkit-border-radius: 50%;
           @include square(40px);
         }
-        .user-name{
+        .user-name {
           display: inline-block;
-          padding:0 5px;
+          padding: 0 5px;
           font-size: 12px;
           font-weight: bolder;
         }
-        .badge{
-          background-color: $brand-primary!important;
+        .badge {
+          background-color: $brand-primary !important;
           margin-top: 8px;
         }
       }
     }
   }
-  #msgWrap{
+  #msgWrap {
     width: 700px;
     height: 500px;
   }
 }
+.message-container{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 700px;
+  height: 470px;
+}
 /*==============message end=================*/
-.msg-strom-detail{
+.msg-strom-detail {
   font-size: 14px;
   text-indent: 2em;
 }

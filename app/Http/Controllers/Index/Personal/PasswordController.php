@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Index\Personal;
 use App\Http\Controllers\Index\Controller;
 
 use App\Http\Requests;
-use Hash;
 
 class PasswordController extends Controller
 {

@@ -44,7 +44,7 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('message', '商品缺货或低于最低购买数');
         }
 
         if ($confirmedGoods->update(['status' => 1])) {

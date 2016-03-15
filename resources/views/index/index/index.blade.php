@@ -121,25 +121,27 @@
                             <div class="col-xs-7">
                                 <div class="col-xs-12 commodity-panel padding-clear">
                                     @foreach($column->goods as $goods)
-                                        <div class="commodity commodity-index-img">
-                                            <div class="img-wrap">
-                                                <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
-                                                    <img class="commodity-img" src="{{ $goods->image_url }}" 、>
+                                        @if ($goods->price > 0)
+                                            <div class="commodity commodity-index-img">
+                                                <div class="img-wrap">
+                                                    <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
+                                                        <img class="commodity-img" src="{{ $goods->image_url }}" 、>
 
-                                                    <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
-                                                </a>
-                                            </div>
-                                            <div class="content-panel">
-                                                <p class="commodity-name">
-                                                    <a href="{{ url('goods/' . $goods->id) }}"
-                                                       target="_blank">{{ $goods->name }}</a></p>
+                                                        <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
+                                                    </a>
+                                                </div>
+                                                <div class="content-panel">
+                                                    <p class="commodity-name">
+                                                        <a href="{{ url('goods/' . $goods->id) }}"
+                                                           target="_blank">{{ $goods->name }}</a></p>
 
-                                                <p class="sell-panel">
-                                                    <span class="money">￥{{ $goods->price }}</span>
-                                                    <span class="sales pull-right">最低购买量 : {{ $goods->min_num }}</span>
-                                                </p>
+                                                    <p class="sell-panel">
+                                                        <span class="money">￥{{ $goods->price }}</span>
+                                                        <span class="sales pull-right">最低购买量 : {{ $goods->min_num }}</span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -187,7 +189,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('.carousel').carousel({
-                interval: 2000
+                interval: 5000
             })
             $("#carousel-indicators li").css("width", ($("#carousel-indicators").width() / $("#carousel-indicators li").length) + "px");
             $('.content-title').on('click', function () {

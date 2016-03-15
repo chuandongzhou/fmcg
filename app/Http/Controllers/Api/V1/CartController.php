@@ -51,6 +51,9 @@ class CartController extends Controller
         if ($goodsInfo->min_num > $buyNum) {
             return $this->error('不能小于购买量');
         }
+        if ($goodsInfo->is_out) {
+            return $this->error('该商品缺货');
+        }
         //查询是否有相同的商品,存在则合并
         $cart = $user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('id'))) {

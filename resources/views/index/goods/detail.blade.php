@@ -86,9 +86,12 @@
                                 <span class="prompt"> 最低购买量 :</span> {{ $goods->min_num }}
                             </li>
                             <li>
-                                <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
-                                   class="btn btn-primary add-to-cart">加入购物车</a>
-
+                                @if($goods->is_out)
+                                    <a href="javascript:void(0)" class="btn btn-primary disabled" disabled="">缺货</a>
+                                @else
+                                    <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
+                                       class="btn btn-primary add-to-cart">加入购物车</a>
+                                @endif
                                 <a href="javascript:void(0)" data-type="goods" data-method="post"
                                    class="btn btn-default btn-like" data-id="{{ $goods->id }}">
                                     @if(is_null($isLike))

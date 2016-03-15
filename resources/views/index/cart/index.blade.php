@@ -138,6 +138,9 @@
                 fixedBottom();
             });
             likeFunc();
+            @if (session('message'))
+               alert('{{ session('message') }}');
+            @endif
             // deleteFunc('cart');
         })
     </script>

@@ -11,5 +11,7 @@ return [
             'audit_not_passed' => '2944',
             'withdraw' => '2946'
         ],
+        // 消息通用密码
+        'message_password' => substr(md5('dingbaida2016315'), 10, 8)
     ],
 ];

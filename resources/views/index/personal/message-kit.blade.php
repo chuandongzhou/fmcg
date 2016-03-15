@@ -17,28 +17,29 @@
 
 @stop
 
-// http://www.taobao.com/market/seller/openim/kit.php?uid=test0&to=test1&appkey=23018936&pwd=123456&fullscreen
+
 @section('js')
     <script>
         // 在url上加上fullscreen参数,即可变为全屏
-        if (result.fullscreen) {
-            var d = document.getElementById('J_demo');
-            d.parentNode.removeChild(d);
-        }
-
+//        if (result.fullscreen) {
+//            var d = document.getElementById('J_demo');
+//            d.parentNode.removeChild(d);
+//        }
+        var d = document.getElementById('J_demo');
+        d.parentNode.removeChild(d);
         window.onload = function () {
             WKIT.init({
-                container: result.fullscreen ? null : document.getElementById('J_demo'),
-                uid: result.uid || 'test0',
-                appkey: result.appkey || '23018936',
-                credential: result.pwd || '123456',
-                touid: result.to || 'test1',
+                container: '{{ $fullScreen }}' ? null : document.getElementById('J_demo'),
+                uid: SITE.USER.id,
+                appkey: '{{ $appKey }}',
+                credential: '{{ $password }}',
+                touid: '{{ $remoteUid }}',
                 theme: 'red',
-//            title: '我是客服哟',
+            title: '我是客服哟',
                 logo: 'http://interface.im.taobao.com/mobileimweb/fileupload/downloadPriFile.do?type=1&fileId=876114ca44f4362f629f7d592014e057.jpg&suffix=jpg&width=1920&height=1200&wangxintype=1&client=ww',
-                autoMsg: 'http://interface.im.taobao.com/mobileimweb/fileupload/downloadPriFile.do?type=1&fileId=876114ca44f4362f629f7d592014e057.jpg&suffix=jpg&width=1920&height=1200&wangxintype=1&client=ww',
+                //autoMsg: '',
                 autoMsgType: 1,
-                pluginUrl: '{{ url('personal/message/goods_detail?id=34') }}'
+                pluginUrl: '{{ url('personal/message/goods-detail?id=34') }}'
             });
         }
     </script>
