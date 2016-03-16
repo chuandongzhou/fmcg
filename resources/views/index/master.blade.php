@@ -2,9 +2,11 @@
 
 @section('title')@yield('subtitle') | 订百达 - 订货首选@stop
 
+@include('includes.message')
+
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
-@stop
+    @stop
 @section('header')
     <!--[if lt IE 9]>
     <div class="ie-warning alert alert-warning alert-dismissable fade in">
@@ -18,8 +20,9 @@
             <div class="row">
                 <div class="col-sm-4 city-wrap">
                     <div class="location-panel">
-                        <i class="fa fa-map-marker"></i> 所在地：<a href="#" class="location-text"><span
-                                    class="city-value">{{  $provinces[\Request::cookie('province_id')] or '' }}</span> <span
+                        <i class="fa fa-map-marker"></i> 所在地：
+                        <a href="#" class="location-text"><span class="city-value"
+                                                                title="{{  $provinces[\Request::cookie('province_id')] or '' }}">{{  $provinces[\Request::cookie('province_id')] or '' }}</span><span
                                     class="fa fa-angle-down up-down"></span></a>
                     </div>
                     <div class="city-list clearfix">
@@ -58,6 +61,8 @@
                                 </a>
                             </li>
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
+                            <li><a href="{{ url('personal/message') }}">消息(<span
+                                            class="red total-message-count">0</span>)</a></li>
                             @if($user->type < cons('user.type.supplier'))
                                 <li class="collect-select">
                                     <a class="collect-selected"><span class="selected">收藏夹</span> <span
@@ -84,6 +89,8 @@
 
 @section('body')
     @yield('container')
+    <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
+    </audio>
     <div class="msg-channel" id="alert-div">
         <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
         <a class="check" href="#">点击查看>>>></a>
@@ -91,12 +98,12 @@
 @stop
 
 
-
 @section('footer')
     <footer class="panel-footer">
         <div class="container text-center text-muted">
-            Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}<br />
-            联系地址：{{ cons('system.company_addr') }}&nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}
+            Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}<br/>
+            联系地址：{{ cons('system.company_addr') }}
+            &nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}
         </div>
     </footer>
 @stop

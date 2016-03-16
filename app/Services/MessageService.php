@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -27,11 +28,11 @@ class MessageService
     /**
      * 增加或修改用户到服务端
      *
-     * @param $user
+     * @param $item
      * @param bool|false $isUpdate
      * @return mixed|\ResultSet|\SimpleXMLElement
      */
-    public function usersHandle($user, $isUpdate = false)
+    public function usersHandle($item, $isUpdate = false)
     {
         $top = new \TopClient();
         $top->appkey = $this->appKey;
@@ -39,18 +40,20 @@ class MessageService
         $top->format = 'json';
         $req = $isUpdate ? new \OpenimUsersUpdateRequest() : new \OpenimUsersAddRequest();
         $userInfos = new \Userinfos();
-        $userInfos->nick = $user->shop->name;
-        $userInfos->icon_url = $user->shop->logo_url;
-        //$userInfos->email='';
-        $userInfos->mobile = $user->backup_mobile;
-        //$userInfos->taobaoid="tbnick123";
-        $userInfos->userid = $user->shop->id;
+
+        $userInfos->nick = $item instanceof User ? $item->shop->name : $item->name;
+        $userInfos->icon_url = $item instanceof User ? $item->shop->logo_url : $item->logo_url;
+        $userInfos->mobile = $item instanceof User ? $item->backup_mobile : $item->user->backup_mobile;
+        $userInfos->userid = $item instanceof User ? $item->shop->id : $item->id;
         $userInfos->password = $this->commonPassword;
-        $userInfos->remark = $user->shop->introduction;
+        $userInfos->remark = $item instanceof User ? $item->shop->introduction : $item->introduction;
+        $userInfos->address = $item instanceof User ? $item->shop->address : $item->address;
+
+        //$userInfos->email='';
+        //$userInfos->taobaoid="tbnick123";
         //$userInfos->extra = "demo";
         //$userInfos->career = "demo";
         //$userInfos->vip = "demo";
-        $userInfos->address = $user->shop->address;
         //$userInfos->name = "demo";
         //$userInfos->age = "123";
         //$userInfos->gender = "demo";
@@ -87,10 +90,11 @@ class MessageService
      * @param $userIds 用户id序列，逗号隔开
      * @return \SimpleXMLElement[]
      */
-    public function deleteUsers($userIds){
+    public function deleteUsers($userIds)
+    {
         $top = new \TopClient();
-        $top->appkey =  $this->appKey;
-        $top->secretKey =  $this->secretKey;
+        $top->appkey = $this->appKey;
+        $top->secretKey = $this->secretKey;
         $req = new \OpenimUsersDeleteRequest();
         $req->setUserids($userIds);
         $resp = $top->execute($req);

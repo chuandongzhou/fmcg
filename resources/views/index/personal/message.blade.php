@@ -1,8 +1,5 @@
 @extends('index.menu-master')
-@include('includes.message' ,[
-      'password' => $password,
-      'appKey' => $appKey
-])
+@include('includes.message')
 @section('subtitle', '个人中心-消息管理')
 
 @section('right')

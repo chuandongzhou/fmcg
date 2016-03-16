@@ -4,19 +4,11 @@ namespace App\Http\Controllers\Index\Personal;
 
 
 use App\Http\Controllers\Index\Controller;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
-
-    protected $password, $appKey;
-
-    public function __construct()
-    {
-        $pushConf = config('push.top');
-        $this->password = $pushConf['message_password'];
-        $this->appKey = $pushConf['app_key'];
-    }
 
     /**
      * 消息列表
@@ -26,26 +18,23 @@ class MessageController extends Controller
     public function getIndex()
     {
 
-        return view('index.personal.message', [
-            'password' => $this->password,
-            'appKey' => $this->appKey
-        ]);
+        return view('index.personal.message');
     }
 
 
     public function getKit(Request $request)
     {
+        $shopId = $request->input('remote_uid', '-1');
+        $shop = Shop::with('logo')->select(['id' ,'name'])->find($shopId);
         return view('index.personal.message-kit', [
-            'password' => $this->password,
-            'appKey' => $this->appKey,
-            'remoteUid' => $request->input('remote_uid', '-1'),
-            'fullScreen' => $request->input('full_screen')
+            'remoteUid' => $shopId,
+            'fullScreen' => $request->input('full_screen'),
+            'shop' => $shop
         ]);
     }
 
     public function getGoodsDetail(Request $request)
     {
-
         return view('index.personal.message-goods-detail');
     }
 }

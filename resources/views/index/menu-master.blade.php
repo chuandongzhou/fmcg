@@ -214,19 +214,19 @@
                             </ul>
                         </li>
                         {{--消息列表--}}
-                        {{--<li>--}}
-                            {{--<a href="javascript:void(0)" class="list-item">--}}
-                                {{--<i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表--}}
-                            {{--</a>--}}
-                            {{--<ul class="menu-wrap">--}}
-                                {{--<li>--}}
-                                    {{--<a class="{{ path_active('personal/message') }}"--}}
-                                       {{--href="{{ url('personal/message') }}">--}}
-                                        {{--消息列表--}}
-                                    {{--</a>--}}
-                                {{--</li>--}}
-                            {{--</ul>--}}
-                        {{--</li>--}}
+                        <li>
+                            <a href="javascript:void(0)" class="list-item">
+                                <i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表
+                            </a>
+                            <ul class="menu-wrap">
+                                <li>
+                                    <a class="{{ path_active('personal/message') }}"
+                                       href="{{ url('personal/message') }}">
+                                        消息列表
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             @else
@@ -293,6 +293,20 @@
                                     <a class="{{ (is_null(request()->input('obj_type')) && request()->is('order/statistics')) ||  request()->input('obj_type') > 1  ? 'active' : '' }}"
                                        href="{{ url('order/statistics') }}">
                                         订单统计
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {{--消息列表--}}
+                        <li>
+                            <a href="javascript:void(0)" class="list-item">
+                                <i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表
+                            </a>
+                            <ul class="menu-wrap">
+                                <li>
+                                    <a class="{{ path_active('personal/message') }}"
+                                       href="{{ url('personal/message') }}">
+                                        消息列表
                                     </a>
                                 </li>
                             </ul>

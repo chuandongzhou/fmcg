@@ -63,7 +63,9 @@
                                     </th>
                                     <th>{{ $order['user']['shop']['name'] }}</th>
                                     <th></th>
-                                    <th></th>
+                                    <th>
+                                        <a href="javascript:" onclick="window.open('{{ url('personal/message/kit?remote_uid=' .$order->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                                    </th>
                                     <th class="text-right">
                                         <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"
                                            data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"

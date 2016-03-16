@@ -63,6 +63,7 @@ class UserController extends Controller
         if ($user->exists) {
             //插入商店
             Shop::create(['user_id' => $user->id]);
+
             return $this->success('添加用户成功');
         }
 
@@ -102,6 +103,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $user)
     {
         if ($user->fill($request->all())->save()) {
+            //更新远程
             return $this->success('更新用户成功');
         }
         $this->error('更新时遇到错误');
@@ -115,6 +117,7 @@ class UserController extends Controller
      */
     public function destroy($user)
     {
+        //更新远程
         return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
     }
 
@@ -174,6 +177,7 @@ class UserController extends Controller
 
             $users = User::whereIn('id', $userIds)->get(['user_name', 'backup_mobile']);
             foreach ($users as $user) {
+                //更新远程
                 $this->_sendAuditSms($user, $result == $auditStatus['pass'], $error);
             }
 

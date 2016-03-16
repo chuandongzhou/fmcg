@@ -372,8 +372,10 @@ class Goods extends Model
      */
     public function getMinNumAttribute()
     {
-        return auth()->user()->type
-        == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer;
+        $userType = auth()->user()->type;
+
+        return $userType == $this->user_type ? $this->min_num_retailer : ($userType == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer);
+
     }
 
     /**

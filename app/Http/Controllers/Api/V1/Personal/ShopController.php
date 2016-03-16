@@ -22,6 +22,7 @@ class ShopController extends Controller
             return $this->error('保存失败');
         }
         if ($shop->fill(array_except($attributes, 'id'))->save()) {
+
             return $this->success('保存店铺成功');
         }
         return $this->error('保存店铺时出现错误');

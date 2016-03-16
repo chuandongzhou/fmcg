@@ -23,6 +23,7 @@ $(function () {//间隔30s自动加载一次
                             check.attr('href', uri);
                             check.html(json.data);
                             div.css('bottom', '5px');
+                            $("#myaudio")[0].play();
                             /* setTimeout(function () {
                              div.css('display', 'none');
                              }, 6000);*/

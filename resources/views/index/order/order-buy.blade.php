@@ -65,7 +65,10 @@
                                         </label>
                                         <span class="order-number"> 订单号 : {{ $order['id'] }}</span>
                                     </th>
-                                    <th colspan="4"> {{ $order['shop']['name'] }} </th>
+                                    <th colspan="3"> {{ $order['shop']['name'] }} </th>
+                                    <th>
+                                        <a href="javascript:" onclick="window.open('{{ url('personal/message/kit?remote_uid=' .$order->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>

@@ -89,7 +89,7 @@
         </div>
     </div>
     <div class="container dealer-index index contents">
-        @foreach($goodsColumns as $column)
+        @foreach($goodsColumns as $index=>$column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
                     <div class="col-xs-12 title"><h3>{{ $column->name }} <a
@@ -98,7 +98,7 @@
                     <div class="col-xs-12 padding-clear">
                         <div class="row margin-clear">
                             <div class="col-xs-5">
-                                <div id="myCarousel1" class="row carousel slide banner-slide">
+                                <div id="myCarousel{{ $index }}" class="row carousel slide banner-slide">
                                     @if(!$column->adverts->isEmpty())
                                         <div class="carousel-inner">
                                             @foreach($column->adverts as $key => $advert)
@@ -109,9 +109,9 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <ul class="carousel-indicators" id="carousel-indicators">
+                                        <ul class="carousel-indicators carousel-indicators-item">
                                             @foreach($column->adverts as $key=>$image)
-                                                <li data-target="#myCarousel1" data-slide-to="{{ $key }}"
+                                                <li data-target="#myCarousel{{ $index }}" data-slide-to="{{ $key }}"
                                                     class="{{ $key == 0 ? 'active' : '' }}">{{ $image->name }}</li>
                                             @endforeach
                                         </ul>
@@ -190,8 +190,10 @@
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 5000
-            })
-            $("#carousel-indicators li").css("width", ($("#carousel-indicators").width() / $("#carousel-indicators li").length) + "px");
+            });
+            $(".carousel-indicators-item").each(function(e){
+                $(this).children("li").css("width",($(this).width()/$(this).children("li").length)+"px");
+            });
             $('.content-title').on('click', function () {
                 var obj = $(this);
                 $('.modal-title').html(obj.attr('title'));

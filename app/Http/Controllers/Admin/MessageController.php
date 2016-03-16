@@ -10,9 +10,11 @@ class MessageController extends Controller
 {
     public function index()
     {
-       /* $users = User::where('audit_status', 1)->where('user_name', 'retailer')->with('shop')->first();
-        $result = (new MessageService())->usersHandle($users);
-        dd($result);*/
+//        $users = User::where('audit_status', 1)->where('user_name', 'supplier')->with('shop')->first();
+//        $result = (new MessageService())->usersHandle($users);
+//        dd($result);
+//
+
         $userIds = User::where('audit_status', 1)->with('shop')->get()->implode('shop.id', ',');
         $remoteUsers = (new MessageService())->checkUsers($userIds);
         $userInfos = [];

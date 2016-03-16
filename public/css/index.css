@@ -86,6 +86,21 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: #fe462f;
   background-color: #fff; }
 
+.contact {
+  padding: 2px 4px;
+  color: #f0ad4e;
+  font-size: 13px;
+  vertical-align: middle; }
+  .contact:hover {
+    color: #f0ad4e; }
+  .contact .fa {
+    -webkit-transform-origin: center bottom;
+    transform-origin: center bottom;
+    vertical-align: middle;
+    margin-top: -3px;
+    -webkit-animation: bounce 0.5s cubic-bezier(0.3, 2.4, 0.85, 2.5) infinite;
+    animation: bounce 0.5s cubic-bezier(0.3, 2.4, 0.85, 2.5) infinite; }
+
 /*======================================head======================================*/
 .personal-header .logo-img {
   display: inline-block;
@@ -586,6 +601,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   width: 25% !important;
   padding: 0 3px !important;
   margin-bottom: 5px !important; }
+  .list-penal .commodity-index-img .prompt {
+    width: 80px !important;
+    height: 80px !important;
+    background-size: cover !important; }
 
 .list-penal .content-panel {
   padding: 2px 5px;
@@ -1666,10 +1685,12 @@ table .product-panel {
       border-top: none;
       background-color: #fff; }
       .dealer-top-header .operating-wrap .collect-select .select-list li {
-        padding: 2px 0 2px 18px;
+        padding: 2px 0 2px 10px;
         width: 100%; }
-        .dealer-top-header .operating-wrap .collect-select .select-list li a:hover {
-          color: #4cb9fe; }
+        .dealer-top-header .operating-wrap .collect-select .select-list li a {
+          padding: 0 !important; }
+          .dealer-top-header .operating-wrap .collect-select .select-list li a:hover {
+            color: #4cb9fe; }
   .dealer-top-header .operating-wrap .user-name-wrap a {
     display: inline-block; }
     .dealer-top-header .operating-wrap .user-name-wrap a.name-panel {
@@ -1686,8 +1707,7 @@ table .product-panel {
       color: #fe462f; }
   .dealer-top-header .operating-wrap a {
     color: #000;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px !important;
     font-size: 13px;
     /*&.home {
         color: $brand-warning;
@@ -1869,8 +1889,7 @@ table .product-panel {
           color: #fe462f; }
 
 .banner-wrap {
-  border-top: 1px solid #4cb9fe;
-  margin-top: -1px; }
+  border-top: 1px solid #4cb9fe; }
   .banner-slide .carousel-indicators {
     text-align: right; }
     .banner-slide .carousel-indicators li {
@@ -2375,11 +2394,19 @@ table .product-panel {
         cursor: pointer; }
       .user-list-wrap .user-list-panel ul li:last-of-type {
         border: none; }
+      .user-list-wrap .user-list-panel ul li .user-item {
+        margin-left: 45px; }
+        .user-list-wrap .user-list-panel ul li .user-item .last-msg-time {
+          font-size: 11px; }
+        .user-list-wrap .user-list-panel ul li .user-item .last-msg {
+          font-size: 11px;
+          padding: 0 5px; }
       .user-list-wrap .user-list-panel ul li .avatar {
         border-radius: 50%;
         -webkit-border-radius: 50%;
         width: 40px;
-        height: 40px; }
+        height: 40px;
+        float: left; }
       .user-list-wrap .user-list-panel ul li .user-name {
         display: inline-block;
         padding: 0 5px;
@@ -2387,7 +2414,7 @@ table .product-panel {
         font-weight: bolder; }
       .user-list-wrap .user-list-panel ul li .badge {
         background-color: #4cb9fe !important;
-        margin-top: 8px; }
+        font-size: 11px; }
   .user-list-wrap #msgWrap {
     width: 700px;
     height: 500px; }
@@ -2403,3 +2430,19 @@ table .product-panel {
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em; }
+
+@-webkit-keyframes bounce {
+  from, to {
+    -webkit-transform: translateY(0vh);
+    transform: translateY(0vh); }
+  80% {
+    -webkit-transform: translateY(0.2vh);
+    transform: translateY(0.2vh); } }
+
+@keyframes bounce {
+  from, to {
+    -webkit-transform: translateY(0vh);
+    transform: translateY(0vh); }
+  80% {
+    -webkit-transform: translateY(0.2vh);
+    transform: translateY(0.2vh); } }

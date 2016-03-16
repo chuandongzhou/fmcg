@@ -80,9 +80,11 @@
                                     <label>{{ $attr['name'] }}</label>
                                     <select name="attrs[{{ $attr['attr_id'] }}]" class="attrs  inline-control">
                                         <option value="0">请选择</option>
-                                        @foreach($attr['child'] as $child)
-                                            <option value="{{ $child['attr_id'] }}" {{ isset($attrGoods[$attr['attr_id']]) && $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
-                                        @endforeach
+                                        @if(isset($attr['child']))
+                                            @foreach($attr['child'] as $child)
+                                                <option value="{{ $child['attr_id'] }}" {{ isset($attrGoods[$attr['attr_id']]) && $child['attr_id'] == $attrGoods[$attr['attr_id']]['attr_id'] ? 'selected' : '' }}>{{ $child['name'] }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </p>
                             @endforeach
@@ -223,7 +225,8 @@
 
                         <div class="col-sm-10 col-md-8 padding-clear">
                             <div class="col-sm-12">
-                                <a id="add-address" class="btn btn-primary" href="javascript:" data-target="#addressModal"
+                                <a id="add-address" class="btn btn-primary" href="javascript:"
+                                   data-target="#addressModal"
                                    data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
                             </div>
                             <div class="address-list col-lg-12">
@@ -245,9 +248,11 @@
                                     <div class="col-sm-10 fa-border show-map">{{ $area->address_name }}
                                         <span class="fa fa-times-circle pull-right close"></span>
                                         <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
-                                        <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
+                                        <input type="hidden" name="area[province_id][]"
+                                               value="{{ $area->province_id }}"/>
                                         <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
-                                        <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
+                                        <input type="hidden" name="area[district_id][]"
+                                               value="{{ $area->district_id }}"/>
                                         <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
                                         <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                                         <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>

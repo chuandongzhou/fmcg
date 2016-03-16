@@ -5,42 +5,55 @@
     <div class="message-container" id="J_demo"></div>
     @stop
 
-    @section('js-lib')
-    @parent
+@section('js-lib')
+@parent
 <!--[if lt IE 9]>
     <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
     <![endif]-->
     <!-- 自动适配移动端与pc端 -->
-    <script src="https://g.alicdn.com/aliww/??h5.openim.sdk/0.1.4/scripts/wsdk.js,h5.openim.kit/0.0.5/scripts/kit.js"
+    <script src="https://g.alicdn.com/aliww/??h5.imsdk/2.1.0/scripts/yw/wsdk.js,h5.openim.kit/0.3.7/scripts/kit.js"
             charset="utf-8"></script>
-
-
 @stop
 
 
 @section('js')
-    <script>
-        // 在url上加上fullscreen参数,即可变为全屏
-//        if (result.fullscreen) {
-//            var d = document.getElementById('J_demo');
-//            d.parentNode.removeChild(d);
-//        }
+    @parent
+    <script type="text/javascript">
         var d = document.getElementById('J_demo');
         d.parentNode.removeChild(d);
         window.onload = function () {
             WKIT.init({
                 container: '{{ $fullScreen }}' ? null : document.getElementById('J_demo'),
-                uid: SITE.USER.id,
-                appkey: '{{ $appKey }}',
-                credential: '{{ $password }}',
+                uid: SITE.USER.id.toString(),
+                appkey: '{{ $messageConf['key'] }}',
+                credential: '{{ $messageConf['pwd'] }}',
                 touid: '{{ $remoteUid }}',
                 theme: 'red',
-            title: '我是客服哟',
-                logo: 'http://interface.im.taobao.com/mobileimweb/fileupload/downloadPriFile.do?type=1&fileId=876114ca44f4362f629f7d592014e057.jpg&suffix=jpg&width=1920&height=1200&wangxintype=1&client=ww',
+                title: '{{ $shop->name }}',
+                toAvatar : '{{ $shop->logo_url }}',
                 //autoMsg: '',
                 autoMsgType: 1,
-                pluginUrl: '{{ url('personal/message/goods-detail?id=34') }}'
+                pluginUrl: '{{ url('personal/message/goods-detail?id=34') }}',
+                onLoginSuccess: function () {
+                    var sdk = WKIT.Conn.sdk, Event = sdk.Event;
+                    Event.on('CHAT.MSG_RECEIVED', function (data) {
+                        setReadState(sdk, data.data.touid.substring(8));
+                    });
+                }
             });
+            //设置消息已读
+            var setReadState = function (sdk, touid) {
+                sdk.Chat.setReadState({
+                    touid: touid,
+                    timestamp: Math.floor((new Date()) / 1000),
+                    success: function (data) {
+                        console.log('设置已读成功',data);
+                    },
+                    error: function (error) {
+                        console.log('设置已读失败', error);
+                    }
+                });
+            };
         }
     </script>
 @stop

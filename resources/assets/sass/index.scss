@@ -78,12 +78,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 .padding-clear {
   padding: 0;
 }
-.pd-left-clear{
-  padding-left:0;
+
+.pd-left-clear {
+  padding-left: 0;
 }
-.pd-right-clear{
-  padding-right:0;
+
+.pd-right-clear {
+  padding-right: 0;
 }
+
 .margin-clear {
   margin: 0 !important;
 }
@@ -126,6 +129,22 @@ ul, li, p, a, h1, h2, h3, h4 {
   .badge {
     color: $brand-danger;
     background-color: $body-bg;
+  }
+}
+
+.contact {
+  padding: 2px 4px;
+  color: $brand-warning;
+  font-size: 13px;
+  vertical-align: middle;
+  &:hover{
+    color: $brand-warning;
+  }
+  .fa{
+    transform-origin: center bottom;
+    vertical-align: middle;
+    margin-top: -3px;
+    animation: bounce 0.5s cubic-bezier(0.30, 2.40, 0.85, 2.50) infinite;
   }
 }
 
@@ -787,6 +806,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 25% !important;
     padding: 0 3px !important;
     margin-bottom: 5px !important;
+    .prompt {
+      width: 80px !important;
+      height: 80px !important;
+      background-size: cover !important;
+    }
   }
   .content-panel {
     padding: 2px 5px;
@@ -2301,9 +2325,10 @@ table {
         border-top: none;
         background-color: $body-bg;
         li {
-          padding: 2px 0 2px 18px;
+          padding: 2px 0 2px 10px;
           width: 100%;
           a {
+            padding: 0 !important;
             &:hover {
               color: $brand-primary;
             }
@@ -2333,8 +2358,7 @@ table {
     }
     a {
       color: $gray-base;
-      padding-top: 10px;
-      padding-bottom: 10px;
+      padding: 10px !important;
       font-size: 13px;
       &:hover, &:focus {
         background-color: transparent;
@@ -2570,8 +2594,6 @@ table {
 
 .banner-wrap {
   border-top: 1px solid $brand-primary;
-  margin-top: -1px;
-
   @at-root .banner-slide {
     .carousel-indicators {
       text-align: right;
@@ -3262,10 +3284,21 @@ table {
         &:last-of-type {
           border: none;
         }
+        .user-item {
+          margin-left: 45px;
+          .last-msg-time {
+            font-size: 11px;
+          }
+          .last-msg {
+            font-size: 11px;
+            padding: 0 5px;
+          }
+        }
         .avatar {
           border-radius: 50%;
           -webkit-border-radius: 50%;
           @include square(40px);
+          float: left;
         }
         .user-name {
           display: inline-block;
@@ -3275,7 +3308,7 @@ table {
         }
         .badge {
           background-color: $brand-primary !important;
-          margin-top: 8px;
+          font-size: 11px;
         }
       }
     }
@@ -3285,15 +3318,27 @@ table {
     height: 500px;
   }
 }
-.message-container{
+
+.message-container {
   position: absolute;
   right: 0;
   bottom: 0;
   width: 700px;
   height: 470px;
 }
+
 /*==============message end=================*/
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em;
 }
+
+@keyframes bounce {
+  from, to {
+    transform: translateY(0vh);
+  }
+  80% {
+    transform: translateY(0.2vh)
+  }
+}
+
