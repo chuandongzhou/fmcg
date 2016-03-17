@@ -54,7 +54,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('balance', 'BalanceController@index'); //账户余额
         $router->get('withdraw', 'WithdrawController@index');//提现相关操作
         $router->get('customer/{user_type}', 'CustomerController@index'); // 客户列表
-        $router->controller('message', 'MessageController'); // 消息列表
+        $router->controller('chat', 'ChatController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
     });
@@ -113,7 +113,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('barcode-without-images/export', 'BarcodeWithoutImagesController@export'); //导出没有图片的条形码
     $router->resource('barcode-without-images', 'BarcodeWithoutImagesController'); //前台用户添加商品时没有图片的条形码
     $router->resource('notice', 'NoticeController'); //前台用户添加商品时没有图片的条形码
-    $router->get('message', 'MessageController@index'); // 消息
+    $router->get('chat', 'ChatController@index'); // 消息
 });
 
 

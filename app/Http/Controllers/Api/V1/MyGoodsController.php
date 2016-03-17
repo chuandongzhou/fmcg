@@ -260,8 +260,11 @@ class MyGoodsController extends Controller
         $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
         })->skip(1)->toArray();
 
-        $shop = auth()->user()->shop->load(['deliveryArea.coordinate']);
+        $shop = auth()->user()->shop->load(['deliveryArea']);
         foreach ($results as $goods) {
+            if (is_null($goods[0])) {
+                break;
+            }
             $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr);
             $goodsModel = $shop->goods()->create($goodsAttr);
             if ($goodsModel->exists) {
@@ -362,11 +365,7 @@ class MyGoodsController extends Controller
         }
 
         $shop->deliveryArea->each(function ($area) use ($goodsModel) {
-            $areaModel = $goodsModel->deliveryArea()->save(new DeliveryArea(array_except($area->toArray(),
-                'coordinate')));
-            if (isset($area->coordinate)) {
-                $areaModel->coordinate()->save(new Coordinate($area->coordinate->toArray()));
-            }
+            $areaModel = $goodsModel->deliveryArea()->save(new DeliveryArea($area->toArray()));
             unset($areaModel);
         });
         return true;

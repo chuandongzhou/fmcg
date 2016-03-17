@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Requests;
+use App\Services\ChatService;
 
 class ShopController extends Controller
 {
@@ -33,6 +34,9 @@ class ShopController extends Controller
     {
         if ($shop->fill($request->all())->save()) {
 
+            //更新聊天远程
+            $shop->load('user');
+            (new ChatService())->usersHandle($shop, true);
             return $this->success('保存店铺成功');
         }
         return $this->error('保存店铺时出现错误');

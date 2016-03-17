@@ -605,6 +605,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 80px !important;
     height: 80px !important;
     background-size: cover !important; }
+  .list-penal .commodity-index-img .promotions {
+    background-position: 0 -205px !important; }
+  .list-penal .commodity-index-img .new-listing {
+    background-position: 0 -100px !important; }
 
 .list-penal .content-panel {
   padding: 2px 5px;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Personal;
 
 use App\Http\Controllers\Api\V1\Controller;
+use App\Services\ChatService;
 use Gate;
 use App\Http\Requests;
 
@@ -23,6 +24,9 @@ class ShopController extends Controller
         }
         if ($shop->fill(array_except($attributes, 'id'))->save()) {
 
+            //更新聊天远程
+            $shop->load('user');
+            (new ChatService())->usersHandle($shop, true);
             return $this->success('保存店铺成功');
         }
         return $this->error('保存店铺时出现错误');

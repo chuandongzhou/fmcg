@@ -37,14 +37,14 @@
                 });
             };
 
-            @if(request()->is('personal/message'))
+            @if(request()->is('personal/chat'))
                 WKIT.init({
                         container: document.getElementById('msgWrap'),
                         width: 700,
                         height: 500,
                         uid: SITE.USER.id.toString(),
-                        appkey: '{{ $messageConf['key'] }}',
-                        credential: '{{ $messageConf['pwd'] }}',
+                        appkey: '{{ $chatConf['key'] }}',
+                        credential: '{{ $chatConf['pwd'] }}',
                         touid: '0',
                         theme: 'orange',
                         pluginUrl: '',
@@ -87,7 +87,6 @@
                                 WKIT.switchTouid({touid: firstId}) ;
                                 setReadState(sdk , firstId);
                                 getUnreadMsgCount(sdk, false);
-
                                 Event.on('CHAT.MSG_RECEIVED', function (data) {
                                     addMessageNum(sdk, getToUid(data.data.touid));
                                 });
@@ -136,8 +135,8 @@
                 var sdk = new WSDK() , Event = sdk.Event;
                 sdk.Base.login({
                     uid: SITE.USER.id.toString(),
-                    appkey: '{{ $messageConf['key'] }}',
-                    credential: '{{ $messageConf['pwd'] }}',
+                    appkey: '{{ $chatConf['key'] }}',
+                    credential: '{{ $chatConf['pwd'] }}',
                     timeout: 5000,
                     success: function (data) {
                         getUnreadMsgCount(sdk, true);

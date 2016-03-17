@@ -95,7 +95,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if ($shop->id != $user->shop->id)
                         <li class="collect">
-                            <a href="javascript:" onclick="window.open('{{ url('personal/message/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                            <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
                         </li>
                         <li class="collect">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"

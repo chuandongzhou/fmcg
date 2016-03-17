@@ -25,15 +25,15 @@
             WKIT.init({
                 container: '{{ $fullScreen }}' ? null : document.getElementById('J_demo'),
                 uid: SITE.USER.id.toString(),
-                appkey: '{{ $messageConf['key'] }}',
-                credential: '{{ $messageConf['pwd'] }}',
+                appkey: '{{ $chatConf['key'] }}',
+                credential: '{{ $chatConf['pwd'] }}',
                 touid: '{{ $remoteUid }}',
                 theme: 'red',
                 title: '{{ $shop->name }}',
                 toAvatar : '{{ $shop->logo_url }}',
                 //autoMsg: '',
                 autoMsgType: 1,
-                pluginUrl: '{{ url('personal/message/goods-detail?id=34') }}',
+                pluginUrl: '{{ url('personal/chat/goods-detail?id=34') }}',
                 onLoginSuccess: function () {
                     var sdk = WKIT.Conn.sdk, Event = sdk.Event;
                     Event.on('CHAT.MSG_RECEIVED', function (data) {

@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
-use App\Models\Shop;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 
 
@@ -62,7 +61,8 @@ class UserController extends Controller
         $user = User::Create($attributes);
         if ($user->exists) {
             //插入商店
-            Shop::create(['user_id' => $user->id]);
+            $user->shop()->create([]);
+            // Shop::create(['user_id' => $user->id]);
 
             return $this->success('添加用户成功');
         }
@@ -104,6 +104,8 @@ class UserController extends Controller
     {
         if ($user->fill($request->all())->save()) {
             //更新远程
+            $user->load('shop');
+            (new ChatService)->usersHandle($user, true);
             return $this->success('更新用户成功');
         }
         $this->error('更新时遇到错误');
@@ -118,6 +120,7 @@ class UserController extends Controller
     public function destroy($user)
     {
         //更新远程
+        (new ChatService)->deleteUsers($user->shop->id);
         return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
     }
 
@@ -150,7 +153,12 @@ class UserController extends Controller
         $result = in_array($status, $auditStatus) ? $status : head($auditStatus);
 
         if ($user->fill(['audit_status' => $result])->save()) {
-            $this->_sendAuditSms($user, $result == $auditStatus['pass'], $error);
+            $status = $result == $auditStatus['pass'];
+            if ($status) {
+                $user->load('shop');
+                (new ChatService)->usersHandle($user);
+            }
+            $this->_sendAuditSms($user,$status , $error);
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
@@ -178,7 +186,12 @@ class UserController extends Controller
             $users = User::whereIn('id', $userIds)->get(['user_name', 'backup_mobile']);
             foreach ($users as $user) {
                 //更新远程
-                $this->_sendAuditSms($user, $result == $auditStatus['pass'], $error);
+                $status = $result == $auditStatus['pass'];
+                if ($status) {
+                    $user->load('shop');
+                    (new ChatService)->usersHandle($user);
+                }
+                $this->_sendAuditSms($user, $status, $error);
             }
 
 

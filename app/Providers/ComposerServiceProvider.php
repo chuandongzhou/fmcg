@@ -9,7 +9,7 @@ use App\Http\ViewComposers\ProvinceComposer;
 use App\Http\ViewComposers\NodeComposer;
 use App\Http\ViewComposers\CartComposer;
 use App\Http\ViewComposers\KeywordsComposer;
-use App\Http\ViewComposers\MessageComposer;
+use App\Http\ViewComposers\ChatComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -53,9 +53,9 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.shop-search',
                 'index.master'
             ],
-            MessageComposer::class => [
-                'includes.message',
-                'index.personal.message-kit'
+            ChatComposer::class => [
+                'includes.chat',
+                'index.personal.chat-kit'
             ]
         ]);
     }

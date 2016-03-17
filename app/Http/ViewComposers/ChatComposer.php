@@ -9,7 +9,7 @@ namespace App\Http\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 
-class MessageComposer
+class ChatComposer
 {
     /**
      * Bind data to the view.
@@ -24,7 +24,7 @@ class MessageComposer
             'pwd' => $pushConf['message_password'],
             'key' => $pushConf['app_key'],
         ];
-        $view->with('messageConf', $config);
+        $view->with('chatConf', $config);
     }
 
 }

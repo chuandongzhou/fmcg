@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Created by PhpStorm.
@@ -11,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class MessageService
+class ChatService
 {
 
     protected $appKey, $secretKey, $commonPassword;

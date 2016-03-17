@@ -2,7 +2,7 @@
 
 @section('title')@yield('subtitle') | 订百达 - 订货首选@stop
 
-@include('includes.message')
+@include('includes.chat')
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
@@ -61,7 +61,7 @@
                                 </a>
                             </li>
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
-                            <li><a href="{{ url('personal/message') }}">消息(<span
+                            <li><a href="{{ url('personal/chat') }}">消息(<span
                                             class="red total-message-count">0</span>)</a></li>
                             @if($user->type < cons('user.type.supplier'))
                                 <li class="collect-select">
