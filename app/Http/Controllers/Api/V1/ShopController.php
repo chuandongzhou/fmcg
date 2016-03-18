@@ -95,6 +95,18 @@ class ShopController extends Controller
         return $this->success(['extend' => $shopExtend]);
     }
 
+
+    public function getShopsByIds(Request $request){
+        $shopIds = $request->input('data');
+        if (empty($shopIds)) {
+            return [];
+        }
+        $shops = Shop::with('logo')->whereIn('id' , $shopIds)->get(['name' , 'id'])->each(function($shop) {
+            $shop->setAppends(['logo_url']);
+        });
+       return $this->success(['shops' => $shops->keyBy('id')]);
+    }
+
     /**
      * 获取店铺商品
      *

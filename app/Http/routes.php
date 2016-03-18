@@ -145,6 +145,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
         $router->get('shop/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
         $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');                   //店铺商品
+        $router->get('shop/get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
         $router->get('shop/all', 'ShopController@allShops');
 
         $router->get('version', 'VersionInfoController@getIndex');

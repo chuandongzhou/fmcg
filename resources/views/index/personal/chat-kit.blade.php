@@ -24,13 +24,13 @@
         window.onload = function () {
             WKIT.init({
                 container: '{{ $fullScreen }}' ? null : document.getElementById('J_demo'),
-                uid: SITE.USER.id.toString(),
+                uid: '{{ $chatConf['shop_id'] }}',
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
                 touid: '{{ $remoteUid }}',
                 theme: 'red',
                 title: '{{ $shop->name }}',
-                toAvatar : '{{ $shop->logo_url }}',
+                toAvatar: '{{ $shop->logo_url }}',
                 //autoMsg: '',
                 autoMsgType: 1,
                 pluginUrl: '{{ url('personal/chat/goods-detail?id=34') }}',
@@ -47,7 +47,7 @@
                     touid: touid,
                     timestamp: Math.floor((new Date()) / 1000),
                     success: function (data) {
-                        console.log('设置已读成功',data);
+                        console.log('设置已读成功', data);
                     },
                     error: function (error) {
                         console.log('设置已读失败', error);

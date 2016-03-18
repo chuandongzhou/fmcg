@@ -17,11 +17,19 @@ class ChatController extends Controller
      */
     public function getIndex()
     {
-
-        return view('index.personal.chat');
+        $shopId = auth()->user()->shop()->pluck('id');
+        return view('index.personal.chat' ,[
+            'shopId' => $shopId
+        ]);
     }
 
 
+    /**
+     * 聊天消息弹出页面
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getKit(Request $request)
     {
         $shopId = $request->input('remote_uid', '-1');
@@ -33,6 +41,12 @@ class ChatController extends Controller
         ]);
     }
 
+    /**
+     * 聊天弹出层商品介绍
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getGoodsDetail(Request $request)
     {
         return view('index.personal.chat-goods-detail');

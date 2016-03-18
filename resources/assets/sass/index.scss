@@ -3301,8 +3301,13 @@ table {
             font-size: 11px;
           }
           .last-msg {
+            display: inline-block;
             font-size: 11px;
             padding: 0 5px;
+            width: 65%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
           }
         }
         .avatar {
@@ -3316,6 +3321,10 @@ table {
           padding: 0 5px;
           font-size: 12px;
           font-weight: bolder;
+          width: 65%;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
         .badge {
           background-color: $brand-primary !important;
