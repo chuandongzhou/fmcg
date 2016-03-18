@@ -216,12 +216,12 @@
                         {{--消息列表--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表
+                                <i class="fa fa-commenting-o {!! path_active('personal/chat/*') !!}"></i> 消息列表
                             </a>
                             <ul class="menu-wrap">
                                 <li>
-                                    <a class="{{ path_active('personal/message') }}"
-                                       href="{{ url('personal/message') }}">
+                                    <a class="{{ path_active('personal/chat') }}"
+                                       href="{{ url('personal/chat') }}">
                                         消息列表
                                     </a>
                                 </li>
@@ -300,12 +300,12 @@
                         {{--消息列表--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-commenting-o {!! path_active('personal/message/*') !!}"></i> 消息列表
+                                <i class="fa fa-commenting-o {!! path_active('personal/chat/*') !!}"></i> 消息列表
                             </a>
                             <ul class="menu-wrap">
                                 <li>
-                                    <a class="{{ path_active('personal/message') }}"
-                                       href="{{ url('personal/message') }}">
+                                    <a class="{{ path_active('personal/chat') }}"
+                                       href="{{ url('personal/chat') }}">
                                         消息列表
                                     </a>
                                 </li>

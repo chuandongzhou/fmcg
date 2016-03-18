@@ -38,18 +38,18 @@
                                     <option selected="selected" value="">请选择省市/其他...</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-3 pd-left-clear">
                                 <select name="city_id" class="address-city form-control address">
                                     <option selected="selected" value="">请选择城市...</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 pd-left-clear">
                                 <select name="district_id" class="address-district form-control address">
                                     <option selected="selected" value="">请选择区/县...</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2">
-                                <select name="street_id" class="address-street form-control address">
+                            <div class="col-sm-2 pd-left-clear">
+                                <select name="street_id" class="address-street form-control  address">
 
                                 </select>
                             </div>

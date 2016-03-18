@@ -325,26 +325,16 @@ class OrderController extends Controller
             }
         });
 
-        if (!empty($search['obj_type']) && $search['obj_type'] < $user->type || $user->type == cons('user.type.supplier')) {
-            //查询买家
-            $query->wherehas('shop.user', function ($q) use ($search, $user) {
-                $q->where('id', $user->id);
-            });
-            if (!empty($search['obj_type'])) {
-                $query->wherehas('user', function ($q) use ($search) {
-                    $q->where('type', $search['obj_type']);
+        $objType = empty($search['obj_type']) ? null : $search['obj_type'];
 
-                });
-            }
-        } elseif (!empty($search['obj_type']) && $search['obj_type'] > $user->type || $user->type == cons('user.type.retailer')) {
-            //查询卖家
-            $query->where('user_id', $user->id);
-            if (!empty($search['obj_type'])) {
-                $query->wherehas('shop.user', function ($q) use ($search) {
-                    $q->where('type', $search['obj_type']);
-                });
-            }
+        if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && !is_null($objType))) {
+            //卖家
+            $this->_orderFilter($query, $user, $objType);
+        }else {
+            // '买家';
+            $this->_orderFilter($query, $user, $objType, true);
         }
+
         //时间
         if (!empty($search['start_at']) && !empty($search['end_at'])) {
             $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
@@ -377,6 +367,40 @@ class OrderController extends Controller
 
         return $query->nonCancel()->with('user.shop', 'shop', 'goods')->orderBy('id',
             'desc')->get();//第一个是买家的店铺,第二个是卖的店铺
+    }
+
+
+    /**
+     * 过滤订单属于买家还是卖家
+     *
+     * @param $query
+     * @param $user
+     * @param null $objType
+     * @param bool|false $isBuyer
+     */
+    private function _orderFilter($query, $user, $objType = null, $isBuyer = false)
+    {
+        if ($isBuyer) {
+            // '买家';
+            //查询买家
+            $query->wherehas('shop.user', function ($q) use ($objType, $user) {
+                $q->where('id', $user->id);
+            });
+            if (!is_null($objType)) {
+                $query->wherehas('user', function ($q) use ($objType) {
+                    $q->where('type', $objType);
+                });
+            }
+        } else {
+            // '卖家';
+            //查询卖家
+            $query->where('user_id', $user->id);
+            if (!is_null($objType)) {
+                $query->wherehas('shop.user', function ($q) use ($objType) {
+                    $q->where('type', $objType);
+                });
+            }
+        }
     }
 
     /**

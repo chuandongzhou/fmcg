@@ -183,7 +183,7 @@ class UserController extends Controller
         if (User::whereIn('id', $userIds)->update(['audit_status' => $result])) {
             $error = $request->input('reason');
 
-            $users = User::whereIn('id', $userIds)->get(['user_name', 'backup_mobile']);
+            $users = User::whereIn('id', $userIds)->get(['user_name', 'backup_mobile', 'id']);
             foreach ($users as $user) {
                 //更新远程
                 $status = $result == $auditStatus['pass'];

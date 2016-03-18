@@ -79,7 +79,7 @@ $(function () {
     //新消息提示框
     //$(".msg-channel").css("bottom", "5px");
     $(".msg-channel .close-btn").click(function () {
-        $(this).closest('.msg-channel').css('display', 'none');
+        $(this).closest('.msg-channel').animate({'bottom': '-160'});
     })
 })
 function menuFunc() {
@@ -493,11 +493,10 @@ function myGoodsFunc() {
             if (status) {
                 self.data('status', status).button('down');
                 statusInfo.html('已上架');
-            }else{
+            } else {
                 self.data('status', status).button('up');
                 statusInfo.html('已下架');
             }
-
 
 
         }).fail(function (jqXHR, textStatus, errorThrown) {

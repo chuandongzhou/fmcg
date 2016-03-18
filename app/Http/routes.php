@@ -193,5 +193,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->any('pay/refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
         $router->get('pay/success-url', 'PayController@successUrl');
         $router->controller('pos', 'PosController');             //pos机付款
+        $router->post('js-errors', ['uses' => 'PublicController@jsErrorStore']); // 前端JS错误记录
     });
 });

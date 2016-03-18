@@ -91,7 +91,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: #f0ad4e;
   font-size: 13px;
   vertical-align: middle; }
-  .contact:hover {
+  .contact:hover, .contact:focus {
     color: #f0ad4e; }
   .contact .fa {
     -webkit-transform-origin: center bottom;
@@ -223,6 +223,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         width: 50px;
         height: 45px; }
 
+.register-nav .container {
+  min-width: 1200px !important; }
+
 .login-content {
   position: relative;
   width: 100%;
@@ -323,7 +326,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: #b4b4b4; }
 
 .register-hr {
-  margin: 0 0 10px 0; }
+  margin: 0 0 10px 0;
+  min-width: 1200px; }
 
 /*======================================register end======================================*/
 /*======================================passed begin======================================*/
@@ -403,7 +407,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .guide-footer .container {
       width: 100% !important; } }
 
-.guide-footer {
+.guide-footer, .register-footer {
   background-color: #fff; }
 
 /*======================================guide end======================================*/
@@ -606,9 +610,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     height: 80px !important;
     background-size: cover !important; }
   .list-penal .commodity-index-img .promotions {
-    background-position: 0 -205px !important; }
+    background-position: 0 -102px !important; }
   .list-penal .commodity-index-img .new-listing {
-    background-position: 0 -100px !important; }
+    background-position: 0 -205px !important; }
 
 .list-penal .content-panel {
   padding: 2px 5px;
@@ -956,7 +960,8 @@ ul, li, p, a, h1, h2, h3, h4 {
       border: 1px solid #b4b4b4;
       background-color: #f2f2f2; }
     .public-personal .menu .name a {
-      font-size: inherit; }
+      font-size: 15px;
+      font-weight: 600; }
       .public-personal .menu .name a:hover {
         color: #4cb9fe; }
     .public-personal .menu .dealer-menu-list {
@@ -1718,7 +1723,7 @@ table .product-panel {
       }*/ }
     .dealer-top-header .operating-wrap a:hover, .dealer-top-header .operating-wrap a:focus {
       background-color: transparent;
-      color: #333333; }
+      color: #555555; }
 
 .search-keyword {
   margin: auto;
@@ -2435,7 +2440,7 @@ table .product-panel {
   font-size: 14px;
   text-indent: 2em; }
 
-@-webkit-keyframes bounce {
+@keyframes bounce {
   from, to {
     -webkit-transform: translateY(0vh);
     transform: translateY(0vh); }
@@ -2443,7 +2448,7 @@ table .product-panel {
     -webkit-transform: translateY(0.2vh);
     transform: translateY(0.2vh); } }
 
-@keyframes bounce {
+@-webkit-keyframes bounce {
   from, to {
     -webkit-transform: translateY(0vh);
     transform: translateY(0vh); }

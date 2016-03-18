@@ -21,9 +21,12 @@
                 <div class="col-sm-4 city-wrap">
                     <div class="location-panel">
                         <i class="fa fa-map-marker"></i> 所在地：
-                        <a href="#" class="location-text"><span class="city-value"
-                                                                title="{{  $provinces[\Request::cookie('province_id')] or '' }}">{{  $provinces[\Request::cookie('province_id')] or '' }}</span><span
-                                    class="fa fa-angle-down up-down"></span></a>
+                        <a href="#" class="location-text">
+                            <span class="city-value" title="{{  $provinces[\Request::cookie('province_id')] or '' }}">
+                                {{  $provinces[\Request::cookie('province_id')] or '' }}
+                            </span>
+                            <span class="fa fa-angle-down up-down"></span>
+                        </a>
                     </div>
                     <div class="city-list clearfix">
                         <div class="list-wrap">
@@ -109,11 +112,13 @@
 @stop
 
 @section('js-lib')
+    @parent
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
     <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
     <script src="{{ asset('js/ajax-polling.js') }}"></script>
 @stop
 @section('js')
+    @parent
     <script type="text/javascript">
         $(function () {
             if (!Cookies.get('province_id')) {

@@ -121,11 +121,13 @@
                             @else
                                 <tr>
                                     <td>{{ $order['id'] }}</td>
-                                    @if(auth()->user()->type == cons('user.type.wholesaler')&&$objCurrentType<cons('user.type.wholesaler') ||auth()->user()->type == cons('user.type.supplier'))
-                                        {{ $order['user']['shop']['name'] }}
-                                    @else
-                                        {{ $order['shop']['name'] }}
-                                    @endif
+                                    <td>
+                                        @if(auth()->user()->type == cons('user.type.wholesaler')&&$objCurrentType<cons('user.type.wholesaler') ||auth()->user()->type == cons('user.type.supplier'))
+                                            {{ $order['user']['shop']['name'] }}
+                                        @else
+                                            {{ $order['shop']['name'] }}
+                                        @endif
+                                    </td>
                                     <td>{{ $order['payment_type'] }}</td>
                                     <td>{{ $order['status_name'] }}</td>
                                     <td>{{ $order['created_at'] }}</td>

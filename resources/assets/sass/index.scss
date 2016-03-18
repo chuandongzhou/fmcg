@@ -137,7 +137,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-warning;
   font-size: 13px;
   vertical-align: middle;
-  &:hover{
+  &:hover,&:focus{
     color: $brand-warning;
   }
   .fa{
@@ -304,7 +304,11 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
+.register-nav{
+  .container {
+    min-width: 1200px !important;
+  }
+}
 .login-content {
   position: relative;
   width: 100%;
@@ -442,6 +446,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .register-hr {
   margin: 0 0 10px 0;
+  min-width: 1200px;
 }
 
 /*======================================register end======================================*/
@@ -553,7 +558,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-.guide-footer {
+.guide-footer ,.register-footer{
   background-color: $body-bg;
 }
 
@@ -812,10 +817,10 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-size: cover !important;
     }
     .promotions{
-      background-position:0 -205px!important;
+      background-position:0 -102px!important;
     }
     .new-listing {
-      background-position: 0 -100px!important;
+      background-position: 0 -205px!important;
     }
   }
   .content-panel {
@@ -1288,7 +1293,8 @@ ul, li, p, a, h1, h2, h3, h4 {
     .name {
       @extend .go-back;
       a {
-        font-size: inherit;
+        font-size: 15px;
+        font-weight: 600;
         &:hover {
           color: $brand-primary;
         }
@@ -2368,9 +2374,8 @@ table {
       font-size: 13px;
       &:hover, &:focus {
         background-color: transparent;
-        color: $gray-dark;
+        color: $gray;
       }
-
       /*&.home {
         color: $brand-warning;
       }*/
@@ -3347,4 +3352,11 @@ table {
     transform: translateY(0.2vh)
   }
 }
-
+@-webkit-keyframes bounce {
+  from, to {
+    transform: translateY(0vh);
+  }
+  80% {
+    transform: translateY(0.2vh)
+  }
+}
