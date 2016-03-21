@@ -13,6 +13,10 @@ class UserBank extends Model
         'is_default',
         'user_id'
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * 用户表

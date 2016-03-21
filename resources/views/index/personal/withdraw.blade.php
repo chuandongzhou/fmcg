@@ -27,15 +27,16 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <p class="time">
-                        提现单号 : <input type="text" name="withdrawId" value="" />
-                        时间段 : <input class="datetimepicker" name="start_time" data-format="YYYY-MM-DD" type="text"
-                                   value="{{ $startTime }}"> 至
-                        <input class="datetimepicker" name="end_time" data-format="YYYY-MM-DD"
-                               value="{{ $endTime }}"
+                    <div class="time form-group">
+                        提现单号 : <input type="text" class=" inline-control" name="withdrawId" value="" />
+                        时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
+                                    type="text"
+                                    value="{{ $data['start_time'] or '' }}"> 至
+                        <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
+                               value="{{ $data['end_time'] or '' }}"
                                type="text">
-                        <input type="submit" class="btn btn-warning" value="查看">
-                    </p>
+                        <input type="submit" class="btn btn-default search-by-get">
+                    </div>
 
                     <table class="table table-bordered table-center">
                         <thead>
@@ -116,6 +117,7 @@
         $(function () {
             picFunc();
             getWithdrawTimeItem();
+            formSubmitByGet();
         });
     </script>
 @stop

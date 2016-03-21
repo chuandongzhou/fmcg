@@ -53,20 +53,20 @@
                     <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
                          aria-expanded="false" style="height: 1px;">
                         <ul class="nav navbar-nav navbar-right operating-wrap">
-                            @if($user->type <= cons('user.type.wholesaler'))
+                            @if((isset($user) && $user->type <= cons('user.type.wholesaler')) || is_null($user))
                                 <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
                                 </li>
                             @endif
                             <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
                             <li>
-                                <a href="{{ $user->type == cons('user.type.retailer') ? url('order-buy') : url('order-sell') }}">
+                                <a href="{{ isset($user) && $user->type > cons('user.type.retailer') ? url('order-sell') : url('order-buy') }}">
                                     <span class="fa fa-file-text-o"></span> 我的订单
                                 </a>
                             </li>
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
                             <li><a href="{{ url('personal/chat') }}">消息(<span
                                             class="red total-message-count">0</span>)</a></li>
-                            @if($user->type < cons('user.type.supplier'))
+                            @if((isset($user) && $user->type < cons('user.type.supplier')) || is_null($user))
                                 <li class="collect-select">
                                     <a class="collect-selected"><span class="selected">收藏夹</span> <span
                                                 class="fa fa-angle-down"></span></a>
@@ -76,12 +76,20 @@
                                     </ul>
                                 </li>
                             @endif
-                            <li class="user-name-wrap">
-                                <a href="{{ url('personal/shop') }}" class="name-panel"><span
-                                            class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
-                                    )</a>
-                                <a href="{{ url('auth/logout') }}" class="exit"><i class="fa fa-sign-out"></i> 退出</a>
-                            </li>
+                            @if(isset($user))
+                                <li class="user-name-wrap">
+                                    <a href="{{ url('personal/shop') }}" class="name-panel"><span
+                                                class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
+                                        )</a>
+                                    <a href="{{ url('auth/logout') }}" class="exit"><i class="fa fa-sign-out"></i>
+                                        退出</a>
+                                </li>
+                            @else
+                                <li class="user-name-wrap">
+                                    <a href="{{ url('auth/guide') }}" class="red">登录</a>
+                                </li>
+                            @endif
+
                         </ul>
                     </div>
                 </div>

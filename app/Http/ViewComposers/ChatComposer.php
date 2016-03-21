@@ -23,7 +23,7 @@ class ChatComposer
         $config = [
             'pwd' => $pushConf['message_password'],
             'key' => $pushConf['app_key'],
-            'shop_id' => auth()->user()->shop()->pluck('id')
+            'shop_id' => auth()->user() ? auth()->user()->shop()->pluck('id') : 0
         ];
         $view->with('chatConf', $config);
     }

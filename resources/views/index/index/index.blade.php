@@ -13,7 +13,7 @@
             </div>
             <div class="col-sm-10 nav-name">
                 {{--<a href="{{ url('/') }}" class="btn">首页</a>--}}
-                @if($user->type == cons('user.type.retailer'))
+                @if((isset($user) && $user->type == cons('user.type.retailer')) || is_null($user))
                     <a href="{{ url('shop?type=wholesaler') }}" class="btn">批发商</a>
                 @endif
                 <a href="{{ url('shop?type=supplier') }}" class="btn">供应商</a>

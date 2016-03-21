@@ -89,16 +89,20 @@
 
     goodsColumns字段子集说明
 
-    id                  int         栏目id
-    name                string      栏目名
+    id                  int         分类id
+    level               int         分类层级
+    name                string      分类名
     goods               array       栏目商品列表
 
     goods字段子集说明
 
     id                  int         商品id
     name                string      商品名
+    bar_code            string      条形码
     price_retailer      decimal     价格（对于终端商）
     price_wholesaler    decimal     价格（对于批发商）
+    min_num_retailer    int         最低购买数（对于终端商）
+    min_num_wholesaler  int         最低购买数（对于批发商）
     is_new              int         是否新品（1是 , 0不是）
     is_promotion        int         是否促销产品
     image_url           string      商品图片
@@ -179,6 +183,7 @@
     pieces_wholesaler   int         单位编号 （对于批发商）
     specification_wholesaler    string  规格 （对于批发商）
     pieces              string      单位名 （根据不同登录角色区分）
+    shelf_life          string      保质期
     bar_code            string      商品条形码
     is_new              int         是否新品（1是 , 0不是）
     is_out              int         是否缺货
@@ -209,14 +214,6 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
-        coordinate          array       配送区域坐标
-
-       coordinate 字段子集说明
-
-       bl_lnt					string			左上角经度
-       bl_lat					string			左上角纬度
-       sl_lng					string			右下角经度
-       sl_lat					string			右下角纬度
 
     images_url 子字段说明
 
@@ -229,8 +226,6 @@
 
 #### 2.3.1获取我的商品列表 [get] ()
 `请求参数`
-
-    sort        string              排序 （name , price , new）
     province_id int                 省id
     city_id     int                 市id
     district_id int                 县id
@@ -286,33 +281,34 @@
     data字段子集说明
 
     id                  int         商品id
-        name                string      商品名
-        sales_volume        int         销售量
-        price_retailer      decimal     价格（对于终端商）
-        min_num_retailer    int         最低购买量 (对于终端商）
-        pieces_retailer     int         单位编号 （对于终端商）
-        specification_retailer  string  规格 （对于终端商）
-        price_wholesaler    decimal     价格（对于批发商）
-        min_num_wholesaler  int         最低购买量 (对于批发商）
-        pieces_wholesaler   int         单位编号 （对于批发商）
-        specification_wholesaler  string  规格 （对于批发商）
-        pieces              string      单位名 （根据不同登录角色区分）
-        bar_code            string      商品条形码
-        is_new              int         是否新品（1是 , 0不是）
-        is_out              int         是否缺货
-        is_change           int         是否可换货
-        is_back             int         是否可退货
-        is_expire           int         是否即期品
-        is_promotion        int         是否促销产品
-        promotion_info      string      促销信息
-        introduce           string      商品图文详情
-        shop_id             int         商品所属店铺id
-        shop_name           string      商品所属店铺
-        attrs               array       标签
-        delivery_area       array       商品配送区域
-        is_like             bool        是否已关注
-        image_url           string      商品图片('第一张')
-        images_url          array       商品全部图片
+    name                string      商品名
+    sales_volume        int         销售量
+    price_retailer      decimal     价格（对于终端商）
+    min_num_retailer    int         最低购买量 (对于终端商）
+    pieces_retailer     int         单位编号 （对于终端商）
+    specification_retailer  string  规格 （对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    min_num_wholesaler  int         最低购买量 (对于批发商）
+    pieces_wholesaler   int         单位编号 （对于批发商）
+    specification_wholesaler  string  规格 （对于批发商）
+    pieces              string      单位名 （根据不同登录角色区分）
+    shelf_life          string      保质期
+    bar_code            string      商品条形码
+    is_new              int         是否新品（1是 , 0不是）
+    is_out              int         是否缺货
+    is_change           int         是否可换货
+    is_back             int         是否可退货
+    is_expire           int         是否即期品
+    is_promotion        int         是否促销产品
+    promotion_info      string      促销信息
+    introduce           string      商品图文详情
+    shop_id             int         商品所属店铺id
+    shop_name           string      商品所属店铺
+    attrs               array       标签
+    delivery_area       array       商品配送区域
+    is_like             bool        是否已关注
+    image_url           string      商品图片('第一张')
+    images_url          array       商品全部图片
 
     attrs 子字段说明
 
@@ -327,14 +323,6 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
-        coordinate          array       配送区域坐标
-
-        coordinate 字段子集说明
-
-        bl_lnt					string			左上角经度
-        bl_lat					string			左上角纬度
-        sl_lng					string			右下角经度
-        sl_lat					string			右下角纬度
 
     images_url 子字段说明
 
@@ -356,7 +344,8 @@
     price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
     pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
-    specification_wholesaler    string 规格  （对于批发商 供应商时添加）
+    specification_wholesaler     string 规格  （对于批发商 供应商时添加）
+    shelf_life          string      保质期
     bar_code            string      商品条形码
     is_new              int         是否新品（1是   0不是）
     is_out              int         是否缺货 （1是   0不是）
@@ -399,6 +388,7 @@
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
     pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
     specification_wholesaler    string 规格  （对于批发商 供应商时添加）
+    shelf_life          string      保质期
     bar_code            string      商品条形码
     is_new              int         是否新品（1是   0不是）
     is_out              int         是否缺货 （1是   0不是）
@@ -1406,6 +1396,8 @@
 	delivery_man 字段子集说明
 	
 	id					int			配送人员ID
+	user_name           string      pos机登录名
+	pos_sign            string      pos机编号
 	name				string		姓名
 	phone				string		电话
 
@@ -1413,7 +1405,10 @@
 
 #### 2.11.2 添加配送人员[post]
 `请求参数:`
-	
+	user_name           string      pos机登录名
+	password            string      pos机登录密码
+	password_confirmation   string  pos机密码确认
+    pos_sign            string      pos机编号
 	name				string		姓名
 	phone				int			电话(长度7~14位)
 
@@ -1424,8 +1419,12 @@
 #### 2.11.3 编辑配送人员信息[put] ({id})
 `请求参数:`
 	
-	name				string		姓名
-	phone				int			电话(长度7~14位)
+	user_name           string      pos机登录名
+    password            string      pos机登录密码 （不修改密码可不填）
+    password_confirmation   string  pos机密码确认（不修改密码可不填）
+    pos_sign            string      pos机编号
+    name				string		姓名
+    phone				int			电话(长度7~14位)
 
 `成功返回:`
 
@@ -1451,7 +1450,8 @@
 
 `成功返回:`
 
-	balance				string		帐户可提现金额
+	balance				decimal		帐户金额
+	protectedBalance    decimal     受保护金额
 	withdraws			array		提现记录
 
 	withdraws 字段子集说明

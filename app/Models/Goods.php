@@ -336,7 +336,7 @@ class Goods extends Model
      */
     public function getPriceAttribute()
     {
-        $userType = auth()->user()->type;
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
         return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
     }
@@ -348,7 +348,7 @@ class Goods extends Model
      */
     public function getPiecesAttribute()
     {
-        $userType = auth()->user()->type;
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
         $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
         return cons()->valueLang('goods.pieces', $piece);
     }
@@ -372,7 +372,7 @@ class Goods extends Model
      */
     public function getMinNumAttribute()
     {
-        $userType = auth()->user()->type;
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
         return $userType == $this->user_type ? $this->min_num_retailer : ($userType == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer);
 

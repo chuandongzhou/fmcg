@@ -115,10 +115,12 @@ class GoodsService
      */
     static function getNewGoodsColumn()
     {
-        $type = auth()->user()->type;
+        $user = auth()->user();
+        $userTypes = cons('user.type');
+        $type = is_null($user) ? $userTypes['retailer'] : $user->type;
 
         //供应商暂时与批发商一致
-        $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
+        $type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
 
         $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $homeColumnGoodsConf = cons('home_column.goods');

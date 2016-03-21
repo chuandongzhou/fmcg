@@ -19,7 +19,8 @@ class CartComposer
      */
     public function compose(View $view)
     {
-        $view->with('cartNum', auth()->user()->carts->count());
+        $cartCount = auth()->user() ? auth()->user()->carts->count() : 0;
+        $view->with('cartNum', $cartCount);
     }
 
 }

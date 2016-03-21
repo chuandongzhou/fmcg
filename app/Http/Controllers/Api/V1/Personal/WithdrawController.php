@@ -26,12 +26,15 @@ class WithdrawController extends Controller
             strtotime('-1 month'));;
         $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
         $user = auth()->user();
-        $withdraws = Withdraw::where('user_id', $user->id)->whereBetween('created_at',
+        $withdraws = $user->withdraw()->with('userBanks')->whereBetween('created_at',
             [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate()->toArray();
 
+        $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
 
         return $this->success([
             'balance' => $user->balance,
+            'protectedBalance' => $protectedBalance,
             'withdraws' => $withdraws, //提现记录
         ]);
     }

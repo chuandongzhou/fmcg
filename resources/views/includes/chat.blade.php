@@ -163,31 +163,31 @@
             var getToUid = function (toUid) {
                 return toUid.substring(8);
             };
-                    @else
-                        var sdk = new WSDK(), Event = sdk.Event;
-            sdk.Base.login({
-                uid: '{{ $chatConf['shop_id'] }}',
-                appkey: '{{ $chatConf['key'] }}',
-                credential: '{{ $chatConf['pwd'] }}',
-                timeout: 5000,
-                success: function (data) {
-                    getUnreadMsgCount(sdk, true);
-
-                    Event.on('CHAT.MSG_RECEIVED', function (data) {
-                        totalMsg.html(parseInt(totalMsg.html()) + 1);
-                    });
-                    sdk.Base.startListenAllMsg();
-                },
-                error: function (error) {
-                    // {code: 1002, resultText: 'TIMEOUT'}
-                    console.log('login fail', error);
+            @else
+                if(!SITE.USER.id) {
+                    return false;
                 }
-            });
+                var sdk = new WSDK(), Event = sdk.Event;
+                sdk.Base.login({
+                    uid: '{{ $chatConf['shop_id'] }}',
+                    appkey: '{{ $chatConf['key'] }}',
+                    credential: '{{ $chatConf['pwd'] }}',
+                    timeout: 5000,
+                    success: function (data) {
+                        getUnreadMsgCount(sdk, true);
+
+                        Event.on('CHAT.MSG_RECEIVED', function (data) {
+                            totalMsg.html(parseInt(totalMsg.html()) + 1);
+                        });
+                        sdk.Base.startListenAllMsg();
+                    },
+                    error: function (error) {
+                        // {code: 1002, resultText: 'TIMEOUT'}
+                        console.log('login fail', error);
+                    }
+                });
+
             @endif
-
-
-
-
         });
     </script>
 @stop

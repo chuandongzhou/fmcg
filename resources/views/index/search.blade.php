@@ -20,7 +20,7 @@
                                     class="fa fa-angle-down"></i></a>
                         <ul class="select-list">
                             <li class="hide"><a href="javascript:void(0)" data-url="search">商品</a></li>
-                            @if($user->type == cons('user.type.retailer'))
+                            @if((isset($user) && $user->type == cons('user.type.retailer')) || is_null($user))
                                 <li><a href="javascript:void(0)" data-type="wholesaler">批发商</a></li>
                             @endif
                             <li><a href="javascript:void(0)" data-type="supplier">供应商</a></li>

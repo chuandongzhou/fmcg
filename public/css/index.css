@@ -66,7 +66,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     color: #fff; }
 
 .red {
-  color: #fe462f; }
+  color: #fe462f !important;}
 
 .prompt {
   color: #777777; }
@@ -2408,8 +2408,13 @@ table .product-panel {
         .user-list-wrap .user-list-panel ul li .user-item .last-msg-time {
           font-size: 11px; }
         .user-list-wrap .user-list-panel ul li .user-item .last-msg {
+          display: inline-block;
           font-size: 11px;
-          padding: 0 5px; }
+          padding: 0 5px;
+          width: 65%;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden; }
       .user-list-wrap .user-list-panel ul li .avatar {
         border-radius: 50%;
         -webkit-border-radius: 50%;
@@ -2420,7 +2425,11 @@ table .product-panel {
         display: inline-block;
         padding: 0 5px;
         font-size: 12px;
-        font-weight: bolder; }
+        font-weight: bolder;
+        width: 65%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden; }
       .user-list-wrap .user-list-panel ul li .badge {
         background-color: #4cb9fe !important;
         font-size: 11px; }

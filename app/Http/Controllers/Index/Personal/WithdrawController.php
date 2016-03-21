@@ -25,17 +25,17 @@ class WithdrawController extends Controller
         $flag = 1;
         $withdrawId = isset($data['withdrawId']) ? intval($data['withdrawId']) : '';
 
-        $startTime = isset($data['start_time']) && $data['start_time'] != '' ? $data['start_time'] : date('Y-m-d',
+        $data['start_time'] = isset($data['start_time']) && $data['start_time'] != '' ? $data['start_time'] : date('Y-m-d',
             strtotime('-1 month'));;
-        $endTime = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
+        $data['end_time'] = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
         $user = auth()->user();
-        $query = Withdraw::with('userBanks')->where('user_id', $user->id);
+        $query = $user->withdraw()->with('userBanks');
         if ($withdrawId) {
             $withdraws = $query->find($withdrawId);
             $flag = 0;
         } else {
             $withdraws = $query->whereBetween('created_at',
-                [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate();
+                [$data['start_time'], (new Carbon($data['end_time']))->endOfDay()])->orderBy('id', 'DESC')->paginate();
         }
 
         $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
@@ -45,8 +45,7 @@ class WithdrawController extends Controller
             'flag' => $flag,
             'balance' => $user->balance,
             'protectedBalance' => $protectedBalance,
-            'startTime' => $startTime,
-            'endTime' => $endTime,
+            'data' => $data,
             'bankInfo' => $user->userBanks,
             'withdraws' => $withdraws, //提现记录
         ]);

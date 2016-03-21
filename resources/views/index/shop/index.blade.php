@@ -55,7 +55,7 @@
 
                             <p class="order-count item">销量 : <span>{{ $shop->sales_volume }}</span></p>
 
-                            <p class="order-count store-presentation"><span>店铺介绍 : </span>
+                            <p class="order-count store-presentation item"><span>店铺介绍 : </span>
                                 <span title="{{ $shop->introduction }}">{{ $shop->introduction }}</span>
                             </p>
                             <p class="item order-count address-panel"><span>联系地址 : </span><span class="address">{{ $shop->address }}</span></p>
