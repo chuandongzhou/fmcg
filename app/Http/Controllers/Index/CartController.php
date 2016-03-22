@@ -11,6 +11,10 @@ use App\Services\CartService;
 
 class CartController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('supplier');
+    }
 
     public function index()
     {

@@ -124,10 +124,10 @@ class GoodsService
 
         $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
         $homeColumnGoodsConf = cons('home_column.goods');
-        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
+        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type . ':' . $provinceId;
 
         $goodsColumns = [];
-        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
+        if (Cache::has($cacheKey)) {
             $goodsColumns = Cache::get($cacheKey);
         } else {
             //商品
@@ -164,7 +164,6 @@ class GoodsService
                         $goods->setAppends(['image_url']);
                     });
                 $category->goods = $goods;
-                $category->province_id = $provinceId;
             }
             Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
         }

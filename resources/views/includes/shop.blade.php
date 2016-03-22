@@ -104,7 +104,7 @@
             </div>
         </div>
     </div>
-    @if($shop->user->type > cons('user.type.retailer'))
+    @if($shop->user->type == cons('user.type.supplier'))
         <div class="form-group">
             <label class="col-sm-2 control-label" for="username">代理合同(可选):</label>
 
@@ -125,7 +125,8 @@
                 </div>
             </div>
         </div>
-
+    @endif
+    @if($shop->user->type > cons('user.type.retailer'))
         <div class="form-group">
             <label class="col-sm-2 control-label">图片</label>
 

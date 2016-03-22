@@ -567,9 +567,9 @@ function statisticsFunc() {
         var form = $('form');
         var oldUrl = form.attr('action');
         var newUrl = SITE.ROOT + "/order/stat-export";
-        form.attr('action', newUrl).attr('method', 'post').submit();
+        form.attr('action', newUrl).submit();
         //初始化设置
-        form.attr('action', oldUrl).attr('method', 'get');
+        form.attr('action', oldUrl);
 
     });
     $('#submitBtn').click(function () {

@@ -306,14 +306,18 @@
             })
             $('select[name="type"]').change(function () {
                 var type = $(this).val(),
-                        retailerType = '{{ cons('user.type.retailer') }}',
+                        wholesalerType = '{{ cons('user.type.wholesaler') }}',
                         agencyContract = $('span[name="agency_contract"]'),
                         addAddress = $('#add-address');
-                if (type == retailerType) {
-                    agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
+                if (type < wholesalerType) {
                     addAddress.prop('disabled' , true).closest('.form-group').addClass('hidden').find('.address-list').html('');
+                    agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
                 } else {
-                    agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
+                    if(type == wholesalerType) {
+                        agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
+                    }else {
+                        agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
+                    }
                     addAddress.prop('disabled' , false).closest('.form-group').removeClass('hidden');
                 }
             })

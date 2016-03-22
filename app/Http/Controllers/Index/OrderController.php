@@ -330,7 +330,7 @@ class OrderController extends Controller
         if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && !is_null($objType))) {
             //卖家
             $this->_orderFilter($query, $user, $objType);
-        }else {
+        } else {
             // '买家';
             $this->_orderFilter($query, $user, $objType, true);
         }
@@ -342,7 +342,7 @@ class OrderController extends Controller
         //商品名
         if (!empty($search['goods_name'])) {
             $query->wherehas('goods', function ($q) use ($search) {
-                $q->where('name', trim($search['goods_name']));
+                $q->where('name', 'LIKE', '%' . trim($search['goods_name']) . '%');
             });
         }
         //用户名
@@ -354,7 +354,7 @@ class OrderController extends Controller
                 });
             } else {//查询买家
                 $query->wherehas('user.shop', function ($q) use ($search) {
-                    $q->where('name', trim($search['user_name']));
+                    $q->where('name', 'LIKE', '%' . trim($search['user_name'] . '%'));
                 });
             }
         }
@@ -479,7 +479,7 @@ class OrderController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      */
-    public function postStatExport(Request $request)
+    public function getStatExport(Request $request)
     {
         //查询条件判断
         $search = $request->all();
