@@ -2,7 +2,7 @@
      aria-hidden="true" style="padding-right: 17px;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" style="width:70%;margin:auto">
-            <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/withdraw/add-withdraw') }}"
+            <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/finance/add-withdraw') }}"
                   method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span

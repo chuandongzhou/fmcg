@@ -18,7 +18,7 @@
         <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-2">
             <h2 class="passed-ok"><i class="fa fa-check-circle"></i>注册成功！</h2>
             <p class="passed-item">我们将在1~3个工作日完成审核，完成后将会以短信通知您！</p>
-            <p>前往<a href="{{ url('auth/guide') }}">订百达首页</a>了解更多信息</p>
+            <p>前往<a href="{{ url('/') }}">订百达首页</a>了解更多信息</p>
         </div>
     </div>
 </div>

@@ -131,7 +131,7 @@ class GoodsService
             $goodsColumns = Cache::get($cacheKey);
         } else {
             //商品
-            $goodsColumns = Category::where(['pid' => 0, 'status' => 1])->with('adverts')->get([
+            $goodsColumns = Category::where(['pid' => 0, 'status' => 1])->with('adverts.image')->get([
                 'id',
                 'level',
                 'pid',
@@ -157,7 +157,7 @@ class GoodsService
                     ->where('user_type', '>', $type)
                     ->ofStatus(cons('goods.status.on'))
                     ->OfDeliveryArea(['province_id' => $provinceId])
-                    ->with('images')
+                    ->with('images.image')
                     ->select($goodsFields)
                     ->take($displayCount)
                     ->get()->each(function ($goods) {

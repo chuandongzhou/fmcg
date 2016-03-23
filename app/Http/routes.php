@@ -51,8 +51,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('password', 'PasswordController@index');          //修改密码
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
-        $router->get('balance', 'BalanceController@index'); //账户余额
-        $router->get('withdraw', 'WithdrawController@index');//提现相关操作
+        $router->controller('finance', 'FinanceController'); //账户余额
         $router->get('customer/{user_type}', 'CustomerController@index'); // 客户列表
         $router->controller('chat', 'ChatController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
@@ -177,7 +176,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
 
-            $router->controller('withdraw', 'WithdrawController');    //提现相关操作
+            $router->controller('finance', 'FinanceController');    //提现相关操作
 
         });
         $router->controller('cart', 'CartController');
@@ -195,5 +194,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('pay/success-url', 'PayController@successUrl');
         $router->controller('pos', 'PosController');             //pos机付款
         $router->post('js-errors', ['uses' => 'PublicController@jsErrorStore']); // 前端JS错误记录
+
+        //获取移动端广告
+        $router->get('advert', 'AdvertController@index');
     });
 });

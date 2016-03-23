@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Controller;
 
-class WithdrawController extends Controller
+class FinanceController extends Controller
 {
 
     /**
@@ -19,7 +19,7 @@ class WithdrawController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
-    public function getIndex(Request $request)
+    public function getWithdraw(Request $request)
     {
         $data = $request->all();
         $startTime = isset($data['start_time']) && $data['start_time'] != '' ? $data['start_time'] : date('Y-m-d',
@@ -29,13 +29,49 @@ class WithdrawController extends Controller
         $withdraws = $user->withdraw()->with('userBanks')->whereBetween('created_at',
             [$startTime, (new Carbon($endTime))->endOfDay()])->orderBy('id', 'DESC')->paginate()->toArray();
 
-        $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
-            cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
-
         return $this->success([
-            'balance' => $user->balance,
-            'protectedBalance' => $protectedBalance,
             'withdraws' => $withdraws, //提现记录
+        ]);
+    }
+
+    /**
+     * 交易流水帐
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getDaybook (Request $request){
+        $data = $request->all();
+
+        $dayBook = SystemTradeInfo::select('trade_no', 'order_id', 'pay_type', 'type', 'amount', 'target_fee',
+            'finished_at')->where('account', auth()->user()->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'));
+        if (isset($data['start_time'])) {
+            $data['end_time'] = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
+
+            $dayBook->whereBetween('finished_at',
+                [$data['start_time'], (new Carbon($data['end_time']))->endOfDay()]);
+        }
+        return $this->success([
+            'dayBook' => $dayBook->orderBy('id', 'DESC')->paginate()->toArray()
+        ]);
+    }
+
+    /**
+     * 获取帐户余额以及受保护的金额
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getBalance(){
+
+        $user = auth()->user();
+        $todayBegin = Carbon::now()->startOfDay();
+
+        $protectedBalance = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->where('finished_at', '>=', $todayBegin)->sum('amount');
+        $this->success([
+            'balance' => $user->balance,
+            'protectedBalance' => $protectedBalance
         ]);
     }
 

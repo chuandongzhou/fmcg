@@ -87,6 +87,10 @@ return [
             'index' => [
                 'name' => 'advert:index',
                 'expire' => 10,
+            ],
+            'app' => [
+                'name' => 'advert:app',
+                'expire' => 10
             ]
         ]
     ],
@@ -129,7 +133,7 @@ return [
         'pay_type' => [
             'yeepay' => 1,          //易宝
             'pingxx' => 2,           //pingxx
-            'pos' =>3               //pos机
+            'pos' => 3               //pos机
         ],
         'pay_status' => [
             'success' => 1,         //成功
@@ -200,7 +204,7 @@ return [
             'BOCO' => 4,        // '交通银行',
             'CIB' => 5,         // '兴业银行',
             'CMBC' => 6,        // '中国民生银行',
-            'CEB' => 7,         //'光大银行',
+            'CEB' => 7,         // '光大银行',
             'BOC' => 8,         // '中国银行',
             'PINGANBANK' => 9,  // '平安银行',
             'ECITIC' => 10,     // '中信银行',

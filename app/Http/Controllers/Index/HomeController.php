@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Models\Notice;
-use App\Models\Order;
 use App\Services\GoodsService;
-use App\Services\ShopService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Cache;

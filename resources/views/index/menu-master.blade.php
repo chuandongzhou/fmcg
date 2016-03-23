@@ -174,13 +174,13 @@
                         {{--财务管理--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-money {!!  path_active(['personal/balance','personal/bank'] ) !!}"></i>
+                                <i class="fa fa-money {!!  path_active(['personal/finance/balance','personal/finance/withdraw']) !!}"></i>
                                 财务管理
                             </a>
                             <ul class="menu-wrap">
                                 <li>
-                                    <a class="{{ path_active('personal/balance') }}"
-                                       href="{{ url('personal/balance') }}">
+                                    <a class="{{ path_active(['personal/finance/balance','personal/finance/withdraw']) }}"
+                                       href="{{ url('personal/finance/balance') }}">
                                         账户余额
                                     </a>
                                 </li>

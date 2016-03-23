@@ -3,29 +3,10 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    <form method="get" action="{{ url('personal/balance') }}" autocomplete="off" class="form-horizontal">
+    <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off" class="form-horizontal">
         <div class="row">
             <div class="col-sm-12 ">
-                <div class="account-balance">
-                    <label>账户余额 :</label>
-                    <b class="balance red">￥{{ $balance }}</b>
-                </div>
-                <div class="protected-balance">
-                    <label>结算保护余额 :</label>
-                    <b class="balance red">￥{{ $protectedBalance }}</b>
-                </div>
-                <div class="can-withdraw-balance">
-                    <label>可提现余额 :</label>
-                    <b class="balance red">￥{{ sprintf('%.2f' , $balance - $protectedBalance) }}</b>
-                    <a class="btn btn-primary" data-target="#withdraw" data-toggle="modal">提现</a>
-                </div>
-                <div class="font-size-10 red">(提现申请处理时间：每天10 : 00 、16 : 00)</div>
-                <div class="personal-center">
-                    <div class="switching">
-                        <a href="{{ url('personal/balance') }}" class="btn active">流水账</a>
-                        <a href="{{ url('personal/withdraw') }}" class="btn">提现记录</a>
-                    </div>
-                </div>
+                @include('index.personal.finance-common')
                 <div class="table-responsive">
                     <div class="time form-group margin-clear">
                         时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"

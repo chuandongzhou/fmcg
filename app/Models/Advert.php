@@ -19,6 +19,8 @@ class Advert extends Model
      */
     protected $fillable = ['category_id', 'name', 'type', 'url', 'start_at', 'end_at', 'image'];
 
+    public $hidden = ['created_at' , 'updated_at'];
+
     /**
      * The attributes that should be mutated to dates.
      *

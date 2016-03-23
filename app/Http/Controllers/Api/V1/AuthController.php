@@ -74,6 +74,10 @@ class AuthController extends Controller
             $shopInput = $request->except('username', 'password', 'backup_mobile', 'type');
             $shopModel = $user->shop();
 
+            if ($user->type == cons('user.type.retailer')) {
+                unset($shopInput['area']);
+            }
+
             if ($shopModel->create($shopInput)->exists) {
                 session(['shop.name' => $shopInput['name']]);
                 return $this->success('注册成功');

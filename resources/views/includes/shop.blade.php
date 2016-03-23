@@ -85,7 +85,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-2 control-label" for="username">经营许可证:</label>
+        <label class="col-sm-2 control-label" for="username">食品流通许可证:</label>
 
         <div class="col-sm-10 col-md-6">
             @if(!$shop->businessLicense)

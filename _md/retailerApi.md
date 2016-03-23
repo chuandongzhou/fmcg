@@ -62,6 +62,7 @@
     business_license            file        食品经营许可证
     agency_contract             file        代理合同
     address                     array       店铺地址
+    area                        array       配送区域列表 (仅批发商和供应商上传)
     x_lng                       float       经度
     y_lat                       float       纬度
 
@@ -74,6 +75,16 @@
         street_id               int             街道id
         area_name               string          省、市、县、街道名
         address                 string          详细地址
+
+     area 字段说明
+
+         id                      array               配送地址id列表(新添加地址id应为 '')
+         province_id             array               省id列表
+         city_id                 array               市id列表
+         district_id             array               县id列表
+         street_id               array               街道id列表
+         area_name               array               省名+市名+县名+街道名  列表
+         address                 array               详细地址列表
 
 `成功返回:`
 
@@ -1440,8 +1451,8 @@
 `失败返回:`
 
 
-### 2.12 提现功能 [personal/withdraw]
-#### 2.12.1 提现申请记录[get] (index) (按提现申请的创建时间查询)
+### 2.12 财务管理 [personal/finance]
+#### 2.12.1 提现申请记录[get] (withdraw) (按提现申请的创建时间查询)
 `请求参数:`
 	
 	page				int			分页
@@ -1449,9 +1460,6 @@
 	end_time			string		结束时间(默认今天的24点)	
 
 `成功返回:`
-
-	balance				decimal		帐户金额
-	protectedBalance    decimal     受保护金额
 	withdraws			array		提现记录
 
 	withdraws 字段子集说明
@@ -1460,27 +1468,64 @@
 		
 		data 字段子集说明
 			
-			id				int			提现单号
-			amount			string		本次提现金额
-			status			int			提现订单状态号
-			status_info		string		提现订单状态
-			trade_no		string		交易单号(未打款则为空字符串)
-			reason			string		审核不通过原因
-			created_at		string		创建时间
-			failed_at		string		不通过时间
-			pass_at			string		通过时间
-			payment_at		string		打款时间  (未执行到的操作对应时间格式-0001-11-30 00:00:00)
-			user_banks	array		提现银行卡信息
-			
-			user_banks 字段子集说明
-			
-				card_holder		string		持卡人姓名
-				card_number		string		卡号
-				card_type		int			银行名称(参考personal/banks [get]返回信息)
+            id				int			提现单号
+            amount			string		本次提现金额
+            status			int			提现订单状态号
+            status_info		string		提现订单状态
+            trade_no		string		交易单号(未打款则为空字符串)
+            reason			string		审核不通过原因
+            created_at		string		创建时间
+            failed_at		string		不通过时间
+            pass_at			string		通过时间
+            payment_at		string		打款时间  (未执行到的操作对应时间格式-0001-11-30 00:00:00)
+            user_banks	array		提现银行卡信息
+
+        user_banks 字段子集说明
+
+            card_holder		string		持卡人姓名
+            card_number		string		卡号
+            card_type		int			银行名称(参考personal/banks [get]返回信息)
 	
 `失败返回:`
 
-#### 2.12.2 提现申请[post] (add-withdraw)
+#### 2.12.2 交易流水帐[get] (daybook)
+`请求参数:`
+
+	page				int			分页
+	start_time			string		开始时间(默认上个月的今天)
+	end_time			string		结束时间(默认今天的24点)
+
+`成功返回:`
+	dayBook			array		交易流水帐
+
+	dayBook 字段子集说明
+
+		data			array		交易记录
+
+		data 字段子集说明
+
+          trade_no          string          交易号
+          order_id          int             订单号
+          pay_type          int             交易平台    (1 易宝   2 pingxx  3 pos机)
+          type              int             交易类型  （1 入帐   2提现）
+          amount            decimal         交易金额
+          target_fee        decimal         交易手续费
+          finished_at       timestamp       交易完成时间
+
+
+`失败返回:`
+
+#### 2.12.3 获取帐户余额[get] (balance)
+`请求参数:`
+
+	balance				decimal			帐户余额
+	protectedBalance	decimal			受保护的金额 （当天交易成功金额）
+
+`成功返回:`
+
+`失败返回:`
+
+#### 2.12.4 提现申请[post] (add-withdraw)
 `请求参数:`
 	
 	amount				int			提现金额
@@ -1621,6 +1666,22 @@
 		content				string		更新内容							 
 
 `失败返回：`
+
+### 2.19 获取移动端广告  [advert]
+#### 2.19.1 获取移动端广告 [get]
+`请求参数：`
+
+
+`成功返回：`
+
+    advert              array           广告列表
+
+    advert 字段说明
+
+        id              int             广告id
+        name            string          广告名
+        url             string          广告指向链接
+        image_url       string          广告图片地址
 
 
 
