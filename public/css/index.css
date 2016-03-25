@@ -66,7 +66,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     color: #fff; }
 
 .red {
-  color: #fe462f !important;}
+  color: #fe462f !important; }
 
 .prompt {
   color: #777777; }
@@ -501,6 +501,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .shopping-car {
   padding: 20px 0; }
+  .shopping-car:focus {
+    background-color: #fe462f !important; }
 
 .search .form-control, .public-personal .controls .item-panel .item .add-goods .form-control {
   outline: none;
@@ -1376,6 +1378,10 @@ table .product-panel {
   padding: 10px 18px; }
   .wholesalers-management .order-process ul li {
     padding: 5px 0; }
+
+.wholesalers-management .model-management-item {
+  display: inline-block;
+  padding-right: 15px; }
 
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/

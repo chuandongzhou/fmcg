@@ -100,7 +100,7 @@ class RoleController extends Controller
             $this->error('要修改的角色不存在');
         }
         $name = $request->input('name');
-        if ($role->fill(['name' => $name])) {
+        if ($role->fill(['name' => $name])->save()) {
             $nodes = $request->input('node');
             if (!empty($nodes)) {
                 $role->nodes()->detach();

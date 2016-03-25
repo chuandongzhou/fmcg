@@ -5,7 +5,7 @@ namespace WeiHeng\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \HengCaoTang\Constant\Constant
+ * @see \WeiHeng\Constant\Constant
  */
 class Constant extends Facade
 {

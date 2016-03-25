@@ -1,6 +1,7 @@
 @extends('index.master')
 
 @section('subtitle', '首页')
+
 @include('includes.notice')
 
 @section('header')
@@ -39,16 +40,20 @@
                     <div class="row">
                         @foreach($categories as $category)
                             <div class="col-sm-12 menu-down-layer menu-down-item">
-                                @foreach($category['child'] as $child)
-                                    <div class="item">
-                                        <h3 class="title">
-                                            <a href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a>
-                                        </h3>
-                                        @foreach($child['child'] as $grandChild)
-                                            <a href="{{ url('search?category_id=3'. $grandChild['id']) }}">{{ $grandChild['name'] }}</a>
-                                        @endforeach
-                                    </div>
-                                @endforeach
+                                @if(isset($category['child']))
+                                    @foreach($category['child'] as $child)
+                                        <div class="item">
+                                            <h3 class="title">
+                                                <a href="{{ url('search?category_id=2'. $child['id']) }}">{{ $child['name'] }}</a>
+                                            </h3>
+                                            @if(isset($child['child']))
+                                                @foreach($child['child'] as $grandChild)
+                                                    <a href="{{ url('search?category_id=3'. $grandChild['id']) }}">{{ $grandChild['name'] }}</a>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -146,7 +151,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             @endif
@@ -191,8 +195,8 @@
             $('.carousel').carousel({
                 interval: 5000
             });
-            $(".carousel-indicators-item").each(function(e){
-                $(this).children("li").css("width",($(this).width()/$(this).children("li").length)+"px");
+            $(".carousel-indicators-item").each(function (e) {
+                $(this).children("li").css("width", ($(this).width() / $(this).children("li").length) + "px");
             });
             $('.content-title').on('click', function () {
                 var obj = $(this);

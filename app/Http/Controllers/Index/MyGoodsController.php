@@ -48,7 +48,7 @@ class MyGoodsController extends Controller
             'updated_at'
         ]);
         $result = GoodsService::getGoodsBySearch($data, $goods);
-        $myGoods = $result['goods']->paginate();
+        $myGoods = $result['goods']->order('id', 'DESC')->paginate();
         $cateIds = [];
         foreach ($myGoods as $item) {
             $cateIds[$item->id] = $item->category_id;

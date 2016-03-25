@@ -36,26 +36,29 @@ class AuthController extends Controller
         $user = User::where('user_name', $account)->first();
 
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
-            return $this->error('账号或密码错误');
+            return $this->invalidParam('password', '账号或密码错误');
         }
 
         if ($user->status != cons('status.on')) {
-            return $this->error('账号已锁定');
+            return $this->invalidParam('password', '账号已锁定');
         }
 
         if ($user->audit_status != cons('user.audit_status.pass')) {
-            return $this->error('账户未审核或审核不通过');
+            return $this->invalidParam('password', '账户未审核或审核不通过');
         }
         $user->setVisible(['id', 'user_name', 'type', 'audit_status', 'backup_mobile', 'shop']);
         if (!is_null($user->shop)) {
             $user->shop->address_name = $user->shop->address;
         }
+
         $nowTime = Carbon::now();
 
-        $user->fill(['last_login_at' => $nowTime])->save();
+        if ($user->fill(['last_login_at' => $nowTime])->save()) {
+            auth()->login($user, true);
+            return $this->success(['user' => $user]);
+        }
+        return $this->invalidParam('password', '登录失败，请重试');
 
-        auth()->login($user, true);
-        return $this->success(['user' => $user]);
     }
 
     /**
@@ -152,9 +155,9 @@ class AuthController extends Controller
         $code = str_random($validateCodeConf['length']);
 
         $result = app('pushbox.sms')->send('code', $data['backup_mobile'], $code);
-        if(empty($result)) {
+        if (empty($result)) {
             return $this->error('发送失败,请重试');
-        }else{
+        } else {
             RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
             return $this->success('发送成功');
         }

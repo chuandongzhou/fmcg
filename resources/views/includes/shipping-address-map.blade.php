@@ -13,9 +13,12 @@
 
                 <div class="modal-body">
                     <div class="shipping-address-info">
-                        <span class="prompt">收货地址</span> : <span class="address-of-map"></span>
-                        <span class="prompt">联系人</span> : <span class="consigner-of-map"></span>
-                        <span class="prompt">联系电话</span> : <span class="phone-of-map"></span>
+                        <div class="model-management-item"><span class="prompt">收货地址</span> : <span
+                                    class="address-of-map"></span></div>
+                        <div class="model-management-item"><span class="prompt">联系人</span> : <span
+                                    class="consigner-of-map"></span></div>
+                        <div class="model-management-item"><span class="prompt">联系电话</span> : <span
+                                    class="phone-of-map"></span></div>
                     </div>
                     <div id="address-map"
                          style="margin-top:20px;;height: 400px;width:100%;">

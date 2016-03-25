@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * 登录注册
+ */
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
     $router->get('guide', 'AuthController@guide');
@@ -7,7 +11,9 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('logout', 'AuthController@logout');
 });
 
-
+/**
+ * 后台登录
+ */
 $router->group(['prefix' => 'admin/auth', 'namespace' => 'Admin'], function ($router) {
     $router->controller('/', 'AuthController');
 });

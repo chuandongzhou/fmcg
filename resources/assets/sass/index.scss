@@ -671,7 +671,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .shopping-car {
-  padding: 20px 0
+  padding: 20px 0;
+  &:focus{
+    background-color:$brand-danger !important;
+  }
 }
 
 @at-root .search {
@@ -1760,7 +1763,6 @@ table {
       color: $body-bg;
     }
   }
-
   .pay-detail {
     @extend .right-search;
     .item {
@@ -1794,7 +1796,6 @@ table {
       }
     }
   }
-
   .order-form-list {
     border: 1px solid $blue-light;
     margin-top: 10px;
@@ -1886,6 +1887,10 @@ table {
         padding: 5px 0;
       }
     }
+  }
+  .model-management-item{
+    display: inline-block;
+    padding-right: 15px;
   }
 }
 
