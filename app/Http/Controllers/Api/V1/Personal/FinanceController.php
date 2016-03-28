@@ -69,7 +69,7 @@ class FinanceController extends Controller
 
         $protectedBalance = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
             cons('trade.is_finished.yes'))->where('finished_at', '>=', $todayBegin)->sum('amount');
-        $this->success([
+        return $this->success([
             'balance' => $user->balance,
             'protectedBalance' => $protectedBalance
         ]);

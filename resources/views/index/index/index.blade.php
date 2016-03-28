@@ -196,7 +196,8 @@
                 interval: 5000
             });
             $(".carousel-indicators-item").each(function (e) {
-                $(this).children("li").css("width", ($(this).width() / $(this).children("li").length) + "px");
+                var obj = $(this), width = 100 / obj.children("li").length;
+                obj.children("li").css("width", width + "%");
             });
             $('.content-title').on('click', function () {
                 var obj = $(this);

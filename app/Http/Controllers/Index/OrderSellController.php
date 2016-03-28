@@ -207,7 +207,7 @@ class OrderSellController extends OrderController
                 '合计:   ' . $item->price,
                 '收货人:   ' . $item->shippingAddress->consigner,
                 '电话:   ' . $item->shippingAddress->phone,
-                '地址:   ' . is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name
+                '地址:   ' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name)
             ];
             foreach ($info as $v) {
                 $table->addRow();

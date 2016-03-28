@@ -3,8 +3,10 @@
     <!--[if lt IE 9]>
 <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
 <![endif]-->
-<script src="https://g.alicdn.com/aliww/??h5.imsdk/2.1.0/scripts/yw/wsdk.js,h5.openim.kit/0.3.7/scripts/kit.js"
+<script src="https://g.alicdn.com/aliww/??h5.imsdk/2.1.0/scripts/yw/wsdk.js,h5.openim.kit/0.3.7/scripts/kit.js?pc=1"
         charset="utf-8"></script>
+{{--<script src="https://g.alicdn.com/aliww/??h5.openim.sdk/1.0.6/scripts/wsdk.js,h5.openim.kit/0.3.3/scripts/kit.js?pc=1"--}}
+        {{--charset="utf-8"></script>--}}
 @stop
 
 @section('js')
@@ -46,7 +48,7 @@
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
                 touid: '0',
-                theme: 'orange',
+                theme: 'green',
                 pluginUrl: '',
                 onLoginSuccess: function () {
                     getRecentContact();
@@ -121,14 +123,14 @@
             };
             //获取所有历史聊天用户html
             var setUserList = function (userList, sdk) {
-                var keys = Object.keys(userList), firstId = keys[0],firstLogoUrl = '', userHtml = '';
+                var keys = Object.keys(userList), firstId = keys[0], firstLogoUrl = '', userHtml = '';
 
                 $.get(site.api('shop/get-shops-by-ids'), {data: keys}, function (shops) {
                     var shops = shops.shops;
                     for (var i in shops) {
-                       if (!firstLogoUrl) {
-                           firstLogoUrl = shops[i].logo_url;
-                       }
+                        if (!firstLogoUrl) {
+                            firstLogoUrl = shops[i].logo_url;
+                        }
                         userHtml += '<li class="user-msg" data-touid="' + i + '">' +
                                 '   <img class="avatar" src=" ' + shops[i].logo_url + ' "> ' +
                                 '   <div class="user-item"> ' +
@@ -164,30 +166,32 @@
                 return toUid.substring(8);
             };
             @else
-                if(!SITE.USER.id) {
-                    return false;
-                }
-                var sdk = new WSDK(), Event = sdk.Event;
-                sdk.Base.login({
-                    uid: '{{ $chatConf['shop_id'] }}',
-                    appkey: '{{ $chatConf['key'] }}',
-                    credential: '{{ $chatConf['pwd'] }}',
-                    timeout: 5000,
-                    success: function (data) {
-                        getUnreadMsgCount(sdk, true);
+                if (!SITE.USER.id) {
+                return false;
+            }
+            var sdk = new WSDK(), Event = sdk.Event;
+            sdk.Base.login({
+                uid: '{{ $chatConf['shop_id'] }}',
+                appkey: '{{ $chatConf['key'] }}',
+                credential: '{{ $chatConf['pwd'] }}',
+                timeout: 5000,
+                success: function (data) {
+                    getUnreadMsgCount(sdk, true);
 
-                        Event.on('CHAT.MSG_RECEIVED', function (data) {
-                            totalMsg.html(parseInt(totalMsg.html()) + 1);
-                        });
-                        sdk.Base.startListenAllMsg();
-                    },
-                    error: function (error) {
-                        // {code: 1002, resultText: 'TIMEOUT'}
-                        console.log('login fail', error);
-                    }
-                });
+                    Event.on('CHAT.MSG_RECEIVED', function (data) {
+                        totalMsg.html(parseInt(totalMsg.html()) + 1);
+                    });
+                    sdk.Base.startListenAllMsg();
+                },
+                error: function (error) {
+                    // {code: 1002, resultText: 'TIMEOUT'}
+                    console.log('login fail', error);
+                }
+            });
 
             @endif
+
+
         });
     </script>
 @stop

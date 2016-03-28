@@ -7,7 +7,7 @@
 @section('container')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
-            @if (!empty(array_except($get , ['name' , 'sort', 'page'])))
+            @if (!empty(array_except($get , ['name' , 'sort', 'page', 'city_id', 'district_id', 'street_id'])))
                 <div class="col-sm-12 a-menu-panel">
                     <div class="search-list-item sort-item">
                         <a href="{{ url('search') }}" class="pull-left all-results"><span class="fa fa-th-large"></span></a>
@@ -43,7 +43,7 @@
                 </div>
             @endif
             <div class="col-sm-12 padding-clear">
-                @if( !isset($get['category_id']))
+                @if( !isset($get['category_id']) && !empty($categories))
                     <div class="search-list-item sort-item sort-item-panel">
                         <span class="pull-left title-name">分类 : </span>
 

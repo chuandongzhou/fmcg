@@ -6,7 +6,7 @@
     @include('index.shop-search')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
-            @if (!empty(array_except($get , ['name', 'sort', 'page'])))
+            @if (!empty(array_except($get , ['name', 'sort', 'page', 'city_id', 'district_id', 'street_id'])))
                 <div class="col-sm-12 a-menu-panel">
                     <div class="sort-item">
                         <a href="{{ url('shop/' . $shop->id . '/search') }}" class="pull-left all-results"><span
@@ -46,7 +46,7 @@
 
             @endif
             <div class="col-sm-12">
-                @if( !isset($get['category_id']))
+                @if( !isset($get['category_id']) && !empty($categories))
                     <div class="search-list-item sort-item sort-item-panel">
                         <span class="pull-left title-name">分类 : </span>
 
