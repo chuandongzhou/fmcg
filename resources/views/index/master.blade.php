@@ -100,23 +100,27 @@
 
 @section('body')
     @yield('container')
-    <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
-    </audio>
-    <div class="msg-channel" id="alert-div">
-        <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
-        <a class="check" href="#">点击查看>>>></a>
-    </div>
+    @if(isset($user))
+        <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
+        </audio>
+        <div class="msg-channel" id="alert-div">
+            <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
+            <a class="check" href="#">点击查看>>>></a>
+        </div>
+    @endif
 @stop
 
-
 @section('footer')
-    <footer class="panel-footer">
-        <div class="container text-center text-muted">
-            Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}<br/>
-            联系地址：{{ cons('system.company_addr') }}
-            &nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}
-        </div>
-    </footer>
+    <div class="footer">
+        @yield('join-us')
+        <footer class="panel-footer">
+            <div class="container text-center text-muted">
+                Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}<br/>
+                联系地址：{{ cons('system.company_addr') }}
+                &nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}
+            </div>
+        </footer>
+    </div>
 @stop
 
 @section('js-lib')

@@ -5,8 +5,6 @@
 <![endif]-->
 <script src="https://g.alicdn.com/aliww/??h5.imsdk/2.1.0/scripts/yw/wsdk.js,h5.openim.kit/0.3.7/scripts/kit.js?pc=1"
         charset="utf-8"></script>
-{{--<script src="https://g.alicdn.com/aliww/??h5.openim.sdk/1.0.6/scripts/wsdk.js,h5.openim.kit/0.3.3/scripts/kit.js?pc=1"--}}
-        {{--charset="utf-8"></script>--}}
 @stop
 
 @section('js')
@@ -167,8 +165,8 @@
             };
             @else
                 if (!SITE.USER.id) {
-                return false;
-            }
+                    return false;
+                }
             var sdk = new WSDK(), Event = sdk.Event;
             sdk.Base.login({
                 uid: '{{ $chatConf['shop_id'] }}',

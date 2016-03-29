@@ -1,7 +1,7 @@
 $(function () {//间隔30s自动加载一次
         //前台轮询结果处理
         function getPushData() {//获取消息
-            var targetUrl = site.baseUrl + "/order/order-polling";
+            var targetUrl = site.api("order/order-polling");
             if(!SITE.USER.id) {
                 return false;
             }

@@ -155,38 +155,18 @@
                 </div>
             @endif
         @endforeach
-        {{--@foreach($shopColumns as $column)--}}
-        {{--@if(!$column->shops->isEmpty())--}}
-        {{--<div class="row list-penal dealer-commodity-wrap">--}}
-        {{--<div class="col-sm-12 title"><h3>{{ $column->name }}</h3></div>--}}
-        {{--<div class="col-sm-12 padding-clear">--}}
-        {{--@foreach($column->shops as $shop)--}}
-        {{--<div class="commodity commodity-index-img">--}}
-        {{--<div class="img-wrap">--}}
-        {{--<a href="{{ url('shop/' . $shop->id) }}" target="_blank">--}}
-        {{--<img class="commodity-img" src="{{ $shop->image_url }}">--}}
-        {{--</a>--}}
-        {{--</div>--}}
-        {{--<div class="content-panel">--}}
-        {{--<p class="commodity-name">--}}
-        {{--<a href="{{ url('shop/' . $shop->id) }}"--}}
-        {{--target="_blank">{{ $shop->name. ' (' . cons()->valueLang('user.type',  $shop->user->type) . ')' }} </a>--}}
-        {{--</p>--}}
-
-        {{--<p class="sell-panel">--}}
-        {{--<span class="money">最低配送额 : ￥{{ $shop->min_money }}</span>--}}
-        {{--<span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>--}}
-        {{--</p>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--@endforeach--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--@endif--}}
-        {{--@endforeach--}}
     </div>
 @stop
 
+@section('join-us')
+    @if(!isset($user))
+        <div class="container join-title text-center">
+            <a href="javascript:" data-toggle="modal"
+               data-target="#myModal-agreement">加入订百达</a>
+        </div>
+        @include('includes.agreement')
+    @endif
+@stop
 
 @section('js')
     @parent

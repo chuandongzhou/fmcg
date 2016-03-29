@@ -62,12 +62,18 @@ class PayService
 
             $orderConf = cons('order');
             $newTimestamp = Carbon::now();
+
+
+            $tradeConf = cons('trade');
+
+            $payType = array_get($tradeConf['pay_type'], $payType, head($tradeConf['pay_type']));
+
             foreach ($orders as $order) {
                 $orderAttr = [
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                     'paid_at' => $newTimestamp
                 ];
-                if ($payType == 'pos') {
+                if ($payType == $tradeConf['pay_type']['pos']) {
                     $orderAttr['status'] = $orderConf['status']['finished'];
                     $orderAttr['finished_at'] = $newTimestamp;
                 }
@@ -84,11 +90,8 @@ class PayService
                         'paid_at' => $newTimestamp
                     ]
                 );
+
                 //增加系统交易信息
-                $tradeConf = cons('trade');
-
-                $payType = array_get($tradeConf['pay_type'], $payType, head($tradeConf['pay_type']));
-
                 $systemTradeInfoAttr = [
                     'type' => $tradeConf['type']['in'],
                     'pay_type' => $payType,

@@ -39,7 +39,7 @@ class OrderAutoCancel extends Command
             $redisKey = 'push:seller:' . $order->shop->user->id;
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_buyer');
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
         }
 
     }

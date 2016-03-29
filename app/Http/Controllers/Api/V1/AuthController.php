@@ -158,7 +158,7 @@ class AuthController extends Controller
         if (empty($result)) {
             return $this->error('发送失败,请重试');
         } else {
-            RedisService::setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
+            (new RedisService)->setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
             return $this->success('发送成功');
         }
     }

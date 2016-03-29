@@ -314,6 +314,6 @@ class PayController extends Controller
         }
 
         $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
-        RedisService::setRedis($redisKey, $redisVal);
+        (new RedisService)->setRedis($redisKey, $redisVal);
     }
 }

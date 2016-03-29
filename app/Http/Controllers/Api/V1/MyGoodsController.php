@@ -42,7 +42,7 @@ class MyGoodsController extends Controller
 
         $result = GoodsService::getGoodsBySearch($gets, $goods, false);
         return $this->success([
-            'goods' => $result['goods']->paginate()->toArray(),
+            'goods' => $result['goods']->orderBy('id', 'DESC')->paginate()->toArray(),
             'categories' => $result['categories']
         ]);
     }

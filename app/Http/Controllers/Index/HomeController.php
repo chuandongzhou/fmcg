@@ -25,7 +25,10 @@ class HomeController extends Controller
         if (Cache::has($indexAdvertConf['name'])) {
             $adverts = Cache::get($indexAdvertConf['name']);
         } else {
-            $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->get();
+            $adverts = Advert::with('image')->where('type',
+                cons('advert.type.index'))->OfTime($nowTime)->get()->each(function ($advert) {
+                $advert->setAppends(['image_url'])->addHidden(['image', 'type', 'start_at', 'end_at']);
+            });
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
         // 公告

@@ -206,7 +206,7 @@ class PosController extends Controller
                 $redisKey = 'push:seller:' . $shopOwner->id;
                 $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
 
-                RedisService::setRedis($redisKey, $redisVal);
+                (new RedisService)->setRedis($redisKey, $redisVal);
 
                 //返回支付成功报文
                 $array['SessionHead']['ResultCode'] = $resultCodeArr['success'];

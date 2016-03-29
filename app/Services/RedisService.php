@@ -8,10 +8,44 @@
 namespace App\Services;
 
 use DB;
-use Illuminate\Support\Facades\Redis;
+use Predis\Client;
+use Predis\ClientInterface;
 
 class RedisService
 {
+
+    /**
+     * @var ClientInterface|Client
+     */
+    protected $redis;
+
+    /**
+     * 使用的数据库名称
+     *
+     * @var string
+     */
+    protected $dbName = 'service';
+
+    /**
+     * 缓存名称
+     *
+     * @var string
+     */
+    protected $name = 'base';
+
+    /**
+     * 命名空间
+     *
+     * @var string
+     */
+    private $namespace;
+
+    public function __construct()
+    {
+
+        $this->redis = \Redis::connection();
+        $this->namespace = $this->name . ':';
+    }
 
     /**
      * 设置Redis
@@ -20,16 +54,12 @@ class RedisService
      * @param $redisValue
      * @param $expire
      */
-    public static function setRedis($redisKey, $redisValue, $expire = 0)
+    public  function setRedis($redisKey, $redisValue, $expire = 0)
     {
-        static $redis;
-        if (!$redis) {
-            $redis = Redis::connection();
-        }
         $expire = $expire ? $expire : cons('push_time.msg_life');
-        if (!$redis->exists($redisKey)) {
-            $redis->set($redisKey, $redisValue);
-            $redis->expire($redisKey, $expire);
+        if (!$this->redis->exists($redisKey)) {
+            $this->redis->set($redisKey, $redisValue);
+            $this->redis->expire($redisKey, $expire);
         }
 
     }
@@ -40,14 +70,34 @@ class RedisService
      * @param $key
      * @return mixed
      */
-    public static function has($key)
+    public  function has($key)
     {
-        static $redis;
-        if (!$redis) {
-            $redis = Redis::connection();
-        }
-        return $redis->has($key);
+        return $this->redis->exists($key);
     }
+
+    /**
+     *  获取redis
+     *
+     * @param $key
+     * @return mixed
+     */
+    public  function get($key)
+    {
+        return $this->redis->get($key);
+    }
+
+    /**
+     *  获取redis
+     *
+     * @param $key
+     * @return mixed
+     */
+    public  function del($key)
+    {
+        return $this->redis->del($key);
+    }
+
+
 
     /**
      * 增加值
@@ -57,13 +107,9 @@ class RedisService
      * @param int $userId
      * @return mixed
      */
-    public static function increment($key, $num = 1, $userId = 0)
+    public  function increment($key, $num = 1, $userId = 0)
     {
-        static $redis;
-        if (!$redis) {
-            $redis = Redis::connection();
-        }
-        return $redis->zincrby($key, $num, $userId);
+        return $this->redis->zincrby($key, $num, $userId);
     }
 
 }

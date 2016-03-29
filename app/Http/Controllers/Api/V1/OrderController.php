@@ -208,7 +208,7 @@ class OrderController extends Controller
             }
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg);
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
         }
 
         return $this->success(['failOrderIds' => $failOrderIds]);
@@ -274,7 +274,7 @@ class OrderController extends Controller
                 $redisKey = 'push:seller:' . $shopOwner->id;
                 $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
-                RedisService::setRedis($redisKey, $redisVal);
+                (new RedisService)->setRedis($redisKey, $redisVal);
             } else {
                 $failIds[] = $order->id;
             }
@@ -353,7 +353,7 @@ class OrderController extends Controller
 
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
 
             $order->fill([
                 'delivery_man_id' => $deliveryManId,
@@ -398,7 +398,7 @@ class OrderController extends Controller
         ];
         //存入redis
 
-        RedisService::setRedis($key, json_encode($statistics), 60);
+        (new RedisService)->setRedis($key, json_encode($statistics), 60);
         return $this->success($statistics);
 
     }
@@ -544,7 +544,7 @@ class OrderController extends Controller
                         //货到付款订单直接通知卖家发货
                         $redisKey = 'push:seller:' . $shop->user->id;
                         $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
-                        RedisService::setRedis($redisKey, $redisVal);
+                        (new RedisService)->setRedis($redisKey, $redisVal);
                     }
                 } else {
                     foreach ($successOrders as $successOrder) {
@@ -611,13 +611,35 @@ class OrderController extends Controller
 
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
 
             return true;
         });
 
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
+
+    /**
+     * 网页端信息提示
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderPolling()
+    {
+        $redis = new RedisService;
+
+        foreach (['user', 'seller', 'withdraw'] as $item) {
+            $key = 'push:' . $item . ':' . $this->user->id;
+            if ($redis->has($key)) {
+                $content = $redis->get($key);
+                $redis->del($key);
+                return $this->success(['type' => $item, 'data' => $content]);
+            }
+        }
+
+        return $this->success([]);
+    }
+
 
     /**
      * 根据订单获取交易流水号

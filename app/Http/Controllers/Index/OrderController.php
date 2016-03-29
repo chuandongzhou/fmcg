@@ -8,11 +8,9 @@ use App\Services\GoodsService;
 use App\Services\RedisService;
 use App\Services\ShippingAddressService;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
 
@@ -154,7 +152,7 @@ class OrderController extends Controller
                         //货到付款订单直接通知卖家发货
                         $redisKey = 'push:seller:' . $shop->user->id;
                         $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
-                        RedisService::setRedis($redisKey, $redisVal);
+                        (new RedisService)->setRedis($redisKey, $redisVal);
                     }
                 } else {
                     foreach ($successOrders as $successOrder) {
@@ -451,27 +449,6 @@ class OrderController extends Controller
         }
 
         return ['stat' => $stat, 'goods' => $goodStat];
-    }
-
-    /**
-     * 网页端信息提示
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getOrderPolling()
-    {
-        $redis = Redis::connection();
-
-        foreach (['user', 'seller', 'withdraw'] as $item) {
-            $key = 'push:' . $item . ':' . auth()->user()->id;
-            if ($redis->exists($key)) {
-                $content = $redis->get($key);
-                $redis->del($key);
-                return response()->json(['type' => $item, 'data' => $content]);
-            }
-        }
-
-        return response()->json([]);
     }
 
     /**

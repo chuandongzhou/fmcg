@@ -86,7 +86,7 @@ class SystemWithdrawInfoController extends Controller
             $redisKey = 'push:withdraw:' . $item->user_id;
             $redisVal = '您的提现订单:' . $item->id . ',' . cons()->lang('push_msg.review_payment');
 
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
 
             app('pushbox.sms')->send('withdraw', $item->user->backup_mobile,
                 [
@@ -122,7 +122,7 @@ class SystemWithdrawInfoController extends Controller
             //启动通知
             $redisKey = 'push:withdraw:' . $item->user_id;
             $redisVal = '您的提现订单:' . $item->id . ',' . cons()->lang('push_msg.review_failed');
-            RedisService::setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal);
 
             return $this->success('操作成功');
         }
