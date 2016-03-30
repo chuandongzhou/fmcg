@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Attr;
-use App\Models\Category;
 use App\Models\Goods;
+use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Http\Requests;
 use App\Services\AttrService;
@@ -32,7 +32,7 @@ class MyGoodsController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-        $goods = auth()->user()->shop->goods()->with('images')->select([
+        $goods = auth()->user()->shop->goods()->with('images.image')->select([
             'id',
             'name',
             'bar_code',
@@ -53,7 +53,14 @@ class MyGoodsController extends Controller
         foreach ($myGoods as $item) {
             $cateIds[$item->id] = $item->category_id;
         }
-        $cateName = Category::whereIn('id', $cateIds)->lists('name', 'id');
+        $cateName = [];
+
+        foreach (CategoryService::getCategories() as $category) {
+            if (in_array($category['id'], $cateIds)) {
+                $cateName[$category['id']] = $category['name'];
+            }
+        }
+
 
         return view('index.my-goods.index', [
             'goods' => $myGoods,

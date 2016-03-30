@@ -11,6 +11,7 @@ return [
         'online' => 1,
         'cod' => 2,
     ],
+    //货到付款支付类型
     'cod_pay_type' => [
         'cash' => 1,  //现金
         'card' => 2   //刷卡
@@ -49,10 +50,6 @@ return [
             'pass' => 1,       //通过
             'not_pass' => 2,       //未通过
         ]
-    ],
-    //后台配置
-    'admin' => [
-        'super_admin_name' => 'admin'
     ],
     //首页栏目
     'home_column' => [
@@ -104,7 +101,7 @@ return [
             'count' => 3
         ],
     ],
-    // 店铺图片分类
+    // 店铺
     'shop' => [
         'file_type' => [
             'logo' => 1,         //logo
@@ -152,6 +149,7 @@ return [
             'yes' => 1              //确认
         ]
     ],
+    //反馈
     'feedback' => [               //反馈
         'status' => [
             'untreaded' => 0,      // 未处理
@@ -229,6 +227,13 @@ return [
             'shops' => App\Models\Shop::class
         ]
     ],
+    //分类
+    'category' => [
+        'cache' => [
+            'pre_name' => 'categories:',
+            'expire' => 1440
+        ]
+    ],
     //标签
     'attr' => [
         'default' => [
@@ -236,6 +241,10 @@ return [
             'import_and_export' => 20219,  // 进出口
             'packing' => 20235,            //包装
             'place' => 20465,              //产地
+        ],
+        'cache' => [
+            'pre_name' => 'attrs:',
+            'expire' => 1440
         ]
     ],
     //推送设备类型
@@ -282,8 +291,21 @@ return [
             'expire' => 60,
         ]
     ],
-    'location' => [
+    //地址
+    'address' => [
         'default_province' => 510000,
+        'provinces' => [
+            'cache' => [
+                'name' => 'address:province',
+                'expire' => -1
+            ]
+        ],
+        'districts' => [
+            'cache' => [
+                'pre_name' => 'address:districts:',
+                'expire' => -1
+            ]
+        ]
     ],
     //pos机
     'pos' => [
@@ -307,7 +329,6 @@ return [
         ],
         'max_fee' => 26,   //pos机支付最高手续费
     ],
-
     //系统信息
     'system' => [
         'employee_name' => '订百达',
@@ -318,6 +339,9 @@ return [
         'company_mobile' => '13980537732',
         'company_ceo' => '马先生',
         'company_record' => '蜀ICP备15031748号-1'
-    ]
-
+    ],
+    //后台配置
+    'admin' => [
+    'super_admin_name' => 'admin'
+]
 ];

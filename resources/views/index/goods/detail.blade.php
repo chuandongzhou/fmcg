@@ -31,8 +31,8 @@
 
                     <p class="title-content prompt">
                         @foreach($categoriesName as $cate)
-                            <a href="{{ url('search?category_id=' . $cate->level . $cate->id) }}" target="_blank">
-                                {{ $cate->name }}
+                            <a href="{{ url('search?category_id=' . $cate['level'] . $cate['id']) }}" target="_blank">
+                                {{ $cate['name'] }}
                             </a>
                             {{ $cate == $categoriesName->last() ? '' : ' -> ' }}
                         @endforeach
@@ -59,7 +59,9 @@
                                 <a href="{{ url('shop/' . $goods->shop->id) }}" target="_blank">
                                     {{ $goods->shop->name }}
                                 </a>
-                                <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$goods->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                                <a href="javascript:"
+                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$goods->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                   class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
                             </b>
                         </li>
                         <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
@@ -155,6 +157,10 @@
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 2000
+            });
+            $(".carousel-indicators li").mousemove(function () {
+                var self = $(this);
+                self.parents(".carousel").stop(true).carousel(self.index());
             });
             $('.add-to-cart'). on('click', function () {
                 var obj = $(this), url = obj.data('url'), buyNum = $('input[name="num"]').val();

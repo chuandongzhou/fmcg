@@ -51,7 +51,7 @@
             </div>
             <div class="col-sm-12 table-responsive">
                 <div>
-                    <label>备用收款账号</label>
+                    <label>备用收货地址</label>
                 </div>
                 <table class="table-bordered table table-center">
                     <thead>

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Attr;
-use App\Models\Category;
+
 use App\Services\AttrService;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Cache;
 
 /**
  * 文件上传接口
@@ -16,6 +15,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class CategoryController extends Controller
 {
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->categories = CategoryService::getCategories();
+    }
+
     /**
      * Get Attr by Search
      *
@@ -25,17 +31,21 @@ class CategoryController extends Controller
     public function getAttr(Request $request, $id)
     {
         $data = $request->all();
-        if (!isset($data['format']) || $data['format'] != 'true') {
-            $categoryPid = Category::where('id', $id)->pluck('pid');
+        $attrService = new AttrService;
 
-            $result = Attr::where('pid', 0)->whereIn('category_id', [$categoryPid, $id])->lists('name', 'attr_id');
+        if (!isset($data['format']) || $data['format'] != 'true') {
+            $attrs = $attrService->getAttrsByCategoryId($id);
+            $categoryPid = $this->categories[$id]['pid'];
+            $attrs = array_merge($attrService->getAttrsByCategoryId($id), $attrService->getAttrsByCategoryId($categoryPid));
+            $result = [];
+            foreach ($attrs as $attr) {
+                if ($attr['pid'] == 0) {
+                    $result[$attr['attr_id']] = $attr['name'];
+                }
+            }
             return $this->success($result);
         } else {
-            $attrs = Attr::where('category_id', $id)->get([
-                'attr_id',
-                'name',
-                'pid'
-            ])->toArray();
+            $attrs = $attrService->getAttrsByCategoryId($id);
             $attrList = (new AttrService($attrs))->format();
             return $this->success($attrList);
         }
@@ -48,24 +58,31 @@ class CategoryController extends Controller
     public function getCategory(Request $request)
     {
         $pid = $request->input('pid');
-        $categories = '';
+        $categoriesTemp = $this->categories;
+        $categories = [];
         if ($pid) {
-            $categories = Category::where('pid', $pid)->with('icon')->lists('name', 'id');
+            foreach ($categoriesTemp as $category) {
+                if ($category['pid'] == $pid) {
+                    $categories[$category['id']] = $category['name'];
+                }
+            }
         } elseif (is_null($pid)) {
             $post = $request->all();
-            $pid = [
+            $pids = [
                 0,
                 $post['level1'],
                 $post['level2']
             ];
-            $result = Category::whereIn('pid', $pid)->with('icon')->select(['id', 'name', 'level'])->get();
-            foreach ($result as $category) {
-                $categories['level' . $category['level']][$category['id']] = $category['name'];
+            //$result = Category::whereIn('pid', $pid)->with('icon')->select(['id', 'name', 'level'])->get();
+            foreach ($categoriesTemp as $category) {
+                if (in_array($category['pid'], $pids)) {
+                    $categories['level' . $category['level']][$category['id']] = $category['name'];
+                }
             }
         }
-
         return $this->success($categories);
     }
+
 
     /**
      * 获取所有分类信息
@@ -74,6 +91,7 @@ class CategoryController extends Controller
      */
     public function getAllCategory()
     {
-        return $this->success(CategoryService::unlimitForLayer(Category::with('icon')->get()->toArray()));
+        return $this->success(CategoryService::unlimitForLayer($this->categories));
     }
+
 }

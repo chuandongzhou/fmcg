@@ -23,7 +23,7 @@ class ShopService
         $cacheKey = $homeColumnShopConf['cache']['pre_name'] . $type;
 
         $shopColumns = [];
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
         if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
             $shopColumns = Cache::get($cacheKey);
         } else {

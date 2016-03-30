@@ -296,3 +296,22 @@ if (!function_exists('xml_to_array')) {
         return $array;
     }
 }
+
+if (!function_exists('array_key_to_value')) {
+    /**
+     * 格式化数组
+     *
+     * @param $array
+     * @param $id
+     * @param null $name
+     * @return array
+     */
+    function array_key_to_value($array, $id, $name = null)
+    {
+        $newArray = [];
+        foreach ($array as $arr) {
+            $newArray[$arr[$id]] = is_null($name) ? $arr : $arr[$name];
+        }
+        return $newArray;
+    }
+}

@@ -39,14 +39,13 @@ class GoodsService
 
         $attrs = [];
         $resultCategories = [];
-        $categories = Category::orderBy('level', 'asc')->with('icon')->select('name', 'level', 'id',
-            'pid')->get()->toArray();
+        $categories = collect(CategoryService::getCategories())->sortBy('level')->toArray();
         if (isset($data['category_id'])) {
             //分类最高位为层级 后面为categoryId
             $level = substr($data['category_id'], 0, 1);
             $categoryId = substr($data['category_id'], 1);
             $resultCategories = CategoryService::formatCategoryForSearch($categories, $categoryId);
-            $attrs = (new AttrService([]))->getAttrByCategoryId($categoryId);
+            $attrs = (new AttrService([]))->getAttrsByCategoryId($categoryId);
             $goods->OfCategory($categoryId, $level);
         }
 
@@ -81,6 +80,7 @@ class GoodsService
         $moreAttr = []; //保存扩展的标签
 
         if ($isWeb) {
+           $attrs = (new AttrService($attrs))->format();
             // 已搜索的标签
             foreach ($attrs as $key => $attr) {
                 if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys((array)$data['attr']))) {
@@ -122,7 +122,7 @@ class GoodsService
         //供应商暂时与批发商一致
         $type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
 
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type . ':' . $provinceId;
 
@@ -131,7 +131,7 @@ class GoodsService
             $goodsColumns = Cache::get($cacheKey);
         } else {
             //商品
-            $goodsColumns = Category::where(['pid' => 0, 'status' => 1])->with('adverts.image')->get([
+            $goodsColumns = Category::active()->where('pid', 0)->with('adverts.image')->get([
                 'id',
                 'level',
                 'pid',
@@ -153,9 +153,8 @@ class GoodsService
                 'sales_volume'
             ];
             foreach ($goodsColumns as $category) {
-                $goods = Goods::where('cate_level_1', $category['id'])
+                $goods = Goods::active()->where('cate_level_1', $category['id'])
                     ->where('user_type', '>', $type)
-                    ->ofStatus(cons('goods.status.on'))
                     ->OfDeliveryArea(['province_id' => $provinceId])
                     ->with('images.image')
                     ->select($goodsFields)
@@ -185,7 +184,7 @@ class GoodsService
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
 
         $goodsColumns = [];
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('location.default_province');
+        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
 
         if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
             $goodsColumns = Cache::get($cacheKey);
@@ -268,29 +267,18 @@ class GoodsService
      */
     static function getGoodsCate(Goods $goods)
     {
+        $cateIds = [
+            $goods->cate_level_1,
+            $goods->cate_level_2,
+            $goods->cate_level_3,
+        ];
 
-        $cacheConf = cons('goods.cache');
+        $categories = CategoryService::getCategories();
 
-        $cacheKey = $cacheConf['cate_name'] . $goods->id;
+        $goodsCates = collect($categories)->filter(function ($category) use ($cateIds) {
+            return in_array($category['id'], array_filter($cateIds));
+        })->sortBy('level')->keyBy('id');
 
-        $goodsCates = [];
-
-        if (Cache::has($cacheKey)) {
-            $goodsCates = Cache::get($cacheKey);
-        } else {
-            $cateIds = [
-                $goods->cate_level_1,
-                $goods->cate_level_2,
-                $goods->cate_level_3,
-            ];
-
-            $goodsCates = Category::whereIn('id', array_filter($cateIds))->orderBy('level', 'ASC')->get([
-                'id',
-                'name',
-                'level'
-            ])->keyBy('id');
-            Cache::put($cacheKey, $goodsCates, $cacheConf['cate_name_expire']);
-        }
         return $goodsCates;
 
     }

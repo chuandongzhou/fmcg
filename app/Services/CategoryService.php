@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Category;
+use Cache;
+
 /**
  * Created by PhpStorm.
  * User: Colin
@@ -146,4 +149,25 @@ class CategoryService
         return $categoryArr;
     }
 
+    /**
+     * 获取categories
+     *
+     * @return array
+     */
+    static function getCategories()
+    {
+        $categories = [];
+        $cacheConf = cons('category.cache');
+
+        $cacheKey = $cacheConf['pre_name'] . 'category';
+        if (Cache::has($cacheKey)) {
+            $categories = Cache::get($cacheKey);
+        } else {
+            $categories = Category::active()->with('icon')->get()->each(function ($category) {
+                $category->addHidden(['icon']);
+            })->keyBy('id')->toArray();
+            Cache::put($cacheKey, $categories, $cacheConf['expire']);
+        }
+        return $categories;
+    }
 }

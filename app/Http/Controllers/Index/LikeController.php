@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Category;
-
 use App\Http\Requests;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -57,7 +56,9 @@ class LikeController extends Controller
         }
         //获取需要显示的分类ID
         $array = array_unique($goods->paginate()->pluck('cate_level_2')->all());
-        $cateArr = Category::whereIn('id', $array)->with('icon')->get();
+        $cateArr = array_where(CategoryService::getCategories() , function($key, $cate) use($array){
+            return in_array($cate['id'] , $array);
+        });
         //加入分类过滤条件
         if (!empty($data['cate_level_2'])) {
             $goods = $goods->ofCategory($data['cate_level_2'], 2);

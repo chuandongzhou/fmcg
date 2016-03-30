@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Attr;
-use App\Models\Category;
 use App\Models\Goods;
+use Cache;
 
 /**
  * Created by PhpStorm.
@@ -42,32 +42,11 @@ class AttrService
         foreach ($attrList as $key => $level) {
             foreach ($attrs as $attr) {
                 if ($level['attr_id'] == $attr['pid']) {
-                    $onlyName ? $nameArray[$attrList[$key]['name']] = $attr['name'] : $attrList[$key]['child'][$attr['attr_id']] = $attr;
+                    $onlyName ? ($nameArray[$attrList[$key]['name']] = $attr['name']) : ($attrList[$key]['child'][$attr['attr_id']] = $attr);
                 }
             }
         }
         return $onlyName ? $nameArray : $attrList;
-    }
-
-    /**
-     *
-     *
-     * @param $category
-     * @return array
-     */
-    public function getAttrByCategoryId($category)
-    {
-        if (is_numeric($category)) {
-            $category = Category::find($category);
-            if (is_null($category)) {
-                return [];
-            }
-        }else{
-            return [];
-        }
-
-        $attrs = $category->attrs()->select(['attr_id', 'pid', 'name'])->get()->toArray();
-        return $this->format($attrs);
     }
 
     /**
@@ -100,13 +79,32 @@ class AttrService
 
         }
         $attrIds = array_merge(array_pluck($attrGoods, 'attr_id'), array_pluck($attrGoods, 'attr_pid'));
-        $attrResults = Attr::select(['attr_id', 'pid', 'name'])
-            ->where('category_id', $goods->category_id)
-            ->whereIn('attr_id', $attrIds)
-            ->get()
-            ->toArray();
 
+        $attrResults = array_where($this->getAttrsByCategoryId($goods->category_id),
+            function ($id, $attr) use ($attrIds) {
+                return in_array($attr['attr_id'], $attrIds);
+            });
         $attrResults = $this->format($attrResults, true);
         return $attrResults;
+    }
+
+    /**
+     * 获取categories
+     *
+     * @return array
+     */
+    public function getAttrsByCategoryId($id)
+    {
+        $attrs = [];
+        $cacheConf = cons('attr.cache');
+
+        $cacheKey = $cacheConf['pre_name'] . 'cate_id:' . $id;
+        if (Cache::has($cacheKey)) {
+            $attrs = Cache::get($cacheKey);
+        } else {
+            $attrs = Attr::active()->where('category_id', $id)->get()->keyBy('id')->toArray();
+            Cache::forever($cacheKey, $attrs);
+        }
+        return $attrs;
     }
 }

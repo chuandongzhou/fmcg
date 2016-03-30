@@ -37,7 +37,7 @@ class ShopController extends Controller
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
         $type = auth()->user()->type;
-        $data['province_id'] = $request->cookie('province_id') ? $request->cookie('province_id') : cons('location.default_province');
+        $data['province_id'] = $request->cookie('province_id') ? $request->cookie('province_id') : cons('address.default_province');
 
         $shops = Shop::select(DB::raw('(6370996.81 * ACOS( COS(' . $yLat . ' * PI() / 180)
              * COS(y_lat * PI() / 180) * COS(' . $xLng . ' * PI() / 180 - x_lng * PI() / 180 )

@@ -70,7 +70,7 @@
                         <div class="carousel-inner">
                             @foreach($adverts as $key=>$advert )
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                    <a href="{{ $advert['url'] }}" target="_blank">
+                                    <a href="{{ $advert->url }}" target="_blank">
                                         <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
                                     </a>
                                 </div>
@@ -174,6 +174,10 @@
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 5000
+            });
+            $(".carousel-indicators li").mousemove(function () {
+                var self = $(this);
+                self.parents(".carousel").stop(true).carousel(self.index());
             });
             $(".carousel-indicators-item").each(function (e) {
                 var obj = $(this), width = 100 / obj.children("li").length;

@@ -7,7 +7,6 @@
  */
 namespace App\Http\ViewComposers;
 
-use Carbon\Carbon;
 use DB;
 use Cache;
 use Illuminate\Contracts\View\View;
@@ -23,12 +22,13 @@ class ProvinceComposer
     public function compose(View $view)
     {
         $provinces = [];
-        if (Cache::has('provinces')) {
-            $provinces = Cache::get('provinces');
+        $cacheConf = cons('address.provinces.cache');
+        $cacheKey = $cacheConf['name'];
+        if (Cache::has($cacheKey)) {
+            $provinces = Cache::get($cacheKey);
         }else {
-            $expiresAt = Carbon::now()->addDays(10);
             $provinces = DB::table('address')->where('pid', 1)->lists('name', 'id');
-            Cache::put('provinces', $provinces, $expiresAt);
+            Cache::forever($cacheKey, $provinces);
         }
 
         $view->with('provinces', $provinces);

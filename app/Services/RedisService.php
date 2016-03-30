@@ -7,7 +7,6 @@
  */
 namespace App\Services;
 
-use DB;
 use Predis\Client;
 use Predis\ClientInterface;
 
@@ -20,18 +19,11 @@ class RedisService
     protected $redis;
 
     /**
-     * 使用的数据库名称
-     *
-     * @var string
-     */
-    protected $dbName = 'service';
-
-    /**
      * 缓存名称
      *
      * @var string
      */
-    protected $name = 'base';
+    protected $name = 'fmcg';
 
     /**
      * 命名空间
@@ -50,12 +42,13 @@ class RedisService
     /**
      * 设置Redis
      *
-     * @param $redisKey
+     * @param $key
      * @param $redisValue
      * @param $expire
      */
-    public  function setRedis($redisKey, $redisValue, $expire = 0)
+    public function setRedis($key, $redisValue, $expire = 0)
     {
+        $redisKey = $this->getKey($key);
         $expire = $expire ? $expire : cons('push_time.msg_life');
         if (!$this->redis->exists($redisKey)) {
             $this->redis->set($redisKey, $redisValue);
@@ -70,9 +63,9 @@ class RedisService
      * @param $key
      * @return mixed
      */
-    public  function has($key)
+    public function has($key)
     {
-        return $this->redis->exists($key);
+        return $this->redis->exists($this->getKey($key));
     }
 
     /**
@@ -81,9 +74,9 @@ class RedisService
      * @param $key
      * @return mixed
      */
-    public  function get($key)
+    public function get($key)
     {
-        return $this->redis->get($key);
+        return $this->redis->get($this->getKey($key));
     }
 
     /**
@@ -92,12 +85,10 @@ class RedisService
      * @param $key
      * @return mixed
      */
-    public  function del($key)
+    public function del($key)
     {
-        return $this->redis->del($key);
+        return $this->redis->del($this->getKey($key));
     }
-
-
 
     /**
      * 增加值
@@ -107,9 +98,20 @@ class RedisService
      * @param int $userId
      * @return mixed
      */
-    public  function increment($key, $num = 1, $userId = 0)
+    public function increment($key, $num = 1, $userId = 0)
     {
-        return $this->redis->zincrby($key, $num, $userId);
+        return $this->redis->zincrby($this->getKey($key), $num, $userId);
+    }
+
+    /**
+     * 获取redisKey
+     *
+     * @param $key
+     * @return string
+     */
+    protected function getKey($key)
+    {
+        return $this->namespace . $key;
     }
 
 }
