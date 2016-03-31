@@ -18,6 +18,16 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0;
 }
 
+.navbar-collapse{
+  display: block;
+  .navbar-nav{
+    margin:0;
+    li{
+      float: left;
+    }
+  }
+}
+
 .inline-control {
   background-image: none;
   border: 1px solid #ccc;
@@ -73,6 +83,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 @mixin dash-bord {
   border-top: 1px dashed $gray-lighter;
   border-bottom: 1px dashed $gray-lighter;
+}
+
+@mixin min-width {
+  min-width: 1200px;
 }
 
 .padding-clear {
@@ -137,10 +151,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-warning;
   font-size: 13px;
   vertical-align: middle;
-  &:hover,&:focus{
+  &:hover, &:focus {
     color: $brand-warning;
   }
-  .fa{
+  .fa {
     transform-origin: center bottom;
     vertical-align: middle;
     margin-top: -3px;
@@ -148,7 +162,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-/*======================================head======================================*/
+/*======================================head========= =============================*/
 .personal-header {
   .logo-img {
     display: inline-block;
@@ -181,9 +195,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   position: absolute;
   bottom: 0;
   width: 100%;
-  min-width: 1200px;
+  max-height:95px;
+  @include min-width;
   margin-top: 20px;
-  max-height: 80px;
+  padding:20px 0;
+  p{
+    line-height:2em;
+  }
   .qr-code {
     display: inline-block;
     vertical-align: middle;
@@ -199,7 +217,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
 /*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
@@ -305,11 +322,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-.register-nav{
+
+.register-nav {
   .container {
     min-width: 1200px !important;
   }
 }
+
 .login-content {
   position: relative;
   width: 100%;
@@ -447,7 +466,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .register-hr {
   margin: 0 0 10px 0;
-  min-width: 1200px;
+  @include min-width;
 }
 
 /*======================================register end======================================*/
@@ -466,7 +485,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================guide end======================================*/
 .container {
-  width: 1200px;
+  @include min-width;
 }
 
 .guide-container {
@@ -559,7 +578,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-.guide-footer ,.register-footer{
+.guide-footer, .register-footer {
   background-color: $body-bg;
 }
 
@@ -673,8 +692,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .shopping-car {
   padding: 20px 0;
-  &:focus{
-    background-color:$brand-danger !important;
+  &:focus {
+    background-color: $brand-danger !important;
   }
 }
 
@@ -717,6 +736,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .wholesalers-header {
   min-height: 35px !important;
+  @include min-width;
   .container {
     padding: 0;
     .collapse {
@@ -820,11 +840,11 @@ ul, li, p, a, h1, h2, h3, h4 {
       height: 80px !important;
       background-size: cover !important;
     }
-    .promotions{
-      background-position:0 -102px!important;
+    .promotions {
+      background-position: 0 -102px !important;
     }
     .new-listing {
-      background-position: 0 -205px!important;
+      background-position: 0 -205px !important;
     }
   }
   .content-panel {
@@ -852,6 +872,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .order-count {
       color: $gray-light;
+      font-size: 12px;
     }
     .address-panel {
       height: 40px;
@@ -1088,19 +1109,20 @@ ul, li, p, a, h1, h2, h3, h4 {
     border: none;
   }
 }
+
 .join-title{
   width:100%;
   background-color: $brand-info;
   padding:15px 0;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   a{
     color:$body-bg;
     font-size: 2.5em;
     font-weight: bold;
     text-decoration: none;
+    outline:none;
   }
 }
-
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/
@@ -1451,7 +1473,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     display: none;
   }
   .graphic-details {
-    padding: 15px;
+    padding: 15px 15px 15px 95px;
   }
   .goods-detail-banner {
     .banner {
@@ -1901,7 +1923,7 @@ table {
       }
     }
   }
-  .model-management-item{
+  .model-management-item {
     display: inline-block;
     padding-right: 15px;
   }
@@ -2463,22 +2485,10 @@ table {
         }
       }
       .control {
-        @include size(79%, 33px);
+        @include size(80%, 33px);
         padding: 0 5px;
-        border: none;
         outline: none;
-      }
-      @media screen and (min-width: 991px) and (max-width: 1200px) {
-        .control {
-          @include size(74%, 33px);
-          padding: 0 5px;
-        }
-      }
-      @media screen and (max-width: 991px) {
-        .control {
-          @include size(69%, 33px);
-          padding: 0 5px;
-        }
+        border:none;
       }
       .search-btn {
         width: 100%;
@@ -3293,6 +3303,35 @@ table {
 }
 
 /*==============help end=================*/
+/*==============about begin=================*/
+.about-contents{
+  .about-title{
+    display:inline-block;
+    border-bottom: 2px solid $brand-warning;
+    padding-bottom: 10px;
+    margin:30px 0 15px 0;
+  }
+  .item-title{
+    display: inline-block;
+    background-color: $brand-primary;
+    color:$body-bg;
+    font-size: 18px;
+    padding: 2px;
+  }
+  p{
+    padding: 20px 0;
+    font-size: 16px;
+    line-height: 1.8em;
+  }
+  .license-img{
+    margin: 45px 0;
+  }
+  .img-bg01{
+    background: url("../images/about-01.jpg") center no-repeat;
+    height:275px;
+  }
+}
+/*==============about end=================*/
 /*==============message begin=================*/
 .user-list-wrap {
   border: 1px solid $gray-lighter;
@@ -3379,6 +3418,7 @@ table {
     transform: translateY(0.2vh)
   }
 }
+
 @-webkit-keyframes bounce {
   from, to {
     transform: translateY(0vh);

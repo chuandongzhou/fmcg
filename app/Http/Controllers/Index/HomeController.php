@@ -48,6 +48,15 @@ class HomeController extends Controller
         ]);
     }
 
+    /**
+     * 关于我们
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function about()
+    {
+        return view('index.index.about');
+    }
+
     public function test()
     {
 

@@ -121,7 +121,7 @@ return [
         'is_change' => '是否可换货',
         'is_back' => '是否可退货',
         'is_expire' => '是否即将过期',
-        'is_promotion' => '是否促销',
+        'is_promotion' => '促销',
         'promotion_info' => '促销信息',
         'images' => '图片',
         'area' => '配送区域',

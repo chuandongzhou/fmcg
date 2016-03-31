@@ -20,7 +20,7 @@
             <ul class="nav-title text-center">
                 <li><a href="{{ url('auth/guide') }}">首页</a></li>
                 <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li><a href="#">关于我们</a></li>
+                <li><a href="{{ url('about') }}">关于我们</a></li>
             </ul>
         </div>
     </nav>

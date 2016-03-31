@@ -34,12 +34,13 @@ class GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
-        $goods = Goods::with('images')->select([
+        $goods = Goods::with('images.image')->select([
             'id',
             'name',
             'sales_volume',
             'price_retailer',
             'price_wholesaler',
+            'bar_code',
             'is_new',
             'is_promotion',
             'is_out',

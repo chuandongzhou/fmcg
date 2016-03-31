@@ -64,12 +64,24 @@
 
 
 @section('footer')
-    <footer class="panel-footer">
-        <div class="container text-center text-muted">
-            Copyright{!!  cons('system.company_name') . '&nbsp;&nbsp;' . cons('system.company_record') !!}<br />
-            联系地址：{{ cons('system.company_addr') }}&nbsp;&nbsp;联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}
-        </div>
-    </footer>
+    <div class="footer">
+        <footer class="panel-footer">
+            <div class="container text-center text-muted">
+                <div class="row">
+                    <div class="col-sm-5 col-sm-push-2 text-left">
+                        <p>Copyright {!! cons('system.company_name') !!}</p>
+
+                        <p>{!! cons('system.company_record') !!}</p>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <p>联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</p>
+
+                        <p>联系地址：{{ cons('system.company_addr') }}</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 @stop
 
 @section('js-lib')
