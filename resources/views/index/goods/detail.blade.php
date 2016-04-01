@@ -80,31 +80,29 @@
                             <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
                         </li>
                         <li><span class="prompt">规格 :</span> <b>{{ $goods->specification or '暂无' }}</b></li>
-                        <form action="{{ url('cart/add') }}" class="form-horizontal  ajax-form" method="post"
-                              autocomplete="off">
-                            <li>
-                                <button disabled class="btn count btn-cancel desc-num">-</button>
-                                <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}">
-                                <button class="btn count btn-cancel inc-num">+</button>
-                                <span class="prompt"> 最低购买量 :</span> {{ $goods->min_num }}
-                            </li>
-                            <li>
-                                @if($goods->is_out)
-                                    <a href="javascript:void(0)" class="btn btn-primary disabled" disabled="">缺货</a>
+                        <li>
+                            <button disabled class="btn count btn-cancel desc-num">-</button>
+                            <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}"
+                                   data-min-num="{{ $goods->min_num }}">
+                            <button class="btn count btn-cancel inc-num">+</button>
+                            <span class="prompt"> 最低购买量 :</span> {{ $goods->min_num }}
+                        </li>
+                        <li>
+                            @if($goods->is_out)
+                                <a href="javascript:void(0)" class="btn btn-primary disabled" disabled="">缺货</a>
+                            @else
+                                <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
+                                   class="btn btn-primary join-cart">加入购物车</a>
+                            @endif
+                            <a href="javascript:void(0)" data-type="goods" data-method="post"
+                               class="btn btn-default btn-like" data-id="{{ $goods->id }}">
+                                @if(is_null($isLike))
+                                    <i class="fa fa-star-o"></i> 加入收藏夹
                                 @else
-                                    <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
-                                       class="btn btn-primary add-to-cart">加入购物车</a>
+                                    <i class="fa fa-star"></i> 已收藏
                                 @endif
-                                <a href="javascript:void(0)" data-type="goods" data-method="post"
-                                   class="btn btn-default btn-like" data-id="{{ $goods->id }}">
-                                    @if(is_null($isLike))
-                                        <i class="fa fa-star-o"></i> 加入收藏夹
-                                    @else
-                                        <i class="fa fa-star"></i> 已收藏
-                                    @endif
-                                </a>
-                            </li>
-                        </form>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -134,22 +132,7 @@
             </div>
         </div>
     </div>
-
-    <!--弹出层-->
-    <div class="mask-outer">
-        <div class="pop-general text-center">
-            <div class="pop-content">
-                <a class="fa fa-close pull-right close-btn" href="javascript:void(0)"></a>
-
-                <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
-
-                <div class="pop-btn">
-                    <a href='javascript:' class="btn btn-default go-shopping">继续购物</a>
-                    <a href="{{ url('cart') }}" class="btn btn-danger">查看购物车</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('includes.cart')
 @stop
 @section('js')
     @parent
@@ -162,40 +145,9 @@
                 var self = $(this);
                 self.parents(".carousel").stop(true).carousel(self.index());
             });
-            $('.add-to-cart'). on('click', function () {
-                var obj = $(this), url = obj.data('url'), buyNum = $('input[name="num"]').val();
-                obj.button({
-                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
-                    doneText: '操作成功',
-                    failText: '操作失败'
-                });
-                obj.button('loading');
-                $.ajax({
-                    url: url,
-                    method: 'post',
-                    data: {num: buyNum}
-                }).done(function () {
-                    obj.button('done');
-                }).fail(function (jqXHR) {
-                    obj.button('fail');
-                    var json = jqXHR['responseJSON'];
-                    if (json) {
-                        setTimeout(function () {
-                            obj.html(json['message']);
-                        }, 0);
-                    }
-                }).always(function () {
-                    $(".mask-outer").css("display", "block");
-                });
 
-                return false;
-            });
-            $('a.close-btn,a.go-shopping').on('click', function () {
-                $(".mask-outer").css("display", "none");
-                // $('.add-to-cart').html('加入购物车');
-                window.location.reload();
-            });
-            numChange({{ $goods->min_num }});
+            joinCart();
+            numChange();
             tabBox();
             likeFunc();
             {{--getCoordinateMap(--}}{{--{!! $coordinates !!}--}}{{--);--}}

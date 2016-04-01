@@ -61,7 +61,6 @@ class ShopController extends Controller
         return view('index.shop.index',
             ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data, 'type' => $type]);
     }
-
     /**
      * 店铺首页
      *
@@ -83,7 +82,7 @@ class ShopController extends Controller
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
 
-        $goods = Goods::where($map)->ofStatus(cons('goods.status.on'))->with('images.image');
+        $goods = Goods::active()->where($map)->with('images.image');
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $goods->{'Of' . ucfirst($sort)}();
         }
@@ -98,7 +97,6 @@ class ShopController extends Controller
             'url' => $url
         ]);
     }
-
 
     /**
      * 店铺详情

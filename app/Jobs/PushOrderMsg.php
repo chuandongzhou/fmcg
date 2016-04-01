@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\PushOrderService;
+use App\Services\OrderService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -27,9 +27,9 @@ class PushOrderMsg extends Job implements SelfHandling, ShouldQueue
     /**
      * 执行任务
      *
-     * @param \App\Services\PushOrderService $push
+     * @param \App\Services\OrderService $push
      */
-    public function handle(PushOrderService $push)
+    public function handle(OrderService $push)
     {
         $push->push($this->targetUserId, $this->msgBody);
     }

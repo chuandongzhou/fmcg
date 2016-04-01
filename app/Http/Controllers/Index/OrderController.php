@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Models\OrderGoods;
 use App\Services\CartService;
 use App\Services\GoodsService;
+use App\Services\OrderService;
 use App\Services\RedisService;
 use App\Services\ShippingAddressService;
 use Illuminate\Http\Request;
@@ -42,13 +43,13 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return redirect()->back()->withInput()->with('message', '商品缺货或低于最低购买数');
+            return redirect()->back()->with('message', '商品缺货或低于最低购买数');
         }
 
         if ($confirmedGoods->update(['status' => 1])) {
             return redirect('order/confirm-order');
         } else {
-            return redirect()->back()->withInput();
+            return redirect()->back();
         }
     }
 
@@ -77,108 +78,19 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-        $user = auth()->user();
-        $carts = $user->carts()->where('status', 1)->with('goods')->get();
-        if (empty($carts[0])) {
-            return redirect('cart');
-        }
-        $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
-        foreach ($carts as $cart) {
-            $orderGoodsNum[$cart->goods_id] = $cart->num;
-        }
-
-        //验证
-        $cartService = new CartService($carts);
-
-        if (!$shops = $cartService->validateOrder($orderGoodsNum)) {
-            return redirect('cart');
-        }
-
         $data = $request->all();
 
-        $payTypes = cons('pay_type');
-        $codPayTypes = cons('cod_pay_type');
+        $result = (new OrderService)->orderSubmitHandle($data);
 
-        $onlinePaymentOrder = [];   //  保存在线支付的订单
-        $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
-
-        $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data['cod_pay_type'],
-            head($codPayTypes)) : 0;
-        //TODO: 需要验证收货地址是否合法
-        $shippingAddressId = $data['shipping_address_id'];
-        $pid = 0;
-        if ($shops->count() > 1) {
-            $maxPid = Order::max('pid');
-            $pid = $maxPid + 1;
+        if (!$result) {
+            return redirect('cart');
         }
 
-        $successOrders = [];  //保存提交成功的订单
-
-        foreach ($shops as $shop) {
-            $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
-            $orderData = [
-                'pid' => $pid,
-                'user_id' => $user->id,
-                'shop_id' => $shop->id,
-                'price' => $shop->sum_price,
-                'pay_type' => $payType,
-                'cod_pay_type' => $codPayType,
-                'shipping_address_id' => (new ShippingAddressService)->copyToSnapshot($shippingAddressId),
-                'remark' => $remark
-            ];
-            if (!$orderData['shipping_address_id']) {
-                foreach ($successOrders as $successOrder) {
-                    $successOrder->delete();
-                }
-                return $this->error('提交订单时遇到问题');
-            }
-
-            $order = Order::create($orderData);
-            if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
-                $successOrders[] = $order;
-                $orderGoods = [];
-                foreach ($shop->cart_goods as $cartGoods) {
-                    $orderGoods[] = new OrderGoods([
-                        'goods_id' => $cartGoods->goods_id,
-                        'price' => $cartGoods->goods->price,
-                        'num' => $cartGoods->num,
-                        'total_price' => $cartGoods->goods->price * $cartGoods->num,
-                    ]);
-                }
-                if ($order->orderGoods()->saveMany($orderGoods)) {
-                    if ($payType == $payTypes['online']) {
-                        $onlinePaymentOrder[] = $order->id;
-                    } else {
-                        //货到付款订单直接通知卖家发货
-                        $redisKey = 'push:seller:' . $shop->user->id;
-                        $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
-                        (new RedisService)->setRedis($redisKey, $redisVal);
-                    }
-                } else {
-                    foreach ($successOrders as $successOrder) {
-                        $successOrder->delete();
-                    }
-
-                    return redirect('cart');
-                }
-
-            } else {
-                //跳转页面后期修改
-                return redirect('cart');
-            }
+        $redirectUrl = url('order-buy');
+        if ($result['pay_type'] == cons('pay_type.online')) {
+            $query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
+            $redirectUrl = url('order/finish-order' . $query);
         }
-
-
-        // 删除购物车
-        $user->carts()->where('status', 1)->delete();
-        // 增加商品销量
-        GoodsService::addGoodsSalesVolume($orderGoodsNum);
-
-        $query = $pid > 0 ? '?type=all&order_id=' . $pid : (empty($onlinePaymentOrder) ? 0 : '?order_id='
-            . $onlinePaymentOrder[0]);
-
-        $redirectUrl = empty($onlinePaymentOrder) ? url('order-buy') : url('order/finish-order' . $query);
-
         return redirect($redirectUrl);
     }
 

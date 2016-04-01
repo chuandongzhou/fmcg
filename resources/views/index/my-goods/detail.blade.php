@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-3 col-sm-push-8 text-right btn-list">
                 <a href="{{ url('my-goods/' . $goods->id . '/edit') }}" class="btn btn-success">编辑</a>
-                <a href="javascript:" data-url="{{ url('api/v1/my-goods/shelve/' . $goods->id) }}"
+                <a href="javascript:"
                    data-id="{{ $goods->id }}" data-method="put"
                    data-data='{ "status": "{{ !$goods->status }}" }'
                    data-done-then="refresh"

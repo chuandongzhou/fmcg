@@ -856,10 +856,12 @@
 <p><code>成功返回：</code></p>
 
 <p><code>失败返回：</code></p>
-<h4>2.3.5 商品上下架 [put] (shelve/{goods_id})</h4>
+<h4>2.3.5 商品上下架 [put] (shelve)</h4>
 
 <p><code>请求参数：</code></p>
-<pre><code>status int 上下架状态 {1 上架 0下架}
+<pre><code>
+    id int 商品id
+    status int 上下架状态 {1 上架 0下架}
 </code></pre>
 
 <p><code>成功返回：</code></p>

@@ -204,8 +204,7 @@
                                 <td>已{{ cons()->valueLang('goods.status' ,$item->status) }}</td>
                                 <td class="operating text-center">
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="editor">编辑</a>
-                                    <a href="javascript:" data-url="{{ url('api/v1/my-goods/shelve/' . $item->id) }}"
-                                       data-id="{{ $item->id }}" data-method="put"
+                                    <a href="javascript:" data-id="{{ $item->id }}" data-method="put"
                                        data-data='{ "status": "{{ !$item->status }}" }'
                                        data-done-then="refresh"
                                        class="no-form shelve">{{ cons()->valueLang('goods.status' , !$item->status) }}</a>

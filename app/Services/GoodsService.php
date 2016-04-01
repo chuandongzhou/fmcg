@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Cache;
  */
 class GoodsService
 {
-
     /**
      * 根据搜索获取商品
      *
@@ -207,9 +206,8 @@ class GoodsService
             ];
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
             foreach ($goodsColumns as $goodsColumn) {
-                $goods = Goods::whereIn('id', $goodsColumn->id_list)
+                $goods = Goods::active()->whereIn('id', $goodsColumn->id_list)
                     ->where('user_type', '>', $type)
-                    ->ofStatus(cons('goods.status.on'))
                     ->OfDeliveryArea(['province_id' => $provinceId])
                     ->with('images')
                     ->select($goodsFields)
@@ -220,9 +218,8 @@ class GoodsService
 
                 if ($columnGoodsCount < $displayCount) {
                     $columnGoodsIds = $goods->pluck('id')->toArray();
-                    $goodsBySort = Goods::whereNotIn('id', $columnGoodsIds)
+                    $goodsBySort = Goods::active()->whereNotIn('id', $columnGoodsIds)
                         ->where('user_type', '>', $type)
-                        ->ofStatus(cons('goods.status.on'))
                         ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
                         ->with('images.image')
                         ->OfDeliveryArea(['province_id' => $provinceId])

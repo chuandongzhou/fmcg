@@ -133,7 +133,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             fixedBottom()
-            selectedFunc();
+            cartFunc();
             $(window).scroll(function () {
                 fixedBottom();
             });

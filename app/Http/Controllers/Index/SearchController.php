@@ -22,9 +22,10 @@ class SearchController extends Controller
         $type = auth()->user()->type;
         $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
-        $goods = Goods::with('images')->select([
+        $goods = Goods::active()->with('images.image', 'shop')->select([
             'id',
             'name',
+            'shop_id',
             'bar_code',
             'min_num_retailer',
             'min_num_wholesaler',
@@ -35,10 +36,11 @@ class SearchController extends Controller
             'is_out',
             'cate_level_1',
             'cate_level_2'
-        ])->where('user_type', '>', $type)->ofStatus(cons('goods.status.on'));
+        ])->where('user_type', '>', $type);
 
         $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
         $result = GoodsService::getGoodsBySearch($data, $goods);
+
         return view('index.search.index',
             [
                 'goods' => $goods->paginate(),

@@ -34,7 +34,7 @@ class GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
-        $goods = Goods::with('images.image')->select([
+        $goods = Goods::active()->with('images.image')->select([
             'id',
             'name',
             'sales_volume',
@@ -64,7 +64,7 @@ class GoodsController extends Controller
      */
     public function postDetail($goodsId)
     {
-        $goods = Goods::with(['images', 'deliveryArea.coordinate'])->find($goodsId);
+        $goods = Goods::active()->with(['images', 'deliveryArea.coordinate'])->find($goodsId);
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');
         }

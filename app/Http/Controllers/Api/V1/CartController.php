@@ -43,7 +43,7 @@ class CartController extends Controller
     public function postAdd(Request $request, $goodsId)
     {
         $user = auth()->user();
-        $goodsInfo = Goods::where('user_type', '>', $user->type)->find($goodsId);
+        $goodsInfo = Goods::active()->where('user_type', '>', $user->type)->find($goodsId);
         if (is_null($goodsInfo)) {
             return $this->error('商品不存在');
         }

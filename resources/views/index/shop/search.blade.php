@@ -134,29 +134,15 @@
             </div>
         </div>
         <div class="row list-penal">
-            @foreach($goods  as $item)
-                <div class="col-sm-3 commodity">
-                    <div class="img-wrap">
-                        <a href="{{ url('goods/' . $item->id) }}"  target="_blank">
-                            <img class="commodity-img" src="{{ $item->image_url }}">
-                        </a>
-                        <span class="prompt @if($item->is_out) lack  @elseif($item->is_promotion) promotions @elseif($item->is_new) new-listing @endif"></span>
-                    </div>
-                    <p class="commodity-name"><a href="{{ url('goods/' . $item->id) }}"  target="_blank">{{ $item->name }}</a></p>
-
-                    <p class="sell-panel">
-                        <span class="money">￥{{ $item->price }}</span>
-                        <span class="sales pull-right">销量 : {{ $item->sales_volume }}</span>
-                    </p>
-                </div>
-            @endforeach
+            @include('includes.goods-list' , ['goods'=> $goods])
         </div>
         <div class="row">
             <div class="col-xs-12 text-right">
-                {!! $goods->render() !!}
+                {!! $goods->appends(array_filter($get))->render() !!}
             </div>
         </div>
     </div>
+    @include('includes.cart')
 @stop
 @section('js-lib')
     @parent
@@ -166,6 +152,8 @@
     @parent
     <script type="text/javascript">
         displayList();
+        joinCart();
+        numChange();
         $('select.address').change(function () {
             var /*provinceControl = $('select[name="province_id"]'),*/
                     cityControl = $('select[name="city_id"]'),

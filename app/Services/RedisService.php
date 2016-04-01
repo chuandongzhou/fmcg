@@ -83,11 +83,24 @@ class RedisService
      *  获取redis
      *
      * @param $key
+     * @param $hasPrefix
      * @return mixed
      */
-    public function del($key)
+    public function del($key, $hasPrefix = true)
     {
-        return $this->redis->del($this->getKey($key));
+        $key = $hasPrefix ? $this->$this->getKey($key) : $key;
+        return empty($key) ? true : $this->redis->del($key);
+    }
+
+    /**
+     * 获取缓存键 （支持模糊查询）
+     *
+     * @param $key
+     * @return array
+     */
+    public function keys($key)
+    {
+        return $this->redis->keys($this->getKey($key));
     }
 
     /**
