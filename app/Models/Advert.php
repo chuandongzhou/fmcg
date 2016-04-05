@@ -42,7 +42,7 @@ class Advert extends Model
     {
         return $query->where('start_at', '<', $nowTime)->Where(function ($query) use ($nowTime) {
             $query->where('end_at', '>', $nowTime)->orWhere('end_at', null);
-        })->orderBy('id', 'desc')->take($limit);
+        })->orderBy('id', 'asc')->take($limit);
     }
 
     /**

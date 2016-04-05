@@ -5,25 +5,27 @@
 @section('container')
     @include('index.shop-search')
     <div class="container wholesalers-index index contents">
-        <div class="row">
-            <div class="col-sm-12 left-store-logo">
-                <div id="myCarousel" class="carousel slide banner banner-slide">
-                    <ol class="carousel-indicators">
-                        @for($index = 0; $index < count($shop->images); $index++)
-                            <li data-target="#myCarousel" data-slide-to="{{ $index }}"
-                                class="{{ $index == 0 ? 'active' : '' }}">
-                        @endfor
-                    </ol>
-                    <div class="carousel-inner banner">
-                        @foreach($shop->images as $key=>$image)
-                            <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image->url }}" alt="{{ $image->name }}">
-                            </div>
-                        @endforeach
+        @if($shop->images[0]->url)
+            <div class="row">
+                <div class="col-sm-12 left-store-logo">
+                    <div id="myCarousel" class="carousel slide banner banner-slide">
+                        <ol class="carousel-indicators">
+                            @for($index = 0; $index < count($shop->images); $index++)
+                                <li data-target="#myCarousel" data-slide-to="{{ $index }}"
+                                    class="{{ $index == 0 ? 'active' : '' }}">
+                            @endfor
+                        </ol>
+                        <div class="carousel-inner banner">
+                            @foreach($shop->images as $key => $image)
+                                <div class="item {{ $key == 0 ? 'active' : '' }}">
+                                    <img src="{{ $image->url }}" alt="{{ $image->name }}">
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="tab-title clearfix">

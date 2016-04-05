@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\RedisService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class AppUrlController extends Controller
 {
@@ -15,11 +15,11 @@ class AppUrlController extends Controller
      */
     public function postAppUrl(Request $request)
     {
-        $redis = Redis::connection();
+        $redis = new RedisService;
         $android = $request->input('android_url');
         $ios = $request->input('ios_url');
-        $android ? $redis->set('android_url', $android) : '';
-        $ios ? $redis->set('ios_url', $ios) : '';
+        $android ? $redis->setRedis('android_url', $android) : '';
+        $ios ? $redis->setRedis('ios_url', $ios) : '';
 
         return $this->success('保存成功');
     }

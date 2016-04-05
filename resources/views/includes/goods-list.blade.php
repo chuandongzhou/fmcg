@@ -18,7 +18,7 @@
                            value="{{ $item->min_num }}" data-min-num="{{ $item->min_num }}">
                     <button type="button" data-group="group{{ $item->id }}" class="count modified inc-num">+</button>
                     @if($item->is_out)
-                        <a href="javascript:void(0)" class="btn btn-primary disabled" disabled="">缺货</a>
+                        <a href="javascript:void(0)" class="btn btn-primary disabled join-cart" disabled="">缺货</a>
                     @else
                         <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$item->id) }}"
                            class="btn btn-primary join-cart" data-group="group{{ $item->id }}">加入购物车</a>

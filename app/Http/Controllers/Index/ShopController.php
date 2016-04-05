@@ -77,7 +77,7 @@ class ShopController extends Controller
 
         if ($shop->images->isEmpty()) {
             $advert = $this->_getAdvertFirstImage();
-            $shop->images[0] = $advert->image;
+            $shop->images[0] = $advert->image ? : (new Advert);
         }
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
