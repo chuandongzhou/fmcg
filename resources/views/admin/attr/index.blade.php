@@ -30,25 +30,23 @@
                 </div>
             </form>
         </div>
-        <div class="row">
-            <table id="attr" class="table">
-                @foreach( $attrs as $id => $attr )
-                    <tr data-tt-id="{{ $id  }}" data-tt-parent-id="{{  $attrs->data('pid')  }}">
-                        <td>{{  $attr  }}</td>
-                        <td class=" btn-group-xs">
-                            <a class="btn btn-primary" href="{{ url('admin/attr/' . $id . '/edit') }}">
-                                <i class="fa fa-edit"></i> 编辑
-                            </a>
-                            <a type="button" class="btn btn-danger ajax" data-method="delete"
-                               data-url="{{  url('admin/attr/' . $attrs->data('id'))  }}">
-                                <i class="fa fa-trash-o"></i> 删除
-                            </a>
+        <table id="attr" class="table">
+            @foreach( $attrs as $id => $attr )
+                <tr data-tt-id="{{ $id  }}" data-tt-parent-id="{{  $attrs->data('pid')  }}">
+                    <td>{{  $attr  }}</td>
+                    <td class=" btn-group-xs">
+                        <a class="btn btn-primary" href="{{ url('admin/attr/' . $id . '/edit') }}">
+                            <i class="fa fa-edit"></i> 编辑
+                        </a>
+                        <a type="button" class="btn btn-danger ajax" data-method="delete"
+                           data-url="{{  url('admin/attr/' . $attrs->data('id'))  }}">
+                            <i class="fa fa-trash-o"></i> 删除
+                        </a>
 
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
     </div>
 @stop
 

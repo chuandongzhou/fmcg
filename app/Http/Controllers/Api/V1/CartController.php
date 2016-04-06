@@ -11,19 +11,27 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Goods;
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use Cache;
 
 class CartController extends Controller
 {
+    protected $user, $cacheKey;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+        $this->cacheKey = 'cart:' . $this->user->id;
+    }
 
     /**
      * 购物车首页
      */
     public function getIndex()
     {
-        $myCarts = auth()->user()->carts();
-        $carts = $myCarts->with('goods')->get();
+        $myCarts = $this->user->carts();
+        $carts = $myCarts->with('goods.images.image')->get();
 
-        if (!empty($carts[0])) {
+        if (!$carts->isEmpty()) {
             // 将所有状态更新为零
             $myCarts->update(['status' => 0]);
 
@@ -42,8 +50,7 @@ class CartController extends Controller
      */
     public function postAdd(Request $request, $goodsId)
     {
-        $user = auth()->user();
-        $goodsInfo = Goods::active()->where('user_type', '>', $user->type)->find($goodsId);
+        $goodsInfo = Goods::active()->where('user_type', '>', $this->user->type)->find($goodsId);
         if (is_null($goodsInfo)) {
             return $this->error('商品不存在');
         }
@@ -55,13 +62,16 @@ class CartController extends Controller
             return $this->error('该商品缺货');
         }
         //查询是否有相同的商品,存在则合并
-        $cart = $user->carts()->where('goods_id', $goodsId);
+        $cart = $this->user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('id'))) {
             $cart->increment('num', $buyNum);
 
             return $this->success('加入购物车成功');
         }
-        if ($user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {
+        if ($this->user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {
+            if (Cache::has($this->cacheKey)) {
+                Cache::increment($this->cacheKey);
+            }
             return $this->success('加入购物车成功');
         }
 
@@ -76,13 +86,17 @@ class CartController extends Controller
      */
     public function deleteDelete($cartId)
     {
-        $cart = auth()->user()->carts()->find($cartId);
+        $cart = $this->user->carts()->find($cartId);
 
-        if (!is_null($cart)) {
-            $cart->delete();
+        if (is_null($cart) || !$cart->delete()) {
+            return $this->error('删除失败');
         }
 
+        if (Cache::has($this->cacheKey)) {
+            Cache::decrement($this->cacheKey);
+        }
         return $this->success('删除成功');
+
     }
 
 

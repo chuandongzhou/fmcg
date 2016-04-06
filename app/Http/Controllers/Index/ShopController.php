@@ -77,7 +77,7 @@ class ShopController extends Controller
 
         if ($shop->images->isEmpty()) {
             $advert = $this->_getAdvertFirstImage();
-            $shop->images[0] = $advert->image ? : (new Advert);
+            $shop->images[0] = $advert->image;
         }
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $map = ['shop_id' => $shop->id];
@@ -184,6 +184,6 @@ class ShopController extends Controller
     {
         $nowTime = Carbon::now();
         $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
-        return $advert;
+        return $advert->image ? $advert : new Advert;
     }
 }

@@ -4,16 +4,13 @@ namespace App\Http\Controllers\Api\V1\Personal;
 
 use App\Http\Controllers\Api\v1\Controller;
 
-use App\Http\Requests;
+use App\Http\Requests\Api\v1\UpdatePasswordRequest;
 use Hash;
 
 class PasswordController extends Controller
 {
-    /**
-     * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function password(Requests\Api\v1\UpdatePasswordRequest $request)
+
+    public function password(UpdatePasswordRequest $request)
     {
         $attributes = $request->all();
 
