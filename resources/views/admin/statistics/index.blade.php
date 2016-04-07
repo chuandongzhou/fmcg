@@ -33,13 +33,13 @@
                     <td>{{ array_get($totalUser, cons('user.type.retailer'), 0) }}</td>
                     <td>{{ array_sum($totalUser->toArray()) }}</td>
                 </tr>
-                {{--<tr>--}}
-                    {{--<td>活跃用户数</td>--}}
-                    {{--<td>{{ array_get($statistics['active_user'] , 0 ,0) }}</td>--}}
-                    {{--<td>{{ array_get($statistics['active_user'] , 1 ,0) }}</td>--}}
-                    {{--<td>{{ array_get($statistics['active_user'] , 2 ,0) }}</td>--}}
-                    {{--<td>{{ isset($statistics['active_user']) ? array_sum($statistics['active_user']) : 0 }}</td>--}}
-                {{--</tr>--}}
+                <tr>
+                    <td>活跃用户数</td>
+                    <td>{{ array_get($statistics['active_user'] , 0 ,0) }}</td>
+                    <td>{{ array_get($statistics['active_user'] , 1 ,0) }}</td>
+                    <td>{{ array_get($statistics['active_user'] , 2 ,0) }}</td>
+                    <td>{{ isset($statistics['active_user']) ? array_sum($statistics['active_user']) : 0 }}</td>
+                </tr>
             </table>
         </div>
         <div class="tab-pane fade" id="data">

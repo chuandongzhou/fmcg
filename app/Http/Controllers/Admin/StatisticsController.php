@@ -32,12 +32,12 @@ class StatisticsController extends Controller
 
         /**
          * 总用户数
-
-        $totalUser = User::select(DB::raw('count(*) as num , type'))->whereBetween('created_at',
-            [$dayStart, $dayEnd])->groupBy('type')->lists('num', 'type');
-        */
+         *
+         * $totalUser = User::select(DB::raw('count(*) as num , type'))->whereBetween('created_at',
+         * [$dayStart, $dayEnd])->groupBy('type')->lists('num', 'type');
+         */
         if ($dayStart == $nowTime->startOfDay()) {
-            $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay());
+            $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay(), false);
         } else {
             //$statistics = DataStatistics::whereBetween('created_at', [$dayStart->toDateString(), $dayEnd->toDateString()])->first();
 
