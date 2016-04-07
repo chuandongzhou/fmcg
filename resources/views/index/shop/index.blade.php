@@ -44,7 +44,9 @@
                                 <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
                                     {{ $shop->name }}
                                 </a>
-                                <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                                <a href="javascript:"
+                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                   class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
 
                             </p>
 
@@ -58,7 +60,9 @@
                             <p class="order-count store-presentation item"><span>店铺介绍 : </span>
                                 <span title="{{ $shop->introduction }}">{{ $shop->introduction }}</span>
                             </p>
-                            <p class="item order-count address-panel"><span>联系地址 : </span><span class="address">{{ $shop->address }}</span></p>
+
+                            <p class="item order-count address-panel"><span>联系地址 : </span><span
+                                        class="address">{{ $shop->address }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -66,7 +70,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12 text-right">
-                {{ $shops->appends($address)->render() }}
+                {!!  $shops->appends($address)->render()  !!}
             </div>
         </div>
     </div>
@@ -80,14 +84,14 @@
     @parent
     <script type="text/javascript">
         $('select.address').change(function () {
-            var/* provinceControl = $('select[name="province_id"]'),*/
+            var /* provinceControl = $('select[name="province_id"]'),*/
                     cityControl = $('select[name="city_id"]'),
                     districtControl = $('select[name="district_id"]'),
                     streetControl = $('select[name="street_id"]'),
                     type = '{{ $type }}',
                     address = type ? '?type=' + type : '',
                     join = type ? '&' : '?';
-          /*  address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';*/
+            /*  address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';*/
             address += cityControl.val() ? join + 'city_id=' + cityControl.val() : '';
             address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
             address += streetControl.val() ? '&street_id=' + streetControl.val() : '';

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\BarcodeWithoutImages;
-use App\Models\Coordinate;
 use App\Models\DeliveryArea;
 use App\Models\Goods;
 use App\Http\Requests;
@@ -24,7 +23,7 @@ class MyGoodsController extends Controller
     {
         $gets = $request->all();
 
-        $goods = auth()->user()->shop->goods()->with('images')->select([
+        $goods = auth()->user()->shop->goods()->with('images.image')->select([
             'id',
             'name',
             'bar_code',

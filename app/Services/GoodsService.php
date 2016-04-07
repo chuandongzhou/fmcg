@@ -79,7 +79,7 @@ class GoodsService
         $moreAttr = []; //保存扩展的标签
 
         if ($isWeb) {
-           $attrs = (new AttrService($attrs))->format();
+            $attrs = (new AttrService($attrs))->format();
             // 已搜索的标签
             foreach ($attrs as $key => $attr) {
                 if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys((array)$data['attr']))) {
@@ -135,7 +135,9 @@ class GoodsService
                 'level',
                 'pid',
                 'name'
-            ]);
+            ])->each(function($category){
+                $category->setAppends([]);
+            });
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
 
             $goodsFields = [

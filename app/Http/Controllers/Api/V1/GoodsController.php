@@ -64,7 +64,7 @@ class GoodsController extends Controller
      */
     public function postDetail($goodsId)
     {
-        $goods = Goods::active()->with(['images', 'deliveryArea.coordinate'])->find($goodsId);
+        $goods = Goods::active()->with(['images.image', 'deliveryArea'])->find($goodsId);
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');
         }

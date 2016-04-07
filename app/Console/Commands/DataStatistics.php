@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Services\DataStatisticsService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class DataStatistics extends Command
 {

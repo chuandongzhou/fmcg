@@ -114,6 +114,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('version-record', 'VersionRecordController');    //版本更新记录
     $router->post('app-url', 'AppUrlController@postAppUrl');//app下载地址管理
     $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
+    $router->controller('statistics', 'StatisticsController');    //运营数据统计(时间段)
     $router->resource('column', 'HomeColumnController');    //首页栏目
     $router->delete('barcode-without-images/batch', 'BarcodeWithoutImagesController@batch'); //批量删除前台用户添加商品时没有图片的条形码
     $router->get('barcode-without-images/export', 'BarcodeWithoutImagesController@export'); //导出没有图片的条形码

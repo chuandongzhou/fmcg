@@ -56,14 +56,18 @@ class LikeController extends Controller
     public function postShops(Request $request)
     {
         $data = $request->all();
-        $shops = auth()->user()->likeShops()->select(['id', 'name', 'min_money']);
+        $shops = auth()->user()->likeShops()->with('images')->select(['id', 'name', 'min_money']);
         if (isset($data['name'])) {
             $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
         }
         if ($request->has('province_id')) {
             $shops = $shops->OfDeliveryArea($data);
         }
-        return $this->success(['shops' => $shops->paginate()->toArray()]);
+        $shops = $shops->paginate();
+        $shops->each(function($shop){
+            $shop->setAppends(['image_url']);
+        });
+        return $this->success(['shops' => $shops->toArray()]);
     }
 
     /**
@@ -75,7 +79,7 @@ class LikeController extends Controller
     public function postGoods(Request $request)
     {
         $data = $request->all();
-        $goods = auth()->user()->likeGoods();
+        $goods = auth()->user()->likeGoods()->with('images.image');
 
         if (isset($data['name'])) {
             $goods->where('name', 'like', '%' . $data['name'] . '%');
@@ -83,18 +87,9 @@ class LikeController extends Controller
         if (!empty($data['province_id'])) {
            $goods->OfDeliveryArea($data);
         }
-        //获取需要显示的分类ID
-        $array = array_unique($goods->get()->pluck('cate_level_2')->all());
-        $cateArr = Category::whereIn('id', $array)->with('icon')->get();
-        //加入分类过滤条件
-        if (!empty($data['cate_level_2'])) {
-           $goods->ofCategory($data['cate_level_2'], 2);
-        }
 
-        //dd($cateArr);
         return $this->success([
             'goods' => $goods->paginate()->toArray(),
-            'cateArr' => $cateArr
         ]);
     }
 }

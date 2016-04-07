@@ -31,8 +31,12 @@ class LikeController extends Controller
         if ($request->has('province_id')) {
             $shops = $shops->OfDeliveryArea(array_filter($data));
         }
+        $shops = $shops->paginate();
+        $shops->each(function($shop){
+            $shop->setAppends(['image_url']);
+        });
         return view('index.like.shop', [
-            'shops' => $shops->paginate(),
+            'shops' => $shops,
             'data' => $data
         ]);
     }
@@ -46,7 +50,7 @@ class LikeController extends Controller
     public function getGoods(Request $request)
     {
         $data = $request->all();
-        $goods = auth()->user()->likeGoods();
+        $goods = auth()->user()->likeGoods()->with('images.image');
 
         if (isset($data['name'])) {
             $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
@@ -56,8 +60,8 @@ class LikeController extends Controller
         }
         //获取需要显示的分类ID
         $array = array_unique($goods->paginate()->pluck('cate_level_2')->all());
-        $cateArr = array_where(CategoryService::getCategories() , function($key, $cate) use($array){
-            return in_array($cate['id'] , $array);
+        $cateArr = array_where(CategoryService::getCategories(), function ($key, $cate) use ($array) {
+            return in_array($cate['id'], $array);
         });
         //加入分类过滤条件
         if (!empty($data['cate_level_2'])) {

@@ -103,7 +103,8 @@ class CategoryService
      * 获取所有同级分类
      *
      * @param $cate
-     * @param $pid
+     * @param $id
+     * @param $selected
      * @return array
      */
     static function getSiblings($cate, $id, $selected = 0)
@@ -123,7 +124,6 @@ class CategoryService
     /**
      * @param $categories
      * @param $categoryId
-     * @param $level
      * @return array
      */
     static function formatCategoryForSearch($categories, $categoryId)
