@@ -3,6 +3,13 @@
 @section('subtitle' , '用户管理')
 
 @section('right-container')
+    <form class="form-horizontal" action="{{ url('admin/user') }}" method="get" autocomplete="off">
+        <label for="time">用户名:</label>
+        <input type="text" name="name" class="time inline-control" value="{{ $filter['name'] }}"/>
+        <input type="hidden" name="type" value="{{ $filter['type'] }}">
+        <input type="submit" class="btn btn-default  search-by-get" value="查询"/>
+    </form>
+
     <form class="form-horizontal ajax-form" method="post"
           action="{{ url('admin/admin/') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
         <table class="table table-striped">
@@ -61,13 +68,14 @@
             </button>
         </div>
     </form>
-    {!! $users->render() !!}
+    {!! $users->appends(array_filter($filter))->render() !!}
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
         $(function () {
             onCheckChange('#parent', '.child');
+            formSubmitByGet();
         })
     </script>
 @stop

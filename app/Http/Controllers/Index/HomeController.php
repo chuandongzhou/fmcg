@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Models\Notice;
-use App\Services\DataStatisticsService;
 use App\Services\GoodsService;
 use Carbon\Carbon;
 use DB;
@@ -60,9 +59,6 @@ class HomeController extends Controller
 
     public function test()
     {
-        $nowTime = Carbon::now();
-        $data = DataStatisticsService::getTodayDataStatistics($nowTime);
 
-        \App\Models\DataStatistics::create($data);
     }
 }

@@ -21,12 +21,21 @@ class UserController extends Controller
     {
         $types = cons('user.type');
         $type = (string)$request->input('type');
+        $name = (string)$request->input('name');
 
         $users = User::where('type', array_get($types, $type, head($types)))->where('audit_status',
-            cons('user.audit_status.pass'))->with('shop')->paginate();
+            cons('user.audit_status.pass'))->with('shop');
+
+        if ($name) {
+            $users = $users->where('user_name', 'Like', '%' . $name . '%');
+        }
 
         return view('admin.user.index', [
-            'users' => $users,
+            'users' => $users->paginate(),
+            'filter' => [
+                'type' => $type,
+                'name' => $name
+            ]
         ]);
     }
 
@@ -158,7 +167,7 @@ class UserController extends Controller
                 $user->load('shop');
                 (new ChatService)->usersHandle($user);
             }
-            $this->_sendAuditSms($user,$status , $error);
+            $this->_sendAuditSms($user, $status, $error);
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
