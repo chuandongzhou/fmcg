@@ -127,7 +127,7 @@ class OrderService
                 $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
                 $orderData = [
                     'pid' => $pid,
-                    'user_id' => auth()->user()->id,
+                    'user_id' => auth()->id(),
                     'shop_id' => $shop->id,
                     'price' => $shop->sum_price,
                     'pay_type' => $payType,

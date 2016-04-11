@@ -16,7 +16,7 @@ class ShopController extends Controller
      */
     public function edit($shop)
     {
-        $shop = $shop->load(['images', 'user', 'deliveryArea.coordinate', 'shopAddress']);
+        //$shop = $shop->load(['images', 'user', 'deliveryArea', 'shopAddress']);
     /*    $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });*/

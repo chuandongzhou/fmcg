@@ -248,7 +248,7 @@ class Shop extends Model
     public function scopeOfUser($query, $myType, $shopType = 0)
     {
         return $query->whereHas('user', function ($q) use ($myType, $shopType) {
-            $q->where('type', '>', $myType)->where('status', cons('status.on'))->where('audit_status',
+            $q->where('type', '>', $myType)->active()->where('audit_status',
                 cons('user.audit_status.pass'));
             if ($shopType) {
                 $q->where('type', $shopType);
@@ -321,14 +321,14 @@ class Shop extends Model
         //格式化图片数组
         $imagesArr = (new ImageUploadService($images))->formatImagePost();
         //删除的图片
-        $files = $this->files();
+        $files = $this->images();
         if (!empty (array_filter($images['id']))) {
             $files = $files->whereNotIn('id', array_filter($images['id']));
         }
-        $files->where('type', cons('shop.file_type.images'))->delete();
+        $files->delete();
 
         if (!empty($imagesArr)) {
-            return $this->associateFiles($imagesArr, 'files', cons('shop.file_type.images'), false);
+            return $this->associateFiles($imagesArr, 'images', cons('shop.file_type.images'), false);
         }
 
         return true;

@@ -15,7 +15,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shop = auth()->user()->shop()->with(['images', 'deliveryArea.coordinate', 'shopAddress'])->first();
+        $shop = auth()->user()->shop;
        /* $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });*/

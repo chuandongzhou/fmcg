@@ -12,7 +12,7 @@ class LikeController extends Controller
 
     public function __construct()
     {
-        $this->userId = auth()->user()->id;
+        $this->userId = auth()->id();
     }
 
     /**
@@ -24,7 +24,7 @@ class LikeController extends Controller
     public function getShops(Request $request)
     {
         $data = $request->all();
-        $shops = auth()->user()->likeShops();
+        $shops = auth()->user()->likeShops()->with('images')->select(['id', 'name', 'min_money']);
         if (isset($data['name'])) {
             $shops = $shops->where('name', 'like', '%' . $data['name'] . '%');
         }
@@ -33,8 +33,9 @@ class LikeController extends Controller
         }
         $shops = $shops->paginate();
         $shops->each(function($shop){
-            $shop->setAppends(['image_url']);
+            $shop->setAppends(['image_url' , 'sales_volume']);
         });
+
         return view('index.like.shop', [
             'shops' => $shops,
             'data' => $data
@@ -58,8 +59,10 @@ class LikeController extends Controller
         if (!empty($data['province_id'])) {
             $goods = $goods->OfDeliveryArea($data);
         }
+       // dd($goods->lists('cate_level_2')->all());
         //获取需要显示的分类ID
-        $array = array_unique($goods->paginate()->pluck('cate_level_2')->all());
+        $array = array_unique($goods->lists('cate_level_2')->all());
+
         $cateArr = array_where(CategoryService::getCategories(), function ($key, $cate) use ($array) {
             return in_array($cate['id'], $array);
         });

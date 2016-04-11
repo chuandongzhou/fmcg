@@ -46,6 +46,11 @@
                 </div>
             @endforeach
         </div>
+        <div class="row">
+            <div class="col-xs-12 text-right">
+                {!! $goods->appends(array_filter($data))->render() !!}
+            </div>
+        </div>
     </div>
 </div>
 @stop

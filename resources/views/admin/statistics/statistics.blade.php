@@ -28,7 +28,7 @@
                     <th>总计</th>
                 </tr>
                 <tr>
-                    <td>当日注册数</td>
+                    <td>注册数</td>
                     <td>{{ array_get($statistics,'supplier_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'wholesaler_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'retailer_reg_num' ,0) }}</td>
@@ -116,6 +116,11 @@
                         <td>{!! $orderEveryday['wholesaler']['codSuccessAmount'] or 0 !!}</td>
                         <td>{!! $orderEveryday['retailer']['codSuccessAmount'] or 0 !!}</td>
                     </tr>
+                    <tr>
+                        <td>线下pos机完成总金额</td>
+                        <td>{!! $orderEveryday['wholesaler']['posSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderEveryday['retailer']['posSuccessAmount'] or 0 !!}</td>
+                    </tr>
                 </table>
             </div>
             <div class="col-sm-10">
@@ -165,9 +170,13 @@
                         <td>线下完成总金额</td>
                         <td>{!! $orderSellerEveryday['wholesaler']['codSuccessAmount'] or 0 !!}</td>
                         <td>{!! $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] or 0 !!}</td>
-                        </td>
                         <td>{!! $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] or 0 !!}</td>
-                        </td>
+                    </tr>
+                    <tr>
+                        <td>线下pos机完成总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['posSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] or 0 !!}</td>
                     </tr>
                 </table>
             </div>

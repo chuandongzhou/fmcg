@@ -17,7 +17,7 @@ class PushController extends Controller
     {
         $attributes = $request->all();
         $service = PushDevice::where('token', $attributes['token'])->first();
-        $attributes['user_id'] = auth()->user()->id;
+        $attributes['user_id'] = auth()->id();
 
         $status = isset($service->id) ? $service->fill($attributes)->save() : PushDevice::create($attributes);
         if ($status) {
@@ -36,7 +36,7 @@ class PushController extends Controller
     public function deleteDeactiveToken(Requests\Api\V1\DeletePushDeviceRequest $requests)
     {
         $token = $requests->input('token');
-        $status = PushDevice::where('user_id', auth()->user()->id)->where('token', $token)->delete();
+        $status = PushDevice::where('user_id', auth()->id())->where('token', $token)->delete();
         if ($status) {
             return $this->success('删除成功');
         }

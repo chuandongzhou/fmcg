@@ -28,18 +28,18 @@
                     @foreach($shops as $shop)
                         <div class="col-sm-3 commodity">
                             <div class="img-wrap">
-                                <a href="{{ url('shop/'.$shop['id'].'/detail') }}" target="_blank">
-                                    <img class="commodity-img" src="{{ $shop['image_url'] }}">
+                                <a href="{{ url('shop/'.$shop->id.'/detail') }}" target="_blank">
+                                    <img class="commodity-img" src="{{ $shop->image_url }}">
                                     {{--<span class="prompt"></span>--}}
                                 </a>
                             </div>
                             <div class="content-panel">
-                                <a href="{{ url('shop/'.$shop['id'].'/detail') }}" target="_blank">
-                                    <p class="commodity-name">{{ $shop['name'] }}</p>
+                                <a href="{{ url('shop/'.$shop->id.'/detail') }}" target="_blank">
+                                    <p class="commodity-name">{{ $shop->name }}</p>
 
                                     <p class="sell-panel">
-                                        <span class="money">最低配送额:￥{{ $shop['min_money'] }}</span>
-                                        <span class="sales pull-right">销量 : {{ $shop['orders'] }}</span>
+                                        <span class="money">最低配送额:￥{{ $shop->min_money }}</span>
+                                        <span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>
                                     </p>
                                 </a>
                             </div>
@@ -47,6 +47,12 @@
                     @endforeach
                 </div>
             @endif
+
+            <div class="row">
+                <div class="col-xs-12 text-right">
+                    {!! $shops->appends(array_filter($data))->render() !!}
+                </div>
+            </div>
         </div>
     </div>
 @stop

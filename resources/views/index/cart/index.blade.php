@@ -132,7 +132,7 @@
     @parent
     <script type="text/javascript">
         $(document).ready(function () {
-            fixedBottom()
+            fixedBottom();
             cartFunc();
             $(window).scroll(function () {
                 fixedBottom();

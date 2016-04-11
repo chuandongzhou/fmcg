@@ -35,7 +35,7 @@ class ShopController extends Controller
         //供应商暂时与批发商一致
         $userType = $user->type <= $userTypes['wholesaler'] ? $user->type : $userTypes['wholesaler'];
 
-        $shops = Shop::OfUser($userType, $typeId)->with('images', 'shopAddress');
+        $shops = Shop::OfUser($userType, $typeId)->with('logo', 'shopAddress');
 
         $shopSorts = cons('shop.sort');
 
@@ -52,6 +52,7 @@ class ShopController extends Controller
         if (!empty($data)) {
             $shops = $shops->OfDeliveryArea($data);
         }
+
         // 名称
         $name = $request->input('name');
 
@@ -61,6 +62,7 @@ class ShopController extends Controller
         return view('index.shop.index',
             ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data, 'type' => $type]);
     }
+
     /**
      * 店铺首页
      *
@@ -70,6 +72,7 @@ class ShopController extends Controller
      */
     public function shop($shop, $sort = '')
     {
+        $user = auth()->user();
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
@@ -79,22 +82,18 @@ class ShopController extends Controller
             $advert = $this->_getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
-        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
-        $map = ['shop_id' => $shop->id];
+        $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
-        $goods = Goods::active()->where($map)->with('images.image');
+        $goods = $shop->goods()->active()->with('images.image');
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $goods->{'Of' . ucfirst($sort)}();
         }
         $goods = $goods->paginate();
-        $url = Gate::denies('validate-shop', $shop) ? 'goods' : 'my-goods';
-
         return view('index.shop.shop', [
             'shop' => $shop,
             'goods' => $goods,
             'sort' => $sort,
             'isLike' => $isLike,
-            'url' => $url
         ]);
     }
 
@@ -115,9 +114,9 @@ class ShopController extends Controller
             $shop->images[0] = $advert->image;
         }
 
-     /*   $coordinate = $shop->deliveryArea->each(function ($area) {
-            $area->coordinate;
-        });*/
+        /*   $coordinate = $shop->deliveryArea->each(function ($area) {
+               $area->coordinate;
+           });*/
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
@@ -136,14 +135,16 @@ class ShopController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-        $goods = $shop->goods()->ofStatus(cons('goods.status.on'))->with('images');
+        $goods = $shop->goods()->active()->with('images.image');
         $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
         $result = GoodsService::getGoodsBySearch($data, $goods);
+
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+
         return view('index.shop.search',
             [
                 'shop' => $shop,
-                'goods' => $goods->paginate(),
+                'goods' => $result['goods']->paginate(),
                 'categories' => $result['categories'],
                 'attrs' => $result['attrs'],
                 'searched' => $result['searched'],

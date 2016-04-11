@@ -258,12 +258,18 @@ function cartFunc() {
                 minMoney = obj.find('.min-money'),
                 notEnough = obj.find('.not-enough');
             obj.find('.goods-list').each(function () {
-                var tag = $(this);
+                var tag = $(this),
+                    goodsAllMonty = tag.find('.goods-all-money'),
+                    descBtn = tag.find('.desc-num'),
+                    buyNumInp = tag.find('.num'),
+                    buyNum = parseInt(buyNumInp.val()),
+                    minNum = buyNumInp.data('minNum');
                 if (tag.find('.inp-checkbox').is(':checked')) {
-                    var money = parseFloat(tag.find('.goods-all-money').html());
-                    shopSumPrice += money;
-                    cartSumPrice += money;
+                    var money = parseFloat(goodsAllMonty.html());
+                    shopSumPrice = shopSumPrice.add(money);
+                    cartSumPrice = cartSumPrice.add(money);
                 }
+                descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
             if (shopSumPrice < minMoney.html() && shopCheckBox.is(':checked')) {
@@ -293,15 +299,9 @@ function cartFunc() {
         var obj = $(this),
             buyInput = obj.siblings('.num'),
             minNum = buyInput.data('minNum'),
-            descButton = obj.siblings('.desc-num'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
         buyInput.val(parseInt(buyInput.val()) + 1);
-        if (buyInput.val() <= minNum) {
-            descButton.prop('disabled', true);
-        } else {
-            descButton.prop('disabled', false);
-        }
-        var goodsAllMoney = buyInput.val() * (buyInput.data('price') * 100) / 100;
+        var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -310,27 +310,18 @@ function cartFunc() {
             buyInput = obj.siblings('.num'),
             minNum = buyInput.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
-        if (buyInput.val() <= minNum) {
-            obj.prop('disabled', true);
-        } else {
-            buyInput.val(parseInt(buyInput.val()) - 1);
-            obj.prop('disabled', false);
-        }
-        var goodsAllMoney = buyInput.val() * (buyInput.data('price') * 100) / 100;
+        buyInput.val(parseInt(buyInput.val()) - 1);
+
+        var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
+
     buyInput.on('keyup', '', function () {
         var obj = $(this),
             minNum = obj.data('minNum'),
-            descButton = obj.siblings('.desc-num'),
-            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
-        if (obj.val() <= minNum) {
-            descButton.prop('disabled', true);
-        } else {
-            descButton.prop('disabled', false);
-        }
-        var goodsAllMoney = obj.val() * (buyInput.data('price') * 100) / 100;
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
+            goodsAllMoney = parseInt(obj.val()).mul(obj.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
@@ -383,7 +374,7 @@ function cartFunc() {
 }
 
 /**
- * 购物车商品增加与减少
+ * 加入购物车商品增加与减少
  */
 var numChange = function () {
     "use strict"; // jshint ;_;

@@ -18,7 +18,7 @@ class CustomerController extends Controller
     {
         $type = array_get(cons('user.type'), $userType, head(cons('user.type')));
         $customerUserIds = Order::where('shop_id', auth()->user()->shop->id)->lists('user_id')->unique();
-        $users = User::whereIn('id', $customerUserIds)->where('type', $type)->with('shop');
+        $users = User::whereIn('id', $customerUserIds)->where('type', $type)->with('shop.shopAddress');
         $address = $request->except('name');
         $name = $request->input('name');
 

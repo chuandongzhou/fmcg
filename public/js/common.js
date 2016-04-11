@@ -189,6 +189,11 @@ var noop = function () {
 };
 
 
+/**
+ * 设置cookie
+ * @param name
+ * @param value
+ */
 function setCookie(name, value) {
     var Days = 30;
     var exp = new Date();
@@ -576,10 +581,10 @@ var addAddFunc = function () {
          changeBtnAddhtml('请选择街道...');
          return false;
          }
-        if (!address.val()) {
-            changeBtnAddhtml('请输入详细地址');
-            return false;
-        }*/
+         if (!address.val()) {
+         changeBtnAddhtml('请输入详细地址');
+         return false;
+         }*/
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
@@ -589,7 +594,7 @@ var addAddFunc = function () {
         $('.modal-header .close').trigger('click');
         container.prepend(
             '<div class="col-sm-10 fa-border show-map">' +
-            areaName +  addressText +
+            areaName + addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
@@ -609,7 +614,10 @@ var addAddFunc = function () {
     });
 };
 
-
+/**
+ * 根据pid获取子分类
+ * @param url
+ */
 var getCategory = function (url) {
     var level1 = $('select[name="cate_level_1"]')
         , level2 = $('select[name="cate_level_2"]')
@@ -740,7 +748,7 @@ var commonMethodSetup = function () {
 /**
  * 添加图片
  */
-function picFunc(uploadLimit) {
+var picFunc = function (uploadLimit) {
     var container = $('.pictures')
         , uploadButton = $('#pic-upload')
         , uploadLimit = uploadLimit || 5;
@@ -791,7 +799,7 @@ function picFunc(uploadLimit) {
 /**
  * 获取标签
  */
-function getAttr() {
+var getAttr = function () {
     //获取标签
     $('select[name="cate_level_1"]').change(function () {
         $('div.attr').html('');
@@ -828,32 +836,10 @@ function getAttr() {
     attrDiv.children().length == 0 ? attrDiv.css('border', '1px solid #fff') : attrDiv.css('border', '1px solid #b4b4b4');
 }
 
-
-/**
- * 初始化方法
- */
-jQuery(function () {
-    jsErrorReportSetup();
-
-    // 通用jQuery扩展设置
-    commonJQueryExtendSetup();
-
-    // 通用ajax设置
-    commonAjaxSetup();
-
-    // 通用上传方法
-    commonUploadSetup();
-
-    // 通用裁剪方法
-    commonCropSetup();
-
-    // 通用杂项方法设置
-    commonMethodSetup();
-});
 /**
  * address页面百度地图相关Js
  */
-function baiDuMap() {
+var baiDuMap = function () {
     //初始化这个变量,防止百度地图重复实例化所导致的显示错误问题
     var flag = false;
     if (!flag) {
@@ -950,7 +936,7 @@ function baiDuMap() {
     });
 }
 
-function dynamicShowMap() {
+var dynamicShowMap = function () {
     map.clearOverlays();
     $('.show-map').each(function () {
         var blx = $(this).find('input[name="area[blx][]"]').val();
@@ -979,7 +965,7 @@ function dynamicShowMap() {
  *
  * @param data
  */
-function getCoordinateMap(data) {
+var getCoordinateMap = function (data) {
     var map = new BMap.Map("map", {enableMapClick: false});
     //左上角，添加默认缩放平移控件
     map.addControl(new BMap.NavigationControl());
@@ -1019,7 +1005,7 @@ function getCoordinateMap(data) {
     }
 }
 
-function getShopAddressMap(lng, lat) {
+var getShopAddressMap = function (lng, lat) {
     var addressMap = new BMap.Map('address-map', {enableMapClick: false});
     var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
     addressMap.addControl(top_left_navigation);
@@ -1084,7 +1070,7 @@ function getShopAddressMap(lng, lat) {
  * get提交form处理
  * @param exceptName
  */
-function formSubmitByGet(exceptName) {
+var formSubmitByGet = function (exceptName) {
     exceptName = exceptName || [];
 
     $('.search-by-get').on('click', function () {
@@ -1107,7 +1093,7 @@ function formSubmitByGet(exceptName) {
  * @param parent_selectors
  * @param target_selectors
  */
-function onCheckChange(parent_selectors, target_selectors) {
+var onCheckChange = function (parent_selectors, target_selectors) {
     var parents = $(parent_selectors);
     var targets = $(target_selectors);
     parents.change(function () {
@@ -1119,6 +1105,145 @@ function onCheckChange(parent_selectors, target_selectors) {
     });
 }
 
+
+/**
+ * 浮点数加法
+ * @param arg1
+ * @param arg2
+ * @returns {number}
+ */
+var accAdd = function (arg1, arg2) {
+    var r1, r2, m;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    }
+    catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    }
+    catch (e) {
+        r2 = 0;
+    }
+    m = Math.pow(10, Math.max(r1, r2));
+    return (arg1 * m + arg2 * m) / m;
+}
+
+
+/**
+ * 浮点数减法
+ * @param arg1
+ * @param arg2
+ * @returns {number}
+ */
+var Subtr = function (arg1, arg2) {
+    var r1, r2, m, n;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    }
+    catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    }
+    catch (e) {
+        r2 = 0;
+    }
+    m = Math.pow(10, Math.max(r1, r2));
+    //last modify by deeka
+    //动态控制精度长度
+    n = (r1 >= r2) ? r1 : r2;
+    return ((arg1 * m - arg2 * m) / m).toFixed(n);
+}
+
+/**
+ * 浮点数乘法
+ * @param arg1
+ * @param arg2
+ * @returns {number}
+ */
+var accMul = function (arg1, arg2) {
+    var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+    try {
+        m += s1.split(".")[1].length;
+    }
+    catch (e) {
+    }
+    try {
+        m += s2.split(".")[1].length;
+    }
+    catch (e) {
+    }
+    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+}
+
+/**
+ * 浮点数除法
+ * @param arg1
+ * @param arg2
+ * @returns {number}
+ */
+var accDiv = function (arg1, arg2) {
+    var t1 = 0, t2 = 0, r1, r2;
+    try {
+        t1 = arg1.toString().split(".")[1].length;
+    }
+    catch (e) {
+    }
+    try {
+        t2 = arg2.toString().split(".")[1].length;
+    }
+    catch (e) {
+    }
+    with (Math) {
+        r1 = Number(arg1.toString().replace(".", ""));
+        r2 = Number(arg2.toString().replace(".", ""));
+        return (r1 / r2) * pow(10, t2 - t1);
+    }
+}
+
+//给Number类型增加一个add方法，，使用时直接用 .add 即可完成计算。
+Number.prototype.add = function (arg) {
+    return accAdd(arg, this);
+};
+
+//给Number类型增加一个add方法，，使用时直接用 .sub 即可完成计算。
+Number.prototype.sub = function (arg) {
+    return Subtr(this, arg);
+};
+
+//给Number类型增加一个mul方法，使用时直接用 .mul 即可完成计算。
+Number.prototype.mul = function (arg) {
+    return accMul(arg, this);
+};
+
+//给Number类型增加一个div方法，，使用时直接用 .div 即可完成计算。
+Number.prototype.div = function (arg) {
+    return accDiv(this, arg);
+};
+/**
+ * 初始化方法
+ */
+jQuery(function () {
+    jsErrorReportSetup();
+
+    // 通用jQuery扩展设置
+    commonJQueryExtendSetup();
+
+    // 通用ajax设置
+    commonAjaxSetup();
+
+    // 通用上传方法
+    commonUploadSetup();
+
+    // 通用裁剪方法
+    commonCropSetup();
+
+    // 通用杂项方法设置
+    commonMethodSetup();
+});
 
 if (!window.console) {
     var console = {

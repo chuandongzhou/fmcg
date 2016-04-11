@@ -41,7 +41,7 @@ class OrderSellController extends OrderController
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
         $query = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image',
-            'shippingAddress.address.coordinate');
+            'shippingAddress.address');
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {

@@ -79,7 +79,7 @@ class StatisticsController extends Controller
         /*
          * 每日订单统计
          */
-        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->where('is_cancel',
+        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
             cons('order.is_cancel.off'))->get();
 
         $orderEveryday = []; //当日订单统计
@@ -104,6 +104,7 @@ class StatisticsController extends Controller
             $payType = cons('pay_type');
 
             foreach ($orders as $order) {
+                //买家
                 if ($users[$order->user_id] == $userType['retailer']) {
                     //终端
                     $orderEveryday['retailer']['count'] = isset($orderEveryday['retailer']['count']) ? ++$orderEveryday['retailer']['count'] : 1;
@@ -119,6 +120,10 @@ class StatisticsController extends Controller
                         $orderEveryday['retailer']['codAmount'] = isset($orderEveryday['retailer']['codAmount']) ? $orderEveryday['retailer']['codAmount'] + $order->price : $order->price;
                         if ($order->pay_status == cons('trade.pay_status.success')) {
                             $orderEveryday['retailer']['codSuccessAmount'] = isset($orderEveryday['retailer']['codSuccessAmount']) ? $orderEveryday['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                            //pos机
+                            if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                $orderEveryday['retailer']['posSuccessAmount'] = isset($orderEveryday['retailer']['posSuccessAmount']) ? $orderEveryday['retailer']['posSuccessAmount'] + $order->price : $order->price;
+                            }
                         }
                     }
 
@@ -133,10 +138,15 @@ class StatisticsController extends Controller
                             $orderEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderEveryday['wholesaler']['onlineSuccessAmount']) ? $orderEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
                         }
                     } else {
+
                         //线下总金额
                         $orderEveryday['wholesaler']['codAmount'] = isset($orderEveryday['wholesaler']['codAmount']) ? $orderEveryday['wholesaler']['codAmount'] + $order->price : $order->price;
                         if ($order->pay_status == cons('trade.pay_status.success')) {
                             $orderEveryday['wholesaler']['codSuccessAmount'] = isset($orderEveryday['wholesaler']['codSuccessAmount']) ? $orderEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            //pos机
+                            if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                $orderEveryday['wholesaler']['posSuccessAmount'] = isset($orderEveryday['wholesaler']['posSuccessAmount']) ? $orderEveryday['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                            }
                         }
                     }
                 }
@@ -156,6 +166,10 @@ class StatisticsController extends Controller
                         $orderSellerEveryday['wholesaler']['codAmount'] = isset($orderSellerEveryday['wholesaler']['codAmount']) ? $orderSellerEveryday['wholesaler']['codAmount'] + $order->price : $order->price;
                         if ($order->pay_status == cons('trade.pay_status.success')) {
                             $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            //pos机
+                            if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                $orderSellerEveryday['wholesaler']['posSuccessAmount'] = isset($orderEveryday['wholesaler']['posSuccessAmount']) ? $orderEveryday['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                            }
                         }
                     }
                 } elseif ($sellerTypes[$order->shop_id] == $userType['supplier']) {
@@ -175,6 +189,10 @@ class StatisticsController extends Controller
                             $orderSellerEveryday['supplier']['wholesaler']['codAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codAmount'] + $order->price : $order->price;
                             if ($order->pay_status == cons('trade.pay_status.success')) {
                                 $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                                //pos机
+                                if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                    $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] = isset($orderEveryday['supplier']['wholesaler']['posSuccessAmount']) ? $orderEveryday['supplier']['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                                }
                             }
                         }
                     } else {
@@ -192,6 +210,10 @@ class StatisticsController extends Controller
                             $orderSellerEveryday['supplier']['retailer']['codAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codAmount']) ? $orderSellerEveryday['supplier']['retailer']['codAmount'] + $order->price : $order->price;
                             if ($order->pay_status == cons('trade.pay_status.success')) {
                                 $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                                //pos机
+                                if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                    $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] = isset($orderEveryday['supplier']['retailer']['posSuccessAmount']) ? $orderEveryday['supplier']['retailer']['posSuccessAmount'] + $order->price : $order->price;
+                                }
                             }
                         }
                     }

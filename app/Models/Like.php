@@ -17,7 +17,7 @@ class Like extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->user_id = auth()->user()->id;
+            $model->user_id = auth()->id();
         });
     }
 

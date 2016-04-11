@@ -12,25 +12,16 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\User;
 use App\Services\CartService;
-use App\Services\GoodsService;
 use App\Services\OrderService;
 use App\Services\RedisService;
-use App\Services\ShippingAddressService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use DB;
 
 class OrderController extends Controller
 {
-    private $user;
-
-    public function __construct()
-    {
-        $this->user = auth()->user();
-    }
-
     /**
      * 买家查询订单列表
      *
@@ -38,7 +29,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::where('user_id', $this->user->id)->with('shop.user', 'goods.images')->orderBy('id',
+        $orders = Order::where('user_id', auth()->id())->with('shop.user', 'goods.images')->orderBy('id',
             'desc')->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
@@ -51,7 +42,7 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        $orders = Order::ofBuy($this->user->id)->nonPayment()->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonPayment()->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
     }
@@ -64,7 +55,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy($this->user->id)->nonArrived()->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonArrived()->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
     }
@@ -76,7 +67,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmByUser()
     {
-        $orders = Order::ofBuy($this->user->id)->WaitConfirm()->paginate();
+        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->paginate();
         return $this->success($this->_hiddenAttr($orders));
     }
 
@@ -87,7 +78,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell($this->user->id)->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenAttr($orders));
     }
 
@@ -100,7 +91,7 @@ class OrderController extends Controller
      */
     public function getDetailOfBuy(Request $request)
     {
-        $order = Order::where('user_id', $this->user->id)->with('goods.images', 'deliveryMan',
+        $order = Order::where('user_id', auth()->id())->with('goods.images', 'deliveryMan',
             'shippingAddress.address', 'orderRefund')->find($request->input('order_id'));
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
@@ -115,7 +106,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId($this->user->id)->with('user.shop', 'goods.images.image')->orderBy('id',
+        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
@@ -128,7 +119,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell($this->user->id)->nonSend()->paginate();
+        $orders = Order::ofSell(auth()->id())->nonSend()->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
     }
@@ -140,7 +131,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell($this->user->id)->getPayment()->paginate();
+        $orders = Order::ofSell(auth()->id())->getPayment()->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
     }
@@ -156,7 +147,7 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::bySellerId($this->user->id)->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
+        $order = Order::bySellerId(auth()->id())->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
             'shippingAddress.address', 'orderRefund')->find($orderId);
         $order->shop->setAppends([]);
         $order->user->setVisible(['id', 'shop', 'type']);
@@ -196,11 +187,11 @@ class OrderController extends Controller
             }
             $order->fill([
                 'is_cancel' => cons('order.is_cancel.on'),
-                'cancel_by' => $this->user->id,
+                'cancel_by' => auth()->id(),
                 'cancel_at' => Carbon::now()
             ])->save();
             //推送通知
-            if ($order->user_id == $this->user->id) {
+            if ($order->user_id == auth()->id()) {
                 $redisKey = 'push:seller:' . $order->shop->user->id;
                 $msg = 'buyer';
             } else {
@@ -245,7 +236,7 @@ class OrderController extends Controller
     public function putBatchFinishOfBuy(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where('user_id', $this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::where('user_id', auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
 
         if ($orders->isEmpty()) {
             return $this->error('确认收货失败');
@@ -292,7 +283,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::bySellerId(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
         if ($orders->isEmpty()) {
             return $this->error('确认收款失败');
         }
@@ -332,10 +323,10 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $deliveryManId = intval($request->input('delivery_man_id'));
         //判断送货人员是否是该店铺的
-        if (!DeliveryMan::where('shop_id', $this->user->shop()->pluck('id'))->find($deliveryManId)) {
+        if (!DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->find($deliveryManId)) {
             return $this->error('操作失败');
         }
-        $orders = Order::bySellerId($this->user->id)->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::bySellerId(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
 
         if ($orders->isEmpty()) {
             return $this->error('操作失败');
@@ -374,7 +365,7 @@ class OrderController extends Controller
     public function getStatistics()
     {
         $redisService = (new RedisService);
-        $key = 'statistics:' . $this->user->id;
+        $key = 'statistics:' . auth()->id();
 
         if ($redisService->has($key)) {
             return $this->success(json_decode($redisService->get($key), true));
@@ -382,7 +373,7 @@ class OrderController extends Controller
 
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
-        $builder = Order::bySellerId($this->user->id)->nonCancel();
+        $builder = Order::bySellerId(auth()->id())->nonCancel();
 
         for ($i = 6; $i >= 0; --$i) {
             $start = $today->copy()->addDay(-$i);
@@ -412,10 +403,11 @@ class OrderController extends Controller
      */
     public function getConfirmOrder()
     {
-        $carts = auth()->user()->carts()->where('status', 1)->with('goods')->get();
+        $user = auth()->user();
+        $carts = $user->carts()->where('status', 1)->with('goods')->get();
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
-        $shippingAddress = auth()->user()->shippingAddress()->with('address')->get();
+        $shippingAddress = $user->shippingAddress()->with('address')->get();
         $payType = cons()->valueLang('pay_type');//支付方式
         $codPayType = cons()->valueLang('cod_pay_type');//货到付款支付方式
         return $this->success([
@@ -482,7 +474,7 @@ class OrderController extends Controller
     public function putChangeOrder(UpdateOrderRequest $request)
     {
         //判断该订单是否存在
-        $order = Order::bySellerId($this->user->id)->find(intval($request->input('order_id')));
+        $order = Order::bySellerId(auth()->id())->find(intval($request->input('order_id')));
         if (!$order || !$order->can_change_price || $order->shop_id != auth()->user()->shop->id) {
             return $this->error('订单不存在或不能修改');
         }
@@ -522,7 +514,7 @@ class OrderController extends Controller
         $redis = new RedisService;
 
         foreach (['user', 'seller', 'withdraw'] as $item) {
-            $key = 'push:' . $item . ':' . $this->user->id;
+            $key = 'push:' . $item . ':' . auth()->id();
             if ($redis->has($key)) {
                 $content = $redis->get($key);
                 $redis->del($key);
