@@ -9,7 +9,6 @@ use App\Http\Requests;
 use Riverslei\Pusher\Pusher;
 use App\Models\PushDevice;
 use DB;
-use Cache;
 
 
 class OrderService
@@ -162,10 +161,6 @@ class OrderService
                             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
                             (new RedisService)->setRedis($redisKey, $redisVal);
                         }
-                        $cacheKey = 'cart:' . $user->id;
-                        if (Cache::has($cacheKey)) {
-                            Cache::decrement($cacheKey, count($orderGoods));
-                        }
                     } else {
                         foreach ($successOrders as $successOrder) {
                             $successOrder->delete();
@@ -195,6 +190,7 @@ class OrderService
                     $returnArray['order_id'] = $onlinePaymentOrder[0];
                 }
             }
+            (new CartService)->decrement($carts->count());
             return $returnArray;
         });
         return $result;

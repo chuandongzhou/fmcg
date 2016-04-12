@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Services\CartService;
+use Cache;
 
 class CartController extends Controller
 {
@@ -20,6 +21,8 @@ class CartController extends Controller
     {
         $myCarts = auth()->user()->carts();
         $carts = $myCarts->with('goods.images.image')->get();
+
+        (new CartService)->set($carts->count());
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零
             $myCarts->update(['status' => 0]);

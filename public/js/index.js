@@ -264,6 +264,7 @@ function cartFunc() {
                     buyNumInp = tag.find('.num'),
                     buyNum = parseInt(buyNumInp.val()),
                     minNum = buyNumInp.data('minNum');
+
                 if (tag.find('.inp-checkbox').is(':checked')) {
                     var money = parseFloat(goodsAllMonty.html());
                     shopSumPrice = shopSumPrice.add(money);
@@ -299,11 +300,14 @@ function cartFunc() {
         var obj = $(this),
             buyInput = obj.siblings('.num'),
             minNum = buyInput.data('minNum'),
-            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money');
-        buyInput.val(parseInt(buyInput.val()) + 1);
-        var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
-        goodsAllMoneyTag.html(goodsAllMoney);
-        initMoney();
+            goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
+            buyNum = parseInt(buyInput.val());
+        if (buyNum < 10000) {
+            buyInput.val(buyNum + 1);
+            var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
+            goodsAllMoneyTag.html(goodsAllMoney);
+            initMoney();
+        }
     });
     descButton.on('click', '', function () {
         var obj = $(this),
@@ -321,9 +325,15 @@ function cartFunc() {
         var obj = $(this),
             minNum = obj.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
-            goodsAllMoney = parseInt(obj.val()).mul(obj.data('price'));
-        goodsAllMoneyTag.html(goodsAllMoney);
-        initMoney();
+            buyNum = parseInt(obj.val());
+        if (buyNum <= 10000) {
+            var goodsAllMoney = buyNum.mul(obj.data('price'));
+            goodsAllMoneyTag.html(goodsAllMoney);
+            initMoney();
+        } else {
+            obj.val(10000);
+        }
+
     });
 
     /**
@@ -398,12 +408,21 @@ var numChange = function () {
                 changeDescButton();
             });
             incNum.on('click', '', function () {
-                num.val(parseInt(num.val()) + 1);
-                changeDescButton();
+                var buyNum = parseInt(num.val());
+                if (buyNum < 10000) {
+                    num.val(parseInt(num.val()) + 1);
+                    changeDescButton();
+                }
             });
 
             num.on('keyup', '', function () {
-                changeDescButton();
+                var obj = $(this), buyNum = parseInt(obj.val());
+                if (buyNum < 10000) {
+                    changeDescButton();
+                } else {
+                    obj.val(10000);
+                    changeDescButton();
+                }
             });
 
             var changeDescButton = function () {

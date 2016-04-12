@@ -12,7 +12,6 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\OrderGoods;
-use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\RedisService;

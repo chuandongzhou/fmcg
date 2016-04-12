@@ -19,7 +19,7 @@ class Advert extends Model
      */
     protected $fillable = ['category_id', 'name', 'type', 'url', 'start_at', 'end_at', 'image'];
 
-    public $hidden = ['created_at' , 'updated_at'];
+    public $hidden = ['created_at', 'updated_at'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -63,8 +63,10 @@ class Advert extends Model
      */
     public function setEndAtAttribute($endAt)
     {
-        if (empty($endAt)) {
+        if (!$endAt || $endAt == "") {
             $this->attributes['end_at'] = null;
+        }else {
+            $this->attributes['end_at'] = $endAt;
         }
     }
 

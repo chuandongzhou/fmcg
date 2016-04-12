@@ -5,8 +5,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\HomeColumn;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
+use Cache;
 
 /**
  * Created by PhpStorm.
@@ -60,8 +59,7 @@ class GoodsService
             $cacheKey = $cachePre . 'sort';
             $keywords = Cache::get($cacheKey);
             $keywords[(string)$data['name']] = isset($keywords[$data['name']]) ? $keywords[$data['name']] + 1 : 1;
-            $expiresAt = Carbon::now()->addDays(1);
-            Cache::put($cacheKey, $keywords, $expiresAt);
+            Cache::forever($cacheKey, $keywords);
 
             $goods->where('name', 'like', '%' . $data['name'] . '%')->get();
 

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Shop;
 use Gate;
+use Cache;
 
 /**
  * Created by PhpStorm.
@@ -14,11 +15,12 @@ use Gate;
 class CartService
 {
 
-    protected $data = [];
+    protected $data = [], $cacheKey;
 
     public function __construct($data = [])
     {
         $this->data = $data;
+        $this->cacheKey = 'cart:' . auth()->id();
         return $this;
     }
 
@@ -80,7 +82,7 @@ class CartService
         //判断商品购买数量是否小于该商品的最低配送额
         foreach ($carts as $cart) {
             $buyNum = $num[$cart->goods_id];
-            if ($cart->goods->min_num > $buyNum || $cart->goods->is_out) {
+            if ($cart->goods->min_num > $buyNum || $cart->goods->is_out || $buyNum > 10000) {
                 $allow = false;
             }
             $updateNum && $cart->fill(['num' => $buyNum])->save();
@@ -97,6 +99,61 @@ class CartService
             }
         }
         return $shops;
+    }
+
+    /**
+     * 是否存在key
+     *
+     * @param null $key
+     * @return mixed
+     */
+    public function has($key = null)
+    {
+        $key = is_null($key) ? $this->cacheKey : $key;
+        return Cache::has($key);
+    }
+
+    /**
+     * 设置购物车数量
+     *
+     * @param $count
+     */
+    public function set($count)
+    {
+        return Cache::forever($this->cacheKey, $count);
+    }
+
+    /**
+     * 获取购物车数量
+     *
+     * @param null $key
+     * @return mixed
+     */
+    public function get($key = null)
+    {
+        $key = is_null($key) ? $this->cacheKey : $key;
+        return Cache::get($key);
+    }
+
+    /**
+     * 增加购物车数量
+     *
+     * @param int $count
+     */
+    public function increment($count = 1)
+    {
+        return $this->has($this->cacheKey) ? Cache::increment($this->cacheKey, $count) : $this->set($count);
+    }
+
+    /**
+     * 减少购物车数量
+     *
+     * @param $count
+     * @return string
+     */
+    public function decrement($count = 1)
+    {
+        return $this->has($this->cacheKey) ? Cache::decrement($this->cacheKey, $count) : '';
     }
 
 }

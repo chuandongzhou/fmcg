@@ -11,16 +11,14 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Goods;
 use App\Services\CartService;
 use Illuminate\Http\Request;
-use Cache;
 
 class CartController extends Controller
 {
-    protected $user, $cacheKey;
+    protected $user;
 
     public function __construct()
     {
         $this->user = auth()->user();
-        $this->cacheKey = 'cart:' . $this->user->id;
     }
 
     /**
@@ -61,6 +59,9 @@ class CartController extends Controller
         if ($goodsInfo->is_out) {
             return $this->error('该商品缺货');
         }
+        if ($buyNum > 10000) {
+            return $this->error('商品数量不能大于10000');
+        }
         //查询是否有相同的商品,存在则合并
         $cart = $this->user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('id'))) {
@@ -69,9 +70,7 @@ class CartController extends Controller
             return $this->success('加入购物车成功');
         }
         if ($this->user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {
-            if (Cache::has($this->cacheKey)) {
-                Cache::increment($this->cacheKey);
-            }
+            (new CartService)->increment();
             return $this->success('加入购物车成功');
         }
 
@@ -92,9 +91,7 @@ class CartController extends Controller
             return $this->error('删除失败');
         }
 
-        if (Cache::has($this->cacheKey)) {
-            Cache::decrement($this->cacheKey);
-        }
+        (new CartService)->decrement();
         return $this->success('删除成功');
 
     }

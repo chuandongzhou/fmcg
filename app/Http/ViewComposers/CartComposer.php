@@ -7,6 +7,7 @@
  */
 namespace App\Http\ViewComposers;
 
+use App\Services\CartService;
 use Illuminate\Contracts\View\View;
 use Cache;
 
@@ -21,17 +22,17 @@ class CartComposer
     public function compose(View $view)
     {
         $user = auth()->user();
+        $cartService = new CartService;
         $cartCount = 0;
         if ($user) {
-            $cacheKey = 'cart:' . $user->id;
-            if (Cache::has($cacheKey)) {
-                $cartCount = Cache::get($cacheKey);
+            if ($cartService->has()) {
+                $cartCount = $cartService->get();
             } else {
                 $cartCount = $user->carts->count();
-                Cache::forever($cacheKey, $cartCount);
+                $cartService->set($cartCount);
             }
         }
-       /* $cartCount = auth()->user() ? auth()->user()->carts->count() : 0;*/
+        /* $cartCount = auth()->user() ? auth()->user()->carts->count() : 0;*/
         $view->with('cartNum', $cartCount);
     }
 
