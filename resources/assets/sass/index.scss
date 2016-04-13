@@ -18,15 +18,15 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0;
 }
 
-.navbar-collapse{
-  display: block;
-  .navbar-nav{
-    margin:0;
-    li{
-      float: left;
-    }
-  }
-}
+//.navbar-collapse{
+//  display: block;
+//  .navbar-nav{
+//    margin:0;
+//    li{
+//      float: left;
+//    }
+//  }
+//}
 
 .inline-control {
   background-image: none;
@@ -296,6 +296,196 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================pop======================================*/
 
 /*======================================login begin======================================*/
+.login-body{
+  background: url("../images/login-bg.jpg") bottom repeat;
+}
+.login-container {
+  @include min-width;
+  min-height: 540px;
+  .login-title {
+    position: absolute;
+    height: 30%;
+    @include min-width;
+    background-color: $brand-info;
+    h3 {
+      color: $body-bg;
+      height: 100%;
+      padding-top: 3%;
+    }
+  }
+  .content-panel {
+    position: absolute;
+    top: 15%;
+    width:100%;
+    @include min-width;
+    .login-content {
+      padding: 30px 10px;
+      background-color: #ececec;
+      box-shadow:0 5px 5px $banner-gray;
+      .logo {
+        position: absolute;
+        top: 0;
+        right: 0;
+        img {
+          width: 54px;
+          height: 49px;
+        }
+      }
+      .login-left-img {
+        padding-right: 20px;
+        img {
+          min-height: 275px;
+          width: 100%;
+        }
+      }
+      .login-right-content {
+        border-left: 1px solid $gray-plain-light;
+        margin-top: 5px;
+        .login-wrap {
+          min-height: 260px;
+          max-width: 300px;
+          margin: auto;
+          .role-title {
+            display: inline-block;
+            border-radius: 4px;
+            padding: 0 3px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            margin-top: 25px;
+            background-color: $brand-warning;
+            color: $body-bg;
+          }
+
+          .item {
+            position: relative;
+            min-height:140px;
+            .triangle-left {
+              position: absolute;
+              z-index: 99;
+              left: 0;
+              top: 0;
+              width: 0;
+              height: 0;
+              border-top: 72px solid transparent;
+              border-left: 40px solid #ececec;
+              border-bottom: 72px solid transparent;
+            }
+            .triangle-right {
+              position: absolute;
+              right: 0;
+              top: 0;
+              width: 0;
+              height: 0;
+              border-top: 72px solid transparent;
+              border-right: 40px solid #ececec;
+              border-bottom: 72px solid transparent;
+            }
+            .enter-item {
+              position:relative;
+              vertical-align: middle;
+              background-color: $gray-plain;
+              &:first-of-type {
+                padding: 35px 0 15px 0;
+              }
+              &:last-of-type {
+                padding: 15px 0 35px 0;
+              }
+              input {
+                border-style: none;
+                outline: none;
+                border-bottom: 1px solid $gray-plain-light;
+                background-color: $gray-plain;
+              }
+              .icon {
+                display: inline-block;
+                @include square(19px);
+                background: url("../images/login.png") no-repeat;
+                vertical-align: middle;
+                &.icon-name {
+                  background-position: left;
+                }
+                &.icon-password {
+                  background-position: -100px 0;
+                }
+              }
+              .line {
+                display: inline-block;
+                height: 19px;
+                border-right: 1px solid $gray-plain-light;
+                margin: 0 10px;
+                vertical-align: middle;
+              }
+            }
+            .error-msg{
+              display: none;
+              position:absolute;
+              left:50%;
+              font-size:12px;
+              color:#f00;
+              margin-left:-100px;
+              bottom:0;
+              width:200px;
+            }
+          }
+          .btn-item {
+            padding: 10px 0;
+            vertical-align: middle;
+            background-color: $body-bg;
+            .btn {
+              padding: 3px 35px;
+              border-radius: 4px;
+              font-size: 15px;
+            }
+          }
+          .forget-pwd {
+            padding: 5px 0 0 0;
+            a {
+              color: $gray;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+    .change-role-options {
+      margin-top: 20px;
+      .tabs-item {
+        float: left;
+        width: 25%;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        text-align: center;
+        cursor: pointer;
+        &:hover, &:focus {
+          text-decoration: none;
+          .item-icon {
+            img {
+              border: 2px solid $body-bg;
+            }
+
+          }
+        }
+        .item-icon {
+          display: inline-block;
+          width: 40%;
+          img {
+            border-radius: 50%;
+            padding: 5px;
+            width: 100%;
+            height: auto;
+          }
+        }
+        .item-name {
+          display: block;
+          color: $gray-base;
+          font-size: 15px;
+          margin-top: 10px;
+          letter-spacing: 2px;
+        }
+      }
+    }
+  }
+}
 .login-nav {
   margin: 0;
   .container {
@@ -329,98 +519,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-.login-content {
-  position: relative;
-  width: 100%;
-  z-index: 999;
-  .login-wrap {
-    position: absolute;
-    background-color: $body-bg;
-    box-shadow: 0 0 3px $gray-light;
-    top: 20%;
-    padding: 20px 0;
-    right: 3%;
-    width: 25%;
-    min-width: 360px;
-    border-radius: 4px;
-    .alert-item {
-      padding: 0 25px;
-      .alert-warning {
-        display: none;
-        padding: 5px;
-        margin: 0;
-      }
-    }
-    .item {
-      padding: 15px 25px;
-      .enter-item {
-        border: 1px solid $gray-plain-light;
-        padding: 5px;
-        vertical-align: middle;
-        &:first-of-type {
-          margin-bottom: 20px;
-        }
-        input {
-          padding: 5px;
-          width: 90%;
-          border: none;
-          outline: none;
-        }
-      }
-      h1 {
-        font-size: 20px;
-        color: $gray-base;
-      }
-      a {
-        color: $gray;
-        &.reg {
-          text-decoration: underline;
-          color: $brand-primary;
-          &:hover, &:focus {
-            outline: none;
-          }
-        }
-      }
-      .icon {
-        @include square(18px);
-        background: url("../images/login.png");
-        vertical-align: middle;
-        &.icon-name {
-          background-position: left;
-        }
-        &.icon-password {
-          background-position: -98px 0;
-        }
-      }
-      .role {
-        width: 25%;
-        padding: 5px 0;
-      }
-      .login-btn {
-        width: 100%;
-        padding: 6px 0;
-      }
-      .forgot-pwd {
-        @extend .login-btn;
-      }
-    }
-    .login {
-      padding: 15px 25px 15px 5px;
-    }
-    .forgot {
-      padding: 15px 5px 15px 25px;
-    }
-  }
-}
-
 .forgot-modal-title {
   font-weight: 700;
-}
-
-@media (min-width: 1400px) {
-  .login-content {
-    height: 85%;
-  }
 }
 
 .login-banner-slide {
@@ -434,11 +534,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .login-footer {
-  border: none;
-  min-width: 100% !important;
-  .container {
-    width: 100% !important;
-  }
+  background-color: #e2e2e2;
+  border:none
 }
 
 /*======================================login end======================================*/
@@ -882,6 +979,10 @@ ul, li, p, a, h1, h2, h3, h4 {
         font-weight: bolder;
       }
     }
+    .store-name{
+      font-size: 13px;
+      padding:5px 0;
+    }
     .order-count {
       color: $gray-light;
       font-size: 12px;
@@ -1139,7 +1240,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================my-goods begin======================================*/
 .public-personal {
-  min-width: 1000px;
+  min-width: 1200px;
   margin-top: 40px;
   .controls {
     padding: 0 0 10px 0;
@@ -2152,7 +2253,7 @@ table {
       margin: auto;
       thead {
         td {
-          background-color: $gray-plain;
+          background-color: $gray-plain ;
           color: $gray-light;
         }
       }
@@ -2692,6 +2793,11 @@ table {
       font-size: 13px;
       margin: 10px 0;
       word-break: break-all;
+      .content-title{
+        &:focus{
+          outline: none !important;
+        }
+      }
     }
   }
 }

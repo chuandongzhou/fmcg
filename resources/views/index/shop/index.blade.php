@@ -25,7 +25,7 @@
                         <select name="district_id" data-id="{{ $address['district_id'] or 0 }}"
                                 class="address-district address"> </select>
                         <select name="street_id" data-id="{{ $address['street_id'] or 0 }}"
-                                class="address-street address"> </select>
+                                class="address-street address useless-control"> </select>
                     </p>
                 </div>
             </div>

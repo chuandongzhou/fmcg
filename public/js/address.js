@@ -3690,38 +3690,38 @@ var addressData = {
     "442101": ["\u4e1c\u6c99\u7fa4\u5c9b", "440000", "dong sha qun dao"],
     "442000": ["\u4e2d\u5c71\u5e02", "440000", "zhong shan shi"],
     "441900": ["\u4e1c\u839e\u5e02", "440000", "dong guan shi"],
-    "441901003": [ "\u4e1c\u57ce\u8857\u9053", "441900", "dong cheng jie dao" ],
-    "441901004": [ "\u5357\u57ce\u8857\u9053", "441900", "nan cheng jie dao"],
-    "441901005": [ "\u4e07\u6c5f\u8857\u9053", "441900", "wan jiang jie dao"],
-    "441901006": [ "\u839e\u57ce\u8857\u9053", "441900", "guan cheng jie dao"],
-    "441901101": [ "\u77f3\u78a3\u9547", "441900", "shi jie zhen"],
-    "441901102": [ "\u77f3\u9f99\u9547", "441900", "shi long zhen"],
-    "441901103": [ "\u8336\u5c71\u9547", "441900", "cha shan zhen"],
-    "441901104": [ "\u77f3\u6392\u9547", "441900", "shi pai zhen"],
-    "441901105": [ "\u4f01\u77f3\u9547", "441900", "qi shi zhen"],
-    "441901106": [ "\u6a2a\u6ca5\u9547", "441900", "heng li zhen"],
-    "441901107": [ "\u6865\u5934\u9547", "441900", "qiao tou zhen"],
-    "441901108": [ "\u8c22\u5c97\u9547", "441900", "xie gang zhen"],
-    "441901109": [ "\u4e1c\u5751\u9547", "441900", "dong keng zhen"],
-    "441901110": [ "\u5e38\u5e73\u9547", "441900", "chang ping zhen"],
-    "441901111": [ "\u5bee\u6b65\u9547", "441900", "liao bu zhen"],
-    "441901112": [ "\u6a1f\u6728\u5934\u9547", "441900", "zhang mu tou zhen"],
-    "441901113": [ "\u5927\u6717\u9547", "441900", "da lang zhen"],
-    "441901114": [ "\u9ec4\u6c5f\u9547", "441900", "huang jiang zhen"],
-    "441901115": [ "\u6e05\u6eaa\u9547", "441900", "qing xi zhen"],
-    "441901116": [ "\u5858\u53a6\u9547", "441900", "tang sha zhen"],
-    "441901118": [ "\u5927\u5cad\u5c71\u9547", "441900", "da ling shan zhen"],
-    "441901119": [ "\u957f\u5b89\u9547", "441900", "zhang an zhen"],
-    "441901121": [ "\u864e\u95e8\u9547", "441900", "hu men zhen"],
-    "441901122": [ "\u539a\u8857\u9547", "441900", "hou jie zhen"],
-    "441901123": [ "\u6c99\u7530\u9547", "441900", "sha tian zhen"],
-    "441901124": [ "\u9053\u6ed8\u9547", "441900", "dao jiao zhen"],
-    "441901125": [ "\u6d2a\u6885\u9547", "441900", "hong mei zhen"],
-    "441901126": [ "\u9ebb\u6d8c\u9547", "441900", "ma yong zhen"],
-    "441901127": [ "\u671b\u725b\u58a9\u9547", "441900", "wang niu dun zhen"],
-    "441901128": [ "\u4e2d\u5802\u9547", "441900", "zhong tang zhen"],
-    "441901129": [ "\u9ad8\u57d7\u9547", "441900", "gao bu zhen"],
-    "441901401": [ "\u677e\u5c71\u6e56\u7ba1\u59d4\u4f1a", "441900", "song shan hu guan wei hui"],
+    "441901003": ["\u4e1c\u57ce\u8857\u9053", "441900", "dong cheng jie dao"],
+    "441901004": ["\u5357\u57ce\u8857\u9053", "441900", "nan cheng jie dao"],
+    "441901005": ["\u4e07\u6c5f\u8857\u9053", "441900", "wan jiang jie dao"],
+    "441901006": ["\u839e\u57ce\u8857\u9053", "441900", "guan cheng jie dao"],
+    "441901101": ["\u77f3\u78a3\u9547", "441900", "shi jie zhen"],
+    "441901102": ["\u77f3\u9f99\u9547", "441900", "shi long zhen"],
+    "441901103": ["\u8336\u5c71\u9547", "441900", "cha shan zhen"],
+    "441901104": ["\u77f3\u6392\u9547", "441900", "shi pai zhen"],
+    "441901105": ["\u4f01\u77f3\u9547", "441900", "qi shi zhen"],
+    "441901106": ["\u6a2a\u6ca5\u9547", "441900", "heng li zhen"],
+    "441901107": ["\u6865\u5934\u9547", "441900", "qiao tou zhen"],
+    "441901108": ["\u8c22\u5c97\u9547", "441900", "xie gang zhen"],
+    "441901109": ["\u4e1c\u5751\u9547", "441900", "dong keng zhen"],
+    "441901110": ["\u5e38\u5e73\u9547", "441900", "chang ping zhen"],
+    "441901111": ["\u5bee\u6b65\u9547", "441900", "liao bu zhen"],
+    "441901112": ["\u6a1f\u6728\u5934\u9547", "441900", "zhang mu tou zhen"],
+    "441901113": ["\u5927\u6717\u9547", "441900", "da lang zhen"],
+    "441901114": ["\u9ec4\u6c5f\u9547", "441900", "huang jiang zhen"],
+    "441901115": ["\u6e05\u6eaa\u9547", "441900", "qing xi zhen"],
+    "441901116": ["\u5858\u53a6\u9547", "441900", "tang sha zhen"],
+    "441901118": ["\u5927\u5cad\u5c71\u9547", "441900", "da ling shan zhen"],
+    "441901119": ["\u957f\u5b89\u9547", "441900", "zhang an zhen"],
+    "441901121": ["\u864e\u95e8\u9547", "441900", "hu men zhen"],
+    "441901122": ["\u539a\u8857\u9547", "441900", "hou jie zhen"],
+    "441901123": ["\u6c99\u7530\u9547", "441900", "sha tian zhen"],
+    "441901124": ["\u9053\u6ed8\u9547", "441900", "dao jiao zhen"],
+    "441901125": ["\u6d2a\u6885\u9547", "441900", "hong mei zhen"],
+    "441901126": ["\u9ebb\u6d8c\u9547", "441900", "ma yong zhen"],
+    "441901127": ["\u671b\u725b\u58a9\u9547", "441900", "wang niu dun zhen"],
+    "441901128": ["\u4e2d\u5802\u9547", "441900", "zhong tang zhen"],
+    "441901129": ["\u9ad8\u57d7\u9547", "441900", "gao bu zhen"],
+    "441901401": ["\u677e\u5c71\u6e56\u7ba1\u59d4\u4f1a", "441900", "song shan hu guan wei hui"],
     "441881": ["\u82f1\u5fb7\u5e02", "441800", "ying de shi"],
     "441882": ["\u8fde\u5dde\u5e02", "441800", "lian zhou shi"],
     "441883": ["\u5176\u5b83\u533a", "441800", "qi ta qu"],
@@ -4618,8 +4618,7 @@ function Address(provinceObj, cityObj, districtObj, streetObj) {
         }
 
         var did = this.district.children('option:selected').val();
-
-        did ? this.updateSourceForStreet(street, did, this['streetVal'], prefix) : street.html(prefix).hide();
+        (did && !street.hasClass('useless-control')) ? this.updateSourceForStreet(street, did, this['streetVal'], prefix) : street.html(prefix).hide();
     };
 
     this.setProvinceObject(provinceObj);
@@ -4710,7 +4709,7 @@ Address.prototype = {
     $('.address-province, .address-city, .address-district, .address-street').each(function () {
         var $this = $(this), group = $this.data('group') || 'default';
         addressGroup[group] = (addressGroup[group] || $()).add($this);
-});
+    });
 
     $.each(addressGroup, function (group, addresses) {
         var province = addresses.filter('.address-province'),
