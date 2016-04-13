@@ -38,12 +38,12 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $type = $request->input('type');
-
-        if (!$type || !$typeId = array_get(cons('user.type') ,$type)) {
-            return redirect('auth/guide');
-        }
-        return view('auth.login', ['type' => $typeId]);
+//        $type = $request->input('type');
+//
+//        if (!$type || !$typeId = array_get(cons('user.type') ,$type)) {
+//            return redirect('auth/guide');
+//        }
+        return view('auth.login');
     }
 
     /**
@@ -86,6 +86,6 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return redirect('auth/guide');
+        return redirect('auth/login');
     }
 }

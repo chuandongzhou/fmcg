@@ -3,81 +3,94 @@
 @section('meta')
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
 @stop
 
 
-@section('title' , '订百达 - 订货首选')
+@section('title' , '登录|订百达 - 订货首选')
 
 @section('css')
-    @parent
-    <style>body {
-            margin-bottom: 120px
-        }</style>
+    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+
+    <style>
+        body { margin-bottom: 120px }
+    </style>
 @stop
 @section('body')
-    <nav class="navbar login-nav">
-        <div class="container padding-clear">
-            <ul class="nav-title text-center">
-                <li><a href="{{ url('auth/guide') }}">首页</a></li>
-                <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li><a href="{{ url('about') }}">关于我们</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container-fluid login-content">
-        <div id="myCarousel" class="row carousel slide login-banner-slide">
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active">
-                    {{--<li data-target="#myCarousel" data-slide-to="1">--}}
-                    {{--<li data-target="#myCarousel" data-slide-to="2">--}}
-            </ol>
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img src="{{ asset('images/banner.jpg') }}" alt="First slide">
-                </div>
-                {{--<div class="item">--}}
-                {{--<img src="{{ asset('images/banner.jpg') }}" alt="Second slide">--}}
-                {{--</div>--}}
-                {{--<div class="item">--}}
-                {{--<img src="{{ asset('images/banner.jpg') }}" alt="Third slide">--}}
-                {{--</div>--}}
+    <div class="container-fluid login-container">
+        <div class="row">
+            <div class="col-sm-12 text-center login-title">
+                <h3>登录系统</h3>
             </div>
         </div>
-        <div class="row login-wrap">
-            <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8">
-                <div class="col-sm-12 item">
-                    <h1 class="pull-left"><a>登录</a></h1>
-                    <a href="javascript:" class="pull-right reg" data-toggle="modal"
-                            data-target="#myModal-agreement">注册</a>
+        <div class="row content-panel" >
+            <div class="col-sm-8 col-sm-offset-2 login-content" >
+                <div class="col-sm-12 logo text-right"  >
+                    <img src="{{ asset('images/logo.png') }}">
                 </div>
-                <div class="col-sm-12 item">
-                    <div class="form-group">
-                        <div class="enter-item">
-                            <label class="icon icon-name"></label>
-                            <input type="text" name="account" placeholder="用户名">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="enter-item">
-                            <label class="icon icon-password"></label>
-                            <input type="password" name="password" placeholder="密码">
-                        </div>
-                    </div>
+                <div class="col-sm-7 login-left-img" >
+                    <img src="{{ asset('images/login-banner.jpg') }}">
                 </div>
+                <div class="col-sm-5 login-right-content"  >
+                    <div class="row login-wrap"   >
+                        <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8"
+                        >
+                            <div class="col-sm-12 padding-clear">
+                                <span class="role-title">供应商平台</span>
+                                <input type="hidden" name="type" id="type" value="{{ cons('user.type.supplier')  }}" />
+                            </div>
+                            <div class="col-sm-12 padding-clear item text-center">
+                                <span class="triangle-left"></span>
+                                <div class="enter-item form-group">
+                                    <span class="icon icon-name"></span>
+                                    <span class="line"></span>
+                                    <input type="text" name="account" class="user-name" placeholder="用户名">
+                                </div>
+                                <div class="enter-item form-group">
+                                    <span class="icon icon-password"></span>
+                                    <span class="line"></span>
+                                    <input type="password" class="password" placeholder="密码" name="password">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 btn-item text-center">
+                                <button type="button" class="register-btn btn btn-primary" data-toggle="modal" data-target="#myModal-agreement">注册</button>
+                                <button type="submit"  class="login-btn btn btn-warning">登录</button>
+                            </div>
 
-                <div class="col-sm-6 col-xs-6 item forgot ">
-                    <button type="button" class="btn btn-warning forgot-pwd" data-toggle="modal"
-                            data-target="#backupModal">
-                        找回密码
-                    </button>
+                            <div class="col-sm-12 text-right forget-pwd">
+                                <a data-toggle="modal" data-target="#myModal">忘记密码 ?</a>
+
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="col-sm-6 col-xs-6 item login ">
-                    <input type="hidden" name="type" value="{{ $type }}"/>
-                    <button type="submit" class="btn btn-primary login-btn" data-loading-text="登录中..."
-                            data-done-text="登录成功" data-fail-text="登录失败">登录
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="col-sm-6 col-sm-offset-3 change-role-options" >
+                <a class="tabs-item"  >
+                    <div class="item-icon" >
+                        <img src="{{ asset('images/guide-icons-1.png')  }}">
+                    </div>
+                    <span class="item-name" data-type="{{ cons('user.type.supplier') }}">供应商平台</span>
+                </a>
+                <a class="tabs-item">
+                    <div class="item-icon">
+                        <img src="{{ asset('images/guide-icons-2.png') }}">
+                    </div>
+                    <span class="item-name" data-type="{{ cons('user.type.wholesaler') }}">批发平台</span>
+                </a>
+                <a class="tabs-item">
+                    <div class="item-icon">
+                        <img src="{{ asset('images/guide-icons-3.png') }}">
+                    </div>
+                    <span class="item-name " data-type="{{ cons('user.type.retailer') }}">终端平台</span>
+                </a>
+                <a class="tabs-item">
+                    <div class="item-icon">
+                        <img src="{{ asset('images/guide-icons-4.png') }}">
+                    </div>
+                    <span class="item-name" data-type="{{ cons('user.type.retailer') }}">零售商城</span>
+                </a>
+            </div>
         </div>
     </div>
     @include('includes.backup-password')
@@ -88,9 +101,13 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('.carousel').carousel({
-                interval: 2000
+        $(function () {
+            $("body").addClass("login-body");
+            $(".tabs-item").click(function(){
+                var self=$(this), roleName=self.children(".item-name").text();
+                $(".role-title").text(roleName);
+
+                $('#type').val(self.children(".item-name").data('type'));
             })
         });
     </script>
