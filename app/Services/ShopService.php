@@ -20,11 +20,16 @@ class ShopService
 
         $columnTypes = cons('home_column.type');
         $homeColumnShopConf = cons('home_column.shop');
-        $cacheKey = $homeColumnShopConf['cache']['pre_name'] . $type;
+
 
         $shopColumns = [];
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
-        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
+
+        $addressData = (new AddressService)->getAddressData();
+        $data = array_except($addressData, 'address_name');
+
+        $cacheKey = $homeColumnShopConf['cache']['pre_name'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
+
+        if (Cache::has($cacheKey)) {
             $shopColumns = Cache::get($cacheKey);
         } else {
             //商家
@@ -33,7 +38,7 @@ class ShopService
             foreach ($shopColumns as $shopColumn) {
                 $shops = Shop::whereIn('id', $shopColumn->id_list)
                     ->OfUser($type)
-                    ->OfDeliveryArea(['province_id' => $provinceId])
+                    ->OfDeliveryArea($data)
                     ->with('images', 'logo', 'user')
                     ->get()
                     ->each(function ($shop) {
@@ -46,7 +51,7 @@ class ShopService
                         ->OfUser($type)
                         ->with('images', 'logo', 'user')
                         ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
-                        ->OfDeliveryArea(['province_id' => $provinceId])
+                        ->OfDeliveryArea($data)
                         ->take(10 - $columnShopsCount)
                         ->get()->each(function ($shop) {
                             $shop->setAppends(['image_url', 'logo']);
@@ -54,7 +59,6 @@ class ShopService
                     $shops = $shops->merge($ShopsBySort);
                 }
                 $shopColumn->shops = $shops;
-                $shopColumn->province_id = $provinceId;
             }
             Cache::put($cacheKey, $shopColumns, $homeColumnShopConf['cache']['expire']);
         }

@@ -23,14 +23,16 @@ class AuthController extends Controller
     /**
      * 登录
      *
-     * @param \App\Http\Requests\Api\v1\LoginRequest $request
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function postLogin(LoginRequest $request)
+    public function postLogin(Request $request)
     {
-        //TODO: 判断account
         $account = $request->input('account');
         $password = $request->input('password');
+        if (!$account || !$password) {
+            return $this->invalidParam('password', '账号或密码不能为空');
+        }
         $type = $request->input('type');
 
         $user = User::where('user_name', $account)->first();

@@ -7,8 +7,7 @@
  */
 namespace App\Http\ViewComposers;
 
-use DB;
-use Cache;
+use App\Services\AddressService;
 use Illuminate\Contracts\View\View;
 
 class ProvinceComposer
@@ -21,17 +20,7 @@ class ProvinceComposer
      */
     public function compose(View $view)
     {
-        $provinces = [];
-        $cacheConf = cons('address.provinces.cache');
-        $cacheKey = $cacheConf['name'];
-        if (Cache::has($cacheKey)) {
-            $provinces = Cache::get($cacheKey);
-        }else {
-            $provinces = DB::table('address')->where('pid', 1)->lists('name', 'id');
-            Cache::forever($cacheKey, $provinces);
-        }
-
-        $view->with('provinces', $provinces);
+        $view->with('addressData', (new AddressService)->getAddressData());
     }
 
 }

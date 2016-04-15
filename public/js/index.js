@@ -83,11 +83,11 @@ function menuFunc() {
         $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
 
-    $('.city-wrap .item').on('click', function () {
+   /* $('.city-wrap .item').on('click', function () {
         var provinceId = $(this).children('a').data('id');
         setCookie('province_id', provinceId);
         window.location.reload();
-    })
+    })*/
     //city-menu end
 
     //collect begin

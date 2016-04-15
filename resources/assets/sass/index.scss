@@ -205,9 +205,26 @@ ul, li, p, a, h1, h2, h3, h4 {
   .qr-code {
     display: inline-block;
     vertical-align: middle;
-    img {
-      @include square(80px);
+    position:relative;
+    .qr-code-img{
+      position:absolute;
+      top:-155px;
+      right:-40px;
+      @include square(150px);
+      display: none;
     }
+    .qr-code-panel{
+      text-decoration: none;
+      cursor: pointer;
+      img {
+        @include square(40px);
+      }
+      p{
+        font-size: 10px;
+        color:$gray-light;
+      }
+    }
+
   }
   .txt-content {
     display: inline-block;
@@ -384,6 +401,7 @@ ul, li, p, a, h1, h2, h3, h4 {
               position:relative;
               vertical-align: middle;
               background-color: $gray-plain;
+              margin:0;
               &:first-of-type {
                 padding: 35px 0 15px 0;
               }
@@ -417,7 +435,6 @@ ul, li, p, a, h1, h2, h3, h4 {
               }
             }
             .error-msg{
-              display: none;
               position:absolute;
               left:50%;
               font-size:12px;
@@ -1066,26 +1083,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 @media screen and (max-width: 765px) {
-  .login-content {
-    height: 85%;
-    .login-banner-slide {
-      display: none;
-    }
-    .login-wrap {
-      right: 50% !important;
-      margin-right: -180px !important;
-    }
-  }
-  .panel-footer {
-    .qr-code {
-      display: none;
-    }
-  }
-  .list-penal {
-    .commodity {
-      /*width: 100%;*/
-    }
-  }
   .dealer-commodity-wrap {
     .commodity-img {
       height: auto;
@@ -2404,7 +2401,7 @@ table {
     position: relative;
     .location-panel {
       padding: 5px 3px;
-      width: 135px;
+     display: inline-block;
       line-height: 31px;
       border: 1px solid $brand-primary;
       position: relative;
@@ -2412,15 +2409,12 @@ table {
       .city-value {
         display: inline-block;
         vertical-align: bottom;
-        max-width: 40px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
         font-size: 13px;
       }
       .location-text {
         color: $gray-base;
         text-decoration: none;
+        display: inline-block;
       }
       &.selected-border {
         border: 1px solid $gray-plain-light;
@@ -2433,13 +2427,16 @@ table {
       margin-top: -1px;
       position: absolute;
       background-color: $body-bg;
+      padding: 5px 10px;
       z-index: 888;
+      min-width: 380px;
+      min-height: 320px;
       display: none;
       .list-wrap {
         .item {
           float: left;
           width: 70px;
-          padding: 10px 0;
+          padding: 5px 0;
           text-align: center;
           a {
             padding: 2px;
@@ -2460,6 +2457,29 @@ table {
             }
           }
         }
+      }
+      .nav-tabs{
+        border-bottom: 1px solid $brand-primary;
+        li{
+          &.active{
+            a{
+              border:1px solid $brand-primary;
+              border-bottom-color:$body-bg;
+            }
+          }
+          a{
+            color:$gray-base!important;
+            &:hover{
+              background-color: $body-bg!important;
+            }
+          }
+        }
+        .city-two{
+          display: none;
+        }
+      }
+      #two{
+        display: none;
       }
     }
   }

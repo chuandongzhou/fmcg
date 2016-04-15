@@ -23,21 +23,31 @@
                     <div class="location-panel">
                         <i class="fa fa-map-marker"></i> 所在地：
                         <a href="#" class="location-text">
-                            <span class="city-value" title="{{  $provinces[\Request::cookie('province_id')] or '' }}">
-                                {{  $provinces[\Request::cookie('province_id')] or '' }}
+                            <span class="city-value" title="{{  $addressData['address_name'] }}">
+                                {{  $addressData['address_name'] }}
                             </span>
                             <span class="fa fa-angle-down up-down"></span>
                         </a>
                     </div>
                     <div class="city-list clearfix">
-                        <div class="list-wrap">
-                            @foreach($provinces as $provinceId => $province)
-                                <div class="item">
-                                    <a title="{{ $province }}"
-                                       class="{{ \Request::cookie('province_id') == $provinceId ? 'selected' : '' }}"
-                                       href="javascript:void(0)" data-id="{{ $provinceId }}">{{ $province }}</a>
-                                </div>
-                            @endforeach
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li>
+                                <a href="#deliveryProvince" data-class="deliveryProvince" data-toggle="tab"
+                                   class="delivery-province" data-id="{{ $addressData['province_id'] }}">请选择</a>
+                            </li>
+                            <li class="active">
+                                <a href="#deliveryCity" data-class="deliveryCity" data-toggle="tab"
+                                   class="delivery-city" data-id="{{ $addressData['city_id'] }}">请选择</a>
+                            </li>
+                        </ul>
+                        <div class="list-wrap tab-content" id="myTabContent">
+                            <div class="tab-pane fade deliveryProvince">
+
+                            </div>
+
+                            <div class="tab-pane fade  in active deliveryCity">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +97,7 @@
                                 </li>
                             @else
                                 <li class="user-name-wrap">
-                                    <a href="{{ url('auth/guide') }}" class="red">登录</a>
+                                    <a href="{{ url('auth/login') }}" class="red">登录</a>
                                 </li>
                             @endif
 
@@ -136,16 +146,7 @@
 @section('js-lib')
     @parent
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
-    <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
-    <script src="{{ asset('js/ajax-polling.js') }}"></script>
-@stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            if (!Cookies.get('province_id')) {
-                setProvinceName();
-            }
-        })
-    </script>
+    <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/address-for-delivery.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/ajax-polling.js') }}"></script>
 @stop

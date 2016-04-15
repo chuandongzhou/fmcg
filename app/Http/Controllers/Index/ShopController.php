@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
-use App\Models\Goods;
 use App\Models\Shop;
+use App\Services\AddressService;
 use App\Services\GoodsService;
 use Carbon\Carbon;
 use DB;
@@ -28,8 +28,8 @@ class ShopController extends Controller
     public function index(Request $request, $sort = '')
     {
         $user = auth()->user();
-        $type = (string)$request->input('type');
-
+        $gets = $request->all();
+        $type = isset($gets['type']) ? $gets['type'] : 'supplier';
         $userTypes = cons('user.type');
         $typeId = array_get($userTypes, $type, last($userTypes));
         //供应商暂时与批发商一致
@@ -45,22 +45,15 @@ class ShopController extends Controller
         }
 
         //配送区域
-        $data = $request->except('name');
+        $addressData = (new AddressService)->getAddressData();
+        $data = array_merge($gets, array_except($addressData, 'address_name'));
+        $shops = $shops->OfDeliveryArea($data);
 
-        $data['province_id'] = $request->cookie('province_id') ? $request->cookie('province_id') : cons('address.default_province');
-
-        if (!empty($data)) {
-            $shops = $shops->OfDeliveryArea($data);
-        }
-
-        // 名称
-        $name = $request->input('name');
-
-        if ($name) {
-            $shops = $shops->where('name', 'like', '%' . $name . '%');
+        if (isset($gets['name'])) {
+            $shops = $shops->where('name', 'like', '%' . $gets['name'] . '%');
         }
         return view('index.shop.index',
-            ['shops' => $shops->paginate(), 'sort' => $sort, 'address' => $data, 'type' => $type]);
+            ['shops' => $shops->paginate(16), 'sort' => $sort, 'get' => $data, 'type' => $type]);
     }
 
     /**
@@ -114,10 +107,6 @@ class ShopController extends Controller
             $shop->images[0] = $advert->image;
         }
 
-        /*   $coordinate = $shop->deliveryArea->each(function ($area) {
-               $area->coordinate;
-           });*/
-
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
         return view('index.shop.detail',
@@ -136,7 +125,8 @@ class ShopController extends Controller
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
         $goods = $shop->goods()->active()->with('images.image');
-        $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
+        $addressData = (new AddressService)->getAddressData();
+        $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getGoodsBySearch($data, $goods);
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
@@ -144,7 +134,7 @@ class ShopController extends Controller
         return view('index.shop.search',
             [
                 'shop' => $shop,
-                'goods' => $result['goods']->paginate(),
+                'goods' => $result['goods']->paginate(20),
                 'categories' => $result['categories'],
                 'attrs' => $result['attrs'],
                 'searched' => $result['searched'],

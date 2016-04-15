@@ -419,7 +419,7 @@ class Shop extends Model
     {
         $logo = $this->logo;
 
-        return $logo ? upload_file_url($logo->path) : asset('images/u8.png');
+        return $logo ? upload_file_url($logo->path) : ($this->user->type == cons('user.type.wholesaler') ? asset('images/wholesaler.jpg') : asset('images/supplier.jpg'));
     }
 
     /**

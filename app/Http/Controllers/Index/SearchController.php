@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Goods;
+use App\Services\AddressService;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
@@ -38,9 +39,9 @@ class SearchController extends Controller
             'cate_level_2'
         ])->where('user_type', '>', $type);
 
-        $data['province_id'] = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
+        $addressData = (new AddressService)->getAddressData();
+        $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getGoodsBySearch($data, $goods);
-
         return view('index.search.index',
             [
                 'goods' => $goods->paginate(),

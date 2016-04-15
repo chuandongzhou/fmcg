@@ -126,19 +126,9 @@
                         <td>{!! $orderEveryday['retailer']['onlineAmount'] or 0 !!}</td>
                     </tr>
                     <tr>
-                        <td>线上完成总金额</td>
-                        <td>{!! $orderEveryday['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
-                        <td>{!! $orderEveryday['retailer']['onlineSuccessAmount'] or 0 !!}</td>
-                    </tr>
-                    <tr>
                         <td>线下总金额</td>
                         <td>{!! $orderEveryday['wholesaler']['codAmount'] or 0 !!}</td>
                         <td>{!! $orderEveryday['retailer']['codAmount'] or 0 !!}</td>
-                    </tr>
-                    <tr>
-                        <td>线下完成总金额</td>
-                        <td>{!! $orderEveryday['wholesaler']['codSuccessAmount'] or 0 !!}</td>
-                        <td>{!! $orderEveryday['retailer']['codSuccessAmount'] or 0 !!}</td>
                     </tr>
                 </table>
             </div>
@@ -168,22 +158,10 @@
                         <td>{!! $orderSellerEveryday['supplier']['wholesaler']['amount'] or 0 !!}</td>
                     </tr>
                     <tr>
-                        <td>线上总金额</td>
-                        <td>{!! $orderSellerEveryday['wholesaler']['onlineAmount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['retailer']['onlineAmount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['onlineAmount'] or 0 !!}</td>
-                    </tr>
-                    <tr>
                         <td>线上完成总金额</td>
                         <td>{!! $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
                         <td>{!! $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] or 0 !!}</td>
                         <td>{!! $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] or 0 !!}</td>
-                    </tr>
-                    <tr>
-                        <td>线下总金额</td>
-                        <td>{!! $orderSellerEveryday['wholesaler']['codAmount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['retailer']['codAmount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['codAmount'] or 0 !!}</td>
                     </tr>
                     <tr>
                         <td>线下完成总金额</td>

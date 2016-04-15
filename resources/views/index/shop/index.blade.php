@@ -18,13 +18,13 @@
 
                     <p class="pull-right">
                         <span>配送区域</span>
-                        <select name="province_id" data-id="{{ $address['province_id'] or 0 }}"
+                        <select name="province_id" data-id="{{ $get['province_id'] or 0 }}"
                                 class="address-province address hide"></select>
-                        <select name="city_id" data-id="{{ $address['city_id'] or 0 }}"
-                                class="address-city address"></select>
-                        <select name="district_id" data-id="{{ $address['district_id'] or 0 }}"
+                        <select name="city_id" data-id="{{ $get['city_id'] or 0 }}"
+                                class="address-city address hide    "></select>
+                        <select name="district_id" data-id="{{ $get['district_id'] or 0 }}"
                                 class="address-district address"> </select>
-                        <select name="street_id" data-id="{{ $address['street_id'] or 0 }}"
+                        <select name="street_id" data-id="{{ $get['street_id'] or 0 }}"
                                 class="address-street address useless-control"> </select>
                     </p>
                 </div>
@@ -70,7 +70,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12 text-right">
-                {!!  $shops->appends($address)->render()  !!}
+                {!!  $shops->appends(array_except($get , ['province_id' ,'city_id']))->render()  !!}
             </div>
         </div>
     </div>
@@ -83,20 +83,10 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $('select.address').change(function () {
-            var /* provinceControl = $('select[name="province_id"]'),*/
-                    cityControl = $('select[name="city_id"]'),
-                    districtControl = $('select[name="district_id"]'),
-                    streetControl = $('select[name="street_id"]'),
-                    type = '{{ $type }}',
-                    address = type ? '?type=' + type : '',
-                    join = type ? '&' : '?';
-            /*  address += provinceControl.val() ? join + 'province_id=' + provinceControl.val() : '';*/
-            address += cityControl.val() ? join + 'city_id=' + cityControl.val() : '';
-            address += districtControl.val() ? '&district_id=' + districtControl.val() : '';
-            address += streetControl.val() ? '&street_id=' + streetControl.val() : '';
-            var url = '{{ url('shop/' . $sort ) }}' + address;
-
+        $('select[name="district_id"]').change(function () {
+            var districtControl = $(this),
+                    address = districtControl.val() ? '{!! empty(array_except($get ,  ['province_id' ,'city_id' ,'district_id' ])) ? '?' : '&' !!}district_id=' + districtControl.val() : '';
+            var url = '{!! url('shop'  . (empty(array_except($get , ['province_id' ,'city_id' ,'district_id' ])) ? '' :  '?' . http_build_query(array_except($get ,  ['province_id' ,'city_id' ,'district_id' ])))) !!}' + address;
             location.href = url;
         })
     </script>

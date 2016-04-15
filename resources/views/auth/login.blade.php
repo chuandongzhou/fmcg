@@ -3,19 +3,10 @@
 @section('meta')
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
-
 @stop
-
 
 @section('title' , '登录|订百达 - 订货首选')
 
-@section('css')
-    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
-
-    <style>
-        body { margin-bottom: 120px }
-    </style>
-@stop
 @section('body')
     <div class="container-fluid login-container">
         <div class="row">
@@ -23,24 +14,26 @@
                 <h3>登录系统</h3>
             </div>
         </div>
-        <div class="row content-panel" >
-            <div class="col-sm-8 col-sm-offset-2 login-content" >
-                <div class="col-sm-12 logo text-right"  >
+        <div class="row content-panel">
+            <div class="col-sm-8 col-sm-offset-2 login-content">
+                <div class="col-sm-12 logo text-right">
                     <img src="{{ asset('images/logo.png') }}">
                 </div>
-                <div class="col-sm-7 login-left-img" >
+                <div class="col-sm-7 login-left-img">
                     <img src="{{ asset('images/login-banner.jpg') }}">
                 </div>
-                <div class="col-sm-5 login-right-content"  >
-                    <div class="row login-wrap"   >
-                        <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}" accept-charset="UTF-8"
+                <div class="col-sm-5 login-right-content">
+                    <div class="row login-wrap">
+                        <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}"
+                              accept-charset="UTF-8" data-help-class="error-msg text-center"
                         >
                             <div class="col-sm-12 padding-clear">
-                                <span class="role-title">供应商平台</span>
-                                <input type="hidden" name="type" id="type" value="{{ cons('user.type.supplier')  }}" />
+                                <span class="role-title">终端商平台</span>
+                                <input type="hidden" name="type" id="type" value="{{ cons('user.type.retailer')  }}"/>
                             </div>
                             <div class="col-sm-12 padding-clear item text-center">
                                 <span class="triangle-left"></span>
+
                                 <div class="enter-item form-group">
                                     <span class="icon icon-name"></span>
                                     <span class="line"></span>
@@ -51,23 +44,27 @@
                                     <span class="line"></span>
                                     <input type="password" class="password" placeholder="密码" name="password">
                                 </div>
+                                <span class="triangle-right"></span>
                             </div>
+
                             <div class="col-sm-12 btn-item text-center">
-                                <button type="button" class="register-btn btn btn-primary" data-toggle="modal" data-target="#myModal-agreement">注册</button>
-                                <button type="submit"  class="login-btn btn btn-warning">登录</button>
+                                <button type="button" class="register-btn btn btn-primary" data-toggle="modal"
+                                        data-target="#myModal-agreement">注册
+                                </button>
+                                <button type="submit" class="login-btn btn btn-warning">登录</button>
                             </div>
 
                             <div class="col-sm-12 text-right forget-pwd">
-                                <a data-toggle="modal" data-target="#myModal">忘记密码 ?</a>
+                                <a href="javascript:" data-toggle="modal" data-target="#backupModal">忘记密码 ?</a>
 
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-sm-offset-3 change-role-options" >
-                <a class="tabs-item"  >
-                    <div class="item-icon" >
+            <div class="col-sm-6 col-sm-offset-3 change-role-options">
+                <a class="tabs-item">
+                    <div class="item-icon">
                         <img src="{{ asset('images/guide-icons-1.png')  }}">
                     </div>
                     <span class="item-name" data-type="{{ cons('user.type.supplier') }}">供应商平台</span>
@@ -103,10 +100,9 @@
     <script type="text/javascript">
         $(function () {
             $("body").addClass("login-body");
-            $(".tabs-item").click(function(){
-                var self=$(this), roleName=self.children(".item-name").text();
+            $(".tabs-item").click(function () {
+                var self = $(this), roleName = self.children(".item-name").text();
                 $(".role-title").text(roleName);
-
                 $('#type').val(self.children(".item-name").data('type'));
             })
         });

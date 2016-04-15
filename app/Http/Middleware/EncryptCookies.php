@@ -13,5 +13,6 @@ class EncryptCookies extends BaseEncrypter
      */
     protected $except = [
         'province_id',
+        'city_id'
     ];
 }

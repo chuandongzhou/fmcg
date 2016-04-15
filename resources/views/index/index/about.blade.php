@@ -10,7 +10,7 @@
     <nav class="navbar login-nav">
         <div class="container padding-clear register">
             <ul class="nav-title text-center">
-                <li><a href="{{ url('auth/guide') }}">首页</a></li>
+                <li><a href="{{ url('/') }}">首页</a></li>
                 <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
                 <li><a href="{{ url('about') }}">关于我们</a></li>
             </ul>
@@ -34,7 +34,7 @@
                 <p>为传统行业厂家、供应商、批发商、超市建立一站式服务平台，为中小零售商店打造最佳供应体系、为供应商提供最广阔的销售渠道。</p>
                 <h4 class="item-title">企业名称阐述</h4>
 
-                <p>订”代表订货、订购，“百”意为百分百、100%，“达”则为送达、达到。“订百达”代表所有商家的订货需求我们都将百分百送达。</p>
+                <p>“订”代表订货、订购，“百”意为百分百、100%，“达”则为送达、达到。“订百达”代表所有商家的订货需求我们都将百分百送达。</p>
                 <h4 class="item-title">企业价值观</h4>
 
                 <p>为客户创造价值，成就客户，完善自身。</p>

@@ -64,10 +64,13 @@ class CartController extends Controller
         }
         //查询是否有相同的商品,存在则合并
         $cart = $this->user->carts()->where('goods_id', $goodsId);
-        if (!is_null($cart->pluck('id'))) {
-            $cart->increment('num', $buyNum);
-
-            return $this->success('加入购物车成功');
+        if (!is_null($cart->pluck('num'))) {
+            if ($cart->pluck('num') + $buyNum <= 10000) {
+                $cart->increment('num', $buyNum);
+                return $this->success('加入购物车成功');
+            } else {
+                return $this->error('商品数量不能大于10000');
+            }
         }
         if ($this->user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {
             (new CartService)->increment();

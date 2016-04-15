@@ -119,9 +119,11 @@ class GoodsService
         //供应商暂时与批发商一致
         $type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
 
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
+        $addressData = (new AddressService)->getAddressData();
+        $data = array_except($addressData, 'address_name');
+
         $homeColumnGoodsConf = cons('home_column.goods');
-        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type . ':' . $provinceId;
+        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
 
         $goodsColumns = [];
         if (Cache::has($cacheKey)) {
@@ -133,7 +135,7 @@ class GoodsService
                 'level',
                 'pid',
                 'name'
-            ])->each(function($category){
+            ])->each(function ($category) {
                 $category->setAppends([]);
             });
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
@@ -154,7 +156,7 @@ class GoodsService
             foreach ($goodsColumns as $category) {
                 $goods = Goods::active()->where('cate_level_1', $category['id'])
                     ->where('user_type', '>', $type)
-                    ->OfDeliveryArea(['province_id' => $provinceId])
+                    ->OfDeliveryArea($data)
                     ->with('images.image')
                     ->select($goodsFields)
                     ->take($displayCount)

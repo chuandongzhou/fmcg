@@ -80,7 +80,6 @@ class DataStatisticsController extends Controller
             cons('order.is_cancel.off'))->get();
 
         $orderEveryday = []; //当日订单统计
-        $orderSellerEveryday = [];  //对于卖家每日统计
 
 
         if (!$orders->isEmpty()) {
@@ -89,6 +88,51 @@ class DataStatisticsController extends Controller
 
             $users = User::whereIn('id', array_unique($userIds))->lists('type', 'id');  // 买家类型
 
+            $userType = cons('user.type');
+            $payType = cons('pay_type');
+
+            foreach ($orders as $order) {
+                //买家
+                if ($users[$order->user_id] == $userType['retailer']) {
+                    //终端
+                    $orderEveryday['retailer']['count'] = isset($orderEveryday['retailer']['count']) ? ++$orderEveryday['retailer']['count'] : 1;
+                    $orderEveryday['retailer']['amount'] = isset($orderEveryday['retailer']['amount']) ? $orderEveryday['retailer']['amount'] + $order->price : $order->price;
+                    if ($order->pay_type == $payType['online']) {
+                        //线上总金额
+                        $orderEveryday['retailer']['onlineAmount'] = isset($orderEveryday['retailer']['onlineAmount']) ? $orderEveryday['retailer']['onlineAmount'] + $order->price : $order->price;
+                    } else {
+                        //线下总金额
+                        $orderEveryday['retailer']['codAmount'] = isset($orderEveryday['retailer']['codAmount']) ? $orderEveryday['retailer']['codAmount'] + $order->price : $order->price;
+                    }
+
+                } elseif ($users[$order->user_id] == $userType['wholesaler']) {
+                    //批发
+                    $orderEveryday['wholesaler']['count'] = isset($orderEveryday['wholesaler']['count']) ? ++$orderEveryday['wholesaler']['count'] : 1;
+                    $orderEveryday['wholesaler']['amount'] = isset($orderEveryday['wholesaler']['amount']) ? $orderEveryday['wholesaler']['amount'] + $order->price : $order->price;
+                    if ($order->pay_type == $payType['online']) {
+                        //线上总金额
+                        $orderEveryday['wholesaler']['onlineAmount'] = isset($orderEveryday['wholesaler']['onlineAmount']) ? $orderEveryday['wholesaler']['onlineAmount'] + $order->price : $order->price;
+
+                    } else {
+                        //线下总金额
+                        $orderEveryday['wholesaler']['codAmount'] = isset($orderEveryday['wholesaler']['codAmount']) ? $orderEveryday['wholesaler']['codAmount'] + $order->price : $order->price;
+                    }
+                }
+            }
+        }
+
+        /*
+        * 每日成单统计
+        */
+        $completeOrders = Order::whereBetween('paid_at', [$dayStart, $dayEnd])->with('systemTradeInfo')->where('status',
+            cons('order.pay_status.payment_success'))->where('is_cancel',
+            cons('order.is_cancel.off'))->get();
+
+        $orderSellerEveryday = [];  //对于卖家每日统计
+
+        if (!$completeOrders->isEmpty()) {
+            $userIds = $orders->pluck('user_id')->all();
+            $users = User::whereIn('id', array_unique($userIds))->lists('type', 'id');  // 买家类型
 
             $shopIds = $orders->pluck('shop_id')->all();
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get(['id', 'user_id']);
@@ -100,102 +144,67 @@ class DataStatisticsController extends Controller
             $userType = cons('user.type');
             $payType = cons('pay_type');
 
-            foreach ($orders as $order) {
-                if ($users[$order->user_id] == $userType['retailer']) {
-                    //终端
-                    $orderEveryday['retailer']['count'] = isset($orderEveryday['retailer']['count']) ? ++$orderEveryday['retailer']['count'] : 1;
-                    $orderEveryday['retailer']['amount'] = isset($orderEveryday['retailer']['amount']) ? $orderEveryday['retailer']['amount'] + $order->price : $order->price;
-                    if ($order->pay_type == $payType['online']) {
-                        //线上总金额
-                        $orderEveryday['retailer']['onlineAmount'] = isset($orderEveryday['retailer']['onlineAmount']) ? $orderEveryday['retailer']['onlineAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderEveryday['retailer']['onlineSuccessAmount'] = isset($orderEveryday['retailer']['onlineSuccessAmount']) ? $orderEveryday['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
-                        }
-                    } else {
-                        //线下总金额
-                        $orderEveryday['retailer']['codAmount'] = isset($orderEveryday['retailer']['codAmount']) ? $orderEveryday['retailer']['codAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderEveryday['retailer']['codSuccessAmount'] = isset($orderEveryday['retailer']['codSuccessAmount']) ? $orderEveryday['retailer']['codSuccessAmount'] + $order->price : $order->price;
-                        }
-                    }
-
-                } elseif ($users[$order->user_id] == $userType['wholesaler']) {
-                    //批发
-                    $orderEveryday['wholesaler']['count'] = isset($orderEveryday['wholesaler']['count']) ? ++$orderEveryday['wholesaler']['count'] : 1;
-                    $orderEveryday['wholesaler']['amount'] = isset($orderEveryday['wholesaler']['amount']) ? $orderEveryday['wholesaler']['amount'] + $order->price : $order->price;
-                    if ($order->pay_type == $payType['online']) {
-                        //线上总金额
-                        $orderEveryday['wholesaler']['onlineAmount'] = isset($orderEveryday['wholesaler']['onlineAmount']) ? $orderEveryday['wholesaler']['onlineAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderEveryday['wholesaler']['onlineSuccessAmount']) ? $orderEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
-                        }
-                    } else {
-                        //线下总金额
-                        $orderEveryday['wholesaler']['codAmount'] = isset($orderEveryday['wholesaler']['codAmount']) ? $orderEveryday['wholesaler']['codAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderEveryday['wholesaler']['codSuccessAmount'] = isset($orderEveryday['wholesaler']['codSuccessAmount']) ? $orderEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
-                        }
-                    }
-                }
-
+            foreach ($completeOrders as $order) {
                 if ($sellerTypes[$order->shop_id] == $userType['wholesaler']) {
                     //批发商
+                    //成单数
                     $orderSellerEveryday['wholesaler']['count'] = isset($orderSellerEveryday['wholesaler']['count']) ? ++$orderSellerEveryday['wholesaler']['count'] : 1;
+                    //成单总金额
                     $orderSellerEveryday['wholesaler']['amount'] = isset($orderSellerEveryday['wholesaler']['amount']) ? $orderSellerEveryday['wholesaler']['amount'] + $order->price : $order->price;
                     if ($order->pay_type == $payType['online']) {
-                        //线上总金额
-                        $orderSellerEveryday['wholesaler']['onlineAmount'] = isset($orderSellerEveryday['wholesaler']['onlineAmount']) ? $orderSellerEveryday['wholesaler']['onlineAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
-                        }
+                        // 线上完成总金额
+                        $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
                     } else {
-                        //线下总金额
-                        $orderSellerEveryday['wholesaler']['codAmount'] = isset($orderSellerEveryday['wholesaler']['codAmount']) ? $orderSellerEveryday['wholesaler']['codAmount'] + $order->price : $order->price;
-                        if ($order->pay_status == cons('trade.pay_status.success')) {
-                            $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                        //线下完成总金额
+                        $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                        //线下pos机完成总金额
+                        if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                            $orderSellerEveryday['wholesaler']['posSuccessAmount'] = isset($orderEveryday['wholesaler']['posSuccessAmount']) ? $orderEveryday['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
                         }
                     }
                 } elseif ($sellerTypes[$order->shop_id] == $userType['supplier']) {
                     //供应商
                     if ($users[$order->user_id] == $userType['wholesaler']) {
                         //对于批发商
+                        //成单数
                         $orderSellerEveryday['supplier']['wholesaler']['count'] = isset($orderSellerEveryday['supplier']['wholesaler']['count']) ? ++$orderSellerEveryday['supplier']['wholesaler']['count'] : 1;
+                        //成单总金额
                         $orderSellerEveryday['supplier']['wholesaler']['amount'] = isset($orderSellerEveryday['supplier']['wholesaler']['amount']) ? $orderSellerEveryday['supplier']['wholesaler']['amount'] + $order->price : $order->price;
                         if ($order->pay_type == $payType['online']) {
-                            //线上总金额
-                            $orderSellerEveryday['supplier']['wholesaler']['onlineAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineAmount'] + $order->price : $order->price;
-                            if ($order->pay_status == cons('trade.pay_status.success')) {
-                                $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
-                            }
+                            //线上成单总金额
+                            $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
                         } else {
-                            //线下总金额
-                            $orderSellerEveryday['supplier']['wholesaler']['codAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codAmount'] + $order->price : $order->price;
-                            if ($order->pay_status == cons('trade.pay_status.success')) {
-                                $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下成单总金额
+                            $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下pos机成单总金额
+                            if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] = isset($orderEveryday['supplier']['wholesaler']['posSuccessAmount']) ? $orderEveryday['supplier']['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
                             }
                         }
                     } else {
                         //对于终端商
+                        //成单数
                         $orderSellerEveryday['supplier']['retailer']['count'] = isset($orderSellerEveryday['supplier']['retailer']['count']) ? ++$orderSellerEveryday['supplier']['retailer']['count'] : 1;
+                        //成单总金额
                         $orderSellerEveryday['supplier']['retailer']['amount'] = isset($orderSellerEveryday['supplier']['retailer']['amount']) ? $orderSellerEveryday['supplier']['retailer']['amount'] + $order->price : $order->price;
                         if ($order->pay_type == $payType['online']) {
-                            //线上总金额
-                            $orderSellerEveryday['supplier']['retailer']['onlineAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineAmount'] + $order->price : $order->price;
-                            if ($order->pay_status == cons('trade.pay_status.success')) {
-                                $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
-                            }
+                            //线上完成总金额
+                            $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
+
                         } else {
-                            //线下总金额
-                            $orderSellerEveryday['supplier']['retailer']['codAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codAmount']) ? $orderSellerEveryday['supplier']['retailer']['codAmount'] + $order->price : $order->price;
-                            if ($order->pay_status == cons('trade.pay_status.success')) {
-                                $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下完成总金额
+                            $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下pos机完成总金额
+                            if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
+                                $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] = isset($orderEveryday['supplier']['retailer']['posSuccessAmount']) ? $orderEveryday['supplier']['retailer']['posSuccessAmount'] + $order->price : $order->price;
                             }
                         }
                     }
                 }
-
             }
         }
+
+
         return view('admin.statistics.index',
             [
                 'totalUser' => $totalUser,
@@ -206,6 +215,4 @@ class DataStatisticsController extends Controller
                 'orderSellerEveryday' => $orderSellerEveryday
             ]);
     }
-    //TODO: 导出的方法
-    // 每日订单统计
 }

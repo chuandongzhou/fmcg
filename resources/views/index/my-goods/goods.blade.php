@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="form-group editor-item">
-                        <label class="control-label col-sm-2"></label>
+                        <label class="control-label col-sm-2"> </label>
 
                         <div class="col-sm-10 goods-imgs">
                             @foreach($goods->images as $image)

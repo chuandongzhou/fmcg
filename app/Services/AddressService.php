@@ -13,7 +13,7 @@ class AddressService
 
     protected $array = [];
 
-    public function __construct($array)
+    public function __construct($array = [])
     {
         $this->array = $array;
 
@@ -53,5 +53,33 @@ class AddressService
         }
 
         return $addressArr;
+    }
+
+    /**
+     * 获取地址数据
+     *
+     * @return array
+     */
+    public function getAddressData()
+    {
+        $address = config('address.address');
+        $provinceKeys = array_keys($address);
+        $provinceCookie = request()->cookie('province_id');
+
+        $provinceId = $provinceCookie && in_array($provinceCookie,
+            $provinceKeys) ? $provinceCookie : cons('address.default_province');
+        $provinceName = $address[$provinceId]['name'];
+
+        $cities = $address[$provinceId]['child'];
+        $cityKeys = array_keys($cities);
+        $cityCookie = request()->cookie('city_id');
+        $cityId = $cityCookie && in_array($cityCookie, $cityKeys) ? $cityCookie : head($cityKeys);
+        $cityName = $cities[$cityId]['name'];
+
+        return [
+            'province_id' => $provinceId,
+            'city_id' => $cityId,
+            'address_name' => $provinceName . $cityName
+        ];
     }
 }

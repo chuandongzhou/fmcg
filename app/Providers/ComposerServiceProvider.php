@@ -37,7 +37,7 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.help.master'
             ],
             ProvinceComposer::class => [
-                'index.search',
+               // 'index.search',
                 'index.master'
             ],
             NodeComposer::class => [

@@ -55,16 +55,6 @@ class AuthController extends Controller
     }
 
     /**
-     * 引导页
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function guide()
-    {
-        return view('auth.guide');
-    }
-
-    /**
      * 注册成功
      *
      * @param \Illuminate\Http\Request $request
