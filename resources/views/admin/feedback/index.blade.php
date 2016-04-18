@@ -16,7 +16,7 @@
         <thead>
         <tr>
             <th>提交者账号</th>
-            <th>提交者名称</th>
+            <th>联系方式</th>
             <th>提交信息内容</th>
             <th>处理状态</th>
             <th class="text-nowrap">操作</th>
@@ -26,7 +26,7 @@
         @foreach($feedbacks as $feedback)
             <tr>
                 <td>{{ $feedback->account }}</td>
-                <td>{{ $feedback->name }}</td>
+                <td>{{ $feedback->contact }}</td>
                 <td>{{ $feedback->content }}</td>
                 <td>{{ cons()->valueLang('feedback.status', $feedback->status) }}</td>
                 <td>

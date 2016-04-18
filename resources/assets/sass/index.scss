@@ -199,40 +199,88 @@ ul, li, p, a, h1, h2, h3, h4 {
   @include min-width;
   margin-top: 20px;
   padding: 20px 0;
-  p{
-    line-height: 2em;
-  }
-  .qr-code {
+  .list-inline{
     display: inline-block;
-    vertical-align: middle;
-    position:relative;
-    .qr-code-img{
-      position:absolute;
-      top:-155px;
-      right:-40px;
-      @include square(150px);
-      display: none;
-    }
-    .qr-code-panel{
-      text-decoration: none;
-      cursor: pointer;
-      img {
-        @include square(40px);
+    li{
+      padding-right: 15px;
+      a{
+        color:$gray;
+        display: inline-block;
+        height:20px;
+        &.icon{
+          background:url("../images/footer-icon.png") left center no-repeat;
+          padding-left: 23px;
+        }
+        &.about{
+          background-position:0 0;
+        }
+        &.contact-information{
+          background-position:0 -77px;
+        }
+        &.feedback{
+          background-position:0 -155px;
+        }
+        &.app-down{
+          background-position:0 -232px;
+        }
       }
-      p{
-        font-size: 10px;
-        color:$gray-light;
+      .tooltip {
+        .tooltip-arrow{
+          border-top-color: $brand-primary;
+        }
+      }
+      .contact-panel{
+        .tooltip-inner{
+          background-color: $body-bg;
+          color:$gray;
+          max-width:290px;
+          font-weight: bolder;
+          font-size: 12px;
+          height:80px;
+          padding:20px 10px;
+          border: 1px solid $brand-primary;
+          div{
+            padding: 2px 0;
+          }
+        }
+      }
+      #qr-content-panel {
+        .tooltip {
+          .tooltip-inner{
+            padding:0;
+          }
+          .qr-code {
+            background-image: url("../images/qr-code.png");
+            background-size: cover;
+            @include square(200px);
+            border: 2px solid $brand-primary;
+          }
+        }
       }
     }
-
-  }
-  .txt-content {
-    display: inline-block;
-    padding-left: 20px;
-    .sign {
-      padding-bottom: 5px;
+    .feedback-panel{
+      .popover {
+        min-width: 340px;
+        textarea {
+          display: block;
+          width: 100%;
+          height: 130px;
+          resize: none;
+          border: 1px solid #ddd;
+        }
+        .input-group {
+          margin-top: 5px;
+        }
+      }
     }
   }
+  .footer{
+    position:static;
+  }
+}
+.panel-footer{
+  padding:20px 15px;
+  position:inherit;
 }
 /*======================================head======================================*/
 /*======================================pop======================================*/
@@ -318,7 +366,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 .login-container {
   @include min-width;
-  min-height: 540px;
+  min-height: 610px;
   .login-title {
     position: absolute;
     height: 30%;
@@ -539,17 +587,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .forgot-modal-title {
   font-weight: 700;
 }
-
-.login-banner-slide {
-  .carousel-inner {
-    img {
-      width: 100%;
-      height: auto;
-      min-height: 500px;
-    }
-  }
-}
-
 .login-footer {
   background-color: #e2e2e2;
   border:none
@@ -597,101 +634,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================passed end======================================*/
 
-/*======================================guide end======================================*/
+/*======================================guide begin======================================*/
 .container {
   @include min-width;
 }
-
-.guide-container {
-  width: auto !important;
-  height: 78%;
-  position: relative;
-  .banner {
-    img {
-      width: 100%;
-    }
-  }
-  .content-panel {
-    position: absolute;
-    bottom: 10%;
-    width: 100%;
-    margin: auto;
-    .tabs-item {
-      float: left;
-      width: 25%;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      text-align: center;
-      cursor: pointer;
-      &:hover, &:focus {
-        text-decoration: none;
-        .item-icon {
-          img {
-            border: 2px solid $body-bg;
-          }
-
-        }
-      }
-      .item-icon {
-        display: inline-block;
-        width: 50%;
-        img {
-          border-radius: 50%;
-          padding: 5px;
-          width: 100%;
-          height: auto;
-        }
-      }
-      .item-name {
-        display: block;
-        color: $body-bg;
-        font-size: 18px;
-        margin-top: 10px;
-        font-weight: 700;
-        letter-spacing: 2px;
-      }
-    }
-  }
-}
-
-@media (min-width: 1400px) {
-  .guide-content {
-    .item-icon {
-      width: 80% !important;
-    }
-  }
-}
-
-@media (max-width: 736px) {
-  .guide-container {
-    position: absolute;
-    top: 0;
-    width: 100% !important;
-    height: 300px;
-    .banner {
-      img {
-        display: none;
-      }
-    }
-    .item-name {
-      color: $gray-base !important;
-      font-size: 12px !important;
-    }
-    .tabs-item {
-      width: 50% !important;
-    }
-  }
-  .guide-footer {
-    position: absolute;
-    bottom: 0;
-    width: auto !important;
-    min-width: 100% !important;
-    .container {
-      width: 100% !important;
-    }
-  }
-}
-
 .guide-footer, .register-footer {
   background-color: $body-bg;
 }
@@ -2424,13 +2370,13 @@ table {
     }
     .city-list {
       border: 1px solid $gray-plain-light;
-      margin-top: -1px;
+      margin-top: -2px;
       position: absolute;
       background-color: $body-bg;
       padding: 5px 10px;
+      min-height:320px;
+      min-width:380px;
       z-index: 888;
-      min-width: 380px;
-      min-height: 320px;
       display: none;
       .list-wrap {
         .item {
@@ -2474,12 +2420,6 @@ table {
             }
           }
         }
-        .city-two{
-          display: none;
-        }
-      }
-      #two{
-        display: none;
       }
     }
   }

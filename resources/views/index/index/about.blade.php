@@ -1,10 +1,6 @@
-@extends('master')
+@extends('auth.master')
 
 @section('title' , '关于我们 | 订百达 - 订货首选')
-
-@section('css')
-    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
-@stop
 
 @section('body')
     <nav class="navbar login-nav">
@@ -46,25 +42,5 @@
                 <a href="{{ asset('images/about-02.jpg') }}" target="_blank"><img src="{{ asset('images/about-02.jpg') }}"></a>
             </div>
         </div>
-    </div>
-@stop
-@section('footer')
-    <div class="footer">
-        <footer class="panel-footer">
-            <div class="container text-center text-muted">
-                <div class="row">
-                    <div class="col-sm-5 col-sm-push-2 text-left">
-                        <p>Copyright {!! cons('system.company_name') !!}</p>
-
-                        <p>{!! cons('system.company_record') !!}</p>
-                    </div>
-                    <div class="col-sm-6 text-left">
-                        <p>联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</p>
-
-                        <p>联系地址：{{ cons('system.company_addr') }}</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </div>
 @stop

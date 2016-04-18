@@ -8,8 +8,20 @@ class Feedback extends Model
     protected $table = 'feedback';
     protected $fillable = [
         'account',
-        'name',
+        'contact',
         'content',
         'status',
     ];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->attributes['account'] = auth()->id() ? auth()->user()->user_name : '';
+        });
+    }
 }

@@ -130,33 +130,62 @@ ul, li, p, a, h1, h2, h3, h4 {
   min-width: 1200px;
   margin-top: 20px;
   padding: 20px 0; }
-  .footer p {
-    line-height: 2em; }
-  .footer .qr-code {
-    display: inline-block;
-    vertical-align: middle;
-    position: relative; }
-    .footer .qr-code .qr-code-img {
-      position: absolute;
-      top: -155px;
-      right: -40px;
-      width: 150px;
-      height: 150px;
-      display: none; }
-    .footer .qr-code .qr-code-panel {
-      text-decoration: none;
-      cursor: pointer; }
-      .footer .qr-code .qr-code-panel img {
-        width: 40px;
-        height: 40px; }
-      .footer .qr-code .qr-code-panel p {
-        font-size: 10px;
-        color: #777777; }
-  .footer .txt-content {
-    display: inline-block;
-    padding-left: 20px; }
-    .footer .txt-content .sign {
-      padding-bottom: 5px; }
+  .footer .list-inline {
+    display: inline-block; }
+    .footer .list-inline li {
+      padding-right: 15px; }
+      .footer .list-inline li a {
+        color: #555555;
+        display: inline-block;
+        height: 20px; }
+        .footer .list-inline li a.icon {
+          background: url("../images/footer-icon.png") left center no-repeat;
+          padding-left: 23px; }
+        .footer .list-inline li a.about {
+          background-position: 0 0; }
+        .footer .list-inline li a.contact-information {
+          background-position: 0 -77px; }
+        .footer .list-inline li a.feedback {
+          background-position: 0 -155px; }
+        .footer .list-inline li a.app-down {
+          background-position: 0 -232px; }
+      .footer .list-inline li .tooltip .tooltip-arrow {
+        border-top-color: #4cb9fe; }
+      .footer .list-inline li .contact-panel .tooltip-inner {
+        background-color: #fff;
+        color: #555555;
+        max-width: 290px;
+        font-weight: bolder;
+        font-size: 12px;
+        height: 80px;
+        padding: 20px 10px;
+        border: 1px solid #4cb9fe; }
+        .footer .list-inline li .contact-panel .tooltip-inner div {
+          padding: 2px 0; }
+      .footer .list-inline li #qr-content-panel .tooltip .tooltip-inner {
+        padding: 0; }
+      .footer .list-inline li #qr-content-panel .tooltip .qr-code {
+        background-image: url("../images/qr-code.png");
+        background-size: cover;
+        width: 200px;
+        height: 200px;
+        border: 2px solid #4cb9fe; }
+    .footer .list-inline .feedback-panel .popover {
+      min-width: 340px; }
+      .footer .list-inline .feedback-panel .popover textarea {
+        display: block;
+        width: 100%;
+        height: 130px;
+        resize: none;
+        border: 1px solid #ddd; }
+      .footer .list-inline .feedback-panel .popover .input-group {
+        margin-top: 5px; }
+  .footer .footer {
+    position: static; }
+
+.panel-footer {
+  padding: 20px 15px;
+  position: inherit; }
 
 /*======================================head======================================*/
 /*======================================pop======================================*/
@@ -229,7 +258,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .login-container {
   min-width: 1200px;
-  min-height: 540px; }
+  min-height: 610px; }
   .login-container .login-title {
     position: absolute;
     height: 30%;
@@ -400,11 +429,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .forgot-modal-title {
   font-weight: 700; }
 
-.login-banner-slide .carousel-inner img {
-  width: 100%;
-  height: auto;
-  min-height: 500px; }
-
 .login-footer {
   background-color: #e2e2e2;
   border: none; }
@@ -442,72 +466,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 10px 0; }
 
 /*======================================passed end======================================*/
-/*======================================guide end======================================*/
+/*======================================guide begin======================================*/
 .container {
   min-width: 1200px; }
-
-.guide-container {
-  width: auto !important;
-  height: 78%;
-  position: relative; }
-  .guide-container .banner img {
-    width: 100%; }
-  .guide-container .content-panel {
-    position: absolute;
-    bottom: 10%;
-    width: 100%;
-    margin: auto; }
-    .guide-container .content-panel .tabs-item {
-      float: left;
-      width: 25%;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      text-align: center;
-      cursor: pointer; }
-      .guide-container .content-panel .tabs-item:hover, .guide-container .content-panel .tabs-item:focus {
-        text-decoration: none; }
-        .guide-container .content-panel .tabs-item:hover .item-icon img, .guide-container .content-panel .tabs-item:focus .item-icon img {
-          border: 2px solid #fff; }
-      .guide-container .content-panel .tabs-item .item-icon {
-        display: inline-block;
-        width: 50%; }
-        .guide-container .content-panel .tabs-item .item-icon img {
-          border-radius: 50%;
-          padding: 5px;
-          width: 100%;
-          height: auto; }
-      .guide-container .content-panel .tabs-item .item-name {
-        display: block;
-        color: #fff;
-        font-size: 18px;
-        margin-top: 10px;
-        font-weight: 700;
-        letter-spacing: 2px; }
-
-@media (min-width: 1400px) {
-  .guide-content .item-icon {
-    width: 80% !important; } }
-
-@media (max-width: 736px) {
-  .guide-container {
-    position: absolute;
-    top: 0;
-    width: 100% !important;
-    height: 300px; }
-    .guide-container .banner img {
-      display: none; }
-    .guide-container .item-name {
-      color: #000 !important;
-      font-size: 12px !important; }
-    .guide-container .tabs-item {
-      width: 50% !important; }
-  .guide-footer {
-    position: absolute;
-    bottom: 0;
-    width: auto !important;
-    min-width: 100% !important; }
-    .guide-footer .container {
-      width: 100% !important; } }
 
 .guide-footer, .register-footer {
   background-color: #fff; }
@@ -1766,13 +1727,13 @@ table .product-panel {
         background-color: #fff; }
     .dealer-top-header .city-wrap .city-list {
       border: 1px solid #e0e0e0;
-      margin-top: -1px;
+      margin-top: -2px;
       position: absolute;
       background-color: #fff;
       padding: 5px 10px;
-      z-index: 888;
-      min-width: 380px;
       min-height: 320px;
+      min-width: 380px;
+      z-index: 888;
       display: none; }
       .dealer-top-header .city-wrap .city-list .list-wrap .item {
         float: left;
@@ -1803,10 +1764,6 @@ table .product-panel {
           color: #000 !important; }
           .dealer-top-header .city-wrap .city-list .nav-tabs li a:hover {
             background-color: #fff !important; }
-        .dealer-top-header .city-wrap .city-list .nav-tabs .city-two {
-          display: none; }
-      .dealer-top-header .city-wrap .city-list #two {
-        display: none; }
   .dealer-top-header .operating-wrap .collect-select {
     position: relative; }
     .dealer-top-header .operating-wrap .collect-select .collect-selected {

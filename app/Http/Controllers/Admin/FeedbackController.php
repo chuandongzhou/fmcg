@@ -19,7 +19,7 @@ class FeedbackController extends Controller
     {
         $createdAt = new Carbon($request->input('feed_time'));
         if ($createdAt) {
-            $feedbacks = Feedback::whereBetween('created_at', [$createdAt ,$createdAt->copy()->endOfDay()])->paginate();
+            $feedbacks = Feedback::whereBetween('created_at', [$createdAt->copy()->startOfDay() ,$createdAt->copy()->endOfDay()])->paginate();
         } else {
             $feedbacks = Feedback::paginate();
         }

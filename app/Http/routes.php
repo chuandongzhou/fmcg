@@ -154,15 +154,12 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');                   //店铺商品
         $router->get('shop/get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
         $router->get('shop/all', 'ShopController@allShops');
-
         $router->get('version', 'VersionInfoController@getIndex');
-
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
-
         $router->put('my-goods/shelve', 'MyGoodsController@shelve');                //商品上下架
         $router->put('my-goods/batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
         $router->get('my-goods/images', 'MyGoodsController@getImages');
@@ -194,16 +191,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('address/province-id', 'AddressController@getProvinceIdByName');
         $router->controller('auth', 'AuthController');
         $router->controller('push', 'PushController');//推送设备
-
         //获取支付charge
-
         $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
         $router->any('pay/refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
         $router->get('pay/success-url', 'PayController@successUrl');
         $router->controller('pos', 'PosController');             //pos机付款
         $router->post('js-errors', ['uses' => 'PublicController@jsErrorStore']); // 前端JS错误记录
-
         //获取移动端广告
         $router->get('advert', 'AdvertController@index');
+        $router->post('feedback' , 'FeedbackController@index'); //意见反馈
     });
 });

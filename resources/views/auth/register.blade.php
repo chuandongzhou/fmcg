@@ -1,12 +1,9 @@
-@extends('master')
+@extends('auth.master')
 @include('includes.cropper')
 @include('includes.address')
 
 @section('title' , '注册 | 订百达')
 
-@section('css')
-    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
-@stop
 @section('body')
     <nav class="navbar login-nav">
         <div class="container padding-clear register">
@@ -275,29 +272,9 @@
 
 
 @stop
-@section('footer')
-    <div class="footer">
-        <footer class="panel-footer">
-            <div class="container text-center text-muted">
-                <div class="row">
-                    <div class="col-sm-5 col-sm-push-2 text-left">
-                        <p>Copyright {!! cons('system.company_name') !!}</p>
-
-                        <p>{!! cons('system.company_record') !!}</p>
-                    </div>
-                    <div class="col-sm-6 text-left">
-                        <p>联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</p>
-
-                        <p>联系地址：{{ cons('system.company_addr') }}</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-@stop
 @section('js-lib')
+    @parent
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
-    <script src="{{ asset('js/index.js?v=1.0.0') }}"></script>
 @stop
 @section('js')
     @parent

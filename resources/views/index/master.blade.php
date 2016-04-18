@@ -124,18 +124,61 @@
 @section('footer')
     <div class="footer">
         @yield('join-us')
-        <footer class="panel-footer">
+        <footer class="panel-footer footer">
             <div class="container text-center text-muted">
-                <div class="row">
-                    <div class="col-sm-5 col-sm-push-2 text-left">
-                        <p>Copyright {!! cons('system.company_name') !!}</p>
-
-                        <p>{!! cons('system.company_record') !!}</p>
+                <div class="row text-center">
+                    <div class="col-sm-6">
+                        <ul class="list-inline">
+                            <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
+                            <li>
+                                <div class="contact-panel">
+                                    <a href="javascript:;" class="icon contact-information">联系方式</a>
+                                </div>
+                                <div class="contact-content content hidden">
+                                    <div>{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</div>
+                                    <div>{{ cons('system.company_addr') }}</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="feedback-panel">
+                                    <a class="feedback icon" href="javascript:;">意见反馈</a>
+                                </div>
+                                <div class="content hidden">
+                                    <form class="ajax-form" method="post" action="{{ url('api/v1/feedback') }}"
+                                          accept-charset="UTF-8" data-help-class="error-msg text-center"
+                                    >
+                                        <div>
+                                            <textarea placeholder="请填写您的反馈意见" name="content"></textarea>
+                                        </div>
+                                        <div>
+                                            <div class="input-group">
+                                            <span class="input-group-addon" id="feedback-contact"><i
+                                                        class="fa fa-envelope-o"></i></span>
+                                                <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
+                                                       aria-describedby="feedback-contact" name="contact">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-submit" type="submit"
+                                                        data-done-then="none" data-done-text="反馈提交成功">提交
+                                                </button>
+                                            </span>
+                                            </div>
+                                            <!-- /input-group -->
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li>
+                                <div id="qr-content-panel">
+                                    <a href="javascript:;" class="app-down icon">APP下载</a>
+                                </div>
+                                <div class="content hidden">
+                                    <div class="qr-code"></div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-sm-6 text-left">
-                        <p>联系方式：{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</p>
-
-                        <p>联系地址：{{ cons('system.company_addr') }}</p>
+                    <div class="col-sm-6">
+                        <p>Copyright {!! cons('system.company_name') !!}</p>
                     </div>
                 </div>
             </div>
@@ -149,4 +192,38 @@
     <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>
     <script type="text/javascript" src="{{ asset('js/address-for-delivery.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/ajax-polling.js') }}"></script>
+@stop
+
+@section('js')
+    <script type="text/javascript">
+        $(function () {
+            //意见反馈
+            $('.feedback-panel > a').popover({
+                container: '.feedback-panel',
+                placement: 'top',
+                html: true,
+                content: function () {
+                    return $(this).parent().siblings('.content').html();
+                }
+            })
+
+            //扫二维码下载app
+            tooltipFunc('#qr-content-panel > a', '#qr-content-panel');
+            //联系方式
+            tooltipFunc('.contact-panel > a', '.contact-panel');
+
+            //调用tooltip插件
+            function tooltipFunc(item, container) {
+                $(item).tooltip({
+                    container: container,
+                    placement: 'top',
+                    html: true,
+                    title: function () {
+                        return $(this).parent().siblings('.content').html();
+                    }
+                })
+            }
+
+        });
+    </script>
 @stop
