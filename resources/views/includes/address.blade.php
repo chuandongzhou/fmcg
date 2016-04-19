@@ -90,7 +90,6 @@
     <script>
         $(function () {
             addAddFunc();
-//            baiDuMap();
         });
     </script>
 @stop

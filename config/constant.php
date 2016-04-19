@@ -336,12 +336,12 @@ return [
         'company_name' => '成都订百达科技有限公司',
         'company_addr' => '成都市高新区天华路9号6栋1单元905',
         'company_tel' => '028-83233316',
-        'company_mobile' => '13980537732',
+        'company_mobile' => '17723323231',
         'company_ceo' => '马先生',
         'company_record' => '蜀ICP备15031748号-1'
     ],
     //后台配置
     'admin' => [
-    'super_admin_name' => 'admin'
-]
+        'super_admin_name' => 'admin'
+    ]
 ];

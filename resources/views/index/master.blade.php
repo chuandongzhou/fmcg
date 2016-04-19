@@ -4,11 +4,15 @@
 
 @include('includes.chat')
 
+@if(!request()->cookie('province_id'))
+    @include('includes.first-load-model')
+@endif
+
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
     @stop
-@section('header')
 
+@section('header')
     <!--[if lt IE 9]>
     <div class="ie-warning alert alert-warning alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

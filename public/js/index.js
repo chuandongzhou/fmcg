@@ -83,11 +83,11 @@ function menuFunc() {
         $('.up-down').removeClass('fa-angle-up').addClass('fa-angle-down');
     })
 
-   /* $('.city-wrap .item').on('click', function () {
-        var provinceId = $(this).children('a').data('id');
-        setCookie('province_id', provinceId);
-        window.location.reload();
-    })*/
+    /* $('.city-wrap .item').on('click', function () {
+     var provinceId = $(this).children('a').data('id');
+     setCookie('province_id', provinceId);
+     window.location.reload();
+     })*/
     //city-menu end
 
     //collect begin
@@ -218,7 +218,9 @@ function joinCart() {
                 }, 0);
             }
         }).always(function () {
-
+            setTimeout(function () {
+                obj.button('reset');
+            }, 2000);
         });
 
         return false;
@@ -326,12 +328,12 @@ function cartFunc() {
             minNum = obj.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(obj.val());
-        if (buyNum <= 10000) {
+        if (buyNum > 10000) {
+            obj.val(10000);
+        } else {
             var goodsAllMoney = buyNum.mul(obj.data('price'));
             goodsAllMoneyTag.html(goodsAllMoney);
             initMoney();
-        } else {
-            obj.val(10000);
         }
 
     });
@@ -417,10 +419,9 @@ var numChange = function () {
 
             num.on('keyup', '', function () {
                 var obj = $(this), buyNum = parseInt(obj.val());
-                if (buyNum < 10000) {
-                    changeDescButton();
-                } else {
+                if (buyNum > 10000) {
                     obj.val(10000);
+                } else {
                     changeDescButton();
                 }
             });

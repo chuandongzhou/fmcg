@@ -37,7 +37,6 @@ if (!function_exists('upload_path')) {
         return config($configName) . $path;
     }
 }
-
 if (!function_exists('upload_url')) {
 
     /**
@@ -57,7 +56,6 @@ if (!function_exists('upload_url')) {
         return str_replace('\\', '/', asset($relatePath . $path, $secure));
     }
 }
-
 if (!function_exists('upload_file_url')) {
 
     /**
@@ -75,7 +73,6 @@ if (!function_exists('upload_file_url')) {
     }
 
 }
-
 if (!function_exists('avatar_url')) {
 
     /**
@@ -108,7 +105,6 @@ if (!function_exists('avatar_url')) {
     }
 
 }
-
 if (!function_exists('human_filesize')) {
 
     /**
@@ -127,7 +123,6 @@ if (!function_exists('human_filesize')) {
     }
 
 }
-
 if (!function_exists('cons')) {
 
     /**
@@ -145,7 +140,6 @@ if (!function_exists('cons')) {
         return $constant->get($key, $default);
     }
 }
-
 if (!function_exists('path_active')) {
     /**
      * 根据path设置菜单激活状态
@@ -162,8 +156,6 @@ if (!function_exists('path_active')) {
         return call_user_func_array('\Request::is', (array)$path) ? $class : '';
     }
 }
-
-
 if (!function_exists('request_info')) {
     /**
      * Write some information with request to the log.
@@ -187,8 +179,6 @@ if (!function_exists('request_info')) {
         ]);
     }
 }
-
-
 if (!function_exists('multi_array_unique')) {
     /**
      * 二维数组去重
@@ -234,7 +224,6 @@ if (!function_exists('admin_auth')) {
         return app('admin.auth');
     }
 }
-
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml
@@ -296,7 +285,6 @@ if (!function_exists('xml_to_array')) {
         return $array;
     }
 }
-
 if (!function_exists('array_key_to_value')) {
     /**
      * 格式化数组
@@ -315,3 +303,4 @@ if (!function_exists('array_key_to_value')) {
         return $newArray;
     }
 }
+

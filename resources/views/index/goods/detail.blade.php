@@ -150,7 +150,6 @@
             numChange();
             tabBox();
             likeFunc();
-            {{--getCoordinateMap(--}}{{--{!! $coordinates !!}--}}{{--);--}}
         });
     </script>
 @stop

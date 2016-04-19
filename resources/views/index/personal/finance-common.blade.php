@@ -3,7 +3,7 @@
     <b class="balance red">￥{{ $balance }}</b>
 </div>
 <div class="protected-balance">
-    <label>结算保护余额 :</label>
+    <label>结算保护金额 :</label>
     <b class="balance red">￥{{ sprintf("%.2f", $protectedBalance) }}</b>
 </div>
 <div class="can-withdraw-balance">
