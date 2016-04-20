@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-sm-4 right-search search search-options">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
+                        <input type="text" class="form-control" name="search_content" placeholder="供应商、订单号"
                                value="{{ $search['search_content'] or '' }}"
                                aria-describedby="course-search">
                 <span class="input-group-btn btn-primary">

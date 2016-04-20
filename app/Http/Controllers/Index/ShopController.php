@@ -47,7 +47,7 @@ class ShopController extends Controller
         //配送区域
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($gets, array_except($addressData, 'address_name'));
-        $shops = $shops->OfDeliveryArea($data);
+        $shops = $shops->OfDeliveryArea(array_filter($data));
 
         if (isset($gets['name'])) {
             $shops = $shops->where('name', 'like', '%' . $gets['name'] . '%');

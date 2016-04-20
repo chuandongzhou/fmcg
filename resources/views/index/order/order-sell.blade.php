@@ -2,6 +2,7 @@
 @include('includes.timepicker')
 @include('includes.order-refund')
 @include('includes.shipping-address-map')
+@include('includes.order-select-delivery_man')
 @section('subtitle', '订单管理')
 
 @section('right')
@@ -56,7 +57,7 @@
                                 <tr>
                                     <th>
                                         <label>
-                                            <input type="checkbox" class="order_id" name="order_id[]"
+                                            <input type="checkbox" class="order_id children" name="order_id[]"
                                                    value="{{ $order['id'] }}"> {{ $order['created_at'] }}
                                         </label>
                                         <span class="order-number">订单号 : {{ $order['id'] }}</span>
@@ -64,7 +65,9 @@
                                     <th>{{ $order['user']['shop']['name'] }}</th>
                                     <th></th>
                                     <th>
-                                        <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客户</a>
+                                        <a href="javascript:"
+                                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                           class="contact"><span class="fa fa-commenting-o"></span> 联系客户</a>
                                     </th>
                                     <th class="text-right">
                                         <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"
@@ -137,7 +140,7 @@
                                                         <p>
                                                             <a class="btn btn-warning send-goods"
                                                                data-target="#sendModal" data-toggle="modal"
-                                                               data-data="{{ $order['id'] }}">
+                                                               data-id="{{ $order['id'] }}">
                                                                 发货
                                                             </a>
                                                         </p>
@@ -172,11 +175,11 @@
             @if(\Request::is('order-sell') && $orders->count() )
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
-                        <input type="checkbox" id="check-all"/>
+                        <input type="checkbox" class="parent"/>
                         <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                                 data-method="put" data-done-then="none">批量取消
                         </button>
-                        <a class="btn btn-warning" data-target="#sendModal" data-toggle="modal">批量发货</a>
+                        <a class="btn btn-warning batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
                         <button class="btn btn-info ajax btn-receive"
                                 data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                         </button>
@@ -186,7 +189,6 @@
                     </div>
                 </div>
             @endif
-            @include('includes.order-select-delivery_man')
         </form>
     </div>
 @stop
@@ -195,11 +197,11 @@
     <script type="text/javascript">
         $(function () {
             getOrderButtonEvent();
-            formSubmitByGet(['delivery_man_id']);
+            onCheckChange('.parent', '.children');
+            formSubmitByGet(['delivery_man_id', 'order_id[]']);
             @if(session('export_error'))
                 alert('{{ session('export_error') }}');
             @endif
-
             $('.refund').click(function () {
                 var obj = $(this), url = obj.data('url');
                 $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');

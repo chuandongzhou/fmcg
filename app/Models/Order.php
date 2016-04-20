@@ -332,8 +332,8 @@ class Order extends Model
     {
         $orderConf = cons('order');
         return $this->attributes['status'] < $orderConf['status']['send']
-        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']/*&& $this->attributes['shop_id'] == auth()->user()->shop->id*/
-            ;
+        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']
+        && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
     }
 
     /**

@@ -155,7 +155,7 @@
                                 </a>
                             @elseif($order['can_send'])
                                 <a class="btn btn-warning send-goods" data-target="#sendModal"
-                                   data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
+                                   data-toggle="modal" data-id="{{ $order['id'] }}">发货</a>
                             @endif
                             @if($order['can_export'])
                                 <a target="_blank" class="btn btn-success"
@@ -206,7 +206,7 @@
                             <th>商品价格</th>
                             <th>商品数量</th>
                             <th>金额</th>
-                            @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
+                            @if($order->can_change_price)
                                 <th>操作</th>
                             @endif
                         </tr>
@@ -253,7 +253,6 @@
     @parent
     <script>
         $(function () {
-            sendGoodsByDetailPage();
             changePriceByDetailPage();
         })
     </script>

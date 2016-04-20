@@ -131,7 +131,7 @@
                                     </a>
                                 @elseif($order['can_send'])
                                     <a class="btn btn-warning send-goods" data-target="#sendModal"
-                                       data-toggle="modal" data-data="{{ $order['id'] }}">发货</a>
+                                       data-toggle="modal" data-id="{{ $order['id'] }}">发货</a>
                                 @elseif($order['can_confirm_collections'])
                                     <button class="btn btn-primary ajax" data-method='put'
                                             data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
@@ -163,7 +163,7 @@
                                data-consigner="{{ $order->shippingAddress->consigner }}"
                                data-phone= {{ $order->shippingAddress->phone }}
                             >
-                                <i  class="fa fa-map-marker"></i> 查看地图</a>
+                                <i class="fa fa-map-marker"></i> 查看地图</a>
 
                         </li>
                     </ul>
@@ -238,7 +238,6 @@
     @parent
     <script>
         $(function () {
-            sendGoodsByDetailPage();
             changePriceByDetailPage();
         })
     </script>

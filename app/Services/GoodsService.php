@@ -32,7 +32,7 @@ class GoodsService
         // 省市县
 
         if (isset($data['province_id'])) {
-            $goods->OfDeliveryArea($data);
+            $goods->OfDeliveryArea(array_filter($data));
         }
 
         $attrs = [];
@@ -124,7 +124,6 @@ class GoodsService
 
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
-
         $goodsColumns = [];
         if (Cache::has($cacheKey)) {
             $goodsColumns = Cache::get($cacheKey);
@@ -151,95 +150,24 @@ class GoodsService
                 'is_new',
                 'is_out',
                 'is_promotion',
-                'sales_volume'
+                'sales_volume',
+                'cate_level_1'
             ];
+            $goods = Goods::active()->whereIn('cate_level_1', $goodsColumns->pluck('id')->all())
+                ->where('user_type', '>', $type)
+                ->OfDeliveryArea(array_filter($data))
+                ->with('images.image')
+                ->select($goodsFields)
+                ->get()->each(function ($goods) {
+                    $goods->setAppends(['image_url']);
+                });
             foreach ($goodsColumns as $category) {
-                $goods = Goods::active()->where('cate_level_1', $category['id'])
-                    ->where('user_type', '>', $type)
-                    ->OfDeliveryArea($data)
-                    ->with('images.image')
-                    ->select($goodsFields)
-                    ->take($displayCount)
-                    ->get()->each(function ($goods) {
-                        $goods->setAppends(['image_url']);
-                    });
-                $category->goods = $goods;
+                $category->goods = $goods->where('cate_level_1', $category['id'])->take($displayCount);
             }
             Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
         }
         return $goodsColumns;
     }
-
-    /**
-     * 获取首页商品栏目
-     *
-     * @return mixed
-     */
-    static function getGoodsColumn()
-    {
-        $type = auth()->user()->type;
-
-        $columnTypes = cons('home_column.type');
-
-        $homeColumnGoodsConf = cons('home_column.goods');
-        $cacheKey = $homeColumnGoodsConf['cache']['pre_name'] . $type;
-
-        $goodsColumns = [];
-        $provinceId = request()->cookie('province_id') ? request()->cookie('province_id') : cons('address.default_province');
-
-        if (Cache::has($cacheKey) && Cache::get($cacheKey)[0]->province_id == $provinceId) {
-            $goodsColumns = Cache::get($cacheKey);
-        } else {
-            //商品
-            $goodsColumns = HomeColumn::where('type', $columnTypes['goods'])->get();
-
-            $goodsFields = [
-                'id',
-                'name',
-                'bar_code',
-                'price_retailer',
-                'price_wholesaler',
-                'min_num_retailer',
-                'min_num_wholesaler',
-                'is_new',
-                'is_out',
-                'is_promotion',
-                'sales_volume'
-            ];
-            $displayCount = $homeColumnGoodsConf['count']; //显示条数
-            foreach ($goodsColumns as $goodsColumn) {
-                $goods = Goods::active()->whereIn('id', $goodsColumn->id_list)
-                    ->where('user_type', '>', $type)
-                    ->OfDeliveryArea(['province_id' => $provinceId])
-                    ->with('images')
-                    ->select($goodsFields)
-                    ->get()->each(function ($goods) {
-                        $goods->setAppends(['image_url']);
-                    });
-                $columnGoodsCount = $goods->count();
-
-                if ($columnGoodsCount < $displayCount) {
-                    $columnGoodsIds = $goods->pluck('id')->toArray();
-                    $goodsBySort = Goods::active()->whereNotIn('id', $columnGoodsIds)
-                        ->where('user_type', '>', $type)
-                        ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
-                        ->with('images.image')
-                        ->OfDeliveryArea(['province_id' => $provinceId])
-                        ->select($goodsFields)
-                        ->take($displayCount - $columnGoodsCount)
-                        ->get()->each(function ($goods) {
-                            $goods->setAppends(['image_url']);
-                        });
-                    $goods = $goods->merge($goodsBySort);
-                }
-                $goodsColumn->goods = $goods;
-                $goodsColumn->province_id = $provinceId;
-            }
-            Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
-        }
-        return $goodsColumns;
-    }
-
     /**
      * 增加商品销量
      *

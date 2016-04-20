@@ -38,7 +38,7 @@ class ShopService
             foreach ($shopColumns as $shopColumn) {
                 $shops = Shop::whereIn('id', $shopColumn->id_list)
                     ->OfUser($type)
-                    ->OfDeliveryArea($data)
+                    ->OfDeliveryArea(array_filter($data))
                     ->with('images', 'logo', 'user')
                     ->get()
                     ->each(function ($shop) {
@@ -51,7 +51,7 @@ class ShopService
                         ->OfUser($type)
                         ->with('images', 'logo', 'user')
                         ->{'Of' . ucfirst(camel_case($shopColumn->sort))}()
-                        ->OfDeliveryArea($data)
+                        ->OfDeliveryArea(array_filter($data))
                         ->take(10 - $columnShopsCount)
                         ->get()->each(function ($shop) {
                             $shop->setAppends(['image_url', 'logo']);

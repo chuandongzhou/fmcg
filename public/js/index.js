@@ -24,31 +24,25 @@ function tips(obj, content) {
  * 订单管理界面
  */
 function getOrderButtonEvent() {
-    $('.content')
-        .on('click', '.send-goods', function () {
-            $('input[name="order_id"]').val($(this).data('data'));
-        })
-        .on('click', 'input[name="order_id[]"]', function () {
-            var child = $('input[name="order_id[]"]');
-            $('#check-all').prop('checked', child.length === child.filter(':checked').length);
-        });
-    $('#check-all').on('click', function () {
-        $('input[name="order_id[]"]').prop('checked', $(this).prop('checked'));
-    });
     $('.btn-cancel').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
         if (textStatus.failOrderIds.length) {
             alert('取消失败的订单id : ' + textStatus.failOrderIds);
-            site.refresh(true);
+            $(this).button('reset');
+            return false;
         }
     });
     $('.btn-receive').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
         if (textStatus.failIds.length) {
             alert('确认失败的订单id : ' + textStatus.failIds);
+            $(this).button('reset');
+            return false;
         }
     });
     $('.btn-send').on('done.ajax.hct', function (data, textStatus, jqXHR, self) {
         if (textStatus.failIds.length) {
             alert('发货失败的订单id : ' + textStatus.failIds);
+            $(this).button('reset');
+            return false;
         }
     });
     $('.export').click(function () {
@@ -617,21 +611,9 @@ function statisticsFunc() {
     var target_value0 = parseInt(target0.attr('value'));
     var target1 = $('input[name="goods_page_num"]');
     var target_value1 = parseInt(target1.attr('value'));
-    $('.span-checkbox').click(function () {
-        var inp_checkbox = $(this).siblings('.inp-checkbox');
-        var isCheck = inp_checkbox.is(':checked');
-        var fa = $(this).children('.fa');
-        if (isCheck == false) {
-            fa.addClass('fa-check');
-            inp_checkbox.prop('checked', true);
-            $('.checkbox-flag').val(1);
-        } else {
-            fa.removeClass('fa-check');
-            inp_checkbox.prop('checked', false);
-            $('.checkbox-flag').val(0);
-        }
+    $('.show-goods-name').change(function () {
         //提交表单
-        $('form').submit();
+        $('#submitBtn').trigger('click');
     });
     $('#export').click(function () {
         var form = $('form');
@@ -803,16 +785,6 @@ function getWithdrawTimeItem() {
     });
 }
 
-/**
- * 订单详情页发货功能事件
- */
-function sendGoodsByDetailPage() {
-    $('#sendModal').find('.btn-add').click(function () {
-        var order_id = $('.send-goods').attr('data-data');
-        var delivery_man_id = $('select option:selected').val();
-        $(this).attr('data-data', '{"order_id":' + order_id + ',"delivery_man_id":' + delivery_man_id + '}');
-    });
-}
 /**
  * 订单详情页修改单价功能事件
  */

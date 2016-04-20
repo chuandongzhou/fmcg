@@ -128,6 +128,7 @@ class OrderController extends Controller
         $payType = cons()->valueLang('pay_type');
         //查询条件判断
         $search = $request->all();
+        $search['show_goods_name'] = isset($search['show_goods_name']) ? $search['show_goods_name'] : 0;
         $orderCurrent = isset($search['order_page_num']) ? intval($search['order_page_num']) : 1;
         $goodsCurrent = isset($search['goods_page_num']) ? intval($search['goods_page_num']) : 1;
         $per = cons('statistics_per');//分页数
@@ -138,8 +139,6 @@ class OrderController extends Controller
         $goodsCount = count($res['goods']);//商品总数
         $otherStat = $res['stat'];
         $statGoods = collect($res['goods'])->forPage($goodsCurrent, $per);
-
-        $search['checkbox_flag'] = isset($search['checkbox_flag']) ? $search['checkbox_flag'] : 1;
 
         $orderNav = $this->_pageNav($orderCurrent, $per, $orderCount);
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
@@ -246,8 +245,11 @@ class OrderController extends Controller
         }
 
         //时间
-        if (!empty($search['start_at']) && !empty($search['end_at'])) {
-            $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
+        if (isset($search['start_at'])) {
+            $query->where('created_at', '>=', $search['start_at']);
+        }
+        if (isset($search['end_at'])) {
+            $query->where('created_at', '<=', $search['end_at']);
         }
         //商品名
         if (!empty($search['goods_name'])) {

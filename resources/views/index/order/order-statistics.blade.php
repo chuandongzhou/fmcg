@@ -39,12 +39,11 @@
                 <div class="col-sm-12 enter-item">
 
                     <div class="item">
-                        <p class="check-item"><span class="span-checkbox"><i
-                                        class="fa {{$search['checkbox_flag']==1 ? 'fa-check' : ''}}"></i></span>
-                            <input class="inp-checkbox"
-                                   type="checkbox" {{$search['checkbox_flag']==1 ? 'checked' : ''}}>显示商品</p>
-                        <input type="hidden" class="checkbox-flag" value="{{ $search['checkbox_flag'] }}"
-                               name="checkbox_flag"/>
+                        <p class="check-item">
+                            <input class="show-goods-name" name="show_goods_name"
+                                   type="checkbox" {{$search['show_goods_name'] ? 'checked' : ''}} value="1">
+                            显示商品
+                        </p>
                         <input type="text" class="enter" name="goods_name" placeholder="商品名称"
                                value="{{ $search['goods_name'] or '' }}">
                         <input type="text" class="enter" name="user_name" placeholder="{{ $showObjName }}"
@@ -58,7 +57,7 @@
                                     name="city_id"></select>
                             <select data-id="{{ $search['district_id'] or 0 }}" class="enter address-district"
                                     name="district_id"></select>
-                            <input type="hidden" class="enter address-street"/>
+                            <input type="hidden" class="enter address-street useless-control"/>
                         </div>
                     @endif
                 </div>
@@ -72,7 +71,7 @@
                             <td>订单状态</td>
                             <td>创建时间</td>
                             <td>订单金额</td>
-                            @if($search['checkbox_flag'])
+                            @if($search['show_goods_name'])
                                 <td>商品编号</td>
                                 <td>商品名称</td>
                                 <td>商品单价</td>
@@ -82,41 +81,28 @@
                         </thead>
                         <tbody>
                         @foreach($statistics as $order)
-                            @if($search['checkbox_flag'])
+                            @if($search['show_goods_name'])
                                 @foreach($order['goods'] as $key => $value)
-                                    @if($key)
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{ $value['id'] }}</td>
-                                            <td>{{ $value['name'] }}</td>
-                                            <td>￥{{ $value['pivot']['price'] }}</td>
-                                            <td>{{ $value['pivot']['num'] }}</td>
-                                        </tr>
-                                    @else
-                                        <tr>
-                                            <td>{{ $order['id'] }}</td>
-                                            <td>
+                                    <tr>
+                                        @if(!$key)
+                                            <td rowspan="{{ $order->goods->count() }}">{{ $order['id'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">
                                                 @if(auth()->user()->type == cons('user.type.wholesaler')&&$objCurrentType<cons('user.type.wholesaler') ||auth()->user()->type == cons('user.type.supplier'))
                                                     {{ $order['user']['shop']['name'] }}
                                                 @else
                                                     {{ $order['shop']['name'] }}
                                                 @endif
                                             </td>
-                                            <td>{{ $order['payment_type'] }}</td>
-                                            <td>{{ $order['status_name'] }}</td>
-                                            <td>{{ $order['created_at'] }}</td>
-                                            <td>￥{{ $order['price'] }}</td>
-                                            <td>{{ $value['id'] }}</td>
-                                            <td>{{ $value['name'] }}</td>
-                                            <td>￥{{ $value['pivot']['price'] }}</td>
-                                            <td>{{ $value['pivot']['num'] }}</td>
-                                        </tr>
-                                    @endif
+                                            <td rowspan="{{ $order->goods->count() }}">{{ $order['payment_type'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">{{ $order['status_name'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">{{ $order['created_at'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">￥{{ $order['price'] }}</td>
+                                        @endif
+                                        <td>{{ $value['id'] }}</td>
+                                        <td>{{ $value['name'] }}</td>
+                                        <td>￥{{ $value['pivot']['price'] }}</td>
+                                        <td>{{ $value['pivot']['num'] }}</td>
+                                    </tr>
                                 @endforeach
                             @else
                                 <tr>
