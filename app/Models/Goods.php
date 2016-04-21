@@ -289,9 +289,10 @@ class Goods extends Model
             //$model->images()->detach();         //商品图片
         });
 
-        static::creating(function ($model) {
-            $model->user_type = auth()->user()->type;
-        });
+//        static::creating(function ($model) {
+//            $model->user_type = auth()->user()->type;
+//
+//        });
     }
 
     /**
