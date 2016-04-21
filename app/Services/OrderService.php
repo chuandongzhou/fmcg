@@ -191,8 +191,34 @@ class OrderService
                 }
             }
             (new CartService)->decrement($carts->count());
+
+            //提交订单成功发送短信
+            $this->sendSmsToSeller($successOrders);
             return $returnArray;
         });
         return $result;
+    }
+
+
+    /**
+     * 发送短信
+     *
+     * @param $orders
+     * @return bool
+     */
+    public function sendSmsToSeller($orders)
+    {
+        if (count($orders) == 0) {
+            return false;
+        }
+        foreach ($orders as $order) {
+            $data = [
+                'order_id' => $order->id,
+                'order_amount' => $order->price,
+                'pay_type' => cons()->valueLang('pay_type', $order->pay_type)
+            ];
+            app('pushbox.sms')->queue('order', $order->shop->user->backup_mobile, $data);
+        }
+        return true;
     }
 }

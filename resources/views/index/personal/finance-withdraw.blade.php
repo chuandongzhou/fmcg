@@ -11,8 +11,7 @@
                     <div class="time form-group">
                         提现单号 : <input type="text" class=" inline-control" name="id" value="{{ $data['id'] or '' }}"/>
                         时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
-                                    type="text"
-                                    value="{{ $data['start_time'] or '' }}"> 至
+                                    type="text" value="{{ $data['start_time'] or '' }}"> 至
                         <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
                                value="{{ $data['end_time'] or '' }}"
                                type="text">

@@ -121,7 +121,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('notice', 'NoticeController'); //前台用户添加商品时没有图片的条形码
     $router->get('chat', 'ChatController@index'); // 消息
     $router->controller('cache', 'CacheController'); // 消息
-    $router->get('goods/create','GoodsController@create');//批量导入商品
+    $router->get('goods/import','GoodsController@import');//批量导入商品
 
 });
 

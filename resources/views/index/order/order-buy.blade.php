@@ -60,14 +60,17 @@
                                 <tr>
                                     <th>
                                         <label>
-                                            <input type="checkbox" name="order_id[]" value="{{ $order['id'] }}">
+                                            <input type="checkbox" name="order_id[]" value="{{ $order['id'] }}"
+                                                   class="children">
                                             {{ $order['created_at'] }}
                                         </label>
                                         <span class="order-number"> 订单号 : {{ $order['id'] }}</span>
                                     </th>
                                     <th colspan="3"> {{ $order['shop']['name'] }} </th>
                                     <th>
-                                        <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                                        <a href="javascript:"
+                                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                           class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
                                     </th>
                                 </tr>
                                 </thead>
@@ -145,7 +148,7 @@
             @if(\Request::is('order-buy') && $orders->count())
                 <div class="row" id="foot-nav">
                     <div class="col-sm-12 padding-clear">
-                        <input type="checkbox" id="check-all"/>
+                        <input type="checkbox" id="check-all" class="parent"/>
                         <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                                 data-method="put">
                             批量取消
@@ -167,6 +170,7 @@
     <script type="text/javascript">
         $(function () {
             getOrderButtonEvent();
+            onCheckChange('.parent', '.children');
             formSubmitByGet();
             $('.refund').click(function () {
                 var obj = $(this), url = obj.data('url');

@@ -32,4 +32,5 @@
             </tbody>
         </table>
     </form>
+    {!! $users->render() !!}
 @stop

@@ -236,10 +236,9 @@ class MyGoodsController extends Controller
     {
         $file = $request->file('file');
 
-        $postAttr = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3', 'status']);
+        $postAttr = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3', 'status', 'shop_id']);
         $attrs = $request->input('attrs');
-        $shopId = $request->input('shopId');
-        $importResult = $this->importGoods($file, $postAttr, $attrs, $shopId);
+        $importResult = $this->importGoods($file, $postAttr, $attrs);
 
         return $importResult['type'] ? $this->success($importResult['info']) : $this->error($importResult['info']);
     }
@@ -251,10 +250,9 @@ class MyGoodsController extends Controller
      * @param $file
      * @param $postAttr
      * @param $attrs
-     * @param $shopId
      * @return bool
      */
-    public function importGoods($file, $postAttr, $attrs,$shopId)
+    public function importGoods($file, $postAttr, $attrs)
     {
         $filePath = $this->uploadExcel($file);
         if (!$filePath['type']) {
@@ -262,11 +260,11 @@ class MyGoodsController extends Controller
         }
         $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
         })->skip(1)->toArray();
-        if(isset($shopId)){
-            $shop = Shop::find($shopId)->load(['deliveryArea','user']);
-        }else{
+        $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : false;
+        if ($shopId) {
+            $shop = Shop::find($shopId)->load(['deliveryArea', 'user']);
+        } else {
             $shop = auth()->user()->shop->load(['deliveryArea']);
-
         }
 
         foreach ($results as $goods) {
@@ -274,10 +272,9 @@ class MyGoodsController extends Controller
                 break;
             }
             $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user->type);
-            if(isset($shopId)){
-
+            if ($shopId) {
                 $goodsAttr['user_type'] = $shop->user->type;
-            }else{
+            } else {
                 $goodsAttr['user_type'] = auth()->user()->type;
             }
             $goodsModel = $shop->goods()->create($goodsAttr);
@@ -389,33 +386,26 @@ class MyGoodsController extends Controller
      * 获取商品字段
      *
      * @param $goodsArr
+     * @param $postAttr
+     * @param $shopType
      * @return array
      */
-    private function _getGoodsAttrForImport($goodsArr, $postAttr, $shop)
+    private function _getGoodsAttrForImport($goodsArr, $postAttr, $shopType)
     {
-
         $goods = [
             'name' => $goodsArr[0],
             'bar_code' => $goodsArr[1],
             'price_retailer' => $goodsArr[2],
             'min_num_retailer' => $goodsArr[3],
             'pieces_retailer' => $goodsArr[4],
-            'specification_retailer' => $goodsArr[5]
+            'specification_retailer' => $goodsArr[5],
+            'user_type' => $shopType
         ];
-        if(!isset($shop)) {
-            if (auth()->user()->type == cons('user.type.supplier')) {
-                $goods['price_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[2];
-                $goods['min_num_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[3];
-                $goods['pieces_wholesaler'] = isset($goodsArr[8]) ? $goodsArr[8] : $goodsArr[4];
-                $goods['specification_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[5];
-            }
-        }else{
-            if($shop == cons('user.type.supplier')){
-                $goods['price_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[2];
-                $goods['min_num_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[3];
-                $goods['pieces_wholesaler'] = isset($goodsArr[8]) ? $goodsArr[8] : $goodsArr[4];
-                $goods['specification_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[5];
-            }
+        if ($shopType == cons('user.type.supplier')) {
+            $goods['price_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[2];
+            $goods['min_num_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[3];
+            $goods['pieces_wholesaler'] = isset($goodsArr[8]) ? $goodsArr[8] : $goodsArr[4];
+            $goods['specification_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[5];
         }
         return array_merge($goods, $postAttr);
     }

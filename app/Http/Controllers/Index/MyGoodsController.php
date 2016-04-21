@@ -161,7 +161,7 @@ class MyGoodsController extends Controller
      */
     public function downloadTemplate()
     {
-        $userType = auth()->user()->type;
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.wholesaler');
         $fileName = array_search($userType, cons('user.type'));
         $file = public_path('images/') . $fileName . '.xls';
         if (is_file($file)) {

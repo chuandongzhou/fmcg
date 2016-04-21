@@ -165,6 +165,17 @@ class Top extends Adapter
         return $this->push(new Message('withdraw', $options));
     }
 
+    /**
+     * 订单处理
+     *
+     * @param $text
+     * @return \Tinpont\Pushbox\Adapter
+     */
+    public function pushOrder($text)
+    {
+        return $this->push(new Message('order', $text));
+    }
+
 
     /**
      * 发送短信

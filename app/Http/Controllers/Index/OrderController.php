@@ -386,7 +386,7 @@ class OrderController extends Controller
                 //打印条件
                 $options = $this->_spliceOptions($search);
                 //订单信息统计
-                $orderContent = $this->_spliceOrderContent($stat, $search['checkbox_flag']);
+                $orderContent = $this->_spliceOrderContent($stat, $search['show_goods_name']);
                 //商品信息统计
                 $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
                 //订单汇总统计

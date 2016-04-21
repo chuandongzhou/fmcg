@@ -15,12 +15,13 @@ class ChatController extends Controller
 //        dd($result);
 //
 
-        $userIds = User::where('audit_status', 1)->with('shop')->get()->implode('shop.id', ',');
-        $remoteUsers = (new ChatService())->checkUsers($userIds);
+        $users = User::where('audit_status', 1)->with('shop')->paginate(15);
+        $shopIds = $users->implode('shop.id', ',');
+        $remoteUsers = (new ChatService())->checkUsers($shopIds);
         $userInfos = [];
         if (isset($remoteUsers->userinfos->userinfos) && count($remoteUsers->userinfos->userinfos) > 0) {
             $userInfos = $remoteUsers->userinfos->userinfos;
         }
-        return view('admin.chat.index', ['userInfos' => $userInfos]);
+        return view('admin.chat.index', ['userInfos' => $userInfos, 'users' => $users]);
     }
 }

@@ -39,7 +39,19 @@
                             @endif
                         </div>
                     </div>
+                    {{--<div class="form-group row">--}}
+                        {{--<label class="col-sm-2 control-label" for="name">验证码:</label>--}}
 
+                        {{--<div class="col-sm-5">--}}
+                            {{--<input type="text" placeholder="请输入手机验证码" name="backup_mobile" class="form-control">--}}
+                        {{--</div>--}}
+                        {{--<div class="col-sm-3">--}}
+                            {{--<button data-prevent-default="false" data-done-then="none" data-method="post"--}}
+                                    {{--data-url="http://fmcg.com/api/v1/auth/send-sms"--}}
+                                    {{--class="btn btn-success ajax form-control send-sms" type="submit">发送短信--}}
+                            {{--</button>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
                 <div class="modal-footer">
                     <div class="text-right">

@@ -331,9 +331,9 @@ class Order extends Model
     public function getCanChangePriceAttribute()
     {
         $orderConf = cons('order');
-        return $this->attributes['status'] < $orderConf['status']['send']
-        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']
-        && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
+        return $this->attributes['pay_type'] == cons('pay_type.online')
+            ? $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
+            : $this->attributes['status'] < $orderConf['status']['finished'];
     }
 
     /**

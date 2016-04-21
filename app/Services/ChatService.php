@@ -47,18 +47,6 @@ class ChatService
         $userInfos->password = $this->commonPassword;
         $userInfos->remark = $item instanceof User ? $item->shop->introduction : $item->introduction;
         $userInfos->address = $item instanceof User ? $item->shop->address : $item->address;
-
-        //$userInfos->email='';
-        //$userInfos->taobaoid="tbnick123";
-        //$userInfos->extra = "demo";
-        //$userInfos->career = "demo";
-        //$userInfos->vip = "demo";
-        //$userInfos->name = "demo";
-        //$userInfos->age = "123";
-        //$userInfos->gender = "demo";
-        //$userInfos->wechat = "demo";
-        //$userInfos->qq = "demo";
-        //$userInfos->weibo = "demo";
         $req->setUserinfos(json_encode($userInfos));
         $resp = $top->execute($req);
 

@@ -3,12 +3,12 @@
 @section('subtitle', '个人中心-商家信息')
 
 @section('right')
-    <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off" class="form-horizontal">
+    <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off">
         <div class="row">
             <div class="col-sm-12 ">
                 @include('index.personal.finance-common')
-                <div class="table-responsive">
-                    <div class="time form-group margin-clear">
+                <div class="table">
+                    <div class="form-group">
                         时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
                                     type="text"
                                     value="{{ $data['start_time'] or '' }}"> 至
@@ -17,7 +17,7 @@
                                type="text">
                         <input type="submit" class="btn btn-default search-by-get">
                     </div>
-                    <div class="time form-group  margin-clear">
+                    <div class="time form-group">
                         <table class="table table-bordered table-center">
                             <thead>
                             <tr>

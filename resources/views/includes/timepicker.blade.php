@@ -26,7 +26,11 @@
                         clear: "fa fa-trash",
                         close: "fa fa-remove"
                     },
-                    format: format
+                    format: format,
+                    widgetPositioning: {
+                        horizontal: 'auto',
+                        vertical: 'bottom'
+                    }
                 });
             });
         });

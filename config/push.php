@@ -9,7 +9,8 @@ return [
             'code' => '2954',
             'audit_passed' => '2943',
             'audit_not_passed' => '2944',
-            'withdraw' => '2946'
+            'withdraw' => '2946',
+            'order' => '3329'
         ],
         // 消息通用密码
         'message_password' => substr(md5('dingbaida2016315'), 10, 8)

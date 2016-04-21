@@ -190,7 +190,7 @@
                             <th>商品价格</th>
                             <th>商品数量</th>
                             <th>金额</th>
-                            @if($order['status']<cons('order.status.send') && $order['is_cancel'] == cons('order.is_cancel.off'))
+                            @if($order->can_change_price)
                                 <th>操作</th>
                             @endif
                         </tr>
