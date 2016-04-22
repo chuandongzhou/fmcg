@@ -33,7 +33,8 @@
                     @endif
                     <button id="submitBtn" class="btn search-by-get" type="submit">统计</button>
                     @unless(empty($statistics))
-                        <a id="export" class="btn btn-primary">统计导出</a>
+                        <a id="export" href="{{ url('order/stat-export?'.  http_build_query($search)) }}"
+                           class="btn btn-primary">统计导出</a>
                     @endunless
                 </div>
                 <div class="col-sm-12 enter-item">
@@ -41,7 +42,7 @@
                     <div class="item">
                         <p class="check-item">
                             <input class="show-goods-name" name="show_goods_name"
-                                   type="checkbox" {{$search['show_goods_name'] ? 'checked' : ''}} value="1">
+                                   type="checkbox" {{ $search['show_goods_name'] ? 'checked' : '' }} value="1">
                             显示商品
                         </p>
                         <input type="text" class="enter" name="goods_name" placeholder="商品名称"

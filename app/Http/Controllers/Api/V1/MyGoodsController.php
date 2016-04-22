@@ -235,7 +235,6 @@ class MyGoodsController extends Controller
     public function import(Request $request)
     {
         $file = $request->file('file');
-
         $postAttr = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3', 'status', 'shop_id']);
         $attrs = $request->input('attrs');
         $importResult = $this->importGoods($file, $postAttr, $attrs);
@@ -260,11 +259,14 @@ class MyGoodsController extends Controller
         }
         $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
         })->skip(1)->toArray();
-        $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : false;
+        $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : null;
         if ($shopId) {
-            $shop = Shop::find($shopId)->load(['deliveryArea', 'user']);
+            $shop = Shop::with(['deliveryArea', 'user'])->find($shopId);
         } else {
             $shop = auth()->user()->shop->load(['deliveryArea']);
+        }
+        if (is_null($shop)) {
+            return $this->setImportResult('店铺不存在');
         }
 
         foreach ($results as $goods) {
@@ -272,11 +274,6 @@ class MyGoodsController extends Controller
                 break;
             }
             $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user->type);
-            if ($shopId) {
-                $goodsAttr['user_type'] = $shop->user->type;
-            } else {
-                $goodsAttr['user_type'] = auth()->user()->type;
-            }
             $goodsModel = $shop->goods()->create($goodsAttr);
             if ($goodsModel->exists) {
                 $this->saveWithoutImageOfBarCode($goodsModel);

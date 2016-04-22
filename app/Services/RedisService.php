@@ -88,7 +88,7 @@ class RedisService
      */
     public function del($key, $hasPrefix = true)
     {
-        $key = $hasPrefix ? $this->$this->getKey($key) : $key;
+        $key = $hasPrefix ? $this->getKey($key) : $key;
         return empty($key) ? true : $this->redis->del($key);
     }
 

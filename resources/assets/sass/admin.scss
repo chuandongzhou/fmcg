@@ -105,15 +105,15 @@
 }
 
 /**********************************交易信息结束***************************************/
-.attr {
-  padding: 15px 0 5px 5px;
-  margin: 0 15px 0 15px;
-  .items-item {
-    display: inline-block;
-    padding-right: 40px;
-    position: relative;
-  }
-}
+//.attr {
+//  padding: 15px 0 5px 5px;
+//  margin: 0 15px 0 15px;
+//  .items-item {
+//    display: inline-block;
+//    padding-right: 40px;
+//    position: relative;
+//  }
+//}
 
 /*========================登录开始 ==========================*/
 .login {
@@ -164,3 +164,31 @@ textarea{
   margin: 0;
 }
 /*==============baidu map css end=================*/
+
+/*==============   文件上传开始   =================*/
+.import-goods-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block; }
+.import-goods-btn input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer; }
+/*==============   文件上传结束   =================*/
+
+.padding-clear{
+  padding:0!important;
+}
+
+.attr {
+  padding: 5px 0 5px 15px;
+  margin: 10px 0;
+  .items-item {
+    display: inline-block;
+    padding:5px 20px 5px 0;
+  }
+}

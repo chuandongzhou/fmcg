@@ -43,15 +43,14 @@ class CartService
         ])->with('user')->get()->each(function ($shop) {
             $shop->setAppends([]);
         });
-        $userLikeGoodsIds = auth()->user()->likeGoods()->pluck('id');
-
+        $userLikeGoodsIds = auth()->user()->likeGoods()->get()->pluck('id')->all();
         foreach ($shops as $key => $shop) {
             $sumPrice = 0;
             foreach ($carts as $cart) {
                 if (Gate::denies('validate-goods', $cart->goods)) {
                     continue;
                 }
-                $cart->is_like = in_array($cart->goods_id, (array)$userLikeGoodsIds);
+                $cart->is_like = in_array($cart->goods_id, $userLikeGoodsIds);
                 $cart->image = $cart->goods->image_url;
                 if ($cart->goods->shop_id == $shop->id) {
                     $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,

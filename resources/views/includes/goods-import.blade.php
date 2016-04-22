@@ -41,7 +41,7 @@
                         <div class="progress collapse">
                             <div class="progress-bar progress-bar-striped active"></div>
                         </div>
-                               <span class="btn btn-primary btn-sm fileinput-button">
+                               <span class="btn btn-primary btn-sm import-goods-btn">
                                     请选择Excel文件
                                     <input type="file" accept="excel/*"
                                            data-url="{{ url('api/v1/my-goods/import') }}" id="upload_file"
@@ -65,7 +65,7 @@
             {{--class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>--}}
 
             <p class="save-btn">
-                <a class="btn btn-bg btn-primary save-btn"> 保存</a>
+                <a class="btn btn-bg btn-primary"> 保存</a>
             </p>
         </div>
     </form>

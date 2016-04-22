@@ -615,15 +615,6 @@ function statisticsFunc() {
         //提交表单
         $('#submitBtn').trigger('click');
     });
-    $('#export').click(function () {
-        var form = $('form');
-        var oldUrl = form.attr('action');
-        var newUrl = SITE.ROOT + "/order/stat-export";
-        form.attr('action', newUrl).submit();
-        //初始化设置
-        form.attr('action', oldUrl);
-
-    });
     $('#submitBtn').click(function () {
         target0.attr('value', 1);
         target1.attr('value', 1);

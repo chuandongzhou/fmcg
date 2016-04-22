@@ -374,7 +374,7 @@ class OrderController extends Controller
     {
         //查询条件判断
         $search = $request->all();
-        $stat = $this->_searchAllOrderByOptions($search);
+        $stat = $this->_searchAllOrderByOptions(array_filter($search));
         $otherStat = $this->_orderStatistics($stat);
 
         Excel::create('订单统计', function ($excel) use ($stat, $search, $otherStat) {
@@ -386,7 +386,7 @@ class OrderController extends Controller
                 //打印条件
                 $options = $this->_spliceOptions($search);
                 //订单信息统计
-                $orderContent = $this->_spliceOrderContent($stat, $search['show_goods_name']);
+                $orderContent = $this->_spliceOrderContent($stat, isset($search['show_goods_name']));
                 //商品信息统计
                 $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
                 //订单汇总统计

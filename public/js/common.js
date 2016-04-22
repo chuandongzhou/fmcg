@@ -1108,7 +1108,7 @@ var onCheckChange = function (parent_selectors, target_selectors) {
 /**
  * 商品批量上传处理
  */
-var goodsBatchUpload = function() {
+var goodsBatchUpload = function () {
     $('#upload_file').change(function () {
         var fileName = $(this).val();
         var arr = fileName.split('\\');
@@ -1153,7 +1153,8 @@ var goodsBatchUpload = function() {
                 data.formData = formData;
                 data.submit();
             });
-        }, fail: function (e, data) {
+        },
+        fail: function (e, data) {
             var json = data.jqXHR['responseJSON'], text = '文件上传失败';
             if (json && json['message']) {
                 text = json['message'];
@@ -1163,7 +1164,6 @@ var goodsBatchUpload = function() {
         },
         done: function (e, data) {
             $(this).parent().after('<span class="fileinput-error"> 上传成功</span>');
-            alert('上传成功');
             location.reload();
         }, always: function (e, data) {
             // 隐藏进度条并开放按钮

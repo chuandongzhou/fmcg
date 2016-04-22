@@ -27,7 +27,9 @@ class CartController extends Controller
     public function getIndex()
     {
         $myCarts = $this->user->carts();
-        $carts = $myCarts->with('goods.images.image')->get();
+        $carts = $myCarts->whereHas('goods', function ($query) {
+            $query->whereNotNull('id');
+        })->with('goods.images.image')->get();
 
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零
