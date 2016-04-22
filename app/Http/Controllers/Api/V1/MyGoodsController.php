@@ -239,7 +239,8 @@ class MyGoodsController extends Controller
         $attrs = $request->input('attrs');
         $importResult = $this->importGoods($file, $postAttr, $attrs);
 
-        return $importResult['type'] ? $this->success($importResult['info']) : $this->error($importResult['info']);
+        return $importResult['type'] ? $this->success($importResult['info'],
+            ['Content-Type' => 'text/html']) : $this->error($importResult['info']);
     }
 
 
