@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class DeliveryMan extends Model
+class DeliveryMan extends Model implements AuthenticatableContract
 {
     use SoftDeletes;
+    use Authenticatable;
 
     protected $table = 'delivery_man';
     protected $fillable = ['user_name', 'password', 'pos_sign', 'name', 'phone', 'shop_id', 'last_login_at'];

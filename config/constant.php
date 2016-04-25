@@ -180,7 +180,10 @@ return [
             'rope' => 4,
             'bag' => 5,
             'pot' => 6,
-            'packet' => 7
+            'packet' => 7,
+            'bucket' => 8,
+            'cup' => 9,
+            'branch' => 10
         ],
         'import_allow_ext' => [
             'xls',

@@ -107,7 +107,10 @@ return [
             'rope' => '条',
             'bag' => '袋',
             'pot' => '罐',
-            'packet' => '包'
+            'packet' => '包',
+            'bucket'=> '桶',
+            'cup' => '杯',
+            'branch' => '支'
         ]
     ],
     // 银行列表

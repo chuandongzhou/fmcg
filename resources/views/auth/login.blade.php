@@ -67,7 +67,7 @@
                     <div class="item-icon">
                         <img src="{{ asset('images/guide-icons-1.png')  }}">
                     </div>
-                    <span class="item-name" data-type="{{ cons('user.type.supplier') }}">供应商平台</span>
+                    <span class="item-name" data-type="{{ cons('user.type.supplier') }}">供应平台</span>
                 </a>
                 <a class="tabs-item">
                     <div class="item-icon">

@@ -33,7 +33,7 @@
                 toAvatar: '{{ $shop->logo_url }}',
                 //autoMsg: '',
                 autoMsgType: 1,
-                pluginUrl: '{{ url('personal/chat/goods-detail?id=34') }}',
+                pluginUrl: '{{ url('personal/chat/detail?id=' . $remoteUid) }}',
                 onLoginSuccess: function () {
                     var sdk = WKIT.Conn.sdk, Event = sdk.Event;
                     Event.on('CHAT.MSG_RECEIVED', function (data) {

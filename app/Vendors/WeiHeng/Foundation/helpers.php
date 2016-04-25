@@ -224,6 +224,18 @@ if (!function_exists('admin_auth')) {
         return app('admin.auth');
     }
 }
+
+if (!function_exists('delivery_auth')) {
+    /**
+     * Get the available admin auth instance.
+     *
+     * @return \Weiheng\Delivery\Guard
+     */
+    function delivery_auth()
+    {
+        return app('delivery.auth');
+    }
+}
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml

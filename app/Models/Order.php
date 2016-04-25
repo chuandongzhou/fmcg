@@ -550,8 +550,11 @@ class Order extends Model
                     $query->where('status', cons('order.status')[$search['status']]);
                 }
             }
-            if ($search['start_at'] && $search['end_at']) {
-                $query->whereBetween('created_at', [$search['start_at'], $search['end_at']]);
+            if ($search['start_at']) {
+                $query->where('created_at', '>', $search['start_at']);
+            }
+            if ($search['end_at']) {
+                $query->where('created_at', ' <', $search['end_at']);
             }
         })->where('is_cancel', cons('order.is_cancel.off'));
     }

@@ -141,6 +141,7 @@ return [
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
         \WeiHeng\Admin\AdminServiceProvider::class,
+        \WeiHeng\Delivery\DeliveryServiceProvider::class,
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,

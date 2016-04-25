@@ -418,8 +418,8 @@ class Shop extends Model
     public function getLogoUrlAttribute()
     {
         $logo = $this->logo;
-
-        return $logo ? upload_file_url($logo->path) : ($this->user->type == cons('user.type.wholesaler') ? asset('images/wholesaler.jpg') : asset('images/supplier.jpg'));
+        $userType = array_flip(cons('user.type'));
+        return $logo ? upload_file_url($logo->path) : asset('images/' . $userType[$this->user->type] . '.jpg');
     }
 
     /**

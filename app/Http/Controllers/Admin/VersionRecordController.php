@@ -46,7 +46,7 @@ class VersionRecordController extends Controller
     public function store(CreateVersionRecordRequest $request)
     {
         $attributes = $request->all();
-        $attributes['user_name'] = auth()->user()->user_name;
+        $attributes['user_name'] = admin_auth()->user()->name;
 
         $exist = VersionRecord::where([
             'type' => $attributes['type'],

@@ -2,11 +2,10 @@
 @section('subtitle' , '运营数据统计')
 @include('includes.timepicker')
 @section('right-container')
-
     <form class="form-horizontal" action="{{ url('admin/statistics') }}" method="get" autocomplete="off">
         <label for="time">时间:</label>
         <input type="text" name="start_time" class="time inline-control datetimepicker"
-                                             data-format="YYYY-MM-DD" value="{{ $startTime }}"/>
+               data-format="YYYY-MM-DD" value="{{ $startTime }}"/>
         至
         <input type="text" name="end_time" class="time inline-control datetimepicker"
                data-format="YYYY-MM-DD" value="{{ $endTime }}"/>

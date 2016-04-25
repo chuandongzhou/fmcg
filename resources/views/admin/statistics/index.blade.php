@@ -171,6 +171,12 @@
                         <td>{!! $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] or 0 !!}</td>
                         </td>
                     </tr>
+                    <tr>
+                        <td>线下pos机完成总金额</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['posSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] or 0 !!}</td>
+                    </tr>
                 </table>
             </div>
         </div>

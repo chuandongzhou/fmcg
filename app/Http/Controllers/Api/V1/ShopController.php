@@ -96,15 +96,24 @@ class ShopController extends Controller
     }
 
 
-    public function getShopsByIds(Request $request){
+    /**
+     * 根据店铺id获取店铺
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return array|\WeiHeng\Responses\Apiv1Response
+     */
+    public function getShopsByIds(Request $request)
+    {
         $shopIds = $request->input('data');
         if (empty($shopIds)) {
             return [];
         }
-        $shops = Shop::with('logo')->whereIn('id' , $shopIds)->get(['name' , 'id'])->each(function($shop) {
+        $shops = Shop::with(['logo', 'user'])->whereIn('id', $shopIds)->get(['name', 'id', 'user_id'])->each(function (
+            $shop
+        ) {
             $shop->setAppends(['logo_url']);
         });
-       return $this->success(['shops' => $shops->keyBy('id')]);
+        return $this->success(['shops' => $shops->keyBy('id')]);
     }
 
     /**

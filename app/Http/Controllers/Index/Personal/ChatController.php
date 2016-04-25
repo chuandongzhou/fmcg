@@ -18,7 +18,7 @@ class ChatController extends Controller
     public function getIndex()
     {
         $shopId = auth()->user()->shop()->pluck('id');
-        return view('index.personal.chat' ,[
+        return view('index.personal.chat', [
             'shopId' => $shopId
         ]);
     }
@@ -33,7 +33,7 @@ class ChatController extends Controller
     public function getKit(Request $request)
     {
         $shopId = $request->input('remote_uid', '-1');
-        $shop = Shop::with('logo')->select(['id' ,'name'])->find($shopId);
+        $shop = Shop::with(['logo', 'user'])->select(['id', 'name', 'user_id'])->find($shopId);
         return view('index.personal.chat-kit', [
             'remoteUid' => $shopId,
             'fullScreen' => $request->input('full_screen'),
@@ -47,8 +47,10 @@ class ChatController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getGoodsDetail(Request $request)
+    public function getDetail(Request $request)
     {
-        return view('index.personal.chat-goods-detail');
+        $shopId = $request->input('id', '-1');
+        $shop = Shop::find($shopId);
+        return view('index.personal.chat-detail', ['shop' => $shop ?: new Shop]);
     }
 }
