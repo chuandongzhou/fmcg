@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 
-class UpdateHomeColumnRequest extends Request
+class CreateShopColumnRequest extends Request
 {
 
     /**
@@ -13,12 +13,21 @@ class UpdateHomeColumnRequest extends Request
      */
     public function rules()
     {
-        $HomeColumn = $this->route('column');
         return [
-            'name' => 'sometimes|required|alpha_dash|between:4,16|unique:home_column,name,' . $HomeColumn->id,
-            'type' => 'required|in:1,2',
+            'name' => 'required|alpha_dash|between:4,16|unique:shop_column',
             'id_list' => 'required',
             'sort' => 'required'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+
+    public function attributes()
+    {
+        return [
+            'name' => '栏目名'
         ];
     }
 }

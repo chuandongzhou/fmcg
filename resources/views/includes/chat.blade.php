@@ -25,7 +25,7 @@
                                 totalCount += item.msgCount;
                                 if (!isTotal) {
                                     var touid = item.contact.substring(8);
-                                    userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').html(item.msgCount);
+                                    userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
                                 }
                             }
                         });
@@ -102,7 +102,7 @@
                     touid: touid,
                     timestamp: Math.floor((new Date()) / 1000),
                     success: function (data) {
-                        userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').html(0);
+                        userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html(0);
                     },
                     error: function (error) {
                         console.log('设置已读失败', error);
@@ -113,7 +113,7 @@
             var addMessageNum = function (sdk, touid) {
                 var userMsg = userListPanel.find('.user-msg[data-touid="' + touid + '"]'), badgeItem = userMsg.find('.badge');
                 if (!userMsg.prop('disabled')) {
-                    badgeItem.html(parseInt(badgeItem.html()) + 1);
+                    badgeItem.removeClass('hide').html(parseInt(badgeItem.html()) + 1);
                 } else {
                     setReadState(sdk, touid);
                 }
@@ -137,7 +137,7 @@
                                 '   </div> ' +
                                 '   <div class="user-item"> ' +
                                 '       <span class="last-msg prompt">' + userList[i][1] + '</span> ' +
-                                '       <span class="pull-right badge">0</span> ' +
+                                '       <span class="pull-right badge hide">0</span> ' +
                                 '   </div> ' +
                                 '</li>';
                     }
@@ -167,27 +167,31 @@
                 if (!SITE.USER.id) {
                     return false;
                 }
-            var sdk = new WSDK(), Event = sdk.Event;
-            sdk.Base.login({
-                uid: '{{ $chatConf['shop_id'] }}',
-                appkey: '{{ $chatConf['key'] }}',
-                credential: '{{ $chatConf['pwd'] }}',
-                timeout: 5000,
-                success: function (data) {
-                    getUnreadMsgCount(sdk, true);
+                var sdk = new WSDK(), Event = sdk.Event;
+                sdk.Base.login({
+                    uid: '{{ $chatConf['shop_id'] }}',
+                    appkey: '{{ $chatConf['key'] }}',
+                    credential: '{{ $chatConf['pwd'] }}',
+                    timeout: 5000,
+                    success: function (data) {
+                        getUnreadMsgCount(sdk, true);
 
-                    Event.on('CHAT.MSG_RECEIVED', function (data) {
-                        totalMsg.html(parseInt(totalMsg.html()) + 1);
-                    });
-                    sdk.Base.startListenAllMsg();
-                },
-                error: function (error) {
-                    // {code: 1002, resultText: 'TIMEOUT'}
-                    console.log('login fail', error);
-                }
-            });
+                        Event.on('CHAT.MSG_RECEIVED', function (data) {
+                            totalMsg.html(parseInt(totalMsg.html()) + 1);
+                        });
+                        sdk.Base.startListenAllMsg();
+                    },
+                    error: function (error) {
+                        // {code: 1002, resultText: 'TIMEOUT'}
+                        console.log('login fail', error);
+                    }
+                });
 
             @endif
+
+
+
+
 
 
         });

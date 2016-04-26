@@ -56,7 +56,8 @@ return [
         'goods' => [
             'count' => 8, //显示商品条数
             'cache' => [
-                'pre_name' => 'home_column:goods:',
+                'name_cate' => 'home_column:cate:',
+                'name_admin' => 'home_column:admin:',
                 'expire' => 10
             ]
         ],
@@ -183,7 +184,9 @@ return [
             'packet' => 7,
             'bucket' => 8,
             'cup' => 9,
-            'branch' => 10
+            'branch' => 10,
+            'individual' => 11,
+            'canister' => 12
         ],
         'import_allow_ext' => [
             'xls',

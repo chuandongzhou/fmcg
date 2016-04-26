@@ -371,7 +371,6 @@ var commonAjaxSetup = function () {
             $.each(self.data('data') || {}, function (name, value) {
                 data.push({name: name, value: value});
             });
-
             $.ajax({
                 url: url,
                 method: method,

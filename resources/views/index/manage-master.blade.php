@@ -76,7 +76,7 @@
                                     <a href="javascript:;" class="icon contact-information">联系方式</a>
                                 </div>
                                 <div class="contact-content content hidden">
-                                    <div>{{ cons('system.company_tel') . ' ' . cons('system.company_mobile') }}</div>
+                                    <div>{{ cons('system.company_tel') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_mobile') }}</div>
                                     <div>{{ cons('system.company_addr') }}</div>
                                 </div>
                             </li>

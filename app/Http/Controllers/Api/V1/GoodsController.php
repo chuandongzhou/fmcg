@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\GoodsColumn;
 use App\Services\AttrService;
 use Gate;
 use App\Models\Goods;
@@ -77,5 +78,30 @@ class GoodsController extends Controller
         $goods->is_like = $isLike ? true : false;
 
         return $this->success(['goods' => $goods]);
+    }
+
+    /**
+     * 获取商品单位
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getPieces()
+    {
+        return $this->success(['pieces' => cons()->valueLang('goods.pieces')]);
+    }
+
+    /**
+     * 获取商品栏目id
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getColumnId(Request $request)
+    {
+        $addressAttributes = $request->only(['province_id', 'city_id']);
+        $cate = $request->input('cate_level_1');
+        $columnId = GoodsColumn::OfAddress(array_filter($addressAttributes))->where('cate_level_1',
+            $cate)->pluck('id_list');
+        return $this->success($columnId);
     }
 }

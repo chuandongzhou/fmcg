@@ -82,6 +82,6 @@
 @stop
 
 
-@section('js')
+@section('js-lib')
     <script src="{{ asset('js/admin.js') }}"></script>
 @stop
