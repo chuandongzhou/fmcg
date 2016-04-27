@@ -289,6 +289,138 @@ img {
   max-width: 100%
 }
 </style>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script>
+    /* 此处为了生成文档目录方便把JS文件写这里了~ */
+    $(function () {
+      var body = $('body');
+
+      /* 创建侧边目录栏 */
+      var directoryHtml = $('<div>');
+      directoryHtml.css({
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        width: 300,
+        backgroundColor: '#FFF',
+        borderRight: '1px solid #CCC',
+        overflow: 'auto',
+        display: 'block'
+      });
+      body.prepend(directoryHtml);
+
+      /* 创建伸缩/展开侧边目录栏 */
+      var control = $('<div>'),
+              shrink = $('<span>'),
+              stretch = $('<span>');
+      control.css({
+        position: 'fixed',
+        top: -1,
+        left: 300,
+        padding: '6px 12px',
+        backgroundColor: '#FFF',
+        border: '1px solid #CCC',
+        cursor: 'pointer'
+      });
+      shrink.css({
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        color: '#000',
+        borderTop: '8px solid transparent',
+        borderBottom: '8px solid transparent',
+        borderRight: '10px solid'
+      });
+      stretch.css({
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        color: '#000',
+        borderTop: '8px solid transparent',
+        borderBottom: '8px solid transparent',
+        borderLeft: '10px solid'
+      });
+      control.prepend(shrink).data('shrink', false);
+      body.prepend(control).css('padding-left', 340);
+      control.click(function () {
+        if ($(this).data('shrink')) {
+          directoryHtml.show();
+          control.css('left', 300).html(shrink).data('shrink', false);
+          body.css('padding-left', 340);
+        } else {
+          directoryHtml.hide();
+          control.css('left', -1).html(stretch).data('shrink', true);
+          body.css('padding-left', 0);
+        }
+      });
+
+      var menuList = $('body').children(':header'),
+              menuObject = [],
+              headerObject = {
+                h1: 0,
+                h2: 0,
+                h3: 0,
+                h4: 0,
+                h5: 0,
+                h6: 0
+              },
+              headerParentObj = {
+                h1: null,
+                h2: 'h1',
+                h3: 'h2',
+                h4: 'h3',
+                h5: 'h4',
+                h6: 'h5'
+              },
+              previousTagName;
+      /* 为菜单创建锚点 */
+      menuList.each(function (index, element) {
+        var href = index ? $(element).html().split(' ')[0] : '0.',
+                tagName = $(element)[0]['tagName'].toLowerCase();
+        menuObject[index] = {
+          id: href,
+          parentId: 0,
+          name: $(element).html(),
+          href: '#' + href
+        };
+        if (tagName === previousTagName) {
+          menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
+        } else if (headerParentObj[tagName] === previousTagName) {
+          menuObject[index]['parentId'] = headerObject[previousTagName];
+        } else {
+          menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
+        }
+        headerObject[tagName] = href;
+        previousTagName = tagName;
+        $(element).prepend('<a id="' + href + '"></a>');
+
+      });
+      /* 创建目录列表 */
+      var createMenuFunc = function (menuObject, parentId, directoryHtml) {
+        if (menuObject.length === 0) {
+          return;
+        }
+        var childList = [];
+        for (var i in menuObject) {
+          if (menuObject[i]['parentId'] === parentId) {
+            childList.push(menuObject[i]);
+          }
+        }
+        for (var i in childList) {
+          var ul = $('<ul>'),
+                  li = $('<li>');
+          ul.css({
+            paddingLeft: 20
+          });
+          li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
+          ul.append(li);
+          directoryHtml.append(ul);
+          createMenuFunc(menuObject, childList[i]['id'], li);
+        }
+      };
+      createMenuFunc(menuObject, 0, directoryHtml);
+
+    });
+  </script>
 </head>
 <body>
 <h1>司机App API</h1>
