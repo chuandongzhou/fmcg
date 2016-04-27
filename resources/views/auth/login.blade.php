@@ -1,37 +1,32 @@
 @extends('auth.master')
 
-@section('meta')
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-@stop
-
 @section('title' , '登录|订百达 - 订货首选')
 
 @section('body')
     <div class="container-fluid login-container">
         <div class="row">
-            <div class="col-sm-12 text-center login-title">
+            <div class="col-xs-12 text-center login-title">
                 <h3>登录系统</h3>
             </div>
         </div>
         <div class="row content-panel">
-            <div class="col-sm-8 col-sm-offset-2 login-content">
-                <div class="col-sm-12 logo text-right">
+            <div class="col-xs-8 col-xs-offset-2 login-content">
+                <div class="col-xs-12 logo text-right">
                     <img src="{{ asset('images/logo.png') }}">
                 </div>
-                <div class="col-sm-7 login-left-img">
+                <div class="col-xs-7 login-left-img">
                     <img src="{{ asset('images/login-banner.jpg') }}">
                 </div>
-                <div class="col-sm-5 login-right-content">
+                <div class="col-xs-5 login-right-content">
                     <div class="row login-wrap">
                         <form class="ajax-form" method="post" action="{{ url('api/v1/auth/login') }}"
                               accept-charset="UTF-8" data-help-class="error-msg text-center"
                         >
-                            <div class="col-sm-12 padding-clear">
+                            <div class="col-xs-12 padding-clear">
                                 <span class="role-title">终端商平台</span>
                                 <input type="hidden" name="type" id="type" value="{{ cons('user.type.retailer')  }}"/>
                             </div>
-                            <div class="col-sm-12 padding-clear item text-center">
+                            <div class="col-xs-12 padding-clear item text-center">
                                 <span class="triangle-left"></span>
 
                                 <div class="enter-item form-group">
@@ -47,14 +42,14 @@
                                 <span class="triangle-right"></span>
                             </div>
 
-                            <div class="col-sm-12 btn-item text-center">
+                            <div class="col-xs-12 btn-item text-center">
                                 <button type="button" class="register-btn btn btn-primary" data-toggle="modal"
                                         data-target="#myModal-agreement">注册
                                 </button>
                                 <button type="submit" class="login-btn btn btn-warning">登录</button>
                             </div>
 
-                            <div class="col-sm-12 text-right forget-pwd">
+                            <div class="col-xs-12 text-right forget-pwd">
                                 <a href="javascript:" data-toggle="modal" data-target="#backupModal">忘记密码 ?</a>
 
                             </div>
@@ -62,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-sm-offset-3 change-role-options">
+            <div class="col-xs-6 col-xs-offset-3 change-role-options">
                 <a class="tabs-item">
                     <div class="item-icon">
                         <img src="{{ asset('images/guide-icons-1.png')  }}">

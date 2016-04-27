@@ -4595,7 +4595,7 @@ function Address(provinceObj, cityObj, districtObj, streetObj) {
     this.updateDistrictSource = function () {
         var district = this.district,
             prefix = '<option value="" selected="selected">请选择区/县...</option>';
-        if (!this.city || !district || district.hasClass('unless-control')) {
+        if (!this.city || !district || (district && district.hasClass('useless-control'))) {
             return;
         }
 

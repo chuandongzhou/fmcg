@@ -3,21 +3,21 @@
 namespace App\Models;
 
 
-class HomeColumn extends Model
+class ShopColumn extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'home_column';
+    protected $table = 'shop_column';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'type', 'id_list', 'sort'];
+    protected $fillable = ['name', 'id_list', 'sort'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

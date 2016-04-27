@@ -663,6 +663,13 @@
 </code></pre>
 
 <p><code>失败返回：</code></p>
+<h4>2.2.4 商品单位[get] (pieces)</h4>
+
+<p><code>请求参数</code></p>
+
+<p><code>成功返回：</code></p>
+<pre><code>'pieces' array 商品单位数组
+</code></pre>
 
 <h3>2.3 我的商品 my-goods</h3>
 <h4>2.3.1获取我的商品列表 [get] ()</h4>
@@ -859,8 +866,7 @@
 <h4>2.3.5 商品上下架 [put] (shelve)</h4>
 
 <p><code>请求参数：</code></p>
-<pre><code>
-    id int 商品id
+<pre><code>id int 商品id
     status int 上下架状态 {1 上架 0下架}
 </code></pre>
 

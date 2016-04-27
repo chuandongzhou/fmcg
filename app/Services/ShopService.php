@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\HomeColumn;
 use App\Models\Shop;
+use App\Models\ShopColumn;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -18,7 +18,6 @@ class ShopService
     {
         $type = auth()->user()->type;
 
-        $columnTypes = cons('home_column.type');
         $homeColumnShopConf = cons('home_column.shop');
 
 
@@ -33,7 +32,7 @@ class ShopService
             $shopColumns = Cache::get($cacheKey);
         } else {
             //商家
-            $shopColumns = HomeColumn::where('type', $columnTypes['shop'])->get();
+            $shopColumns = ShopColumn::get();
 
             foreach ($shopColumns as $shopColumn) {
                 $shops = Shop::whereIn('id', $shopColumn->id_list)
