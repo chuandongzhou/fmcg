@@ -8,24 +8,30 @@
 	id:状态值
 	message:返回具体内容
 	error:返回具体字段不合法
-##2，接口详细说明
-###2.1 公共模块 delivery
-####2.1.1 登陆[post](login)
+## 2，接口详细说明
+### 2.1 公共模块 delivery
+#### 2.1.1 登陆[post] (login)
 `请求参数：`
+	
 	user_name   string       账号
+
 	password    string       密码
+
 `成功返回：`
 	id           int         配送人员id
+
 	user_name    string      登录名
+
 	password     string      密码
 
 `失败返回：`
 
 
-####2.2.2 分配的订单信息[get]
+#### 2.2.2 分配的订单信息[get] (orders)
 `请求参数：`
 
 `成功返回：`
+
 	id               int       订单号
 	price            float     订单金额
 	is_pay           int       支付状态（0未支付，1已支付）
@@ -46,16 +52,18 @@
 	area_name       string      收货地址
 `失败返回：`
 
-####2.2.3 完成配送操作[get](deal-delivery)
+####2.2.3 完成配送操作[get] (deal-delivery)
 `请求参数：`
+
 	order_id        int          订单号
 
 `成功返回：`
 
 `失败返回：`
 
-####2.2.4 订单详情[get](detail)
+####2.2.4 订单详情[get] (detail)
 `请求参数：`
+
 	order_id        int          订单id
 
 `成功返回：`
@@ -99,10 +107,11 @@
 
 `失败返回：`
 
-####2.2.5 订单历史记录[get](historyOrders)
+####2.2.5 订单历史记录[get] (historyOrders)
 `请求参数：`
 
 `成功返回：`
+
 	 date               string        订单日期
 	 data               array         详细信息
 	 
@@ -116,12 +125,16 @@
 
 `失败返回：`
 
-####2.2.2 退出登陆[get](logout)
+####2.2.2 退出登陆[get] (logout)
 `请求参数：`
 
 `成功返回：`
 
 `失败返回：`
+
+
+
+  
 
 	
 	

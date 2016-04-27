@@ -289,138 +289,6 @@ img {
   max-width: 100%
 }
 </style>
-  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script>
-    /* 此处为了生成文档目录方便把JS文件写这里了~ */
-    $(function () {
-      var body = $('body');
-
-      /* 创建侧边目录栏 */
-      var directoryHtml = $('<div>');
-      directoryHtml.css({
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        width: 300,
-        backgroundColor: '#FFF',
-        borderRight: '1px solid #CCC',
-        overflow: 'auto',
-        display: 'block'
-      });
-      body.prepend(directoryHtml);
-
-      /* 创建伸缩/展开侧边目录栏 */
-      var control = $('<div>'),
-              shrink = $('<span>'),
-              stretch = $('<span>');
-      control.css({
-        position: 'fixed',
-        top: -1,
-        left: 300,
-        padding: '6px 12px',
-        backgroundColor: '#FFF',
-        border: '1px solid #CCC',
-        cursor: 'pointer'
-      });
-      shrink.css({
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        color: '#000',
-        borderTop: '8px solid transparent',
-        borderBottom: '8px solid transparent',
-        borderRight: '10px solid'
-      });
-      stretch.css({
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        color: '#000',
-        borderTop: '8px solid transparent',
-        borderBottom: '8px solid transparent',
-        borderLeft: '10px solid'
-      });
-      control.prepend(shrink).data('shrink', false);
-      body.prepend(control).css('padding-left', 340);
-      control.click(function () {
-        if ($(this).data('shrink')) {
-          directoryHtml.show();
-          control.css('left', 300).html(shrink).data('shrink', false);
-          body.css('padding-left', 340);
-        } else {
-          directoryHtml.hide();
-          control.css('left', -1).html(stretch).data('shrink', true);
-          body.css('padding-left', 0);
-        }
-      });
-
-      var menuList = $('body').children(':header'),
-              menuObject = [],
-              headerObject = {
-                h1: 0,
-                h2: 0,
-                h3: 0,
-                h4: 0,
-                h5: 0,
-                h6: 0
-              },
-              headerParentObj = {
-                h1: null,
-                h2: 'h1',
-                h3: 'h2',
-                h4: 'h3',
-                h5: 'h4',
-                h6: 'h5'
-              },
-              previousTagName;
-      /* 为菜单创建锚点 */
-      menuList.each(function (index, element) {
-        var href = index ? $(element).html().split(' ')[0] : '0.',
-                tagName = $(element)[0]['tagName'].toLowerCase();
-        menuObject[index] = {
-          id: href,
-          parentId: 0,
-          name: $(element).html(),
-          href: '#' + href
-        };
-        if (tagName === previousTagName) {
-          menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
-        } else if (headerParentObj[tagName] === previousTagName) {
-          menuObject[index]['parentId'] = headerObject[previousTagName];
-        } else {
-          menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
-        }
-        headerObject[tagName] = href;
-        previousTagName = tagName;
-        $(element).prepend('<a id="' + href + '"></a>');
-
-      });
-      /* 创建目录列表 */
-      var createMenuFunc = function (menuObject, parentId, directoryHtml) {
-        if (menuObject.length === 0) {
-          return;
-        }
-        var childList = [];
-        for (var i in menuObject) {
-          if (menuObject[i]['parentId'] === parentId) {
-            childList.push(menuObject[i]);
-          }
-        }
-        for (var i in childList) {
-          var ul = $('<ul>'),
-                  li = $('<li>');
-          ul.css({
-            paddingLeft: 20
-          });
-          li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
-          ul.append(li);
-          directoryHtml.append(ul);
-          createMenuFunc(menuObject, childList[i]['id'], li);
-        }
-      };
-      createMenuFunc(menuObject, 0, directoryHtml);
-
-    });
-  </script>
 </head>
 <body>
 <h1>司机App API</h1>
@@ -435,24 +303,31 @@ img {
 	error:返回具体字段不合法</p>
 <h2>2，接口详细说明</h2>
 <h3>2.1 公共模块 delivery</h3>
-<h4>2.1.1 登陆<a href="login">post</a></h4>
-<p><code>请求参数：</code>
-	user<em>name   string       账号
-	password    string       密码
-<code>成功返回：</code>
-	id           int         配送人员id
-	user</em>name    string      登录名
-	password     string      密码</p>
-<p><code>失败返回：</code></p>
-<h4>2.2.2 分配的订单信息[get]</h4>
+<h4>2.1.1 登陆[post] (login)</h4>
 <p><code>请求参数：</code></p>
+<pre><code>user_name   string       账号
+
+password    string       密码
+</code></pre>
+
 <p><code>成功返回：</code>
-	id               int       订单号
-	price            float     订单金额
-	is_pay           int       支付状态（0未支付，1已支付）
-	shop             array     收货店铺信息
-	shippingAddress  array     收货信息</p>
-<pre><code>shop字段说明
+	id           int         配送人员id</p>
+<pre><code>user_name    string      登录名
+
+password     string      密码
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.2.2 分配的订单信息[get] (orders)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>id               int       订单号
+price            float     订单金额
+is_pay           int       支付状态（0未支付，1已支付）
+shop             array     收货店铺信息
+shippingAddress  array     收货信息
+
+shop字段说明
 name             string     收货店家名
 
 shippingAddress字段说明
@@ -467,14 +342,18 @@ area_name       string      收货地址
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.3 完成配送操作<a href="deal-delivery">get</a></h4>
-<p><code>请求参数：</code>
-	order_id        int          订单号</p>
+<h4>2.2.3 完成配送操作[get] (deal-delivery)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id        int          订单号
+</code></pre>
+
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.2.4 订单详情<a href="detail">get</a></h4>
-<p><code>请求参数：</code>
-	order_id        int          订单id</p>
+<h4>2.2.4 订单详情[get] (detail)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id        int          订单id
+</code></pre>
+
 <p><code>成功返回：</code></p>
 <pre><code>id               int         订单号
 price            float       订单金额
@@ -515,12 +394,13 @@ total_price        decimal       购买商品总价格
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.5 订单历史记录<a href="historyOrders">get</a></h4>
+<h4>2.2.5 订单历史记录[get] (historyOrders)</h4>
 <p><code>请求参数：</code></p>
-<p><code>成功返回：</code>
-	 date               string        订单日期
-	 data               array         详细信息</p>
-<pre><code>data字段说明
+<p><code>成功返回：</code></p>
+<pre><code> date               string        订单日期
+ data               array         详细信息
+
+data字段说明
 id                   int              订单号
 delivery_finished_at  string          订单完成时间
 shop                  array           店家信息
@@ -530,7 +410,7 @@ name                 string            店家名称
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.2 退出登陆<a href="logout">get</a></h4>
+<h4>2.2.2 退出登陆[get] (logout)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
