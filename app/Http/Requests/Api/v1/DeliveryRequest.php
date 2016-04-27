@@ -17,8 +17,8 @@ class DeliveryRequest extends Request{
     public function rules()
     {
         return [
-            'start_at' => 'required',
-            'end_at' => 'required|after:start_at',
+            'start_at' => 'required|date',
+            'end_at' => 'required|date|after:start_at',
         ];
     }
 }

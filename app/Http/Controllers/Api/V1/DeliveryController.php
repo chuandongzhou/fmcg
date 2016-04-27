@@ -87,8 +87,9 @@ class DeliveryController extends Controller
      */
     public function historyOrders(DeliveryRequest $request)
     {
-        $start_at = (new Carbon($request->input('start_time')))->startOfDay();
+        $start_at = (new Carbon($request->input('start_at')))->startOfDay();
         $end_at = (new Carbon($request->input('end_at')))->endOfDay();
+
         $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])
             ->whereNotNull('delivery_finished_at')
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
