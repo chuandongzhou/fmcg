@@ -62,6 +62,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->controller('chat', 'ChatController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
+        $router->get('delivery','DeliveryController@historyDelivery');
     });
 
     $router->get('help', 'HelpController@index'); // 帮助中心
@@ -202,5 +203,16 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //获取移动端广告
         $router->get('advert', 'AdvertController@index');
         $router->post('feedback' , 'FeedbackController@index'); //意见反馈
+        //司机版APP接口
+        $router->group(['prefix' => 'delivery'], function ($router) {
+            $router->get('index','DeliveryController@index');//配送人员登陆页面 测试用
+            $router->post('login','DeliveryController@login');//处理配送人员登陆
+            $router->get('orders','DeliveryController@orders');//已分配的订单信息
+            $router->get('historyOrders','DeliveryController@historyOrders');//已配送历史订单信息
+            $router->get('detail/{order_id}','DeliveryController@detail');//配送订单详情
+            $router->get('deal-delivery/{order_id}','DeliveryController@dealDelivery');//处理完成配送
+            $router->get('logout','DeliveryController@logout');//退出登陆
+        });
+
     });
 });

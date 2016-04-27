@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>posapp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>司机App API</h1>
+<h1>1,API接口通信规定</h1>
+<p>-接口采用<strong>HTTP</strong>,<strong>POST</strong>协议
+-请求URL <strong>192.168.2.65/api/v1</strong>
+-请求返回数据格式
+	所有数据返回都基于以下的<strong>json</strong>协议
+	&gt;失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
+	id:状态值
+	message:返回具体内容
+	error:返回具体字段不合法</p>
+<h2>2，接口详细说明</h2>
+<h3>2.1 公共模块 delivery</h3>
+<h4>2.1.1 登陆<a href="login">post</a></h4>
+<p><code>请求参数：</code>
+	user<em>name   string       账号
+	password    string       密码
+<code>成功返回：</code>
+	id           int         配送人员id
+	user</em>name    string      登录名
+	password     string      密码</p>
+<p><code>失败返回：</code></p>
+<h4>2.2.2 分配的订单信息[get]</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code>
+	id               int       订单号
+	price            float     订单金额
+	is_pay           int       支付状态（0未支付，1已支付）
+	shop             array     收货店铺信息
+	shippingAddress  array     收货信息</p>
+<pre><code>shop字段说明
+name             string     收货店家名
+
+shippingAddress字段说明
+consigner       string      收货人
+phone           string      收货人联系方式
+x-lng           string      收货地址经度（隐藏字段）
+y_lat           string      收货地址纬度（隐藏字段）
+address         array       收货地址
+
+address字段说明
+area_name       string      收货地址
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.2.3 完成配送操作<a href="deal-delivery">get</a></h4>
+<p><code>请求参数：</code>
+	order_id        int          订单号</p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.2.4 订单详情<a href="detail">get</a></h4>
+<p><code>请求参数：</code>
+	order_id        int          订单id</p>
+<p><code>成功返回：</code></p>
+<pre><code>id               int         订单号
+price            float       订单金额
+is_pay           int         支付状态（0未付款，1已付款）
+delivery_finished_at  string    配送完成时间（该字段时空表示未完成配送）
+shop             array       店家信息
+shippingAddress  array       收货信息
+goods            array       商品信息
+
+shop字段说明
+name            string       收货店家名
+
+shippingAddress字段说明
+consigner       string       收货人姓名
+phone           string       收货联系电话
+address         array        收货地址
+
+address字段说明
+area_name       string       收货地址
+
+goods字段说明
+name            string        商品名称
+pieces_retailer     int         单位编号 （对于终端商）
+specification_retailer  string     规格  （对于终端商）
+price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
+pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
+specification_wholesaler     string 规格  （对于批发商 供应商时添加）
+promotion_info      string      促销信息    （取当是促销时传入）
+pivot               array        购买商品信息中间表
+image_url           string      商品图片('第一张')
+images_url          array       商品全部图片
+
+pivot字段说明
+price              decimal       购买商品单位价格
+num                int           购买商品数量
+total_price        decimal       购买商品总价格
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.2.5 订单历史记录<a href="historyOrders">get</a></h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code>
+	 date               string        订单日期
+	 data               array         详细信息</p>
+<pre><code>data字段说明
+id                   int              订单号
+delivery_finished_at  string          订单完成时间
+shop                  array           店家信息
+
+shop字段说明
+name                 string            店家名称
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.2.2 退出登陆<a href="logout">get</a></h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

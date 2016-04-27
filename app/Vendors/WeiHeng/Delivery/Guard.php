@@ -9,7 +9,7 @@ class Guard extends BaseGuard
     /**
      * Get the currently authenticated user.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|\App\Models\Admin|null
+     * @return \Illuminate\Contracts\Auth\Authenticatable|\App\Models\DeliveryMan|null
      */
     public function user()
     {
