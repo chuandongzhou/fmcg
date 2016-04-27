@@ -69,6 +69,14 @@
                                         配送人员
                                     </a>
                                 </li>
+                                @if ($user->type != cons('user.type.retailer'))
+                                    <li>
+                                        <a class="{{ path_active('personal/delivery') }}"
+                                           href="{{ url('personal/delivery') }}">
+                                           配送历史
+                                        </a>
+                                    </li>
+                                @endif
                                 <li>
                                     <a class="{{ path_active('personal/password') }}"
                                        href="{{ url('personal/password') }}">
