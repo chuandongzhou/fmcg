@@ -41,8 +41,7 @@ class Order extends Model
         'can_export',
         'can_payment',
         'can_confirm_arrived',
-        'pieces',
-        'is_pay'
+        'pieces'
     ];
 
     protected $hidden = [];

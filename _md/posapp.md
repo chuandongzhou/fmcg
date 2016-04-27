@@ -107,21 +107,27 @@
 
 `失败返回：`
 
-####2.2.5 订单历史记录[get] (historyOrders)
+####2.2.5 订单历史记录[get] (history_orders)
 `请求参数：`
+
+	start_at        string        开始时间
+	end_at          string        结束时间
 
 `成功返回：`
 
-	 date               string        订单日期
-	 data               array         详细信息
+	 order         array            历史订单详情
 	 
-	data字段说明
-	id                   int              订单号
-	delivery_finished_at  string          订单完成时间
-    shop                  array           店家信息
+	order字段说明
+	key(数组键)              string              日期
 
-	shop字段说明
-	name                 string            店家名称
+	value（数组值） 			array               订单详情
+              
+		id                   int              订单号
+		delivery_finished_at  string          订单完成时间
+	    shop                  array           店家信息
+	
+		shop字段说明
+		name                 string            店家名称
 
 `失败返回：`
 

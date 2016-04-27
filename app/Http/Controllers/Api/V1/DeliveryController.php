@@ -6,7 +6,7 @@ use App\Models\DeliveryMan;
 use Hash;
 use App\Models\Order;
 use Carbon\Carbon;
-
+use App\Http\Requests\Api\v1\DeliveryRequest;
 use DB;
 
 class DeliveryController extends Controller
@@ -63,7 +63,7 @@ class DeliveryController extends Controller
 
         $orders->each( function($order){
             $order->shippingAddress==null?'': $order->shippingAddress->setHidden(['x_lng','y_lat']);
-            $order->paid_at=='0000-00-00 00:00:00'?$order->setAppends(['is_pay'=>0]):$order->setAppends(['is_pay'=>1]);
+            $order->is_pay = $order->pay_status==1?1:0;
         });
        // dd($orders);
         return  $this->success($orders);
@@ -72,31 +72,25 @@ class DeliveryController extends Controller
     }
     /**
      *配送历史
+     * @param \App\Http\Requests\Api\v1\DeliveryRequest $request
      *@return \WeiHeng\Responses\Apiv1Response
      */
-    public function historyOrders(){
-        $orders = Order::where(['delivery_man_id'=>delivery_auth()->id()])->whereNotNull('delivery_finished_at')->with('shop')->orderBy('delivery_finished_at','DESC')->paginate();
-       $date = array();
-       // dd($orders);
-        for($i=0;$i<count($orders);$i++){
-            $date[] = date('Y-m-d',strtotime($orders[$i]['delivery_finished_at']));
-        }
-        $date = array_flip(array_flip($date));
-        $historyOrder = array();
-        $key = 0;
-        foreach($date  as $k => $v){
-            $historyOrder[$key]['date'] = $v;
-            foreach($orders as $order){
-               if(date('Y-m-d',strtotime($order['delivery_finished_at']))==$v){
-                  $historyOrder[$key]['data'][] = $order;
-                      // $historyOrder[$v][] = $order;
-               }
-            }
-            $key++;
+    public function historyOrders(DeliveryRequest $request){
+        $start_at = $request->input('start_at');
+        $end_at = $request->input('end_at');
+        $orders = Order::where(['delivery_man_id'=>delivery_auth()->id()])
+            ->whereNotNull('delivery_finished_at')
+            ->whereBetween('delivery_finished_at',[$start_at,$end_at])
+            ->with('shop')->orderBy('delivery_finished_at','DESC')->get();
 
+        $historyOrder = array();
+        foreach ($orders as $order) {
+            $date = (new Carbon($order['delivery_finished_at']))->toDateString();
+            $historyOrder[$date][] = $order;
         }
-        //dd($historyOrder);
-        return $this->success($historyOrder);
+
+       //dd($historyOrder);
+        return $this->success(['historyOrder'=>$historyOrder]);
 
     }
     /**
@@ -110,7 +104,7 @@ class DeliveryController extends Controller
 
         $order = Order::where(['delivery_man_id'=>delivery_auth()->id()])->with( 'shop','shippingAddress.address','goods.images.image')->find($order_id);
 
-        $order->paid_at=='0000-00-00 00:00:00'?$order->setAppends(['is_pay'=>0]):$order->setAppends(['is_pay'=>1]);
+        $order->is_pay = $order->pay_status==1?1:0;
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url']);
 
