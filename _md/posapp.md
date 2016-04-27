@@ -107,7 +107,7 @@
 
 `失败返回：`
 
-####2.2.5 订单历史记录[get] (history_orders)
+####2.2.5 订单历史记录[get] (history-orders)
 `请求参数：`
 
 	start_at        string        开始时间
