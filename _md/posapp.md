@@ -81,6 +81,7 @@
 	
 	user字段说明
 	shop            array       收货店家
+	type			int         买家用户类型（1是终端   2是批发）
 
 	shop字段说明
 	name            string      收货店家名
@@ -95,7 +96,8 @@
 	
 	goods字段说明
 	name            string        商品名称
-    pieces_retailer     int         单位编号 （对于终端商）
+    pieces_retailer     int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
+	price_retailer      decimal     价格（对于终端商）
 	specification_retailer  string     规格  （对于终端商）
 	price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
