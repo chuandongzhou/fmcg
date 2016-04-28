@@ -121,7 +121,7 @@ class DeliveryController extends Controller
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url']);
+            $goods->addHidden(['introduce', 'images_url','pieces']);
 
         });
 

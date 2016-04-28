@@ -96,36 +96,38 @@
 	
 	goods字段说明
 	name            string        商品名称
-    pieces_retailer     int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
-	price_retailer      decimal     价格（对于终端商）
+   
 	specification_retailer  string     规格  （对于终端商）
-	price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
-    min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
-    pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
-    specification_wholesaler     string 规格  （对于批发商 供应商时添加）
+	
+    specification_wholesaler  string  规格  （对于批发商 供应商时添加）
+
 	promotion_info      string      促销信息    （取当是促销时传入）
+
 	pivot               array        购买商品信息中间表
+
 	image_url           string      商品图片('第一张')
+
     images_url          array       商品全部图片
 	
 	pivot字段说明
 	price              decimal       购买商品单位价格
 	num                int           购买商品数量
 	total_price        decimal       购买商品总价格
-
+	pieces             int           单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包 8桶 9杯 10支 11个 12筒） 
 `失败返回：`
 
 ####2.2.5 订单历史记录[get] (history-orders)
 `请求参数：`
 
-	start_at        string        开始时间
-	end_at          string        结束时间
+	start_at        date        开始时间
+	end_at          date        结束时间
 
 `成功返回：`
 
 	 order         array            历史订单详情
 	 
 	order字段说明
+
 	key(数组键)              string              日期
 
 	value（数组值） 			array               订单详情
