@@ -66,14 +66,14 @@ class DeliveryController extends Controller
      */
     public function orders()
     {
-        $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])->whereNull('delivery_finished_at')->with('shop',
+        $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])->whereNull('delivery_finished_at')->with('user.shop',
             'shippingAddress.address')->paginate();
 
         $orders->each(function ($order) {
             $order->shippingAddress == null ? '' : $order->shippingAddress->setHidden(['x_lng', 'y_lat']);
             $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         });
-        // dd($orders);
+        dd($orders);
         return $this->success($orders);
 
 
@@ -93,7 +93,7 @@ class DeliveryController extends Controller
         $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])
             ->whereNotNull('delivery_finished_at')
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
-            ->with('shop')->orderBy('delivery_finished_at', 'DESC')->get();
+            ->with('user.shop')->orderBy('delivery_finished_at', 'DESC')->get();
 
         $historyOrder = array();
         foreach ($orders as $order) {
@@ -116,7 +116,7 @@ class DeliveryController extends Controller
     {
 
 
-        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('shop', 'shippingAddress.address',
+        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('user.shop', 'shippingAddress.address',
             'goods.images.image')->find($order_id);
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;

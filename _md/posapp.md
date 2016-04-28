@@ -35,11 +35,14 @@
 	id               int       订单号
 	price            float     订单金额
 	is_pay           int       支付状态（0未支付，1已支付）
-	shop             array     收货店铺信息
+	user             array     收货店铺信息
 	shippingAddress  array     收货信息
 	
+	user字段说明
+	shop             array     收货店家
+
 	shop字段说明
-	name             string     收货店家名
+	name            string      收货店家名
 
 	shippingAddress字段说明
 	consigner       string      收货人
@@ -72,12 +75,15 @@
 	price            float       订单金额
 	is_pay           int         支付状态（0未付款，1已付款）
 	delivery_finished_at  string    配送完成时间（该字段时空表示未完成配送）
-	shop             array       店家信息
+	user             array       收货店家信息
 	shippingAddress  array       收货信息
 	goods            array       商品信息
 	
+	user字段说明
+	shop            array       收货店家
+
 	shop字段说明
-	name            string       收货店家名
+	name            string      收货店家名
 	
 	shippingAddress字段说明
 	consigner       string       收货人姓名
@@ -124,10 +130,12 @@
               
 		id                   int              订单号
 		delivery_finished_at  string          订单完成时间
-	    shop                  array           店家信息
+	    user                  array           收货店家信息
 	
-		shop字段说明
-		name                 string            店家名称
+		user字段说明
+		shop                array            店家信息
+
+		shop字段说明          string          收货店家名称
 
 `失败返回：`
 
