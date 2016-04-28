@@ -73,7 +73,7 @@ class DeliveryController extends Controller
             $order->shippingAddress == null ? '' : $order->shippingAddress->setHidden(['x_lng', 'y_lat']);
             $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         });
-        dd($orders);
+      //  dd($orders);
         return $this->success($orders);
 
 
