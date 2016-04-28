@@ -141,8 +141,8 @@
                                                            target="_blank">{{ $goods->name }}</a></p>
 
                                                     <p class="sell-panel">
-                                                        <span class="money">￥{{ $goods->price }}</span>
-                                                        <span class="sales pull-right">最低购买量 : {{ $goods->min_num }}</span>
+                                                        <span class="money">￥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                                        <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
                                                     </p>
                                                 </div>
                                             </div>

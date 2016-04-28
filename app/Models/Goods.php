@@ -349,9 +349,14 @@ class Goods extends Model
      */
     public function getPiecesAttribute()
     {
+        $piece = $this->pieces_id;
+        return cons()->valueLang('goods.pieces', $piece);
+    }
+
+    public function getPiecesIdAttribute(){
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
         $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
-        return cons()->valueLang('goods.pieces', $piece);
+        return $piece;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\UpdateAdvertRequest;
 use App\Http\Requests\Admin\CreateAdvertRequest;
 use App\Models\Advert;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 
 abstract class AdvertController extends Controller
@@ -20,15 +21,20 @@ abstract class AdvertController extends Controller
     /**
      * 获取广告列表
      *
-     * @return \Illuminate\View\View
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $adverts = Advert::where('type', cons('advert.type.' . $this->type))->paginate();
+        $data = $request->all();
+
+        $adverts = Advert::where('type',
+            cons('advert.type.' . $this->type))->OfAddress(array_filter($data))->paginate();
 
         return view('admin.advert.index', [
             'type' => $this->type,
             'adverts' => $adverts,
+            'data' => $data
         ]);
     }
 
@@ -40,7 +46,7 @@ abstract class AdvertController extends Controller
     public function create()
     {
         if ($this->type == 'category') {
-            $categories = Category::where('pid' , 0)->get();
+            $categories = Category::where('pid', 0)->get();
         }
         return view('admin.advert.advert', [
             'type' => $this->type,
@@ -87,7 +93,7 @@ abstract class AdvertController extends Controller
     public function edit($advert)
     {
         if ($this->type == 'category') {
-            $categories = Category::where('pid' , 0)->get();
+            $categories = Category::where('pid', 0)->get();
         }
         return view('admin.advert.advert', [
             'type' => $this->type,

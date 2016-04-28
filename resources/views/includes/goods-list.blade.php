@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="sell-panel">
-                    <span class="money">￥{{ $item->price }}</span>
+                    <span class="money">￥{{ $item->price . '/' . $item->pieces }}</span>
                     <span class="sales pull-right">最低购买量 : {{ $item->min_num }}</span>
                 </div>
                 <div class="store-name">

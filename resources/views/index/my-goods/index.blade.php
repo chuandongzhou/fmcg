@@ -133,7 +133,7 @@
                                 data-id="{{ $get['street_id'] or  0}}">
                             <option>区</option>
                         </select>
-                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' , 'name']) as $key=>$val)
+                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' , 'name', 'page']) as $key=>$val)
                             <input type="hidden" name="{{ $key }}" value="{{ $val }}"/>
                         @endforeach
                     </div>

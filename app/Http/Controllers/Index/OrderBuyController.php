@@ -41,7 +41,7 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::ofBuy(auth()->id())->orderBy('id', 'desc');
+        $query = Order::ofBuy(auth()->id());
         if (is_numeric($search['search_content'])) {
             $orders = $query->where('id', $search['search_content'])->paginate();
         } else {
@@ -97,7 +97,6 @@ class OrderBuyController extends OrderController
     /**
      * 获取订单详情
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
     public function getDetail(Request $request)
