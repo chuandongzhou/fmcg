@@ -109,15 +109,15 @@ class DeliveryController extends Controller
     /**
      * 配送订单详情
      *
-     * @param $order_id
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function detail($order_id)
+    public function detail(Request $request)
     {
 
 
         $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('user.shop', 'shippingAddress.address',
-            'goods.images.image')->find($order_id);
+            'goods.images.image')->find($request->input('order_id'));
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         $order->goods->each(function ($goods) {
@@ -133,13 +133,13 @@ class DeliveryController extends Controller
     /**
      * 处理完成配送
      *
-     * @param $orderId
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function dealDelivery($orderId)
+    public function dealDelivery(Request $request)
     {
 
-
+        $orderId = $request->input('order_id');
         if (empty($orderId)) {
             return $this->error('订单号不能为空');
         }

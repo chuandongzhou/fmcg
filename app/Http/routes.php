@@ -210,8 +210,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('login','DeliveryController@login');//处理配送人员登陆
             $router->get('orders','DeliveryController@orders');//已分配的订单信息
             $router->get('history-orders','DeliveryController@historyOrders');//已配送历史订单信息
-            $router->get('detail/{order_id}','DeliveryController@detail');//配送订单详情
-            $router->get('deal-delivery/{order_id}','DeliveryController@dealDelivery');//处理完成配送
+            $router->get('detail','DeliveryController@detail');//配送订单详情
+            $router->get('deal-delivery','DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout','DeliveryController@logout');//退出登陆
         });
 
