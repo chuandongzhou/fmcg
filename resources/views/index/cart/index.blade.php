@@ -71,7 +71,7 @@
 
                                     </td>
                                     <td class="text-center">￥<span
-                                                class="goods-price">{{ $cartGoods->goods->price }}</span>
+                                                class="goods-price">{{ $cartGoods->goods->price . '/' . $cartGoods->goods->pieces}}</span>
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="modified desc-num">-</button>

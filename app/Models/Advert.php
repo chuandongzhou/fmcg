@@ -17,7 +17,17 @@ class Advert extends Model
      *
      * @var array
      */
-    protected $fillable = ['category_id', 'name', 'type', 'url', 'start_at', 'end_at', 'image'];
+    protected $fillable = [
+        'province_id',
+        'city_id',
+        'category_id',
+        'name',
+        'type',
+        'url',
+        'start_at',
+        'end_at',
+        'image'
+    ];
 
     public $hidden = ['created_at', 'updated_at'];
 
@@ -45,6 +55,22 @@ class Advert extends Model
         })->orderBy('id', 'asc')->take($limit);
     }
 
+
+    /**
+     * 过滤地址或配送区域
+     *
+     * @param $query
+     * @param $data
+     */
+    public function scopeOfAddress($query, $data)
+    {
+        if (isset($data['province_id']) && isset($data['city_id'])) {
+            return $query->where(['province_id' => $data['province_id'], 'city_id' => $data['city_id']]);
+        } elseif (isset($data['province_id'])) {
+            return $query->where('province_id', $data['province_id']);
+        }
+    }
+
     /**
      * 模型关联一个文件
      *
@@ -65,7 +91,7 @@ class Advert extends Model
     {
         if (!$endAt || $endAt == "") {
             $this->attributes['end_at'] = null;
-        }else {
+        } else {
             $this->attributes['end_at'] = $endAt;
         }
     }

@@ -6,8 +6,8 @@
 <nav class="navbar login-nav">
     <div class="container padding-clear register">
         <ul class="nav-title text-center">
-            <li><a href="http://192.168.2.66/fmcg/public/auth/login">首页</a></li>
-            <li><a class="logo-icon" href="#"><img src="http://192.168.2.66/fmcg/public/images/logo.png" alt="logo"/></a></li>
+            <li><a href="{{ url('/') }}">首页</a></li>
+            <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
             <li><a href="{{ url('about') }}">关于我们</a></li>
         </ul>
     </div>

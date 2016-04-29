@@ -40,8 +40,7 @@ class Order extends Model
         'can_confirm_collections',
         'can_export',
         'can_payment',
-        'can_confirm_arrived',
-        'pieces'
+        'can_confirm_arrived'
     ];
 
     protected $hidden = [];
@@ -121,7 +120,7 @@ class Order extends Model
     {
         return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id',
             'goods_id')->withTrashed()->withPivot('id', 'price',
-            'num', 'total_price');
+            'num', 'total_price', 'pieces');
     }
 
     /**

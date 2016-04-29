@@ -13,7 +13,7 @@
     <footer class="panel-footer footer login-footer">
         <div class="container text-center text-muted">
             <div class="row text-center">
-                <div class="col-sm-6">
+                <div class="col-xs-6">
                     <ul class="list-inline">
                         <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
                         <li>
@@ -63,7 +63,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-xs-6">
                     <p>Copyright {!! cons('system.company_name') !!}</p>
                 </div>
             </div>

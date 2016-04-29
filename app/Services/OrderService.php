@@ -149,6 +149,7 @@ class OrderService
                             'goods_id' => $cartGoods->goods_id,
                             'price' => $cartGoods->goods->price,
                             'num' => $cartGoods->num,
+                            'pieces' => $cartGoods->goods->pieces_id,
                             'total_price' => $cartGoods->goods->price * $cartGoods->num,
                         ]);
                     }

@@ -6,7 +6,7 @@ namespace App\Models;
 class OrderGoods extends Model
 {
     protected $table = 'order_goods';
-    public  $timestamps = false;
+    public $timestamps = false;
     protected $fillable = [
         'goods_id',
         'price',
@@ -33,5 +33,10 @@ class OrderGoods extends Model
     public function goods()
     {
         return $this->belongsTo('App\Models\Goods')->withTrashed();
+    }
+
+    public function getPiecesNameAttribute()
+    {
+        return cons()->valueLang('goods.pieces', $this->pieces);
     }
 }

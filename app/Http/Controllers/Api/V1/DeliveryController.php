@@ -116,7 +116,8 @@ class DeliveryController extends Controller
     {
 
 
-        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('user.shop', 'shippingAddress.address',
+        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('user.shop',
+            'shippingAddress.address',
             'goods.images.image')->find($request->input('order_id'));
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;

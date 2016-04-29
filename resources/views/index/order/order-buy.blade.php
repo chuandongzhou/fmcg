@@ -88,7 +88,7 @@
 
                                         </td>
                                         <td><span class="red">￥{{ $goods['pivot']['price'] }}</span>
-                                            / {{ $goods->pieces }}</td>
+                                            / {{  cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                                         <td>{{ $goods['pivot']['num'] }}</td>
                                         @if(0 == $key)
                                             <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">

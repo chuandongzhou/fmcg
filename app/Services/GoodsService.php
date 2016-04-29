@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\GoodsColumn;
-use App\Models\HomeColumn;
 use Cache;
 
 /**
@@ -135,8 +134,17 @@ class GoodsService
                 'level',
                 'pid',
                 'name'
-            ])->each(function ($category) {
+            ])->each(function ($category) use ($data) {
                 $category->setAppends([]);
+                $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
+                    if (is_null($advert['province_id'])) {
+                        return true;
+                    }
+                    if ($data['province_id'] && $data['city_id']) {
+                        return $advert['province_id'] == $data['province_id'] && $advert['city_id'] == $data['city_id'];
+                    }
+                    return $advert['province_id'] == $data['province_id'];
+                })->take(5);
             });
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
 
@@ -148,6 +156,8 @@ class GoodsService
                 'price_wholesaler',
                 'min_num_retailer',
                 'min_num_wholesaler',
+                'pieces_retailer',
+                'pieces_wholesaler',
                 'is_new',
                 'is_out',
                 'is_promotion',

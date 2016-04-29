@@ -32,6 +32,8 @@ class SearchController extends Controller
             'min_num_wholesaler',
             'price_retailer',
             'price_wholesaler',
+            'pieces_retailer',
+            'pieces_wholesaler',
             'is_new',
             'is_promotion',
             'is_out',

@@ -195,7 +195,7 @@
                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                 </div>
                             </td>
-                            <td>￥{{ $goods['pivot']['price'] . ' / ' . $goods->pieces }}</td>
+                            <td>￥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
                             <td>￥{{ $goods['pivot']['total_price'] }}</td>
                         </tr>

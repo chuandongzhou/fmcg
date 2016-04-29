@@ -95,7 +95,7 @@
                                         </td>
                                         <td>
                                             <span class="red">￥{{ $goods['pivot']['price'] }}</span>
-                                            / {{ cons()->valueLang('goods.pieces' , $goods->{'pieces_' . $order->user->type_name})  }}
+                                            / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
                                         </td>
                                         <td>{{ $goods['pivot']['num'] }}</td>
                                         @if(0 == $key )
