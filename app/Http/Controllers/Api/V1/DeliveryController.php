@@ -98,11 +98,26 @@ class DeliveryController extends Controller
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
             ->with('user.shop')->orderBy('delivery_finished_at', 'DESC')->get();
 
+        $historydate = array();
         $historyOrder = array();
-        foreach ($orders as $order) {
-            $date = (new Carbon($order['delivery_finished_at']))->toDateString();
-            $historyOrder[$date][] = $order;
-            $order->user->setHidden([]);
+        for($i=0;$i<count($orders);$i++){
+            $date = (new Carbon( $orders[$i]['delivery_finished_at']))->toDateString();
+            $historydate[$date] = $i;
+        }
+        $historydate = array_flip($historydate);
+        $j = 0;
+        foreach ($historydate as $k=>$v) {
+            $historyOrder[$j]['date'] = $v;
+            foreach($orders as $order){
+                $date = (new Carbon($order['delivery_finished_at']))->toDateString();
+                if($historyOrder[$j]['date']==$date){
+                    $order->user->setHidden([]);
+                    $historyOrder[$j]['data'][] = $order;
+
+                }
+            }
+
+          $j++;
         }
 
         //dd($historyOrder);
