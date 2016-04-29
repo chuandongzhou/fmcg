@@ -35,6 +35,7 @@
 	id               int       订单号
 	price            float     订单金额
 	is_pay           int       支付状态（0未支付，1已支付）
+	pieces           array     所有的商品单位
 	user             array     收货店铺信息
 	shippingAddress  array     收货信息
 	
@@ -52,7 +53,8 @@
 	address         array       收货地址
 		
 	address字段说明
-	area_name       string      收货地址
+	area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
+	address         string      详细收货地址
 `失败返回：`
 
 ####2.2.3 完成配送操作[get] (deal-delivery)
@@ -92,7 +94,8 @@
 	address         array        收货地址
 	
 	address字段说明
-	area_name       string       收货地址
+	area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
+	address         string      详细收货地址
 	
 	goods字段说明
 	name            string        商品名称
@@ -124,22 +127,24 @@
 
 `成功返回：`
 
-	 order         array            历史订单详情
+	 historyOrder         array            历史订单详情
 	 
 	order字段说明
 
-	key(数组键)              string              日期
+	date              string              日期
 
-	value（数组值） 			array               订单详情
-              
-		id                   int              订单号
-		delivery_finished_at  string          订单完成时间
-	    user                  array           收货店家信息
+	data 			array               订单详情
 	
-		user字段说明
-		shop                array            店家信息
+	data字段说明
+          
+	id                   int              订单号
+	delivery_finished_at  string          订单完成时间
+    user                  array           收货店家信息
 
-		shop字段说明          string          收货店家名称
+	user字段说明
+	shop                array            店家信息
+
+	shop字段说明          string          收货店家名称
 
 `失败返回：`
 
