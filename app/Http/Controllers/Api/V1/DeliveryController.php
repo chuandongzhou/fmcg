@@ -70,9 +70,10 @@ class DeliveryController extends Controller
             'shippingAddress.address')->paginate();
 
         $orders->each(function ($order) {
-            $order->shippingAddress == null ? '' : $order->shippingAddress->setHidden(['x_lng', 'y_lat']);
+
             $order->is_pay = $order->pay_status == 1 ? 1 : 0;
             $order->pieces = cons('pieces');
+            $order->user->setHidden([]);
         });
 
       //  dd($orders);
@@ -101,6 +102,7 @@ class DeliveryController extends Controller
         foreach ($orders as $order) {
             $date = (new Carbon($order['delivery_finished_at']))->toDateString();
             $historyOrder[$date][] = $order;
+            $order->user->setHidden([]);
         }
 
         //dd($historyOrder);
@@ -123,6 +125,7 @@ class DeliveryController extends Controller
             'goods.images.image')->find($request->input('order_id'));
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
+        $order->user->setHidden([]);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url','pieces']);
 
