@@ -30,7 +30,9 @@
                     <span class="sales pull-right">最低购买量 : {{ $item->min_num }}</span>
                 </div>
                 <div class="store-name">
-                    {{ isset($shop) ? $shop->name : $item->shop->name }}
+                    <a href="{{ asset('shop/' . (isset($shop) ? $shop->id : $item->shop->id )) }}" target="_blank">
+                        {{ isset($shop) ?  $shop->name : $item->shop->name  }}
+                    </a>
                 </div>
             </div>
         </div>

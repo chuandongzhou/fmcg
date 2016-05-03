@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\AddressService;
 use App\Services\ImageUploadService;
+use App\Services\ShopService;
 
 class Shop extends Model
 {
@@ -484,6 +485,16 @@ class Shop extends Model
             $result[$key]['url'] = $image->url;
         }
         return $result;
+    }
+
+    /**
+     * 店铺二维码
+     *
+     * @return string
+     */
+    public function getQrcodeUrlAttribute()
+    {
+        return ShopService::qrcode($this->id);
     }
 
     /**

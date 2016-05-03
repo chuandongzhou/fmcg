@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Index;
 
 use App\Http\Requests;
 use App\Models\DeliveryMan;
+use App\Services\ShopService;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use PhpOffice\PhpWord\PhpWord;
+use QrCode;
 
 class OrderSellController extends OrderController
 {
@@ -216,9 +218,13 @@ class OrderSellController extends OrderController
                 $cell->addText($v);
             }
             $table->addRow();
-            $cell = $table->addCell(9000, ['align' => 'left']);
-            $cell->getStyle()->setGridSpan(6);
+            $cell = $table->addCell(6000, ['align' => 'left']);
+            $cell->getStyle()->setGridSpan(4);
             $cell->addText(date('Y-m-d'));
+
+            $qrCode = $table->addCell(3000, ['align' => 'right']);
+            $qrCode->getStyle()->setGridSpan(2);
+            $qrCode->addImage(ShopService::qrcode($item->shop_id));
             $section->addFooter();
         }
         $name = date('Ymd') . strtotime('now') . '.docx';

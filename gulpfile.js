@@ -74,7 +74,10 @@ elixir(function (mix) {
         //easing
         .copy([bowerDir + 'jquery.easing/js/**'], 'public/js/lib/jquery/easing')
         //tinymce
-        .copy([bowerDir + 'tinymce/**'], 'public/js/lib/jquery/tinymce');
+        .copy([bowerDir + 'tinymce/**'], 'public/js/lib/jquery/tinymce')
+        //jquery-qrcode
+        .copy([bowerDir + 'jquery-qrcode/jquery.qrcode.min.js'], 'public/js/lib/jquery/qrcode')
+    ;
 
 
         // version

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Shop;
 use App\Models\ShopColumn;
 use Illuminate\Support\Facades\Cache;
+use QrCode;
 
 /**
  * Created by PhpStorm.
@@ -41,8 +42,8 @@ class ShopService
                     ->with('images', 'logo', 'user')
                     ->get()
                     ->each(function ($shop) {
-                    $shop->setAppends(['image_url', 'logo']);
-                });
+                        $shop->setAppends(['image_url', 'logo']);
+                    });
                 $columnShopsCount = $shops->count();
                 if ($columnShopsCount < 10) {
                     $columnShopsIds = $shops->pluck('id')->toArray();
@@ -63,4 +64,33 @@ class ShopService
         }
         return $shopColumns;
     }
+
+
+    /**
+     * 获取店铺二维码头像
+     *
+     * @param int $uid
+     * @param $size
+     * @return string
+     */
+    static function qrcode($uid = 0, $size = null)
+    {
+        $qrcodePath = config('path.upload_qrcode');
+        $relatePath = str_replace(public_path(), '', $qrcodePath);
+        $qrcodeSize = is_null($size) ? cons('shop.qrcode_size') : $size;
+        // 处理分割后的ID
+        $path = implode('/', divide_uid($uid, "/{$qrcodeSize}.png"));
+
+        if (!is_file($qrcodePath . $path)) {
+            @mkdir(dirname($qrcodePath . $path), 0777, true);
+            QrCode::format('png')->size($qrcodeSize)->generate(url('shop/' . $uid), $qrcodePath . $path);
+        }
+        // 处理缓存
+        $mtime = @filemtime($qrcodePath . $path);
+        if (false !== $mtime) {
+            return asset($relatePath . $path) . '?' . $mtime;
+        }
+        return asset($relatePath . $path);
+    }
+
 }

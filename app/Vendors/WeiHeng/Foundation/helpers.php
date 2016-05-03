@@ -224,7 +224,6 @@ if (!function_exists('admin_auth')) {
         return app('admin.auth');
     }
 }
-
 if (!function_exists('delivery_auth')) {
     /**
      * Get the available admin auth instance.

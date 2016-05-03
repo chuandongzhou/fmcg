@@ -147,6 +147,7 @@ return [
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,
         \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
 
 
     ],
@@ -204,6 +205,7 @@ return [
         'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
         'Pusher' => \Riverslei\Pusher\Pusher::class,
         'PushNotification' => \Davibennun\LaravelPushNotification\Facades\PushNotification::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
     ],
 
 ];

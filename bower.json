@@ -27,6 +27,7 @@
     "eonasdan-bootstrap-datetimepicker": "~4.15.35",
     "jquery.easing":"~1.3",
     "tinymce":"~4.2",
-    "js-cookie": "*"
+    "js-cookie": "*",
+    "jquery-qrcode" : "*"
   }
 }

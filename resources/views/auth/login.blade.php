@@ -23,7 +23,7 @@
                               accept-charset="UTF-8" data-help-class="error-msg text-center"
                         >
                             <div class="col-xs-12 padding-clear">
-                                <span class="role-title">终端商平台</span>
+                                <span class="role-title">终端平台</span>
                                 <input type="hidden" name="type" id="type" value="{{ cons('user.type.retailer')  }}"/>
                             </div>
                             <div class="col-xs-12 padding-clear item text-center">

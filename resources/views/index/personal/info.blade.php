@@ -1,5 +1,6 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-店铺介绍')
+@include('includes.qrcode')
 
 @section('right')
     <div class="col-sm-12 store goods-detail  wholesalers-index personal-store">
@@ -8,7 +9,8 @@
                 <div class="store-panel">
                     <img class="avatar" src="{{ $shop->logo_url }}">
                     <ul class="store-msg">
-                        <li>店家名称 : {{ $shop->name }}</li>
+                        <li>店家名称 : {{ $shop->name }} &nbsp;&nbsp;
+                            <a href="javascript:" class="qrcode" data-target="#qrcodeModal" data-toggle="modal" data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a></li>
                         <li>联系人 : {{ $shop->contact_person }}</li>
                         <li>最低配送额 : {{ $shop->min_money }}</li>
                     </ul>
@@ -59,19 +61,13 @@
                         </ul>
                     </div>
                     {{--<div class="item">--}}
-                        {{--<h5 class="title-name">商品配送区域大概地图标识</h5>--}}
+                    {{--<h5 class="title-name">商品配送区域大概地图标识</h5>--}}
 
-                        {{--<div id="map"></div>--}}
+                    {{--<div id="map"></div>--}}
                     {{--</div>--}}
                 </div>
             </div>
         @endif
     </div>
 @stop
-{{--@section('js')--}}
-    {{--@parent--}}
-    {{--<script type="text/javascript">--}}
-        {{--getCoordinateMap({!! $coordinates !!});--}}
-    {{--</script>--}}
-{{--@stop--}}
 
