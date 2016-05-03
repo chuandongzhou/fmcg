@@ -7,6 +7,7 @@ use Hash;
 use App\Models\Order;
 use Carbon\Carbon;
 use App\Http\Requests\Api\v1\DeliveryRequest;
+use App\Http\Requests\Api\v1\DeliveryLoginRequest;
 use DB;
 
 class DeliveryController extends Controller
@@ -25,11 +26,11 @@ class DeliveryController extends Controller
      *
      * 配送人员登录
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\v1\DeliveryLoginRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      *
      */
-    public function login(Request $request)
+    public function login(DeliveryLoginRequest $request)
     {
 
         $userName = $request->input('user_name');
@@ -40,12 +41,12 @@ class DeliveryController extends Controller
 
         $deliveryMan = DeliveryMan::where('user_name', $userName)->first();
         if (!$deliveryMan) {
-            return $this->invalidParam('password', '账号或密码错误');
+            return $this->invalidParam('password', '账号不存在');
         }
         $password = md5($password);
 
         if ($password != $deliveryMan->password) {
-            return $this->invalidParam('password', '账号或密码错误');
+            return $this->invalidParam('password', '密码错误');
         }
         $nowTime = Carbon::now();
 
@@ -76,7 +77,7 @@ class DeliveryController extends Controller
             $order->user->setHidden([]);
         });
 
-      //  dd($orders);
+        //  dd($orders);
         return $this->success($orders);
 
 
@@ -98,29 +99,21 @@ class DeliveryController extends Controller
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
             ->with('user.shop')->orderBy('delivery_finished_at', 'DESC')->get();
 
-        $historydate = array();
         $historyOrder = array();
-        for($i=0;$i<count($orders);$i++){
-            $date = (new Carbon( $orders[$i]['delivery_finished_at']))->toDateString();
-            $historydate[$date] = $i;
-        }
-        $historydate = array_flip($historydate);
         $j = 0;
-        foreach ($historydate as $k=>$v) {
-            $historyOrder[$j]['date'] = $v;
-            foreach($orders as $order){
-                $date = (new Carbon($order['delivery_finished_at']))->toDateString();
-                if($historyOrder[$j]['date']==$date){
-                    $order->user->setHidden([]);
-                    $historyOrder[$j]['data'][] = $order;
-
-                }
+        foreach ($orders as $order) {
+            $date = (new Carbon($order['delivery_finished_at']))->toDateString();
+            $key = array_search($date, array_column($historyOrder, 'date'));
+            $order->delivery_finished_at = (new Carbon($order->delivery_finished_at))->getTimestamp();
+            if ($key === false) {
+                $historyOrder[$j]['date'] = $date;
+                $historyOrder[$j]['data'][] = $order;
+                $j++;
+            } else {
+                $historyOrder[$key]['data'][] = $order;
             }
-
-          $j++;
         }
 
-        //dd($historyOrder);
         return $this->success(['historyOrder' => $historyOrder]);
 
     }
@@ -142,7 +135,7 @@ class DeliveryController extends Controller
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         $order->user->setHidden([]);
         $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url','pieces']);
+            $goods->addHidden(['introduce', 'images_url', 'pieces']);
 
         });
 

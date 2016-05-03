@@ -5,25 +5,33 @@
 @section('css')
     @parent
     <style>
-        input{    height: 30px;
-            margin-right: 10px;
-            vertical-align: middle;}
-        select{
+        input {
             height: 30px;
             margin-right: 10px;
             vertical-align: middle;
         }
-        button{
+
+        select {
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        button {
             height: 30px;
 
             color: #555555;
         }
+
         .control-search {
             padding: 10px 30px;
         }
-        th{text-align: center}
+
+        th {
+            text-align: center
+        }
     </style>
-    @stop
+@stop
 @section('right')
     <div class="row delivery">
         <div class="col-sm-12 collect">
@@ -61,16 +69,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($deliveries as $delivery)
+                    @foreach($deliveries as $delivery)
                         <tr align="center">
 
-                            <td>{{ $delivery->deliveryMan->name  }}</td>
+                            <td>{{ $delivery->deliveryMan?$delivery->deliveryMan->name:''  }}</td>
                             <td>{{ $delivery->id }}</td>
                             <td>{{ $delivery->user->shop->name }}</td>
                             <td>{{  $delivery->shippingAddress&&$delivery->shippingAddress->address?$delivery->shippingAddress->address->address_name:'' }}</td>
                             <td>{{ $delivery->delivery_finished_at }}</td>
                         </tr>
-                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
                 <div class="text-right">
