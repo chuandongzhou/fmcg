@@ -18,7 +18,7 @@ class DeliveryLoginRequest extends Request
     public function rules()
     {
         return [
-            'user_name' => 'required|numeric|size:6',
+            'user_name' => 'required|size:6',
             'password' => 'required',
         ];
     }
