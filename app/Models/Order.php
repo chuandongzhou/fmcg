@@ -69,6 +69,15 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderGoods');
     }
 
+    /**
+     * 订单修改记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderChangeRecode()
+    {
+        return $this->hasMany('App\Models\OrderChangeRecode');
+    }
 
     /**
      * 订单退款信息
@@ -553,7 +562,7 @@ class Order extends Model
                 $query->where('created_at', '>', $search['start_at']);
             }
             if ($search['end_at']) {
-                $query->where('created_at', ' <', $search['end_at']);
+                $query->where('created_at', '<', $search['end_at']);
             }
         })->where('is_cancel', cons('order.is_cancel.off'));
     }

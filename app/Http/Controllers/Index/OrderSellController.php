@@ -114,12 +114,12 @@ class OrderSellController extends OrderController
     public function getDetail(Request $request)
     {
         $order = Order::bySellerId(auth()->id())->with('user.shop', 'shop.user', 'goods.images.image',
-            'shippingAddress.address', 'systemTradeInfo')->find(intval($request->input('order_id')));
+            'shippingAddress.address', 'systemTradeInfo',
+            'orderChangeRecode')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');
         }
         //过滤字段
-        $order->shop->setAppends([]);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url']);
         });

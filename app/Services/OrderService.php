@@ -222,4 +222,50 @@ class OrderService
         }
         return true;
     }
+
+    /**
+     * 订单修改处理
+     *
+     * @param $order
+     * @param $attributes
+     * @param $userId
+     * @return bool
+     */
+    public function changeOrder($order, $attributes, $userId)
+    {
+        //判断待修改物品是否属于该订单
+        $orderGoods = OrderGoods::find(intval($attributes['pivot_id']));
+        if (!$orderGoods || $orderGoods->order_id != $order->id) {
+            return false;
+        }
+
+        $num = $attributes['num'];
+        $price = is_null($attributes['price']) ? $orderGoods->price : $attributes['price'];
+
+        $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
+            $oldTotalPrice = $orderGoods->total_price;
+            $newTotalPrice = $num * $price;
+            //增加修改记录
+            $oldNum = $orderGoods->num;
+            $oldPrice = $orderGoods->price;
+
+            $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
+            $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
+
+            $content = "商品编号：{$orderGoods->id};原商品数量：{$oldNum},现商品数量：{$orderGoods->num};原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
+
+            $order->orderChangeRecode()->create([
+                'user_id' => $userId,
+                'content' => $content
+            ]);
+
+            //通知买家订单价格发生了变化
+            $redisKey = 'push:user:' . $order->user_id;
+            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
+            (new RedisService)->setRedis($redisKey, $redisVal);
+
+            return true;
+        });
+        return $flag === true;
+    }
 }

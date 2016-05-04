@@ -194,6 +194,21 @@
                         </ul>
                     </div>
                 @endif
+                @if(!$order->orderChangeRecode->isEmpty())
+                    <div class="col-sm-12 receiving-information">
+                        <ul>
+                            <li class="title">订单修改记录</li>
+                            @foreach($order->orderChangeRecode as $orderChangeRecode)
+                                <li>
+                                    <span class="title-info-name">修改人 : </span>
+                                    {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan->name }}
+                                    <span class="title-info-name">内容 : </span>
+                                    {{ $orderChangeRecode->content }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
             <div class="row table-row">
                 <div class="col-sm-12 table-responsive table-col">

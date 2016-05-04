@@ -474,32 +474,12 @@ class OrderController extends Controller
     {
         //判断该订单是否存在
         $order = Order::bySellerId(auth()->id())->find(intval($request->input('order_id')));
-        if (!$order || !$order->can_change_price || $order->shop_id != auth()->user()->shop->id) {
+        if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }
-        //判断输入的价格是否合法
-        $price = $request->input('price');
-        $num = $request->input('num');
+        $attributes = $request->all();
 
-        //判断待修改物品是否属于该订单
-        $orderGoods = OrderGoods::find(intval($request->input('pivot_id')));
-        if (!$orderGoods || $orderGoods->order_id != $order->id) {
-            return $this->error('操作失败');
-        }
-        $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num) {
-            $oldTotalPrice = $orderGoods->total_price;
-            $newTotalPrice = $num * $price;
-            $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
-            $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
-            //通知买家订单价格发生了变化
-
-            $redisKey = 'push:user:' . $order->user_id;
-            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal);
-
-            return true;
-        });
-
+        $flag = (new OrderService)->changeOrder($order, $attributes, auth()->id());
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
 

@@ -26,6 +26,7 @@
                         clear: "fa fa-trash",
                         close: "fa fa-remove"
                     },
+                    locale: 'zh-cn',
                     format: format,
                     widgetPositioning: {
                         horizontal: 'auto',
