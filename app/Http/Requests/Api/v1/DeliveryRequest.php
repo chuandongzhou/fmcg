@@ -18,7 +18,7 @@ class DeliveryRequest extends Request{
     {
         return [
             'start_at' => 'required|date',
-            'end_at' => 'required|date|after:start_at',
+            'end_at' => 'required|date',
         ];
     }
 }

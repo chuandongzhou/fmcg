@@ -213,6 +213,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('detail','DeliveryController@detail');//配送订单详情
             $router->get('deal-delivery','DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout','DeliveryController@logout');//退出登陆
+            $router->post('update-order','DeliveryController@putChangeOrder');//修改订单商品数量
         });
 
     });
