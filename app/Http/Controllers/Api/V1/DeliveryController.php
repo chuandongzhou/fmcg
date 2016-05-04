@@ -5,11 +5,13 @@ use Illuminate\Http\Request;
 use App\Models\DeliveryMan;
 use Hash;
 use App\Models\Order;
+use App\Models\OrderGoods;
 use Carbon\Carbon;
 use App\Http\Requests\Api\v1\DeliveryRequest;
 use App\Http\Requests\Api\v1\DeliveryLoginRequest;
 use DB;
-
+use App\Http\Requests\Api\v1\DeliveryUpdateOrderRequest;
+use App\Services\RedisService;
 class DeliveryController extends Controller
 {
 
@@ -185,6 +187,46 @@ class DeliveryController extends Controller
     {
         delivery_auth()->logout();
         return $this->success();
+    }
+
+    /**
+     * 修改订单
+     *
+     * @param \App\Http\Requests\Api\v1\DeliveryUpdateOrderRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putChangeOrder(DeliveryUpdateOrderRequest $request)
+    {
+        //判断该订单是否存在
+        $order = Order::where('delivery_man_id',delivery_auth()->id())->find(intval($request->input('order_id')));
+        if (!$order || !$order->can_change_price) {
+            return $this->error('订单不存在或不能修改');
+        }
+        //判断输入的数量是否合法
+
+        $num = $request->input('num');
+
+        //判断待修改物品是否属于该订单
+        $orderGoods = OrderGoods::find(intval($request->input('pivot_id')));
+        if (!$orderGoods || $orderGoods->order_id != $order->id) {
+            return $this->error('操作失败');
+        }
+        $flag = DB::transaction(function () use ($orderGoods, $order, $num) {
+            $oldTotalPrice = $orderGoods->total_price;
+            $price = $orderGoods->price;
+            $newTotalPrice = $num * $price;
+            $orderGoods->fill(['num' => $num, 'total_price' => $newTotalPrice])->save();
+            $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
+            //通知买家订单价格发生了变化
+
+            $redisKey = 'push:user:' . $order->user_id;
+            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
+            (new RedisService)->setRedis($redisKey, $redisVal);
+
+            return true;
+        });
+
+        return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
 
 }
