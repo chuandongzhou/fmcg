@@ -240,7 +240,7 @@ class OrderService
         }
 
         $num = $attributes['num'];
-        $price = is_null($attributes['price']) ? $orderGoods->price : $attributes['price'];
+        $price = isset($attributes['price']) ? $attributes['price'] : $orderGoods->price;
 
         $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
             $oldTotalPrice = $orderGoods->total_price;

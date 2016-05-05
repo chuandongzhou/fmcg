@@ -190,7 +190,7 @@ class DeliveryController extends Controller
      * @param \App\Http\Requests\Api\v1\UpdateOrderRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function putChangeOrder(UpdateOrderRequest $request)
+    public function changeOrder(UpdateOrderRequest $request)
     {
         $deliveryId = delivery_auth()->id();
         //判断该订单是否存在

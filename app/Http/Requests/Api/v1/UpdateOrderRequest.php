@@ -13,8 +13,8 @@ class UpdateOrderRequest extends Request
     public function rules()
     {
         return [
-            'num' => 'sometimes|required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'num' => 'required|sometimes|required|integer|min:1',
+            'price' => 'numeric|min:0',
         ];
     }
 }

@@ -8,6 +8,6 @@ abstract class Request extends FormRequest
 {
     public function authorize()
     {
-        return auth()->check() || admin_auth()->check();
+        return auth()->check() || admin_auth()->check() || delivery_auth()->check();
     }
 }
