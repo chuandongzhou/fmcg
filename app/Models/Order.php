@@ -285,7 +285,7 @@ class Order extends Model
     }
 
     /**
-     * 是否已收款(卖家)
+     * 是否可收款(卖家)
      *
      * @return bool
      */
@@ -561,7 +561,7 @@ class Order extends Model
                         ])->orWhere(['pay_type' => cons('pay_type.cod')]);
                     })->where('status', cons('order.status.non_send'));
                 } else {
-                    $query->where('status', cons('order.status', $search['status']));
+                    $query->where('status', cons('order.status.' . $search['status']));
                 }
             }
             if ($search['start_at']) {
