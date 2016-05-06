@@ -42,16 +42,18 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image',
+        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image',
             'shippingAddress.address');
         if (is_numeric($search['search_content'])) {
-            $orders = $query->where('id', $search['search_content'])->paginate();
+            $orders = $orders->where('id', $search['search_content']);
+        } elseif ($search['search_content']) {
+            $orders = $orders->ofSelectOptions($search)->ofUserShopName($search['search_content']);
         } else {
-            $orders = $query->ofSelectOptions($search)->orderBy('id',
-                'desc')->ofUserShopName($search['search_content'])->paginate();
+            $orders = $orders->ofSelectOptions($search);
         }
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
+        $orders = $orders->orderBy('id', 'desc')->paginate();
         $orders->each(function ($order) {
             $order->user->shop->setAppends([]);
         });
@@ -65,7 +67,6 @@ class OrderSellController extends OrderController
         ]);
     }
 
-    //TODO: 以下查询待优化
     /**
      * 待发货订单
      */

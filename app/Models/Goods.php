@@ -184,41 +184,18 @@ class Goods extends Model
      */
     public function scopeOfDeliveryArea($query, $data)
     {
-        if (isset($data['province_id'])
-            && isset($data['city_id'])
-            && isset($data['district_id'])
-            && isset($data['street_id'])
-        ) {
-            return $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id'],
-                    'district_id' => $data['district_id'],
-                    'street_id' => $data['street_id'],
-                ]);
-            });
-        } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
-            return $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id'],
-                    'district_id' => $data['district_id']
-                ]);
-            });
-        } elseif (isset($data['province_id']) && isset($data['city_id'])) {
-            return $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id']
-                ]);
-            });
-        } elseif (isset($data['province_id'])) {
-            return $query->whereHas('deliveryArea', function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id']
-                ]);
-            });
-        }
+        $goodsBuilder = clone $query;
+        $goodsIds = $goodsBuilder->lists('id');
+        $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
+        $goodsIds = DB::table('delivery_area')->where(array_filter($data))->where('addressable_type',
+            "App\\Models\\Goods")->whereIn('addressable_id', $goodsIds)->lists('addressable_id');
+        return $query->whereIn('id', $goodsIds);
+
+
+        /* $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
+         return $query->whereHas('deliveryArea', function ($query) use ($data) {
+             $query->where($data);
+         });*/
     }
 
     /**
@@ -353,7 +330,8 @@ class Goods extends Model
         return cons()->valueLang('goods.pieces', $piece);
     }
 
-    public function getPiecesIdAttribute(){
+    public function getPiecesIdAttribute()
+    {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
         $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
         return $piece;

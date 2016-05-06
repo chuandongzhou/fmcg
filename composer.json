@@ -38,6 +38,7 @@
     "files": [
       "app/Vendors/WeiHeng/Foundation/helpers.php",
       "app/Vendors/WeiHeng/Foundation/Yeepay.php",
+      "app/Vendors/WeiHeng/Foundation/Alipay.php",
       "app/Vendors/WeiHeng/Message/TopSdk.php"
     ]
   },

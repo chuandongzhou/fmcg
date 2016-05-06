@@ -3,6 +3,7 @@
 @section('subtitle', '首页')
 
 @include('includes.notice')
+@include('includes.jquery-lazeload')
 
 @section('header')
     @parent
@@ -71,7 +72,8 @@
                             @foreach($adverts as $key=>$advert )
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                     <a href="{{ $advert->url }}" target="_blank">
-                                        <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                        <img class="lazy" data-original="{{ $advert->image_url }}"
+                                             alt="{{ $advert->name }}">
                                     </a>
                                 </div>
                             @endforeach
@@ -109,7 +111,8 @@
                                             @foreach($column->adverts as $key => $advert)
                                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                                     <a href="{{ $advert->url }}" target="_blank">
-                                                        <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                                        <img class="lazy" data-original="{{ $advert->image_url }}"
+                                                             alt="{{ $advert->name }}">
                                                     </a>
                                                 </div>
                                             @endforeach
@@ -130,7 +133,8 @@
                                             <div class="commodity commodity-index-img">
                                                 <div class="img-wrap">
                                                     <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
-                                                        <img class="commodity-img" src="{{ $goods->image_url }}" 、>
+                                                        <img class="commodity-img lazy"
+                                                             data-original="{{ $goods->image_url }}"/>
 
                                                         <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
                                                     </a>

@@ -205,37 +205,10 @@ class Shop extends Model
      */
     public function scopeOfDeliveryArea($query, $data, $relation = 'deliveryArea')
     {
-        if (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id']) && isset($data['street_id'])) {
-            $query->whereHas($relation, function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id'],
-                    'district_id' => $data['district_id'],
-                    'street_id' => $data['street_id'],
-                ]);
-            });
-        } elseif (isset($data['province_id']) && isset($data['city_id']) && isset($data['district_id'])) {
-            $query->whereHas($relation, function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id'],
-                    'district_id' => $data['district_id']
-                ]);
-            });
-        } elseif (isset($data['province_id']) && isset($data['city_id'])) {
-            $query->whereHas($relation, function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id'],
-                    'city_id' => $data['city_id']
-                ]);
-            });
-        } elseif (isset($data['province_id'])) {
-            $query->whereHas($relation, function ($query) use ($data) {
-                $query->where([
-                    'province_id' => $data['province_id']
-                ]);
-            });
-        }
+        $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
+        return $query->whereHas($relation, function ($query) use ($data) {
+            $query->where(array_filter($data));
+        });
     }
 
     /**
@@ -420,7 +393,7 @@ class Shop extends Model
     {
         $logo = $this->logo;
         $userType = array_flip(cons('user.type'));
-        return $logo ? upload_file_url($logo->path) : asset('images/' . $userType[$this->user->type] . '.jpg');
+        return $logo ? $logo->url : asset('images/' . $userType[$this->user->type] . '.jpg');
     }
 
     /**
@@ -432,7 +405,7 @@ class Shop extends Model
     {
         $license = $this->license;
 
-        return $license ? upload_file_url($license->path) : '';
+        return $license ? $license->url : '';
     }
 
     /**
@@ -444,7 +417,7 @@ class Shop extends Model
     {
         $businessLicense = $this->businessLicense;
 
-        return $businessLicense ? upload_file_url($businessLicense->path) : '';
+        return $businessLicense ? $businessLicense->url : '';
     }
 
     /**
@@ -456,7 +429,7 @@ class Shop extends Model
     {
         $agencyContract = $this->agencyContract;
 
-        return $agencyContract ? upload_file_url($agencyContract->path) : '';
+        return $agencyContract ? $agencyContract->url : '';
     }
 
     /**
@@ -468,7 +441,7 @@ class Shop extends Model
     {
         $image = $this->images->first();
 
-        return $image ? upload_file_url($image->path) : asset('images/shop_default.png');
+        return $image ? $image->url : asset('images/shop_default.png');
     }
 
     /**

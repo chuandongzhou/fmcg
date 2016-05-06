@@ -56,10 +56,6 @@ class LikeController extends Controller
         if (isset($data['name'])) {
             $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
         }
-        if (!empty($data['province_id'])) {
-            $goods = $goods->OfDeliveryArea($data);
-        }
-       // dd($goods->lists('cate_level_2')->all());
         //获取需要显示的分类ID
         $array = array_unique($goods->lists('cate_level_2')->all());
 
@@ -69,6 +65,9 @@ class LikeController extends Controller
         //加入分类过滤条件
         if (!empty($data['cate_level_2'])) {
             $goods = $goods->ofCategory($data['cate_level_2'], 2);
+        }
+        if (!empty($data['province_id'])) {
+            $goods = $goods->OfDeliveryArea($data);
         }
 
         return view('index.like.goods', [

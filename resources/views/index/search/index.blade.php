@@ -3,6 +3,7 @@
 @section('subtitle')
     {{ $keywords ? : '商品搜索' }}
 @stop
+@include('includes.jquery-lazeload')
 
 @section('container')
     <div class="container dealer-index index search-page">

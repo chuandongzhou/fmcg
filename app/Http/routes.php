@@ -23,6 +23,7 @@ $router->group(['prefix' => 'admin/auth', 'namespace' => 'Admin'], function ($ro
  */
 $router->controller('webhooks/pingxx', 'Index\Webhook\PingxxController');
 $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
+$router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
 
 /**
  * 前台
@@ -31,7 +32,7 @@ $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/test', 'HomeController@test');              //商家管理首页
     $router->get('/', 'HomeController@index');              //商家管理首页
-    $router->get('about' , 'HomeController@about');         //关于我们
+    $router->get('about', 'HomeController@about');         //关于我们
 
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
     $router->get('shop/{shop}/detail', 'ShopController@detail')->where('shop', '[0-9]+');          //商家商店详情
@@ -49,7 +50,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->controller('order', 'OrderController');       //订单
     $router->get('search', 'SearchController@index');      //商品搜索页
     $router->controller('like', 'LikeController');//收藏夹
-    $router->controller('pay', 'YeepayController'); //易宝
+    $router->get('yeepay/{order_id}', 'YeepayController@index'); //易宝
+    $router->get('alipay/{order_id}', 'AlipayController@index'); //支付宝
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
@@ -62,7 +64,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->controller('chat', 'ChatController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
-        $router->get('delivery','DeliveryController@historyDelivery');
+        $router->get('delivery', 'DeliveryController@historyDelivery');
     });
 
     $router->get('help', 'HelpController@index'); // 帮助中心
@@ -123,7 +125,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('notice', 'NoticeController'); //前台用户添加商品时没有图片的条形码
     $router->get('chat', 'ChatController@index'); // 消息
     $router->controller('cache', 'CacheController'); // 消息
-    $router->get('goods/import','GoodsController@import');//批量导入商品
+    $router->get('goods/import', 'GoodsController@import');//批量导入商品
 
 });
 
@@ -203,17 +205,17 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('js-errors', ['uses' => 'PublicController@jsErrorStore']); // 前端JS错误记录
         //获取移动端广告
         $router->get('advert', 'AdvertController@index');
-        $router->post('feedback' , 'FeedbackController@index'); //意见反馈
+        $router->post('feedback', 'FeedbackController@index'); //意见反馈
         //司机版APP接口
         $router->group(['prefix' => 'delivery'], function ($router) {
-            $router->get('index','DeliveryController@index');//配送人员登陆页面 测试用
-            $router->post('login','DeliveryController@login');//处理配送人员登陆
-            $router->get('orders','DeliveryController@orders');//已分配的订单信息
-            $router->get('history-orders','DeliveryController@historyOrders');//已配送历史订单信息
-            $router->get('detail','DeliveryController@detail');//配送订单详情
-            $router->get('deal-delivery','DeliveryController@dealDelivery');//处理完成配送
-            $router->get('logout','DeliveryController@logout');//退出登陆
-            $router->post('update-order','DeliveryController@changeOrder');//修改订单商品数量
+            $router->get('index', 'DeliveryController@index');//配送人员登陆页面 测试用
+            $router->post('login', 'DeliveryController@login');//处理配送人员登陆
+            $router->get('orders', 'DeliveryController@orders');//已分配的订单信息
+            $router->get('history-orders', 'DeliveryController@historyOrders');//已配送历史订单信息
+            $router->get('detail', 'DeliveryController@detail');//配送订单详情
+            $router->get('deal-delivery', 'DeliveryController@dealDelivery');//处理完成配送
+            $router->get('logout', 'DeliveryController@logout');//退出登陆
+            $router->post('update-order', 'DeliveryController@changeOrder');//修改订单商品数量
         });
 
     });

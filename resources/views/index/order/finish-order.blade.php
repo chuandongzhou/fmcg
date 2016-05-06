@@ -32,7 +32,7 @@
                 <p class="order-ok-title">订单已提交，请于24小时内完成支付</p>
 
                 <p class="finish-operating">
-                    <a href="{{ url('pay/request/' . $orderId . ($type == 'all' ? '?type=all' : '')) }}"
+                    <a href="{{ url('yeepay/' . $orderId . ($type == 'all' ? '?type=all' : '')) }}"
                        class="btn btn-danger pay" onclick="showPaySuccess()" target="_blank">前往支付</a>
                     <a href="{{ url('order-buy') }}" class="check-order">查看订单</a>
                 </p>

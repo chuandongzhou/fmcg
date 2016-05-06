@@ -13,8 +13,10 @@ class UpdateOrderRequest extends Request
     public function rules()
     {
         return [
-            'num' => 'required|sometimes|required|integer|min:1',
-            'price' => 'numeric|min:0',
+            'num' => 'required|integer|min:1',
+            'price' => 'sometimes|required|numeric|min:0',
+            'order_id' => 'required|integer',
+            'pivot_id' => 'required|integer'
         ];
     }
 }

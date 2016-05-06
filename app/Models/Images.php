@@ -52,6 +52,6 @@ class Images extends Model
     public function getImageUrlAttribute()
     {
         $image = $this->image;
-        return $image ? upload_file_url($image->path) : '';
+        return $image ? $image->url : '';
     }
 }

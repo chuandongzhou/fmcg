@@ -26,7 +26,7 @@ class PingxxController extends Controller
     {
         $raw_data = file_get_contents('php://input');
         $signature = $request->server('HTTP_X_PINGPLUSPLUS_SIGNATURE');
-        $pub_key_path = __DIR__ . "/rsa_public_key.pem";
+        $pub_key_path = storage_path('pingxx_pem/rsa_public_key.pem');
         // 验证 webhooks 签名
         $result = verify_signature($raw_data, $signature, $pub_key_path);
 

@@ -132,7 +132,8 @@ return [
         'pay_type' => [
             'yeepay' => 1,          //易宝
             'pingxx' => 2,           //pingxx
-            'pos' => 3               //pos机
+            'pos' => 3,               //pos机
+            'alipay' => 4              //支付宝
         ],
         'pay_status' => [
             'success' => 1,         //成功

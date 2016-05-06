@@ -67,7 +67,8 @@ return [
         'pay_type' => [
             'yeepay' => '易宝',
             'pingxx' => 'pingxx',
-            'pos' => 'pos机'
+            'pos' => 'pos机',
+            'alipay' => '支付宝'
         ],
         'pay_status' => [
             'success' => '成功',
@@ -108,11 +109,11 @@ return [
             'bag' => '袋',
             'pot' => '罐',
             'packet' => '包',
-            'bucket'=> '桶',
+            'bucket' => '桶',
             'cup' => '杯',
             'branch' => '支',
-            'individual'=> '个',
-            'canister'=> '筒'
+            'individual' => '个',
+            'canister' => '筒'
         ]
     ],
     // 银行列表

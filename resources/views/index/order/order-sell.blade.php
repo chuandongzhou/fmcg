@@ -177,7 +177,7 @@
                     <div class="col-sm-12 padding-clear">
                         <input type="checkbox" class="parent"/>
                         <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                data-method="put" data-done-then="none">批量取消
+                                data-method="put">批量取消
                         </button>
                         <a class="btn btn-warning batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
                         <button class="btn btn-info ajax btn-receive"

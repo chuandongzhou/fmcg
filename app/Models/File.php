@@ -175,7 +175,8 @@ class File extends Model
     protected function getUrlAttribute()
     {
         if ($this->path) {
-            return upload_file_url($this->path);
+            $mtime = @filemtime(config('path.upload_file') . $this->path);
+            return upload_file_url($this->path . ($mtime ? '?' . $mtime : ''));
         }
 
         return '';

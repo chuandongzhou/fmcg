@@ -2,6 +2,8 @@
 
 @section('subtitle' , '店铺商品搜索')
 
+@include('includes.jquery-lazeload')
+
 @section('container')
     @include('index.shop-search')
     <div class="container dealer-index index search-page">

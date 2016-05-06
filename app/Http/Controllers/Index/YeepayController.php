@@ -19,7 +19,7 @@ class YeePayController extends Controller
      * @param $orderId
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function getRequest(Request $request, $orderId)
+    public function Index(Request $request, $orderId)
     {
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';

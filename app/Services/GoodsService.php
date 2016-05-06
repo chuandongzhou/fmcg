@@ -29,12 +29,6 @@ class GoodsService
         if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
             $goods->{'Of' . ucfirst(camel_case($data['sort']))}();
         }
-        // 省市县
-
-        if (isset($data['province_id'])) {
-            $goods->OfDeliveryArea(array_filter($data));
-        }
-
         $attrs = [];
         $resultCategories = [];
         $categories = collect(CategoryService::getCategories())->sortBy('level')->toArray();
@@ -69,7 +63,10 @@ class GoodsService
                 return in_array($val['id'], $categoryIds);
             });
         }
-
+        // 省市
+        if (isset($data['province_id'])) {
+            $goods->OfDeliveryArea(array_filter($data));
+        }
 
         $defaultAttrName = cons()->valueLang('attr.default');
 
@@ -94,7 +91,7 @@ class GoodsService
         }
 
         return [
-            'goods' => $goods,
+            'goods' => $goods->orderBy('is_out'),
             'attrs' => $attrs,
             'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
                 function ($key, $value) {

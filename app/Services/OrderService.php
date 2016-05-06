@@ -194,7 +194,7 @@ class OrderService
             (new CartService)->decrement($carts->count());
 
             //提交订单成功发送短信
-            $this->sendSmsToSeller($successOrders);
+           // $this->sendSmsToSeller($successOrders);
             return $returnArray;
         });
         return $result;

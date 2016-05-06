@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class Order extends Model
 {
     protected $table = 'order';
@@ -360,14 +362,14 @@ class Order extends Model
      * 根据买家名字查询订单及买家信息--getSearch()
      *
      * @param $query
-     * @param $search
+     * @param $shopName
      * @return mixed
      */
-    public function scopeOfUserShopName($query, $search)
+    public function scopeOfUserShopName($query, $shopName)
     {
-        return $query->wherehas('user.shop', function ($query) use ($search) {
+        return $query->whereHas('user.shop', function ($query) use ($shopName) {
 
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%' . $shopName . '%');
         });
     }
 
@@ -380,7 +382,7 @@ class Order extends Model
      */
     public function scopeOfSellerShopName($query, $search)
     {
-        return $query->wherehas('shop', function ($query) use ($search) {
+        return $query->whereHas('shop', function ($query) use ($search) {
 
             $query->where('name', 'like', '%' . $search . '%');
 
@@ -410,7 +412,7 @@ class Order extends Model
      */
     public function scopeOfSell($query, $userId)
     {
-        return $query->wherehas('shop.user', function ($query) use ($userId) {
+        return $query->whereHas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
         })->where('is_cancel', cons('order.is_cancel.off'))->with('user.shop', 'goods.images')->orderBy('id', 'desc');
     }
@@ -424,19 +426,23 @@ class Order extends Model
      */
     public function scopeBySellerId($query, $userId)
     {
-        return $query->wherehas('shop.user', function ($query) use ($userId) {
+        return $query->whereHas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
         });
 
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeExceptNonPayment($query)
     {
         return $query->where(function ($query) {
             $query->where(function ($query) {
                 $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
                     cons('order.pay_status.payment_success'));
-            })->orwhere('pay_type', cons('pay_type.cod'));
+            })->orWhere('pay_type', cons('pay_type.cod'));
         });
     }
 
@@ -555,16 +561,17 @@ class Order extends Model
                         ])->orWhere(['pay_type' => cons('pay_type.cod')]);
                     })->where('status', cons('order.status.non_send'));
                 } else {
-                    $query->where('status', cons('order.status')[$search['status']]);
+                    $query->where('status', cons('order.status', $search['status']));
                 }
             }
             if ($search['start_at']) {
-                $query->where('created_at', '>', $search['start_at']);
+                $query->where('created_at', '>=', $search['start_at']);
             }
             if ($search['end_at']) {
-                $query->where('created_at', '<', $search['end_at']);
+                $endAt = (new Carbon($search['end_at']))->endOfDay();
+                $query->where('created_at', '<=', $endAt);
             }
-        })->where('is_cancel', cons('order.is_cancel.off'));
+        })->nonCancel();
     }
 
     /**

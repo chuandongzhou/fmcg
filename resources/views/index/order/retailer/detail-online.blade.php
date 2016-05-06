@@ -214,7 +214,7 @@
                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                     @endif
                     @if($order['can_payment'])
-                        <a href="{{ url('pay/request/' . $order['id']) }}" class="btn btn-success">去付款</a>
+                        <a href="{{ url('yeepay/' . $order['id']) }}" class="btn btn-success">去付款</a>
                     @elseif($order['can_confirm_arrived'])
                         <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>

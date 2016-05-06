@@ -3,7 +3,7 @@
         <div class="col-sm-3 commodity">
             <div class="img-wrap">
                 <a href="{{ url('goods/' . $item->id) }}" target="_blank">
-                    <img class="commodity-img" src="{{ $item->image_url }}">
+                    <img class="commodity-img lazy" data-original="{{ $item->image_url }}">
                     <span class="@if($item->is_out)prompt  lack  @elseif($item->is_promotion)prompt  promotions @elseif($item->is_new)prompt  new-listing @endif"></span>
                 </a>
             </div>

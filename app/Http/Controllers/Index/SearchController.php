@@ -56,6 +56,7 @@ class SearchController extends Controller
                     isset($data['name']) ? $data['name'] : null),
                 'data' => $data
             ]);
+
     }
 
     /**

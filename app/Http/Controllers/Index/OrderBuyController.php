@@ -41,23 +41,24 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $query = Order::ofBuy(auth()->id());
+        $orders = Order::ofBuy(auth()->id());
         if (is_numeric($search['search_content'])) {
-            $orders = $query->where('id', $search['search_content'])->paginate();
+            $orders = $orders->where('id', $search['search_content']);
+        } elseif ($search['search_content']) {
+            $orders = $orders->ofSelectOptions($search)->ofUserShopName($search['search_content']);
         } else {
-            $orders = $query->ofSelectOptions($search)->ofSellerShopName($search['search_content'])->paginate();
+            $orders = $orders->ofSelectOptions($search);
         }
 
         return view('index.order.order-buy', [
             'pay_type' => $payType,
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
-            'orders' => $orders,
+            'orders' => $orders->orderBy('id', 'desc')->paginate(),
             'search' => $search
         ]);
     }
 
-    //TODO: 以下查询待优化
     /**
      * 待发货订单
      */
@@ -114,8 +115,10 @@ class OrderBuyController extends OrderController
             'order' => $order
         ]);
     }
+
     /**
      * 获取不同状态订单数
+     *
      * @param int $nonSend
      * @param int $waitReceive
      * @param int $waitConfirm
