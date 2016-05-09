@@ -69,7 +69,6 @@ class OrderController extends Controller
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
 
-
     /**
      * 提交订单
      *
@@ -94,6 +93,12 @@ class OrderController extends Controller
         return redirect($redirectUrl);
     }
 
+    /**
+     * 订单提交完成页
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function getFinishOrder(Request $request)
     {
         $orderId = $request->input('order_id');
@@ -105,12 +110,14 @@ class OrderController extends Controller
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
 
-        $orders = Order::where('id', $field)->get(['pay_type', 'pay_status', 'user_id']);
+        $orders = Order::where($field, $orderId)->get(['pay_type', 'pay_status', 'user_id', 'pay_way', 'is_cancel']);
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
-
-        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
+        $order = $orders->first();
+        $onlinePayWay = array_flip(cons('pay_way.online'));
+        $payWay = array_get($onlinePayWay, $order->pay_way, head($onlinePayWay));
+        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type, 'payWay' => $payWay]);
     }
 
     /**
@@ -385,14 +392,19 @@ class OrderController extends Controller
 
                 //打印条件
                 $options = $this->_spliceOptions($search);
+
                 //订单信息统计
                 $orderContent = $this->_spliceOrderContent($stat, isset($search['show_goods_name']));
+
                 //商品信息统计
                 $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
+
                 //订单汇总统计
                 $orderStat = $this->_spliceOrderStat($otherStat['stat']);
 
+
                 $out = array_merge($options, $orderContent, $goodsContent, $orderStat);
+
 
                 $sheet->rows($out);
 
@@ -431,15 +443,19 @@ class OrderController extends Controller
             $options[] = [$showObjName . ":", $search['user_name']];
         }
 
-        if (!empty($search['province_id'])) {
-            $options[] = ['省市:', DB::table('address')->select('name')->find(intval($search['province_id']))];
-        }
-        if (!empty($search['city_id'])) {
-            $options[] = ['城市:', DB::table('address')->select('name')->find(intval($search['city_id']))];
-        }
-        if (!empty($search['district_id'])) {
-            $options[] = ['区县:', DB::table('address')->select('name')->find(intval($search['district_id']))];
-        }
+        /* $searchAddress = array_only($search, ['province_id', 'city_id', 'district_id']);
+
+         $addressList = DB::table('address')->whereIn('id', $searchAddress)->lists('name', 'id');
+
+         if (!empty($search['province_id'])) {
+             $options[] = ['省:', $addressList[$search['province_id']]];
+         }
+         if (!empty($search['city_id'])) {
+             $options[] = ['城市:', $addressList[$search['city_id']]];
+         }
+         if (!empty($search['district_id'])) {
+             $options[] = ['区县:', $addressList[$search['district_id']]];
+         }*/
 
         return $options;
     }

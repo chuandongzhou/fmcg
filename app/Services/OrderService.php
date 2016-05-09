@@ -108,13 +108,10 @@ class OrderService
             }
 
             $payTypes = cons('pay_type');
-            $codPayTypes = cons('cod_pay_type');
-
-            $onlinePaymentOrder = [];   //  保存在线支付的订单
             $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
 
-            $codPayType = $payType == $payTypes['cod'] ? array_get($codPayTypes, $data['cod_pay_type'],
-                head($codPayTypes)) : 0;
+            $payWayConf = cons('pay_way.' . $data['pay_type']);
+            $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
             //TODO: 需要验证收货地址是否合法
             $shippingAddressId = $data['shipping_address_id'];
 
@@ -130,14 +127,12 @@ class OrderService
                     'shop_id' => $shop->id,
                     'price' => $shop->sum_price,
                     'pay_type' => $payType,
-                    'cod_pay_type' => $codPayType,
+                    'pay_way' => $payWay,
                     'shipping_address_id' => (new ShippingAddressService)->copyToSnapshot($shippingAddressId),
                     'remark' => $remark
                 ];
                 if (!$orderData['shipping_address_id']) {
-                    foreach ($successOrders as $successOrder) {
-                        $successOrder->delete();
-                    }
+                   $this->_deleteSuccessOrders($successOrders);
                     return false;
                 }
                 $order = Order::create($orderData);
@@ -154,22 +149,19 @@ class OrderService
                         ]);
                     }
                     if ($order->orderGoods()->saveMany($orderGoods)) {
-                        if ($payType == $payTypes['online']) {
-                            $onlinePaymentOrder[] = $order->id;
-                        } else {
+                        if ($payType == $payTypes['cod']) {
                             //货到付款订单直接通知卖家发货
                             $redisKey = 'push:seller:' . $shop->user->id;
                             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
                             (new RedisService)->setRedis($redisKey, $redisVal);
                         }
                     } else {
-                        foreach ($successOrders as $successOrder) {
-                            $successOrder->delete();
-                        }
+                        $this->_deleteSuccessOrders($successOrders);
                         return false;
                     }
 
                 } else {
+                    $this->_deleteSuccessOrders($successOrders);
                     return false;
                 }
             }
@@ -188,13 +180,13 @@ class OrderService
                     $returnArray['order_id'] = $pid;
                     $returnArray['type'] = 'all';
                 } else {
-                    $returnArray['order_id'] = $onlinePaymentOrder[0];
+                    $returnArray['order_id'] = $successOrders[0]->id;
                 }
             }
             (new CartService)->decrement($carts->count());
 
             //提交订单成功发送短信
-           // $this->sendSmsToSeller($successOrders);
+            // $this->sendSmsToSeller($successOrders);
             return $returnArray;
         });
         return $result;
@@ -252,7 +244,7 @@ class OrderService
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
 
-            $content = "商品编号：{$orderGoods->id};原商品数量：{$oldNum},现商品数量：{$orderGoods->num};原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
+            $content = "商品编号：{$orderGoods->goods_id};原商品数量：{$oldNum},现商品数量：{$orderGoods->num};原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
 
             $order->orderChangeRecode()->create([
                 'user_id' => $userId,
@@ -267,5 +259,19 @@ class OrderService
             return true;
         });
         return $flag === true;
+    }
+
+    /**
+     * 订单提交失败时删除已成功的订单
+     *
+     * @param $successOrders
+     * @return bool
+     */
+    private function _deleteSuccessOrders($successOrders)
+    {
+        foreach ($successOrders as $successOrder) {
+            $successOrder->delete();
+        }
+        return true;
     }
 }

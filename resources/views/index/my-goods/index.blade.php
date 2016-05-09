@@ -115,25 +115,32 @@
                         <input class="control" name="name" value="{{ isset($get['name']) ? $get['name'] : '' }}"
                                type="text">
                     </div>
+                    <div class="item control-status">
+                        <label>状态:</label>
+                        <select class="status" name="status">
+                            <option value="">请选择</option>
+                            @foreach(cons()->valueLang('goods.status') as $status => $statusName)
+                                <option value="{{ $status }}" {{ isset($get['status']) && $get['status'] == $status ? 'selected' : '' }}>
+                                    {{ $statusName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="item control-delivery">
                         <label>配送区域:</label>
                         <select class="address-province" name="province_id"
                                 data-id="{{ $get['province_id'] or 0}}">
-                            <option>省</option>
                         </select>
                         <select class="address-city" name="city_id"
                                 data-id="{{ $get['city_id'] or 0}}">
-                            <option>市</option>
                         </select>
                         <select class="address-district" name="district_id"
                                 data-id="{{ $get['district_id'] or 0}}">
-                            <option>区</option>
                         </select>
-                        <select class="address-street" name="street_id"
+                        <select class="address-street hidden useless-control" name="street_id"
                                 data-id="{{ $get['street_id'] or  0}}">
-                            <option>区</option>
                         </select>
-                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' , 'name', 'page']) as $key=>$val)
+                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' , 'name', 'page', 'status']) as $key=>$val)
                             <input type="hidden" name="{{ $key }}" value="{{ $val }}"/>
                         @endforeach
                     </div>
