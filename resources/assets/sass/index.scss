@@ -1,3 +1,4 @@
+// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "variables";
 @import "bootstrap/mixins";
 
@@ -236,8 +237,8 @@ ul, li, p, a, h1, h2, h3, h4 {
           max-width:290px;
           font-weight: bolder;
           font-size: 12px;
-          height:80px;
-          padding:20px 10px;
+          height:100px;
+          padding:30px 10px;
           border: 1px solid $brand-primary;
           div{
             padding: 2px 0;
@@ -259,6 +260,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
     .feedback-panel{
+
       .popover {
         min-width: 340px;
         textarea {
@@ -285,6 +287,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
+
   position: absolute;
   top: 0;
   right: 0;
@@ -512,7 +515,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
     .change-role-options {
-      margin-top: 20px;
+      margin-top: 45px;
       .tabs-item {
         float: left;
         width: 25%;
@@ -922,6 +925,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
+      word-break: break-all;
     }
     .shopping-store{
       margin:5px 0;
@@ -1103,7 +1107,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     .store-msg {
       margin-left: 80px;
       li {
-        padding: 1px 0;
+        padding: 1px 0 10px 0;
+        font-size:15px;
+        font-weight: 600;
       }
     }
   }
@@ -1111,7 +1117,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-top: 1px dashed $gray-lighter;
     margin-top: -1px;
     ul {
-      padding: 10px 0;
+      padding: 5px 0;
       clear: both;
       .address-panel-item {
         margin-left: 80px;
@@ -1158,8 +1164,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .personal-store {
-  border: none;
+  border:1px solid $gray-plain-light !important;
   height: auto;
+  padding-top:5px;
+  margin:0 0 20px 0;
   .address-panel {
     border: none;
   }
@@ -3163,12 +3171,24 @@ table {
   .btn {
     padding: 15px 40px;
   }
+  .left-operation{
+    height:50px;
+    line-height:50px;
+  }
 }
 
 .submit-order {
   padding: 6px 25px;
 }
 
+.batch-deletion{
+  color:#222;
+  display:inline-block;
+  margin-left:10px;
+  &:focus,&:hover{
+    color:#222;
+  }
+}
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect {
@@ -3483,6 +3503,71 @@ table {
 }
 
 /*==============message end=================*/
+/*==============home end=================*/
+.home-orders-list{
+  margin-bottom: 20px;
+  .item-wrap{
+    border:1px solid $gray-plain-light;
+    border-radius: 2px;
+    padding: 5px 0;
+    .title{
+      padding: 5px;
+      border-bottom: 1px solid $gray-plain-light;
+      font-size: 1.3rem;
+      .order-prompt{
+        background-color: $blue;
+        border-radius: 3px;
+        color: $body-bg;
+        padding:0 1px;
+        font-size: 0.5rem;
+      }
+    }
+    .quantity{
+      padding: 10px 5px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+  }
+}
+.home-notice{
+  height:300px;
+  .panel-body{
+    height:260px;
+
+  }
+}
+.home-msg-list{
+  .panel-body{
+    height:410px;
+  }
+}
+.panel-body{
+  overflow-y: auto;
+  padding:5px 10px;
+  #myChart{
+    width:100%;
+    height:250px;
+  }
+  #myChart2{
+    width: 100%;
+    height:400px
+  }
+  .item{
+    border-top: 1px solid $gray-plain-light;
+    padding-top: 5px;
+    &:first-of-type{
+      border:none
+    }
+  }
+}
+.home-name{
+    display: inline-block;
+    width:55%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/*==============home end=================*/
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em;
