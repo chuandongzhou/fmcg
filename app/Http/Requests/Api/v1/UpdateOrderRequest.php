@@ -13,7 +13,7 @@ class UpdateOrderRequest extends Request
     public function rules()
     {
         return [
-            'num' => 'required|integer|min:1',
+            'num' => 'required|integer|min:1|max:10000',
             'price' => 'sometimes|required|numeric|min:0',
             'order_id' => 'required|integer',
             'pivot_id' => 'required|integer'
