@@ -6,15 +6,22 @@ return [
         'off' => 0,
         'on' => 1,
     ],
-    //支付方式
+    //支付类型
     'pay_type' => [
         'online' => 1,
         'cod' => 2,
     ],
-    //货到付款支付类型
-    'cod_pay_type' => [
-        'cash' => 1,  //现金
-        'card' => 2   //刷卡
+    //支付方式
+    'pay_way' => [
+        'online' => [
+            'yeepay' => 1,
+            'alipay' => 2
+        ],
+        'cod' => [
+            'cash' => 1,  //现金
+            'card' => 2   //刷卡
+        ]
+
     ],
     //订单表
     'order' => [

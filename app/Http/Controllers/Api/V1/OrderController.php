@@ -142,7 +142,6 @@ class OrderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
@@ -407,13 +406,13 @@ class OrderController extends Controller
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
-        $payType = cons()->valueLang('pay_type');//支付方式
-        $codPayType = cons()->valueLang('cod_pay_type');//货到付款支付方式
+        $payType = cons()->valueLang('pay_type');//支付类型
+        $payWay = cons()->lang('pay_way');//支付方式
         return $this->success([
             'shops' => $shops,
             'shipping_address' => $shippingAddress,
             'pay_type' => $payType,
-            'cod_pay_type' => $codPayType
+            'pay_way' => $payWay
         ]);
     }
 
@@ -504,6 +503,19 @@ class OrderController extends Controller
         return $this->success([]);
     }
 
+    /**
+     * 获取支付方式
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getPayWay(Request $request)
+    {
+        $payWayConf = cons()->lang('pay_way');
+        $payWay = $request->input('pay_type', key($payWayConf));
+
+        return $this->success($payWayConf[$payWay]);
+    }
 
     /**
      * 根据订单获取交易流水号

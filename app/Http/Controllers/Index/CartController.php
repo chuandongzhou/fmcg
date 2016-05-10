@@ -19,9 +19,10 @@ class CartController extends Controller
 
     public function index()
     {
-        $myCarts = auth()->user()->carts();
-        $carts = $myCarts->whereHas('goods', function ($query) {
-            $query->whereNotNull('id');
+        $user = auth()->user();
+        $myCarts = $user->carts();
+        $carts = $myCarts->whereHas('goods', function ($query) use ($user) {
+            $query->whereNotNull('id')->where('user_type', '>', $user->type);
         })->with('goods.images.image')->get();
 
         (new CartService)->set($carts->count());

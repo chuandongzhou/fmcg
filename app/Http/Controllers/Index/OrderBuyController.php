@@ -55,6 +55,7 @@ class OrderBuyController extends OrderController
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
             'orders' => $orders->orderBy('id', 'desc')->paginate(),
+            'onlinePayWay' => array_flip(cons('pay_way.online')),
             'search' => $search
         ]);
     }
@@ -108,11 +109,19 @@ class OrderBuyController extends OrderController
             return $this->error('订单不存在');
         }
 
+        $payWay = null;
+        if ($order->can_payment) {
+            $onlinePayWay = array_flip(cons('pay_way.online'));
+            $payWay = array_get($onlinePayWay, $order->pay_way, head($onlinePayWay));
+        }
+        $viewName = array_search($order->pay_type, cons('pay_type'));
+
         //拼接需要调用的模板名字
-        $view = 'index.order.retailer.detail-' . array_flip(cons('pay_type'))[$order->pay_type];
+        $view = 'index.order.retailer.detail-' . $viewName;
 
         return view($view, [
-            'order' => $order
+            'order' => $order,
+            'payWay' => $payWay
         ]);
     }
 

@@ -94,23 +94,23 @@
                                 <p class="operating">
                                     <span>支付方式 :</span>
                                     <select name="pay_type" class="pay_type">
-                                        @foreach(cons('pay_type') as $key=>$type)
-                                            <option value="{{ $key }}">{{ cons()->valueLang('pay_type' , $type) }}</option>
+                                        @foreach(cons()->lang('pay_type') as $key=>$type)
+                                            <option value="{{ $key }}">{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </p>
-                                <p class="operating hidden">
-                                    @foreach(cons('cod_pay_type') as $key=> $type)
-                                        <input type="radio" {{ $key=='cash' ? 'checked' : '' }} disabled
-                                               name="cod_pay_type"
-                                               value="{{ $key }}"/> {{ cons()->valueLang('cod_pay_type' , $type) }}
-                                        &nbsp;&nbsp;&nbsp;
+                                <p class="operating pay_way">
+                                    @foreach(cons()->lang('pay_way.online') as $key=> $way)
+                                        <input type="radio" {{ $key == 'yeepay' ? 'checked' : '' }}
+                                        name="pay_way" value="{{ $key }}"/>
+                                        {{ $way }}  &nbsp;&nbsp;&nbsp;
                                     @endforeach
                                 </p>
 
                             </td>
                             <td>
-                                <a class="btn brand-cancel" id="add-address" href="javascript:void(0)" type="button" data-target="#shippingAddressModal"
+                                <a class="btn brand-cancel" id="add-address" href="javascript:void(0)" type="button"
+                                   data-target="#shippingAddressModal"
                                    data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加收货地址
                                 </a>
                             </td>
@@ -132,12 +132,17 @@
     <script type="text/javascript">
         $(function () {
             $('.pay_type').on('change', function () {
-                var obj = $(this), payType = obj.val(), codPayType = obj.parent().next();
-                if (payType == 'cod') {
-                    codPayType.removeClass('hidden').children('input[type="radio"]').prop('disabled', false);
-                } else {
-                    codPayType.addClass('hidden').children('input[type="radio"]').prop('disabled', true);
-                }
+                var obj = $(this), payType = obj.val(), payWay = '';
+                $.get(site.api('order/pay-way'), {pay_type: payType}, function (data) {
+                    for (var i in data) {
+                        if (i == 'cash' || i == 'yeepay')
+                            payWay += '<input type="radio" name="pay_way" value="' + i + '" checked/> ' + data[i] + '  &nbsp;&nbsp;&nbsp';
+                        else {
+                            payWay += '<input type="radio" name="pay_way" value="' + i + '"/> ' + data[i] + '  &nbsp;&nbsp;&nbsp';
+                        }
+                    }
+                    $('.pay_way').html(payWay);
+                }, 'json')
             })
         })
     </script>

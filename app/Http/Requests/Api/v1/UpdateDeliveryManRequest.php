@@ -17,7 +17,7 @@ class UpdateDeliveryManRequest extends Request
             'name' => 'required',
             'phone' => 'required|numeric|digits_between:7,14',
             'user_name' => 'digits:6|unique:delivery_man,user_name,' . $deliveryMan->id,
-            'password' => 'min:6|confirmed',
+            'password' => 'digits_between:6,18|confirmed',
             'pos_sign' => 'min:6',
         ];
     }

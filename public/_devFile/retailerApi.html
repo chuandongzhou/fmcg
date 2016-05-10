@@ -1195,8 +1195,8 @@
 <p><code>成功返回：</code></p>
 <pre><code> shops array 商店列表
     shipping_address array 收货地址列表
-    pay_type array 支付方式
-    cod_pay_type array 货到付款的支付方式
+    pay_type array 支付类型
+    pay_way array 支付方式
 
     shops 子字段说明
 
@@ -1246,8 +1246,8 @@
 
 <p><code>请求参数：</code></p>
 <pre><code>shipping_address_id int 收货地址id
-    pay_type string 支付方式 （online 在线 ， cod 货到付款）
-    cod_pay_type string 货到付款方式 （仅当pay_type为cod时传入 传入'cash'为现金 传入'card'为刷卡）
+    pay_type string 支付类型 （online 在线 ， cod 货到付款）
+    pay_way string 付款方式 （传入'cash'为现金 传入'card'为刷卡 yeepay为易宝 alipay 为支付宝）
     shop array 商店
 
     shop 子字段说明（key=&gt;value） key为商店id
@@ -1277,7 +1277,7 @@
     price string 订单总金额
     status_name string 订单显示状态
     payment_type string 支付方式(如:在线支付;货到付款)
-    cod_pay_type int 货到付款支付方式(1:现金;2:刷卡)
+    pay_way string 付款方式 （传入'cash'为现金 传入'card'为刷卡 yeepay为易宝 alipay 为支付宝）
     pay_type int 支付方式(1:在线支付;2:货到付款)
     pay_status int 支付状态(0:未付款;1:已付款)
     status int 订单状态(1:未发货;2:已发货;3:完成)
@@ -1412,7 +1412,7 @@
     price string 订单总金额
     status_name string 订单显示状态
     payment_type string 支付方式(如:在线支付;货到付款)
-    cod_pay_type int 货到付款支付方式(1:现金;2:刷卡)
+    pay_way string 付款方式 （传入'cash'为现金 传入'card'为刷卡 yeepay为易宝 alipay 为支付宝）
     pay_type int 支付方式(1:在线支付;2:货到付款)
     pay_status int 支付状态(0:未付款;1:已付款)
     status int 订单状态(1:未发货;2:已发货;3:完成)
@@ -1491,7 +1491,7 @@
     status_name string 订单显示状态
     payment_type string 支付方式(显示)
     pay_type int 支付方式
-    cod_pay_type int 货到付款方式
+    pay_way string 付款方式 （传入'cash'为现金 传入'card'为刷卡 yeepay为易宝 alipay 为支付宝）
     is_cancel int 订单是否被取消(1取消,0未取消)
     remark string 订单备注信息
     created_at string 创建时间

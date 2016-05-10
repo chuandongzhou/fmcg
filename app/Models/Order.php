@@ -12,7 +12,7 @@ class Order extends Model
         'pid',
         'price',
         'pay_type',
-        'cod_pay_type',
+        'pay_way',
         'pay_id',
         'remark',
         'pay_status',
@@ -58,6 +58,9 @@ class Order extends Model
         static::deleted(function ($model) {
             // 删除所有关联文件
             $model->orderGoods()->delete();
+            $model->orderChangeRecode()->delete();
+            $model->orderRefund()->delete();
+            $model->shippingAddress()->delete();
         });
     }
 

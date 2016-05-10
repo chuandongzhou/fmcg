@@ -50,17 +50,6 @@
                         <input type="text" class="enter" name="user_name" placeholder="{{ $showObjName }}"
                                value="{{ $search['user_name'] or '' }}">
                     </div>
-                    @if(Auth()->user()->type == cons('user.type.retailer'))
-                        <div class="item">商家地址 :
-                            <select data-id="{{ $search['province_id'] or 0 }}" class="enter address-province"
-                                    name="province_id"></select>
-                            <select data-id="{{ $search['city_id'] or 0 }}" class="enter address-city"
-                                    name="city_id"></select>
-                            <select data-id="{{ $search['district_id'] or 0 }}" class="enter address-district"
-                                    name="district_id"></select>
-                            <input type="hidden" class="enter address-street useless-control"/>
-                        </div>
-                    @endif
                 </div>
                 <div class="col-sm-12 table-responsive tables">
                     <table class="table-bordered table">

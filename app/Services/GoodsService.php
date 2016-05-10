@@ -25,10 +25,13 @@ class GoodsService
      */
     static function getGoodsBySearch($data, $goods, $isWeb = true)
     {
-        //排序
-        if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
-            $goods->{'Of' . ucfirst(camel_case($data['sort']))}();
+        /**
+         * 状态
+         */
+        if (isset($data['status'])) {
+            $goods->where('status', $data['status']);
         }
+
         $attrs = [];
         $resultCategories = [];
         $categories = collect(CategoryService::getCategories())->sortBy('level')->toArray();
@@ -67,7 +70,10 @@ class GoodsService
         if (isset($data['province_id'])) {
             $goods->OfDeliveryArea(array_filter($data));
         }
-
+        //排序
+        if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
+            $goods->{'Of' . ucfirst(camel_case($data['sort']))}();
+        }
         $defaultAttrName = cons()->valueLang('attr.default');
 
         $searched = []; //保存已搜索的标签
@@ -91,7 +97,7 @@ class GoodsService
         }
 
         return [
-            'goods' => $goods->orderBy('is_out'),
+            'goods' => $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc')->orderBy('id', 'asc'),
             'attrs' => $attrs,
             'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
                 function ($key, $value) {
