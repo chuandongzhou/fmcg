@@ -435,8 +435,17 @@ shop字段说明          string          收货店家名称
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.2 退出登陆[get] (logout)</h4>
+<h4>2.2.6 退出登陆[get] (logout)</h4>
 <p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.2.7 修改订单[post] (update-order)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_id          int            订单号
+num               int            修改后的数量
+pivot_id          int            商品订单关联表ID
+</code></pre>
+
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
 
