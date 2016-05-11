@@ -14,7 +14,15 @@ use Cache;
 class CategoryService
 {
 
-    //组合一维数组
+    /**
+     * 组合一维数组
+     *
+     * @param $cate
+     * @param string $html
+     * @param int $pid
+     * @param int $level
+     * @return array
+     */
     static function unlimitForLevel($cate, $html = '--', $pid = 0, $level = 0)
     {
         $arr = array();
@@ -30,7 +38,14 @@ class CategoryService
         return $arr;
     }
 
-    //组合多维数组
+    /**
+     * 组合多维数组
+     *
+     * @param $cate
+     * @param int $pid
+     * @param string $name
+     * @return array
+     */
     static function unlimitForLayer($cate, $pid = 0, $name = 'child')
     {
         $arr = array();
@@ -44,7 +59,13 @@ class CategoryService
         return $arr;
     }
 
-    //传递子分类的id返回所有的父级分类
+    /**
+     * 传递子分类的id返回所有的父级分类
+     *
+     * @param $cate
+     * @param $id
+     * @return array
+     */
     static function getParents($cate, $id)
     {
         $arr = array();
@@ -58,7 +79,13 @@ class CategoryService
         return $arr;
     }
 
-    //传递父级id返回所有子级id
+    /**
+     * 传递父级id返回所有子级id
+     *
+     * @param $cate
+     * @param $pid
+     * @return array
+     */
     static function getChildsId($cate, $pid)
     {
         $arr = array();
@@ -71,7 +98,13 @@ class CategoryService
         return $arr;
     }
 
-    //传递父级id返回所有子级分类
+    /**
+     * 传递父级id返回所有子级分类
+     *
+     * @param $cate
+     * @param $pid
+     * @return array
+     */
     static function getChilds($cate, $pid)
     {
         $arr = array();
@@ -85,7 +118,13 @@ class CategoryService
         return $arr;
     }
 
-    //传递父级id返回所有子级分类
+    /**
+     * 传递父级id返回所有子级分类
+     *
+     * @param $cate
+     * @param $pid
+     * @return array
+     */
     static function getChild($cate, $pid)
     {
         $arr = array();
@@ -130,7 +169,6 @@ class CategoryService
     {
 
         $parentNode = self::getParents($categories, $categoryId);
-
         if (empty($parentNode)) {
             return [];
         }
@@ -170,4 +208,48 @@ class CategoryService
         }
         return $categories;
     }
+
+    /**
+     * 格式化分类
+     *
+     * @param $category
+     * @return array
+     */
+    static function formatCategory($category)
+    {
+        return [
+            'level' => substr($category, 0, 1),
+            'category_id' => substr($category, 1)
+        ];
+
+    }
+
+    /**
+     * 格式化店铺商品的所有分类
+     *
+     * @param $shop
+     * @param bool|false $cateId
+     * @return array
+     */
+    static function formatShopGoodsCate($shop, $cateId = false)
+    {
+        $shopGoods = $shop->goods()->active()->get();
+        $shopGoodsCates = $shopGoods->pluck('cate_level_1')->all();
+        if ($cateId > 0 || !$cateId) {
+            $cate2 = $shopGoods->pluck('cate_level_2')->all();
+            $cate3 = $shopGoods->pluck('cate_level_3')->all();
+            $cateId = self::formatCategory($cateId)['category_id'];
+            $shopGoodsCates = array_unique(array_filter(array_merge($shopGoodsCates, $cate2, $cate3)));
+        }
+        $categories = array_where(self::getCategories(), function ($key, $value) use ($shopGoodsCates) {
+            return in_array($key, $shopGoodsCates);
+        });
+        if ($cateId > 0) {
+            return CategoryService::formatCategoryForSearch($categories, $cateId);
+        } elseif (!$cateId) {
+            return CategoryService::unlimitForLayer($categories);
+        }
+        return $categories;
+    }
+
 }

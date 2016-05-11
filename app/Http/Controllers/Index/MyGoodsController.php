@@ -31,41 +31,27 @@ class MyGoodsController extends Controller
     public function index(Request $request)
     {
         $gets = $request->all();
-        $data = array_filter($this->_formatGet($gets));
-        $goods = auth()->user()->shop->goods()->with('images.image')->select([
-            'id',
-            'name',
-            'bar_code',
-            'price_retailer',
-            'price_wholesaler',
-            'min_num_retailer',
-            'min_num_wholesaler',
-            'user_type',
-            'status',
-            'cate_level_1',
-            'cate_level_2',
-            'cate_level_3',
-            'updated_at'
-        ]);
-        $result = GoodsService::getGoodsBySearch($data, $goods);
+        $data = $this->_formatGet($gets);
+        $shop = auth()->user()->shop;
+
+        $result = GoodsService::getShopGoods($shop, $data);
         $myGoods = $result['goods']->orderBy('id', 'DESC')->paginate();
-        $cateIds = [];
-        foreach ($myGoods as $item) {
-            $cateIds[$item->id] = $item->category_id;
-        }
+
+        $cateIds = $myGoods->pluck('category_id')->all();
         $cateName = [];
 
-        foreach (CategoryService::getCategories() as $category) {
-            if (in_array($category['id'], $cateIds)) {
-                $cateName[$category['id']] = $category['name'];
+        foreach (CategoryService::getCategories() as $key => $category) {
+            if (in_array($key, $cateIds)) {
+                $cateName[$key] = $category['name'];
             }
         }
-
+        $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
+        $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
 
         return view('index.my-goods.index', [
             'goods' => $myGoods,
             'goodsCateName' => $cateName,
-            'categories' => $result['categories'],
+            'categories' => $categories,
             'attrs' => $result['attrs'],
             'searched' => $result['searched'],
             'moreAttr' => $result['moreAttr'],

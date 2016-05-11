@@ -245,6 +245,7 @@
 
 #### 2.3.1获取我的商品列表 [get] ()
 `请求参数`
+
     province_id int                 省id
     city_id     int                 市id
     district_id int                 县id

@@ -46,7 +46,7 @@ class SearchController extends Controller
         $result = GoodsService::getGoodsBySearch($data, $goods);
         return view('index.search.index',
             [
-                'goods' => $goods->paginate(),
+                'goods' => $goods->orderBy('id', 'asc')->paginate(),
                 'categories' => $result['categories'],
                 'attrs' => $result['attrs'],
                 'searched' => $result['searched'],

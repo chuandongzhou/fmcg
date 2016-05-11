@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Models\Advert;
 use App\Models\Shop;
 use App\Services\AddressService;
+use App\Services\CategoryService;
 use App\Services\GoodsService;
 use Carbon\Carbon;
 use DB;
@@ -124,18 +125,21 @@ class ShopController extends Controller
     {
         $gets = $request->all();
         $data = array_filter($this->_formatGet($gets));
-        $goods = $shop->goods()->active()->with('images.image');
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
-        $result = GoodsService::getGoodsBySearch($data, $goods);
-
+        $result = GoodsService::getShopGoods($shop, $data);
+        $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+
+        $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
+        $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
+        $shop->load('goods');
 
         return view('index.shop.search',
             [
                 'shop' => $shop,
-                'goods' => $result['goods']->paginate(20),
-                'categories' => $result['categories'],
+                'goods' => $goods,
+                'categories' => $categories,
                 'attrs' => $result['attrs'],
                 'searched' => $result['searched'],
                 'moreAttr' => $result['moreAttr'],

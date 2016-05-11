@@ -69,7 +69,7 @@ class AlipayController extends Controller
                 //调试用，写文本函数记录程序运行情况是否正常
                 //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
             }
-            $result = (new PayService)->addTradeInfo($orders, $amount, 0, $tradeNo, 'alipay',$sign);
+            $result = (new PayService)->addTradeInfo($orders, $amount, 0, $tradeNo, 'alipay', $sign);
 
             return $result ? "success" : '';
 
@@ -77,7 +77,7 @@ class AlipayController extends Controller
             //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
         } else {
             //验证失败
-            echo "fail";
+            return "fail";
 
             //调试用，写文本函数记录程序运行情况是否正常
             //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");

@@ -56,46 +56,49 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a class="list-name" href="{{ url('shop/' . $shop->id) }}">店家商品</a></li>
-                    {{--<li class="menu-list" id="menu-list">--}}
-                    {{--<a href="#" class="menu-wrap-title list-name">商品分类</a>--}}
+                    <li class="menu-list" id="menu-list">
+                        <a href="#" class="menu-wrap-title list-name">商品分类</a>
 
-                    {{--<div class="menu-list-wrap">--}}
-                    {{--<div class="categories" id="other-page-categories">--}}
-                    {{--<ul class="menu-wrap">--}}
-                    {{--@foreach($categories as $category)--}}
-                    {{--<li class="list1">--}}
-                    {{--<a class="one-title"--}}
-                    {{--href="{{ url('shop/' . $shop->id . '/search?category_id=1' . $category['id']) }}"><i></i>{{ $category['name'] }}--}}
-                    {{--</a>--}}
-
-                    {{--<div class="menu-down-wrap menu-down-layer">--}}
-                    {{--@foreach($category['child'] as $child)--}}
-                    {{--<div class="item active">--}}
-                    {{--<h3 class="title">--}}
-                    {{--<a href="{{ url('shop/'  . $shop->id . '/search?category_id=2' . $child['id']) }}">--}}
-                    {{--{{ $child['name'] }}--}}
-                    {{--</a>--}}
-                    {{--</h3>--}}
-                    {{--@foreach($child['child'] as $grandChild)--}}
-                    {{--<a href="{{ url('shop/'  . $shop->id . '/search?category_id=3' . $grandChild['id']) }}">--}}
-                    {{--{{ $grandChild['name'] }}--}}
-                    {{--</a>--}}
-                    {{--@endforeach--}}
-                    {{--</div>--}}
-                    {{--@endforeach--}}
-                    {{--</div>--}}
-                    {{--</li>--}}
-                    {{--@endforeach--}}
-                    {{--</ul>--}}
-                    {{--</div>--}}
-                    {{--</div>--}}
-                    {{--</li>--}}
+                        <div class="menu-list-wrap">
+                            <div class="categories" id="other-page-categories">
+                                <ul class="menu-wrap">
+                                    @foreach(\App\Services\CategoryService::formatShopGoodsCate($shop) as $category)
+                                        <li class="list1">
+                                            <a class="one-title"
+                                               href="{{ url('shop/' . $shop->id . '/search?category_id=1' . $category['id']) }}"><i></i>{{ $category['name'] }}
+                                            </a>
+                                            @if(isset($category['child']))
+                                                <div class="menu-down-wrap menu-down-layer">
+                                                    @foreach($category['child'] as $child)
+                                                        <div class="item active">
+                                                            <h3 class="title">
+                                                                <a href="{{ url('shop/'  . $shop->id . '/search?category_id=2' . $child['id']) }}">
+                                                                    {{ $child['name'] }}
+                                                                </a>
+                                                            </h3>
+                                                            @foreach($child['child'] as $grandChild)
+                                                                <a href="{{ url('shop/'  . $shop->id . '/search?category_id=3' . $grandChild['id']) }}">
+                                                                    {{ $grandChild['name'] }}
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
                     <li><a class="list-name" href="{{ url('shop/' . $shop->id . '/detail') }}">店家信息</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if ($shop->id != $user->shop->id)
                         <li class="collect">
-                            <a href="javascript:" onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');" class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                            <a href="javascript:"
+                               onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                               class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
                         </li>
                         <li class="collect">
                             <a href="javascript:void(0)" data-type="shops" data-method="post"

@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Models\Images;
 use App\Services\AddressService;
 use App\Services\AttrService;
+use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\ImageUploadService;
 use App\Services\ImportService;
@@ -22,28 +23,14 @@ class MyGoodsController extends Controller
 
     public function index(Request $request)
     {
-        $gets = $request->all();
+        $data = $request->all();
+        $shop = auth()->user()->shop;
 
-        $goods = auth()->user()->shop->goods()->with('images.image')->select([
-            'id',
-            'name',
-            'bar_code',
-            'sales_volume',
-            'price_retailer',
-            'price_wholesaler',
-            'min_num_retailer',
-            'min_num_wholesaler',
-            'user_type',
-            'is_new',
-            'is_promotion',
-            'cate_level_1',
-            'cate_level_2'
-        ]);
+        $result = GoodsService::getShopGoods($shop, $data);
 
-        $result = GoodsService::getGoodsBySearch($gets, $goods, false);
         return $this->success([
             'goods' => $result['goods']->orderBy('id', 'DESC')->paginate()->toArray(),
-            'categories' => $result['categories']
+            'categories' => CategoryService::formatShopGoodsCate($shop)
         ]);
     }
 

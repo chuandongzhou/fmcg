@@ -95,14 +95,70 @@ class GoodsService
             //手机端有搜索名字时才返回
             $categories = isset($data['name']) ? $categories : new \stdClass();
         }
-
+        $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
         return [
-            'goods' => $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc')->orderBy('id', 'asc'),
             'attrs' => $attrs,
             'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
                 function ($key, $value) {
                     return $value['pid'] === 0;
                 }),
+            'searched' => $searched,
+            'moreAttr' => $moreAttr
+        ];
+    }
+
+    static function getShopGoods($shop, $data)
+    {
+        $goods = $shop->goods()->with('images.image');
+        /**
+         * 状态
+         */
+        if (isset($data['status'])) {
+            $goods->where('status', $data['status']);
+        }
+        $attrs = [];
+        if (isset($data['category_id'])) {
+            //分类最高位为层级 后面为categoryId
+            $cateArr = CategoryService::formatCategory($data['category_id']);
+            $attrs = (new AttrService([]))->getAttrsByCategoryId($cateArr['category_id']);
+            $goods->OfCategory($cateArr['category_id'], $cateArr['level']);
+        }
+        // 标签
+        if (isset($data['attr']) && !empty($data['attr'])) {
+            $goods->OfAttr($data['attr']);
+        }
+
+        // 名称
+        if (isset($data['name']) && $data['name']) {
+            $goods->where('name', 'like', '%' . $data['name'] . '%')->get();
+        }
+        // 省市
+        if (isset($data['province_id'])) {
+            $goods->OfDeliveryArea(array_filter($data));
+        }
+        //排序
+        if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {
+            $goods->{'Of' . ucfirst(camel_case($data['sort']))}();
+        }
+        $attrs = (new AttrService($attrs))->format();
+
+        $defaultAttrName = cons()->valueLang('attr.default');
+        $searched = []; //保存已搜索的标签
+        $moreAttr = []; //保存扩展的标签
+        // 已搜索的标签
+        foreach ($attrs as $key => $attr) {
+            if (!empty($data['attr']) && in_array($attr['attr_id'], array_keys((array)$data['attr']))) {
+                $searched[$attr['attr_id']] = array_get($attr['child'], $data['attr'][$attr['attr_id']])['name'];
+                unset($attrs[$key]);
+            } elseif (!in_array($attr['name'], $defaultAttrName)) {
+                $moreAttr[$key] = $attr;
+                unset($attrs[$key]);
+            }
+        }
+        $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
+        return [
+            'goods' => $goods,
+            'attrs' => $attrs,
             'searched' => $searched,
             'moreAttr' => $moreAttr
         ];
