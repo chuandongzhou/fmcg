@@ -93,16 +93,16 @@
                                 </p>
                                 <p class="operating">
                                     <span>支付方式 :</span>
-                                    <select name="pay_type" class="pay_type">
+                                    <select name="pay_type" class="pay-type">
                                         @foreach(cons()->lang('pay_type') as $key=>$type)
                                             <option value="{{ $key }}">{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </p>
-                                <p class="operating pay_way">
-                                    @foreach(cons()->lang('pay_way.online') as $key=> $way)
-                                        <input type="radio" {{ $key == 'yeepay' ? 'checked' : '' }}
-                                        name="pay_way" value="{{ $key }}"/>
+                                <p class="operating hidden pay-way">
+                                    @foreach(cons()->lang('pay_way.cod') as $key=> $way)
+                                        <input type="radio" {{ $key == 'cash' ? 'checked' : '' }}
+                                        name="pay_way" value="{{ $key }}" disabled/>
                                         {{ $way }}  &nbsp;&nbsp;&nbsp;
                                     @endforeach
                                 </p>
@@ -131,18 +131,14 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            $('.pay_type').on('change', function () {
-                var obj = $(this), payType = obj.val(), payWay = '';
-                $.get(site.api('order/pay-way'), {pay_type: payType}, function (data) {
-                    for (var i in data) {
-                        if (i == 'cash' || i == 'yeepay')
-                            payWay += '<input type="radio" name="pay_way" value="' + i + '" checked/> ' + data[i] + '  &nbsp;&nbsp;&nbsp';
-                        else {
-                            payWay += '<input type="radio" name="pay_way" value="' + i + '"/> ' + data[i] + '  &nbsp;&nbsp;&nbsp';
-                        }
-                    }
-                    $('.pay_way').html(payWay);
-                }, 'json')
+            $('.pay-type').on('change', function () {
+                var obj = $(this), payType = obj.val(), payWay = $('.pay-way');
+
+                if (payType == 'cod') {
+                    payWay.removeClass('hidden').children('input[type="radio"]').prop('disabled', false);
+                } else {
+                    payWay.addClass('hidden').children('input[type="radio"]').prop('disabled', true);
+                }
             })
         })
     </script>

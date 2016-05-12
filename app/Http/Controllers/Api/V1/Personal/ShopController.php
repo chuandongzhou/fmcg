@@ -47,7 +47,10 @@ class ShopController extends Controller
         $finishedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(finished_at,'%Y-%m-%d') as day,status,pay_status,pay_type,is_cancel"))
             ->bySellerId(auth()->id())
             ->whereBetween('finished_at',[$month_start,$month_end])
-            ->where('status', cons('order.status.finished'))->nonCancel()->groupBy('day')->get();
+            ->where('status', cons('order.status.finished'))->nonCancel()->groupBy('day')->get()->each(function($order) {
+                $order->setAppends([]);
+            });
+
         //本月付款订单
         $receivedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(paid_at,'%Y-%m-%d') as receivedday,status,pay_status,pay_type,is_cancel"))
             ->bySellerId(auth()->id())

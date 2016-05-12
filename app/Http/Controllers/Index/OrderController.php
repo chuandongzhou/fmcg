@@ -114,10 +114,8 @@ class OrderController extends Controller
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
-        $order = $orders->first();
-        $onlinePayWay = array_flip(cons('pay_way.online'));
-        $payWay = array_get($onlinePayWay, $order->pay_way, head($onlinePayWay));
-        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type, 'payWay' => $payWay]);
+
+        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
     }
 
     /**

@@ -31,20 +31,10 @@ class HomeController extends Controller
             });
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
-        // 公告
-        $indexNoticeConf = cons('notice.index.cache');
-        $notices = [];
-        if (Cache::has($indexNoticeConf['name'])) {
-            $notices = Cache::get($indexNoticeConf['name']);
-        } else {
-            $notices = Notice::orderBy('id', 'desc')->take(cons('notice.index.count'))->get();
-            Cache::put($indexNoticeConf['name'], $notices, $indexNoticeConf['expire']);
-        }
         return view('index.index.index', [
             'goodsColumns' => GoodsService::getNewGoodsColumn(),
 //            'shopColumns' => ShopService::getShopColumn(),
             'adverts' => $adverts,
-            'notices' => $notices
         ]);
     }
 

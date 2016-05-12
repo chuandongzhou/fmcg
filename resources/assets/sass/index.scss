@@ -249,11 +249,31 @@ ul, li, p, a, h1, h2, h3, h4 {
           .tooltip-inner {
             padding: 0;
           }
-          .qr-code {
-            background-image: url("../images/qr-code.png");
-            background-size: cover;
-            @include square(200px);
+          .qr-panel {
             border: 2px solid $brand-primary;
+            @include size(220px,125px);
+            background-color: $body-bg;
+            padding-top: 3px;
+            .item {
+              display: inline-block!important;
+              @include size(105px,115px);
+              .dbd-qr-code{
+                background-image: url("../images/qr-code.png");
+              }
+              .helper{
+                background-image: url("../images/qr-code2.png");
+              }
+              .qr-code {
+                background-size: cover;
+                @include square(100px);
+                margin:auto;
+              }
+              .text{
+                color:$gray-base;
+                font-weight: 600;
+                margin:auto;
+              }
+            }
           }
         }
       }
@@ -3027,7 +3047,11 @@ table {
     }
   }
 }
-
+.pay-way{
+  img{
+    @include size(100px,35px);
+  }
+}
 .table-list-row {
   margin-top: 40px;
   .shopping-table-list {
@@ -3090,6 +3114,15 @@ table {
     }
   }
   .shopping-finish {
+    .pay-way{
+      margin: 20px auto auto auto;
+      padding:5px 5px 10px 5px;
+      width: 300px;
+      border:1px solid $gray-lighter;
+      .title{
+        margin-bottom: 15px;
+      }
+    }
     .order-ok-icon {
       font-size: 40px;
       color: $brand-success;

@@ -1,5 +1,7 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单详情')
+@include('includes.pay')
+@include('includes.stepBar')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -212,11 +214,12 @@
             <p>
                 @if(!$order->is_cancel)
                     @if($order->can_cancel)
-                        <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/change-price') }}"
-                           data-method="put" data-data='{"order_id":{{ $order->id }}}'>取消</a>
+                        <a class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                     @endif
-                    @if($payWay)
-                        <a href="{{ url($payWay . '/' . $order->id) }}" class="btn btn-success">去付款</a>
+                    @if($order->can_payment)
+                        <a href="javascript:" data-target="#payModal" data-toggle="modal"
+                           class="btn btn-success" data-id="{{ $order->id }}">去付款</a>
                     @elseif($order->can_confirm_arrived)
                         <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                            data-method="put" data-data='{"order_id":{{ $order->id }}}'>确认收货</a>
@@ -227,4 +230,3 @@
     </div>
 
 @stop
-@include('includes.stepBar')

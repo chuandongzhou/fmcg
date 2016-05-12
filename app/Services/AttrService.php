@@ -20,7 +20,6 @@ class AttrService
     public function __construct($attrs = [])
     {
         $this->attrs = $attrs;
-        return $this;
     }
 
     /**

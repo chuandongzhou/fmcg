@@ -176,7 +176,16 @@
                                     <a href="javascript:;" class="app-down icon">APP下载</a>
                                 </div>
                                 <div class="content hidden">
-                                    <div class="qr-code"></div>
+                                    <div class="qr-panel">
+                                        <div class="dbd item">
+                                            <div class="qr-code dbd-qr-code"></div>
+                                            <div class="text text-center">订百达</div>
+                                        </div>
+                                        <div class="driver-helper item">
+                                            <div class="qr-code helper"></div>
+                                            <div class="text text-center">司机助手</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
                         </ul>

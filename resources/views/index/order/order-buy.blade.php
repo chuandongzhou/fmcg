@@ -1,6 +1,7 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @include('includes.order-refund')
+@include('includes.pay')
 @section('subtitle', '订单管理')
 
 @section('right')
@@ -109,8 +110,8 @@
                                                               data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
                                                     @endif
                                                     @if($order['can_payment'])
-                                                        <p><a href="{{ url(array_get($onlinePayWay, $order->pay_way, head($onlinePayWay)) .'/' . $order['id']) }}"
-                                                              class="btn btn-success" target="_blank">去付款</a></p>
+                                                        <p><a href="javascript:" data-target="#payModal" data-toggle="modal"
+                                                              class="btn btn-success" data-id="{{ $order->id }}">去付款</a></p>
                                                     @elseif($order['can_confirm_arrived'])
                                                         <p><a class="btn btn-danger ajax"
                                                               data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"

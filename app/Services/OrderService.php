@@ -110,8 +110,11 @@ class OrderService
             $payTypes = cons('pay_type');
             $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
 
-            $payWayConf = cons('pay_way.' . $data['pay_type']);
-            $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
+            $payWay = 0;
+            if (isset($data['pay_way'])) {
+                $payWayConf = cons('pay_way.cod');
+                $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
+            }
             //TODO: 需要验证收货地址是否合法
             $shippingAddressId = $data['shipping_address_id'];
 
@@ -132,7 +135,7 @@ class OrderService
                     'remark' => $remark
                 ];
                 if (!$orderData['shipping_address_id']) {
-                   $this->_deleteSuccessOrders($successOrders);
+                    $this->_deleteSuccessOrders($successOrders);
                     return false;
                 }
                 $order = Order::create($orderData);

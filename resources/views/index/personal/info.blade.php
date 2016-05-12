@@ -90,18 +90,16 @@
                         <h3 class="panel-title"><i class="fa fa-envelope-o" aria-hidden="true"></i> 系统公告</h3>
                     </div>
                     <div class="panel-body">
-
-
-                        @foreach($notices as $notice)
-                        <div class="item">
-                            <a class="content-title" href="javascript:" data-target="#noticeModal" data-toggle="modal"
-                               data-content="{{ $notice->content }}" title="{{ $notice->title }}">
-                                <p class="home-name">{{ $notice->title }}</p>
-                            </a>
-
-                            <span class="pull-right">{{ $notice->time }}</span>
-                        </div>
-                            @endforeach
+                        @foreach((new \App\Services\NoticeService)->getNotice() as $notice)
+                            <div class="item">
+                                <a class="content-title" href="javascript:" data-target="#noticeModal"
+                                   data-toggle="modal"
+                                   data-content="{{ $notice->content }}" title="{{ $notice->title }}">
+                                    <p class="home-name">{{ $notice->title }}</p>
+                                </a>
+                                <span class="pull-right">{{ $notice->time }}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -143,7 +141,7 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $(function(){
+        $(function () {
             $('.content-title').on('click', function () {
                 var obj = $(this);
                 $('.modal-title').html(obj.attr('title'));
@@ -160,13 +158,13 @@
                 //分类统计信息
                 var orderGoodsInfo = data.orderGoodsInfo;
 
-                var date=new Date;
-                var year=date.getFullYear();
-                var month=date.getMonth()+1;
-                month =(month<10 ? "0"+month:month);
+                var date = new Date;
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                month = (month < 10 ? "0" + month : month);
                 //当前年月
-                var mydate = (year.toString()+'-'+month.toString());
-                var d = new Date(year,month,0);
+                var mydate = (year.toString() + '-' + month.toString());
+                var d = new Date(year, month, 0);
                 //当前月天数
                 var days = d.getDate();
                 //当月日期数组
@@ -176,22 +174,22 @@
                 //当月付款订单总数
                 var receivedOrderData = new Array();
 
-                for(var i=1;i<=days;i++){
-                    var nowday = i<10?'0'+i:i;
-                    daysArray.push(mydate+'-'+nowday);
+                for (var i = 1; i <= days; i++) {
+                    var nowday = i < 10 ? '0' + i : i;
+                    daysArray.push(mydate + '-' + nowday);
                     var finishCount = 0;
                     var rereceivedCount = 0;
-                    for(var j=0;j<finishedOrders.length;j++){
-                        if(finishedOrders[j]['day']==mydate+'-'+nowday){
+                    for (var j = 0; j < finishedOrders.length; j++) {
+                        if (finishedOrders[j]['day'] == mydate + '-' + nowday) {
                             finishCount = finishedOrders[j]['count'];
                         }
                     }
-                    for(var e=0;e<rereceivedOrders.length;e++){
-                        if(rereceivedOrders[e]['receivedday']==mydate+'-'+nowday){
+                    for (var e = 0; e < rereceivedOrders.length; e++) {
+                        if (rereceivedOrders[e]['receivedday'] == mydate + '-' + nowday) {
                             rereceivedCount = rereceivedOrders[e]['count'];
                         }
                     }
-                     finishedOrderData.push(finishCount);
+                    finishedOrderData.push(finishCount);
                     receivedOrderData.push(rereceivedCount);
 
                 }
@@ -204,18 +202,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['付款单数','完成单数']
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
-                    toolbox: {
-                        feature: {
-                            saveAsImage: {}
-                        }
+                        data: ['付款单数', '完成单数']
                     },
                     xAxis: {
                         type: 'category',
@@ -227,16 +214,16 @@
                     },
                     series: [
                         {
-                            name:'付款单数',
-                            type:'line',
-                            stack: '总量',
-                            data:receivedOrderData
+                            name: '付款单数',
+                            type: 'line',
+                            smooth: true,
+                            data: receivedOrderData
                         },
                         {
-                            name:'完成单数',
-                            type:'line',
-                            stack: '总量',
-                            data:finishedOrderData
+                            name: '完成单数',
+                            type: 'line',
+                            smooth: true,
+                            data: finishedOrderData
                         },
 
                     ]

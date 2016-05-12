@@ -41,7 +41,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="form-group image-upload {{ $goods->images->isEmpty() ? '' : 'hide' }}">
+                    <div class="form-group image-upload editor-item {{ $goods->images->isEmpty() ? '' : 'hide' }}">
                         <label class="col-sm-2 control-label"></label>
 
                         <div class="col-sm-10">
@@ -215,7 +215,7 @@
                     <div class="form-group col-sm-12 graphic-wrap editor-item">
                         <label class="control-label col-sm-2">商品图文介绍 :</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 padding-clear">
                         <textarea class="introduce tinymce-editor form-control"
                                   name="introduce">{{ $goods->introduce }}</textarea>
                         </div>

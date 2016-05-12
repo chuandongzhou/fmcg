@@ -2,6 +2,8 @@
 
 @section('subtitle' , '订单详情')
 
+@include('includes.stepBar')
+
 @section('right')
     <div class="order-detail row">
         <div class="col-sm-12 go-history">
@@ -193,4 +195,3 @@
         </div>
     </div>
 @stop
-@include('includes.stepBar')

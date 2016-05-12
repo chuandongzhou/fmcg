@@ -14,9 +14,7 @@ class InfoController extends Controller
     public function index()
     {
         $shop = auth()->user()->shop->load('shopAddress', 'deliveryArea', 'user')->setAppends(['logo_url']);
-        $notices = Notice::all(['id','title','content','created_at'])->each(function($notice){
-            $notice->time = (new Carbon($notice['created_at']))->formatLocalized('%Y-%m-%d %H:%M');
-        });
+
         //待付款
         $waitReceive = Order::bySellerId(auth()->id())->where('pay_status', cons('order.pay_status.non_payment'))->where('pay_type', cons('pay_type.online'))->nonCancel()->count();
         //待发货
@@ -34,8 +32,6 @@ class InfoController extends Controller
             'waitSend' => $waitSend,
             'refund' => $refund,
             'waitConfirm' => $waitConfirm,
-            'notices' => $notices
-           /* 'coordinates' => $coordinate*/
         ]);
     }
 

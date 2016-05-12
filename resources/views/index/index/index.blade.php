@@ -83,7 +83,7 @@
                 <div class="col-xs-2 upcoming-events">
                     <h3 class="text-center">活动公告</h3>
 
-                    @foreach($notices as $key=>$notice)
+                    @foreach((new \App\Services\NoticeService())->getNotice() as $key=>$notice)
                         <p>
                             <a class="content-title" href="javascript:" data-target="#noticeModal" data-toggle="modal"
                                data-content="{{ $notice->content }}"

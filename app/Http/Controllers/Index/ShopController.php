@@ -128,7 +128,7 @@ class ShopController extends Controller
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
+        $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate();
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;

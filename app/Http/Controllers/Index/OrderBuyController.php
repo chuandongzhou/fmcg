@@ -55,7 +55,6 @@ class OrderBuyController extends OrderController
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
             'orders' => $orders->orderBy('id', 'desc')->paginate(),
-            'onlinePayWay' => array_flip(cons('pay_way.online')),
             'search' => $search
         ]);
     }
@@ -99,7 +98,8 @@ class OrderBuyController extends OrderController
     /**
      * 获取订单详情
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
     public function getDetail(Request $request)
     {
@@ -109,11 +109,6 @@ class OrderBuyController extends OrderController
             return $this->error('订单不存在');
         }
 
-        $payWay = null;
-        if ($order->can_payment) {
-            $onlinePayWay = array_flip(cons('pay_way.online'));
-            $payWay = array_get($onlinePayWay, $order->pay_way, head($onlinePayWay));
-        }
         $viewName = array_search($order->pay_type, cons('pay_type'));
 
         //拼接需要调用的模板名字
@@ -121,7 +116,6 @@ class OrderBuyController extends OrderController
 
         return view($view, [
             'order' => $order,
-            'payWay' => $payWay
         ]);
     }
 
