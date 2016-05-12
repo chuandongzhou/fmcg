@@ -18,13 +18,13 @@ class InfoController extends Controller
             $notice->time = (new Carbon($notice['created_at']))->formatLocalized('%Y-%m-%d %H:%M');
         });
         //待付款
-        $waitReceive = Order::bySellerId(auth()->user()->id)->where('pay_status', cons('order.pay_status.non_payment'))->nonCancel()->count();
+        $waitReceive = Order::bySellerId(auth()->id())->where('pay_status', cons('order.pay_status.non_payment'))->where('pay_type', cons('pay_type.online'))->nonCancel()->count();
         //待发货
-        $waitSend = Order::bySellerId(auth()->user()->id)->nonSend()->count();
-        //退款中
-        $refund = Order::bySellerId(auth()->user()->id)->where('pay_status',cons('order.pay_status.refund'))->nonCancel()->count();
+        $waitSend = Order::bySellerId(auth()->id())->nonSend()->count();
+        //代收款
+        $refund = Order::bySellerId(auth()->id())->getPayment()->nonCancel()->count();
         //待确认（待审核）
-        $waitConfirm = Order::bySellerId(auth()->user()->id)->waitConfirm()->count();
+        $waitConfirm = Order::bySellerId(auth()->id())->waitConfirm()->count();
         /*  $coordinate = $shop->deliveryArea->each(function ($area) {
             $area->coordinate;
         });*/

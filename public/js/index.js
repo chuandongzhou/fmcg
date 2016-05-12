@@ -336,11 +336,11 @@ function cartFunc() {
      * checkBox选择
      */
     shopCheckbox.click(function () {
-        var obj = $(this),
+        var obj = $('.shop-checkbox'),
             iconTag = obj.children('.fa'),
             checkbox = obj.next('input'),
             isChecked = iconTag.hasClass('fa-check'),
-            childCheckbox = obj.closest('table').find('.goods-checkbox');
+            childCheckbox = $('.table-bordered').find('.goods-checkbox');
 
         if (isChecked) {
             iconTag.removeClass('fa-check');
@@ -358,7 +358,7 @@ function cartFunc() {
             iconTag = obj.children('.fa'),
             checkbox = obj.next('input'),
             isChecked = iconTag.hasClass('fa-check'),
-            parentCheckbox = obj.closest('table').find('.shop-checkbox');
+            parentCheckbox = $('.check-item').find('.shop-checkbox');
         if (isChecked) {
             iconTag.removeClass('fa-check');
             checkbox.prop('checked', false);

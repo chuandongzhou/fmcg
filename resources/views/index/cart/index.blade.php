@@ -57,8 +57,8 @@
                                         <div class="check-item">
                                             <span class="span-checkbox  goods-checkbox"><i
                                                         class="fa fa-check"></i></span>
-                                            <input class="inp-checkbox" checked name="goods_id[]"
-                                                   value="{{ $cartGoods->goods_id }}" type="checkbox">
+                                            <input class="inp-checkbox" checked name="goods_id[]" rel = 'reason'
+                                                   value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}" type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
 
@@ -120,10 +120,26 @@
             </div>
         </div>
 
+        {{--<div class="container clearing-container fixed-bottom">--}}
+            {{--<div class="row clearing text-right">--}}
+                {{--<span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>--}}
+                {{--<input type="submit" class="btn btn-primary"/>--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <div class="container clearing-container fixed-bottom">
             <div class="row clearing text-right">
-                <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
-                <input type="submit" class="btn btn-primary"/>
+                <div class="col-sm-6 text-left left-operation">
+                    <div class="check-item">
+                        <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
+                        <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
+
+                    </div>
+                    <a href="javascript:;" class="batch-deletion">删除选中</a>
+                </div>
+                <div class="col-sm-6 padding-clear">
+                    <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
+                    <button class="btn btn-primary">结算</button>
+                </div>
             </div>
         </div>
     </form>
@@ -142,6 +158,35 @@
                alert('{{ session('message') }}');
             @endif
             // deleteFunc('cart');
+            //批量删除
+            $('.batch-deletion').click(function() {
+                var cancelChecked = $('tbody .inp-checkbox');
+                var requestData = new Array();
+                for (var i = 0; i < cancelChecked.length; i++) {
+                    if (cancelChecked[i].checked) {
+                        requestData.push(cancelChecked[i].id);
+                    }
+                }
+                if(requestData.length==0){
+                    alert('没有需要删除的商品');
+                    return false;
+                }
+                $.ajax({
+                    url: '/api/v1/cart/delete',
+                    method: 'post',
+                    data: {'cartIds': requestData}
+                }).done(function (data) {
+                    alert('删除成功');
+                    for(var i=0;i<requestData.length;i++){
+                        $('#'+requestData[i]).closest('tr').remove();
+                    }
+                    $('.shop-sum-price').html(0);
+                    $('.cart-sum-price').html(0);
+                    $('.shopping-car span').html(parseInt($('.shopping-car span').html())-requestData.length);
+                }).fail(function(data){
+                    alert(data.message);
+                });
+            });
         })
     </script>
 @stop

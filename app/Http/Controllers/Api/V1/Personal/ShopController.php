@@ -9,6 +9,7 @@ use App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\Category;
 class ShopController extends Controller
 {
     /**
@@ -44,17 +45,32 @@ class ShopController extends Controller
 
         //本月已完成订单
         $finishedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(finished_at,'%Y-%m-%d') as day,status,pay_status,pay_type,is_cancel"))
-            ->bySellerId(auth()->user()->id)
+            ->bySellerId(auth()->id())
             ->whereBetween('finished_at',[$month_start,$month_end])
             ->where('status', cons('order.status.finished'))->nonCancel()->groupBy('day')->get();
         //本月付款订单
         $receivedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(paid_at,'%Y-%m-%d') as receivedday,status,pay_status,pay_type,is_cancel"))
-            ->bySellerId(auth()->user()->id)
+            ->bySellerId(auth()->id())
             ->whereBetween('paid_at',[$month_start,$month_end])
             ->where('pay_status',cons('order.pay_status.payment_success'))->nonCancel()->groupBy('receivedday')->get();
+        //本月销售图表信息
+        $sellOrdersInfo = Order::bySellerId(auth()->id())->where('status',cons('order.status.finished')) ->whereBetween('finished_at',[$month_start,$month_end])->with('orderGoods.goods')->get();
+        $orderGoodsInfo = Array();
+       foreach($sellOrdersInfo as $sellOrderInfo){
+            foreach($sellOrderInfo->orderGoods as $order_goods){
 
+                $category = Category::where('id',$order_goods->goods->cate_level_2)->select('name')->get()->toArray();
 
-        return $this->success(['finishedOrders' =>$finishedOrders,'receivedOrders'=>$receivedOrders]);
+                if( empty($orderGoodsInfo[$order_goods->goods->cate_level_2]['num'])){
+                    $orderGoodsInfo[$order_goods->goods->cate_level_2]['name'] = $category[0]['name'];
+                    $orderGoodsInfo[$order_goods->goods->cate_level_2]['num'] =  1;
+                }else{
+                    $orderGoodsInfo[$order_goods->goods->cate_level_2]['num'] += 1;
+                }
+
+            }
+       }
+        return $this->success(['finishedOrders' =>$finishedOrders,'receivedOrders'=>$receivedOrders,'orderGoodsInfo'=>$orderGoodsInfo]);
     }
 
 }

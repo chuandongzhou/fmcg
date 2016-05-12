@@ -39,26 +39,8 @@
             <div class="col-xs-3 item">
                 <div class="item-wrap">
                     <div class="title">
-                        <span>待付款</span>
-                        <span class="order-prompt pull-right">订单</span>
-                    </div>
-                    <div class="quantity">{{ $waitReceive }}</div>
-                </div>
-            </div>
-            <div class="col-xs-3 item">
-                <div class="item-wrap">
-                    <div class="title">
-                        <span>待发货</span>
-                        <span class="order-prompt pull-right">订单</span>
-                    </div>
-                    <div class="quantity">{{ $waitSend }}</div>
-                </div>
-            </div>
-            <div class="col-xs-3 item">
-                <div class="item-wrap">
-                    <div class="title">
                         <span>待审核</span>
-                        <span class="order-prompt pull-right">订单</span>
+                       <a href="{{ url('order-sell?status=non_confirm') }}"> <span class="order-prompt pull-right">订单</span></a>
                     </div>
                     <div class="quantity">{{ $waitConfirm }}</div>
                 </div>
@@ -66,8 +48,26 @@
             <div class="col-xs-3 item">
                 <div class="item-wrap">
                     <div class="title">
-                        <span>退款中</span>
-                        <span class="order-prompt pull-right">订单</span>
+                        <span>待发货</span>
+                        <a href="{{ url('order-sell?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                    </div>
+                    <div class="quantity">{{ $waitSend }}</div>
+                </div>
+            </div>
+            <div class="col-xs-3 item">
+                <div class="item-wrap">
+                    <div class="title">
+                        <span>待付款</span>
+                        <a href="{{ url('order-sell?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
+                    </div>
+                    <div class="quantity">{{ $waitReceive }}</div>
+                </div>
+            </div>
+            <div class="col-xs-3 item">
+                <div class="item-wrap">
+                    <div class="title">
+                       <span>待收款</span>
+                        <a href="{{ url('order-sell/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
                     </div>
                     <div class="quantity">{{ $refund }}</div>
                 </div>
@@ -153,8 +153,12 @@
                 url: '/api/v1/personal/order-data',
                 method: 'get'
             }).done(function (data) {
+                //完成订单信息
                 var  finishedOrders = data.finishedOrders;
+                //付款订单信息
                 var  rereceivedOrders = data.receivedOrders;
+                //分类统计信息
+                var orderGoodsInfo = data.orderGoodsInfo;
 
                 var date=new Date;
                 var year=date.getFullYear();
@@ -238,51 +242,55 @@
                     ]
                 };
                 myChart2.setOption(option2);
+
+                orderGoodsInfo;
+                var orderGoodsNames = new Array();
+                var orderGoodsData = new Array();
+                for(var data in orderGoodsInfo){
+                    var obj = {value: orderGoodsInfo[data]['num'], name: orderGoodsInfo[data]['name']};
+                    orderGoodsData.push(obj);
+                    orderGoodsNames.push(orderGoodsInfo[data]['name']);
+                }
+                //月销售图表
+                var option = {
+                    title : {
+                        text: '分类购买量统计',
+                        x:'center'
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: orderGoodsNames
+                    },
+                    series : [
+                        {
+                            name: '商品销量',
+                            type: 'pie',
+                            radius : '55%',
+                            center: ['50%', '60%'],
+                            data:orderGoodsData,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
             });
 
 
             var myChart = echarts.init(document.getElementById('myChart'));
             var myChart2 = echarts.init(document.getElementById('myChart2'));
 
-            //月销售图表
-            var option = {
-                title : {
-                    text: '分类购买量统计',
-                    x:'center'
-                },
-                tooltip : {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-                },
-                series : [
-                    {
-                        name: '访问来源',
-                        type: 'pie',
-                        radius : '55%',
-                        center: ['50%', '60%'],
-                        data:[
-                            {value:335, name:'直接访问'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1548, name:'搜索引擎'}
-                        ],
-                        itemStyle: {
-                            emphasis: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
-                        }
-                    }
-                ]
-            };
-            myChart.setOption(option);
+
 
 
         })
