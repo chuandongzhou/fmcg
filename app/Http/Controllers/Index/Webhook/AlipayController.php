@@ -39,6 +39,8 @@ class AlipayController extends Controller
             $orderId = $request->input('out_trade_no');     //商户订单号
             $tradeNo = $request->input('trade_no');         //支付宝交易号
             $amount = $request->input('total_fee');         //交易金额
+            //TODO: 订单手续费暂定千分之六
+            $orderFee = sprintf("%.2f", $amount * 6 / 1000);
             $sign = $request->input('sign');                //签名
             $field = $request->input('extra_common_param');
 
@@ -69,7 +71,7 @@ class AlipayController extends Controller
                 //调试用，写文本函数记录程序运行情况是否正常
                 //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
             }
-            $result = (new PayService)->addTradeInfo($orders, $amount, 0, $tradeNo, 'alipay', $sign);
+            $result = (new PayService)->addTradeInfo($orders, $amount, $orderFee, $tradeNo, 'alipay', $sign);
 
             return $result ? "success" : '';
 

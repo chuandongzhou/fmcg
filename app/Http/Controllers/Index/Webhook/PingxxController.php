@@ -72,7 +72,6 @@ class PingxxController extends Controller
                 // 开发者在此处加入对退款异步通知的处理代码
                 $orderInfo = $event->data->object;
                 $orderId = $orderInfo->metadata->order_no;
-                //info($orderId);
                 $order = Order::find($orderId);
                 $order->setAppends([]);
                 if ($order->fill([

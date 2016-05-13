@@ -61,7 +61,7 @@ class PayService
             }
 
             $orderConf = cons('order');
-            $newTimestamp = Carbon::now();
+            $nowTimestamp = Carbon::now();
 
 
             $tradeConf = cons('trade');
@@ -71,11 +71,11 @@ class PayService
             foreach ($orders as $order) {
                 $orderAttr = [
                     'pay_status' => $orderConf['pay_status']['payment_success'],
-                    'paid_at' => $newTimestamp
+                    'paid_at' => $nowTimestamp
                 ];
                 if ($payType == $tradeConf['pay_type']['pos']) {
                     $orderAttr['status'] = $orderConf['status']['finished'];
-                    $orderAttr['finished_at'] = $newTimestamp;
+                    $orderAttr['finished_at'] = $nowTimestamp;
                 }
 
                 $order->fill($orderAttr)->save();
@@ -87,7 +87,7 @@ class PayService
                         'order_id' => $order->id,
                         'trade_no' => $tradeNo,
                         'amount' => $order->price - $fee,
-                        'paid_at' => $newTimestamp
+                        'paid_at' => $nowTimestamp
                     ]
                 );
 
@@ -110,15 +110,13 @@ class PayService
 
                 if ($payType == $tradeConf['pay_type']['pos']) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
-                    $systemTradeInfoAttr['finished_at'] = $newTimestamp;
+                    $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
                 }
 
                 SystemTradeInfo::create($systemTradeInfoAttr);
             }
             return 'success';
         });
-
-
         return $result === 'success';
     }
 }
