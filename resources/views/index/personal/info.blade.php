@@ -234,7 +234,6 @@
                 var orderGoodsNames = new Array();
                 var orderGoodsData = new Array();
                 for(var i=0;i<orderGoodsInfo.length;i++){
-                    alert(orderGoodsInfo[i]['name']);
                     var obj = {value: orderGoodsInfo[i]['sum'], name: orderGoodsInfo[i]['name']};
                     orderGoodsData.push(obj);
                     orderGoodsNames.push(orderGoodsInfo[i]['name']);
