@@ -136,9 +136,14 @@
                     </div>
                     <a href="javascript:;" class="batch-deletion">删除选中</a>
                 </div>
+                {{--<div class="col-sm-6 padding-clear">--}}
+                    {{--<span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>--}}
+                    {{--<button class="btn btn-primary">结算</button>--}}
+                {{--</div>--}}
                 <div class="col-sm-6 padding-clear">
                     <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
-                    <button class="btn btn-primary">结算</button>
+
+                    <input id="cartInput" type="submit" class="btn btn-primary"/>
                 </div>
             </div>
         </div>
@@ -177,6 +182,7 @@
                     data: {'cartIds': requestData}
                 }).done(function (data) {
                     alert('删除成功');
+                    $('#cartInput').prop('disabled', true);
                     for(var i=0;i<requestData.length;i++){
                         $('#'+requestData[i]).closest('tr').remove();
                     }

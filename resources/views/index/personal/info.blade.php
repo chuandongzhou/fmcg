@@ -233,10 +233,11 @@
                 orderGoodsInfo;
                 var orderGoodsNames = new Array();
                 var orderGoodsData = new Array();
-                for(var data in orderGoodsInfo){
-                    var obj = {value: orderGoodsInfo[data]['num'], name: orderGoodsInfo[data]['name']};
+                for(var i=0;i<orderGoodsInfo.length;i++){
+                    alert(orderGoodsInfo[i]['name']);
+                    var obj = {value: orderGoodsInfo[i]['sum'], name: orderGoodsInfo[i]['name']};
                     orderGoodsData.push(obj);
-                    orderGoodsNames.push(orderGoodsInfo[data]['name']);
+                    orderGoodsNames.push(orderGoodsInfo[i]['name']);
                 }
                 //月销售图表
                 var option = {
