@@ -103,7 +103,12 @@
             <div class="col-xs-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">当月销售图表</h3>
+                        @if($type==cons('user.type.retailer'))
+                            <h3 class="panel-title">当月进货图表</h3>
+                        @else
+                            <h3 class="panel-title">当月销售图表</h3>
+                        @endif
+
                     </div>
                     <div class="panel-body">
                         <div id="myChart"></div>
@@ -177,13 +182,13 @@
                 url: '/api/v1/personal/order-data',
                 method: 'get'
             }).done(function (data) {
+                var name = data.type==1?'商品购买量':'商品销量';
                 //完成订单信息
                 var finishedOrders = data.finishedOrders;
                 //付款订单信息
                 var rereceivedOrders = data.receivedOrders;
                 //分类统计信息
                 var orderGoodsInfo = data.orderGoodsInfo;
-
                 var date = new Date;
                 var year = date.getFullYear();
                 var month = date.getMonth() + 1;
@@ -281,7 +286,7 @@
                     },
                     series: [
                         {
-                            name: '商品销量',
+                            name: name,
                             type: 'pie',
                             radius: '55%',
                             center: ['50%', '60%'],

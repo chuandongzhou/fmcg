@@ -92,7 +92,8 @@ class ShopController extends Controller
         return $this->success([
             'finishedOrders' => $finishedOrders,
             'receivedOrders' => $receivedOrders,
-            'orderGoodsInfo' => $orderGoodsInfo
+            'orderGoodsInfo' => $orderGoodsInfo,
+            'type' => auth()->user()->type,
         ]);
     }
 
