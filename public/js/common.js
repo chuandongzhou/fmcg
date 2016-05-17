@@ -1075,6 +1075,7 @@ var formSubmitByGet = function (exceptName) {
     $('.search-by-get').on('click', function () {
         var obj = $(this), form = obj.closest('form'), query = new Array(), action = form.attr('action');
 
+
         $.each(form.serializeArray(), function (i, o) {
             if (o.value && $.inArray(o.name, exceptName) == -1) {
                 query.push(o.name + '=' + o.value);

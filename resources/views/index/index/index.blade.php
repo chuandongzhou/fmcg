@@ -111,7 +111,7 @@
                                             @foreach($column->adverts as $key => $advert)
                                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                                     <a href="{{ $advert->url }}" target="_blank">
-                                                        <img class="lazy" data-original="{{ $advert->image_url }}"
+                                                        <img  src="{{ $advert->image_url }}"
                                                              alt="{{ $advert->name }}">
                                                     </a>
                                                 </div>

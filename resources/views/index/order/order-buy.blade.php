@@ -172,7 +172,7 @@
         $(function () {
             getOrderButtonEvent();
             onCheckChange('.parent', '.children');
-            formSubmitByGet();
+            formSubmitByGet(['order_id[]']);
             $('.refund').click(function () {
                 var obj = $(this), url = obj.data('url');
                 $('.modal-footer').find('button[type="submit"]').attr('data-url', url);

@@ -243,15 +243,18 @@ class OrderController extends Controller
         $failIds = [];
         foreach ($orders as $order) {
             if (!$order->can_confirm_arrived || $order->user_id != auth()->id()) {
-                if (count($orders) == 1) {
+                if ($orders->count() == 1) {
                     return $this->error('确认收货失败');
                 }
                 $failIds[] = $order->id;
                 continue;
             }
-            if ($order->fill(['status' => cons('order.status.finished'), 'finished_at' => Carbon::now()])->save()) {
+            if ($tradeModel = $order->systemTradeInfo && $order->fill([
+                    'status' => cons('order.status.finished'),
+                    'finished_at' => Carbon::now()
+                ])->save()
+            ) {
                 //更新systemTradeInfo完成状态
-                $tradeModel = $order->systemTradeInfo;
                 $tradeModel->fill([
                     'is_finished' => cons('trade.is_finished.yes'),
                     'finished_at' => Carbon::now()

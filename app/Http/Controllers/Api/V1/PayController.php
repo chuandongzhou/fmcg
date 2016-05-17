@@ -124,18 +124,30 @@ class PayController extends Controller
                     'refund_at' => Carbon::now()
                 ])->save();
                 //通知 卖家/买 已退款
-               $this->_setRefundNotice($order , $refundBySeller);
+                $this->_setRefundNotice($order, $refundBySeller);
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
             }
+        } elseif ($tradeInfo->pay_type == cons('trade.pay_type.alipay')) {
+            $result = $this->_refundByAlipay($tradeInfo, $reason);
+
+            if ($result) {
+                $order->orderRefund()->create(['reason' => $reason]);
+                //通知 卖家/买 已退款
+                $this->_setRefundNotice($order, $refundBySeller);
+                return $this->success('退款成功');
+            } else {
+                return $this->error('退款时遇到错误');
+            }
+
         } else {
             $result = $this->_refundByPingxx($tradeInfo, $reason);
 
             if ($result) {
                 $order->orderRefund()->create(['reason' => $reason]);
                 //通知 卖家/买 已退款
-                $this->_setRefundNotice($order , $refundBySeller);
+                $this->_setRefundNotice($order, $refundBySeller);
                 return $this->success('退款成功');
             } else {
                 return $this->error('退款时遇到错误');
@@ -172,6 +184,17 @@ class PayController extends Controller
         );
         //info($result);
         return is_null($result->failure_code);
+    }
+
+    /**
+     * alipay 退款
+     *
+     * @param $tradeInfo
+     * @param $reason
+     */
+    private function _refundByAlipay($tradeInfo, $reason)
+    {
+        return false;
     }
 
     /**
