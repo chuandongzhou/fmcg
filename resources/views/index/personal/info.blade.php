@@ -9,7 +9,9 @@
                 <div class="store-panel">
                     <img class="avatar" src="{{ $shop->logo_url  }}">
                     <ul class="store-msg">
-                        <li>店家姓名:{{ $shop->name }} <a href="javascript:" class="qrcode" data-target="#qrcodeModal" data-toggle="modal" data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a></li></li>
+                        <li>店家姓名:{{ $shop->name }} <a href="javascript:" class="qrcode" data-target="#qrcodeModal" data-toggle="modal" data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a>
+                        </li>
+                        </li>
                         <li>联系人:{{ $shop->contact_person }}</li>
                         <li>最低配送额:￥{{ $shop->min_money }}</li>
                     </ul>
@@ -32,7 +34,7 @@
                 </ul>
             </div>
             <div class="col-xs-2 text-right">
-                <a class="btn btn-primary"  href="{{ url('personal/shop') }}">编辑</a>
+                <a class="btn btn-primary" href="{{ url('personal/shop') }}">编辑</a>
             </div>
         </div>
         <div class="row home-orders-list">
@@ -40,7 +42,12 @@
                 <div class="item-wrap">
                     <div class="title">
                         <span>待审核</span>
-                       <a href="{{ url('order-sell?status=non_confirm') }}"> <span class="order-prompt pull-right">订单</span></a>
+                        @if($type==cons('user.type.retailer'))
+
+                            <a href="{{ url('order-buy?status=non_confirm') }}"> <span class="order-prompt pull-right">订单</span></a>
+                        @else
+                            <a href="{{ url('order-sell?status=non_confirm') }}"> <span class="order-prompt pull-right">订单</span></a>
+                        @endif
                     </div>
                     <div class="quantity">{{ $waitConfirm }}</div>
                 </div>
@@ -49,7 +56,13 @@
                 <div class="item-wrap">
                     <div class="title">
                         <span>待发货</span>
-                        <a href="{{ url('order-sell?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @if($type==cons('user.type.retailer'))
+
+                            <a href="{{ url('order-buy?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @else
+                            <a href="{{ url('order-sell?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @endif
+
                     </div>
                     <div class="quantity">{{ $waitSend }}</div>
                 </div>
@@ -58,7 +71,13 @@
                 <div class="item-wrap">
                     <div class="title">
                         <span>待付款</span>
-                        <a href="{{ url('order-sell?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @if($type==cons('user.type.retailer'))
+
+                            <a href="{{ url('order-buy?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @else
+                            <a href="{{ url('order-sell?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @endif
+
                     </div>
                     <div class="quantity">{{ $waitReceive }}</div>
                 </div>
@@ -66,8 +85,15 @@
             <div class="col-xs-3 item">
                 <div class="item-wrap">
                     <div class="title">
-                       <span>待收款</span>
-                        <a href="{{ url('order-sell/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
+
+                        @if($type==cons('user.type.retailer'))
+                            <span>待收货</span>
+                            <a href="{{ url('order-buy/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @else
+                            <span>待收款</span>
+                            <a href="{{ url('order-sell/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
+                        @endif
+
                     </div>
                     <div class="quantity">{{ $refund }}</div>
                 </div>
@@ -84,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4" >
+            <div class="col-xs-4">
                 <div class="panel panel-info home-notice">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-envelope-o" aria-hidden="true"></i> 系统公告</h3>
@@ -116,17 +142,17 @@
                 </div>
             </div>
             {{--<div class="col-xs-4">--}}
-                {{--<div class="panel panel-info home-msg-list">--}}
-                    {{--<div class="panel-heading">--}}
-                        {{--<h3 class="panel-title"><i class="fa fa-envelope-o" aria-hidden="true"></i> 消息列表</h3>--}}
-                    {{--</div>--}}
-                    {{--<div class="panel-body">--}}
-                        {{--<div class="item" title="支付订单 用户xxx支付了订单110,总金额0.01元">--}}
-                            {{--<p class="home-name">支付订单 用户xxx支付了订单110,总金额0.01元</p>--}}
-                            {{--<span class="pull-right">2016-05-04 14:53</span>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
+            {{--<div class="panel panel-info home-msg-list">--}}
+            {{--<div class="panel-heading">--}}
+            {{--<h3 class="panel-title"><i class="fa fa-envelope-o" aria-hidden="true"></i> 消息列表</h3>--}}
+            {{--</div>--}}
+            {{--<div class="panel-body">--}}
+            {{--<div class="item" title="支付订单 用户xxx支付了订单110,总金额0.01元">--}}
+            {{--<p class="home-name">支付订单 用户xxx支付了订单110,总金额0.01元</p>--}}
+            {{--<span class="pull-right">2016-05-04 14:53</span>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--</div>--}}
             {{--</div>--}}
         </div>
     </div>
@@ -152,9 +178,9 @@
                 method: 'get'
             }).done(function (data) {
                 //完成订单信息
-                var  finishedOrders = data.finishedOrders;
+                var finishedOrders = data.finishedOrders;
                 //付款订单信息
-                var  rereceivedOrders = data.receivedOrders;
+                var rereceivedOrders = data.receivedOrders;
                 //分类统计信息
                 var orderGoodsInfo = data.orderGoodsInfo;
 
@@ -233,18 +259,18 @@
                 orderGoodsInfo;
                 var orderGoodsNames = new Array();
                 var orderGoodsData = new Array();
-                for(var i=0;i<orderGoodsInfo.length;i++){
+                for (var i = 0; i < orderGoodsInfo.length; i++) {
                     var obj = {value: orderGoodsInfo[i]['sum'], name: orderGoodsInfo[i]['name']};
                     orderGoodsData.push(obj);
                     orderGoodsNames.push(orderGoodsInfo[i]['name']);
                 }
                 //月销售图表
                 var option = {
-                    title : {
+                    title: {
                         text: '分类购买量统计',
-                        x:'center'
+                        x: 'center'
                     },
-                    tooltip : {
+                    tooltip: {
                         trigger: 'item',
                         formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
@@ -253,13 +279,13 @@
                         left: 'left',
                         data: orderGoodsNames
                     },
-                    series : [
+                    series: [
                         {
                             name: '商品销量',
                             type: 'pie',
-                            radius : '55%',
+                            radius: '55%',
                             center: ['50%', '60%'],
-                            data:orderGoodsData,
+                            data: orderGoodsData,
                             itemStyle: {
                                 emphasis: {
                                     shadowBlur: 10,
@@ -276,8 +302,6 @@
 
             var myChart = echarts.init(document.getElementById('myChart'));
             var myChart2 = echarts.init(document.getElementById('myChart2'));
-
-
 
 
         })
