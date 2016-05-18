@@ -36,7 +36,7 @@
                                 <input class="form-control" name="backup_mobile" placeholder="请输入密保手机" type="text">
                             </div>
                             <div class="col-sm-3">
-                                <button type="submit" class="btn btn-success ajax form-control send-sms"
+                                <button type="submit" class="btn btn-success ajax form-control send-sms no-prompt"
                                         data-url="{{ url('api/v1/auth/send-sms') }}" data-method="post"
                                         data-done-then="none" data-prevent-default="false">发送短信
                                 </button>

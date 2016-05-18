@@ -55,12 +55,13 @@ class OrderBuyController extends OrderController
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
             'orders' => $orders->orderBy('id', 'desc')->paginate(),
-            'search' => $search
+            'search' => $search,
+            'userBalance' => auth()->user()->balance
         ]);
     }
 
     /**
-     * 待发货订单
+     * 待支付订单
      */
     public function getWaitPay()
     {
@@ -68,6 +69,7 @@ class OrderBuyController extends OrderController
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum($orders->count()),
+            'userBalance' => auth()->user()->balance
         ]);
     }
 
@@ -116,6 +118,7 @@ class OrderBuyController extends OrderController
 
         return view($view, [
             'order' => $order,
+            'userBalance' => auth()->user()->balance
         ]);
     }
 

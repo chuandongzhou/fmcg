@@ -12,6 +12,15 @@ class OrderChangeRecode extends Model
         'content'
     ];
 
+    protected $hidden = [
+        'id',
+        'user_id',
+        'order_id',
+        'created_at',
+        'updated_at'
+    ];
+
+
     /**
      * 订单表
      *

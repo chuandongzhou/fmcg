@@ -46,7 +46,7 @@
                                 <button type="button" class="register-btn btn btn-primary" data-toggle="modal"
                                         data-target="#myModal-agreement">注册
                                 </button>
-                                <button type="submit" class="login-btn btn btn-warning">登录</button>
+                                <button type="submit" class="login-btn btn btn-warning no-prompt">登录</button>
                             </div>
 
                             <div class="col-xs-12 text-right forget-pwd">

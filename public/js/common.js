@@ -381,7 +381,7 @@ var commonAjaxSetup = function () {
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
                     isButton && self.html('操作成功');
-                    self.hasClass('login-btn') || self.hasClass('send-sms') || alert(self.data('doneText') || '操作成功');
+                    self.hasClass('no-prompt') || alert(self.data('doneText') || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
@@ -602,10 +602,10 @@ var addAddFunc = function () {
             '<span class="fa fa-times-circle pull-right close"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-                //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
-                //'<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
-                //'<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
-                //'<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
+            //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
+            //'<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
+            //'<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
+            //'<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
             '</div>'
         );
         //changeAddButtonStatus();

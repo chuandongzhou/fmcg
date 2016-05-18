@@ -74,9 +74,12 @@ return [
         ],
         'pay_type' => [
             'yeepay' => '易宝',
-            'pingxx' => 'pingxx',
+            'yeepay_wap' => '易宝(app)',
             'pos' => 'pos机',
-            'alipay' => '支付宝'
+            'alipay_pc' => '支付宝',
+            'alipay' => '支付宝(app)',
+            'alipay_wap' => '支付宝(app网页)',
+            'balancepay' => '余额支付'
         ],
         'pay_status' => [
             'success' => '成功',
@@ -195,7 +198,7 @@ return [
         'price_changed' => '价格发生了变化',
         'review_failed' => '审核未通过',
         'review_payment' => '已打款,请查收',
-        'refund' => '已取消并退款',
+        'refund' => '已取消并已申请退款',
     ],
     //提现状态
     'withdraw' => [

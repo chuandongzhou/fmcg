@@ -40,7 +40,7 @@
                             @endif
                             <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
                             <li class="user-name-wrap">
-                                <a href="{{ url('personal/shop') }}" class="name-panel"><span
+                                <a href="{{ url('personal/info') }}" class="name-panel"><span
                                             class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
                                     )</a>
                                 <a href="{{ url('auth/logout') }}" class="exit"><i class="fa fa-sign-out"></i> 退出</a>
@@ -60,8 +60,6 @@
         <a class="check" href="#">点击查看>>>></a>
     </div>
 @stop
-
-
 
 @section('footer')
     <div class="footer">

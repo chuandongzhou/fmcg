@@ -107,6 +107,13 @@ class GoodsService
         ];
     }
 
+    /**
+     * 获取店铺商品
+     *
+     * @param $shop
+     * @param $data
+     * @return array
+     */
     static function getShopGoods($shop, $data)
     {
         $goods = $shop->goods()->with('images.image');

@@ -21,9 +21,12 @@ use WeiHeng\Yeepay\YeepayClient;
 
 class PayController extends Controller
 {
+    protected $pingxxConfig;
+
     public function __construct()
     {
-        Pingpp::setApiKey('sk_live_8izjnHmf9mPG4aTOWL0yvbv9');
+        $this->pingxxConfig = config('pingxx');
+        Pingpp::setApiKey($this->pingxxConfig['api_key']);
     }
 
     /**
@@ -37,6 +40,9 @@ class PayController extends Controller
     {
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
+        $channels = $this->pingxxConfig['channels'];
+        $channel = $request->input('channel');
+        $channel = in_array($channel, $channels) ? $channel : head($channel);
         $orders = Order::where($field, $orderId)->get();
         if ($orders->isEmpty()) {
             return $this->error('获取失败，请重试');
@@ -52,15 +58,6 @@ class PayController extends Controller
         //配置extra
 
 
-        $extra = array(
-            'product_category' => '7',
-            'identity_id' => auth()->id() . '',
-            'identity_type' => 2,
-            'terminal_type' => 3,
-            'terminal_id' => auth()->id() . '',
-            'user_ua' => $request->server('HTTP_USER_AGENT'),
-            'result_url' => url('api/v1/pay/success-url')
-        );
         $charge = Charge::create(
             array(
                 'subject' => '成都订百达科技有限公司',
@@ -68,11 +65,11 @@ class PayController extends Controller
                 'amount' => ($orders->pluck('price')->sum()) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
-                'extra' => $extra,
-                'channel' => 'yeepay_wap',
+                'extra' => $this->_getExtra($channel, $request),
+                'channel' => $channel,
                 'client_ip' => $request->server('REMOTE_ADDR'),
                 'description' => $type,
-                'app' => array('id' => 'app_1mH8m59WrrDCHSqb')
+                'app' => array('id' => $this->pingxxConfig['app_id'])
             )
         )->__toArray(true);
 
@@ -111,53 +108,74 @@ class PayController extends Controller
             return $this->error('订单不存在或不能退款');
         }
 
-        if (!$order->fill(['pay_status' => cons('order.pay_status.refund')])->save()) {
-            return $this->error('退款失败,请稍后再试');
+        $result = DB::transaction(function () use ($order, $tradeInfo, $reason, $refundBySeller) {
+
+            if (!$order->fill(['pay_status' => cons('order.pay_status.refund')])->save()) {
+                return false;
+            }
+            $payTypes = cons('trade.pay_type');
+
+            if ($tradeInfo->pay_type == $payTypes['yeepay']) {
+                if ($this->_refundByYeepay($tradeInfo, $reason)) {
+                    $order->orderRefund()->create(['reason' => $reason]);
+                    // 更新订单状态
+                    $order->fill([
+                        'pay_status' => cons('order.pay_status.refund_success'),
+                        'refund_at' => Carbon::now()
+                    ])->save();
+                    //通知 卖家/买 已退款
+                    $this->_setRefundNotice($order, $refundBySeller);
+                } else {
+                    return false;
+                }
+            }
+            elseif (in_array($tradeInfo->pay_type, [$payTypes['alipay'], $payTypes['alipay_pc'], $payTypes['alipay_wap']])) {
+                $result = $this->_refundByAlipay($tradeInfo, $reason);
+                if ($result) {
+                    $order->orderRefund()->create(['reason' => $reason]);
+                    //通知 卖家/买 已退款
+                    $this->_setRefundNotice($order, $refundBySeller);
+                } else {
+                    return false;
+                }
+            }
+            elseif ($tradeInfo->pay_type == $payTypes['yeepay_wap']) {
+                $result = $this->_refundByPingxx($tradeInfo, $reason);
+
+                if ($result) {
+                    $order->orderRefund()->create(['reason' => $reason]);
+                    //通知 卖家/买 已退款
+                    $this->_setRefundNotice($order, $refundBySeller);
+                } else {
+                    return false;
+                }
+            }
+            elseif ($tradeInfo->pay_type == $payTypes['balancepay']) {
+                $result = $this->_refundByBalance($tradeInfo);
+
+                if ($result) {
+                    $order->orderRefund()->create(['reason' => $reason]);
+                    //通知 卖家/买 已退款
+                    $this->_setRefundNotice($order, $refundBySeller);
+                } else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            return true;
+        });
+        if ($result === false) {
+            $order->fill(['pay_status' => cons('order.pay_status.payment_success')])->save();
+            return $this->error('退款时遇到错误，请重试');
         }
-
-        if ($tradeInfo->pay_type == cons('trade.pay_type.yeepay')) {
-            if ($this->_refundByYeepay($tradeInfo, $reason)) {
-                $order->orderRefund()->create(['reason' => $reason]);
-                // 更新订单状态
-                $order->fill([
-                    'pay_status' => cons('order.pay_status.refund_success'),
-                    'refund_at' => Carbon::now()
-                ])->save();
-                //通知 卖家/买 已退款
-                $this->_setRefundNotice($order, $refundBySeller);
-                return $this->success('退款成功');
-            } else {
-                return $this->error('退款时遇到错误');
-            }
-        } elseif ($tradeInfo->pay_type == cons('trade.pay_type.alipay')) {
-            $result = $this->_refundByAlipay($tradeInfo, $reason);
-
-            if ($result) {
-                $order->orderRefund()->create(['reason' => $reason]);
-                //通知 卖家/买 已退款
-                $this->_setRefundNotice($order, $refundBySeller);
-                return $this->success('退款成功');
-            } else {
-                return $this->error('退款时遇到错误');
-            }
-
-        } else {
-            $result = $this->_refundByPingxx($tradeInfo, $reason);
-
-            if ($result) {
-                $order->orderRefund()->create(['reason' => $reason]);
-                //通知 卖家/买 已退款
-                $this->_setRefundNotice($order, $refundBySeller);
-                return $this->success('退款成功');
-            } else {
-                return $this->error('退款时遇到错误');
-            }
-        }
-
+        $successMessage = $tradeInfo->pay_type == cons('trade.pay_type.alipay') ? '退款审请成功' : '退款成功';
+        return $this->success($successMessage);
     }
 
     /**
-     * 移动端页面跳转
+     * 移动端成功页面跳转
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -167,9 +185,20 @@ class PayController extends Controller
     }
 
     /**
+     * 移动端取消页面跳转
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function cancelUrl()
+    {
+        return redirect('dbdfmcg://pingppwappay?result=cancel');
+    }
+
+    /**
      * Pingxx退款
      *
      * @param $tradeInfo
+     * @param $reason
      * @return bool
      */
     private function _refundByPingxx($tradeInfo, $reason)
@@ -186,15 +215,39 @@ class PayController extends Controller
         return is_null($result->failure_code);
     }
 
+
     /**
-     * alipay 退款
+     * 余额退款
+     *
+     * @param $tradeInfo
+     * @return mixed
+     */
+    private function _refundByBalance($tradeInfo)
+    {
+        $order = $tradeInfo->order;
+        if (!$order) {
+            return false;
+        }
+        $user = $order->user;
+        if (!$user) {
+            return false;
+        }
+        if ( $order->fill(['pay_status' => cons('order.pay_status.refund_success'), 'refund_at' => Carbon::now()])->save()) {
+            return $user->increment('balance', $tradeInfo->amount);
+        }
+        return false;
+    }
+
+    /**
+     * 退款
      *
      * @param $tradeInfo
      * @param $reason
+     * @return \WeiHeng\Alipay\提交表单HTML文本
      */
     private function _refundByAlipay($tradeInfo, $reason)
     {
-        return false;
+        return true;
     }
 
     /**
@@ -221,7 +274,6 @@ class PayController extends Controller
         $pageContents = $yeepayClient->quickPost($yeepayConf['ref_url_online'], $params);
 
         $result = explode("\n", $pageContents);
-
         return $pageContents && $this->_validateYeepayRefundResult($result);
 
     }
@@ -325,10 +377,12 @@ class PayController extends Controller
      * 设置订单退款通知
      *
      * @param $order
-     * @param bool|false $refundBySeller
+     * @param bool $refundBySeller
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     private function _setRefundNotice($order, $refundBySeller = false)
     {
+
         $redisKey = '';
         if ($refundBySeller) {
             $redisKey = 'push:user:' . $order->user->id;
@@ -338,5 +392,41 @@ class PayController extends Controller
 
         $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');
         (new RedisService)->setRedis($redisKey, $redisVal);
+    }
+
+    /**
+     * 获取extra
+     *
+     * @param $channel
+     * @param $request
+     * @return array
+     */
+    private function _getExtra($channel, $request)
+    {
+        $extra = [];
+        switch ($channel) {
+            case  'yeepay_wap':
+                $extra = array(
+                    'product_category' => '7',
+                    'identity_id' => auth()->id() . '',
+                    'identity_type' => 2,
+                    'terminal_type' => 3,
+                    'terminal_id' => auth()->id() . '',
+                    'user_ua' => $request->server('HTTP_USER_AGENT'),
+                    'result_url' => url($this->pingxxConfig['success_url'][$channel])
+                );
+                break;
+            case  'alipay' :
+
+                break;
+            case 'alipay_wap' :
+                $extra = array(
+                    'success_url' => url($this->pingxxConfig['success_url'][$channel]),
+                    'cancel_url' => url($this->pingxxConfig['cancel_url'][$channel])
+                );
+                break;
+        }
+
+        return $extra;
     }
 }

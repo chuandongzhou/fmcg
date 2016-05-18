@@ -186,6 +186,21 @@ class Shop extends Model
         return $query->orderBy('id', 'desc');
     }
 
+
+    /**
+     * 店铺名搜索
+     *
+     * @param $query
+     * @param $name
+     * @return mixed
+     */
+    public function scopeOfName($query, $name)
+    {
+        if ($name) {
+            return $query->where('name', 'LIKE', '%' . $name . '%');
+        }
+    }
+
     /**
      * 最新的商家
      *

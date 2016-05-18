@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
-use App\Models\Notice;
 use App\Services\GoodsService;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller

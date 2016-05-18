@@ -195,59 +195,59 @@ ul, li, p, a, h1, h2, h3, h4 {
   position: absolute;
   bottom: 0;
   width: 100%;
-  max-height: 95px;
+  max-height:95px;
   @include min-width;
   margin-top: 20px;
   padding: 20px 0;
-  .list-inline {
+  .list-inline{
     display: inline-block;
-    li {
+    li{
       padding-right: 15px;
-      a {
-        color: $gray;
+      a{
+        color:$gray;
         display: inline-block;
-        height: 20px;
-        &.icon {
-          background: url("../images/footer-icon.png") left center no-repeat;
+        height:20px;
+        &.icon{
+          background:url("../images/footer-icon.png") left center no-repeat;
           padding-left: 23px;
         }
-        &.about {
-          background-position: 0 0;
+        &.about{
+          background-position:0 0;
         }
-        &.contact-information {
-          background-position: 0 -77px;
+        &.contact-information{
+          background-position:0 -77px;
         }
-        &.feedback {
-          background-position: 0 -155px;
+        &.feedback{
+          background-position:0 -155px;
         }
-        &.app-down {
-          background-position: 0 -232px;
+        &.app-down{
+          background-position:0 -232px;
         }
       }
       .tooltip {
-        .tooltip-arrow {
+        .tooltip-arrow{
           border-top-color: $brand-primary;
         }
       }
-      .contact-panel {
-        .tooltip-inner {
+      .contact-panel{
+        .tooltip-inner{
           background-color: $body-bg;
-          color: $gray;
-          max-width: 290px;
+          color:$gray;
+          max-width:290px;
           font-weight: bolder;
           font-size: 12px;
           height:100px;
           padding:30px 10px;
           border: 1px solid $brand-primary;
-          div {
+          div{
             padding: 2px 0;
           }
         }
       }
       #qr-content-panel {
         .tooltip {
-          .tooltip-inner {
-            padding: 0;
+          .tooltip-inner{
+            padding:0;
           }
           .qr-panel {
             border: 2px solid $brand-primary;
@@ -278,7 +278,8 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-    .feedback-panel {
+    .feedback-panel{
+
       .popover {
         min-width: 340px;
         textarea {
@@ -294,19 +295,18 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
   }
-  .footer {
-    position: static;
+  .footer{
+    position:static;
   }
 }
-
-.panel-footer {
-  padding: 20px 15px;
+.panel-footer{
+  padding:20px 15px;
 }
-
 /*======================================head======================================*/
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
+
   position: absolute;
   top: 0;
   right: 0;
@@ -382,10 +382,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================pop======================================*/
 
 /*======================================login begin======================================*/
-.login-body {
+.login-body{
   background: url("../images/login-bg.jpg") bottom repeat;
 }
-
 .login-container {
   @include min-width;
   min-height: 610px;
@@ -403,12 +402,12 @@ ul, li, p, a, h1, h2, h3, h4 {
   .content-panel {
     position: absolute;
     top: 15%;
-    width: 100%;
+    width:100%;
     @include min-width;
     .login-content {
       padding: 30px 10px;
       background-color: #ececec;
-      box-shadow: 0 5px 5px $banner-gray;
+      box-shadow:0 5px 5px $banner-gray;
       .logo {
         position: absolute;
         top: 0;
@@ -445,7 +444,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
           .item {
             position: relative;
-            min-height: 140px;
+            min-height:140px;
             .triangle-left {
               position: absolute;
               z-index: 99;
@@ -468,10 +467,10 @@ ul, li, p, a, h1, h2, h3, h4 {
               border-bottom: 72px solid transparent;
             }
             .enter-item {
-              position: relative;
+              position:relative;
               vertical-align: middle;
               background-color: $gray-plain;
-              margin: 0;
+              margin:0;
               &:first-of-type {
                 padding: 35px 0 15px 0;
               }
@@ -504,14 +503,14 @@ ul, li, p, a, h1, h2, h3, h4 {
                 vertical-align: middle;
               }
             }
-            .error-msg {
-              position: absolute;
-              left: 50%;
-              font-size: 12px;
-              color: #f00;
-              margin-left: -100px;
-              bottom: 0;
-              width: 200px;
+            .error-msg{
+              position:absolute;
+              left:50%;
+              font-size:12px;
+              color:#f00;
+              margin-left:-100px;
+              bottom:0;
+              width:200px;
             }
           }
           .btn-item {
@@ -573,7 +572,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
 }
-
 .login-nav {
   margin: 0;
   .container {
@@ -610,10 +608,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .forgot-modal-title {
   font-weight: 700;
 }
-
 .login-footer {
   background-color: #e2e2e2;
-  border: none
+  border:none
 }
 
 /*======================================login end======================================*/
@@ -662,7 +659,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 .container {
   @include min-width;
 }
-
 .guide-footer, .register-footer {
   background-color: $body-bg;
 }
@@ -802,7 +798,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0;
         position: relative;
         z-index: 10;
-        float: none;
+        float:none;
       }
     }
     .menu-down-layer {
@@ -950,14 +946,14 @@ ul, li, p, a, h1, h2, h3, h4 {
       -webkit-box-orient: vertical;
       word-break: break-all;
     }
-    .shopping-store {
-      margin: 5px 0;
-      p {
-        display: inline-block;
+    .shopping-store{
+      margin:5px 0;
+      p{
+        display:inline-block;
       }
-      .join-cart {
+      .join-cart{
         color: $body-bg;
-        padding: 2px 5px;
+        padding:2px 5px;
         vertical-align: top;
       }
     }
@@ -968,9 +964,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         font-weight: bolder;
       }
     }
-    .store-name {
+    .store-name{
       font-size: 13px;
-      padding: 5px 0;
+      padding:5px 0;
     }
     .order-count {
       color: $gray-light;
@@ -982,7 +978,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .address {
         position: absolute;
         top: 0;
-        left: 58px;
+        left:58px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -1130,7 +1126,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .store-msg {
       margin-left: 80px;
       li {
-        padding: 1px 0 10px 0;
+        padding: 1px 0;
         font-size:15px;
         font-weight: 600;
       }
@@ -1140,7 +1136,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-top: 1px dashed $gray-lighter;
     margin-top: -1px;
     ul {
-      padding: 5px 0;
+      padding: 10px 0;
       clear: both;
       .address-panel-item {
         margin-left: 80px;
@@ -1193,23 +1189,31 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin:0 0 20px 0;
   .address-panel {
     border: none;
+    ul {
+      padding: 5px 0;
+    }
+  }
+  .store-panel {
+    li {
+      padding: 1px 0 10px 0!important;
+
+    }
   }
 }
 
-.join-title {
-  width: 100%;
+.join-title{
+  width:100%;
   background-color: $brand-info;
-  padding: 15px 0;
+  padding:15px 0;
   margin-bottom: 10px;
-  a {
-    color: $body-bg;
+  a{
+    color:$body-bg;
     font-size: 2.5em;
     font-weight: bold;
     text-decoration: none;
-    outline: none;
+    outline:none;
   }
 }
-
 /*======================================index end======================================*/
 
 /*======================================my-goods begin======================================*/
@@ -1217,7 +1221,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   min-width: 1200px;
   margin-top: 40px;
   .controls {
-    padding: 0 0 10px 0;
+    padding: 0 0 10px 0 !important;
     .item-panel {
       background-color: $blue-light;
       margin-top: 20px;
@@ -2227,7 +2231,7 @@ table {
       margin: auto;
       thead {
         td {
-          background-color: $gray-plain;
+          background-color: $gray-plain ;
           color: $gray-light;
         }
       }
@@ -2378,7 +2382,7 @@ table {
     position: relative;
     .location-panel {
       padding: 5px 3px;
-      display: inline-block;
+     display: inline-block;
       line-height: 31px;
       border: 1px solid $brand-primary;
       position: relative;
@@ -2405,8 +2409,8 @@ table {
       position: absolute;
       background-color: $body-bg;
       padding: 5px 10px;
-      min-height: 320px;
-      min-width: 380px;
+      min-height:320px;
+      min-width:380px;
       z-index: 888;
       display: none;
       .list-wrap {
@@ -2435,19 +2439,19 @@ table {
           }
         }
       }
-      .nav-tabs {
+      .nav-tabs{
         border-bottom: 1px solid $brand-primary;
-        li {
-          &.active {
-            a {
-              border: 1px solid $brand-primary;
-              border-bottom-color: $body-bg;
+        li{
+          &.active{
+            a{
+              border:1px solid $brand-primary;
+              border-bottom-color:$body-bg;
             }
           }
-          a {
-            color: $gray-base !important;
-            &:hover {
-              background-color: $body-bg !important;
+          a{
+            color:$gray-base!important;
+            &:hover{
+              background-color: $body-bg!important;
             }
           }
         }
@@ -2592,7 +2596,7 @@ table {
         @include size(80%, 33px);
         padding: 0 5px;
         outline: none;
-        border: none;
+        border:none;
       }
       .search-btn {
         width: 100%;
@@ -2784,8 +2788,8 @@ table {
       font-size: 13px;
       margin: 10px 0;
       word-break: break-all;
-      .content-title {
-        &:focus {
+      .content-title{
+        &:focus{
           outline: none !important;
         }
       }
@@ -3115,8 +3119,8 @@ table {
   }
   .shopping-finish {
     .pay-way{
-      margin: 20px auto auto auto;
       padding:5px 5px 10px 5px;
+      margin: 20px auto auto auto;
       width: 300px;
       border:1px solid $gray-lighter;
       .title{
@@ -3126,6 +3130,7 @@ table {
     .order-ok-icon {
       font-size: 40px;
       color: $brand-success;
+      vertical-align: middle;
     }
     .order-ok-title {
       margin-top: 15px;
@@ -3152,7 +3157,22 @@ table {
     }
   }
 }
-
+.cart-empty{
+  margin-bottom: 20px;
+  .car-icon{
+    float:left;
+    color:$blue-light;
+    font-size: 4em;
+    vertical-align: middle;
+  }
+  ul{
+    float: left;
+    padding:3px 0 0 15px;
+    li{
+      padding:4px 0;
+    }
+  }
+}
 .modified {
   background-color: $gray-plain;
   outline: none;
@@ -3163,12 +3183,10 @@ table {
     border: 1px solid $brand-warning;
   }
 }
-
 .num {
   @include size(40px, 25px);
   text-align: center;
 }
-
 .check-item {
   display: inline-block;
   .span-checkbox {
@@ -3442,38 +3460,37 @@ table {
 
 /*==============help end=================*/
 /*==============about begin=================*/
-.about-contents {
-  .about-title {
-    display: inline-block;
+.about-contents{
+  .about-title{
+    display:inline-block;
     border-bottom: 2px solid $brand-warning;
     padding-bottom: 10px;
-    margin: 30px 0 15px 0;
+    margin:30px 0 15px 0;
   }
-  .item-title {
+  .item-title{
     display: inline-block;
     background-color: $brand-primary;
-    color: $body-bg;
+    color:$body-bg;
     font-size: 18px;
     padding: 2px;
   }
-  p {
+  p{
     padding: 20px 0;
     font-size: 16px;
     line-height: 1.8em;
   }
-  .license-img {
+  .license-img{
     margin: 45px 0;
-    img {
-      width: 220px;
-      height: 300px;
+    img{
+      width:220px;
+      height:300px;
     }
   }
-  .img-bg01 {
+  .img-bg01{
     background: url("../images/about-01.jpg") center no-repeat;
-    height: 275px;
+    height:275px;
   }
 }
-
 /*==============about end=================*/
 /*==============message begin=================*/
 .user-list-wrap {
@@ -3564,7 +3581,7 @@ table {
         border-radius: 3px;
         color: $body-bg;
         padding:0 1px;
-        font-size: 0.5rem;
+        font-size: 1.2rem;
       }
     }
     .quantity{
@@ -3589,12 +3606,13 @@ table {
 .panel-body{
   overflow-y: auto;
   padding:5px 10px;
-  #myChart{
+  .chart{
     width:100%;
+  }
+  #myChart{
     height:250px;
   }
   #myChart2{
-    width: 100%;
     height:400px
   }
   .item{
@@ -3606,11 +3624,15 @@ table {
   }
 }
 .home-name{
-    display: inline-block;
-    width:55%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+  display: inline-block;
+  width:55%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color:$gray;
+  &:focus{
+    border:none
+  }
 }
 /*==============home end=================*/
 .msg-strom-detail {

@@ -40,4 +40,14 @@ class SystemTradeInfo extends Model
         });
     }
 
+    /**
+     * 关联订单信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function order()
+    {
+        return $this->belongsTo('App\Models\Order');
+    }
+
 }

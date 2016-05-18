@@ -11,11 +11,19 @@
                     <h4 class="modal-title" id="myModalLabel">支付方式</h4>
                 </div>
                 <div class="modal-body text-center">
-                    <div class="operating  pay-way">
+                    <div class="operating  pay-way text-left">
+                        <p class="text-left title">
+                            当前账户余额：<span class="red">￥<b class="user-balance">{{ $userBalance }}</b> &nbsp;</span>
+                            <span class="red balance-not-full hide">(余额不足)</span></p>
+                        <label>
+                            <input type="radio" name="pay_way" value="balancepay" class="balance-pay">
+                            <img class="pay-img" src="{{ asset('images/balance.png') }}">
+                        </label>
+                        <br/> <br/>
                         @foreach(cons()->lang('pay_way.online') as $key=> $way)
                             <label>
                                 <input type="radio" {{ $key == 'yeepay' ? 'checked' : '' }} name="pay_way"
-                                       value="{{ $key }}" data-way="{{ $key }}"/>
+                                       value="{{ $key }}"/>
                                 <img src="{{ asset('images/' . $key  .'.png') }}"/> &nbsp;&nbsp;&nbsp;
                             </label>
                         @endforeach
@@ -35,24 +43,32 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            var payModal = $('#payModal');
+            var payModal = $('#payModal'), payWayPanel = payModal.find('.pay-way');
             payModal.on('show.bs.modal', function (e) {
                 var payParent = $(e.relatedTarget),
                         orderId = payParent.data('id'),
-                        payWayPanel = $('.pay-way'),
-                        payWay = payWayPanel.find('input:checked').data('way'),
+                        orderPrice = payParent.data('price'),
+                        payWay = payWayPanel.find('input:checked').val(),
                         payButton = $('.pay'),
                         payUrl = payButton.attr('href');
+
+                if (orderPrice > payWayPanel.find('.user-balance').html()) {
+                    payWayPanel.find('.balance-not-full').removeClass('hide');
+                    payWayPanel.find('.balance-pay').prop('disabled', true);
+                }
+
                 payButton.attr('href', payUrl + '/' + payWay + '/' + orderId);
 
                 payWayPanel.on('change', 'input[name="pay_way"]', function () {
-                    var payWay = $(this).data('way'), payUrl = payButton.attr('href');
+                    var payWay = $(this).val(), payUrl = payButton.attr('href');
                     var newPayUrl = payUrl.replace(/\/(\w+)\//, '/' + payWay + '/');
                     payButton.attr('href', newPayUrl);
                 })
             });
             payModal.on('hide.bs.modal', function (e) {
                 $('.pay').attr('href', '{{ url('/') }}');
+                payWayPanel.find('.balanceNotFull').addClass('hide');
+                payWayPanel.find('.balance-pay').prop('disabled', false);
             })
         })
     </script>

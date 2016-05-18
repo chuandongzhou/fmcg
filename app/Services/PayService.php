@@ -119,4 +119,33 @@ class PayService
         });
         return $result === 'success';
     }
+
+    /**
+     * 格式化支付宝退款回调数据
+     *
+     * @param $resultDetails
+     * @return array|bool
+     */
+    public function formatAlipayRefundData($resultDetails)
+    {
+        if (!is_string($resultDetails)) {
+            return false;
+        }
+        $orderDatas = explode('#', $resultDetails);
+        $refundDatas = [];
+        foreach ($orderDatas as $order) {
+            $order = explode('$', $order)[0];
+            $tradeNo = explode('^', $order)[0];
+            $amount = explode('^', $order)[1];
+            $result = explode('^', $order)[2];
+            if ($result === 'SUCCESS') {
+                $refundDatas[$tradeNo] = $amount;
+            } else {
+                info('支付宝退款错误信息： 订单交易号：' . $tradeNo . ';退款金额：' . $amount . ';错误代码:' . $result . '; 错误详情见：https://doc.open.alipay.com/doc2/detail?treeId=66&articleId=103651&docType=1');
+            }
+        }
+        return $refundDatas;
+    }
+    
+    
 }

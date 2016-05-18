@@ -50,8 +50,9 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->controller('order', 'OrderController');       //订单
     $router->get('search', 'SearchController@index');      //商品搜索页
     $router->controller('like', 'LikeController');//收藏夹
-    $router->get('yeepay/{order_id}', 'YeepayController@index'); //易宝
-    $router->get('alipay/{order_id}', 'AlipayController@index'); //支付宝
+    $router->get('yeepay/{order_id}', 'PayController@yeepay'); //易宝
+    $router->get('alipay/{order_id}', 'PayController@alipay'); //支付宝
+    $router->get('balancepay/{order_id}', 'PayController@balancepay'); //支付宝
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
@@ -110,6 +111,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->controller('system-withdraw', 'SystemWithdrawInfoController');        //系统提现信息
     $router->controller('feedback', 'FeedbackController');             //反馈管理
     $router->controller('trade', 'TradeController');        //交易信息
+    $router->controller('refund', 'RefundApplyController');        //退款申请信息
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
@@ -154,28 +156,33 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         ]);
 
         $router->controller('goods', 'GoodsController');                           //商品
-        $router->get('shop/shops', 'ShopController@shops');                        //热门店铺
-        $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
-        $router->get('shop/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
-        $router->get('shop/{shop}/extend', 'ShopController@extend')->where('shop', '[0-9]+');                   //店铺商品
-        $router->get('shop/get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
-        $router->get('shop/all', 'ShopController@allShops');
+        $router->group(['prefix' => 'shop'], function ($router) {
+            $router->get('shops', 'ShopController@shops');                        //热门店铺
+            $router->get('{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
+            $router->get('{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
+            $router->get('{shop}/extend', 'ShopController@extend')->where('shop',
+                '[0-9]+');                   //店铺商品
+            $router->get('get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
+            $router->get('all', 'ShopController@allShops');
+            $router->get('{shop}/category', 'ShopController@category');         //获取店铺分类
+        });
         $router->get('version', 'VersionInfoController@getIndex');
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类
         $router->get('categories', 'CategoryController@getCategory');         //获取标签
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
-        $router->put('my-goods/shelve', 'MyGoodsController@shelve');                //商品上下架
-        $router->put('my-goods/batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
-        $router->get('my-goods/images', 'MyGoodsController@getImages');
-        $router->post('my-goods/import', 'MyGoodsController@import');
-        $router->resource('my-goods', 'MyGoodsController');
-
+        $router->group(['prefix' => 'my-goods'], function ($router) {
+            $router->put('shelve', 'MyGoodsController@shelve');                //商品上下架
+            $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
+            $router->get('images', 'MyGoodsController@getImages');
+            $router->post('import', 'MyGoodsController@import');
+            $router->resource('/', 'MyGoodsController');
+        });
 
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
-            $router->get('order-data','ShopController@orderData');//商家首页订单统计信息
+            $router->get('order-data', 'ShopController@orderData');//商家首页订单统计信息
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
@@ -199,9 +206,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('auth', 'AuthController');
         $router->controller('push', 'PushController');//推送设备
         //获取支付charge
-        $router->get('pay/charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
-        $router->any('pay/refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
-        $router->get('pay/success-url', 'PayController@successUrl');
+
+        $router->group(['prefix' => 'pay'], function ($router) {
+            $router->get('charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
+            $router->any('refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
+            $router->get('success-url', 'PayController@successUrl');
+            $router->get('cancel-url', 'PayController@cancelUrl');
+        });
+
         $router->controller('pos', 'PosController');             //pos机付款
         $router->post('js-errors', ['uses' => 'PublicController@jsErrorStore']); // 前端JS错误记录
         //获取移动端广告

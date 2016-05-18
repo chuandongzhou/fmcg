@@ -93,7 +93,7 @@
                             @endif
                             @if(isset($user))
                                 <li class="user-name-wrap">
-                                    <a href="{{ url('personal/shop') }}" class="name-panel"><span
+                                    <a href="{{ url('personal/info') }}" class="name-panel"><span
                                                 class="user-name">{{ $user->shop->name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
                                         )</a>
                                     <a href="{{ url('auth/logout') }}" class="exit"><i class="fa fa-sign-out"></i>

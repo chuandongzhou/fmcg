@@ -98,7 +98,7 @@
                 @if($order->pay_status == cons('order.pay_status.refund')  || $order->pay_status == cons('order.pay_status.refund_success'))
                     <tr>
                         <td>申请退款</td>
-                        <td>{{ $order->orderRefund->created_at }}</td>
+                        <td>{{ $order->orderRefund ? $order->orderRefund->created_at : '' }}</td>
                         <td>{{ $order->user->shop->name }}</td>
                     </tr>
                 @endif
@@ -219,7 +219,7 @@
                     @endif
                     @if($order->can_payment)
                         <a href="javascript:" data-target="#payModal" data-toggle="modal"
-                           class="btn btn-success" data-id="{{ $order->id }}">去付款</a>
+                           class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->price }}">去付款</a>
                     @elseif($order->can_confirm_arrived)
                         <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                            data-method="put" data-data='{"order_id":{{ $order->id }}}'>确认收货</a>

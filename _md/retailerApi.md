@@ -244,7 +244,7 @@
 ### 2.3 我的商品 my-goods
 
 #### 2.3.1获取我的商品列表 [get] ()
-`请求参数`
+`请求参数：`
 
     province_id int                 省id
     city_id     int                 市id
@@ -253,6 +253,7 @@
     name        string              商品名
     category_id int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
     attr        array               标签数组
+    status      int                 上下架（1 搜索上架商品  0搜索下架商品）
     page        int                 分页
 
 `成功返回：`
@@ -496,6 +497,7 @@
 #### 2.4.2 根据距离排序获取所有店铺[get] all
 `请求参数：`
 
+    name                string      店铺名（可空）
     page                int         页码
     x_lng               float       纬度
     y_lat               float       经度
@@ -562,7 +564,14 @@
 #### 2.4.4 店铺商品[get]   ({shop_id}/goods)
 `请求参数：`
 
-    page                int         分页
+      province_id 	int                 省id
+      city_id     	int                 市id
+      district_id 	int                 县id
+      street_id   	int                 街道id
+      name        	string              商品名
+      category_id 	int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+      attr        	array               标签数组
+      page         int                 分页
 
 `成功返回：`
 
@@ -673,6 +682,23 @@
 `成功返回：`
 
 `失败返回：`
+
+#### 2.4.7 店铺分类[get] ({shop_id}/category)
+`请求参数：`
+
+`成功返回：`
+
+   categories       array           店铺分类数组
+
+   categories       子集介绍
+
+        id              int                 分类id
+        pid             int                 分类父级id
+        name            string              分类名
+        level           int                 分类层级
+        icon_url        string              分类icon图片
+        child           array               分类子级（格式同categories）
+
 
 ### 2.5 分类 categories
 #### 2.5.1 获取所有分类[post] (all)
@@ -825,7 +851,7 @@
 
     shipping_address_id int         收货地址id
     pay_type            string      支付类型 （online 在线 ， cod 货到付款）
-    pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡  yeepay为易宝  alipay 为支付宝）
+    pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡）
     shop                array       商店
 
     shop 子字段说明（key=>value）  key为商店id
@@ -858,7 +884,7 @@
 	price               string      订单总金额
 	status_name			string		订单显示状态
 	payment_type		string      支付方式(如:在线支付;货到付款)
-	pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡  yeepay为易宝  alipay 为支付宝）
+	pay_way             string      付款方式 （'cash'为现金  传入'card'为刷卡 ）
 	pay_type			int			支付方式(1:在线支付;2:货到付款)
 	pay_status			int			支付状态(0:未付款;1:已付款)
 	status				int			订单状态(1:未发货;2:已发货;3:完成)
@@ -995,7 +1021,7 @@
 	price              		 	string      订单总金额
 	status_name					string		订单显示状态
 	payment_type				string      支付方式(如:在线支付;货到付款)
-	pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡  yeepay为易宝  alipay 为支付宝）
+	pay_way                     string      付款方式 （传入'cash'为现金  传入'card'为刷卡）
 	pay_type					int			支付方式(1:在线支付;2:货到付款)
 	pay_status					int			支付状态(0:未付款;1:已付款)
 	status						int			订单状态(1:未发货;2:已发货;3:完成)
@@ -1078,7 +1104,7 @@
 	status_name				string		订单显示状态
 	payment_type			string      支付方式(显示)
 	pay_type				int			支付方式
-	pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡  yeepay为易宝  alipay 为支付宝）
+	pay_way                 string      付款方式 （'cash'为现金  传入'card'为刷卡）
 	is_cancel				int			订单是否被取消(1取消,0未取消)
 	remark					string		订单备注信息
 	created_at				string		创建时间
@@ -1093,6 +1119,8 @@
 	order_refund            array       退款详情
 	shipping_address    	array       收货信息
     goods    				array		商品详细信息
+    order_change_recode     array       订单修改记录
+
 
 	delivery_man 字段子集说明
 
@@ -1119,6 +1147,10 @@
 
     reason              string      退款原因
     created_at          timestamp   申请退款时间
+
+    order_change_recode 字段子集说明
+
+    content             string      修改内容
 
 `失败返回：`
 
@@ -1642,6 +1674,7 @@
 `请求参数：`
 
     type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
+    channel         string          支付渠道     （yeepay_wap 为易宝 , alipay为支付宝app, alipay_wap 为支付宝app网页支付）
 
 `成功返回：`
 

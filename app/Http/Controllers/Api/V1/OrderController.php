@@ -146,7 +146,7 @@ class OrderController extends Controller
     {
         $orderId = $request->input('order_id');
         $order = Order::bySellerId(auth()->id())->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
-            'shippingAddress.address', 'orderRefund')->find($orderId);
+            'shippingAddress.address', 'orderRefund', 'orderChangeRecode')->find($orderId);
         $order->shop->setAppends([]);
         $order->user->setVisible(['id', 'shop', 'type']);
         $order->goods->each(function ($goods) {
@@ -224,7 +224,6 @@ class OrderController extends Controller
         }
         return $this->error('订单确认失败，请重试');
     }
-
     /**
      * 买家批量确认订单完成,仅针对在线支付订单
      *

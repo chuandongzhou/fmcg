@@ -29,7 +29,7 @@ class OrderController extends Controller
         $goodsId = $request->input('goods_id');
 
         $orderGoodsNum = array_where($orderGoodsNum, function ($key, $value) use ($goodsId) {
-            return in_array($key, $goodsId);
+            return in_array($key, (array)$goodsId);
         });
 
         if (empty($orderGoodsNum)) {
@@ -62,6 +62,9 @@ class OrderController extends Controller
     {
         $user = auth()->user();
         $carts = $user->carts()->where('status', 1)->with('goods')->get();
+        if ($carts->isEmpty()) {
+            return redirect('cart');
+        }
         $shops = (new CartService($carts))->formatCarts();
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
@@ -110,12 +113,26 @@ class OrderController extends Controller
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
 
-        $orders = Order::where($field, $orderId)->get(['pay_type', 'pay_status', 'user_id', 'pay_way', 'is_cancel']);
+        $orders = Order::where($field, $orderId)->get([
+            'pay_type',
+            'pay_status',
+            'user_id',
+            'pay_way',
+            'is_cancel',
+            'price'
+        ]);
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
+        $userBalance = auth()->user()->balance;
 
-        return view('index.order.finish-order', ['orderId' => $orderId, 'type' => $type]);
+        return view('index.order.finish-order',
+            [
+                'orderId' => $orderId,
+                'type' => $type,
+                'userBalance' => $userBalance,
+                'orderSumPrice' => $orders->sum('price')
+            ]);
     }
 
     /**

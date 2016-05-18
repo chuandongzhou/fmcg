@@ -844,14 +844,14 @@ ul, li, p, a, h1, h2, h3, h4 {
     .store .store-panel .store-msg, .store .public-personal .store-msg {
       margin-left: 80px; }
       .store .store-panel .store-msg li, .store .public-personal .store-msg li {
-        padding: 1px 0 10px 0;
+        padding: 1px 0;
         font-size: 15px;
         font-weight: 600; }
   .store .address-panel {
     border-top: 1px dashed #b4b4b4;
     margin-top: -1px; }
     .store .address-panel ul {
-      padding: 5px 0;
+      padding: 10px 0;
       clear: both; }
       .store .address-panel ul .address-panel-item {
         margin-left: 80px; }
@@ -892,6 +892,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0 0 20px 0; }
   .personal-store .address-panel {
     border: none; }
+    .personal-store .address-panel ul {
+      padding: 5px 0; }
+  .personal-store .store-panel li, .personal-store .public-personal li {
+    padding: 1px 0 10px 0 !important; }
 
 .join-title {
   width: 100%;
@@ -911,7 +915,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   min-width: 1200px;
   margin-top: 40px; }
   .public-personal .controls {
-    padding: 0 0 10px 0; }
+    padding: 0 0 10px 0 !important; }
     .public-personal .controls .item-panel {
       background-color: #cae6f7;
       margin-top: 20px; }
@@ -2271,15 +2275,16 @@ table .product-panel {
     .table-list-row .shopping-table-list table tr td.total-money {
       border-left: 1px solid #e0e0e0; }
   .table-list-row .shopping-finish .pay-way {
-    margin: 20px auto auto auto;
     padding: 5px 5px 10px 5px;
+    margin: 20px auto auto auto;
     width: 300px;
     border: 1px solid #b4b4b4; }
     .table-list-row .shopping-finish .pay-way .title {
       margin-bottom: 15px; }
   .table-list-row .shopping-finish .order-ok-icon {
     font-size: 40px;
-    color: #5cb85c; }
+    color: #5cb85c;
+    vertical-align: middle; }
   .table-list-row .shopping-finish .order-ok-title {
     margin-top: 15px;
     font-weight: 700;
@@ -2298,6 +2303,19 @@ table .product-panel {
       margin-right: 10px; }
       .table-list-row .shopping-finish .finish-operating .check-order:hover {
         color: #f0ad4e; }
+
+.cart-empty {
+  margin-bottom: 20px; }
+  .cart-empty .car-icon {
+    float: left;
+    color: #cae6f7;
+    font-size: 4em;
+    vertical-align: middle; }
+  .cart-empty ul {
+    float: left;
+    padding: 3px 0 0 15px; }
+    .cart-empty ul li {
+      padding: 4px 0; }
 
 .modified {
   background-color: #f2f2f2;
@@ -2620,7 +2638,7 @@ table .product-panel {
         border-radius: 3px;
         color: #fff;
         padding: 0 1px;
-        font-size: 0.5rem; }
+        font-size: 1.2rem; }
     .home-orders-list .item-wrap .quantity {
       padding: 10px 5px;
       font-size: 17px;
@@ -2637,11 +2655,11 @@ table .product-panel {
 .panel-body {
   overflow-y: auto;
   padding: 5px 10px; }
+  .panel-body .chart {
+    width: 100%; }
   .panel-body #myChart {
-    width: 100%;
     height: 250px; }
   .panel-body #myChart2 {
-    width: 100%;
     height: 400px; }
   .panel-body .item {
     border-top: 1px solid #e0e0e0;
@@ -2654,7 +2672,10 @@ table .product-panel {
   width: 55%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden; }
+  overflow: hidden;
+  color: #555555; }
+  .home-name:focus {
+    border: none; }
 
 /*==============home end=================*/
 .msg-strom-detail {

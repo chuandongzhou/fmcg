@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">支付平台：</label>
 
-            <div class="col-sm-4 pay_type">
+            <div class="col-sm-10 pay_type">
                 <input type="radio" name="pay_type" value="0" checked/> 全部 &nbsp;&nbsp;&nbsp;
                 @foreach (cons()->valueLang('trade.pay_type') as $key=>$value)
                     <input type="radio"

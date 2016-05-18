@@ -3,6 +3,7 @@
 @section('subtitle' , '购物车')
 
 @section('container')
+
     <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
         {{ csrf_field() }}
         <div class="container dealer-index index shopping-cart">
@@ -27,6 +28,20 @@
                     4.等待确认
                 </div>
             </div>
+        </div>
+        @if($shops->isEmpty())
+            <div class="container table-list-row">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4 cart-empty">
+                        <span class="fa fa-shopping-cart car-icon"></span>
+                        <ul>
+                            <li>你还没有添加商品到购物车哦，赶紧去看看吧~~</li>
+                            <li><a href="{{ url('/') }}">去购物></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @else
             <div class="row table-list-row">
                 @foreach($shops as $shop)
                     <div class="col-sm-12 table-responsive shopping-table-list">
@@ -35,7 +50,8 @@
                             <tr>
                                 <th>
                                     <div class="check-item">
-                                        <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
+                                            <span class="span-checkbox  shop-checkbox"><i
+                                                        class="fa fa-check"></i></span>
                                         <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
                                         <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">
                                             {{ $shop->name }}
@@ -57,8 +73,9 @@
                                         <div class="check-item">
                                             <span class="span-checkbox  goods-checkbox"><i
                                                         class="fa fa-check"></i></span>
-                                            <input class="inp-checkbox" checked name="goods_id[]" rel = 'reason'
-                                                   value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}" type="checkbox">
+                                            <input class="inp-checkbox" checked name="goods_id[]" rel='reason'
+                                                   value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}"
+                                                   type="checkbox">
                                         </div>
                                         <img class="avatar" src="{{ $cartGoods->image }}">
 
@@ -118,36 +135,30 @@
                     </div>
                 @endforeach
             </div>
-        </div>
+            <div class="container clearing-container fixed-bottom">
+                <div class="row clearing text-right">
+                    <div class="col-sm-6 text-left left-operation">
+                        <div class="check-item">
+                            <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
+                            <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
 
-        {{--<div class="container clearing-container fixed-bottom">--}}
-            {{--<div class="row clearing text-right">--}}
-                {{--<span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>--}}
-                {{--<input type="submit" class="btn btn-primary"/>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        <div class="container clearing-container fixed-bottom">
-            <div class="row clearing text-right">
-                <div class="col-sm-6 text-left left-operation">
-                    <div class="check-item">
-                        <span class="span-checkbox  shop-checkbox"><i class="fa fa-check"></i></span>
-                        <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
-
+                        </div>
+                        <a href="javascript:;" class="batch-deletion">删除选中</a>
                     </div>
-                    <a href="javascript:;" class="batch-deletion">删除选中</a>
-                </div>
-                {{--<div class="col-sm-6 padding-clear">--}}
+                    {{--<div class="col-sm-6 padding-clear">--}}
                     {{--<span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>--}}
                     {{--<button class="btn btn-primary">结算</button>--}}
-                {{--</div>--}}
-                <div class="col-sm-6 padding-clear">
-                    <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
+                    {{--</div>--}}
+                    <div class="col-sm-6 padding-clear">
+                        <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
 
-                    <input id="cartInput" type="submit" class="btn btn-primary"/>
+                        <input id="cartInput" type="submit" class="btn btn-primary"/>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </form>
+
 @stop
 @section('js')
     @parent
@@ -164,7 +175,7 @@
             @endif
             // deleteFunc('cart');
             //批量删除
-            $('.batch-deletion').click(function() {
+            $('.batch-deletion').click(function () {
                 var cancelChecked = $('tbody .inp-checkbox');
                 var requestData = new Array();
                 for (var i = 0; i < cancelChecked.length; i++) {
@@ -172,7 +183,7 @@
                         requestData.push(cancelChecked[i].id);
                     }
                 }
-                if(requestData.length==0){
+                if (requestData.length == 0) {
                     alert('没有需要删除的商品');
                     return false;
                 }
@@ -183,13 +194,13 @@
                 }).done(function (data) {
                     alert('删除成功');
                     $('#cartInput').prop('disabled', true);
-                    for(var i=0;i<requestData.length;i++){
-                        $('#'+requestData[i]).closest('tr').remove();
+                    for (var i = 0; i < requestData.length; i++) {
+                        $('#' + requestData[i]).closest('tr').remove();
                     }
                     $('.shop-sum-price').html(0);
                     $('.cart-sum-price').html(0);
-                    $('.shopping-car span').html(parseInt($('.shopping-car span').html())-requestData.length);
-                }).fail(function(data){
+                    $('.shopping-car span').html(parseInt($('.shopping-car span').html()) - requestData.length);
+                }).fail(function (data) {
                     alert(data.message);
                 });
             });

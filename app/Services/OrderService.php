@@ -92,7 +92,9 @@ class OrderService
         $result = DB::transaction(function () use ($data) {
             $user = auth()->user();
 
-            $carts = $user->carts()->where('status', 1)->with('goods')->get();
+            $carts = $user->carts()->where('status', 1)->with('goods')->get()->each(function ($cart) {
+                $cart->goods->setAppends([]);
+            });
             if ($carts->isEmpty()) {
                 return false;
             }
@@ -120,7 +122,7 @@ class OrderService
 
             $pid = $shops->count() > 1 ? Order::max('pid') + 1 : 0;
 
-            $successOrders = [];  //保存提交成功的订单
+            $successOrders = collect([]);  //保存提交成功的订单
 
             foreach ($shops as $shop) {
                 $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
@@ -140,7 +142,7 @@ class OrderService
                 }
                 $order = Order::create($orderData);
                 if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
-                    $successOrders[] = $order;
+                    $successOrders->push($order);
                     $orderGoods = [];
                     foreach ($shop->cart_goods as $cartGoods) {
                         $orderGoods[] = new OrderGoods([
@@ -175,6 +177,7 @@ class OrderService
 
             $returnArray = [
                 'pay_type' => $payType,
+                'sum_price' => $successOrders->sum('price'),
                 'type' => ""
             ];
 
@@ -183,7 +186,7 @@ class OrderService
                     $returnArray['order_id'] = $pid;
                     $returnArray['type'] = 'all';
                 } else {
-                    $returnArray['order_id'] = $successOrders[0]->id;
+                    $returnArray['order_id'] = $successOrders->first()->id;
                 }
             }
             (new CartService)->decrement($carts->count());

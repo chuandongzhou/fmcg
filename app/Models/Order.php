@@ -309,15 +309,14 @@ class Order extends Model
     }
 
     /**
-     * 是否可付款(买家在线支付)
+     * 是否可付款(
      *
      * @return bool
      */
     public function getCanPaymentAttribute()
     {
-        return /*$this->attributes['user_id'] == auth()->id()
-        && */
-            $this->attributes['pay_type'] == cons('pay_type.online')
+        return
+            ($this->attributes['pay_type'] == cons('pay_type.online') || ($this->attributes['pay_type'] == cons('pay_type.cod')) && $this->attributes['status'] == cons('order.status.send'))
             && $this->attributes['pay_status'] == cons('order.pay_status.non_payment')
             && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
     }
@@ -331,8 +330,7 @@ class Order extends Model
     {
         return $this->attributes['pay_type'] == cons('pay_type.online')
         && $this->attributes['status'] == cons('order.status.send')
-        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success')/* && $this->attributes['user_id'] == auth()->id()*/
-            ;
+        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success');
     }
 
 
@@ -468,8 +466,10 @@ class Order extends Model
      */
     public function scopeNonPayment($query)
     {
-        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status',
-            cons('order.pay_status.non_payment'));
+        return $query->where(function ($q) {
+            $q->where(['pay_type' => cons('pay_type.online')])
+                ->orWhere(['pay_type' => cons('pay_type.cod'), 'status' => cons('order.status.send')]);
+        })->where('pay_status', cons('order.pay_status.non_payment'));
     }
 
     /**
@@ -526,7 +526,7 @@ class Order extends Model
      */
     public function scopeNonArrived($query)
     {
-        return $query->where('status', cons('order.status.send'));
+        return $query->where(['status' => cons('order.status.send'), 'pay_type' => cons('pay_type.online')]);
     }
 
     /**

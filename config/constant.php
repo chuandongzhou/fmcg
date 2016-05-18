@@ -137,10 +137,13 @@ return [
             'out' => 2,              //提现
         ],
         'pay_type' => [
-            'yeepay' => 1,          //易宝
-            'pingxx' => 2,           //pingxx
-            'pos' => 3,               //pos机
-            'alipay' => 4              //支付宝
+            'yeepay' => 1,              //易宝
+            'yeepay_wap' => 2,          //pingxx_易宝
+            'pos' => 3,                 //pos机
+            'alipay_pc' => 4,           //支付宝
+            'alipay' => 5,              //支付宝app
+            'alipay_wap' => 6,           //支付宝（app网页）
+            'balancepay' => 7               //余额支付
         ],
         'pay_status' => [
             'success' => 1,         //成功

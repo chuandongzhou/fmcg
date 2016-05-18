@@ -27,7 +27,7 @@ class YeepayClient
     // Note: This currently ignores the cookie path (and time) completely. Time is not important,
     //       but path could possibly lead to security problems.
     var $persist_referers = true; // For each request, sends path of last request as referer
-    var $debug = true;
+    var $debug = false;
     var $handle_redirects = true; // Auaomtically redirect if Location or URI header is found
     var $max_redirects = 5;
     var $headers_only = false;    // If true, stops receiving once headers have been read.

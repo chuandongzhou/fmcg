@@ -192,7 +192,7 @@ class PosController extends Controller
             $orderFee = sprintf("%.2f", $body['Amount'] * 78 / 10000);
             $maxFee = cons('pos.max_fee');
 
-            $orderFee = $orderFee <= $maxFee ?: $maxFee;
+            $orderFee = ($orderFee <= $maxFee ? $orderFee : $maxFee);
 
             $result = (new PayService)->addTradeInfo($orders, $body['Amount'], $orderFee, $body['YeepayOrderNo'], 'pos',
                 $head['HMAC'], $body['ReferNo'], cons('trade.pay_status.received_no_sign'), $body['BankCardNo']);

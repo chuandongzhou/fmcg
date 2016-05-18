@@ -50,6 +50,8 @@ class PingxxController extends Controller
 
                 $chargeId = $orderInfo->id;
 
+                $channel = $orderInfo->channel;
+
                 $orders = Order::where($field, $orderInfo->order_no)->get()->each(function ($order) {
                     $order->setAppends([]);
                 });
@@ -60,7 +62,7 @@ class PingxxController extends Controller
 
                 //修改订单状态以及添加交易信息
 
-                $result = (new PayService)->addTradeInfo($orders, $amount, $orderFee, $tradeNo, 'pingxx', '',
+                $result = (new PayService)->addTradeInfo($orders, $amount, $orderFee, $tradeNo, $channel, '',
                     $chargeId);
                 if ($result) {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');

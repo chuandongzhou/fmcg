@@ -8,9 +8,9 @@ class OrderRefund extends Model
     protected $table = 'order_refund';
     protected $fillable = [
         'reason',
-        'order_id'
+        'order_id',
+        'refunded_amount'
     ];
-
 
 
 }

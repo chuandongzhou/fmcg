@@ -111,7 +111,7 @@
                                                     @endif
                                                     @if($order['can_payment'])
                                                         <p><a href="javascript:" data-target="#payModal" data-toggle="modal"
-                                                              class="btn btn-success" data-id="{{ $order->id }}">去付款</a></p>
+                                                              class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->price }}">去付款</a></p>
                                                     @elseif($order['can_confirm_arrived'])
                                                         <p><a class="btn btn-danger ajax"
                                                               data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
