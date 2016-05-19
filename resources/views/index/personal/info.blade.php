@@ -73,7 +73,7 @@
                         <span>待付款</span>
                         @if($type==cons('user.type.retailer'))
 
-                            <a href="{{ url('order-buy?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-buy/wait-pay') }}"><span class="order-prompt pull-right">订单</span></a>
                         @else
                             <a href="{{ url('order-sell?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
                         @endif
