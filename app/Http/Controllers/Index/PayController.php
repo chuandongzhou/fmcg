@@ -170,7 +170,7 @@ class PayController extends Controller
             if (!$result) {
                 return redirect()->back();
             }
-            return redirect('order-buy');
+            return redirect('order/pay-success');
         }
     }
 }

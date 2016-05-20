@@ -136,6 +136,18 @@ class OrderController extends Controller
     }
 
     /**
+     * 支付成功
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getPaySuccess()
+    {
+
+        return view('index.order.pay-success');
+    }
+
+
+    /**
      * 订单统计,全部显示商家名字
      *
      * @param \Illuminate\Http\Request $request

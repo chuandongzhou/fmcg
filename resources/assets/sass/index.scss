@@ -3138,6 +3138,14 @@ table {
       font-size: 17px;
       color: $gray;
     }
+    .pay-ok{
+      font-size: 30px;
+      .check-order{
+        font-size: 14px;
+        display: inline-block;
+        margin-left: 20px;
+      }
+    }
     .finish-operating {
       margin-top: 20px;
       .pay {
@@ -3214,6 +3222,8 @@ table {
   left: 0;
   bottom: 0;
   z-index: 1030;
+  width:1200px;
+  margin: auto;
 }
 
 .clearing {

@@ -13,7 +13,7 @@
                 <div class="modal-body text-center">
                     <div class="operating  pay-way text-left">
                         <p class="text-left title">
-                            当前账户余额：<span class="red">￥<b class="user-balance">{{ $userBalance }}</b> &nbsp;</span>
+                            当前账户余额：<span class="red">￥<b class="user-balance">{{ $userBalance or 0 }}</b> &nbsp;</span>
                             <span class="red balance-not-full hide">(余额不足)</span></p>
                         <label>
                             <input type="radio" name="pay_way" value="balancepay" class="balance-pay">
@@ -44,7 +44,7 @@
     <script type="text/javascript">
         $(function () {
             var payModal = $('#payModal'), payWayPanel = payModal.find('.pay-way');
-            payModal.on('show.bs.modal', function (e) {
+            payModal.on('shown.bs.modal', function (e) {
                 var payParent = $(e.relatedTarget),
                         orderId = payParent.data('id'),
                         orderPrice = payParent.data('price'),
@@ -52,9 +52,13 @@
                         payButton = $('.pay'),
                         payUrl = payButton.attr('href');
 
-                if (orderPrice > payWayPanel.find('.user-balance').html()) {
+
+                if (orderPrice > parseFloat(payWayPanel.find('.user-balance').html())) {
                     payWayPanel.find('.balance-not-full').removeClass('hide');
                     payWayPanel.find('.balance-pay').prop('disabled', true);
+                } else {
+                    payWayPanel.find('.balance-not-full').addClass('hide');
+                    payWayPanel.find('.balance-pay').prop('disabled', false);
                 }
 
                 payButton.attr('href', payUrl + '/' + payWay + '/' + orderId);

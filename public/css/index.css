@@ -2290,6 +2290,12 @@ table .product-panel {
     font-weight: 700;
     font-size: 17px;
     color: #555555; }
+  .table-list-row .shopping-finish .pay-ok {
+    font-size: 30px; }
+    .table-list-row .shopping-finish .pay-ok .check-order {
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 20px; }
   .table-list-row .shopping-finish .finish-operating {
     margin-top: 20px; }
     .table-list-row .shopping-finish .finish-operating .pay {
@@ -2354,7 +2360,9 @@ table .product-panel {
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 1030; }
+  z-index: 1030;
+  width: 1200px;
+  margin: auto; }
 
 .clearing {
   background-color: #d2d2d2;

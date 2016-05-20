@@ -100,22 +100,24 @@ class CartController extends Controller
         return $this->success('删除成功');
 
     }
+
     /**
      * 批量删除购物车商品
+     *
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      *
      */
-    public function postDelete(Request $request){
-        $cartIds = $request->input('cartIds');
-        $res = $this->user->carts()->whereIn('id',$cartIds)->delete();
-        if($res){
-            (new CartService)->decrement(count($cartIds));
-            return  $this->success('删除成功');
+    public function deleteBatchDelete(Request $request)
+    {
+        $goodsId = $request->input('goods_id');
+        if (is_null($goodsId)) {
+            return $this->error('请选择要删除的商品');
+        }
+        if ($this->user->carts()->whereIn('goods_id', $goodsId)->delete()) {
+            return $this->success('删除成功');
         }
         return $this->error('删除失败');
-
-
     }
 
 

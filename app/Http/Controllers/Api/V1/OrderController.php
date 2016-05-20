@@ -224,6 +224,7 @@ class OrderController extends Controller
         }
         return $this->error('订单确认失败，请重试');
     }
+
     /**
      * 买家批量确认订单完成,仅针对在线支付订单
      *
@@ -236,7 +237,7 @@ class OrderController extends Controller
         $orders = Order::where('user_id', auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
 
         if ($orders->isEmpty()) {
-            return $this->error('确认收货失败');
+            return $this->error('请选择订单');
         }
 
         $failIds = [];
@@ -248,13 +249,13 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
-            if ($tradeModel = $order->systemTradeInfo && $order->fill([
+            if (($tradeModel = $order->systemTradeInfo) && $order->fill([
                     'status' => cons('order.status.finished'),
                     'finished_at' => Carbon::now()
                 ])->save()
             ) {
                 //更新systemTradeInfo完成状态
-                $tradeModel->fill([
+                $order->systemTradeInfo->fill([
                     'is_finished' => cons('trade.is_finished.yes'),
                     'finished_at' => Carbon::now()
                 ])->save();

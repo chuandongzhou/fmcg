@@ -109,8 +109,7 @@ function menuFunc() {
 
     $('#menu-list .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
-        $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().
-        children('.menu-down-wrap').css('display', 'none');
+        $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().children('.menu-down-wrap').css('display', 'none');
         $(this).children('.menu-down-wrap').css('border', '1px solid #4cb9fe');
     })
 
@@ -187,7 +186,7 @@ function joinCart() {
         site.redirect('auth/login');
         return;
     }
-    $('.join-cart'). on('click', function () {
+    $('.join-cart').on('click', function () {
         var obj = $(this), url = obj.data('url'),
             buyNum = obj.data('group') ? obj.siblings('input[name="num"]').val() : $('input[name="num"]').val();
         obj.button({
@@ -242,13 +241,21 @@ function fixedBottom() {
  * 购物车处理
  */
 function cartFunc() {
+    var shopCheckbox = $('.shop-checkbox'),
+        goodsCheckbox = $('.goods-checkbox'),
+        checkAll = $('.check-all'),
+        checkFa = checkAll.children('.fa'),
+        incButton = $('.inc-num'),
+        descButton = $('.desc-num'),
+        buyInput = incButton.siblings('.num');
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            submitBtn = $('input.btn-primary');
-        $('.shopping-table-list table').each(function () {
+            submitBtn = $('input.btn-primary'),
+            cartShops = $('.shopping-table-list table');
+        cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
+        cartShops.each(function () {
             var obj = $(this),
-                shopCheckBox = obj.find('.shop-checkbox').next('input'),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
                 shopSumPrice = 0,
                 minMoney = obj.find('.min-money'),
@@ -269,7 +276,7 @@ function cartFunc() {
                 descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
-            if (shopSumPrice < minMoney.html() && shopCheckBox.is(':checked')) {
+            if (shopSumPrice < minMoney.html() && shopSumPrice) {
                 notEnough.removeClass('hidden');
             } else {
                 notEnough.addClass('hidden');
@@ -284,14 +291,7 @@ function cartFunc() {
 
         cartSumPriceSpan.html(cartSumPrice);
     };
-
-
     //  添加和减少数量
-    var shopCheckbox = $('.shop-checkbox'),
-        goodsCheckbox = $('.goods-checkbox'),
-        incButton = $('.inc-num'),
-        descButton = $('.desc-num'),
-        buyInput = incButton.siblings('.num');
     incButton.on('click', '', function () {
         var obj = $(this),
             buyInput = obj.siblings('.num'),
@@ -316,7 +316,6 @@ function cartFunc() {
         goodsAllMoneyTag.html(goodsAllMoney);
         initMoney();
     });
-
     buyInput.on('keyup', '', function () {
         var obj = $(this),
             minNum = obj.data('minNum'),
@@ -331,16 +330,13 @@ function cartFunc() {
         }
 
     });
-
-    /**
-     * checkBox选择
-     */
+    //checkBox选择
     shopCheckbox.click(function () {
-        var obj = $('.shop-checkbox'),
+        var obj = $(this),
             iconTag = obj.children('.fa'),
             checkbox = obj.next('input'),
             isChecked = iconTag.hasClass('fa-check'),
-            childCheckbox = $('.table-bordered').find('.goods-checkbox');
+            childCheckbox = obj.closest('.table-bordered').find('.goods-checkbox');
 
         if (isChecked) {
             iconTag.removeClass('fa-check');
@@ -358,7 +354,7 @@ function cartFunc() {
             iconTag = obj.children('.fa'),
             checkbox = obj.next('input'),
             isChecked = iconTag.hasClass('fa-check'),
-            parentCheckbox = $('.check-item').find('.shop-checkbox');
+            parentCheckbox = obj.closest('.table-bordered').find('.shop-checkbox');
         if (isChecked) {
             iconTag.removeClass('fa-check');
             checkbox.prop('checked', false);
@@ -375,6 +371,25 @@ function cartFunc() {
             parentCheckbox.children('.fa').removeClass('fa-check').end().next('input').prop('checked', false);
         }
         initMoney()
+    });
+    checkAll.click(function () {
+        var obj = $(this),
+            iconTag = obj.children('.fa'),
+            isChecked = iconTag.hasClass('fa-check');
+        if (isChecked) {
+            iconTag.removeClass('fa-check');
+            shopCheckbox.children('.fa').removeClass('fa-check');
+            shopCheckbox.next('input').prop('checked', false);
+            goodsCheckbox.children('.fa').removeClass('fa-check');
+            goodsCheckbox.next('input').prop('checked', false);
+        } else {
+            iconTag.addClass('fa-check');
+            shopCheckbox.children('.fa').addClass('fa-check');
+            shopCheckbox.next('input').prop('checked', true);
+            goodsCheckbox.children('.fa').addClass('fa-check');
+            goodsCheckbox.next('input').prop('checked', true);
+        }
+        initMoney();
     });
     initMoney();
 }
