@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\SystemTradeInfo;
+use App\Services\PayService;
 use App\Services\RedisService;
 use Carbon\Carbon;
 use DB;
@@ -77,6 +78,21 @@ class PayController extends Controller
     }
 
     /**
+     * 余额支付
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $orderId
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function balancepay(Request $request, $orderId)
+    {
+        $type = $request->input('type');
+        $field = $type == 'all' ? 'pid' : 'id';
+        $result = (new PayService())->balancepay($field, $orderId);
+        return $result ? $this->success('支付成功') : $this->error('余额不足');
+    }
+
+    /**
      * 退款
      *
      * @param \Illuminate\Http\Request $request
@@ -128,8 +144,8 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
-            }
-            elseif (in_array($tradeInfo->pay_type, [$payTypes['alipay'], $payTypes['alipay_pc'], $payTypes['alipay_wap']])) {
+            } elseif (in_array($tradeInfo->pay_type,
+                [$payTypes['alipay'], $payTypes['alipay_pc'], $payTypes['alipay_wap']])) {
                 $result = $this->_refundByAlipay($tradeInfo, $reason);
                 if ($result) {
                     $order->orderRefund()->create(['reason' => $reason]);
@@ -138,8 +154,7 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
-            }
-            elseif ($tradeInfo->pay_type == $payTypes['yeepay_wap']) {
+            } elseif ($tradeInfo->pay_type == $payTypes['yeepay_wap']) {
                 $result = $this->_refundByPingxx($tradeInfo, $reason);
 
                 if ($result) {
@@ -149,8 +164,7 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
-            }
-            elseif ($tradeInfo->pay_type == $payTypes['balancepay']) {
+            } elseif ($tradeInfo->pay_type == $payTypes['balancepay']) {
                 $result = $this->_refundByBalance($tradeInfo);
 
                 if ($result) {
@@ -160,8 +174,7 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
-            }
-            else {
+            } else {
                 return false;
             }
             return true;
@@ -232,7 +245,11 @@ class PayController extends Controller
         if (!$user) {
             return false;
         }
-        if ( $order->fill(['pay_status' => cons('order.pay_status.refund_success'), 'refund_at' => Carbon::now()])->save()) {
+        if ($order->fill([
+            'pay_status' => cons('order.pay_status.refund_success'),
+            'refund_at' => Carbon::now()
+        ])->save()
+        ) {
             return $user->increment('balance', $tradeInfo->amount);
         }
         return false;

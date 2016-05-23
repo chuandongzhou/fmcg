@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Index;
 
 
 use App\Http\Requests;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Models\Order;
 
 class OrderBuyController extends OrderController
 {
+
+    protected $userBalance;
 
     /**
      * 构造方法,限制供应商访问购买功能
@@ -18,6 +21,7 @@ class OrderBuyController extends OrderController
         //parent::__construct();
         //供应商无购买商品功能
         $this->middleware('supplier');
+        $this->userBalance = (new UserService())->getUserBalance();
     }
 
     /**
@@ -56,7 +60,7 @@ class OrderBuyController extends OrderController
             'data' => $this->_getOrderNum(),
             'orders' => $orders->orderBy('id', 'desc')->paginate(),
             'search' => $search,
-            'userBalance' => auth()->user()->balance
+            'userBalance' => $this->userBalance['availableBalance']
         ]);
     }
 
@@ -69,7 +73,7 @@ class OrderBuyController extends OrderController
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum($orders->count()),
-            'userBalance' => auth()->user()->balance
+            'userBalance' => $this->userBalance['availableBalance']
         ]);
     }
 
@@ -118,7 +122,7 @@ class OrderBuyController extends OrderController
 
         return view($view, [
             'order' => $order,
-            'userBalance' => auth()->user()->balance
+            'userBalance' => $this->userBalance['availableBalance']
         ]);
     }
 

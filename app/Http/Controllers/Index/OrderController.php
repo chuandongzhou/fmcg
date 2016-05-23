@@ -8,6 +8,7 @@ use App\Services\GoodsService;
 use App\Services\OrderService;
 use App\Services\RedisService;
 use App\Services\ShippingAddressService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\Order;
@@ -124,13 +125,13 @@ class OrderController extends Controller
         if (Gate::denies('validate-online-orders', $orders)) {
             return redirect(url('order-buy'));
         }
-        $userBalance = auth()->user()->balance;
+        $balance = (new UserService())->getUserBalance();
 
         return view('index.order.finish-order',
             [
                 'orderId' => $orderId,
                 'type' => $type,
-                'userBalance' => $userBalance,
+                'userBalance' => $balance['availableBalance'],
                 'orderSumPrice' => $orders->sum('price')
             ]);
     }

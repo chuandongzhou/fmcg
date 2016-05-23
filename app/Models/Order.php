@@ -181,26 +181,29 @@ class Order extends Model
         $payType = $this->attributes['pay_type'];
         $isCancel = $this->attributes['is_cancel'];
         $payStatusArr = cons('order.pay_status');
+        $statusConf = cons('order.status');
         if ($isCancel) {
             return cons()->lang('order.is_cancel.on');
         }
         if ($payType == cons('pay_type.online')) {//在线支付
-            /*if (!$status) {//显示未确认
-                return cons()->valueLang('order.status')[$status];
-            }*/
             if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
-                return cons()->valueLang('order.pay_status')[$payStatus];
+                return cons()->valueLang('order.pay_status', $payStatus);
+            }
+            //已支付
+            if ($payStatus == $payStatusArr['payment_success'] && $status < $statusConf['send']) {
+                return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status',
+                    $status);
             }
         }
         //货到付款，当客户已付款时候显示订单状态为已付款
         if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
-            && $status == cons('order.status.send')
+            && $status == $statusConf['send']
         ) {
             return cons()->lang('order.pay_status.payment_success');
         }
 
 
-        return cons()->valueLang('order.status')[$status];
+        return cons()->valueLang('order.status', $status);
     }
 
     /**
@@ -214,7 +217,7 @@ class Order extends Model
         $payStatus = $this->attributes['pay_status'];//支付状态
         $status = $this->attributes['status'];//订单状态
         if ($payType == cons('pay_type.online')) {//在线支付
-            return $payStatus ? ($status + 1) : $status;
+            return $payStatus ? ($status == 0 ? 2 : $status + 1) : $status;
         }
         //货到付款
         if ($payStatus) {

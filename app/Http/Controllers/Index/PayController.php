@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Order;
 use App\Services\PayService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Gate;
 use WeiHeng\Alipay\AlipaySubmit;
@@ -154,23 +155,8 @@ class PayController extends Controller
     {
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
-        $orders = Order::where($field, $orderId)->get();
-        if (Gate::denies('validate-online-orders', $orders)) {
-            return redirect()->back();
-        }
+        $result = (new PayService())->balancepay($field, $orderId);
 
-        $totalFee = $orders->sum('price');
-        $userBalance = auth()->user()->balance;
-
-        if ( $userBalance < $totalFee) {
-            return redirect()->back();
-        }
-        if (auth()->user()->decrement('balance', $totalFee)) {
-            $result = (new PayService())->addTradeInfo($orders, $totalFee, 0, '', 'balancepay');
-            if (!$result) {
-                return redirect()->back();
-            }
-            return redirect('order/pay-success');
-        }
+        return $result ? redirect('order/pay-success') : redirect()->back();
     }
 }

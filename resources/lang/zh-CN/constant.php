@@ -78,7 +78,7 @@ return [
             'pos' => 'pos机',
             'alipay_pc' => '支付宝',
             'alipay' => '支付宝(app)',
-            'alipay_wap' => '支付宝(app网页)',
+            //'alipay_wap' => '支付宝(app网页)',
             'balancepay' => '余额支付'
         ],
         'pay_status' => [

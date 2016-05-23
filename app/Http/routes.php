@@ -209,6 +209,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
         $router->group(['prefix' => 'pay'], function ($router) {
             $router->get('charge/{order_id}', 'PayController@charge')->where('order_id', '[0-9]+');
+            $router->post('balancepay/{order_id}', 'PayController@balancepay')->where('order_id', '[0-9]+');
             $router->any('refund/{order_id}', 'PayController@refund')->where('order_id', '[0-9]+');
             $router->get('success-url', 'PayController@successUrl');
             $router->get('cancel-url', 'PayController@cancelUrl');

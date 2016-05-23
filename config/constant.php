@@ -26,17 +26,17 @@ return [
     //订单表
     'order' => [
         'pay_status' => [//支付状态
-            'non_payment' => 0,
-            'payment_success' => 1,
+            'non_payment' => 0,        //未支付
+            'payment_success' => 1,     //已支付
             'payment_failed' => 2,
-            'refund' => 3,
-            'refund_success' => 4,
+            'refund' => 3,              //退款中
+            'refund_success' => 4,      //已退款
         ],
         'status' => [ //订单状态
-            'non_confirm' => 0, //未确认
-            'non_send' => 1, //未发货
-            'send' => 2, //已发货
-            'finished' => 3, //完成
+            'non_confirm' => 0,         //未确认
+            'non_send' => 1,            //未发货
+            'send' => 2,                //已发货
+            'finished' => 3,            //完成
         ],
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
@@ -142,7 +142,7 @@ return [
             'pos' => 3,                 //pos机
             'alipay_pc' => 4,           //支付宝
             'alipay' => 5,              //支付宝app
-            'alipay_wap' => 6,           //支付宝（app网页）
+            //'alipay_wap' => 6,           //支付宝（app网页）
             'balancepay' => 7               //余额支付
         ],
         'pay_status' => [

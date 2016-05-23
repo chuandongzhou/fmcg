@@ -150,8 +150,9 @@
                         <div class="col-xs-6 padding-clear">
                             <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
 
-                            <input id="cartInput" type="submit" class="btn btn-primary"/>
+                            <input id="cartInput" type="submit" value="提交" class="btn btn-primary"/>
                         </div>
+
                     </div>
             </div>
         @endif

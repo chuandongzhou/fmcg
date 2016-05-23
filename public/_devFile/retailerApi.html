@@ -1245,7 +1245,7 @@ id                  int         订单ID号
 price               string      订单总金额
 status_name         string      订单显示状态
 payment_type        string      支付方式(如:在线支付;货到付款)
-pay_way             string      付款方式 （'cash'为现金  传入'card'为刷卡）
+pay_way             string      付款方式 （'cash'为现金  传入'card'为刷卡 ）
 pay_type            int         支付方式(1:在线支付;2:货到付款)
 pay_status          int         支付状态(0:未付款;1:已付款)
 status              int         订单状态(1:未发货;2:已发货;3:完成)
@@ -1374,7 +1374,7 @@ id                          int         订单ID号
 price                       string      订单总金额
 status_name                 string      订单显示状态
 payment_type                string      支付方式(如:在线支付;货到付款)
-pay_way                     string      付款方式 （'cash'为现金  传入'card'为刷卡）
+pay_way                     string      付款方式 （传入'cash'为现金  传入'card'为刷卡）
 pay_type                    int         支付方式(1:在线支付;2:货到付款)
 pay_status                  int         支付状态(0:未付款;1:已付款)
 status                      int         订单状态(1:未发货;2:已发货;3:完成)
@@ -1916,7 +1916,7 @@ type            int             设备类型(ios=&gt;1;android=&gt;2)
 <h4>2.17.1 获取charge对象[get] (charge/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <pre><code>type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
-channel         string          支付渠道     （yeepay_wap 为易宝 , alipay为支付宝app, alipay_wap 为支付宝app网页支付）
+channel         string          支付渠道     （yeepay_wap 为易宝 , alipay为支付宝app）
 </code></pre>
 
 <p><code>成功返回：</code></p>
@@ -1924,7 +1924,14 @@ channel         string          支付渠道     （yeepay_wap 为易宝 , alipa
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.17.2 退款[get] (refund/{order_id})</h4>
+<h4>2.17.2 余额支付[post] (balancepay/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.17.3 退款[get] (refund/{order_id})</h4>
 <p><code>请求参数：</code>
     reason string 退款原因</p>
 <p><code>成功返回：</code></p>

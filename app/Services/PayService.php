@@ -7,10 +7,12 @@
  */
 namespace App\Services;
 
+use App\Models\Order;
 use App\Models\Shop;
 use App\Models\SystemTradeInfo;
 use Carbon\Carbon;
 use DB;
+use Gate;
 
 class PayService
 {
@@ -29,29 +31,9 @@ class PayService
      * @param string $bankCardNo
      * @return bool
      */
-    public function addTradeInfo(
-        $orders,
-        $amount,
-        $orderFee,
-        $tradeNo,
-        $payType,
-        $hmac = '',
-        $chargeId = '',
-        $payStatus = 1,
-        $bankCardNo = ''
-    ) {
+    public function addTradeInfo($orders, $amount, $orderFee, $tradeNo, $payType, $hmac = '', $chargeId = '', $payStatus = 1, $bankCardNo = '') {
         //更改订单状态
-        $result = DB::transaction(function () use (
-            $orders,
-            $amount,
-            $orderFee,
-            $tradeNo,
-            $payType,
-            $hmac,
-            $chargeId,
-            $payStatus,
-            $bankCardNo
-        ) {
+        $result = DB::transaction(function () use ($orders, $amount, $orderFee, $tradeNo, $payType, $hmac, $chargeId, $payStatus, $bankCardNo) {
             //找出所有卖家的帐号
             $shopIds = $orders->pluck('shop_id')->all();
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get();
@@ -146,6 +128,36 @@ class PayService
         }
         return $refundDatas;
     }
-    
-    
+
+    /**
+     * 余额支付
+     *
+     * @param $field
+     * @param $orderId
+     * @return bool
+     */
+    public function balancepay($field, $orderId)
+    {
+        $orders = Order::where($field, $orderId)->get();
+        if (Gate::denies('validate-online-orders', $orders)) {
+            return false;
+        }
+
+        $totalFee = $orders->sum('price');
+        $userBalance = (new UserService())->getUserBalance();
+
+        if ($userBalance['availableBalance'] < $totalFee) {
+            return false;
+        }
+        if (auth()->user()->decrement('balance', $totalFee)) {
+            $result = $this->addTradeInfo($orders, $totalFee, 0, '', 'balancepay');
+            if (!$result) {
+                auth()->user()->increment('balance', $totalFee);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

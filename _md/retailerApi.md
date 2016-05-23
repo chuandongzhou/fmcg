@@ -1674,7 +1674,7 @@
 `请求参数：`
 
     type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
-    channel         string          支付渠道     （yeepay_wap 为易宝 , alipay为支付宝app, alipay_wap 为支付宝app网页支付）
+    channel         string          支付渠道     （yeepay_wap 为易宝 , alipay为支付宝app）
 
 `成功返回：`
 
@@ -1682,7 +1682,17 @@
 
 `失败返回：`
 
-#### 2.17.2 退款[get] (refund/{order_id})
+#### 2.17.2 余额支付[post] (balancepay/{order_id})
+`请求参数：`
+
+    type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
+
+`成功返回：`
+
+`失败返回：`
+
+
+#### 2.17.3 退款[get] (refund/{order_id})
 `请求参数：`
     reason         string           退款原因
 
