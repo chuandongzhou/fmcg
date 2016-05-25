@@ -6,7 +6,7 @@
         $(function () {
 
             stepBar.init("stepBar", {
-                step: {{$order['step_num']}},
+                step: {{ $order['step_num'] }},
                 change: true,
                 animation: true
             });

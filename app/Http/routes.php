@@ -113,6 +113,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->controller('trade', 'TradeController');        //交易信息
     $router->controller('refund', 'RefundApplyController');        //退款申请信息
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
+    $router->get('promoter/statistics', 'PromoterController@statistics');    //批量删除推广人员
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
     $router->resource('version-record', 'VersionRecordController');    //版本更新记录
@@ -177,9 +178,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
             $router->post('import', 'MyGoodsController@import');
-            $router->resource('/', 'MyGoodsController');
         });
-
+        $router->resource('my-goods', 'MyGoodsController');
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
             $router->get('order-data', 'ShopController@orderData');//商家首页订单统计信息

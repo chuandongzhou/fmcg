@@ -146,15 +146,18 @@ class OrderController extends Controller
     {
         $orderId = $request->input('order_id');
         $order = Order::bySellerId(auth()->id())->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
-            'shippingAddress.address', 'orderRefund', 'orderChangeRecode')->find($orderId);
+            'shippingAddress.address', 'orderRefund')->find($orderId);
         $order->shop->setAppends([]);
         $order->user->setVisible(['id', 'shop', 'type']);
         $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url']);
+            $goods->addHidden(['introduce', 'images_url', 'order_change_recode']);
         });
-
+        $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
+            $recode->name = auth()->id() ? $order->shop->name : $order->deliveryMan->name;
+        });
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
+        $order->addHidden(['order_change_recode']);
         return $order ? $this->success($order) : $this->error('订单不存在');
     }
 

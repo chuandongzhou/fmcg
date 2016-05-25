@@ -63,7 +63,7 @@ class PayController extends Controller
             array(
                 'subject' => '成都订百达科技有限公司',
                 'body' => $orderNames,
-                'amount' => ($orders->pluck('price')->sum()) * 100,   //单位为分
+                'amount' => ($orders->sum('price')) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
                 'extra' => $this->_getExtra($channel, $request),
@@ -73,7 +73,7 @@ class PayController extends Controller
                 'app' => array('id' => $this->pingxxConfig['app_id'])
             )
         )->__toArray(true);
-
+        info($charge);
         return $this->success($charge);
     }
 
@@ -144,8 +144,7 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
-            } elseif (in_array($tradeInfo->pay_type,
-                [$payTypes['alipay'], $payTypes['alipay_pc'], $payTypes['alipay_wap']])) {
+            } elseif (in_array($tradeInfo->pay_type, [$payTypes['alipay'], $payTypes['alipay_pc']])) {
                 $result = $this->_refundByAlipay($tradeInfo, $reason);
                 if ($result) {
                     $order->orderRefund()->create(['reason' => $reason]);

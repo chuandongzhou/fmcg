@@ -1598,6 +1598,21 @@ table .product-panel {
       font-size: 16px; }
     .order-detail .order-receipt .order-information li .remarks-content, .order-detail .order-receipt .receiving-information li .remarks-content {
       padding: 10px 0; }
+  .order-detail .order-receipt .receiving-information .list-update {
+    height: 210px;
+    overflow: hidden; }
+    .order-detail .order-receipt .receiving-information .list-update .item {
+      height: 35px;
+      line-height: 35px;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden; }
+  .order-detail .order-receipt .receiving-information .in {
+    height: auto;
+    overflow: inherit; }
+  .order-detail .order-receipt .receiving-information .see-more a {
+    color: #49adec; }
 
 .order-detail .table-row .table-col {
   padding: 20px 0 0 0; }

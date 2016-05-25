@@ -8,6 +8,7 @@
 namespace App\Models;
 
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
@@ -151,7 +152,9 @@ class Goods extends Model
      */
     public function scopeOfPrice($query)
     {
-        return $query->orderBy('price_retailer', 'asc');
+        $typeName = (new UserService())->getUserTypeName();
+        $typeName = ($typeName == 'supplier' ? 'retailer' : $typeName);
+        return $query->orderBy('price_' . $typeName, 'asc');
     }
 
     /**

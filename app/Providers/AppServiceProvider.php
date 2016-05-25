@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
                 $query = str_replace(['%', '?'], ['%%', '%s'], $query);
                 $finalQuery = vsprintf($query, $bindings);
 
-                info($finalQuery, $data);
+                info($finalQuery , $data);
             });
         }
     }
@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->registerContainerAliases();
     }
+
     /**
      * 注册容器别名
      */
