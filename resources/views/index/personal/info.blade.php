@@ -9,7 +9,8 @@
                 <div class="store-panel">
                     <img class="avatar" src="{{ $shop->logo_url  }}">
                     <ul class="store-msg">
-                        <li>店家姓名:{{ $shop->name }} <a href="javascript:" class="qrcode" data-target="#qrcodeModal" data-toggle="modal" data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a>
+                        <li>店家姓名:{{ $shop->name }} <a href="javascript:" class="qrcode" data-target="#qrcodeModal"
+                                                      data-toggle="modal" data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a>
                         </li>
                         </li>
                         <li>联系人:{{ $shop->contact_person }}</li>
@@ -58,9 +59,11 @@
                         <span>待发货</span>
                         @if($type==cons('user.type.retailer'))
 
-                            <a href="{{ url('order-buy?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-buy?status=non_send') }}"><span
+                                        class="order-prompt pull-right">订单</span></a>
                         @else
-                            <a href="{{ url('order-sell?status=non_send') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-sell?status=non_send') }}"><span
+                                        class="order-prompt pull-right">订单</span></a>
                         @endif
 
                     </div>
@@ -73,7 +76,8 @@
                         <span>待付款</span>
                         @if($type==cons('user.type.retailer'))
 
-                            <a href="{{ url('order-buy/wait-pay') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-buy/wait-pay') }}"><span
+                                        class="order-prompt pull-right">订单</span></a>
                         @else
                             <a href="{{ url('order-sell?status=non_payment') }}"><span class="order-prompt pull-right">订单</span></a>
                         @endif
@@ -88,10 +92,12 @@
 
                         @if($type==cons('user.type.retailer'))
                             <span>待收货</span>
-                            <a href="{{ url('order-buy/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-buy/wait-receive') }}"><span
+                                        class="order-prompt pull-right">订单</span></a>
                         @else
                             <span>待收款</span>
-                            <a href="{{ url('order-sell/wait-receive') }}"><span class="order-prompt pull-right">订单</span></a>
+                            <a href="{{ url('order-sell/wait-receive') }}"><span
+                                        class="order-prompt pull-right">订单</span></a>
                         @endif
 
                     </div>
@@ -182,7 +188,8 @@
                 url: '/api/v1/personal/order-data',
                 method: 'get'
             }).done(function (data) {
-                var name = data.type==1?'商品购买量':'商品销量';
+                var name = data.type == 1 ? '商品购买量' : '商品销量';
+                var totalName = data.type == 1 ? '分类购买量统计' : '分类销售量统计';
                 //完成订单信息
                 var finishedOrders = data.finishedOrders;
                 //付款订单信息
@@ -272,7 +279,7 @@
                 //月销售图表
                 var option = {
                     title: {
-                        text: '分类购买量统计',
+                        text: totalName,
                         x: 'center'
                     },
                     tooltip: {

@@ -127,7 +127,8 @@ class StatisticsController extends Controller
         /*
         * 每日成单统计
         */
-        $completeOrders = Order::whereBetween('paid_at', [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
+        $completeOrders = Order::whereBetween('paid_at',
+            [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
             cons('order.is_cancel.off'))->get();
 
         $orderSellerEveryday = [];  //对于卖家每日统计
@@ -156,12 +157,25 @@ class StatisticsController extends Controller
                     if ($order->pay_type == $payType['online']) {
                         // 线上完成总金额
                         $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
+                        //线上完成总金额当天下单并完成的金额
+                        if ($order->created_at >= $dayStart) {
+                            $orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'] + $order->price : $order->price;
+                        }
+
                     } else {
                         //线下完成总金额
                         $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                        //线下完成总金额当天下单并完成的金额
+                        if ($order->created_at >= $dayStart) {
+                            $orderSellerEveryday['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['codSuccessAmountToday'] + $order->price : $order->price;
+                        }
                         //线下pos机完成总金额
                         if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
                             $orderSellerEveryday['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmount']) ? $orderSellerEveryday['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                            //线下pos机完成总金额当天下单并完成的金额
+                            if ($order->created_at >= $dayStart) {
+                                $orderSellerEveryday['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['posSuccessAmountToday'] + $order->price : $order->price;
+                            }
                         }
                     }
                 } elseif ($sellerTypes[$order->shop_id] == $userType['supplier']) {
@@ -175,12 +189,26 @@ class StatisticsController extends Controller
                         if ($order->pay_type == $payType['online']) {
                             //线上成单总金额
                             $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
+                            //线上完成总金额当天下单并完成的金额
+                            if ($order->created_at >= $dayStart) {
+                                $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmountToday'] + $order->price : $order->price;
+                            }
+
                         } else {
                             //线下成单总金额
                             $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下完成总金额当天下单并完成的金额
+                            if ($order->created_at >= $dayStart) {
+                                $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'] + $order->price : $order->price;
+                            }
+
                             //线下pos机成单总金额
                             if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
                                 $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                                //线下pos机完成总金额当天下单并完成的金额
+                                if ($order->created_at >= $dayStart) {
+                                    $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'] + $order->price : $order->price;
+                                }
                             }
                         }
                     } else {
@@ -192,13 +220,24 @@ class StatisticsController extends Controller
                         if ($order->pay_type == $payType['online']) {
                             //线上完成总金额
                             $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
-
+                            //线上完成总金额当天下单并当天完成的金额
+                            if ($order->created_at >= $dayStart) {
+                                $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'] + $order->price : $order->price;
+                            }
                         } else {
                             //线下完成总金额
                             $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                            //线下完成总金额当天下单并当天完成的金额
+                            if ($order->created_at >= $dayStart) {
+                                $orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'] + $order->price : $order->price;
+                            }
                             //线下pos机完成总金额
                             if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
                                 $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] + $order->price : $order->price;
+                                //线下pos机完成总金额当天下单并当天完成的金额
+                                if ($order->created_at >= $dayStart) {
+                                    $orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'] + $order->price : $order->price;
+                                }
                             }
                         }
                     }
