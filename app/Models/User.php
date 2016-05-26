@@ -28,7 +28,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'updated_at',
         'created_at',
         'balance',
-        'spreading_code',
         'status',
         'shop'
     ];
@@ -38,7 +37,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'backup_mobile',
         'type',
         'audit_status',
-        'spreading_code',
         'last_login_at'
     ];
 
