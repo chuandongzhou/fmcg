@@ -6,6 +6,7 @@ use App\Http\Requests\Api\v1\CreateWithdrawRequest;
 use App\Models\SystemTradeInfo;
 use App\Models\UserBank;
 use App\Models\Withdraw;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Controller;
@@ -63,16 +64,7 @@ class FinanceController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getBalance(){
-
-        $user = auth()->user();
-        $todayBegin = Carbon::now()->startOfDay();
-
-        $protectedBalance = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
-            cons('trade.is_finished.yes'))->where('finished_at', '>=', $todayBegin)->sum('amount');
-        return $this->success([
-            'balance' => $user->balance,
-            'protectedBalance' => $protectedBalance
-        ]);
+        return $this->success((new UserService())->getUserBalance());
     }
 
     /**

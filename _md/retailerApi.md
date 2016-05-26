@@ -1119,7 +1119,7 @@
 	order_refund            array       退款详情
 	shipping_address    	array       收货信息
     goods    				array		商品详细信息
-    order_change_recode     array       订单修改记录
+    orderChangeRecode       array       订单修改记录
 
 
 	delivery_man 字段子集说明
@@ -1148,9 +1148,10 @@
     reason              string      退款原因
     created_at          timestamp   申请退款时间
 
-    order_change_recode 字段子集说明
+    orderChangeRecode 字段子集说明
 
     content             string      修改内容
+    created_at          timestamp   修改时间
 
 `失败返回：`
 
@@ -1188,12 +1189,13 @@
 `失败返回：`
 
 
-#### 2.7.17 卖家修改订单物品单价[put] (change-price)
+#### 2.7.17 卖家修改订单[put] (change-order)
 `请求参数：`
 
 	order_id  				int		订单id
-	price  					int		物品单价
-	pivot_id  				int		物品在order_goods表中的id
+	price  					int		商品单价
+	num                     int     商品数量
+	pivot_id  				int		商品在order_goods表中的id
 
 `成功返回：`
 
@@ -1560,10 +1562,12 @@
 #### 2.12.3 获取帐户余额[get] (balance)
 `请求参数:`
 
-	balance				decimal			帐户余额
-	protectedBalance	decimal			受保护的金额 （当天交易成功金额）
 
 `成功返回:`
+
+
+	balance				decimal			帐户余额
+	protectedBalance	decimal			受保护的金额 （当天交易成功金额）
 
 `失败返回:`
 

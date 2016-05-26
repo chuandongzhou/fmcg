@@ -119,6 +119,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany('App\Models\ShippingAddress');
     }
+    
+    /**
+     * 订单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders(){
+        return $this->hasMany('App\Models\Order');
+    }
 
     /**
      * 提现
@@ -151,4 +160,5 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return array_search($this->type, cons('user.type'));
     }
+
 }

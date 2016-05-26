@@ -250,7 +250,7 @@ class OrderService
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
 
-            $content = "商品编号：{$orderGoods->goods_id};原商品数量：{$oldNum},现商品数量：{$orderGoods->num};原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
+            $content = "商品编号：{$orderGoods->goods_id}; 原商品数量：{$oldNum},现商品数量：{$orderGoods->num}; 原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
 
             $order->orderChangeRecode()->create([
                 'user_id' => $userId,

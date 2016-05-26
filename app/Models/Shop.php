@@ -162,18 +162,19 @@ class Shop extends Model
      */
     public function orders()
     {
-        return $this->hasMany('App\Models\Order')->where('status', cons('order.status.finished'))->count();
+        return $this->hasMany('App\Models\Order');
     }
 
     /**
-     * 追加订单完成量
+     * 关联推广人员
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getOrdersAttribute()
+    public function promoters()
     {
-        return $this->orders();
+        return $this->belongsTo('App\Models\Promoter', 'spreading_code', 'spreading_code');
     }
+
 
     /**
      * 获取热门商家

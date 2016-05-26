@@ -182,14 +182,26 @@
                     <div class="col-sm-12 receiving-information">
                         <ul>
                             <li class="title">订单修改记录</li>
-                            @foreach($order->orderChangeRecode as $orderChangeRecode)
-                                <li>
-                                    <span class="title-info-name">修改人 : </span>
-                                    {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan->name }}
-                                    <span class="title-info-name">内容 : </span>
-                                    {{ $orderChangeRecode->content }}
+                            <li>
+                                <ul class="list-update">
+                                    @foreach($order->orderChangeRecode->reverse() as $orderChangeRecode)
+                                        <li class="item">
+                                            <span class="title-info-name"> </span>
+                                            {{ $orderChangeRecode->created_at }}
+                                            <span class="title-info-name">&nbsp;&nbsp;&nbsp;&nbsp;修改人 : </span>
+                                            {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan->name }}
+                                        </li>
+                                        <li class="item">
+                                            {{ $orderChangeRecode->content }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            @if($order->orderChangeRecode->count() > 6)
+                                <li class="text-center see-more">
+                                    <a href="javascript:">点击查看更多</a>
                                 </li>
-                            @endforeach
+                            @endif
                         </ul>
                     </div>
                 @endif

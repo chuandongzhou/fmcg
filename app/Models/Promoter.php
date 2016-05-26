@@ -20,8 +20,19 @@ class Promoter extends Model
         parent::boot();
 
         // 注册创建事件
-        static::creating(function ($model) {
-           $model->spreading_code = strtoupper(uniqid());
+        static::created(function ($model) {
+            $model->spreading_code = 'DBD' . str_pad($model->id, 3, "0", STR_PAD_LEFT);
+            $model->save();
         });
+    }
+
+    /**
+     * 关联店铺
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shops()
+    {
+        return $this->hasMany('App\Models\Shop', 'spreading_code', 'spreading_code');
     }
 }

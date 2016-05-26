@@ -733,6 +733,12 @@ function changePriceByDetailPage() {
         $('input[name="price"]').val(price);
         $('input[name="num"]').val(num);
     });
+    $(".see-more").click(function(){
+        var self=$(this);
+        self.siblings().children(".list-update").addClass("in");
+        self.css("display","none");
+    })
+
 }
 
 /**

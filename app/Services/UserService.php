@@ -14,6 +14,12 @@ use Carbon\Carbon;
  */
 class UserService
 {
+    /**
+     * 获取用户余额
+     *
+     * @param null $user
+     * @return array
+     */
     public function getUserBalance($user = null)
     {
         $user = $user ?: (auth()->user() ?: (new User()));
@@ -28,5 +34,18 @@ class UserService
             'protectedBalance' => $protectedBalance,
             'availableBalance' => $availableBalance
         ];
+    }
+
+    /**
+     * 获取用户分类名
+     *
+     * @param null $user
+     * @return mixed
+     */
+    public function getUserTypeName($user = null)
+    {
+        $user = $user ?: (auth()->user() ?: (new User()));
+        $userTypes = array_flip(cons('user.type'));
+        return array_get($userTypes, $user->type, head($userTypes));
     }
 }
