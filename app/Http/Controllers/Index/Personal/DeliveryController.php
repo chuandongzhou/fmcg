@@ -32,7 +32,7 @@ class DeliveryController extends Controller
             if ($search['end_at']) {
                 $query->where('delivery_finished_at', '<', $search['end_at']);
             }
-        })->with('user.shop', 'shippingAddress.address', 'deliveryMan')->orderBy('delivery_finished_at','DESC')->paginate();
+        })->with('user.shop', 'shippingAddress.address', 'deliveryMan','systemTradeInfo')->orderBy('delivery_finished_at','DESC')->paginate();
 
         $deliveryMen = auth()->user()->shop->deliveryMans;
         return view('index.personal.delivery',

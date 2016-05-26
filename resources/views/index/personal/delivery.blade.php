@@ -64,6 +64,8 @@
                         <th>配送人员</th>
                         <th>订单号</th>
                         <th>店家名称</th>
+                        <th>支付状态</th>
+                        <th>支付方式</th>
                         <th>收货地址</th>
                         <th>完成配送时间</th>
                     </tr>
@@ -75,6 +77,14 @@
                             <td>{{ $delivery->deliveryMan?$delivery->deliveryMan->name:''  }}</td>
                             <td>{{ $delivery->id }}</td>
                             <td>{{ $delivery->user->shop->name }}</td>
+                            <td>{{ $delivery->pay_status==1?'已支付':'未支付' }}</td>
+                            <td>
+                                @if($delivery->pay_status==1)
+                                    {{ isset($delivery->systemTradeInfo)?cons()->valueLang('trade.pay_type', $delivery->systemTradeInfo->pay_type):'' }}
+                                @else
+                                    {{ $delivery->pay_type==1?'线上支付':'线下支付' }}
+                                @endif
+                            </td>
                             <td>{{  $delivery->shippingAddress&&$delivery->shippingAddress->address?$delivery->shippingAddress->address->address_name:'' }}</td>
                             <td>{{ $delivery->delivery_finished_at }}</td>
                         </tr>
