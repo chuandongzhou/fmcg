@@ -129,16 +129,40 @@
                     </tr>
                     <tr>
                         <td>成单数</td>
-                        <td>{!! $orderSellerEveryday['wholesaler']['count'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['retailer']['count'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['count'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['count'] or 0 !!}
+                            ({!! $orderSellerEveryday['wholesaler']['countToday'] or 0 !!}
+                            +{!! (isset($orderSellerEveryday['wholesaler']['count'])?$orderSellerEveryday['wholesaler']['count']:0)-(isset($orderSellerEveryday['wholesaler']['countToday'])?$orderSellerEveryday['wholesaler']['countToday']:0) !!}
+                            )
+                        </td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['count'] or 0 !!}
+                            ({!! $orderSellerEveryday['supplier']['retailer']['countToday'] or 0 !!}
+                            +{!! (isset($orderSellerEveryday['supplier']['retailer']['count'])?$orderSellerEveryday['supplier']['retailer']['count']:0)-(isset($orderSellerEveryday['supplier']['retailer']['countToday'])?$orderSellerEveryday['supplier']['retailer']['countToday']:0) !!}
+                            )
+                        </td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['count'] or 0 !!}
+                            ({!!$orderSellerEveryday['supplier']['wholesaler']['countToday'] or 0  !!}
+                            +{!! (isset($orderSellerEveryday['supplier']['wholesaler']['count'])?$orderSellerEveryday['supplier']['wholesaler']['count']:0)-(isset($orderSellerEveryday['supplier']['wholesaler']['countToday'])?$orderSellerEveryday['supplier']['wholesaler']['countToday']:0) !!}
+                            )
+                        </td>
                         <td>{!! (isset($orderSellerEveryday['wholesaler']['count'])?$orderSellerEveryday['wholesaler']['count']:0)+(isset($orderSellerEveryday['supplier']['retailer']['count'])?$orderSellerEveryday['supplier']['retailer']['count']:0)+(isset($orderSellerEveryday['supplier']['wholesaler']['count'])?$orderSellerEveryday['supplier']['wholesaler']['count']:0) !!}</td>
                     </tr>
                     <tr>
                         <td>成单总金额</td>
-                        <td>{!! $orderSellerEveryday['wholesaler']['amount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['retailer']['amount'] or 0 !!}</td>
-                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['amount'] or 0 !!}</td>
+                        <td>{!! $orderSellerEveryday['wholesaler']['amount'] or 0 !!}
+                            ({!! $orderSellerEveryday['wholesaler']['amountToday'] or 0 !!}
+                            +{!! (isset($orderSellerEveryday['wholesaler']['amount'])?$orderSellerEveryday['wholesaler']['amount']:0)-(isset($orderSellerEveryday['wholesaler']['amountToday'])?$orderSellerEveryday['wholesaler']['amountToday']:0) !!}
+                            )
+                        </td>
+                        <td>{!! $orderSellerEveryday['supplier']['retailer']['amount'] or 0 !!}
+                            ({!!  $orderSellerEveryday['supplier']['retailer']['amountToday'] or 0 !!}
+                            +{!! (isset( $orderSellerEveryday['supplier']['retailer']['amount'])? $orderSellerEveryday['supplier']['retailer']['amount']:0)-(isset( $orderSellerEveryday['supplier']['retailer']['amountToday'])? $orderSellerEveryday['supplier']['retailer']['amountToday']:0) !!}
+                            )
+                        </td>
+                        <td>{!! $orderSellerEveryday['supplier']['wholesaler']['amount'] or 0 !!}
+                            ({!! $orderSellerEveryday['supplier']['wholesaler']['amountToday'] or 0  !!}
+                            +{!! (isset($orderSellerEveryday['supplier']['wholesaler']['amount'])?$orderSellerEveryday['supplier']['wholesaler']['amount']:0)-(isset($orderSellerEveryday['supplier']['wholesaler']['amountToday'])?$orderSellerEveryday['supplier']['wholesaler']['amountToday']:0) !!}
+                            )
+                        </td>
                         <td>{!! (isset($orderSellerEveryday['wholesaler']['amount'])?$orderSellerEveryday['wholesaler']['amount']:0)+(isset($orderSellerEveryday['supplier']['retailer']['amount'])?$orderSellerEveryday['supplier']['retailer']['amount']:0)+(isset($orderSellerEveryday['supplier']['wholesaler']['amount'])?$orderSellerEveryday['supplier']['wholesaler']['amount']:0) !!}</td>
                     </tr>
                     <tr>

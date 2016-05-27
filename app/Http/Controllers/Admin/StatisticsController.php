@@ -152,6 +152,14 @@ class StatisticsController extends Controller
                     //批发商
                     //成单数
                     $orderSellerEveryday['wholesaler']['count'] = isset($orderSellerEveryday['wholesaler']['count']) ? ++$orderSellerEveryday['wholesaler']['count'] : 1;
+
+                    if ($order->created_at >= $dayStart) {
+                        //当天下单成单数
+                        $orderSellerEveryday['wholesaler']['countToday'] = isset($orderSellerEveryday['wholesaler']['countToday']) ? ++$orderSellerEveryday['wholesaler']['countToday'] : 1;
+                        //当天下单成单总额
+                        $orderSellerEveryday['wholesaler']['amountToday'] = isset($orderSellerEveryday['wholesaler']['amountToday']) ? $orderSellerEveryday['wholesaler']['amountToday'] + $order->price : $order->price;
+                    }
+
                     //成单总金额
                     $orderSellerEveryday['wholesaler']['amount'] = isset($orderSellerEveryday['wholesaler']['amount']) ? $orderSellerEveryday['wholesaler']['amount'] + $order->price : $order->price;
                     if ($order->pay_type == $payType['online']) {
@@ -186,6 +194,12 @@ class StatisticsController extends Controller
                         $orderSellerEveryday['supplier']['wholesaler']['count'] = isset($orderSellerEveryday['supplier']['wholesaler']['count']) ? ++$orderSellerEveryday['supplier']['wholesaler']['count'] : 1;
                         //成单总金额
                         $orderSellerEveryday['supplier']['wholesaler']['amount'] = isset($orderSellerEveryday['supplier']['wholesaler']['amount']) ? $orderSellerEveryday['supplier']['wholesaler']['amount'] + $order->price : $order->price;
+                        if ($order->created_at >= $dayStart) {
+                            //成单数当天下单
+                            $orderSellerEveryday['supplier']['wholesaler']['countToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['countToday']) ? ++$orderSellerEveryday['supplier']['wholesaler']['countToday'] : 1;
+                            //成单总金额当天下单
+                            $orderSellerEveryday['supplier']['wholesaler']['amountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['amountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['amountToday'] + $order->price : $order->price;
+                        }
                         if ($order->pay_type == $payType['online']) {
                             //线上成单总金额
                             $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
@@ -217,6 +231,12 @@ class StatisticsController extends Controller
                         $orderSellerEveryday['supplier']['retailer']['count'] = isset($orderSellerEveryday['supplier']['retailer']['count']) ? ++$orderSellerEveryday['supplier']['retailer']['count'] : 1;
                         //成单总金额
                         $orderSellerEveryday['supplier']['retailer']['amount'] = isset($orderSellerEveryday['supplier']['retailer']['amount']) ? $orderSellerEveryday['supplier']['retailer']['amount'] + $order->price : $order->price;
+                        if ($order->created_at >= $dayStart) {
+                            //成单数当日下单
+                            $orderSellerEveryday['supplier']['retailer']['countToday'] = isset($orderSellerEveryday['supplier']['retailer']['countToday']) ? ++$orderSellerEveryday['supplier']['retailer']['countToday'] : 1;
+                            //成单总金额当日下单
+                            $orderSellerEveryday['supplier']['retailer']['amountToday'] = isset($orderSellerEveryday['supplier']['retailer']['amountToday']) ? $orderSellerEveryday['supplier']['retailer']['amountToday'] + $order->price : $order->price;
+                        }
                         if ($order->pay_type == $payType['online']) {
                             //线上完成总金额
                             $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
