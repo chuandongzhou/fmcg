@@ -127,7 +127,7 @@ class StatisticsController extends Controller
         /*
         * 每日成单统计
         */
-        $completeOrders = Order::whereBetween('paid_at',
+        $completeOrders = Order::whereBetween('finished_at',
             [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
             cons('order.is_cancel.off'))->get();
 

@@ -37,7 +37,7 @@
                     <td width="10%">成单数</td>
                     <td>{{ $promoter->finishedOrdersCount }}
                         ({{ $promoter->currentMonthFinishedOrdersCount }}
-                        + {{ bcsub($promoter->finishedOrdersCount, $promoter->currentMonthFinishedOrdersCount , 2); }})
+                        + {{ bcsub($promoter->finishedOrdersCount, $promoter->currentMonthFinishedOrdersCount) }})
                     </td>
                 </tr>
                 <tr align="center">

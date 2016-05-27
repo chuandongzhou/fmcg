@@ -23,8 +23,8 @@ class SystemWithdrawInfoController extends Controller
         $withdrawId = isset($data['withdraw_id']) && $data['withdraw_id'] != '' ? intval($data['withdraw_id']) : '';
         $tradeNo = isset($data['trade_no']) && $data['trade_no'] != '' ? trim($data['trade_no']) : '';
         $userName = isset($data['user_name']) && $data['user_name'] != '' ? trim($data['user_name']) : '';
-        $data['started_at'] = isset($data['started_at']) && $data['started_at'] != '' ? $data['started_at'] : Carbon::now()->startOfMonth();
-        $data['end_at'] = isset($data['end_at']) && $data['end_at'] != '' ? $data['end_at'] : Carbon::now();
+        $data['started_at'] = isset($data['started_at']) && $data['started_at'] != '' ? $data['started_at'] : (string)Carbon::now()->startOfMonth();
+        $data['end_at'] = isset($data['end_at']) && $data['end_at'] != '' ? $data['end_at'] : (string)Carbon::now();
         $query = Withdraw::with('userBanks', 'user');
         if ($withdrawId) {
             $query->where('id', $withdrawId);

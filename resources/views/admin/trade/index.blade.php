@@ -103,7 +103,7 @@
             </tbody>
         </table>
     </form>
-    {!! $trades->appends($data)->render() !!}
+    {!! $trades->appends(array_filter($data))->render() !!}
 @stop
 @section('js')
     @parent

@@ -12,7 +12,7 @@ class RefundApplyController extends Controller
 {
     protected $alipayPayTypes, $refundOrdersId;
 
-    public function _construct()
+    public function __construct()
     {
         $this->alipayPayTypes = [cons('trade.pay_type.alipay'), cons('trade.pay_type.alipay_pc')];
         $this->refundOrdersId = Order::where('pay_status', cons('order.pay_status.refund'))->lists('id');
@@ -29,6 +29,7 @@ class RefundApplyController extends Controller
             ->whereIn('order_id', $this->refundOrdersId)
             ->orderBy('id', 'asc')
             ->paginate();
+        info($this->alipayPayTypes);
         return view('admin.trade.refund', ['trades' => $trades]);
     }
 

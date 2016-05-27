@@ -106,6 +106,12 @@ class PromoterController extends Controller
         return Promoter::destroy($promoterIds) ? $this->success('删除推广人员成功') : $this->error('推广人员删除时遇到错误');
     }
 
+    /**
+     * 统计
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function statistics(Request $request)
     {
         $month = $request->input('month', (new Carbon())->format('Y-m'));

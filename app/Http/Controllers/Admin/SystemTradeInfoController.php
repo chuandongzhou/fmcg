@@ -21,9 +21,7 @@ class SystemTradeInfoController extends Controller
         $attributes = array_filter($request->all());
 
         $result = $this->getTrade($attributes);
-
         return view('admin.trade.index',
-
             [
                 'trades' => $result['trades'],
                 'linkUrl' => http_build_query($attributes),
@@ -100,6 +98,12 @@ class SystemTradeInfoController extends Controller
 
     }
 
+    /**
+     * 获取交易信息
+     *
+     * @param $attributes
+     * @return array
+     */
     private function getTrade($attributes)
     {
         $map = [];
@@ -116,8 +120,8 @@ class SystemTradeInfoController extends Controller
         if (isset($attributes['pay_type']) && $attributes['pay_type']) {
             $map['pay_type'] = $attributes['pay_type'];
         }
-        $time['started_at'] = isset($attributes['started_at']) ? $attributes['started_at'] : Carbon::now()->startOfMonth();
-        $time['ended_at'] = isset($attributes['ended_at']) ? $attributes['ended_at'] : Carbon::now();
+        $time['started_at'] = isset($attributes['started_at']) ? $attributes['started_at'] : (string)Carbon::now()->startOfMonth();
+        $time['ended_at'] = isset($attributes['ended_at']) ? $attributes['ended_at'] : (string)Carbon::now();
 
         $trades = SystemTradeInfo::where($map)->whereBetween('success_at',
             [$time['started_at'], $time['ended_at']])->paginate();

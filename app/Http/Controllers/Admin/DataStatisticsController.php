@@ -124,7 +124,7 @@ class DataStatisticsController extends Controller
         /*
         * 每日成单统计
         */
-        $completeOrders = Order::whereBetween('paid_at', [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
+        $completeOrders = Order::whereBetween('finished_at', [$dayStart, $dayEnd])->with('systemTradeInfo')->where('is_cancel',
             cons('order.is_cancel.off'))->get();
 
         $orderSellerEveryday = [];  //对于卖家每日统计

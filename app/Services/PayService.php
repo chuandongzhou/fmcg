@@ -31,9 +31,29 @@ class PayService
      * @param string $bankCardNo
      * @return bool
      */
-    public function addTradeInfo($orders, $amount, $orderFee, $tradeNo, $payType, $hmac = '', $chargeId = '', $payStatus = 1, $bankCardNo = '') {
+    public function addTradeInfo(
+        $orders,
+        $amount,
+        $orderFee,
+        $tradeNo,
+        $payType,
+        $hmac = '',
+        $chargeId = '',
+        $payStatus = 1,
+        $bankCardNo = ''
+    ) {
         //更改订单状态
-        $result = DB::transaction(function () use ($orders, $amount, $orderFee, $tradeNo, $payType, $hmac, $chargeId, $payStatus, $bankCardNo) {
+        $result = DB::transaction(function () use (
+            $orders,
+            $amount,
+            $orderFee,
+            $tradeNo,
+            $payType,
+            $hmac,
+            $chargeId,
+            $payStatus,
+            $bankCardNo
+        ) {
             //找出所有卖家的帐号
             $shopIds = $orders->pluck('shop_id')->all();
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get();
@@ -55,7 +75,7 @@ class PayService
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                     'paid_at' => $nowTimestamp
                 ];
-                if ($payType == $tradeConf['pay_type']['pos']) {
+                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
                     $orderAttr['status'] = $orderConf['status']['finished'];
                     $orderAttr['finished_at'] = $nowTimestamp;
                 }
@@ -90,9 +110,19 @@ class PayService
                     'hmac' => $hmac,
                 ];
 
-                if ($payType == $tradeConf['pay_type']['pos']) {
+                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
+
+                    //pos机支付成功更新用户余额
+                    $shopOwner = $order->shop->user;
+                    $shopOwner->balance += $order->price - $fee;
+                    $shopOwner->save();
+                    //通知卖家
+                    $redisKey = 'push:seller:' . $shopOwner->id;
+                    $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
+
+                    (new RedisService)->setRedis($redisKey, $redisVal);
                 }
 
                 SystemTradeInfo::create($systemTradeInfoAttr);

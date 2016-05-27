@@ -198,16 +198,6 @@ class PosController extends Controller
                 $head['HMAC'], $body['ReferNo'], cons('trade.pay_status.received_no_sign'), $body['BankCardNo']);
 
             if ($result) {
-                //pos机支付成功更新用户余额
-                $shopOwner = $orders->first()->shop->user;
-                $shopOwner->balance += $body['Amount'] - $orderFee;
-                $shopOwner->save();
-                //通知卖家
-                $redisKey = 'push:seller:' . $shopOwner->id;
-                $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
-
-                (new RedisService)->setRedis($redisKey, $redisVal);
-
                 //返回支付成功报文
                 $array['SessionHead']['ResultCode'] = $resultCodeArr['success'];
                 $array['SessionHead']['ResultMsg'] = cons()->valueLang('pos.result_code',
