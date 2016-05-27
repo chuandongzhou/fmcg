@@ -37,7 +37,7 @@
                     <td width="10%">成单数</td>
                     <td>{{ $promoter->finishedOrdersCount }}
                         ({{ $promoter->currentMonthFinishedOrdersCount }}
-                        + {{ $promoter->finishedOrdersCount -  $promoter->currentMonthFinishedOrdersCount}})
+                        + {{ bcsub($promoter->finishedOrdersCount, $promoter->currentMonthFinishedOrdersCount , 2); }})
                     </td>
                 </tr>
                 <tr align="center">
@@ -49,7 +49,8 @@
                     <td>
                         {{ $promoter->finishedOrdersAmount }}
                         （{{ $promoter->currentMonthFinishedOrdersAmount }}
-                        + {{ $promoter->finishedOrdersAmount -  $promoter->currentMonthFinishedOrdersAmount }}）
+                        + {{ bcsub ($promoter->finishedOrdersAmount,  $promoter->currentMonthFinishedOrdersAmount , 2) }}
+                        ）
                     </td>
                 </tr>
                 <tr align="center">
@@ -66,7 +67,7 @@
 @stop
 @section('js')
     <script type="text/javascript">
-            formSubmitByGet();
+        formSubmitByGet();
     </script>
 @stop
 

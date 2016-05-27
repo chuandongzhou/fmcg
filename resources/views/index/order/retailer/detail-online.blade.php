@@ -2,6 +2,7 @@
 @section('subtitle' , '订单详情')
 @include('includes.pay')
 @include('includes.stepBar')
+@include('includes.order-refund')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -216,6 +217,13 @@
                     @if($order->can_cancel)
                         <a class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                    @endif
+                    @if ($order->can_refund)
+                            <a class="btn btn-danger refund" data-target="#refund"
+                               data-toggle="modal"
+                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                退款
+                            </a>
                     @endif
                     @if($order->can_payment)
                         <a href="javascript:" data-target="#payModal" data-toggle="modal"

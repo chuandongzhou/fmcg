@@ -22,7 +22,7 @@ class AlipayController extends Controller
 
     public function anySuccess(Request $request)
     {
-        info($request->all());
+        //info($request->all());
         //计算得出通知验证结果
         $alipayConf = getAlipayConfig();
 
@@ -32,8 +32,14 @@ class AlipayController extends Controller
         if ($verify_result) {//验证成功
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //请在这里加上商户的业务逻辑程序代
-            
+
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+
+            //如果是退款直接返回success
+            if ($request->input('refund_status')) {
+                return "success";
+            }
+
 
             //获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
             $orderId = $request->input('out_trade_no');     //商户订单号
@@ -86,9 +92,15 @@ class AlipayController extends Controller
         }
     }
 
+
+    /**
+     * 退款处理
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function anyRefund(Request $request)
     {
-        info($request->all());
         $alipayConf = getAlipayConfig('refund');
         $alipayNotify = new AlipayNotify($alipayConf);
         $verify_result = $alipayNotify->verifyNotify();
@@ -97,33 +109,34 @@ class AlipayController extends Controller
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //请在这里加上商户的业务逻辑程序代
 
-
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
 
             //获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
 
             //批次号
-            $batchNo = $this->input('batch_no');
+            $batchNo = $request->input('batch_no');
 
             //批量退款数据中转账成功的笔数
-            $successNum = $this->input('success_num');
+            $successNum = $request->input('success_num');
 
             //批量退款数据中的详细信息
-            $resultDetails = $this->input('result_details');
+            $resultDetails = $request->input('result_details');
 
             $result = DB::transaction(function () use ($resultDetails) {
                 $refundDatas = (new PayService)->formatAlipayRefundData($resultDetails);
                 if ($refundDatas && !empty($refundDatas)) {
                     $tradeNos = array_keys($refundDatas);
-                    $orderIds = SystemTradeInfo::whereIn('trade_no', $tradeNos)->get()->pluck('order_id');
-                    $orders = Order::whereIn('id', $orderIds)->get();
+                    $orderIds = SystemTradeInfo::whereIn('trade_no', $tradeNos)->lists('order_id');
+                    $orders = Order::whereIn('id', $orderIds)->where('pay_status',
+                        cons('order.pay_status.refund'))->with('systemTradeInfo')->get();
                     foreach ($orders as $order) {
                         if ($order->fill([
                             'pay_status' => cons('order.pay_status.refund_success'),
                             'refund_at' => Carbon::now()
                         ])->save()
                         ) {
-                            $order->orderRefund()->increment('refunded_amount', $refundDatas[$order->id]);
+                            $order->orderRefund()->increment('refunded_amount',
+                                $refundDatas[$order->systemTradeInfo->trade_no]);
                         }
                     }
                 }
@@ -135,7 +148,7 @@ class AlipayController extends Controller
             //如果没有做过处理，那么执行商户的业务程序
             //如果有做过处理，那么不执行商户的业务程序
 
-            return $result ? "success" : 'fail';        //请不要修改或删除
+            return $result === true ? "success" : 'fail';        //请不要修改或删除
 
             //调试用，写文本函数记录程序运行情况是否正常
             //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");

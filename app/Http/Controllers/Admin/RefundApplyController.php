@@ -10,6 +10,14 @@ use WeiHeng\Alipay\AlipaySubmit;
 
 class RefundApplyController extends Controller
 {
+    protected $alipayPayTypes, $refundOrdersId;
+
+    public function _construct()
+    {
+        $this->alipayPayTypes = [cons('trade.pay_type.alipay'), cons('trade.pay_type.alipay_pc')];
+        $this->refundOrdersId = Order::where('pay_status', cons('order.pay_status.refund'))->lists('id');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +25,10 @@ class RefundApplyController extends Controller
      */
     public function getIndex()
     {
-        $refundOrders = Order::where('pay_status', cons('order.pay_status.refund'))->get();
-        $trades = SystemTradeInfo:: where('pay_type', cons('trade.pay_type.alipay'))->whereIn('order_id',
-            $refundOrders->pluck('id'))->orderBy('id', 'asc')->paginate();
+        $trades = SystemTradeInfo:: whereIn('pay_type', $this->alipayPayTypes)
+            ->whereIn('order_id', $this->refundOrdersId)
+            ->orderBy('id', 'asc')
+            ->paginate();
         return view('admin.trade.refund', ['trades' => $trades]);
     }
 
@@ -35,10 +44,11 @@ class RefundApplyController extends Controller
         if (empty($tradeIds)) {
             return $this->error('请选择要退款的订单');
         }
-        $refundOrders = Order::where('pay_status', cons('order.pay_status.refund'))->get();
-        $trades = SystemTradeInfo::whereIn('id', $tradeIds)->where('pay_type',
-            cons('trade.pay_type.alipay'))->whereIn('order_id',
-            $refundOrders->pluck('id'))->orderBy('id', 'asc')->get();
+        $trades = SystemTradeInfo::whereIn('id', $tradeIds)
+            ->whereIn('pay_type', $this->alipayPayTypes)
+            ->whereIn('order_id', $this->refundOrdersId)
+            ->orderBy('id', 'asc')
+            ->get();
         return $this->_refundHandle($trades);
 
     }
