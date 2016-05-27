@@ -108,7 +108,7 @@
                         {{--商品管理--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-heart-o {!! path_active(['my-goods','my-goods/*']) !!}"></i> 商品管理
+                                <i class="fa fa-shopping-basket {!! path_active(['my-goods','my-goods/*']) !!}"></i> 商品管理
                             </a>
                             <ul class="menu-wrap">
                                 <li>

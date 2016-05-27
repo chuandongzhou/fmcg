@@ -49,7 +49,8 @@ class MyGoodsController extends Controller
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
 
-            $images = $request->input('images');
+            $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
+
             if (!is_null($images)) {
                 $this->_setImages($images, $goods->bar_code);
             }
@@ -92,7 +93,6 @@ class MyGoodsController extends Controller
      */
     public function update(Requests\Api\v1\UpdateGoodsRequest $request, $goods)
     {
-
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
@@ -114,7 +114,7 @@ class MyGoodsController extends Controller
             // 更新配送地址
             $this->updateDeliveryArea($goods, $request->input('area'));
 
-            $images = $request->input('images');
+            $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
             if (!is_null($images)) {
                 $this->_setImages($images, $goods->bar_code);
             }
@@ -222,6 +222,7 @@ class MyGoodsController extends Controller
     public function import(Request $request)
     {
         $file = $request->file('file');
+
         $postAttr = $request->only(['cate_level_1', 'cate_level_2', 'cate_level_3', 'status', 'shop_id']);
         $attrs = $request->input('attrs');
         $importResult = $this->importGoods($file, $postAttr, $attrs);
@@ -460,7 +461,9 @@ class MyGoodsController extends Controller
         foreach ($images as $item) {
             $image = Images::create(['bar_code' => $name]);
             if ($image->exists) {
-                $image->associateFile($image->convertToFile($item['path'], $item['name']), 'image');
+                $file = is_array($item) ? $item['path'] : $item;
+                $fileName = is_array($item) ? $item['name'] : null;
+                $image->associateFile($image->convertToFile($file, $fileName), 'image');
             }
         }
         return true;

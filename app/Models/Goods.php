@@ -386,7 +386,7 @@ class Goods extends Model
         $result = [];
         foreach ($images as $key => $image) {
             $result[$key]['id'] = $image['id'];
-            $result[$key]['name'] = $image->image->name;
+            $result[$key]['name'] = $image->image ? $image->image->name : 'goods_default';
             $result[$key]['url'] = $image->image_url;
         }
         return $result;

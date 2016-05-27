@@ -32,6 +32,9 @@ class ImageUploadService
         if (!is_array($array)) {
             return [];
         }
+        if (!isset($array['id'])) {
+            return $array;
+        }
         $imagesArr = [];
         foreach ($array['id'] as $key => $imageId) {
             $imagesArr[] = [

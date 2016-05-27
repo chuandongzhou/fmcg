@@ -28,7 +28,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::where('user_id', auth()->id())->with('shop.user', 'goods.images')->orderBy('id',
+        $orders = Order::where('user_id', auth()->id())->with('shop.user', 'user', 'goods.images.image')->orderBy('id',
             'desc')->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
@@ -483,6 +483,7 @@ class OrderController extends Controller
             return $this->error('订单不存在或不能修改');
         }
         $attributes = $request->all();
+        info($attributes);
 
         $flag = (new OrderService)->changeOrder($order, $attributes, auth()->id());
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
