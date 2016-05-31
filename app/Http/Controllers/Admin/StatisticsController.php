@@ -43,7 +43,7 @@ class StatisticsController extends Controller
 
             // $monthAgo = $carbon->copy()->subDays(30);
 
-            // 活跃用户数
+            //登录数
             $statistics = DataStatistics::whereBetween('created_at', [
                 $dayStart,
                 $dayEnd

@@ -26,7 +26,7 @@ class UpdateShopRequest extends Request
             'license' => 'sometimes|required',
             'business_license' => 'sometimes|required',
             'agency_contract' => 'sometimes|required',
-            'spreading_code' => 'required|exists:promoter,spreading_code'
+            //'spreading_code' => 'required|exists:promoter,spreading_code'
         ];
     }
 

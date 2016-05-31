@@ -138,7 +138,7 @@ class PromoterController extends Controller
 
 
             //下单
-            $submitOrders = Order::whereIn('user_id', $userIds)->whereBetween('created_at',
+            $submitOrders = Order::NonCancel()->whereIn('user_id', $userIds)->whereBetween('created_at',
                 [$startOfMonth, $endOfMonth])->get();
             
             //下单用户数

@@ -76,8 +76,7 @@ class DataStatisticsController extends Controller
         /*
          * 每日订单统计
          */
-        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->where('is_cancel',
-            cons('order.is_cancel.off'))->get();
+        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->NonCancel()->get();
 
         $orderEveryday = []; //当日订单统计
 

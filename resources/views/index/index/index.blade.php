@@ -104,7 +104,7 @@
                     </div>
                     <div class="col-xs-12 padding-clear">
                         <div class="row margin-clear">
-                            <div class="col-xs-5">
+                            <div class="col-xs-3">
                                 <div id="myCarousel{{ $index }}" class="row carousel slide banner-slide">
                                     @if(!$column->adverts->isEmpty())
                                         <div class="carousel-inner">
@@ -120,13 +120,13 @@
                                         <ul class="carousel-indicators carousel-indicators-item">
                                             @foreach($column->adverts as $key=>$image)
                                                 <li data-target="#myCarousel{{ $index }}" data-slide-to="{{ $key }}"
-                                                    class="{{ $key == 0 ? 'active' : '' }}">{{ $image->name }}</li>
+                                                    class="{{ $key == 0 ? 'active' : '' }}"></li>
                                             @endforeach
                                         </ul>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-xs-7">
+                            <div class="col-xs-9">
                                 <div class="col-xs-12 commodity-panel padding-clear">
                                     @foreach($column->goods as $goods)
                                         @if ($goods->price > 0)
@@ -178,14 +178,6 @@
         $(document).ready(function () {
             $('.carousel').carousel({
                 interval: 5000
-            });
-            $(".carousel-indicators li").mousemove(function () {
-                var self = $(this);
-                self.parents(".carousel").stop(true).carousel(self.index());
-            });
-            $(".carousel-indicators-item").each(function (e) {
-                var obj = $(this), width = 100 / obj.children("li").length;
-                obj.children("li").css("width", width + "%");
             });
             $('.content-title').on('click', function () {
                 var obj = $(this);

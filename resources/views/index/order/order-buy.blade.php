@@ -59,7 +59,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>
+                                    <th width="50%">
                                         <label>
                                             <input type="checkbox" name="order_id[]" value="{{ $order['id'] }}"
                                                    class="children">
@@ -67,7 +67,7 @@
                                         </label>
                                         <span class="order-number"> 订单号 : {{ $order['id'] }}</span>
                                     </th>
-                                    <th colspan="3"> {{ $order['shop']['name'] }} </th>
+                                    <th colspan="3" width="30%"> {{ $order['shop']['name'] }} </th>
                                     <th>
                                         <a href="javascript:"
                                            onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
@@ -78,7 +78,7 @@
                                 <tbody>
                                 @foreach($order['goods'] as $key => $goods)
                                     <tr>
-                                        <td>
+                                        <td width="50%">
                                             <img class="store-img" src="{{ $goods['image_url'] }}">
 
                                             <div class="product-panel">
@@ -88,9 +88,9 @@
                                             </div>
 
                                         </td>
-                                        <td><span class="red">￥{{ $goods['pivot']['price'] }}</span>
+                                        <td width="15%"><span class="red">￥{{ $goods['pivot']['price'] }}</span>
                                             / {{  cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
-                                        <td>{{ $goods['pivot']['num'] }}</td>
+                                        <td width="5%">{{ $goods['pivot']['num'] }}</td>
                                         @if(0 == $key)
                                             <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
                                                 <p>{{ $order['status_name'] }}</p>

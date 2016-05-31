@@ -103,20 +103,21 @@ class PayService
                     'bank_card_no' => $bankCardNo,
                     'trade_no' => $tradeNo,
                     'pay_status' => $payStatus,
-                    'amount' => $order->price - $fee,
+                    'amount' => bcsub($order->price, $fee, 2),
                     'target_fee' => $fee,
                     'trade_currency' => $tradeConf['trade_currency']['rmb'],
                     'callback_type' => 'json',
                     'hmac' => $hmac,
                 ];
 
+                // pos机支付和货到付款在线支付直接完成
                 if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
 
                     //pos机支付成功更新用户余额
                     $shopOwner = $order->shop->user;
-                    $shopOwner->balance += $order->price - $fee;
+                    $shopOwner->balance += bcsub($order->price, $fee, 2);
                     $shopOwner->save();
                     //通知卖家
                     $redisKey = 'push:seller:' . $shopOwner->id;

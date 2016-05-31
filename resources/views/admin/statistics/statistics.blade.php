@@ -27,7 +27,7 @@
                     <th>总计</th>
                 </tr>
                 <tr>
-                    <td>注册数</td>
+                    <td>注册数(不包含今天)</td>
                     <td>{{ array_get($statistics,'supplier_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'wholesaler_reg_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'retailer_reg_num' ,0) }}</td>
@@ -51,7 +51,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>登录数</td>
+                    <td>登录数(不包含今天)</td>
                     <td>{{ array_get($statistics,'supplier_login_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'wholesaler_login_num' ,0) }}</td>
                     <td>{{ array_get($statistics,'retailer_login_num' ,0) }}</td>

@@ -258,7 +258,7 @@ class OrderController extends Controller
                 ])->save()
             ) {
                 //更新systemTradeInfo完成状态
-                $order->systemTradeInfo->fill([
+                $tradeModel->fill([
                     'is_finished' => cons('trade.is_finished.yes'),
                     'finished_at' => Carbon::now()
                 ])->save();

@@ -166,7 +166,18 @@ class Order extends Model
     {
         $type = $this->attributes['pay_type'];
 
-        return cons()->valueLang('pay_type')[$type];
+        return cons()->valueLang('pay_type', $type);
+    }
+
+    /**
+     * 货到付款支付方式
+     *
+     * @return string
+     */
+    public function getPayWayLangAttribute(){
+        $payWay = $this->attributes['pay_way']; 
+
+        return cons()->valueLang('pay_way.cod', $payWay);
     }
 
     /**

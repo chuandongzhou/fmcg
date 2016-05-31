@@ -107,7 +107,7 @@
                                         class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                             </li>
                         @endif
-                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}</li>
+                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }} ( {{ $order->pay_way_lang }} )</li>
                         <li><span class="title-info-name">订单状态 : </span><span
                                     class="red">{{ $order['status_name'] }}</span></li>
                         <li><span class="title-info-name">订单备注 :</span>

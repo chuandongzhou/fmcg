@@ -55,15 +55,15 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>
+                                    <th width="50%">
                                         <label>
                                             <input type="checkbox" class="order_id children" name="order_id[]"
                                                    value="{{ $order['id'] }}"> {{ $order['created_at'] }}
                                         </label>
                                         <span class="order-number">订单号 : {{ $order['id'] }}</span>
                                     </th>
-                                    <th>{{ $order['user']['shop']['name'] }}</th>
-                                    <th></th>
+                                    <th width="15%">{{ $order['user']['shop']['name'] }}</th>
+                                    <th width="10%"></th>
                                     <th>
                                         <a href="javascript:"
                                            onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
@@ -78,7 +78,8 @@
                                            data-phone= {{ isset($order->shippingAddress) ? $order->shippingAddress->phone : '' }}
                                         >
                                             <i class="fa fa-map-marker"></i> 查看收货地址
-                                        </a></th>
+                                        </a>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>

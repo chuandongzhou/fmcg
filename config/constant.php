@@ -61,7 +61,7 @@ return [
     //首页栏目
     'home_column' => [
         'goods' => [
-            'count' => 8, //显示商品条数
+            'count' => 10, //显示商品条数
             'cache' => [
                 'name_cate' => 'home_column:cate:',
                 'name_admin' => 'home_column:admin:',

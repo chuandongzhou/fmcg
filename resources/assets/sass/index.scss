@@ -884,10 +884,10 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin-left: 0;
     .carousel-inner {
       .item {
-        max-height: 400px;
+        max-height: 453px;
         img {
           width: 100%;
-          max-height: 400px;
+          max-height: 453px;
         }
       }
     }
@@ -914,7 +914,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding-bottom: -10px !important;
   }
   .commodity-index-img {
-    width: 25% !important;
+    width: 20% !important;
     padding: 0 3px !important;
     margin-bottom: 5px !important;
     .prompt {
@@ -2793,7 +2793,7 @@ table {
       .item {
         padding: 0;
         img {
-          @include size(100%, 400px);
+          @include size(100%, 453px);
         }
       }
     }
@@ -2836,7 +2836,7 @@ table {
         }
       }
     }
-    .carousel-indicators {
+    /*.carousel-indicators {
       position: relative !important;
       height: 40px;
       bottom: 0 !important;
@@ -2862,7 +2862,7 @@ table {
           color: $body-bg;
         }
       }
-    }
+    }*/
   }
 }
 

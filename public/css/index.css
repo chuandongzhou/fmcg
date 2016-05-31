@@ -660,10 +660,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 .list-penal .banner-slide {
   margin-left: 0; }
   .list-penal .banner-slide .carousel-inner .item {
-    max-height: 400px; }
+    max-height: 453px; }
     .list-penal .banner-slide .carousel-inner .item img {
       width: 100%;
-      max-height: 400px; }
+      max-height: 453px; }
 
 .list-penal .commodity-panel {
   margin-top: 10px; }
@@ -685,7 +685,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding-bottom: -10px !important; }
 
 .list-penal .commodity-index-img {
-  width: 25% !important;
+  width: 20% !important;
   padding: 0 3px !important;
   margin-bottom: 5px !important; }
   .list-penal .commodity-index-img .prompt {
@@ -2042,7 +2042,7 @@ table .product-panel {
     padding: 0; }
     .banner-wrap .dealer-index-banner .carousel-inner .item img {
       width: 100%;
-      height: 400px; }
+      height: 453px; }
   .banner-wrap .upcoming-events {
     height: 401px;
     border: 1px solid #d2d2d2;
@@ -2057,43 +2057,46 @@ table .product-panel {
       .banner-wrap .upcoming-events p .content-title:focus {
         outline: none !important; }
 
-.dealer-index .list-penal .title {
-  margin: 15px 0 5px 0; }
-  .dealer-index .list-penal .title h3 {
-    padding: 8px 2px;
-    font-size: 15px;
-    font-weight: bold;
-    color: #4cb9fe;
-    border-bottom: 1px solid #4cb9fe; }
-    .dealer-index .list-penal .title h3 a {
-      font-size: 13px;
-      display: inline-block;
-      margin-left: 10px; }
-
-.dealer-index .list-penal .carousel-indicators {
-  position: relative !important;
-  height: 40px;
-  bottom: 0 !important;
-  margin-left: inherit !important;
-  width: 100% !important;
-  left: inherit !important;
-  background-color: #49adec; }
-  .dealer-index .list-penal .carousel-indicators li {
-    color: #fff;
-    display: inline-block;
-    float: left;
-    height: 40px !important;
-    margin: 0 !important;
-    text-indent: 0 !important;
-    border-radius: 0 !important;
-    border: 0 !important;
-    line-height: 35px;
-    text-align: center;
-    background-color: #49adec; }
-    .dealer-index .list-penal .carousel-indicators li.active {
-      background-color: #4cb9fe !important;
-      height: inherit !important;
-      color: #fff; }
+.dealer-index .list-penal {
+  /*.carousel-indicators {
+      position: relative !important;
+      height: 40px;
+      bottom: 0 !important;
+      margin-left: inherit !important;
+      width: 100% !important;
+      left: inherit !important;
+      background-color: $blue-lighter;
+      li {
+        color: $body-bg;
+        display: inline-block;
+        float: left;
+        height: 40px !important;
+        margin: 0 !important;
+        text-indent: 0 !important;
+        border-radius: 0 !important;
+        border: 0 !important;
+        line-height: 35px;
+        text-align: center;
+        background-color: $blue-lighter;
+        &.active {
+          background-color: $brand-primary !important;
+          height: inherit !important;
+          color: $body-bg;
+        }
+      }
+    }*/ }
+  .dealer-index .list-penal .title {
+    margin: 15px 0 5px 0; }
+    .dealer-index .list-penal .title h3 {
+      padding: 8px 2px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #4cb9fe;
+      border-bottom: 1px solid #4cb9fe; }
+      .dealer-index .list-penal .title h3 a {
+        font-size: 13px;
+        display: inline-block;
+        margin-left: 10px; }
 
 /*======================================index end======================================*/
 /*======================================search begin======================================*/
