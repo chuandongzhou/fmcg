@@ -32,9 +32,6 @@
             <div class="col-sm-12 ">
                 <div class="tab-title clearfix">
                     <p class="sequence">
-                        <a class="{{ $sort == 'all' || !$sort  ? 'active' : '' }}"
-                           href="{{ url('shop/' . $shop->id) }}">全部</a>
-
                         @foreach(cons('sort.goods') as $key=>$sortName)
                             <a class="{{ $sort == $key ? 'active' : '' }}"
                                href="{{ url('shop/'.$shop->id . '/'.$key) }}">

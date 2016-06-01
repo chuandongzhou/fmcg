@@ -113,8 +113,8 @@
             <div class="col-sm-12">
                 <div class="tab-title clearfix">
                     <p class="pull-left sequence">
-                        <a href="{{ url('shop/' . $shop->id . '/search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"
-                           class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>
+                        {{--<a href="{{ url('shop/' . $shop->id . '/search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"--}}
+                           {{--class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>--}}
                         <a href="{{ url('shop/' . $shop->id . '/search?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                            class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
                         <a href="{{ url('shop/' . $shop->id . '/search?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"

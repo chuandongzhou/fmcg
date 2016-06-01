@@ -15,7 +15,7 @@
                                 uri = '{{ url("order-sell") }}';
                                 break;
                             default :
-                                uri = '{{ url("personal/withdraw") }}';
+                                uri = '{{ url("personal/finance/withdraw") }}';
                                 break;
                         }
                         div.attr('href', uri);

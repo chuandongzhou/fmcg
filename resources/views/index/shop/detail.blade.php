@@ -6,7 +6,7 @@
     @include('index.shop-search')
     <div class="container wholesalers-index goods-detail">
         <div class="row margin-clear">
-            <div class="col-sm-8 left-store-logo store-info-logo">
+            <div class="col-sm-8  store-info-logo">
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($shop->images as $key=>$image)

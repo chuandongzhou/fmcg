@@ -55,7 +55,11 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <a class="list-name" href="{{ url('shop/' . $shop->id . '/search') }}">全部商品</a>
+                    </li>
                     <li class="menu-list" id="menu-list">
+
                         <a href="#" class="menu-wrap-title list-name">商品分类</a>
 
                         <div class="menu-list-wrap">

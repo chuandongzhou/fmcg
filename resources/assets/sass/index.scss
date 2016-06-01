@@ -820,7 +820,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   min-height: 35px !important;
   @include min-width;
   .container {
-    padding: 0;
     .collapse {
       padding: 0;
     }
@@ -1065,7 +1064,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0;
         img {
           width: 100%;
-          max-height: 400px;
+          max-height: 200px;
           border: 1px solid $gray-lighter;
         }
       }
@@ -2793,7 +2792,7 @@ table {
       .item {
         padding: 0;
         img {
-          @include size(100%, 453px);
+          @include size(100%, 400px);
         }
       }
     }

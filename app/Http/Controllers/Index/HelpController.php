@@ -15,10 +15,7 @@ class HelpController extends Controller
     public function index(Request $request)
     {
         $id = $request->input('id', 1);
-
-        if ($id < 1 || $id > 14) {
-            $id = 1;
-        }
+        $id = ($id < 1 || $id > 14) ? 1 : $id;
 
         return view('index.help.help-' . str_pad($id, 2, "0", STR_PAD_LEFT), ['id' => $id]);
     }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Services\GoodsService;
-use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
