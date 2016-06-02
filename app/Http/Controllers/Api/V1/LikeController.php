@@ -65,7 +65,7 @@ class LikeController extends Controller
         }
         $shops = $shops->paginate();
         $shops->each(function($shop){
-            $shop->setAppends(['image_url']);
+            $shop->setAppends(['logo_url']);
         });
         return $this->success(['shops' => $shops->toArray()]);
     }

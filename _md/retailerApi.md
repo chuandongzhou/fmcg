@@ -1276,7 +1276,7 @@
     id                  int         店铺id
     name                string      店铺名
     min_money           decimal     最低配送额
-    image_url           string      店铺图片
+    logo_url           string       店铺图片
     orders              int         店铺销量
 
 `失败返回`

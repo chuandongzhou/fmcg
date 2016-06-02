@@ -323,7 +323,7 @@
                 </div>
             @endif
 
-            <div class="col-sm-10  col-xs-9">
+            <div class="col-sm-10  col-xs-9 padding-clear">
                 @yield('right')
             </div>
         </div>

@@ -2,6 +2,8 @@
 
 @section('subtitle', '我的商品')
 
+@include('includes.jquery-lazeload')
+
 @section('right')
     <div class="row controls">
         <div class="col-sm-12 sort">
@@ -188,7 +190,7 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
-                                    <img class="store-img" src="{{ $item->image_url }}">
+                                    <img class="store-img lazy" data-original="{{ $item->image_url }}">
                                     <a class="product-name ellipsis"
                                        href="{{ url('my-goods/' . $item->id) }}"> {{ $item->name }}</a>
                                 </td>

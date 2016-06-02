@@ -196,12 +196,14 @@
 
                         <div class="check-item col-sm-10">
                             <label class="control-label">
-                                <input name="is_back" value="1" {{ $goods->is_back ? 'checked' : '' }} type="checkbox">
+                                <input name="is_change" value="1" {{ $goods->is_change ? 'checked' : '' }} type="checkbox">
                                 可换货
                             </label>
-                            <label class="control-label"><input name="is_back" value="1"
-                                                                {{ $goods->is_change ? 'checked' : '' }} type="checkbox">
-                                可退货</label>
+                            <label class="control-label">
+                                <input name="is_back" value="1"
+                                       {{ $goods->is_back ? 'checked' : '' }} type="checkbox">
+                                可退货
+                            </label>
                             <label class="control-label"><input name="is_promotion" value="1"
                                                                 {{ $goods->is_promotion ? 'checked' : '' }} type="checkbox">
                                 促销</label>
