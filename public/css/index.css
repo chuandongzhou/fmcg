@@ -695,9 +695,12 @@ ul, li, p, a, h1, h2, h3, h4 {
   .list-penal .commodity-index-img .new-listing {
     background-position: 0 -205px !important; }
 
+.list-penal .commodity-border {
+  border: 1px solid #cae6f7; }
+
 .list-penal .content-panel {
   padding: 2px 5px;
-  background-color: #f2f2f2; }
+  /*background-color: $gray-plain;*/ }
   .list-penal .content-panel a {
     color: #555555; }
   .list-penal .content-panel .commodity-name {

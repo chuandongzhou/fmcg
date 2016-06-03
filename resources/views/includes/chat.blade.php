@@ -50,7 +50,15 @@
                 pluginUrl: '',
                 onLoginSuccess: function () {
                     getRecentContact();
+                },
+                onAudioReceived: function(content){
+                    // content为图片的地址
+                    // 返回一个要显示语音的html字符串
+                    // 点击播放等操作请自己实现
+                    return '<span class="glyphicon glyphicon-volume-up"></span> 暂不支持播放，请下载最新版app';
                 }
+
+
             });
             //获取最近联系人
             var getRecentContact = function () {

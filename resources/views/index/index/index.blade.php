@@ -131,15 +131,16 @@
                                     @foreach($column->goods as $goods)
                                         @if ($goods->price > 0)
                                             <div class="commodity commodity-index-img">
-                                                <div class="img-wrap">
-                                                    <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
-                                                        <img class="commodity-img lazy"
-                                                             data-original="{{ $goods->image_url }}"/>
+                                                <div class="commodity-border">
+                                                    <div class="img-wrap">
+                                                        <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
+                                                            <img class="commodity-img lazy"
+                                                                 data-original="{{ $goods->image_url }}"/>
 
-                                                        <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
-                                                    </a>
-                                                </div>
-                                                <div class="content-panel">
+                                                            <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="content-panel">
                                                     <p class="commodity-name">
                                                         <a href="{{ url('goods/' . $goods->id) }}"
                                                            target="_blank">{{ $goods->name }}</a></p>
@@ -148,6 +149,7 @@
                                                         <span class="money">￥{{ $goods->price . '/' . $goods->pieces }}</span>
                                                         <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
                                                     </p>
+                                                </div>
                                                 </div>
                                             </div>
                                         @endif

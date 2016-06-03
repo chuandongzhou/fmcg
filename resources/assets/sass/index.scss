@@ -928,9 +928,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-position: 0 -205px !important;
     }
   }
+  .commodity-border{
+    border:1px solid $blue-light;
+  }
   .content-panel {
     padding: 2px 5px;
-    background-color: $gray-plain;
+    /*background-color: $gray-plain;*/
     a {
       color: $gray;
     }
