@@ -14,6 +14,13 @@ use App\Models\ShippingAddressSnapshot;
  */
 class ShippingAddressService
 {
+    /**
+     * 复制收货地址至快照
+     *
+     * @param $shippingAddressId
+     * @return bool|mixed
+     * @throws \Exception
+     */
     public function copyToSnapshot($shippingAddressId)
     {
         if (!$shippingAddressId) {
@@ -54,6 +61,20 @@ class ShippingAddressService
         }
         return false;
 
+    }
+
+    /**
+     * 验证收货地址
+     *
+     * @param $shippingAddressId
+     * @param null $userId
+     * @return mixed
+     */
+    public function validate($shippingAddressId, $userId = null)
+    {
+        $userId = is_null($userId) ? auth()->id() : $userId;
+
+        return ShippingAddress::where(['id' => $shippingAddressId, 'user_id' => $userId])->pluck('id');
     }
 
 }

@@ -104,8 +104,8 @@
                 </tr>
             @endforeach
         @else
-            <tr>
-                <td>没有符合条件的信息</td>
+            <tr align="center">
+                <td colspan="11">没有符合条件的信息</td>
             </tr>
         @endif
         </tbody>

@@ -117,7 +117,12 @@ class OrderService
                 $payWayConf = cons('pay_way.cod');
                 $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
             }
-            //TODO: 需要验证收货地址是否合法
+            $shippingAddressService = new ShippingAddressService();
+
+            //验证收货地址是否合法
+            if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'])) {
+                return false;
+            }
             $shippingAddressId = $data['shipping_address_id'];
 
             $pid = $shops->count() > 1 ? Order::max('pid') + 1 : 0;
@@ -133,7 +138,7 @@ class OrderService
                     'price' => $shop->sum_price,
                     'pay_type' => $payType,
                     'pay_way' => $payWay,
-                    'shipping_address_id' => (new ShippingAddressService)->copyToSnapshot($shippingAddressId),
+                    'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddressId),
                     'remark' => $remark
                 ];
                 if (!$orderData['shipping_address_id']) {
