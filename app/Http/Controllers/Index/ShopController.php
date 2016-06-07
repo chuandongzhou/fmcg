@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Advert;
 use App\Models\Shop;
 use App\Services\AddressService;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
-use Carbon\Carbon;
+use App\Services\ShopService;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
@@ -70,12 +69,9 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
-        $shop->load('images');
 
-        if ($shop->images->isEmpty()) {
-            $advert = $this->_getAdvertFirstImage();
-            $shop->images[0] = $advert->image;
-        }
+        $shop->adverts = $shop->adverts()->OfTime()->get();
+
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
         $goods = $shop->goods()->active()->with('images.image');
@@ -104,7 +100,7 @@ class ShopController extends Controller
         }
 
         if ($shop->images->isEmpty()) {
-            $advert = $this->_getAdvertFirstImage();
+            $advert = ShopService::getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
 
@@ -170,15 +166,4 @@ class ShopController extends Controller
         return $data;
     }
 
-    /**
-     * 商店图片为空时获取首页广告的第一张图
-     *
-     * @return mixed
-     */
-    private function _getAdvertFirstImage()
-    {
-        $nowTime = Carbon::now();
-        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
-        return $advert->image ? $advert : new Advert;
-    }
 }

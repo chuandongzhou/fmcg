@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class Advert extends Model
 {
     /**
@@ -18,6 +20,8 @@ class Advert extends Model
      * @var array
      */
     protected $fillable = [
+        'shop_id',
+        'goods_id',
         'province_id',
         'city_id',
         'category_id',
@@ -29,7 +33,9 @@ class Advert extends Model
         'image'
     ];
 
-    public $hidden = ['created_at', 'updated_at'];
+    public $hidden = ['image', 'type', 'start_at', 'end_at', 'created_at', 'updated_at'];
+
+    public $appends = ['image_url'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -48,8 +54,9 @@ class Advert extends Model
         return $this->morphOne('App\Models\File', 'fileable');
     }
 
-    public function scopeOfTime($query, $nowTime, $limit = 4)
+    public function scopeOfTime($query, $nowTime = null, $limit = 4)
     {
+        $nowTime = $nowTime ?: Carbon::now();
         return $query->where('start_at', '<', $nowTime)->Where(function ($query) use ($nowTime) {
             $query->where('end_at', '>', $nowTime)->orWhere('end_at', null);
         })->orderBy('id', 'asc')->take($limit);
@@ -83,6 +90,16 @@ class Advert extends Model
     }
 
     /**
+     * 设置链接地址
+     *
+     * @param $goodsId
+     */
+    public function setGoodsIdAttribute($goodsId)
+    {
+        $this->attributes['url'] = url('goods/' . $goodsId);
+    }
+
+    /**
      * 设置结束时间
      *
      * @param $endAt
@@ -106,6 +123,19 @@ class Advert extends Model
         $image = $this->image;
 
         return $image ? upload_file_url($image->path) : '';
+    }
+
+    /**
+     * 获取商品id
+     *
+     * @return int
+     */
+    public function getGoodsIdAttribute()
+    {
+        $url = $this->url;
+        preg_match_all('/goods\/(\d+)/', $url, $matched);
+
+        return empty($matched[1]) ? 0 : $matched[1][0];
     }
 
     /**

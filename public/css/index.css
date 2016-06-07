@@ -616,23 +616,25 @@ ul, li, p, a, h1, h2, h3, h4 {
 .wholesalers-header {
   min-height: 35px !important;
   min-width: 1200px; }
-  .wholesalers-header .container .collapse {
+  .wholesalers-header .container {
     padding: 0; }
-  .wholesalers-header .container .active a.list-name {
-    color: #fff;
-    background-color: #4cb9fe; }
-  .wholesalers-header .container .navbar-nav li {
-    padding: 0; }
-    .wholesalers-header .container .navbar-nav li .list-name {
-      width: 100%;
-      padding: 0 15px;
-      height: 35px;
-      line-height: 35px; }
-  .wholesalers-header .container .collect .btn {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: #fff;
-    vertical-align: middle; }
+    .wholesalers-header .container .collapse {
+      padding: 0; }
+    .wholesalers-header .container .active a.list-name {
+      color: #fff;
+      background-color: #4cb9fe; }
+    .wholesalers-header .container .navbar-nav li {
+      padding: 0; }
+      .wholesalers-header .container .navbar-nav li .list-name {
+        width: 100%;
+        padding: 0 15px;
+        height: 35px;
+        line-height: 35px; }
+    .wholesalers-header .container .collect .btn {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      color: #fff;
+      vertical-align: middle; }
   .wholesalers-header .menu-list {
     min-width: 195px;
     text-align: center; }
@@ -699,8 +701,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   border: 1px solid #cae6f7; }
 
 .list-penal .content-panel {
-  padding: 2px 5px;
-  /*background-color: $gray-plain;*/ }
+  padding: 2px 5px; }
   .list-penal .content-panel a {
     color: #555555; }
   .list-penal .content-panel .commodity-name {
@@ -769,7 +770,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .list-penal .img-wrap {
   position: relative;
-  border: 1px solid #f2f2f2; }
+  border: 1px solid #f2f2f2;
+  /*&:hover{
+      border: 1px solid $brand-primary;
+    }*/ }
   .list-penal .img-wrap .prompt {
     position: absolute;
     display: inline-block;
@@ -1056,7 +1060,6 @@ ul, li, p, a, h1, h2, h3, h4 {
       color: #000;
       display: inline-block;
       width: 100%;
-      padding: 10px 0;
       text-decoration: none;
       font-size: 12px; }
       .public-personal .menu a:hover {
@@ -1067,19 +1070,35 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-color: #f2f2f2; }
     .public-personal .menu .name a {
       font-size: 15px;
-      font-weight: 600; }
+      font-weight: 600;
+      padding: 10px 0; }
       .public-personal .menu .name a:hover {
         color: #4cb9fe; }
     .public-personal .menu .dealer-menu-list {
       text-align: center; }
       .public-personal .menu .dealer-menu-list .list-item {
         color: #000;
-        font-size: inherit; }
+        font-size: inherit;
+        padding: 10px 0; }
     .public-personal .menu .menu-list {
       border: 1px solid #b4b4b4;
       margin: -1px auto auto auto; }
-      .public-personal .menu .menu-list .menu-wrap {
-        padding-left: 20px; }
+      .public-personal .menu .menu-list .menu-wrap:before,
+      .public-personal .menu .menu-list .menu-wrap:after {
+        content: " ";
+        display: table; }
+      .public-personal .menu .menu-list .menu-wrap:after {
+        clear: both; }
+      .public-personal .menu .menu-list .menu-wrap li {
+        display: inline-block;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        padding: 5px 0;
+        width: 50%;
+        float: left; }
+        .public-personal .menu .menu-list .menu-wrap li:nth-child(odd) a {
+          border-right: 1px solid #b4b4b4; }
         .public-personal .menu .menu-list .menu-wrap li a:hover {
           background-color: inherit;
           color: #777777; }
@@ -1378,7 +1397,7 @@ table .product-panel {
   table-layout: fixed; }
   table .product-panel .ellipsis {
     display: inline-block;
-    max-width: 350px;
+    max-width: 340px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -2379,9 +2398,9 @@ table .product-panel {
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 1030;
+  margin: auto;
   width: 1200px;
-  margin: auto; }
+  z-index: 1030; }
 
 .clearing {
   background-color: #d2d2d2;
@@ -2390,7 +2409,7 @@ table .product-panel {
     margin: 0 10px;
     font-size: 22px;
     vertical-align: middle; }
-  .clearing .btn {
+  .clearing .submit {
     padding: 15px 40px; }
   .clearing .left-operation {
     height: 50px;

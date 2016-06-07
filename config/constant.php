@@ -86,7 +86,8 @@ return [
             'index' => 1, // 首页(外侧)广告
             'user' => 2, // 用户(内则)广告
             'app' => 3, // app广告(启动页)
-            'category' => 4 //商品分类广告
+            'category' => 4, //商品分类广告
+            'shop' => 5 //店铺首页广告
         ],
         'cache' => [
             'index' => [

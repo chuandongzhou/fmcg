@@ -66,7 +66,7 @@ abstract class AdvertController extends Controller
         $attributes = $request->all();
         $attributes['type'] = cons('advert.type.' . $this->type);
 
-        if (Advert::create(array_filter($attributes))->exists) {
+        if (Advert::create($attributes)->exists) {
             return $this->success('添加广告成功');
         }
 
@@ -116,7 +116,7 @@ abstract class AdvertController extends Controller
         $attributes = $request->all();
         unset($attributes['type']);
 
-        if ($advert->fill(array_filter($attributes))->save()) {
+        if ($advert->fill($attributes)->save()) {
             return $this->success('修改成功');
         }
 

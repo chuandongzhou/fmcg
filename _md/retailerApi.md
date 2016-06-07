@@ -700,6 +700,21 @@
         child           array               分类子级（格式同categories）
 
 
+#### 2.4.8 店铺广告[get] ({shop_id}/adverts)
+`请求参数：`
+
+`成功返回：`
+
+   adverts       array           店铺广告列表
+
+   adverts       子集介绍
+
+        id              int                 广告id
+        name            string              广告名
+        url             string              广告链接地址
+        goods_id        int                 广告所属商品id
+
+
 ### 2.5 分类 categories
 #### 2.5.1 获取所有分类[post] (all)
 `请求参数：`

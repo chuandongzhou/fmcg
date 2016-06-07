@@ -7,20 +7,22 @@
 @section('container')
     @include('index.shop-search')
     <div class="container wholesalers-index index contents">
-        @if($shop->images[0]->url)
+        @if(!$shop->adverts->isEmpty())
             <div class="row">
                 <div class="col-sm-12 left-store-logo">
                     <div id="myCarousel" class="carousel slide banner banner-slide">
                         <ol class="carousel-indicators">
-                            @for($index = 0; $index < count($shop->images); $index++)
+                            @for($index = 0; $index < $shop->adverts->count(); $index++)
                                 <li data-target="#myCarousel" data-slide-to="{{ $index }}"
                                     class="{{ $index == 0 ? 'active' : '' }}">
                             @endfor
                         </ol>
                         <div class="carousel-inner banner">
-                            @foreach($shop->images as $key => $image)
+                            @foreach($shop->adverts as $key => $image)
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                    <img src="{{ $image->url }}" alt="{{ $image->name }}">
+                                    <a href="{{ $image->url }}">
+                                        <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
+                                    </a>
                                 </div>
                             @endforeach
                         </div>

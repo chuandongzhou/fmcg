@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Advert;
 use App\Models\Shop;
 use App\Models\ShopColumn;
 use Illuminate\Support\Facades\Cache;
@@ -93,4 +94,14 @@ class ShopService
         return asset($relatePath . $path);
     }
 
+    /**
+     * 商店图片为空时获取首页广告的第一张图
+     *
+     * @return mixed
+     */
+    static function getAdvertFirstImage()
+    {
+        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->first();
+        return $advert->image ? $advert : new Advert;
+    }
 }

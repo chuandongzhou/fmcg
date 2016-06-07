@@ -83,7 +83,7 @@ class ShopController extends Controller
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
         if ($shop->images->isEmpty()) {
-            $advert = $this->_getAdvertFirstImage();
+            $advert = ShopService::getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
         $shop->is_like = $isLike ? true : false;
@@ -157,15 +157,17 @@ class ShopController extends Controller
     }
 
     /**
-     * 商店图片为空时获取首页广告的第一张图
+     * 获取店铺广告
      *
-     * @return mixed
+     * @param $shop
+     * @return \WeiHeng\Responses\Apiv1Response
      */
-    private function _getAdvertFirstImage()
+    public function adverts($shop)
     {
-        $nowTime = Carbon::now();
-        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime($nowTime)->first();
-        return $advert;
+        $adverts = $shop->adverts()->OfTime()->get()->each(function ($advert) {
+            $advert->setAppends(['goods_id']);
+        });
+        return $this->success(['adverts' => $adverts]);
     }
 
 }

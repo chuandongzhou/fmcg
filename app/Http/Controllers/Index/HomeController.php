@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Services\GoodsService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
@@ -16,7 +15,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $nowTime = Carbon::now();
         //广告
         $indexAdvertConf = cons('advert.cache.index');
         $adverts = [];
@@ -24,14 +22,11 @@ class HomeController extends Controller
             $adverts = Cache::get($indexAdvertConf['name']);
         } else {
             $adverts = Advert::with('image')->where('type',
-                cons('advert.type.index'))->OfTime($nowTime)->get()->each(function ($advert) {
-                $advert->setAppends(['image_url'])->addHidden(['image', 'type', 'start_at', 'end_at']);
-            });
+                cons('advert.type.index'))->OfTime()->get();
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
         return view('index.index.index', [
             'goodsColumns' => GoodsService::getNewGoodsColumn(),
-//            'shopColumns' => ShopService::getShopColumn(),
             'adverts' => $adverts,
         ]);
     }
@@ -48,6 +43,6 @@ class HomeController extends Controller
 
     public function test()
     {
-
+        
     }
 }

@@ -14,7 +14,7 @@ use App\Models\Goods;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
-class GoodsController extends Controller
+class   GoodsController extends Controller
 {
     /**
      * 获取热门商品列表

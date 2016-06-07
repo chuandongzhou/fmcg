@@ -43,6 +43,24 @@ class Shop extends Model
     protected $hidden = ['images', 'logo', 'created_at', 'updated_at'];
 
     /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            $model->user()->delete();
+            $model->deliveryMans()->delete();
+            $model->goods()->delete();
+            $model->deliveryArea()->delete();
+            $model->shopAddress()->delete();
+            $model->advert()->delete();
+        });
+    }
+
+    /**
      * 用户表
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -163,6 +181,17 @@ class Shop extends Model
     public function orders()
     {
         return $this->hasMany('App\Models\Order');
+    }
+
+
+    /**
+     * 前面广告
+     *
+     * @return mixed
+     */
+    public function adverts()
+    {
+        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.shop'));
     }
 
     /**

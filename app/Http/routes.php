@@ -66,11 +66,10 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->get('delivery', 'DeliveryController@historyDelivery');
+        $router->controller('model', 'ModelController');  //模版管理
     });
 
     $router->get('help', 'HelpController@index'); // 帮助中心
-
-
 });
 
 
@@ -161,6 +160,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('shops', 'ShopController@shops');                        //热门店铺
             $router->get('{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
             $router->get('{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
+            $router->get('{shop}/adverts', 'ShopController@adverts')->where('shop', '[0-9]+');                  //店铺商品
             $router->get('{shop}/extend', 'ShopController@extend')->where('shop',
                 '[0-9]+');                   //店铺商品
             $router->get('get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
@@ -186,16 +186,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
-
             $router->resource('bank', 'UserBankController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
-
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
-
             $router->controller('finance', 'FinanceController');    //提现相关操作
+            $router->controller('model', 'ModelController');  //模版管理
 
         });
         $router->controller('cart', 'CartController');

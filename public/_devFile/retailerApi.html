@@ -1084,6 +1084,17 @@ address                 array               详细地址列表
     child           array               分类子级（格式同categories）
 </code></pre>
 
+<h4>2.4.8 店铺广告[get] ({shop_id}/adverts)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p>adverts array 店铺广告列表</p>
+<p>adverts 子集介绍</p>
+<pre><code>    id              int                 广告id
+    name            string              广告名
+    url             string              广告链接地址
+    goods_id        int                 广告所属商品id
+</code></pre>
+
 <h3>2.5 分类 categories</h3>
 <h4>2.5.1 获取所有分类[post] (all)</h4>
 <p><code>请求参数：</code></p>
@@ -1492,7 +1503,7 @@ order_refund 字段子集说明（有退款时返回）
 reason              string      退款原因
 created_at          timestamp   申请退款时间
 
-orderChangeRecode  字段子集说明
+orderChangeRecode 字段子集说明
 
 content             string      修改内容
 created_at          timestamp   修改时间
@@ -1591,7 +1602,7 @@ shops 字段说明
 id                  int         店铺id
 name                string      店铺名
 min_money           decimal     最低配送额
-logo_url            string      店铺图片
+logo_url           string       店铺图片
 orders              int         店铺销量
 </code></pre>
 
@@ -1832,11 +1843,11 @@ end_time            string      结束时间(默认今天的24点)
 <p><code>失败返回:</code></p>
 <h4>2.12.3 获取帐户余额[get] (balance)</h4>
 <p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
 <pre><code>balance             decimal         帐户余额
 protectedBalance    decimal         受保护的金额 （当天交易成功金额）
 </code></pre>
 
-<p><code>成功返回:</code></p>
 <p><code>失败返回:</code></p>
 <h4>2.12.4 提现申请[post] (add-withdraw)</h4>
 <p><code>请求参数:</code></p>

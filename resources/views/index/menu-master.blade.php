@@ -132,11 +132,11 @@
                         </li>
                         @if($user->type == cons('user.type.wholesaler'))
                             {{--进货中心--}}
-                            <li>
-                                <a class="list-item" href="{{ url('/') }}" target="_blank">
-                                    <i class="fa fa-shopping-cart"></i> 进货中心
-                                </a>
-                            </li>
+                            {{--<li>--}}
+                                {{--<a class="list-item" href="{{ url('/') }}" target="_blank">--}}
+                                    {{--<i class="fa fa-shopping-cart"></i> 进货中心--}}
+                                {{--</a>--}}
+                            {{--</li>--}}
                             {{--进货管理--}}
                             <li>
                                 <a href="javascript:void(0)" class="list-item">
@@ -231,6 +231,20 @@
                                     <a class="{{ path_active('personal/chat') }}"
                                        href="{{ url('personal/chat') }}">
                                         消息列表
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {{--模版管理--}}
+                        <li>
+                            <a href="javascript:void(0)" class="list-item">
+                                <i class="fa fa-commenting-o {!! path_active('personal/model/*') !!}"></i> 模版管理
+                            </a>
+                            <ul class="menu-wrap">
+                                <li>
+                                    <a class="{{ path_active('personal/model/*') }}"
+                                       href="{{ url('personal/model/advert') }}">
+                                        首页广告
                                     </a>
                                 </li>
                             </ul>
