@@ -102,31 +102,18 @@
                     <div class="col-xs-12 title"><h3>{{ $column->name }} <a
                                     href="{{ url('search?category_id=' . $column->level.$column->id) }}">进入>></a></h3>
                     </div>
-                    <div class="col-xs-12 padding-clear">
+                    <div class="col-xs-12">
                         <div class="row margin-clear">
-                            <div class="col-xs-3">
-                                <div id="myCarousel{{ $index }}" class="row carousel slide banner-slide">
-                                    @if(!$column->adverts->isEmpty())
-                                        <div class="carousel-inner">
-                                            @foreach($column->adverts as $key => $advert)
-                                                <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                                    <a href="{{ $advert->url }}" target="_blank">
-                                                        <img  src="{{ $advert->image_url }}"
-                                                             alt="{{ $advert->name }}">
-                                                    </a>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <ul class="carousel-indicators carousel-indicators-item">
-                                            @foreach($column->adverts as $key=>$image)
-                                                <li data-target="#myCarousel{{ $index }}" data-slide-to="{{ $key }}"
-                                                    class="{{ $key == 0 ? 'active' : '' }}"></li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
+                            <div class="col-xs-2 padding-clear">
+                                <ul class="secondary-menu">
+                                    @foreach($categories[$column->id]['child'] as $child)
+                                        <li>
+                                            <a href="{{ url('search?category_id=' . $child['level'].$child['id']) }}">{{ $child['name'] }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
-                            <div class="col-xs-9">
+                            <div class="col-xs-7 padding-clear">
                                 <div class="col-xs-12 commodity-panel padding-clear">
                                     @foreach($column->goods as $goods)
                                         @if ($goods->price > 0)
@@ -141,19 +128,41 @@
                                                         </a>
                                                     </div>
                                                     <div class="content-panel">
-                                                    <p class="commodity-name">
-                                                        <a href="{{ url('goods/' . $goods->id) }}"
-                                                           target="_blank">{{ $goods->name }}</a></p>
+                                                        <p class="commodity-name">
+                                                            <a href="{{ url('goods/' . $goods->id) }}"
+                                                               target="_blank">{{ $goods->name }}</a></p>
 
-                                                    <p class="sell-panel">
-                                                        <span class="money">￥{{ $goods->price . '/' . $goods->pieces }}</span>
-                                                        <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
-                                                    </p>
-                                                </div>
+                                                        <p class="sell-panel">
+                                                            <span class="money">￥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                                            <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endif
                                     @endforeach
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div id="myCarousel{{ $index }}" class="row carousel slide banner-slide">
+                                    @if(!$column->adverts->isEmpty())
+                                        <div class="carousel-inner">
+                                            @foreach($column->adverts as $key => $advert)
+                                                <div class="item {{ $key == 0 ? 'active' : '' }}">
+                                                    <a href="{{ $advert->url }}" target="_blank">
+                                                        <img src="{{ $advert->image_url }}"
+                                                             alt="{{ $advert->name }}">
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <ul class="carousel-indicators carousel-indicators-item">
+                                            @foreach($column->adverts as $key=>$image)
+                                                <li data-target="#myCarousel{{ $index }}" data-slide-to="{{ $key }}"
+                                                    class="{{ $key == 0 ? 'active' : '' }}"></li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -175,6 +175,12 @@ function menuFunc() {
     $('.dealer-menu-list .list-item').click(function () {
         $(this).siblings('.menu-wrap').slideToggle();
     })
+    $(".dealer-menu-list>li").each(function () {
+        var onlyOne = $(this).children(".menu-wrap").children("li");
+        if (onlyOne.length === 1) {
+            onlyOne.addClass("one-item");
+        }
+    })
 }
 
 /**
@@ -733,10 +739,10 @@ function changePriceByDetailPage() {
         $('input[name="price"]').val(price);
         $('input[name="num"]').val(num);
     });
-    $(".see-more").click(function(){
-        var self=$(this);
+    $(".see-more").click(function () {
+        var self = $(this);
         self.siblings().children(".list-update").addClass("in");
-        self.css("display","none");
+        self.css("display", "none");
     })
 
 }

@@ -67,10 +67,10 @@ class ShippingAddressController extends Controller
      */
     public function store(Requests\Api\v1\CreateShippingAddressRequest $request)
     {
-        $address = $request->except(['province_id', 'city_id', 'province_id', 'street_id', 'area_name', 'address']);
+        $address = $request->except(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
         $shippingAddress = auth()->user()->shippingAddress()->create($address);
         if ($shippingAddress->exists) {
-            $shipping =  $request->only(['province_id', 'city_id', 'province_id', 'street_id', 'area_name', 'address']);
+            $shipping =  $request->only(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
             $addressModel = $shippingAddress->address()->create($shipping);
             if ($addressModel->exists) {
                 return $this->success('添加成功');

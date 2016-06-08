@@ -400,6 +400,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         float: left;
         width: 25%;
         box-sizing: border-box;
+        -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         text-align: center;
         cursor: pointer; }
@@ -660,10 +661,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 .list-penal .banner-slide {
   margin-left: 0; }
   .list-penal .banner-slide .carousel-inner .item {
-    max-height: 453px; }
+    max-height: 447px;
+    min-height: 447px; }
     .list-penal .banner-slide .carousel-inner .item img {
       width: 100%;
-      max-height: 453px; }
+      max-height: 447px;
+      min-height: 447px; }
 
 .list-penal .commodity-panel {
   margin-top: 10px; }
@@ -672,6 +675,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .list-penal .commodity {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   width: 20%;
   float: left;
@@ -685,7 +689,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding-bottom: -10px !important; }
 
 .list-penal .commodity-index-img {
-  width: 20% !important;
+  width: 25% !important;
   padding: 0 3px !important;
   margin-bottom: 5px !important; }
   .list-penal .commodity-index-img .prompt {
@@ -1015,6 +1019,7 @@ ul, li, p, a, h1, h2, h3, h4 {
             padding: 5px;
             font-size: 12px;
             box-sizing: border-box;
+            -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -1097,8 +1102,13 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 5px 0;
         width: 50%;
         float: left; }
+        .public-personal .menu .menu-list .menu-wrap li.one-item {
+          width: 100% !important;
+          float: none !important; }
         .public-personal .menu .menu-list .menu-wrap li:nth-child(odd) a {
           border-right: 1px solid #b4b4b4; }
+        .public-personal .menu .menu-list .menu-wrap li:last-of-type a {
+          border: none; }
         .public-personal .menu .menu-list .menu-wrap li a:hover {
           background-color: inherit;
           color: #777777; }
@@ -1281,6 +1291,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .load-img-wrap .thumbnail, .goods-imgs .thumbnail {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   width: 19%;
   float: left;
@@ -2117,6 +2128,32 @@ table .product-panel {
         font-size: 13px;
         display: inline-block;
         margin-left: 10px; }
+
+.dealer-index .secondary-menu {
+  height: 450px;
+  overflow: hidden; }
+  .dealer-index .secondary-menu:before,
+  .dealer-index .secondary-menu:after {
+    content: " ";
+    display: table; }
+  .dealer-index .secondary-menu:after {
+    clear: both; }
+  .dealer-index .secondary-menu li {
+    width: 50%;
+    float: left;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; }
+    .dealer-index .secondary-menu li a {
+      display: inline-block;
+      width: 100%;
+      padding: 10px 3px;
+      color: #555555;
+      font-size: 13px; }
+      .dealer-index .secondary-menu li a:hover {
+        background-color: #e0e0e0;
+        text-decoration: none; }
 
 /*======================================index end======================================*/
 /*======================================search begin======================================*/

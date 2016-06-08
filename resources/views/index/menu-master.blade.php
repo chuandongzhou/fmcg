@@ -73,7 +73,7 @@
                                     <li>
                                         <a class="{{ path_active('personal/delivery') }}"
                                            href="{{ url('personal/delivery') }}">
-                                           配送历史
+                                            配送历史
                                         </a>
                                     </li>
                                 @endif
@@ -108,7 +108,8 @@
                         {{--商品管理--}}
                         <li>
                             <a href="javascript:void(0)" class="list-item">
-                                <i class="fa fa-shopping-basket {!! path_active(['my-goods','my-goods/*']) !!}"></i> 商品管理
+                                <i class="fa fa-shopping-basket {!! path_active(['my-goods','my-goods/*']) !!}"></i>
+                                商品管理
                             </a>
                             <ul class="menu-wrap">
                                 <li>
@@ -133,9 +134,9 @@
                         @if($user->type == cons('user.type.wholesaler'))
                             {{--进货中心--}}
                             {{--<li>--}}
-                                {{--<a class="list-item" href="{{ url('/') }}" target="_blank">--}}
-                                    {{--<i class="fa fa-shopping-cart"></i> 进货中心--}}
-                                {{--</a>--}}
+                            {{--<a class="list-item" href="{{ url('/') }}" target="_blank">--}}
+                            {{--<i class="fa fa-shopping-cart"></i> 进货中心--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--进货管理--}}
                             <li>
