@@ -75,13 +75,6 @@
                     <td>{{ $order['created_at'] }}</td>
                     <td>{{ $order->user->shop->name }}</td>
                 </tr>
-                @if((int)$order['paid_at'])
-                    <tr>
-                        <td>付款</td>
-                        <td>{{ $order['paid_at'] }}</td>
-                        <td>{{ $order->user->shop->name }}</td>
-                    </tr>
-                @endif
                 @if((int)$order['send_at'])
                     <tr>
                         <td>
@@ -89,6 +82,13 @@
                         </td>
                         <td>{{ $order['send_at'] }}</td>
                         <td>{{ $order->shop->name }}</td>
+                    </tr>
+                @endif
+                @if((int)$order['paid_at'])
+                    <tr>
+                        <td>付款</td>
+                        <td>{{ $order['paid_at'] }}</td>
+                        <td>{{ $order->user->shop->name }}</td>
                     </tr>
                 @endif
                 @if((int)$order['finished_at'])

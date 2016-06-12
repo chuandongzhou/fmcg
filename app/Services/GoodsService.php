@@ -195,23 +195,26 @@ class GoodsService
             $goodsColumns = Cache::get($cacheKey);
         } else {
             //商品
-            $goodsColumns = Category::active()->where('pid', 0)->with('adverts.image')->get([
-                'id',
-                'level',
-                'pid',
-                'name'
-            ])->each(function ($category) use ($data) {
-                $category->setAppends([]);
-                $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
-                    if (is_null($advert['province_id'])) {
-                        return true;
+            $goodsColumns = Category::active()
+                ->where('level', 1)
+                ->with('adverts.image')
+                ->get(['id', 'level', 'pid', 'name'])
+                ->each(function ($category) use ($data) {
+                    $category->setAppends([]);
+                    if ($category->level == 1) {
+
+                        $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
+                            if (is_null($advert['province_id'])) {
+                                return true;
+                            }
+                            if ($data['province_id'] && $data['city_id']) {
+                                return $advert['province_id'] == $data['province_id'] && $advert['city_id'] == $data['city_id'];
+                            }
+                            return $advert['province_id'] == $data['province_id'];
+                        })->take(5);
                     }
-                    if ($data['province_id'] && $data['city_id']) {
-                        return $advert['province_id'] == $data['province_id'] && $advert['city_id'] == $data['city_id'];
-                    }
-                    return $advert['province_id'] == $data['province_id'];
-                })->take(5);
-            });
+                });
+
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
 
             $goodsFields = [

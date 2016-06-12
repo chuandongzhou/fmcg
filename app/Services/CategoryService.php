@@ -52,7 +52,7 @@ class CategoryService
         foreach ($cate as $v) {
             if ($v['pid'] == $pid) {
                 $v[$name] = self::unlimitForLayer($cate, $v['id'], $name);
-                $arr[] = $v;
+                $arr[$v['id']] = $v;
             }
         }
 

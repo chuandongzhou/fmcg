@@ -541,8 +541,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .tabs-item {
         float: left;
         width: 25%;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
         text-align: center;
         cursor: pointer;
         &:hover, &:focus {
@@ -890,10 +891,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin-left: 0;
     .carousel-inner {
       .item {
-        max-height: 453px;
+        max-height: 447px;
+        min-height: 447px;
         img {
           width: 100%;
-          max-height: 453px;
+          max-height: 447px;
+          min-height: 447px;
         }
       }
     }
@@ -905,8 +908,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .commodity {
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
     width: 20%;
     float: left;
     padding: 0 15px;
@@ -920,7 +924,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     padding-bottom: -10px !important;
   }
   .commodity-index-img {
-    width: 20% !important;
+    width: 25% !important;
     padding: 0 3px !important;
     margin-bottom: 5px !important;
     .prompt {
@@ -1342,8 +1346,9 @@ ul, li, p, a, h1, h2, h3, h4 {
             width: 30%;
             padding: 5px;
             font-size: 12px;
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
+            box-sizing:border-box;
+            -moz-box-sizing:border-box;
+            -webkit-box-sizing:border-box;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -1463,9 +1468,18 @@ ul, li, p, a, h1, h2, h3, h4 {
           padding:5px 0;
           width:50%;
           float:left;
+          &.one-item{
+            width:100% !important;
+            float:none !important;
+          }
           &:nth-child(odd){
             a {
               border-right: 1px solid $gray-lighter;
+            }
+          }
+          &:last-of-type{
+            a{
+              border:none;
             }
           }
           a {
@@ -1721,8 +1735,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .load-img-wrap {
   .thumbnail {
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
     width: 19%;
     float: left;
     margin-right: 3px;
@@ -2887,6 +2902,30 @@ table {
         }
       }
     }*/
+  }
+  .secondary-menu{
+    @include clearfix;
+    height: 450px;
+    overflow: hidden;
+    li{
+      width:50%;
+      float: left;
+      text-align:center;
+      box-sizing:border-box;
+      -moz-box-sizing:border-box;
+      -webkit-box-sizing:border-box;
+      a{
+        display: inline-block;
+        width: 100%;
+        padding:10px 3px;
+        color:$gray;
+        font-size: 13px;
+        &:hover{
+          background-color: $gray-plain-light;
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
 
