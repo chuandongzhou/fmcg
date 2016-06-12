@@ -289,7 +289,7 @@
                     legend: {
                         orient: 'vertical',
                         left: 'left',
-                        data: orderGoodsNames
+                        data: orderGoodsNames.length>8?'':orderGoodsNames
                     },
                     series: [
                         {
