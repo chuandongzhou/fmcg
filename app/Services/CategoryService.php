@@ -44,15 +44,16 @@ class CategoryService
      * @param $cate
      * @param int $pid
      * @param string $name
+     * @param bool $index
      * @return array
      */
-    static function unlimitForLayer($cate, $pid = 0, $name = 'child')
+    static function unlimitForLayer($cate, $pid = 0, $name = 'child', $index = true)
     {
         $arr = array();
         foreach ($cate as $v) {
             if ($v['pid'] == $pid) {
                 $v[$name] = self::unlimitForLayer($cate, $v['id'], $name);
-                $arr[$v['id']] = $v;
+                $index ? ($arr[$v['id']] = $v) : ($arr[] = $v);
             }
         }
 

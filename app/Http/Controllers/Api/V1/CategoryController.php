@@ -36,7 +36,8 @@ class CategoryController extends Controller
         if (!isset($data['format']) || $data['format'] != 'true') {
             $attrs = $attrService->getAttrsByCategoryId($id);
             $categoryPid = $this->categories[$id]['pid'];
-            $attrs = array_merge($attrService->getAttrsByCategoryId($id), $attrService->getAttrsByCategoryId($categoryPid));
+            $attrs = array_merge($attrService->getAttrsByCategoryId($id),
+                $attrService->getAttrsByCategoryId($categoryPid));
             $result = [];
             foreach ($attrs as $attr) {
                 if ($attr['pid'] == 0) {
@@ -73,7 +74,6 @@ class CategoryController extends Controller
                 $post['level1'],
                 $post['level2']
             ];
-            //$result = Category::whereIn('pid', $pid)->with('icon')->select(['id', 'name', 'level'])->get();
             foreach ($categoriesTemp as $category) {
                 if (in_array($category['pid'], $pids)) {
                     $categories['level' . $category['level']][$category['id']] = $category['name'];
@@ -91,7 +91,7 @@ class CategoryController extends Controller
      */
     public function getAllCategory()
     {
-        return $this->success(CategoryService::unlimitForLayer($this->categories));
+        return $this->success(CategoryService::unlimitForLayer($this->categories, 0, 'child', false));
     }
 
 }

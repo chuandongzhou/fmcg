@@ -143,14 +143,10 @@
                             </div>
                             <a href="javascript:" class="batch-deletion ajax btn padding-clear" data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                         </div>
-                        {{--<div class="col-xs-6 padding-clear">--}}
-                        {{--<span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>--}}
-                        {{--<button class="btn btn-primary">结算</button>--}}
-                        {{--</div>--}}
                         <div class="col-xs-6 padding-clear">
                             <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
 
-                            <input id="cartInput" type="submit" value="提交" class="btn btn-primary"/>
+                            <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
                         </div>
 
                     </div>

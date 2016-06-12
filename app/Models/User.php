@@ -115,15 +115,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function shippingAddress()
     {
-        return $this->hasMany('App\Models\ShippingAddress');
+        return $this->hasMany('App\Models\ShippingAddress')->orderBy('is_default', 'desc');
     }
-    
+
     /**
      * 订单
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orders(){
+    public function orders()
+    {
         return $this->hasMany('App\Models\Order');
     }
 
