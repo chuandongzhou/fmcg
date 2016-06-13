@@ -7,17 +7,19 @@
 @section('container')
     @include('index.shop-search')
     <div class="container wholesalers-index index contents">
-        @if(!$shop->adverts->isEmpty())
-            <div class="row">
-                <div class="col-sm-12 left-store-logo">
-                    <div id="myCarousel" class="carousel slide banner banner-slide">
-                        <ol class="carousel-indicators">
+        <div class="row">
+            <div class="col-sm-12 left-store-logo">
+                <div id="myCarousel" class="carousel slide banner banner-slide">
+                    <ol class="carousel-indicators">
+                        @if(!$shop->adverts->isEmpty())
                             @for($index = 0; $index < $shop->adverts->count(); $index++)
                                 <li data-target="#myCarousel" data-slide-to="{{ $index }}"
                                     class="{{ $index == 0 ? 'active' : '' }}">
                             @endfor
-                        </ol>
-                        <div class="carousel-inner banner">
+                        @endif
+                    </ol>
+                    <div class="carousel-inner banner">
+                        @if(!$shop->adverts->isEmpty())
                             @foreach($shop->adverts as $key => $image)
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                     <a href="{{ $image->url }}">
@@ -25,11 +27,16 @@
                                     </a>
                                 </div>
                             @endforeach
-                        </div>
+                        @else
+                            <div class="item active">
+                                <img src="{{ asset('images/default-shop-image.jpg') }}" alt="店铺图片">
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
+
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="tab-title clearfix">

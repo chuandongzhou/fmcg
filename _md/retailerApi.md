@@ -705,13 +705,13 @@
 
 `成功返回：`
 
-   adverts       array           店铺广告列表
+   adverts       array           店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）
 
    adverts       子集介绍
 
         id              int                 广告id
         name            string              广告名
-        url             string              广告链接地址
+        image_url       string              广告图片地址
         goods_id        int                 广告所属商品id
 
 

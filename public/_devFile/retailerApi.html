@@ -1087,11 +1087,11 @@ address                 array               详细地址列表
 <h4>2.4.8 店铺广告[get] ({shop_id}/adverts)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<p>adverts array 店铺广告列表</p>
+<p>adverts array 店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）</p>
 <p>adverts 子集介绍</p>
 <pre><code>    id              int                 广告id
     name            string              广告名
-    url             string              广告链接地址
+    image_url       string              广告图片地址
     goods_id        int                 广告所属商品id
 </code></pre>
 

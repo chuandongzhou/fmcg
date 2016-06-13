@@ -60,6 +60,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-bg btn-success">{{ $advert->id ? '修改' : '添加' }}</button>
+                <a href="javascript:history.go(-1)" class="btn btn-cancel">返回</a>
             </div>
         </div>
     </form>
