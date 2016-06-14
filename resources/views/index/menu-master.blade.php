@@ -1,39 +1,5 @@
 @extends('index.manage-master')
 
-@section('header')
-    @parent
-    {{--<nav class="navbar personal-header">--}}
-    {{--<div class="container">--}}
-    {{--<div class="navbar-header">--}}
-    {{--<button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"--}}
-    {{--data-target="#bs-example-navbar-collapse-1" aria-expanded="false">--}}
-    {{--<span class="sr-only">Toggle navigation</span>--}}
-    {{--<span class="icon-bar"></span>--}}
-    {{--<span class="icon-bar"></span>--}}
-    {{--<span class="icon-bar"></span>--}}
-    {{--</button>--}}
-    {{--<a class="logo-img"><img src="{{ asset('images/personal-logo.png') }}"></a>--}}
-    {{--</div>--}}
-    {{--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">--}}
-    {{--<ul class="nav navbar-nav items-item">--}}
-    {{--@if($user->type < cons('user.type.wholesaler'))--}}
-    {{--<li class="item"><a href="{{ url('/') }}">首页</a></li>--}}
-    {{--<li class="item"><a href="{{ url('shop?type=wholesaler') }}">批发商</a></li>--}}
-    {{--<li class="item"><a href="{{ url('shop?type=supplier') }}">供应商</a></li>--}}
-    {{--@else--}}
-    {{--<li class="item">--}}
-    {{--<a href="{{ url('shop/' . $user->shop->id) }}">--}}
-    {{--<i class="fa fa-angle-left"></i>--}}
-    {{--商店首页--}}
-    {{--</a>--}}
-    {{--</li>--}}
-    {{--@endif--}}
-    {{--</ul>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</nav>--}}
-    {{--<hr class="personal-hr"/>--}}
-@stop
 @section('container')
     <div class="container public-personal contents">
         <div class="row">
@@ -132,12 +98,6 @@
                             </ul>
                         </li>
                         @if($user->type == cons('user.type.wholesaler'))
-                            {{--进货中心--}}
-                            {{--<li>--}}
-                            {{--<a class="list-item" href="{{ url('/') }}" target="_blank">--}}
-                            {{--<i class="fa fa-shopping-cart"></i> 进货中心--}}
-                            {{--</a>--}}
-                            {{--</li>--}}
                             {{--进货管理--}}
                             <li>
                                 <a href="javascript:void(0)" class="list-item">
@@ -191,6 +151,25 @@
                                     <a class="{{ path_active(['personal/finance/balance','personal/finance/withdraw']) }}"
                                        href="{{ url('personal/finance/balance') }}">
                                         账户余额
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="{{ path_active('personal/bank') }}" href="{{ url('personal/bank') }}">
+                                        提现账号
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {{--业务管理--}}
+                        <li>
+                            <a href="javascript:void(0)" class="list-item">
+                                <i class="fa fa-money"></i>
+                                业务管理
+                            </a>
+                            <ul class="menu-wrap">
+                                <li>
+                                    <a class="" href="{{ url('business/salesman') }}">
+                                        业务员管理
                                     </a>
                                 </li>
                                 <li>

@@ -362,5 +362,11 @@ return [
     //后台配置
     'admin' => [
         'super_admin_name' => 'admin'
+    ],
+    'salesman' => [
+        'avatar' => [
+            64 => 'default_64.jpg',
+            128 => 'default_128.jpg',
+        ]
     ]
 ];

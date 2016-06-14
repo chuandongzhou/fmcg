@@ -204,6 +204,16 @@ class Shop extends Model
         return $this->belongsTo('App\Models\Promoter', 'spreading_code', 'spreading_code');
     }
 
+    /**
+     * 关联业务员
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function salesmen()
+    {
+        return $this->hasMany('App\Models\Salesman');
+    }
+
 
     /**
      * 获取热门商家

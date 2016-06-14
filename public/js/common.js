@@ -1065,6 +1065,69 @@ var getShopAddressMap = function (lng, lat) {
         }
     });
 }
+
+var setAddressMap = function (lng, lat) {
+    var addressMap = new BMap.Map('address-map', {enableMapClick: false});
+    var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+    addressMap.addControl(top_left_navigation);
+    addressMap.enableScrollWheelZoom(true)
+    if (lng && lat) {
+        var point_address = new BMap.Point(lng, lat);
+        addressMap.centerAndZoom(point_address, 12);
+        addressMap.addOverlay(new BMap.Marker(point_address));
+    } else {
+        var point_address = new BMap.Point(106, 35);
+        addressMap.centerAndZoom(point_address, 12);
+        var geolocation_address = new BMap.Geolocation();
+        geolocation_address.getCurrentPosition(function (r) {
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                //重置中心点
+                addressMap.addOverlay(new BMap.Marker(r.point));
+                addressMap.panTo(r.point);
+            }
+        }, {enableHighAccuracy: true});
+    }
+    $('.shop-address').on('change', 'select', function () {
+        var elem = $(this);
+        var areaName = elem.find('option:checked').text();
+        var num = 6;
+        if (elem.hasClass('address-city')) {
+            num = 12;
+        }
+        if (elem.hasClass('address-district')) {
+            num = 14;
+        }
+        if (elem.hasClass('address-street')) {
+            num = 16;
+        }
+        if (areaName != '其它区' && areaName != '海外') {
+            //删除之前的覆盖物
+            addressMap.clearOverlays();
+            // 创建地址解析器实例
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(areaName, function (newPoint) {
+                if (newPoint) {
+                    point_address = newPoint;
+                    addressMap.centerAndZoom(newPoint, num);
+                    var newMarker = new BMap.Marker(point_address);
+                    //重置中心点
+                    addressMap.addOverlay(newMarker);
+                    var pointPosition = newMarker.getPosition();
+                    $('input[name="x_lng"]').val(pointPosition.lng);
+                    $('input[name="y_lat"]').val(pointPosition.lat);
+                    newMarker.enableDragging();//可拖拽点
+                    newMarker.addEventListener('dragend', function () {
+                        pointPosition = newMarker.getPosition();
+                        $('input[name="x_lng"]').val(pointPosition.lng);
+                        $('input[name="y_lat"]').val(pointPosition.lat);
+                    });
+                }
+            }, areaName);
+        }
+    });
+}
+
 /**
  * get提交form处理
  * @param exceptName

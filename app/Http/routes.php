@@ -69,6 +69,13 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->controller('model', 'ModelController');  //模版管理
     });
 
+    //业务管理
+    $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
+        $router->resource('salesman', 'SalesmanController');
+        $router->resource('salesman-customer', 'SalesmanCustomerController');
+    });
+
+
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
 
@@ -228,6 +235,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('deal-delivery', 'DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout', 'DeliveryController@logout');//退出登陆
             $router->post('update-order', 'DeliveryController@changeOrder');//修改订单商品数量
+        });
+
+        //业务管理
+        $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
+            $router->resource('salesman', 'SalesmanController');
         });
 
     });

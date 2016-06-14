@@ -19,7 +19,6 @@ if (!function_exists('divide_uid')) {
         ];
     }
 }
-
 if (!function_exists('upload_path')) {
 
     /**
@@ -95,6 +94,39 @@ if (!function_exists('avatar_url')) {
         // 处理分割后的ID
         $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
 
+        // 处理缓存
+        $mtime = @filemtime($avatarPath . $path);
+        if (false !== $mtime) {
+            return asset($relatePath . $path, $secure) . '?' . $mtime;
+        }
+
+        return asset($relatePath . $default[$size], $secure);
+    }
+
+}
+if (!function_exists('salesman_avatar_url')) {
+
+    /**
+     * 获取上传头像URL
+     *
+     * @param int $uid
+     * @param int $size
+     * @param bool $secure
+     * @return string
+     */
+    function salesman_avatar_url($uid = 0, $size = 64, $secure = null)
+    {
+        $default = cons('salesman.avatar');
+        $avatarPath = config('path.upload_salesman_avatar');
+        $relatePath = str_replace(public_path(), '', $avatarPath);
+
+        // 处理size
+        array_key_exists($size, $default) || $size = 64;
+
+        // 处理分割后的ID
+        $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
+
+        info($avatarPath . $path);
         // 处理缓存
         $mtime = @filemtime($avatarPath . $path);
         if (false !== $mtime) {

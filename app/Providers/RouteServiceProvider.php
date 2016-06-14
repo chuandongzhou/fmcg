@@ -30,7 +30,8 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\ShippingAddress' => 'shipping-address',
         'App\Models\ShopColumn' => 'shop-column',
         'App\Models\VersionRecord' => 'version-record',
-        'App\Models\Notice' => 'notice'
+        'App\Models\Notice' => 'notice',
+        'App\Models\Salesman' => 'salesman'
     ];
 
     /**
