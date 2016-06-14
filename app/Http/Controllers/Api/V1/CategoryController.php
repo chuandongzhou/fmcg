@@ -91,7 +91,7 @@ class CategoryController extends Controller
      */
     public function getAllCategory()
     {
-        return $this->success(CategoryService::unlimitForLayer($this->categories, 0, 'child', false));
+        return $this->success(CategoryService::unlimitForLayer($this->categories));
     }
 
 }

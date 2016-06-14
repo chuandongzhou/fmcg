@@ -23,7 +23,7 @@ class CategoryComposer
     {
         $categories = CategoryService::getCategories();
 
-        $view->with('categories', CategoryService::unlimitForLayer($categories));
+        $view->with('categories', CategoryService::unlimitForLayer($categories, 0, 'child', false));
     }
 
 }
