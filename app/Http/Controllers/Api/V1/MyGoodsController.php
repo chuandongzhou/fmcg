@@ -321,9 +321,9 @@ class MyGoodsController extends Controller
      */
     private function updateDeliveryArea($model, $area)
     {
-        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
-            return true;
-        }
+//        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
+//            return true;
+//        }
         //配送区域添加
         $areaArr = (new AddressService($area))->formatAddressPost();
         //删除原有配送区域信息
@@ -344,7 +344,7 @@ class MyGoodsController extends Controller
                      $areaModel->coordinate()->save(new Coordinate($coordinate));
                  }*/
             }
-            $model->deliveryArea()->saveMany($areas);
+            $model->deliveryArea()->saveMany(array_unique($areas));
         }
         return true;
     }
