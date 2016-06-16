@@ -338,13 +338,17 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areas[] = new DeliveryArea($data);
+                $areasModal =  new DeliveryArea($data);
+                if(!in_array($areasModal,$areas)){
+                    $areas[] = $areasModal;
+                }
+
 
                 /* if (isset($coordinate)) {
                      $areaModel->coordinate()->save(new Coordinate($coordinate));
                  }*/
             }
-            $model->deliveryArea()->saveMany(array_unique($areas));
+            $model->deliveryArea()->saveMany($areas);
         }
         return true;
     }
