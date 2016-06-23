@@ -22,7 +22,7 @@ class DataStatistics extends Command
      */
     public function handle()
     {
-        $nowTime = Carbon::now();
+        $nowTime = Carbon::now()->toDateString();
         $data = DataStatisticsService::getTodayDataStatistics($nowTime);
 
         \App\Models\DataStatistics::create($data);

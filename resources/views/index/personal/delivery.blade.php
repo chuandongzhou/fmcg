@@ -40,15 +40,15 @@
                     <form action="{{ url('personal/delivery') }}" method="get" autocomplete="off">
                         时间段
                         <input class="enter datetimepicker" name="start_at"
-                               placeholder="{{ empty($search['start_at'])? '开始时间' : $search['start_at']}}" type="text"
+                               placeholder="开始时间" type="text"
                                value="{{ $search['start_at'] or '' }}">至
                         <input class="enter datetimepicker" name="end_at"
-                               placeholder="{{ empty($search['end_at']) ? '结束时间' : $search['end_at']}}" type="text"
+                               placeholder="结束时间" type="text"
                                value="{{ $search['end_at'] or '' }}">
 
 
                         <select name="delivery_man_id">
-                            <option>所有配送人员</option>
+                            <option value="">所有配送人员</option>
                             @foreach($deliveryMen as $man)
                                 <option value="{{ $man->id  }}"{{ $man->id==$search['delivery_man_id'] ? 'selected' : ''}}>{{ $man->name }}</option>
                             @endforeach
@@ -98,5 +98,12 @@
             </div>
         </div>
     </div>
-
 @stop
+
+@section('js')
+    @parent
+    <script type="text/javascript">
+        formSubmitByGet();
+    </script>
+@stop
+

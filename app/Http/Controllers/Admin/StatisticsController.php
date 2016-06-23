@@ -39,10 +39,6 @@ class StatisticsController extends Controller
         if ($dayStart == $nowTime->startOfDay()) {
             $statistics = DataStatisticsService::getTodayDataStatistics($nowTime->copy()->addDay(), false);
         } else {
-            //$statistics = DataStatistics::whereBetween('created_at', [$dayStart->toDateString(), $dayEnd->toDateString()])->first();
-
-            // $monthAgo = $carbon->copy()->subDays(30);
-
             //登录数
             $statistics = DataStatistics::whereBetween('created_at', [
                 $dayStart,
@@ -51,10 +47,15 @@ class StatisticsController extends Controller
                 'sum(`retailer_login_num`) as retailer_login_num
                 ,sum(`wholesaler_login_num`) as wholesaler_login_num
                 ,sum(`supplier_login_num`) as supplier_login_num
-                ,sum(`retailer_reg_num`) as retailer_reg_num
-                ,sum(`wholesaler_reg_num`) as wholesaler_reg_num
-                ,sum(`supplier_reg_num`) as supplier_reg_num
                 '))->first();
+
+            $userType = cons('user.type');
+            //注册数
+            $regCount = User::select(DB::raw('count(*) as num,type'))->whereBetween('created_at',
+                [$dayStart, $dayEnd])->groupBy('type')->lists('num', 'type');
+            $statistics->wholesaler_reg_num = array_get($regCount, array_get($userType, 'wholesaler'), 0);
+            $statistics->supplier_reg_num = array_get($regCount, array_get($userType, 'supplier'), 0);
+            $statistics->retailer_reg_num = array_get($regCount, array_get($userType, 'retailer'), 0);
 
         }
 

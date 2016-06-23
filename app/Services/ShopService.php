@@ -104,4 +104,20 @@ class ShopService
         $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->first();
         return $advert->image ? $advert : new Advert;
     }
+
+    /**
+     * 获取店铺默认收货地址
+     *
+     * @param $shop
+     * @return mixed
+     */
+    static function getDefaultShippingAddress($shop)
+    {
+        if ($shop instanceof Shop) {
+            return $shop->user->shippingAddress->first();
+        } else if (is_int($shop)) {
+            $shop = Shop::find($shop);
+            return self::getDefaultShippingAddress($shop);
+        }
+    }
 }

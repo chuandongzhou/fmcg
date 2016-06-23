@@ -162,7 +162,7 @@
     </div>
 @endif
 
-<div class="form-group shop-address">
+<div class="form-group shop-address address-panel">
     <label class="col-sm-2 control-label">所在地</label>
 
     <div class="col-sm-3">
@@ -188,21 +188,26 @@
                 data-id="{{ $shop->shopAddress ? $shop->shopAddress->street_id : '' }}"
                 class="address-street form-control address"></select>
     </div>
+    <div class="hidden address-text">
+        <input type="hidden" name="address[area_name]" class="area-name"
+               value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}"/>
+        <input type="hidden" name="x_lng" class="lng" value="{{ $shop->x_lng }}"/>
+        <input type="hidden" name="y_lat" class="lat" value="{{ $shop->y_lat }}"/>
+    </div>
 </div>
 <div class="form-group">
     <label for="address" class="col-sm-2 control-label">详细地址</label>
 
     <div class="col-sm-10 col-md-6">
-        <input type="hidden" name="address[area_name]"
-               value="{{ $shop->shopAddress ? $shop->shopAddress->area_name : '' }}"/>
         <input type="text" placeholder="请输入详细地址" name="address[address]" id="address"
                class="form-control"
                value="{{ $shop->shopAddress ? $shop->shopAddress->address : '' }}">
-        <input type="hidden" name="x_lng" value="{{ $shop->x_lng }}"/>
-        <input type="hidden" name="y_lat" value="{{ $shop->y_lat }}"/>
 
-        <div id="address-map"
-             style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;width: 100%;height: 200px;"></div>
+        <div data-group="shop" class="baidu-map" id="shop"
+             data-lng="{{ $shop->x_lng }}"
+             data-lat="{{ $shop->y_lat }}">
+        </div>
+
     </div>
 
 </div>
@@ -224,11 +229,6 @@
                     <input type="hidden" name="area[street_id][]" value=""/>
                     <input type="hidden" name="area[area_name][]" value=""/>
                     <input type="hidden" name="area[address][]" value=""/>
-                    {{--区域经纬度--}}
-                    {{--<input type="hidden" name="area[blx][]" value=""/>--}}
-                    {{--<input type="hidden" name="area[bly][]" value=""/>--}}
-                    {{--<input type="hidden" name="area[slx][]" value=""/>--}}
-                    {{--<input type="hidden" name="area[sly][]" value=""/>--}}
                 </div>
                 @foreach ($shop->deliveryArea as $area)
                     <div class="col-sm-12 fa-border show-map">{{ $area->address_name }}
@@ -240,52 +240,21 @@
                         <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
                         <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
                         <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
-                        {{--区域经纬度--}}
-                        {{--<input type="hidden" name="area[blx][]"--}}
-                        {{--value="{{ $area->coordinate->bl_lng or '' }}"/>--}}
-                        {{--<input type="hidden" name="area[bly][]"--}}
-                        {{--value="{{ $area->coordinate->bl_lat or '' }}"/>--}}
-                        {{--<input type="hidden" name="area[slx][]"--}}
-                        {{--value="{{ $area->coordinate->sl_lng or '' }}"/>--}}
-                        {{--<input type="hidden" name="area[sly][]"--}}
-                        {{--value="{{ $area->coordinate->sl_lat or '' }}"/>--}}
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
-    {{--<div class="form-group">--}}
-    {{--<label class="col-sm-2 control-label">地图标识 :</label>--}}
-
-    {{--<div class="col-sm-10">--}}
-    {{--<div id="map"></div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
 @endif
 
 @section('js')
     @parent
     <script type="text/javascript">
-        $(document).ready(function () {
-            {{--@if($shop->user->type != cons('user.type.retailer'))--}}
-            {{--getCoordinateMap({!! $coordinates or '' !!});--}}
-            {{--@endif--}}
-            getShopAddressMap({!! $shop->x_lng?:0  !!}, {!! $shop->y_lat?:0  !!});
 
-        });
         $(function () {
             picFunc();
-            $('select.address').change(function () {
-                var provinceControl = $('select[name="address[province_id]"]'),
-                        cityControl = $('select[name="address[city_id]"]'),
-                        districtControl = $('select[name="address[district_id]"]'),
-                        streetControl = $('select[name="address[street_id]"]'),
-                        provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
-                        cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
-                        districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
-                        streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
-                $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
-            })
+            var baiduMap = initMap();
+            addressSelectChange(true, baiduMap);
         })
     </script>
 @stop

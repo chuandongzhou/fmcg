@@ -47,11 +47,6 @@
                         <select class="address-street inline-control add-street useless-control">
                             <option selected="selected" value="">请选择街道...</option>
                         </select>
-{{--
-
-                        <button type="button" class="btn btn-primary btn-sm btn-more  pull-right" data-text="添加">添加
-                        </button>
---}}
 
                         <div class="address-detail">
                             <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注 : </label>
@@ -59,17 +54,6 @@
                         </div>
                     </div>
 
-                    {{--区域经纬度--}}
-                    {{--<input type="hidden" name="coordinate_blx" value=""/>--}}
-                    {{--<input type="hidden" name="coordinate_bly" value=""/>--}}
-                    {{--<input type="hidden" name="coordinate_slx" value=""/>--}}
-                    {{--<input type="hidden" name="coordinate_sly" value=""/>--}}
-
-                    {{--<div class="modal-footer">--}}
-                    {{--<button class="btn btn-primary btn-sm " onclick="polygon_modal.enableEditing();">开启编辑功能</button>--}}
-                    {{--<button class="btn btn-primary btn-sm " onclick="polygon_modal.disableEditing();">关闭编辑功能</button>--}}
-                    {{--</div>--}}
-                    {{--<div id="map-modal"></div>--}}
 
                 </div>
                 <div class="modal-footer">

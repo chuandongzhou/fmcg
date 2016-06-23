@@ -71,10 +71,18 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
 
     //业务管理
     $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
+        $router->get('salesman/target', 'SalesmanController@target');
         $router->resource('salesman', 'SalesmanController');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
+        $router->get('report/{salesman_id}/export', 'ReportController@export');
+        $router->resource('report', 'ReportController');
+        $router->group(['prefix' => 'order'], function ($router) {
+            $router->get('export', 'SalesmanVisitOrderController@export');
+            $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+            $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+            $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
+        });
     });
-
 
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
@@ -239,7 +247,17 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
+            $router->get('salesman/export-target', 'SalesmanController@exportTarget');
+            $router->delete('salesman/batch-delete', 'SalesmanController@batchDelete');
+            $router->put('salesman/target-set', 'SalesmanController@targetSet');
             $router->resource('salesman', 'SalesmanController');
+            $router->resource('salesman-customer', 'SalesmanCustomerController');
+            $router->group(['prefix' => 'order'], function ($router) {
+                $router->get('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
+                $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
+                $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
+                $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
+            });
         });
 
     });

@@ -4,10 +4,13 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class Salesman extends Model
+class Salesman extends Model implements AuthenticatableContract
 {
     use SoftDeletes;
+    use Authenticatable;
     protected $table = 'salesman';
 
     protected $fillable = [
@@ -62,6 +65,46 @@ class Salesman extends Model
     public function customers()
     {
         return $this->hasMany('App\Models\SalesmanCustomer');
+    }
+
+    /**
+     * 关联拜访表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function visits()
+    {
+        return $this->hasMany('App\Models\SalesmanVisit');
+    }
+
+    /**
+     * 关联订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\SalesmanVisitOrder');
+    }
+
+    /**
+     * 订货单
+     *
+     * @return mixed
+     */
+    public function orderForms()
+    {
+        return $this->orders()->where('type', cons('salesman.order.type.order'));
+    }
+
+    /**
+     * 退货单
+     *
+     * @return mixed
+     */
+    public function returnOrders()
+    {
+        return $this->orders()->where('type', cons('salesman.order.type.return_order'));
     }
 
     /**
@@ -134,6 +177,36 @@ class Salesman extends Model
      */
     public function getAvatarUrlAttribute()
     {
-        return salesman_avatar_url(array_get($this->attributes, $this->primaryKey), 128);
+        return salesman_avatar_url(array_get($this->attributes, $this->primaryKey), 64);
     }
+
+    /**
+     * 按名字检索
+     *
+     * @param $query
+     * @param $name
+     * @param bool $includeAccount
+     * @return mixed
+     */
+    public function scopeOfName($query, $name, $includeAccount = false)
+    {
+        if ($name) {
+            return $includeAccount ? $query->where('name', 'LIKE', '%' . $name . '%')
+                ->orWhere('account', 'LIKE', '%' . $name . '%') : $query->where('name', 'LIKE', '%' . $name . '%');
+        }
+        return $query;
+    }
+
+    /**
+     * 按参数检索
+     *
+     * @param $query
+     * @param $options
+     * @return mixed
+     */
+    public function scopeOfOptions($query, $options)
+    {
+        return $query->where(array_filter($options));
+    }
+
 }

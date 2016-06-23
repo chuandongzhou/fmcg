@@ -218,4 +218,13 @@ return [
             'success' => '成功'
         ],
     ],
+    // 业务员
+    'salesman' => [
+        'order' => [
+            'status' => [
+                'not_pass' => '未审核',
+                'passed' => '已通过'
+            ],
+        ]
+    ]
 ];

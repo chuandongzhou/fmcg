@@ -168,7 +168,7 @@ return [
         'sort' => '排序',
         'reason' => '原因',
         'content' => '内容',
-        'contact' => '联系方式',
+        'contact' => '联系人',
         'version_name' => '版本名称',
         'version_no' => '版本号',
         'address[province_id]' => '省',
@@ -178,7 +178,14 @@ return [
         'num' => '数量',
         'price' => '价格',
         'amount' => '金额',
-        'bank_id' => '银行'
+        'bank_id' => '银行',
+        'platform_id' => '平台id',
+        'contact_information' => '联系方式',
+        'business_area' => '营业面积',
+        'display_fee' => '陈列费',
+        'salesman_id' => '营业员',
+        'date' => '日期',
+        'target' => '目标'
     ],
 
 ];

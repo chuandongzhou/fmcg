@@ -267,6 +267,17 @@ if (!function_exists('delivery_auth')) {
         return app('delivery.auth');
     }
 }
+if (!function_exists('salesman_auth')) {
+    /**
+     * Get the available admin auth instance.
+     *
+     * @return \Weiheng\Delivery\Guard
+     */
+    function salesman_auth()
+    {
+        return app('delivery.auth');
+    }
+}
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml
@@ -344,6 +355,20 @@ if (!function_exists('array_key_to_value')) {
             $newArray[$arr[$id]] = is_null($name) ? $arr : $arr[$name];
         }
         return $newArray;
+    }
+}
+if (!function_exists('percentage')) {
+    /**
+     * 求百分比
+     *
+     * @param $dividend
+     * @param $divisor
+     * @param int $scale
+     * @return string
+     */
+    function percentage($dividend, $divisor, $scale = 2)
+    {
+        return bcmul(bcdiv($dividend, $divisor, $scale + 2), 100, $scale) . '%';
     }
 }
 

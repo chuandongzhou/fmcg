@@ -57,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
         $aliases = [
             'admin.auth' => \WeiHeng\Admin\Guard::class,
             'delivery.auth' => \WeiHeng\Delivery\Guard::class,
+            'salesman.auth' => \WeiHeng\Salesman\Guard::class,
         ];
 
         foreach ($aliases as $key => $value) {

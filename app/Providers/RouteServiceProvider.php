@@ -31,7 +31,9 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\ShopColumn' => 'shop-column',
         'App\Models\VersionRecord' => 'version-record',
         'App\Models\Notice' => 'notice',
-        'App\Models\Salesman' => 'salesman'
+        'App\Models\Salesman' => 'salesman',
+        'App\Models\SalesmanCustomer' => 'salesman-customer',
+        'App\Models\SalesmanVisitOrder' => 'salesman-visit-order'
     ];
 
     /**

@@ -79,53 +79,112 @@
                        type="text">
             </div>
         </div>
-
+        {{--营业地址--}}
         <div class="form-group address-panel">
-            <label class="col-sm-2 control-label">营业地址</label>
+            <label class="col-sm-2 control-label">营业地址:</label>
 
             <div class="col-sm-3">
                 <select data-group="business_address" name="business_address[province_id]"
-                        data-id="{{ $salesmanCustomer->address ? $salesmanCustomer->address->province_id : '' }}"
+                        data-id="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->province_id : '' }}"
                         class="address-province form-control address">
                 </select>
             </div>
             <div class="col-sm-3">
                 <select data-group="business_address" name="business_address[city_id]"
-                        data-id="{{  $salesmanCustomer->address ? $salesmanCustomer->address->city_id : '' }}"
+                        data-id="{{  $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->city_id : '' }}"
                         class="address-city form-control address">
                 </select>
             </div>
             <div class="col-sm-2">
                 <select data-group="business_address" name="business_address[district_id]"
-                        data-id="{{ $salesmanCustomer->address ? $salesmanCustomer->address->district_id : '' }}"
+                        data-id="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->district_id : '' }}"
                         class="address-district form-control address">
                 </select>
             </div>
             <div class="col-sm-2">
                 <select data-group="business_address" name="business_address[street_id]"
-                        data-id="{{ $salesmanCustomer->address ? $salesmanCustomer->address->street_id : '' }}"
+                        data-id="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->street_id : '' }}"
                         class="address-street form-control address"></select>
             </div>
             <div class="hidden address-text">
-                <input type="hidden" name="business_address[area_name]" class="area_name"
-                       value="{{ $salesmanCustomer->address ? $salesmanCustomer->address->area_name : '' }}"/>
+                <input type="hidden" name="business_address[area_name]" class="area-name"
+                       value="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->area_name : '' }}"/>
                 <input type="hidden" class="lng" name="business_address_lng"
                        value="{{ $salesmanCustomer->business_address_lng }}"/>
                 <input type="hidden" class="lat" name="business_address_lat"
                        value="{{ $salesmanCustomer->business_address_lat }}"/>
             </div>
         </div>
+        {{--营业详细地址--}}
         <div class="form-group">
-            <label for="address" class="col-sm-2 control-label">详细地址</label>
+            <label for="address" class="col-sm-2 control-label">详细地址:</label>
 
             <div class="col-sm-10 col-md-6">
 
-                <input type="text" placeholder="请输入详细地址" name="address[address]" id="address"
+                <input type="text" placeholder="请输入详细地址" name="business_address[address]"
                        class="form-control"
-                       value="{{ $salesmanCustomer->address ? $salesmanCustomer->address->address : '' }}">
+                       value="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->address : '' }}">
 
-                <div id="address-map" class="baidu-map" data-lng="{{ $salesmanCustomer->business_address_lng }}"
-                     data-lat="{{ $salesmanCustomer->business_address_lat }}">
+                <div data-group="business_address" class="baidu-map" id="business_address"
+                     data-lng="{{ $salesmanCustomer->business_address_lng }}"
+                     data-lat="{{ $salesmanCustomer->business_address_lat }}"
+                >
+
+                </div>
+            </div>
+
+        </div>
+
+        {{--收货地址--}}
+        <div class="form-group address-panel">
+            <label class="col-sm-2 control-label">收货地址:</label>
+
+            <div class="col-sm-3">
+                <select data-group="shipping_address" name="shipping_address[province_id]"
+                        data-id="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->province_id : '' }}"
+                        class="address-province form-control address">
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select data-group="shipping_address" name="shipping_address[city_id]"
+                        data-id="{{  $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->city_id : '' }}"
+                        class="address-city form-control address">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select data-group="shipping_address" name="shipping_address[district_id]"
+                        data-id="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->district_id : '' }}"
+                        class="address-district form-control address">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select data-group="shipping_address" name="shipping_address[street_id]"
+                        data-id="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->street_id : '' }}"
+                        class="address-street form-control address"></select>
+            </div>
+            <div class="hidden address-text">
+                <input type="hidden" name="shipping_address[area_name]" class="area-name"
+                       value="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->area_name : '' }}"/>
+                <input type="hidden" class="lng" name="shipping_address_lng"
+                       value="{{ $salesmanCustomer->shipping_address_lng }}"/>
+                <input type="hidden" class="lat" name="shipping_address_lat"
+                       value="{{ $salesmanCustomer->shipping_address_lat }}"/>
+            </div>
+        </div>
+        {{--收货详细地址--}}
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label">详细地址:</label>
+
+            <div class="col-sm-10 col-md-6">
+
+                <input type="text" placeholder="请输入详细地址" name="shipping_address[address]"
+                       class="form-control"
+                       value="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->address : '' }}">
+
+                <div data-group="shipping_address" class="baidu-map" id="shipping_address"
+                     data-lng="{{ $salesmanCustomer->shipping_address_lng }}"
+                     data-lat="{{ $salesmanCustomer->shipping_address_lat }}"
+                >
 
                 </div>
             </div>
@@ -145,20 +204,8 @@
     @parent
     <script type="text/javascript">
         $(function () {
-
-            $('select.address').change(function () {
-                var obj = $(this), addressPanel = obj.closest('.address-panel'),
-                        areaName = addressPanel.find('.area-name'),
-                        provinceControl = addressPanel.find('select.address-province'),
-                        cityControl = addressPanel.find('select.address-city'),
-                        districtControl = addressPanel.find('select.address-district'),
-                        streetControl = addressPanel.find('select.address-street'),
-                        provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
-                        cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
-                        districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
-                        streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
-                areaName.val(provinceVal + cityVal + districtVal + streetVal);
-            })
-        })
+            var baiduMap = initMap();
+            addressSelectChange(true, baiduMap);
+        });
     </script>
 @stop

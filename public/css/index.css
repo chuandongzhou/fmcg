@@ -21,7 +21,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   height: 28px;
   line-height: 28px;
   padding: 3px 6px;
-  margin: 0 10px;
+  margin-right: 10px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s; }
   .inline-control:hover {
     border-color: #66afe9;
@@ -2496,6 +2496,14 @@ table .product-panel {
   overflow: hidden;
   margin: 0; }
 
+.baidu-map {
+  margin-top: 20px;
+  overflow: hidden;
+  zoom: 1;
+  position: relative;
+  width: 100%;
+  height: 200px; }
+
 /*==============baidu map css end=================*/
 .msg-channel {
   width: 300px;
@@ -2761,10 +2769,65 @@ table .product-panel {
     border: none; }
 
 /*==============home end=================*/
+/*==============sales-details begin=================*/
+.sales-details-panel .item {
+  padding: 5px 0; }
+
+.sales-details-tabs {
+  padding: 10px 0; }
+
+.business-table tr th, .business-table .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list table .business-table tr td {
+  border: 1px solid #777777 !important;
+  vertical-align: middle !important; }
+
+.business-table tr td {
+  border: 1px solid #777777 !important;
+  vertical-align: middle !important; }
+
+/*==============sales-details end=================*/
+/*==============business-report begin=================*/
+.business-report-title {
+  padding-bottom: 20px; }
+
+.business-report-monthly {
+  margin-top: 40px; }
+
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em; }
 
+/*==============business-report end=================*/
+/*==============business-order-form begin=================*/
+.business-operating {
+  padding: 0 20px; }
+  .business-operating label {
+    margin-right: 15px; }
+
+.business-order-wrap {
+  border: 1px solid #777777;
+  margin-top: 20px;
+  padding: 5px 10px; }
+  .business-order-wrap .title {
+    margin-bottom: 10px; }
+  .business-order-wrap hr {
+    margin: 5px 0 !important; }
+  .business-order-wrap .item {
+    padding: 5px 0;
+    position: relative; }
+    .business-order-wrap .item .edit-money {
+      display: none; }
+    .business-order-wrap .item .edit-cash {
+      position: absolute;
+      left: 50%;
+      margin: 0 0 5px 0;
+      padding: 1px 5px;
+      font-size: 12px; }
+  .business-order-wrap .money-item .money {
+    display: none; }
+  .business-order-wrap .money-item .edit-money {
+    display: inline-block; }
+
+/*==============business-order-form end=================*/
 @keyframes bounce {
   from, to {
     -webkit-transform: translateY(0vh);
@@ -2780,3 +2843,49 @@ table .product-panel {
   80% {
     -webkit-transform: translateY(0.2vh);
     transform: translateY(0.2vh); } }
+
+/*==============tips begin=================*/
+#tips {
+  position: absolute;
+  padding: 1px;
+  text-align: left;
+  white-space: normal;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  margin-top: -10px;
+  z-index: 1001;
+  color: #333;
+  top: 0;
+  left: 0;
+  display: none; }
+
+#tips .text {
+  padding: 2px 8px; }
+
+#tips .arrow, #tips .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: transparent solid; }
+
+#tips .arrow {
+  border-width: 8px;
+  bottom: -8px;
+  left: 50%;
+  margin-left: -8px;
+  border-top-color: #999999;
+  border-bottom-width: 0; }
+
+#tips .arrow:after {
+  border-width: 7px;
+  bottom: 1px;
+  margin-left: -7px;
+  border-top-color: #ffffff;
+  border-bottom-width: 0;
+  content: " "; }
+
+/*==============tips end=================*/

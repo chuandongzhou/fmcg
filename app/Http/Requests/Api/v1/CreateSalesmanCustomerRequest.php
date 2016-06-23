@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Requests\Api\v1;
+
+
+class CreateSalesmanCustomerRequest extends Request
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'name' => 'required',
+            'platform_id' => 'integer',
+            'contact' => 'required',
+            'contact_information' => 'required',
+            'business_area' => 'required',
+            'display_fee' => 'required',
+            'salesman_id' => 'sometimes|required|integer'
+        ];
+    }
+    /**
+     * 自定义验证
+     *
+     * @param \Illuminate\Contracts\Validation\Factory $factory
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator($factory)
+    {
+        return $this->defaultValidator($factory)->after(function ($validator) {
+            if ($businessAddress= $this->input('business_address')) {
+                if (!$businessAddress['address']) {
+                    $validator->errors()->add('address[address]', '地址 不能为空');
+                }
+                if (!$businessAddress['city_id']) {
+                    $validator->errors()->add('address[city_id]', '市 不能为空');
+                }
+            }
+            if ($shippingAddress= $this->input('business_address')) {
+                if (!$shippingAddress['address']) {
+                    $validator->errors()->add('address[address]', '地址 不能为空');
+                }
+                if (!$shippingAddress['city_id']) {
+                    $validator->errors()->add('address[city_id]', '市 不能为空');
+                }
+            }
+        });
+    }
+}

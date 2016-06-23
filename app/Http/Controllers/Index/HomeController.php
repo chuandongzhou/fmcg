@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Console\Commands\DataStatistics;
 use App\Models\Advert;
+use App\Services\DataStatisticsService;
 use App\Services\GoodsService;
+use App\Services\ShopService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style\Font;
 
 class HomeController extends Controller
 {
@@ -43,6 +50,9 @@ class HomeController extends Controller
 
     public function test()
     {
-        
+        $nowTime = Carbon::now();
+        $data = DataStatisticsService::getTodayDataStatistics($nowTime);
+
+        dd($data);
     }
 }

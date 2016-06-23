@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Salesman;
+use App\Services\BusinessService;
+use App\Services\SalesmanTargetService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,19 +14,22 @@ use App\Http\Controllers\Index\Controller;
 class SalesmanController extends Controller
 {
     protected $shop;
+
     public function __construct()
     {
         $this->shop = auth()->user()->shop;
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $salesmen = $this->shop->salesmen()->active()->paginate();
-        return view('index.business.salesman-index', ['salesmen' => $salesmen]);
+        $name = $request->input('name');
+        $salesmen = $this->shop->salesmen()->active()->OfName($name, true)->paginate();
+        return view('index.business.salesman-index', ['salesmen' => $salesmen, 'name' => $name]);
     }
 
     /**
@@ -50,12 +56,13 @@ class SalesmanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  Request $request
+     * @param  Salesman $salesman
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, Salesman $salesman)
     {
-        //
+        dd($salesman);
     }
 
     /**
@@ -90,5 +97,27 @@ class SalesmanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     * 业务员目标
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function target(Request $request)
+    {
+        $date = $request->input('date', (new Carbon())->format('Y-m'));
+
+        $salesmenOrderData = (new BusinessService)->getSalesmanOrders($this->shop,
+            (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
+
+
+        return view('index.business.salesman-target-index', [
+            'date' => $date,
+            'salesmen' => $salesmenOrderData,
+            'target' => new SalesmanTargetService()
+        ]);
     }
 }

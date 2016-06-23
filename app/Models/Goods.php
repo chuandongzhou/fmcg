@@ -136,6 +136,17 @@ class Goods extends Model
     }
 
     /**
+     * 通用排序
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfCommonSort($query)
+    {
+        return $query->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
+    }
+
+    /**
      * 查询新品
      *
      * @param $query
