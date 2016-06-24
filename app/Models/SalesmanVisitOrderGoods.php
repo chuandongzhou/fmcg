@@ -28,7 +28,7 @@ class SalesmanVisitOrderGoods extends Model
 
     /**
      * 关联订单表
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function salesmanVisitOrder()
@@ -55,5 +55,25 @@ class SalesmanVisitOrderGoods extends Model
     public function getGoodsNameAttribute()
     {
         return $this->goods ? $this->goods->name : '';
+    }
+
+    /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function mortgageGoods()
+    {
+        return $this->belongsTo('App\Models\MortgageGoods', 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 获取抵费商品名
+     *
+     * @return string
+     */
+    public function getMortgageGoodsNameAttribute()
+    {
+        return $this->mortgageGoods ? $this->mortgageGoods->goods_name : '';
     }
 }

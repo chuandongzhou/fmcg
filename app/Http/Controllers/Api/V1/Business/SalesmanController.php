@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\V1\Controller;
 use App\Models\Salesman;
 use App\Services\BusinessService;
 use Carbon\Carbon;
-use Gate;
 use App\Http\Requests;
 use App\Services\SalesmanTargetService;
 use Illuminate\Http\Request;

@@ -76,7 +76,7 @@
                                 </tr>
                                 @foreach($mortgageGoods as $goods)
                                     <tr>
-                                        <td>{{ $goods->goods_name }}</td>
+                                        <td>{{ $goods->mortgage_goods_name }}</td>
                                         <td>{{ cons()->valueLang('goods.pieces', $goods->pieces) }}</td>
                                         <td>{{ $goods->num }}</td>
                                         <td>

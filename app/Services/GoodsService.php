@@ -112,11 +112,12 @@ class GoodsService
      *
      * @param $shop
      * @param $data
+     * @param $with
      * @return array
      */
-    static function getShopGoods($shop, $data)
+    static function getShopGoods($shop, $data, $with = ['images.image'])
     {
-        $goods = $shop->goods()->with('images.image');
+        $goods = $shop->goods()->with($with);
         /**
          * 状态
          */

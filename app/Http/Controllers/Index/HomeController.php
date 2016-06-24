@@ -50,9 +50,6 @@ class HomeController extends Controller
 
     public function test()
     {
-        $nowTime = Carbon::now();
-        $data = DataStatisticsService::getTodayDataStatistics($nowTime);
-
-        dd($data);
+       return intval(true);
     }
 }

@@ -160,4 +160,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return array_search($this->type, cons('user.type'));
     }
 
+    /**
+     * 获取店铺ID
+     *
+     * @return int
+     */
+    public function getShopIdAttribute()
+    {
+        return $this->shop ? $this->shop->id : 0;
+    }
+
 }

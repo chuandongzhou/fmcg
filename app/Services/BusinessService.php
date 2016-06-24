@@ -27,11 +27,12 @@ class BusinessService
         ];
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
-            $orderGoods = $salesmanVisitOrder->orderGoods->filter(function ($item) use ($orderGoodsConf) {
+            $goods = $salesmanVisitOrder->orderGoods->load(['mortgageGoods', 'goods']);
+            $orderGoods = $goods->filter(function ($item) use ($orderGoodsConf) {
                 return $item->type == $orderGoodsConf['order'];
             });
 
-            $mortgageGoods = $salesmanVisitOrder->orderGoods->filter(function ($item) use ($orderGoodsConf) {
+            $mortgageGoods = $goods->filter(function ($item) use ($orderGoodsConf) {
                 return $item->type == $orderGoodsConf['mortgage'];
             });
             $data['orderGoods'] = $orderGoods;
@@ -52,7 +53,10 @@ class BusinessService
      */
     public function getSalesmanOrders($shop, $startDate, $endDate)
     {
-        $salesmen = $shop->salesmen()->with(['orders', 'visits'])->get()->each(function ($salesman) use ($startDate, $endDate) {
+        $salesmen = $shop->salesmen()->with(['orders', 'visits'])->get()->each(function ($salesman) use (
+            $startDate,
+            $endDate
+        ) {
             $orders = $salesman->orders->filter(function ($order) use ($startDate, $endDate) {
                 return $order->created_at >= $startDate && $order->created_at <= $endDate;
             });
@@ -61,8 +65,11 @@ class BusinessService
                 return $order->type == cons('salesman.order.type.order');
             });
 
+            $visits = $salesman->visits->filter(function ($visit) use ($startDate, $endDate) {
+                return $visit->created_at >= $startDate && $visit->created_at <= $endDate;
+            });
 
-            $salesman->visitCustomerCount = $salesman->visits->pluck('salesman_customer_id')->toBase()->unique()->count();
+            $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
             $salesman->orderFormSumAmount = $orderForms->sum('amount');
             $salesman->orderFormCount = $orderForms->count();
 

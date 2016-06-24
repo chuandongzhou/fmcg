@@ -9,7 +9,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
 use App\Http\Requests\Api\v1\BackupSendSmsRequest;
-use App\Http\Requests\Api\v1\LoginRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
 use App\Services\RedisService;

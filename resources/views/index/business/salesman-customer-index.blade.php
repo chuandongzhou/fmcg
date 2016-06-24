@@ -53,7 +53,7 @@
                                 {{ $customer->name }}
                             </td>
                             <td>
-                                {{ $customer->platform_id }}
+                                {{ $customer->shop_id }}
                             </td>
                             <td>
                                 {{ $customer->contact }}

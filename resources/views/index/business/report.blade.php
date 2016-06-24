@@ -3,7 +3,7 @@
 @include('includes.timepicker')
 
 @section('right')
-    <form action="{{ url('business/salesman/target') }}" method="get">
+    <form action="{{ url('business/report') }}" method="get">
         <div class="row">
             <div class="col-sm-12 table-responsive">
                 <div class="col-sm-12 form-group">

@@ -105,5 +105,12 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
+
+        /**
+         * 验证抵费商品
+         */
+        $gate->define('validate-mortgage-goods', function ($user, $mortgageGoods) {
+            return $mortgageGoods->shop->id == $user->shop_id;
+        });
     }
 }

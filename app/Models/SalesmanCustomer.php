@@ -11,6 +11,7 @@ class SalesmanCustomer extends Model
         'number',
         'name',
         'shop_id', //平台id
+        'letter',
         'contact',
         'contact_information',
         'business_area',
@@ -23,6 +24,20 @@ class SalesmanCustomer extends Model
         'business_address',
         'shipping_address'
     ];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+           $model->businessAddress()->delete();
+           $model->shippingAddress()->delete();
+        });
+    }
 
     /**
      * 关联业务员
@@ -55,15 +70,6 @@ class SalesmanCustomer extends Model
             cons('salesman.customer.address_type.business'));
     }
 
-    /**
-     * 关联店铺
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function shop()
-    {
-        return $this->belongsTo('App\Models\Shop');
-    }
 
     /**
      * 收货地址
@@ -76,6 +82,15 @@ class SalesmanCustomer extends Model
             cons('salesman.customer.address_type.shipping'));
     }
 
+    /**
+     * 关联店铺
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo('App\Models\Shop');
+    }
     /**
      * 按名字搜索
      *

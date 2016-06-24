@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="col-sm-12 form-group">
-                    <table class="table table-bordered table-center">
+                    <table class="table table-bordered table-center table-middle">
                         <thead>
                         <tr>
                             <th></th>
@@ -38,7 +38,7 @@
                                     <input type="checkbox" class="child" name="salesman_id[]" value="{{ $man->id }}">
                                 </td>
                                 <td>
-                                    <img src="{{ $man->avatar_url }}">{{ $man->name }}
+                                    <img class="avatar" src="{{ $man->avatar_url }}">  {{ $man->name }}
                                 </td>
                                 <td>
                                     {{ $man->account }}

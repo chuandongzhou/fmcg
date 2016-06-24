@@ -56,14 +56,19 @@ class ReportController extends Controller
 
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
-            'orders.orderGoods',
+            'orders.orderGoods.mortgageGoods',
             'goodsRecord',
             'salesmanCustomer.shippingAddress'
         ])->get();
 
-        return view('index.business.report-detail', [
-            'startDate' => $startDate->toDateString(),
-            'endDate' => $endDate->toDateString(),
+
+        $startDate = $startDate->toDateString();
+        $endDate = $endDate->toDateString();
+
+        $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
+        return view('index.business.' . $viewName, [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'visitData' => $this->_formatVisit($visits),
             'salesman' => $salesman,
 
@@ -122,14 +127,12 @@ class ReportController extends Controller
 
         $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
 
-        $cellAlignRight = array('align' => 'right');
-        $cellAlignCenter = array('align' => 'center');
-        $cellVAlignCenter = array('valign' => 'center');
-        $gridSpan9 = ['gridSpan' => 9];
-        $gridSpan3 = ['gridSpan' => 3];
-        $gridSpan4 = ['gridSpan' => 4];
-        $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
-        $cellRowContinue = array('vMerge' => 'continue');
+
+        $cellAlignCenter = ['align' => 'center'];
+        $cellVAlignCenter = ['valign' => 'center'];
+        $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
+        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
+        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
 
         $phpWord->setDefaultFontName('仿宋');
         $phpWord->setDefaultFontSize(10);
@@ -246,13 +249,13 @@ class ReportController extends Controller
 
         $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
 
-        $cellAlignRight = array('align' => 'right');
-        $cellAlignCenter = array('align' => 'center');
-        $cellVAlignCenter = array('valign' => 'center');
-        $gridSpan9 = ['gridSpan' => 9];
-        $gridSpan3 = ['gridSpan' => 3];
-        $gridSpan4 = ['gridSpan' => 4];
-        $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
+        $cellAlignCenter = ['align' => 'center'];
+        $cellVAlignCenter = ['valign' => 'center'];
+        $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
+        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
+        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
+        $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
 
         $phpWord->setDefaultFontName('仿宋');
@@ -270,11 +273,103 @@ class ReportController extends Controller
             $table = $section->addTable('table');
 
             $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText($startDate . ' 至 ' . $endDate, ['size' => 30], $cellAlignCenter);
+            $table->addCell(10500, $gridSpan6)->addText($startDate . ' 至 ' . $endDate, ['size' => 30],
+                $cellAlignCenter);
 
             $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报告', null, $cellAlignCenter);
+            $table->addCell(10500, $gridSpan6)->addText($salesman->name . ' - 业务报告', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(1200, $cellVAlignCenter)->addText('客户编号', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('店铺名称', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('联系人', null, $cellAlignCenter);
+            $table->addCell(1800, $cellVAlignCenter)->addText('联系电话', null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan2)->addText('营业地址', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(1200, $cellVAlignCenter)->addText($customerId, null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText($visit['customer_name'], null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText($visit['contact'], null, $cellAlignCenter);
+            $table->addCell(1800, $cellVAlignCenter)->addText($visit['contact_information'], null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan2)->addText($visit['shipping_address_name'], null, $cellAlignCenter);
+
+
+            $table->addRow();
+            $table->addCell(1200, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);
+
+            if (isset($visit['display_fee'])) {
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(9300, $gridSpan5)->addText('现金', null, $cellAlignCenter);
+
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(2000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+                $table->addCell(7300, $gridSpan4)->addText('金额', null, $cellAlignCenter);
+
+                foreach ($visit['display_fee'] as $displayFee) {
+                    $table->addRow();
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($displayFee['created_at'], null,
+                        $cellAlignCenter);
+                    $table->addCell(7300, $gridSpan4)->addText($displayFee['display_fee'], null, $cellAlignCenter);
+                }
+            }
+            if (isset($visit['mortgage'])) {
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(9300, $gridSpan5)->addText('货抵', null, $cellAlignCenter);
+
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(2000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+                $table->addCell(1800, $cellVAlignCenter)->addText('商品单位', null, $cellAlignCenter);
+                $table->addCell(3500, $gridSpan2)->addText('商品数量', null, $cellAlignCenter);
+                foreach ($visit['mortgage'] as $date => $mortgages) {
+                    $table->addRow();
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(2000, $cellRowSpan)->addText($date, null, $cellAlignCenter);
+                    foreach ($mortgages as $mortgage) {
+                        $table->addRow();
+                        $table->addCell(null, $cellRowContinue);
+                        $table->addCell(null, $cellRowContinue);
+                        $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null, $cellAlignCenter);
+                        $table->addCell(1800, $cellVAlignCenter)->addText($mortgage['pieces'], null, $cellAlignCenter);
+                        $table->addCell(3500, $gridSpan2)->addText($mortgage['num'], null, $cellAlignCenter);
+                    }
+                }
+            }
+            $table->addRow();
+            $table->addCell(10500, $gridSpan6)->addText('销售统计', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(1200, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('订货数量', null, $cellAlignCenter);
+            $table->addCell(1800, $cellVAlignCenter)->addText('订货总金额', null, $cellAlignCenter);
+            $table->addCell(1500, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
+            foreach ($visit['statistics'] as $goodsId => $statistics) {
+                $table->addRow();
+                $table->addCell(1200, $cellVAlignCenter)->addText($goodsId, null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['goods_name'], null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['order_num'], null, $cellAlignCenter);
+                $table->addCell(1800, $cellVAlignCenter)->addText($statistics['order_amount'], null, $cellAlignCenter);
+                $table->addCell(1500, $cellVAlignCenter)->addText($statistics['return_order_num'], null,
+                    $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['return_amount'], null, $cellAlignCenter);
+            }
+            $table->addRow();
+            $table->addCell(10500,
+                $gridSpan6)->addText("订货总金额 : {$visit['amount']}   退货总金额 : {$visit['return_amount']}", null,
+                $cellAlignCenter);
+
+
         }
+
+        $name = $salesman->name . $startDate . '至' . $endDate . '业务报告.docx';
+        $phpWord->save($name, 'Word2007', true);
     }
 
     /**
@@ -297,6 +392,9 @@ class ReportController extends Controller
             $visitData[$customerId]['created_at'] = $visit->created_at;
             $visitData[$customerId]['customer_name'] = $visit->salesmanCustomer->name;
             $visitData[$customerId]['contact'] = $visit->salesmanCustomer->contact;
+            $visitData[$customerId]['lng'] = $visit->salesmanCustomer->business_address_lng;
+            $visitData[$customerId]['lat'] = $visit->salesmanCustomer->business_address_lat;
+            $visitData[$customerId]['number'] = $visit->salesmanCustomer->number;
             $visitData[$customerId]['contact_information'] = $visit->salesmanCustomer->contact_information;
             $visitData[$customerId]['shipping_address_name'] = $visit->salesmanCustomer->shipping_address_name;
 
@@ -365,7 +463,7 @@ class ReportController extends Controller
             foreach ($mortgageGoods as $mortgage) {
                 $date = (new Carbon($mortgage->created_at))->toDateString();
                 $visitData[$customerId]['mortgage'][$date][] = [
-                    'name' => $goodsNames[$mortgage->goods_id],
+                    'name' =>$mortgage->mortgage_goods_name,
                     'num' => $mortgage->num,
                     'pieces' => cons()->valueLang('goods.pieces', $mortgage->pieces)
                 ];

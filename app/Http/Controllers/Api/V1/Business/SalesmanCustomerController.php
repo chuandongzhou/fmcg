@@ -51,6 +51,7 @@ class SalesmanCustomerController extends Controller
         }
 
         $attributes['number'] = $this->_getCustomerNumber($salesman);
+        $attributes['letter'] = $this->_getLetter($attributes['name']);
 
         if ($salesman->customers()->create($attributes)->exists) {
             return $this->success('添加客户成功');
@@ -72,6 +73,7 @@ class SalesmanCustomerController extends Controller
             return $this->error('客户不存在');
         }
         $attributes = $request->all();
+        $attributes['letter'] = $this->_getLetter($attributes['name']);
         if ($customer->fill($attributes)->save()) {
             return $this->success('修改客户成功');
         }
@@ -103,5 +105,16 @@ class SalesmanCustomerController extends Controller
     private function _getCustomerNumber(Salesman $salesman)
     {
         return $salesman->customers()->max('number') + 1;
+    }
+
+    /**
+     * 获取昵称首字字母
+     *
+     * @param $name
+     * @return string
+     */
+    private function _getLetter($name)
+    {
+        return strtoupper(pinyin_abbr($name)[0]);
     }
 }

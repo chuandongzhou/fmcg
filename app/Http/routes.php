@@ -73,9 +73,11 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
         $router->get('salesman/target', 'SalesmanController@target');
         $router->resource('salesman', 'SalesmanController');
+        $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
         $router->resource('report', 'ReportController');
+        $router->resource('mortgage-goods', 'MortgageGoodsController');
         $router->group(['prefix' => 'order'], function ($router) {
             $router->get('export', 'SalesmanVisitOrderController@export');
             $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
@@ -190,6 +192,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
         $router->group(['prefix' => 'my-goods'], function ($router) {
             $router->put('shelve', 'MyGoodsController@shelve');                //商品上下架
+            $router->post('{my_goods}/mortgage', 'MyGoodsController@mortgage');                //商品上下架
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
             $router->post('import', 'MyGoodsController@import');
@@ -257,6 +260,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
                 $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
+            });
+            //抵费商品
+            $router->group(['prefix' => 'mortgage-goods'], function ($router) {
+                $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
+                $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
+                $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
+                $router->delete('batch-delete', 'MortgageGoodsController@batchDestroy'); //移除
+                $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
             });
         });
 

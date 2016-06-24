@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Controllers\Api\V1\Business;
+
+use App\Models\Salesman;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Api\V1\Controller;
+use Hash;
+
+class AuthController extends Controller
+{
+    /**
+     * 登录
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postLogin(Request $request)
+    {
+        $account = $request->input('account');
+        $password = $request->input('password');
+        if (!$account || !$password) {
+            return $this->invalidParam('password', '账号或密码不能为空');
+        }
+
+        $salesman = Salesman::where('user_name', $account)->first();
+
+        if (!$salesman || !Hash::check($password, $salesman->password)) {
+            return $this->invalidParam('password', '账号或密码错误');
+        }
+
+        if ($salesman->status != cons('status.on')) {
+            return $this->invalidParam('password', '账号已锁定');
+        }
+
+
+        $nowTime = Carbon::now();
+
+        if ($salesman->fill(['last_login_at' => $nowTime])->save()) {
+            salesman_auth()->login($salesman, true);
+            return $this->success(['salesman' => $salesman]);
+        }
+        return $this->invalidParam('password', '登录失败，请重试');
+
+    }
+}

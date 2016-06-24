@@ -56,6 +56,26 @@ class Goods extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($model) {
+            $model->deliveryArea()->delete();   //配送区域
+            $model->carts()->delete();           //购物车
+            $model->attr()->detach();           //商品标签
+            //$model->images()->detach();         //商品图片
+        });
+
+//        static::creating(function ($model) {
+//            $model->user_type = auth()->user()->type;
+//
+//        });
+    }
+
+    /**
      * 所属店铺
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -126,6 +146,16 @@ class Goods extends Model
     }
 
     /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function mortgageGoods()
+    {
+        return $this->hasOne('App\Models\MortgageGoods');
+    }
+
+    /**
      * 查询热销产品
      *
      * @param $query
@@ -178,7 +208,6 @@ class Goods extends Model
         return $query->orderBy('name', 'asc');
     }
 
-
     /**
      * 查询促销产品
      *
@@ -188,7 +217,6 @@ class Goods extends Model
     {
         return $query->where('is_promotion', 1);
     }
-
 
     /**
      * 配送地址
@@ -267,61 +295,6 @@ class Goods extends Model
     }
 
     /**
-     * 模型启动事件
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleted(function ($model) {
-            $model->deliveryArea()->delete();   //配送区域
-            $model->carts()->delete();           //购物车
-            $model->attr()->detach();           //商品标签
-            //$model->images()->detach();         //商品图片
-        });
-
-//        static::creating(function ($model) {
-//            $model->user_type = auth()->user()->type;
-//
-//        });
-    }
-
-    /**
-     *  设置图片
-     *
-     * @param $images ['id'=>['1' ,''] , 'path'=>'']
-     * @return bool
-     */
-//    public function setImagesAttribute($images)
-//    {
-//        if ($this->exists) {
-//            $this->images()->detach();
-//            $this->images()->sync($images);
-//        } else {
-//            static::created(function ($model) use ($images) {
-//                $model->images()->detach();
-//                $model->images()->sync($images);
-//            });
-//        }
-//
-//
-//        /*//格式化图片数组
-//        $imagesArr = (new ImageUploadService($images))->formatImagePost();
-//        //删除的图片
-//        $files = $this->images();
-//        if (!empty (array_filter($images['id']))) {
-//            $files = $files->whereNotIn('id', array_filter($images['id']));
-//        }
-//        $files->delete();
-//
-//        if (!empty($imagesArr)) {
-//            return $this->associateFiles($imagesArr, 'images', 0, false);
-//        }*/
-//
-//        return true;
-//    }
-
-    /**
      * 根据不同角色获取价格
      *
      * @return mixed
@@ -344,6 +317,11 @@ class Goods extends Model
         return cons()->valueLang('goods.pieces', $piece);
     }
 
+    /**
+     * 根据不同角色获取单位Id
+     *
+     * @return mixed
+     */
     public function getPiecesIdAttribute()
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
@@ -411,5 +389,15 @@ class Goods extends Model
     public function getCategoryIdAttribute()
     {
         return $this->cate_level_3 ? $this->cate_level_3 : ($this->cate_level_2 ? $this->cate_level_2 : $this->cate_level_1);
+    }
+
+    /**
+     * 是否是抵费商品
+     *
+     * @return bool
+     */
+    public function getIsMortgageGoodsAttribute()
+    {
+        return !is_null($this->mortgageGoods);
     }
 }

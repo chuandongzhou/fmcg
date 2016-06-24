@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Index\Controller;
 use Gate;
+use PhpOffice\PhpWord\PhpWord;
 
 class SalesmanCustomerController extends Controller
 {
@@ -65,10 +66,17 @@ class SalesmanCustomerController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         //
     }
 
+    /**
+     * 客户信息销售明细
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\SalesmanCustomer $customer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
     public function show(Request $request, SalesmanCustomer $customer)
     {
         if ($customer && Gate::denies('validate-customer', $customer)) {
@@ -79,8 +87,97 @@ class SalesmanCustomerController extends Controller
         $beginTime = isset($data['begin_time']) ? new Carbon($data['begin_time']) : (new Carbon())->startOfMonth();
         $endTime = isset($data['end_time']) ? (new Carbon($data['end_time']))->endOfDay() : Carbon::now();
 
+        $result = $this->_getCustomerDetail($customer, $beginTime, $endTime);
+
+        $result = array_merge($result, [
+            'beginTime' => $beginTime->toDateString(),
+            'endTime' => $endTime->toDateString(),
+            'customer' => $customer,
+        ]);
+
+        return view('index.business.salesman-customer-detail', $result);
+    }
+
+    /**
+     * 客户信息销售明细
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\SalesmanCustomer $customer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
+    public function export(Request $request, SalesmanCustomer $customer)
+    {
+        if ($customer && Gate::denies('validate-customer', $customer)) {
+            return $this->error('客户不存在');
+        }
+
+        $data = $request->all();
+        $beginTime = isset($data['begin_time']) ? new Carbon($data['begin_time']) : (new Carbon())->startOfMonth();
+        $endTime = isset($data['end_time']) ? (new Carbon($data['end_time']))->endOfDay() : Carbon::now();
+
+        $result = $this->_getCustomerDetail($customer, $beginTime, $endTime);
+
+        $result = array_merge($result, [
+            'beginTime' => $beginTime->toDateString(),
+            'endTime' => $endTime->toDateString(),
+            'customer' => $customer,
+        ]);
+
+        return $this->_export($result);
+    }
+
+    /**
+     * 客户编辑
+     *
+     * @param $salesCustomer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit($salesCustomer)
+    {
+        $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
+        return view('index.business.salesman-customer',
+            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesCustomer]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    /**
+     * 获取客户销售明细详情
+     *
+     * @param \App\Models\SalesmanCustomer $customer
+     * @param $beginTime
+     * @param $endTime
+     * @return array
+     */
+    private function _getCustomerDetail(SalesmanCustomer $customer, $beginTime, $endTime)
+    {
+
         //拜访记录
-        $visits = $customer->visits()->OfTime($beginTime, $endTime)->with(['orders.orderGoods', 'goodsRecord'])->get();
+        $visits = $customer->visits()->OfTime($beginTime, $endTime)->with([
+            'orders.orderGoods.mortgageGoods',
+            'goodsRecord'
+        ])->get();
 
 
         //拜访商品记录
@@ -128,7 +225,7 @@ class SalesmanCustomerController extends Controller
         foreach ($orderGoods as $goods) {
             $salesList[$goods->goods_id][$goods->salesman_visit_id][$goods->type] = $goods;
         }
-        
+
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
@@ -150,53 +247,113 @@ class SalesmanCustomerController extends Controller
                 ];
             }
         }
-        return view('index.business.salesman-customer-detail', [
-            'beginTime' => $beginTime->toDateString(),
-            'endTime' => $endTime->toDateString(),
+        return [
             'visits' => $visits,
-            'customer' => $customer,
             'orders' => $orders,
             'orderGoodsDetail' => $orderGoodsDetail,
             'returnOrders' => $returnOrders,
             'mortgageGoods' => $mortgageGoods,
             'salesListsData' => $salesListsData
+        ];
+    }
+
+    private function _export($result)
+    {
+        // Creating the new document...
+        $phpWord = new PhpWord();
+
+        $tableBolder = array('borderSize' => 1, 'borderColor' => '999999');
+
+
+        $cellAlignCenter = ['align' => 'center'];
+        $cellVAlignCenter = ['valign' => 'center'];
+        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
+        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
+        $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
+        $cellRowContinue = array('vMerge' => 'continue');
+
+        $phpWord->setDefaultFontName('仿宋');
+        $phpWord->setDefaultFontSize(10);
+
+        $phpWord->addParagraphStyle('Normal', [
+            'spaceBefore' => 0,
+            'spaceAfter' => 0,
+            'lineHeight' => 1.2,  // 行间距
         ]);
+
+        $section = $phpWord->addSection();
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell(2500)->addText('店铺名称 : ' . $result['customer']->name);
+        $table->addCell(2500)->addText('联系人 : ' . $result['customer']->contact);
+        $table->addCell(5500)->addText('联系电话 : ' . $result['customer']->contact_information);
+
+        $table->addRow();
+        $table->addCell(2500)->addText('业务员 : ' . $result['customer']->salesman->name);
+        $table->addCell(2500)->addText('拜访次数 : ' . $result['visits']->count());
+        $table->addCell(5500)->addText('最后拜访时间 : ' . $result['visits']->max('created_at'));
+
+        $table->addRow();
+        $table->addCell(2500)->addText('订货总订单数 : ' . $result['orders']->count());
+        $table->addCell(8000, $gridSpan2)->addText('订单总金额  : ' . $result['orders']->sum('amount'));
+
+        $table->addRow();
+        $table->addCell(2500)->addText('退货总订单数 : ' . $result['returnOrders']->count());
+        $table->addCell(8000, $gridSpan2)->addText('退货总金额  : ' . $result['returnOrders']->sum('amount'));
+
+
+        $displaySection = $phpWord->addSection();
+        $displayTable = $displaySection->addTable($tableBolder);
+
+        /*  $displayTable->addRow();
+          $displayTable->addCell(1500, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);*/
+
+        if (isset($result['orders'])) {
+            $displayTable->addRow();
+            //$displayTable->addCell(null, $cellRowContinue);
+            $displayTable->addCell(9000, $gridSpan4)->addText('现金', null, $cellAlignCenter);
+
+            $displayTable->addRow();
+            //$displayTable->addCell(null, $cellRowContinue);
+            $displayTable->addCell(5000, $gridSpan2)->addText('拜访时间', null, $cellAlignCenter);
+            $displayTable->addCell(4000, $gridSpan2)->addText('金额', null, $cellAlignCenter);
+
+            foreach ($result['orders'] as $order) {
+                $displayTable->addRow();
+                //$displayTable->addCell(null, $cellRowContinue);
+                $displayTable->addCell(2000, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
+                $displayTable->addCell(7300, $gridSpan2)->addText($order->display_fee, null, $cellAlignCenter);
+            }
+        }
+
+        if ($result['mortgageGoods']->count()) {
+            $displayTable->addRow();
+            //$displayTable->addCell(null, $cellRowContinue);
+            $displayTable->addCell(9000, $gridSpan4)->addText('货抵 ', null, $cellAlignCenter);
+
+            $displayTable->addRow();
+            //$displayTable->addCell(null, $cellRowContinue);
+            $displayTable->addCell(3000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+            $displayTable->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+            $displayTable->addCell(2000, $cellVAlignCenter)->addText('商品单位', null, $cellAlignCenter);
+            $displayTable->addCell(2000, $cellVAlignCenter)->addText('数量', null, $cellAlignCenter);
+
+            foreach ($result['mortgageGoods'] as $mortgage) {
+                $displayTable->addRow();
+                //$displayTable->addCell(null, $cellRowContinue);
+                $displayTable->addCell(3000, $cellVAlignCenter)->addText($mortgage->created_at, null, $cellAlignCenter);
+                $displayTable->addCell(2000, $cellVAlignCenter)->addText($mortgage->mortgage_goods_name, null, $cellAlignCenter);
+                $displayTable->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces' , $mortgage->pieces), null, $cellAlignCenter);
+                $displayTable->addCell(2000, $cellVAlignCenter)->addText($mortgage->num, null, $cellAlignCenter);
+            }
+        }
+
+
+        $name = $result['customer']->name . $result['beginTime'] . ' 至 ' . $result['endTime'] . '销售明细.docx';
+        $phpWord->save($name, 'Word2007', true);
+
     }
 
 
-    /**
-     * 客户编辑
-     *
-     * @param $salesCustomer
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function edit($salesCustomer)
-    {
-        $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
-        return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesCustomer]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

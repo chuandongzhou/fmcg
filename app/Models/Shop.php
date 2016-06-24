@@ -214,6 +214,16 @@ class Shop extends Model
         return $this->hasMany('App\Models\Salesman');
     }
 
+    /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function mortgageGoods()
+    {
+        return $this->hasMany('App\Models\MortgageGoods');
+    }
+
 
     /**
      * 获取热门商家
