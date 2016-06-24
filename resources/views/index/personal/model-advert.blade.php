@@ -2,6 +2,7 @@
 @include('includes.uploader')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-首页广告')
+@include('includes.tinymce',['full' => true])
 
 @section('right')
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
@@ -49,14 +50,20 @@
         <div class="form-group">
             @if($advert->type==5)
                 <label for="url" class="col-sm-2 control-label goodsId">商品id</label>
-                <div class="col-sm-4">
+                <div class="col-sm-4 goodsidDiv">
                     <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id"
                            value="{{ $advert->goods_id }}">
                 </div>
+                <div class="col-xs-8 promoteDiv" style="display:none">
+                    <textarea  class="introduce tinymce-editor form-control promotInfo"></textarea>
+                </div>
             @else
                 <label for="url" class="col-sm-2 control-label goodsId">促销信息</label>
-                <div class="col-sm-4">
-                    <textarea class="promotInfo col-xs-12" type="text" class="form-control" id="goods_id" name="goods_id" rows="3">{{ $advert->url }}</textarea>
+                <div class="col-sm-8 promoteDiv">
+                     <textarea class="introduce tinymce-editor form-control promotInfo" name="promoteinfo">{{ $advert->url }}</textarea>
+                </div>
+                <div class="col-xs-4 goodsidDiv" style="display:none">
+                    <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id" />
                 </div>
             @endif
 

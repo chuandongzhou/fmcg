@@ -1,6 +1,6 @@
 @include('includes.uploader')
 @include('includes.timepicker')
-
+@include('includes.tinymce',['full' => true])
 @section('body')
     <div class="modal fade" id="shopAdvertModal" tabindex="-1" role="dialog" aria-labelledby="shopAdvertModalLabel"
          aria-hidden="true">
@@ -50,10 +50,13 @@
                         <div class="form-group">
                             <label for="url" class="col-sm-2 control-label goodsId">商品id</label>
 
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="goods_id" name="goods_id"
-                                       placeholder="请输入商品id">
+                            <div class="col-sm-4 goodsidDiv">
+                                <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id" />
                             </div>
+                            <div class="col-xs-8 promoteDiv" style="display:none">
+                                <textarea name="promoteinfo"  class="introduce tinymce-editor form-control promotInfo"></textarea>
+                            </div>
+
                         </div>
 
                         <div class="form-group" id="date-time">
