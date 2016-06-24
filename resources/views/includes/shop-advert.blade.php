@@ -28,11 +28,19 @@
                             <label for="upload-file" class="col-sm-2 control-label">广告图片</label>
 
                             <div class="col-sm-4">
-                <span data-name="image" class="btn btn-primary btn-sm fileinput-button">
-                                请选择图片文件
-                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
-                                       name="file">
-                            </span>
+                                <button data-height="200" data-width="800" data-target="#cropperModal" data-toggle="modal"
+                                        data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
+                                        id="pic-upload">
+                                    请选择图片文件(裁剪)
+                                </button>
+
+                                <div class="progress collapse">
+                                    <div class="progress-bar progress-bar-striped active"></div>
+                                </div>
+
+                                <div class="row pictures">
+
+                                </div>
 
                                 <div class="image-preview w160">
                                     <img src="" class="img-thumbnail">

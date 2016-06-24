@@ -1,12 +1,11 @@
 @extends('index.menu-master')
-@include('includes.shop-advert')
+
 
 @section('subtitle', '个人中心-首页广告')
 
 @section('right')
     <div>
-        <a class="add" href="javascript:void(0)" type="button" data-target="#shopAdvertModal"
-           data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加广告
+        <a class="add" href="{{ url('personal/model/create') }}"  ><label><span class="fa fa-plus"></span></label>添加广告
         </a>
     </div>
     <table class="table table-striped">
