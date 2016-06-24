@@ -39,9 +39,16 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <label for="url" class="col-sm-2 control-label">商品id</label>
+                            <div class="col-xs-2 col-xs-offset-2">
+                                <input class="goodsIdRadio" type="radio" name="identity"  checked="checked" value="shop" />商品id
+                            </div>
+                            <div>
+                                <input class="promoteRadio" type="radio" name="identity" value="promote" >促销信息
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="url" class="col-sm-2 control-label goodsId">商品id</label>
 
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="goods_id" name="goods_id"
@@ -73,4 +80,12 @@
         </div>
     </div>
     @parent
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(document).ready(function () {
+            radioCheck();
+        })
+    </script>
 @stop

@@ -191,7 +191,10 @@ class Shop extends Model
      */
     public function adverts()
     {
-        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.shop'));
+        return $this->hasMany('App\Models\Advert')->where(function ($query) {
+            $query->where('type',cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
+        });
+
     }
 
     /**

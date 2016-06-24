@@ -94,10 +94,10 @@ class Advert extends Model
      *
      * @param $goodsId
      */
-    public function setGoodsIdAttribute($goodsId)
-    {
-        $this->attributes['url'] = url('goods/' . $goodsId);
-    }
+//    public function setGoodsIdAttribute($goodsId)
+//    {
+//        $this->attributes['url'] = url('goods/' . $goodsId);
+//    }
 
     /**
      * 设置结束时间

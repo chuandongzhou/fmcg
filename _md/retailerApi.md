@@ -713,6 +713,8 @@
         name            string              广告名
         image_url       string              广告图片地址
         goods_id        int                 广告所属商品id
+		type            int                 (5:商品广告，6:促销信息)
+		url				string              商品广告时是链接地址，促销信息时是促销信息类容
 
 
 ### 2.5 分类 categories

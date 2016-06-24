@@ -30,14 +30,36 @@
                 </div>
             </div>
         </div>
-
         <div class="form-group">
-            <label for="url" class="col-sm-2 control-label">商品id</label>
-
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id"
-                       value="{{ $advert->goods_id }}">
+            <div class="col-xs-2 col-xs-offset-2">
+                @if($advert->type==5)
+                    <input class="goodsIdRadio" type="radio" name="identity"  checked="checked" value="shop" />商品id
+                @else
+                    <input class="goodsIdRadio" type="radio" name="identity" value="shop" />商品id
+                @endif
             </div>
+            <div>
+                @if($advert->type==5)
+                    <input class="promoteRadio" type="radio" name="identity" value="promote" >促销信息
+                @else
+                    <input class="promoteRadio" type="radio" name="identity" value="promote" checked="checked" >促销信息
+                @endif
+            </div>
+        </div>
+        <div class="form-group">
+            @if($advert->type==5)
+                <label for="url" class="col-sm-2 control-label goodsId">商品id</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id"
+                           value="{{ $advert->goods_id }}">
+                </div>
+            @else
+                <label for="url" class="col-sm-2 control-label goodsId">促销信息</label>
+                <div class="col-sm-4">
+                    <textarea class="promotInfo col-xs-12" type="text" class="form-control" id="goods_id" name="goods_id" rows="3">{{ $advert->url }}</textarea>
+                </div>
+            @endif
+
         </div>
 
         <div class="form-group" id="date-time">
@@ -65,4 +87,12 @@
         </div>
     </form>
     @parent
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(document).ready(function () {
+            radioCheck();
+        })
+    </script>
 @stop

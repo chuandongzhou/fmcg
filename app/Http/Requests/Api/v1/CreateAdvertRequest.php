@@ -15,7 +15,7 @@ class CreateAdvertRequest extends Request
         return [
             'name' => 'required',
             'image' => 'sometimes|required',
-            'goods_id' => 'required|integer',
+            'goods_id' => 'required',
             'start_at' => 'required|date',
             'end_at' => 'date|after:start_at',
         ];

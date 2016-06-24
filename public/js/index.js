@@ -811,3 +811,18 @@ $(function () {
         $(this).closest('.msg-channel').animate({'bottom': '-160'});
     })
 })
+
+//店铺广告radio选择
+function radioCheck(){
+    var goodsval =  $('.goodsId').next().children('input').val()?$('.goodsId').next().children('input').val():'';
+    var promoteInfo = $('.promotInfo').html()?$('.promotInfo').html():'';
+    $('.goodsIdRadio').click(function(){
+        $('.goodsId').html('商品id');
+        $('.goodsId').next().html('<input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id" value="'+goodsval+'">');
+    });
+    $('.promoteRadio').click(function(){
+        $('.goodsId').html('促销信息');
+        $('.goodsId').next().html('<textarea class="promotInfo col-xs-12" type="text" class="form-control" id="goods_id" name="goods_id" rows="3">'+promoteInfo+'</textarea>');
+    });
+
+}
