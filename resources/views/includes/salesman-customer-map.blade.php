@@ -44,7 +44,7 @@
                 var mapData = customerMapData();
 
                 // 百度地图API功能
-                var mp = new BMap.Map("customer-map");
+                var mp = new BMap.Map("customer-map", {enableMapClick: false});
                 mp.centerAndZoom(new BMap.Point(mapData[0]['lng'], mapData[0]['lat']), 15);
                 mp.enableScrollWheelZoom();
                 // 复杂的自定义覆盖物

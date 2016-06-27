@@ -11,11 +11,15 @@ use Gate;
 
 class MortgageGoodsController extends Controller
 {
-    protected $shop;
-
     public function __construct()
     {
-        $this->shop = auth()->user()->shop;
+        $this->middleware('salesman.auth', ['only' => ['index']]);
+    }
+
+    public function index()
+    {
+        $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->get();
+        return $this->success(compact('mortgageGoods'));
     }
 
     /**
@@ -52,11 +56,18 @@ class MortgageGoodsController extends Controller
         if (empty($goodsIds)) {
             return $this->error('请选择要' . $statusVal . '的商品');
         }
-        return $this->shop->mortgageGoods()->whereIn('id', $goodsIds)->update(['status' => $status])
+        returnauth()->user()->shop->mortgageGoods()->whereIn('id', $goodsIds)->update(['status' => $status])
             ? $this->success('商品' . $statusVal . '成功') : $this->error('商品' . $statusVal . '时出现问题');
 
     }
 
+    /**
+     * 商品更新
+     *
+     * @param \App\Http\Requests\Api\v1\UpdateMortgageGoodsRequest $request
+     * @param \App\Models\MortgageGoods $mortgageGoods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function update(Requests\Api\v1\UpdateMortgageGoodsRequest $request, MortgageGoods $mortgageGoods)
     {
         if (Gate::denies('validate-mortgage-goods', $mortgageGoods)) {
@@ -64,7 +75,7 @@ class MortgageGoodsController extends Controller
         }
 
         $attributes = $request->all();
-        
+
         return $mortgageGoods->fill($attributes)->save() ? $this->success('修改成功') : $this->error('修改商品时出现问题');
     }
 
@@ -91,7 +102,7 @@ class MortgageGoodsController extends Controller
     public function batchDestroy(Request $request)
     {
         $goodsIds = (array)$request->input('goods_id');
-        return $this->shop->mortgageGoods()->whereIn('id',
+        return auth()->user()->shop->mortgageGoods()->whereIn('id',
             $goodsIds)->delete() ? $this->success('删除商品成功') : $this->success('删除商品时出现问题');
 
     }

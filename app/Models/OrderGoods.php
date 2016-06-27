@@ -35,8 +35,23 @@ class OrderGoods extends Model
         return $this->belongsTo('App\Models\Goods')->withTrashed();
     }
 
+    /**
+     * 获取单位名
+     *
+     * @return string
+     */
     public function getPiecesNameAttribute()
     {
         return cons()->valueLang('goods.pieces', $this->pieces);
+    }
+
+    /**
+     * 获取商品图片
+     *
+     * @return string
+     */
+    public function getImageAttribute()
+    {
+        return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
     }
 }

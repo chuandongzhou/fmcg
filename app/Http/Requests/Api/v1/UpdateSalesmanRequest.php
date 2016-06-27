@@ -12,13 +12,13 @@ class UpdateSalesmanRequest extends Request
      */
     public function rules()
     {
-        $salesman = $this->route('salesman');
-        info($salesman->account);
+       // $salesman = $this->route('salesman');
         return [
             'avatar' => 'sometimes|required',
-            'account' => 'required|between:4,18|unique:salesman,account,' . $salesman->id,
+            //'account' => 'required|between:4,18|unique:salesman,account,' . $salesman->id,
             'password' => 'between:6,18|confirmed',
-            'name' => 'required'
+            'name' => 'required',
+            'contact_information' => 'required'
         ];
     }
 }

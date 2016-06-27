@@ -270,6 +270,7 @@ class SalesmanCustomerController extends Controller
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
         $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
         $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
+        $gridSpan10 = ['gridSpan' => 10, 'valign' => 'center'];
         $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
 
@@ -303,49 +304,99 @@ class SalesmanCustomerController extends Controller
         $table->addCell(8000, $gridSpan2)->addText('退货总金额  : ' . $result['returnOrders']->sum('amount'));
 
 
-        $displaySection = $phpWord->addSection();
-        $displayTable = $displaySection->addTable($tableBolder);
+        $section = $phpWord->addSection();
+        $table = $section->addTable($tableBolder);
 
-        /*  $displayTable->addRow();
-          $displayTable->addCell(1500, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);*/
+        $table->addRow(0);
+        $table->addCell(1500, $gridSpan5)->addText('陈列费明细', null, $cellAlignCenter);
+        $table->addCell(3000)->addText('', null, $cellAlignCenter);
+        $table->addCell(2000)->addText('', null, $cellAlignCenter);
+        $table->addCell(2000)->addText('', null, $cellAlignCenter);
+        $table->addCell(2000)->addText('', null, $cellAlignCenter);
+
+        $table->addRow();
+        $table->addCell(1500, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);
 
         if (isset($result['orders'])) {
-            $displayTable->addRow();
-            //$displayTable->addCell(null, $cellRowContinue);
-            $displayTable->addCell(9000, $gridSpan4)->addText('现金', null, $cellAlignCenter);
+            $table->addRow();
+            $table->addCell(null, $cellRowContinue);
+            $table->addCell(9000, $gridSpan4)->addText('现金', null, $cellAlignCenter);
 
-            $displayTable->addRow();
-            //$displayTable->addCell(null, $cellRowContinue);
-            $displayTable->addCell(5000, $gridSpan2)->addText('拜访时间', null, $cellAlignCenter);
-            $displayTable->addCell(4000, $gridSpan2)->addText('金额', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(null, $cellRowContinue);
+            $table->addCell(5000, $gridSpan2)->addText('拜访时间', null, $cellAlignCenter);
+            $table->addCell(4000, $gridSpan2)->addText('金额', null, $cellAlignCenter);
 
             foreach ($result['orders'] as $order) {
-                $displayTable->addRow();
-                //$displayTable->addCell(null, $cellRowContinue);
-                $displayTable->addCell(2000, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
-                $displayTable->addCell(7300, $gridSpan2)->addText($order->display_fee, null, $cellAlignCenter);
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(2000, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(7300, $gridSpan2)->addText($order->display_fee, null, $cellAlignCenter);
             }
         }
 
         if ($result['mortgageGoods']->count()) {
-            $displayTable->addRow();
-            //$displayTable->addCell(null, $cellRowContinue);
-            $displayTable->addCell(9000, $gridSpan4)->addText('货抵 ', null, $cellAlignCenter);
+            $table->addRow();
+            $table->addCell(null, $cellRowContinue);
+            $table->addCell(9000, $gridSpan4)->addText('货抵 ', null, $cellAlignCenter);
 
-            $displayTable->addRow();
-            //$displayTable->addCell(null, $cellRowContinue);
-            $displayTable->addCell(3000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
-            $displayTable->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
-            $displayTable->addCell(2000, $cellVAlignCenter)->addText('商品单位', null, $cellAlignCenter);
-            $displayTable->addCell(2000, $cellVAlignCenter)->addText('数量', null, $cellAlignCenter);
+            $table->addRow();
+            $table->addCell(null, $cellRowContinue);
+            $table->addCell(3000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('商品单位', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('数量', null, $cellAlignCenter);
 
             foreach ($result['mortgageGoods'] as $mortgage) {
-                $displayTable->addRow();
-                //$displayTable->addCell(null, $cellRowContinue);
-                $displayTable->addCell(3000, $cellVAlignCenter)->addText($mortgage->created_at, null, $cellAlignCenter);
-                $displayTable->addCell(2000, $cellVAlignCenter)->addText($mortgage->mortgage_goods_name, null, $cellAlignCenter);
-                $displayTable->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces' , $mortgage->pieces), null, $cellAlignCenter);
-                $displayTable->addCell(2000, $cellVAlignCenter)->addText($mortgage->num, null, $cellAlignCenter);
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage->created_at, null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->mortgage_goods_name, null,
+                    $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage->pieces),
+                    null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->num, null, $cellAlignCenter);
+            }
+        }
+
+        $section = $phpWord->addSection();
+        $table = $section->addTable($tableBolder);
+
+        $table->addRow();
+        $table->addCell(10500, $gridSpan10)->addText('客户销售商品列表', null, $cellAlignCenter);
+
+        $table->addRow();
+        $table->addCell(800, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
+        $table->addCell(1700, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('商品库存', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('生产日期', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('商品单价', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('订货数量', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('订货总金额', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('退货总金额', null, $cellAlignCenter);
+
+        foreach ($result['salesListsData'] as $goodsId => $salesGoods) {
+            $table->addRow();
+            $table->addCell(800, $cellRowSpan)->addText($salesGoods['id'], null, $cellAlignCenter);
+            $table->addCell(1700, $cellRowSpan)->addText($salesGoods['name'], null, $cellAlignCenter);
+            foreach ($salesGoods['visit'] as $visit) {
+                $piecesName = cons()->valueLang('goods.pieces', $visit['order_pieces']);
+                $table->addRow();
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['time'], null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['stock'], null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['production_date'], null, $cellAlignCenter);
+                $table->addCell(1000,
+                    $cellVAlignCenter)->addText($visit['order_price'] . '/' . $piecesName, null, $cellAlignCenter);
+                $table->addCell(1000,
+                    $cellVAlignCenter)->addText($visit['order_num'] . $piecesName   , null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['order_amount'], null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_num'], null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_amount'], null, $cellAlignCenter);
             }
         }
 

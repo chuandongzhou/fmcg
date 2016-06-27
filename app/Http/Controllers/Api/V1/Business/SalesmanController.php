@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Services\SalesmanTargetService;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\PhpWord;
+use Gate;
 
 class SalesmanController extends Controller
 {
@@ -43,6 +44,9 @@ class SalesmanController extends Controller
      */
     public function show($salesman)
     {
+        if (Gate::denies('validate-salesman', $salesman)) {
+            return $this->error('业务员不存在');
+        }
         return $this->success(['salesman' => $salesman]);
     }
 
@@ -55,8 +59,26 @@ class SalesmanController extends Controller
      */
     public function update(Requests\Api\V1\UpdateSalesmanRequest $request, $salesman)
     {
+        if (Gate::denies('validate-salesman', $salesman)) {
+            return $this->error('业务员不存在');
+        }
         $attributes = $request->all();
-        if ($salesman->fill($attributes)->save()) {
+        if ($salesman->fill(array_except($attributes, 'account'))->save()) {
+            return $this->success('保存业务员成功');
+        }
+        return $this->error('保存业务员是出现错误');
+    }
+
+    /**
+     * Update the specified resource by App
+     * @param \App\Http\Requests\Api\V1\UpdateSalesmanRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function updateByApp(Requests\Api\V1\UpdateSalesmanRequest $request)
+    {
+        $salesman = salesman_auth()->user();
+        $attributes = $request->all();
+        if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }
         return $this->error('保存业务员是出现错误');
@@ -70,6 +92,9 @@ class SalesmanController extends Controller
      */
     public function destroy($salesman)
     {
+        if (Gate::denies('validate-salesman', $salesman)) {
+            return $this->error('业务员不存在');
+        }
         return $salesman->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员失败');
     }
 

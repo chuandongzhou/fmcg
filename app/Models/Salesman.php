@@ -25,7 +25,7 @@ class Salesman extends Model implements AuthenticatableContract
         'status'
     ];
 
-    protected $hidden = ['updated_at', 'created_at', 'last_login_ip', 'last_login_time'];
+    protected $hidden = ['password','remember_token','updated_at', 'created_at', 'last_login_ip', 'last_login_time'];
 
     /**
      * 模型启动事件

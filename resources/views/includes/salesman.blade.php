@@ -109,7 +109,7 @@
                     $.get(site.api('business/salesman/' + salesmanId), '', function (data) {
                         var salesman = data.salesman;
                         avatarThumbnail.attr('src', salesman.avatar_url);
-                        account.val(salesman.account);
+                        account.val(salesman.account).prop('disabled', true);
                         name.val(salesman.name);
                         contactInformation.val(salesman.contact_information);
                         submitBtn.data('method', 'put').data('url', '{{ url('api/v1/business/salesman' ) }}/' + salesmanId);
@@ -118,7 +118,7 @@
                 }
             }).on('hidden.bs.modal', function () {
                 avatarThumbnail.attr('src', '');
-                account.val('');
+                account.val('').prop('disabled', false);
                 name.val('');
                 password.val('');
                 passwordConfirmation.val('');

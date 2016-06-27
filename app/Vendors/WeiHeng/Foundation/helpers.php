@@ -275,7 +275,7 @@ if (!function_exists('salesman_auth')) {
      */
     function salesman_auth()
     {
-        return app('delivery.auth');
+        return app('salesman.auth');
     }
 }
 if (!function_exists('array_to_xml')) {

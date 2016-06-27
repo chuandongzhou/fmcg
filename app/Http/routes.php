@@ -250,11 +250,13 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
+            $router->post('auth/login', 'AuthController@login');
             $router->get('salesman/export-target', 'SalesmanController@exportTarget');
             $router->delete('salesman/batch-delete', 'SalesmanController@batchDelete');
             $router->put('salesman/target-set', 'SalesmanController@targetSet');
             $router->resource('salesman', 'SalesmanController');
             $router->resource('salesman-customer', 'SalesmanCustomerController');
+            $router->resource('visit', 'SalesmanVisitController');
             $router->group(['prefix' => 'order'], function ($router) {
                 $router->get('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
@@ -263,6 +265,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             });
             //抵费商品
             $router->group(['prefix' => 'mortgage-goods'], function ($router) {
+                $router->get('/', 'MortgageGoodsController@index'); //启/禁用
                 $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
                 $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
                 $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用

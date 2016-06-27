@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Console\Commands\DataStatistics;
 use App\Models\Advert;
-use App\Services\DataStatisticsService;
 use App\Services\GoodsService;
-use App\Services\ShopService;
-use Carbon\Carbon;
+
 use Illuminate\Support\Facades\Cache;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Style\Font;
 
 class HomeController extends Controller
 {
@@ -50,6 +44,71 @@ class HomeController extends Controller
 
     public function test()
     {
-       return intval(true);
+        $data = [
+            'goods' => [
+                [
+                    'id',
+                    'pieces',
+                    'stock',
+                    'production_date',
+                    'order_form' => [
+                        'price',
+                        'num'
+                    ],
+                    'return_order' => [
+                        'amount',
+                        'num'
+                    ]
+                ]
+            ],
+            'display_fee',
+            "mortgage" => [
+                [
+                    "goods_id",
+                    "num",
+                    "pieces",
+                ],
+
+            ]
+
+        ];
+
+        $order = [];
+        $goodsRecode = [];
+        $order['order_form']['display_fee'] = isset($data['display_fee']) ? $data['display_fee'] : 0;
+
+        foreach ($data['goods'] as $goods) {
+            if ($goods['order_form']) {
+                $order['order_form']['amount'] = isset($order['order_form']['amount']) ?
+                    bcadd($order['order_form']['amount'],
+                        bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2), 2) :
+                    bcmul($goods['order_form']['amount'], $goods['order_form']['num'], 2);
+                $order['order_form']['goods'][] = [
+                    'goods_id' => $goods['id'],
+                    'price' => $goods['order_form']['price'],
+                    'num' => $goods['order_form']['num'],
+                    'pieces' => $goods['pieces'],
+                    'amount' => bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2)
+                ];
+            }
+
+            if ($goods['return_order']) {
+                $order['return_order']['amount'] = isset($order['return_order']['amount']) ?
+                    bcadd($order['return_order']['amount'], $goods['return_order']['amount'],
+                        2) : $goods['return_order']['amount'];
+                $order['return_order']['goods'][] = [
+                    'goods_id' => $goods['id'],
+                    'num' => $goods['order_form']['num'],
+                    'amount' => bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2)
+                ];
+            }
+            $goodsRecode[] = [
+                'goods_id' => $goods['id'],
+                'stock' => $goods['stock'],
+                'production_date' => $goods['production_date']
+            ];
+
+        }
+
     }
 }

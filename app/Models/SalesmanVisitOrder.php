@@ -72,6 +72,17 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
+     * 未处理订单
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfUntreated($query)
+    {
+        return $query->where('status', 0);
+    }
+
+    /**
      * 获取客户名
      *
      * @return string

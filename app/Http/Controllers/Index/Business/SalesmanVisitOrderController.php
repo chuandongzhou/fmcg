@@ -19,9 +19,10 @@ class SalesmanVisitOrderController extends Controller
      */
     public function orderForms()
     {
-        $orders = $this->_getOrders(cons('salesman.order.type.order'));
 
-
+        $shop = auth()->user()->shop;
+        $salesmenId = $shop->salesmen->pluck('id');
+        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.order'));
 
         return view('index.business.order-order-forms', ['orders' => $orders]);
     }
@@ -33,7 +34,9 @@ class SalesmanVisitOrderController extends Controller
      */
     public function returnOrders()
     {
-        $orders = $this->_getOrders(cons('salesman.order.type.return_order'));
+        $shop = auth()->user()->shop;
+        $salesmenId = $shop->salesmen->pluck('id');
+        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.return_order'));
 
         return view('index.business.order-return-orders', ['orders' => $orders]);
     }
@@ -173,21 +176,5 @@ class SalesmanVisitOrderController extends Controller
         $name = date('Ymd') . strtotime('now') . '.docx';
         $phpWord->save($name, 'Word2007', true);
 
-    }
-
-    /**
-     *  根据类型获取所有订单
-     *
-     * @param $type
-     * @return mixed
-     */
-    private function _getOrders($type)
-    {
-        $shop = auth()->user()->shop;
-        $salesmenId = $shop->salesmen->pluck('id');
-
-        $orders = SalesmanVisitOrder::where('type', $type)->whereIn('salesman_id',
-            $salesmenId)->with('salesmanCustomer', 'salesman')->get();
-        return $orders;
     }
 }

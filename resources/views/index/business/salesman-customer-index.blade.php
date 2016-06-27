@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12 table-responsive">
-                <table class="table table-bordered table-center salesman-customer-table">
+                <table class="table table-bordered table-center table-middle salesman-customer-table">
                     <thead>
                     <tr>
                         <th>编号</th>
@@ -61,10 +61,10 @@
                             <td>
                                 {{ $customer->contact_information }}
                             </td>
-                            <td>
+                            <td width="120">
                                 {{ $customer->business_address_name }}
                             </td>
-                            <td>
+                            <td width="120">
                                 {{ $customer->shipping_address_name }}
                             </td>
                             <td>

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
+use App\Services\BusinessService;
 use App\Services\ShippingAddressService;
 use App\Services\ShopService;
 use Carbon\Carbon;
@@ -19,6 +20,30 @@ use DB;
 class SalesmanVisitOrderController extends Controller
 {
 
+    /**
+     * get orderForms by salesmanId
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function orderForms()
+    {
+        $salesmenId = salesman_auth()->id();
+        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.order'));
+        return $this->success(['orders' => $orders]);
+    }
+
+    /**
+     * get returnOrders by salesmanId
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function returnOrders()
+    {
+        $salesmenId = salesman_auth()->id();
+        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.return_order'));
+        return $this->success(['orders' => $orders]);
+    }
+    
     /**
      * 订单操作
      *
@@ -34,7 +59,6 @@ class SalesmanVisitOrderController extends Controller
         $attributes = $request->all();
         return $salesmanVisitOrder->fill($attributes)->save() ? $this->success('操作成功') : $this->error('订单不存在');
     }
-
 
     /**
      * 订单商品修改
