@@ -57,8 +57,8 @@ class LikeController extends Controller
             $goods = $goods->where('name', 'like', '%' . $data['name'] . '%');
         }
         //获取需要显示的分类ID
-        $array = array_unique($goods->lists('cate_level_2')->all());
-
+        $array = $goods->lists('id','cate_level_2')->all();
+        $array = array_unique(array_keys($array));
         $cateArr = array_where(CategoryService::getCategories(), function ($key, $cate) use ($array) {
             return in_array($cate['id'], $array);
         });
