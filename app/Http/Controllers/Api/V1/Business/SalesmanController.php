@@ -71,6 +71,7 @@ class SalesmanController extends Controller
 
     /**
      * Update the specified resource by App
+     *
      * @param \App\Http\Requests\Api\V1\UpdateSalesmanRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -132,6 +133,36 @@ class SalesmanController extends Controller
         $result = (new SalesmanTargetService())->setTarget($data['salesman_id'], $data['date'], $data['target']);
 
         return $result ? $this->success('目录设置成功') : $this->success('更新目标成功');
+    }
+
+    /**
+     * app首页数据
+     *
+     * @param \App\Models\Salesman $salesman
+     * @return array
+     */
+    public function homeData()
+    {
+        $salesman = salesman_auth()->user();
+        $thisDate = (new Carbon())->format('Y-m');
+
+        $target = (new SalesmanTargetService)->getTarget($salesman->id, $thisDate);
+
+        //本月已完成订单金额
+        $thisMonthCompleted = $salesman->orderForms()->whereBetween('created_at',
+            [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount');
+
+        //未处理订货单数
+        $untreatedOrderForms = $salesman->orderForms()->OfUntreated()->count();
+        //未处理退货单数
+        $untreatedReturnOrders = $salesman->returnOrders()->OfUntreated()->count();
+
+        // 今日拜访数
+        $todayVisitCount = $salesman->visits()->whereBetween('created_at',
+            [Carbon::today(), (new Carbon())->endOfDay()])->count();
+
+        return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
+            'todayVisitCount');
     }
 
     /**

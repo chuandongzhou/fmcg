@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Goods;
+use App\Models\MortgageGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Shop;
 use Carbon\Carbon;
@@ -96,12 +97,54 @@ class BusinessService
      *
      * @param $salesmenId
      * @param $type
+     * @param $withOrderGoods
      * @return mixed
      */
-    public function getOrders($salesmenId, $type)
+    public function getOrders($salesmenId, $type, $withOrderGoods = false)
     {
+        $with = $withOrderGoods ? ['salesmanCustomer'] : ['salesmanCustomer', 'salesman'];
         $orders = SalesmanVisitOrder::where('type', $type)->whereIn('salesman_id',
-            (array)$salesmenId)->with('salesmanCustomer', 'salesman')->get();
+            $salesmenId)->with($with)->paginate();
+        if ($withOrderGoods) {
+            $orders->each(function ($order) {
+                $orderConf = cons('salesman.order');
+                if ($order->type == $orderConf['type']['order']) {
+                    $orderGoods = $order->orderGoods;
+
+                    $orderGoodsLists = $order->orderGoods = $orderGoods->filter(function ($item) use ($orderConf) {
+                        return $item->type == $orderConf['goods']['type']['order'];
+                    });
+
+                    $orderGoodsIds = $orderGoodsLists->pluck('goods_id')->toBase()->unique();
+                    $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
+
+                    foreach ($orderGoodsLists as $goods) {
+                        $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
+                    }
+
+                    $mortgageGoodsLists = $orderGoods->filter(function ($item) use ($orderConf) {
+                        return $item->type == $orderConf['goods']['type']['mortgage'];
+                    });
+
+                    $mortgageGoodsIds = $mortgageGoodsLists->pluck('goods_id')->toBase()->unique();
+
+                    $mortgageGoodsNames = MortgageGoods::whereIn('id', $mortgageGoodsIds)->lists('goods_name', 'id');
+
+                    foreach ($mortgageGoodsLists as $goods) {
+                        $goods->goodsName = isset($mortgageGoodsNames[$goods->goods_id]) ? $mortgageGoodsNames[$goods->goods_id] : '';
+                    }
+
+                } else {
+                    $orderGoodsIds = $order->orderGoods->pluck('goods_id')->toBase()->unique();
+                    $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
+
+                    foreach ($order->orderGoods as $goods) {
+                        $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
+                    }
+                }
+                $order->setHidden(['order_goods']);
+            });
+        }
         return $orders;
     }
 

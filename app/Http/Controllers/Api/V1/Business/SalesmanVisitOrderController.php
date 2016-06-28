@@ -28,8 +28,8 @@ class SalesmanVisitOrderController extends Controller
     public function orderForms()
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.order'));
-        return $this->success(['orders' => $orders]);
+        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.order'), true);
+        return $this->success(['orders' => $orders->toArray()]);
     }
 
     /**
@@ -40,10 +40,10 @@ class SalesmanVisitOrderController extends Controller
     public function returnOrders()
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.return_order'));
-        return $this->success(['orders' => $orders]);
+        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.return_order'),true);
+        return $this->success(['orders' => $orders->toArray()]);
     }
-    
+
     /**
      * 订单操作
      *

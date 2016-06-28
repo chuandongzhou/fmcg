@@ -18,7 +18,7 @@ class MortgageGoodsController extends Controller
 
     public function index()
     {
-        $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->get();
+        $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->paginate()->toArray();
         return $this->success(compact('mortgageGoods'));
     }
 

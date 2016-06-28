@@ -14,7 +14,7 @@ class CreateSalesmanCustomerRequest extends Request
     {
         return [
             'name' => 'required',
-            'platform_id' => 'integer',
+            'shop_id' => 'integer',
             'contact' => 'required',
             'contact_information' => 'required',
             'business_area' => 'required',
@@ -33,18 +33,18 @@ class CreateSalesmanCustomerRequest extends Request
         return $this->defaultValidator($factory)->after(function ($validator) {
             if ($businessAddress= $this->input('business_address')) {
                 if (!$businessAddress['address']) {
-                    $validator->errors()->add('address[address]', '地址 不能为空');
+                    $validator->errors()->add('business_address[address]', '地址 不能为空');
                 }
                 if (!$businessAddress['city_id']) {
-                    $validator->errors()->add('address[city_id]', '市 不能为空');
+                    $validator->errors()->add('business_address[city_id]', '市 不能为空');
                 }
             }
-            if ($shippingAddress= $this->input('business_address')) {
+            if ($shippingAddress= $this->input('shipping_address')) {
                 if (!$shippingAddress['address']) {
-                    $validator->errors()->add('address[address]', '地址 不能为空');
+                    $validator->errors()->add('shipping_address[address]', '地址 不能为空');
                 }
                 if (!$shippingAddress['city_id']) {
-                    $validator->errors()->add('address[city_id]', '市 不能为空');
+                    $validator->errors()->add('shipping_address[city_id]', '市 不能为空');
                 }
             }
         });

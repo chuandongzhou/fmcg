@@ -43,39 +43,11 @@ class AuthController extends Controller
 
         if ($salesman->fill(['last_login_at' => $nowTime])->save()) {
             salesman_auth()->login($salesman, true);
-            $salesmanData = $this->_getSalesmanData($salesman);
-            return $this->success(['salesman' => $salesmanData]);
+           // $salesmanData = $this->_getSalesmanData($salesman);
+            return $this->success(['salesman' => $salesman]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
 
     }
-
-    /**
-     * app首页数据
-     *
-     * @param \App\Models\Salesman $salesman
-     * @return array
-     */
-    private function _getSalesmanData(Salesman $salesman)
-    {
-        $thisDate = (new Carbon())->format('Y-m');
-
-        $target = (new SalesmanTargetService)->getTarget($salesman->id, $thisDate);
-
-        //本月已完成订单金额
-        $thisMonthCompleted = $salesman->orderForms()->whereBetween('created_at',
-            [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount');
-
-        //未处理订货单数
-        $untreatedOrderForms = $salesman->orderForms()->OfUntreated()->count();
-        //未处理退货单数
-        $untreatedReturnOrders = $salesman->returnOrders()->OfUntreated()->count();
-
-        // 今日拜访数
-        $todayVisitCount = $salesman->visits()->whereBetween('created_at',
-            [Carbon::today(), (new Carbon())->endOfDay()])->count();
-
-        return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
-            'todayVisitCount');
-    }
+    
 }

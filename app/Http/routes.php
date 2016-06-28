@@ -251,13 +251,20 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
             $router->post('auth/login', 'AuthController@login');
-            $router->get('salesman/export-target', 'SalesmanController@exportTarget');
-            $router->delete('salesman/batch-delete', 'SalesmanController@batchDelete');
-            $router->put('salesman/target-set', 'SalesmanController@targetSet');
+            $router->group(['prefix' => 'salesman'], function ($router) {
+                $router->get('home-data', 'SalesmanController@homeData');
+                $router->get('export-target', 'SalesmanController@exportTarget');
+                $router->delete('batch-delete', 'SalesmanController@batchDelete');
+                $router->put('target-set', 'SalesmanController@targetSet');
+                $router->put('update-by-app', 'SalesmanController@updateByApp');
+            });
             $router->resource('salesman', 'SalesmanController');
+            $router->put('salesman-customer/update-by-app', 'SalesmanCustomerController@updateByApp');
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->resource('visit', 'SalesmanVisitController');
             $router->group(['prefix' => 'order'], function ($router) {
+                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
                 $router->get('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
                 $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');

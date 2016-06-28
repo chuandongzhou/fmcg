@@ -125,8 +125,7 @@ if (!function_exists('salesman_avatar_url')) {
 
         // 处理分割后的ID
         $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
-
-        info($avatarPath . $path);
+        
         // 处理缓存
         $mtime = @filemtime($avatarPath . $path);
         if (false !== $mtime) {

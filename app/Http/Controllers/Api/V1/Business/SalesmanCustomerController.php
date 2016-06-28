@@ -17,9 +17,9 @@ class SalesmanCustomerController extends Controller
      */
     public function index()
     {
-        $customers = salesman_auth()->user()->customers;
+        $customers = salesman_auth()->user()->customers()->paginate();
 
-        return $this->success(['customers' => $customers]);
+        return $this->success(['customers' => $customers->toArray()]);
     }
 
     /**

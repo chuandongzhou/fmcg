@@ -30,7 +30,6 @@ class SalesmanVisitController extends Controller
         return $this->success(compact('visit'));
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
