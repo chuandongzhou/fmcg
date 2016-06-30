@@ -1,6 +1,6 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-客户列表')
-
+@section('top-title', '客户管理-终端客户')
 @section('right')
     <form class="form-horizontal" method="get" action="{{ url('personal/customer/'. $type) }}" autocomplete="off">
 

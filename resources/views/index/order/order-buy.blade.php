@@ -3,8 +3,9 @@
 @include('includes.order-refund')
 @include('includes.pay')
 @section('subtitle', '订单管理')
-
+@section('top-title', '进货管理-订单列表')
 @section('right')
+    <div class="row">
     <div class="col-sm-12 wholesalers-management">
         <div class="row">
             @include('index.order.order-buy-menu')
@@ -163,6 +164,7 @@
                 </div>
             @endif
         </form>
+    </div>
     </div>
 
 @stop

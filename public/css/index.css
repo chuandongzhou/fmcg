@@ -22,6 +22,10 @@ h4 {
   margin: 0;
 }
 
+p {
+  margin: 0 !important;
+}
+
 .inline-control {
   background-image: none;
   border: 1px solid #ccc;
@@ -31,7 +35,7 @@ h4 {
   height: 28px;
   line-height: 28px;
   padding: 3px 6px;
-  margin: 0 10px;
+  margin-right: 10px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
 
@@ -302,6 +306,12 @@ h4 {
 
 .footer .footer {
   position: static;
+}
+
+.page-footer {
+  position: static !important;
+  margin-top: 0 !important;
+  min-width: inherit !important;
 }
 
 .panel-footer {
@@ -830,6 +840,41 @@ h4 {
 
 /*======================================header begin======================================*/
 
+.drop-newmsg {
+  padding: 0 !important;
+}
+
+.drop-exit {
+  padding: 24px 12px !important;
+  font-size: 19px;
+}
+
+.drop-exit a {
+  color: #c0cddc;
+  padding: 0 !important;
+}
+
+.drop-exit a:hover {
+  background-color: inherit !important;
+  color: #c0cddc;
+}
+
+.link-index {
+  display: inline-block;
+  margin-top: 21px !important;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.path-title {
+  padding: 0 10px 5px 10px;
+  color: #4cb9fe;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
 .logo {
   padding-bottom: 10px;
   padding-top: 10px;
@@ -1004,6 +1049,7 @@ h4 {
   float: left;
   padding: 0 15px;
   margin-bottom: 10px;
+  background-color: #fff;
 }
 
 .list-penal .commodity .commodity-img {
@@ -1335,6 +1381,7 @@ h4 {
 
 .personal-store {
   border: 1px solid #e0e0e0 !important;
+  background: #fff;
   height: auto;
   padding-top: 5px;
   margin: 0 0 20px 0;
@@ -2125,6 +2172,10 @@ h4 {
 
 /*======================================wholesalers-management begin======================================*/
 
+table {
+  background-color: #fff;
+}
+
 table .product-panel {
   vertical-align: middle;
   display: inline-block;
@@ -2320,6 +2371,7 @@ table .product-panel .promotions {
   margin: 40px 0 20px 0;
   padding: 0;
   border: 1px solid #b4b4b4;
+  background-color: #fff;
 }
 
 .personal-center .switching a {
@@ -2386,6 +2438,7 @@ table .product-panel .promotions {
   margin-top: 4px;
   padding: 5px;
   color: #808080;
+  background-color: #fff;
 }
 
 .personal-center .pictures {
@@ -3239,7 +3292,7 @@ table .product-panel .promotions {
   margin: 15px 0 5px 0;
 }
 
-.dealer-index .list-penal .title h3 {
+.dealer-index .list-penal .title .category-name {
   padding: 8px 2px;
   font-size: 15px;
   font-weight: bold;
@@ -3247,7 +3300,7 @@ table .product-panel .promotions {
   border-bottom: 1px solid #4cb9fe;
 }
 
-.dealer-index .list-penal .title h3 a {
+.dealer-index .list-penal .title .category-name a {
   font-size: 13px;
   display: inline-block;
   margin-left: 10px;
@@ -3838,6 +3891,15 @@ table .product-panel .promotions {
   margin: 0;
 }
 
+.baidu-map {
+  margin-top: 20px;
+  overflow: hidden;
+  zoom: 1;
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
 /*==============baidu map css end=================*/
 
 .msg-channel {
@@ -4158,6 +4220,7 @@ table .product-panel .promotions {
 
 .home-orders-list .item-wrap {
   border: 1px solid #e0e0e0;
+  background-color: #fff;
   border-radius: 2px;
   padding: 5px 0;
 }
@@ -4186,37 +4249,37 @@ table .product-panel .promotions {
   height: 300px;
 }
 
-.home-notice .panel-body {
+.home-notice .panel-container {
   height: 260px;
 }
 
-.home-msg-list .panel-body {
+.home-msg-list .panel-container {
   height: 410px;
 }
 
-.panel-body {
+.panel-container {
   overflow-y: auto;
   padding: 5px 10px;
 }
 
-.panel-body .chart {
+.panel-container .chart {
   width: 100%;
 }
 
-.panel-body #myChart {
+.panel-container #myChart {
   height: 250px;
 }
 
-.panel-body #myChart2 {
+.panel-container #myChart2 {
   height: 400px;
 }
 
-.panel-body .item {
+.panel-container .item {
   border-top: 1px solid #e0e0e0;
   padding-top: 5px;
 }
 
-.panel-body .item:first-of-type {
+.panel-container .item:first-of-type {
   border: none;
 }
 
@@ -4235,10 +4298,97 @@ table .product-panel .promotions {
 
 /*==============home end=================*/
 
+/*==============sales-details begin=================*/
+
+.sales-details-panel .item {
+  padding: 5px 0;
+}
+
+.sales-details-tabs {
+  padding: 10px 0;
+}
+
+.business-table tr th,
+.business-table .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table .business-table tr td {
+  border: 1px solid #777777 !important;
+  vertical-align: middle !important;
+}
+
+.business-table tr td {
+  border: 1px solid #777777 !important;
+  vertical-align: middle !important;
+}
+
+/*==============sales-details end=================*/
+
+/*==============business-report begin=================*/
+
+.business-report-title {
+  padding-bottom: 20px;
+}
+
+.business-report-monthly {
+  margin-top: 40px;
+}
+
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em;
 }
+
+/*==============business-report end=================*/
+
+/*==============business-order-form begin=================*/
+
+.business-operating {
+  padding: 0 20px;
+}
+
+.business-operating label {
+  margin-right: 15px;
+}
+
+.business-order-wrap {
+  border: 1px solid #777777;
+  margin-top: 20px;
+  padding: 5px 10px;
+}
+
+.business-order-wrap .title {
+  margin-bottom: 10px;
+}
+
+.business-order-wrap hr {
+  margin: 5px 0 !important;
+}
+
+.business-order-wrap .item {
+  padding: 5px 0;
+  position: relative;
+}
+
+.business-order-wrap .item .edit-money {
+  display: none;
+}
+
+.business-order-wrap .item .edit-cash {
+  position: absolute;
+  left: 50%;
+  margin: 0 0 5px 0;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+
+.business-order-wrap .money-item .money {
+  display: none;
+}
+
+.business-order-wrap .money-item .edit-money {
+  display: inline-block;
+}
+
+/*==============business-order-form end=================*/
 
 @keyframes bounce {
   from, to {
@@ -4264,7 +4414,55 @@ table .product-panel .promotions {
   }
 }
 
-#shopAdvertModal .modal-body {
-  max-height: 450px;
-  overflow: scroll;
+/*==============tips begin=================*/
+
+#tips {
+  position: absolute;
+  padding: 1px;
+  text-align: left;
+  white-space: normal;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  margin-top: -10px;
+  z-index: 1001;
+  color: #333;
+  top: 0;
+  left: 0;
+  display: none;
 }
+
+#tips .text {
+  padding: 2px 8px;
+}
+
+#tips .arrow,
+#tips .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: transparent solid;
+}
+
+#tips .arrow {
+  border-width: 8px;
+  bottom: -8px;
+  left: 50%;
+  margin-left: -8px;
+  border-top-color: #999999;
+  border-bottom-width: 0;
+}
+
+#tips .arrow:after {
+  border-width: 7px;
+  bottom: 1px;
+  margin-left: -7px;
+  border-top-color: #ffffff;
+  border-bottom-width: 0;
+  content: " ";
+}
+
+/*==============tips end=================*/

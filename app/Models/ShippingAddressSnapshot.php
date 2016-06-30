@@ -23,6 +23,6 @@ class ShippingAddressSnapshot extends Model
      */
     public function address()
     {
-        return $this->morphOne('App\Models\DeliveryArea', 'addressable');
+        return $this->morphOne('App\Models\AddressData', 'addressable');
     }
 }

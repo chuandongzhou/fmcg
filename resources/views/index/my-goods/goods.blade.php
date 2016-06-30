@@ -4,9 +4,10 @@
 @include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
-
+@section('top-title', '商品管理-新增商品')
 @section('right')
-    <div class="col-sm-12 goods-editor">
+    <div class="row">
+     <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
               action="{{ url('api/v1/my-goods/'.$goods->id) }}"
               data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
@@ -288,6 +289,7 @@
                 </p>
             </div>
         </form>
+    </div>
     </div>
 @stop
 @section('js')

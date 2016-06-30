@@ -99,8 +99,8 @@
         @foreach($goodsColumns as $index=>$column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
-                    <div class="col-xs-12 title"><h3>{{ $column->name }} <a
-                                    href="{{ url('search?category_id=' . $column->level.$column->id) }}">进入>></a></h3>
+                    <div class="col-xs-12 title"><div class="category-name">{{ $column->name }} <a
+                                    href="{{ url('search?category_id=' . $column->level.$column->id) }}">进入>></a></div>
                     </div>
                     <div class="col-xs-12">
                         <div class="row margin-clear">

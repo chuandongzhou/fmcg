@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 
 @section('subtitle', '我的商品')
-
+@section('top-title', '商品管理-我的商品')
 @include('includes.jquery-lazeload')
 
 @section('right')

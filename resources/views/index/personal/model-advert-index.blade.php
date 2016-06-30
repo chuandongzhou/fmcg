@@ -2,7 +2,7 @@
 
 
 @section('subtitle', '个人中心-首页广告')
-
+@section('top-title', '模板管理-首页广告')
 @section('right')
     <div>
         <a class="add" href="{{ url('personal/model/create') }}"  ><label><span class="fa fa-plus"></span></label>添加广告

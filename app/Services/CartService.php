@@ -154,5 +154,18 @@ class CartService
     {
         return $this->has($this->cacheKey) ? Cache::decrement($this->cacheKey, $count) : '';
     }
+    /**
+     * 获取购物车数量
+     *
+     */
+    public function cartDetail(){
+        $user = auth()->user();
+        $myCarts = $user->carts();
+        $carts['detail'] = $myCarts->whereHas('goods', function ($query) use ($user) {
+            $query->whereNotNull('id')->where('user_type', '>', $user->type);
+        })->with('goods.images.image')->get();
+        $carts['count'] = count($carts['detail']);
 
+        return $carts;
+    }
 }

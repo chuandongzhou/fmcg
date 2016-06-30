@@ -3,10 +3,11 @@
 @include('includes.order-refund')
 @include('includes.shipping-address-map')
 @include('includes.order-select-delivery_man')
-@section('subtitle', '订单管理')
+@section('top-title', '订单管理-订单列表')
 
 @section('right')
-    <div class="col-sm-12 wholesalers-management">
+    <div class="row">
+     <div class="col-sm-12 wholesalers-management">
         <div class="row">
             @include('index.order.order-sell-menu')
         </div>
@@ -191,6 +192,7 @@
                 </div>
             @endif
         </form>
+    </div>
     </div>
 @stop
 @section('js')

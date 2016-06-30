@@ -3,7 +3,7 @@
 @include('includes.qrcode')
 @include('includes.notice')
 @section('right')
-    <div class="col-sm-12 col-xs-9">
+
         <div class="row store personal-store">
             <div class="col-sm-5">
                 <div class="store-panel">
@@ -116,7 +116,7 @@
                         @endif
 
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-container">
                         <div id="myChart"></div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-envelope-o" aria-hidden="true"></i> 系统公告</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-container">
                         @foreach((new \App\Services\NoticeService)->getNotice() as $notice)
                             <div class="item">
                                 <a class="content-title" href="javascript:" data-target="#noticeModal"
@@ -147,7 +147,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">当月订单统计</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-container">
                         <div id="myChart2"></div>
                     </div>
                 </div>
@@ -165,8 +165,8 @@
             {{--</div>--}}
             {{--</div>--}}
             {{--</div>--}}
-        </div>
-    </div>
+        {{--</div>--}}
+
 
 
 

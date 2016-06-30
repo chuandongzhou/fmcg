@@ -158,7 +158,7 @@ class Shop extends Model
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphMany('App\Models\AddressData', 'addressable')->where('type',
             cons('shop.address_type.delivery_address'));
     }
 
@@ -169,7 +169,7 @@ class Shop extends Model
      */
     public function shopAddress()
     {
-        return $this->morphOne('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
             cons('shop.address_type.shop_address'));
     }
 

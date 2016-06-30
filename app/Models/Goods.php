@@ -122,7 +122,7 @@ class Goods extends Model
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\DeliveryArea', 'addressable');
+        return $this->morphMany('App\Models\AddressData', 'addressable');
     }
 
     /**
@@ -190,7 +190,7 @@ class Goods extends Model
         $goodsBuilder = clone $query;
         $goodsIds = $goodsBuilder->lists('id');
         $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
-        $goodsIds = DB::table('delivery_area')->where(array_filter($data))->where('addressable_type',
+        $goodsIds = DB::table('address_data')->where(array_filter($data))->where('addressable_type',
             "App\\Models\\Goods")->whereIn('addressable_id', $goodsIds)->lists('addressable_id');
         return $query->whereIn('id', $goodsIds);
 
