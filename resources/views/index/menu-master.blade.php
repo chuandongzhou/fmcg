@@ -41,7 +41,7 @@
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
                 <li class="nav-item start {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password','personal/delivery/*','personal/delivery','personal/delivery-man/*','personal/shipping-address/*']) !!}">
-                    <a href="{{ asset('personal/info') }}" class="nav-link nav-toggle">
+                    <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-smile-o"></i>
                         <span class="title">个人中心</span>
                         <span class="selected"></span>
