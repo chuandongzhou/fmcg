@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         $nowTime = Carbon::now();
 
-        if ($user->fill(['last_login_at' => $nowTime])->save()) {
+        if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             auth()->login($user, true);
             return $this->success(['user' => $user]);
         }

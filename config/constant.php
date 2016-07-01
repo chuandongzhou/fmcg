@@ -10,6 +10,7 @@ return [
     'pay_type' => [
         'online' => 1,
         'cod' => 2,
+        'pick_up' => 3
     ],
     //支付方式
     'pay_way' => [
@@ -41,6 +42,10 @@ return [
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
             'on' => 1,
+        ],
+        'receive_mode' => [ //订单提货方式
+            'delivery' => 0,
+            'pick_up' => 1
         ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
     ],

@@ -17,9 +17,9 @@ class SalesmanCustomerController extends Controller
      */
     public function index()
     {
-        $customers = salesman_auth()->user()->customers()->paginate();
+        $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress')->get();
 
-        return $this->success(['customers' => $customers->toArray()]);
+        return $this->success(['customers' => $customers]);
     }
 
     /**
@@ -40,7 +40,6 @@ class SalesmanCustomerController extends Controller
     {
         $attributes = $request->all();
         $salesman = isset($attributes['salesman_id']) ? auth()->user()->shop->salesmen()->active()->find($attributes['salesman_id']) : salesman_auth()->user();
-
         if (is_null($salesman)) {
             return $this->error('添加客户失败，请重试');
         }
@@ -49,6 +48,7 @@ class SalesmanCustomerController extends Controller
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
         if ($salesman->customers()->create($attributes)->exists) {
+            info($salesman);
             return $this->success('添加客户成功');
         }
         return $this->error('添加客户时出现问题');

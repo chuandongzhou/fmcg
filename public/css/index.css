@@ -200,6 +200,11 @@ ul, li, p, a, h1, h2, h3, h4 {
   .footer .footer {
     position: static; }
 
+.page-footer {
+  position: static !important;
+  margin-top: 0 !important;
+  min-width: inherit !important; }
+
 .panel-footer {
   padding: 20px 15px; }
 
@@ -561,6 +566,33 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
+.drop-newmsg {
+  padding: 0 !important; }
+
+.drop-exit {
+  padding: 24px 12px !important;
+  font-size: 19px; }
+  .drop-exit a {
+    color: #c0cddc;
+    padding: 0 !important; }
+    .drop-exit a:hover {
+      background-color: inherit !important;
+      color: #c0cddc; }
+
+.link-index {
+  display: inline-block;
+  margin-top: 21px !important;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600; }
+
+.path-title {
+  padding: 0 10px 5px 10px;
+  color: #4cb9fe;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px; }
+
 .logo {
   padding-bottom: 10px;
   padding-top: 10px; }
@@ -680,7 +712,8 @@ ul, li, p, a, h1, h2, h3, h4 {
   width: 20%;
   float: left;
   padding: 0 15px;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  background-color: #fff; }
   .list-penal .commodity .commodity-img {
     width: 100%;
     display: inline-block; }
@@ -896,6 +929,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .personal-store {
   border: 1px solid #e0e0e0 !important;
+  background: #fff;
   height: auto;
   padding-top: 5px;
   margin: 0 0 20px 0; }
@@ -1402,25 +1436,27 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
-table .product-panel {
-  vertical-align: middle;
-  display: inline-block;
-  table-layout: fixed; }
-  table .product-panel .ellipsis {
+table {
+  background-color: #fff; }
+  table .product-panel {
+    vertical-align: middle;
     display: inline-block;
-    max-width: 340px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: middle; }
-  table .product-panel .product-name {
-    margin-left: 10px;
-    color: #555555;
-    display: inline-block; }
-  table .product-panel .promotions {
-    margin-left: 10px;
-    font-size: 12px;
-    color: #b4b4b4; }
+    table-layout: fixed; }
+    table .product-panel .ellipsis {
+      display: inline-block;
+      max-width: 340px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: middle; }
+    table .product-panel .product-name {
+      margin-left: 10px;
+      color: #555555;
+      display: inline-block; }
+    table .product-panel .promotions {
+      margin-left: 10px;
+      font-size: 12px;
+      color: #b4b4b4; }
 
 .wholesalers-management .notice-bar {
   padding: 0;
@@ -1522,7 +1558,8 @@ table .product-panel {
 .personal-center .switching {
   margin: 40px 0 20px 0;
   padding: 0;
-  border: 1px solid #b4b4b4; }
+  border: 1px solid #b4b4b4;
+  background-color: #fff; }
   .personal-center .switching a {
     border-left: 1px solid #b4b4b4;
     border-right: 1px solid #b4b4b4;
@@ -1567,7 +1604,8 @@ table .product-panel {
     border-radius: 3px;
     margin-top: 4px;
     padding: 5px;
-    color: #808080; }
+    color: #808080;
+    background-color: #fff; }
 
 .personal-center .pictures {
   margin-top: 10px; }
@@ -2118,13 +2156,13 @@ table .product-panel {
     }*/ }
   .dealer-index .list-penal .title {
     margin: 15px 0 5px 0; }
-    .dealer-index .list-penal .title h3 {
+    .dealer-index .list-penal .title .category-name {
       padding: 8px 2px;
       font-size: 15px;
       font-weight: bold;
       color: #4cb9fe;
       border-bottom: 1px solid #4cb9fe; }
-      .dealer-index .list-penal .title h3 a {
+      .dealer-index .list-penal .title .category-name a {
         font-size: 13px;
         display: inline-block;
         margin-left: 10px; }
@@ -2462,6 +2500,47 @@ table .product-panel {
   .batch-deletion:focus, .batch-deletion:hover {
     color: #222; }
 
+.delivery-mode {
+  border-top: 1px solid #e0e0e0;
+  padding: 10px; }
+  .delivery-mode .title {
+    margin-bottom: 20px;
+    font-weight: 600; }
+  .delivery-mode .check-delivery {
+    width: 200px;
+    background-color: #fff;
+    border: 3px solid #d2d2d2;
+    color: #000; }
+    .delivery-mode .check-delivery:hover {
+      color: #000; }
+  .delivery-mode .from-mentioning {
+    margin: 20px 0; }
+  .delivery-mode .fa {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: #fff;
+    font-size: 12px;
+    display: none; }
+  .delivery-mode .triangle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 20px solid #4cb9fe;
+    border-left: 20px solid transparent;
+    display: none; }
+  .delivery-mode .check-delivery.active {
+    border: 3px solid #4cb9fe;
+    position: relative; }
+    .delivery-mode .check-delivery.active .fa {
+      display: inline-block; }
+    .delivery-mode .check-delivery.active .triangle {
+      display: inline-block; }
+  .delivery-mode .operation-buttons[disabled='disabled'] {
+    background-color: #b4b4b4; }
+
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect .control-panel {
@@ -2718,6 +2797,7 @@ table .product-panel {
   margin-bottom: 20px; }
   .home-orders-list .item-wrap {
     border: 1px solid #e0e0e0;
+    background-color: #fff;
     border-radius: 2px;
     padding: 5px 0; }
     .home-orders-list .item-wrap .title {
@@ -2737,25 +2817,25 @@ table .product-panel {
 
 .home-notice {
   height: 300px; }
-  .home-notice .panel-body {
+  .home-notice .panel-container {
     height: 260px; }
 
-.home-msg-list .panel-body {
+.home-msg-list .panel-container {
   height: 410px; }
 
-.panel-body {
+.panel-container {
   overflow-y: auto;
   padding: 5px 10px; }
-  .panel-body .chart {
+  .panel-container .chart {
     width: 100%; }
-  .panel-body #myChart {
+  .panel-container #myChart {
     height: 250px; }
-  .panel-body #myChart2 {
+  .panel-container #myChart2 {
     height: 400px; }
-  .panel-body .item {
+  .panel-container .item {
     border-top: 1px solid #e0e0e0;
     padding-top: 5px; }
-    .panel-body .item:first-of-type {
+    .panel-container .item:first-of-type {
       border: none; }
 
 .home-name {

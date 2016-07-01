@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdateShopRequest extends Request
+class UpdateShopRequest extends UserRequest
 {
 
     /**

@@ -1,7 +1,5 @@
 @extends('index.menu-master')
 
-@include('includes.address')
-
 @section('subtitle', '业务管理-业务员客户添加')
 
 @section('right')
@@ -20,7 +18,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="salesman_id">营业员:</label>
+            <label class="col-sm-2 control-label" for="salesman_id">业务员:</label>
 
             <div class="col-sm-10 col-md-6">
                 <select class="form-control" id="salesman_id" name="salesman_id">
@@ -198,6 +196,10 @@
         </div>
     </form>
     @parent
+@stop
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
 @stop
 
 @section('js')

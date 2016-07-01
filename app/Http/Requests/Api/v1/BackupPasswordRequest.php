@@ -9,12 +9,6 @@ namespace App\Http\Requests\Api\v1;
 
 class BackupPasswordRequest extends Request
 {
-
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [

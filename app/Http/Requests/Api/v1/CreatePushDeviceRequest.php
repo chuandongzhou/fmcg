@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use App\Http\Requests\Request;
 
-class CreatePushDeviceRequest extends Request
+class CreatePushDeviceRequest extends UserRequest
 {
     /**
      * Get the validation rules that apply to the request.

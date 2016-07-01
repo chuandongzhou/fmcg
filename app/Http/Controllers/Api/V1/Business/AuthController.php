@@ -41,13 +41,24 @@ class AuthController extends Controller
 
         $nowTime = Carbon::now();
 
-        if ($salesman->fill(['last_login_at' => $nowTime])->save()) {
+        if ($salesman->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             salesman_auth()->login($salesman, true);
-           // $salesmanData = $this->_getSalesmanData($salesman);
             return $this->success(['salesman' => $salesman]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
 
     }
+
+    /**
+     * 退出登录
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function logout()
+    {
+        salesman_auth()->logout();
+        return $this->success([]);
+    }
+
     
 }

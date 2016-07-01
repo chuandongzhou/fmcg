@@ -211,42 +211,46 @@
     </div>
 
 </div>
-@if($shop->user->type != cons('user.type.retailer'))
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="username">配送区域:</label>
+    {{--@if($shop->user->type != cons('user.type.retailer'))--}}
+        {{--<div class="form-group">--}}
+            {{--<label class="col-sm-2 control-label" for="username">配送区域:</label>--}}
 
-        <div class="col-sm-10 col-md-8 padding-clear">
-            <div class="col-sm-12">
-                <a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"
-                   data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
-            </div>
-            <div class="address-list col-lg-12">
-                <div class="hidden">
-                    <input type="hidden" name="area[id][]" value=""/>
-                    <input type="hidden" name="area[province_id][]" value=""/>
-                    <input type="hidden" name="area[city_id][]" value=""/>
-                    <input type="hidden" name="area[district_id][]" value=""/>
-                    <input type="hidden" name="area[street_id][]" value=""/>
-                    <input type="hidden" name="area[area_name][]" value=""/>
-                    <input type="hidden" name="area[address][]" value=""/>
-                </div>
-                @foreach ($shop->deliveryArea as $area)
-                    <div class="col-sm-12 fa-border show-map">{{ $area->address_name }}
-                        <span class="fa fa-times-circle pull-right close"></span>
-                        <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
-                        <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
-                        <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>
-                        <input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>
-                        <input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>
-                        <input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>
-                        <input type="hidden" name="area[address][]" value="{{ $area->address }}"/>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-@endif
+            {{--<div class="col-sm-10 col-md-8 padding-clear">--}}
+                {{--<div class="col-sm-12">--}}
+                    {{--<a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"--}}
+                       {{--data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>--}}
+                {{--</div>--}}
+                {{--<div class="address-list col-lg-12">--}}
+                    {{--<div class="hidden">--}}
+                        {{--<input type="hidden" name="area[id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[province_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[city_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[district_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[street_id][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[area_name][]" value=""/>--}}
+                        {{--<input type="hidden" name="area[address][]" value=""/>--}}
+                    {{--</div>--}}
+                    {{--@foreach ($shop->deliveryArea as $area)--}}
+                        {{--<div class="col-sm-12 fa-border show-map">{{ $area->address_name }}--}}
+                            {{--<span class="fa fa-times-circle pull-right close"></span>--}}
+                            {{--<input type="hidden" name="area[id][]" value="{{ $area->id }}"/>--}}
+                            {{--<input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>--}}
+                            {{--<input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>--}}
+                            {{--<input type="hidden" name="area[district_id][]" value="{{ $area->district_id }}"/>--}}
+                            {{--<input type="hidden" name="area[street_id][]" value="{{ $area->street_id }}"/>--}}
+                            {{--<input type="hidden" name="area[area_name][]" value="{{ $area->area_name }}"/>--}}
+                            {{--<input type="hidden" name="area[address][]" value="{{ $area->address }}"/>--}}
+                        {{--</div>--}}
+                    {{--@endforeach--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--@endif--}}
 
+@section('js-lib')
+    @parent
+    <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
+@stop
 @section('js')
     @parent
     <script type="text/javascript">

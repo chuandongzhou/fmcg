@@ -14,24 +14,30 @@
 `请求参数：`
 	
 	account     string       账号
-
-
 	password    string       密码
 
 `成功返回：`
 
-  salesman      array           当前登录业务员
+  salesman               array           当前登录业务员
 
   salesman字段子集说明
 
-  id                    int             业务员id
-  account               string          账号
-  shop_id               int             业务员所属店铺id
-  name                  string          业务员名
-  contact_information   string          联系方式
-  avatar_url            string          头像
+      id                    int             业务员id
+      account               string          账号
+      shop_id               int             业务员所属店铺id
+      name                  string          业务员名
+      contact_information   string          联系方式
+      avatar_url            string          头像
 
 `失败返回：`
+
+#### 2.1.1 退出登陆[get] (logout)
+`请求参数：`
+
+`成功返回：`
+
+`失败返回：`
+
 
 ### 2.2 业务员模块salesman
 #### 2.2.1 首页数据[get] (home-data)
@@ -69,9 +75,6 @@
 
     customers字段子集说明（包含分页信息）
 
-    data                    array           客户数组
-
-    customers字段子集说明
 
     id                      int             客户ID
     number                  int             客户号
@@ -86,10 +89,24 @@
     shipping_address_lng    float           收货地址经度
     shipping_address_lat    float           收货地址纬度
     display_fee             decimal         陈列费
+    business_address        array           营业地址详情
+    shipping_address        array           营业地址详情
+
+    business_address字段子集说明
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县/区id
+    street_id               int             街道id
+    area_name               string          省+市+县+街道名
+    address                 string          详细地址
+
+    business_address字段子集同business_address字段子集说明
 
 `失败返回：`
 
-#### 2.3.2 客户编辑[put] (update-by-app)
+#### 2.3.2 客户编辑[put] (update-by-app/{id})
 `请求参数：`
 
     name                    string          客户名称
@@ -100,6 +117,41 @@
     shop_id                 int             客户的平台id
     business_address        array           营业地址
     shipping_address        array           收货地址
+    business_address_lng    float           营业地址经度
+    business_address_lat    float           营业地址纬度
+    shipping_address_lng    float           收货地址经度
+    shipping_address_lat    float           收货地址纬度
+
+    business_address字段子集说明
+
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
+
+    shipping_address字段子集同上
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.3.3 客户添加[post] (/)
+`请求参数：`
+
+    name                    string          客户名称
+    contact                 string          联系人
+    contact_information     string          联系方式
+    business_area           string          营业面积
+    display_fee             decimal         陈列费
+    shop_id                 int             客户的平台id
+    business_address        array           营业地址
+    shipping_address        array           收货地址
+    business_address_lng    float           营业地址经度
+    business_address_lat    float           营业地址纬度
+    shipping_address_lng    float           收货地址经度
+    shipping_address_lat    float           收货地址纬度
 
     business_address字段子集说明
 
@@ -197,7 +249,7 @@
     
  `失败返回：`   
  
- #### 2.5.3 添加拜访 [post] (visit)
+#### 2.5.3 添加拜访 [post] (visit)
 `请求参数：`
 
     salesman_customer_id    int             客户id
@@ -296,3 +348,43 @@
          num                     int             数量
          pieces                  int             单位id
          amount                  decimal         金额
+
+### 2.7 平台商品 goods
+#### 2.7.1 获取所有平台商品[get] (/)
+
+`请求参数：`
+
+      name        	string              商品名
+      category_id 	int                 商品分类id  (如110000   最高位数1为层级，后面为分类id)
+      page         int                 分页
+
+`成功返回：`
+
+    data                array       商品列表
+
+    data 字段子集说明
+
+    id                  int         商品id
+    name                string      商品名
+    price_retailer      decimal     价格（对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    pieces_retailer     int         单位（对于终端商）
+    pieces_wholesaler   int         单位（对于批发商）
+    images_url          string      商品图片
+
+#### 2.7.2 店铺分类[get] (category)
+`请求参数：`
+
+`成功返回：`
+
+   categories       array           店铺分类数组
+
+   categories       子集介绍
+
+        id              int                 分类id
+        pid             int                 分类父级id
+        name            string              分类名
+        level           int                 分类层级
+        icon_url        string              分类icon图片
+        child           array               分类子级（格式同categories）
+

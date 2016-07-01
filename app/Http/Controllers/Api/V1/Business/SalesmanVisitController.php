@@ -38,49 +38,51 @@ class SalesmanVisitController extends Controller
      */
     public function store(Request $request)
     {
-        /* $data = [
-             'salesman_customer_id'
+         /*$data = [
+             'salesman_customer_id' => 1,
              'goods' => [
                  [
-                     'id',
-                     'pieces',
-                     'stock',
-                     'production_date',
+                     'id' => 324,
+                     'pieces' => 11,
+                     'stock'  => '3件',
+                     'production_date' => '2015-06-09',
                      'order_form' => [
-                         'price',
-                         'num'
+                         'price'  => '169',
+                         'num'    => 2
                      ],
                      'return_order' => [
-                         'amount',
-                         'num'
+                         'amount'  => 160,
+                         'num'     => 2
                      ]
                  ]
              ],
-             'display_fee',
+             'display_fee' => '100',
              "mortgage" => [
                  [
-                     "goods_id",
-                     "num",
-                     "pieces",
+                     "goods_id"  => 324,
+                     "num"       => 1,
+                     "pieces"    => 11,
                  ],
 
              ]
 
-         ];*/
+         ];
+        dd($data);*/
         $data = $request->all();
         $salesman = salesman_auth()->user();
 
         $result = DB::transaction(function () use ($salesman, $data) {
             $result = $this->_formatData($data);
-            $visit = $salesman->visits->create(['salesman_customer_id' => $data['salesman_customer_id']]);
+            $visit = $salesman->visits()->create(['salesman_customer_id' => $data['salesman_customer_id']]);
 
             $orderConf = cons('salesman.order');
 
             if ($visit->exists) {
                 if ($orderForms = array_filter($result['order']['order_form'])) {
                     $orderForms['salesman_visit_id'] = $visit->id;
+                    $orderForms['salesman_customer_id'] = $data['salesman_customer_id'];
                     $orderForms['type'] = $orderConf['type']['order'];
-                    $orderForm = $salesman->orders->create($orderForms);
+                    $orderForm = $salesman->orders()->create($orderForms);
                     if ($orderForm->exists) {
                         $orderGoodsArr = [];
                         $mortgageGoodsArr = [];
@@ -104,7 +106,7 @@ class SalesmanVisitController extends Controller
                 if (isset($result['order']['return_order'])) {
                     $result['order']['return_order']['salesman_visit_id'] = $visit->id;
                     $result['order']['return_order']['type'] = $orderConf['type']['return_order'];
-                    $returnOrder = $salesman->orders->create($result['order']['return_order']);
+                    $returnOrder = $salesman->orders()->create($result['order']['return_order']);
                     if ($returnOrder->exists) {
                         $orderGoodsArr = [];
                         foreach ($result['order']['return_order']['goods'] as $orderGoods) {
@@ -112,7 +114,12 @@ class SalesmanVisitController extends Controller
                             $orderGoods['type'] = $orderConf['goods']['type']['return'];
                             $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
                         }
+                        info($result['order']['return_order']['goods']);
+                        info($orderGoodsArr);
+
                         $returnOrder->orderGoods()->saveMany($orderGoodsArr);
+
+
                     }
                 }
                 if ($goodsRecodes = $result['goodsRecode']) {
@@ -125,7 +132,6 @@ class SalesmanVisitController extends Controller
             }
             return 'success';
         });
-
         return $result === 'success' ? $this->success('拜访记录添加成功') : $this->error('拜访记录添加时出现错误');
     }
 
@@ -157,14 +163,13 @@ class SalesmanVisitController extends Controller
     {
         $order = [];
         $goodsRecode = [];
-        $order['order_form']['display_fee'] = isset($data['display_fee']) ? $data['display_fee'] : 0;
 
         foreach ($data['goods'] as $goods) {
-            if ($goods['order_form']) {
+            if (isset($goods['order_form'])) {
+                $order['order_form']['display_fee'] = isset($data['display_fee']) ? $data['display_fee'] : 0;
                 $order['order_form']['amount'] = isset($order['order_form']['amount']) ?
-                    bcadd($order['order_form']['amount'],
-                        bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2), 2) :
-                    bcmul($goods['order_form']['amount'], $goods['order_form']['num'], 2);
+                    bcadd($order['order_form']['amount'], bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2), 2) :
+                    bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2);
                 $order['order_form']['goods'][] = [
                     'goods_id' => $goods['id'],
                     'price' => $goods['order_form']['price'],
@@ -174,14 +179,14 @@ class SalesmanVisitController extends Controller
                 ];
             }
 
-            if ($goods['return_order']) {
+            if (isset($goods['return_order'])) {
                 $order['return_order']['amount'] = isset($order['return_order']['amount']) ?
                     bcadd($order['return_order']['amount'], $goods['return_order']['amount'],
                         2) : $goods['return_order']['amount'];
                 $order['return_order']['goods'][] = [
                     'goods_id' => $goods['id'],
-                    'num' => $goods['order_form']['num'],
-                    'amount' => bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2)
+                    'num' => $goods['return_order']['num'],
+                    'amount' => $goods['return_order']['amount']
                 ];
             }
             $goodsRecode[] = [

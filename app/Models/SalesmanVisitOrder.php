@@ -14,11 +14,12 @@ class SalesmanVisitOrder extends Model
         'status',
         'type',
         'salesman_visit_id',
+        'salesman_customer_id'
     ];
 
     protected $hidden = [
-        'created_at',
-        'updated_at'
+        'updated_at',
+        'order_goods'
     ];
 
     /**

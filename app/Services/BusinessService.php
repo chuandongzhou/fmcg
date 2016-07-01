@@ -104,7 +104,7 @@ class BusinessService
     {
         $with = $withOrderGoods ? ['salesmanCustomer'] : ['salesmanCustomer', 'salesman'];
         $orders = SalesmanVisitOrder::where('type', $type)->whereIn('salesman_id',
-            $salesmenId)->with($with)->paginate();
+            $salesmenId)->with($with)->orderBy('id', 'desc')->paginate();
         if ($withOrderGoods) {
             $orders->each(function ($order) {
                 $orderConf = cons('salesman.order');
@@ -115,12 +115,16 @@ class BusinessService
                         return $item->type == $orderConf['goods']['type']['order'];
                     });
 
+
+
                     $orderGoodsIds = $orderGoodsLists->pluck('goods_id')->toBase()->unique();
                     $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
 
                     foreach ($orderGoodsLists as $goods) {
                         $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
                     }
+
+                    $order->orderGoods = $orderGoodsLists->values();
 
                     $mortgageGoodsLists = $orderGoods->filter(function ($item) use ($orderConf) {
                         return $item->type == $orderConf['goods']['type']['mortgage'];
@@ -134,15 +138,20 @@ class BusinessService
                         $goods->goodsName = isset($mortgageGoodsNames[$goods->goods_id]) ? $mortgageGoodsNames[$goods->goods_id] : '';
                     }
 
+                    $order->mortgageGoods = $mortgageGoodsLists->values();
+
                 } else {
-                    $orderGoodsIds = $order->orderGoods->pluck('goods_id')->toBase()->unique();
+
+                    $orderGoods = $order->orderGoods;
+                    $orderGoodsIds = $orderGoods->pluck('goods_id')->toBase()->unique();
                     $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
 
-                    foreach ($order->orderGoods as $goods) {
+                    foreach ($orderGoods as $goods) {
                         $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
                     }
+                    $order->orderGoods = $orderGoods;
                 }
-                $order->setHidden(['order_goods']);
+              
             });
         }
         return $orders;

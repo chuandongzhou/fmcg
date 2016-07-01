@@ -66,7 +66,7 @@ class SalesmanCustomer extends Model
      */
     public function businessAddress()
     {
-        return $this->morphOne('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
             cons('salesman.customer.address_type.business'));
     }
 
@@ -78,7 +78,7 @@ class SalesmanCustomer extends Model
      */
     public function shippingAddress()
     {
-        return $this->morphOne('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
             cons('salesman.customer.address_type.shipping'));
     }
 

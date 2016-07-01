@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
-use App\Models\DeliveryArea;
 use App\Models\Goods;
-use App\Models\MortgageGoods;
 use App\Models\Shop;
 use App\Http\Requests;
 use App\Models\Images;
@@ -356,7 +355,7 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areas[] = new DeliveryArea($data);
+                $areas[] = new AddressData($data);
 
                 /* if (isset($coordinate)) {
                      $areaModel->coordinate()->save(new Coordinate($coordinate));
@@ -380,7 +379,7 @@ class MyGoodsController extends Controller
         }
 
         $shop->deliveryArea->each(function ($area) use ($goodsModel) {
-            $areaModel = $goodsModel->deliveryArea()->save(new DeliveryArea($area->toArray()));
+            $areaModel = $goodsModel->deliveryArea()->save(new AddressData($area->toArray()));
             unset($areaModel);
         });
         return true;

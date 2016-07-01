@@ -9,6 +9,7 @@ class SalesmanVisitOrderGoods extends Model
     protected $fillable = [
         'goods_id',
         'price',
+        'pieces',
         'num',
         'amount',
         'type',

@@ -42,6 +42,7 @@ class AddressService
                     'street_id' => isset($array['street_id'][$key]) ? $array['street_id'][$key] : 0,
                     'area_name' => isset($array['area_name'][$key]) ? $array['area_name'][$key] : 0,
                     'address' => isset($array['address'][$key]) ? $array['address'][$key] : 0,
+                    'extra_common_param' => isset($array['min_money'][$key]) ? $array['min_money'][$key] : '',
                     'coordinate' => [
                         'bl_lng' => isset($array['blx'][$key]) ? $array['blx'][$key] : 0,
                         'bl_lat' => isset($array['bly'][$key]) ? $array['bly'][$key] : 0,

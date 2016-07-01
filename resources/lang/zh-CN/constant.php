@@ -10,6 +10,7 @@ return [
     'pay_type' => [
         'online' => '在线支付',
         'cod' => '货到付款',
+        'pick_up' => '自提',
     ],
     //支付方式
     'pay_way' => [
@@ -31,6 +32,10 @@ return [
             'payment_failed' => '付款失败',
             'refund' => '退款中',
             'refund_success' => '退款成功',
+        ],
+        'receive_mode' => [ //订单提货方式
+            'delivery' => '送货',
+            'pick_up' => '自提'
         ],
         'status' => [ //订单状态
             'non_confirm' => '未确认',
@@ -189,7 +194,8 @@ return [
     'push_msg' => [
         'non_send' => [
             'online' => '买家已完成在线支付,请发货',
-            'cod' => '买家已提交货到付款订单,请发货'
+            'cod' => '买家已提交货到付款订单,请发货',
+            'pick_up' => '买家已提交到店面自提订单'
         ],
         'finished' => '买家已确认收货',
         'send' => '卖家已发货,请注意查收',

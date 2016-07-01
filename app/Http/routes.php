@@ -56,6 +56,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
 
     $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
         $router->get('shop', 'ShopController@index');          //商家信息
+        $router->resource('delivery-area', 'DeliveryAreaController');          //商家信息
         $router->get('info', 'InfoController@index');          //商家信息
         $router->get('password', 'PasswordController@index');          //修改密码
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
@@ -200,6 +201,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->resource('my-goods', 'MyGoodsController');
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
+            $router->resource('delivery-area', 'DeliveryAreaController',
+                ['only' => ['index', 'store', 'update', 'destroy']]);          //商家配送区域
             $router->get('order-data', 'ShopController@orderData');//商家首页订单统计信息
             $router->put('password', 'PasswordController@password');          //修改密码
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
@@ -251,6 +254,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
             $router->post('auth/login', 'AuthController@login');
+            $router->get('auth/logout', 'AuthController@logout');
             $router->group(['prefix' => 'salesman'], function ($router) {
                 $router->get('home-data', 'SalesmanController@homeData');
                 $router->get('export-target', 'SalesmanController@exportTarget');
@@ -278,6 +282,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
                 $router->delete('batch-delete', 'MortgageGoodsController@batchDestroy'); //移除
                 $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
+            });
+
+            $router->group(['prefix' => 'goods'], function ($router) {
+                $router->get('categories', 'GoodsController@category'); //启/禁用
+                $router->get('/', 'GoodsController@goods'); //启/禁用
             });
         });
 

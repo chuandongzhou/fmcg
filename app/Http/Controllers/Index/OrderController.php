@@ -84,7 +84,6 @@ class OrderController extends Controller
         $data = $request->all();
 
         $result = (new OrderService)->orderSubmitHandle($data);
-
         if (!$result) {
             return redirect('cart');
         }

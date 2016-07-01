@@ -22,6 +22,6 @@ class Coordinate extends Model
      */
     public function deliveryArea()
     {
-        return $this->belongsTo('App\Models\DeliveryArea', 'delivery_area_id', 'id');
+        return $this->belongsTo('App\Models\AddressData', 'delivery_area_id', 'id');
     }
 }

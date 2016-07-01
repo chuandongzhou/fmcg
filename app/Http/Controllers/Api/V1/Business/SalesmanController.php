@@ -14,12 +14,6 @@ use Gate;
 
 class SalesmanController extends Controller
 {
-    protected $shop;
-
-    public function __construct()
-    {
-        $this->shop = auth()->user()->shop;
-    }
 
     /**
      * 添加业务员
@@ -30,7 +24,7 @@ class SalesmanController extends Controller
     public function store(Requests\Api\v1\CreateSalesManRequest $request)
     {
         $attributes = $request->all();
-        if ($this->shop->salesmen()->create($attributes)->exists) {
+        if (auth()->user()->shop->salesmen()->create($attributes)->exists) {
             return $this->success('添加业务员成功');
         }
         return $this->error('添加业务员是出现错误');
@@ -111,7 +105,7 @@ class SalesmanController extends Controller
         if (empty($salesmanId)) {
             return $this->error('请选择要删除的业务员');
         }
-        return $this->shop->salesmen()->whereIn('id',
+        returnauth()->user()->shop->salesmen()->whereIn('id',
             $salesmanId)->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员时出现问题');
     }
 
@@ -125,7 +119,7 @@ class SalesmanController extends Controller
     {
         $data = $request->all();
 
-        $salesman = $this->shop->salesmen()->find($data['salesman_id']);
+        $salesman =auth()->user()->shop->salesmen()->find($data['salesman_id']);
 
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
@@ -138,7 +132,6 @@ class SalesmanController extends Controller
     /**
      * app首页数据
      *
-     * @param \App\Models\Salesman $salesman
      * @return array
      */
     public function homeData()
@@ -216,7 +209,7 @@ class SalesmanController extends Controller
             $table->addCell(1500)->addText($salesman->returnOrderSumAmount, null, $cellAlignCenter);
         }
 
-        $name = $this->shop->name . $date . '业务员目标' . '.docx';
+        $name =auth()->user()->shop->name . $date . '业务员目标' . '.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 }

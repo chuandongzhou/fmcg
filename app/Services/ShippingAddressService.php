@@ -68,13 +68,39 @@ class ShippingAddressService
      *
      * @param $shippingAddressId
      * @param null $userId
+     * @param null $shops
      * @return mixed
      */
-    public function validate($shippingAddressId, $userId = null)
+    public function validate($shippingAddressId, $userId = null, $shops = null)
     {
         $userId = is_null($userId) ? auth()->id() : $userId;
 
-        return ShippingAddress::where(['id' => $shippingAddressId, 'user_id' => $userId])->pluck('id');
+        $shippingAddress = ShippingAddress::where('user_id', $userId)->find($shippingAddressId);
+
+        if (is_null($shippingAddress)) {
+            return false;
+        }
+        if (!is_null($shops)) {
+            $address = $shippingAddress->address;
+            $where = [
+                'province_id' => $address->province_id,
+                'city_id' => $address->city_id,
+                'district_id' => $address->district_id,
+            ];
+
+            foreach ($shops as $shop) {
+                $delivery = $shop->deliveryArea()->where(array_filter($where))->first();
+
+                $minMoney = ($delivery && $delivery->min_money) ? $delivery->min_money : $shop->min_money;
+
+                if ($shop->sum_price < $minMoney) {
+                    return false;
+                }
+            }
+
+        }
+
+        return true;
     }
 
 }

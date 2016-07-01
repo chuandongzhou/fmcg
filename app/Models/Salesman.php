@@ -38,7 +38,7 @@ class Salesman extends Model implements AuthenticatableContract
     /**
      * 模型启动事件
      */
-    public static function boot()
+    /*public static function boot()
     {
         parent::boot();
 
@@ -46,7 +46,7 @@ class Salesman extends Model implements AuthenticatableContract
         static::deleted(function ($model) {
             $model->customers()->delete();
         });
-    }
+    }*/
 
     /**
      * The accessors to append to the model's array form.

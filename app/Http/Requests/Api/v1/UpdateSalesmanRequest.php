@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\V1;
 
 
-class UpdateSalesmanRequest extends Request
+class UpdateSalesmanRequest extends SalesmanRequest
 {
     /**
      * Get the validation rules that apply to the request.

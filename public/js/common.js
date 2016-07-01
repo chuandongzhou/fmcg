@@ -527,36 +527,19 @@ var addAddFunc = function () {
         , city = $('.add-city')
         , district = $('.add-district')
         , street = $('.add-street')
+        , minMoney = $('.min-money')
         , address = $('.detail-address');
 
-    //$('#addressModal').on('hidden.bs.modal', function (e) {
-    //    //TODO 初始化地址
-    //    address.val('');
-    //});
-    // 地址限制
-    /* var changeAddButtonStatus = function () {
-     if (container.children('div:visible').length >= addLimit) {
-     addButton.button('loading');
-     return true;
-     }
-
-     addButton.button('reset');
-     return false;
-     };*/
     var changeBtnAddhtml = function (html) {
         btnAdd.html(html);
         setTimeout(function () {
             btnAdd.html(btnAdd.data('text'));
         }, 3000)
     };
-
-    //changeAddButtonStatus();
     // 删除地址
     container.on('click', '.close', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
-            //changeAddButtonStatus();
-            //dynamicShowMap();
         });
     });
 
@@ -575,23 +558,16 @@ var addAddFunc = function () {
             return false;
         }
 
-        /* if (street.is(':visible') && !street.val()) {
-         changeBtnAddhtml('请选择街道...');
-         return false;
-         }
-         if (!address.val()) {
-         changeBtnAddhtml('请输入详细地址');
-         return false;
-         }*/
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
+            minMoneyText = minMoney.length ? '<input type="hidden" name="area[extra_common_param][]" value="' + minMoney.val() + '"/>' : '',
             areaName = provinceText + cityText + districtText + streetText;
         $('.modal-header .close').trigger('click');
         container.prepend(
-            '<div class="col-sm-10 fa-border show-map">' +
+            '<div class="col-sm-12 fa-border show-map">' +
             areaName + addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
@@ -601,14 +577,9 @@ var addAddFunc = function () {
             '<span class="fa fa-times-circle pull-right close"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-            //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
-            //'<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
-            //'<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
-            //'<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
+            minMoneyText +
             '</div>'
         );
-        //changeAddButtonStatus();
-        //dynamicShowMap();
     });
 };
 
@@ -620,7 +591,6 @@ var getCategory = function (url) {
     var level1 = $('select[name="cate_level_1"]')
         , level2 = $('select[name="cate_level_2"]')
         , level3 = $('select[name="cate_level_3"]');
-
 
     var post = function (pid, select) {
         var ohtml = '<option value="">请选择</option>';
@@ -1167,7 +1137,7 @@ var initMap = function () {
 
     });
     return baiduMap;
-}
+};
 
 
 /**

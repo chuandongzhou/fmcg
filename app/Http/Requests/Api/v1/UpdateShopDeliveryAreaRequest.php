@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdateMortgageGoodsRequest extends SalesmanRequest
+class UpdateShopDeliveryAreaRequest extends UserRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -12,9 +13,12 @@ class UpdateMortgageGoodsRequest extends SalesmanRequest
      */
     public function rules()
     {
+
         return [
-            'goods_name' => 'required',
-            'pieces' => 'required',
+            'city_id' => 'required',
+            'district_id' => 'required',
+            'min_money' => 'numeric'
         ];
+
     }
 }

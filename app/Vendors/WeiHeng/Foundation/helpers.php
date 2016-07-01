@@ -84,9 +84,11 @@ if (!function_exists('avatar_url')) {
      */
     function avatar_url($uid = 0, $size = 64, $secure = null)
     {
-        $default = config('auth.default.avatar');
+        $default = cons('salesman.avatar');
+
         $avatarPath = config('path.upload_avatar');
-        $relatePath = str_replace(public_path(), '', $avatarPath);
+        $relatePath = str_replace(public_path() , '', $avatarPath);
+        $relatePath = str_replace('\\' , '', $relatePath);
 
         // 处理size
         array_key_exists($size, $default) || $size = 64;
@@ -119,6 +121,7 @@ if (!function_exists('salesman_avatar_url')) {
         $default = cons('salesman.avatar');
         $avatarPath = config('path.upload_salesman_avatar');
         $relatePath = str_replace(public_path(), '', $avatarPath);
+        $relatePath = str_replace('\\' , '', $relatePath);
 
         // 处理size
         array_key_exists($size, $default) || $size = 64;

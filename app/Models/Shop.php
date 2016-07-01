@@ -158,7 +158,7 @@ class Shop extends Model
      */
     public function deliveryArea()
     {
-        return $this->morphMany('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphMany('App\Models\AddressData', 'addressable')->where('type',
             cons('shop.address_type.delivery_address'));
     }
 
@@ -169,7 +169,7 @@ class Shop extends Model
      */
     public function shopAddress()
     {
-        return $this->morphOne('App\Models\DeliveryArea', 'addressable')->where('type',
+        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
             cons('shop.address_type.shop_address'));
     }
 
@@ -421,23 +421,12 @@ class Shop extends Model
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
         if (!empty($areaArr)) {
-            $this->deliveryArea->each(function ($address) {
-                $address->delete();
-            });
+            $this->deliveryArea()->delete();
             $areas = [];
             foreach ($areaArr as $data) {
-                /*  if (isset($data['coordinate'])) {
-                      $coordinate = $data['coordinate'];
-                      unset($data['coordinate']);
-                  }*/
                 unset($data['coordinate']);
-                $areas[] = new DeliveryArea($data);
-
-                /* if (isset($coordinate)) {
-                     $areaModel->coordinate()->create($coordinate);
-                 }*/
+                $areas[] = new AddressData($data);
             }
-
             if ($this->exists) {
                 $this->deliveryArea()->saveMany($areas);
             } else {
