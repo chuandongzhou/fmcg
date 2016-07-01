@@ -3,7 +3,12 @@
 @include('includes.order-refund')
 @include('includes.pay')
 @section('subtitle', '订单管理')
-@section('top-title', '进货管理-订单列表')
+@if(auth()->user()->type == cons('user.type.retailer'))
+    @section('top-title', '订单管理->订单列表')
+@else
+    @section('top-title', '进货管理->订单列表')
+@endif
+
 @section('right')
     <div class="row">
     <div class="col-sm-12 wholesalers-management">

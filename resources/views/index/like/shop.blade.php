@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 
 @section('subtitle', '店铺收藏')
-@section('top-title', '我的收藏-店铺收藏')
+@section('top-title', '我的收藏->店铺收藏')
 @section('right')
     <div class="row my-goods index">
         <div class="col-sm-12 collect">

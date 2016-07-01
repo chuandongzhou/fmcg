@@ -1,6 +1,6 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-收货地址')
-@section('top-title', '个人中心-收货地址')
+@section('top-title', '个人中心->收货地址')
 @section('right')
     @include('includes.shipping-address')
     <form action="#" method="post">

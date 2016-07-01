@@ -712,7 +712,7 @@ p{
       .ui-stepSequence {
         position: relative;
         padding: 1px 10px;
-        border-radius: 50%;
+        border-radius: 50% !important;
         z-index: 103;
       }
       .ui-stepName {

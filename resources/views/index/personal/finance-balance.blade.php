@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-商家信息')
-@section('top-title', '财务管理-账户余额')
+@section('top-title', '财务管理->账户余额')
 @section('right')
     <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off">
         <div class="row">

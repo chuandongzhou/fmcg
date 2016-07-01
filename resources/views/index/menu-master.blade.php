@@ -40,7 +40,7 @@
         <div class="page-sidebar navbar-collapse collapse">
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
-                <li class="nav-item start {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password','personal/delivery/*','personal/delivery','personal/delivery-man/*']) !!}">
+                <li class="nav-item start {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password','personal/delivery/*','personal/delivery','personal/delivery-man/*','personal/shipping-address/*']) !!}">
                     <a href="{{ asset('personal/info') }}" class="nav-link nav-toggle">
                         <i class="fa fa-smile-o"></i>
                         <span class="title">个人中心</span>
@@ -54,14 +54,14 @@
                             </a>
                         </li>
                         @if ($user->type != cons('user.type.supplier'))
-                        <li class="nav-item start {{ path_active('personal/shipping-address') }}">
+                        <li class="nav-item start {{ path_active(['personal/shipping-address','personal/shipping-address/*']) }}">
                             <a href="{{ url('personal/shipping-address') }}" class="nav-link ">
                                 <span class="title">收货地址</span>
                             </a>
                         </li>
                         @endif
                         @if ($user->type != cons('user.type.retailer'))
-                        <li class="nav-item start {{ path_active(['personal/delivery-man','personal/delivery/*']) }}">
+                        <li class="nav-item start {{ path_active(['personal/delivery-man','personal/delivery-man/*']) }}">
                             <a href="{{ url('personal/delivery-man') }}" class="nav-link ">
                                 <span class="title">配送人员</span>
                             </a>
@@ -110,7 +110,7 @@
                         <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item  {{ path_active('my-goods') }} ">
+                        <li class="nav-item  {{ path_active(['my-goods','my-goods/*/edit']) }} ">
                             <a href="{{ url('my-goods') }}" class="nav-link ">
                                 <span class="title">我的商品</span>
                             </a>
@@ -194,11 +194,11 @@
                     </li>
                 @endif
                 @if($user->type != cons('user.type.retailer'))
-                <li class="nav-item {!!  path_active(['personal/finance/balance','personal/finance/withdraw','personal/bank']) !!} ">
+                <li class="nav-item {!!  path_active(['personal/finance/balance','personal/finance/withdraw','personal/bank/*','personal/bank']) !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-money "></i>
                         <span class="title">财务管理</span>
-                        <span class="{!! request()->is('personal/finance/balance','personal/finance/withdraw','personal/bank')?'selected':'' !!}"></span>
+                        <span class="{!! request()->is('personal/finance/balance','personal/finance/withdraw','personal/bank/*','personal/bank')?'selected':'' !!}"></span>
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
@@ -207,18 +207,18 @@
                                 <span class="title">账户余额</span>
                             </a>
                         </li>
-                        <li class="nav-item  {{ path_active('personal/bank') }}">
+                        <li class="nav-item  {{ path_active(['personal/bank/*','personal/bank']) }}">
                             <a href="{{ url('personal/bank') }}" class="nav-link ">
                                 <span class="title">提现账号</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item  {!! path_active(['personal/bank','business/salesman/*']) !!}">
+                <li class="nav-item  {!! path_active(['personal/bank/*','personal/bank','business/salesman/*']) !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="icon-wallet"></i>
                         <span class="title">业务管理</span>
-                        <span class="{!! request()->is('personal/bank','business/salesman/*')?'selected':'' !!}"></span>
+                        <span class="{!! request()->is('personal/bank/*','personal/bank','business/salesman/*')?'selected':'' !!}"></span>
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
@@ -227,7 +227,7 @@
                                 <span class="title">业务员管理</span>
                             </a>
                         </li>
-                        <li class="nav-item  {{ path_active('personal/bank') }}">
+                        <li class="nav-item  {{ path_active(['personal/bank/*','personal/bank']) }}">
                             <a href="{{ url('personal/bank') }}" class="nav-link ">
                                 <span class="title">提现账号</span>
                             </a>

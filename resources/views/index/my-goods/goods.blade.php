@@ -4,7 +4,12 @@
 @include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
-@section('top-title', '商品管理-新增商品')
+@if(request()->is('my-goods/create'))
+    @section('top-title', '商品管理->新增商品')
+@else
+    @section('top-title', '商品管理->我的商品')
+@endif
+
 @section('right')
     <div class="row">
      <div class="col-sm-12 goods-editor">

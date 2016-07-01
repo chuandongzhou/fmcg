@@ -2,8 +2,12 @@
 @include('includes.timepicker')
 
 @section('subtitle', '订单统计')
+@if(request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer'))
+    @section('top-title', '进货管理->订单统计')
+@else
+    @section('top-title', '订单管理->订单统计')
+@endif
 
-    @section('top-title', '进货管理-订单统计')
 
 
 @section('right')

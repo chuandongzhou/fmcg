@@ -2,6 +2,7 @@
 @include('includes.uploader')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-首页广告')
+@section('top-title', '模板管理->首页广告')
 @include('includes.tinymce',['full' => true])
 @include('includes.cropper')
 

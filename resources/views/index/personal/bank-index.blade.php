@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-提现账号')
 @include('includes.bank')
-@section('top-title', '财务管理-提现账号')
+@section('top-title', '财务管理->提现账号')
 @section('right')
     <form action="#" method="post">
         <div class="row">

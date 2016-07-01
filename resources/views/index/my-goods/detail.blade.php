@@ -1,7 +1,7 @@
 @extends('index.menu-master')
 
 @section('subtitle', '商品详情')
-@section('top-title', '商品管理-我的商品')
+@section('top-title', '商品管理->我的商品')
 @section('right')
     <div class="row">
     <div class="col-sm-12 my-goods goods-detail">

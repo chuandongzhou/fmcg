@@ -2,7 +2,7 @@
 @include('includes.cropper')
 @include('includes.address')
 @section('subtitle', '个人中心-商家信息')
-@section('top-title', '个人中心-店铺信息')
+@section('top-title', '个人中心->店铺信息')
 @section('right')
 
     <div class="row">

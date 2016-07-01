@@ -2,7 +2,7 @@
 @include('includes.timepicker')
 
 @section('subtitle', '个人中心-配送历史查询')
-@section('top-title', '个人中心-配送历史')
+@section('top-title', '个人中心->配送历史')
 @section('css')
     @parent
     <style>

@@ -19,16 +19,13 @@
                     success: function (data) {
                         var list = data.data, totalCount = 0;
                         list.forEach(function (item) {
-                            console.log(item);
                             if (item.contact.substring(0, 8) === 'chntribe') {
 
                             } else {
                                 totalCount += item.msgCount;
-//                                if (!isTotal) {
-                                    var touid = item.contact.substring(8);
-                                    userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
-                                    chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
-//                                }
+                                var touid = item.contact.substring(8);
+                                userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
+                                chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
                             }
                         });
                         totalMsg.html(totalCount);
@@ -40,7 +37,7 @@
 
             };
             //获取最近联系人
-            var allRecentContact = function(sdk,Event){
+            var allRecentContact = function (sdk, Event) {
                 sdk.Base.getRecentContact({
                     count: 30,
                     success: function (data) {
@@ -61,7 +58,7 @@
 
                         if (firstId) {
                             setUserList(userList, sdk);
-                            setReadState(sdk, firstId);
+                            //  setReadState(sdk, firstId);
                             Event.on('CHAT.MSG_RECEIVED', function (data) {
                                 addMessageNum(sdk, getToUid(data.data.touid));
                             });
@@ -73,22 +70,9 @@
                     }
                 });
             }
-            //管理中心侧边栏联系人点击事件
-            chatListPanel.on('click', '.user-msg',function(){
-                var touid = $(this).data('touid');
-                var unreadMsg = touid.find('badge').html();
-                window.location.href = 'http://192.168.2.65';
-//                var obj = $('.user-msg[data-touid="' + touid + '"]');
-//                getUserChat(obj,toid);
-
-            });
-            //聊天界面联系人点击事件
+            //聊天界面联系人点击事件,聊天记录加载
             userListPanel.on('click', '.user-msg', function () {
                 var obj = $(this), touid = obj.data('touid').toString();
-               getUserChat(obj,touid);
-            });
-            //聊天记录加载
-            var getUserChat = function(obj,touid){
                 var sdk = WKIT.Conn.sdk;
                 obj.prop('disabled', true).css('background-color', '#e0e0e0').siblings().prop('disabled', false).css('background-color', '#f2f2f2');
                 WKIT.switchTouid({
@@ -96,11 +80,11 @@
                     toAvatar: obj.find('img').attr('src')
                 });
                 setReadState(sdk, touid);
-            }
+            });
 
             //获取所有历史聊天用户html
             var setUserList = function (userList, sdk) {
-                var keys = Object.keys(userList), firstId = keys[0], firstLogoUrl = '', userHtml = '',usersHtml = '';
+                var keys = Object.keys(userList), firstId = keys[0], firstLogoUrl = '', userHtml = '', usersHtml = '';
 
                 $.get(site.api('shop/get-shops-by-ids'), {data: keys}, function (shops) {
                     var shops = shops.shops;
@@ -119,19 +103,21 @@
                                 '       <span class="pull-right badge hide">0</span> ' +
                                 '   </div> ' +
                                 '</li>';
-                        usersHtml += '<ul class="media-list list-items user-msg" data-touid="'+i+'">'+
-                                ' <li class="media">'+
-                                '<div class="media-status">'+
-                                ' <span class="badge badge-success pull-right badge">0</span>'+
-                                '</div>'+
-                                ' <img class="media-object" src="'+shops[i].logo_url+'" alt="...">'+
-                                '<div class="media-body">'+
-                                '<h4 class="media-heading">'+shops[i].name+'</h4>'+
-                                '<div class="media-heading-sub">' + userList[i][1] + '</div>'+
-                                '<div class="media-heading-small">' + userList[i][0] + '</div>'+
-                                '</div>'+
-                                ' </li>'+
-                                ' </ul>';
+                        usersHtml += '<a href="/personal/chat?uid=' + i + '">' +
+                                '<ul class="media-list list-items user-msg" data-touid="' + i + '">' +
+                                ' <li class="media">' +
+                                '<div class="media-status">' +
+                                ' <span class="badge badge-success pull-right badge">0</span>' +
+                                '</div>' +
+                                ' <img class="media-object" src="' + shops[i].logo_url + '" alt="...">' +
+                                '<div class="media-body">' +
+                                '<h4 class="media-heading">' + shops[i].name + '</h4>' +
+                                '<div class="media-heading-sub">' + userList[i][1] + '</div>' +
+                                '<div class="media-heading-small">' + userList[i][0] + '</div>' +
+                                '</div>' +
+                                ' </li>' +
+                                ' </ul>' +
+                                '</a>';
                     }
                     userListPanel.append(userHtml);
                     chatListPanel.append(usersHtml);
@@ -140,8 +126,15 @@
                         touid: firstId,
                         toAvatar: firstLogoUrl
                     });
+                            @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
+                    var id = parseInt({!!  request()->input('uid') !!});
+                    userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                    setReadState(sdk, id + "");
+                    @elseif(request()->is('personal/chat'))
+                         userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                    setReadState(sdk, firstId);
+                    @endif
 
-                    userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
                 }, 'json')
 
             };
@@ -151,8 +144,10 @@
                     touid: touid,
                     timestamp: Math.floor((new Date()) / 1000),
                     success: function (data) {
+                        var readNum = userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html();
                         userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html(0);
-                        chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html(0);
+                        chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').html(0);
+                        totalMsg.html(totalMsg.html() - readNum);
                     },
                     error: function (error) {
                         console.log('设置已读失败', error);
@@ -161,10 +156,14 @@
             };
             //消息条数加1
             var addMessageNum = function (sdk, touid) {
-                var userMsg = userListPanel.find('.user-msg[data-touid="' + touid + '"]'), badgeItem = userMsg.find('.badge');
+                var userMsg = userListPanel.find('.user-msg[data-touid="' + touid + '"]'), badgeItem = userMsg.find('.badge'), unreadMsg = chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge');
+
                 if (!userMsg.prop('disabled')) {
                     badgeItem.removeClass('hide').html(parseInt(badgeItem.html()) + 1);
-                    $('.media-status span').html(parseInt(badgeItem.html()) + 1);
+                    unreadMsg.html(parseInt(unreadMsg.html()) + 1);
+                    @if(request()->is('personal/chat'))
+                        totalMsg.html(parseInt(totalMsg.html()) + 1);
+                    @endif
                 } else {
                     setReadState(sdk, touid);
                 }
@@ -196,9 +195,9 @@
                 pluginUrl: '',
                 onLoginSuccess: function () {
                     var sdk = WKIT.Conn.sdk, Event = sdk.Event;
-                    allRecentContact(sdk,Event);
+                    allRecentContact(sdk, Event);
                 },
-                onAudioReceived: function(content){
+                onAudioReceived: function (content) {
                     // content为图片的地址
                     // 返回一个要显示语音的html字符串
                     // 点击播放等操作请自己实现
@@ -220,7 +219,7 @@
                 timeout: 5000,
                 success: function (data) {
                     //获取联系人列表
-                    allRecentContact(sdk,Event);
+                    allRecentContact(sdk, Event);
 //                    getUnreadMsgCount(sdk, true);
 
                     Event.on('CHAT.MSG_RECEIVED', function (data) {

@@ -788,7 +788,7 @@ p {
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence {
   position: relative;
   padding: 1px 10px;
-  border-radius: 50%;
+  border-radius: 50% !important;
   z-index: 103;
 }
 

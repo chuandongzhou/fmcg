@@ -132,7 +132,7 @@
                                 <a class="content-title" href="javascript:" data-target="#noticeModal"
                                    data-toggle="modal"
                                    data-content="{{ $notice->content }}" title="{{ $notice->title }}">
-                                    <p class="home-name">{{ $notice->title }}</p>
+                                    <div class="home-name">{{ $notice->title }}</div>
                                 </a>
                                 <span class="pull-right">{{ $notice->time }}</span>
                             </div>
