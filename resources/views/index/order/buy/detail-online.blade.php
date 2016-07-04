@@ -213,24 +213,26 @@
             <p>总额<b class="red">￥{{ $order->price }}</b></p>
 
             <p>
-                @if(!$order->is_cancel)
-                    @if($order->can_cancel)
-                        <a class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
-                    @endif
+                @if(!$order['is_cancel'])
                     @if ($order->can_refund)
-                            <a class="btn btn-danger refund" data-target="#refund"
-                               data-toggle="modal"
-                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                退款
-                            </a>
+                        <a class="btn btn-danger refund" data-target="#refund"
+                           data-toggle="modal"
+                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                            退款
+                        </a>
+                    @elseif($order['can_cancel'])
+                        <a class="btn btn-cancel ajax"
+                           data-url="{{ url('api/v1/order/cancel-sure') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                     @endif
-                    @if($order->can_payment)
+                    @if($order['can_payment'])
                         <a href="javascript:" data-target="#payModal" data-toggle="modal"
                            class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->price }}">去付款</a>
-                    @elseif($order->can_confirm_arrived)
-                        <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
-                           data-method="put" data-data='{"order_id":{{ $order->id }}}'>确认收货</a>
+                        <a class="btn btn-danger ajax"
+                           data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
                     @endif
                 @endif
             </p>

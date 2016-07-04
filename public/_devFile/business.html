@@ -575,6 +575,38 @@ shipping_address字段子集同上
 
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
+<h4>2.3.4 获取所有销售商品[get] (sale-goods)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>salesman_customer_id        int         客户id
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>goods                       array       商品列表
+
+goods字段子集介绍
+
+id                          int         商品id
+name                        string      商品名
+image_url                   string      商品图片
+</code></pre>
+
+<p><code>失败返回</code></p>
+<h4>2.3.5 添加销售商品[post] (add-sale-goods)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>salesman_customer_id        int         客户id
+goods_id                    int         商品id
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
+<h4>2.3.6 移除销售商品[delete] (delete-sale-goods)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>salesman_customer_id        int         客户id
+goods_id                    int         商品id
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
 <h3>2.4 抵费商品 mortgage-goods</h3>
 <h4>2.4.1 获取所有抵费商品[get] (/)</h4>
 <p><code>请求参数：</code></p>

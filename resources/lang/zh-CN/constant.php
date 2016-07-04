@@ -33,10 +33,6 @@ return [
             'refund' => '退款中',
             'refund_success' => '退款成功',
         ],
-        'receive_mode' => [ //订单提货方式
-            'delivery' => '送货',
-            'pick_up' => '自提'
-        ],
         'status' => [ //订单状态
             'non_confirm' => '未确认',
             'non_send' => '未发货',

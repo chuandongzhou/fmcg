@@ -13,7 +13,7 @@ class Order extends Model
         'price',
         'pay_type',
         'pay_way',
-        'receive_mode',
+        //'receive_mode',
         'remark',
         'pay_status',
         'status',
@@ -164,9 +164,9 @@ class Order extends Model
      */
     public function getPaymentTypeAttribute()
     {
-        $type = $this->attributes['pay_type'];
+        $type = $this->pay_type;
 
-        return $type ? cons()->valueLang('pay_type', $type) : cons()->lang('order.receive_mode.pick_up');
+        return cons()->valueLang('pay_type', $type);
     }
 
     /**
@@ -305,8 +305,21 @@ class Order extends Model
      */
     public function getCanSendAttribute()
     {
-        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status'] == cons('order.pay_status.payment_success') : true)
-        && $this->attributes['status'] == cons('order.status.non_send') && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
+        $payType = $this->pay_type;
+        $payStatus = $this->pay_status;
+        $status = $this->status;
+        $payTypeConf = cons('pay_type');
+
+        $result = false;
+        if ($payType == $payTypeConf['online']) {
+            $result = ($this->pay_status == cons('order.pay_status.payment_success')) && ($status == cons('order.status.non_send'));
+        } elseif ($payType == $payTypeConf['cod']) {
+            $result = $status == cons('order.status.non_send');
+        }
+        return $result && $this->is_cancel == cons('order.is_cancel.off');
+
+        /* return ($this->pay_type == cons('pay_type.online') ? $this->pay_status == cons('order.pay_status.payment_success') : true)
+         && $this->attributes['status'] == cons('order.status.non_send') && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
     /**
@@ -327,8 +340,13 @@ class Order extends Model
      */
     public function getCanConfirmCollectionsAttribute()
     {
-        return $this->attributes['pay_type'] == cons('pay_type.cod')
-        && $this->attributes['status'] == cons('order.status.send');
+        $payType = $this->pay_type;
+        $status = $this->status;
+        $payTypeConf = cons('pay_type');
+        $statusConf = cons('order.status');
+
+        return ($payType == $payTypeConf['cod'] && $status == $statusConf['send'])
+        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
     }
 
     /**
@@ -348,8 +366,8 @@ class Order extends Model
      */
     public function getCanPaymentAttribute()
     {
-        $status = $this->attributes['status'];
-        $payStatus = $this->attributes['pay_status'];
+        $status = $this->status;
+        $payStatus = $this->pay_status;
         $statusArr = cons('order.status');
         $payStatusArr = cons('order.pay_status');
         return $this->attributes['is_cancel'] == cons('order.is_cancel.off')

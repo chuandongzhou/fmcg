@@ -19,7 +19,8 @@
                                 class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                     </li>
                 @endif
-                <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )</li>
+                <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )
+                </li>
                 <li><span class="title-name">订单状态 : </span><span class="red">{{ $order['status_name'] }}</span></li>
                 <li><span class="title-name">订单备注 : </span>
 
@@ -172,7 +173,8 @@
                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                 </div>
                             </td>
-                            <td>￥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
+                            <td>
+                                ￥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
                             <td>￥{{ $goods['pivot']['total_price'] }}</td>
                         </tr>
@@ -187,8 +189,19 @@
             <p>
                 @if(!$order['is_cancel'])
                     @if($order['can_cancel'])
-                        <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                        <a class="btn btn-cancel ajax"
+                           data-url="{{ url('api/v1/order/cancel-sure') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                    @endif
+                    @if($order['can_payment'])
+                        <a href="javascript:" data-target="#payModal" data-toggle="modal"
+                           class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->price }}">去付款</a>
+                    @elseif($order['can_confirm_arrived'])
+                        <a class="btn btn-danger ajax"
+                           data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
                     @endif
                 @endif
             </p>

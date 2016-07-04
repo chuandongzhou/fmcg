@@ -127,7 +127,7 @@
 
                                         <p class="total-money">合计金额
                                             <b class="red money">￥<span class="shop-sum-price"></span></b>
-                                            <b class="red not-enough">(金额不足)</b>
+                                            {{--<b class="red not-enough">(金额不足)</b>--}}
                                         </p>
                                     </td>
                                 </tr>

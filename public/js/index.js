@@ -257,15 +257,15 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            submitBtn = $('input.btn-primary'),
+            //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
-                shopSumPrice = 0,
+                shopSumPrice = 0/*,
                 minMoney = obj.find('.min-money'),
-                notEnough = obj.find('.not-enough');
+                notEnough = obj.find('.not-enough')*/;
             obj.find('.goods-list').each(function () {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
@@ -282,18 +282,18 @@ function cartFunc() {
                 descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
-            if (shopSumPrice < minMoney.html() && shopSumPrice) {
+           /* if (shopSumPrice < minMoney.html() && shopSumPrice) {
                 notEnough.removeClass('hidden');
             } else {
                 notEnough.addClass('hidden');
-            }
+            }*/
         });
 
-        if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
+     /*   if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
             submitBtn.prop('disabled', false);
         } else {
             submitBtn.prop('disabled', true);
-        }
+        }*/
 
         cartSumPriceSpan.html(cartSumPrice);
     };

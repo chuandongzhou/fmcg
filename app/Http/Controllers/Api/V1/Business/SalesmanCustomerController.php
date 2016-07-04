@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1\Business;
 
+use App\Models\Goods;
 use App\Models\Salesman;
 use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
 use App\Models\SalesmanCustomer;
 use Gate;
+use Illuminate\Http\Request;
 
 class SalesmanCustomerController extends Controller
 {
@@ -109,6 +111,75 @@ class SalesmanCustomerController extends Controller
 
         return $customer->delete() ? $this->success('删除客户成功') : $this->error('删除客户时出现问题');
 
+    }
+
+    /**
+     * 销售商品列表
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function saleGoods(Request $request)
+    {
+        $salesman = salesman_auth()->user();
+        $customerId = $request->input('salesman_customer_id');
+        $customer = $salesman->customers()->find($customerId);
+        if (is_null($customer)) {
+            return $this->error('客户不存在');
+        }
+
+        $goods = $customer->goods()->select(['id', 'name'])->get()->each(function ($item) {
+            $item->setAppends(['image_url']);
+        });
+        return $this->success(['goods' => $goods]);
+    }
+
+    /**
+     * 添加销售商品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function addSaleGoods(Request $request)
+    {
+        $salesman = salesman_auth()->user();
+        $customerId = $request->input('salesman_customer_id');
+        $goodsId = $request->input('goods_id');
+
+        $customer = $salesman->customers()->find($customerId);
+        if (is_null($customer)) {
+            return $this->error('客户不存在');
+        }
+        $goods = Goods::active()->find($goodsId);
+
+
+        if (is_null($goods) || $goods->shop_id != $salesman->shop_id) {
+            return $this->error('商品不存在');
+        }
+
+        $customer->goods()->attach($goodsId);
+
+        return $this->success('添加商品成功');
+
+    }
+
+    /**
+     * 删除销售商品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function deleteSaleGoods(Request $request)
+    {
+        $salesman = salesman_auth()->user();
+        $customerId = $request->input('salesman_customer_id');
+        $customer = $salesman->customers()->find($customerId);
+        if (is_null($customer)) {
+            return $this->error('客户不存在');
+        }
+        $goodsId = $request->input('goods_id');
+        $customer->goods()->detach($goodsId);
+        return $this->success('移除商品成功');
     }
 
     /**

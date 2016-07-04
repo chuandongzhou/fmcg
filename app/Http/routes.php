@@ -263,7 +263,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('update-by-app', 'SalesmanController@updateByApp');
             });
             $router->resource('salesman', 'SalesmanController');
-            $router->put('salesman-customer/update-by-app', 'SalesmanCustomerController@updateByApp');
+
+            $router->group(['prefix' => 'salesman-customer'], function ($router) {
+                $router->put('update-by-app/{salesman_customer}',
+                    'SalesmanCustomerController@updateByApp');
+                $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
+                $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
+                $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
+            });
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->resource('visit', 'SalesmanVisitController');
             $router->group(['prefix' => 'order'], function ($router) {

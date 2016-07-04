@@ -34,8 +34,8 @@ class SalesmanCustomer extends Model
 
         // 注册删除事件
         static::deleted(function ($model) {
-           $model->businessAddress()->delete();
-           $model->shippingAddress()->delete();
+            $model->businessAddress()->delete();
+            $model->shippingAddress()->delete();
         });
     }
 
@@ -91,6 +91,17 @@ class SalesmanCustomer extends Model
     {
         return $this->belongsTo('App\Models\Shop');
     }
+
+    /**
+     * 关联已销售商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function goods()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'salesman_customer_sale_goods');
+    }
+
     /**
      * 按名字搜索
      *

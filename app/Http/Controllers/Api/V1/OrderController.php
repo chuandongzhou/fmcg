@@ -295,7 +295,7 @@ class OrderController extends Controller
         $failIds = []; //失败订单id
         $nowTime = Carbon::now();
         foreach ($orders as $order) {
-            if ($order->status != cons('order.status.send') || $order->pay_type != cons('pay_type.cod')) {
+            if (!$order->can_confirm_collections) {
                 if (count($orders) == 1) {
                     return $this->error('确认收款失败');
                 }
@@ -483,8 +483,6 @@ class OrderController extends Controller
             return $this->error('订单不存在或不能修改');
         }
         $attributes = $request->all();
-        info($attributes);
-
         $flag = (new OrderService)->changeOrder($order, $attributes, auth()->id());
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }

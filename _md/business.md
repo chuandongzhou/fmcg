@@ -168,6 +168,43 @@
 
 `失败返回：`
 
+#### 2.3.4 获取所有销售商品[get] (sale-goods)
+`请求参数：`
+
+    salesman_customer_id        int         客户id
+
+`成功返回：`
+
+    goods                       array       商品列表
+
+    goods字段子集介绍
+
+    id                          int         商品id
+    name                        string      商品名
+    image_url                   string      商品图片
+
+`失败返回`
+
+#### 2.3.5 添加销售商品[post] (add-sale-goods)
+`请求参数：`
+
+    salesman_customer_id        int         客户id
+    goods_id                    int         商品id
+
+`成功返回：`
+
+`失败返回`
+
+#### 2.3.6 移除销售商品[delete] (delete-sale-goods)
+`请求参数：`
+
+    salesman_customer_id        int         客户id
+    goods_id                    int         商品id
+
+`成功返回：`
+
+`失败返回`
+
 ### 2.4 抵费商品 mortgage-goods
 #### 2.4.1 获取所有抵费商品[get] (/)
 `请求参数：`

@@ -107,7 +107,9 @@
                                         class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                             </li>
                         @endif
-                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }} ( {{ $order->pay_way_lang }} )</li>
+                        <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }}
+                            ( {{ $order->pay_way_lang }} )
+                        </li>
                         <li><span class="title-info-name">订单状态 : </span><span
                                     class="red">{{ $order['status_name'] }}</span></li>
                         <li><span class="title-info-name">订单备注 :</span>
@@ -120,23 +122,28 @@
                         <div class="pull-right">
                             @if(!$order['is_cancel'])
                                 @if($order['can_cancel'])
-                                    <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                            data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
-                                    </button>
+                                    <a class="btn btn-cancel ajax" data-method='put'
+                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                       data-data='{"order_id":{{ $order['id'] }}}'>
+                                        取消
+                                    </a>
                                 @endif
                                 @if($order->can_confirm)
                                     <a class="btn btn-warning ajax" data-method='put'
                                        data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
                                         确认订单
                                     </a>
-                                @elseif($order['can_send'])
-                                    <a class="btn btn-warning send-goods" data-target="#sendModal"
-                                       data-toggle="modal" data-id="{{ $order['id'] }}">发货</a>
+                                @endif
+                                @if($order['can_send'])
+                                    <a class="btn btn-warning send-goods"
+                                       data-target="#sendModal" data-toggle="modal"
+                                       data-id="{{ $order['id'] }}">
+                                        发货
+                                    </a>
                                 @elseif($order['can_confirm_collections'])
-                                    <button class="btn btn-primary ajax" data-method='put'
-                                            data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
-                                            data-data='{"order_id":{{ $order['id'] }}}'>确认收款
-                                    </button>
+                                    <a class="btn btn-info ajax" data-method='put'
+                                       data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
+                                       data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a>
                                 @endif
                                 @if($order['can_export'])
                                     <a target="_blank" class="btn btn-success"

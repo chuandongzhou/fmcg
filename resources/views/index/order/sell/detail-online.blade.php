@@ -143,23 +143,48 @@
                     </ul>
                     <div class="pull-right">
                         @if(!$order['is_cancel'])
-                            @if($order['can_cancel'])
-                                <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                        data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消
-                                </button>
+                            @if($order->can_refund)
+                                <p>
+                                    <a class="btn btn-danger refund" data-target="#refund"
+                                       data-toggle="modal"
+                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                        取消并退款
+                                    </a>
+                                </p>
+                            @elseif($order['can_cancel'])
+                                <p>
+                                    <a class="btn btn-cancel ajax" data-method='put'
+                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                       data-data='{"order_id":{{ $order['id'] }}}'>
+                                        取消
+                                    </a>
+                                </p>
                             @endif
                             @if($order->can_confirm)
-                                <a class="btn btn-warning ajax" data-method='put'
-                                   data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
-                                    确认订单
-                                </a>
-                            @elseif($order['can_send'])
-                                <a class="btn btn-warning send-goods" data-target="#sendModal"
-                                   data-toggle="modal" data-id="{{ $order['id'] }}">发货</a>
+                                <p>
+                                    <a class="btn btn-warning ajax" data-method='put'
+                                       data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
+                                        确认订单
+                                    </a>
+                                </p>
+                            @endif
+                            @if($order['can_send'])
+                                <p>
+                                    <a class="btn btn-warning send-goods"
+                                       data-target="#sendModal" data-toggle="modal"
+                                       data-id="{{ $order['id'] }}">
+                                        发货
+                                    </a>
+                                </p>
+                            @elseif($order['can_confirm_collections'])
+                                <p><a class="btn btn-info ajax" data-method='put'
+                                      data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
+                                      data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
                             @endif
                             @if($order['can_export'])
-                                <a target="_blank" class="btn btn-success"
-                                   href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
+                                <p><a target="_blank" class="btn btn-success"
+                                      href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
+                                </p>
                             @endif
                         @endif
                     </div>

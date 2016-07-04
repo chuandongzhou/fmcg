@@ -126,7 +126,6 @@
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
                                                     @endif
-
                                                 @endif
                                             </td>
                                         @endif
