@@ -553,7 +553,7 @@ var addAddFunc = function () {
 
     //changeAddButtonStatus();
     // 删除地址
-    container.on('click', '.close', function () {
+    container.on('click', '.close-icon', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
             //changeAddButtonStatus();
@@ -599,7 +599,7 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
             '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
             '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
-            '<span class="fa fa-times-circle pull-right close"></span>' +
+            '<span class="fa fa-times-circle pull-right close-icon"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
             //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +

@@ -2160,11 +2160,14 @@ p {
   margin-top: 20px;
 }
 
-.address-list .close {
+.address-list .close-icon {
+  cursor: pointer;
+  opacity: 0.2;
   color: #f00;
 }
 
-.address-list .close:hover {
+.address-list .close-icon:hover {
+  opacity: 1;
   color: #f00;
 }
 

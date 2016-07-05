@@ -231,8 +231,8 @@
                     {{--<input type="hidden" name="area[sly][]" value=""/>--}}
                 </div>
                 @foreach ($shop->deliveryArea as $area)
-                    <div class="col-sm-12 fa-border show-map">{{ $area->address_name }}
-                        <span class="fa fa-times-circle pull-right close"></span>
+                    <div class="col-sm-10 fa-border show-map">{{ $area->address_name }}
+                        <span class="fa fa-times-circle pull-right close-icon"></span>
                         <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                         <input type="hidden" name="area[province_id][]" value="{{ $area->province_id }}"/>
                         <input type="hidden" name="area[city_id][]" value="{{ $area->city_id }}"/>

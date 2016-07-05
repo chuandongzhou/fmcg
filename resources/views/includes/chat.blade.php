@@ -25,10 +25,16 @@
                                 totalCount += item.msgCount;
                                 var touid = item.contact.substring(8);
                                 userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
-                                chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
+                                if (item.msgCount > 0) {
+                                    chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').removeClass('hide').html(item.msgCount);
+                                }
+
                             }
                         });
-                        totalMsg.html(totalCount);
+                        if (totalCount > 0) {
+                            totalMsg.removeClass('hide').html(totalCount);
+                        }
+
                     },
                     error: function (error) {
                         console.log('获取未读消息的条数失败', error);
@@ -107,7 +113,7 @@
                                 '<ul class="media-list list-items user-msg" data-touid="' + i + '">' +
                                 ' <li class="media">' +
                                 '<div class="media-status">' +
-                                ' <span class="badge badge-success pull-right badge">0</span>' +
+                                ' <span class="badge badge-success pull-right badge hide">0</span>' +
                                 '</div>' +
                                 ' <img class="media-object" src="' + shops[i].logo_url + '" alt="...">' +
                                 '<div class="media-body">' +
@@ -146,8 +152,13 @@
                     success: function (data) {
                         var readNum = userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html();
                         userListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html(0);
-                        chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').html(0);
-                        totalMsg.html(totalMsg.html() - readNum);
+                        chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge').addClass('hide').html(0);
+                        if ((totalMsg.html() - readNum) > 0) {
+                            totalMsg.html(totalMsg.html() - readNum);
+                        } else {
+                            totalMsg.addClass('hide').html(0);
+                        }
+
                     },
                     error: function (error) {
                         console.log('设置已读失败', error);
@@ -160,9 +171,9 @@
 
                 if (!userMsg.prop('disabled')) {
                     badgeItem.removeClass('hide').html(parseInt(badgeItem.html()) + 1);
-                    unreadMsg.html(parseInt(unreadMsg.html()) + 1);
+                    unreadMsg.removeClass('hide').html(parseInt(unreadMsg.html()) + 1);
                     @if(request()->is('personal/chat'))
-                        totalMsg.html(parseInt(totalMsg.html()) + 1);
+                        totalMsg.removeClass('hide').html(parseInt(totalMsg.html()) + 1);
                     @endif
                 } else {
                     setReadState(sdk, touid);

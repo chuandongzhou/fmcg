@@ -1918,9 +1918,12 @@ p{
 }
 
 .address-list {
-  .close {
+  .close-icon {
+    cursor: pointer;
+    opacity: 0.2;
     color: $red;
     &:hover {
+      opacity: 1;
       color: $red;
     }
   }

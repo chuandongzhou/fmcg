@@ -33,77 +33,81 @@
             </div>
 
             <!-- BEGIN 响应式菜单切换 -->
-            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+               data-target=".navbar-collapse"> </a>
 
             <div class="page-top">
                 <div class="top-menu">
                     <ul class="nav navbar-nav pull-right">
                         <!--帮助中心-->
 
-                            <li class="dropdown dropdown-extended dropdown-notification" >
-                                <a href="{{ url('help') }}" class="dropdown-toggle"  data-hover="dropdown"
-                                   data-close-others="true" >
-                                    <i class="fa fa-question-circle" title="帮助中心"></i>  &nbsp;
-                                </a>
-                            </li>
+                        <li class="dropdown dropdown-extended dropdown-notification">
+                            <a href="{{ url('help') }}" class="dropdown-toggle" data-hover="dropdown"
+                               data-close-others="true">
+                                <i class="fa fa-question-circle" title="帮助中心"></i> &nbsp;
+                            </a>
+                        </li>
 
                         <!--购物车-->
                         @if($carts = (new \App\Services\CartService)->cartDetail())
-                        <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                            <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <i class="fa fa-shopping-cart"></i>
-                                @if( $carts['count']>0)
-                                    <span class="badge badge-default">{{ $carts['count'] }} </span>
-                                @endif
+                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                                <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
+                                   data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    @if( $carts['count']>0)
+                                        <span class="badge badge-default">{{ $carts['count'] }} </span>
+                                    @endif
 
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="external">
-                                    <h3> 最新加入商品</h3>
-                                    <a href="{{ url('cart') }}">去购物车查看</a>
-                                </li>
-                                <li>
-                                    <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                        @foreach($carts['detail'] as $cart)
-                                            <li>
-                                                <a href="{{ url('goods/'.$cart->goods->id) }}">
-                                                    <!--<span class="time">just now</span>-->
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="external">
+                                        <h3> 最新加入商品</h3>
+                                        <a href="{{ url('cart') }}">去购物车查看</a>
+                                    </li>
+                                    <li>
+                                        <ul class="dropdown-menu-list scroller" style="height: 250px;"
+                                            data-handle-color="#637283">
+                                            @foreach($carts['detail'] as $cart)
+                                                <li>
+                                                    <a href="{{ url('goods/'.$cart->goods->id) }}">
+                                                        <!--<span class="time">just now</span>-->
                                                 <span class="details">
                                                     <span class="label">
                                                         <img src="{{ $cart->goods->image_url }}">
                                                     </span> {{ $cart->goods->name }}
                                                 </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        @endif
-                        <!--最新消息-->
-                        <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg" >
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                               data-close-others="true">
-                                <i class="fa fa-commenting-o "></i>
-                                <span class="badge badge-default total-message-count">0 </span>
-                            </a>
-                            <br>
-                        </li>
-                        <!--登录名-->
-                        <li class="dropdown dropdown-user">
-                            <a href="{{ url('personal/info') }}" class="dropdown-toggle"  data-hover="dropdown"
-                               data-close-others="true">
-                                <img alt="" class="img-circle" src="{{ $user->shop->logo }}"/>
-                                <span class="username username-hide-on-mobile">{{ $user->shop->name }}</span>
-                            </a>
-                        </li>
-                        <!--退出登录-->
-                        <li class="dropdown dropdown-extended drop-exit ">
-                            <a href="{{ url('auth/logout') }}">
-                                <i class="icon-logout"></i>
-                            </a>
-                        </li>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            @endif
+                                    <!--最新消息-->
+                            <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
+                                   data-hover="dropdown"
+                                   data-close-others="true">
+                                    <i class="fa fa-commenting-o "></i>
+                                    <span class="badge badge-default total-message-count hide">0 </span>
+                                </a>
+                                <br>
+                            </li>
+                            <!--登录名-->
+                            <li class="dropdown dropdown-user">
+                                <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
+                                   data-close-others="true">
+                                    <img alt="" class="img-circle" src="{{ $user->shop->logo }}"/>
+                                    <span class="username username-hide-on-mobile">{{ $user->shop->name }}</span>
+                                </a>
+                            </li>
+                            <!--退出登录-->
+                            <li class="dropdown dropdown-extended drop-exit ">
+                                <a href="{{ url('auth/logout') }}">
+                                    <i class="icon-logout"></i>
+                                </a>
+                            </li>
                     </ul>
                 </div>
             </div>
@@ -114,11 +118,11 @@
 
 @section('body')
     <div class="page-container public-personal contents">
-            @yield('container')
-            <div class="msg-channel" id="alert-div">
-                <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
-                <a class="check" href="#">点击查看>>>></a>
-            </div>
+        @yield('container')
+        <div class="msg-channel" id="alert-div">
+            <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
+            <a class="check" href="#">点击查看>>>></a>
+        </div>
         <!--登出按钮-->
         <a href="javascript:;" class="page-quick-sidebar-toggler">
             <i class="icon-login"></i>
@@ -128,8 +132,9 @@
             <div class="page-quick-sidebar">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> {{ $user->shop->name }}
-                            <span class="badge badge-danger total-message-count">0</span>
+                        <a href="javascript:;" data-target="#quick_sidebar_tab_1"
+                           data-toggle="tab"> {{ $user->shop->name }}
+                            <span class="badge badge-danger total-message-count hide">0</span>
                         </a>
                     </li>
                 </ul>
@@ -138,33 +143,33 @@
                         <div class="page-quick-sidebar-chat-users" data-rail-color="#ddd"
                              data-wrapper-class="page-quick-sidebar-list">
                             {{--<ul class="media-list list-items">--}}
-                                {{--<li class="media">--}}
-                                    {{--<div class="media-status">--}}
-                                        {{--<span class="badge badge-success">8</span>--}}
-                                    {{--</div>--}}
-                                    {{--<img class="media-object" src="http://placehold.it/100" alt="...">--}}
+                            {{--<li class="media">--}}
+                            {{--<div class="media-status">--}}
+                            {{--<span class="badge badge-success">8</span>--}}
+                            {{--</div>--}}
+                            {{--<img class="media-object" src="http://placehold.it/100" alt="...">--}}
 
-                                    {{--<div class="media-body">--}}
-                                        {{--<h4 class="media-heading">Bob Nilson</h4>--}}
+                            {{--<div class="media-body">--}}
+                            {{--<h4 class="media-heading">Bob Nilson</h4>--}}
 
-                                        {{--<div class="media-heading-sub"> Project Manager</div>--}}
-                                    {{--</div>--}}
-                                {{--</li>--}}
+                            {{--<div class="media-heading-sub"> Project Manager</div>--}}
+                            {{--</div>--}}
+                            {{--</li>--}}
                             {{--</ul>--}}
                             {{--<ul class="media-list list-items">--}}
-                                {{--<li class="media">--}}
-                                    {{--<div class="media-status">--}}
-                                        {{--<span class="badge badge-warning">2</span>--}}
-                                    {{--</div>--}}
-                                    {{--<img class="media-object" src="http://placehold.it/100" alt="...">--}}
+                            {{--<li class="media">--}}
+                            {{--<div class="media-status">--}}
+                            {{--<span class="badge badge-warning">2</span>--}}
+                            {{--</div>--}}
+                            {{--<img class="media-object" src="http://placehold.it/100" alt="...">--}}
 
-                                    {{--<div class="media-body">--}}
-                                        {{--<h4 class="media-heading">Lara Kunis</h4>--}}
+                            {{--<div class="media-body">--}}
+                            {{--<h4 class="media-heading">Lara Kunis</h4>--}}
 
-                                        {{--<div class="media-heading-sub"> CEO, Loop Inc</div>--}}
-                                        {{--<div class="media-heading-small"> Last seen 03:10 AM</div>--}}
-                                    {{--</div>--}}
-                                {{--</li>--}}
+                            {{--<div class="media-heading-sub"> CEO, Loop Inc</div>--}}
+                            {{--<div class="media-heading-small"> Last seen 03:10 AM</div>--}}
+                            {{--</div>--}}
+                            {{--</li>--}}
                             {{--</ul>--}}
                         </div>
                         <div class="page-quick-sidebar-item">
@@ -264,7 +269,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="cont-col2">
-                                                    <div class="desc"> Finance Report for year 2013 has been released.</div>
+                                                    <div class="desc"> Finance Report for year 2013 has been released.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -402,7 +408,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="cont-col2">
-                                                    <div class="desc"> Finance Report for year 2013 has been released.</div>
+                                                    <div class="desc"> Finance Report for year 2013 has been released.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -569,74 +576,74 @@
 @stop
 
 @section('footer')
-        <footer class="panel-footer footer page-footer">
-            <div class="container text-center text-muted">
-                <div class="row text-center">
-                    <div class="col-xs-6">
-                        <ul class="list-inline">
-                            <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
-                            <li>
-                                <div class="contact-panel">
-                                    <a href="javascript:;" class="icon contact-information">联系方式</a>
-                                </div>
-                                <div class="contact-content content hidden">
-                                    <div>{{ cons('system.company_tel') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_mobile') }}</div>
-                                    <div>{{ cons('system.company_addr') }}</div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="feedback-panel">
-                                    <a class="feedback icon" href="javascript:;">意见反馈</a>
-                                </div>
-                                <div class="content hidden">
-                                    <form class="ajax-form" method="post" action="{{ url('api/v1/feedback') }}"
-                                          accept-charset="UTF-8" data-help-class="error-msg text-center"
-                                    >
-                                        <div>
-                                            <textarea placeholder="请填写您的反馈意见" name="content"></textarea>
-                                        </div>
-                                        <div>
-                                            <div class="input-group">
+    <footer class="panel-footer footer page-footer">
+        <div class="container text-center text-muted">
+            <div class="row text-center">
+                <div class="col-xs-6">
+                    <ul class="list-inline">
+                        <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
+                        <li>
+                            <div class="contact-panel">
+                                <a href="javascript:;" class="icon contact-information">联系方式</a>
+                            </div>
+                            <div class="contact-content content hidden">
+                                <div>{{ cons('system.company_tel') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_mobile') }}</div>
+                                <div>{{ cons('system.company_addr') }}</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="feedback-panel">
+                                <a class="feedback icon" href="javascript:;">意见反馈</a>
+                            </div>
+                            <div class="content hidden">
+                                <form class="ajax-form" method="post" action="{{ url('api/v1/feedback') }}"
+                                      accept-charset="UTF-8" data-help-class="error-msg text-center"
+                                >
+                                    <div>
+                                        <textarea placeholder="请填写您的反馈意见" name="content"></textarea>
+                                    </div>
+                                    <div>
+                                        <div class="input-group">
                                             <span class="input-group-addon" id="feedback-contact"><i
                                                         class="fa fa-envelope-o"></i></span>
-                                                <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
-                                                       aria-describedby="feedback-contact" name="contact">
+                                            <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
+                                                   aria-describedby="feedback-contact" name="contact">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary btn-submit" type="submit"
                                                         data-done-then="none" data-done-text="反馈提交成功">提交
                                                 </button>
                                             </span>
-                                            </div>
-                                            <!-- /input-group -->
                                         </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="qr-content-panel">
-                                    <a href="javascript:;" class="app-down icon">APP下载</a>
-                                </div>
-                                <div class="content hidden">
-                                    <div class="qr-panel">
-                                        <div class="dbd item">
-                                            <div class="qr-code dbd-qr-code"></div>
-                                            <div class="text text-center">订百达</div>
-                                        </div>
-                                        <div class="driver-helper item">
-                                            <div class="qr-code helper"></div>
-                                            <div class="text text-center">司机助手</div>
-                                        </div>
+                                        <!-- /input-group -->
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="qr-content-panel">
+                                <a href="javascript:;" class="app-down icon">APP下载</a>
+                            </div>
+                            <div class="content hidden">
+                                <div class="qr-panel">
+                                    <div class="dbd item">
+                                        <div class="qr-code dbd-qr-code"></div>
+                                        <div class="text text-center">订百达</div>
+                                    </div>
+                                    <div class="driver-helper item">
+                                        <div class="qr-code helper"></div>
+                                        <div class="text text-center">司机助手</div>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-xs-6">
-                        <p>Copyright {!! cons('system.company_name') !!}</p>
-                    </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-6">
+                   <p> Copyright &copy; 成都订百达科技有限公司 蜀ICP备15031748号-1</p>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
 
 @stop
 
