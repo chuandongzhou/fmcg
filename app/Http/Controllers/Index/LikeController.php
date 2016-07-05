@@ -32,8 +32,8 @@ class LikeController extends Controller
             $shops = $shops->OfDeliveryArea(array_filter($data));
         }
         $shops = $shops->paginate();
-        $shops->each(function($shop){
-            $shop->setAppends(['image_url' , 'sales_volume']);
+        $shops->each(function ($shop) {
+            $shop->setAppends(['image_url', 'sales_volume']);
         });
 
         return view('index.like.shop', [
@@ -71,7 +71,7 @@ class LikeController extends Controller
         }
 
         return view('index.like.goods', [
-            'goods' => $goods->paginate(),
+            'goods' => $goods->orderBy('id', 'DESC')->paginate(16),
             'data' => $data,
             'cateArr' => $cateArr
         ]);

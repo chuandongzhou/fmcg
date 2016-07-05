@@ -59,6 +59,16 @@ class SalesmanVisitOrderGoods extends Model
     }
 
     /**
+     * 获取商品图片
+     *
+     * @return string
+     */
+    public function getGoodsImageAttribute()
+    {
+        return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
+    }
+
+    /**
      * 关联抵费商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

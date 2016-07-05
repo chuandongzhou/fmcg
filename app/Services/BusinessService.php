@@ -116,7 +116,6 @@ class BusinessService
                     });
 
 
-
                     $orderGoodsIds = $orderGoodsLists->pluck('goods_id')->toBase()->unique();
                     $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
 
@@ -151,7 +150,7 @@ class BusinessService
                     }
                     $order->orderGoods = $orderGoods;
                 }
-              
+
             });
         }
         return $orders;
@@ -161,9 +160,10 @@ class BusinessService
      * 格式化访问数据
      *
      * @param $visits
+     * @param bool $hasGoodsImage
      * @return array
      */
-    public function formatVisit($visits)
+    public function formatVisit($visits, $hasGoodsImage = false)
     {
         $orderConf = cons('salesman.order');
 
@@ -224,6 +224,8 @@ class BusinessService
                     $visitData[$customerId]['statistics'][$goods->goods_id]['price'] = $goods->price;
                     $visitData[$customerId]['statistics'][$goods->goods_id]['pieces'] = cons()->valueLang('goods.pieces',
                         $goods->pieces);
+                    $hasGoodsImage && ( $visitData[$customerId]['statistics'][$goods->goods_id]['image_url'] = $goods->goods_image);
+
                 } elseif ($goods->type == $orderConf['goods']['type']['return']) {
                     $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] + intval($goods->num) : intval($goods->num);
                     $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? bcadd($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'],

@@ -38,36 +38,36 @@ class SalesmanVisitController extends Controller
      */
     public function store(Request $request)
     {
-         /*$data = [
-             'salesman_customer_id' => 1,
-             'goods' => [
-                 [
-                     'id' => 324,
-                     'pieces' => 11,
-                     'stock'  => '3件',
-                     'production_date' => '2015-06-09',
-                     'order_form' => [
-                         'price'  => '169',
-                         'num'    => 2
-                     ],
-                     'return_order' => [
-                         'amount'  => 160,
-                         'num'     => 2
-                     ]
-                 ]
-             ],
-             'display_fee' => '100',
-             "mortgage" => [
-                 [
-                     "goods_id"  => 324,
-                     "num"       => 1,
-                     "pieces"    => 11,
-                 ],
+        /*$data = [
+            'salesman_customer_id' => 1,
+            'goods' => [
+                [
+                    'id' => 324,
+                    'pieces' => 11,
+                    'stock'  => '3件',
+                    'production_date' => '2015-06-09',
+                    'order_form' => [
+                        'price'  => '169',
+                        'num'    => 2
+                    ],
+                    'return_order' => [
+                        'amount'  => 160,
+                        'num'     => 2
+                    ]
+                ]
+            ],
+            'display_fee' => '100',
+            "mortgage" => [
+                [
+                    "goods_id"  => 324,
+                    "num"       => 1,
+                    "pieces"    => 11,
+                ],
 
-             ]
+            ]
 
-         ];
-        dd($data);*/
+        ];
+       dd($data);*/
         $data = $request->all();
         $salesman = salesman_auth()->user();
 
@@ -146,10 +146,16 @@ class SalesmanVisitController extends Controller
         if (!$visit || $visit->salesman_id != salesman_auth()->id()) {
             return $this->error('拜访信息出错');
         }
-        $visit->load(['orders.orderGoods.mortgageGoods', 'goodsRecord', 'salesmanCustomer.shippingAddress']);
-        $visitData = head((new BusinessService())->formatVisit([$visit]));
+        $visit->load([
+            'orders.orderGoods.mortgageGoods',
+            'goodsRecord',
+            'salesmanCustomer.shippingAddress',
+            'orders.orderGoods.goods'
+        ]);
+        $visitData = head((new BusinessService())->formatVisit([$visit], true));
         $visitData['display_fee'] = head($visitData['display_fee']) ? head($visitData['display_fee'])['display_fee'] : 0;
         $visitData['mortgage'] = head($visitData['mortgage']) ? head($visitData['mortgage']) : [];
+        $visitData['statistics'] = array_values($visitData['statistics']);
         return $this->success(compact('visitData'));
     }
 
@@ -168,7 +174,8 @@ class SalesmanVisitController extends Controller
             if (isset($goods['order_form'])) {
                 $order['order_form']['display_fee'] = isset($data['display_fee']) ? $data['display_fee'] : 0;
                 $order['order_form']['amount'] = isset($order['order_form']['amount']) ?
-                    bcadd($order['order_form']['amount'], bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2), 2) :
+                    bcadd($order['order_form']['amount'],
+                        bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2), 2) :
                     bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2);
                 $order['order_form']['goods'][] = [
                     'goods_id' => $goods['id'],

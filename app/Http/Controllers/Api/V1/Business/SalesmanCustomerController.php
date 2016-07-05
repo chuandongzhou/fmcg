@@ -150,6 +150,9 @@ class SalesmanCustomerController extends Controller
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
+        if ($customer->goods()->where(['goods_id' => $goodsId])->pluck('goods_id')) {
+            return $this->success('添加商品成功');
+        }
         $goods = Goods::active()->find($goodsId);
 
 

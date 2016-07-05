@@ -103,7 +103,7 @@ class ReportController extends Controller
             'goodsRecord',
             'salesmanCustomer.shippingAddress'
         ])->get();
-        $visitData = $this->_formatVisit($visits);
+        $visitData = (new BusinessService())->formatVisit($visits);
 
         $startDate = $startDate->toDateString();
         $endDate = $endDate->toDateString();
@@ -117,7 +117,6 @@ class ReportController extends Controller
      *
      * @param $salesman
      * @param $startDate
-     * @param $endDate
      * @param $visitData
      */
     private function _exportByDay($salesman, $startDate, $visitData)

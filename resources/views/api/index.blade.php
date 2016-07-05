@@ -6,7 +6,7 @@
 <body>
 <h1>模拟POST发送页面 www.bpicms.com</h1>
 -开发用
-<form action="{{ url('api/v1') }}" method="post" enctype="Multipart/form-data" autocomplete="off">
+<form action="{{ url('api/v1') }}" method="post" enctype="Multipart/form-data">
     <input type="hidden" name="_method" class="hidden" value="PUT" />
     请求的方式:<select class="type">
         <option value="get">get</option>

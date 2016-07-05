@@ -277,6 +277,7 @@
     production_date         date            生产日期
     return_amount           decimal         退货金额
     return_order_num        string          退货数量
+    image_url               string          商品图片地址
     
     mortgage字段子集说明
     
