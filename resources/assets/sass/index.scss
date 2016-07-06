@@ -17,19 +17,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   padding: 0;
   margin: 0 ;
 }
-p{
-  margin: 0 !important;
-}
-
-//.navbar-collapse{
-//  display: block;
-//  .navbar-nav{
-//    margin:0;
-//    li{
-//      float: left;
-//    }
-//  }
-//}
 
 .inline-control {
   background-image: none;
@@ -712,7 +699,7 @@ p{
       .ui-stepSequence {
         position: relative;
         padding: 1px 10px;
-        border-radius: 50% !important;
+        border-radius: 50%;
         z-index: 103;
       }
       .ui-stepName {
@@ -951,7 +938,6 @@ p{
     float: left;
     padding: 0 15px;
     margin-bottom: 10px;
-    background-color:$body-bg;
     .commodity-img {
       width: 100%;
       display: inline-block;
@@ -978,6 +964,7 @@ p{
   }
   .commodity-border {
     border: 1px solid $blue-light;
+    background-color:$body-bg;
   }
   .content-panel {
     padding: 2px 5px;
@@ -1304,6 +1291,7 @@ p{
       border: 1px solid $gray-lighter;
       margin-top: -1px;
       padding: 0 5px;
+      background-color: $body-bg;
       .title-name {
         display: inline-block;
         padding: 5px 0 0 10px;
@@ -1918,12 +1906,10 @@ p{
 }
 
 .address-list {
-  .close-icon {
-    cursor: pointer;
-    opacity: 0.2;
+  .close-icon{
     color: $red;
+    text-indent:0!important;
     &:hover {
-      opacity: 1;
       color: $red;
     }
   }
@@ -2101,7 +2087,9 @@ table {
     padding-right: 15px;
   }
 }
-
+.cart-img{
+  @include square(50px);
+}
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/
 .personal-center {
@@ -3392,6 +3380,57 @@ table {
   }
 }
 
+.delivery-mode{
+  border-top:1px solid $gray-plain-light;
+  padding:10px;
+  .title{
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .check-delivery{
+    position:relative;
+    width:200px;
+    background-color:$body-bg;
+    border:3px solid $banner-gray;
+    color:$gray-base;
+    &:hover{
+      color:$gray-base;
+    }
+  }
+  .from-mentioning{
+    margin:20px 0;
+  }
+  .fa-check{
+    position: absolute;
+    bottom:0;
+    right:0;
+    color:$body-bg;
+    font-size: 12px;
+    display: none;
+  }
+  .triangle{
+    position: absolute;
+    bottom:0;
+    right:0;
+    width: 0;
+    height: 0;
+    border-bottom: 20px solid $brand-primary;
+    border-left: 20px solid transparent;
+    display: none;
+  }
+  .check-delivery.active{
+    border:3px solid $brand-primary;
+    .fa{
+      display: inline-block;
+    }
+    .triangle{
+      display: inline-block;
+    }
+  }
+  .operation-buttons[disabled='disabled']{
+    background-color: $banner-gray;
+  }
+}
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect {

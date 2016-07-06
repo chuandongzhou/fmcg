@@ -141,13 +141,13 @@
                         touid: firstId,
                         toAvatar: firstLogoUrl
                     });
-                            @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
-                    var id = parseInt({!!  request()->input('uid') !!});
-                    userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
-                    setReadState(sdk, id + "");
-                    @elseif(request()->is('personal/chat'))
-                         userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
-                    setReadState(sdk, firstId);
+                    @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
+                        var id = parseInt({!!  request()->input('uid') !!});
+                        userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                        setReadState(sdk, id + "");
+                     @elseif(request()->is('personal/chat'))
+                             userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                        setReadState(sdk, firstId);
                     @endif
 
                 }, 'json')
@@ -189,7 +189,7 @@
                 }
 
             };
-
+            // 获取时间
             var getLocalTime = function (nS) {
                 var now = new Date(nS * 1000);
                 var year = now.getFullYear();
@@ -232,7 +232,7 @@
                 return false;
             }
             var sdk = new WSDK(), Event = sdk.Event;
-            sdk.Base.login({
+                sdk.Base.login({
                 uid: '{{ $chatConf['shop_id'] }}',
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
@@ -252,7 +252,6 @@
                     console.log('login fail', error);
                 }
             });
-
             @endif
 
         });
