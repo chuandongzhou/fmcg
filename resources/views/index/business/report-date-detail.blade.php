@@ -71,7 +71,7 @@
                                         <td rowspan="{{ count($mortgages) }}">{{ $date }}</td>
                                     @endif
                                     <td>{{ $mortgage['name'] }}</td>
-                                    <td>{{ $mortgage['pieces'] }}</td>
+                                    <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
                                     <td colspan="2">{{ $mortgage['num'] }}</td>
 
                                 </tr>
@@ -95,8 +95,8 @@
                             <td>{{ $statistics['goods_name'] }}</td>
                             <td>{{ $statistics['order_num'] }}</td>
                             <td>{{ $statistics['order_amount'] }}</td>
-                            <td>{{ $statistics['return_order_num'] }}</td>
-                            <td>{{ $statistics['return_amount'] }}</td>
+                            <td>{{ $statistics['return_order_num'] or 0 }}</td>
+                            <td>{{ $statistics['return_amount'] or 0 }}</td>
                         </tr>
                     @endforeach
                     <tr>

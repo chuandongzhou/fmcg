@@ -9,6 +9,8 @@ class SalesmanVisit extends Model
 
     protected $fillable = ['salesman_customer_id'];
 
+    protected $hidden = ['updated_at'];
+
     /**
      * 关联业务员
      *

@@ -66,12 +66,12 @@ class ReportController extends Controller
         $endDate = $endDate->toDateString();
 
         $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
+        
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
             'endDate' => $endDate,
             'visitData' => (new BusinessService())->formatVisit($visits),
             'salesman' => $salesman,
-
         ]);
 
     }
@@ -128,10 +128,8 @@ class ReportController extends Controller
 
 
         $cellAlignCenter = ['align' => 'center'];
-        $cellVAlignCenter = ['valign' => 'center'];
         $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
         $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
-        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
 
         $phpWord->setDefaultFontName('仿宋');
         $phpWord->setDefaultFontSize(10);
@@ -192,7 +190,8 @@ class ReportController extends Controller
                 foreach (head($visit['mortgage']) as $mortgage) {
                     $table->addRow();
                     $table->addCell(3500, $gridSpan3)->addText($mortgage['name'], null, $cellAlignCenter);
-                    $table->addCell(4000, $gridSpan3)->addText($mortgage['pieces'], null, $cellAlignCenter);
+                    $table->addCell(4000, $gridSpan3)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']),
+                        null, $cellAlignCenter);
                     $table->addCell(3000, $gridSpan3)->addText($mortgage['num'], null, $cellAlignCenter);
                 }
             }
@@ -217,7 +216,7 @@ class ReportController extends Controller
                 $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
                 $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
                 $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? $statistics['pieces'] : '件'),
+                $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces', $statistics['pieces']) : '件'),
                     null, $cellAlignCenter);
                 $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
                 $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
@@ -334,7 +333,7 @@ class ReportController extends Controller
                         $table->addCell(null, $cellRowContinue);
                         $table->addCell(null, $cellRowContinue);
                         $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null, $cellAlignCenter);
-                        $table->addCell(1800, $cellVAlignCenter)->addText($mortgage['pieces'], null, $cellAlignCenter);
+                        $table->addCell(1800, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']), null, $cellAlignCenter);
                         $table->addCell(3500, $gridSpan2)->addText($mortgage['num'], null, $cellAlignCenter);
                     }
                 }

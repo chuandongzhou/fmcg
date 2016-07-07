@@ -153,8 +153,8 @@ class SalesmanVisitController extends Controller
             'orders.orderGoods.goods'
         ]);
         $visitData = head((new BusinessService())->formatVisit([$visit], true));
-        $visitData['display_fee'] = head($visitData['display_fee']) ? head($visitData['display_fee'])['display_fee'] : 0;
-        $visitData['mortgage'] = head($visitData['mortgage']) ? head($visitData['mortgage']) : [];
+        $visitData['display_fee'] = isset($visitData['display_fee']) ? head($visitData['display_fee'])['display_fee'] : 0;
+        $visitData['mortgage'] = isset($visitData['mortgage']) ? head($visitData['mortgage']) : [];
         $visitData['statistics'] = array_values($visitData['statistics']);
         return $this->success(compact('visitData'));
     }

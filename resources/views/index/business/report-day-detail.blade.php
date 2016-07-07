@@ -69,7 +69,7 @@
                             @foreach(head($visit['mortgage']) as $mortgage)
                                 <tr>
                                     <td colspan="3">{{ $mortgage['name'] }}</td>
-                                    <td colspan="3">{{ $mortgage['pieces'] }}</td>
+                                    <td colspan="3">{{ {{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }} }}</td>
                                     <td colspan="3">{{ $mortgage['num'] }}</td>
                                 </tr>
                             @endforeach

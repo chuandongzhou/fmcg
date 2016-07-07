@@ -49,6 +49,16 @@ class SalesmanVisitOrderGoods extends Model
     }
 
     /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function mortgageGoods()
+    {
+        return $this->belongsTo('App\Models\MortgageGoods', 'goods_id', 'goods_id');
+    }
+
+    /**
      * 获取商品名
      *
      * @return string
@@ -68,15 +78,6 @@ class SalesmanVisitOrderGoods extends Model
         return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
     }
 
-    /**
-     * 关联抵费商品
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function mortgageGoods()
-    {
-        return $this->belongsTo('App\Models\MortgageGoods', 'goods_id', 'goods_id');
-    }
 
     /**
      * 获取抵费商品名
@@ -85,6 +86,6 @@ class SalesmanVisitOrderGoods extends Model
      */
     public function getMortgageGoodsNameAttribute()
     {
-        return $this->mortgageGoods ? $this->mortgageGoods->goods_name : '';
+        return $this->mortgageGoods ? $this->mortgageGoods->goods_name : ($this->goods ? $this->goods->name : '');
     }
 }

@@ -48,6 +48,7 @@ class CartService
             $sumPrice = 0;
             foreach ($carts as $cart) {
                 if (Gate::denies('validate-goods', $cart->goods)) {
+                    $cart->delete();
                     continue;
                 }
                 $cart->is_like = in_array($cart->goods_id, $userLikeGoodsIds);

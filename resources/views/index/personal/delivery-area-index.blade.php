@@ -6,11 +6,10 @@
     <form action="#" method="post">
         <div class="row">
             <div class="col-sm-12 table-responsive">
-                {{--<div>
-                    <a class="add" href="javascript:void(0)" type="button" data-target="#deliveryModal"
-                       data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加配送人员
+                <div>
+                    <a class="add" href="{{ url('personal/delivery-area/create') }}" ><label><span class="fa fa-plus"></span></label>添加配送人员
                     </a>
-                </div>--}}
+                </div>
                 <table class="table table-bordered table-center">
                     <thead>
                     <tr>
