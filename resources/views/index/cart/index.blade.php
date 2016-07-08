@@ -136,20 +136,22 @@
                         </div>
                     @endforeach
                 </div>
-                    <div class="row clearing text-right clearing-container fixed-bottom">
-                        <div class="col-xs-6 text-left left-operation">
-                            <div class="check-item">
-                                <span class="span-checkbox  check-all"><i class="fa fa-check"></i></span>
-                            </div>
-                            <a href="javascript:" class="batch-deletion ajax btn padding-clear" data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
+                <div class="row" id="car-bottom"></div>
+                <div class="row clearing text-right clearing-container fixed-bottom">
+                    <div class="col-xs-6 text-left left-operation">
+                        <div class="check-item">
+                            <span class="span-checkbox  check-all"><i class="fa fa-check"></i></span>
                         </div>
-                        <div class="col-xs-6 padding-clear">
-                            <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
-
-                            <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
-                        </div>
-
+                        <a href="javascript:" class="batch-deletion ajax btn padding-clear"
+                           data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                     </div>
+                    <div class="col-xs-6 padding-clear">
+                        <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
+
+                        <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
+                    </div>
+
+                </div>
             </div>
         @endif
     </form>

@@ -28,6 +28,7 @@
       name                  string          业务员名
       contact_information   string          联系方式
       avatar_url            string          头像
+      shop_type             int             所属店铺类型id (1终端 2批发 3供应)
 
 `失败返回：`
 
@@ -182,6 +183,10 @@
     id                          int         商品id
     name                        string      商品名
     image_url                   string      商品图片
+    price_retailer              decimal     终端商价格
+    pieces_retailer             int         终端商单位
+    price_wholesaler            decimal     批发商价格
+    pieces_wholesaler           int         批发商单位
 
 `失败返回`
 

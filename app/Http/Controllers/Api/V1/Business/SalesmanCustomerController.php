@@ -128,7 +128,14 @@ class SalesmanCustomerController extends Controller
             return $this->error('客户不存在');
         }
 
-        $goods = $customer->goods()->select(['id', 'name'])->get()->each(function ($item) {
+        $goods = $customer->goods()->select([
+            'id',
+            'name',
+            'price_retailer',
+            'pieces_retailer',
+            'price_wholesaler',
+            'pieces_wholesaler',
+        ])->get()->each(function ($item) {
             $item->setAppends(['image_url']);
         });
         return $this->success(['goods' => $goods]);

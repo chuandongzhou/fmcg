@@ -189,6 +189,16 @@ class Salesman extends Model implements AuthenticatableContract
     }
 
     /**
+     * 获取店铺类型
+     *
+     * @return mixed
+     */
+    public function getShopTypeAttribute()
+    {
+        return $this->shop()->first()->user()->pluck('type');
+    }
+
+    /**
      * 按名字检索
      *
      * @param $query
