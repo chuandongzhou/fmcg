@@ -1,5 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-客户列表')
+@if(request()->is('personal/customer/wholesaler'))
+    @section('top-title', '客户管理->批发客户')
+@else
+    @section('top-title', '客户管理->终端客户')
+@endif
 
 @section('right')
     <form class="form-horizontal" method="get" action="{{ url('personal/customer/'. $type) }}" autocomplete="off">

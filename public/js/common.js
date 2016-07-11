@@ -537,7 +537,7 @@ var addAddFunc = function () {
         }, 3000)
     };
     // 删除地址
-    container.on('click', '.close', function () {
+    container.on('click', '.close-icon', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
         });
@@ -574,7 +574,7 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[city_id][]" value="' + city.val() + '"/>' +
             '<input type="hidden" name="area[district_id][]" value="' + district.val() + '"/>' +
             '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
-            '<span class="fa fa-times-circle pull-right close"></span>' +
+            '<span class="fa fa-times-circle pull-right close-icon"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
             minMoneyText +

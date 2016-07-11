@@ -1,6 +1,7 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单详情')
 @include('includes.shipping-address-map')
+@section('top-title', '订单管理->订单详情')
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">

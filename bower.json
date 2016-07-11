@@ -10,13 +10,11 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "vendor/bower_components",
     "test",
     "tests"
   ],
   "dependencies": {
-    "bootstrap-sass-official": "~3.3.4",
+    "bootstrap-sass-official": "*",
     "jquery": ">=1 <2.0.0",
     "cropper": "*",
     "blueimp-file-upload": "*",

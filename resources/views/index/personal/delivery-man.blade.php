@@ -1,6 +1,6 @@
 @extends('index.menu-master')
-@section('subtitle', '个人中心-提现账号')
-
+@section('subtitle', '个人中心-配送人员')
+@section('top-title', '个人中心->配送人员')
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man/' . $deliveryMan->id) }}"
           method="{{ $deliveryMan->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"

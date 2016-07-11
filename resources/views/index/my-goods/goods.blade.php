@@ -4,9 +4,15 @@
 @include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
+@if(request()->is('my-goods/create'))
+    @section('top-title', '商品管理->新增商品')
+@else
+    @section('top-title', '商品管理->我的商品')
+@endif
 
 @section('right')
-    <div class="col-sm-12 goods-editor">
+    <div class="row">
+     <div class="col-sm-12 goods-editor">
         <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
               action="{{ url('api/v1/my-goods/'.$goods->id) }}"
               data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
@@ -248,7 +254,7 @@
                                 </div>
                                 @foreach ($goods->deliveryArea as $area)
                                     <div class="col-sm-10 fa-border show-map">{{ $area->address_name }}
-                                        <span class="fa fa-times-circle pull-right close"></span>
+                                        <span class="fa fa-times-circle pull-right close-icon"></span>
                                         <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                                         <input type="hidden" name="area[province_id][]"
                                                value="{{ $area->province_id }}"/>
@@ -288,6 +294,7 @@
                 </p>
             </div>
         </form>
+    </div>
     </div>
 @stop
 @section('js')

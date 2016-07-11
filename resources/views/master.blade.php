@@ -31,7 +31,7 @@
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="{{ asset('js/lib/jquery/placeholder/jquery.placeholder.min.js') }}"></script>
     </head>
-    <body>
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
 
         @yield('header')
         @yield('body')

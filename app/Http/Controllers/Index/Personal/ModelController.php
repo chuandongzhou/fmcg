@@ -38,7 +38,14 @@ class ModelController extends Controller
         $advert = $this->shop->adverts()->find($advertId);
 
         return view('index.personal.model-advert', [
-            'advert' => is_null($advert) ? new Advert : $advert
-        ]);
+        'advert' => is_null($advert) ? new Advert : $advert
+    ]);
+    }
+    /**
+    *返回添加店铺广告界面
+     *@return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getCreate(){
+        return view('index.personal.model-advert', ['advert' => new Advert]);
     }
 }

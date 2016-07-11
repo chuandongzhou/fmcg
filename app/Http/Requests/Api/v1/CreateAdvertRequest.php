@@ -15,7 +15,8 @@ class CreateAdvertRequest extends UserRequest
         return [
             'name' => 'required',
             'image' => 'sometimes|required',
-            'goods_id' => 'required|integer',
+            'goods_id' => 'required_if:identity,shop|numeric',
+            'promoteinfo' => 'required_if:identity,promote',
             'start_at' => 'required|date',
             'end_at' => 'date|after:start_at',
         ];

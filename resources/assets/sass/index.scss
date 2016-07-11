@@ -966,6 +966,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .commodity-border {
     border: 1px solid $blue-light;
+    background-color:$body-bg;
   }
   .content-panel {
     padding: 2px 5px;
@@ -1292,6 +1293,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       border: 1px solid $gray-lighter;
       margin-top: -1px;
       padding: 0 5px;
+      background-color: $body-bg;
       .title-name {
         display: inline-block;
         padding: 5px 0 0 10px;
@@ -1906,8 +1908,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .address-list {
-  .close {
+  .close-icon{
     color: $red;
+    text-indent:0!important;
     &:hover {
       color: $red;
     }
@@ -2086,7 +2089,9 @@ table {
     padding-right: 15px;
   }
 }
-
+.cart-img{
+  @include square(50px);
+}
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/
 .personal-center {
@@ -3385,6 +3390,57 @@ table {
     font-weight: 600;
   }
   .check-delivery{
+    position:relative;
+    width:200px;
+    background-color:$body-bg;
+    border:3px solid $banner-gray;
+    color:$gray-base;
+    &:hover{
+      color:$gray-base;
+    }
+  }
+  .from-mentioning{
+    margin:20px 0;
+  }
+  .fa-check{
+    position: absolute;
+    bottom:0;
+    right:0;
+    color:$body-bg;
+    font-size: 12px;
+    display: none;
+  }
+  .triangle{
+    position: absolute;
+    bottom:0;
+    right:0;
+    width: 0;
+    height: 0;
+    border-bottom: 20px solid $brand-primary;
+    border-left: 20px solid transparent;
+    display: none;
+  }
+  .check-delivery.active{
+    border:3px solid $brand-primary;
+    .fa{
+      display: inline-block;
+    }
+    .triangle{
+      display: inline-block;
+    }
+  }
+  .operation-buttons[disabled='disabled']{
+    background-color: $banner-gray;
+  }
+}
+.delivery-mode{
+  border-top:1px solid $gray-plain-light;
+  padding:10px;
+  .title{
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .check-delivery{
     width:200px;
     background-color:$body-bg;
     border:3px solid $banner-gray;
@@ -3759,7 +3815,6 @@ table {
   margin-bottom: 20px;
   .item-wrap {
     border: 1px solid $gray-plain-light;
-    background-color: $body-bg;
     border-radius: 2px;
     padding: 5px 0;
     .title {

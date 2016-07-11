@@ -3,7 +3,7 @@
 @section('subtitle', '店家商品')
 
 @include('includes.jquery-lazeload')
-
+@include('includes.shop-advert-model')
 @section('container')
     @include('index.shop-search')
     <div class="container wholesalers-index index contents">
@@ -22,9 +22,15 @@
                         @if(!$shop->adverts->isEmpty())
                             @foreach($shop->adverts as $key => $image)
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
+                                    @if($image->type==5)
                                     <a href="{{ $image->url }}">
                                         <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
                                     </a>
+                                     @else
+                                        <a class="advert-content" data-toggle="modal" data-target="#shopAdvertModal" data-content="{{ $image->url }}" title="{{ $image->name }}">
+                                            <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
+                                        </a>
+                                    @endif
                                 </div>
                             @endforeach
                         @else
@@ -72,6 +78,11 @@
             $('.carousel').carousel({
                 interval: 2000
             })
+            $('.advert-content').on('click', function () {
+                var obj = $(this);
+                $('.modal-title').html(obj.attr('title'));
+                $('.notice-content').html(obj.data('content'));
+            });
         });
     </script>
 @stop

@@ -33,7 +33,7 @@ class Advert extends Model
         'image'
     ];
 
-    public $hidden = ['image', 'type', 'start_at', 'end_at', 'created_at', 'updated_at'];
+    public $hidden = ['image', 'start_at', 'end_at', 'created_at', 'updated_at'];
 
     public $appends = ['image_url'];
 
@@ -94,10 +94,10 @@ class Advert extends Model
      *
      * @param $goodsId
      */
-    public function setGoodsIdAttribute($goodsId)
-    {
-        $this->attributes['url'] = url('goods/' . $goodsId);
-    }
+//    public function setGoodsIdAttribute($goodsId)
+//    {
+//        $this->attributes['url'] = url('goods/' . $goodsId);
+//    }
 
     /**
      * 设置结束时间

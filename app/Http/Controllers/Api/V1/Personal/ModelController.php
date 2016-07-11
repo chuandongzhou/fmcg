@@ -24,10 +24,12 @@ class ModelController extends Controller
      */
     public function postAdvert(CreateAdvertRequest $request)
     {
-        $attributes = $request->all();
-        $attributes['type'] = cons('advert.type.shop');
+        $goodsId = $request->input('goods_id');
+        $promoteinfo = $request->input('promoteinfo');
+        $attributes = $request->except(['identity','goods_id','promoteinfo']);
+        $attributes['type'] = cons('advert.type.'.$request->input('identity'));
         $attributes['end_at'] = $attributes['end_at'] ?: null;
-
+        $attributes['url'] = $request->input('identity')=='shop'?url('goods/'.$goodsId):$promoteinfo;
         if ($this->shop->adverts()->create($attributes)->exists) {
             return $this->success('添加广告成功');
         }
@@ -49,9 +51,11 @@ class ModelController extends Controller
             return $this->error('广告不存在');
         }
 
-        $attributes = $request->all();
-        $attributes['type'] = cons('advert.type.shop');
-
+        $goodsId = $request->input('goods_id');
+        $promoteinfo = $request->input('promoteinfo');
+        $attributes = $request->except(['identity','goods_id','promoteinfo']);
+        $attributes['type'] = cons('advert.type.'.$request->input('identity'));
+        $attributes['url'] = $request->input('identity')=='shop'?url('goods/'.$goodsId):$promoteinfo;
         if ($advert->fill($attributes)->save()) {
             return $this->success('修改广告成功');
         }

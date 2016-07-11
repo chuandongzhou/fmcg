@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
+use App\Models\DeliveryArea;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Http\Requests;
@@ -338,9 +339,9 @@ class MyGoodsController extends Controller
      */
     private function updateDeliveryArea($model, $area)
     {
-        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
-            return true;
-        }
+//        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
+//            return true;
+//        }
         //配送区域添加
         $areaArr = (new AddressService($area))->formatAddressPost();
         //删除原有配送区域信息
@@ -355,7 +356,11 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areas[] = new AddressData($data);
+                $areasModal =  new DeliveryArea($data);
+                if(!in_array($areasModal,$areas)){
+                    $areas[] = $areasModal;
+                }
+
 
                 /* if (isset($coordinate)) {
                      $areaModel->coordinate()->save(new Coordinate($coordinate));

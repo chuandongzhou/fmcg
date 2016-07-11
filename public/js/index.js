@@ -864,3 +864,19 @@ $(function () {
         $(this).closest('.msg-channel').animate({'bottom': '-160'});
     })
 })
+
+//店铺广告radio选择
+function radioCheck(){
+    $('.goodsIdRadio').click(function(){
+        $('.goodsId').html('商品Id');
+        $('.goodsidDiv').css('display','block');
+        $('.promoteDiv').css('display','none');
+
+    });
+    $('.promoteRadio').click(function(){
+        $('.goodsId').html('促销信息');
+        $('.goodsidDiv').css('display','none');
+        $('.promoteDiv').css('display','block');
+    });
+
+}

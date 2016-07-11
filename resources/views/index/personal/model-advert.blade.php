@@ -2,6 +2,9 @@
 @include('includes.uploader')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-首页广告')
+@section('top-title', '模板管理->首页广告')
+@include('includes.tinymce',['full' => true])
+@include('includes.cropper')
 
 @section('right')
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
@@ -19,25 +22,67 @@
             <label for="upload-file" class="col-sm-2 control-label">广告图片</label>
 
             <div class="col-sm-4">
-                <span data-name="image" class="btn btn-primary btn-sm fileinput-button">
-                                请选择图片文件
-                                <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
-                                       name="file">
-                            </span>
+                <button data-height="200" data-width="800" data-target="#cropperModal" data-toggle="modal"
+                        data-loading-text="图片已达到最大数量" class="btn btn-primary btn-sm" type="button"
+                        id="pic-upload">
+                    请选择图片文件(裁剪)
+                </button>
+
+                <div class="progress collapse">
+                    <div class="progress-bar progress-bar-striped active"></div>
+                </div>
+
+                <div class="row pictures">
+
+                </div>
 
                 <div class="image-preview w160">
                     <img src="{{ $advert->image_url }}" class="img-thumbnail">
                 </div>
+
+                {{--<div class="image-preview w160">--}}
+                {{--<img src="{{ $advert->image_url }}" class="img-thumbnail">--}}
+                {{--</div>--}}
             </div>
         </div>
-
         <div class="form-group">
-            <label for="url" class="col-sm-2 control-label">商品id</label>
+            <div class="col-xs-2 col-xs-offset-2">
+                @if($advert->type==6)
+                    <input class="goodsIdRadio" type="radio" name="identity" value="shop" />商品id
 
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id"
-                       value="{{ $advert->goods_id }}">
+                @else
+                    <input class="goodsIdRadio" type="radio" name="identity"  checked="checked" value="shop" />商品id
+                @endif
             </div>
+            <div>
+                @if($advert->type==6)
+                    <input class="promoteRadio" type="radio" name="identity" value="promote" checked="checked" >促销信息
+
+                @else
+                    <input class="promoteRadio" type="radio" name="identity" value="promote" >促销信息
+                @endif
+            </div>
+        </div>
+        <div class="form-group">
+            @if($advert->type==6)
+                <label for="url" class="col-sm-2 control-label goodsId">促销信息</label>
+                <div class="col-sm-8 promoteDiv">
+                    <textarea class="introduce tinymce-editor form-control promotInfo" name="promoteinfo">{{ $advert->url }}</textarea>
+                </div>
+                <div class="col-xs-4 goodsidDiv" style="display:none">
+                    <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id" />
+                </div>
+            @else
+                <label for="url" class="col-sm-2 control-label goodsId">商品id</label>
+                <div class="col-sm-4 goodsidDiv">
+                    <input type="text" class="form-control" id="goods_id" name="goods_id" placeholder="请输入商品id"
+                           value="{{ $advert->goods_id }}">
+                </div>
+                <div class="col-xs-8 promoteDiv" style="display:none">
+                    <textarea name="promoteinfo"  class="introduce tinymce-editor form-control promotInfo"></textarea>
+                </div>
+            @endif
+
         </div>
 
         <div class="form-group" id="date-time">
@@ -65,4 +110,12 @@
         </div>
     </form>
     @parent
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(document).ready(function () {
+            radioCheck();
+        })
+    </script>
 @stop

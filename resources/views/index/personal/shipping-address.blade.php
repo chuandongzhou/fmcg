@@ -1,6 +1,6 @@
 @extends('index.menu-master')
-@section('subtitle', '个人中心-提现账号')
-
+@section('subtitle', '个人中心-收货地址')
+@section('top-title', '个人中心->收货地址')
 @section('right')
     <form class="form-horizontal ajax-form"
           action="{{ url('api/v1/personal/shipping-address/' . $shippingAddress->id) }}"
