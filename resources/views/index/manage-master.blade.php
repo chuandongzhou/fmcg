@@ -54,7 +54,6 @@
                                 <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
                                    data-hover="dropdown" data-close-others="true">
                                     <i class="fa fa-shopping-cart"></i>
-
                                         <span class="badge badge-default cart-badge"></span>
 
 
@@ -262,36 +261,47 @@
                     }
                 })
             }
-        //购物车数据
+            //购物车数量
             $.ajax({
                 url: '/api/v1/cart/detail',
                 method: 'get'
-            }).done(function (data) {
-                var cartNum = data.count, carts = data.detail, cartHtml = '';
-
-                if(cartNum>0){
-                    for(var i=0;i<carts.length;i++){
-
-                        cartHtml += '<li>'+
-                                '<a href="/goods/'+carts[i].goods.id+'">'+
-                                ' <span class="details">'+
-                                '<span class="label">'+
-                                '<img class="cart-img" src="'+carts[i].goods.image_url+'">'+
-                                '</span>'+carts[i].goods.name+
-                                '</span>'+
-                                '</a>'+
-                                '</li>';
-                    }
-
-                    $('.cart-badge').html(cartNum);
-                    $('.cartDetail').html(cartHtml);
+            }).done(function(data){
+                if(data.count>0){
+                    $('.cart-badge').html(data.count);
                 }else{
                     $('.cart-badge').html('');
                 }
-
-
-
             });
+        //购物车数据
+            $('#header_notification_bar').mouseover(function(){
+                $.ajax({
+                    url: '/api/v1/cart/detail',
+                    method: 'get'
+                }).done(function (data) {
+                    var cartNum = data.count, carts = data.detail, cartHtml = '';
+
+                    if(cartNum>0){
+                        for(var i=0;i<carts.length;i++){
+
+                            cartHtml += '<li>'+
+                                    '<a href="/goods/'+carts[i].goods.id+'">'+
+                                    ' <span class="details">'+
+                                    '<span class="label">'+
+                                    '<img class="cart-img" src="'+carts[i].goods.image_url+'">'+
+                                    '</span>'+carts[i].goods.name+
+                                    '</span>'+
+                                    '</a>'+
+                                    '</li>';
+                        }
+
+                        $('.cart-badge').html(cartNum);
+                        $('.cartDetail').html(cartHtml);
+                    }else{
+                        $('.cart-badge').html('');
+                    }
+                });
+            });
+
         });
     </script>
 @stop
