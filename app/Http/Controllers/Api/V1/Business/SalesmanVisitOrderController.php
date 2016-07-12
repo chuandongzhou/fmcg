@@ -40,7 +40,7 @@ class SalesmanVisitOrderController extends Controller
     public function returnOrders()
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.return_order'),true);
+        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.return_order'), true);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
@@ -68,47 +68,24 @@ class SalesmanVisitOrderController extends Controller
      */
     public function updateOrderGoods(UpdateSalesmanVisitOrderGoodsRequest $request)
     {
-        $goodsId = $request->input('id');
-        $orderGoods = SalesmanVisitOrderGoods::with('salesmanVisitOrder')->find($goodsId);
-        $salesmanVisitOrder = $orderGoods->salesmanVisitOrder;
-        if (is_null($orderGoods) || Gate::denies('validate-salesman-order', $orderGoods->salesmanVisitOrder)) {
-            return $this->error('订单不存在');
-        }
+        if ($orderId = $request->input('order_id')) {
+            $salesmanVisitOrder = SalesmanVisitOrder::find($orderId);
 
-        $goodsTypes = cons('salesman.order.goods.type');
+            $result = $this->_updateOrderGoods($salesmanVisitOrder, $request);
 
-
-        $result = DB::transaction(function () use ($orderGoods, $goodsTypes, $request, $salesmanVisitOrder) {
-            $attributes = [];
-            //商品原总金额
-            $goodsOldAmount = $orderGoods->amount;
-
-            if ($orderGoods->type == $goodsTypes['order']) {
-                //订单
-                $attributes['price'] = $request->input('price');
-                $attributes['num'] = $request->input('num');
-                $attributes['pieces'] = $request->input('pieces');
-                $attributes['amount'] = $attributes['price'] * intval($attributes['num']);
-                if ($orderGoods->fill($attributes)->save()) {
-                    $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
-                }
-            } elseif ($orderGoods->type == $goodsTypes['return']) {
-                //退货单
-                $attributes['num'] = $request->input('num');
-                $attributes['amount'] = $request->input('amount');
-                if ($orderGoods->fill($attributes)->save()) {
-                    $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
-                }
-            } else {
-                //货抵
-                $attributes['num'] = $request->input('num');
-                $orderGoods->fill($attributes)->save();
+        } else {
+            $goodsId = $request->input('id');
+            $orderGoods = SalesmanVisitOrderGoods::with('salesmanVisitOrder')->find($goodsId);
+            if (is_null($orderGoods)) {
+                return $this->error('订单不存在');
             }
-            return 'success';
-        });
+            $salesmanVisitOrder = $orderGoods->salesmanVisitOrder;
+            $result = $this->_updateOrderGoods($salesmanVisitOrder, $request, $orderGoods);
+        }
 
         return $result === 'success' ? $this->success('修改成功') : $this->error('修改订单时出现问题');
     }
+
 
     /**
      * 订单批量通过
@@ -157,7 +134,7 @@ class SalesmanVisitOrderController extends Controller
         if (is_null($orderIds)) {
             return $this->error('请选择要同步的订单');
         }
-        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('orderFormGoods')->get();
+        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('orderGoods', '')->get();
 
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
@@ -200,7 +177,8 @@ class SalesmanVisitOrderController extends Controller
                 $orderTemp = Order::create($orderData);
                 if ($orderTemp->exists) {//添加订单成功,修改orderGoods中间表信息
                     $orderGoods = [];
-                    foreach ($order->orderFormGoods as $goods) {
+                    foreach ($order->orderGoods as $goods) {
+                        // 添加订单商品
                         $orderGoods[] = new OrderGoods([
                             'goods_id' => $goods->goods_id,
                             'price' => $goods->price,
@@ -209,6 +187,17 @@ class SalesmanVisitOrderController extends Controller
                             'total_price' => $goods->amount,
                         ]);
                     }
+                    foreach ($order->mortgageGoods as $goods) {
+                        // 添加抵费商品
+                        $orderGoods[] = new OrderGoods([
+                            'goods_id' => $goods->goods_id,
+                            'price' => 0,
+                            'num' => $goods->pivot->num,
+                            'pieces' => $goods->pieces,
+                            'total_price' => 0,
+                        ]);
+                    }
+                    //添加抵费商品
 
                     if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
                         return ['error' => '同步时出现错误，请重试'];
@@ -228,5 +217,52 @@ class SalesmanVisitOrderController extends Controller
 
         return $result === 'success' ? $this->success('同步成功') : $this->error($result['error']);
 
+    }
+
+    private function _updateOrderGoods($salesmanVisitOrder, $request, $orderGoods = null)
+    {
+        if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+            return $this->error('订单不存在');
+        }
+
+        $result = DB::transaction(function () use ($salesmanVisitOrder, $request, $orderGoods) {
+            if ($orderGoods) {
+                $goodsTypes = cons('salesman.order.goods.type');
+                $attributes = [];
+                //商品原总金额
+                $goodsOldAmount = $orderGoods->amount;
+
+                if ($orderGoods->type == $goodsTypes['order']) {
+                    //订单
+                    $attributes['price'] = $request->input('price');
+                    $attributes['num'] = $request->input('num');
+                    $attributes['pieces'] = $request->input('pieces');
+                    $attributes['amount'] = bcmul($attributes['price'], intval($attributes['num']), 2);
+                    if ($orderGoods->fill($attributes)->save()) {
+                        $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
+                    }
+                } elseif ($orderGoods->type == $goodsTypes['return']) {
+                    //退货单
+                    $attributes['num'] = $request->input('num');
+                    $attributes['amount'] = $request->input('amount');
+                    if ($orderGoods->fill($attributes)->save()) {
+                        $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
+                    }
+                }
+            } else {
+                //抵费商品
+                $goodsId = $request->input('id');
+                $num = $request->input('num');
+                if (!$goodsId || !$salesmanVisitOrder->mortgageGoods()->find($goodsId)) {
+                    return false;
+                }
+
+                $salesmanVisitOrder->mortgageGoods()->detach($goodsId);
+                $salesmanVisitOrder->mortgageGoods()->attach([$goodsId => ['num' => $num]]);
+            }
+
+            return 'success';
+        });
+        return $result;
     }
 }

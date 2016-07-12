@@ -2,6 +2,11 @@
 @section('subtitle', '业务管理-订货单')
 @include('includes.cropper')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    订货单
+@stop
+
 @section('right')
     <div class="col-sm-12 col-xs-9">
         <div class="row">

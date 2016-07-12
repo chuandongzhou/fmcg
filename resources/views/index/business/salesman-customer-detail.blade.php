@@ -1,6 +1,11 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @section('subtitle', '业务管理-业务员管理')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman-customer') }}">客户管理</a> &rarr;
+    客户明细
+@stop
 
 @section('right')
     <div class="form-group">
@@ -74,10 +79,10 @@
                     </tr>
                     @foreach($mortgageGoods as $mortgage)
                         <tr>
-                            <td>{{ $mortgage->created_at }}</td>
-                            <td>{{ /*$orderGoodsDetail[$mortgage->goods_id]*/ $mortgage->mortgage_goods_name }}</td>
-                            <td>{{ cons()->valueLang('goods.pieces' , $mortgage->pieces) }}</td>
-                            <td>{{ $mortgage->num }}</td>
+                            <td>{{ $mortgage['created_at'] }}</td>
+                            <td>{{ $mortgage['name'] }}</td>
+                            <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
+                            <td>{{ $mortgage['num'] }}</td>
                         </tr>
                     @endforeach
                 @endif

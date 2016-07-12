@@ -46,9 +46,68 @@ class HomeController extends Controller
 
     public function test()
     {
-       $salesmanCustomer = SalesmanCustomer::find(1);
-
-        dd($salesmanCustomer->goods);
+        array(
+            'display_fee' => '9',
+            'goods' =>
+                array(
+                    0 =>
+                        array(
+                            'id' => '374',
+                        ),
+                    1 =>
+                        array(
+                            'order_form' =>
+                                array(
+                                    'num' => '2',
+                                ),
+                        ),
+                    2 =>
+                        array(
+                            'order_form' =>
+                                array(
+                                    'price' => '12',
+                                ),
+                        ),
+                    3 =>
+                        array(
+                            'pieces' => '0',
+                        ),
+                    4 =>
+                        array(
+                            'production_date' => '2016-07-13',
+                        ),
+                    5 =>
+                        array(
+                            'return_order' =>
+                                array(
+                                    'amount' => '13.5',
+                                ),
+                        ),
+                    6 =>
+                        array(
+                            'return_order' =>
+                                array(
+                                    'num' => '9',
+                                ),
+                        ),
+                    7 =>
+                        array(
+                            'stock' => '3',
+                        ),
+                ),
+            'mortgage' =>
+                array(
+                    0 =>
+                        array(
+                            'goods_id' => '377',
+                        ),
+                    1 =>
+                        array(
+                            'num' => '6',
+                        ),
+                ),
+            'salesman_customer_id' => '8',
+        )  ;
 
     }
 }

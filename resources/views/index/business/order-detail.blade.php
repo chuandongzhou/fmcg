@@ -1,6 +1,21 @@
 @extends('index.menu-master')
 @include('includes.salesman-order-change')
-@section('subtitle', '业务管理-订货单')
+@section('subtitle')
+    业务管理-{{ $order->type == cons('salesman.order.type.order') ? '订货单' : '退货单' }}
+@stop
+
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+
+    @if($order->type == cons('salesman.order.type.order'))
+        <a href="{{ url('business/order/order-forms') }}">订货单</a> &rarr;
+       订货单详情
+    @else
+        <a href="{{ url('business/order/return-orders') }}">退货单</a> &rarr;
+        退货单详情
+    @endif
+@stop
+
 @section('right')
     <div class="col-sm-12 col-xs-9">
         <div class="row">
@@ -76,14 +91,15 @@
                                 </tr>
                                 @foreach($mortgageGoods as $goods)
                                     <tr>
-                                        <td>{{ $goods->mortgage_goods_name }}</td>
-                                        <td>{{ cons()->valueLang('goods.pieces', $goods->pieces) }}</td>
-                                        <td>{{ $goods->num }}</td>
+                                        <td>{{ $goods['name'] }}</td>
+                                        <td>{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}</td>
+                                        <td>{{ $goods['num'] }}</td>
                                         <td>
                                             <a href="javascript:" data-toggle="modal" data-target="#salesmanOrder"
-                                               data-id="{{ $goods->id }}"
-                                               data-num="{{  $goods->num }}"
-                                               data-type="{{ $goods->type }}">
+                                               data-id="{{ $goods['id'] }}"
+                                               data-num="{{  $goods['num'] }}"
+                                               data-order-id="{{ $order->id }}"
+                                               data-type="-1">
                                                 编辑
                                             </a>
                                         </td>
@@ -95,7 +111,8 @@
                             @if($order->status == cons('salesman.order.status.not_pass'))
                                 <button class="btn btn-success" type="submit">通过</button>
                             @else
-                                <a class="btn btn-primary" href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
+                                <a class="btn btn-primary"
+                                   href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
                                 <button class="btn btn-warning" type="submit">同步</button>
                             @endif
                         </div>

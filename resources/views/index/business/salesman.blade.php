@@ -2,6 +2,12 @@
 
 @section('subtitle', '业务管理-业务员添加')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman') }}">业务员管理</a> &rarr;
+    业务员{{ $salesman->id ? '编辑' : '新增' }}
+@stop
+
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/salesman/' . $salesman->id) }}"
           method="{{ $salesman->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"

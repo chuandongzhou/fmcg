@@ -400,8 +400,7 @@ return [
             'goods' => [
                 'type' => [
                     'order' => 0,
-                    'mortgage' => 1,   //抵费
-                    'return' => 2
+                    'return' => 1
                 ]
             ]
         ]

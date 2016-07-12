@@ -52,18 +52,7 @@ class SalesmanController extends Controller
     {
         //
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  Request $request
-     * @param  Salesman $salesman
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, Salesman $salesman)
-    {
-        dd($salesman);
-    }
+    
 
     /**
      * Show the form for editing the specified resource.

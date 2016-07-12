@@ -105,7 +105,7 @@ class SalesmanController extends Controller
         if (empty($salesmanId)) {
             return $this->error('请选择要删除的业务员');
         }
-        returnauth()->user()->shop->salesmen()->whereIn('id',
+        return auth()->user()->shop->salesmen()->whereIn('id',
             $salesmanId)->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员时出现问题');
     }
 
@@ -167,7 +167,7 @@ class SalesmanController extends Controller
     {
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($this->shop,
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders(auth()->user()->shop,
             (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
         $phpWord = new PhpWord();
 

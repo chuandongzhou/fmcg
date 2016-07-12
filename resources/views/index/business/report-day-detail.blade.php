@@ -3,6 +3,12 @@
 @include('includes.salesman-customer-map')
 @section('subtitle', '业务管理-业务报告详细')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/report') }}">业务员报告</a> &rarr;
+    业务报告明细
+@stop
+
 @section('right')
         <div class="row">
             <div class="col-xs-12 business-report-title">
@@ -69,7 +75,7 @@
                             @foreach(head($visit['mortgage']) as $mortgage)
                                 <tr>
                                     <td colspan="3">{{ $mortgage['name'] }}</td>
-                                    <td colspan="3">{{ {{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }} }}</td>
+                                    <td colspan="3">{{  cons()->valueLang('goods.pieces', $mortgage['pieces'])  }}</td>
                                     <td colspan="3">{{ $mortgage['num'] }}</td>
                                 </tr>
                             @endforeach

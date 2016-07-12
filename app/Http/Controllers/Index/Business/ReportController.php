@@ -56,7 +56,8 @@ class ReportController extends Controller
 
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
-            'orders.orderGoods.mortgageGoods',
+            'orders.orderGoods',
+            'orders.mortgageGoods',
             'goodsRecord',
             'salesmanCustomer.shippingAddress'
         ])->get();
@@ -66,7 +67,7 @@ class ReportController extends Controller
         $endDate = $endDate->toDateString();
 
         $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
-        
+
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -96,10 +97,10 @@ class ReportController extends Controller
         $startDate = isset($data['start_date']) ? new Carbon($data['start_date']) : (new Carbon())->startOfMonth();
         $endDate = isset($data['end_date']) ? (new Carbon($data['end_date']))->endOfDay() : Carbon::now();
 
-
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
             'orders.orderGoods',
+            'orders.mortgageGoods',
             'goodsRecord',
             'salesmanCustomer.shippingAddress'
         ])->get();
@@ -216,7 +217,8 @@ class ReportController extends Controller
                 $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
                 $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
                 $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces', $statistics['pieces']) : '件'),
+                $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces',
+                        $statistics['pieces']) : '件'),
                     null, $cellAlignCenter);
                 $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
                 $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
@@ -333,7 +335,8 @@ class ReportController extends Controller
                         $table->addCell(null, $cellRowContinue);
                         $table->addCell(null, $cellRowContinue);
                         $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null, $cellAlignCenter);
-                        $table->addCell(1800, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']), null, $cellAlignCenter);
+                        $table->addCell(1800, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces',
+                            $mortgage['pieces']), null, $cellAlignCenter);
                         $table->addCell(3500, $gridSpan2)->addText($mortgage['num'], null, $cellAlignCenter);
                     }
                 }

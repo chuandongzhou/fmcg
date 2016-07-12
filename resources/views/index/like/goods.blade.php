@@ -1,6 +1,9 @@
 @extends('index.menu-master')
 @section('subtitle', '商品收藏')
-@section('top-title', '我的收藏->商品收藏')
+@section('top-title')
+    <a href="{{ url('like/shops') }}">我的收藏</a> &rarr;
+    商品收藏
+@stop
 @section('right')
     <div class="row my-goods index">
         <div class="col-sm-12 collect search-page">
@@ -50,7 +53,7 @@
                                     </a>
                                 </p>
                                 <p class="sell-panel">
-                                    <span class="money">￥{{ $good->price }}</span>
+                                    <span class="money">¥{{ $good->price }}</span>
                                     <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
                                 </p>
 

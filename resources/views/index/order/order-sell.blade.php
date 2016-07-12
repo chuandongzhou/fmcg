@@ -101,7 +101,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="red">￥{{ $goods['pivot']['price'] }}</span>
+                                            <span class="red">¥{{ $goods['pivot']['price'] }}</span>
                                             / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
                                         </td>
                                         <td>{{ $goods['pivot']['num'] }}</td>
@@ -111,7 +111,7 @@
 
                                                 <p>{{ $order['payment_type'] }}</p>
 
-                                                <p><span class="red">￥{{ $order['price'] }}</span></p>
+                                                <p><span class="red">¥{{ $order['price'] }}</span></p>
                                             </td>
                                             <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
                                                 <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"

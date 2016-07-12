@@ -686,7 +686,7 @@ pieces                  string          单位
 
 <p><code>失败返回：</code>
 </p>
-<h4>2.5.3 添加拜访 [post] (visit)</h4>
+<h4>2.5.3 添加拜访 [post] (/)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>salesman_customer_id    int             客户id
 goods                   array           拜访商品列表
@@ -711,11 +711,10 @@ return_order字段子集说明
     amount              decimal         退款金额
     num                 string          退货数量
 
- mortgage字段子集说明
+  mortgage字段子集说明
 
-    name                    string          商品名
+    goods_id                int             商品ID
     num                     int             数量
-    pieces                  string          单位
 </code></pre>
 
 <p><code>成功返回：</code></p>
@@ -739,10 +738,10 @@ id                      int             订单号
 amount                  decimal         订单金额
 display_fee             decimal         陈列费
 status                  tinyint         订单状态（0未审核  1已审核）
-orderGoods              array           订货单商品列表
+order_goods             array           订货单商品列表
 mortgageGoods           array           陈列商品列表
 
-orderGoods字段子集说明
+order_goods字段子集说明
 
 goods_id                int             商品id
 goodsName               string          商品名
@@ -753,7 +752,7 @@ amount                  decimal         金额
 
 mortgageGoods字段子集说明
 
-goodsName               string          商品名
+name                    string          商品名
 num                     int             数量
 pieces                  int             单位id
 </code></pre>
@@ -805,7 +804,7 @@ pieces_wholesaler   int         单位（对于批发商）
 images_url          string      商品图片
 </code></pre>
 
-<h4>2.7.2 店铺分类[get] (category)</h4>
+<h4>2.7.2 店铺分类[get] (categories)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p>categories array 店铺分类数组</p>

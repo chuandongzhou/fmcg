@@ -1,6 +1,11 @@
 @extends('index.menu-master')
-@section('subtitle', '个人中心-配送人员')
+@section('subtitle', '个人中心-配送区域')
 
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    <a href="{{ url('personal/shop') }}">配送区域</a> &rarr;
+    {{ $area->id ? '编辑' : '添加' }}配送区域
+@stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-area/' . $area->id) }}"
           method="{{ $area->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"
@@ -9,7 +14,8 @@
         <div class="form-group row address-panel">
             <label class="col-sm-2 control-label" for="num">配送区域:</label>
             <div class="col-sm-10">
-                <select class="address-province inline-control address" name="province_id" data-id="{{ $area->province_id  }}">
+                <select class="address-province inline-control address" name="province_id"
+                        data-id="{{ $area->province_id  }}">
                     <option value="">请选择省市/其他...</option>
                 </select>
 
@@ -17,7 +23,8 @@
                     <option value="">请选择城市...</option>
                 </select>
 
-                <select class="address-district inline-control address" name="district_id" data-id="{{ $area->district_id }}">
+                <select class="address-district inline-control address" name="district_id"
+                        data-id="{{ $area->district_id }}">
                     <option value="">请选择区/县...</option>
                 </select>
 

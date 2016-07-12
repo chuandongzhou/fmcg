@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单详情')
 @include('includes.shipping-address-map')
-@section('top-title', '订单管理->订单详情')
+@section('top-title')
+    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
+    订单详情
+@stop
 
 @section('right')
     <div class="row order-detail">
@@ -116,12 +119,12 @@
                             <span class="title-info-name">订单号 :</span> {{ $order['id'] }}
                         </li>
                         <li>
-                            <span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
+                            <span class="title-info-name">订单金额 : </span><span class="red">¥{{ $order['price'] }}</span>
                         </li>
                         @if(!is_null($order->systemTradeInfo))
                             <li>
                                 <span class="title-info-name">订单手续费 : </span><span
-                                        class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                                        class="red">¥{{ $order->systemTradeInfo->target_fee }}</span>
                             </li>
                         @endif
                         <li>
@@ -294,7 +297,7 @@
                     </table>
                 </div>
                 <div class="col-sm-12 text-right">
-                    总额 : <b class="red">￥{{ $order['price'] }}</b>
+                    总额 : <b class="red">¥{{ $order['price'] }}</b>
                 </div>
             </div>
         </div>

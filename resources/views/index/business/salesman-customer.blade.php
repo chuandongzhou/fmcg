@@ -2,6 +2,12 @@
 
 @section('subtitle', '业务管理-业务员客户添加')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman-customer') }}">客户管理</a> &rarr;
+    客户{{ $salesmanCustomer->id ? '编辑' : '新增' }}
+@stop
+
 @section('right')
     <form class="form-horizontal ajax-form"
           action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"

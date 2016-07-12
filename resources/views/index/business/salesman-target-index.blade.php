@@ -1,5 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-业务员目标')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    业务员目标
+@stop
+
 @include('includes.timepicker')
 @include('includes.salesman-target-set')
 

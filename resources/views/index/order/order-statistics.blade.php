@@ -3,9 +3,15 @@
 
 @section('subtitle', '订单统计')
 @if(request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer'))
-    @section('top-title', '进货管理->订单统计')
+    @section('top-title')
+        <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
+        订单统计
+    @stop
 @else
-    @section('top-title', '订单管理->订单统计')
+    @section('top-title')
+        <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
+        订单统计
+    @stop
 @endif
 
 
@@ -94,11 +100,11 @@
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['payment_type'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['status_name'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['created_at'] }}</td>
-                                            <td rowspan="{{ $order->goods->count() }}">￥{{ $order['price'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">¥{{ $order['price'] }}</td>
                                         @endif
                                         <td>{{ $value['id'] }}</td>
                                         <td>{{ $value['name'] }}</td>
-                                        <td>￥{{ $value['pivot']['price'] }}</td>
+                                        <td>¥{{ $value['pivot']['price'] }}</td>
                                         <td>{{ $value['pivot']['num'] }}</td>
                                     </tr>
                                 @endforeach
@@ -115,7 +121,7 @@
                                     <td>{{ $order['payment_type'] }}</td>
                                     <td>{{ $order['status_name'] }}</td>
                                     <td>{{ $order['created_at'] }}</td>
-                                    <td>￥{{ $order['price'] }}</td>
+                                    <td>¥{{ $order['price'] }}</td>
                                 </tr>
                             @endif
                         @endforeach

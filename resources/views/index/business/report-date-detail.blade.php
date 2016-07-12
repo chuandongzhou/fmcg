@@ -2,6 +2,12 @@
 @include('includes.timepicker')
 @section('subtitle', '业务管理-业务报告详细')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/report') }}">业务员报告</a> &rarr;
+    业务报告明细
+@stop
+
 @section('right')
 
     <div class="row business-report-monthly">

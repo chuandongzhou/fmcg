@@ -8,6 +8,7 @@
                       data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id"/>
+                    <input type="hidden" name="order_id" disabled/>
 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -73,14 +74,17 @@
                     numControl = $('input[name="num"]'),
                     piecesControl = $('select[name="pieces"]'),
                     amountControl = $('input[name="amount"]'),
-                    idControl = $('input[name="id"]');
+                    idControl = $('input[name="id"]'),
+                    orderIdControl = $('input[name="order_id"]');
+
             salesmanOrderModal.on('show.bs.modal', function (e) {
                 var parent = $(e.relatedTarget),
                         price = parent.data('price'),
                         id = parent.data('id'),
+                        orderId = parent.data('orderId') || 0,
                         num = parent.data('num'),
                         pieces = parent.data('pieces'),
-                        type = parent.data('type');
+                        type = parent.data('type'),
                         amount = parent.data('amount');
                 priceControl.val(price);
                 numControl.val(num);
@@ -88,7 +92,8 @@
                 idControl.val(id);
                 amountControl.val(amount);
 
-                if (type == '{{ cons('salesman.order.goods.type.mortgage') }}') {
+                if (type == -1) {
+                    orderIdControl.prop('disabled', false).val(orderId);
                     priceControl.prop('disabled', true).closest('.form-group').addClass('hidden');
                     piecesControl.prop('disabled', true).closest('.form-group').addClass('hidden');
                 } else if (type == '{{ cons('salesman.order.goods.type.return') }}') {
@@ -98,6 +103,7 @@
                 }
 
             }).on('hidden.bs.modal', function () {
+                orderIdControl.prop('disabled', true).val('');
                 priceControl.prop('disabled', false).closest('.form-group').removeClass('hidden');
                 piecesControl.prop('disabled', false).closest('.form-group').removeClass('hidden');
                 amountControl.prop('disabled', true).closest('.form-group').addClass('hidden');

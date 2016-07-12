@@ -18,7 +18,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0 ;
 }
 
-
 .inline-control {
   background-image: none;
   border: 1px solid #ccc;
@@ -939,7 +938,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     float: left;
     padding: 0 15px;
     margin-bottom: 10px;
-    background-color:$body-bg;
     .commodity-img {
       width: 100%;
       display: inline-block;
@@ -2091,6 +2089,10 @@ table {
 }
 .cart-img{
   @include square(50px);
+}
+.cart-txt{
+  border:1px solid red;
+  display: inline-block;
 }
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/
@@ -3433,57 +3435,6 @@ table {
     background-color: $banner-gray;
   }
 }
-.delivery-mode{
-  border-top:1px solid $gray-plain-light;
-  padding:10px;
-  .title{
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  .check-delivery{
-    width:200px;
-    background-color:$body-bg;
-    border:3px solid $banner-gray;
-    color:$gray-base;
-    &:hover{
-      color:$gray-base;
-    }
-  }
-  .from-mentioning{
-    margin:20px 0;
-  }
-  .fa{
-    position: absolute;
-    bottom:0;
-    right:0;
-    color:$body-bg;
-    font-size: 12px;
-    display: none;
-  }
-  .triangle{
-    position: absolute;
-    bottom:0;
-    right:0;
-    width: 0;
-    height: 0;
-    border-bottom: 20px solid $brand-primary;
-    border-left: 20px solid transparent;
-    display: none;
-  }
-  .check-delivery.active{
-    border:3px solid $brand-primary;
-    position:relative;
-    .fa{
-      display: inline-block;
-    }
-    .triangle{
-      display: inline-block;
-    }
-  }
-  .operation-buttons[disabled='disabled']{
-    background-color: $gray-lighter;
-  }
-}
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect {
@@ -3563,6 +3514,7 @@ table {
     line-height: 40px;
     background-color: $brand-primary;
     border-radius: 8px 8px 0 0;
+    padding: 0 !important;
     span {
       display: inline-block;
       font-size: 16px;
@@ -3815,6 +3767,7 @@ table {
   margin-bottom: 20px;
   .item-wrap {
     border: 1px solid $gray-plain-light;
+    background-color: $body-bg;
     border-radius: 2px;
     padding: 5px 0;
     .title {

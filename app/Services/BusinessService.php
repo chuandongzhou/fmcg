@@ -33,16 +33,12 @@ class BusinessService
         ];
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
-            $goods = $salesmanVisitOrder->orderGoods->load(['mortgageGoods', 'goods']);
+            $goods = $salesmanVisitOrder->orderGoods->load('goods');
             $orderGoods = $goods->filter(function ($item) use ($orderGoodsConf) {
                 return $item->type == $orderGoodsConf['order'];
             });
-
-            $mortgageGoods = $goods->filter(function ($item) use ($orderGoodsConf) {
-                return $item->type == $orderGoodsConf['mortgage'];
-            });
             $data['orderGoods'] = $orderGoods;
-            $data['mortgageGoods'] = $mortgageGoods;
+            $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
         } else {
             $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
         }
@@ -109,35 +105,15 @@ class BusinessService
             $orders->each(function ($order) {
                 $orderConf = cons('salesman.order');
                 if ($order->type == $orderConf['type']['order']) {
-                    $orderGoods = $order->orderGoods;
-
-                    $orderGoodsLists = $order->orderGoods = $orderGoods->filter(function ($item) use ($orderConf) {
-                        return $item->type == $orderConf['goods']['type']['order'];
-                    });
-
-
-                    $orderGoodsIds = $orderGoodsLists->pluck('goods_id')->toBase()->unique();
+                    // $orderGoods = $order->orderGoods;
+                    $orderGoodsIds = $order->orderGoods->pluck('goods_id')->toBase()->unique();
                     $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
 
-                    foreach ($orderGoodsLists as $goods) {
+                    $order->orderGoods->each(function ($goods) use ($orderGoodsNames) {
                         $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
-                    }
-
-                    $order->orderGoods = $orderGoodsLists->values();
-
-                    $mortgageGoodsLists = $orderGoods->filter(function ($item) use ($orderConf) {
-                        return $item->type == $orderConf['goods']['type']['mortgage'];
                     });
 
-                    $mortgageGoodsIds = $mortgageGoodsLists->pluck('goods_id')->toBase()->unique();
-
-                    $mortgageGoodsNames = MortgageGoods::whereIn('id', $mortgageGoodsIds)->lists('goods_name', 'id');
-
-                    foreach ($mortgageGoodsLists as $goods) {
-                        $goods->goodsName = isset($mortgageGoodsNames[$goods->goods_id]) ? $mortgageGoodsNames[$goods->goods_id] : '';
-                    }
-
-                    $order->mortgageGoods = $mortgageGoodsLists->values();
+                    $order->mortgageGoods = $this->getOrderMortgageGoods([$order]);
 
                 } else {
 
@@ -186,14 +162,15 @@ class BusinessService
 
             $orderForm = $visit->orders->filter(function ($item) use ($orderConf) {
                 return !is_null($item) && $item->type == $orderConf['type']['order'];
-            })->first();
+            });
 
-            if (!is_null($orderForm)) {
-                $orderForm->display_fee && ($visitData[$customerId]['display_fee'][] = [
-                    'created_at' => (string)$orderForm->created_at,
-                    'display_fee' => $orderForm->display_fee
+            if ($orderForm->count()) {
+                $order = $orderForm->first();
+                $order->display_fee && ($visitData[$customerId]['display_fee'][] = [
+                    'created_at' => (string)$order->created_at,
+                    'display_fee' => $order->display_fee
                 ]);
-            } 
+            }
 
             //拜访商品记录
             $goodsRecodeData = [];
@@ -208,8 +185,6 @@ class BusinessService
 
             $visitData[$customerId]['amount'] = isset($visitData[$customerId]['amount']) ? $visitData[$customerId]['amount'] : 0;
             $visitData[$customerId]['return_amount'] = isset($visitData[$customerId]['return_amount']) ? $visitData[$customerId]['return_amount'] : 0;
-            $mortgageGoods = [];
-
             $allGoods = $visit->orders->pluck('orderGoods')->collapse();
             $goodsIds = $allGoods->pluck('goods_id')->all();
 
@@ -236,33 +211,55 @@ class BusinessService
                     $visitData[$customerId]['return_amount'] = bcadd($visitData[$customerId]['return_amount'],
                         $goods->amount, 2);
                 }
-                if ($goods->type == $orderConf['goods']['type']['mortgage']) {
-                    $mortgageGoods[] = $goods;
-                } else {
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['goods_id'] = $goods->goods_id;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['goods_name'] = $goodsNames[$goods->goods_id];
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['stock'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->stock : 0;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : 0;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] : 0;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] : 0;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] : 0;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] : 0;
 
-                }
+                $visitData[$customerId]['statistics'][$goods->goods_id]['goods_id'] = $goods->goods_id;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['goods_name'] = $goodsNames[$goods->goods_id];
+                $visitData[$customerId]['statistics'][$goods->goods_id]['stock'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->stock : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] : 0;
+
             }
+
+            $mortgageGoods = $this->getOrderMortgageGoods($orderForm);
+
 
             //货抵商品
             foreach ($mortgageGoods as $mortgage) {
-                $date = (new Carbon($mortgage->created_at))->toDateString();
-                $visitData[$customerId]['mortgage'][$date][] = [
-                    'name' => $mortgage->mortgage_goods_name,
-                    'num' => $mortgage->num,
-                    'pieces' => $mortgage->pieces
-                ];
+                $date = (new Carbon($mortgage['created_at']))->toDateString();
+                $visitData[$customerId]['mortgage'][$date][] = $mortgage;
             }
 
         }
 
         return $visitData;
+    }
+
+    /**
+     * 获取订单抵货商品
+     *
+     * @param $orders
+     * @return array
+     */
+    public function getOrderMortgageGoods($orders)
+    {
+        $mortgagesGoods = collect([]);
+        foreach ($orders as $order) {
+            if ($goods = $order->mortgageGoods) {
+                foreach ($goods as $good) {
+                    $mortgagesGoods->push([
+                        'id' => $good->id,
+                        'name' => $good->goods_name,
+                        'pieces' => $good->pieces,
+                        'num' => $good->pivot->num,
+                        'created_at' => (string)$order->created_at
+                    ]);
+                }
+
+            }
+        }
+        return $mortgagesGoods;
     }
 }

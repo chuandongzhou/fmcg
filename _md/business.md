@@ -292,7 +292,7 @@
     
  `失败返回：`   
  
-#### 2.5.3 添加拜访 [post] (visit)
+#### 2.5.3 添加拜访 [post] (/)
 `请求参数：`
 
     salesman_customer_id    int             客户id
@@ -320,9 +320,9 @@
     
      mortgage字段子集说明
         
-        name                    string          商品名
+        goods_id                int             商品ID
         num                     int             数量
-        pieces                  string          单位
+
 
 `成功返回：`
 	
@@ -349,9 +349,9 @@
     display_fee             decimal         陈列费
     status                  tinyint         订单状态（0未审核  1已审核）
     orderGoods              array           订货单商品列表
-    mortgageGoods           array           陈列商品列表
+    order_goods             array           陈列商品列表
     
-    orderGoods字段子集说明
+    order_goods字段子集说明
     
     goods_id                int             商品id
     goodsName               string          商品名
@@ -362,7 +362,7 @@
     
     mortgageGoods字段子集说明
     
-    goodsName               string          商品名
+    name                    string          商品名
     num                     int             数量
     pieces                  int             单位id
 
@@ -415,7 +415,7 @@
     pieces_wholesaler   int         单位（对于批发商）
     images_url          string      商品图片
 
-#### 2.7.2 店铺分类[get] (category)
+#### 2.7.2 店铺分类[get] (categories)
 `请求参数：`
 
 `成功返回：`

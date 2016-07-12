@@ -60,8 +60,7 @@ class SalesmanVisitController extends Controller
             "mortgage" => [
                 [
                     "goods_id"  => 324,
-                    "num"       => 1,
-                    "pieces"    => 11,
+                    "num"       => 1
                 ],
 
             ]
@@ -69,6 +68,7 @@ class SalesmanVisitController extends Controller
         ];
        dd($data);*/
         $data = $request->all();
+        info($data);
         $salesman = salesman_auth()->user();
 
         $result = DB::transaction(function () use ($salesman, $data) {
@@ -95,12 +95,12 @@ class SalesmanVisitController extends Controller
 
                         if ($data['mortgage']) {
                             foreach ($data['mortgage'] as $mortgageGoods) {
-                                $mortgageGoods['salesman_visit_id'] = $visit->id;
-                                $mortgageGoods['type'] = $orderConf['goods']['type']['mortgage'];
-                                $mortgageGoodsArr[] = new SalesmanVisitOrderGoods($mortgageGoods);
+                                $mortgageGoodsArr[$mortgageGoods['goods_id']] = [
+                                    'num' => $mortgageGoods['num']
+                                ];
                             }
                         }
-                        $orderForm->orderGoods()->saveMany($mortgageGoodsArr);
+                        $orderForm->mortgageGoods()->attach($mortgageGoodsArr);
                     }
                 }
                 if (isset($result['order']['return_order'])) {
@@ -114,9 +114,6 @@ class SalesmanVisitController extends Controller
                             $orderGoods['type'] = $orderConf['goods']['type']['return'];
                             $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
                         }
-                        info($result['order']['return_order']['goods']);
-                        info($orderGoodsArr);
-
                         $returnOrder->orderGoods()->saveMany($orderGoodsArr);
 
 

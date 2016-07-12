@@ -13,7 +13,7 @@
                                                   data-url="{{ url('shop/' . $shop->id) }}">店铺二维码</a>
                     </li>
                     <li>联系人:{{ $shop->contact_person }}</li>
-                    <li>最低配送额:￥{{ $shop->min_money }}</li>
+                    <li>最低配送额:¥{{ $shop->min_money }}</li>
                 </ul>
             </div>
         </div>

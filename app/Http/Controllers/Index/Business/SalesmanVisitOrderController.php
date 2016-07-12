@@ -52,8 +52,6 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
-
-
         return view('index.business.order-detail', (new BusinessService)->getOrderData($salesmanVisitOrder));
     }
 
@@ -104,6 +102,7 @@ class SalesmanVisitOrderController extends Controller
             }
 
             $data = (new BusinessService())->getOrderData($order);
+
 
             $section = $phpWord->addSection();
             $table = $section->addTable('table');
@@ -163,10 +162,10 @@ class SalesmanVisitOrderController extends Controller
                     foreach ($data['mortgageGoods'] as $mortgageGoods) {
                         $table->addRow(16);
                         $table->addCell(null, $cellRowContinue);
-                        $table->addCell(1300, $gridSpan4)->addText($mortgageGoods->goods_name, null, $cellAlignCenter);
+                        $table->addCell(1300, $gridSpan4)->addText($mortgageGoods['name'], null, $cellAlignCenter);
                         $table->addCell(1300)->addText(cons()->valueLang('goods.pieces',
-                            $mortgageGoods->pieces), null, $cellAlignCenter);
-                        $table->addCell(1300)->addText($mortgageGoods->num, null, $cellAlignCenter);
+                            $mortgageGoods['pieces']), null, $cellAlignCenter);
+                        $table->addCell(1300)->addText($mortgageGoods['num'], null, $cellAlignCenter);
                     }
 
                 }

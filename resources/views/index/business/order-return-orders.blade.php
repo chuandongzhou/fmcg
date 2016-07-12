@@ -1,5 +1,11 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-订货单')
+
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    退货单
+@stop
+
 @include('includes.cropper')
 
 @section('right')

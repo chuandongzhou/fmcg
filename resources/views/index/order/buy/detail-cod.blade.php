@@ -2,6 +2,12 @@
 
 @section('subtitle' , '订单详情')
 @section('top-title', '进货管理->订单详情')
+
+@section('top-title')
+    <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
+    订单详情
+@stop
+
 @include('includes.stepBar')
 
 @section('right')
@@ -12,11 +18,11 @@
         <div class="col-sm-12 order-panel">
             <ul>
                 <li><span class="title-name">订单号 : </span> {{ $order['id'] }}</li>
-                <li><span class="title-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span></li>
+                <li><span class="title-name">订单金额 : </span><span class="red">¥{{ $order['price'] }}</span></li>
                 @if(!is_null($order->systemTradeInfo))
                     <li>
                         <span class="title-name">订单手续费 : </span><span
-                                class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                                class="red">¥{{ $order->systemTradeInfo->target_fee }}</span>
                     </li>
                 @endif
                 <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )
@@ -174,9 +180,9 @@
                                 </div>
                             </td>
                             <td>
-                                ￥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
+                                ¥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
-                            <td>￥{{ $goods['pivot']['total_price'] }}</td>
+                            <td>¥{{ $goods['pivot']['total_price'] }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -184,7 +190,7 @@
             </div>
         </div>
         <div class="col-sm-12 text-right bottom-content">
-            <p>总额<b class="red">￥{{ $order['price'] }}</b></p>
+            <p>总额<b class="red">¥{{ $order['price'] }}</b></p>
 
             <p>
                 @if(!$order['is_cancel'])

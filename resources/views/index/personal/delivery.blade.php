@@ -2,7 +2,9 @@
 @include('includes.timepicker')
 
 @section('subtitle', '个人中心-配送历史查询')
-@section('top-title', '个人中心->配送历史')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; <a href="{{ url('personal/shop') }}">配送历史</a>
+@stop
 @section('css')
     @parent
     <style>

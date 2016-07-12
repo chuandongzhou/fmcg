@@ -1,8 +1,10 @@
 @extends('index.menu-master')
 
-
 @section('subtitle', '个人中心-首页广告')
-@section('top-title', '模板管理->首页广告')
+@section('top-title')
+    <a href="{{ url('personal/model/advert') }}">模版管理</a> &rarr;
+    首页广告
+@stop
 @section('right')
     <div>
         <a class="add" href="{{ url('personal/model/create') }}"  ><label><span class="fa fa-plus"></span></label>添加广告
