@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Order;
+use App\Models\SalesmanVisitOrder;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -68,6 +69,48 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
             return false;
+        });
+
+        /**
+         * 判断业务员权限
+         */
+        $gate->define('validate-salesman', function ($user, $salesman) {
+            return $user->shop->id == $salesman->shop_id;
+        });
+
+        /**
+         * 判断客户权限
+         */
+        $gate->define('validate-customer', function ($user, $customer) {
+            return $user->shop->id == $customer->salesman->shop_id;
+        });
+
+        /**
+         * 判断业务订单权限
+         */
+        $gate->define('validate-salesman-order', function ($user, $order) {
+
+            $shopSalesmenIds = $user->shop->salesmen->pluck('id')->toBase();
+            if ($order instanceof SalesmanVisitOrder) {
+                return $shopSalesmenIds->contains($order->salesman_id);
+            } else {
+                if ($order->isEmpty()) {
+                    return false;
+                }
+                foreach ($order as $item) {
+                    if (!$shopSalesmenIds->contains($item->salesman_id)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+
+        /**
+         * 验证抵费商品
+         */
+        $gate->define('validate-mortgage-goods', function ($user, $mortgageGoods) {
+            return $mortgageGoods->shop->id == $user->shop_id;
         });
     }
 }

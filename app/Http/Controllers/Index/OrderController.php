@@ -84,9 +84,8 @@ class OrderController extends Controller
         $data = $request->all();
 
         $result = (new OrderService)->orderSubmitHandle($data);
-
         if (!$result) {
-            return redirect('cart');
+            return redirect('cart')->with('message', '存在不合法订单');
         }
 
         $redirectUrl = url('order-buy');

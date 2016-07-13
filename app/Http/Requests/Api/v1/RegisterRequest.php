@@ -11,11 +11,6 @@ namespace App\Http\Requests\Api\v1;
 class RegisterRequest extends Request
 {
 
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [

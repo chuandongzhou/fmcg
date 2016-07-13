@@ -91,12 +91,6 @@ class CartService
         }
 
         $shops = $this->formatCarts();
-        // 判断购买金额是否小于商店的最低配送额
-        foreach ($shops as $shop) {
-            if ($shop->min_money > $shop->sum_price) {
-                return false;
-            }
-        }
         return $shops;
     }
 

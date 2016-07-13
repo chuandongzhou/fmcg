@@ -10,7 +10,7 @@ namespace App\Http\Requests\Api\v1;
 
 
 
-class DeletePushDeviceRequest extends Request
+class DeletePushDeviceRequest extends UserRequest
 {
     /**
      * Get the validation rules that apply to the request.

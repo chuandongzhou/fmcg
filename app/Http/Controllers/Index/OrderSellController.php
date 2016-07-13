@@ -124,9 +124,10 @@ class OrderSellController extends OrderController
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url']);
         });
-        
+
+        $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
         //拼接需要调用的模板名字
-        $view = 'index.order.wholesaler.detail-' . array_flip(cons('pay_type'))[$order->pay_type];
+        $view = 'index.order.sell.detail-' . $viewName;
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view($view, [
             'order' => $order,

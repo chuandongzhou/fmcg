@@ -19,7 +19,6 @@ if (!function_exists('divide_uid')) {
         ];
     }
 }
-
 if (!function_exists('upload_path')) {
 
     /**
@@ -85,9 +84,11 @@ if (!function_exists('avatar_url')) {
      */
     function avatar_url($uid = 0, $size = 64, $secure = null)
     {
-        $default = config('auth.default.avatar');
+        $default = cons('salesman.avatar');
+
         $avatarPath = config('path.upload_avatar');
-        $relatePath = str_replace(public_path(), '', $avatarPath);
+        $relatePath = str_replace(public_path() , '', $avatarPath);
+        $relatePath = str_replace('\\' , '', $relatePath);
 
         // 处理size
         array_key_exists($size, $default) || $size = 64;
@@ -95,6 +96,39 @@ if (!function_exists('avatar_url')) {
         // 处理分割后的ID
         $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
 
+        // 处理缓存
+        $mtime = @filemtime($avatarPath . $path);
+        if (false !== $mtime) {
+            return asset($relatePath . $path, $secure) . '?' . $mtime;
+        }
+
+        return asset($relatePath . $default[$size], $secure);
+    }
+
+}
+if (!function_exists('salesman_avatar_url')) {
+
+    /**
+     * 获取上传头像URL
+     *
+     * @param int $uid
+     * @param int $size
+     * @param bool $secure
+     * @return string
+     */
+    function salesman_avatar_url($uid = 0, $size = 64, $secure = null)
+    {
+        $default = cons('salesman.avatar');
+        $avatarPath = config('path.upload_salesman_avatar');
+        $relatePath = str_replace(public_path(), '', $avatarPath);
+        $relatePath = str_replace('\\' , '', $relatePath);
+
+        // 处理size
+        array_key_exists($size, $default) || $size = 64;
+
+        // 处理分割后的ID
+        $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
+        
         // 处理缓存
         $mtime = @filemtime($avatarPath . $path);
         if (false !== $mtime) {
@@ -235,6 +269,17 @@ if (!function_exists('delivery_auth')) {
         return app('delivery.auth');
     }
 }
+if (!function_exists('salesman_auth')) {
+    /**
+     * Get the available admin auth instance.
+     *
+     * @return \Weiheng\Delivery\Guard
+     */
+    function salesman_auth()
+    {
+        return app('salesman.auth');
+    }
+}
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml
@@ -312,6 +357,20 @@ if (!function_exists('array_key_to_value')) {
             $newArray[$arr[$id]] = is_null($name) ? $arr : $arr[$name];
         }
         return $newArray;
+    }
+}
+if (!function_exists('percentage')) {
+    /**
+     * 求百分比
+     *
+     * @param $dividend
+     * @param $divisor
+     * @param int $scale
+     * @return string
+     */
+    function percentage($dividend, $divisor, $scale = 2)
+    {
+        return bcmul(bcdiv($dividend, $divisor, $scale + 2), 100, $scale) . '%';
     }
 }
 

@@ -95,7 +95,7 @@ class GoodsService
             //手机端有搜索名字时才返回
             $categories = isset($data['name']) ? $categories : new \stdClass();
         }
-        $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
+        $goods->OfCommonSort();
         return [
             'attrs' => $attrs,
             'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
@@ -112,16 +112,17 @@ class GoodsService
      *
      * @param $shop
      * @param $data
+     * @param $with
      * @return array
      */
-    static function getShopGoods($shop, $data)
+    static function getShopGoods($shop, $data = [], $with = ['images.image'])
     {
-        $goods = $shop->goods()->with('images.image');
+        $goods = $shop->goods()->with($with);
         /**
          * 状态
          */
         if (isset($data['status'])) {
-            $goods->where('status', $data['status']);
+            $goods->OfStatus($data['status']);
         }
         $attrs = [];
         if (isset($data['category_id'])) {
@@ -162,9 +163,8 @@ class GoodsService
                 unset($attrs[$key]);
             }
         }
-        $goods->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
         return [
-            'goods' => $goods,
+            'goods' => $goods->OfCommonSort(),
             'attrs' => $attrs,
             'searched' => $searched,
             'moreAttr' => $moreAttr

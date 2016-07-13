@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class CreateUserBankRequest extends Request
+class CreateUserBankRequest extends UserRequest
 {
     /**
      * Get the validation rules that apply to the request.

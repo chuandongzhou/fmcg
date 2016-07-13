@@ -257,15 +257,15 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            submitBtn = $('input.btn-primary'),
+            //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
-                shopSumPrice = 0,
+                shopSumPrice = 0/*,
                 minMoney = obj.find('.min-money'),
-                notEnough = obj.find('.not-enough');
+                notEnough = obj.find('.not-enough')*/;
             obj.find('.goods-list').each(function () {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
@@ -282,18 +282,18 @@ function cartFunc() {
                 descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
-            if (shopSumPrice < minMoney.html() && shopSumPrice) {
+           /* if (shopSumPrice < minMoney.html() && shopSumPrice) {
                 notEnough.removeClass('hidden');
             } else {
                 notEnough.addClass('hidden');
-            }
+            }*/
         });
 
-        if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
+     /*   if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
             submitBtn.prop('disabled', false);
         } else {
             submitBtn.prop('disabled', true);
-        }
+        }*/
 
         cartSumPriceSpan.html(cartSumPrice);
     };
@@ -541,60 +541,24 @@ function displayList() {
  * 我的商品列表
  */
 function myGoodsFunc() {
-    $('.shelve').button({
+
+    var table = $(".goods-table-panel .goods-table");
+
+    table.width($(".goods-table-panel .goods-table table").width());
+
+    if ($(".goods-table-panel .goods-table tr").length > 7) {
+        table.css({'height': '529px', 'overflowY': 'scroll'});
+    }
+
+    $('.mortgage').button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
-        downText: '下架',
-        upText: '上架'
-    });
-    $('.delete-goods').button({
-        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+        mortgagedText: '设置成功'
     });
 
     /**
-     * 商品上下架
+     * 抵费商品
      */
-    $(document).on('click', '.shelve', function () {
-        var self = $(this),
-            id = self.data('id'),
-            status = self.html() == '下架',
-            statusInfo = self.closest('td').prev();
-        // 判断登录
-        if (!site.isLogin()) {
-            site.redirect('auth/login');
-            return;
-        }
-
-        self.button('loading');
-        $.ajax({
-            url: site.api('my-goods/shelve'),
-            method: 'put',
-            data: {status: !status ? 1 : 0, id: id}
-        }).done(function (data, textStatus, jqXHR) {
-            if ($.isPlainObject(data)) {
-                status = data.message;
-            } else {
-                status = null;
-            }
-            if (status) {
-                self.data('status', status).button('down');
-                statusInfo.html('已上架');
-            } else {
-                self.data('status', status).button('up');
-                statusInfo.html('已下架');
-            }
-
-
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.button(status ? 'up' : 'down');
-            if (errorThrown == 'Unauthorized') {
-                site.redirect('auth/login');
-            } else {
-                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
-            }
-        });
-    });
-
-    $(document).on('click', '.delete-goods', function () {
+    $(document).on('click', '.mortgage', function () {
         var self = $(this),
             url = self.data('url'),
             method = self.data('method');
@@ -610,10 +574,100 @@ function myGoodsFunc() {
             method: method,
             data: {}
         }).done(function (data, textStatus, jqXHR) {
+            self.button('mortgaged').fadeOut(1500, function () {
+                self.remove();
+            });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (errorThrown == 'Unauthorized') {
+                site.redirect('auth/login');
+            } else {
+                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
+                self.button('reset');
+            }
+        });
+    });
+
+    ajaxNoForm();
+    deleteNoForm();
+}
+
+/**
+ * 无form删除
+ */
+var deleteNoForm = function () {
+    $('.delete-no-form').button({
+        loadingText: '<i class="fa fa-spinner fa-pulse"></i>'
+    });
+    /**
+     * 商品删除
+     */
+    $(document).on('click', '.delete-no-form', function () {
+        var self = $(this),
+            url = self.data('url'),
+            method = self.data('method');
+        // 判断登录
+        if (!site.isLogin()) {
+            site.redirect('auth/login');
+            return;
+        }
+
+        self.button('loading');
+        $.ajax({
+            url: url,
+            method: method,
+            data: {}
+        }).done(function (data, textStatus, jqXHR) {
+            alert('删除成功');
             self.parents('tr').slideUp(function () {
                 self.remove();
             })
         }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (errorThrown == 'Unauthorized') {
+                site.redirect('auth/login');
+            } else {
+                tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
+                self.button('reset');
+            }
+        });
+    });
+};
+
+/**
+ * 无form异步提交
+ */
+var ajaxNoForm = function () {
+    $('.ajax-no-form').button({
+        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+        onText: $('.ajax-no-form').data('on'),
+        offText: $('.ajax-no-form').data('off')
+    });
+    $(document).on('click', '.ajax-no-form', function () {
+        var self = $(this),
+            status = self.data('status'),
+            url = self.data('url'),
+            data = {status: status ? 0 : 1};
+        // 序列化表单
+        $.each(self.data('data') || {}, function (name, value) {
+            data[name] = value
+        });
+        console.log(data);
+
+        self.button('loading');
+        $.ajax({
+            url: url,
+            method: 'put',
+            data: data
+        }).done(function (data, textStatus, jqXHR) {
+            console.log(data);
+            if ($.isPlainObject(data) && data.id) {
+                self.data('status', 1).button('off');
+                // statusInfo.html('已上架');
+            } else {
+                self.data('status', 0).button('on');
+                //statusInfo.html('已下架');
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            self.button(status ? 'up' : 'down');
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');
             } else {
@@ -627,7 +681,7 @@ function myGoodsFunc() {
 /**
  * 统计页面js处理
  */
-function statisticsFunc() {
+var statisticsFunc = function () {
     var target0 = $('input[name="order_page_num"]');
     var target_value0 = parseInt(target0.attr('value'));
     var target1 = $('input[name="goods_page_num"]');

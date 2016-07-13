@@ -182,38 +182,38 @@
                                                         data-done-then="none" data-done-text="反馈提交成功">提交
                                                 </button>
                                             </span>
+                                            </div>
+                                            <!-- /input-group -->
                                         </div>
-                                        <!-- /input-group -->
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <li>
-                            <div id="qr-content-panel">
-                                <a href="javascript:;" class="app-down icon">APP下载</a>
-                            </div>
-                            <div class="content hidden">
-                                <div class="qr-panel">
-                                    <div class="dbd item">
-                                        <div class="qr-code dbd-qr-code"></div>
-                                        <div class="text text-center">订百达</div>
-                                    </div>
-                                    <div class="driver-helper item">
-                                        <div class="qr-code helper"></div>
-                                        <div class="text text-center">司机助手</div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li>
+                                <div id="qr-content-panel">
+                                    <a href="javascript:;" class="app-down icon">APP下载</a>
+                                </div>
+                                <div class="content hidden">
+                                    <div class="qr-panel">
+                                        <div class="dbd item">
+                                            <div class="qr-code dbd-qr-code"></div>
+                                            <div class="text text-center">订百达</div>
+                                        </div>
+                                        <div class="driver-helper item">
+                                            <div class="qr-code helper"></div>
+                                            <div class="text text-center">司机助手</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-6">
-                   <p> Copyright &copy; 成都订百达科技有限公司 蜀ICP备15031748号-1</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6">
+                        <p>Copyright  &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
-
+        </footer>
+    </div>
 @stop
 
 @section('js-lib')

@@ -109,7 +109,15 @@
                                                 <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
                                                       class="btn btn-primary">查看</a></p>
                                                 @if(!$order['is_cancel'])
-                                                    @if($order['can_cancel'])
+                                                    @if ($order->can_refund)
+                                                        <p>
+                                                            <a class="btn btn-danger refund" data-target="#refund"
+                                                               data-toggle="modal"
+                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                                退款
+                                                            </a>
+                                                        </p>
+                                                    @elseif($order['can_cancel'])
                                                         <p><a class="btn btn-cancel ajax"
                                                               data-url="{{ url('api/v1/order/cancel-sure') }}"
                                                               data-method="put"
@@ -123,15 +131,6 @@
                                                               data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                                                               data-method="put"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
-                                                    @endif
-                                                    @if ($order->can_refund)
-                                                        <p>
-                                                            <a class="btn btn-danger refund" data-target="#refund"
-                                                               data-toggle="modal"
-                                                               data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                                退款
-                                                            </a>
-                                                        </p>
                                                     @endif
                                                 @endif
                                             </td>

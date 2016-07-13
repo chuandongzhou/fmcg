@@ -34,7 +34,7 @@ class MyGoodsController extends Controller
         $data = $this->_formatGet($gets);
         $shop = auth()->user()->shop;
 
-        $result = GoodsService::getShopGoods($shop, $data);
+        $result = GoodsService::getShopGoods($shop, $data, ['images.image', 'mortgageGoods']);
         $myGoods = $result['goods']->orderBy('id', 'DESC')->paginate();
 
         $cateIds = $myGoods->pluck('category_id')->all();

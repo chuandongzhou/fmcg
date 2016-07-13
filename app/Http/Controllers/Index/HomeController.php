@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Salesman;
+use App\Models\SalesmanCustomer;
 use App\Services\GoodsService;
+
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
@@ -43,6 +46,9 @@ class HomeController extends Controller
 
     public function test()
     {
-        
+       $salesmanCustomer = SalesmanCustomer::find(1);
+
+        dd($salesmanCustomer->goods);
+
     }
 }

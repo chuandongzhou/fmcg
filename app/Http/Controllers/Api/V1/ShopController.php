@@ -39,7 +39,7 @@ class ShopController extends Controller
     {
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
-        $type = auth()->user()->type;
+        $type = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
 
@@ -147,10 +147,11 @@ class ShopController extends Controller
                     'goods' => [],
                     'isLike' => []
                 ]);
+
         }
         $data = $request->all();
-        $addressData = (new AddressService)->getAddressData();
-        $data = array_merge($data, array_except($addressData, 'address_name'));
+       /* $addressData = (new AddressService)->getAddressData();
+        $data = array_merge($data, array_except($addressData, 'address_name'));*/
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate()->toArray();
         return $this->success(['goods' => $goods]);

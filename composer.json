@@ -19,7 +19,8 @@
     "pingplusplus/pingpp-php": "dev-master",
     "guzzlehttp/guzzle": "^6.1",
     "tinpont/pushbox": "dev-master",
-    "simplesoftwareio/simple-qrcode": "1.3.*"
+    "simplesoftwareio/simple-qrcode": "1.3.*",
+    "overtrue/laravel-pinyin": "~3.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

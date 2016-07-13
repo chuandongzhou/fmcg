@@ -28,10 +28,12 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin.auth' => \App\Http\Middleware\AdminAuthenticate::class,
+        'salesman.auth' => \App\Http\Middleware\SalesmanAuthenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         'retailer' => \App\Http\Middleware\ForbidRetailer::class,
         'supplier' => \App\Http\Middleware\ForbidSupplier::class,
+
     ];
 }

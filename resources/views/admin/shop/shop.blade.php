@@ -1,6 +1,6 @@
 @extends('admin.master')
 @include('includes.cropper')
-@include('includes.address')
+{{--@include('includes.address' , ['model' => 'shop'])--}}
 @section('subtitle' , '用户管理')
 
 @section('right-container')

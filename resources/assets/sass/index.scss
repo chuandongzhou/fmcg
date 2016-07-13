@@ -18,6 +18,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   margin: 0 ;
 }
 
+
 .inline-control {
   background-image: none;
   border: 1px solid #ccc;
@@ -938,6 +939,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     float: left;
     padding: 0 15px;
     margin-bottom: 10px;
+    background-color:$body-bg;
     .commodity-img {
       width: 100%;
       display: inline-block;
@@ -3388,7 +3390,6 @@ table {
     font-weight: 600;
   }
   .check-delivery{
-    position:relative;
     width:200px;
     background-color:$body-bg;
     border:3px solid $banner-gray;
@@ -3400,7 +3401,7 @@ table {
   .from-mentioning{
     margin:20px 0;
   }
-  .fa-check{
+  .fa{
     position: absolute;
     bottom:0;
     right:0;
@@ -3420,6 +3421,7 @@ table {
   }
   .check-delivery.active{
     border:3px solid $brand-primary;
+    position:relative;
     .fa{
       display: inline-block;
     }
@@ -3428,7 +3430,7 @@ table {
     }
   }
   .operation-buttons[disabled='disabled']{
-    background-color: $banner-gray;
+    background-color: $gray-lighter;
   }
 }
 /*======================================shopping-car end======================================*/

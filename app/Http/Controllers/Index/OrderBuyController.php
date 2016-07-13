@@ -109,16 +109,15 @@ class OrderBuyController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::where('user_id', auth()->id())->with('user', 'shippingAddress', 'shop', 'goods',
-            'goods.images', 'deliveryMan', 'shippingAddress.address')->find($request->input('order_id'));
+        $order = Order::where('user_id', auth()->id())->find($request->input('order_id'));
         if (!$order) {
             return $this->error('订单不存在');
         }
 
-        $viewName = array_search($order->pay_type, cons('pay_type'));
+        $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
 
         //拼接需要调用的模板名字
-        $view = 'index.order.retailer.detail-' . $viewName;
+        $view = 'index.order.buy.detail-' . $viewName;
 
         return view($view, [
             'order' => $order,

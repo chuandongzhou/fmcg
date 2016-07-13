@@ -78,13 +78,14 @@
 
      area 字段说明
 
-         id                      array               配送地址id列表(新添加地址id应为 '')
-         province_id             array               省id列表
-         city_id                 array               市id列表
-         district_id             array               县id列表
-         street_id               array               街道id列表
-         area_name               array               省名+市名+县名+街道名  列表
-         address                 array               详细地址列表
+         id                     array               配送地址id列表(新添加地址id应为 '')
+         province_id            array               省id列表
+         city_id                array               市id列表
+         district_id            array               县id列表
+         street_id              array               街道id列表
+         area_name              array               省名+市名+县名+街道名  列表
+         address                array               详细地址列表
+         min_money              array               最低配送额列表
 
 `成功返回:`
 
@@ -653,7 +654,7 @@
     address                 array               地址
     x_lng                   float               经度
     y_lat                   float               纬度
-    area                    array               配送区域列表
+    >area                    array               配送区域列表
 
     images  字段说明
 
@@ -669,15 +670,15 @@
     street_id               int                 街道id
     address                 string              详细地址
 
-    area 字段说明
+    >area 字段说明
 
-    id                      array               配送地址id列表(新添加地址id应为 '')
-    province_id             array               省id列表
-    city_id                 array               市id列表
-    district_id             array               县id列表
-    street_id               array               街道id列表
-    area_name               array               省名+市名+县名+街道名  列表
-    address                 array               详细地址列表
+    >id                      array               配送地址id列表(新添加地址id应为 '')
+    >province_id             array               省id列表
+    >city_id                 array               市id列表
+    >district_id             array               县id列表
+    >street_id               array               街道id列表
+    >area_name               array               省名+市名+县名+街道名  列表
+    >address                 array               详细地址列表
 
 `成功返回：`
 
@@ -1438,8 +1439,66 @@
 
 `失败返回：`
 
-### 2.10  修改密码（personal/password）
-####2.10.1 修改密码[put]
+### 2.10  配送区域（personal/delivery-area）
+#### 2.10.1 获取所有配送区域[get](/)
+
+`请求参数：`
+
+`成功返回：`
+
+    area                    array           配送区域数组
+    
+    area字段子集介绍
+    
+       id                      int             地址id
+       province_id             int             省id
+       city_id                 int             市id
+       district_id             int             县id
+       area_name               string          省、市、县名
+       address                 string          详细地址
+       min_money               decimal          最低配送额
+       
+#### 2.10.2 添加配送区域[post](/)
+
+`请求参数：
+    
+       province_id             int             省id
+       city_id                 int             市id
+       district_id             int             县id
+       area_name               string          省、市、县、街道名
+       address                 string          详细地址
+       min_money               decimal          最低配送额
+        
+`成功返回：`
+
+`失败返回：`
+
+#### 2.10.3 修改配送区域[put](/{id})
+
+`请求参数：
+    
+       province_id             int             省id
+       city_id                 int             市id
+       district_id             int             县id
+       area_name               string          省、市、县、街道名
+       address                 string          详细地址
+       min_money               decimal          最低配送额
+        
+`成功返回：`
+
+`失败返回：`
+
+#### 2.10.4 删除配送区域[delete](/{id})
+
+`请求参数：
+        
+`成功返回：`
+
+`失败返回：`
+
+
+### 2.11  修改密码（personal/password）
+####2.11.1 修改密码[put]
 
 `请求参数：`
 
@@ -1457,8 +1516,8 @@
 `失败返回:`
 
 
-### 2.11 配送信息 [personal/delivery-man]
-#### 2.11.1 配送人员列表[get]
+### 2.12 配送信息 [personal/delivery-man]
+#### 2.12.1 配送人员列表[get]
 `请求参数:`
 
 `成功返回:`
@@ -1475,7 +1534,7 @@
 
 `失败返回:`
 
-#### 2.11.2 添加配送人员[post]
+#### 2.12.2 添加配送人员[post]
 `请求参数:`
 	user_name           string      pos机登录名
 	password            string      pos机登录密码
@@ -1488,7 +1547,7 @@
 
 `失败返回:`
 
-#### 2.11.3 编辑配送人员信息[put] ({id})
+#### 2.12.3 编辑配送人员信息[put] ({id})
 `请求参数:`
 	
 	user_name           string      pos机登录名
@@ -1503,7 +1562,7 @@
 	
 `失败返回:`
 
-#### 2.11.4 删除配送人员[delete] ({id})
+#### 2.12.4 删除配送人员[delete] ({id})
 `请求参数:`
 
 `成功返回:`
@@ -1512,8 +1571,8 @@
 `失败返回:`
 
 
-### 2.12 财务管理 [personal/finance]
-#### 2.12.1 提现申请记录[get] (withdraw) (按提现申请的创建时间查询)
+### 2.13 财务管理 [personal/finance]
+#### 2.13.1 提现申请记录[get] (withdraw) (按提现申请的创建时间查询)
 `请求参数:`
 	
 	page				int			分页
@@ -1549,7 +1608,7 @@
 	
 `失败返回:`
 
-#### 2.12.2 交易流水帐[get] (daybook)
+#### 2.13.2 交易流水帐[get] (daybook)
 `请求参数:`
 
 	page				int			分页
@@ -1576,7 +1635,7 @@
 
 `失败返回:`
 
-#### 2.12.3 获取帐户余额[get] (balance)
+#### 2.13.3 获取帐户余额[get] (balance)
 `请求参数:`
 
 
@@ -1588,7 +1647,7 @@
 
 `失败返回:`
 
-#### 2.12.4 提现申请[post] (add-withdraw)
+#### 2.13.4 提现申请[post] (add-withdraw)
 `请求参数:`
 	
 	amount				int			提现金额
@@ -1598,8 +1657,8 @@
 
 `失败返回:`
 
-### 2.13 提现账号管理  [personal/bank]
-#### 2.13.1 获取提现账号列表[get]
+### 2.14 提现账号管理  [personal/bank]
+#### 2.14.1 获取提现账号列表[get]
 `请求参数:`
 	
 `成功返回:`
@@ -1618,7 +1677,7 @@
 
 `失败返回:`
 
-#### 2.13.2 添加提现账号[post]
+#### 2.14.2 添加提现账号[post]
 `请求参数:`
 	
 	card_number			int				银行账号
@@ -1630,7 +1689,7 @@
 
 `失败返回:`
 
-#### 2.13.3 修改提现账号[put] ({id})
+#### 2.14.3 修改提现账号[put] ({id})
 `请求参数:`
 	
 	同上
@@ -1639,7 +1698,7 @@
 
 `失败返回:`
 
-#### 2.13.4 删除提现账号[delete] ({id})
+#### 2.14.4 删除提现账号[delete] ({id})
 `请求参数:`
 	
 `成功返回:`
@@ -1647,16 +1706,16 @@
 `失败返回:`
 
 
-### 2.14 设置默认提现账号  [personal/bank-default]
-#### 2.14.1 设置默认提现账号[put] ({id})
+### 2.15 设置默认提现账号  [personal/bank-default]
+#### 2.15.1 设置默认提现账号[put] ({id})
 `请求参数:`
 	
 `成功返回:`
 
 `失败返回:`
 
-### 2.15 获取银行信息  [personal/bank-info]
-#### 2.15.1 获取银行信息[get]
+### 2.16 获取银行信息  [personal/bank-info]
+#### 2.16.1 获取银行信息[get]
 `请求参数:`
 
 
@@ -1668,8 +1727,8 @@
 `失败返回:`
 
 
-### 2.16 推送设备  [push]
-#### 2.16.1 添加推送设备[post] (active-token)
+### 2.17 推送设备  [push]
+#### 2.17.1 添加推送设备[post] (active-token)
 `请求参数:`
 	
 	token			string			token
@@ -1681,7 +1740,7 @@
 `失败返回:`
 
 
-#### 2.16.1 删除推送设备[delete] (deactive-token)
+#### 2.17.1 删除推送设备[delete] (deactive-token)
 `请求参数:`
 	
 	token			string			token
@@ -1690,8 +1749,8 @@
 
 `失败返回:`
 
-### 2.17 支付  [pay]
-#### 2.17.1 获取charge对象[get] (charge/{order_id})
+### 2.18 支付  [pay]
+#### 2.18.1 获取charge对象[get] (charge/{order_id})
 `请求参数：`
 
     type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
@@ -1703,7 +1762,7 @@
 
 `失败返回：`
 
-#### 2.17.2 余额支付[post] (balancepay/{order_id})
+#### 2.18.2 余额支付[post] (balancepay/{order_id})
 `请求参数：`
 
     type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
@@ -1713,7 +1772,7 @@
 `失败返回：`
 
 
-#### 2.17.3 退款[get] (refund/{order_id})
+#### 2.18.3 退款[get] (refund/{order_id})
 `请求参数：`
     reason         string           退款原因
 
@@ -1722,8 +1781,8 @@
 `失败返回：`
 
 
-### 2.18 获取版本信息  [version]
-#### 2.18.1 获取版本信息 [get] 
+### 2.19 获取版本信息  [version]
+#### 2.19.1 获取版本信息 [get] 
 `请求参数：`
 	type            	int             移动端类型(1:ios;2:android)
 
@@ -1741,8 +1800,8 @@
 
 `失败返回：`
 
-### 2.19 获取移动端广告  [advert]
-#### 2.19.1 获取移动端广告 [get]
+### 2.20 获取移动端广告  [advert]
+#### 2.20.1 获取移动端广告 [get]
 `请求参数：`
 
 
