@@ -301,6 +301,10 @@
                     }
                 });
             });
+            //鼠标移出事件
+            $('#header_notification_bar').mouseout(function(){
+                $('.cartDetail').html('');
+            });
 
         });
     </script>
