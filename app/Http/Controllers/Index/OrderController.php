@@ -258,11 +258,16 @@ class OrderController extends Controller
                 })->orWhere(function ($query) {
                     //货到付款情况，只查询发货以后的状态
                     $query->ofHasSend();
+                })->orWhere(function ($query){
+                    //自提，查询已完成状态
+                    $query->ofPickUpSuccess();
                 });
             } else {
                 if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
                     $query->ofPaySuccess();
-                } else { //货到付款
+                } elseif($search['pay_type'] == cons('pay_type.pick_up')) { //自提
+                    $query->ofPickUpSuccess();
+                }else{//货到付款
                     $query->ofHasSend();
                 }
             }
@@ -373,7 +378,13 @@ class OrderController extends Controller
             if ($value['pay_type'] == cons('pay_type.online')) {
                 ++$stat['onlineNum'];
                 $stat['onlineAmount'] += $value['price'];
-            } else {
+            } elseif($value['pay_type'] == cons('pay_type.cod')) {
+                ++$stat['codNum'];
+                $stat['codAmount'] += $value['price'];
+                if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
+                    $stat['codReceiveAmount'] += $value['price'];
+                }
+            }else{
                 ++$stat['codNum'];
                 $stat['codAmount'] += $value['price'];
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {

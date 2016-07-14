@@ -23,7 +23,7 @@ class InfoController extends Controller
             //待收货
             $refund = Order::ofBuy(auth()->id())->nonArrived()->count();
             //待确认（待审核）
-            $waitConfirm = Order::ofBuy(auth()->id())->waitConfirm()->count();
+            $waitConfirm = Order::ofBuy(auth()->id())->ofWaitConfirm(1)->count();
 
         } else {
             //待付款
@@ -34,7 +34,7 @@ class InfoController extends Controller
             //代收款
             $refund = Order::bySellerId(auth()->id())->getPayment()->nonCancel()->count();
             //待确认（待审核）
-            $waitConfirm = Order::bySellerId(auth()->id())->waitConfirm()->count();
+            $waitConfirm = Order::bySellerId(auth()->id())->ofWaitConfirm()->count();
         }
         return view('index.personal.info', [
             'shop' => $shop,

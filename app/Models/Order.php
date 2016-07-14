@@ -539,16 +539,20 @@ class Order extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWaitConfirm($query)
+    public function scopeofWaitConfirm($query,$buy=0)
     {
-        return $query->where(function ($query) {
-            $query->where([
-                'pay_type' => cons('pay_type.online'),
-                'pay_status' => cons('order.pay_status.payment_success')
-            ])->orWhere('pay_type', cons('pay_type.cod'));
+        return $query->where(function ($query) use ($buy) {
+            if($buy!=0){
+                $query->where('pay_type', cons('pay_type.cod'));
+            }else{
+                $query->where([
+                    'pay_type' => cons('pay_type.online'),
+//                'pay_status' => cons('order.pay_status.payment_success')
+                ])->orWhere('pay_type', cons('pay_type.cod'));
+            }
+
         })->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
-
     /**
      * 待收款,货到付款
      *
@@ -606,7 +610,7 @@ class Order extends Model
             if ($search['status']) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
-                    $query->where('pay_status', cons('order.pay_status.non_payment'))
+                    $query->where(['pay_status'=>cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])
                         ->where('pay_type', cons('pay_type.online'));
                 } elseif ($search['status'] == key(cons('order.status'))) {
                     //未确认
@@ -614,7 +618,7 @@ class Order extends Model
                         ->where(function ($query) {
                             $query->where([
                                 'pay_type' => cons('pay_type.online'),
-                                'pay_status' => cons('order.pay_status.payment_success')
+//                                'pay_status' => cons('order.pay_status.payment_success')
                             ])->orWhere('pay_type', cons('pay_type.cod'));
                         });
                 } elseif ($search['status'] == 'non_send') {//未发货
@@ -660,5 +664,13 @@ class Order extends Model
     {
         return $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
             [cons('order.status.send'), cons('order.status.finished')]);
+    }
+    /**
+     * 自提，已完成的订单条件
+     *
+     *
+     */
+    public function scopeofPickUpSuccess($query){
+        return $query->where('pay_type',cons('pay_type.pick_up'))->where('status',cons('order.status.finished'));
     }
 }

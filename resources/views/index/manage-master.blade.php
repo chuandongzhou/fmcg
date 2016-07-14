@@ -20,6 +20,14 @@
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
     <![endif]-->
+    <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
+    <!--[if lt IE 10]>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[placeholder]').removeAttr("placeholder");
+        })
+    </script>
+    <![endif]-->
     <div class="page-header navbar navbar-fixed-top">
         <div class="page-header-inner ">
             <div class="page-logo">
@@ -273,7 +281,7 @@
                 }
             });
         //购物车数据
-            $('#header_notification_bar').mouseover(function(){
+            $('#header_notification_bar').mouseenter(function(){
                 $.ajax({
                     url: '/api/v1/cart/detail',
                     method: 'get'
@@ -301,8 +309,8 @@
                     }
                 });
             });
-            //鼠标移出事件
-            $('#header_notification_bar').mouseout(function(){
+//            //鼠标移出事件
+            $('#header_notification_bar').mouseleave(function(){
                 $('.cartDetail').html('');
             });
 
