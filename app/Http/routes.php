@@ -68,6 +68,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->get('delivery', 'DeliveryController@historyDelivery');
         $router->controller('model', 'ModelController');  //模版管理
+        $router->resource('coupon', 'CouponController'); // 优惠券
     });
 
     //业务管理
@@ -215,6 +216,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->resource('shipping-address', 'ShippingAddressController');          //收货地址
             $router->controller('finance', 'FinanceController');    //提现相关操作
             $router->controller('model', 'ModelController');  //模版管理
+            $router->resource('coupon', 'CouponController'); // 优惠券
 
         });
         $router->controller('cart', 'CartController');
@@ -262,6 +264,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('target-set', 'SalesmanController@targetSet');
                 $router->put('update-by-app', 'SalesmanController@updateByApp');
             });
+
+            $router->put('salesman/password', 'SalesmanController@password');  //修改密码
             $router->resource('salesman', 'SalesmanController');
 
             $router->group(['prefix' => 'salesman-customer'], function ($router) {
@@ -285,8 +289,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->group(['prefix' => 'mortgage-goods'], function ($router) {
                 $router->get('/', 'MortgageGoodsController@index'); //启/禁用
                 $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
-                $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
                 $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
+                $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
                 $router->delete('batch-delete', 'MortgageGoodsController@batchDestroy'); //移除
                 $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
             });

@@ -23,23 +23,7 @@ class SearchController extends Controller
         $type = auth()->user()->type;
         $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
-        $goods = Goods::active()->with('images.image', 'shop')->select([
-            'id',
-            'name',
-            'shop_id',
-            'bar_code',
-            'min_num_retailer',
-            'min_num_wholesaler',
-            'price_retailer',
-            'price_wholesaler',
-            'pieces_retailer',
-            'pieces_wholesaler',
-            'is_new',
-            'is_promotion',
-            'is_out',
-            'cate_level_1',
-            'cate_level_2'
-        ])->where('user_type', '>', $type);
+        $goods = Goods::active()->with('images.image', 'shop')->where('user_type', '>', $type);
 
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));

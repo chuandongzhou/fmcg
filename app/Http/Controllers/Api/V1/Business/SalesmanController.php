@@ -11,6 +11,7 @@ use App\Services\SalesmanTargetService;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\PhpWord;
 use Gate;
+use Hash;
 
 class SalesmanController extends Controller
 {
@@ -51,16 +52,39 @@ class SalesmanController extends Controller
      * @param $salesman
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Api\V1\UpdateSalesmanRequest $request, $salesman)
+    public function update(Requests\Api\V1\UpdateSalesmanRequest $request, Salesman $salesman)
     {
         if (Gate::denies('validate-salesman', $salesman)) {
             return $this->error('业务员不存在');
         }
         $attributes = $request->all();
+        info($attributes);
         if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }
         return $this->error('保存业务员是出现错误');
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function password(Requests\Api\v1\UpdatePasswordRequest $request)
+    {
+        $attributes = $request->all();
+
+        $user = salesman_auth()->user();
+
+        if (Hash::check($attributes['old_password'], $user->password)) {
+            if ($user->fill(['password' => $attributes['password']])->save()) {
+                return $this->success('修改密码成功');
+            }
+            return $this->error('修改密码时遇到错误');
+
+        }
+        return $this->error('原密码错误');
     }
 
     /**
@@ -73,6 +97,7 @@ class SalesmanController extends Controller
     {
         $salesman = salesman_auth()->user();
         $attributes = $request->all();
+        info($request->all());
         if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }
@@ -119,7 +144,7 @@ class SalesmanController extends Controller
     {
         $data = $request->all();
 
-        $salesman =auth()->user()->shop->salesmen()->find($data['salesman_id']);
+        $salesman = auth()->user()->shop->salesmen()->find($data['salesman_id']);
 
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
@@ -209,7 +234,7 @@ class SalesmanController extends Controller
             $table->addCell(1500)->addText($salesman->returnOrderSumAmount, null, $cellAlignCenter);
         }
 
-        $name =auth()->user()->shop->name . $date . '业务员目标' . '.docx';
+        $name = auth()->user()->shop->name . $date . '业务员目标' . '.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 }

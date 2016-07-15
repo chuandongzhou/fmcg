@@ -712,19 +712,26 @@ ul, li, p, a, h1, h2, h3, h4 {
   width: 20%;
   float: left;
   padding: 0 15px;
-  margin-bottom: 10px;
-  background-color: #fff; }
+  margin-bottom: 10px; }
   .list-penal .commodity .commodity-img {
     width: 100%;
     display: inline-block; }
+
+.list-penal .commodity-border {
+  border: 1px solid #cae6f7;
+  background-color: #fff; }
+  .list-penal .commodity-border:hover {
+    -webkit-transform: translate3d(0px, -3px, 0px) rotate(0deg);
+    transform: translate3d(0px, -3px, 0px) rotate(0deg);
+    box-shadow: 0 0 5px #4cb9fe; }
 
 .list-penal .commodity-index-panel {
   padding-bottom: -10px !important; }
 
 .list-penal .commodity-index-img {
   width: 25% !important;
-  padding: 0 3px !important;
-  margin-bottom: 5px !important; }
+  padding: 0 !important;
+  margin: -1px 0 0 0 !important; }
   .list-penal .commodity-index-img .prompt {
     width: 80px !important;
     height: 80px !important;
@@ -734,9 +741,17 @@ ul, li, p, a, h1, h2, h3, h4 {
   .list-penal .commodity-index-img .new-listing {
     background-position: 0 -205px !important; }
 
-.list-penal .commodity-border {
-  border: 1px solid #cae6f7;
-  background-color: #fff; }
+.list-penal .commodity-search-product {
+  position: relative;
+  min-height: 300px; }
+  .list-penal .commodity-search-product .commodity-border:hover {
+    position: absolute;
+    z-index: 999; }
+    .list-penal .commodity-search-product .commodity-border:hover .shopping-store {
+      display: inline-block; }
+      .list-penal .commodity-search-product .commodity-border:hover .shopping-store .sales {
+        font-size: 13px;
+        margin-top: 5px; }
 
 .list-penal .content-panel {
   padding: 2px 5px; }
@@ -753,13 +768,15 @@ ul, li, p, a, h1, h2, h3, h4 {
     -webkit-box-orient: vertical;
     word-break: break-all; }
   .list-penal .content-panel .shopping-store {
+    display: none;
     margin: 5px 0; }
     .list-penal .content-panel .shopping-store p {
       display: inline-block; }
     .list-penal .content-panel .shopping-store .join-cart {
       color: #fff;
       padding: 2px 5px;
-      vertical-align: top; }
+      vertical-align: top;
+      margin-left: 5px; }
   .list-penal .content-panel .sell-panel {
     font-size: 12px; }
     .list-penal .content-panel .sell-panel .money {
@@ -828,7 +845,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     background-position: 0 -300px; }
 
 .commodity-other .commodity {
-  width: 25%; }
+  width: 20%; }
 
 .dealer-commodity-wrap .commodity-img {
   height: 100px; }
@@ -1559,6 +1576,10 @@ table {
 .cart-img {
   width: 50px;
   height: 50px; }
+
+.cart-txt {
+  border: 1px solid red;
+  display: inline-block; }
 
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/
@@ -2548,47 +2569,6 @@ table {
   .delivery-mode .operation-buttons[disabled='disabled'] {
     background-color: #d2d2d2; }
 
-.delivery-mode {
-  border-top: 1px solid #e0e0e0;
-  padding: 10px; }
-  .delivery-mode .title {
-    margin-bottom: 20px;
-    font-weight: 600; }
-  .delivery-mode .check-delivery {
-    width: 200px;
-    background-color: #fff;
-    border: 3px solid #d2d2d2;
-    color: #000; }
-    .delivery-mode .check-delivery:hover {
-      color: #000; }
-  .delivery-mode .from-mentioning {
-    margin: 20px 0; }
-  .delivery-mode .fa {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    color: #fff;
-    font-size: 12px;
-    display: none; }
-  .delivery-mode .triangle {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-bottom: 20px solid #4cb9fe;
-    border-left: 20px solid transparent;
-    display: none; }
-  .delivery-mode .check-delivery.active {
-    border: 3px solid #4cb9fe;
-    position: relative; }
-    .delivery-mode .check-delivery.active .fa {
-      display: inline-block; }
-    .delivery-mode .check-delivery.active .triangle {
-      display: inline-block; }
-  .delivery-mode .operation-buttons[disabled='disabled'] {
-    background-color: #b4b4b4; }
-
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect .control-panel {
@@ -2648,7 +2628,8 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: #4cb9fe;
-    border-radius: 8px 8px 0 0; }
+    border-radius: 8px 8px 0 0;
+    padding: 0 !important; }
     .msg-channel .title span, .msg-channel .title .close-btn {
       display: inline-block;
       font-size: 16px;
@@ -2845,6 +2826,7 @@ table {
   margin-bottom: 20px; }
   .home-orders-list .item-wrap {
     border: 1px solid #e0e0e0;
+    background-color: #fff;
     border-radius: 2px;
     padding: 5px 0; }
     .home-orders-list .item-wrap .title {
@@ -2910,6 +2892,9 @@ table {
 .business-table tr td {
   border: 1px solid #777777 !important;
   vertical-align: middle !important; }
+
+.clerk-name {
+  text-align: left !important; }
 
 /*==============sales-details end=================*/
 /*==============business-report begin=================*/

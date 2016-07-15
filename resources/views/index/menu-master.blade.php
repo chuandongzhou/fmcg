@@ -193,37 +193,37 @@
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
-                            <li class="nav-item  ">
+                            <li class="nav-item  {{ path_active('business/salesman/target') }}">
                                 <a href="{{ url('business/salesman/target') }}" class="nav-link ">
                                     <span class="title">业务员目标管理</span>
                                 </a>
                             </li>
-                            <li class="nav-item  ">
+                            <li class="nav-item  {{ path_active(['business/salesman']) }}">
                                 <a href="{{ url('business/salesman') }}" class="nav-link ">
                                     <span class="title">业务员管理</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ path_active(['business/salesman-customer*']) }}">
                                 <a href="{{ url('business/salesman-customer') }}" class="nav-link ">
                                     <span class="title">客户管理</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ path_active(['business/mortgage-goods*']) }}">
                                 <a href="{{ url('business/mortgage-goods') }}" class="nav-link ">
                                     <span class="title">抵陈列费商品</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ path_active(['business/report*']) }}">
                                 <a href="{{ url('business/report') }}" class="nav-link ">
                                     <span class="title">业务报告</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ path_active(['business/order/order-forms*']) }}">
                                 <a href="{{ url('business/order/order-forms') }}" class="nav-link ">
                                     <span class="title">订货单</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ path_active(['business/order/return-orders*']) }}">
                                 <a href="{{ url('business/order/return-orders') }}" class="nav-link ">
                                     <span class="title">退货单</span>
                                 </a>

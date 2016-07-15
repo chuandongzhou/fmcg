@@ -2,7 +2,7 @@
 @section('subtitle', '个人中心-配送人员')
 
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; <a href="{{ url('personal/shop') }}">配送区域</a>
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; 配送区域
 @stop
 @section('right')
     <form action="#" method="post">

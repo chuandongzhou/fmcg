@@ -56,7 +56,7 @@ class MortgageGoodsController extends Controller
         if (empty($goodsIds)) {
             return $this->error('请选择要' . $statusVal . '的商品');
         }
-        returnauth()->user()->shop->mortgageGoods()->whereIn('id', $goodsIds)->update(['status' => $status])
+        return auth()->user()->shop->mortgageGoods()->whereIn('id', $goodsIds)->update(['status' => $status])
             ? $this->success('商品' . $statusVal . '成功') : $this->error('商品' . $statusVal . '时出现问题');
 
     }

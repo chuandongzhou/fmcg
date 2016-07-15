@@ -19,6 +19,7 @@ class Order extends Model
         'status',
         'shipping_address_id',
         'delivery_man_id',
+        'coupon_id',
         'user_id',
         'shop_id',
         'paid_at',
@@ -155,6 +156,16 @@ class Order extends Model
     public function deliveryMan()
     {
         return $this->belongsTo('App\Models\DeliveryMan')->withTrashed();
+    }
+
+    /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function coupon()
+    {
+        return $this->belongsTo('App\Models\Coupon')->withTrashed();
     }
 
     /**

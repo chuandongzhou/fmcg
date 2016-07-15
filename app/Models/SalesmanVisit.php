@@ -43,7 +43,7 @@ class SalesmanVisit extends Model
 
     /**
      * 关联拜访商品记录
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function goodsRecord()
@@ -59,7 +59,7 @@ class SalesmanVisit extends Model
      * @param $endTime
      * @return mixed
      */
-    public function scopeOfTime($query, $beginTime, $endTime)
+    public function scopeOfTime($query, $beginTime = null, $endTime = null)
     {
         if ($beginTime) {
             $query = $query->where('created_at', '>=', $beginTime);
@@ -70,5 +70,17 @@ class SalesmanVisit extends Model
         return $query;
     }
 
+    /**
+     * 排序
+     * 
+     * @param $query
+     * @param string $field
+     * @param string $sort
+     * @return mixed
+     */
+    public function scopeOfSort($query, $field = 'id', $sort = 'DESC')
+    {
+        return $query->orderBy($field, $sort);
+    }
 
 }

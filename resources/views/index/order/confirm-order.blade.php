@@ -143,13 +143,16 @@
                                             <span>支付方式 :</span>
                                             <select class="operation-buttons pay-type" name="pay_type">
                                                 @foreach(cons()->lang('pay_type') as $key=>$type)
-                                                    <option value="{{ $key }}">{{ $type }}</option>
+                                                    @if($key != 'pick_up')
+                                                        <option value="{{ $key }}">{{ $type }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                             <span class="operating hidden pay-way">
                                                 @foreach(cons()->lang('pay_way.cod') as $key=> $way)
                                                     <input type="radio" {{ $key == 'cash' ? 'checked' : '' }}
-                                                    name="pay_way" value="{{ $key }}" disabled class="operation-buttons"/>
+                                                    name="pay_way" value="{{ $key }}" disabled
+                                                           class="operation-buttons"/>
                                                     {{ $way }}  &nbsp;&nbsp;&nbsp;
                                                 @endforeach
                                             </span>

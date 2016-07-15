@@ -41,7 +41,7 @@
                                 <td>
                                     <input type="checkbox" class="child" name="salesman_id[]" value="{{ $man->id }}">
                                 </td>
-                                <td>
+                                <td class="clerk-name">
                                     <img class="avatar" src="{{ $man->avatar_url }}">  {{ $man->name }}
                                 </td>
                                 <td>

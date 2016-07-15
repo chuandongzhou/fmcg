@@ -39,7 +39,8 @@ class SalesmanVisitOrder extends Model
      */
     public function mortgageGoods()
     {
-        return $this->belongsToMany('App\Models\MortgageGoods', 'salesman_visit_order_mortgage_goods')->withPivot('num');
+        return $this->belongsToMany('App\Models\MortgageGoods',
+            'salesman_visit_order_mortgage_goods')->withPivot('num');
     }
 
     /**
@@ -165,5 +166,15 @@ class SalesmanVisitOrder extends Model
     public function getCustomerShopIdAttribute()
     {
         return $this->salesmanCustomer->shop_id;
+    }
+
+    /**
+     * 获取订单客户平台店铺用户id
+     *
+     * @return mixed
+     */
+    public function getCustomerUserIdAttribute()
+    {
+        return $this->salesmanCustomer->shop ? $this->salesmanCustomer->shop->user_id : 0;
     }
 }

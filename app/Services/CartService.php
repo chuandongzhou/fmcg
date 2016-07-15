@@ -74,22 +74,24 @@ class CartService
     public function validateOrder($num, $updateNum = false)
     {
         $carts = $this->data;
-        if (empty($carts[0]) || empty($num)) {
+        if ($carts->isEmpty() || empty($num)) {
             return false;
         }
         //是否通过验证
         $allow = true;
-        //判断商品购买数量是否小于该商品的最低配送额
+
         foreach ($carts as $cart) {
             $buyNum = $num[$cart->goods_id];
-            if ($cart->goods->min_num > $buyNum || $cart->goods->is_out || $buyNum > 10000) {
+            //判断商品购买数量是否小于该商品的最低配送额
+            /*$cart->goods->min_num > $buyNum || */
+            if ($cart->goods->is_out || $buyNum > 10000) {
                 $allow = false;
             }
             $updateNum && $cart->fill(['num' => $buyNum])->save();
         }
-        if (!$allow) {
-            return false;
-        }
+         if (!$allow) {
+             return false;
+         }
 
         $shops = $this->formatCarts();
         return $shops;
@@ -149,11 +151,13 @@ class CartService
     {
         return $this->has($this->cacheKey) ? Cache::decrement($this->cacheKey, $count) : '';
     }
+
     /**
      * 获取购物车数量
      *
      */
-    public function cartDetail(){
+    public function cartDetail()
+    {
         $user = auth()->user();
         $myCarts = $user->carts();
         $carts['detail'] = $myCarts->whereHas('goods', function ($query) use ($user) {

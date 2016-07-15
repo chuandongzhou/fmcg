@@ -30,7 +30,7 @@
             <div class="item"><span class="prompt">退货总订单数</span> : <span>{{ $returnOrders->count() }}</span></div>
         </div>
         <div class="col-xs-3">
-            <div class="item"><span class="prompt">联系人</span> : <span>{{ $customer->constant }}</span></div>
+            <div class="item"><span class="prompt">联系人</span> : <span>{{ $customer->contact }}</span></div>
             <div class="item"><span class="prompt">拜访次数</span> : <span>{{ $visits->count()   }}</span></div>
             <div class="item"><span class="prompt">订单总金额</span> : <span>{{ $orders->sum('amount') }}</span></div>
             <div class="item"><span class="prompt">退货总金额</span> : <span>{{ $returnOrders->sum('amount') }}</span>

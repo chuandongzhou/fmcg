@@ -6,6 +6,7 @@ use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
@@ -26,7 +27,8 @@ class SalesmanVisitController extends Controller
     public function index()
     {
         $salesman = salesman_auth()->user();
-        $visit = $salesman->visits()->with('salesmanCustomer')->get();
+        $startOfToday = (new Carbon())->startOfDay();
+        $visit = $salesman->visits()->with('salesmanCustomer')->OfTime($startOfToday)->OfSort()->get();
         return $this->success(compact('visit'));
     }
 
@@ -59,7 +61,7 @@ class SalesmanVisitController extends Controller
             'display_fee' => '100',
             "mortgage" => [
                 [
-                    "goods_id"  => 324,
+                    "id"  => 324,
                     "num"       => 1
                 ],
 
@@ -78,7 +80,7 @@ class SalesmanVisitController extends Controller
             $orderConf = cons('salesman.order');
 
             if ($visit->exists) {
-                if ($orderForms = array_filter($result['order']['order_form'])) {
+                if (isset($result['order']['order_form']) && ($orderForms = array_filter($result['order']['order_form']))) {
                     $orderForms['salesman_visit_id'] = $visit->id;
                     $orderForms['salesman_customer_id'] = $data['salesman_customer_id'];
                     $orderForms['type'] = $orderConf['type']['order'];
@@ -93,9 +95,9 @@ class SalesmanVisitController extends Controller
                         }
                         $orderForm->orderGoods()->saveMany($orderGoodsArr);
 
-                        if ($data['mortgage']) {
+                        if (isset($data['mortgage'])) {
                             foreach ($data['mortgage'] as $mortgageGoods) {
-                                $mortgageGoodsArr[$mortgageGoods['goods_id']] = [
+                                $mortgageGoodsArr[$mortgageGoods['id']] = [
                                     'num' => $mortgageGoods['num']
                                 ];
                             }
@@ -119,7 +121,7 @@ class SalesmanVisitController extends Controller
 
                     }
                 }
-                if ($goodsRecodes = $result['goodsRecode']) {
+                if (isset($result['goodsRecode']) && ($goodsRecodes = $result['goodsRecode'])) {
                     $goodsRecodeArr = [];
                     foreach ($goodsRecodes as $goodsRecode) {
                         $goodsRecodeArr[] = new SalesmanVisitGoodsRecord($goodsRecode);
@@ -144,7 +146,8 @@ class SalesmanVisitController extends Controller
             return $this->error('拜访信息出错');
         }
         $visit->load([
-            'orders.orderGoods.mortgageGoods',
+            'orders.orderGoods',
+            'orders.mortgageGoods',
             'goodsRecord',
             'salesmanCustomer.shippingAddress',
             'orders.orderGoods.goods'
@@ -152,7 +155,8 @@ class SalesmanVisitController extends Controller
         $visitData = head((new BusinessService())->formatVisit([$visit], true));
         $visitData['display_fee'] = isset($visitData['display_fee']) ? head($visitData['display_fee'])['display_fee'] : 0;
         $visitData['mortgage'] = isset($visitData['mortgage']) ? head($visitData['mortgage']) : [];
-        $visitData['statistics'] = array_values($visitData['statistics']);
+        $visitData['statistics'] = isset($visitData['statistics']) ? array_values($visitData['statistics']) : [];
+
         return $this->success(compact('visitData'));
     }
 
@@ -167,6 +171,10 @@ class SalesmanVisitController extends Controller
         $order = [];
         $goodsRecode = [];
 
+        if (!isset($data['goods'])) {
+            return compact('order', 'goodsRecode');
+        }
+
         foreach ($data['goods'] as $goods) {
             if (isset($goods['order_form'])) {
                 $order['order_form']['display_fee'] = isset($data['display_fee']) ? $data['display_fee'] : 0;
@@ -178,7 +186,7 @@ class SalesmanVisitController extends Controller
                     'goods_id' => $goods['id'],
                     'price' => $goods['order_form']['price'],
                     'num' => $goods['order_form']['num'],
-                    'pieces' => $goods['pieces'],
+                    'pieces' => $goods['order_form']['pieces'],
                     'amount' => bcmul($goods['order_form']['price'], $goods['order_form']['num'], 2)
                 ];
             }

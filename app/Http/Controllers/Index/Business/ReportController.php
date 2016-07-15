@@ -68,6 +68,8 @@ class ReportController extends Controller
 
         $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
 
+        $data = (new BusinessService())->formatVisit($visits);
+
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -197,37 +199,40 @@ class ReportController extends Controller
                 }
             }
 
-            $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText('客户销售商品', ['size' => 20], $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(1000)->addText('商品ID', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('商品名称', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('商品库存', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('生产日期', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('商品单价', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('订货数量', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('订货总金额', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('退货数量', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('退货总金额', null, $cellAlignCenter);
-
-            foreach ($visit['statistics'] as $goodsId => $statistics) {
+            if (isset($visit['statistics'])) {
                 $table->addRow();
-                $table->addCell(1000)->addText($goodsId, null, $cellAlignCenter);
-                $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
-                $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces',
-                        $statistics['pieces']) : '件'),
-                    null, $cellAlignCenter);
-                $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText($statistics['return_order_num'], null, $cellAlignCenter);
-                $table->addCell(1000)->addText($statistics['return_amount'], null, $cellAlignCenter);
+                $table->addCell(10500, $gridSpan9)->addText('客户销售商品', ['size' => 20], $cellAlignCenter);
+
+                $table->addRow();
+                $table->addCell(1000)->addText('商品ID', null, $cellAlignCenter);
+                $table->addCell(1500)->addText('商品名称', null, $cellAlignCenter);
+                $table->addCell(1000)->addText('商品库存', null, $cellAlignCenter);
+                $table->addCell(1500)->addText('生产日期', null, $cellAlignCenter);
+                $table->addCell(1000)->addText('商品单价', null, $cellAlignCenter);
+                $table->addCell(1500)->addText('订货数量', null, $cellAlignCenter);
+                $table->addCell(1000)->addText('订货总金额', null, $cellAlignCenter);
+                $table->addCell(1000)->addText('退货数量', null, $cellAlignCenter);
+                $table->addCell(1000)->addText('退货总金额', null, $cellAlignCenter);
+
+                foreach ($visit['statistics'] as $goodsId => $statistics) {
+                    $table->addRow();
+                    $table->addCell(1000)->addText($goodsId, null, $cellAlignCenter);
+                    $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
+                    $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
+                    $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
+                    $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces',
+                            $statistics['pieces']) : '件'),
+                        null, $cellAlignCenter);
+                    $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
+                    $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
+                    $table->addCell(1000)->addText($statistics['return_order_num'], null, $cellAlignCenter);
+                    $table->addCell(1000)->addText($statistics['return_amount'], null, $cellAlignCenter);
+                }
+                $table->addRow();
+                $table->addCell(10500,
+                    $gridSpan9)->addText("订货总金额：{$visit['amount']}   退货总金额：{$visit['return_amount']}",
+                    ['size' => 20], $cellAlignCenter);
             }
-            $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText("订货总金额：{$visit['amount']}   退货总金额：{$visit['return_amount']}",
-                ['size' => 20], $cellAlignCenter);
         }
         $name = $salesman->name . $startDate . '业务报告.docx';
         $phpWord->save($name, 'Word2007', true);
@@ -341,32 +346,36 @@ class ReportController extends Controller
                     }
                 }
             }
-            $table->addRow();
-            $table->addCell(10500, $gridSpan6)->addText('销售统计', null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(1200, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText('订货数量', null, $cellAlignCenter);
-            $table->addCell(1800, $cellVAlignCenter)->addText('订货总金额', null, $cellAlignCenter);
-            $table->addCell(1500, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
-            foreach ($visit['statistics'] as $goodsId => $statistics) {
+            if (isset($visit['statistics'])) {
                 $table->addRow();
-                $table->addCell(1200, $cellVAlignCenter)->addText($goodsId, null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['goods_name'], null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['order_num'], null, $cellAlignCenter);
-                $table->addCell(1800, $cellVAlignCenter)->addText($statistics['order_amount'], null, $cellAlignCenter);
-                $table->addCell(1500, $cellVAlignCenter)->addText($statistics['return_order_num'], null,
+                $table->addCell(10500, $gridSpan6)->addText('销售统计', null, $cellAlignCenter);
+
+                $table->addRow();
+                $table->addCell(1200, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText('订货数量', null, $cellAlignCenter);
+                $table->addCell(1800, $cellVAlignCenter)->addText('订货总金额', null, $cellAlignCenter);
+                $table->addCell(1500, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText('退货数量', null, $cellAlignCenter);
+                foreach ($visit['statistics'] as $goodsId => $statistics) {
+                    $table->addRow();
+                    $table->addCell(1200, $cellVAlignCenter)->addText($goodsId, null, $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($statistics['goods_name'], null,
+                        $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($statistics['order_num'], null, $cellAlignCenter);
+                    $table->addCell(1800, $cellVAlignCenter)->addText($statistics['order_amount'], null,
+                        $cellAlignCenter);
+                    $table->addCell(1500, $cellVAlignCenter)->addText($statistics['return_order_num'], null,
+                        $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($statistics['return_amount'], null,
+                        $cellAlignCenter);
+                }
+                $table->addRow();
+                $table->addCell(10500,
+                    $gridSpan6)->addText("订货总金额 : {$visit['amount']}   退货总金额 : {$visit['return_amount']}", null,
                     $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($statistics['return_amount'], null, $cellAlignCenter);
+
             }
-            $table->addRow();
-            $table->addCell(10500,
-                $gridSpan6)->addText("订货总金额 : {$visit['amount']}   退货总金额 : {$visit['return_amount']}", null,
-                $cellAlignCenter);
-
-
         }
 
         $name = $salesman->name . $startDate . '至' . $endDate . '业务报告.docx';

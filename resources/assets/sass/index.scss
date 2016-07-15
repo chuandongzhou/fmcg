@@ -15,7 +15,7 @@ body {
 ul, li, p, a, h1, h2, h3, h4 {
   list-style: none;
   padding: 0;
-  margin: 0 ;
+  margin: 0;
 }
 
 .inline-control {
@@ -289,11 +289,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     position: static;
   }
 }
-.page-footer{
-  position:static!important;
-  margin-top:0!important;
-  min-width:inherit !important;
+
+.page-footer {
+  position: static !important;
+  margin-top: 0 !important;
+  min-width: inherit !important;
 }
+
 .panel-footer {
   padding: 20px 15px;
 }
@@ -535,9 +537,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .tabs-item {
         float: left;
         width: 25%;
-        box-sizing:border-box;
-        -moz-box-sizing:border-box;
-        -webkit-box-sizing:border-box;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         text-align: center;
         cursor: pointer;
         &:hover, &:focus {
@@ -746,35 +748,39 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
-.drop-newmsg{
+.drop-newmsg {
   padding: 0 !important;
 }
-.drop-exit{
-  padding:24px 12px!important;
-  font-size:19px;
-  a{
-    color:#c0cddc;
-    &:hover{
+
+.drop-exit {
+  padding: 24px 12px !important;
+  font-size: 19px;
+  a {
+    color: #c0cddc;
+    &:hover {
       background-color: inherit !important;
-      color:#c0cddc;
+      color: #c0cddc;
     }
-    padding: 0!important;
+    padding: 0 !important;
   }
 }
-.link-index{
+
+.link-index {
   display: inline-block;
-  margin-top:21px!important;
-  color:#fff;
-  font-size:18px;
-  font-weight:600;
+  margin-top: 21px !important;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
 }
-.path-title{
-  padding:0 10px 5px 10px;
-  color:#4cb9fe;
+
+.path-title {
+  padding: 0 10px 5px 10px;
+  color: #4cb9fe;
   font-size: 13px;
   font-weight: 600;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
+
 .logo {
   padding-bottom: 10px;
   padding-top: 10px;
@@ -931,9 +937,9 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .commodity {
-    box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     width: 20%;
     float: left;
     padding: 0 15px;
@@ -943,13 +949,22 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: inline-block;
     }
   }
+  .commodity-border {
+    border: 1px solid $blue-light;
+    background-color: $body-bg;
+    &:hover{
+      transform: translate3d(0px, -3px, 0px) rotate(0deg);
+      box-shadow: 0 0 5px $brand-primary;
+    }
+  }
   .commodity-index-panel {
     padding-bottom: -10px !important;
   }
+
   .commodity-index-img {
     width: 25% !important;
-    padding: 0 3px !important;
-    margin-bottom: 5px !important;
+    padding: 0!important;
+    margin: -1px 0 0 0 !important;
     .prompt {
       width: 80px !important;
       height: 80px !important;
@@ -962,9 +977,22 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-position: 0 -205px !important;
     }
   }
-  .commodity-border {
-    border: 1px solid $blue-light;
-    background-color:$body-bg;
+  .commodity-search-product{
+    position: relative;
+    min-height:300px;
+    .commodity-border {
+      &:hover {
+        position: absolute;
+        z-index: 999;
+        .shopping-store {
+          display: inline-block;
+          .sales{
+            font-size: 13px;
+            margin-top: 5px;
+          }
+        }
+      }
+    }
   }
   .content-panel {
     padding: 2px 5px;
@@ -983,6 +1011,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       word-break: break-all;
     }
     .shopping-store {
+      display: none;
       margin: 5px 0;
       p {
         display: inline-block;
@@ -991,6 +1020,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         color: $body-bg;
         padding: 2px 5px;
         vertical-align: top;
+        margin-left: 5px;
       }
     }
     .sell-panel {
@@ -1079,7 +1109,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .commodity-other {
   .commodity {
-    width: 25%;
+    width: 20%;
   }
 }
 
@@ -1223,7 +1253,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .personal-store {
   border: 1px solid $gray-plain-light !important;
-  background:$body-bg;
+  background: $body-bg;
   height: auto;
   padding-top: 5px;
   margin: 0 0 20px 0;
@@ -1372,9 +1402,9 @@ ul, li, p, a, h1, h2, h3, h4 {
             width: 30%;
             padding: 5px;
             font-size: 12px;
-            box-sizing:border-box;
-            -moz-box-sizing:border-box;
-            -webkit-box-sizing:border-box;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -1466,7 +1496,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       a {
         font-size: 15px;
         font-weight: 600;
-        padding:10px 0;
+        padding: 10px 0;
         &:hover {
           color: $brand-primary;
         }
@@ -1476,7 +1506,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       .list-item {
         color: $gray-base;
         font-size: inherit;
-        padding:10px 0;
+        padding: 10px 0;
       }
       text-align: center;
     }
@@ -1487,25 +1517,25 @@ ul, li, p, a, h1, h2, h3, h4 {
       .menu-wrap {
         @include clearfix;
         li {
-          display:inline-block;
-          box-sizing:border-box;
-          -moz-box-sizing:border-box;
-          -webkit-box-sizing:border-box;
-          padding:5px 0;
-          width:50%;
-          float:left;
-          &.one-item{
-            width:100% !important;
-            float:none !important;
+          display: inline-block;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          padding: 5px 0;
+          width: 50%;
+          float: left;
+          &.one-item {
+            width: 100% !important;
+            float: none !important;
           }
-          &:nth-child(odd){
+          &:nth-child(odd) {
             a {
               border-right: 1px solid $gray-lighter;
             }
           }
-          &:last-of-type{
-            a{
-              border:none;
+          &:last-of-type {
+            a {
+              border: none;
             }
           }
           a {
@@ -1761,9 +1791,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .load-img-wrap {
   .thumbnail {
-    box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     width: 19%;
     float: left;
     margin-right: 3px;
@@ -1906,9 +1936,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .address-list {
-  .close-icon{
+  .close-icon {
     color: $red;
-    text-indent:0!important;
+    text-indent: 0 !important;
     &:hover {
       color: $red;
     }
@@ -1918,7 +1948,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================goods-editor end======================================*/
 /*======================================wholesalers-management begin======================================*/
 table {
-   background-color: $body-bg;
+  background-color: $body-bg;
   .product-panel {
     vertical-align: middle;
     display: inline-block;
@@ -2087,13 +2117,16 @@ table {
     padding-right: 15px;
   }
 }
-.cart-img{
+
+.cart-img {
   @include square(50px);
 }
-.cart-txt{
-  border:1px solid red;
+
+.cart-txt {
+  border: 1px solid red;
   display: inline-block;
 }
+
 /*======================================wholesalers-management end======================================*/
 /*======================================personal-center begin======================================*/
 .personal-center {
@@ -2101,7 +2134,7 @@ table {
     margin: 40px 0 20px 0;
     padding: 0;
     border: 1px solid $gray-lighter;
-    background-color:$body-bg;
+    background-color: $body-bg;
     a {
       border-left: 1px solid $gray-lighter;
       border-right: 1px solid $gray-lighter;
@@ -2160,7 +2193,7 @@ table {
       margin-top: 4px;
       padding: 5px;
       color: #808080;
-      background-color:$body-bg;
+      background-color: $body-bg;
     }
   }
 
@@ -2938,24 +2971,24 @@ table {
       }
     }*/
   }
-  .secondary-menu{
+  .secondary-menu {
     @include clearfix;
     height: 450px;
     overflow: hidden;
-    li{
-      width:50%;
+    li {
+      width: 50%;
       float: left;
-      text-align:center;
-      box-sizing:border-box;
-      -moz-box-sizing:border-box;
-      -webkit-box-sizing:border-box;
-      a{
+      text-align: center;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      a {
         display: inline-block;
         width: 100%;
-        padding:10px 3px;
-        color:$gray;
+        padding: 10px 3px;
+        color: $gray;
         font-size: 13px;
-        &:hover{
+        &:hover {
           background-color: $gray-plain-light;
           text-decoration: none;
         }
@@ -3384,57 +3417,58 @@ table {
   }
 }
 
-.delivery-mode{
-  border-top:1px solid $gray-plain-light;
-  padding:10px;
-  .title{
+.delivery-mode {
+  border-top: 1px solid $gray-plain-light;
+  padding: 10px;
+  .title {
     margin-bottom: 20px;
     font-weight: 600;
   }
-  .check-delivery{
-    position:relative;
-    width:200px;
-    background-color:$body-bg;
-    border:3px solid $banner-gray;
-    color:$gray-base;
-    &:hover{
-      color:$gray-base;
+  .check-delivery {
+    position: relative;
+    width: 200px;
+    background-color: $body-bg;
+    border: 3px solid $banner-gray;
+    color: $gray-base;
+    &:hover {
+      color: $gray-base;
     }
   }
-  .from-mentioning{
-    margin:20px 0;
+  .from-mentioning {
+    margin: 20px 0;
   }
-  .fa-check{
+  .fa-check {
     position: absolute;
-    bottom:0;
-    right:0;
-    color:$body-bg;
+    bottom: 0;
+    right: 0;
+    color: $body-bg;
     font-size: 12px;
     display: none;
   }
-  .triangle{
+  .triangle {
     position: absolute;
-    bottom:0;
-    right:0;
+    bottom: 0;
+    right: 0;
     width: 0;
     height: 0;
     border-bottom: 20px solid $brand-primary;
     border-left: 20px solid transparent;
     display: none;
   }
-  .check-delivery.active{
-    border:3px solid $brand-primary;
-    .fa{
+  .check-delivery.active {
+    border: 3px solid $brand-primary;
+    .fa {
       display: inline-block;
     }
-    .triangle{
+    .triangle {
       display: inline-block;
     }
   }
-  .operation-buttons[disabled='disabled']{
+  .operation-buttons[disabled='disabled'] {
     background-color: $banner-gray;
   }
 }
+
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/
 .collect {
@@ -3487,6 +3521,7 @@ table {
   overflow: hidden;
   margin: 0;
 }
+
 .baidu-map {
   margin-top: 20px;
   overflow: hidden;
@@ -3495,8 +3530,8 @@ table {
   width: 100%;
   height: 200px;
 }
-/*==============baidu map css end=================*/
 
+/*==============baidu map css end=================*/
 .msg-channel {
   width: 300px;
   height: 150px;
@@ -3692,7 +3727,6 @@ table {
 /*==============message begin=================*/
 .user-list-wrap {
   border: 1px solid $gray-lighter;
-
   .user-list-panel {
     background-color: $gray-plain;
     height: 500px;
@@ -3839,79 +3873,90 @@ table {
 
 /*==============home end=================*/
 /*==============sales-details begin=================*/
-.sales-details-panel{
-  .item{
-    padding:5px 0;
+.sales-details-panel {
+  .item {
+    padding: 5px 0;
   }
 }
-.sales-details-tabs{
-  padding:10px 0;
+
+.sales-details-tabs {
+  padding: 10px 0;
 }
-.business-table{
-  tr{
-    th{
-      border:1px solid $gray-light !important;
+
+.business-table {
+  tr {
+    th {
+      border: 1px solid $gray-light !important;
       vertical-align: middle !important;
     }
-    td{
-      border:1px solid $gray-light !important;
+    td {
+      border: 1px solid $gray-light !important;
       vertical-align: middle !important;
     }
   }
+}
+
+.clerk-name{
+  text-align: left!important;
 }
 /*==============sales-details end=================*/
 /*==============business-report begin=================*/
-.business-report-title{
+.business-report-title {
   padding-bottom: 20px;
 }
-.business-report-monthly{
+
+.business-report-monthly {
   margin-top: 40px;
 }
+
 .msg-strom-detail {
   font-size: 14px;
   text-indent: 2em;
 }
+
 /*==============business-report end=================*/
 /*==============business-order-form begin=================*/
-.business-operating{
+.business-operating {
   padding: 0 20px;
-  label{
+  label {
     margin-right: 15px;
   }
 }
-.business-order-wrap{
-  border:1px solid $gray-light;
-  margin-top:20px;
-  padding:5px 10px;
-  .title{
+
+.business-order-wrap {
+  border: 1px solid $gray-light;
+  margin-top: 20px;
+  padding: 5px 10px;
+  .title {
     margin-bottom: 10px;
   }
-  hr{
-    margin:5px 0!important;
+  hr {
+    margin: 5px 0 !important;
   }
-  .item{
-    padding:5px 0;
+  .item {
+    padding: 5px 0;
     position: relative;
-    .edit-money{
+    .edit-money {
       display: none;
     }
-    .edit-cash{
-      position:absolute;
-      left:50%;
-      margin:0 0 5px 0;
-      padding:1px 5px;
+    .edit-cash {
+      position: absolute;
+      left: 50%;
+      margin: 0 0 5px 0;
+      padding: 1px 5px;
       font-size: 12px;
     }
   }
-  .money-item{
-    .money{
+  .money-item {
+    .money {
       display: none;
     }
-    .edit-money{
+    .edit-money {
       display: inline-block;
     }
   }
 }
+
 /*==============business-order-form end=================*/
 @keyframes bounce {
   from, to {
@@ -3930,6 +3975,7 @@ table {
     transform: translateY(0.2vh)
   }
 }
+
 /*==============tips begin=================*/
 #tips {
   position: absolute;
@@ -3960,6 +4006,7 @@ table {
   height: 0;
   border: transparent solid;
 }
+
 #tips .arrow {
   border-width: 8px;
   bottom: -8px;
@@ -3977,5 +4024,6 @@ table {
   border-bottom-width: 0;
   content: " ";
 }
+
 /*==============tips end=================*/
 

@@ -112,5 +112,12 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-mortgage-goods', function ($user, $mortgageGoods) {
             return $mortgageGoods->shop->id == $user->shop_id;
         });
+
+        /**
+         * 验证店铺代金券
+         */
+        $gate->define('validate-shop-coupon', function ($user, $coupon) {
+            return $coupon->shop_id == $user->shop_id;
+        });
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdatePasswordRequest extends Request
+class UpdateCouponRequest extends UserRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,8 +13,9 @@ class UpdatePasswordRequest extends Request
     public function rules()
     {
         return [
-            'old_password' => 'required|between:6,18|different:password',
-            'password' => 'required|min:6|confirmed'
+           'stock' => 'required|integer|min:1',
+           'start_at' => 'date',
+           'end_at' => 'date|after:start_at',
         ];
     }
 }

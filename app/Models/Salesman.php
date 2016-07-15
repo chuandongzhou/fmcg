@@ -122,7 +122,16 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function setAvatarAttribute($file)
     {
-        $file = config('path.upload_temp') . $file;
+
+        if (is_string($file)) {
+            $file = config('path.upload_temp') . $file;
+        } else {
+            $result = $this->convertToFile($file, null, false);
+            $file = $result ? $result['path'] : null;
+            $file = config('path.upload_temp') . $file;
+            info($file);
+        }
+
         try {
             $image = \Image::make($file);
         } catch (\Exception $e) {

@@ -41,7 +41,7 @@ class AuthController extends Controller
 
         $nowTime = Carbon::now();
 
-        $salesman->setAppends(['shop_type']);
+        $salesman->setAppends(['shop_type', 'avatar_url']);
         if ($salesman->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             salesman_auth()->login($salesman, true);
 

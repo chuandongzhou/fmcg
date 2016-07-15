@@ -160,7 +160,7 @@ class SalesmanVisitOrderController extends Controller
                 }
                 $shippingAddress = ShopService::getDefaultShippingAddress($order->customer_shop_id);
                 $orderData = [
-                    'user_id' => $order->customer_shop_id,
+                    'user_id' => $order->Customer_user_id,
                     'shop_id' => auth()->user()->shop->id,
                     'price' => $order->amount,
                     'pay_type' => $syncConf['pay_type'],

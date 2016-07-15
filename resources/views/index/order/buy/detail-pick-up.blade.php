@@ -44,11 +44,6 @@
                     </li>
 
                     <li>
-                        <span>联系电话 :</span>
-                        <span>{{ $order['shop']['contact_info'] }}</span>
-                    </li>
-
-                    <li>
                         <span>提货地址 : </span>
                         {{  $order->shop ? $order->shop->address : '' }}
                         <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"

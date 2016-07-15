@@ -58,9 +58,22 @@
 #### 2.2.2 编辑个人资料[put] (update-by-app)
 `请求参数：`
 
+    avatar                  file            头像
     name                    string          姓名
     contact_information     string          联系方式
     password                string          密码（非必填，不填是不修改密码）
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.2.3 修改密码[put] (password)
+
+`请求参数：`
+
+    old_password            string          原密码
+    password                string          新密码
+    password_confirmation   string          确认新密码
 
 `成功返回：`
 
@@ -303,14 +316,13 @@
     goods字段子集说明
     
     id                      int             商品id
-    pieces                  int             单位id
     stock                   string          商品库存
-    production_date         date            商品生产日期
+    production_date         date            商品生产日期（'2016-07-13'）
     order_form              array           订货数据（要订此商品时传入）
     return_order            array           退货数据（要退此商品时传入）
     
     order_form字段子集说明
-     
+        pieces              int             单位id
         price               decimal         商品单价
         num                 int             订货数量
     return_order字段子集说明
@@ -320,7 +332,7 @@
     
      mortgage字段子集说明
         
-        goods_id                int             商品ID
+        id                      int             商品ID
         num                     int             数量
 
 
