@@ -539,18 +539,13 @@ class Order extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeofWaitConfirm($query,$buy=0)
+    public function scopeWaitConfirm($query)
     {
-        return $query->where(function ($query) use ($buy) {
-            if($buy!=0){
-                $query->where('pay_type', cons('pay_type.cod'));
-            }else{
+        return $query->where(function ($query) {
                 $query->where([
                     'pay_type' => cons('pay_type.online'),
 //                'pay_status' => cons('order.pay_status.payment_success')
                 ])->orWhere('pay_type', cons('pay_type.cod'));
-            }
-
         })->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
     /**

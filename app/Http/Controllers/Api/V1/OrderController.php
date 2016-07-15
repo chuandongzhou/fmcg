@@ -66,7 +66,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmByUser()
     {
-        $orders = Order::ofBuy(auth()->id())->ofWaitConfirm(1)->paginate();
+        $orders = Order::ofBuy(auth()->id())->waitConfirm()->paginate();
         return $this->success($this->_hiddenAttr($orders));
     }
 
@@ -77,7 +77,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->ofWaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->waitConfirm()->paginate();
         return $this->success($this->_hiddenAttr($orders));
     }
 
