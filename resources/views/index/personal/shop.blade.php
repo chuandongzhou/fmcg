@@ -1,10 +1,11 @@
 @extends('index.menu-master')
 @include('includes.cropper')
-{{--@include('includes.address', ['model' => 'shop'])--}}
 @section('subtitle', '个人中心-商家信息')
-@section('top-title', '个人中心->店铺信息')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    店铺信息
+@stop
 @section('right')
-
     <div class="row">
         <div class="col-sm-12 personal-center">
             <form class="form-horizontal ajax-form" method="put"

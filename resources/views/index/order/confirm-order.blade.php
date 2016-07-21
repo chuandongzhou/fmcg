@@ -50,15 +50,15 @@
                                         <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
                                         {{ $cartGoods->goods->name }}
                                     </td>
-                                    <td class="text-center">￥{{ $cartGoods->goods->price }}</td>
+                                    <td class="text-center">¥{{ $cartGoods->goods->price }}</td>
                                     <td class="text-center">{{ $cartGoods->num }}</td>
                                     <td class="text-center">
-                                        <b class="red">￥{{ $cartGoods->goods->price *  $cartGoods->num }}</b>
+                                        <b class="red">¥{{ $cartGoods->goods->price *  $cartGoods->num }}</b>
                                     </td>
                                     @if($key == 0)
                                         <td class="text-center total-money"
                                             rowspan="{{ count($shop['cart_goods']) }}">
-                                            合计金额 :<b class="red">￥{{ $shop->sum_price }}</b>
+                                            合计金额 :<b class="red">¥{{ $shop->sum_price }}</b>
                                         </td>
                                     @endif
 
@@ -143,13 +143,16 @@
                                             <span>支付方式 :</span>
                                             <select class="operation-buttons pay-type" name="pay_type">
                                                 @foreach(cons()->lang('pay_type') as $key=>$type)
-                                                    <option value="{{ $key }}">{{ $type }}</option>
+                                                    @if($key != 'pick_up')
+                                                        <option value="{{ $key }}">{{ $type }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                             <span class="operating hidden pay-way">
                                                 @foreach(cons()->lang('pay_way.cod') as $key=> $way)
                                                     <input type="radio" {{ $key == 'cash' ? 'checked' : '' }}
-                                                    name="pay_way" value="{{ $key }}" disabled class="operation-buttons"/>
+                                                    name="pay_way" value="{{ $key }}" disabled
+                                                           class="operation-buttons"/>
                                                     {{ $way }}  &nbsp;&nbsp;&nbsp;
                                                 @endforeach
                                             </span>

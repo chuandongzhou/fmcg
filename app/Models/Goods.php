@@ -293,7 +293,7 @@ class Goods extends Model
     {
         return $this->scopeOfStatus($query, 0);
     }
-
+    
     /**
      * 根据不同角色获取价格
      *

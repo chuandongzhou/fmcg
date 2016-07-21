@@ -1,9 +1,14 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-订货单')
+
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    退货单
+@stop
+
 @include('includes.cropper')
 
 @section('right')
-    <div class="col-sm-12 col-xs-9">
         <div class="row">
             <div class="col-xs-12">
                 <form class="form-horizontal ajax-form" data-done-then="refresh" autocomplete="off">
@@ -52,7 +57,6 @@
                 </form>
             </div>
         </div>
-    </div>
     @parent
 @stop
 

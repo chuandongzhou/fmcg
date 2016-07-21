@@ -2,7 +2,11 @@
 @include('includes.uploader')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-首页广告')
-@section('top-title', '模板管理->首页广告')
+@section('top-title')
+    <a href="{{ url('personal/model/advert') }}">模版管理</a> &rarr;
+    <a href="{{ url('personal/model/advert') }}">首页广告</a> &rarr;
+    首页广告{{ $advert->id ? '编辑' : '添加' }}
+@stop
 @include('includes.tinymce',['full' => true])
 @include('includes.cropper')
 

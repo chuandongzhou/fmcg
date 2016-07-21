@@ -33,13 +33,14 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
-     * 关联订货单商品
+     * 关联抵费商品
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function orderFormGoods()
+    public function mortgageGoods()
     {
-        return $this->orderGoods()->where('type', cons('salesman.order.goods.type.order'));
+        return $this->belongsToMany('App\Models\MortgageGoods',
+            'salesman_visit_order_mortgage_goods')->withPivot('num');
     }
 
     /**
@@ -134,7 +135,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanExportAttribute()
     {
-        return $this->status == cons('salesman.order.type.passed');
+        return $this->status == cons('salesman.order.status.passed');
     }
 
     /**
@@ -165,5 +166,15 @@ class SalesmanVisitOrder extends Model
     public function getCustomerShopIdAttribute()
     {
         return $this->salesmanCustomer->shop_id;
+    }
+
+    /**
+     * 获取订单客户平台店铺用户id
+     *
+     * @return mixed
+     */
+    public function getCustomerUserIdAttribute()
+    {
+        return $this->salesmanCustomer->shop ? $this->salesmanCustomer->shop->user_id : 0;
     }
 }

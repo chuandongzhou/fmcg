@@ -186,7 +186,10 @@ return [
         'display_fee' => '陈列费',
         'salesman_id' => '营业员',
         'date' => '日期',
-        'target' => '目标'
+        'target' => '目标',
+        'stock' => '库存',
+        'full' => '最低订单金额',
+        'discount' => '优惠金额'
     ],
 
 ];

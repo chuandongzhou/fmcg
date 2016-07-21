@@ -1,6 +1,11 @@
 @extends('index.menu-master')
 @include('includes.salesman-customer-map')
-@section('subtitle', '业务管理-业务员管理')
+@section('subtitle', '业务管理-客户管理')
+
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    客户管理
+@stop
 
 @section('right')
     <form class="form-horizontal" method="get" action="{{ url('business/salesman-customer') }}" autocomplete="off">

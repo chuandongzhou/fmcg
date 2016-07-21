@@ -1,5 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单详情')
+
+@section('top-title')
+    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
+    订单详情
+@stop
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
@@ -12,12 +17,12 @@
                         <li class="title">订单信息</li>
                         <li><span class="title-info-name">订单号 : </span>{{ $order['id'] }}</li>
                         <li>
-                            <span class="title-info-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span>
+                            <span class="title-info-name">订单金额 : </span><span class="red">¥{{ $order['price'] }}</span>
                         </li>
                         @if(!is_null($order->systemTradeInfo))
                             <li>
                                 <span class="title-info-name">订单手续费 : </span><span
-                                        class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                                        class="red">¥{{ $order->systemTradeInfo->target_fee }}</span>
                             </li>
                         @endif
                         <li><span class="title-info-name">支付方式 : </span>{{ $order['payment_type'] }} </li>
@@ -143,7 +148,7 @@
                     </table>
                 </div>
                 <div class="col-sm-12 text-right">
-                    总额 : <b class="red">￥{{ $order['price'] }}</b>
+                    总额 : <b class="red">¥{{ $order['price'] }}</b>
                 </div>
             </div>
         </div>

@@ -2,6 +2,12 @@
 
 @section('subtitle', '业务管理-业务员客户添加')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman-customer') }}">客户管理</a> &rarr;
+    客户{{ $salesmanCustomer->id ? '编辑' : '新增' }}
+@stop
+
 @section('right')
     <form class="form-horizontal ajax-form"
           action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"
@@ -72,8 +78,8 @@
             <label class="col-sm-2 control-label" for="platform_id">平台ID:</label>
 
             <div class="col-sm-10 col-md-6">
-                <input class="form-control" id="platform_id" name="platform_id" placeholder="平台ID"
-                       value="{{ $salesmanCustomer->platform_id }}"
+                <input class="form-control" id="shop_id" name="shop_id" placeholder="平台ID"
+                       value="{{ $salesmanCustomer->shop_id }}"
                        type="text">
             </div>
         </div>

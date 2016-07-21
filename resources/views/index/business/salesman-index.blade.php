@@ -1,5 +1,9 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-业务员管理')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    业务员管理
+@stop
 @include('includes.salesman')
 @include('includes.cropper')
 
@@ -37,7 +41,7 @@
                                 <td>
                                     <input type="checkbox" class="child" name="salesman_id[]" value="{{ $man->id }}">
                                 </td>
-                                <td>
+                                <td class="clerk-name">
                                     <img class="avatar" src="{{ $man->avatar_url }}">  {{ $man->name }}
                                 </td>
                                 <td>
@@ -55,7 +59,7 @@
                                         </a>
 
                                         <a class="btn btn-default"
-                                           href="{{ url('business/salesman/' . $man->id) }}"><i
+                                           href="{{ url('business/report/' . $man->id) }}"><i
                                                     class="fa fa-book"></i> 报告</a>
 
                                         <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}"

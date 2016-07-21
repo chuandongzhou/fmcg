@@ -1,16 +1,17 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-配送人员')
-{{--@include('includes.delivery-man')--}}
 
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; 配送区域
+@stop
 @section('right')
     <form action="#" method="post">
         <div class="row">
             <div class="col-sm-12 table-responsive">
-                {{--<div>
-                    <a class="add" href="javascript:void(0)" type="button" data-target="#deliveryModal"
-                       data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加配送人员
+                <div>
+                    <a class="add" href="{{ url('personal/delivery-area/create') }}" ><label><span class="fa fa-plus"></span></label>添加配送区域
                     </a>
-                </div>--}}
+                </div>
                 <table class="table table-bordered table-center">
                     <thead>
                     <tr>

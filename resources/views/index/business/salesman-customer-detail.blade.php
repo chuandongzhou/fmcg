@@ -1,6 +1,11 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @section('subtitle', '业务管理-业务员管理')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman-customer') }}">客户管理</a> &rarr;
+    客户明细
+@stop
 
 @section('right')
     <div class="form-group">
@@ -25,7 +30,7 @@
             <div class="item"><span class="prompt">退货总订单数</span> : <span>{{ $returnOrders->count() }}</span></div>
         </div>
         <div class="col-xs-3">
-            <div class="item"><span class="prompt">联系人</span> : <span>{{ $customer->constant }}</span></div>
+            <div class="item"><span class="prompt">联系人</span> : <span>{{ $customer->contact }}</span></div>
             <div class="item"><span class="prompt">拜访次数</span> : <span>{{ $visits->count()   }}</span></div>
             <div class="item"><span class="prompt">订单总金额</span> : <span>{{ $orders->sum('amount') }}</span></div>
             <div class="item"><span class="prompt">退货总金额</span> : <span>{{ $returnOrders->sum('amount') }}</span>
@@ -74,10 +79,10 @@
                     </tr>
                     @foreach($mortgageGoods as $mortgage)
                         <tr>
-                            <td>{{ $mortgage->created_at }}</td>
-                            <td>{{ /*$orderGoodsDetail[$mortgage->goods_id]*/ $mortgage->mortgage_goods_name }}</td>
-                            <td>{{ cons()->valueLang('goods.pieces' , $mortgage->pieces) }}</td>
-                            <td>{{ $mortgage->num }}</td>
+                            <td>{{ $mortgage['created_at'] }}</td>
+                            <td>{{ $mortgage['name'] }}</td>
+                            <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
+                            <td>{{ $mortgage['num'] }}</td>
                         </tr>
                     @endforeach
                 @endif

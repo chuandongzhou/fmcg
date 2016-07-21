@@ -1,5 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-业务员目标')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    业务员目标
+@stop
+
 @include('includes.timepicker')
 @include('includes.salesman-target-set')
 
@@ -15,23 +20,25 @@
                     </span>
 
                     {{--<span class="item control-item">--}}
-                        {{--<select name="salesman_id" class="inline-control">--}}
-                            {{--<option value="">请选择业务员</option>--}}
-                            {{--@foreach($salesmen as $salesman)--}}
-                                {{--<option value="{{ $salesman->id }}" {{ $salesmanId == $salesman->id ? 'selected' : '' }}>--}}
-                                    {{--{{ $salesman->name }}--}}
-                                {{--</option>--}}
-                            {{--@endforeach--}}
-                        {{--</select>--}}
+                    {{--<select name="salesman_id" class="inline-control">--}}
+                    {{--<option value="">请选择业务员</option>--}}
+                    {{--@foreach($salesmen as $salesman)--}}
+                    {{--<option value="{{ $salesman->id }}" {{ $salesmanId == $salesman->id ? 'selected' : '' }}>--}}
+                    {{--{{ $salesman->name }}--}}
+                    {{--</option>--}}
+                    {{--@endforeach--}}
+                    {{--</select>--}}
                     {{--</span>--}}
 
 
                     <span class="item control-item">
                         <button type="submit" class="btn btn-default search-by-get">查询</button>
-                        <a class="btn btn-default" href="{{ url('api/v1/business/salesman/export-target') }}">
+                        <a class="btn btn-default"
+                           href="{{ url('api/v1/business/salesman/export-target?date=' . $date) }}">
                             导出
                         </a>
-                        <a class="btn btn-default" href="javascript:" data-toggle="modal" data-target="#salesmanTargetSet">
+                        <a class="btn btn-default" href="javascript:" data-toggle="modal"
+                           data-target="#salesmanTargetSet">
                             设置目标
                         </a>
                     </span>

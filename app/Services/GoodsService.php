@@ -370,7 +370,7 @@ class GoodsService
             return false;
         }
         foreach ($orderGoodsNum as $goodsId => $goodsNum) {
-            Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
+                Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
         }
         return true;
     }

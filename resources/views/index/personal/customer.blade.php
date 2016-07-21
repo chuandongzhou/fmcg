@@ -1,9 +1,16 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-客户列表')
 @if(request()->is('personal/customer/wholesaler'))
-    @section('top-title', '客户管理->批发客户')
+
+    @section('top-title')
+        <a href="{{ url('personal/customer/retailer') }}">客户管理</a> &rarr;
+        批发客户
+    @stop
 @else
-    @section('top-title', '客户管理->终端客户')
+    @section('top-title')
+        <a href="{{ url('personal/customer/retailer') }}">客户管理</a> &rarr;
+        终端客户
+    @stop
 @endif
 
 @section('right')

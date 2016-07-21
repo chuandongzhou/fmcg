@@ -29,7 +29,7 @@
                     <ul class="store-msg">
                         <li>店铺名称 : {{ $shop->name }}</li>
                         <li>联系人 : {{ $shop->contact_person }}</li>
-                        <li>最低配送额:￥{{ $shop->min_money }}</li>
+                        <li>最低配送额:¥{{ $shop->min_money }}</li>
                     </ul>
                 </div>
                 <div class="address-panel">

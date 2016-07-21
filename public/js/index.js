@@ -235,9 +235,8 @@ function joinCart() {
  * 购物车底部处理
  */
 function fixedBottom() {
-    var scrollTop = document.documentElement.scrollTop + document.body.scrollTop;
-    var bottom = $(document).height() - $(window).height() - $('.clearing-container').height();
-    if (scrollTop > bottom) {
+    var distanceTop = $('#car-bottom').offset().top - $(window).height();
+    if ($(window).scrollTop() > distanceTop) {
         $('.clearing-container').removeClass('fixed-bottom')
     } else {
         $('.clearing-container').addClass('fixed-bottom')

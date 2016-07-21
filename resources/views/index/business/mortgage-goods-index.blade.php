@@ -1,5 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-抵陈列费商品')
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    抵陈列费商品
+@stop
+
 @include('includes.mortgage-goods')
 
 @section('right')

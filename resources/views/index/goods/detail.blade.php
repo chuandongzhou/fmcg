@@ -42,7 +42,7 @@
                 <div class="clearfix store-detail">
                     <ul class="pull-left left-panel">
                         <li><span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b></li>
-                        <li><span class="prompt">价格 :</span> <b>￥{{ $goods->price . ' / ' . $goods->pieces }}</b></li>
+                        <li><span class="prompt">价格 :</span> <b>¥{{ $goods->price . ' / ' . $goods->pieces }}</b></li>
                         <li><span class="prompt">保质期 :</span> <b>{{ $goods->shelf_life}}</b></li>
                         @foreach($attrs as $key=>$attr)
                             <li>

@@ -28,6 +28,7 @@
       name                  string          业务员名
       contact_information   string          联系方式
       avatar_url            string          头像
+      shop_type             int             所属店铺类型id (1终端 2批发 3供应)
 
 `失败返回：`
 
@@ -57,9 +58,22 @@
 #### 2.2.2 编辑个人资料[put] (update-by-app)
 `请求参数：`
 
+    avatar                  file            头像
     name                    string          姓名
     contact_information     string          联系方式
     password                string          密码（非必填，不填是不修改密码）
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.2.3 修改密码[put] (password)
+
+`请求参数：`
+
+    old_password            string          原密码
+    password                string          新密码
+    password_confirmation   string          确认新密码
 
 `成功返回：`
 
@@ -182,6 +196,10 @@
     id                          int         商品id
     name                        string      商品名
     image_url                   string      商品图片
+    price_retailer              decimal     终端商价格
+    pieces_retailer             int         终端商单位
+    price_wholesaler            decimal     批发商价格
+    pieces_wholesaler           int         批发商单位
 
 `失败返回`
 
@@ -287,7 +305,7 @@
     
  `失败返回：`   
  
-#### 2.5.3 添加拜访 [post] (visit)
+#### 2.5.3 添加拜访 [post] (/)
 `请求参数：`
 
     salesman_customer_id    int             客户id
@@ -298,14 +316,13 @@
     goods字段子集说明
     
     id                      int             商品id
-    pieces                  int             单位id
     stock                   string          商品库存
-    production_date         date            商品生产日期
+    production_date         date            商品生产日期（'2016-07-13'）
     order_form              array           订货数据（要订此商品时传入）
     return_order            array           退货数据（要退此商品时传入）
     
     order_form字段子集说明
-     
+        pieces              int             单位id
         price               decimal         商品单价
         num                 int             订货数量
     return_order字段子集说明
@@ -315,9 +332,9 @@
     
      mortgage字段子集说明
         
-        name                    string          商品名
+        id                      int             商品ID
         num                     int             数量
-        pieces                  string          单位
+
 
 `成功返回：`
 	
@@ -346,7 +363,7 @@
     orderGoods              array           订货单商品列表
     mortgageGoods           array           陈列商品列表
     
-    orderGoods字段子集说明
+    order_goods字段子集说明
     
     goods_id                int             商品id
     goodsName               string          商品名
@@ -357,7 +374,7 @@
     
     mortgageGoods字段子集说明
     
-    goodsName               string          商品名
+    name                    string          商品名
     num                     int             数量
     pieces                  int             单位id
 
@@ -408,9 +425,9 @@
     price_wholesaler    decimal     价格（对于批发商）
     pieces_retailer     int         单位（对于终端商）
     pieces_wholesaler   int         单位（对于批发商）
-    images_url          string      商品图片
+    image_url           string      商品图片
 
-#### 2.7.2 店铺分类[get] (category)
+#### 2.7.2 店铺分类[get] (categories)
 `请求参数：`
 
 `成功返回：`

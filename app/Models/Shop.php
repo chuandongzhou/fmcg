@@ -192,7 +192,7 @@ class Shop extends Model
     public function adverts()
     {
         return $this->hasMany('App\Models\Advert')->where(function ($query) {
-            $query->where('type',cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
+            $query->where('type', cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
         });
 
     }
@@ -227,6 +227,16 @@ class Shop extends Model
         return $this->hasMany('App\Models\MortgageGoods');
     }
 
+
+    /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function coupons()
+    {
+        return $this->hasMany('App\Models\Coupon');
+    }
 
     /**
      * 获取热门商家

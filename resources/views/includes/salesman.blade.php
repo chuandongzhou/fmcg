@@ -112,7 +112,7 @@
                         account.val(salesman.account).prop('disabled', true);
                         name.val(salesman.name);
                         contactInformation.val(salesman.contact_information);
-                        submitBtn.data('method', 'put').data('url', '{{ url('api/v1/business/salesman' ) }}/' + salesmanId);
+                        submitBtn.data('method', 'put').data('url', site.api('business/salesman/') + salesmanId);
                     }, 'json')
 
                 }

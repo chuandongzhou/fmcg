@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 
 @section('subtitle', '个人中心-修改密码')
-@section('top-title', '个人中心->修改密码')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    修改密码
+@stop
 @section('right')
     <form class="form-horizontal ajax-form" method="put"
           action="{{ url('api/v1/personal/password') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">

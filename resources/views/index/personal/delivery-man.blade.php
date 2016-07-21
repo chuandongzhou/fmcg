@@ -1,6 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-配送人员')
-@section('top-title', '个人中心->配送人员')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    <a href="{{ url('personal/delivery-man') }}">配送人员</a> &rarr;
+    配送人员编辑
+@stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man/' . $deliveryMan->id) }}"
           method="{{ $deliveryMan->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"

@@ -3,11 +3,10 @@
 @include('includes.order-refund')
 @include('includes.pay')
 @section('subtitle', '订单管理')
-@if(auth()->user()->type == cons('user.type.retailer'))
-    @section('top-title', '订单管理->订单列表')
-@else
-    @section('top-title', '进货管理->订单列表')
-@endif
+@section('top-title')
+    <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
+    订单列表
+@stop
 
 @section('right')
     <div class="row">
@@ -94,7 +93,7 @@
                                             </div>
 
                                         </td>
-                                        <td width="15%"><span class="red">￥{{ $goods['pivot']['price'] }}</span>
+                                        <td width="15%"><span class="red">¥{{ $goods['pivot']['price'] }}</span>
                                             / {{  cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                                         <td width="5%">{{ $goods['pivot']['num'] }}</td>
                                         @if(0 == $key)
@@ -103,7 +102,7 @@
 
                                                 <p>{{ $order['payment_type'] }}</p>
 
-                                                <p><span class="red">￥{{ $order['price'] }}</span></p>
+                                                <p><span class="red">¥{{ $order['price'] }}</span></p>
                                             </td>
                                             <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
                                                 <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"

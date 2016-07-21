@@ -2,6 +2,12 @@
 @include('includes.timepicker')
 @section('subtitle', '业务管理-业务报告详细')
 
+@section('top-title')
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/report') }}">业务员报告</a> &rarr;
+    业务报告明细
+@stop
+
 @section('right')
 
     <div class="row business-report-monthly">
@@ -10,7 +16,7 @@
             <h5 class="text-center">{{ $salesman->name }} - 业务报告</h5>
             <hr>
             <div>
-                <a href="{{ url("business/report/2/export?start_date={$startDate}&end_date={$endDate}") }}"
+                <a href="{{ url("business/report/{$salesman->id}/export?start_date={$startDate}&end_date={$endDate}") }}"
                    class="btn btn-primary">导出</a>
             </div>
         </div>
@@ -33,7 +39,7 @@
                     </tr>
                     @if(isset($visit['display_fee']))
                         <tr>
-                            <td rowspan="{{ (count($visit['display_fee']) ? (count($visit['display_fee']) + 2) : 0) + (isset($visit['mortgage']) ? (count(array_flatten($visit['mortgage']))/3 + 2) : 0) }}">
+                            <td rowspan="{{ (count($visit['display_fee']) ? (count($visit['display_fee']) + 2) : 0) + (isset($visit['mortgage']) ? (count(array_flatten($visit['mortgage']))/5 + 2) : 0) }}">
                                 陈列费
                             </td>
                             <td colspan="5">现金</td>
@@ -52,7 +58,7 @@
                     @if(isset($visit['mortgage']))
                         <tr>
                             @if(!isset($visit['display_fee']))
-                                <td rowspan="{{ count(array_flatten($visit['mortgage']))/3 + 2 }}">
+                                <td rowspan="{{ count(array_flatten($visit['mortgage']))/5 + 2 }}">
                                     陈列费
                                 </td>
                             @endif
@@ -71,40 +77,42 @@
                                         <td rowspan="{{ count($mortgages) }}">{{ $date }}</td>
                                     @endif
                                     <td>{{ $mortgage['name'] }}</td>
-                                    <td>{{ $mortgage['pieces'] }}</td>
+                                    <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
                                     <td colspan="2">{{ $mortgage['num'] }}</td>
 
                                 </tr>
                             @endforeach
                         @endforeach
                     @endif
-                    <tr>
-                        <td colspan="6">销售统计</td>
-                    </tr>
-                    <tr>
-                        <td>商品ID</td>
-                        <td>商品名称</td>
-                        <td>订货数量</td>
-                        <td>订货总金额</td>
-                        <td>退货数量</td>
-                        <td>退货总金额</td>
-                    </tr>
-                    @foreach($visit['statistics'] as $goodsId=>$statistics)
+                    @if(isset($visit['statistics']))
                         <tr>
-                            <td>{{ $goodsId }}</td>
-                            <td>{{ $statistics['goods_name'] }}</td>
-                            <td>{{ $statistics['order_num'] }}</td>
-                            <td>{{ $statistics['order_amount'] }}</td>
-                            <td>{{ $statistics['return_order_num'] }}</td>
-                            <td>{{ $statistics['return_amount'] }}</td>
+                            <td colspan="6">销售统计</td>
                         </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="6">
-                            <b>订货总金额 : {{ $visit['amount'] }}</b> &nbsp;&nbsp;<b>退货总金额
-                                : {{ $visit['return_amount'] }}</b>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>商品ID</td>
+                            <td>商品名称</td>
+                            <td>订货数量</td>
+                            <td>订货总金额</td>
+                            <td>退货数量</td>
+                            <td>退货总金额</td>
+                        </tr>
+                        @foreach($visit['statistics'] as $goodsId=>$statistics)
+                            <tr>
+                                <td>{{ $goodsId }}</td>
+                                <td>{{ $statistics['goods_name'] }}</td>
+                                <td>{{ $statistics['order_num'] }}</td>
+                                <td>{{ $statistics['order_amount'] }}</td>
+                                <td>{{ $statistics['return_order_num'] or 0 }}</td>
+                                <td>{{ $statistics['return_amount'] or 0 }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="6">
+                                <b>订货总金额 : {{ $visit['amount'] }}</b> &nbsp;&nbsp;<b>退货总金额
+                                    : {{ $visit['return_amount'] }}</b>
+                            </td>
+                        </tr>
+                    @endif
                 </table>
             @endforeach
         </div>

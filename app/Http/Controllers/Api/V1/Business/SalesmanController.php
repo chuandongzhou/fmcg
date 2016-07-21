@@ -11,6 +11,7 @@ use App\Services\SalesmanTargetService;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\PhpWord;
 use Gate;
+use Hash;
 
 class SalesmanController extends Controller
 {
@@ -51,7 +52,7 @@ class SalesmanController extends Controller
      * @param $salesman
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Api\V1\UpdateSalesmanRequest $request, $salesman)
+    public function update(Requests\Api\V1\UpdateSalesmanRequest $request, Salesman $salesman)
     {
         if (Gate::denies('validate-salesman', $salesman)) {
             return $this->error('业务员不存在');
@@ -64,6 +65,28 @@ class SalesmanController extends Controller
     }
 
     /**
+     * 修改密码
+     *
+     * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function password(Requests\Api\v1\UpdatePasswordRequest $request)
+    {
+        $attributes = $request->all();
+
+        $user = salesman_auth()->user();
+
+        if (Hash::check($attributes['old_password'], $user->password)) {
+            if ($user->fill(['password' => $attributes['password']])->save()) {
+                return $this->success('修改密码成功');
+            }
+            return $this->error('修改密码时遇到错误');
+
+        }
+        return $this->error('原密码错误');
+    }
+
+    /**
      * Update the specified resource by App
      *
      * @param \App\Http\Requests\Api\V1\UpdateSalesmanRequest $request
@@ -73,6 +96,7 @@ class SalesmanController extends Controller
     {
         $salesman = salesman_auth()->user();
         $attributes = $request->all();
+        info($request->all());
         if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }
@@ -105,7 +129,7 @@ class SalesmanController extends Controller
         if (empty($salesmanId)) {
             return $this->error('请选择要删除的业务员');
         }
-        returnauth()->user()->shop->salesmen()->whereIn('id',
+        return auth()->user()->shop->salesmen()->whereIn('id',
             $salesmanId)->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员时出现问题');
     }
 
@@ -119,7 +143,7 @@ class SalesmanController extends Controller
     {
         $data = $request->all();
 
-        $salesman =auth()->user()->shop->salesmen()->find($data['salesman_id']);
+        $salesman = auth()->user()->shop->salesmen()->find($data['salesman_id']);
 
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
@@ -167,7 +191,7 @@ class SalesmanController extends Controller
     {
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($this->shop,
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders(auth()->user()->shop,
             (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
         $phpWord = new PhpWord();
 
@@ -209,7 +233,7 @@ class SalesmanController extends Controller
             $table->addCell(1500)->addText($salesman->returnOrderSumAmount, null, $cellAlignCenter);
         }
 
-        $name =auth()->user()->shop->name . $date . '业务员目标' . '.docx';
+        $name = auth()->user()->shop->name . $date . '业务员目标' . '.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 }

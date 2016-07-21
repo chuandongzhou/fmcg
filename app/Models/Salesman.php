@@ -122,7 +122,16 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function setAvatarAttribute($file)
     {
-        $file = config('path.upload_temp') . $file;
+
+        if (is_string($file)) {
+            $file = config('path.upload_temp') . $file;
+        } else {
+            $result = $this->convertToFile($file, null, false);
+            $file = $result ? $result['path'] : null;
+            $file = config('path.upload_temp') . $file;
+            info($file);
+        }
+
         try {
             $image = \Image::make($file);
         } catch (\Exception $e) {
@@ -189,6 +198,16 @@ class Salesman extends Model implements AuthenticatableContract
     }
 
     /**
+     * 获取店铺类型
+     *
+     * @return mixed
+     */
+    public function getShopTypeAttribute()
+    {
+        return $this->shop()->first()->user()->pluck('type');
+    }
+
+    /**
      * 按名字检索
      *
      * @param $query
@@ -199,8 +218,10 @@ class Salesman extends Model implements AuthenticatableContract
     public function scopeOfName($query, $name, $includeAccount = false)
     {
         if ($name) {
-            return $includeAccount ? $query->where('name', 'LIKE', '%' . $name . '%')
-                ->orWhere('account', 'LIKE', '%' . $name . '%') : $query->where('name', 'LIKE', '%' . $name . '%');
+            return $includeAccount ? $query->where(function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('account', 'LIKE', '%' . $name . '%');
+            }) : $query->where('name', 'LIKE', '%' . $name . '%');
         }
         return $query;
     }

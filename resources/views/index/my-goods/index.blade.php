@@ -122,7 +122,7 @@
                         <select class="status" name="status">
                             <option value="">请选择</option>
                             @foreach(cons()->valueLang('goods.status') as $status => $statusName)
-                                <option value="{{ $status }}" {{ isset($get['status']) && $get['stat    us'] == $status ? 'selected' : '' }}>
+                                <option value="{{ $status }}" {{ isset($get['status']) && $get['status'] == $status ? 'selected' : '' }}>
                                     已{{ $statusName }}
                                 </option>
                             @endforeach

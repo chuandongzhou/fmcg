@@ -4,11 +4,11 @@
 @include('includes.tinymce',['full' => true])
 
 @section('subtitle', '商品')
-@if(request()->is('my-goods/create'))
-    @section('top-title', '商品管理->新增商品')
-@else
-    @section('top-title', '商品管理->我的商品')
-@endif
+@section('top-title')
+    <a href="{{ url('my-goods') }}">商品管理</a> &rarr;
+    <a href="{{ url('my-goods') }}">我的商品</a> &rarr;
+    {{ $goods->id ? '编辑' : '新增' }}商品
+@stop
 
 @section('right')
     <div class="row">

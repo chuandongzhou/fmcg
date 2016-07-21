@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Goods;
 use App\Models\SalesmanCustomer;
+use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -39,7 +40,7 @@ class SalesmanCustomerController extends Controller
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
-            ->with('salesman')
+            ->with('salesman', 'businessAddress', 'shippingAddress')
             ->get();
 
         return view('index.business.salesman-customer-index',
@@ -175,7 +176,8 @@ class SalesmanCustomerController extends Controller
 
         //拜访记录
         $visits = $customer->visits()->OfTime($beginTime, $endTime)->with([
-            'orders.orderGoods.mortgageGoods',
+            'orders.orderGoods',
+            'orders.mortgageGoods',
             'goodsRecord'
         ])->get();
 
@@ -203,6 +205,7 @@ class SalesmanCustomerController extends Controller
             return $item->type == $orderConf['type']['order'];
         });
 
+
         //退货单
         $returnOrders = $allOrders->filter(function ($item) use ($orderConf) {
             return $item->type == $orderConf['type']['return_order'];
@@ -216,9 +219,7 @@ class SalesmanCustomerController extends Controller
             'id');
 
         //货抵
-        $mortgageGoods = $orderGoods->filter(function ($item) use ($orderConf) {
-            return $item->type == $orderConf['goods']['type']['mortgage'];
-        });
+        $mortgageGoods = (new BusinessService())->getOrderMortgageGoods($orders);
 
         //客户销售的商品
         $salesList = [];
@@ -351,12 +352,12 @@ class SalesmanCustomerController extends Controller
             foreach ($result['mortgageGoods'] as $mortgage) {
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage->created_at, null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->mortgage_goods_name, null,
+                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage['created_at'], null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null,
                     $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage->pieces),
+                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']),
                     null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->num, null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
             }
         }
 

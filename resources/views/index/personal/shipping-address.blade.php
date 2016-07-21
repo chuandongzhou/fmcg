@@ -1,6 +1,12 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-收货地址')
-@section('top-title', '个人中心->收货地址')
+
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    <a href="{{ url('personal/shipping-address') }}">收货地址</a> &rarr;
+    收货地址编辑
+@stop
+
 @section('right')
     <form class="form-horizontal ajax-form"
           action="{{ url('api/v1/personal/shipping-address/' . $shippingAddress->id) }}"

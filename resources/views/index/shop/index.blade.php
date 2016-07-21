@@ -52,7 +52,7 @@
 
                             <p class="sell-panel item">
                                 <span class="sales">最低配送额 : </span>
-                                <span class="money">￥{{ $shop->min_money }}</span>
+                                <span class="money">¥{{ $shop->min_money }}</span>
                             </p>
 
                             <p class="order-count item">销量 : <span>{{ $shop->sales_volume }}</span></p>

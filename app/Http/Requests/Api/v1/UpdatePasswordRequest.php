@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdatePasswordRequest extends UserRequest
+class UpdatePasswordRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.

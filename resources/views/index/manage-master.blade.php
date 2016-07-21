@@ -216,7 +216,7 @@
                         </ul>
                     </div>
                     <div class="col-xs-6">
-                        <p>Copyright  &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </p>
+                        <div>Copyright  &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </div>
                     </div>
                 </div>
             </div>

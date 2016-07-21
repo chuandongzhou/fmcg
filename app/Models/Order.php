@@ -19,6 +19,7 @@ class Order extends Model
         'status',
         'shipping_address_id',
         'delivery_man_id',
+        'coupon_id',
         'user_id',
         'shop_id',
         'paid_at',
@@ -158,6 +159,16 @@ class Order extends Model
     }
 
     /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function coupon()
+    {
+        return $this->belongsTo('App\Models\Coupon')->withTrashed();
+    }
+
+    /**
      * 支付形式
      *
      * @return mixed
@@ -229,15 +240,6 @@ class Order extends Model
             }
             return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
         }
-        /*  //货到付款，当客户已付款时候显示订单状态为已付款
-          if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
-              && $status == $statusConf['send']
-          ) {
-              return cons()->lang('order.pay_status.payment_success');
-          }*/
-
-
-        // return cons()->valueLang('order.status', $status);
     }
 
     /**
@@ -418,6 +420,17 @@ class Order extends Model
         $userType = $this->user->type;
         $piece = $userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer;
         return cons()->valueLang('goods.pieces', $piece);
+    }
+
+    /**
+     * 获取订单优惠后价格
+     *
+     * @return mixed|string
+     */
+    public function getAfterRebatesPriceAttribute()
+    {
+        $price = $this->price;
+        return $this->coupon ? (bcsub($price, $this->coupon->discount, 2)) : $price;
     }
 
     /**

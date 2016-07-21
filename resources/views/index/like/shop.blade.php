@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 
 @section('subtitle', '店铺收藏')
-@section('top-title', '我的收藏->店铺收藏')
+@section('top-title')
+    <a href="{{ url('like/shops') }}">我的收藏</a> &rarr;
+    店铺收藏
+@stop
 @section('right')
     <div class="row my-goods index">
         <div class="col-sm-12 collect">
@@ -39,7 +42,7 @@
                                     {{--<p class="commodity-name">{{ $shop->name }}</p>--}}
 
                                     {{--<p class="sell-panel">--}}
-                                        {{--<span class="money">最低配送额:￥{{ $shop->min_money }}</span>--}}
+                                        {{--<span class="money">最低配送额:¥{{ $shop->min_money }}</span>--}}
                                         {{--<span class="sales pull-right">销量 : {{ $shop->sales_volume }}</span>--}}
                                     {{--</p>--}}
                                 {{--</a>--}}
@@ -69,7 +72,7 @@
 
                                     <p class="sell-panel item">
                                         <span class="sales">最低配送额 : </span>
-                                        <span class="money">￥{{ $shop->min_money }}</span>
+                                        <span class="money">¥{{ $shop->min_money }}</span>
                                     </p>
 
                                     <p class="order-count item">销量 : <span>{{ $shop->sales_volume }}</span></p>

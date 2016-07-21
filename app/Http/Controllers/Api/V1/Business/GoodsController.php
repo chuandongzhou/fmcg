@@ -49,6 +49,7 @@ class GoodsController extends Controller
         $goods = $result['goods']->active()->orderBy('id', 'DESC')->select([
             'id',
             'name',
+            'bar_code',
             'price_retailer',
             'price_wholesaler',
             'pieces_retailer',
