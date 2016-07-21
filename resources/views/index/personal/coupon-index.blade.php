@@ -24,7 +24,8 @@
                         <th>满</th>
                         <th>减</th>
                         <th>库存</th>
-                        <th>开始时间</th>
+                        <th>总量</th>
+                        {{--<th>开始时间</th>--}}
                         <th>结束时间</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -46,8 +47,11 @@
                                 {{ $coupon->stock  }}
                             </td>
                             <td>
-                                {{ $coupon->start_at  }}
+                                {{ $coupon->total  }}
                             </td>
+                            {{--<td>--}}
+                                {{--{{ $coupon->start_at  }}--}}
+                            {{--</td>--}}
                             <td>
                                 {{ $coupon->end_at  }}
                             </td>
@@ -57,10 +61,10 @@
                             <td>
 
                                 <div role="group" class="btn-group btn-group-xs">
-                                    <a href="javascript:" class="btn btn-primary" data-toggle="modal"
-                                       data-target="#couponModal" data-id="{{ $coupon->id }}">
-                                        <i class="fa fa-edit"></i> 编辑
-                                    </a>
+                                    {{--<a href="javascript:" class="btn btn-primary" data-toggle="modal"--}}
+                                       {{--data-target="#couponModal" data-id="{{ $coupon->id }}">--}}
+                                        {{--<i class="fa fa-edit"></i> 编辑--}}
+                                    {{--</a>--}}
                                     <a data-url="{{ url('api/v1/coupon/'. $coupon->id) }}"
                                        data-method="delete" class="btn btn-danger ajax" type="button">
                                         <i class="fa fa-trash-o"></i> 删除

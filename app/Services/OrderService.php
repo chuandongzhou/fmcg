@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\OrderGoods;
+use Carbon\Carbon;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use App\Http\Requests;
 use Riverslei\Pusher\Pusher;
@@ -242,6 +243,11 @@ class OrderService
                 'remark' => $remark,
                 'pay_type' => $payType
             ];
+            $couponId = isset($data['shop'][$shop->id]['coupon_id']) ? $data['shop'][$shop->id]['coupon_id'] : null;
+            if ($couponId) {
+                $couponId = $this->validateCouponId($shop->id, $couponId, $shop->sum_price);
+                $couponId && ($orderData['coupon_id'] = $couponId);
+            }
             $order = Order::create($orderData);
 
             if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
@@ -297,11 +303,11 @@ class OrderService
         $shippingAddressService = new ShippingAddressService();
 
         //验证收货地址是否合法
-        if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'], null, $shops))
-        {
+        if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'],
+                null, $shops)
+        ) {
             return false;
         }
-        //dd($shopMoney);
         $shippingAddressId = $data['shipping_address_id'];
 
         $pid = $this->_getOrderPid($shops);
@@ -310,6 +316,7 @@ class OrderService
 
         foreach ($shops as $shop) {
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
+
             $orderData = [
                 'pid' => $pid,
                 'user_id' => auth()->id(),
@@ -320,6 +327,11 @@ class OrderService
                 'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddressId),
                 'remark' => $remark
             ];
+            $couponId = isset($data['shop'][$shop->id]['coupon_id']) ? $data['shop'][$shop->id]['coupon_id'] : null;
+            if ($couponId) {
+                $couponId = $this->validateCouponId($shop->id, $couponId, $shop->sum_price);
+                $couponId && ($orderData['coupon_id'] = $couponId);
+            }
             if (!$orderData['shipping_address_id']) {
                 $this->_deleteSuccessOrders($successOrders);
                 return false;
@@ -373,6 +385,29 @@ class OrderService
     }
 
     /**
+     * 验证优惠券
+     *
+     * @param $shopId
+     * @param $couponId
+     * @param $sumPrice
+     * @return bool
+     */
+    public function validateCouponId($shopId, $couponId, $sumPrice)
+    {
+        $coupon = auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->find($couponId);
+
+       if($coupon) {
+           $pivot =  $coupon->pivot;
+           if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
+
+               return $couponId;
+           }
+           return false;
+       }
+       return false;
+    }
+
+    /**
      * 获取订单pid
      *
      * @param $shops
@@ -382,4 +417,5 @@ class OrderService
     {
         return $shops->count() > 1 ? Order::max('pid') + 1 : 0;
     }
+
 }

@@ -66,12 +66,31 @@
                             @endforeach
                             </tbody>
                             <tfoot>
-                            <td colspan="5">
-                                <p class="operating">
-                                    <span>订单备注 :</span>
-                                    <textarea name="shop[{{ $shop->id }}][remark]" class="control"></textarea>
-                                </p>
-                            </td>
+                            <tr>
+                                <td colspan="5">
+                                    <p class="operating">
+                                        <span>订单备注 :</span>
+                                        <textarea name="shop[{{ $shop->id }}][remark]" class="control"></textarea>
+                                    </p>
+                                </td>
+                            </tr>
+
+                            @if(!$shop->coupons->isEmpty())
+                                <tr>
+                                    <td colspan="5">
+                                        <p class="operating">
+                                            <span>优惠券 :</span>
+                                            <select class="inline-control" name="shop[{{ $shop->id }}][coupon_id]">
+                                                @foreach($shop->coupons as $coupon)
+                                                    <option value="{{ $coupon->id }}">满 {{ $coupon->full }}
+                                                        减 {{ $coupon->discount }}</option>
+                                                @endforeach
+                                                <option value="">不使用优惠券</option>
+                                            </select>
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endif
                             </tfoot>
                         </table>
                     </div>

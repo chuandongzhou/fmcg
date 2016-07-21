@@ -143,9 +143,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function coupon()
+    public function coupons()
     {
-        return $this->belongsToMany('App\Models\Coupon', 'user_coupon')->withPivot('used_at')->withTrashed();
+        return $this->belongsToMany('App\Models\Coupon', 'user_coupon')->withPivot(['used_at', 'received_at'])->withTrashed();
     }
 
     /**

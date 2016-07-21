@@ -46,7 +46,8 @@ class ComposerServiceProvider extends ServiceProvider
             CartComposer::class => [
                 'index.search',
                 'index.shop-search',
-                'index.master'
+                'index.master',
+                'includes.navigator',
             ],
             KeywordsComposer::class => [
                 'index.search',
