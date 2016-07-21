@@ -218,8 +218,10 @@ class Salesman extends Model implements AuthenticatableContract
     public function scopeOfName($query, $name, $includeAccount = false)
     {
         if ($name) {
-            return $includeAccount ? $query->where('name', 'LIKE', '%' . $name . '%')
-                ->orWhere('account', 'LIKE', '%' . $name . '%') : $query->where('name', 'LIKE', '%' . $name . '%');
+            return $includeAccount ? $query->where(function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('account', 'LIKE', '%' . $name . '%');
+            }) : $query->where('name', 'LIKE', '%' . $name . '%');
         }
         return $query;
     }

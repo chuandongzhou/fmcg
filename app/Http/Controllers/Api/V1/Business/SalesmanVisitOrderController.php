@@ -134,7 +134,7 @@ class SalesmanVisitOrderController extends Controller
         if (is_null($orderIds)) {
             return $this->error('请选择要同步的订单');
         }
-        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('orderGoods', '')->get();
+        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('orderGoods', 'salesmanCustomer')->get();
 
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
@@ -160,7 +160,7 @@ class SalesmanVisitOrderController extends Controller
                 }
                 $shippingAddress = ShopService::getDefaultShippingAddress($order->customer_shop_id);
                 $orderData = [
-                    'user_id' => $order->Customer_user_id,
+                    'user_id' => $order->customer_user_id,
                     'shop_id' => auth()->user()->shop->id,
                     'price' => $order->amount,
                     'pay_type' => $syncConf['pay_type'],

@@ -693,12 +693,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 .list-penal .banner-slide {
   margin-left: 0; }
   .list-penal .banner-slide .carousel-inner .item {
-    max-height: 447px;
-    min-height: 447px; }
+    max-height: 452px;
+    min-height: 452px; }
     .list-penal .banner-slide .carousel-inner .item img {
       width: 100%;
-      max-height: 447px;
-      min-height: 447px; }
+      max-height: 452px;
+      min-height: 452px; }
 
 .list-penal .commodity-panel {
   margin-top: 10px; }
@@ -742,16 +742,18 @@ ul, li, p, a, h1, h2, h3, h4 {
     background-position: 0 -205px !important; }
 
 .list-penal .commodity-search-product {
-  position: relative;
   min-height: 300px; }
-  .list-penal .commodity-search-product .commodity-border:hover {
-    position: absolute;
-    z-index: 999; }
-    .list-penal .commodity-search-product .commodity-border:hover .shopping-store {
-      display: inline-block; }
-      .list-penal .commodity-search-product .commodity-border:hover .shopping-store .sales {
-        font-size: 13px;
-        margin-top: 5px; }
+  .list-penal .commodity-search-product .commodity-border {
+    position: relative; }
+    .list-penal .commodity-search-product .commodity-border:hover {
+      position: absolute;
+      z-index: 999;
+      width: 88%; }
+      .list-penal .commodity-search-product .commodity-border:hover .shopping-store {
+        display: inline-block; }
+        .list-penal .commodity-search-product .commodity-border:hover .shopping-store .sales {
+          font-size: 13px;
+          margin-top: 5px; }
 
 .list-penal .content-panel {
   padding: 2px 5px; }

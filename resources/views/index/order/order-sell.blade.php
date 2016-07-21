@@ -3,7 +3,11 @@
 @include('includes.order-refund')
 @include('includes.shipping-address-map')
 @include('includes.order-select-delivery_man')
-@section('top-title', '订单管理->订单列表')
+
+@section('top-title')
+    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
+    订单列表
+@stop
 
 @section('right')
     <div class="row">

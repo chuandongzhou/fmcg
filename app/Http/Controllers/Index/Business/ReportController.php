@@ -116,6 +116,63 @@ class ReportController extends Controller
     }
 
     /**
+     * 报告列表导出
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function exportIndex(Request $request)
+    {
+        $shop = auth()->user()->shop;
+        $startDate = $request->input('start_date', ((new Carbon)->startOfMonth()->toDateString()));
+        $endDate = $request->input('end_date', ((new Carbon)->toDateString()));
+        $endDateTemp = (new Carbon($endDate))->addDay()->toDateString();
+
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp);
+
+        $phpWord = new PhpWord();
+
+        $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
+
+
+        $cellAlignCenter = ['align' => 'center'];
+        $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
+        $cellRowContinue = array('vMerge' => 'continue');
+
+        $phpWord->setDefaultFontName('仿宋');
+        $phpWord->setDefaultFontSize(10);
+        $phpWord->addTableStyle('table', $styleTable);
+
+        $phpWord->addParagraphStyle('Normal', [
+            'spaceBefore' => 0,
+            'spaceAfter' => 0,
+            'lineHeight' => 1.2,  // 行间距
+        ]);
+
+        $section = $phpWord->addSection();
+        foreach ($salesmenOrderData as $man) {
+            $table = $section->addTable('table');
+            $table->addRow();
+            $table->addCell(2000, $cellRowSpan)->addText($man->name, null, $cellAlignCenter);
+            $table->addCell(1500)->addText('拜访客户数', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('订货单数', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('订货总金额', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('退货单数', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('退货总金额', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(2000, $cellRowContinue);
+            $table->addCell(1500)->addText($man->visitCustomerCount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->orderFormCount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->orderFormSumAmount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->returnOrderCount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->returnOrderSumAmount, null, $cellAlignCenter);
+        }
+        $name = $startDate . '至' . $endDate . '业务报告.docx';
+        $phpWord->save($name, 'Word2007', true);
+
+    }
+
+    /**
      * 业务员报告按天导出
      *
      * @param $salesman
@@ -234,7 +291,7 @@ class ReportController extends Controller
                     ['size' => 20], $cellAlignCenter);
             }
         }
-        $name = $salesman->name . $startDate . '业务报告.docx';
+        $name = $salesman->name . $startDate . '业务报告明细.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 
@@ -378,7 +435,7 @@ class ReportController extends Controller
             }
         }
 
-        $name = $salesman->name . $startDate . '至' . $endDate . '业务报告.docx';
+        $name = $salesman->name . $startDate . '至' . $endDate . '业务报告明细.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 

@@ -25,16 +25,6 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * @param \App\Http\Requests\Api\v1\CreateSalesmanCustomerRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -50,7 +40,6 @@ class SalesmanCustomerController extends Controller
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
         if ($salesman->customers()->create($attributes)->exists) {
-            info($salesman);
             return $this->success('添加客户成功');
         }
         return $this->error('添加客户时出现问题');
@@ -89,7 +78,7 @@ class SalesmanCustomerController extends Controller
         if ($customer && $customer->salesman_id != salesman_auth()->id()) {
             return $this->error('客户不存在');
         }
-        $attributes = $request->all();
+        $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
         if ($customer->fill($attributes)->save()) {
             return $this->success('修改客户成功');
@@ -131,6 +120,7 @@ class SalesmanCustomerController extends Controller
         $goods = $customer->goods()->select([
             'id',
             'name',
+            'bar_code',
             'price_retailer',
             'pieces_retailer',
             'price_wholesaler',

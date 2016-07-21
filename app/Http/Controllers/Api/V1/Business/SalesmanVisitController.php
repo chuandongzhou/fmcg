@@ -108,6 +108,7 @@ class SalesmanVisitController extends Controller
                 if (isset($result['order']['return_order'])) {
                     $result['order']['return_order']['salesman_visit_id'] = $visit->id;
                     $result['order']['return_order']['type'] = $orderConf['type']['return_order'];
+                    $result['order']['return_order']['salesman_customer_id'] = $data['salesman_customer_id'];
                     $returnOrder = $salesman->orders()->create($result['order']['return_order']);
                     if ($returnOrder->exists) {
                         $orderGoodsArr = [];

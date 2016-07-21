@@ -20,7 +20,7 @@
                    data-toggle="modal">
                     <i class="fa fa-map-marker"></i> 线路图
                 </a>
-                <a href="{{ url("business/report/2/export?start_date={$startDate}&end_date={$endDate}") }}"
+                <a href="{{ url("business/report/{$salesman->id}/export?start_date={$startDate}&end_date={$endDate}") }}"
                    class="btn btn-primary">导出</a>
             </div>
         </div>

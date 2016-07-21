@@ -117,7 +117,13 @@
                         @else
                             <a class="btn btn-primary"
                                href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
-                            <button class="btn btn-warning" type="submit">同步</button>
+                            @if($order->can_sync)
+                                <button class="btn btn-warning ajax"
+                                        data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"
+                                        data-method="post">
+                                    同步
+                                </button>
+                            @endif
                         @endif
                     </div>
                 @else

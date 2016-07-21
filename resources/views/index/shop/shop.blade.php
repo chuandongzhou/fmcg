@@ -23,11 +23,12 @@
                             @foreach($shop->adverts as $key => $image)
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                     @if($image->type==5)
-                                    <a href="{{ $image->url }}">
-                                        <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
-                                    </a>
-                                     @else
-                                        <a class="advert-content" data-toggle="modal" data-target="#shopAdvertModal" data-content="{{ $image->url }}" title="{{ $image->name }}">
+                                        <a href="{{ $image->url }}">
+                                            <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
+                                        </a>
+                                    @else
+                                        <a class="advert-content" data-toggle="modal" data-target="#shopAdvertModal"
+                                           data-content="{{ $image->url }}" title="{{ $image->name }}">
                                             <img src="{{ $image->image_url }}" alt="{{ $image->name }}">
                                         </a>
                                     @endif
@@ -42,7 +43,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="tab-title clearfix">
@@ -67,6 +67,7 @@
         </div>
     </div>
     @include('includes.cart')
+
 @stop
 @section('js')
     @parent

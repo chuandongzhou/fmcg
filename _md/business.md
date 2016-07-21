@@ -361,7 +361,7 @@
     display_fee             decimal         陈列费
     status                  tinyint         订单状态（0未审核  1已审核）
     orderGoods              array           订货单商品列表
-    order_goods             array           陈列商品列表
+    mortgageGoods           array           陈列商品列表
     
     order_goods字段子集说明
     
@@ -425,7 +425,7 @@
     price_wholesaler    decimal     价格（对于批发商）
     pieces_retailer     int         单位（对于终端商）
     pieces_wholesaler   int         单位（对于批发商）
-    images_url          string      商品图片
+    image_url           string      商品图片
 
 #### 2.7.2 店铺分类[get] (categories)
 `请求参数：`

@@ -78,6 +78,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
+        $router->get('report/export', 'ReportController@exportIndex');
         $router->resource('report', 'ReportController');
         $router->resource('mortgage-goods', 'MortgageGoodsController');
         $router->group(['prefix' => 'order'], function ($router) {
@@ -225,6 +226,13 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('address/street', 'AddressController@street');
         $router->post('address/province-id', 'AddressController@getProvinceIdByName');
         $router->controller('auth', 'AuthController');
+        $router->group(['prefix' => 'coupon'], function ($router) {
+            $router->get('user-coupon/{expire?}', 'CouponController@userCoupon');
+            $router->post('receive/{coupon}', 'CouponController@receive');
+            $router->get('{shop}', 'CouponController@coupon');
+
+        });
+
         $router->controller('push', 'PushController');//推送设备
         //获取支付charge
 
@@ -280,7 +288,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->group(['prefix' => 'order'], function ($router) {
                 $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
                 $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-                $router->get('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
+                $router->post('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
+                $router->post('batch-sync', 'SalesmanVisitOrderController@batchSync');
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
                 $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');

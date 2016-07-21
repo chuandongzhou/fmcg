@@ -920,12 +920,12 @@ ul, li, p, a, h1, h2, h3, h4 {
     margin-left: 0;
     .carousel-inner {
       .item {
-        max-height: 447px;
-        min-height: 447px;
+        max-height: 452px;
+        min-height: 452px;
         img {
           width: 100%;
-          max-height: 447px;
-          min-height: 447px;
+          max-height: 452px;
+          min-height: 452px;
         }
       }
     }
@@ -978,12 +978,13 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .commodity-search-product{
-    position: relative;
     min-height:300px;
     .commodity-border {
+      position: relative;
       &:hover {
         position: absolute;
         z-index: 999;
+        width:88%;
         .shopping-store {
           display: inline-block;
           .sales{

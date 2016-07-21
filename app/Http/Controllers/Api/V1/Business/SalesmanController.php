@@ -58,7 +58,6 @@ class SalesmanController extends Controller
             return $this->error('业务员不存在');
         }
         $attributes = $request->all();
-        info($attributes);
         if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }

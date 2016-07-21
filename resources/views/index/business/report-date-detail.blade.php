@@ -16,7 +16,7 @@
             <h5 class="text-center">{{ $salesman->name }} - 业务报告</h5>
             <hr>
             <div>
-                <a href="{{ url("business/report/2/export?start_date={$startDate}&end_date={$endDate}") }}"
+                <a href="{{ url("business/report/{$salesman->id}/export?start_date={$startDate}&end_date={$endDate}") }}"
                    class="btn btn-primary">导出</a>
             </div>
         </div>

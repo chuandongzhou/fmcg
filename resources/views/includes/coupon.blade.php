@@ -42,20 +42,20 @@
                             </div>
                         </div>
 
+                        {{--<div class="form-group row">--}}
+                            {{--<label class="col-sm-2 control-label" for="start_at">开始日期:</label>--}}
+
+                            {{--<div class="col-sm-10 col-md-6">--}}
+                                {{--<input class="form-control datetimepicker" data-format="YYYY-MM-DD" id="start_at" name="start_at"--}}
+                                       {{--placeholder="请输入开始时间"--}}
+                                       {{--type="text">--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="start_at">开始时间:</label>
+                            <label class="col-sm-2 control-label"   for="end_at">结束日期:</label>
 
                             <div class="col-sm-10 col-md-6">
-                                <input class="form-control datetimepicker" id="start_at" name="start_at"
-                                       placeholder="请输入开始时间"
-                                       type="text">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="end_at">结束时间:</label>
-
-                            <div class="col-sm-10 col-md-6">
-                                <input class="form-control datetimepicker" id="end_at" name="end_at" placeholder="请输入结束时间"
+                                <input class="form-control datetimepicker" id="end_at" data-format="YYYY-MM-DD" name="end_at" placeholder="请输入结束时间"
                                        type="text">
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                     full = $('input[name="full"]'),
                     discount = $('input[name="discount"]'),
                     stock = $('input[name="stock"]'),
-                    start_at = $('input[name="start_at"]'),
+                    //start_at = $('input[name="start_at"]'),
                     end_at = $('input[name="end_at"]'),
                     submitBtn = $('button[type="submit"]');
 
@@ -97,7 +97,7 @@
                         full.val(coupon.full).prop('disabled', true);
                         discount.val(coupon.discount).prop('disabled', true);
                         stock.val(coupon.stock);
-                        start_at.val(coupon.start_at);
+                        //start_at.val(coupon.start_at);
                         end_at.val(coupon.end_at);
                         submitBtn.data('method', 'put').data('url', site.api('personal/coupon/') + couponId);
                     }, 'json')
@@ -107,7 +107,7 @@
                 full.val('').prop('disabled', false);
                 discount.val('').prop('disabled', false);
                 stock.val('');
-                start_at.val('');
+                //start_at.val('');
                 end_at.val('');
                 submitBtn.data('method', null).data('url', null);
                 form.formValidate('reset');

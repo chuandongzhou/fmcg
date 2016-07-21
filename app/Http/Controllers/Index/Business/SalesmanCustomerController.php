@@ -352,12 +352,12 @@ class SalesmanCustomerController extends Controller
             foreach ($result['mortgageGoods'] as $mortgage) {
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage->created_at, null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->mortgage_goods_name, null,
+                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage['created_at'], null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null,
                     $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage->pieces),
+                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']),
                     null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage->num, null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
             }
         }
 

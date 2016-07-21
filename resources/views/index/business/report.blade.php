@@ -28,7 +28,8 @@
 
                     <span class="item control-item">
                         <button type="submit" class="btn btn-default search-by-get">查询</button>
-                        <a class="btn btn-default" href="{{ url('api/v1/business/salesman/export-target') }}">
+                        <a class="btn btn-default"
+                           href="{{ url('business/report/export?start_date=' . $startDate . '&end_date=' . $endDate) }}">
                             导出
                         </a>
                     </span>
@@ -49,7 +50,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                   {{ $man->visitCustomerCount }}
+                                    {{ $man->visitCustomerCount }}
                                 </td>
                                 <td>
                                     {{ $man->orderFormCount }}
