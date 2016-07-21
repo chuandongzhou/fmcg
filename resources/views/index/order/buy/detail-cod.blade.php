@@ -1,8 +1,6 @@
 @extends('index.menu-master')
 
 @section('subtitle' , '订单详情')
-@section('top-title', '进货管理->订单详情')
-
 @section('top-title')
     <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
     订单详情

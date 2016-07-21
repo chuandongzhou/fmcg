@@ -9,8 +9,8 @@ return [
     //支付类型
     'pay_type' => [
         'online' => '在线支付',
-        'cod' => '货到付款',
-        'pick_up' => '自提',
+        'cod' => '货到付款'
+//        'pick_up' => '自提',
     ],
     //支付方式
     'pay_way' => [

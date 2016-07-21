@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 
 @section('subtitle', '我的商品')
-@section('top-title', '商品管理->我的商品')
+@section('top-title')
+    <a href="{{ url('my-goods') }}">商品管理</a> &rarr;
+    我的商品
+@stop
 @include('includes.jquery-lazeload')
 
 @section('right')

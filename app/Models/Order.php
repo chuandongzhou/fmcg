@@ -221,25 +221,29 @@ class Order extends Model
         }
 
 
-        if ($payType == cons('pay_type.pick_up')) {
-            //自提
-            return $status == $statusConf['finished'] ? '已完成' : '未提货';
-
-            /*if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
-                return cons()->valueLang('order.pay_status', $payStatus);
-            }
-            //已支付
-            if ($payStatus == $payStatusArr['payment_success'] && $status < $statusConf['send']) {
-                return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status',
-                    $status);
-            }*/
-        } else {
-            //在线支付和货到付款
-            if ($payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {
+//        if ($payType == cons('pay_type.pick_up')) {
+//            //自提
+//            return $status == $statusConf['finished'] ? '已完成' : '未提货';
+//
+//            /*if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
+//                return cons()->valueLang('order.pay_status', $payStatus);
+//            }
+//            //已支付
+//            if ($payStatus == $payStatusArr['payment_success'] && $status < $statusConf['send']) {
+//                return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status',
+//                    $status);
+//            }*/
+//        } else {
+//            //在线支付和货到付款
+//            if ($payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {
+//                return cons()->valueLang('order.pay_status', $payStatus);
+//            }
+//            return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
+//        }
+        if ($payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {
                 return cons()->valueLang('order.pay_status', $payStatus);
             }
             return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
-        }
     }
 
     /**
@@ -347,8 +351,8 @@ class Order extends Model
         $payTypeConf = cons('pay_type');
         $statusConf = cons('order.status');
 
-        return ($payType == $payTypeConf['cod'] && $status == $statusConf['send'])
-        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
+        return ($payType == $payTypeConf['cod'] && $status == $statusConf['send']);
+//        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
     }
 
     /**
@@ -374,8 +378,8 @@ class Order extends Model
         $payStatusArr = cons('order.pay_status');
         return $this->attributes['is_cancel'] == cons('order.is_cancel.off')
         && $payStatus == $payStatusArr['non_payment']
-        && ($status >= $statusArr['non_send'] && $status < $statusArr['finished'])
-        && $this->attributes['pay_type'] != cons('pay_type.pick_up');
+        && ($status >= $statusArr['non_send'] && $status < $statusArr['finished']);
+//        && $this->attributes['pay_type'] != cons('pay_type.pick_up');
         /*
                 return
                     ($this->attributes['pay_type'] == cons('pay_type.online') || ($this->attributes['pay_type'] == cons('pay_type.cod')) && $this->attributes['status'] == cons('order.status.send'))
@@ -533,7 +537,7 @@ class Order extends Model
     }
 
     /**
-     * 待确认
+     * 待付款
      *
      * @param $query
      * @return mixed
@@ -541,7 +545,7 @@ class Order extends Model
     public function scopeNonPayment($query)
     {
         return $query->where(function ($q) {
-            $q->where(['pay_type' => cons('pay_type.online')])
+            $q->where(['pay_type' => cons('pay_type.online'),'status'=>cons('order.status.non_send')])
                 ->orWhere(['pay_type' => cons('pay_type.cod'), 'status' => cons('order.status.send')]);
         })->where('pay_status', cons('order.pay_status.non_payment'));
     }

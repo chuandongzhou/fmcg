@@ -77,7 +77,7 @@
                                         @endif
                                     </th>
                                     <th class="text-right">
-                                        @if($order->pay_type != cons('pay_type.pick_up'))
+{{--                                        @if($order->pay_type != cons('pay_type.pick_up'))--}}
                                             <a href="javascript:" data-target="#shippingAddressMapModal"
                                                data-toggle="modal"
                                                data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
@@ -88,7 +88,7 @@
                                             >
                                                 <i class="fa fa-map-marker"></i> 查看收货地址
                                             </a>
-                                        @endif
+                                        {{--@endif--}}
                                     </th>
                                 </tr>
                                 </thead>

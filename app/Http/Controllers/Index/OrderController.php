@@ -265,9 +265,11 @@ class OrderController extends Controller
             } else {
                 if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
                     $query->ofPaySuccess();
-                } elseif($search['pay_type'] == cons('pay_type.pick_up')) { //自提
-                    $query->ofPickUpSuccess();
-                }else{//货到付款
+               }
+// elseif($search['pay_type'] == cons('pay_type.pick_up')) { //自提
+//                    $query->ofPickUpSuccess();
+//                }
+                else{//货到付款
                     $query->ofHasSend();
                 }
             }

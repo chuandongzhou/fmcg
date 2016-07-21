@@ -170,14 +170,14 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12 text-left from-mentioning">
-                            <a class="btn check-delivery from-mentioning-btn" href="javascript:">
-                                自提 <span class="triangle"></span>
-                                <span class="fa fa-check"></span>
-                            </a>
-                        </div>
-                    </div>
+                    {{--<div class="row">--}}
+                        {{--<div class="col-sm-12 text-left from-mentioning">--}}
+                            {{--<a class="btn check-delivery from-mentioning-btn" href="javascript:">--}}
+                                {{--自提 <span class="triangle"></span>--}}
+                                {{--<span class="fa fa-check"></span>--}}
+                            {{--</a>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
                 <div class="col-sm-12 text-right padding-clear">
                     <a href="javascript:history.back()" class="btn btn-cancel submit-order">返回</a>
