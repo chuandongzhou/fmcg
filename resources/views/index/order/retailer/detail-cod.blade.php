@@ -2,6 +2,12 @@
 
 @section('subtitle' , '订单详情')
 @section('top-title', '进货管理->订单详情')
+
+@section('top-title')
+    <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
+    订单详情
+@stop
+
 @include('includes.stepBar')
 
 @section('right')
@@ -172,9 +178,10 @@
                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                 </div>
                             </td>
-                            <td>￥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
+                            <td>
+                                ¥{{ $goods['pivot']['price'] . ' / ' . cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
-                            <td>￥{{ $goods['pivot']['total_price'] }}</td>
+                            <td>¥{{ $goods['pivot']['total_price'] }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -182,13 +189,24 @@
             </div>
         </div>
         <div class="col-sm-12 text-right bottom-content">
-            <p>总额<b class="red">￥{{ $order['price'] }}</b></p>
+            <p>总额<b class="red">¥{{ $order['price'] }}</b></p>
 
             <p>
                 @if(!$order['is_cancel'])
                     @if($order['can_cancel'])
-                        <a class="btn btn-danger ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                           data-method="put" data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                        <a class="btn btn-cancel ajax"
+                           data-url="{{ url('api/v1/order/cancel-sure') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
+                    @endif
+                    @if($order['can_payment'])
+                        <a href="javascript:" data-target="#payModal" data-toggle="modal"
+                           class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->after_rebates_price }}">去付款</a>
+                    @elseif($order['can_confirm_arrived'])
+                        <a class="btn btn-danger ajax"
+                           data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                           data-method="put"
+                           data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
                     @endif
                 @endif
             </p>

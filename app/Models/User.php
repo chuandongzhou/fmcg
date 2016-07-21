@@ -139,6 +139,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function coupons()
+    {
+        return $this->belongsToMany('App\Models\Coupon', 'user_coupon')->withPivot(['used_at', 'received_at'])->withTrashed();
+    }
+
+    /**
      * 密码自动转换
      *
      * @param $value
@@ -158,6 +168,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getTypeNameAttribute()
     {
         return array_search($this->type, cons('user.type'));
+    }
+
+    /**
+     * 获取店铺ID
+     *
+     * @return int
+     */
+    public function getShopIdAttribute()
+    {
+        return $this->shop ? $this->shop->id : 0;
     }
 
 }

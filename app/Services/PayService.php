@@ -174,7 +174,7 @@ class PayService
             return false;
         }
 
-        $totalFee = $orders->sum('price');
+        $totalFee = $orders->sum('after_rebates_price');   //价格改为优惠后价格;
         $userBalance = (new UserService())->getUserBalance();
 
         if ($userBalance['availableBalance'] < $totalFee) {

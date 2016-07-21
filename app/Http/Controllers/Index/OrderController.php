@@ -66,7 +66,8 @@ class OrderController extends Controller
         if ($carts->isEmpty()) {
             return redirect('cart');
         }
-        $shops = (new CartService($carts))->formatCarts();
+        $shops = (new CartService($carts))->formatCarts(null, true);
+
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
 
@@ -384,15 +385,17 @@ class OrderController extends Controller
             //商品相关统计
             foreach ($value['goods'] as $good) {
                 $num = $good['pivot']['num'];
-                $price = $good['pivot']['price'] * $num;
-                $name = $good['name'];
-                $id = $good['id'];
-                if (isset($goodStat[$good['id']])) {
-                    $goodStat[$good['id']]['num'] += $num;
-                    $goodStat[$good['id']]['price'] += $price;
-                } else {
+                if ($num > 0) {
+                    $price = $good['pivot']['price'] * $num;
+                    $name = $good['name'];
+                    $id = $good['id'];
+                    if (isset($goodStat[$good['id']])) {
+                        $goodStat[$good['id']]['num'] += $num;
+                        $goodStat[$good['id']]['price'] += $price;
+                    } else {
 
-                    $goodStat[$good['id']] = ['id' => $id, 'name' => $name, 'price' => $price, 'num' => $num];
+                        $goodStat[$good['id']] = ['id' => $id, 'name' => $name, 'price' => $price, 'num' => $num];
+                    }
                 }
             }
         }
@@ -515,7 +518,7 @@ class OrderController extends Controller
                             '',
                             $value['id'],
                             $value['name'],
-                            '￥' . $value['pivot']['price'],
+                            '¥' . $value['pivot']['price'],
                             $value['pivot']['num']
                         ];
                     } else {
@@ -525,10 +528,10 @@ class OrderController extends Controller
                             $order['payment_type'],
                             $order['status_name'],
                             $order['created_at'],
-                            '￥' . $order['price'],
+                            '¥' . $order['price'],
                             $value['id'],
                             $value['name'],
-                            '￥' . $value['pivot']['price'],
+                            '¥' . $value['pivot']['price'],
                             $value['pivot']['num']
                         ];
                     }
@@ -540,7 +543,7 @@ class OrderController extends Controller
                     $order['payment_type'],
                     $order['status_name'],
                     $order['created_at'],
-                    '￥' . $order['price'],
+                    '¥' . $order['price'],
                 ];
             }
         }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\OrderGoods;
+use Carbon\Carbon;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use App\Http\Requests;
 use Riverslei\Pusher\Pusher;
@@ -105,100 +106,31 @@ class OrderService
             //验证
             $cartService = new CartService($carts);
 
+            // 是否送货订单
+            $isDelivery = isset($data['pay_type']);
+
             if (!$shops = $cartService->validateOrder($orderGoodsNum)) {
                 return false;
             }
 
-            $payTypes = cons('pay_type');
-            $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
-
-            $payWay = 0;
-            if (isset($data['pay_way'])) {
-                $payWayConf = cons('pay_way.cod');
-                $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
+            if ($isDelivery) {
+                $result = $this->_submitOrderByDelivery($data, $shops);
+            } else {
+                $result = $this->_submitOrderByPickUp($data, $shops);
             }
-            $shippingAddressService = new ShippingAddressService();
+            if ($result) {
+                // 增加商品销量
+                GoodsService::addGoodsSalesVolume($orderGoodsNum);
+                // 删除购物车
+                $goodsNum = $user->carts()->where('status', 1)->delete();
+                //减少购物车数量
+                (new CartService)->decrement($goodsNum);
 
-            //验证收货地址是否合法
-            if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'])) {
-                return false;
+                //提交订单成功发送短信
+                // $this->sendSmsToSeller($successOrders);
             }
-            $shippingAddressId = $data['shipping_address_id'];
+            return $result;
 
-            $pid = $shops->count() > 1 ? Order::max('pid') + 1 : 0;
-
-            $successOrders = collect([]);  //保存提交成功的订单
-
-            foreach ($shops as $shop) {
-                $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
-                $orderData = [
-                    'pid' => $pid,
-                    'user_id' => auth()->id(),
-                    'shop_id' => $shop->id,
-                    'price' => $shop->sum_price,
-                    'pay_type' => $payType,
-                    'pay_way' => $payWay,
-                    'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddressId),
-                    'remark' => $remark
-                ];
-                if (!$orderData['shipping_address_id']) {
-                    $this->_deleteSuccessOrders($successOrders);
-                    return false;
-                }
-                $order = Order::create($orderData);
-                if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
-                    $successOrders->push($order);
-                    $orderGoods = [];
-                    foreach ($shop->cart_goods as $cartGoods) {
-                        $orderGoods[] = new OrderGoods([
-                            'goods_id' => $cartGoods->goods_id,
-                            'price' => $cartGoods->goods->price,
-                            'num' => $cartGoods->num,
-                            'pieces' => $cartGoods->goods->pieces_id,
-                            'total_price' => $cartGoods->goods->price * $cartGoods->num,
-                        ]);
-                    }
-                    if ($order->orderGoods()->saveMany($orderGoods)) {
-                        if ($payType == $payTypes['cod']) {
-                            //货到付款订单直接通知卖家发货
-                            $redisKey = 'push:seller:' . $shop->user->id;
-                            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
-                            (new RedisService)->setRedis($redisKey, $redisVal);
-                        }
-                    } else {
-                        $this->_deleteSuccessOrders($successOrders);
-                        return false;
-                    }
-
-                } else {
-                    $this->_deleteSuccessOrders($successOrders);
-                    return false;
-                }
-            }
-            // 删除购物车
-            $user->carts()->where('status', 1)->delete();
-            // 增加商品销量
-            GoodsService::addGoodsSalesVolume($orderGoodsNum);
-
-            $returnArray = [
-                'pay_type' => $payType,
-                'sum_price' => $successOrders->sum('price'),
-                'type' => ""
-            ];
-
-            if ($payType == $payTypes['online']) {
-                if ($pid > 0) {
-                    $returnArray['order_id'] = $pid;
-                    $returnArray['type'] = 'all';
-                } else {
-                    $returnArray['order_id'] = $successOrders->first()->id;
-                }
-            }
-            (new CartService)->decrement($carts->count());
-
-            //提交订单成功发送短信
-            // $this->sendSmsToSeller($successOrders);
-            return $returnArray;
         });
         return $result;
     }
@@ -285,4 +217,205 @@ class OrderService
         }
         return true;
     }
+
+    /**
+     * 添加上门自提订单
+     *
+     * @param $data
+     * @param $shops
+     * @return array|bool
+     */
+    private function _submitOrderByPickUp($data, $shops)
+    {
+        $pid = $this->_getOrderPid($shops);
+
+        $successOrders = collect([]);  //保存提交成功的订单
+
+        $payType = cons('pay_type.pick_up');
+
+        foreach ($shops as $shop) {
+            $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
+            $orderData = [
+                'pid' => $pid,
+                'user_id' => auth()->id(),
+                'shop_id' => $shop->id,
+                'price' => $shop->sum_price,
+                'remark' => $remark,
+                'pay_type' => $payType
+            ];
+            $couponId = isset($data['shop'][$shop->id]['coupon_id']) ? $data['shop'][$shop->id]['coupon_id'] : null;
+            if ($couponId) {
+                $couponId = $this->validateCouponId($shop->id, $couponId, $shop->sum_price);
+                $couponId && ($orderData['coupon_id'] = $couponId);
+            }
+            $order = Order::create($orderData);
+
+            if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
+                $successOrders->push($order);
+                $orderGoods = [];
+                foreach ($shop->cart_goods as $cartGoods) {
+                    $orderGoods[] = new OrderGoods([
+                        'goods_id' => $cartGoods->goods_id,
+                        'price' => $cartGoods->goods->price,
+                        'num' => $cartGoods->num,
+                        'pieces' => $cartGoods->goods->pieces_id,
+                        'total_price' => $cartGoods->goods->price * $cartGoods->num,
+                    ]);
+                }
+                if ($order->orderGoods()->saveMany($orderGoods)) {
+                    $redisKey = 'push:seller:' . $shop->user->id;
+                    $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.pick_up');
+                    (new RedisService)->setRedis($redisKey, $redisVal);
+                } else {
+                    $this->_deleteSuccessOrders($successOrders);
+                    return false;
+                }
+
+            } else {
+                $this->_deleteSuccessOrders($successOrders);
+                return false;
+            }
+        }
+        return [
+            'pay_type' => $payType,
+            'sum_price' => $successOrders->sum('price'),
+            'type' => ""
+        ];
+    }
+
+    /**
+     * 添加送货订单
+     *
+     * @param $data
+     * @param $shops
+     * @return array|bool
+     */
+    private function _submitOrderByDelivery($data, $shops)
+    {
+        $payTypes = cons('pay_type');
+        $payType = array_get($payTypes, $data['pay_type'], head($payTypes));
+
+        $payWay = 0;
+        if (isset($data['pay_way'])) {
+            $payWayConf = cons('pay_way.cod');
+            $payWay = array_get($payWayConf, $data['pay_way'], head($payWayConf));
+        }
+        $shippingAddressService = new ShippingAddressService();
+
+        //验证收货地址是否合法
+        if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'],
+                null, $shops)
+        ) {
+            return false;
+        }
+        $shippingAddressId = $data['shipping_address_id'];
+
+        $pid = $this->_getOrderPid($shops);
+
+        $successOrders = collect([]);  //保存提交成功的订单
+
+        foreach ($shops as $shop) {
+            $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
+
+            $orderData = [
+                'pid' => $pid,
+                'user_id' => auth()->id(),
+                'shop_id' => $shop->id,
+                'price' => $shop->sum_price,
+                'pay_type' => $payType,
+                'pay_way' => $payWay,
+                'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddressId),
+                'remark' => $remark
+            ];
+            $couponId = isset($data['shop'][$shop->id]['coupon_id']) ? $data['shop'][$shop->id]['coupon_id'] : null;
+            if ($couponId) {
+                $couponId = $this->validateCouponId($shop->id, $couponId, $shop->sum_price);
+                $couponId && ($orderData['coupon_id'] = $couponId);
+            }
+            if (!$orderData['shipping_address_id']) {
+                $this->_deleteSuccessOrders($successOrders);
+                return false;
+            }
+
+            $order = Order::create($orderData);
+            if ($order->exists) {//添加订单成功,修改orderGoods中间表信息
+                $successOrders->push($order);
+                $orderGoods = [];
+                foreach ($shop->cart_goods as $cartGoods) {
+                    $orderGoods[] = new OrderGoods([
+                        'goods_id' => $cartGoods->goods_id,
+                        'price' => $cartGoods->goods->price,
+                        'num' => $cartGoods->num,
+                        'pieces' => $cartGoods->goods->pieces_id,
+                        'total_price' => $cartGoods->goods->price * $cartGoods->num,
+                    ]);
+                }
+                if ($order->orderGoods()->saveMany($orderGoods)) {
+                    if ($payType == $payTypes['cod']) {
+                        //货到付款订单直接通知卖家发货
+                        $redisKey = 'push:seller:' . $shop->user->id;
+                        $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
+                        (new RedisService)->setRedis($redisKey, $redisVal);
+                    }
+                } else {
+                    $this->_deleteSuccessOrders($successOrders);
+                    return false;
+                }
+
+            } else {
+                $this->_deleteSuccessOrders($successOrders);
+                return false;
+            }
+        }
+        $returnArray = [
+            'pay_type' => $payType,
+            'sum_price' => $successOrders->sum('price'),
+            'type' => ""
+        ];
+
+        if ($payType == $payTypes['online']) {
+            if ($pid > 0) {
+                $returnArray['order_id'] = $pid;
+                $returnArray['type'] = 'all';
+            } else {
+                $returnArray['order_id'] = $successOrders->first()->id;
+            }
+        }
+        return $returnArray;
+    }
+
+    /**
+     * 验证优惠券
+     *
+     * @param $shopId
+     * @param $couponId
+     * @param $sumPrice
+     * @return bool
+     */
+    public function validateCouponId($shopId, $couponId, $sumPrice)
+    {
+        $coupon = auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->find($couponId);
+
+       if($coupon) {
+           $pivot =  $coupon->pivot;
+           if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
+
+               return $couponId;
+           }
+           return false;
+       }
+       return false;
+    }
+
+    /**
+     * 获取订单pid
+     *
+     * @param $shops
+     * @return int
+     */
+    private function _getOrderPid($shops)
+    {
+        return $shops->count() > 1 ? Order::max('pid') + 1 : 0;
+    }
+
 }

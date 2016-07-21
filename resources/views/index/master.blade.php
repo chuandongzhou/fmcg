@@ -10,6 +10,7 @@
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+    <link href="{{ asset('css/shop-navigator.css') }}" rel="stylesheet">
     @stop
 
 @section('header')
@@ -115,6 +116,9 @@
 
 @section('body')
     @yield('container')
+    @if ( !is_null(auth()->user()))
+        @include('includes.navigator')
+    @endif
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
@@ -160,7 +164,7 @@
                                                         class="fa fa-envelope-o"></i></span>
                                                 <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
                                                        aria-describedby="feedback-contact" name="contact">
-                                            <span class="input-group-btn">
+                                                <span class="input-group-btn">
                                                 <button class="btn btn-primary btn-submit" type="submit"
                                                         data-done-then="none" data-done-text="反馈提交成功">提交
                                                 </button>
@@ -191,7 +195,8 @@
                         </ul>
                     </div>
                     <div class="col-xs-6">
-                        <p>Copyright {!! cons('system.company_name') !!}</p>
+                        <p>
+                            Copyright &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </p>
                     </div>
                 </div>
             </div>
@@ -205,6 +210,7 @@
     <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>
     <script type="text/javascript" src="{{ asset('js/address-for-delivery.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/ajax-polling.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/shop-navigator.js') }}"></script>
 @stop
 
 @section('js')
