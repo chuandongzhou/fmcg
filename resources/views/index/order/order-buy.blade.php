@@ -89,7 +89,7 @@
                                             <div class="product-panel">
                                                 <a class="product-name ellipsis"
                                                    href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
-                                                {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                                {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
                                             </div>
 
                                         </td>

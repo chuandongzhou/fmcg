@@ -237,11 +237,12 @@ ul, li, p, a, h1, h2, h3, h4 {
       #qr-content-panel {
         .tooltip {
           .tooltip-inner {
+            max-width: 340px!important;
             padding: 0;
           }
           .qr-panel {
             border: 2px solid $brand-primary;
-            @include size(220px, 125px);
+            @include size(335px, 125px);
             background-color: $body-bg;
             padding-top: 3px;
             .item {
@@ -252,6 +253,9 @@ ul, li, p, a, h1, h2, h3, h4 {
               }
               .helper {
                 background-image: url("../images/qr-code2.png");
+              }
+              .field {
+                background-image: url("../images/qr-code3.png");
               }
               .qr-code {
                 background-size: cover;
@@ -804,6 +808,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 .wholesalers-top-header {
   .right-search {
     padding: 20px 0;
+    .input-group{
+      z-index: 0!important;
+    }
   }
 }
 
@@ -2076,25 +2083,33 @@ table {
             color: $gray-light;
             vertical-align: middle;
             font-size: 14px;
+            font-weight: 400!important;
             .order-number {
               display: inline-block;
               margin-left: 20px;
+              label{
+                font-weight: 400!important;
+                font-size: 14px !important;
+              }
             }
           }
           td {
             border-right: none;
             border-left: none;
             vertical-align: middle;
-            font-size: 14px;
+            font-size: 13px!important;
+            padding: 2px!important;
             .store-img {
-              @include square(100px);
+              @include square(60px);
             }
           }
           td.pay-detail {
             border-left: 1px solid $table-border-color;
             border-right: 1px solid $table-border-color;
+            vertical-align: top;
           }
           td.operating {
+            vertical-align: top;
             p {
               padding: 5px 0;
             }
@@ -3266,6 +3281,12 @@ table {
           .btn {
             color: $gray-dark;
           }
+          &.store-name{
+            width: 50% !important;
+          }
+          &.unit-price{
+            width: 10%!important;
+          }
         }
         td.total-money {
           border-left: 1px solid $gray-plain-light;
@@ -3418,14 +3439,42 @@ table {
   }
 }
 
-.delivery-mode {
-  border-top: 1px solid $gray-plain-light;
+.confirm-order {
   padding: 10px;
   .title {
     margin-bottom: 20px;
     font-weight: 600;
+    &.msg-title{
+      margin-bottom: 0;
+    }
   }
-  .check-delivery {
+  .item{
+    padding:0 0 50px 90px;
+    &.address-item{
+      width: 70%;
+      #add-address{
+        color:$gray;
+      }
+    }
+  }
+  .delivery-mode{
+    margin-bottom: 10px;
+    border-bottom:1px solid $banner-gray;
+  }
+  .checks{
+    .from-mentioning-btn{
+      margin-right: 100px;
+    }
+  }
+  .control{
+    display: block;
+  }
+  .control-select{
+    width: 100%;
+    height:35px;
+    display: block;
+  }
+  .check-item {
     position: relative;
     width: 200px;
     background-color: $body-bg;
@@ -3434,9 +3483,6 @@ table {
     &:hover {
       color: $gray-base;
     }
-  }
-  .from-mentioning {
-    margin: 20px 0;
   }
   .fa-check {
     position: absolute;
@@ -3456,7 +3502,7 @@ table {
     border-left: 20px solid transparent;
     display: none;
   }
-  .check-delivery.active {
+  .check-item.active {
     border: 3px solid $brand-primary;
     .fa {
       display: inline-block;
@@ -3465,8 +3511,50 @@ table {
       display: inline-block;
     }
   }
-  .operation-buttons[disabled='disabled'] {
-    background-color: $banner-gray;
+  .cash-on-delivery{
+    display: inline-block;
+    margin-left: 100px;
+    &>.item {
+      margin-left: -20px!important;
+      padding: 0;
+      .check-item {
+        width: 80px !important;
+        margin: 10px 20px 0 20px;
+      }
+    }
+  }
+  .cash-on-item{
+    display:none;
+  }
+  .operating{
+    .prompt{
+      display: inline-block;
+      color:$gray-lighter;
+      padding: 3px 0;
+    }
+    .control-select{
+      width:200px;
+    }
+  }
+  .count-panel {
+    float: right;
+    .count {
+      text-align: left;
+      .name {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+      }
+    }
+  }
+  .finally{
+    margin-bottom: 20px;
+    .count{
+      padding: 5px 0;
+      .name {
+        width:140px;
+      }
+    }
   }
 }
 

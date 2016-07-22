@@ -163,10 +163,11 @@ ul, li, p, a, h1, h2, h3, h4 {
         .footer .list-inline li .contact-panel .tooltip-inner div {
           padding: 2px 0; }
       .footer .list-inline li #qr-content-panel .tooltip .tooltip-inner {
+        max-width: 340px !important;
         padding: 0; }
       .footer .list-inline li #qr-content-panel .tooltip .qr-panel {
         border: 2px solid #4cb9fe;
-        width: 220px;
+        width: 335px;
         height: 125px;
         background-color: #fff;
         padding-top: 3px; }
@@ -178,6 +179,8 @@ ul, li, p, a, h1, h2, h3, h4 {
             background-image: url("../images/qr-code.png"); }
           .footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .helper {
             background-image: url("../images/qr-code2.png"); }
+          .footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .field {
+            background-image: url("../images/qr-code3.png"); }
           .footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .qr-code {
             background-size: cover;
             width: 100px;
@@ -610,6 +613,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .wholesalers-top-header .right-search, .wholesalers-top-header .wholesalers-management .pay-detail, .wholesalers-management .wholesalers-top-header .pay-detail {
   padding: 20px 0; }
+  .wholesalers-top-header .right-search .input-group, .wholesalers-top-header .wholesalers-management .pay-detail .input-group, .wholesalers-management .wholesalers-top-header .pay-detail .input-group {
+    z-index: 0 !important; }
 
 .shopping-car {
   padding: 20px 0; }
@@ -1546,23 +1551,31 @@ table {
     background-color: #cae6f7;
     color: #777777;
     vertical-align: middle;
-    font-size: 14px; }
+    font-size: 14px;
+    font-weight: 400 !important; }
     .wholesalers-management .order-table-list .table-col table tr th .order-number, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number {
       display: inline-block;
       margin-left: 20px; }
+      .wholesalers-management .order-table-list .table-col table tr th .order-number label, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number label, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number label {
+        font-weight: 400 !important;
+        font-size: 14px !important; }
   .wholesalers-management .order-table-list .table-col table tr td {
     border-right: none;
     border-left: none;
     vertical-align: middle;
-    font-size: 14px; }
+    font-size: 13px !important;
+    padding: 2px !important; }
     .wholesalers-management .order-table-list .table-col table tr td .store-img {
-      width: 100px;
-      height: 100px; }
+      width: 60px;
+      height: 60px; }
   .wholesalers-management .order-table-list .table-col table tr td.pay-detail {
     border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd; }
-  .wholesalers-management .order-table-list .table-col table tr td.operating p {
-    padding: 5px 0; }
+    border-right: 1px solid #ddd;
+    vertical-align: top; }
+  .wholesalers-management .order-table-list .table-col table tr td.operating {
+    vertical-align: top; }
+    .wholesalers-management .order-table-list .table-col table tr td.operating p {
+      padding: 5px 0; }
 
 .wholesalers-management .order-process {
   border: 1px solid #cae6f7;
@@ -2415,6 +2428,10 @@ table {
         height: 50px; }
       .table-list-row .shopping-table-list table tr td .btn {
         color: #333333; }
+      .table-list-row .shopping-table-list table tr td.store-name {
+        width: 50% !important; }
+      .table-list-row .shopping-table-list table tr td.unit-price {
+        width: 10% !important; }
     .table-list-row .shopping-table-list table tr td.total-money {
       border-left: 1px solid #e0e0e0; }
   .table-list-row .shopping-finish .pay-way {
@@ -2530,30 +2547,46 @@ table {
   .batch-deletion:focus, .batch-deletion:hover {
     color: #222; }
 
-.delivery-mode {
-  border-top: 1px solid #e0e0e0;
+.confirm-order {
   padding: 10px; }
-  .delivery-mode .title {
+  .confirm-order .title {
     margin-bottom: 20px;
     font-weight: 600; }
-  .delivery-mode .check-delivery {
+    .confirm-order .title.msg-title {
+      margin-bottom: 0; }
+  .confirm-order .item {
+    padding: 0 0 50px 90px; }
+    .confirm-order .item.address-item {
+      width: 70%; }
+      .confirm-order .item.address-item #add-address {
+        color: #555555; }
+  .confirm-order .delivery-mode {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d2d2d2; }
+  .confirm-order .checks .from-mentioning-btn {
+    margin-right: 100px; }
+  .confirm-order .control {
+    display: block; }
+  .confirm-order .control-select {
+    width: 100%;
+    height: 35px;
+    display: block; }
+  .confirm-order .check-item {
     position: relative;
     width: 200px;
     background-color: #fff;
     border: 3px solid #d2d2d2;
     color: #000; }
-    .delivery-mode .check-delivery:hover {
+    .confirm-order .check-item:hover {
       color: #000; }
-  .delivery-mode .from-mentioning {
-    margin: 20px 0; }
-  .delivery-mode .fa-check {
+  .confirm-order .fa-check {
     position: absolute;
     bottom: 0;
     right: 0;
     color: #fff;
     font-size: 12px;
     display: none; }
-  .delivery-mode .triangle {
+  .confirm-order .triangle {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -2562,14 +2595,43 @@ table {
     border-bottom: 20px solid #4cb9fe;
     border-left: 20px solid transparent;
     display: none; }
-  .delivery-mode .check-delivery.active {
+  .confirm-order .check-item.active {
     border: 3px solid #4cb9fe; }
-    .delivery-mode .check-delivery.active .fa {
+    .confirm-order .check-item.active .fa {
       display: inline-block; }
-    .delivery-mode .check-delivery.active .triangle {
+    .confirm-order .check-item.active .triangle {
       display: inline-block; }
-  .delivery-mode .operation-buttons[disabled='disabled'] {
-    background-color: #d2d2d2; }
+  .confirm-order .cash-on-delivery {
+    display: inline-block;
+    margin-left: 100px; }
+    .confirm-order .cash-on-delivery > .item {
+      margin-left: -20px !important;
+      padding: 0; }
+      .confirm-order .cash-on-delivery > .item .check-item {
+        width: 80px !important;
+        margin: 10px 20px 0 20px; }
+  .confirm-order .cash-on-item {
+    display: none; }
+  .confirm-order .operating .prompt {
+    display: inline-block;
+    color: #b4b4b4;
+    padding: 3px 0; }
+  .confirm-order .operating .control-select {
+    width: 200px; }
+  .confirm-order .count-panel {
+    float: right; }
+    .confirm-order .count-panel .count {
+      text-align: left; }
+      .confirm-order .count-panel .count .name {
+        display: inline-block;
+        width: 100px;
+        text-align: right; }
+  .confirm-order .finally {
+    margin-bottom: 20px; }
+    .confirm-order .finally .count {
+      padding: 5px 0; }
+      .confirm-order .finally .count .name {
+        width: 140px; }
 
 /*======================================shopping-car end======================================*/
 /*======================================collect begin======================================*/

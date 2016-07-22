@@ -120,7 +120,7 @@
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');
-                data['number'] = obj.data('number');
+                data['number'] =  '客户 ' + obj.data('number');
                 data['name'] = obj.data('name');
                 mapData.push(data);
             });

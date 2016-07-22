@@ -215,6 +215,10 @@
                                             <div class="qr-code helper"></div>
                                             <div class="text text-center">司机助手</div>
                                         </div>
+                                        <div class="driver-helper item">
+                                            <div class="qr-code field"></div>
+                                            <div class="text text-center">外勤</div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
