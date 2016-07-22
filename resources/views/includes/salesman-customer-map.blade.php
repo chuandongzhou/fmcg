@@ -112,7 +112,7 @@
                 };
 
                 for (var i = 0; i < mapData.length; i++) {
-                    var txt = "客户 " + mapData[i]['number'], mouseoverTxt = txt + " " + mapData[i]['name'];
+                    var txt = mapData[i]['number'], mouseoverTxt = txt + " " + mapData[i]['name'];
 
                     var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(mapData[i]['lng'], mapData[i]['lat']), txt, mouseoverTxt);
 

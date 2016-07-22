@@ -19,18 +19,6 @@
                               data-format="YYYY-MM">
                     </span>
 
-                    {{--<span class="item control-item">--}}
-                    {{--<select name="salesman_id" class="inline-control">--}}
-                    {{--<option value="">请选择业务员</option>--}}
-                    {{--@foreach($salesmen as $salesman)--}}
-                    {{--<option value="{{ $salesman->id }}" {{ $salesmanId == $salesman->id ? 'selected' : '' }}>--}}
-                    {{--{{ $salesman->name }}--}}
-                    {{--</option>--}}
-                    {{--@endforeach--}}
-                    {{--</select>--}}
-                    {{--</span>--}}
-
-
                     <span class="item control-item">
                         <button type="submit" class="btn btn-default search-by-get">查询</button>
                         <a class="btn btn-default"

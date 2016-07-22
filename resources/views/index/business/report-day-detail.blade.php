@@ -50,7 +50,7 @@
                             <input type="hidden" class="map-data"
                                    data-lng="{{ $visit['lng'] }}"
                                    data-lat="{{ $visit['lat'] }}"
-                                   data-number="{{ $visit['number'] }}"
+                                   data-number="{{ $visit['visit_id'] }}"
                                    data-name="{{ $visit['customer_name'] }}"
                             >
                         </td>
@@ -129,7 +129,7 @@
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');
-                data['number'] = obj.data('number');
+                data['number'] = '序号' + obj.data('number');
                 data['name'] = obj.data('name');
                 mapData.push(data);
             });
