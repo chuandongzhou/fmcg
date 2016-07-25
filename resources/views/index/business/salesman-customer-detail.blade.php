@@ -48,7 +48,7 @@
             <table class="table text-center table-bordered table-middle">
                 @if($orders->count())
                     <tr>
-                        <td rowspan="{{ ($orders->count()+ 2) + ($mortgageGoods->count() ? ($mortgageGoods->count() + 2)     : 0) }}">
+                        <td rowspan="{{ ($orders->count()+ 2) + ($mortgageGoods->count() ? ($mortgageGoods->collapse()->count() + 2) : 0) }}">
                             陈列费
                         </td>
                         <td colspan="4">现金</td>
@@ -77,13 +77,17 @@
                         <td>商品单位</td>
                         <td>数量</td>
                     </tr>
-                    @foreach($mortgageGoods as $mortgage)
-                        <tr>
-                            <td>{{ $mortgage['created_at'] }}</td>
-                            <td>{{ $mortgage['name'] }}</td>
-                            <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
-                            <td>{{ $mortgage['num'] }}</td>
-                        </tr>
+                    @foreach($mortgageGoods as $createdAt =>$mortgages)
+                        @foreach($mortgages as $mortgage)
+                            <tr>
+                                @if($mortgage == $mortgages->first())
+                                     <td rowspan="{{ $mortgages->count() }}">{{ $createdAt }}</td>
+                                @endif
+                                <td>{{ $mortgage['name'] }}</td>
+                                <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
+                                <td>{{ $mortgage['num'] }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 @endif
             </table>

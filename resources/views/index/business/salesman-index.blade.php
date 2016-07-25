@@ -73,6 +73,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="text-right">
+                    {!! $salesmen->render() !!}
+                </div>
 
                 <div class="col-sm-12 form-group">
                     <span class="item control-item">

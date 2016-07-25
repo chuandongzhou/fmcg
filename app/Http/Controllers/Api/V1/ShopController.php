@@ -150,8 +150,8 @@ class ShopController extends Controller
 
         }
         $data = $request->all();
-       /* $addressData = (new AddressService)->getAddressData();
-        $data = array_merge($data, array_except($addressData, 'address_name'));*/
+        /* $addressData = (new AddressService)->getAddressData();
+         $data = array_merge($data, array_except($addressData, 'address_name'));*/
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate()->toArray();
         return $this->success(['goods' => $goods]);
@@ -169,6 +169,33 @@ class ShopController extends Controller
             $advert->setAppends(['goods_id', 'image_url']);
         });
         return $this->success(['adverts' => $adverts]);
+    }
+
+    /**
+     * 获取店铺最低配送额
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function minMoney(Request $request)
+    {
+        $shippingAddressId = $request->input('shipping_address_id');
+        $shopIds = $request->input('shop_id');
+
+        $user = auth()->user();
+        $shippingAddress = $user->shippingAddress()->with('address')->find($shippingAddressId);
+        if (is_null($shippingAddress)) {
+            return $this->error('收货地址不存在');
+        }
+        $shops = Shop::whereIn('id', $shopIds)->with('deliveryArea')->get();
+
+        if ($shops->isEmpty()) {
+            return $this->error('店铺不存在');
+        }
+
+        $result = ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress);
+
+        return $this->success(['shopMinMoney' => $result]);
     }
 
 }

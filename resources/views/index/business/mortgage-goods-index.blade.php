@@ -71,6 +71,11 @@
                     </table>
                 </div>
 
+                <div class="text-right">
+                    {!! $mortgageGoods->render() !!}
+                </div>
+
+
                 <div class="col-sm-12 form-group">
                     <span class="item control-item">
                        <input type="checkbox" class="parent"> 全选

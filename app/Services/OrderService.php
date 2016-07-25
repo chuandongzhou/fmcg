@@ -127,12 +127,12 @@ class OrderService
                 (new CartService)->decrement($goodsNum);
 
                 //提交订单成功发送短信
-                // $this->sendSmsToSeller($successOrders);
+                //$this->sendSmsToSeller($result['success_orders']);
             }
             return $result;
 
         });
-        return $result;
+        return array_except($result, 'success_orders');
     }
 
 
@@ -279,7 +279,8 @@ class OrderService
         return [
             'pay_type' => $payType,
             'sum_price' => $successOrders->sum('price'),
-            'type' => ""
+            'type' => "",
+            'success_orders' => $successOrders,
         ];
     }
 
@@ -369,6 +370,7 @@ class OrderService
         }
         $returnArray = [
             'pay_type' => $payType,
+            'success_orders' => $successOrders,
             'sum_price' => $successOrders->sum('price'),
             'type' => ""
         ];
@@ -396,15 +398,15 @@ class OrderService
     {
         $coupon = auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->find($couponId);
 
-       if($coupon) {
-           $pivot =  $coupon->pivot;
-           if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
+        if ($coupon) {
+            $pivot = $coupon->pivot;
+            if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
 
-               return $couponId;
-           }
-           return false;
-       }
-       return false;
+                return $couponId;
+            }
+            return false;
+        }
+        return false;
     }
 
     /**

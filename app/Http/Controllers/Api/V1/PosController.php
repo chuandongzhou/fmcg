@@ -152,7 +152,7 @@ class PosController extends Controller
                     'ReceiverName' => $order->shippingAddress->consigner,
                     'RceiverAddr' => is_null($order->shippingAddress->address) ? '' : $order->shippingAddress->address->address,
                     'RceiverTel' => $order->shippingAddress->phone,
-                    'Amount' => $order->price,
+                    'Amount' => $order->after_rebates_price,
                     'OrderStatus' => $orderStatus,
                     'OrderStatusMsg' => cons()->valueLang('trade.pay_status', $orderStatus)
                 ];

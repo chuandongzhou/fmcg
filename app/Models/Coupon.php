@@ -77,8 +77,8 @@ class Coupon extends Model
      */
     public function getCanReceiveAttribute()
     {
-        $nowTime = Carbon::now();
-        if ($this->stock <= 0 && ($this->start_at > $nowTime || $this->end_at < $nowTime)) {
+        $nowDate = (new Carbon)->toDateString();
+        if ($this->stock <= 0 || $this->end_at < $nowDate) {
             return false;
         }
 

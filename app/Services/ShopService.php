@@ -120,4 +120,37 @@ class ShopService
             return self::getDefaultShippingAddress($shop);
         }
     }
+
+    /**
+     * 根据收货地址找出店铺最低配送额
+     *
+     * @param $shops
+     * @param $shippingAddress
+     * @param bool $validate
+     * @return array|bool
+     */
+    static function getShopMinMoneyByShippingAddress($shops, $shippingAddress, $validate = false)
+    {
+        $address = $shippingAddress->address;
+        $where = [
+            'province_id' => $address->province_id,
+            'city_id' => $address->city_id,
+            'district_id' => $address->district_id,
+        ];
+
+        $shopMinMoneys = [];
+        foreach ($shops as $shop) {
+            $delivery = $shop->deliveryArea()->where(array_filter($where))->first();
+
+            $minMoney = ($delivery && $delivery->min_money) ? $delivery->min_money : $shop->min_money;
+
+            if ($validate) {
+                if ($shop->sum_price < $minMoney) {
+                    return false;
+                }
+            }
+            $shopMinMoneys[$shop->id] = $minMoney;
+        }
+        return $validate ? true : $shopMinMoneys;
+    }
 }

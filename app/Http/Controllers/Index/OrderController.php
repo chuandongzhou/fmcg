@@ -71,6 +71,7 @@ class OrderController extends Controller
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
 
+
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
 

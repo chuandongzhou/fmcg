@@ -156,9 +156,8 @@ class SalesmanVisitOrderController extends Controller
             $shippingAddressService = new ShippingAddressService();
             foreach ($orders as $order) {
                 if (!$order->can_sync) {
-                    return ['error' => '同步失败：存在不能同步的订单'];
+                    return ['error' => '存在不能同步的订单'];
                 }
-                $shippingAddress = ShopService::getDefaultShippingAddress($order->customer_shop_id);
                 $orderData = [
                     'user_id' => $order->customer_user_id,
                     'shop_id' => auth()->user()->shop->id,
@@ -168,12 +167,14 @@ class SalesmanVisitOrderController extends Controller
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                     'status' => $orderConf['status']['finished'],
                     'finished_at' => Carbon::now(),
-                    'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddress->id),
+                    'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($order->SalesmanCustomer),
                     'remark' => '业务同步订单'
                 ];
+
                 if (!$orderData['shipping_address_id']) {
-                    return ['error' => '该客户平台id不存在默认收货地址'];
+                    return ['error' => '客户收货地址不存在'];
                 }
+
                 $orderTemp = Order::create($orderData);
                 if ($orderTemp->exists) {//添加订单成功,修改orderGoods中间表信息
                     $orderGoods = [];

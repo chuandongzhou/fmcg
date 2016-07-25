@@ -50,7 +50,7 @@ class ReportController extends Controller
 
         $data = $request->all();
 
-        $startDate = isset($data['start_date']) ? new Carbon($data['start_date']) : (new Carbon())->startOfMonth();
+        $startDate = isset($data['start_date']) ? new Carbon($data['start_date']) : (new Carbon())->startOfDay();
         $endDate = isset($data['end_date']) ? (new Carbon($data['end_date']))->endOfDay() : Carbon::now();
 
 
@@ -67,8 +67,6 @@ class ReportController extends Controller
         $endDate = $endDate->toDateString();
 
         $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
-
-        $data = (new BusinessService())->formatVisit($visits);
 
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
