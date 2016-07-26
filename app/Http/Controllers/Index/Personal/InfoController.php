@@ -27,8 +27,8 @@ class InfoController extends Controller
 
         } else {
             //待付款
-            $waitReceive = Order::bySellerId(auth()->id())->where('pay_status',
-                cons('order.pay_status.non_payment'))->where('pay_type', cons('pay_type.online'))->nonCancel()->count();
+            $waitReceive = Order::bySellerId(auth()->id())->where(['pay_status'=>
+                cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])->where('pay_type', cons('pay_type.online'))->nonCancel()->count();
             //待发货
             $waitSend = Order::bySellerId(auth()->id())->nonSend()->count();
             //代收款

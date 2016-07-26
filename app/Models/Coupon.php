@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\carbon;
 class Coupon extends Model
 {
     use softDeletes;
@@ -48,6 +48,16 @@ class Coupon extends Model
     public function order()
     {
         return $this->hasMany('App\Models\Order');
+    }
+    /**
+     * 判断优惠券现在是否可用
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeTime($query)
+    {
+        return $query->where('start_at','<',Carbon::now())->where('end_at','>',Carbon::now());
     }
 
     /**
