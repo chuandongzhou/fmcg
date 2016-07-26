@@ -143,11 +143,11 @@
                         </ul>
                     </li>
                 @else
-                    <li class="nav-item {!! request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3 ? 'active' : '' !!}  ">
+                    <li class="nav-item {!! path_active(['order-buy', 'order-buy/*', 'order/statistics']) !!}  ">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-edit "></i>
                             <span class="title">订单管理</span>
-                            <span class="{!! request()->is('order-buy', 'order-buy/*') || request()->input('obj_type') == 3 ? 'selected' : '' !!} "></span>
+                            <span class="{!! request()->is('order-buy', 'order-buy/*', 'order/statistics')  ? 'selected' : '' !!} "></span>
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
@@ -156,8 +156,8 @@
                                     <span class="title">订单列表</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->input('obj_type') == 3 && request()->is('order/statistics') ? 'active' : '' }}">
-                                <a href="{{ url('order/statistics?obj_type=3') }}" class="nav-link ">
+                            <li class="nav-item  {{ request()->is('order/statistics') ? 'active' : '' }}">
+                                <a href="{{ url('order/statistics') }}" class="nav-link ">
                                     <span class="title">订单统计</span>
                                 </a>
                             </li>
@@ -230,7 +230,6 @@
                             </li>
                         </ul>
                     </li>
-
                     <li class="nav-item {!! path_active('personal/customer/*') !!} ">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-users "></i>

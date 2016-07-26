@@ -42,7 +42,7 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image',
+        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods',
             'shippingAddress.address');
         if (is_numeric($search['search_content'])) {
             $orders = $orders->where('id', $search['search_content']);

@@ -215,28 +215,39 @@ class SalesmanCustomerController extends Controller
         $orderGoods = $allOrders->pluck('orderGoods')->collapse();
 
         //所有订单商品详情
-        $orderGoodsDetail = Goods::whereIn('id', $orderGoods->pluck('goods_id')->toBase()->unique())->lists('name',
+        $orderGoodsDetail = Goods::whereIn('id', array_keys($goodsRecodeData))->lists('name',
             'id');
 
         //货抵
-        $mortgageGoods = (new BusinessService())->getOrderMortgageGoods($orders);
+        $mortgageGoods = (new BusinessService())->getOrderMortgageGoods($orders)->groupBy('created_at');
 
         //客户销售的商品
         $salesList = [];
         foreach ($orderGoods as $goods) {
             $salesList[$goods->goods_id][$goods->salesman_visit_id][$goods->type] = $goods;
         }
+        $orderGoodsIds = array_keys($salesList);
+        foreach ($goodsRecodeData as $goodsId => $goodsRecode) {
+            if (!in_array($goodsId, $orderGoodsIds)) {
+                $visit = head($goodsRecode)->visit;
+                $salesList[$goodsId][key($goodsRecode)][-1] = ['created_at' => $visit->created_at];
+            }
+        };
+
+        //dd($salesList);
 
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
+
+        // $recordGoodsIds = array_keys($goodsRecodeData);
 
         foreach ($salesList as $goodsId => $goodsVisits) {
             $salesListsData[$goodsId]['id'] = $goodsId;
             $salesListsData[$goodsId]['name'] = $orderGoodsDetail[$goodsId];
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][] = [
-                    'time' => head($goodsList)->created_at,
+                    'time' => head($goodsList)['created_at'],
                     'stock' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,
@@ -355,7 +366,8 @@ class SalesmanCustomerController extends Controller
                 $table->addCell(3000, $cellVAlignCenter)->addText($mortgage['created_at'], null, $cellAlignCenter);
                 $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null,
                     $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']),
+                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces',
+                    $mortgage['pieces']),
                     null, $cellAlignCenter);
                 $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
             }
@@ -394,7 +406,7 @@ class SalesmanCustomerController extends Controller
                 $table->addCell(1000,
                     $cellVAlignCenter)->addText($visit['order_price'] . '/' . $piecesName, null, $cellAlignCenter);
                 $table->addCell(1000,
-                    $cellVAlignCenter)->addText($visit['order_num'] . $piecesName   , null, $cellAlignCenter);
+                    $cellVAlignCenter)->addText($visit['order_num'] . $piecesName, null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['order_amount'], null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_num'], null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_amount'], null, $cellAlignCenter);

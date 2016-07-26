@@ -1,47 +1,87 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
-use Illuminate\Http\Request;
-use App\Models\Shop;
-use Carbon\carbon;
+
 use App\Models\Coupon;
+use Carbon\Carbon;
+use Gate;
+
+
 class CouponController extends Controller
 {
-    /**我的优惠券
-     *  @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function index(Request $request){
-        $coupons = auth()->user()->load(['coupon' => function ($query) {
-            $query ->time()->whereNull('used_at')->orderBy('end_at', 'desc');
-        },'coupon.shop']);
-        return $this->success($coupons);
-    }
-    /**店铺可领取优惠券
-     *  @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function recevieCoupons(Request $request){
-        $shopid = $request['shopid'];
-        $ids = array();
-        $receivedCoupons = auth()->user()->load(['coupon' => function($query) use ($shopid){
-            $query->where('shop_id',$shopid);
-        }]);
-        foreach($receivedCoupons->coupon as $coupon){
-            $ids[] = $coupon->id;
-        }
-        $canReceiveCoupons = Shop::where('id',$shopid)->with(['coupons' => function ($query) use($ids) {
-            $query->whereNotIn('id',$ids)
-               ->time()
-                ->where('stock','>',0)
-                ->orderBy('end_at', 'desc');
-        },'coupons.shop'])->get();
-        return $this->success($canReceiveCoupons);
-    }
     /**
-     * 领取优惠券
+     * 获取店铺可领优惠券
+     *
+     * @param $shop
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function store(Request $request){
-        $coupon_id = $request->input('coupon_id');
-        auth()->user()->coupon()->attach($coupon_id, ['received_at' => Carbon::now()]);
-        return $this->success('领取成功');
+    public function coupon($shop)
+    {
+        $user = auth()->user();
+
+        if (!$shop || $shop->user->type <= $user->type) {
+            return $this->error('店铺不存在');
+        }
+        $coupons = $shop->coupons->filter(function ($coupon) {
+            $coupon->shop->setAppends([]);
+            return $coupon->can_receive;
+        });
+
+        return $this->success(['coupons' => $coupons->values()]);
+    }
+
+
+    /**
+     * 获取用户自己优惠券
+     *
+     * @param bool $expire
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function userCoupon($expire = false)
+    {
+        $user = auth()->user();
+        $coupons = $user->coupons()->with('shop')->orderBy('end_at',
+            'DESC')->take($expire ? 5 : -1)->get()->each(function ($coupon) {
+            $coupon->shop->setAppends([]);
+        });
+
+        return $this->success(['coupons' => $coupons]);
+    }
+
+    /**
+     * 领取优惠券
+     *
+     * @param \App\Models\Coupon $coupon
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function receive(Coupon $coupon)
+    {
+        if (!$coupon->can_receive) {
+            return $this->error('库存不足');
+        }
+        if (!$this->_changeStock($coupon)) {
+            return $this->error('领取失败');
+        }
+        $user = auth()->user();
+
+        $user->coupons()->attach($coupon->id, ['received_at' => Carbon::now()]);
+        return $this->success(['coupon' => $coupon]);
+    }
+
+    /**
+     * Display the specified resource.o
+     *
+     * @param \App\Models\Coupon $coupon
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function show(Coupon $coupon)
+    {
+        return $this->success(['coupon' => $coupon]);
+    }
+
+
+    private function _changeStock($coupon, $num = 1)
+    {
+        return $coupon->decrement('stock', $num);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\SalesmanCustomer;
 use App\Models\ShippingAddress;
 use App\Models\ShippingAddressSnapshot;
 
@@ -63,6 +64,37 @@ class ShippingAddressService
 
     }
 
+    public function copySalesmanCustomerShippingAddressToSnapshot(SalesmanCustomer $salesmanCustomer)
+    {
+        $addressData = [
+            'consigner' => $salesmanCustomer->contact,
+            'phone' =>$salesmanCustomer->contact_information,
+            'user_id' => 0,
+            'x_lng' =>$salesmanCustomer->shipping_address_lng,
+            'y_lat' => $salesmanCustomer->shipping_address_lat
+        ];
+
+        $shippingAddressSnapshot = ShippingAddressSnapshot::create($addressData);
+        if ($shippingAddressSnapshot->exists) {
+            $addressDetail = $salesmanCustomer->shippingAddress;
+
+            if (!$addressDetail) {
+                $shippingAddressSnapshot->delete();
+                return false;
+            }
+            $shippingAddressSnapshot->address()->create([
+                'province_id' => $addressDetail->province_id,
+                'city_id' => $addressDetail->city_id,
+                'district_id' => $addressDetail->district_id,
+                'street_id' => $addressDetail->street_id,
+                'area_name' => $addressDetail->area_name,
+                'address' => $addressDetail->address,
+            ]);
+            return $shippingAddressSnapshot->id;
+        }
+        return false;
+    }
+
     /**
      * 验证收货地址
      *
@@ -81,7 +113,8 @@ class ShippingAddressService
             return false;
         }
         if (!is_null($shops)) {
-            $address = $shippingAddress->address;
+            return ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress, true);
+            /*$address = $shippingAddress->address;
             $where = [
                 'province_id' => $address->province_id,
                 'city_id' => $address->city_id,
@@ -96,7 +129,7 @@ class ShippingAddressService
                 if ($shop->sum_price < $minMoney) {
                     return false;
                 }
-            }
+            }*/
 
         }
 

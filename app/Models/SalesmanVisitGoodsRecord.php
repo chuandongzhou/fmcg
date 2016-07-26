@@ -12,5 +12,10 @@ class SalesmanVisitGoodsRecord extends Model
         'stock',
         'production_date'
     ];
-    public $timestamps= false;
+    public $timestamps = false;
+
+    public function visit()
+    {
+        return $this->belongsTo('App\Models\SalesmanVisit', 'salesman_visit_id');
+    }
 }

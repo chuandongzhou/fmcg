@@ -81,14 +81,14 @@ class PayService
                 }
 
                 $order->fill($orderAttr)->save();
-                $fee = ($order->price / $amount) * $orderFee;
+                $fee = ($order->after_rebates_price / $amount) * $orderFee;
                 $fee = sprintf("%.2f", $fee);
                 // 增加易宝支付log
                 DB::table('yeepay_log')->insert(
                     [
                         'order_id' => $order->id,
                         'trade_no' => $tradeNo,
-                        'amount' => $order->price - $fee,
+                        'amount' => $order->after_rebates_price - $fee,
                         'paid_at' => $nowTimestamp
                     ]
                 );
@@ -103,7 +103,7 @@ class PayService
                     'bank_card_no' => $bankCardNo,
                     'trade_no' => $tradeNo,
                     'pay_status' => $payStatus,
-                    'amount' => bcsub($order->price, $fee, 2),
+                    'amount' => bcsub($order->after_rebates_price, $fee, 2),
                     'target_fee' => $fee,
                     'trade_currency' => $tradeConf['trade_currency']['rmb'],
                     'callback_type' => 'json',
@@ -117,7 +117,7 @@ class PayService
 
                     //pos机支付成功更新用户余额
                     $shopOwner = $order->shop->user;
-                    $shopOwner->balance += bcsub($order->price, $fee, 2);
+                    $shopOwner->balance += bcsub($order->after_rebates_price, $fee, 2);
                     $shopOwner->save();
                     //通知卖家
                     $redisKey = 'push:seller:' . $shopOwner->id;
@@ -174,7 +174,7 @@ class PayService
             return false;
         }
 
-        $totalFee = $orders->sum('price');
+        $totalFee = $orders->sum('after_rebates_price');   //价格改为优惠后价格;
         $userBalance = (new UserService())->getUserBalance();
 
         if ($userBalance['availableBalance'] < $totalFee) {

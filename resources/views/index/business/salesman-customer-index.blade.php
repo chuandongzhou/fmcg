@@ -98,6 +98,7 @@
                                            data-lat="{{ $customer->business_address_lat }}"
                                            data-number="{{ $customer->number }}"
                                            data-name="{{ $customer->name }}"
+                                           data-id="{{ $customer->id }}"
                                     >
                                 </div>
                             </td>
@@ -120,8 +121,9 @@
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');
-                data['number'] = obj.data('number');
+                data['number'] = '客户 ' + obj.data('number');
                 data['name'] = obj.data('name');
+                data['href'] = site.url('business/salesman-customer/' + obj.data('id'));
                 mapData.push(data);
             });
             return mapData;

@@ -83,6 +83,16 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>商品图片</td>
+                <td>
+                    <div class="btn-group btn-group-xs" role="group">
+                        <button type="button" class="btn btn-danger ajax" data-data='{"key" : "goods:image"}'>
+                            <i class="fa fa-trash-o"></i> 清除
+                        </button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </form>

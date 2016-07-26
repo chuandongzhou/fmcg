@@ -8,6 +8,7 @@
 namespace App\Models;
 
 
+use App\Services\GoodsImageService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
@@ -173,7 +174,7 @@ class Goods extends Model
      */
     public function scopeOfCommonSort($query)
     {
-        return $query->orderBy('is_promotion', 'desc')->orderBy('is_out', 'asc');
+        return $query->orderBy('is_promotion', 'desc')->orderBy('is_new', 'DESC')->orderBy('is_out', 'asc');
     }
 
     /**
@@ -293,7 +294,7 @@ class Goods extends Model
     {
         return $this->scopeOfStatus($query, 0);
     }
-    
+
     /**
      * 根据不同角色获取价格
      *
@@ -361,8 +362,16 @@ class Goods extends Model
      */
     public function getImageUrlAttribute()
     {
+
+        $goodsService = new GoodsImageService();
+        $goodsId = $this->id;
+        if ($goodsService->hasImage($goodsId)) {
+            return $goodsService->getImage($goodsId);
+        }
         $image = $this->images->first();
-        return $image ? $image->image_url : asset('images/goods_default.png');
+        $url = $image ? $image->image_url : asset('images/goods_default.png');
+        $goodsService->setImage($this->id, $url);
+        return $url;
     }
 
     /**

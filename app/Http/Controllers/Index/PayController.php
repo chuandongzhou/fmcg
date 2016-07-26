@@ -47,7 +47,7 @@ class PayController extends Controller
             'exter_invoke_ip' => $alipayConf['exter_invoke_ip'],
             'out_trade_no' => $orderId,
             'subject' => '成都订百达科技有限公司',
-            'total_fee' => $orders->sum('price'),
+            'total_fee' => $orders->sum('after_rebates_price'),   //价格改为优惠后价格
             'body' => '',
             'extra_common_param' => $field,
             //公共回传参数
@@ -87,7 +87,7 @@ class PayController extends Controller
 
 //	支付金额,必填.
 //单位:元，精确到分.
-        $p3_Amt = $orders->sum('price');
+        $p3_Amt = $orders->sum('after_rebates_price');   //价格改为优惠后价格;
 
 //	交易币种,固定值"CNY".
         $p4_Cur = config('yeepay.p4_cur');

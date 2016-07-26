@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Shop;
+use Carbon\Carbon;
 use Gate;
 use Cache;
 
@@ -27,9 +28,11 @@ class CartService
     /**
      * 格式化购物车商品
      *
-     * @param $carts
+     * @param null $carts
+     * @param bool $withCoupon
+     * @return array
      */
-    public function formatCarts($carts = null)
+    public function formatCarts($carts = null, $withCoupon = false)
     {
         $carts = is_null($carts) ? $this->data : $carts;
         $shopIds = $carts->pluck('goods.shop_id');
@@ -59,9 +62,27 @@ class CartService
                     $sumPrice += $cart->goods->price * $cart->num;
                 }
             }
-            $sumPrice > 0 ? $shops[$key]->sum_price = $sumPrice : array_except($shops, $key);
+            if ($sumPrice > 0) {
+                $shops[$key]->sum_price = $sumPrice;
+                $withCoupon && ($shops[$key]->coupons = $this->getUsefulCoupon($shop->id, $sumPrice));
+
+            } else {
+                $shops = array_except($shops, $key);
+            }
         }
         return $shops;
+    }
+
+    /**
+     * 获取可用优惠券
+     *
+     * @param $shopId
+     * @param $sumPrice
+     * @return mixed
+     */
+    public function getUsefulCoupon($shopId, $sumPrice)
+    {
+        return auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->orderBy('discount', 'DESC')->get();
     }
 
     /**

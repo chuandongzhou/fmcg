@@ -44,14 +44,15 @@
                 var mapData = customerMapData();
 
                 // 百度地图API功能
-                var mp = new BMap.Map("customer-map", {enableMapClick: false});
+                var mp = new BMap.Map("customer-map");
                 mp.centerAndZoom(new BMap.Point(mapData[0]['lng'], mapData[0]['lat']), 15);
                 mp.enableScrollWheelZoom();
                 // 复杂的自定义覆盖物
-                function ComplexCustomOverlay(point, text, mouseoverText) {
+                function ComplexCustomOverlay(point, text, mouseoverText, href) {
                     this._point = point;
                     this._text = text;
                     this._overText = mouseoverText;
+                    this._href = href;
                 }
 
                 ComplexCustomOverlay.prototype = new BMap.Overlay();
@@ -71,6 +72,8 @@
                     div.style.whiteSpace = "nowrap";
                     div.style.MozUserSelect = "none";
                     div.style.fontSize = "12px";
+                    div.setAttribute("data-href",this._href) ;
+
                     var span = this._span = document.createElement("span");
                     div.appendChild(span);
                     span.appendChild(document.createTextNode(this._text));
@@ -89,6 +92,7 @@
                     div.onmouseover = function () {
                         this.style.backgroundColor = "#6BADCA";
                         this.style.borderColor = "#0000ff";
+                        this.style.cursor = "pointer";
                         this.getElementsByTagName("span")[0].innerHTML = that._overText;
                         arrow.style.backgroundPosition = "0px -20px";
                     };
@@ -111,12 +115,24 @@
                     this._div.style.top = pixel.y - 30 + "px";
                 };
 
-                for (var i = 0; i < mapData.length; i++) {
-                    var txt = "客户 " + mapData[i]['number'], mouseoverTxt = txt + " " + mapData[i]['name'];
+                ComplexCustomOverlay.prototype.addEventListener = function (event, fun) {
+                    this._div['on' + event] = fun;
+                }
 
-                    var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(mapData[i]['lng'], mapData[i]['lat']), txt, mouseoverTxt);
+                for (var i = 0; i < mapData.length; i++) {
+                    var txt = mapData[i]['number'], mouseoverTxt = txt + " " + mapData[i]['name'], href = mapData[i]['href'] || false;
+
+                    var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(mapData[i]['lng'], mapData[i]['lat']), txt, mouseoverTxt, href);
 
                     mp.addOverlay(myCompOverlay);
+
+                    myCompOverlay.addEventListener('click', function () {
+                        var href = $(this).data('href');
+                        if (href) {
+                            window.open(href);
+                        }
+                    });
+
                 }
             });
         })

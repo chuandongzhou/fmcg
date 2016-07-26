@@ -116,6 +116,9 @@
 
 @section('body')
     @yield('container')
+    @if ( !is_null(auth()->user()))
+        @include('includes.navigator')
+    @endif
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
@@ -337,7 +340,7 @@
                                                         class="fa fa-envelope-o"></i></span>
                                                 <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
                                                        aria-describedby="feedback-contact" name="contact">
-                                            <span class="input-group-btn">
+                                                <span class="input-group-btn">
                                                 <button class="btn btn-primary btn-submit" type="submit"
                                                         data-done-then="none" data-done-text="反馈提交成功">提交
                                                 </button>
@@ -361,6 +364,10 @@
                                         <div class="driver-helper item">
                                             <div class="qr-code helper"></div>
                                             <div class="text text-center">司机助手</div>
+                                        </div>
+                                        <div class="driver-helper item">
+                                            <div class="qr-code field"></div>
+                                            <div class="text text-center">外勤</div>
                                         </div>
                                     </div>
                                 </div>

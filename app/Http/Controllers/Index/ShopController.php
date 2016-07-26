@@ -70,13 +70,15 @@ class ShopController extends Controller
             return redirect()->back();
         }
 
-        $shop->adverts = $shop->adverts()->OfTime()->get();
+        $shop->adverts = $shop->adverts()->with('image')->OfTime()->get();
 
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
-        $goods = $shop->goods()->active()->with('images.image');
+        $goods = $shop->goods()->active();
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $goods->{'Of' . ucfirst($sort)}();
+        } else {
+            $goods = $goods->OfCommonSort()->orderBy('id', 'DESC');
         }
         $goods = $goods->paginate();
         return view('index.shop.shop', [

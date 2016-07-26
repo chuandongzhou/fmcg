@@ -57,6 +57,9 @@
                         </tr>
                     @endforeach
                 </table>
+                <div class="text-right">
+                    {!! $orders->render() !!}
+                </div>
                 <div class="business-operating">
                     <label><input type="checkbox" class="parent">全选</label>
                     <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"

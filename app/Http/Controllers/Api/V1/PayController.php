@@ -63,7 +63,7 @@ class PayController extends Controller
             array(
                 'subject' => '成都订百达科技有限公司',
                 'body' => $orderNames,
-                'amount' => ($orders->sum('price')) * 100,   //单位为分
+                'amount' => ($orders->sum('after_rebates_price')) * 100,   //单位为分
                 'order_no' => $orderId,
                 'currency' => 'cny',
                 'extra' => $this->_getExtra($channel, $request),
@@ -73,7 +73,6 @@ class PayController extends Controller
                 'app' => array('id' => $this->pingxxConfig['app_id'])
             )
         )->__toArray(true);
-        info($charge);
         return $this->success($charge);
     }
 

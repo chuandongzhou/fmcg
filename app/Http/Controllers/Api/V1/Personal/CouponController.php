@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Controller;
 use App\Http\Requests\Api\v1\CreateCouponRequest;
 use App\Http\Requests\Api\v1\UpdateCouponRequest;
 use App\Models\Coupon;
+use Carbon\Carbon;
 use Gate;
 
 
@@ -14,26 +15,23 @@ class CouponController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function index()
     {
-        //
-    }
+        $shop = auth()->user()->shop;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $coupons = $shop->coupons;
+
+        return $this->success(['coupon' => $coupons]);
     }
 
     public function store(CreateCouponRequest $request)
     {
         $attributes = $request->all();
+
+        $attributes['start_at'] = (new Carbon())->toDateString();
+        $attributes['total'] = $attributes['stock'];
 
         $shop = auth()->user()->shop;
 
