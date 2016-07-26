@@ -68,6 +68,7 @@ class OrderController extends Controller
         }
         $shops = (new CartService($carts))->formatCarts(null, true);
 
+
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
 

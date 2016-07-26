@@ -15,6 +15,7 @@ use App\Models\OrderGoods;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\RedisService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -28,8 +29,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::where('user_id', auth()->id())->with('shop.user', 'user', 'goods.images.image')->orderBy('id',
-            'desc')->paginate();
+        $orders = Order::OfBuy(auth()->id())->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
     }
@@ -45,7 +45,6 @@ class OrderController extends Controller
 
         return $this->success($this->_hiddenAttr($orders));
     }
-
 
     /**
      * 获取待收货信息--买家操作
@@ -81,7 +80,6 @@ class OrderController extends Controller
         return $this->success($this->_hiddenAttr($orders));
     }
 
-
     /**
      * 买家获取订单详情
      *
@@ -105,7 +103,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image')->orderBy('id',
+        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods', 'coupon')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
         return $this->success($this->_hiddenAttr($orders));
@@ -134,7 +132,6 @@ class OrderController extends Controller
 
         return $this->success($this->_hiddenAttr($orders));
     }
-
 
     /**
      * 卖家查询订单详情
@@ -315,7 +312,6 @@ class OrderController extends Controller
         return $this->success(['failIds' => $failIds]);
     }
 
-
     /**
      * 批量修改发货状态。不区分付款状态
      *
@@ -403,20 +399,17 @@ class OrderController extends Controller
     /**
      * 获取确认订单页
      *
-     * @return \Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getConfirmOrder()
     {
         $user = auth()->user();
         $carts = $user->carts()->where('status', 1)->with('goods')->get();
-        $shops = (new CartService($carts))->formatCarts();
-        //收货地址
-        $shippingAddress = $user->shippingAddress()->with('address')->get();
+        $shops = (new CartService($carts))->formatCarts(null, true);
         $payType = cons()->valueLang('pay_type');//支付类型
         $payWay = cons()->lang('pay_way');//支付方式
         return $this->success([
             'shops' => $shops,
-            'shipping_address' => $shippingAddress,
             'pay_type' => $payType,
             'pay_way' => $payWay
         ]);
@@ -546,6 +539,21 @@ class OrderController extends Controller
             });
             $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
+
+            $order->setAppends([
+                'status_name',
+                'payment_type',
+                'step_num',
+                'can_cancel',
+                'can_confirm',
+                'can_send',
+                'can_confirm_collections',
+                'can_export',
+                'can_payment',
+                'can_confirm_arrived',
+                'after_rebates_price'
+            ]);
+            $order->shop->setAppends([]);
         });
         return $orders;
     }

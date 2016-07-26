@@ -30,16 +30,17 @@ class OrderBuyController extends OrderController
      */
     public function getIndex(Request $request)
     {
-        //买家可执行功能列表
         //支付方式
         $payType = cons()->valueLang('pay_type');
 
         //订单状态
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
+
         $orderStatus = array_merge($payStatus, $orderStatus);
 
         $search = $request->all();
+
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
         $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';

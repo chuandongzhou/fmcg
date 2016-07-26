@@ -815,7 +815,6 @@
 `成功返回：`
 
      shops                array       商店列表
-     shipping_address     array       收货地址列表
 	 pay_type			  array		  支付类型
 	 pay_way		      array		  支付方式
 
@@ -825,6 +824,7 @@
     id                  int         商店id
     min_money           decimal     最低配送额
     cart_goods          array       属于本商店的商品
+    coupons             array       当前店铺可用的优惠券
 
         cart_goods子字段说明
 
@@ -835,46 +835,35 @@
         images              string      商品图片
         goods               array       商品详情
 
-            cart_goods子字段说明
+        cart_goods子字段说明
 
-            id                  int         商品id
-            name                string      商品名
-            price_retailer      decimal     价格（对于终端商）
-            price_wholesaler    decimal     价格（对于批发商）
+        id                  int         商品id
+        name                string      商品名
+        price_retailer      decimal     价格（对于终端商）
+        price_wholesaler    decimal     价格（对于批发商）
+        
+        coupons 子字段说明
+        
+        id                  int         优惠券id
+        full                decimal     订单满多少金额
+        discount            decimal     订单优惠金额
 
-     shippingAddress    子字段说明
-
-     id                 int         收货地址id
-     consigner          string      收货人
-     phone              string      手机号码
-     is_default         int         是否默认
-     user_id            int         用户id
-     address            array       地址详情
-
-     address    子字段说明
-
-     id                 int         地址id
-     province_id        int         省id
-     city_id            int         市id
-     district_id        int         县id
-     street_id          int         街道id
-     area_name          string      区域名
-     address            string      详细地址
 
 
 `失败返回`
 
-#### 2.7.3 提交订单[get] (confirm-order)
+#### 2.7.3 提交订单[post] (submit-order)
 `请求参数：`
 
-    shipping_address_id int         收货地址id
-    pay_type            string      支付类型 （online 在线 ， cod 货到付款）
-    pay_way             string      付款方式 （传入'cash'为现金  传入'card'为刷卡）
+    shipping_address_id int         收货地址id(仅当为送货订单时传入)
+    pay_type            string      支付类型 （仅当为送货订单时传入 ： online 在线 ， cod 货到付款）
+    pay_way             string      付款方式 （仅当pay_type为cod时传入 ：传入'cash'为现金  传入'card'为刷卡）
     shop                array       商店
 
     shop 子字段说明（key=>value）  key为商店id
 
     remark              string      订单备注信息
+    coupon_id           int         优惠券id
 
 `成功返回：`
 
@@ -900,9 +889,10 @@
 	
 	id					int			订单ID号
 	price               string      订单总金额
+	after_rebates_price decimal     订单优惠后金额
 	status_name			string		订单显示状态
 	payment_type		string      支付方式(如:在线支付;货到付款)
-	pay_way             string      付款方式 （'cash'为现金  传入'card'为刷卡 ）
+	pay_way             string      付款方式 （1为现金  2为刷卡 ）
 	pay_type			int			支付方式(1:在线支付;2:货到付款)
 	pay_status			int			支付状态(0:未付款;1:已付款)
 	status				int			订单状态(1:未发货;2:已发货;3:完成)
@@ -918,10 +908,10 @@
 	name				string		店铺名字
 	user				array		卖家信息
 
-		user 字段子集说明
+    user 字段子集说明
 
-		user_name       string      卖家账户名称
-		type			int         卖家角色类型
+    user_name       string      卖家账户名称
+    type			int         卖家角色类型
 	
 	goods 字段子集说明
 	
@@ -931,10 +921,10 @@
 	image_url			string		商品图片地址
 	pivot				array		该商品在本订单中的详细信息
 
-		pivot 字段子集说明
+    pivot 字段子集说明
 
-		price			string		商品价格
-		num				int			商品数量
+    price			string		商品价格
+    num				int			商品数量
 	
 `失败返回`
 
@@ -1037,9 +1027,10 @@
 	
 	id						 	int			订单ID号
 	price              		 	string      订单总金额
+	after_rebates_price         decimal     订单优惠后金额
 	status_name					string		订单显示状态
 	payment_type				string      支付方式(如:在线支付;货到付款)
-	pay_way                     string      付款方式 （传入'cash'为现金  传入'card'为刷卡）
+	pay_way                     string      付款方式 （1为现金  2为刷卡）
 	pay_type					int			支付方式(1:在线支付;2:货到付款)
 	pay_status					int			支付状态(0:未付款;1:已付款)
 	status						int			订单状态(1:未发货;2:已发货;3:完成)

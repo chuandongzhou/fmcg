@@ -89,8 +89,8 @@ class CartService
      * 购买商品数据验证
      *
      * @param $num
-     * @param bool|false $updateNum
-     * @return bool
+     * @param bool $updateNum
+     * @return array|bool
      */
     public function validateOrder($num, $updateNum = false)
     {

@@ -100,12 +100,14 @@
                     passwordConfirmation = $('input[name="password_confirmation"]'),
                     name = $('input[name="name"]'),
                     contactInformation = $('input[name="contact_information"]'),
-                    submitBtn = $('button[type="submit"]');
+                    submitBtn = $('button[type="submit"]'),
+                    modelTitle = $('.modal-title');
 
             salesmanModel.on('show.bs.modal', function (e) {
                 targetParent = $(e.relatedTarget);
                 salesmanId = targetParent.data('id');
                 if (salesmanId) {
+                    modelTitle.html('编辑业务员');
                     $.get(site.api('business/salesman/' + salesmanId), '', function (data) {
                         var salesman = data.salesman;
                         avatarThumbnail.attr('src', salesman.avatar_url);
@@ -117,6 +119,7 @@
 
                 }
             }).on('hidden.bs.modal', function () {
+                modelTitle.html('添加业务员');
                 avatarThumbnail.attr('src', '');
                 account.val('').prop('disabled', false);
                 name.val('');
