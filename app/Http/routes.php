@@ -260,7 +260,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('logout', 'DeliveryController@logout');//退出登陆
             $router->post('update-order', 'DeliveryController@changeOrder');//修改订单商品数量
         });
-
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
             $router->post('auth/login', 'AuthController@login');

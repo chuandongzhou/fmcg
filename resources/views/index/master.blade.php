@@ -116,15 +116,189 @@
 
 @section('body')
     @yield('container')
-    @if ( !is_null(auth()->user()))
-        @include('includes.navigator')
-    @endif
+
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
         <div class="msg-channel" id="alert-div">
             <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></div>
             <a class="check" href="#">点击查看>>>></a>
+        </div>
+        <!--右侧贴边导航quick_links.js控制-->
+        <div class="quick-wrap">
+            <div class="quick_links_panel">
+                <div id="quick_links" class="quick_links">
+                    <li>
+                        <a href="javascript:;" class="my_qlinks"><i class="setting"></i></a>
+                        @if(isset($user))
+                        <div class="ibar_login_box status_login">
+                            <div class="avatar_box">
+                                <p class="avatar_imgbox"><img src="{{ $user->shop->logo_url }}"/></p>
+                                <ul class="user_info">
+                                    <li>店铺名：{{ $user->shop->name }}</li>
+                                    <li>类&nbsp;型：{{ cons()->valueLang('user.type' , $user->type) }}</li>
+                                </ul>
+                            </div>
+                            <div class="login_btnbox">
+                                <a href="{{ isset($user) && $user->type > cons('user.type.retailer') ? url('order-sell') : url('order-buy') }}" class="login_order">我的订单</a>
+                                <a href="{{ url('like/goods') }}" class="login_favorite">我的收藏</a>
+                            </div>
+                            <i class="icon_arrow_white"></i>
+                        </div>
+                        @endif
+                    </li>
+                    <li id="shopCart">
+                        <a href="javascript:;" class="message_list pop-show-link"><i class="message"></i>
+
+                            <div class="span">购物车</div>
+                            @if($carts = (new \App\Services\CartService)->cartDetail())
+                                <span class="cart_num">{{ $carts['count'] }}</span></a>
+                        @endif
+                    </li>
+                    <li id="coupon">
+                        <a href="javascript:;" class="history_list pop-show-link"><i class="view"></i></a>
+
+                        <div class="mp_tooltip" style=" visibility:hidden;">我的资产<i class="icon_arrow_right_black"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{{ url('like/goods') }}" class="mpbtn_wdsc"><i class="wdsc"></i></a>
+
+                        <div class="mp_tooltip">我的收藏<i class="icon_arrow_right_black"></i></div>
+                    </li>
+                </div>
+                <div class="quick_toggle">
+                    <li><a href="javascript:;" class="return_top"><i class="top"></i></a></li>
+                </div>
+            </div>
+            <div id="quick_links_pop" class="quick_links_pop ">
+                <!--购物车开始-->
+                {{--<a href="javascript:;" class="ibar_closebtn" title="关闭"></a>--}}
+                {{--<div class="ibar_plugin_title"><h3>购物车</h3></div>--}}
+                {{--<div class="loading-img" style="display:none;"><img src="../images/loading.gif" /></div>--}}
+                {{--<div class="pop_panel cart-panel" style="display:none;">--}}
+                {{--<div class="ibar_plugin_content">--}}
+                {{--<div class="ibar_cart_group ibar_cart_product" >--}}
+                {{--<ul>--}}
+                {{----}}
+                {{--</ul>--}}
+                {{--</div>--}}
+                {{--<div class="cart_handler">--}}
+                {{--<div class="cart_handler_header"><span class="cart_handler_left">共<span--}}
+                {{--class="cart_price cart_num">1</span>件商品</span><span class="cart_handler_right">￥569.00</span>--}}
+                {{--</div>--}}
+                {{--<a href="{{ url('cart') }}" class="cart_go_btn" target="_blank">去购物车结算</a></div>--}}
+                {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="arrow"><i></i></div>--}}
+                {{--<div class="fix_bg"></div>--}}
+                        <!--购物车结束-->
+                <!--优惠券领取开始-->
+                <a href="javascript:;" class="ibar_closebtn" title="关闭"></a>
+                <div class="ibar_plugin_title">
+                    <h3>
+                        我的资产
+                    </h3>
+                </div>
+                <div class="loading-img" style="display:none;"><img src="../images/loading.gif" /></div>
+                <div class="pop_panel coupon-panel" style="display:none;">
+                    <div class="ibar_plugin_content">
+                        <div class="ia-head-list">
+                            <a href="http://192.168.2.66/coupons" target="_blank" class="pl">
+                                <div class="my-coupon-num">
+                                    2
+                                </div>
+                                <div class="text">
+                                    优惠券
+                                </div>
+                            </a>
+                        </div>
+                        <div class="ga-expiredsoon">
+                            <div class="es-head">
+                                即将过期优惠券
+                            </div>
+                            <div class="coupon-wrap my-coupon-wrap">
+                                <div class="coupon-loading-img" style="display:none;"><img src="../images/loading.gif" /></div>
+                                {{--<div class="coupon bgc-blue">--}}
+                                    {{--<div class="validity">--}}
+                                        {{--<p>--}}
+                                            {{--<!--有效期-->--}}
+                                        {{--</p>--}}
+                                        {{--<p>--}}
+                                            {{--2016-07-01--}}
+                                        {{--</p>--}}
+                                        {{--<p>--}}
+                                            {{--2016-08-31--}}
+                                        {{--</p>--}}
+                                    {{--</div>--}}
+                                    {{--<ul>--}}
+                                        {{--<li>--}}
+                                            {{--<a href=" http://192.168.2.66/shop/3" target="_blank">--}}
+                                                {{--无限极旗舰店--}}
+                                            {{--</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li>--}}
+                                            {{--￥5.00--}}
+                                        {{--</li>--}}
+                                        {{--<li>--}}
+                                            {{--满50.00使用--}}
+                                        {{--</li>--}}
+                                    {{--</ul>--}}
+                                {{--</div>--}}
+                                {{--<div class="coupon bgc-red">--}}
+                                    {{--<div class="expiration">--}}
+                                        {{--<span>--}}
+                                        {{--10天后过期--}}
+                                        {{--</span>--}}
+                                    {{--</div>--}}
+                                    {{--<ul>--}}
+                                        {{--<li>--}}
+                                            {{--<a href=" http://192.168.2.66/shop/3" target="_blank">--}}
+                                                {{--无限极旗舰店--}}
+                                            {{--</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li>--}}
+                                            {{--￥20.00--}}
+                                        {{--</li>--}}
+                                        {{--<li>--}}
+                                            {{--满200.00使用--}}
+                                        {{--</li>--}}
+                                    {{--</ul>--}}
+                                {{--</div>--}}
+                            </div>
+                        </div>
+                        <div class="ga-expiredsoon recevie-coupon-head" style="display:none;">
+                            <div class="es-head">
+                                可领取优惠券
+                            </div>
+                            <div class="coupon-wrap my-recevie-coupon-wrap">
+                                <div class="coupon-loading-img" style="display:none;"><img src="../images/loading.gif" /></div>
+                                {{--<div class="coupon bgc-orange">--}}
+                                    {{--<div class="receive-wrap"><a class="not-receive">立即领取</a><a class="already-receive"><span--}}
+                                                    {{--class="fa fa-check"></span>已领</a></div>--}}
+                                    {{--<div class="validity"><p>有效期</p>--}}
+
+                                        {{--<p>2016.07.18 00.00</p>--}}
+
+                                        {{--<p>2016.07.28 23.59</p></div>--}}
+                                    {{--<ul>--}}
+                                        {{--<li>xxx店铺</li>--}}
+                                        {{--<li>￥10</li>--}}
+                                        {{--<li>满5使用</li>--}}
+                                    {{--</ul>--}}
+                                {{--</div>--}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pop_panel cart-panel" style="display:none;">
+                    <div class="ibar_plugin_content"></div>
+                </div>
+                <div class="arrow"><i></i></div>
+                <div class="fix_bg"></div>
+                <!--优惠券领取结束-->
+            </div>
         </div>
     @endif
 @stop
@@ -247,6 +421,244 @@
                 })
             }
 
+            var flip = 0;
+            var couponFlip = 0;
+            //点击购物车图标显示弹框
+            $("#shopCart").click(function (e) {
+                e.stopPropagation();
+                couponFlip = 0;
+                if (flip++ % 2 === 0) {
+
+                    $(".quick_links_pop").animate({left: -320, queue: true});
+                    $(".quick_links_pop").css("zIndex", "-1");
+                    $('.coupon-panel').css('display','none');
+                    $('.ibar_plugin_title h3').html('购物车');
+                    $('.loading-img').css('display', 'block');
+                    $('.cart-panel').css('display', 'none');
+
+                    $.ajax({
+                        url: '/api/v1/cart',
+                        method: 'get'
+                    }).done(function (data) {
+                        var html = '', cartNum = 0, cartPrices = 0;
+                        html += '<div class="ibar_cart_group ibar_cart_product" >'+
+                            '<ul>';
+                        for (var shops in data) {
+                            var detailShops = data[shops];
+                            for (var shop in detailShops) {
+
+                                html += '<li class="cart_item">' +
+                                        '<div class="store-name">' + detailShops[shop].name + '</div>';
+                                cartPrices += detailShops[shop].sum_price;
+                                for (var goods in detailShops[shop].cart_goods) {
+                                    cartNum++;
+                                    var detailGoods = detailShops[shop].cart_goods[goods];
+
+                                    html += '<div class="store-panel">' +
+                                            '<div class="cart_item_pic"><a href="/goods/' + detailGoods.goods_id + '"><img src="' + detailGoods.image + '"></a></div>' +
+                                            '<div class="cart_item_desc"><a href="#" class="cart_item_name">' + detailGoods.goods.name + '</a>' +
+                                            '<div class="cart_item_price"><span class="cart_price">￥' + detailGoods.goods.price + '</span></div>' +
+                                            '</div>' +
+                                            '</div>';
+                                }
+                                html += '</li>';
+                            }
+                        }
+                        html += '</ul>'+
+                                '</div>'+
+                                '<div class="cart_handler">'+
+                                    '<div class="cart_handler_header"><span class="cart_handler_left">共<span'+
+                                    'class="cart_price cart_num">'+cartNum+'</span>件商品</span><span class="cart_handler_right">￥'+cartPrices+'</span>'+
+                                    '</div>'+
+                                   '<a href="{{ url('cart') }}" class="cart_go_btn" target="_blank">去购物车结算</a></div>';
+
+                        $('.cart-panel .ibar_plugin_content').html(html);
+                        $('.cart_num').html(cartNum);
+                        $('.cart_handler_right').html('￥' + cartPrices);
+                        $('.loading-img').css('display', 'none');
+                        $('.cart-panel').css('display', 'block');
+
+                    });
+                } else {
+                    $(".quick_links_pop").animate({left: -40, queue: true});
+                    $(".quick_links_pop").css("zIndex", "-1")
+                }
+            })
+            //点击我的资产图标显示弹框
+            $("#coupon").click(function (e) {
+                e.stopPropagation();
+                flip = 0;
+                if (couponFlip++ % 2 === 0) {
+
+                    $(".quick_links_pop").animate({left: -320, queue: true});
+                    $(".quick_links_pop").css("zIndex", "-1");
+                    $('.cart-panel').css('display', 'none');
+                    var html = '';
+                    $('.ibar_plugin_title h3').html('我的资产');
+                    $('.coupon-panel').css('display', 'block');
+                    $('.coupon-loading-img').css('display','block');
+                    $.ajax({
+                        url: '/api/v1/coupon/user-coupon',
+                        method: 'get'
+                    }).done(function (data) {
+                        data = data.coupons;
+                        $('.my-coupon-num').html(data.length);
+                        for(var i=0;i<data.length;i++){
+                            var dateTo = new Date(data[i].end_at);
+                            var dateFrom = new Date();
+                            var diff = dateTo.valueOf() - dateFrom.valueOf();
+                            var diff_day = parseInt(diff/(1000*60*60*24));
+                            if(diff_day>10){
+                                html +=  '<div class="coupon bgc-blue">'+
+                                            '<div class="validity">'+
+                                                '<p>'+
+                                                ' 有效期'+
+                                                ' </p>'+
+                                                ' <p>'+
+                                                data[i].start_at+
+                                                '</p>'+
+                                                '<p>'+
+                                                data[i].end_at+
+                                                '</p>'+
+                                            '</div>'+
+                                            ' <ul>'+
+                                                ' <li>'+
+                                                    ' <a href=" shop/'+data[i].shop.id+'" target="_blank">'+
+                                                   data[i].shop.name+
+                                                    ' </a>'+
+                                                ' </li>'+
+                                                ' <li>'+
+                                                ' ￥'+data[i].discount+
+                                                '</li>'+
+                                                '<li>'+
+                                                '满'+data[i].full+'使用'+
+                                                '</li>'+
+                                            ' </ul>'+
+                                        '</div>';
+                            }else{
+                                html += '<div class="coupon bgc-red">'+
+                                            ' <div class="expiration">'+
+                                                '<span>'+
+                                                    diff_day+'天后过期'+
+                                                ' </span>'+
+                                            ' </div>'+
+                                            '  <ul>'+
+                                                '<li>'+
+                                                ' <a href=" shop/'+data[i].shop.id+'" target="_blank">'+
+                                                data[i].shop.name+
+                                                '</a>'+
+                                                '</li>'+
+                                                ' <li>'+
+                                                ' ￥'+data[i].discount+
+                                                ' </li>'+
+                                                '<li>'+
+                                                ' 满'+data[i].full+'使用'+
+                                                ' </li>'+
+                                            ' </ul>'+
+                                        '</div>';
+                            }
+                        }
+                        $('.my-coupon-wrap').html(html);
+                        $('.coupon-loading-img').css('display','none');
+
+
+                    });
+                   @if(request()->is('shop/*'))
+                    var pattern=/.*shop\/(\d).*/g;
+                    var shop = (pattern.exec(window.location.href))[1];
+                    var url = '/api/v1/coupon/'+shop;
+                    $.ajax({
+                        url: url,
+                        method: 'get'
+                    }).done(function (data) {
+
+                        var h ='';
+                        data = data.coupons;
+
+                        for(var i=0;i<data.length;i++){
+                            h +=  '<div class="coupon bgc-orange">'+
+                                    '<div class="receive-wrap" data-id="'+data[i].id+'"><a class="not-receive">立即领取</a><a class="already-receive"><span'+
+                                    ' class="fa fa-check"></span>已领</a></div>'+
+                                    '<div class="validity"><p>有效期</p>'+
+
+                                    '<p>'+data[i].start_at+'</p>'+
+
+                                    '<p>'+data[i].end_at+'</p></div>'+
+                                    '<ul>'+
+                                    '<li>'+data[i].shop.name+'</li>'+
+                                    '<li>￥'+data[i].discount+'</li>'+
+                                    '<li>满'+data[i].full+'使用</li>'+
+                                    '</ul>'+
+                                    '</div>';
+
+                        }
+                        $('.recevie-coupon-head').css('display','block');
+                        $('.my-recevie-coupon-wrap').html(h);
+
+                    });
+                    @endif
+
+                } else {
+                    $(".quick_links_pop").animate({left: -40, queue: true});
+                    $(".quick_links_pop").css("zIndex", "-1")
+                }
+            })
+            //点击按钮关闭弹框
+            $(".ibar_closebtn").click(function (e) {
+                flip = 0;
+                couponFlip = 0;
+                $(".quick_links_pop").animate({left: -40, queue: true});
+                $(".quick_links_pop").css("zIndex", "-1")
+            })
+            //用户头像显示信息
+            $(".my_qlinks").mouseenter(function () {
+                $(this).siblings(".ibar_login_box").show();
+            })
+            //点击其他地方隐藏div
+            $(".my_qlinks").parent("li").mouseleave(function () {
+                $(".ibar_login_box").hide();
+            })
+            $(document).click(function (e) {
+                e = e || window.event;
+                flip = 0;
+                couponFlip = 0;
+                if (e.target != $('.quick-wrap')[0] && e.target != $(".quick_links_pop")[0]) {
+                    $(".quick_links_pop").animate({left: -40, queue: true});
+                    $(".quick_links_pop").css("zIndex", "-1")
+                }
+            });
+            $(".quick-wrap").click(function (event) {
+                event.stopPropagation();
+            });
+            //滚动条离开顶部一定的高度 显示回到顶部按钮
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > 100) {
+                    $(".quick_toggle").addClass('quick_links_allow_gotop');
+                } else {
+                    $(".quick_toggle").removeClass('quick_links_allow_gotop');
+                }
+            })
+            //点击回到顶部按钮
+            $(".return_top").click(function () {
+                $('html, body').animate({scrollTop: 0}, 'slow');
+            });
+            //领取优惠券
+            $("#quick_links_pop").on("click", ".receive-wrap", function () {
+                var coupon_id = $(this).data('id');
+                var obj = $(this);
+
+                $.ajax({
+                    url: '/api/v1/coupon/receive/'+coupon_id,
+                    data: {coupon: coupon_id},
+                    method: 'post'
+                }).done(function () {
+                    obj.children(".not-receive").css("display", "none").siblings().css("display", "inline-block");
+                    setTimeout(function () {
+                        obj.css("display", "none")
+                    }, 500)
+                });
+
+            });
         });
     </script>
 @stop

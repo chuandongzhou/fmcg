@@ -47,7 +47,7 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['images_url', 'image_url', 'pieces'];
+    public $appends = ['images_url', 'image_url', 'pieces','price'];
 
     protected $hidden = [
         'images',
