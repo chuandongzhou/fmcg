@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url('/') }}" class="btn btn-danger pay" target="_blank">前往支付</a>
+                    <a href="" class="btn btn-danger pay" target="_blank">前往支付</a>
                 </div>
             </div>
         </div>
@@ -43,17 +43,15 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            var payModal = $('#payModal'), payWayPanel = payModal.find('.pay-way');
+            var payModal = $('#payModal'), payWayPanel = payModal.find('.pay-way'), payButton = $('.pay'), payUrl = site.url();
             payModal.on('shown.bs.modal', function (e) {
                 var payParent = $(e.relatedTarget),
                         orderId = payParent.data('id'),
                         orderPrice = payParent.data('price'),
                         payWay = payWayPanel.find('input:checked').val(),
-                        payButton = $('.pay'),
-                        payUrl = payButton.attr('href');
-
-
-                if (orderPrice > parseFloat(payWayPanel.find('.user-balance').html())) {
+                        userBalanceControl = payWayPanel.find('.user-balance'),
+                        userBalance = parseFloat(userBalanceControl.html());
+                if (orderPrice > userBalance) {
                     payWayPanel.find('.balance-not-full').removeClass('hide');
                     payWayPanel.find('.balance-pay').prop('disabled', true);
                 } else {
@@ -70,7 +68,7 @@
                 })
             });
             payModal.on('hide.bs.modal', function (e) {
-                $('.pay').attr('href', '{{ url('/') }}');
+                payButton.attr('href', payUrl);
                 payWayPanel.find('.balanceNotFull').addClass('hide');
                 payWayPanel.find('.balance-pay').prop('disabled', false);
             })

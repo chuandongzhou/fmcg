@@ -48,11 +48,11 @@ class SalesmanController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\Api\V1\UpdateSalesmanRequest $request
+     * @param \App\Http\Requests\Api\v1\UpdateSalesmanRequest $request
      * @param $salesman
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function update(Requests\Api\V1\UpdateSalesmanRequest $request, Salesman $salesman)
+    public function update(Requests\Api\v1\UpdateSalesmanRequest $request, Salesman $salesman)
     {
         if (Gate::denies('validate-salesman', $salesman)) {
             return $this->error('业务员不存在');
@@ -89,10 +89,10 @@ class SalesmanController extends Controller
     /**
      * Update the specified resource by App
      *
-     * @param \App\Http\Requests\Api\V1\UpdateSalesmanRequest $request
+     * @param \App\Http\Requests\Api\v1\UpdateSalesmanRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function updateByApp(Requests\Api\V1\UpdateSalesmanRequest $request)
+    public function updateByApp(Requests\Api\v1\UpdateSalesmanRequest $request)
     {
         $salesman = salesman_auth()->user();
         $attributes = $request->all();

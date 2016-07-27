@@ -296,8 +296,8 @@ class Order extends Model
      */
     public function getCanConfirmAttribute()
     {
-        return $this->attributes['status'] == cons('order.status.non_confirm') && $this->attributes['is_cancel'] == cons('order.is_cancel.off')/* && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id')*/
-            ;
+        return $this->attributes['status'] == cons('order.status.non_confirm')
+        && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
     }
 
     /**
@@ -474,8 +474,10 @@ class Order extends Model
      */
     public function scopeOfBuy($query, $userId)
     {
-        return $query->where('user_id', $userId)->where('is_cancel', cons('order.is_cancel.off'))->with('shop.user',
-            'goods.images.image')->orderBy('id', 'desc');
+        return $query->where('user_id', $userId)
+            ->where('is_cancel', cons('order.is_cancel.off'))
+            ->with('shop.user', 'user', 'goods', 'coupon')
+            ->orderBy('id', 'desc');
     }
 
     /**
@@ -533,17 +535,18 @@ class Order extends Model
     }
 
     /**
-     * 待确认
+     * 待付款
      *
      * @param $query
      * @return mixed
      */
     public function scopeNonPayment($query)
     {
-        return $query->where(function ($q) {
-            $q->where(['pay_type' => cons('pay_type.online')])
-                ->orWhere(['pay_type' => cons('pay_type.cod'), 'status' => cons('order.status.send')]);
-        })->where('pay_status', cons('order.pay_status.non_payment'));
+        return $query->where(function ($query) {
+            $statusArr = cons('order.status');
+            $query->where('status', '>=', $statusArr['non_send'])->where('status', '<', $statusArr['finished']);
+        })->where('pay_status', cons('order.pay_status.non_payment'))->where('pay_type', '<>',
+            cons('pay_type.pick_up'));
     }
 
     /**
@@ -554,12 +557,7 @@ class Order extends Model
      */
     public function scopeWaitConfirm($query)
     {
-        return $query->where(function ($query) {
-            $query->where([
-                'pay_type' => cons('pay_type.online'),
-                'pay_status' => cons('order.pay_status.payment_success')
-            ])->orWhere('pay_type', cons('pay_type.cod'));
-        })->where('status', cons('order.status.non_confirm'))->NonCancel();
+        return $query->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
 
     /**
@@ -600,7 +598,7 @@ class Order extends Model
      */
     public function scopeNonArrived($query)
     {
-        return $query->where(['status' => cons('order.status.send'), 'pay_type' => cons('pay_type.online')]);
+        return $query->where(['status' => cons('order.status.send')]);
     }
 
     /**
@@ -620,16 +618,7 @@ class Order extends Model
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
                     $query->where('pay_status', cons('order.pay_status.non_payment'))
-                        ->where('pay_type', cons('pay_type.online'));
-                } elseif ($search['status'] == key(cons('order.status'))) {
-                    //未确认
-                    $query->where('status', cons('order.status.non_confirm'))
-                        ->where(function ($query) {
-                            $query->where([
-                                'pay_type' => cons('pay_type.online'),
-                                'pay_status' => cons('order.pay_status.payment_success')
-                            ])->orWhere('pay_type', cons('pay_type.cod'));
-                        });
+                        ->where('pay_type', '<>', cons('pay_type.pick_up'));
                 } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {
                         $query->where([

@@ -121,7 +121,7 @@
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
         <div class="msg-channel" id="alert-div">
-            <p class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></p>
+            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></div>
             <a class="check" href="#">点击查看>>>></a>
         </div>
         <!--右侧贴边导航quick_links.js控制-->
