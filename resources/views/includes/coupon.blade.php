@@ -33,12 +33,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="stock">库存:</label>
+                            <label class="col-sm-2 control-label" for="stock">总量:</label>
 
                             <div class="col-sm-10 col-md-6">
                                 <input class="form-control" id="stock" name="stock"
-                                       placeholder="请输入库存"
-                                       type="text">
+                                       placeholder="请输入生成总量" type="text">
                             </div>
                         </div>
 

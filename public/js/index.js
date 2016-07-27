@@ -649,7 +649,6 @@ var ajaxNoForm = function () {
         $.each(self.data('data') || {}, function (name, value) {
             data[name] = value
         });
-        console.log(data);
 
         self.button('loading');
         $.ajax({
@@ -658,10 +657,12 @@ var ajaxNoForm = function () {
             data: data
         }).done(function (data, textStatus, jqXHR) {
             console.log(data);
-            if ($.isPlainObject(data) && data.id) {
+            if ($.isPlainObject(data) && data.message) {
+                //console.log('off');
                 self.data('status', 1).button('off');
                 // statusInfo.html('已上架');
             } else {
+                //console.log('on');
                 self.data('status', 0).button('on');
                 //statusInfo.html('已下架');
             }

@@ -1984,7 +1984,6 @@ table {
 
 .wholesalers-management {
   .notice-bar {
-    padding: 0;
     border-bottom: 1px solid $brand-primary;
     margin-bottom: 10px;
     .btn {
@@ -1996,7 +1995,10 @@ table {
     }
   }
   .pay-detail {
-    @extend .right-search;
+    padding: 20px 15px!important;
+    .input-group{
+      z-index: 0!important;
+    }
     .item {
       display: inline-block;
       padding: 3px 25px 3px 0;
@@ -2072,9 +2074,7 @@ table {
     }
 
   }
-  .order-table-list {
-    .table-col {
-      padding: 0;
+  .table-col {
       table {
         tr {
           th {
@@ -2117,7 +2117,6 @@ table {
         }
       }
     }
-  }
   .order-process {
     border: 1px solid $blue-light;
     margin: 15px 0;

@@ -611,9 +611,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   .dealer-header .logo-icon {
     padding-top: 8px; }
 
-.wholesalers-top-header .right-search, .wholesalers-top-header .wholesalers-management .pay-detail, .wholesalers-management .wholesalers-top-header .pay-detail {
+.wholesalers-top-header .right-search {
   padding: 20px 0; }
-  .wholesalers-top-header .right-search .input-group, .wholesalers-top-header .wholesalers-management .pay-detail .input-group, .wholesalers-management .wholesalers-top-header .pay-detail .input-group {
+  .wholesalers-top-header .right-search .input-group {
     z-index: 0 !important; }
 
 .shopping-car {
@@ -648,7 +648,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     height: auto;
     text-align: left; }
 
-.right-search, .wholesalers-management .pay-detail {
+.right-search {
   padding: 10px 0; }
 
 .wholesalers-header {
@@ -1486,7 +1486,6 @@ table {
       color: #b4b4b4; }
 
 .wholesalers-management .notice-bar {
-  padding: 0;
   border-bottom: 1px solid #4cb9fe;
   margin-bottom: 10px; }
   .wholesalers-management .notice-bar .btn {
@@ -1495,14 +1494,18 @@ table {
   .wholesalers-management .notice-bar .btn-primary {
     color: #fff; }
 
-.wholesalers-management .pay-detail .item {
-  display: inline-block;
-  padding: 3px 25px 3px 0;
-  font-size: 12px; }
-  .wholesalers-management .pay-detail .item input {
-    width: 80px; }
-  .wholesalers-management .pay-detail .item .control {
-    padding: 5px 0; }
+.wholesalers-management .pay-detail {
+  padding: 20px 15px !important; }
+  .wholesalers-management .pay-detail .input-group {
+    z-index: 0 !important; }
+  .wholesalers-management .pay-detail .item {
+    display: inline-block;
+    padding: 3px 25px 3px 0;
+    font-size: 12px; }
+    .wholesalers-management .pay-detail .item input {
+      width: 80px; }
+    .wholesalers-management .pay-detail .item .control {
+      padding: 5px 0; }
 
 .wholesalers-management .order-management .control-item {
   width: 28%; }
@@ -1544,38 +1547,39 @@ table {
   .wholesalers-management .order-form-list .order-form-detail p {
     padding: 10px 0; }
 
-.wholesalers-management .order-table-list .table-col {
-  padding: 0; }
-  .wholesalers-management .order-table-list .table-col table tr th, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td {
-    border: none;
-    background-color: #cae6f7;
-    color: #777777;
-    vertical-align: middle;
-    font-size: 14px;
-    font-weight: 400 !important; }
-    .wholesalers-management .order-table-list .table-col table tr th .order-number, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number {
-      display: inline-block;
-      margin-left: 20px; }
-      .wholesalers-management .order-table-list .table-col table tr th .order-number label, .wholesalers-management .order-table-list .table-col .table-list-row .shopping-table-list table tr td .order-number label, .table-list-row .shopping-table-list .wholesalers-management .order-table-list .table-col table tr td .order-number label {
-        font-weight: 400 !important;
-        font-size: 14px !important; }
-  .wholesalers-management .order-table-list .table-col table tr td {
-    border-right: none;
-    border-left: none;
-    vertical-align: middle;
-    font-size: 13px !important;
-    padding: 2px !important; }
-    .wholesalers-management .order-table-list .table-col table tr td .store-img {
-      width: 60px;
-      height: 60px; }
-  .wholesalers-management .order-table-list .table-col table tr td.pay-detail {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    vertical-align: top; }
-  .wholesalers-management .order-table-list .table-col table tr td.operating {
-    vertical-align: top; }
-    .wholesalers-management .order-table-list .table-col table tr td.operating p {
-      padding: 5px 0; }
+.wholesalers-management .table-col table tr th, .wholesalers-management .table-col .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .wholesalers-management .table-col table tr td {
+  border: none;
+  background-color: #cae6f7;
+  color: #777777;
+  vertical-align: middle;
+  font-size: 14px;
+  font-weight: 400 !important; }
+  .wholesalers-management .table-col table tr th .order-number, .wholesalers-management .table-col .table-list-row .shopping-table-list table tr td .order-number, .table-list-row .shopping-table-list .wholesalers-management .table-col table tr td .order-number {
+    display: inline-block;
+    margin-left: 20px; }
+    .wholesalers-management .table-col table tr th .order-number label, .wholesalers-management .table-col .table-list-row .shopping-table-list table tr td .order-number label, .table-list-row .shopping-table-list .wholesalers-management .table-col table tr td .order-number label {
+      font-weight: 400 !important;
+      font-size: 14px !important; }
+
+.wholesalers-management .table-col table tr td {
+  border-right: none;
+  border-left: none;
+  vertical-align: middle;
+  font-size: 13px !important;
+  padding: 2px !important; }
+  .wholesalers-management .table-col table tr td .store-img {
+    width: 60px;
+    height: 60px; }
+
+.wholesalers-management .table-col table tr td.pay-detail {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  vertical-align: top; }
+
+.wholesalers-management .table-col table tr td.operating {
+  vertical-align: top; }
+  .wholesalers-management .table-col table tr td.operating p {
+    padding: 5px 0; }
 
 .wholesalers-management .order-process {
   border: 1px solid #cae6f7;

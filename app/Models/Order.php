@@ -358,7 +358,7 @@ class Order extends Model
      */
     public function getCanExportAttribute()
     {
-        return $this->attributes['status'] == cons('order.status.send');
+        return $this->attributes['status'] == cons('order.status.send') || $this->attributes['status'] == cons('order.status.non_send');
     }
 
     /**

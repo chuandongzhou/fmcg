@@ -363,14 +363,14 @@ class Goods extends Model
     public function getImageUrlAttribute()
     {
 
-        $goodsService = new GoodsImageService();
+       /* $goodsService = new GoodsImageService();
         $goodsId = $this->id;
         if ($goodsService->hasImage($goodsId)) {
             return $goodsService->getImage($goodsId);
-        }
+        }*/
         $image = $this->images->first();
         $url = $image ? $image->image_url : asset('images/goods_default.png');
-        $goodsService->setImage($this->id, $url);
+        //$goodsService->setImage($this->id, $url);
         return $url;
     }
 

@@ -186,7 +186,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('get-shops-by-ids', 'ShopController@getShopsByids');                   //店铺列表
             $router->get('all', 'ShopController@allShops');
             $router->get('{shop}/category', 'ShopController@category');         //获取店铺分类
-            $router->get('min-money', 'ShopController@minMoney');         //获取店铺最低配送额
         });
         $router->get('version', 'VersionInfoController@getIndex');
         $router->controller('file', 'FileController');                              // 文件上传

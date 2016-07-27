@@ -270,14 +270,14 @@
                     shopIds.push($(this).data('id'));
                 });
                 $.ajax({
-                    url: site.api('shop/min-money'),
+                    url: site.api('order/min-money'),
                     method: 'get',
                     data: {shipping_address_id: shippingAddressId, shop_id: shopIds}
                 }).done(function (data, textStatus, jqXHR) {
                     var shopMinMoney = data.shopMinMoney;
 
                     for (var i in shopMinMoney) {
-                        $('.shop-min-money-' + i).html(shopMinMoney[i]);
+                        $('.shop-min-money-' + shopMinMoney[i]['shop_id']).html(shopMinMoney[i]['min_money']);
                     }
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {

@@ -144,9 +144,11 @@ class OrderSellController extends OrderController
     public function getExport(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $res = Order::with('shippingAddress', 'shippingAddress.address',
-            'goods.images')->bySellerId(auth()->id())->where('status', cons('order.status.send'))->whereIn('id',
-            $orderIds)->get();
+
+        $status = cons('order.status');
+        $res = Order::with('shippingAddress.address', 'goods')
+            ->bySellerId(auth()->id())->whereIn('status', [$status['non_send'], $status['send']])
+            ->whereIn('id', $orderIds)->get();
         if (empty($orderIds) || $res->count() !== count($orderIds)) {
             return $this->error('无订单消息或存在不能导出的订单', null, ['export_error' => '无订单消息或存在不能导出的订单']);
         }

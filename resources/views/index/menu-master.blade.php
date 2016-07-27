@@ -42,6 +42,12 @@
                                     <span class="title">配送区域</span>
                                 </a>
                             </li>
+                            <li class="nav-item start {{ path_active(['personal/coupon']) }}">
+                                <a href="{{ url('personal/coupon') }}" class="nav-link ">
+                                    <span class="title">优惠券</span>
+                                </a>
+                            </li>
+
                         @endif
                         <li class="nav-item start {{ path_active('personal/password') }}">
                             <a href="{{ url('personal/password') }}" class="nav-link ">

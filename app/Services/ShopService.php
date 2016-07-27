@@ -149,7 +149,10 @@ class ShopService
                     return false;
                 }
             }
-            $shopMinMoneys[$shop->id] = $minMoney;
+            $shopMinMoneys[] = [
+                'shop_id' => $shop->id,
+                'min_money' => $minMoney
+            ];
         }
         return $validate ? true : $shopMinMoneys;
     }
