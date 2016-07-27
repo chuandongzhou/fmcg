@@ -261,9 +261,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('logout', 'DeliveryController@logout');//退出登陆
             $router->post('update-order', 'DeliveryController@changeOrder');//修改订单商品数量
         });
-        $router->get('coupon','CouponController@index');
-        $router->get('recevie-coupons','CouponController@recevieCoupons');
-        $router->post('coupon/store','CouponController@store');
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
             $router->post('auth/login', 'AuthController@login');

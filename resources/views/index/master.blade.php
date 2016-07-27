@@ -116,9 +116,7 @@
 
 @section('body')
     @yield('container')
-    @if ( !is_null(auth()->user()))
-        @include('includes.navigator')
-    @endif
+
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
@@ -500,14 +498,13 @@
                     $('.coupon-panel').css('display', 'block');
                     $('.coupon-loading-img').css('display','block');
                     $.ajax({
-                        url: '/api/v1/coupon',
+                        url: '/api/v1/coupon/user-coupon',
                         method: 'get'
                     }).done(function (data) {
-
-                        data = data.coupon;
+                        data = data.coupons;
                         $('.my-coupon-num').html(data.length);
-                        for(var coupons in data){
-                            var dateTo = new Date(data[coupons].end_at);
+                        for(var i=0;i<data.length;i++){
+                            var dateTo = new Date(data[i].end_at);
                             var dateFrom = new Date();
                             var diff = dateTo.valueOf() - dateFrom.valueOf();
                             var diff_day = parseInt(diff/(1000*60*60*24));
@@ -518,23 +515,23 @@
                                                 ' 有效期'+
                                                 ' </p>'+
                                                 ' <p>'+
-                                                data[coupons].start_at+
+                                                data[i].start_at+
                                                 '</p>'+
                                                 '<p>'+
-                                                data[coupons].end_at+
+                                                data[i].end_at+
                                                 '</p>'+
                                             '</div>'+
                                             ' <ul>'+
                                                 ' <li>'+
-                                                    ' <a href=" shop/'+data[coupons].shop.id+'" target="_blank">'+
-                                                   data[coupons].shop.name+
+                                                    ' <a href=" shop/'+data[i].shop.id+'" target="_blank">'+
+                                                   data[i].shop.name+
                                                     ' </a>'+
                                                 ' </li>'+
                                                 ' <li>'+
-                                                ' ￥'+data[coupons].discount+
+                                                ' ￥'+data[i].discount+
                                                 '</li>'+
                                                 '<li>'+
-                                                '满'+data[coupons].full+'使用'+
+                                                '满'+data[i].full+'使用'+
                                                 '</li>'+
                                             ' </ul>'+
                                         '</div>';
@@ -547,15 +544,15 @@
                                             ' </div>'+
                                             '  <ul>'+
                                                 '<li>'+
-                                                ' <a href=" shop/'+data[coupons].shop.id+'" target="_blank">'+
-                                                data[coupons].shop.name+
+                                                ' <a href=" shop/'+data[i].shop.id+'" target="_blank">'+
+                                                data[i].shop.name+
                                                 '</a>'+
                                                 '</li>'+
                                                 ' <li>'+
-                                                ' ￥'+data[coupons].discount+
+                                                ' ￥'+data[i].discount+
                                                 ' </li>'+
                                                 '<li>'+
-                                                ' 满'+data[coupons].full+'使用'+
+                                                ' 满'+data[i].full+'使用'+
                                                 ' </li>'+
                                             ' </ul>'+
                                         '</div>';
@@ -568,28 +565,29 @@
                     });
                    @if(request()->is('shop/*'))
                     var pattern=/.*shop\/(\d).*/g;
-                    var outCome_exec=pattern.exec(window.location.href);
-
+                    var shop = (pattern.exec(window.location.href))[1];
+                    var url = '/api/v1/coupon/'+shop;
                     $.ajax({
-                        url: '/api/v1/recevie-coupons',
-                        data: {shopid: outCome_exec[1]},
+                        url: url,
                         method: 'get'
                     }).done(function (data) {
+
                         var h ='';
-                        data = data[0].coupons;
-                        for(var coupon in data){
+                        data = data.coupons;
+
+                        for(var i=0;i<data.length;i++){
                             h +=  '<div class="coupon bgc-orange">'+
-                                    '<div class="receive-wrap" data-id="'+data[coupon].id+'"><a class="not-receive">立即领取</a><a class="already-receive"><span'+
+                                    '<div class="receive-wrap" data-id="'+data[i].id+'"><a class="not-receive">立即领取</a><a class="already-receive"><span'+
                                     ' class="fa fa-check"></span>已领</a></div>'+
                                     '<div class="validity"><p>有效期</p>'+
 
-                                    '<p>'+data[coupon].start_at+'</p>'+
+                                    '<p>'+data[i].start_at+'</p>'+
 
-                                    '<p>'+data[coupon].end_at+'</p></div>'+
+                                    '<p>'+data[i].end_at+'</p></div>'+
                                     '<ul>'+
-                                    '<li>'+data[coupon].shop.name+'</li>'+
-                                    '<li>￥'+data[coupon].discount+'</li>'+
-                                    '<li>满'+data[coupon].full+'使用</li>'+
+                                    '<li>'+data[i].shop.name+'</li>'+
+                                    '<li>￥'+data[i].discount+'</li>'+
+                                    '<li>满'+data[i].full+'使用</li>'+
                                     '</ul>'+
                                     '</div>';
 
@@ -648,9 +646,10 @@
             $("#quick_links_pop").on("click", ".receive-wrap", function () {
                 var coupon_id = $(this).data('id');
                 var obj = $(this);
+
                 $.ajax({
-                    url: '/api/v1/coupon/store',
-                    data: {coupon_id: coupon_id},
+                    url: '/api/v1/coupon/receive/'+coupon_id,
+                    data: {coupon: coupon_id},
                     method: 'post'
                 }).done(function () {
                     obj.children(".not-receive").css("display", "none").siblings().css("display", "inline-block");

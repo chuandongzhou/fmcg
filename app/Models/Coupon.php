@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\carbon;
 class Coupon extends Model
 {
     use softDeletes;
@@ -97,7 +96,6 @@ class Coupon extends Model
 
         return !$user->coupons()->find($this->id) && $shopUser->id != $user->id && $shopUser->type > $user->type;
     }
-
 
     /**
      * 获取当前广告状态

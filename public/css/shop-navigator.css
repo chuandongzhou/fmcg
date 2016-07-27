@@ -266,10 +266,18 @@
     float:left;
     font-size:14px;
 }
-.ibar_cart_group_header a{float:right;color:#ed145b}
-.ibar_cart_group_header a:hover{text-decoration:underline;}
-.cart_item{
-    padding:5px 0 0 0;
+
+.ibar_cart_group_header a {
+    float: right;
+    color: #ed145b
+}
+
+.ibar_cart_group_header a:hover {
+    text-decoration: underline;
+}
+
+.cart_item {
+    padding: 15px 0;
     min-width: 240px;
     min-height: 120px;
 }
@@ -654,6 +662,9 @@ i.ibar_recharge-arrow{
 }
 .coupon li{
     padding:2px 0;
+    color:#fff;
+}
+.coupon li a{
     color:#fff;
 }
 .coupon .expiration{
