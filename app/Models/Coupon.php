@@ -52,16 +52,7 @@ class Coupon extends Model
     {
         return $this->hasMany('App\Models\Order');
     }
-    /**
-     * 判断优惠券现在是否可用
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeTime($query)
-    {
-        return $query->where('start_at','<',Carbon::now())->where('end_at','>',Carbon::now());
-    }
+
 
     /**
      * 查询可用优惠券
