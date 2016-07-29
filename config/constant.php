@@ -43,6 +43,10 @@ return [
             'off' => 0,
             'on' => 1,
         ],
+        'delivery_mode' => [
+            'delivery' => 1,
+            'pick_up' => 2
+        ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
     ],
     //用户类别

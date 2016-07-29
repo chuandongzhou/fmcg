@@ -8,13 +8,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 
-use App\Models\Advert;
 use App\Models\Shop;
 use App\Services\AddressService;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\ShopService;
-use Carbon\Carbon;
 use Gate;
 use DB;
 use Illuminate\Http\Request;
@@ -171,31 +169,5 @@ class ShopController extends Controller
         return $this->success(['adverts' => $adverts]);
     }
 
-    /**
-     * 获取店铺最低配送额
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function minMoney(Request $request)
-    {
-        $shippingAddressId = $request->input('shipping_address_id');
-        $shopIds = $request->input('shop_id');
-
-        $user = auth()->user();
-        $shippingAddress = $user->shippingAddress()->with('address')->find($shippingAddressId);
-        if (is_null($shippingAddress)) {
-            return $this->error('收货地址不存在');
-        }
-        $shops = Shop::whereIn('id', $shopIds)->with('deliveryArea')->get();
-
-        if ($shops->isEmpty()) {
-            return $this->error('店铺不存在');
-        }
-
-        $result = ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress);
-
-        return $this->success(['shopMinMoney' => $result]);
-    }
 
 }

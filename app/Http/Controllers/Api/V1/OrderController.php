@@ -10,12 +10,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
+use App\Models\Goods;
 use App\Models\Order;
-use App\Models\OrderGoods;
+use App\Models\Shop;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\RedisService;
-use App\Services\UserService;
+use App\Services\ShopService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -457,6 +458,8 @@ class OrderController extends Controller
 
         $data = $request->all();
 
+        info($data);
+
         $result = (new OrderService)->orderSubmitHandle($data);
 
         return $result ? $this->success($result) : $this->error('提交订单时遇到问题');
@@ -513,6 +516,61 @@ class OrderController extends Controller
         $payWay = $request->input('pay_type', key($payWayConf));
 
         return $this->success($payWayConf[$payWay]);
+    }
+
+    /**
+     * 获取店铺最低配送额
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getMinMoney(Request $request)
+    {
+        $shippingAddressId = $request->input('shipping_address_id');
+        $shopIds = $request->input('shop_id');
+
+        $user = auth()->user();
+        $shippingAddress = $user->shippingAddress()->with('address')->find($shippingAddressId);
+        if (is_null($shippingAddress)) {
+            return $this->error('收货地址不存在');
+        }
+        $shops = Shop::whereIn('id', $shopIds)->with('deliveryArea')->get();
+
+        if ($shops->isEmpty()) {
+            return $this->error('店铺不存在');
+        }
+
+        $result = ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress);
+
+        return $this->success(['shopMinMoney' => $result]);
+    }
+
+    /**
+     * 获取商品价格
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getGoodsPrice(Request $request)
+    {
+        $deliveryMode = $request->input('delivery_mode', 1);
+        $goodsIds = $request->input('goods_id');
+        $goods = Goods::whereIn('id', $goodsIds)->get();
+
+        if ($goods->isEmpty()) {
+            return $this->error('商品不存在');
+        }
+
+        $goodsPrice = [];
+        $isDelivery = ($deliveryMode == cons('order.delivery_mode.delivery'));
+
+        foreach ($goods as $item) {
+            $goodsPrice[] = [
+                'goods_id' => $item->id,
+                'price' => $isDelivery ? $item->price : $item->pick_up_price
+            ];
+        }
+        return $this->success(['goodsPrice' => $goodsPrice]);
     }
 
     /**

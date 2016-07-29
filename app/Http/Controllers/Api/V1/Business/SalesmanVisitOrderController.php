@@ -164,9 +164,9 @@ class SalesmanVisitOrderController extends Controller
                     'price' => $order->amount,
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],
-                    'pay_status' => $orderConf['pay_status']['payment_success'],
-                    'status' => $orderConf['status']['finished'],
-                    'finished_at' => Carbon::now(),
+                    //'pay_status' => $orderConf['pay_status']['payment_success'],
+                    'status' => $orderConf['status']['non_send'],
+                   // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($order->SalesmanCustomer),
                     'remark' => '业务同步订单'
                 ];

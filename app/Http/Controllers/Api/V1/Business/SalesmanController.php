@@ -96,7 +96,6 @@ class SalesmanController extends Controller
     {
         $salesman = salesman_auth()->user();
         $attributes = $request->all();
-        info($request->all());
         if ($salesman->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('保存业务员成功');
         }

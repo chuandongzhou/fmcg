@@ -18,4 +18,24 @@ class SalesmanVisitGoodsRecord extends Model
     {
         return $this->belongsTo('App\Models\SalesmanVisit', 'salesman_visit_id');
     }
+
+    /**
+     * 关联商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function goods()
+    {
+        return $this->belongsTo('App\Models\Goods');
+    }
+
+    /**
+     * 商品图片
+     *
+     * @return string
+     */
+    public function getGoodsImageAttribute()
+    {
+        return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
+    }
 }

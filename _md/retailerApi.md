@@ -893,7 +893,7 @@
 	status_name			string		订单显示状态
 	payment_type		string      支付方式(如:在线支付;货到付款)
 	pay_way             string      付款方式 （1为现金  2为刷卡 ）
-	pay_type			int			支付方式(1:在线支付;2:货到付款)
+	pay_type			int			支付方式(1:在线支付;2:货到付款;3:自提)
 	pay_status			int			支付状态(0:未付款;1:已付款)
 	status				int			订单状态(1:未发货;2:已发货;3:完成)
 	is_cancel			int			订单是否被取消(1取消,0未取消)
@@ -1253,6 +1253,25 @@
 
 `失败返回：`
 
+#### 2.7.21 根据收货地址获取店铺配送额[get] (min-money)
+`请求参数：`
+
+    shipping_address_id             int                 收货地址id
+    shop_id                         array               要获取的店铺id数组
+
+`成功返回：`
+   
+    shopMinMoney                    array               最低配送额列表
+    
+    shopMinMoney字段子集
+    
+    shop_id                         int                 店铺id
+    min_money                       decimal             最低配送额
+
+`失败返回：`
+
+
+
 
 ### 2.8 收藏 like
 
@@ -1431,7 +1450,7 @@
 `失败返回：`
 
 ### 2.10  配送区域（personal/delivery-area）
-#### 2.10.1 获取所有配送区域[get](/)
+#### 2.10.1 获取所有配送区域[get] (/)
 
 `请求参数：`
 
@@ -1449,7 +1468,7 @@
        address                 string          详细地址
        min_money               decimal          最低配送额
        
-#### 2.10.2 添加配送区域[post](/)
+#### 2.10.2 添加配送区域[post] (/)
 
 `请求参数：
     
@@ -1464,7 +1483,7 @@
 
 `失败返回：`
 
-#### 2.10.3 修改配送区域[put](/{id})
+#### 2.10.3 修改配送区域[put] (/{id})
 
 `请求参数：
     
@@ -1479,7 +1498,7 @@
 
 `失败返回：`
 
-#### 2.10.4 删除配送区域[delete](/{id})
+#### 2.10.4 删除配送区域[delete] (/{id})
 
 `请求参数：
         
@@ -1807,6 +1826,44 @@
         url             string          广告指向链接
         image_url       string          广告图片地址
 
+### 2.21 优惠券模块  [coupon]
+#### 2.21.1 获取我的优惠券 [get] (user-coupon)
+`请求参数：`
+
+`成功返回：`
+
+    coupons             array           优惠券列表
+    
+    coupons 字段说明
+    
+        id              int             优惠券id
+        full            decimal         订单满
+        discount        decimal         订单减
+        diff_time       string          优惠券离过期时间
+        shop            array           优惠店铺信息
+        
+        shop 字段说明
+            
+            id                  int             店铺id
+            name                string          店铺名
+            contact_person      string          联系人
+            contact_info        string          联系电话
 
 
+`失败返回：`
 
+#### 2.21.2 获取店铺可领优惠券 [get] ({shop_id})
+`请求参数：`
+
+`成功返回：`
+
+    返回格式同上
+    
+`失败返回：`
+
+#### 2.21.3 优惠券领取 [post] (receive/{coupon_id})
+`请求参数：`
+
+`成功返回：`
+
+    coupons            array           领取的优惠券信息（格式同coupons）

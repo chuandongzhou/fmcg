@@ -356,7 +356,7 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areasModal =  new DeliveryArea($data);
+                $areasModal =  new AddressData($data);
                 if(!in_array($areasModal,$areas)){
                     $areas[] = $areasModal;
                 }

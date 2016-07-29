@@ -96,23 +96,28 @@
                     <h4 class="title">商品清单 : </h4>
 
                     @foreach($shops as $shop)
-                        <table class="table table-bordered">
+                        <table class="table table-bordered shop-item" data-id="{{ $shop->id }}">
                             <thead>
                             <tr>
-                                <th colspan="3" class="shop-item" data-id="{{ $shop->id }}">
+                                <th colspan="3">
                                     商家 : {{ $shop->name }}
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($shop['cart_goods'] as $key => $cartGoods)
-                                <tr>
+                                <tr class="goods-item" data-id="{{ $cartGoods->goods->id }}">
                                     <td class="store-name">
                                         <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
                                         {{ $cartGoods->goods->name }}
                                     </td>
-                                    <td class="text-center unit-price">¥ {{ $cartGoods->goods->price }}</td>
-                                    <td class="text-center">x {{ $cartGoods->num }}</td>
+                                    <td class="text-center unit-price">¥ <span
+                                                class="goods-price-{{ $cartGoods->goods->id }} goods-price"
+                                                data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price }}</span>
+                                    </td>
+                                    <td class="text-center">x <span class="goods-num"
+                                                                    data-num="{{ $cartGoods->num }}">{{ $cartGoods->num }}</span>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -130,11 +135,13 @@
                                                     name="shop[{{ $shop->id }}][coupon_id]">
                                                 @foreach($shop->coupons as $coupon)
                                                     <option value="{{ $coupon->id }}"
-                                                            data-discount="{{ $coupon->discount }}">
+                                                            data-discount="{{ $coupon->discount }}"
+                                                            data-full="{{ $coupon->full }}"
+                                                    >
                                                         满 {{ $coupon->full }}
                                                         减 {{ $coupon->discount }}</option>
                                                 @endforeach
-                                                <option value="" data-discount="0">不使用优惠券</option>
+                                                <option value="0" data-discount="0">不使用优惠券</option>
                                             </select>
                                         </div>
                                     @endif
@@ -148,7 +155,8 @@
                                             <b class="red {{ 'shop-min-money-' . $shop->id }}">{{ $shop->min_money }}</b>
                                         </p>
                                         <p class="count"><span class="name">合计 :&nbsp;</span>
-                                            <b class="red shop-sum-price">{{ $shop->sum_price }} {{--90(100-10)--}}</b>
+                                            <b class="red shop-sum-price"
+                                               data-price="{{ $shop->sum_price }}">{{ $shop->sum_price }} {{--90(100-10)--}}</b>
                                         </p>
                                     </div>
                                 </td>
@@ -166,7 +174,8 @@
                                 </b>件商品&nbsp;总商品金额 :&nbsp;
                             </span>
                             <span class="red">
-                                ¥ <b class="sum-price">{{ $shops->sum('sum_price') }}</b>
+                                ¥ <b class="sum-price"
+                                     data-sum-price="{{ $shops->sum('sum_price') }}">{{ $shops->sum('sum_price') }}</b>
                             </span>
                         </p>
                         <p class="count">
@@ -204,6 +213,7 @@
                     var self = $(this);
                     self.find('select,input').prop('disabled', true);
                 });
+                confirmFunc.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
                 $('.min-money').hide();
             } else {
                 deliveryItem.show();
@@ -211,6 +221,7 @@
                     var self = $(this);
                     self.find('select,input').prop('disabled', false);
                 });
+                confirmFunc.deliveryMode({{ cons('order.delivery_mode.delivery') }});
                 $('.min-money').show();
             }
             obj.addClass('active').siblings().removeClass("active");
@@ -234,7 +245,6 @@
         });
 
         var confirmFunc = {
-
             discountAmount: function () {
                 var discountControl = $('select.coupon-control'),
                         sumDiscount = 0,
@@ -245,11 +255,11 @@
                     var obj = $(this),
                             discount = parseFloat(obj.children('option:selected').data('discount')),
                             shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
-                            shopSumPrice = parseFloat(shopSumPriceControl.html());
+                            shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
 
                     if (discount) {
                         sumDiscount = sumDiscount.add(discount);
-                        shopSumPriceControl.html((shopSumPrice.add(discount).toFixed(2)) + '(' + shopSumPrice + '-' + discount + ')');
+                        shopSumPriceControl.html((shopSumPrice.sub(discount)) + '(' + shopSumPrice + '-' + discount + ')');
                     } else {
                         shopSumPriceControl.html(shopSumPrice.toFixed(2));
                     }
@@ -262,7 +272,7 @@
                 } else {
                     sumDiscountControl.html(sumDiscount).parents('.count').hide();
                 }
-                amountControl.html(parseFloat(sumPriceControl.html()) - sumDiscount);
+                amountControl.html(parseFloat(sumPriceControl.data('sumPrice')) - sumDiscount);
             },
             shopMinMoney: function () {
                 var shopItem = $('.shop-item'), shopIds = [], shippingAddressId = $('select[name="shipping_address_id"]').val();
@@ -270,14 +280,14 @@
                     shopIds.push($(this).data('id'));
                 });
                 $.ajax({
-                    url: site.api('shop/min-money'),
+                    url: site.api('order/min-money'),
                     method: 'get',
                     data: {shipping_address_id: shippingAddressId, shop_id: shopIds}
                 }).done(function (data, textStatus, jqXHR) {
                     var shopMinMoney = data.shopMinMoney;
 
                     for (var i in shopMinMoney) {
-                        $('.shop-min-money-' + i).html(shopMinMoney[i]);
+                        $('.shop-min-money-' + shopMinMoney[i]['shop_id']).html(shopMinMoney[i]['min_money']);
                     }
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -286,8 +296,81 @@
                 }).always(function (data, textStatus, jqXHR) {
 
                 });
-            }
+            },
+            deliveryMode: function (deliveryMode) {
+                var goodsItem = $('.goods-item'), goodsIds = [], deliveryMode = deliveryMode || 1;  //deliveryMode: 1送货 2自提
+                goodsItem.each(function () {
+                    goodsIds.push($(this).data('id'));
+                });
+                $.ajax({
+                    url: site.api('order/goods-price'),
+                    method: 'get',
+                    data: {delivery_mode: deliveryMode, goods_id: goodsIds}
+                }).done(function (data, textStatus, jqXHR) {
+                    var goodsPrice = data.goodsPrice;
 
+                    for (var i in goodsPrice) {
+                        $('.goods-price-' + goodsPrice[i]['goods_id']).data('price', goodsPrice[i]['price']).html(goodsPrice[i]['price']);
+                    }
+                    confirmFunc.formatShopSumPrice();
+                    confirmFunc.formatSumPrice();
+                    confirmFunc.formatCouponControl();
+                    confirmFunc.discountAmount();
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+
+
+                }).always(function (data, textStatus, jqXHR) {
+
+                });
+            },
+            formatShopSumPrice: function () {
+                $('.shop-item').each(function () {
+                    var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'), goodsItem = obj.find('.goods-item');
+                    goodsItem.each(function () {
+                        var self = $(this),
+                                goodsPrice = parseFloat(self.find('.goods-price').data('price')),
+                                goodsNum = self.find('.goods-num').data('num');
+                        sumPrice = sumPrice.add(goodsPrice.mul(goodsNum));
+                    });
+
+
+                    sumPricePanel.data('price', sumPrice).html(sumPrice.toFixed(2));
+                })
+            },
+            formatSumPrice: function () {
+                var sumPricePanel = $('.sum-price'), sumPrice = 0;
+                $('.shop-item').each(function () {
+                    var shopSumPrice = $(this).find('.shop-sum-price').data('price');
+                    sumPrice = sumPrice.add(parseFloat(shopSumPrice));
+                });
+
+                sumPricePanel.data('sum-price', sumPrice).html(sumPrice);
+            },
+            formatCouponControl: function () {
+                $('.shop-item').each(function () {
+                    var obj = $(this),
+                            shopSumPrice = obj.find('.shop-sum-price').data('price'),
+                            couponControl = obj.find('.coupon-control');
+                    if (couponControl.length) {
+                        var couponId = 0;
+                        couponControl.children('option').each(function () {
+                            var self = $(this), full = self.data('full');
+                            if ($(this).data('discount') > 0) {
+                                if (full > shopSumPrice) {
+                                    self.prop('disabled', true);
+                                }
+                                else {
+                                    couponId = couponId || self.attr('value');
+                                    self.prop('disabled', false);
+                                }
+                            }
+                        });
+                        couponControl.val(couponId);
+                    }
+
+                });
+            }
         };
 
         $('select.coupon-control').on('change', function () {

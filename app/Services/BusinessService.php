@@ -173,33 +173,42 @@ class BusinessService
             }
 
             //拜访商品记录
+            $goodsRecord = $visit->goodsRecord;
             $goodsRecodeData = [];
-            foreach ($visit->goodsRecord as $record) {
+            foreach ($goodsRecord as $record) {
                 if (!is_null($record)) {
                     $goodsRecodeData[$record->goods_id] = $record;
                 }
             }
 
-            $orderGoods = [];
-
 
             $visitData[$customerId]['amount'] = isset($visitData[$customerId]['amount']) ? $visitData[$customerId]['amount'] : 0;
             $visitData[$customerId]['return_amount'] = isset($visitData[$customerId]['return_amount']) ? $visitData[$customerId]['return_amount'] : 0;
-            $allGoods = $visit->orders->pluck('orderGoods')->collapse();
-            $goodsIds = $allGoods->pluck('goods_id')->all();
+            $allGoods = $orderGoods = $visit->orders->pluck('orderGoods')->collapse();
 
+            foreach ($goodsRecord as $key => $record) {
+                $tag = false;
+                foreach ($orderGoods as $goods) {
+                    if ($record->goods_id == $goods->goods_id && $record->salesman_visit_id == $goods->salesman_visit_id) {
+                        $tag = true;
+                        break;
+                    }
+                }
+                if (!$tag) {
+                    $allGoods->push($record);
+                }
+            }
+            $goodsIds = $allGoods->pluck('goods_id')->all();
             $goodsNames = Goods::whereIn('id', $goodsIds)->lists('name', 'id');
 
-            foreach ($allGoods as $goods) {
-                $orderGoods[$goods->type][] = $goods;
 
+            foreach ($allGoods as $goods) {
                 if ($goods->type == $orderConf['goods']['type']['order']) {
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] + $goods->num : $goods->num;
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? bcadd($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'],
                         $goods->amount, 2) : $goods->amount;
                     $visitData[$customerId]['statistics'][$goods->goods_id]['price'] = $goods->price;
                     $visitData[$customerId]['statistics'][$goods->goods_id]['pieces'] = $goods->pieces;
-                    $hasGoodsImage && ($visitData[$customerId]['statistics'][$goods->goods_id]['image_url'] = $goods->goods_image);
 
                     $visitData[$customerId]['amount'] = bcadd($visitData[$customerId]['amount'], $goods->amount, 2);
 
@@ -212,6 +221,7 @@ class BusinessService
                         $goods->amount, 2);
                 }
 
+                $hasGoodsImage && ($visitData[$customerId]['statistics'][$goods->goods_id]['image_url'] = $goods->goods_image);
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_id'] = $goods->goods_id;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_name'] = $goodsNames[$goods->goods_id];
                 $visitData[$customerId]['statistics'][$goods->goods_id]['stock'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->stock : 0;

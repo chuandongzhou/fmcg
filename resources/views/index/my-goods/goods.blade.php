@@ -99,8 +99,15 @@
                     <div class="form-group editor-item">
                         <label class="control-label col-sm-2">价格 :</label>
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <input name="price_retailer" value="{{ $goods->price_retailer }}" placeholder="请输入价格"
+                                   type="text" class="form-control">
+                        </div>
+
+                        <label class="control-label col-sm-2">自提价格:</label>
+
+                        <div class="col-sm-2">
+                            <input name="price_retailer_pick_up" value="{{ $goods->price_retailer_pick_up }}" placeholder="请输入自提价格"
                                    type="text" class="form-control">
                         </div>
                         <label class="control-label col-sm-2">单位 :</label>
@@ -138,10 +145,18 @@
                         <div class="form-group editor-item">
                             <label class="control-label col-sm-2">价格(批发) :</label>
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-2">
                                 <input name="price_wholesaler" class="form-control"
                                        value="{{ $goods->price_wholesaler }}" type="text"
                                        placeholder="请输入批发价格">
+                            </div>
+
+                            <label class="control-label col-sm-2">自提价格(批发) :</label>
+
+                            <div class="col-sm-2">
+                                <input name="price_wholesaler_pick_up" class="form-control"
+                                       value="{{ $goods->price_wholesaler_pick_up }}" type="text"
+                                       placeholder="请输入批发自提价格">
                             </div>
                             <label class="control-label col-sm-2">单位(批发) :</label>
 

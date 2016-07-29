@@ -705,8 +705,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .ui-stepSequence {
         position: relative;
         padding: 1px 10px;
-        border-radius: 50%;
+        border-radius: 50% !important;
         z-index: 103;
+        margin-left: 1px;
       }
       .ui-stepName {
         position: relative;
@@ -1832,7 +1833,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor {
   .attr {
-    border: 1px solid $gray-lighter;
+    border: none!important;
     padding: 5px 0 5px 15px !important;
     margin: 10px 0 !important;
     .items-item {
@@ -1889,6 +1890,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         border-radius: 3px;
         margin-top: 4px;
         padding: 5px;
+        background-color: #fff;
         color: #808080;
       }
     }
@@ -1984,7 +1986,6 @@ table {
 
 .wholesalers-management {
   .notice-bar {
-    padding: 0;
     border-bottom: 1px solid $brand-primary;
     margin-bottom: 10px;
     .btn {
@@ -1996,7 +1997,10 @@ table {
     }
   }
   .pay-detail {
-    @extend .right-search;
+    padding:10px 15px;
+    .input-group{
+      z-index: 0!important;
+    }
     .item {
       display: inline-block;
       padding: 3px 25px 3px 0;
@@ -2072,9 +2076,7 @@ table {
     }
 
   }
-  .order-table-list {
-    .table-col {
-      padding: 0;
+  .table-col {
       table {
         tr {
           th {
@@ -2107,17 +2109,19 @@ table {
             border-left: 1px solid $table-border-color;
             border-right: 1px solid $table-border-color;
             vertical-align: top;
+            p {
+              margin:10px 0!important;
+            }
           }
           td.operating {
             vertical-align: top;
             p {
-              padding: 5px 0;
+              margin:10px 0!important;
             }
           }
         }
       }
     }
-  }
   .order-process {
     border: 1px solid $blue-light;
     margin: 15px 0;
@@ -4115,4 +4119,3 @@ table {
 }
 
 /*==============tips end=================*/
-

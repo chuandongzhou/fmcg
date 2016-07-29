@@ -52,14 +52,14 @@
                             <span class="pull-left title-name">分类 : </span>
 
                             <div class="clearfix all-sort-panel">
-                                <p class="pull-left all-sort">
+                                <div class="pull-left all-sort">
                                     @foreach($categories as $key => $category)
                                         <a href="{{ url('my-goods?category_id=' . $category['level'].$category['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"
                                            class="btn  control">
                                             {{ $category['name'] }}
                                         </a>
                                     @endforeach
-                                </p>
+                                </div>
                                 <a class="more pull-right" href="javascript:"><span>更多</span> <i
                                             class="fa fa-angle-down"></i></a>
                             </div>

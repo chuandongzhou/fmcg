@@ -155,7 +155,7 @@ return [
         'min_money' => '最低配送额',
         'introduction' => '介绍',
         'bar_code' => '商品条形码',
-        'promoteinfo' =>'促销信息',
+        'promoteinfo' => '促销信息',
         //后台
         'real_name' => '真实名字',
         'role_id' => '角色分组ID',
@@ -180,7 +180,7 @@ return [
         'price' => '价格',
         'amount' => '金额',
         'bank_id' => '银行',
-        'platform_id' => '平台id',
+        'shop_id' => '平台id',
         'contact_information' => '联系方式',
         'business_area' => '营业面积',
         'display_fee' => '陈列费',
@@ -189,7 +189,9 @@ return [
         'target' => '目标',
         'stock' => '库存',
         'full' => '最低订单金额',
-        'discount' => '优惠金额'
+        'discount' => '优惠金额',
+        'price_retailer_pick_up' => '终端商自提价格',
+        'price_wholesaler_pick_up' => '批发商自提价格'
     ],
 
 ];

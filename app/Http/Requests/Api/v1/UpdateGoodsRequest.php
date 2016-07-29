@@ -15,7 +15,9 @@ class UpdateGoodsRequest extends UserRequest
         return [
             'name' => 'required',
             'price_retailer' => 'required|numeric|min:0',
+            'price_retailer_pick_up' => 'numeric|min:0',
             'price_wholesaler' => 'sometimes|required|numeric|min:0',
+            'price_wholesaler_pick_up' => 'numeric|min:0',
             'bar_code' => 'required|digits_between:7,18',
             'cate_level_1' => 'required|numeric|min:0',
             'cate_level_2' => 'required|numeric|min:1',
