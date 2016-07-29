@@ -458,6 +458,8 @@ class OrderController extends Controller
 
         $data = $request->all();
 
+        info($data);
+
         $result = (new OrderService)->orderSubmitHandle($data);
 
         return $result ? $this->success($result) : $this->error('提交订单时遇到问题');

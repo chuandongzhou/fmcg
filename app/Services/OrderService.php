@@ -107,7 +107,7 @@ class OrderService
             $cartService = new CartService($carts);
 
             // 是否送货订单
-            $isDelivery = isset($data['delivery_id']);
+            $isDelivery = isset($data['shipping_address_id']);
 
             if (!$shops = $cartService->validateOrder($orderGoodsNum, false, $isDelivery)) {
                 return false;
