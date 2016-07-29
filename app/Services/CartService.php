@@ -30,9 +30,10 @@ class CartService
      *
      * @param null $carts
      * @param bool $withCoupon
+     * @param bool $isDelivery
      * @return array
      */
-    public function formatCarts($carts = null, $withCoupon = false)
+    public function formatCarts($carts = null, $withCoupon = false, $isDelivery = true)
     {
         $carts = is_null($carts) ? $this->data : $carts;
         $shopIds = $carts->pluck('goods.shop_id');
@@ -54,17 +55,19 @@ class CartService
                     $cart->delete();
                     continue;
                 }
+                $cartGoods = $cart->goods;
+
                 $cart->is_like = in_array($cart->goods_id, $userLikeGoodsIds);
-                $cart->image = $cart->goods->image_url;
-                if ($cart->goods->shop_id == $shop->id) {
-                    $shops[$key]->cart_goods = $shops[$key]->cart_goods ? array_merge($shops[$key]->cart_goods,
-                        [$cart]) : [$cart];
-                    $sumPrice += $cart->goods->price * $cart->num;
+                $cart->image = $cartGoods->image_url;
+                if ($cartGoods->shop_id == $shop->id) {
+                    $shop->cart_goods = $shop->cart_goods ? $shop->cart_goods->push($cart) : collect([$cart]);
+                    $cartGoodsPrice = $isDelivery ? $cartGoods->price : $cartGoods->pick_up_price;
+                    $sumPrice += $cartGoodsPrice * $cart->num;
                 }
             }
             if ($sumPrice > 0) {
-                $shops[$key]->sum_price = $sumPrice;
-                $withCoupon && ($shops[$key]->coupons = $this->getUsefulCoupon($shop->id, $sumPrice));
+                $shop->sum_price = $sumPrice;
+                $withCoupon && ($shop->coupons = $this->getUsefulCoupon($shop->id, $sumPrice));
 
             } else {
                 $shops = array_except($shops, $key);
@@ -82,7 +85,8 @@ class CartService
      */
     public function getUsefulCoupon($shopId, $sumPrice)
     {
-        return auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->orderBy('discount', 'DESC')->get();
+        return auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->orderBy('discount',
+            'DESC')->get();
     }
 
     /**
@@ -90,9 +94,10 @@ class CartService
      *
      * @param $num
      * @param bool $updateNum
+     * @param bool $isDelivery
      * @return array|bool
      */
-    public function validateOrder($num, $updateNum = false)
+    public function validateOrder($num, $updateNum = false, $isDelivery = true)
     {
         $carts = $this->data;
         if ($carts->isEmpty() || empty($num)) {
@@ -110,11 +115,11 @@ class CartService
             }
             $updateNum && $cart->fill(['num' => $buyNum])->save();
         }
-         if (!$allow) {
-             return false;
-         }
+        if (!$allow) {
+            return false;
+        }
 
-        $shops = $this->formatCarts();
+        $shops = $this->formatCarts(null, false, $isDelivery);
         return $shops;
     }
 

@@ -70,7 +70,7 @@ class SalesmanVisitController extends Controller
         ];
        dd($data);*/
         $data = $request->all();
-        info($data);
+        //info($data);
         $salesman = salesman_auth()->user();
 
         $result = DB::transaction(function () use ($salesman, $data) {

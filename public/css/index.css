@@ -534,8 +534,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence {
         position: relative;
         padding: 1px 10px;
-        border-radius: 50%;
-        z-index: 103; }
+        border-radius: 50% !important;
+        z-index: 103;
+        margin-left: 1px; }
       .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepName {
         position: relative;
         line-height: 50px;
@@ -1372,7 +1373,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     color: #000; }
 
 .goods-editor .attr {
-  border: 1px solid #b4b4b4;
+  border: none !important;
   padding: 5px 0 5px 15px !important;
   margin: 10px 0 !important; }
   .goods-editor .attr .items-item {
@@ -1418,6 +1419,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-radius: 3px;
     margin-top: 4px;
     padding: 5px;
+    background-color: #fff;
     color: #808080; }
 
 .goods-editor .content-wrap .pictures {
@@ -1495,7 +1497,7 @@ table {
     color: #fff; }
 
 .wholesalers-management .pay-detail {
-  padding: 20px 15px !important; }
+  padding: 10px 15px; }
   .wholesalers-management .pay-detail .input-group {
     z-index: 0 !important; }
   .wholesalers-management .pay-detail .item {
@@ -1575,11 +1577,13 @@ table {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   vertical-align: top; }
+  .wholesalers-management .table-col table tr td.pay-detail p {
+    margin: 10px 0 !important; }
 
 .wholesalers-management .table-col table tr td.operating {
   vertical-align: top; }
   .wholesalers-management .table-col table tr td.operating p {
-    padding: 5px 0; }
+    margin: 10px 0 !important; }
 
 .wholesalers-management .order-process {
   border: 1px solid #cae6f7;

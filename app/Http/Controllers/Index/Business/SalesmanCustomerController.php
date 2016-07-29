@@ -184,8 +184,8 @@ class SalesmanCustomerController extends Controller
 
         //拜访商品记录
         $goodsRecodeData = [];
-        $goodsRecode = $visits->pluck('goodsRecord')->collapse();
-        foreach ($goodsRecode as $record) {
+        $goodsRecord = $visits->pluck('goodsRecord')->collapse();
+        foreach ($goodsRecord as $record) {
             if (!is_null($record)) {
                 $goodsRecodeData[$record->goods_id][$record->salesman_visit_id] = $record;
             }
@@ -196,7 +196,6 @@ class SalesmanCustomerController extends Controller
         $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
             return !is_null($item);
         });
-
 
         $orderConf = cons('salesman.order');
 
@@ -223,24 +222,29 @@ class SalesmanCustomerController extends Controller
 
         //客户销售的商品
         $salesList = [];
+
+
         foreach ($orderGoods as $goods) {
             $salesList[$goods->goods_id][$goods->salesman_visit_id][$goods->type] = $goods;
         }
-        $orderGoodsIds = array_keys($salesList);
-        foreach ($goodsRecodeData as $goodsId => $goodsRecode) {
-            if (!in_array($goodsId, $orderGoodsIds)) {
-                $visit = head($goodsRecode)->visit;
-                $salesList[$goodsId][key($goodsRecode)][-1] = ['created_at' => $visit->created_at];
-            }
-        };
 
-        //dd($salesList);
+        foreach ($goodsRecord as $key => $record) {
+            $tag = false;
+            foreach ($orderGoods as $goods) {
+                if ($record->goods_id == $goods->goods_id && $record->salesman_visit_id == $goods->salesman_visit_id) {
+                    $tag = true;
+                    break;
+                }
+            }
+            if (!$tag) {
+                $salesList[$record->goods_id][$record->salesman_visit_id][-1] = ['created_at' => $record->visit->created_at];
+            }
+        }
 
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
 
-        // $recordGoodsIds = array_keys($goodsRecodeData);
 
         foreach ($salesList as $goodsId => $goodsVisits) {
             $salesListsData[$goodsId]['id'] = $goodsId;
@@ -262,7 +266,7 @@ class SalesmanCustomerController extends Controller
         return [
             'visits' => $visits,
             'orders' => $orders,
-            'orderGoodsDetail' => $orderGoodsDetail,
+            //'orderGoodsDetail' => $orderGoodsDetail,
             'returnOrders' => $returnOrders,
             'mortgageGoods' => $mortgageGoods,
             'salesListsData' => $salesListsData
@@ -360,16 +364,22 @@ class SalesmanCustomerController extends Controller
             $table->addCell(2000, $cellVAlignCenter)->addText('商品单位', null, $cellAlignCenter);
             $table->addCell(2000, $cellVAlignCenter)->addText('数量', null, $cellAlignCenter);
 
-            foreach ($result['mortgageGoods'] as $mortgage) {
+
+            foreach ($result['mortgageGoods'] as $visitTime => $mortgages) {
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(3000, $cellVAlignCenter)->addText($mortgage['created_at'], null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null,
-                    $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces',
-                    $mortgage['pieces']),
-                    null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
+                $table->addCell(3000, $cellRowSpan)->addText($visitTime, null, $cellAlignCenter);
+                foreach ($mortgages as $mortgage) {
+                    $table->addRow();
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(3000, $cellRowContinue);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['name'], null,
+                        $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText(cons()->valueLang('goods.pieces',
+                        $mortgage['pieces']),
+                        null, $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
+                }
             }
         }
 

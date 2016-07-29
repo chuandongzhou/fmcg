@@ -21,10 +21,12 @@ class Goods extends Model
     protected $fillable = [
         'name',
         'price_retailer',
+        'price_retailer_pick_up',
         'pieces_retailer',
         'min_num_retailer',
         'specification_retailer',
         'price_wholesaler',
+        'price_wholesaler_pick_up',
         'pieces_wholesaler',
         'min_num_wholesaler',
         'specification_wholesaler',
@@ -47,7 +49,7 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['images_url', 'image_url', 'pieces','price'];
+    public $appends = ['images_url', 'image_url', 'pieces', 'price'];
 
     protected $hidden = [
         'images',
@@ -295,6 +297,31 @@ class Goods extends Model
         return $this->scopeOfStatus($query, 0);
     }
 
+
+    /**
+     * 设置终端商自提价格
+     *
+     * @param $priceRetailerPickUp
+     */
+    public function setPriceRetailerPickUpAttribute($priceRetailerPickUp)
+    {
+        if (!$priceRetailerPickUp || $priceRetailerPickUp <= 0) {
+            $this->attributes['price_retailer_pick_up'] = $this->attributes['price_retailer'];
+        }
+    }
+
+    /**
+     * 设置批发商自提价格
+     *
+     * @param $priceWholesalerPickUp
+     */
+    public function setPriceWholesalerPickUpAttribute($priceWholesalerPickUp)
+    {
+        if (!$priceWholesalerPickUp || $priceWholesalerPickUp <= 0) {
+            $this->attributes['price_wholesaler_pick_up'] = $this->attributes['price_wholesaler'];
+        }
+    }
+
     /**
      * 根据不同角色获取价格
      *
@@ -305,6 +332,19 @@ class Goods extends Model
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
         return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
+    }
+
+    /**
+     * 根据不同角色获取价格
+     *
+     * @return mixed
+     */
+    public function getPickUpPriceAttribute()
+    {
+        $user = auth()->user();
+        $userType = $user ? $user->type : cons('user.type.retailer');
+
+        return $userType == $this->user_type ? $this->price_retailer_pick_up : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler_pick_up : $this->price_retailer_pick_up);
     }
 
     /**
@@ -363,14 +403,14 @@ class Goods extends Model
     public function getImageUrlAttribute()
     {
 
-       /* $goodsService = new GoodsImageService();
-        $goodsId = $this->id;
-        if ($goodsService->hasImage($goodsId)) {
-            return $goodsService->getImage($goodsId);
-        }*/
+         $goodsService = new GoodsImageService();
+         $goodsId = $this->id;
+         if ($goodsService->hasImage($goodsId)) {
+             return $goodsService->getImage($goodsId);
+         }
         $image = $this->images->first();
         $url = $image ? $image->image_url : asset('images/goods_default.png');
-        //$goodsService->setImage($this->id, $url);
+        $goodsService->setImage($this->id, $url);
         return $url;
     }
 

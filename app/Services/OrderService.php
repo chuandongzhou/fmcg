@@ -107,9 +107,9 @@ class OrderService
             $cartService = new CartService($carts);
 
             // 是否送货订单
-            $isDelivery = isset($data['pay_type']);
+            $isDelivery = isset($data['delivery_id']);
 
-            if (!$shops = $cartService->validateOrder($orderGoodsNum)) {
+            if (!$shops = $cartService->validateOrder($orderGoodsNum, false, $isDelivery)) {
                 return false;
             }
 
@@ -256,7 +256,7 @@ class OrderService
                 foreach ($shop->cart_goods as $cartGoods) {
                     $orderGoods[] = new OrderGoods([
                         'goods_id' => $cartGoods->goods_id,
-                        'price' => $cartGoods->goods->price,
+                        'price' => $cartGoods->goods->pick_up_price,
                         'num' => $cartGoods->num,
                         'pieces' => $cartGoods->goods->pieces_id,
                         'total_price' => $cartGoods->goods->price * $cartGoods->num,

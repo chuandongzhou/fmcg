@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
+use App\Models\Goods;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Services\CartService;
@@ -540,6 +541,34 @@ class OrderController extends Controller
         $result = ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress);
 
         return $this->success(['shopMinMoney' => $result]);
+    }
+
+    /**
+     * 获取商品价格
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getGoodsPrice(Request $request)
+    {
+        $deliveryMode = $request->input('delivery_mode', 1);
+        $goodsIds = $request->input('goods_id');
+        $goods = Goods::whereIn('id', $goodsIds)->get();
+
+        if ($goods->isEmpty()) {
+            return $this->error('商品不存在');
+        }
+
+        $goodsPrice = [];
+        $isDelivery = ($deliveryMode == cons('order.delivery_mode.delivery'));
+
+        foreach ($goods as $item) {
+            $goodsPrice[] = [
+                'goods_id' => $item->id,
+                'price' => $isDelivery ? $item->price : $item->pick_up_price
+            ];
+        }
+        return $this->success(['goodsPrice' => $goodsPrice]);
     }
 
     /**
