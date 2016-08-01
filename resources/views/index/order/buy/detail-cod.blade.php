@@ -25,7 +25,8 @@
                                 class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
                     </li>
                 @endif
-                <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )</li>
+                <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )
+                </li>
                 <li><span class="title-name">订单状态 : </span><span class="red">{{ $order['status_name'] }}</span></li>
                 <li><span class="title-name">订单备注 : </span>
 
@@ -189,7 +190,13 @@
             </div>
         </div>
         <div class="col-sm-12 text-right bottom-content">
-            <p>总额<b class="red">¥{{ $order['price'] }}</b></p>
+            <p>
+                总额：<b class="red">¥{{ $order->price }}</b>
+                @if($order->coupon_id)
+                    <br/> 优惠：<b class="red">¥{{ bcsub($order->price, $order->after_rebates_price, 2) }}</b>
+                    <br/>  应付金额：<b class="red">¥{{ $order->after_rebates_price }}</b>
+                @endif
+            </p>
 
             <p>
                 @if(!$order['is_cancel'])
@@ -201,7 +208,8 @@
                     @endif
                     @if($order['can_payment'])
                         <a href="javascript:" data-target="#payModal" data-toggle="modal"
-                           class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->after_rebates_price }}">去付款</a>
+                           class="btn btn-success" data-id="{{ $order->id }}"
+                           data-price="{{ $order->after_rebates_price }}">去付款</a>
                     @elseif($order['can_confirm_arrived'])
                         <a class="btn btn-danger ajax"
                            data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"

@@ -1,17 +1,52 @@
 @extends('index.menu-master')
 @section('subtitle', '业务管理-订货单')
-@include('includes.cropper')
+@include('includes.timepicker')
+
 
 @section('top-title')
-    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman') }}" xmlns="http://www.w3.org/1999/html">业务管理</a> &rarr;
     订货单
 @stop
 
 @section('right')
     <div class="row">
         <div class="col-xs-12">
-            <form class="form-horizontal" data-done-then="refresh" action="{{ url('business/order/export') }}"
+            <form class="form-horizontal" data-done-then="refresh" action="{{ url('business/order/order-forms') }}"
                   method="get" autocomplete="off">
+                <div class="form-group editor-item">
+                    <div class="col-sm-6">
+                        <div class="col-sm-5  padding-clear">
+                            <input name="start_date" value="{{ $data['start_date'] or '' }}" placeholder="请输入开始日期"
+                                   type="text" class="form-control datetimepicker" data-format="YYYY-MM-DD">
+                        </div>
+                        <div class="col-sm-1 padding-clear">
+                            <label class="control-label col-sm-1">至</label>
+                        </div>
+                        <div class="col-sm-5 padding-clear">
+                            <input name="end_date" value="{{ $data['end_date'] or '' }}" placeholder="请输入结束日期"
+                                   type="text" class="form-control datetimepicker col-sm-2" data-format="YYYY-MM-DD">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <select name="status" class=" form-control">
+                            <option value="">请选择状态</option>
+                            @foreach(cons()->valueLang('salesman.order.status') as $key => $status)
+                                <option value="{{ $key }}" {{ isset($data['status']) && $key == $data['status'] ? 'selected' : '' }} >{{ $status }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="salesman_id" class="form-control">
+                            <option value="">请选择业务员</option>
+                            @foreach($salesmen as $salesman)
+                                <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="submit" class="btn btn-submit btn-default search-by-get"
+                           data-url="{{ url('business/order/order-forms') }}">
+                </div>
                 <table class="table business-table text-center">
                     <tr>
                         <td></td>
@@ -71,7 +106,9 @@
                             data-method="post">
                         批量同步
                     </button>
-                    <button class="btn batch" type="submit">批量导出</button>
+                    <button class="btn batch btn-submit" type="submit" data-url="{{ url('business/order/export') }}">
+                        批量导出
+                    </button>
                 </div>
             </form>
         </div>
@@ -84,6 +121,12 @@
     <script type="text/javascript">
         $(function () {
             onCheckChange('.parent', '.child');
+            $('.btn-submit').on('click', function () {
+                var obj = $(this);
+                obj.closest('form').attr('action', obj.data('url'));
+            });
+            formSubmitByGet(['order_id[]']);
+
         })
     </script>
 @stop

@@ -32,7 +32,7 @@ class OrderController extends Controller
     {
         $orders = Order::OfBuy(auth()->id())->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
@@ -44,7 +44,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofBuy(auth()->id())->nonPayment()->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
@@ -56,18 +56,18 @@ class OrderController extends Controller
     {
         $orders = Order::ofBuy(auth()->id())->nonArrived()->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
      * 获取买家待确认订单
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getWaitConfirmByUser()
     {
         $orders = Order::ofBuy(auth()->id())->WaitConfirm()->paginate();
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
@@ -78,7 +78,7 @@ class OrderController extends Controller
     public function getWaitConfirmBySeller()
     {
         $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
@@ -89,13 +89,15 @@ class OrderController extends Controller
      */
     public function getDetailOfBuy(Request $request)
     {
-        $order = Order::where('user_id', auth()->id())->with('goods.images', 'deliveryMan',
-            'shippingAddress.address', 'orderRefund')->find($request->input('order_id'));
+        $order = Order::where('user_id', auth()->id())->find($request->input('order_id'));
+
+        $order = $this->_orderLoadData($order);
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
-        return $order ? $this->success($order) : $this->error('订单不存在');
+        return $order ? $this->success($this->_hiddenOrderAttr($order)) : $this->error('订单不存在');
     }
+
 
     /**
      * 卖家查询订单列表
@@ -107,7 +109,7 @@ class OrderController extends Controller
         $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods', 'coupon')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
     /**
@@ -119,7 +121,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell(auth()->id())->nonSend()->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders,false));
     }
 
     /**
@@ -131,7 +133,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell(auth()->id())->getPayment()->paginate();
 
-        return $this->success($this->_hiddenAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders,false));
     }
 
     /**
@@ -143,19 +145,17 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::bySellerId(auth()->id())->with('user', 'DeliveryMan', 'shop.user', 'goods.images.image',
-            'shippingAddress.address', 'orderRefund')->find($orderId);
-        $order->shop->setAppends([]);
-        $order->user->setVisible(['id', 'shop', 'type']);
-        $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url', 'order_change_recode']);
-        });
+        $order = Order::bySellerId(auth()->id())->find($orderId);
+
+        $order = $this->_hiddenOrderAttr($this->_orderLoadData($order),false);
+
         $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
             $recode->name = auth()->id() ? $order->shop->name : $order->deliveryMan->name;
         });
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
         $order->addHidden(['order_change_recode']);
+
         return $order ? $this->success($order) : $this->error('订单不存在');
     }
 
@@ -458,8 +458,6 @@ class OrderController extends Controller
 
         $data = $request->all();
 
-        info($data);
-
         $result = (new OrderService)->orderSubmitHandle($data);
 
         return $result ? $this->success($result) : $this->error('提交订单时遇到问题');
@@ -587,32 +585,64 @@ class OrderController extends Controller
     }
 
     /**
-     * @param $orders
+     *  订单预加载处理
+     *
+     * @param $order
+     * @return mixed
      */
-    private function _hiddenAttr($orders)
+    private function _orderLoadData($order)
     {
-        $orders->each(function ($order) {
-            $order->goods->each(function ($goods) {
-                $goods->addHidden(['introduce', 'images_url']);
-            });
-            $order->user->setVisible(['id', 'shop', 'type']);
-            $order->user->shop->setVisible(['name'])->setAppends([]);
+        $payType = cons('pay_type');
+        if ($order->pay_type == $payType['pick_up']) {
+            $order->load(['goods.images', 'shop.shopAddress']);
+        } else {
+           $order->load(['goods.images', 'deliveryMan', 'shippingAddress.address', 'orderRefund']) ;
+        }
+        return $order;
+    }
 
-            $order->setAppends([
-                'status_name',
-                'payment_type',
-                'step_num',
-                'can_cancel',
-                'can_confirm',
-                'can_send',
-                'can_confirm_collections',
-                'can_export',
-                'can_payment',
-                'can_confirm_arrived',
-                'after_rebates_price'
-            ]);
-            $order->shop->setAppends([]);
+    /**
+     * @param $orders
+     * @param  bool $buyer
+     */
+    private function _hiddenOrdersAttr($orders, $buyer = true)
+    {
+        $orders->each(function ($order) use ($buyer) {
+            $this->_hiddenOrderAttr($order, $buyer);
         });
         return $orders;
+    }
+
+    /**
+     * @param $order
+     * @param bool $buyer
+     * @return mixed
+     */
+    private function _hiddenOrderAttr($order, $buyer = true)
+    {
+        $order->goods->each(function ($goods) {
+            $goods->addHidden(['introduce', 'images_url']);
+        });
+        if (!$buyer) {
+            $order->user->setVisible(['id', 'shop', 'type']);
+            $order->user->shop->setVisible(['name'])->setAppends([]);
+        }
+
+        $order->setAppends([
+            'status_name',
+            'payment_type',
+            'step_num',
+            'can_cancel',
+            'can_confirm',
+            'can_send',
+            'can_confirm_collections',
+            'can_export',
+            'can_payment',
+            'can_confirm_arrived',
+            'after_rebates_price'
+        ]);
+        $buyer && $order->shop->setAppends([]);
+
+        return $order;
     }
 }

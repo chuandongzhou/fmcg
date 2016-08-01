@@ -188,7 +188,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 text-right padding-clear">
-                    <button class="btn btn-cancel submit-order">取消</button>
+                    <a class="btn btn-cancel" href="javascript:history.go(-1)">取消</a>
                     <button class="btn btn-primary submit-order">提交订单</button>
                 </div>
             </form>

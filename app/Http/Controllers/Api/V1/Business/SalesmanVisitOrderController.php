@@ -28,7 +28,8 @@ class SalesmanVisitOrderController extends Controller
     public function orderForms()
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.order'), true);
+        $orders = (new BusinessService())->getOrders([$salesmenId], ['type' => cons('salesman.order.type.order')],
+            true);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
@@ -40,7 +41,8 @@ class SalesmanVisitOrderController extends Controller
     public function returnOrders()
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders([$salesmenId], cons('salesman.order.type.return_order'), true);
+        $orders = (new BusinessService())->getOrders([$salesmenId],
+            ['type' => cons('salesman.order.type.return_order')], true);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
@@ -166,7 +168,7 @@ class SalesmanVisitOrderController extends Controller
                     'pay_way' => $syncConf['pay_way'],
                     //'pay_status' => $orderConf['pay_status']['payment_success'],
                     'status' => $orderConf['status']['non_send'],
-                   // 'finished_at' => Carbon::now(),
+                    // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($order->SalesmanCustomer),
                     'remark' => '业务同步订单'
                 ];

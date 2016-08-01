@@ -15,30 +15,44 @@ class SalesmanVisitOrderController extends Controller
     /**
      * 订货单
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function orderForms()
+    public function orderForms(Request $request)
     {
 
         $shop = auth()->user()->shop;
-        $salesmenId = $shop->salesmen->pluck('id');
-        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.order'));
 
-        return view('index.business.order-order-forms', ['orders' => $orders]);
+        $salesmen = $shop->salesmen;
+
+        $salesmenId = $salesmen->pluck('id');
+        $data = $request->all();
+        $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
+        $orders = (new BusinessService())->getOrders($salesmenId, $data);
+
+        return view('index.business.order-order-forms',
+            ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
 
     /**
      * 退货单
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function returnOrders()
+    public function returnOrders(Request $request)
     {
         $shop = auth()->user()->shop;
-        $salesmenId = $shop->salesmen->pluck('id');
-        $orders = (new BusinessService())->getOrders($salesmenId, cons('salesman.order.type.return_order'));
 
-        return view('index.business.order-return-orders', ['orders' => $orders]);
+        $salesmen = $shop->salesmen;
+
+        $salesmenId = $salesmen->pluck('id');
+        $data = $request->all();
+        $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
+
+        $orders = (new BusinessService())->getOrders($salesmenId, $data);
+
+        return view('index.business.order-return-orders',  ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
 
     /**

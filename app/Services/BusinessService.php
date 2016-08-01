@@ -92,15 +92,28 @@ class BusinessService
      * 根据类型获取所有订单
      *
      * @param $salesmenId
-     * @param $type
+     * @param $data
      * @param $withOrderGoods
      * @return mixed
      */
-    public function getOrders($salesmenId, $type, $withOrderGoods = false)
+    public function getOrders($salesmenId, $data = [], $withOrderGoods = false)
     {
         $with = $withOrderGoods ? ['salesmanCustomer'] : ['salesmanCustomer', 'salesman'];
-        $orders = SalesmanVisitOrder::where('type', $type)->whereIn('salesman_id',
-            $salesmenId)->with($with)->orderBy('id', 'desc')->paginate();
+
+        if (isset($data['salesman_id']) && ($salesmanId = $data['salesman_id'])) {
+            $exists = $salesmenId->toBase()->contains($salesmanId);
+            if ($exists) {
+                $orders = SalesmanVisitOrder::OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
+            } else {
+                $orders = SalesmanVisitOrder::whereIn('salesman_id')->OfData(array_except($data,
+                    'salesman_id'))->with($with)->orderBy('id', 'desc')->paginate();
+            }
+
+        } else {
+            $orders = SalesmanVisitOrder::whereIn('salesman_id',
+                $salesmenId)->OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
+        }
+
         if ($withOrderGoods) {
             $orders->each(function ($order) {
                 $orderConf = cons('salesman.order');

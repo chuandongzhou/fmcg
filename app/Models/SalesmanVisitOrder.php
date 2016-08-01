@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class SalesmanVisitOrder extends Model
 {
     protected $table = 'salesman_visit_order';
@@ -82,6 +84,29 @@ class SalesmanVisitOrder extends Model
     public function scopeOfUntreated($query)
     {
         return $query->where('status', 0);
+    }
+
+    /**
+     * 订单过滤
+     *
+     * @param $query
+     * @param $data
+     * @return mixed
+     */
+    public function scopeOfData($query, $data)
+    {
+        if (isset($data['start_date']) && ($startDate = $data['start_date'])) {
+            $query = $query->where('created_at', '>=', $startDate);
+        }
+
+        if (isset($data['end_date']) && ($endDate = $data['end_date'])) {
+            $date = new Carbon($endDate);
+            $query = $query->where('created_at', '<', $date->copy()->endOfDay());
+        }
+
+        return $query->where(array_only($data, ['salesman_id', 'status']));
+
+
     }
 
     /**
@@ -165,7 +190,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCustomerShopIdAttribute()
     {
-        return $this->salesmanCustomer->shop_id;
+        return $this->salesmanCustomer ? $this->salesmanCustomer->shop_id : 0;
     }
 
     /**

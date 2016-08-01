@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\OrderGoods;
 use App\Services\CartService;
-use App\Services\GoodsService;
 use App\Services\OrderService;
-use App\Services\RedisService;
-use App\Services\ShippingAddressService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Models\Order;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
 

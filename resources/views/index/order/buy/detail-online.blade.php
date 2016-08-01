@@ -214,7 +214,13 @@
             </div>
         </div>
         <div class="col-sm-12 text-right bottom-content">
-            <p>总额<b class="red">¥{{ $order->price }}</b></p>
+            <p>
+                总额：<b class="red">¥{{ $order->price }}</b>
+                @if($order->coupon_id)
+                    <br/> 优惠：<b class="red">¥{{ bcsub($order->price, $order->after_rebates_price, 2) }}</b>
+                    <br/>  应付金额：<b class="red">¥{{ $order->after_rebates_price }}</b>
+                @endif
+            </p>
 
             <p>
                 @if(!$order['is_cancel'])

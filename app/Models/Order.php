@@ -308,7 +308,6 @@ class Order extends Model
     public function getCanSendAttribute()
     {
         $payType = $this->pay_type;
-        $payStatus = $this->pay_status;
         $status = $this->status;
         $payTypeConf = cons('pay_type');
 
@@ -430,7 +429,7 @@ class Order extends Model
     public function getAfterRebatesPriceAttribute()
     {
         $price = $this->price;
-        return $this->coupon ? (bcsub($price, $this->coupon->discount, 2)) : $price;
+        return ($this->coupon_id && $this->coupon) ? (bcsub($price, $this->coupon->discount, 2)) : $price;
     }
 
     /**
