@@ -226,7 +226,8 @@
     top:0;
     bottom:0;
     _height:expression((document.documentElement.clientHeight-100-40)+"px");
-    overflow:hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .ibar_cart_group{
     padding:0 20px 0 10px;
