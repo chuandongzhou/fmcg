@@ -170,7 +170,7 @@
                                 html += '<div class="coupon bgc-red">' +
                                         ' <div class="expiration">' +
                                         '<span>' +
-                                        data[i].diff_time + '天后过期' +
+                                        data[i].diff_time + '后过期' +
                                         ' </span>' +
                                         ' </div>' +
                                         '  <ul>' +

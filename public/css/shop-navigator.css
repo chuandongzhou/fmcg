@@ -532,14 +532,13 @@ i.ibar_recharge-arrow{
     background:#fff;
     box-shadow:0 0 5px rgba(0,0,0,.4);
     border-radius:5px 0 0 5px;
-    border-left:1px solid #ccc\0;
-    border-top:1px solid #ccc\0;
-    border-bottom:1px solid #ccc\0;
+    border-left:1px solid #ccc;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc;
     z-index:3;
     position:absolute;
     top:0px;
     left:-266px;
-    left:-288px\0;
     display:none;
 }
 .ibar_login_box .avatar_box{

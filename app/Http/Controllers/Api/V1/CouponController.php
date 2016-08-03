@@ -39,8 +39,9 @@ class CouponController extends Controller
      */
     public function userCoupon($expire = false)
     {
+        $now =  (new Carbon())->toDateString();
         $user = auth()->user();
-        $coupons = $user->coupons()->wherePivot('used_at', null)->with('shop')->orderBy('end_at',
+        $coupons = $user->coupons()->wherePivot('used_at', null)->with('shop')->where('end_at','>=',$now)->orderBy('end_at',
             'DESC')->take($expire ? 5 : -1)->get()->each(function ($coupon) {
             $coupon->shop->setAppends([]);
         });
