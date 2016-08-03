@@ -48,7 +48,7 @@ class OrderAutoReceive extends Command
                     $redisKey = 'push:seller:' . $shopOwner->id;
                     $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
-                    (new RedisService)->setRedis($redisKey, $redisVal);
+                    (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 }
             });
         }

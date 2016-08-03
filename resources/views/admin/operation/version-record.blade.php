@@ -14,8 +14,8 @@
 
             <div class="col-sm-4">
                 <select name="type" class="form-control">
-                    @foreach($type as $key => $item)
-                    <option value="{{ $key }}">{{ $item }}</option>
+                    @foreach(cons()->valueLang('push_device') as $key => $item)
+                        <option value="{{ $key }}">{{ $item }}</option>
                     @endforeach
                 </select>
             </div>

@@ -14,7 +14,8 @@
                     <div class="operating  pay-way text-left">
                         <p class="text-left title">
                             当前账户余额：<span class="red">¥<b class="user-balance">{{ $userBalance or 0 }}</b> &nbsp;</span>
-                            <span class="red balance-not-full hide">(余额不足)</span></p>
+                            <span class="red balance-not-full hide">(余额不足)</span>
+                        </p>
                         <label>
                             <input type="radio" name="pay_way" value="balancepay" class="balance-pay">
                             <img class="pay-img" src="{{ asset('images/balance.png') }}">

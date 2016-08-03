@@ -135,11 +135,10 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('promoter/statistics', 'PromoterController@statistics');    //批量删除推广人员
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
-    $router->resource('version-record', 'VersionRecordController');    //版本更新记录
-    $router->post('app-url', 'AppUrlController@postAppUrl');//app下载地址管理
     $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
     $router->controller('statistics', 'StatisticsController');    //运营数据统计(时间段)
     $router->resource('shop-column', 'ShopColumnController');    //店铺栏目
+    $router->resource('version-record', 'VersionRecordController');    //店铺栏目
     $router->controller('goods-column', 'GoodsColumnController');    //商品栏目
     $router->delete('barcode-without-images/batch', 'BarcodeWithoutImagesController@batch'); //批量删除前台用户添加商品时没有图片的条形码
     $router->get('barcode-without-images/export', 'BarcodeWithoutImagesController@export'); //导出没有图片的条形码
@@ -187,7 +186,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('all', 'ShopController@allShops');
             $router->get('{shop}/category', 'ShopController@category');         //获取店铺分类
         });
-        $router->get('version', 'VersionInfoController@getIndex');
+        $router->controller('version', 'VersionInfoController');
         $router->controller('file', 'FileController');                              // 文件上传
         $router->get('categories/{id}/attrs', 'CategoryController@getAttr');         //获取标签
         $router->get('attr/{id}/second', 'AttrController@secondAttr');         //获取二级分类

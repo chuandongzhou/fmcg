@@ -3629,19 +3629,19 @@ table {
   width: 300px;
   height: 150px;
   background-color: $gray-plain;
-  border-radius: 8px;
+  border-radius: 8px!important;
   position: fixed;
-  right: 5px;
+  right: 45px;
   bottom: -160px;
   text-align: center;
-  z-index: 99;
+  z-index: 99999;
   color: black;
   transition: bottom 1s ease 0s;
   .title {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 0 0!important;
     padding: 0 !important;
     span {
       display: inline-block;
@@ -3665,7 +3665,9 @@ table {
     width: 100%;
   }
 }
-
+.control-center-channel{
+  right:5px !important;
+}
 /*==============help begin=================*/
 .help-menu-list {
   background-color: $gray-plain;

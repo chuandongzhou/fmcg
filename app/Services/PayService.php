@@ -123,7 +123,7 @@ class PayService
                     $redisKey = 'push:seller:' . $shopOwner->id;
                     $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
 
-                    (new RedisService)->setRedis($redisKey, $redisVal);
+                    (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 }
 
                 SystemTradeInfo::create($systemTradeInfoAttr);

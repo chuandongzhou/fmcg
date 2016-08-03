@@ -4,7 +4,7 @@
 
 
 @section('top-title')
-    <a href="{{ url('business/salesman') }}" xmlns="http://www.w3.org/1999/html">业务管理</a> &rarr;
+    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
     订货单
 @stop
 
@@ -80,13 +80,13 @@
                                 @else
                                     <a class="btn btn-primary"
                                        href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
-                                    @if($order->can_sync)
+                                    {{--@if($order->can_sync)
                                         <button class="btn btn-warning ajax"
                                                 data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"
                                                 data-method="post">
                                             同步
                                         </button>
-                                    @endif
+                                    @endif--}}
                                 @endif
                             </td>
                         </tr>

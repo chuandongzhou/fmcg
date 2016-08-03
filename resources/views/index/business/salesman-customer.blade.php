@@ -75,11 +75,11 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-sm-2 control-label" for="platform_id">平台ID:</label>
+            <label class="col-sm-2 control-label" for="platform_id">平台账号:</label>
 
             <div class="col-sm-10 col-md-6">
-                <input class="form-control" id="shop_id" name="shop_id" placeholder="平台ID"
-                       value="{{ $salesmanCustomer->shop_id }}"
+                <input class="form-control" id="account" name="account" placeholder="平台账号"
+                       value="{{ $salesmanCustomer->account }}"
                        type="text">
             </div>
         </div>

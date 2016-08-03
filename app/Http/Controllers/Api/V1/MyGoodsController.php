@@ -180,10 +180,19 @@ class MyGoodsController extends Controller
      */
     public function mortgage(Goods $goods)
     {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $shopId = auth()->user()->shop_id;
+
+        if ($mortgageGoods = $goods->mortgageGoods()->withTrashed()->where('shop_id', $shopId)->first()) {
+            return $mortgageGoods->fill(['deleted_at' => null])->save() ? $this->success('设置成功') : $this->error('设置失败，请重试');
+        }
+
         $attributes = [
             'goods_name' => $goods->name,
             'pieces' => $goods->pieces_retailer,
-            'shop_id' => auth()->user()->shop_id
+            'shop_id' => $shopId
         ];
 
         return $goods->mortgageGoods()->create($attributes)->exists ? $this->success('设置成功') : $this->error('设置失败，请重试');
@@ -356,8 +365,8 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areasModal =  new AddressData($data);
-                if(!in_array($areasModal,$areas)){
+                $areasModal = new AddressData($data);
+                if (!in_array($areasModal, $areas)) {
                     $areas[] = $areasModal;
                 }
 
@@ -404,16 +413,18 @@ class MyGoodsController extends Controller
             'name' => $goodsArr[0],
             'bar_code' => $goodsArr[1],
             'price_retailer' => $goodsArr[2],
-            'min_num_retailer' => $goodsArr[3],
-            'pieces_retailer' => $goodsArr[4],
-            'specification_retailer' => $goodsArr[5],
+            'price_retailer_pick_up' => isset($goodsArr[3]) && $goodsArr[3] ? $goodsArr[3] : $goodsArr[2],
+            'min_num_retailer' => $goodsArr[4],
+            'pieces_retailer' => $goodsArr[5],
+            'specification_retailer' => $goodsArr[6],
             'user_type' => $shopType
         ];
         if ($shopType == cons('user.type.supplier')) {
-            $goods['price_wholesaler'] = isset($goodsArr[6]) ? $goodsArr[6] : $goodsArr[2];
-            $goods['min_num_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[3];
-            $goods['pieces_wholesaler'] = isset($goodsArr[8]) ? $goodsArr[8] : $goodsArr[4];
-            $goods['specification_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[5];
+            $goods['price_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[2];
+            $goods['price_wholesaler_pick_up'] = isset($goodsArr[8]) && $goodsArr[8] ? $goodsArr[8] : $goods['price_wholesaler'];
+            $goods['min_num_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[4];
+            $goods['pieces_wholesaler'] = isset($goodsArr[10]) ? $goodsArr[10] : $goodsArr[5];
+            $goods['specification_wholesaler'] = isset($goodsArr[11]) ? $goodsArr[11] : $goodsArr[6];
         }
         return array_merge($goods, $postAttr);
     }

@@ -39,6 +39,12 @@ class RedisService
         $this->namespace = $this->name . ':';
     }
 
+    public function __set($name, $value)
+    {
+        // TODO: Implement __set() method.
+        $this->$name = $value;
+    }
+
     /**
      * 设置Redis
      *
@@ -49,10 +55,10 @@ class RedisService
     public function setRedis($key, $redisValue, $expire = 0)
     {
         $redisKey = $this->getKey($key);
-        $expire = $expire ? $expire : cons('push_time.msg_life');
+        //$expire = $expire ? $expire : cons('push_time.msg_life');
         if (!$this->redis->exists($redisKey)) {
             $this->redis->set($redisKey, $redisValue);
-            $this->redis->expire($redisKey, $expire);
+            $expire && $this->redis->expire($redisKey, $expire);
         }
 
     }

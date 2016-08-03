@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class MortgageGoods extends Model
 {
+    use softDeletes;
     protected $table = 'mortgage_goods';
 
     protected $fillable = [
         'goods_name',
         'pieces',
         'shop_id',
-        'status'
+        'status',
+        'deleted_at'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public $hidden = ['created_at', 'updated_at'];
 

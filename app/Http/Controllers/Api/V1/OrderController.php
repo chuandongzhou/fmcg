@@ -199,7 +199,7 @@ class OrderController extends Controller
             }
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg);
-            (new RedisService)->setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
         }
 
         return $this->success(['failOrderIds' => $failOrderIds]);
@@ -268,7 +268,7 @@ class OrderController extends Controller
                 $redisKey = 'push:seller:' . $shopOwner->id;
                 $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
-                (new RedisService)->setRedis($redisKey, $redisVal);
+                (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
             } else {
                 $failIds[] = $order->id;
             }
@@ -346,7 +346,7 @@ class OrderController extends Controller
 
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
-            (new RedisService)->setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
 
             $order->fill([
                 'delivery_man_id' => $deliveryManId,

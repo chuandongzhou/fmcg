@@ -15,11 +15,15 @@ class SalesmanCustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function index()
     {
-        $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress')->get();
+        $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress',
+            'shop.user')->get()->each(function ($customer) {
+            $customer->shop && $customer->shop->setAppends([]);
+            $customer->setAppends(['account']);
+        });
 
         return $this->success(['customers' => $customers]);
     }
@@ -53,13 +57,14 @@ class SalesmanCustomerController extends Controller
      * @param $customer
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function update(Requests\Api\v1\CreateSalesmanCustomerRequest $request, $customer)
+    public function update(Requests\Api\v1\CreateSalesmanCustomerRequest $request, SalesmanCustomer $customer)
     {
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
         $attributes = $request->all();
         $attributes['letter'] = $this->_getLetter($attributes['name']);
+
         if ($customer->fill($attributes)->save()) {
             return $this->success('修改客户成功');
         }
@@ -80,6 +85,7 @@ class SalesmanCustomerController extends Controller
         }
         $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
+
         if ($customer->fill($attributes)->save()) {
             return $this->success('修改客户成功');
         }
@@ -203,4 +209,5 @@ class SalesmanCustomerController extends Controller
     {
         return strtoupper(pinyin_abbr($name)[0]);
     }
+
 }

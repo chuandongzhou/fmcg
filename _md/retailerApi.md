@@ -835,12 +835,14 @@
         images              string      商品图片
         goods               array       商品详情
 
-        cart_goods子字段说明
+        goods子字段说明
 
-        id                  int         商品id
-        name                string      商品名
-        price_retailer      decimal     价格（对于终端商）
-        price_wholesaler    decimal     价格（对于批发商）
+        id                          int         商品id
+        name                        string      商品名
+        price_retailer              decimal     价格（对于终端商）
+        price_retailer_pick_up      decimal     自提价格（对于终端商）
+        price_wholesaler            decimal     价格（对于批发商）
+        price_wholesaler_pick_up    decimal     自提价格（对于批发商）
         
         coupons 子字段说明
         
@@ -1794,12 +1796,12 @@
 ### 2.19 获取版本信息  [version]
 #### 2.19.1 获取版本信息 [get] 
 `请求参数：`
-	type            	int             移动端类型(1:ios;2:android)
+
+	type            	int             移动端类型(1:ios; 2:android; 3司机; 4外勤)
 
 `成功返回：`
 
-    android_url         string          android最新版本下载地址
-	ios_url        		string          iso最新版本下载地址
+    download_url        string          最新版本下载地址
 	record				array			最新版相关详情
 
 	record 字段说明

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Models\VersionRecord;
+use App\Services\RedisService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class VersionInfoController extends Controller
 {
@@ -17,12 +17,37 @@ class VersionInfoController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $redis = Redis::connection();
+        $redis = new RedisService();
+
+        $type = $request->input('type', 1);
+
+        $deviceName = array_search($type, cons('push_device'));
 
         return $this->success([
-            'record' => VersionRecord::where('type', $request->input('type'))->orderBy('created_at', 'DESC')->first(),
-            'android_url' => $redis->get('android_url'),
-            'ios_url' => $redis->get('ios_url')
+            'record' => VersionRecord::where('type', $type)->orderBy('version_no', 'DESC')->first(),
+            'download_url' => $redis->get('app-link:' . $deviceName),
         ]);
+    }
+
+    /**
+     * 保存下载地址
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function postAppUrl(Request $request)
+    {
+        $redis = new RedisService;
+        $data = $request->only('android', 'ios', 'delivery', 'business');
+
+        $data = array_filter($data);
+
+        foreach ($data as $key => $item) {
+            $redisKey = 'app-link:' . $key;
+            $redis->del($redisKey);
+            $redis->setRedis($redisKey, $item);
+        }
+
+        return $this->success('保存成功');
     }
 }

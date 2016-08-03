@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use App\Services\ShopService;
+
 class SalesmanCustomer extends Model
 {
     protected $table = 'salesman_customer';
@@ -10,6 +12,7 @@ class SalesmanCustomer extends Model
     protected $fillable = [
         'number',
         'name',
+        'account',
         'shop_id', //平台id
         'letter',
         'contact',
@@ -24,6 +27,8 @@ class SalesmanCustomer extends Model
         'business_address',
         'shipping_address'
     ];
+
+    protected $hidden = ['shop'];
 
     /**
      * 模型启动事件
@@ -173,6 +178,16 @@ class SalesmanCustomer extends Model
     }
 
     /**
+     * 设置店铺id
+     *
+     * @param $account
+     */
+    public function setAccountAttribute($account)
+    {
+        $this->attributes['shop_id'] = ShopService::getShopIdByAccount($account);
+    }
+
+    /**
      * 获取营业地址
      *
      * @return string
@@ -191,5 +206,15 @@ class SalesmanCustomer extends Model
     public function getShippingAddressNameAttribute()
     {
         return is_null($this->shippingAddress) ? '' : $this->shippingAddress->address_name;
+    }
+
+    /**
+     * 获取店铺名
+     *
+     * @return string
+     */
+    public function getAccountAttribute()
+    {
+        return $this->shop_id && $this->shop ? $this->shop->user->user_name : '';
     }
 }

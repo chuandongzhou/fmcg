@@ -14,7 +14,7 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
     {
         return [
             'name' => 'required',
-            'shop_id' => 'integer',
+            'account' => 'string|exists:user,user_name',
             'contact' => 'required',
             'contact_information' => 'required',
             'business_area' => 'required',

@@ -3,12 +3,15 @@
 @section('subtitle' , '订单详情')
 @section('top-title', '进货管理->订单详情')
 
+
 @section('top-title')
     <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
     订单详情
 @stop
 
 @include('includes.stepBar')
+@include('includes.pay')
+@include('includes.order-refund')
 
 @section('right')
     <div class="order-detail row">
@@ -22,7 +25,7 @@
                 @if(!is_null($order->systemTradeInfo))
                     <li>
                         <span class="title-name">订单手续费 : </span><span
-                                class="red">￥{{ $order->systemTradeInfo->target_fee }}</span>
+                                class="red">¥{{ $order->systemTradeInfo->target_fee }}</span>
                     </li>
                 @endif
                 <li><span class="title-name">支付方式 : </span>{{ $order['payment_type'] }}( {{ $order->pay_way_lang  }} )
@@ -200,7 +203,13 @@
 
             <p>
                 @if(!$order['is_cancel'])
-                    @if($order['can_cancel'])
+                    @if ($order->can_refund)
+                        <a class="btn btn-danger refund" data-target="#refund"
+                           data-toggle="modal"
+                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                            退款
+                        </a>
+                    @elseif($order['can_cancel'])
                         <a class="btn btn-cancel ajax"
                            data-url="{{ url('api/v1/order/cancel-sure') }}"
                            data-method="put"

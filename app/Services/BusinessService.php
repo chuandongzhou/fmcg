@@ -114,6 +114,7 @@ class BusinessService
                 $salesmenId)->OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
         }
 
+
         if ($withOrderGoods) {
             $orders->each(function ($order) {
                 $orderConf = cons('salesman.order');

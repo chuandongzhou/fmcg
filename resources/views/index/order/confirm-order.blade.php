@@ -272,7 +272,7 @@
                 } else {
                     sumDiscountControl.html(sumDiscount).parents('.count').hide();
                 }
-                amountControl.html(parseFloat(sumPriceControl.data('sumPrice')) - sumDiscount);
+                amountControl.html(parseFloat(sumPriceControl.data('sumPrice')).sub(sumDiscount));
             },
             shopMinMoney: function () {
                 var shopItem = $('.shop-item'), shopIds = [], shippingAddressId = $('select[name="shipping_address_id"]').val();

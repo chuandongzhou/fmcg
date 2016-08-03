@@ -4,22 +4,20 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('admin/app-url') }}" data-help-class="col-sm-push-2 col-sm-10"
+          action="{{ url('api/v1/version/app-url') }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-url="{{ url('admin/version-record') }}" autocomplete="off">
-        <div class="form-group">
-            <label for="android_url" class="col-sm-2 control-label">android下载地址</label>
+        @foreach(cons()->lang('push_device') as $key => $item)
+            <div class="form-group">
+                <label for="{{ $key  }}" class="col-sm-2 control-label">{{ $item }}下载地址</label>
 
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="android_url" name="android_url" placeholder="请输入android下载地址" value="{{ $androidUrl or '' }}" />
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="{{ $key  }}" name="{{ $key }}"
+                           placeholder="请输入{{ $item }}下载地址"
+                           value="{{ $redis->get('app-link:' . $key ) }}"/>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="ios_url" class="col-sm-2 control-label">ios下载地址</label>
+        @endforeach
 
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="ios_url" name="ios_url" placeholder="请输入ios下载地址" value="{{ $androidUrl or '' }}"/>
-            </div>
-        </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-bg btn-primary">保存</button>
@@ -51,7 +49,7 @@
                     <td>
                         <div class="btn-group btn-group-xs" role="group">
                             <a type="button" class="btn btn-danger ajax" data-method="delete"
-                                   data-url="{{ url('admin/version-record/' . $record->id) }}">
+                               data-url="{{ url('admin/version-record/' . $record->id) }}">
                                 <i class="fa fa-trash-o"></i> 删除
                             </a>
                             <a type="button" class="btn btn-success ajax disabled" data-method="delete"

@@ -255,12 +255,17 @@ class OrderController extends Controller
                 })->orWhere(function ($query) {
                     //货到付款情况，只查询发货以后的状态
                     $query->ofHasSend();
+                })->orWhere(function ($query) {
+                    //货到付款情况，只查询发货以后的状态
+                    $query->ofPickUp();
                 });
             } else {
                 if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
                     $query->ofPaySuccess();
-                } else { //货到付款
+                } else if ($search['pay_type'] == cons('pay_type.cod')) { //货到付款
                     $query->ofHasSend();
+                }else {
+                    $query->ofPickUp();
                 }
             }
         });

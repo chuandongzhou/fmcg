@@ -95,6 +95,7 @@
     name                    string          客户名
     letter                  char            客户名首字母
     shop_id                 int             客户的平台id
+    account                 string          客户的平台账号
     contact                 string          联系人
     contact_information     string          联系方式
     business_area           string          营业面积
@@ -128,7 +129,7 @@
     contact_information     string          联系方式
     business_area           string          营业面积
     display_fee             decimal         陈列费
-    shop_id                 int             客户的平台id
+    account                 string          客户的平台账号(选填)
     business_address        array           营业地址
     shipping_address        array           收货地址
     business_address_lng    float           营业地址经度
@@ -159,7 +160,7 @@
     contact_information     string          联系方式
     business_area           string          营业面积
     display_fee             decimal         陈列费
-    shop_id                 int             客户的平台id
+    account                 string          客户的平台账号(选填)
     business_address        array           营业地址
     shipping_address        array           收货地址
     business_address_lng    float           营业地址经度
@@ -344,6 +345,9 @@
 #### 2.6.1 获取所有订货单[get] (order-forms)
 `请求参数：`
 
+    status              int                 状态   （0未审核  1已通过）
+    start_date          date                开始时间
+    end_date            date                结束时间
     page                int                 分页
                             
 `成功返回：`
@@ -383,6 +387,9 @@
 #### 2.6.2 获取所有退货单[get] (return-orders)
 `请求参数：`
 
+    status              int                 状态   （0未审核  1已通过）
+    start_date          date                开始时间
+    end_date            date                结束时间
     page                int                 分页
                             
 `成功返回：`

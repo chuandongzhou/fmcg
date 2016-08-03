@@ -662,4 +662,18 @@ class Order extends Model
         return $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
             [cons('order.status.send'), cons('order.status.finished')]);
     }
+
+    /**
+     * 自提订单
+     *
+     * @param $query
+     * @param $type
+     * @return mixed
+     */
+    public function scopeOfPickUp($query, $type = null)
+    {
+        $type = $type ? : cons('order.status.finished');
+
+        return $query->where('pay_type', cons('pay_type.pick_up'))->where('status', $type);
+    }
 }

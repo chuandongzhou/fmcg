@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\CreateVersionRecordRequest;
 use App\Models\VersionRecord;
-use Illuminate\Support\Facades\Redis;
+use App\Services\RedisService;
 
 class VersionRecordController extends Controller
 {
@@ -16,12 +16,11 @@ class VersionRecordController extends Controller
      */
     public function index()
     {
-        $redis = Redis::connection();
+        $redis = new RedisService();
 
         return view('admin.operation.version', [
             'records' => VersionRecord::orderBy('created_at', 'DESC')->paginate(),
-            'androidUrl' => $redis->get('android_url'),
-            'iosUrl' => $redis->get('ios_url')
+            'redis' => $redis
         ]);
     }
 
@@ -32,9 +31,8 @@ class VersionRecordController extends Controller
      */
     public function create()
     {
-        return view('admin.operation.version-record', [
-            'type' => array_flip(cons('push_device'))
-        ]);
+
+        return view('admin.operation.version-record');
     }
 
     /**

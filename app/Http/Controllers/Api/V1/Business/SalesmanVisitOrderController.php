@@ -23,26 +23,34 @@ class SalesmanVisitOrderController extends Controller
     /**
      * get orderForms by salesmanId
      *
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function orderForms()
+    public function orderForms(Request $request)
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders([$salesmenId], ['type' => cons('salesman.order.type.order')],
-            true);
+
+        $data = $request->only(['status', 'start_date', 'end_date']);
+        $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
+
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data, true);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
     /**
      * get returnOrders by salesmanId
      *
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function returnOrders()
+    public function returnOrders(Request $request)
     {
         $salesmenId = salesman_auth()->id();
-        $orders = (new BusinessService())->getOrders([$salesmenId],
-            ['type' => cons('salesman.order.type.return_order')], true);
+
+        $data = $request->only(['status', 'start_date', 'end_date']);
+        $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
+
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data, true);
         return $this->success(['orders' => $orders->toArray()]);
     }
 

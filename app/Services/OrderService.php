@@ -197,7 +197,7 @@ class OrderService
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal);
+            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
 
             return true;
         });
@@ -265,7 +265,7 @@ class OrderService
                 if ($order->orderGoods()->saveMany($orderGoods)) {
                     $redisKey = 'push:seller:' . $shop->user->id;
                     $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.pick_up');
-                    (new RedisService)->setRedis($redisKey, $redisVal);
+                    (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 } else {
                     $this->_deleteSuccessOrders($successOrders);
                     return false;
@@ -356,7 +356,7 @@ class OrderService
                         //货到付款订单直接通知卖家发货
                         $redisKey = 'push:seller:' . $shop->user->id;
                         $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
-                        (new RedisService)->setRedis($redisKey, $redisVal);
+                        (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                     }
                 } else {
                     $this->_deleteSuccessOrders($successOrders);

@@ -42,7 +42,7 @@ class SalesmanVisitOrder extends Model
     public function mortgageGoods()
     {
         return $this->belongsToMany('App\Models\MortgageGoods',
-            'salesman_visit_order_mortgage_goods')->withPivot('num');
+            'salesman_visit_order_mortgage_goods')->withTrashed()->withPivot('num');
     }
 
     /**
@@ -104,7 +104,12 @@ class SalesmanVisitOrder extends Model
             $query = $query->where('created_at', '<', $date->copy()->endOfDay());
         }
 
-        return $query->where(array_only($data, ['salesman_id', 'status']));
+
+        $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']),function($item){
+            return !is_null($item);
+        });
+
+        return $query->where($filter);
 
 
     }

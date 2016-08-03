@@ -202,6 +202,14 @@ return [
         'review_payment' => '已打款,请查收',
         'refund' => '已取消并已申请退款',
     ],
+    //推送设备类型
+    'push_device' => [
+        'ios' => 'IOS',
+        'android' => '安卓',
+        'delivery' => '司机',
+        'business' => '外勤'
+    ],
+
     //提现状态
     'withdraw' => [
         'failed' => '审核未通过',

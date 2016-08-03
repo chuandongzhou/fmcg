@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Advert;
 use App\Models\Shop;
 use App\Models\ShopColumn;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use QrCode;
 
@@ -156,4 +157,20 @@ class ShopService
         }
         return $validate ? true : $shopMinMoneys;
     }
+
+    /**
+     * 获取shopId
+     *
+     * @param $account
+     * @return mixed
+     */
+    static function getShopIdByAccount($account)
+    {
+        if (!$account) {
+            return null;
+        }
+        $user = User::where('user_name', $account)->with('shop')->first();
+        return $user->shop->id;
+    }
+
 }
