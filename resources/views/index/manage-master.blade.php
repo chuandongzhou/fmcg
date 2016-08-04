@@ -20,6 +20,14 @@
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
     <![endif]-->
+    <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
+    <!--[if lt IE 10]>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[placeholder]').removeAttr("placeholder");
+        })
+    </script>
+    <![endif]-->
     <div class="page-header navbar navbar-fixed-top">
         <div class="page-header-inner ">
             <div class="page-logo">
@@ -49,14 +57,13 @@
                         </li>
 
                         <!--购物车-->
-                        @if($carts = (new \App\Services\CartService)->cartDetail())
+
                             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                                 <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
                                    data-hover="dropdown" data-close-others="true">
                                     <i class="fa fa-shopping-cart"></i>
-                                    @if( $carts['count']>0)
-                                        <span class="badge badge-default">{{ $carts['count'] }} </span>
-                                    @endif
+                                        <span class="badge badge-default cart-badge"></span>
+
 
                                 </a>
                                 <ul class="dropdown-menu">
@@ -65,25 +72,13 @@
                                         <a href="{{ url('cart') }}">去购物车查看</a>
                                     </li>
                                     <li>
-                                        <ul class="dropdown-menu-list scroller" style="height: 250px;"
+                                        <ul class="dropdown-menu-list scroller cartDetail" style="height: 250px;"
                                             data-handle-color="#637283">
-                                            @foreach($carts['detail'] as $cart)
-                                                <li>
-                                                    <a href="{{ url('goods/'.$cart->goods->id) }}">
-                                                        <!--<span class="time">just now</span>-->
-                                                <span class="details">
-                                                    <span class="label">
-                                                        <img class="cart-img" src="{{ $cart->goods->image_url }}">
-                                                    </span> {{ $cart->goods->name }}
-                                                </span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
-                            @endif
+
                                     <!--最新消息-->
                             <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
@@ -278,6 +273,50 @@
                     }
                 })
             }
+            //购物车数量
+            $.ajax({
+                url: '/api/v1/cart/detail',
+                method: 'get'
+            }).done(function(data){
+                if(data.count>0){
+                    $('.cart-badge').html(data.count);
+                }else{
+                    $('.cart-badge').html('');
+                }
+            });
+        //购物车数据
+            $('#header_notification_bar').mouseenter(function(){
+                $.ajax({
+                    url: '/api/v1/cart/detail',
+                    method: 'get'
+                }).done(function (data) {
+                    var cartNum = data.count, carts = data.detail, cartHtml = '';
+
+                    if(cartNum>0){
+                        for(var i=0;i<carts.length;i++){
+
+                            cartHtml += '<li>'+
+                                    '<a href="/goods/'+carts[i].goods.id+'">'+
+                                    ' <span class="details">'+
+                                    '<span class="label">'+
+                                    '<img class="cart-img" src="'+carts[i].goods.image_url+'">'+
+                                    '</span>'+carts[i].goods.name+
+                                    '</span>'+
+                                    '</a>'+
+                                    '</li>';
+                        }
+
+                        $('.cart-badge').html(cartNum);
+                        $('.cartDetail').html(cartHtml);
+                    }else{
+                        $('.cart-badge').html('');
+                    }
+                });
+            });
+//            //鼠标移出事件
+            $('#header_notification_bar').mouseleave(function(){
+                $('.cartDetail').html('');
+            });
 
         });
     </script>

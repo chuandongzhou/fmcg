@@ -95,7 +95,7 @@ class OrderBuyController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofBuy(auth()->id())->WaitConfirm();
+        $orders = Order::ofBuy(auth()->id())->waitConfirm();
         return view('index.order.order-buy', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, -1, $orders->count())

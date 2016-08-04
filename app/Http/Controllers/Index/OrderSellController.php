@@ -98,7 +98,7 @@ class OrderSellController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->waitConfirm();
         return view('index.order.order-sell', [
             'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum(-1, -1, $orders->count())
@@ -251,7 +251,7 @@ class OrderSellController extends OrderController
             //待发货
             'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::bySellerId($userId)->getPayment()->count(),
             //待收款（针对货到付款）
-            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($userId)->WaitConfirm()->count(),
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($userId)->waitConfirm()->count(),
             //待确认
         ];
 

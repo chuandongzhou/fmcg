@@ -6,7 +6,7 @@
         <div class="page-sidebar navbar-collapse collapse">
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
-                <li class="nav-item start {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password','personal/delivery/*','personal/delivery','personal/delivery-man/*','personal/shipping-address/*']) !!}">
+                <li class="nav-item start {!! path_active(['personal/shop' ,'personal/shipping-address','personal/delivery-man','personal/password','personal/delivery/*','personal/delivery','personal/delivery-man/*','personal/shipping-address/*','personal/info']) !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-smile-o"></i>
                         <span class="title">个人中心</span>
@@ -14,6 +14,11 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
+                        <li class="nav-item start {{ path_active('personal/info') }}">
+                            <a href="{{ url('personal/info') }}" class="nav-link">
+                                <span class="title">个人中心</span>
+                            </a>
+                        </li>
                         <li class="nav-item start {{ path_active('personal/shop') }}">
                             <a href="{{ url('personal/shop') }}" class="nav-link">
                                 <span class="title">店铺信息</span>
@@ -141,7 +146,7 @@
                                     <span class="title">订单列表</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->is('order/statistics') && request()->input('obj_type') < 3 ? 'active' : '' }}">
+                            <li class="nav-item  {{ request()->is('order/statistics/*') && request()->input('obj_type') < 3 ? 'active' : '' }}">
                                 <a href="{{ url('order/statistics') }}" class="nav-link ">
                                     <span class="title">订单统计</span>
                                 </a>

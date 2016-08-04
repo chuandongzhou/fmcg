@@ -21,7 +21,7 @@
         <div class="col-sm-12 order-panel">
             <ul>
                 <li><span class="title-name">订单号 : </span> {{ $order['id'] }}</li>
-                <li><span class="title-name">订单金额 : </span><span class="red">￥{{ $order['price'] }}</span></li>
+                <li><span class="title-name">订单金额 : </span><span class="red">¥{{ $order['price'] }}</span></li>
                 @if(!is_null($order->systemTradeInfo))
                     <li>
                         <span class="title-name">订单手续费 : </span><span

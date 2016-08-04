@@ -239,7 +239,6 @@ class Order extends Model
                 return cons()->valueLang('order.pay_status', $payStatus);
             }
             return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
-        }
     }
 
     /**
@@ -558,7 +557,6 @@ class Order extends Model
     {
         return $query->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
-
     /**
      * 待收款,货到付款
      *

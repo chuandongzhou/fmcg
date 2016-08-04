@@ -119,6 +119,19 @@ class CartController extends Controller
         }
         return $this->error('删除失败');
     }
+    /**
+     * 获取购物车数量
+     *
+     */
+    public function getDetail(){
+        $user = auth()->user();
+        $myCarts = $user->carts();
+        $carts['detail'] = $myCarts->whereHas('goods', function ($query) use ($user) {
+            $query->whereNotNull('id')->where('user_type', '>', $user->type);
+        })->with('goods.images.image')->get();
+        $carts['count'] = count($carts['detail']);
 
+        return $carts;
+    }
 
 }

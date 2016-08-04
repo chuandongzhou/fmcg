@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
-use App\Models\DeliveryArea;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Http\Requests;

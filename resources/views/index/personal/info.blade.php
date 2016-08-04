@@ -1,5 +1,8 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-店铺介绍')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; 个人中心
+@stop
 @include('includes.qrcode')
 @include('includes.notice')
 @section('right')

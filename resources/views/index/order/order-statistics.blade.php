@@ -146,7 +146,7 @@
                             <tr>
                                 <td>{{ $good['id'] }}</td>
                                 <td>{{ $good['name'] }}</td>
-                                <td>{{ round($good['price'] / $good['num'],2) }}</td>
+                                <td>{{ $good['num']?round($good['price'] / $good['num'],2):0 }}</td>
                                 <td>{{ $good['num'] }}</td>
                                 <td>{{ $good['price'] }}</td>
                             </tr>
