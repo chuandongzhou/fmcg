@@ -40,9 +40,11 @@ class SalesmanCustomerController extends Controller
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
-            ->with('salesman', 'businessAddress', 'shippingAddress')
-            ->get();
-
+            ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
+            ->get()->each(function ($customer) {
+                $customer->shop && $customer->shop->setAppends([]);
+                $customer->setAppends(['account']);
+            });
         return view('index.business.salesman-customer-index',
             ['salesmen' => $salesmen, 'customers' => $customers, 'salesmanId' => $salesmanId, 'name' => $name]);
     }

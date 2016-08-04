@@ -666,7 +666,7 @@ var commonCropSetup = function () {
  * 通用方法设置
  */
 var commonMethodSetup = function () {
-    // 全局placeholder
+    // 全局placeholderplaceholder
     $('input, textarea').placeholder();
 
     // 全局限制textarea长度
@@ -1110,9 +1110,6 @@ var initMap = function () {
             lng = parseFloat(obj.data('lng')),
             lat = parseFloat(obj.data('lat')),
             top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
-
-        console.log(lng);
-        console.log(lat);
 
         baiduMap[group] = new BMap.Map(group, {enableMapClick: false});
         baiduMap[group].addControl(top_left_navigation);

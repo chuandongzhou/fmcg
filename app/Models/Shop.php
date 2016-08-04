@@ -218,6 +218,16 @@ class Shop extends Model
     }
 
     /**
+     * 所有客户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function salesmenCustomer()
+    {
+        return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman');
+    }
+
+    /**
      * 关联抵费商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

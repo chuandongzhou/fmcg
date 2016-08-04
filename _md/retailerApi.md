@@ -358,16 +358,18 @@
 #### 2.3.3 添加我的商品 [post] ()
 `请求参数：`
 
-    name                string      商品名
-    price_retailer      decimal     价格 （对于终端商）
-    min_num_retailer    int         最低购买量 （对于终端商）
-    pieces_retailer     int         单位编号 （对于终端商）
-    specification_retailer  string     规格  （对于终端商）
-    price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
-    min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
-    pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
-    specification_wholesaler     string 规格  （对于批发商 供应商时添加）
-    shelf_life          string      保质期
+    name                        string      商品名
+    price_retailer              decimal     价格 （对于终端商）
+    price_retailer_pick_up      decimal     自提价格（对于终端商）
+    min_num_retailer            int         最低购买量 （对于终端商）
+    pieces_retailer             int         单位编号 （对于终端商）
+    specification_retailer      string      规格  （对于终端商）
+    price_wholesaler            decimal     价格 （对于批发商  供应商时添加）
+    price_wholesaler_pick_up     decimal    自提价格（对于批发商）
+    min_num_wholesaler          int         最低购买量 （对于批发商  供应商时添加）
+    pieces_wholesaler           int         单位编号 （对于批发商  供应商时添加）
+    specification_wholesaler    string 规格  （对于批发商 供应商时添加）
+    shelf_life                  string      保质期
     bar_code            string      商品条形码
     is_new              int         是否新品（1是   0不是）
     is_out              int         是否缺货 （1是   0不是）
@@ -401,12 +403,14 @@
 #### 2.3.4 更新我的商品 [put] ({goods_id})
 `请求参数：`
 
-    name                string      商品名
-    price_retailer      decimal     价格 （对于终端商）
-    min_num_retailer    int         最低购买量 （对于终端商）
-    pieces_retailer     int         单位编号 （对于终端商）
-    specification_retailer  string     规格  （对于终端商）
-    price_wholesaler    decimal     价格 （对于批发商  供应商时添加）
+    name                        string      商品名
+    price_retailer              decimal     价格 （对于终端商）
+    price_retailer_pick_up      decimal     自提价格（对于终端商）
+    min_num_retailer            int         最低购买量 （对于终端商）
+    pieces_retailer             int         单位编号 （对于终端商）
+    specification_retailer      string      规格  （对于终端商）
+    price_wholesaler            decimal     自提价格 （对于批发商  供应商时添加）
+    price_retailer_pick_up      decimal     自提价格 （对于批发商  供应商时添加）
     min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
     pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
     specification_wholesaler    string 规格  （对于批发商 供应商时添加）

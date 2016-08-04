@@ -128,15 +128,19 @@
                 <input type="text" placeholder="请输入详细地址" name="business_address[address]"
                        class="form-control"
                        value="{{ $salesmanCustomer->businessAddress ? $salesmanCustomer->businessAddress->address : '' }}">
+            </div>
 
+        </div>
+
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label"></label>
+            <div class="col-sm-10 col-md-6">
                 <div data-group="business_address" class="baidu-map" id="business_address"
                      data-lng="{{ $salesmanCustomer->business_address_lng }}"
                      data-lat="{{ $salesmanCustomer->business_address_lat }}"
                 >
-
                 </div>
             </div>
-
         </div>
 
         {{--收货地址--}}
@@ -185,14 +189,18 @@
                        class="form-control"
                        value="{{ $salesmanCustomer->shippingAddress ? $salesmanCustomer->shippingAddress->address : '' }}">
 
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label"></label>
+            <div class="col-sm-10 col-md-6">
                 <div data-group="shipping_address" class="baidu-map" id="shipping_address"
                      data-lng="{{ $salesmanCustomer->shipping_address_lng }}"
                      data-lat="{{ $salesmanCustomer->shipping_address_lat }}"
-                >
-
-                </div>
+                ></div>
             </div>
-
         </div>
 
         <div class="form-group row">

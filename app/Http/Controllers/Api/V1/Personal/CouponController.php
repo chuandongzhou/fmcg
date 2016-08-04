@@ -35,7 +35,7 @@ class CouponController extends Controller
 
         $shop = auth()->user()->shop;
 
-        return $shop->coupons()->create($attributes)->exists ? $this->success('添加代金券成功') : $this->error('添加代金券时出现问题');
+        return $shop->coupons()->create($attributes)->exists ? $this->success('添加优惠券成功') : $this->error('添加优惠券时出现问题');
 
     }
 
@@ -75,7 +75,7 @@ class CouponController extends Controller
         }
         $attributes = $request->only(['stock', 'start_at', 'end_at']);
 
-        return $coupon->fill($attributes)->save() ? $this->success('修改代金券成功') : $this->error('修改代金券时出现问题');
+        return $coupon->fill($attributes)->save() ? $this->success('修改优惠券成功') : $this->error('修改优惠券时出现问题');
     }
 
     /**
@@ -90,6 +90,6 @@ class CouponController extends Controller
             return $this->error('优惠券不存在');
         }
 
-        return $coupon->delete() ? $this->success('删除代金券成功') : $this->error('删除代金券时出现问题');
+        return $coupon->delete() ? $this->success('删除优惠券成功') : $this->error('删除优惠券时出现问题');
     }
 }

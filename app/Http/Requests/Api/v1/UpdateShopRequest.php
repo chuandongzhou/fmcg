@@ -40,7 +40,7 @@ class UpdateShopRequest extends UserRequest
         return $this->defaultValidator($factory)->after(function ($validator) {
             if ($address = $this->input('address')) {
                 if (!$address['address']) {
-                    $validator->errors()->add('address[address]', '地址 不能为空');
+                    $validator->errors()->add('address[address]', '详细地址 不能为空');
                 }
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');

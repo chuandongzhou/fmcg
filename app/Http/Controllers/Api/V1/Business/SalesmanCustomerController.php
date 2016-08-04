@@ -7,6 +7,7 @@ use App\Models\Salesman;
 use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
 use App\Models\SalesmanCustomer;
+use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,14 @@ class SalesmanCustomerController extends Controller
         $attributes['number'] = $this->_getCustomerNumber($salesman);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
-        if ($salesman->customers()->create($attributes)->exists) {
+        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
+                $attributes['account']))
+        ) {
+            return $this->invalidParam('account', '账号不存在或已被关联');
+        }
+
+
+        if ($salesman->customers()->create(array_except($attributes, 'account'))->exists) {
             return $this->success('添加客户成功');
         }
         return $this->error('添加客户时出现问题');
@@ -64,8 +72,13 @@ class SalesmanCustomerController extends Controller
         }
         $attributes = $request->all();
         $attributes['letter'] = $this->_getLetter($attributes['name']);
+        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
+                $attributes['account'], $customer))
+        ) {
+            return $this->invalidParam('account', '账号不存在或已被关联');
+        }
 
-        if ($customer->fill($attributes)->save()) {
+        if ($customer->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('修改客户成功');
         }
         return $this->error('修改客户时出现问题');
@@ -86,7 +99,13 @@ class SalesmanCustomerController extends Controller
         $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
-        if ($customer->fill($attributes)->save()) {
+        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
+                $attributes['account'], $customer))
+        ) {
+            return $this->invalidParam('account', '账号不存在或已被关联');
+        }
+
+        if ($customer->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('修改客户成功');
         }
         return $this->error('修改客户时出现问题');
@@ -208,6 +227,34 @@ class SalesmanCustomerController extends Controller
     private function _getLetter($name)
     {
         return strtoupper(pinyin_abbr($name)[0]);
+    }
+
+    /**
+     * 验证用户名
+     *
+     * @param $shop
+     * @param $account
+     * @param $customer
+     * @return bool
+     */
+    private function _validateAccount($shop, $account, $customer = null)
+    {
+        $user = User::where('user_name', $account)->with('shop')->first();
+        if (is_null($user)) {
+            return false;
+        }
+        $shopId = $user->shop->id;
+
+        $existsCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $shopId)->first();
+
+        if ($existsCustomer) {
+            if ($customer && $customer->id == $existsCustomer->id) {
+                return $shopId;
+            }
+            return false;
+        }
+        return true;
+
     }
 
 }

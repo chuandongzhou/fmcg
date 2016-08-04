@@ -159,6 +159,7 @@ class OrderController extends Controller
         $payType = cons()->valueLang('pay_type');
         //查询条件判断
         $search = $request->all();
+
         $search['show_goods_name'] = isset($search['show_goods_name']) ? $search['show_goods_name'] : 0;
         $orderCurrent = isset($search['order_page_num']) ? intval($search['order_page_num']) : 1;
         $goodsCurrent = isset($search['goods_page_num']) ? intval($search['goods_page_num']) : 1;

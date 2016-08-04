@@ -182,10 +182,10 @@ class SalesmanCustomer extends Model
      *
      * @param $account
      */
-    public function setAccountAttribute($account)
+   /* public function setAccountAttribute($account)
     {
         $this->attributes['shop_id'] = ShopService::getShopIdByAccount($account);
-    }
+    }*/
 
     /**
      * 获取营业地址

@@ -65,7 +65,7 @@
                                        {{--data-target="#couponModal" data-id="{{ $coupon->id }}">--}}
                                         {{--<i class="fa fa-edit"></i> 编辑--}}
                                     {{--</a>--}}
-                                    <a data-url="{{ url('api/v1/coupon/'. $coupon->id) }}"
+                                    <a data-url="{{ url('api/v1/personal/coupon/'. $coupon->id) }}"
                                        data-method="delete" class="btn btn-danger ajax" type="button">
                                         <i class="fa fa-trash-o"></i> 删除
                                     </a>

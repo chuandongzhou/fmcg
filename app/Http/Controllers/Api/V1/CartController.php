@@ -38,7 +38,7 @@ class CartController extends Controller
             $carts = (new CartService($carts))->formatCarts();
         }
 
-        return $this->success(['shops' => $carts->toArray()]);
+        return $this->success(['shops' => $carts->values()->toArray()]);
     }
 
     /**

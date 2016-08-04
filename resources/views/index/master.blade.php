@@ -14,21 +14,12 @@
     @stop
 
 @section('header')
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <!--[if lt IE 9]>
     <div class="ie-warning alert alert-warning alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         您的浏览器不是最新的，您正在使用 Internet Explorer 的一个<strong>老版本</strong>。 为了获得最佳的浏览体验，我们建议您选用其它浏览器。
         <a class="btn btn-primary" href="http://browsehappy.com/" target="_blank" rel="nofollow">立即升级</a>
     </div>
-    <![endif]-->
-    <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
-    <!--[if lt IE 10]>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('[placeholder]').removeAttr("placeholder");
-        })
-    </script>
     <![endif]-->
     <div class="dealer-top-header">
         <div class="container ">
@@ -256,7 +247,6 @@
                     }
                 })
             }
-
 
         });
     </script>

@@ -184,7 +184,7 @@ return [
         'contact_information' => '联系方式',
         'business_area' => '营业面积',
         'display_fee' => '陈列费',
-        'salesman_id' => '营业员',
+        'salesman_id' => '业务员',
         'date' => '日期',
         'target' => '目标',
         'stock' => '库存',

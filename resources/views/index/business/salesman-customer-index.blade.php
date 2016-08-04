@@ -37,7 +37,7 @@
                     <tr>
                         <th>编号</th>
                         <th>客户名称</th>
-                        <th>平台ID</th>
+                        <th>平台账号</th>
                         <th>联系人</th>
                         <th>联系方式</th>
                         <th>营业地址</th>
@@ -58,7 +58,7 @@
                                 {{ $customer->name }}
                             </td>
                             <td>
-                                {{ $customer->shop_id }}
+                                {{ $customer->account }}
                             </td>
                             <td>
                                 {{ $customer->contact }}
