@@ -88,7 +88,7 @@
                                             </div>
 
                                         </td>
-                                        <td class="text-center">￥<span
+                                        <td class="text-center">¥<span
                                                     class="goods-price">{{ $cartGoods->goods->price . '/' . $cartGoods->goods->pieces}}</span>
                                         </td>
                                         <td class="text-center">
@@ -99,7 +99,7 @@
                                                    value="{{ $cartGoods->num }}">
                                             <button type="button" class="modified inc-num">+</button>
                                         </td>
-                                        <td class="text-center red">￥<span
+                                        <td class="text-center red">¥<span
                                                     class="goods-all-money">{{ $cartGoods->goods->price * $cartGoods->num }}</span>
                                         </td>
                                         <td class="text-right">
@@ -121,13 +121,13 @@
                                 <tfoot>
                                 <tr>
                                     <td colspan="6" class="text-right">
-                                        <p class="lowest-money">最低配送额 <b class="red money">￥<span
+                                        <p class="lowest-money">最低配送额 <b class="red money">¥<span
                                                         class="min-money">{{ $shop->min_money }}</span></b>
                                         </p>
 
                                         <p class="total-money">合计金额
-                                            <b class="red money">￥<span class="shop-sum-price"></span></b>
-                                            <b class="red not-enough">(金额不足)</b>
+                                            <b class="red money">¥<span class="shop-sum-price"></span></b>
+                                            {{--<b class="red not-enough">(金额不足)</b>--}}
                                         </p>
                                     </td>
                                 </tr>
@@ -136,20 +136,22 @@
                         </div>
                     @endforeach
                 </div>
-                    <div class="row clearing text-right clearing-container fixed-bottom">
-                        <div class="col-xs-6 text-left left-operation">
-                            <div class="check-item">
-                                <span class="span-checkbox  check-all"><i class="fa fa-check"></i></span>
-                            </div>
-                            <a href="javascript:" class="batch-deletion ajax btn padding-clear" data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
+                <div class="row" id="car-bottom"></div>
+                <div class="row clearing text-right clearing-container fixed-bottom">
+                    <div class="col-xs-6 text-left left-operation">
+                        <div class="check-item">
+                            <span class="span-checkbox  check-all"><i class="fa fa-check"></i></span>
                         </div>
-                        <div class="col-xs-6 padding-clear">
-                            <span class="money">总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
-
-                            <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
-                        </div>
-
+                        <a href="javascript:" class="batch-deletion ajax btn padding-clear"
+                           data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                     </div>
+                    <div class="col-xs-6 padding-clear">
+                        <span class="money">总金额<b class="red">¥<span class="cart-sum-price"></span></b></span>
+
+                        <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
+                    </div>
+
+                </div>
             </div>
         @endif
     </form>

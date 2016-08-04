@@ -221,7 +221,6 @@ function apiv1FirstError(json, defaultValue) {
             return message;
         }
     }
-
     return defaultValue;
 }
 
@@ -380,8 +379,8 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.html('操作成功');
-                    self.hasClass('no-prompt') || alert(self.data('doneText') || '操作成功');
+                    isButton && self.html(data.message || '操作成功');
+                    self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
@@ -528,36 +527,19 @@ var addAddFunc = function () {
         , city = $('.add-city')
         , district = $('.add-district')
         , street = $('.add-street')
+        , minMoney = $('.min-money')
         , address = $('.detail-address');
 
-    //$('#addressModal').on('hidden.bs.modal', function (e) {
-    //    //TODO 初始化地址
-    //    address.val('');
-    //});
-    // 地址限制
-    /* var changeAddButtonStatus = function () {
-     if (container.children('div:visible').length >= addLimit) {
-     addButton.button('loading');
-     return true;
-     }
-
-     addButton.button('reset');
-     return false;
-     };*/
     var changeBtnAddhtml = function (html) {
         btnAdd.html(html);
         setTimeout(function () {
             btnAdd.html(btnAdd.data('text'));
         }, 3000)
     };
-
-    //changeAddButtonStatus();
     // 删除地址
     container.on('click', '.close-icon', function () {
         $(this).parent().fadeOut('normal', function () {
             $(this).remove();
-            //changeAddButtonStatus();
-            //dynamicShowMap();
         });
     });
 
@@ -576,23 +558,16 @@ var addAddFunc = function () {
             return false;
         }
 
-        /* if (street.is(':visible') && !street.val()) {
-         changeBtnAddhtml('请选择街道...');
-         return false;
-         }
-         if (!address.val()) {
-         changeBtnAddhtml('请输入详细地址');
-         return false;
-         }*/
         var provinceText = province.find("option:selected").text(),
             cityText = city.find("option:selected").text(),
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
+            minMoneyText = minMoney.length ? '<input type="hidden" name="area[extra_common_param][]" value="' + minMoney.val() + '"/>' : '',
             areaName = provinceText + cityText + districtText + streetText;
         $('.modal-header .close').trigger('click');
         container.prepend(
-            '<div class="col-sm-10 fa-border show-map">' +
+            '<div class="col-sm-12 fa-border show-map">' +
             areaName + addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
@@ -602,14 +577,9 @@ var addAddFunc = function () {
             '<span class="fa fa-times-circle pull-right close-icon"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
             '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-            //'<input type="hidden" name="area[blx][]" value="' + $('input[name="coordinate_blx"]').val() + '"/>' +
-            //'<input type="hidden" name="area[bly][]" value="' + $('input[name="coordinate_bly"]').val() + '"/>' +
-            //'<input type="hidden" name="area[slx][]" value="' + $('input[name="coordinate_slx"]').val() + '"/>' +
-            //'<input type="hidden" name="area[sly][]" value="' + $('input[name="coordinate_sly"]').val() + '"/>' +
+            minMoneyText +
             '</div>'
         );
-        //changeAddButtonStatus();
-        //dynamicShowMap();
     });
 };
 
@@ -621,7 +591,6 @@ var getCategory = function (url) {
     var level1 = $('select[name="cate_level_1"]')
         , level2 = $('select[name="cate_level_2"]')
         , level3 = $('select[name="cate_level_3"]');
-
 
     var post = function (pid, select) {
         var ohtml = '<option value="">请选择</option>';
@@ -1002,7 +971,7 @@ var getCoordinateMap = function (data) {
         map.centerAndZoom(new BMap.Point(106, 35), 5);
 
     }
-}
+};
 
 var getShopAddressMap = function (lng, lat) {
     var addressMap = new BMap.Map('address-map', {enableMapClick: false});
@@ -1065,6 +1034,112 @@ var getShopAddressMap = function (lng, lat) {
         }
     });
 }
+
+
+/**
+ * 设置地址
+ * @param setMap
+ * @param baiduMap
+ */
+var addressSelectChange = function (setMap, baiduMap) {
+    $('select.address').change(function () {
+        var obj = $(this), addressPanel = obj.closest('.address-panel'),
+            areaName = addressPanel.find('.area-name'),
+            provinceControl = addressPanel.find('select.address-province'),
+            cityControl = addressPanel.find('select.address-city'),
+            districtControl = addressPanel.find('select.address-district'),
+            streetControl = addressPanel.find('select.address-street'),
+            provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
+            cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
+            districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
+            streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
+        areaName.val(provinceVal + cityVal + districtVal + streetVal);
+        if (setMap) {
+            var group = obj.data('group') || 'default',
+                cityName = obj.find('option:checked').text(),
+                lngControl = addressPanel.find('.lng'),
+                latControl = addressPanel.find('.lat');
+            var num = 6;
+            if (obj.hasClass('address-city')) {
+                num = 12;
+            }
+            if (obj.hasClass('address-district')) {
+                num = 14;
+            }
+            if (obj.hasClass('address-street')) {
+                num = 16;
+            }
+            if (cityName != '其它区' && cityName != '海外') {
+                //删除之前的覆盖物
+                baiduMap[group].clearOverlays();
+                // 创建地址解析器实例
+                var myGeo = new BMap.Geocoder();
+                // 将地址解析结果显示在地图上,并调整地图视野
+                myGeo.getPoint(cityName, function (newPoint) {
+                    if (newPoint) {
+                        point_address = newPoint;
+                        baiduMap[group].centerAndZoom(newPoint, num);
+                        var newMarker = new BMap.Marker(point_address);
+                        //重置中心点
+                        baiduMap[group].addOverlay(newMarker);
+                        var pointPosition = newMarker.getPosition();
+                        lngControl.val(pointPosition.lng);
+                        latControl.val(pointPosition.lat);
+                        newMarker.enableDragging();//可拖拽点
+                        newMarker.addEventListener('dragend', function () {
+                            pointPosition = newMarker.getPosition();
+                            lngControl.val(pointPosition.lng);
+                            latControl.val(pointPosition.lat);
+                        });
+                    }
+                }, cityName);
+            }
+        }
+    });
+};
+
+/**
+ * 初始化并返回地图
+ * @returns {Array}
+ */
+var initMap = function () {
+    var baiduMap = new Array();
+    $('.baidu-map').each(function () {
+        var obj = $(this),
+            group = obj.data('group') || 'default',
+            lng = parseFloat(obj.data('lng')),
+            lat = parseFloat(obj.data('lat')),
+            top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+
+        console.log(lng);
+        console.log(lat);
+
+        baiduMap[group] = new BMap.Map(group, {enableMapClick: false});
+        baiduMap[group].addControl(top_left_navigation);
+        baiduMap[group].enableScrollWheelZoom(true);
+
+        if (lng && lat) {
+            var point_address = new BMap.Point(lng, lat);
+            baiduMap[group].centerAndZoom(point_address, 12);
+            baiduMap[group].addOverlay(new BMap.Marker(point_address));
+        } else {
+            var point_address = new BMap.Point(106, 35);
+            baiduMap[group].centerAndZoom(point_address, 12);
+            var geolocation_address = new BMap.Geolocation();
+            geolocation_address.getCurrentPosition(function (r) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    //重置中心点
+                    baiduMap[group].addOverlay(new BMap.Marker(r.point));
+                    baiduMap[group].panTo(r.point);
+                }
+            }, {enableHighAccuracy: true});
+        }
+
+    });
+    return baiduMap;
+};
+
+
 /**
  * get提交form处理
  * @param exceptName

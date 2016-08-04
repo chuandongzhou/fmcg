@@ -35,7 +35,7 @@
                 <div class="operating  pay-way text-left">
 
                     <p class="text-left title">
-                        当前账户余额：<span class="red">￥{{ $userBalance }} &nbsp;</span>
+                        当前账户余额：<span class="red">¥{{ $userBalance }} &nbsp;</span>
                         @if($userBalance < $orderSumPrice)
                             <span class="red">(余额不足)</span>
                         @endif

@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-提现账号')
 @include('includes.bank')
-@section('top-title', '财务管理->提现账号')
+@section('top-title')
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
+   提现账号
+@stop
 @section('right')
     <form action="#" method="post">
         <div class="row">

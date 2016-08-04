@@ -136,18 +136,21 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        Overtrue\LaravelPinyin\ServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         /*
          * Custom Service Providers...
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
         \WeiHeng\Admin\AdminServiceProvider::class,
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
+        \WeiHeng\Salesman\SalesmanServiceProvider::class,
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,
         \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
-        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
+
 
 
     ],
@@ -205,7 +208,8 @@ return [
         'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
         'Pusher' => \Riverslei\Pusher\Pusher::class,
         'PushNotification' => \Davibennun\LaravelPushNotification\Facades\PushNotification::class,
-        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
     ],
 
 ];

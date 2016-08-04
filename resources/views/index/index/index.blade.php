@@ -99,7 +99,8 @@
         @foreach($goodsColumns as $index=>$column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
-                    <div class="col-xs-12 title"><div class="category-name">{{ $column->name }} <a
+                    <div class="col-xs-12 title">
+                        <div class="category-name">{{ $column->name }} <a
                                     href="{{ url('search?category_id=' . $column->level.$column->id) }}">进入>></a></div>
                     </div>
                     <div class="col-xs-12">
@@ -117,26 +118,25 @@
                                 <div class="col-xs-12 commodity-panel padding-clear">
                                     @foreach($column->goods as $goods)
                                         @if ($goods->price > 0)
-                                            <div class="commodity commodity-index-img">
-                                                <div class="commodity-border">
-                                                    <div class="img-wrap">
-                                                        <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
-                                                            <img class="commodity-img lazy"
-                                                                 data-original="{{ $goods->image_url }}"/>
+                                            <div class="commodity commodity-index-img commodity-border">
 
-                                                            <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="content-panel">
-                                                        <p class="commodity-name">
-                                                            <a href="{{ url('goods/' . $goods->id) }}"
-                                                               target="_blank">{{ $goods->name }}</a></p>
+                                                <div class="img-wrap">
+                                                    <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
+                                                        <img class="commodity-img lazy"
+                                                             data-original="{{ $goods->image_url }}"/>
 
-                                                        <p class="sell-panel">
-                                                            <span class="money">￥{{ $goods->price . '/' . $goods->pieces }}</span>
-                                                            <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
-                                                        </p>
-                                                    </div>
+                                                        <span class="@if($goods->is_out)prompt lack @elseif($goods->is_promotion)prompt promotions @elseif($goods->is_new)prompt new-listing @endif"></span>
+                                                    </a>
+                                                </div>
+                                                <div class="content-panel">
+                                                    <p class="commodity-name">
+                                                        <a href="{{ url('goods/' . $goods->id) }}"
+                                                           target="_blank">{{ $goods->name }}</a></p>
+
+                                                    <p class="sell-panel">
+                                                        <span class="money">¥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                                        <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         @endif

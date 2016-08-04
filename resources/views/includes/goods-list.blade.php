@@ -1,6 +1,6 @@
 @foreach($goods  as $item)
     @if ($item->price > 0)
-        <div class="col-sm-3 commodity">
+        <div class="col-sm-3 commodity commodity-search-product">
             <div class="commodity-border">
                 <div class="img-wrap">
                     <a href="{{ url('goods/' . $item->id) }}" target="_blank">
@@ -11,7 +11,15 @@
                 <div class="content-panel">
                     <div class="commodity-name">
                         <a href="{{ url('goods/' . $item->id) }}" target="_blank">{{ $item->name }}</a></div>
-
+                    <div class="sell-panel">
+                        <span class="money">¥{{ $item->price . '/' . $item->pieces }}</span>
+                        <span class="sales pull-right">最低购买量 : {{ $item->min_num }}</span>
+                    </div>
+                    <div class="store-name">
+                        <a href="{{ asset('shop/' . (isset($shop) ? $shop->id : $item->shop->id )) }}" target="_blank">
+                            {{ isset($shop) ?  $shop->name : $item->shop->name  }}
+                        </a>
+                    </div>
                     <div class="shopping-store">
                         <button type="button" data-group="group{{ $item->id }}" class="count modified desc-num"
                                 disabled>-
@@ -26,16 +34,7 @@
                             <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$item->id) }}"
                                class="btn btn-primary join-cart" data-group="group{{ $item->id }}">加入购物车</a>
                         @endif
-                    </div>
-
-                    <div class="sell-panel">
-                        <span class="money">￥{{ $item->price . '/' . $item->pieces }}</span>
-                        <span class="sales pull-right">最低购买量 : {{ $item->min_num }}</span>
-                    </div>
-                    <div class="store-name">
-                        <a href="{{ asset('shop/' . (isset($shop) ? $shop->id : $item->shop->id )) }}" target="_blank">
-                            {{ isset($shop) ?  $shop->name : $item->shop->name  }}
-                        </a>
+                        <div class="sales prompt">累积销量：{{ $item->sales_volume }}</div>
                     </div>
                 </div>
             </div>

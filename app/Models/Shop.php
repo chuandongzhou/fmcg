@@ -192,7 +192,7 @@ class Shop extends Model
     public function adverts()
     {
         return $this->hasMany('App\Models\Advert')->where(function ($query) {
-            $query->where('type',cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
+            $query->where('type', cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
         });
 
     }
@@ -207,6 +207,36 @@ class Shop extends Model
         return $this->belongsTo('App\Models\Promoter', 'spreading_code', 'spreading_code');
     }
 
+    /**
+     * 关联业务员
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function salesmen()
+    {
+        return $this->hasMany('App\Models\Salesman');
+    }
+
+    /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function mortgageGoods()
+    {
+        return $this->hasMany('App\Models\MortgageGoods');
+    }
+
+
+    /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function coupons()
+    {
+        return $this->hasMany('App\Models\Coupon');
+    }
 
     /**
      * 获取热门商家
@@ -404,23 +434,12 @@ class Shop extends Model
     {
         $areaArr = (new AddressService($area))->formatAddressPost();
         if (!empty($areaArr)) {
-            $this->deliveryArea->each(function ($address) {
-                $address->delete();
-            });
+            $this->deliveryArea()->delete();
             $areas = [];
             foreach ($areaArr as $data) {
-                /*  if (isset($data['coordinate'])) {
-                      $coordinate = $data['coordinate'];
-                      unset($data['coordinate']);
-                  }*/
                 unset($data['coordinate']);
-                $areas[] = new DeliveryArea($data);
-
-                /* if (isset($coordinate)) {
-                     $areaModel->coordinate()->create($coordinate);
-                 }*/
+                $areas[] = new AddressData($data);
             }
-
             if ($this->exists) {
                 $this->deliveryArea()->saveMany($areas);
             } else {

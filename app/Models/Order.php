@@ -13,12 +13,13 @@ class Order extends Model
         'price',
         'pay_type',
         'pay_way',
-        'pay_id',
+        //'receive_mode',
         'remark',
         'pay_status',
         'status',
         'shipping_address_id',
         'delivery_man_id',
+        'coupon_id',
         'user_id',
         'shop_id',
         'paid_at',
@@ -158,13 +159,23 @@ class Order extends Model
     }
 
     /**
+     * 关联优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function coupon()
+    {
+        return $this->belongsTo('App\Models\Coupon')->withTrashed();
+    }
+
+    /**
      * 支付形式
      *
      * @return mixed
      */
     public function getPaymentTypeAttribute()
     {
-        $type = $this->attributes['pay_type'];
+        $type = $this->pay_type;
 
         return cons()->valueLang('pay_type', $type);
     }
@@ -174,8 +185,9 @@ class Order extends Model
      *
      * @return string
      */
-    public function getPayWayLangAttribute(){
-        $payWay = $this->attributes['pay_way']; 
+    public function getPayWayLangAttribute()
+    {
+        $payWay = $this->attributes['pay_way'];
 
         return cons()->valueLang('pay_way.cod', $payWay);
     }
@@ -193,28 +205,45 @@ class Order extends Model
         $isCancel = $this->attributes['is_cancel'];
         $payStatusArr = cons('order.pay_status');
         $statusConf = cons('order.status');
+        // 未确认 =未支付  =退款中  =已退款 未发货 已发货 完成          在线 / 货到付款
+
+
+        //未提货   完成                                              自提
+
+        //取消
         if ($isCancel) {
             return cons()->lang('order.is_cancel.on');
         }
-        if ($payType == cons('pay_type.online')) {//在线支付
-            if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
+
+        // 未确认  已完成
+        if ($status == $statusConf['non_confirm'] || $status == $statusConf['finished']) {
+            return cons()->valueLang('order.status', $status);
+        }
+
+
+//        if ($payType == cons('pay_type.pick_up')) {
+//            //自提
+//            return $status == $statusConf['finished'] ? '已完成' : '未提货';
+//
+//            /*if (!$payStatus || $payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {//显示未支付
+//                return cons()->valueLang('order.pay_status', $payStatus);
+//            }
+//            //已支付
+//            if ($payStatus == $payStatusArr['payment_success'] && $status < $statusConf['send']) {
+//                return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status',
+//                    $status);
+//            }*/
+//        } else {
+//            //在线支付和货到付款
+//            if ($payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {
+//                return cons()->valueLang('order.pay_status', $payStatus);
+//            }
+//            return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
+//        }
+        if ($payStatus == $payStatusArr['refund'] || $payStatus == $payStatusArr['refund_success']) {
                 return cons()->valueLang('order.pay_status', $payStatus);
             }
-            //已支付
-            if ($payStatus == $payStatusArr['payment_success'] && $status < $statusConf['send']) {
-                return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status',
-                    $status);
-            }
-        }
-        //货到付款，当客户已付款时候显示订单状态为已付款
-        if ($payType == cons('pay_type.cod') && $payStatus == cons('order.pay_status.payment_success')
-            && $status == $statusConf['send']
-        ) {
-            return cons()->lang('order.pay_status.payment_success');
-        }
-
-
-        return cons()->valueLang('order.status', $status);
+            return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
     }
 
     /**
@@ -271,8 +300,7 @@ class Order extends Model
      */
     public function getCanConfirmAttribute()
     {
-        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status'] == cons('order.pay_status.payment_success') : true)
-        && $this->attributes['status'] == cons('order.status.non_confirm') && $this->attributes['is_cancel'] == cons('order.is_cancel.off')/* && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id')*/
+        return $this->attributes['status'] == cons('order.status.non_confirm') && $this->attributes['is_cancel'] == cons('order.is_cancel.off')/* && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id')*/
             ;
     }
 
@@ -283,9 +311,21 @@ class Order extends Model
      */
     public function getCanSendAttribute()
     {
-        return ($this->attributes['pay_type'] == cons('pay_type.online') ? $this->attributes['pay_status'] == cons('order.pay_status.payment_success') : true)
-        && $this->attributes['status'] == cons('order.status.non_send') && $this->attributes['is_cancel'] == cons('order.is_cancel.off')/* && $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id')*/
-            ;
+        $payType = $this->pay_type;
+        $payStatus = $this->pay_status;
+        $status = $this->status;
+        $payTypeConf = cons('pay_type');
+
+        $result = false;
+        if ($payType == $payTypeConf['online']) {
+            $result = ($this->pay_status == cons('order.pay_status.payment_success')) && ($status == cons('order.status.non_send'));
+        } elseif ($payType == $payTypeConf['cod']) {
+            $result = $status == cons('order.status.non_send');
+        }
+        return $result && $this->is_cancel == cons('order.is_cancel.off');
+
+        /* return ($this->pay_type == cons('pay_type.online') ? $this->pay_status == cons('order.pay_status.payment_success') : true)
+         && $this->attributes['status'] == cons('order.status.non_send') && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
     /**
@@ -295,10 +335,8 @@ class Order extends Model
      */
     public function getCanRefundAttribute()
     {
-        return $this->attributes['pay_type'] == cons('pay_type.online')
-        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
-        && $this->attributes['status'] == cons('order.status.non_confirm')/* && $this->attributes['user_id'] == auth()->id()*/
-            ;
+        return $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
+        && $this->attributes['status'] == cons('order.status.non_confirm');
     }
 
     /**
@@ -308,8 +346,13 @@ class Order extends Model
      */
     public function getCanConfirmCollectionsAttribute()
     {
-        return $this->attributes['pay_type'] == cons('pay_type.cod')
-        && $this->attributes['status'] == cons('order.status.send');
+        $payType = $this->pay_type;
+        $status = $this->status;
+        $payTypeConf = cons('pay_type');
+        $statusConf = cons('order.status');
+
+        return ($payType == $payTypeConf['cod'] && $status == $statusConf['send']);
+//        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
     }
 
     /**
@@ -329,10 +372,20 @@ class Order extends Model
      */
     public function getCanPaymentAttribute()
     {
-        return
-            ($this->attributes['pay_type'] == cons('pay_type.online') || ($this->attributes['pay_type'] == cons('pay_type.cod')) && $this->attributes['status'] == cons('order.status.send'))
-            && $this->attributes['pay_status'] == cons('order.pay_status.non_payment')
-            && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
+        $status = $this->status;
+        $payStatus = $this->pay_status;
+        $statusArr = cons('order.status');
+        $payStatusArr = cons('order.pay_status');
+        return $this->attributes['is_cancel'] == cons('order.is_cancel.off')
+        && $payStatus == $payStatusArr['non_payment']
+        && ($status >= $statusArr['non_send'] && $status < $statusArr['finished']);
+//        && $this->attributes['pay_type'] != cons('pay_type.pick_up');
+        /*
+                return
+                    ($this->attributes['pay_type'] == cons('pay_type.online') || ($this->attributes['pay_type'] == cons('pay_type.cod')) && $this->attributes['status'] == cons('order.status.send'))
+                    && $this->attributes['pay_status'] == cons('order.pay_status.non_payment')
+                    && $this->attributes['status'] == cons('order.status.non_send')
+                    && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
     /**
@@ -371,6 +424,17 @@ class Order extends Model
         $userType = $this->user->type;
         $piece = $userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer;
         return cons()->valueLang('goods.pieces', $piece);
+    }
+
+    /**
+     * 获取订单优惠后价格
+     *
+     * @return mixed|string
+     */
+    public function getAfterRebatesPriceAttribute()
+    {
+        $price = $this->price;
+        return $this->coupon ? (bcsub($price, $this->coupon->discount, 2)) : $price;
     }
 
     /**
@@ -473,7 +537,7 @@ class Order extends Model
     }
 
     /**
-     * 待确认
+     * 待付款
      *
      * @param $query
      * @return mixed
@@ -481,7 +545,7 @@ class Order extends Model
     public function scopeNonPayment($query)
     {
         return $query->where(function ($q) {
-            $q->where(['pay_type' => cons('pay_type.online')])
+            $q->where(['pay_type' => cons('pay_type.online'),'status'=>cons('order.status.non_send')])
                 ->orWhere(['pay_type' => cons('pay_type.cod'), 'status' => cons('order.status.send')]);
         })->where('pay_status', cons('order.pay_status.non_payment'));
     }
@@ -495,13 +559,12 @@ class Order extends Model
     public function scopeWaitConfirm($query)
     {
         return $query->where(function ($query) {
-            $query->where([
-                'pay_type' => cons('pay_type.online'),
-                'pay_status' => cons('order.pay_status.payment_success')
-            ])->orWhere('pay_type', cons('pay_type.cod'));
+                $query->where([
+                    'pay_type' => cons('pay_type.online'),
+//                'pay_status' => cons('order.pay_status.payment_success')
+                ])->orWhere('pay_type', cons('pay_type.cod'));
         })->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
-
     /**
      * 待收款,货到付款
      *
@@ -559,7 +622,7 @@ class Order extends Model
             if ($search['status']) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
-                    $query->where('pay_status', cons('order.pay_status.non_payment'))
+                    $query->where(['pay_status'=>cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])
                         ->where('pay_type', cons('pay_type.online'));
                 } elseif ($search['status'] == key(cons('order.status'))) {
                     //未确认
@@ -567,7 +630,7 @@ class Order extends Model
                         ->where(function ($query) {
                             $query->where([
                                 'pay_type' => cons('pay_type.online'),
-                                'pay_status' => cons('order.pay_status.payment_success')
+//                                'pay_status' => cons('order.pay_status.payment_success')
                             ])->orWhere('pay_type', cons('pay_type.cod'));
                         });
                 } elseif ($search['status'] == 'non_send') {//未发货
@@ -613,5 +676,13 @@ class Order extends Model
     {
         return $query->where('pay_type', cons('pay_type.cod'))->whereIn('status',
             [cons('order.status.send'), cons('order.status.finished')]);
+    }
+    /**
+     * 自提，已完成的订单条件
+     *
+     *
+     */
+    public function scopeofPickUpSuccess($query){
+        return $query->where('pay_type',cons('pay_type.pick_up'))->where('status',cons('order.status.finished'));
     }
 }

@@ -9,7 +9,8 @@ return [
     //支付类型
     'pay_type' => [
         'online' => 1,
-        'cod' => 2,
+        'cod' => 2
+//        'pick_up' => 3
     ],
     //支付方式
     'pay_way' => [
@@ -363,5 +364,45 @@ return [
     //后台配置
     'admin' => [
         'super_admin_name' => 'admin'
+    ],
+    //业务员
+    'salesman' => [
+        //头像
+        'avatar' => [
+            64 => 'default_64.jpg',
+            128 => 'default_128.jpg',
+        ],
+        //客户
+        'customer' => [
+            'address_type' => [
+                'business' => 1,
+                'shipping' => 2
+            ]
+        ],
+        //订单
+        'order' => [
+            'sync' => [
+                'pay_type' => 2,    // 默认货到付款
+                'pay_way' => 1,
+            ],
+            //是否已同步
+            'is_synced' => [
+                'synced' => 1,
+            ],
+            'status' => [
+                'not_pass' => 0,
+                'passed' => 1
+            ],
+            'type' => [
+                'order' => 0,
+                'return_order' => 1
+            ],
+            'goods' => [
+                'type' => [
+                    'order' => 0,
+                    'return' => 1
+                ]
+            ]
+        ]
     ]
 ];

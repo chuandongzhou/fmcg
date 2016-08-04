@@ -9,11 +9,7 @@ namespace App\Http\Requests\Api\v1;
 
 class BackupSendSmsRequest extends Request
 {
-
-    public function authorize()
-    {
-        return true;
-    }
+    
     public function rules()
     {
         return [

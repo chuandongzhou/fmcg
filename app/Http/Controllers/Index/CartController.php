@@ -24,7 +24,6 @@ class CartController extends Controller
         $carts = $myCarts->whereHas('goods', function ($query) use ($user) {
             $query->whereNotNull('id')->where('user_type', '>', $user->type);
         })->with('goods.images.image')->get();
-
         (new CartService)->set($carts->count());
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零

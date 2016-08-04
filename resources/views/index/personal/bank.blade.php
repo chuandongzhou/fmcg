@@ -1,6 +1,11 @@
 @extends('index.menu-master')
 @section('subtitle', '财务管理-提现账号')
-@section('top-title', '财务管理->提现账号')
+
+@section('top-title')
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
+    <a href="{{ url('personal/bank') }}">提现账号</a> &rarr;
+    编辑提现账号
+@stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/bank/' . $userBank->id) }}"
           method="{{ $userBank->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"

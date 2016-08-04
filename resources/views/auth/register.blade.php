@@ -1,6 +1,6 @@
 @extends('auth.master')
 @include('includes.cropper')
-@include('includes.address')
+@include('includes.address', ['model' => 'shop'])
 
 @section('title' , '注册 | 订百达')
 

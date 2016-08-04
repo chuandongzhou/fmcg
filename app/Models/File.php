@@ -111,9 +111,10 @@ class File extends Model
      *
      * @param string|\Symfony\Component\HttpFoundation\File\File $file
      * @param null|string $originalName
+     * @param bool $saveToFileTable
      * @return null|static
      */
-    public static function createWithFile($file, $originalName = null)
+    public static function createWithFile($file, $originalName = null, $saveToFileTable = true)
     {
         if (is_string($file)) {
             $file = new SymfonyFile($file, false);
@@ -129,7 +130,7 @@ class File extends Model
             $userId = auth()->id();
         }
 
-        $uploadFilePath = config('path.upload_file');
+        $uploadFilePath = $saveToFileTable ? config('path.upload_file') : config('path.upload_temp');
 
         // 根据当前日期生成目录
         $date = date('Y/m/d/');
@@ -149,7 +150,6 @@ class File extends Model
 
             return null;
         }
-
         // 开始写入数据库
         $attributes = [
             'type' => 0,
@@ -164,7 +164,7 @@ class File extends Model
             'ip' => \Request::getClientIp(),
         ];
 
-        return static::create($attributes);
+        return $saveToFileTable ? static::create($attributes) : $attributes;
     }
 
     /**

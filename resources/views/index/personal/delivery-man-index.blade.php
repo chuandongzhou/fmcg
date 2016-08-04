@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-配送人员')
 @include('includes.delivery-man')
-@section('top-title', '个人中心->配送人员')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    配送人员
+@stop
 @section('right')
     <form action="#" method="post">
         <div class="row">

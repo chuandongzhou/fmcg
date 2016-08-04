@@ -1,6 +1,9 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-收货地址')
-@section('top-title', '个人中心->收货地址')
+@section('top-title')
+    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
+    收货地址
+@stop
 @section('right')
     @include('includes.shipping-address')
     <form action="#" method="post">

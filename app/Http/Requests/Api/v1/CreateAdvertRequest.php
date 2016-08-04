@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api\v1;
 
-class CreateAdvertRequest extends Request
+class CreateAdvertRequest extends UserRequest
 {
 
     /**

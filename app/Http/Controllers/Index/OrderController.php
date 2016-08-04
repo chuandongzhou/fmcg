@@ -44,7 +44,7 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return redirect()->back()->with('message', '商品缺货或低于最低购买数');
+            return redirect()->back()->with('message', '商品缺货或购买数不合法');
         }
 
         if ($confirmedGoods->update(['status' => 1])) {
@@ -85,9 +85,8 @@ class OrderController extends Controller
         $data = $request->all();
 
         $result = (new OrderService)->orderSubmitHandle($data);
-
         if (!$result) {
-            return redirect('cart');
+            return redirect('cart')->with('message', '商品缺货或购买数不合法');
         }
 
         $redirectUrl = url('order-buy');
@@ -260,11 +259,18 @@ class OrderController extends Controller
                 })->orWhere(function ($query) {
                     //货到付款情况，只查询发货以后的状态
                     $query->ofHasSend();
+                })->orWhere(function ($query){
+                    //自提，查询已完成状态
+                    $query->ofPickUpSuccess();
                 });
             } else {
                 if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
                     $query->ofPaySuccess();
-                } else { //货到付款
+               }
+// elseif($search['pay_type'] == cons('pay_type.pick_up')) { //自提
+//                    $query->ofPickUpSuccess();
+//                }
+                else{//货到付款
                     $query->ofHasSend();
                 }
             }
@@ -375,7 +381,13 @@ class OrderController extends Controller
             if ($value['pay_type'] == cons('pay_type.online')) {
                 ++$stat['onlineNum'];
                 $stat['onlineAmount'] += $value['price'];
-            } else {
+            } elseif($value['pay_type'] == cons('pay_type.cod')) {
+                ++$stat['codNum'];
+                $stat['codAmount'] += $value['price'];
+                if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
+                    $stat['codReceiveAmount'] += $value['price'];
+                }
+            }else{
                 ++$stat['codNum'];
                 $stat['codAmount'] += $value['price'];
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {

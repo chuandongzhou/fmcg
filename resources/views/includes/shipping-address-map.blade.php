@@ -1,3 +1,13 @@
+@section('css')
+    @parent
+    <style type="text/css">
+        #address-map {
+            margin-top: 20px;;
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+@stop
 @section('right')
     <div class="modal fade" id="shippingAddressMapModal" tabindex="-1" role="dialog"
          aria-labelledby="shippingAddressMapModalLabel"
@@ -20,8 +30,7 @@
                         <div class="model-management-item"><span class="prompt">联系电话</span> : <span
                                     class="phone-of-map"></span></div>
                     </div>
-                    <div id="address-map"
-                         style="margin-top:20px;;height: 400px;width:100%;">
+                    <div id="address-map" style="">
                     </div>
                 </div>
 

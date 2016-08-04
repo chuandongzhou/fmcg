@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
-use App\Models\DeliveryArea;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Http\Requests;
@@ -169,6 +169,23 @@ class MyGoodsController extends Controller
             }
         }
         return $this->error('商品' . $statusVal . '失败');
+    }
+
+    /**
+     * 设置为抵费商品
+     *
+     * @param \App\Models\Goods $goods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function mortgage(Goods $goods)
+    {
+        $attributes = [
+            'goods_name' => $goods->name,
+            'pieces' => $goods->pieces_retailer,
+            'shop_id' => auth()->user()->shop_id
+        ];
+
+        return $goods->mortgageGoods()->create($attributes)->exists ? $this->success('设置成功') : $this->error('设置失败，请重试');
     }
 
     /**
@@ -338,11 +355,7 @@ class MyGoodsController extends Controller
                      unset($data['coordinate']);
                  }*/
                 unset($data['coordinate']);
-                $areasModal =  new DeliveryArea($data);
-                if(!in_array($areasModal,$areas)){
-                    $areas[] = $areasModal;
-                }
-
+                $areas[] = new AddressData($data);
 
                 /* if (isset($coordinate)) {
                      $areaModel->coordinate()->save(new Coordinate($coordinate));
@@ -366,7 +379,7 @@ class MyGoodsController extends Controller
         }
 
         $shop->deliveryArea->each(function ($area) use ($goodsModel) {
-            $areaModel = $goodsModel->deliveryArea()->save(new DeliveryArea($area->toArray()));
+            $areaModel = $goodsModel->deliveryArea()->save(new AddressData($area->toArray()));
             unset($areaModel);
         });
         return true;

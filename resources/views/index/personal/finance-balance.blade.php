@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @section('subtitle', '个人中心-商家信息')
-@section('top-title', '财务管理->账户余额')
+@section('top-title')
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
+    账户余额
+@stop
 @section('right')
     <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off">
         <div class="row">
@@ -33,7 +36,7 @@
                             @foreach($tradeInfo as $trade)
                                 <tr>
                                     <td>{{ $trade->order_id }}</td>
-                                    <td><b class="red">￥{{ $trade->amount }}</b></td>
+                                    <td><b class="red">¥{{ $trade->amount }}</b></td>
                                     <td>{{ $trade->target_fee }}</td>
                                     <td>{{ cons()->valueLang('trade.pay_type' , $trade->pay_type) }}</td>
                                     <td>{{ $trade->trade_no }}</td>

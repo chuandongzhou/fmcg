@@ -1,0 +1,2210 @@
+[33mcommit 849254209388e94557e06b2243d514667056acfa[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Jun 14 16:29:17 2016 +0800
+
+    1，修复api商品分类格式
+
+[33mcommit de2d1960b119b94522228bc2c703ce88d81452f8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Jun 13 18:06:15 2016 +0800
+
+    1，修复api店铺广告获取错误问题
+
+[33mcommit 8d8b39fde74bcdc04a33f151db223cc591203f54[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Sun Jun 12 18:12:38 2016 +0800
+
+    1，修复移动商品获取分类崩溃问题
+    2，优化收货地址排序
+
+[33mcommit ae53e7bf366f4f911030d52865bd493631ea3a2d[m
+Merge: 873a531 077e1a1
+Author: liDan <lidan@persist.com.cn>
+Date:   Sun Jun 12 10:25:29 2016 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 873a53185c5991b788bc68c54b66fb3e40d24bcf[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Sun Jun 12 10:24:53 2016 +0800
+
+    1，管理中心首页分类销售量统计显示修改
+
+[33mcommit 077e1a100e5d85999a0e9528a0b7c7758c3c33ec[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Jun 8 17:13:39 2016 +0800
+
+    1，修复添加收货地址时错误
+    2，优化首页页面
+
+[33mcommit 37c4d826e743683d70369c7d713175368a16444c[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Jun 7 17:54:56 2016 +0800
+
+    1，增加店铺首页广告的增加与修改
+    2，优化个人中心菜单显示
+
+[33mcommit b96c79af19a5700ac06b68098d114d7978efdccf[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Jun 6 18:06:04 2016 +0800
+
+    1，修复订单提交问题
+
+[33mcommit cd37e0864aedee4ff54a3a62369004bec8966372[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Jun 3 18:03:51 2016 +0800
+
+    1，优化商品显示
+    2，优化404页面
+
+[33mcommit 2e8d808788b1497fd69d908a44998d62101bc755[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Jun 2 18:14:02 2016 +0800
+
+    1，优化店铺收藏页显示
+    2，修复商品修改退换货选择错误
+
+[33mcommit 487f3975c0f13456225935da943100d8ab25059f[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Jun 1 18:00:10 2016 +0800
+
+    1，修复提现通知页面跳转错误
+    2，优化店铺页面显示
+
+[33mcommit c23599f7b0cc061ed03b0b355511d98e317d0d12[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue May 31 17:58:34 2016 +0800
+
+    1，修复订单导出错误
+    2，优化首页显示
+
+[33mcommit 8025bd58f5eb902831bf72f7ebe89e680f48aeaa[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 27 18:22:29 2016 +0800
+
+    1，修复货到付款在线支付错误
+
+[33mcommit e0c4d927521d75c034fcffeb559ce6bd7accd5f9[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 27 15:21:29 2016 +0800
+
+    1，修复支付宝退款时错误
+    2，可退款订单详情页增加退款按钮
+
+[33mcommit d7993cde05ea3c9678fd5274ec56d9dd98cd4151[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 27 12:01:21 2016 +0800
+
+    1，运营数据统计修改
+
+[33mcommit e3db6576c92f5dac57721e13005f8d58600fa54e[m
+Merge: 3b92081 492bf27
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 27 11:27:03 2016 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 3b92081322851a1f50c6bdf6a3a22b6607ebecc7[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 27 11:26:32 2016 +0800
+
+    1，运营数据统计增加合计
+
+[33mcommit 492bf27dd072e716dc05feb105f56bfd1f218825[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu May 26 18:00:21 2016 +0800
+
+    1，app添加商品支持上传商品图片
+    2，
+
+[33mcommit 80fa6d65125be2297d1907b74cdfd563a4c2b282[m
+Merge: f7feca9 ec3aedf
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu May 26 10:40:25 2016 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit f7feca922accc8a9e7c41fa33a1ef3377ac88360[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu May 26 10:37:39 2016 +0800
+
+    1，配送历史增加支付状态和支付方式
+
+[33mcommit 193a1c38cbd06b7c33e31e285879471818f21938[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed May 25 18:10:29 2016 +0800
+
+    1，后台订单统计修改2，店铺首页信息修改
+
+[33mcommit ec3aedfa3ef89b753e975c096e48ae47aaeec551[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed May 25 18:05:32 2016 +0800
+
+    1，增加后台推广人员统计页面
+    2，优化前台专家订单详情（订单修改记录）页面显示
+    3，优化商品排序
+
+[33mcommit e74e816a123bb89dff23a40b63cfdf1906c2c339[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon May 23 17:53:45 2016 +0800
+
+    1，增加app余额支付接口
+
+[33mcommit accb7ee0b87f019c08f75a6add8c9844d94832fc[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 20 18:01:05 2016 +0800
+
+    1，优化购物车模块
+    2，余额付款增加支付成功页
+    3，修复确认收货时错误
+
+[33mcommit 62e69cecf59992b9f30298689fa0c275ef457636[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu May 19 18:04:01 2016 +0800
+
+    1，店铺首页终端商待付款连接修改
+
+[33mcommit fea03cd973669f1149a7a6398aca76cd8b1ffd19[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed May 18 18:03:10 2016 +0800
+
+    1，优化支付流程
+    2，优化支付宝退款流程
+    3，网页端增加店铺余额支付功能
+    4，移动端店铺和店铺商品增加搜索功能
+    5，货到付款已发货订单支持在线付款功能
+
+[33mcommit 818392648d241a6d951621ddd07fcbe7326367c2[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 17 17:51:49 2016 +0800
+
+    1，商品首页修改
+
+[33mcommit 5c93e3afe190d00641213942b5d2a20773d4bc09[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 17 11:18:01 2016 +0800
+
+    1，商品首页终端商数据修改
+
+[33mcommit 1d8838b5a0b135cc8fd788f1c575580dfa32038c[m
+Merge: 7b09a87 208b911
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 17 09:29:38 2016 +0800
+
+    Merge branch 'master' of git.persist.com.cn:php/fmcg
+
+[33mcommit 7b09a87d71b9f0e5e06204cd850a2731569b1495[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Mon May 16 11:12:30 2016 +0800
+
+    1，商品首页二级商品销量统计修改
+
+[33mcommit 7a4491fd9e2d11d14cf5c57c02cbad43f05a2ec9[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Mon May 16 11:07:58 2016 +0800
+
+    1，购物车没有商品不能点击2，商品首页二级商品销量统计修改
+
+[33mcommit 208b911fe2b6c99842fe112393b4a8d0f9992b41[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 13 17:55:16 2016 +0800
+
+    1，优化在线订单支付流程
+
+[33mcommit 64f3f5bfbf65b0dbb591c1eb41d65090e4f0523f[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 13 09:48:27 2016 +0800
+
+    1，司机app配送订单取消过滤已完成的订单
+
+[33mcommit 78b25b6ec0826a6dc5a859ae5782975070ef0115[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 13 09:44:33 2016 +0800
+
+    1，司机app配送订单过滤已完成的订单
+
+[33mcommit 4f50a6a353feed3e14b5b7a26899311e99300bdd[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu May 12 18:06:31 2016 +0800
+
+    1，优化在线订单支付流程
+
+[33mcommit f7ac3344d0d0e562b1921f954001e11d901637e3[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu May 12 17:26:18 2016 +0800
+
+    1，店铺管理页面二级商品分类统计2，购物车增加批量删除功能
+
+[33mcommit 93a7f330eaf18b1a5daebed02bbc374846803613[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed May 11 14:11:36 2016 +0800
+
+    1，增加店铺商品分类
+    2，优化商品分类
+
+[33mcommit 7795d924ef0018b40ab176e2b7d0d8f96c36a04f[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed May 11 12:01:36 2016 +0800
+
+    1司机app接口文档修改，新增修改订单数量接口
+
+[33mcommit 52e607fd897bee3597b726750cf9f7cf76283533[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 10 17:44:16 2016 +0800
+
+    1,店铺信息首页修改，增加订单统计功能，查看公告功能
+
+[33mcommit e696a7ad191babeaa4d06556b1495db3bcc7f3fd[m
+Merge: f4dd545 a5dabec
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 10 14:36:52 2016 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit f4dd54535c619f97a36f5c47df064aecfb124c03[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 10 14:36:14 2016 +0800
+
+    1, 司机App修改订单数量设置上限
+
+[33mcommit a5dabecc2b1c4f574cefcb29968e267ec1bfffb8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon May 9 18:15:37 2016 +0800
+
+    1，增加订单支付宝付款
+    2，优化购物车模块
+    3，我的商品增加上下架过滤
+    4，优化商品搜索页
+
+[33mcommit 4fa67e5bffd793bad1ffc115e71675cbc7540488[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Mon May 9 17:16:16 2016 +0800
+
+    1, 司机App订单列表取消分页
+
+[33mcommit 297faec90da0b0e1636ff6b140f41db971fda4a9[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 6 17:53:22 2016 +0800
+
+    修复订单列表已发货和已完成过滤
+
+[33mcommit 40d2fa584a7e95b3cdb3d2e8b9ee4639c29d843e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri May 6 17:23:22 2016 +0800
+
+    1、增加支付宝支付接口
+    2、优化商品配送区域过滤
+    3、增加店铺二维码
+
+[33mcommit 99aa43a32f4bdfc4414c487b8f62c61f64e4d24f[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri May 6 16:07:19 2016 +0800
+
+    1, 司机App修改历史记录查询接口
+
+[33mcommit 9f3014d268b1ce9f4bfab3a3025f94a51ae4627b[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu May 5 10:10:02 2016 +0800
+
+    1, 司机App修改商品数量修改接口
+
+[33mcommit d4e9b795a0116ee73003b4966addecf9c5bd8acc[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed May 4 17:56:43 2016 +0800
+
+    1，司机版增加订单修改
+    2，优化日期插件
+
+[33mcommit 4180990d9756caade5aa5c9d69940881ed378f6b[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed May 4 11:34:28 2016 +0800
+
+    1, 司机App修改日期验证，新增订单修改路由
+
+[33mcommit f3208367d341fb3c8f1101a03944bb3ac08c8813[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed May 4 11:05:13 2016 +0800
+
+    1, 司机App增加修改订单功能
+
+[33mcommit ea202c2f3b4c68becf88303d0a696bcc6b34a179[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue May 3 18:04:58 2016 +0800
+
+    1，店铺增加二维码功能
+    2，修复订单提交成功发送手机验证码价格为0问题
+
+[33mcommit e7c0e8af12599fa7833c4ed5f0f0458326f4669f[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 3 18:00:53 2016 +0800
+
+    1,web端登录验证修改
+
+[33mcommit 403fe60f0435e59e571579e130d4407e765244c1[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Tue May 3 17:53:09 2016 +0800
+
+    1,web端历史记录查询和登录修改2,网页端姓名显示错误修改
+
+[33mcommit 441efd224dc1bf95235188a68b9c535ee71d96a6[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 17:55:26 2016 +0800
+
+    web端历史记录查询修改
+
+[33mcommit af4578a2b0a598ac8534677d3782fbddc1b64c25[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 17:52:43 2016 +0800
+
+    手机版App接口文档修改
+
+[33mcommit c474397fb64e532af75a6e3222cb78941ceb8f1e[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 17:29:13 2016 +0800
+
+    手机版App接口历史订单返回格式修改
+
+[33mcommit 92f4ed4ea6cc09df3f272e80da05a225f4041eb9[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 12:17:55 2016 +0800
+
+    手机版App接口店铺显示修改
+
+[33mcommit 7d98acdae2ee9eee502d430c3c715a044fd26330[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 11:35:57 2016 +0800
+
+    手机版App接口修改
+
+[33mcommit cf75a17f88eef57cb8416cd3eb70259e51294114[m
+Merge: 91309d5 283ead2
+Author: liDan <lidan@persist.com.cn>
+Date:   Fri Apr 29 11:21:44 2016 +0800
+
+    Merge branch 'master' of git.persist.com.cn:php/fmcg
+
+[33mcommit 91309d58db62c81ba89138503b97b84ce29af1b0[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 28 18:15:28 2016 +0800
+
+    手机版App接口修改
+
+[33mcommit 283ead21c1d1336934c291205690938cac0592b1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Apr 28 18:13:49 2016 +0800
+
+    1，分类广告增加地区区分
+    2，商品选择面增加商品单位
+    3，订单商品增加商品单位
+
+[33mcommit 7c0a4fc4a55f29f83384d1fe4a8d73b26ad7e95e[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 28 17:05:13 2016 +0800
+
+    手机版App接口get请求修改
+
+[33mcommit eb8ec6eeac08800191aba0fd5c6ea7a8cde82bab[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 28 15:22:49 2016 +0800
+
+    手机版App接口文档修改
+
+[33mcommit 738469ec13aa1c82ca4d875f29e66ec65b850e27[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 28 10:53:02 2016 +0800
+
+    手机版App收货店家错误修改
+
+[33mcommit 8f46ad983ae8f2df1cb09349b2ab43a565be0b44[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 28 10:52:02 2016 +0800
+
+    手机版App收货店家错误修改
+
+[33mcommit 018ab864fa25bbdad15d3bcfdaa031003b1f0b0d[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 18:23:23 2016 +0800
+
+    手机版App修改
+
+[33mcommit 8a0bde9fa68902b7a8e7762e0a2d5f319347c8d6[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 18:14:22 2016 +0800
+
+    新增历史配送查询
+
+[33mcommit 4e7c45abcf859b2eaf6d0f808e89e7a10dc79a34[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 18:11:41 2016 +0800
+
+    司机版app修改
+
+[33mcommit 29142a2d2d99cbb91d27516ae98cd06915caf697[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 17:21:35 2016 +0800
+
+    司机版app修改
+
+[33mcommit e59c67adc48bf9816457a5eb4999c6b2ba229977[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 17:16:08 2016 +0800
+
+    司机版app修改
+
+[33mcommit 8fbc5cee61425acdcc8521dc18552d1c4e0e22c3[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 15:39:31 2016 +0800
+
+    司机版app修改
+
+[33mcommit e481dff5df8edd7b7f33f1866702b4c727ea9033[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 15:05:32 2016 +0800
+
+    司机版app修改
+
+[33mcommit dfff38af4c2a633f662dd14b5124753c3144ecae[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 15:01:24 2016 +0800
+
+    司机版app修改
+
+[33mcommit 58e5ef152490fd479cdfa081971956139286669d[m
+Merge: d1da04b 8a79075
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 14:57:03 2016 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d1da04b39ffc158c9277208408aa7ef4702e60d4[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 27 14:56:07 2016 +0800
+
+    司机App接口
+
+[33mcommit 8a79075ec986c59dd9808151e6cfb8abc2942558[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Apr 26 18:08:16 2016 +0800
+
+    1，首页商品栏目支持后台添加
+    2，优化聊天模块（无消息不显示数目）
+    3，增加获取商品单位接口
+
+[33mcommit 963054cb685a15d39a3eb430f0b250d93375653a[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Apr 25 17:57:24 2016 +0800
+
+    1，修复统计后台页面错误
+    2，修复获取店铺默认图错误
+    3，增加配送人员登录框架
+    4，优化弹出的聊天页面
+
+[33mcommit 68c4f4348c2fa8342a8849b81f5667b90b5b1ddb[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Apr 22 18:02:17 2016 +0800
+
+    ie9以下上传商品提示下载问题
+
+[33mcommit 9319ec9e0ff6969fc021dabfe734cfa600d034ab[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Apr 22 14:20:46 2016 +0800
+
+    1，优化购物车中收藏问题
+    2，修复统计页面统计导出问题
+    2，修复后台商品导入问题
+
+[33mcommit 58e4b1e5b821aee0afc2c8f33ff775acb16760fa[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Apr 21 18:34:23 2016 +0800
+
+    1，增加后台商品上传
+    2，后台聊天远程用户增加分页功能
+    3，提交订单成功增加给卖家发送短信接口
+
+[33mcommit 9cd4e9de68f46a8deba204dbd121b4ca68dcaab7[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Thu Apr 21 16:06:41 2016 +0800
+
+    修改登录页面
+
+[33mcommit 3b9b75b7bf9e099a9c67723bccf2d6bc14db8f01[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Apr 20 18:16:07 2016 +0800
+
+    1，优化所在地商品过滤
+    2，优化订单列表模块
+    3，优化订单统计模块
+
+[33mcommit 6a73e1d24a4f50d06f0d5ea54683f58b1ef32004[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Apr 19 18:00:40 2016 +0800
+
+    1，首次访问增加所在地选择
+    2，优化购买商品时的商品数量
+
+[33mcommit 3832240889f966e11d80320d3f7f6702c27863ad[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Apr 18 17:58:48 2016 +0800
+
+    1，更新网站底部样式
+
+[33mcommit 793ed52dc3c60f03c08f3f03ceeb82bc0d0f56b2[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Apr 15 18:03:02 2016 +0800
+
+    1，更新登录页
+    2，默认所在地精确到市/区
+
+[33mcommit c2afb47fca9812929a193e9880d1df2fe9919d06[m
+Author: liDan <lidan@persist.com.cn>
+Date:   Wed Apr 13 18:37:30 2016 +0800
+
+    修改登录页面
+
+[33mcommit 21f038dc1cb66a20e40b4c31ea9299b4d2337965[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Apr 13 18:38:55 2016 +0800
+
+    1，配送区域取消街道
+
+[33mcommit e88e7c39906ee772a3b2543d80948787699f9209[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Apr 12 18:06:23 2016 +0800
+
+    1，优化购物车数量缓存
+    2，限制商品最多购买量
+
+[33mcommit 3e1781affeea90514ada7985ed9a7d27891edb64[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Apr 11 18:16:39 2016 +0800
+
+    1，优化后台统计模块
+    2，优化前台一些请求sql逻辑
+
+[33mcommit d1087d5ccc252b013bdd5a7ffc8482a65af12323[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Apr 8 17:58:53 2016 +0800
+
+    账号管理增加用户名模糊查询，修复分页信息错误
+
+[33mcommit abdc1f58b3cadb8cbb500f13825e904e0b2a6943[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Apr 7 18:43:18 2016 +0800
+
+    1 优化后台统计时间段查询
+
+[33mcommit 73ae4b61b7d0cb31e4f4cbe9d8cf961eb2b7ca67[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Apr 7 18:23:56 2016 +0800
+
+    1 优化某些请求反复查询file表问题
+    2 增加后台统计时间段查询
+
+[33mcommit 3a2ee90ae9b28584e93cf0319c757d75e524300c[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Apr 6 18:08:55 2016 +0800
+
+    1，优化购物车模块
+
+[33mcommit ae5b5a9a36cc44b12c572f1c287e7999694ae284[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Apr 5 18:19:08 2016 +0800
+
+    1，修复无店铺图片时店铺页报错问题
+    2，查看店家商品时不能进入我的店铺
+
+[33mcommit 636420396e9d9fc8d01881140a59cc1c20d8f0ea[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Apr 1 17:55:00 2016 +0800
+
+    1，优化商品列表展示
+    2，后台增加清除缓存功能
+    3，优化订单提交模块
+
+[33mcommit d6c15b23dd02fb9215bb7bff524c5d9147ee1b31[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Mar 31 18:02:04 2016 +0800
+
+    1，增加  关于我们  页
+    2，修复商品搜索api中图片返回错误
+
+[33mcommit 61a38872eaa3ea877fa66e25eff841811585dae6[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Mar 30 18:07:37 2016 +0800
+
+    1，优化网站缓存
+    2，修复我的商品详情页商品上下架错误
+
+[33mcommit 67c7efd597e3ddfbadbed9153f46b9fe6da2e096[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 29 18:36:34 2016 +0800
+
+    1，优化redis模块
+    2，首优化首页广告获取
+    3，修复多订单合并付款时付款类型错误问题
+
+[33mcommit bf81d30af89259b9b9f6d19ed9fdc64d693eff3e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Mar 28 17:55:52 2016 +0800
+
+    1，修改手机端广告接口
+    2，修复导出订单时订单地址错误
+    3，优化移动端访问消息列表页面
+
+[33mcommit 5fa4e488443b0b2e7889dc9eacb547690ba3a14d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Mar 25 17:55:15 2016 +0800
+
+    1，修复后台修改角色名不成功问题
+    2，优化前台登录提示
+    3，优化引导页以及登录页手机访问效果
+
+[33mcommit 2046d448b3c9929d517664ab4ffb961b569635d9[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Mar 23 18:00:46 2016 +0800
+
+    1，优化财务管理模块
+    2，增加app获取广告接口
+
+[33mcommit bd3f66783d7797cc363520b4ff7c5adf203eab4e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 22 18:16:31 2016 +0800
+
+    1，禁止供应商进入购物车
+    2，订单统计商品与商家名支持模糊查询
+    3，批发商取消代理合同
+
+[33mcommit 1bbf656c28675eceabbf13085ec0c2ed18dba03f[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Mar 21 17:42:39 2016 +0800
+
+    1，修改APP接口
+    2，首页支持未登录访问
+
+[33mcommit e408eafbfd4a77a26e1c3cd21a30ab6a283d035c[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Mar 18 18:07:40 2016 +0800
+
+    1，优化聊天服务器
+
+[33mcommit 8e4f5b25b119d9ab84b249f1ec49ae0c80da8b32[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Mar 18 15:30:27 2016 +0800
+
+    1，批量审核用户更新远程聊天错误
+                   2，修复订单统计统计不正确问题
+                   3，优化订单变化时右下角通知框
+
+[33mcommit 976f5bfbd502cebb5d241dd97d2b09673b919460[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Mar 17 18:06:37 2016 +0800
+
+    1，优化聊天系统
+    2，修批量上传商品时错误
+
+[33mcommit 531be9b8d54d10e3958393e1ceeb3a955b8c6a39[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Mar 16 18:26:51 2016 +0800
+
+    1，增加客户聊天功能
+    2，订单通知增加提醒功能
+
+[33mcommit eb18ccc3c1a44210b907aa9a1767c30260f87d69[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 15 18:38:59 2016 +0800
+
+    1，后台集成聊天用户
+    2，缺货商品不能加入购买
+    3，收货地址支持输入电话号码
+
+[33mcommit 8a25a36397aaf75ff2950f9e26355b271c2be5d8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 15 18:38:01 2016 +0800
+
+    1，后台集成聊天用户
+    2，缺货商品不能加入购买
+    3，收货地址支持输入电话号码
+
+[33mcommit 0aec4439c1704d0bc3fc89fc324e8d930fedbde3[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Mar 14 18:13:41 2016 +0800
+
+    1，优化Pos机支付
+    2，供应商支持查看首页以及店铺列表（与批发商一样）
+    3，修复批量支付订单错误
+    4，优化卖家订单列表
+
+[33mcommit 60b2ecac7106c97eb1a885185e7af36a6e6e2f2e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Mar 11 18:42:16 2016 +0800
+
+    1，后台无图片条形码增加分页
+    2，优化商品增加与修改模块
+    3，优化提现处理流程
+    4，修复首页偶尔崩溃问题
+    5，卖家增加取消订单并退款功能
+
+[33mcommit 993086d24edc73905f09e76f1895f87232f78fcb[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Mar 9 18:08:14 2016 +0800
+
+    1，优化公告模块
+    2，修复短信验证码发送错误后仍提示发送频繁问题
+    3，卖家修改订单增加修改购买数量
+    4，商品详情增加显示商品分类
+
+[33mcommit cf78cf61aa8563bf43990f771da3acf7cd4f0d42[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 8 17:54:58 2016 +0800
+
+    1，首页改版（显示商品分类以及商品，商品分类增加广告位， 增加活动公告显示）
+    2，优化商品搜索栏目
+    3，修复批量上传商品时点立即上架无效错误
+
+[33mcommit e1fd01c13dac6d8d9276177cfa28554c69eae846[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Mar 4 18:21:07 2016 +0800
+
+    1，优化pos机接口
+    2，优化订单导出时错误弹框
+
+[33mcommit fd286602defbaa1deff606c49c34d79b0778cf9e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Mar 3 18:14:15 2016 +0800
+
+    1，增加订单收货地址快照
+    2，卖家查看订单详情中增加查看收货地址地图
+
+[33mcommit aa2d8bc849407e45546d371de5e01756b957624e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Mar 2 18:04:16 2016 +0800
+
+    1，收货地址增加地图显示
+    2，商品以及店铺配送区域撤销地图显示
+    3，优化订单变更时消息推送模块
+
+[33mcommit 01a23dc8b63da1486bc0154a451c3591832d7130[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Mar 1 18:02:12 2016 +0800
+
+    1，修复添加商品但没有标签时错误
+    2，修复批量上传商品时请求错误
+    3，修改一些页面显示联系方式错误
+    4，修复购物车减小购买数量bug
+
+[33mcommit d6d6dc152407261ee4a542c493592fda07a672b7[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Feb 29 17:57:43 2016 +0800
+
+    1，管理中心菜单全部展开
+    2，优化分页显示位置
+
+[33mcommit 79e4c89b995162f6528feec8a8f7e6c5601deaaa[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Feb 26 18:03:29 2016 +0800
+
+    1，优化商品发布页
+    2，列表页增加显示商品最低购买量
+
+[33mcommit 6dbfdb8c8156ef3001851898fd6300a0ae9b252f[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Feb 25 18:04:30 2016 +0800
+
+    修复管理中心导航高亮错误
+
+[33mcommit 336a93c4c50155b94d62553a8610e27f2dfcda55[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Feb 24 18:05:34 2016 +0800
+
+    1，修改订单通知时间
+    2，修复订单统计页js导入错误
+    3，优化管理中心导航
+
+[33mcommit df1ab3c833ab106a200753d8be8d3bd025960557[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Feb 23 18:02:56 2016 +0800
+
+    1，修改联系地址以及联系人
+    2，提现记录默认没有时间过滤
+
+[33mcommit 3ca6a774fb9a7f1293e38a61dcd398eaa2de8249[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Feb 22 11:24:28 2016 +0800
+
+    1，修复注册时地图错误
+    2，优化用户提现模块
+
+[33mcommit c57aa186523d503b85183d4befabceaac414bb30[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Feb 17 17:30:59 2016 +0800
+
+    订单详情增加手续费
+
+[33mcommit a18ef278132862b28e92604a615f2784a425d777[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Jan 20 18:04:05 2016 +0800
+
+    1，修复易宝pos机接口错误
+
+[33mcommit 836ea101e8934d0521a3689dfbaef9f5d53ba6ef[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Jan 19 17:58:40 2016 +0800
+
+    1，增加易宝pos机接口
+    2，pingxx手续费修改为千分之六
+    3，优化后台管理员管理模块
+
+[33mcommit ff85efb3fcc489effdfaa01b92905dafe2e7604a[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Jan 15 17:46:44 2016 +0800
+
+    1，获取店铺接口增加店铺经纬度
+    2，优化商品搜索和店铺搜索
+    3，修复有些页面地图文件导入问题
+
+[33mcommit 7727b9d5049b4f6b5a0cc056874f0f0e3a5df54a[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Jan 14 18:12:05 2016 +0800
+
+    1，优化页面布局
+    2，购物车商家区分类型
+    3，修复订单管理不能导入问题
+
+[33mcommit 098ca5b9d6523fbe8f12ffc73907861f23b733d5[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Jan 7 18:00:08 2016 +0800
+
+    1，配送区域增加取消限制
+    2，我的商品取消过滤省cookie
+
+[33mcommit bc4c877eb67c990fe396e428a2bdf097212100c3[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Jan 6 17:51:10 2016 +0800
+
+    1，修改帮助中心图片路径
+    2，优化商品搜索
+    3，增加404页面
+
+[33mcommit 2305ac67d4cda68cc9e0e0de0e829b71490d0348[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Jan 5 18:19:18 2016 +0800
+
+    1，增加帮助中心
+    2，修复后台修改店铺信息失败问题
+
+[33mcommit b7975da98f5c4be116d56273354e06127297ab7a[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Jan 4 17:49:44 2016 +0800
+
+    1，后台没有图片的条形码增加商品名
+    2，优化店铺内商品检索
+    3，修复进入店铺详情页收藏店铺失效问题
+
+[33mcommit dff26fb7848083037ec18679b41839209e33be20[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Dec 31 17:50:31 2015 +0800
+
+    优化前台栏目商品、店铺过滤
+
+[33mcommit feb5de0bb3320a292fb13be3aabd2aad671496db[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Dec 28 17:52:46 2015 +0800
+
+    1，商品和店铺增加地址过滤
+    2，优化一些前面界面显示
+
+[33mcommit 1e0919f0da0a79db6e69fba54f9e83853d9bd134[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Dec 25 18:04:12 2015 +0800
+
+    1， 商品增加规格属性
+    2， 优化商品批量上传
+    3， 修复pingxx退款错误问题
+    4， 修复移动端获取店铺栏目错误
+
+[33mcommit 7d145b4cf1607535c2c1a0b142c5072c238e32fb[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Dec 24 18:10:18 2015 +0800
+
+    1， 订单退款增加退款原因
+    2， 修复后台修改店铺错误
+    3， 优化登录模块
+    4， 优化订单模块
+
+[33mcommit ea7fdbe80aa086749763a8c8f28836afb408e379[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Dec 23 17:50:14 2015 +0800
+
+    1， 优化浏览器定位
+    2， 优化订单模块
+    3， 修复支付后回调时错误
+
+[33mcommit c084aa507d25466d05e4a97e6a112d96ce6de6ed[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Dec 22 17:46:49 2015 +0800
+
+    1 增加搜索关键字
+    2 修复修改订单价格不能修改为小数问题
+    3 优化批量导入商品模块
+
+[33mcommit c618021067a7ca267b9e076f69849eaabf49d181[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Dec 21 18:21:03 2015 +0800
+
+    1 修改提交订单错误时跳转
+
+[33mcommit 5ad046142c45e8dd55ced50c065165d66b557320[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Dec 21 17:54:28 2015 +0800
+
+    1   修复后台分类显示错误问题
+    2   修复收藏店铺错误问题
+    3   优化前台一些跳转问题
+
+[33mcommit a4b71942a43cb088a3bdffe7dd3930cdffb94a31[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Dec 18 17:54:45 2015 +0800
+
+    1 增加1天未付款自动取消订单功能
+    2 修复移动端店铺商品错误问题
+    3 优化前台首页以及一些页面显示问题
+
+[33mcommit 3b492d30bf7a3c196a8d6a202305fd6799c5e99c[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Dec 16 17:48:04 2015 +0800
+
+    优化前台管理中心菜单以及顺序
+
+[33mcommit 73f2c0a2a9ccbe5174c03b53bb90d233c706a033[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Dec 15 17:54:18 2015 +0800
+
+    优化登录页面
+
+[33mcommit 1b2379417051e4a4214b1bc9ad253bea32879085[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Dec 14 17:49:21 2015 +0800
+
+    优化后台权限
+
+[33mcommit f0a52b9ee756e8c8db93b974a86ed0a0c2568abb[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Dec 11 18:08:05 2015 +0800
+
+    1，后台增加角色模块
+    2，修复修改商品无法取消退换货问题
+    3，优化百度地图
+
+[33mcommit d3d8b2dda5000bb1342d52b16c9f943241ae9ed3[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Dec 10 17:53:37 2015 +0800
+
+    1，修复供应商批量导入商品错误
+    2，优化添加商品时标签添加
+
+[33mcommit 4fe9da245479c103c098d6fefe767d942a1fca9b[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Dec 10 10:30:15 2015 +0800
+
+    批量导入商品模板
+
+[33mcommit 815798bf0736ef35f292fe90438a6666f9030cd8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Dec 9 18:12:33 2015 +0800
+
+    增加批量上传商品功能
+
+[33mcommit c5af51c7aac35601206a36b3a7d06778111357cb[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Dec 8 17:50:27 2015 +0800
+
+    更新商品图库模块
+
+[33mcommit 8d76a810c8e8eefbc82d8f2ce1ff79c4e9ec01e1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Dec 7 18:07:25 2015 +0800
+
+    1，商品增加数量单位和条形码
+    2，优化分页数据
+    3，修改个人中心目录
+
+[33mcommit 092a9f59bd6a5b64fc8701778f4f8e15b8037217[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Dec 4 18:04:59 2015 +0800
+
+    1， 优化表单get提交
+    2，增加客户列表模块
+    3，修复登录不返回店铺信息错误
+
+[33mcommit f0963813d3c0135ae848b967de20a8f03a65f27a[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Dec 3 18:06:54 2015 +0800
+
+    1，优化首页请求速率
+    2，优化订单列表
+    3，找回密码，提现成功，账号审核增加发送短信功能
+    4，修复后台统计错误
+
+[33mcommit 6bfb714edd9807a47e544652d4ce0d7f399c7b79[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Dec 2 11:02:36 2015 +0800
+
+    修复后台统计模块
+
+[33mcommit 3a160b1466691d3a574cbaf754e5041df601fc4d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Dec 1 18:07:19 2015 +0800
+
+    更新地址库
+
+[33mcommit 5b63d57c5bbfad7b0d0f4f157552a278fbcb9cb8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Dec 1 18:01:08 2015 +0800
+
+    1。增加自动确认收货功能，
+    2。订单增加卖家确认订单功能，
+    3。优化后台数据统计模块
+
+[33mcommit ecbb47811d4cb8256f270258d74afb3bc295f0d2[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 30 18:22:00 2015 +0800
+
+    1.ie浏览器部分功能出现不兼容
+    3.店家图片默认图
+    4.个人资料编辑按钮
+    5.地图关闭其他地图层点击信息
+    6.配送区域文字、操作转换
+    7.配送区域去掉4级地址（街道）
+    8.操作成功弹框提示
+    9.修复每日登录不更新活跃用户
+
+[33mcommit 05483f16bdb8adfe146072e9ae0754b7bd0b88ff[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 27 18:05:40 2015 +0800
+
+    优化表单验证和提交
+    优化前台页面显示
+    修改上传店铺图片比例
+
+[33mcommit 96982684a83529daedbaa502d01fd268dd7da7ee[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 26 18:08:16 2015 +0800
+
+    修复删除送货人或收货地址后查看订单无显示bug,
+    优化页面跳转功能，
+    增加找回密码功能，
+    优化查看订单详情
+
+[33mcommit 25b4e77978dd7ef5600093d5329f6492742c11ec[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 26 09:34:39 2015 +0800
+
+    二维码图片以及个人中心logo
+
+[33mcommit 793a63b1dd2bced34e7cab383c5fbb18ba4ca901[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 25 17:57:57 2015 +0800
+
+    优化前台个人中心菜单，
+    修复未被审核的商家也会显示在商家列表中
+
+[33mcommit 27d7e3fe6150be93641e7185b16753fe3cde3745[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 23 18:01:16 2015 +0800
+
+    后台增加账号审核功能
+
+[33mcommit 50944f981a68a526c02ada2c3674d33a4c9c5053[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 20 17:20:38 2015 +0800
+
+    优化批量处理订单，修复删除我的商品错误问题
+
+[33mcommit e6b4e160fa3280aeb19931b83b4b8b994509e93d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 19 17:44:49 2015 +0800
+
+    修改一些前台显示错误，优化个人中心模块
+
+[33mcommit 34df0f6edbd56cf450784f2a4eefddfb413638b9[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 19 14:21:44 2015 +0800
+
+    修复后台添加分类时错误，前台某些显示修改
+
+[33mcommit 8437d197fc825bb1390c59c7243a07a7ba1eeaf5[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 18 17:52:14 2015 +0800
+
+    修复后台添加和修改管理员错误，
+    修复后台交易信息查询错误
+
+[33mcommit b681598103d3d5bf3c9bc4d13dfbf882bc8678fa[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 18 16:42:12 2015 +0800
+
+    终端商注册取消上传代理合同
+
+[33mcommit f8b674349f543ecdb2b2206fd0f0d6c46f200662[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 18 16:13:15 2015 +0800
+
+    修复注册时账号错误，
+    修复删除账号时错误
+
+[33mcommit d98a553a8924d4a145018f89205ae65dd91a1ee1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 18 14:36:26 2015 +0800
+
+    新增商品默认添加店铺配送区域时地图标识， 优化推送时写入session逻辑，退款成功时新增通知卖家
+
+[33mcommit 0bd113cf2e4d605a655ee9c5d58155307fa79994[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 17 18:02:49 2015 +0800
+
+    新增商品默认添加店铺配送区域
+
+[33mcommit 679654fa9d0a0424ea85ff8c95a6cb8bd30e84fc[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 17 15:57:19 2015 +0800
+
+    优化商品栏目和店铺栏目接口
+
+[33mcommit b02d576f16a7888d938f2ff09deabf494cbfdcec[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 17 15:24:58 2015 +0800
+
+    修改pingxx退款错误，优化页面显示。
+
+[33mcommit 61f933cd61d80fc9a1efd3e7a2e6ff2022f29868[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 16 18:05:17 2015 +0800
+
+    增加订单退款模块，优化订单推送功能
+
+[33mcommit 9d064875ed4b176dd0cdf418f67913415306b43d[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Nov 13 18:09:40 2015 +0800
+
+    优化master页面
+
+[33mcommit 4119a88b56516eb4cc6dc4fde071fd7d006974de[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 13 17:12:06 2015 +0800
+
+    修复不显示店铺图片bug
+
+[33mcommit 1f434b2304db9ad6776d2f4d9cef276f133133ab[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Nov 13 16:47:41 2015 +0800
+
+    完成zh-CN validation
+
+[33mcommit bfd667d6aceda25a9731636650468e5d21a5f45b[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Nov 13 15:30:55 2015 +0800
+
+    优化订单统计功能逻辑,修正模板左侧导航顺序.
+
+[33mcommit f1fad6c191f777f31f1923b76e1648181ec3b527[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 13 12:32:48 2015 +0800
+
+    优化统计模块查询
+
+[33mcommit 1b2b66fcfb91b339d10d56e0c44126cc4cb30a29[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 13 12:14:15 2015 +0800
+
+    修复后台统计bug, 修复pingxx支付bug
+
+[33mcommit ec01ac24d0164e5d619e886099a483b10cf4bf7e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 13 11:03:03 2015 +0800
+
+    优化程序代码
+
+[33mcommit 2fa547112052a446c6bd0074e662cde63de918ab[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 13 10:59:30 2015 +0800
+
+    优化程序代码
+
+[33mcommit 9ccc20cfcbefbf85f2b7a6093155fdeb03906430[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Nov 13 10:51:27 2015 +0800
+
+    修改api version接口返回字段书写错误
+
+[33mcommit d02a2a1dacb2ae7b780ebe27263d1c03a40742b9[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 12 21:12:49 2015 +0800
+
+    页面底部修改
+
+[33mcommit ecdcbb2f94b43c57e217c6917d04b5b307e6b3cd[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 12 20:45:10 2015 +0800
+
+    修改api ordercontroller   order中 image => images
+
+[33mcommit 3aaa75ba226e73f9fda460791be8e65dc1107d33[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 12 19:33:07 2015 +0800
+
+    完善后台统计，优化程序代码
+
+[33mcommit 4a249fe3a16323fbdeefa4cb42a948e4edb96d67[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 12 19:32:22 2015 +0800
+
+    优化
+
+[33mcommit d8b8f6b1f6ee049a2d88a7d0f012b36e4dfa01fc[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 12 12:12:19 2015 +0800
+
+    修复买家可支付标记中的一个bug.
+
+[33mcommit d4c846da4c0b6bfbb3a284b950bdce0e5cecb639[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 11 15:43:08 2015 +0800
+
+    优化程序代码
+
+[33mcommit 4d2b4d159574c0b8944fce950edab3be2fcf601e[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Nov 10 21:07:11 2015 +0800
+
+    添加版本更新功能，优化一些代码
+
+[33mcommit 6120ce3ed4a6915c91ffaec2dab86d27b2a64c0f[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 10 20:53:39 2015 +0800
+
+    后台商品图片批量添加
+
+[33mcommit 43e0acff81b31448d2b13ce25397eda46cf830c6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Nov 10 11:42:33 2015 +0800
+
+    优化order相关功能,修复sendPush的一个bug
+
+[33mcommit 93045d79db9255b0ff7297eb1886619d567d45da[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 10 11:39:13 2015 +0800
+
+    优化支付模块
+
+[33mcommit 924410cfcb4df8e7430a5feaaf0e76d8970e6494[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 9 20:16:47 2015 +0800
+
+    店铺更新问题
+
+[33mcommit 6921faea14e721ed77445947835fa7a10257f29a[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 9 20:15:37 2015 +0800
+
+    优化改价功能
+
+[33mcommit d6ca37ddad730313f253f3cf1c72aa1079e014c7[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 9 17:36:46 2015 +0800
+
+    格式化
+
+[33mcommit 6f6eed83add963f39ba702dc1f81be4aa9fd4bd6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 9 17:34:29 2015 +0800
+
+    优化买家在线支付确认收货功能
+
+[33mcommit e5f6f562ddaabc8709ea8ca0871275b8c45f402d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 9 17:30:46 2015 +0800
+
+    更新支付
+
+[33mcommit c66e45e9623dd894d2d1fb7e50da5a12bc90b6d3[m
+Merge: c1cb2a8 65a102a
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 9 17:07:35 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:php/fmcg
+
+[33mcommit c1cb2a8cc6ef25b0f56ce8f29fb03d64a4b29e60[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 9 17:07:07 2015 +0800
+
+    优化买家在线支付确认收货功能
+
+[33mcommit 65a102affbfc26779ab0bb54665c03d0aa4f81e4[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Nov 9 10:17:53 2015 +0800
+
+    更新pingxx支付
+
+[33mcommit c35db21c58a83688fa2288827c587cf27fc06292[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Nov 6 20:53:18 2015 +0800
+
+    更新平台支付
+
+[33mcommit 0ec1eb05445ada4a1571745d51b211d79e70aebd[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 5 17:52:51 2015 +0800
+
+    添加redis缓存
+
+[33mcommit ecb6ce998c4fcf58633c1866ffc56510e54a7897[m
+Merge: 928cfb8 7a62e6f
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 5 17:20:02 2015 +0800
+
+    Merge remote-tracking branch 'origin/master'
+    
+    Conflicts:
+    	public/_devFile/retailerApi.html
+
+[33mcommit 928cfb838a3a6b7b6fd2400e9b94776d03eb40bd[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 5 17:04:45 2015 +0800
+
+    添加订单统计接口,及文档
+
+[33mcommit 7a62e6f230e196032ea7c277d111935e80b6cf41[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 5 11:47:11 2015 +0800
+
+    更新文档
+
+[33mcommit 57e48a664ed4480df8ece3c4e5b4f2823f5f7e4c[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Nov 5 11:33:56 2015 +0800
+
+    更新支付流程
+
+[33mcommit 98692dedcfccda4f48041ae18ce07cc19e1f0343[m
+Merge: 58176d3 0880d9e
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Nov 5 10:45:35 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:php/fmcg
+
+[33mcommit 0880d9e2a65158310dbeb431777cef35fd541e4f[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Nov 4 19:44:24 2015 +0800
+
+    更新支付流程
+
+[33mcommit 58176d3f792232fc6da92c43cbd7f989c0917fe9[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Nov 4 12:12:42 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+    
+    Conflicts:
+    	public/_devFile/retailerApi.html
+
+[33mcommit 85b858eb22afae598d203da6ce521a6999253d42[m
+Merge: f56cb1f cc48454
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Nov 4 12:11:33 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+    
+    Conflicts:
+    	public/_devFile/retailerApi.html
+
+[33mcommit f56cb1fdc174ac6f92627481b8219693919f4cb6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Nov 4 12:05:38 2015 +0800
+
+    增加商品详情中返回配送坐标信息
+
+[33mcommit cc48454c9cae04ff1a45e7265a78260e1fe31331[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Nov 3 21:07:57 2015 +0800
+
+    更新支付流程
+
+[33mcommit e6f5aed0042bc26eb5ece26327af8200dd03a9a4[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Nov 3 21:06:18 2015 +0800
+
+    删除设备注册验证里面的唯一验证
+
+[33mcommit 03e416432ea14c7a8a401ba8acc3573564ed7eb8[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 2 17:23:21 2015 +0800
+
+    修复统计功能翻页后标签未选中的问题,优化地图显示功能
+
+[33mcommit 0666b94a7f8c7773d199920a7a01ee67354124b9[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Nov 2 10:31:35 2015 +0800
+
+    修改卖家订单列表API接口的一个条件书写错误
+
+[33mcommit a6b5ecd29ffa3fdf7e9317015a656897f1979dd6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 17:07:11 2015 +0800
+
+    合并
+
+[33mcommit c143e5fb2e0f40393b0c655214bc8e708243d5d6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 16:57:47 2015 +0800
+
+    合并
+
+[33mcommit 9f07e38e96d5af82dd43fb92d6a0020877c850a5[m
+Merge: af3e6b3 7e5cc9c
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 16:57:13 2015 +0800
+
+    合并
+
+[33mcommit af3e6b3807718cee8142e8925d2cda2ca2318264[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 16:49:26 2015 +0800
+
+    增加设置默认提现银行卡接口文档,修改操作方式为put
+
+[33mcommit 7e5cc9ce31986c91eb77c51394dfa3c5cd3fde04[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Oct 30 16:24:10 2015 +0800
+
+    更新文档
+
+[33mcommit e2477824dd339365325b498f80d9807a36b092d4[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 15:53:31 2015 +0800
+
+    增加获取用户银行卡接口
+
+[33mcommit f84e7a042d5648a874cef0d2a2e748b63287bffa[m
+Merge: 394fda4 4eed208
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 15:18:35 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 394fda44ac72342d0656d141fefb336d8bff8834[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 15:18:05 2015 +0800
+
+    修正设备注册接口的一个小问题,修正个人中心有的页面选中状态未高亮的问题
+
+[33mcommit 4eed20833e712f87a872ddd75ddef6c9140a6860[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Oct 30 10:58:05 2015 +0800
+
+    增加根据店铺距离查询店铺接口
+
+[33mcommit a60d21265cf8e1d7a933b8d6f8ad18f1a51899e6[m
+Merge: 52ea85d 63c3f82
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 09:53:16 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 52ea85d8f4d222ea11cff4ce4527c265d480d624[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 30 09:52:57 2015 +0800
+
+    完成提现反馈信息通知,优化推送队列遍历代码,增加推送条数统计
+
+[33mcommit 63c3f825d89d3234eb5d99b994ca4be4eb95c0ed[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Oct 29 20:06:00 2015 +0800
+
+    增加后台登录
+
+[33mcommit 8bd71f198f61a7770f08f8fe1363b8e5b7d1911c[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Oct 29 17:20:11 2015 +0800
+
+    完成移动端提现功能API，编写personal相关接口，优化一些模板显示
+
+[33mcommit 417a4cedaf8e74a08aacea0572076f48727ff2d8[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Oct 29 10:56:33 2015 +0800
+
+    增加订单改价功能
+
+[33mcommit 6c106ea6ff4de1d3bb1bc485773f6d14967b5913[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Oct 27 14:10:25 2015 +0800
+
+    更改order接口中的一个模型调用错误
+
+[33mcommit 3ba9a4a4145411ce558bb9c004bd527bfdea451a[m
+Merge: f77ce38 134d0ba
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Oct 27 14:06:31 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+    
+    Conflicts:
+    	app/Http/Controllers/Api/V1/OrderController.php
+
+[33mcommit f77ce3864cd4e957c288b7d905adaa7c092bcac9[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Oct 27 14:01:32 2015 +0800
+
+    合并订单功能中的几个操作，变更批发商，供应商的订单管理默认显示
+
+[33mcommit 134d0ba6d50679dace882dc187632a358841e4ea[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Oct 27 09:45:38 2015 +0800
+
+    优化代码
+
+[33mcommit e5c1572d98d07e46d267cdb53db99fabbd21a20e[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Oct 26 21:02:02 2015 +0800
+
+    修改一个API方法名书写错误,完成前台提现功能.
+
+[33mcommit 0cd88d2faebc9ce6134588450e92f42314155fb2[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Oct 23 14:50:57 2015 +0800
+
+    更新接口文档以及优化项目
+
+[33mcommit 0da711f41c0892ce10bef1d80b92d17b9cbcc3c1[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 23 13:37:57 2015 +0800
+
+    合并文件
+
+[33mcommit 847abeab95bc3f8ebd21e6d4864dd16f41094aa4[m
+Merge: d49bc82 dfb5c37
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 23 13:36:00 2015 +0800
+
+    合并文件
+
+[33mcommit d49bc827754aa4e2c1ba4a1a551708ffdc0381d5[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 23 12:27:12 2015 +0800
+
+    去掉订单确认流程,完成地图添加显示功能,完成订单部分的API接口及文档.
+
+[33mcommit dfb5c3716f55f24b61eeddd559e161f4ea9903a1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Oct 20 16:03:26 2015 +0800
+
+    前台登录
+
+[33mcommit 8f1be49384689d3d7074483d87e8572f9cff6938[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Oct 16 20:18:36 2015 +0800
+
+    调试
+
+[33mcommit 2eb1efa5927c66409dd56b7332173050970a122d[m
+Merge: 64f5b82 a06ba72
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Oct 14 21:05:04 2015 +0800
+
+    Merge remote-tracking branch 'origin/master'
+    
+    Conflicts:
+    	app/Http/routes.php
+
+[33mcommit 64f5b8236fb2c3bad37968e398cfc865e2ff913d[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Oct 14 21:02:49 2015 +0800
+
+    完成买家订单功能接口,订单统计功能优化
+
+[33mcommit f636f108adab952aea47308a317177e7d87096d9[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Oct 14 21:00:01 2015 +0800
+
+    完成订单统计导出功能,修改订单查询条件,修改订单管理显示,添加推送任务加入到队列的定时扫描任务
+
+[33mcommit a06ba726a0689e709da67427216630686727f351[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Oct 13 09:45:01 2015 +0800
+
+    修改前台首页栏目
+
+[33mcommit 3c29b7fed0d5f67372504f8237bb6a0f229ce88b[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Oct 12 20:52:58 2015 +0800
+
+    完成买家订单功能接口,订单统计功能优化
+
+[33mcommit 96a30595bb081cbbf4cfff98077730220551de28[m
+Merge: efe6b72 6e4dcc1
+Author: zhaoyadong <250332754@qq.com>
+Date:   Sat Oct 10 18:08:06 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+    
+    Conflicts:
+    	_md/retailerApi.md
+    	app/Http/Controllers/Auth/AuthController.php
+    	resources/views/index/menu-master.blade.php
+    	resources/views/index/order/order-buy.blade.php
+
+[33mcommit efe6b7295901ef18cd68e1effbff00e987c9022d[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Sat Oct 10 18:01:16 2015 +0800
+
+    完成推送功能，优化订单模块显示
+
+[33mcommit 6e4dcc1fe6cc65e415af8f069698e9b3401f8e80[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Sat Oct 10 11:44:31 2015 +0800
+
+    增加易宝支付功能，修改页面跳转
+
+[33mcommit 7b0d2a3789a69b893d4f78f6edf2f94ad148db8e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 30 14:33:46 2015 +0800
+
+    登录界面
+
+[33mcommit d91a4d93fd995176405fb45fd65b78b55ccbe8c2[m
+Merge: b8f5489 04d303c
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Sep 30 10:32:29 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+    
+    Conflicts:
+    	config/constant.php
+    	public/js/index.js
+
+[33mcommit b8f5489b7b42b022ad2532dec25e51391abea642[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Sep 30 10:28:18 2015 +0800
+
+    调整导出功能,新增PC端轮询订单改变信息,以及移动端订单推送功能
+
+[33mcommit ed0880a208023a9b67d9f99142523b649e4cb714[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Sep 30 10:26:04 2015 +0800
+
+    调整导出功能,新增PC端轮询订单改变信息,以及移动端订单推送功能
+
+[33mcommit 04d303c4eaceb571ffc6538fe5e0b9d394f52833[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Sep 28 09:59:29 2015 +0800
+
+    修改商品搜索
+
+[33mcommit 33d1df31d8619b487999e1eef92e06d6901e3e32[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Sep 17 19:14:06 2015 +0800
+
+    优化部分代码
+
+[33mcommit 92c6987bd16bc4b9449bfdf2c318586e8c96de13[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Sep 17 18:42:11 2015 +0800
+
+    。完成商品收藏文件夹的搜索功能
+
+[33mcommit 6a2142ede2f6037cd5d1bf72ef14c89a4802692f[m
+Merge: 7e2698c cbc5f3e
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Sep 17 18:39:43 2015 +0800
+
+    添加order功能的过滤中间件，替换order-buy/sell订单的显示模板和index.js中的ajax返回信息的显示方式。更正order model中status_name字段货到付款显示异常问题
+
+[33mcommit 7e2698c1b3d8f29d027078a36406adb88316f0ae[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Sep 16 19:48:34 2015 +0800
+
+    完成商店收藏搜索功能
+
+[33mcommit cbc5f3e8ea64645576f31636d69819259915fa4d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 19:42:31 2015 +0800
+
+    优化店铺地址
+
+[33mcommit 28f141316300ed6582fffce33aa32a4a637cfce6[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 16:29:09 2015 +0800
+
+    更改部分命名空间大写
+
+[33mcommit ce08fd7832cf695aed1c4a8352cdef1e315d1d42[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 16:12:07 2015 +0800
+
+    删除小写命名空间
+
+[33mcommit 936ee1b86429f3b3b42230b1d837fee00a468a5e[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 16:09:58 2015 +0800
+
+    上传测试
+
+[33mcommit cbbb1d1ee0dfe8c33abd344b693306eba4ee5067[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 16:02:56 2015 +0800
+
+    更新库文件
+
+[33mcommit 4066dbf7f9635aaa2678ea7f1e550947e1534216[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 16 15:44:38 2015 +0800
+
+    增加店铺搜索
+
+[33mcommit 58aed64b89e26bce00d3cccd2fbe6109334a9419[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Sep 16 15:25:13 2015 +0800
+
+    修改收藏夹的关联关系.
+
+[33mcommit 806a1c51e61664ecb9d1a09162fd3efc5dfd5d8a[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 15 21:06:07 2015 +0800
+
+    修改前台显示页面的继承关系
+
+[33mcommit 65747dabf14ec4573ef023b9c1817a1247ad3437[m
+Merge: d725486 5c28eca
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 15 21:02:52 2015 +0800
+
+    修正控制器文件夹首字母大写问题,修改retailer前台页面的继承关系.
+
+[33mcommit d7254860779fc9e4797a0bae86269590d433bfec[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 15 19:32:27 2015 +0800
+
+     修改retailer的order显示页面等
+
+[33mcommit a0c6a0fc7b9ba8d2720873b1ca7cb93c0e8aa4b4[m
+Merge: 9f2a854 f31bb42
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 15 19:26:11 2015 +0800
+
+     修改retailer的order显示页面等
+
+[33mcommit 5c28ecabb2a7e2cfcf8ce86c69fbf73a8a976cb1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Sep 15 18:00:28 2015 +0800
+
+    修改和优化部分代码
+
+[33mcommit 91d9dec1855119093ecb6ff792fcc9cc1d06169d[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Sep 14 17:06:48 2015 +0800
+
+    增加收货地址页
+
+[33mcommit a31895a652d25945654eb38fb5ff2cbc06b57dca[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Sep 11 10:16:54 2015 +0800
+
+    用户商品搜索页，商品收藏，修复修改店铺bug
+
+[33mcommit b7b4feb13ca6fbecd736bb688ce125fab85cda29[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Sep 9 10:13:45 2015 +0800
+
+    确认订单修改
+
+[33mcommit 9f2a854348277d90c43f25bc59a126779066ddef[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 8 14:43:20 2015 +0800
+
+    完成批发商店铺信息功能
+
+[33mcommit f31bb426c2782ae6ccc46d015a8655d218b6f4d8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Sep 8 12:08:11 2015 +0800
+
+    增加查看购物车和确认订单
+
+[33mcommit f67c134b2b9b7c0e71331e6cdfb53c5ebf65d788[m
+Merge: d275371 b10cd9e
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Sep 7 12:00:51 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit d27537145b68e293ba2e1602bf68bd5d41297879[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Sep 7 12:00:35 2015 +0800
+
+    完成订单管理功能的统计功能
+
+[33mcommit b10cd9e32bf8ddc254324c294850341ce434e7a4[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Sun Sep 6 09:46:46 2015 +0800
+
+    前台店面个人中心~~
+
+[33mcommit 85d003edfa039d203be438006835ee448b661a34[m
+Merge: 25904bd b2a4dc8
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 1 20:59:51 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 25904bd779f9ee0f810e1141ec8e397c786bbe7b[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Sep 1 20:59:27 2015 +0800
+
+    完成订单管理功能的查看功能
+
+[33mcommit b2a4dc85d975b71ca726a6d9da1fa00e5ed7a7be[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Sep 1 09:50:44 2015 +0800
+
+    增加我的商品搜索面
+
+[33mcommit f7759b8e390547ef7d9a446a95fe46574ab779de[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 31 18:24:30 2015 +0800
+
+    完成订单管理功能除查看、支付、导出外的其他功能，及相关页面和JS
+
+[33mcommit 63e0d57753007d51dc6c5d66ce244b55b97f5672[m
+Merge: 84464e3 4909295
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 31 18:16:30 2015 +0800
+
+    完成订单管理功能除查看、支付、导出外的其他功能，及相关页面和JS
+
+[33mcommit 84464e30c2ecd9741515eac2bec37c8882714668[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Aug 28 21:02:18 2015 +0800
+
+    订单管理系统的业务逻辑和前台显示模板开发
+
+[33mcommit 4909295e4ba01891a5d1c1dcd1e1400a994b6fee[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Aug 28 15:43:05 2015 +0800
+
+    添加商品表彰验证
+
+[33mcommit 7b3127df4afee294cb3f01520720013299dcf6f5[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Fri Aug 28 15:40:43 2015 +0800
+
+    增加前台店铺商品管理
+
+[33mcommit 03423e689908909a9d788d87bb8ce7166c1ab286[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Aug 26 11:53:36 2015 +0800
+
+    前台商铺首页
+
+[33mcommit 0769efab70b439980a538a6d25967f4173a04de2[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Aug 25 16:43:04 2015 +0800
+
+    前台基本结构
+
+[33mcommit 35a50aa357c00d27cde6908ec612283691e73743[m
+Merge: 2f004da 206d9a2
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 25 11:55:37 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 2f004da4fcb7ce3499b08fc97733412f02614749[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 25 11:17:41 2015 +0800
+
+    批发商模板和管理页面
+
+[33mcommit 206d9a22b00dd0cb18f2fccd28b9344f35e32061[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Aug 25 10:16:00 2015 +0800
+
+    增加easing库，数据统计页面
+
+[33mcommit 93e5962b5c21ba02d612114e16c1b65e3110c679[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 24 15:14:06 2015 +0800
+
+    增加推广人员模块，运维操作记录，运营数据统计的command
+
+[33mcommit 71c96f5c3535702a5270066ca05251661c5450b6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 24 14:55:31 2015 +0800
+
+    广告模块
+
+[33mcommit a4005b1ed00c722552913dd11f83e70b88e38c84[m
+Author: Tinpont <510499887@qq.com>
+Date:   Fri Aug 21 10:22:41 2015 +0800
+
+    整改广告CURD
+
+[33mcommit 48f7a5f2c44b036117461e8ad93e4348386489f4[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Aug 20 16:43:24 2015 +0800
+
+    广告模块
+
+[33mcommit b967d7b1514255bda594322e7df7e2c5d181a2f6[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Aug 20 16:43:04 2015 +0800
+
+    广告模块
+
+[33mcommit 8d7c6987e38f1c912e1865cedbf96882fbf356eb[m
+Merge: f9320a2 4d66690
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Aug 20 09:59:17 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit f9320a216b200445ed7df0801f4224e5a4f062b1[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Thu Aug 20 09:59:04 2015 +0800
+
+    广告管理模块
+
+[33mcommit 4d666901b977261f85c6ca970bff407aa185c8a5[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Aug 20 09:53:10 2015 +0800
+
+    增加系统交易信息
+
+[33mcommit 2ba8d527e03b5ef7d9452a5b282f3ce2d08094e7[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Aug 19 11:08:31 2015 +0800
+
+    增加编辑商店模块
+
+[33mcommit 99bf0e1bbb7b42d00a4d90475207108bc41f3205[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Wed Aug 19 11:05:20 2015 +0800
+
+    增加编辑商店模块，优化代码
+
+[33mcommit 121c3bcc7e9d82773efa394c64d37910d4e602ac[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 17 19:04:28 2015 +0800
+
+    商品图片模块、商品标签模块
+
+[33mcommit 6a2d6e493a6e78e4450ec6e0fed6223240e243fc[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 17 10:22:53 2015 +0800
+
+    广告管理模块
+
+[33mcommit dc40154af9b3dce61fa158dfe9997920363ae729[m
+Merge: e23f7a2 af22fce
+Author: zhaoyadong <250332754@qq.com>
+Date:   Fri Aug 14 10:28:34 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit af22fce13b2e13acefe5ed02cd77155816f78fc1[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Thu Aug 13 16:00:49 2015 +0800
+
+    增加用户详情页面
+
+[33mcommit e23f7a249dc5c98c2f0eb3212c0cf772b360401d[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Aug 12 17:16:44 2015 +0800
+
+    修改管理员显示模板，添加修改密码模板
+
+[33mcommit a0d539792664e4369a8524fa9dd7964e38832c3b[m
+Merge: 9a07ec6 f54e857
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Aug 12 14:16:23 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 9a07ec6805aef2f540621ac10c1d3b97d0898b05[m
+Merge: 8c06541 9ec787b
+Author: zhaoyadong <250332754@qq.com>
+Date:   Wed Aug 12 14:15:48 2015 +0800
+
+    修改管理员显示模板，添加修改密码模板
+
+[33mcommit f54e85717be5b5709f60f4b2c245e96274aa9e4e[m
+Author: Tinpont <510499887@qq.com>
+Date:   Wed Aug 12 12:23:08 2015 +0800
+
+    添加treetable第三方库
+
+[33mcommit df562c1f6e6c1196358a874aa5a826df237d85a5[m
+Author: Tinpont <510499887@qq.com>
+Date:   Wed Aug 12 11:12:01 2015 +0800
+
+    修改jstree目录,依赖jquery
+
+[33mcommit c0da66b28c8da9ee049e65835edccb9af3771244[m
+Author: Tinpont <510499887@qq.com>
+Date:   Wed Aug 12 11:06:09 2015 +0800
+
+    添加jstree库
+
+[33mcommit 8c0654188ffc940cc6f448bb351b7ac33dd7ac35[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 11 20:55:26 2015 +0800
+
+    5015/8/11修改
+
+[33mcommit 9ec787b22709197538dc3c25a9ac8ab6a44dde1e[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 20:44:19 2015 +0800
+
+    更新第三方库
+
+[33mcommit 605a6f3ed21136ba483b820d23680da560c241a3[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 20:14:16 2015 +0800
+
+    1. 修改后台样式
+    2. 添加后台首页
+
+[33mcommit 183071bca66f1ab3ba50f8f9019f0e15b5789187[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 19:50:35 2015 +0800
+
+    添加日志记录
+
+[33mcommit 79f15d057f7308f75cbef34d738674b3bae2ede3[m
+Merge: 5561225 001b585
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 11 17:03:27 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 001b585e64e6de91893cd33f654cd52c6fd37b85[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 17:02:20 2015 +0800
+
+    修正添加用户没有设置类型的问题
+
+[33mcommit 55612255dc3d4ca760346444f122fd27bcb66cad[m
+Merge: aad5ce7 3c31442
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 11 16:57:34 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 3c31442c06970147704ee320c8a960b16d6f1f31[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 16:54:55 2015 +0800
+
+    更新后台样式
+
+[33mcommit aad5ce7bfeab7a1a3201c619b7d541f89e0da5fb[m
+Merge: 791b7b9 e31146f
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 11 16:37:00 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 791b7b936234b4ea753ef23a27b114e9ce4bcc0d[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Tue Aug 11 16:36:26 2015 +0800
+
+    5015/8/11修改
+
+[33mcommit e31146fdd02a3c6107a8809833cab18128431adc[m
+Author: Tinpont <510499887@qq.com>
+Date:   Tue Aug 11 16:35:14 2015 +0800
+
+    优化用户管理CURD
+
+[33mcommit dcc9a1512010f09f671034bcb5e6b66dffd3ff4b[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Aug 11 15:16:14 2015 +0800
+
+    增加用户控制器
+
+[33mcommit 902782849fbb8fffaf7e032f5a35efb0971c5da8[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Tue Aug 11 10:18:04 2015 +0800
+
+    修改模型
+
+[33mcommit 2efb39d3561a7b07d4137a760a9ab7ac3590d0af[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 10 18:13:04 2015 +0800
+
+    模板
+
+[33mcommit 5d81430749fc8bc7e48a7bd367411eba1cfb3308[m
+Merge: 8b85fa7 b0eee17
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 10 18:09:10 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 8b85fa7fc97d5e3b8117db9f0e7e57192119ea19[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 10 18:08:54 2015 +0800
+
+    模板
+
+[33mcommit b0eee17d8c4c089e6fd1a46f8e717b99da5f0f67[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 10 18:07:45 2015 +0800
+
+    角色模型
+
+[33mcommit 22c5534760d51fb46f15174d88ab3eea3c77b5e4[m
+Merge: 7ed85b1 7e7ae6f
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 10 18:03:16 2015 +0800
+
+    Merge branch 'master' of git.persist.com.cn:web/fmcg
+
+[33mcommit 7ed85b13d3ff230f01bd76ba7aaa3f1db26aaef2[m
+Author: zhaoyadong <250332754@qq.com>
+Date:   Mon Aug 10 18:02:43 2015 +0800
+
+    模板
+
+[33mcommit 7e7ae6ff73c60d81c6aada9eace5f701bcb29929[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 10 17:59:38 2015 +0800
+
+    后台一些控制器创建
+
+[33mcommit 3438dce56ef72d295257e11139df0f6c762b9188[m
+Merge: 178ccd7 e6f57cb
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 10 09:55:40 2015 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 178ccd7293659662524b06ab5e18eefd4b004578[m
+Author: yinweiyi <378772944@qq.com>
+Date:   Mon Aug 10 09:55:16 2015 +0800
+
+    部分模型！！！
+
+[33mcommit e6f57cba3045b7a59a0e834e88a14a2ce4a6d95e[m
+Author: Tinpont <510499887@qq.com>
+Date:   Thu Aug 6 14:07:04 2015 +0800
+
+    添加自定义类
+
+[33mcommit ee200d0945edcc23445a8f40e9bca1a27660744a[m
+Author: Tinpont <510499887@qq.com>
+Date:   Thu Aug 6 13:55:56 2015 +0800
+
+    完成项目初步框架
+
+[33mcommit 719ab983a8ff7361ee648d138a6230ed027cbe1a[m
+Author: Tinpont <510499887@qq.com>
+Date:   Thu Aug 6 11:21:30 2015 +0800
+
+    初始化项目

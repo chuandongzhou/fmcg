@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
 @section('subtitle', '财务管理-提现记录')
-@section('top-title', '财务管理->提现记录')
+@section('top-title')
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
+    提现记录
+@stop
 @section('right')
     <form method="get" action="{{ url('personal/finance/withdraw') }}" autocomplete="off">
         <div class="row">

@@ -1,7 +1,10 @@
 @extends('index.menu-master')
 
 @section('subtitle', '我的商品')
-@section('top-title', '商品管理->我的商品')
+@section('top-title')
+    <a href="{{ url('my-goods') }}">商品管理</a> &rarr;
+    我的商品
+@stop
 @include('includes.jquery-lazeload')
 
 @section('right')
@@ -212,12 +215,28 @@
                                 <td>{{ $item->updated_at }}</td>
                                 <td>已{{ cons()->valueLang('goods.status' ,$item->status) }}</td>
                                 <td class="operating text-center">
+                                    @if(!$item->is_mortgage_goods)
+                                        <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
+                                           data-url="{{ url('api/v1/my-goods/' . $item->id . '/mortgage') }}"
+                                           class="no-form mortgage" title="设为抵费商品">抵费</a>
+                                    @endif
+
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="editor">编辑</a>
-                                    <a href="javascript:" data-id="{{ $item->id }}" data-method="put"
-                                       data-data='{ "status": "{{ !$item->status }}" }'
-                                       data-done-then="refresh"
-                                       class="no-form shelve">{{ cons()->valueLang('goods.status' , !$item->status) }}</a>
-                                    <a class="delete-goods no-form" data-method="delete"
+                                    {{--<a href="javascript:" data-id="{{ $item->id }}" data-method="put"--}}
+                                    {{--data-data='{ "status": "{{ !$item->status }}" }'--}}
+                                    {{--data-done-then="refresh"--}}
+                                    {{--class="no-form shelve">--}}
+
+                                    <a href="javascript:" data-method="put"
+                                       data-url="{{ url('api/v1/my-goods/shelve')}}"
+                                       data-status="{{ $item->status }}"
+                                       data-data='{ "id": "{{ $item->id }}" }'
+                                       data-on='上架'
+                                       data-off='下架'
+                                       class="ajax-no-form">
+                                        {{ cons()->valueLang('goods.status' , !$item->status) }}
+                                    </a>
+                                    <a class="delete-no-form" data-method="delete"
                                        data-url="{{ url('api/v1/my-goods/' . $item->id) }}" href="javascript:">删除</a>
                                 </td>
                             </tr>
@@ -235,14 +254,6 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        var table = $(".goods-table-panel .goods-table");
-
-        table.width($(".goods-table-panel .goods-table table").width());
-
-        if ($(".goods-table-panel .goods-table tr").length > 7) {
-            table.css({'height': '529px', 'overflowY': 'scroll'});
-        }
-
         displayList();
         formSubmitByGet();
         myGoodsFunc();

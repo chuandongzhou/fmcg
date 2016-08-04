@@ -72,8 +72,8 @@ class   GoodsController extends Controller
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
         $goods->shop_name = $goods->shop()->pluck('name');
-        is_null($goods->specification_retailer) && $goods->specification_retailer = '';
-        is_null($goods->specification_wholesaler) && $goods->specification_wholesaler = '';
+        is_null($goods->specification_retailer) && ($goods->specification_retailer = '');
+        is_null($goods->specification_wholesaler) && ($goods->specification_wholesaler = '');
         $goods->attrs = $attrs;
         $goods->is_like = $isLike ? true : false;
 

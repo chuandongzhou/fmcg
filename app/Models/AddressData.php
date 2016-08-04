@@ -17,7 +17,9 @@ class AddressData extends Model
         'street_id',
         'area_name',
         'address',
-        'coordinate'
+        'coordinate',
+        'min_money',
+        'extra_common_param'
     ];
     protected $hidden = [
         'type',
@@ -48,6 +50,16 @@ class AddressData extends Model
     }
 
     /**
+     * 设置最低配送额
+     *
+     * @param $minMoney
+     */
+    public function setMinMoneyAttribute($minMoney)
+    {
+        $this->attributes['extra_common_param'] = $minMoney;
+    }
+
+    /**
      * 获取地址详情
      *
      * @return string
@@ -55,6 +67,16 @@ class AddressData extends Model
     public function getAddressNameAttribute()
     {
         return $this->area_name . $this->address;
+    }
+
+    /**
+     * 获取最低配送额
+     *
+     * @return int|mixed
+     */
+    public function getMinMoneyAttribute()
+    {
+        return is_null($this->extra_common_param) ? 0 : $this->extra_common_param;
     }
 
     /**

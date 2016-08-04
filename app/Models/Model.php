@@ -29,9 +29,10 @@ class Model extends Eloquent
      *
      * @param int|string|\SplFileInfo $file
      * @param string $originalName
+     * @param bool $saveToFileTable
      * @return null|\App\Models\File
      */
-    public function convertToFile($file, $originalName = null)
+    public function convertToFile($file, $originalName = null, $saveToFileTable = true)
     {
         if (empty($file)) {
             return null;
@@ -46,7 +47,7 @@ class Model extends Eloquent
             }
         }
 
-        return File::createWithFile($file, $originalName);
+        return File::createWithFile($file, $originalName, $saveToFileTable);
     }
 
     /**

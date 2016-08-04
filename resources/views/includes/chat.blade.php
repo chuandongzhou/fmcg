@@ -95,9 +95,18 @@
                 $.get(site.api('shop/get-shops-by-ids'), {data: keys}, function (shops) {
                     var shops = shops.shops;
                     for (var i in shops) {
-                        if (!firstLogoUrl) {
-                            firstLogoUrl = shops[i].logo_url;
-                        }
+                        @if(!empty(request()->input('uid')) && request()->is('personal/chat'))
+                            var uid = parseInt({!!  request()->input('uid') !!});
+                            if(uid== i){
+                                firstLogoUrl = shops[i].logo_url;
+                                firstId = {!!  request()->input('uid') !!}+'';
+                            }
+                         @else
+                            if (!firstLogoUrl) {
+                                firstLogoUrl = shops[i].logo_url;
+                            }
+                         @endif
+
                         userHtml += '<li class="user-msg" data-touid="' + i + '">' +
                                 '   <img class="avatar" src=" ' + shops[i].logo_url + ' "> ' +
                                 '   <div class="user-item"> ' +

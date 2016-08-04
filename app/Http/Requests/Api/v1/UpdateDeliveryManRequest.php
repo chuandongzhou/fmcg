@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdateDeliveryManRequest extends Request
+class UpdateDeliveryManRequest extends UserRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,7 +17,7 @@ class UpdateDeliveryManRequest extends Request
             'name' => 'required',
             'phone' => 'required|numeric|digits_between:7,14',
             'user_name' => 'required_with:password|digits:6|unique:delivery_man,user_name,' . $deliveryMan->id,
-            'password' => 'required_with:user_name|digits_between:6,18|confirmed',
+            'password' => 'digits_between:6,18|confirmed',
             'pos_sign' => 'min:6',
         ];
     }
