@@ -61,11 +61,12 @@ class   GoodsController extends Controller
      * 商品详情
      *
      * @param $goodsId
-     * @return \Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postDetail($goodsId)
     {
         $goods = Goods::active()->with(['images.image', 'deliveryArea'])->find($goodsId);
+        $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
@@ -75,7 +76,7 @@ class   GoodsController extends Controller
         is_null($goods->specification_retailer) && ($goods->specification_retailer = '');
         is_null($goods->specification_wholesaler) && ($goods->specification_wholesaler = '');
         $goods->attrs = $attrs;
-        $goods->is_like = $isLike ? true : false;
+        $goods->is_like = !is_null($isLike);
 
         return $this->success(['goods' => $goods]);
     }

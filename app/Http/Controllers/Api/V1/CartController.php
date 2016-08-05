@@ -27,9 +27,7 @@ class CartController extends Controller
     public function getIndex()
     {
         $myCarts = $this->user->carts();
-        $carts = $myCarts->whereHas('goods', function ($query) {
-            $query->whereNotNull('id');
-        })->with('goods.images.image')->get();
+        $carts = $myCarts->with('goods')->get();
 
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零
@@ -119,19 +117,21 @@ class CartController extends Controller
         }
         return $this->error('删除失败');
     }
+
+
     /**
      * 获取购物车数量
      *
      */
-    public function getDetail(){
-        $user = auth()->user();
+    public function getDetail()
+    {
+        $user = $this->user;
         $myCarts = $user->carts();
-        $carts['detail'] = $myCarts->whereHas('goods', function ($query) use ($user) {
+        $carts = $myCarts->whereHas('goods', function ($query) use ($user) {
             $query->whereNotNull('id')->where('user_type', '>', $user->type);
-        })->with('goods.images.image')->get();
-        $carts['count'] = count($carts['detail']);
+        })->with('goods')->get();
 
-        return $carts;
+        return $this->success(['carts' => $carts]);
     }
 
 }

@@ -76,6 +76,7 @@ class MyGoodsController extends Controller
             return $this->forbidden('权限不足');
         }
         $goods->load(['images', 'deliveryArea']);
+        $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
 
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->shop_name = $goods->shop()->pluck('name');

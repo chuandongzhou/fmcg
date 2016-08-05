@@ -27,14 +27,14 @@ class InfoController extends Controller
 
         } else {
             //待付款
-            $waitReceive = Order::bySellerId(auth()->id())->where(['pay_status'=>
+            $waitReceive = Order::OfSell(auth()->id())->where(['pay_status'=>
                 cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])->where('pay_type', cons('pay_type.online'))->nonCancel()->count();
             //待发货
-            $waitSend = Order::bySellerId(auth()->id())->nonSend()->count();
+            $waitSend = Order::OfSell(auth()->id())->nonSend()->count();
             //代收款
-            $refund = Order::bySellerId(auth()->id())->getPayment()->nonCancel()->count();
+            $refund = Order::OfSell(auth()->id())->getPayment()->nonCancel()->count();
             //待确认（待审核）
-            $waitConfirm = Order::bySellerId(auth()->id())->waitConfirm()->count();
+            $waitConfirm = Order::OfSell(auth()->id())->waitConfirm()->count();
         }
         return view('index.personal.info', [
             'shop' => $shop,

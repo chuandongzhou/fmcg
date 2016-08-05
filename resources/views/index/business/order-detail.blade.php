@@ -46,7 +46,7 @@
                     </tr>
                     @foreach($orderGoods as $goods)
                         <tr>
-                            <td>{{ $goods->id }}</td>
+                            <td>{{ $goods->goods_id }}</td>
                             <td>{{ $goods->goods_name }}</td>
                             @if($order->type != cons('salesman.order.type.return_order'))
                                 <td>{{ $goods->price }}/{{ cons()->valueLang('goods.pieces', $goods->pieces) }}</td>

@@ -5,7 +5,6 @@
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
     <link href="{{ asset('css/css.css') }}" rel="stylesheet" type="text/css"/>
-    {{--<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>--}}
     <link href="{{ asset('css/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/bootstrap-switch.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/components.min.css') }}" rel="stylesheet" id="style_components" type="text/css"/>
@@ -23,7 +22,7 @@
     <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
     <!--[if lt IE 10]>
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('[placeholder]').removeAttr("placeholder");
         })
     </script>
@@ -58,51 +57,50 @@
 
                         <!--购物车-->
 
-                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                                <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
-                                   data-hover="dropdown" data-close-others="true">
-                                    <i class="fa fa-shopping-cart"></i>
-                                        <span class="badge badge-default cart-badge"></span>
+                        <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                            <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
+                               data-hover="dropdown" data-close-others="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="badge badge-default cart-badge">{{ $cartNum }}</span>
 
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="external">
+                                    <h3> 最新加入商品</h3>
+                                    <a href="{{ url('cart') }}">去购物车查看</a>
+                                </li>
+                                <li>
+                                    <ul class="dropdown-menu-list scroller cart-detail" style="height: 250px;"
+                                        data-handle-color="#637283">
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
 
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="external">
-                                        <h3> 最新加入商品</h3>
-                                        <a href="{{ url('cart') }}">去购物车查看</a>
-                                    </li>
-                                    <li>
-                                        <ul class="dropdown-menu-list scroller cartDetail" style="height: 250px;"
-                                            data-handle-color="#637283">
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-
-                                    <!--最新消息-->
-                            <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
-                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
-                                   data-hover="dropdown"
-                                   data-close-others="true">
-                                    <i class="fa fa-commenting-o "></i>
-                                    <span class="badge badge-default total-message-count hide">0 </span>
-                                </a>
-                                <br>
-                            </li>
-                            <!--登录名-->
-                            <li class="dropdown dropdown-user">
-                                <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
-                                   data-close-others="true">
-                                    <img alt="" class="img-circle" src="{{ $user->shop->logo_url }}"/>
-                                    <span class="username username-hide-on-mobile">{{ $user->shop->name }}</span>
-                                </a>
-                            </li>
-                            <!--退出登录-->
-                            <li class="dropdown dropdown-extended drop-exit ">
-                                <a href="{{ url('auth/logout') }}">
-                                    <i class="icon-logout"></i>
-                                </a>
-                            </li>
+                        <!--最新消息-->
+                        <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
+                               data-hover="dropdown"
+                               data-close-others="true">
+                                <i class="fa fa-commenting-o "></i>
+                                <span class="badge badge-default total-message-count hide">0 </span>
+                            </a>
+                            <br>
+                        </li>
+                        <!--登录名-->
+                        <li class="dropdown dropdown-user">
+                            <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
+                               data-close-others="true">
+                                <img alt="" class="img-circle" src="{{ $user->shop->logo_url }}"/>
+                                <span class="username username-hide-on-mobile">{{ $user->shop->name }}</span>
+                            </a>
+                        </li>
+                        <!--退出登录-->
+                        <li class="dropdown dropdown-extended drop-exit ">
+                            <a href="{{ url('auth/logout') }}">
+                                <i class="icon-logout"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -115,7 +113,8 @@
     <div class="page-container public-personal contents">
         @yield('container')
         <div class="msg-channel control-center-channel" id="alert-div">
-            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></div>
+            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a>
+            </div>
             <a class="check" href="#">点击查看>>>></a>
         </div>
         <!--登出按钮-->
@@ -190,41 +189,41 @@
                                                         data-done-then="none" data-done-text="反馈提交成功">提交
                                                 </button>
                                             </span>
-                                            </div>
-                                            <!-- /input-group -->
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="qr-content-panel">
-                                    <a href="javascript:;" class="app-down icon">APP下载</a>
-                                </div>
-                                <div class="content hidden">
-                                    <div class="qr-panel">
-                                        <div class="dbd item">
-                                            <div class="qr-code dbd-qr-code"></div>
-                                            <div class="text text-center">订百达</div>
-                                        </div>
-                                        <div class="driver-helper item">
-                                            <div class="qr-code helper"></div>
-                                            <div class="text text-center">司机助手</div>
-                                        </div>
-                                        <div class="driver-helper item">
-                                            <div class="qr-code field"></div>
-                                            <div class="text text-center">外勤</div>
                                         </div>
                                     </div>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="qr-content-panel">
+                                <a href="javascript:;" class="app-down icon">APP下载</a>
+                            </div>
+                            <div class="content hidden">
+                                <div class="qr-panel">
+                                    <div class="dbd item">
+                                        <div class="qr-code dbd-qr-code"></div>
+                                        <div class="text text-center">订百达</div>
+                                    </div>
+                                    <div class="driver-helper item">
+                                        <div class="qr-code helper"></div>
+                                        <div class="text text-center">司机助手</div>
+                                    </div>
+                                    <div class="driver-helper item">
+                                        <div class="qr-code field"></div>
+                                        <div class="text text-center">外勤</div>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-xs-6">
-                        <div>Copyright  &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </div>
-                    </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-6">
+                    <div>
+                        Copyright &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </div>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
     </div>
 @stop
 
@@ -273,51 +272,37 @@
                     }
                 })
             }
-            //购物车数量
-            $.ajax({
-                url: '/api/v1/cart/detail',
-                method: 'get'
-            }).done(function(data){
-                if(data.count>0){
-                    $('.cart-badge').html(data.count);
-                }else{
-                    $('.cart-badge').html('');
+
+            //购物车数据
+            $('#header_notification_bar').hover(function () {
+
+                var cartDetail = $('.cart-detail');
+                if (cartDetail.children('li').length) {
+                    return false;
                 }
-            });
-        //购物车数据
-            $('#header_notification_bar').mouseenter(function(){
+
                 $.ajax({
-                    url: '/api/v1/cart/detail',
+                    url: site.api('cart/detail'),
                     method: 'get'
                 }).done(function (data) {
-                    var cartNum = data.count, carts = data.detail, cartHtml = '';
+                    var carts = data.carts, cartHtml = '';
 
-                    if(cartNum>0){
-                        for(var i=0;i<carts.length;i++){
-
-                            cartHtml += '<li>'+
-                                    '<a href="/goods/'+carts[i].goods.id+'">'+
-                                    ' <span class="details">'+
-                                    '<span class="label">'+
-                                    '<img class="cart-img" src="'+carts[i].goods.image_url+'">'+
-                                    '</span>'+carts[i].goods.name+
-                                    '</span>'+
-                                    '</a>'+
-                                    '</li>';
-                        }
-
-                        $('.cart-badge').html(cartNum);
-                        $('.cartDetail').html(cartHtml);
-                    }else{
-                        $('.cart-badge').html('');
+                    for (var i  in carts) {
+                        cartHtml += '<li>';
+                        cartHtml += '   <a href="/goods/' + carts[i].goods.id + '">';
+                        cartHtml += '       <span class="details clearfix">';
+                        cartHtml += '           <span class="label pull-left">';
+                        cartHtml += '               <img class="cart-img" src="' + carts[i].goods.image_url + '">';
+                        cartHtml += '           </span>';
+                        cartHtml += carts[i].goods.name;
+                        cartHtml += '       </span>';
+                        cartHtml += '   </a>';
+                        cartHtml += '</li>';
                     }
+                    $('.cart-detail').html(cartHtml);
+
                 });
             });
-//            //鼠标移出事件
-            $('#header_notification_bar').mouseleave(function(){
-                $('.cartDetail').html('');
-            });
-
         });
     </script>
 @stop

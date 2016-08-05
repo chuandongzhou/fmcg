@@ -44,10 +44,14 @@ class SalesmanCustomerController extends Controller
         $attributes['number'] = $this->_getCustomerNumber($salesman);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
-        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
-                $attributes['account']))
-        ) {
-            return $this->invalidParam('account', '账号不存在或已被关联');
+        if ($attributes['account']) {
+            $shop = $salesman->shop;
+
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'])) {
+                return $this->invalidParam('account', '账号不存在或已被关联');
+            }
+        } else {
+            $attributes['shop_id'] = null;
         }
 
 
@@ -72,10 +76,14 @@ class SalesmanCustomerController extends Controller
         }
         $attributes = $request->all();
         $attributes['letter'] = $this->_getLetter($attributes['name']);
-        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
-                $attributes['account'], $customer))
-        ) {
-            return $this->invalidParam('account', '账号不存在或已被关联');
+        if ($attributes['account']) {
+            $shop = auth()->user()->shop;
+
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'], $customer)) {
+                return $this->invalidParam('account', '账号不存在或已被关联');
+            }
+        } else {
+            $attributes['shop_id'] = null;
         }
 
         if ($customer->fill(array_except($attributes, 'account'))->save()) {
@@ -99,10 +107,15 @@ class SalesmanCustomerController extends Controller
         $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
-        if ($attributes['account'] && !($attributes['shop_id'] = $this->_validateAccount(auth()->user()->shop,
-                $attributes['account'], $customer))
-        ) {
-            return $this->invalidParam('account', '账号不存在或已被关联');
+
+        if ($attributes['account']) {
+            $shop = salesman_auth()->user()->shop;
+
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'], $customer)) {
+                return $this->invalidParam('account', '账号不存在或已被关联');
+            }
+        } else {
+            $attributes['shop_id'] = null;
         }
 
         if ($customer->fill(array_except($attributes, 'account'))->save()) {
@@ -253,7 +266,7 @@ class SalesmanCustomerController extends Controller
             }
             return false;
         }
-        return true;
+        return $shopId;
 
     }
 

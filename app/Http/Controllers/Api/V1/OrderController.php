@@ -30,7 +30,22 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::OfBuy(auth()->id())->paginate();
+        $orders = Order::OfBuy(auth()->id())->WithExistGoods(['shop.user', 'user', 'coupon'],
+            [
+                'goods.id',
+                'name',
+                'price_retailer',
+                'price_retailer_pick_up',
+                'pieces_retailer',
+                'min_num_retailer',
+                'specification_retailer',
+                'price_wholesaler',
+                'price_wholesaler_pick_up',
+                'pieces_wholesaler',
+                'min_num_wholesaler',
+                'specification_wholesaler',
+                'bar_code'
+            ])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -106,7 +121,7 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods', 'coupon')->orderBy('id',
+        $orders = Order::OfSell(auth()->id())->with('user.shop', 'goods', 'coupon')->orderBy('id',
             'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
@@ -121,7 +136,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell(auth()->id())->nonSend()->paginate();
 
-        return $this->success($this->_hiddenOrdersAttr($orders,false));
+        return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
     /**
@@ -133,7 +148,7 @@ class OrderController extends Controller
     {
         $orders = Order::ofSell(auth()->id())->getPayment()->paginate();
 
-        return $this->success($this->_hiddenOrdersAttr($orders,false));
+        return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
     /**
@@ -145,9 +160,9 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::bySellerId(auth()->id())->find($orderId);
+        $order = Order::OfSell(auth()->id())->find($orderId);
 
-        $order = $this->_hiddenOrderAttr($this->_orderLoadData($order),false);
+        $order = $this->_hiddenOrderAttr($this->_orderLoadData($order), false);
 
         $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
             $recode->name = auth()->id() ? $order->shop->name : $order->deliveryMan->name;
@@ -199,7 +214,7 @@ class OrderController extends Controller
             }
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg);
-            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
         }
 
         return $this->success(['failOrderIds' => $failOrderIds]);
@@ -268,7 +283,7 @@ class OrderController extends Controller
                 $redisKey = 'push:seller:' . $shopOwner->id;
                 $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
-                (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
+                (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
             } else {
                 $failIds[] = $order->id;
             }
@@ -285,7 +300,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::bySellerId(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::OfSell(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
         if ($orders->isEmpty()) {
             return $this->error('确认收款失败');
         }
@@ -327,7 +342,7 @@ class OrderController extends Controller
         if (!DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->find($deliveryManId)) {
             return $this->error('操作失败');
         }
-        $orders = Order::bySellerId(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::OfSell(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
 
         if ($orders->isEmpty()) {
             return $this->error('操作失败');
@@ -346,7 +361,7 @@ class OrderController extends Controller
 
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
-            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
 
             $order->fill([
                 'delivery_man_id' => $deliveryManId,
@@ -374,7 +389,7 @@ class OrderController extends Controller
 
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
-        $builder = Order::bySellerId(auth()->id())->nonCancel();
+        $builder = Order::OfSell(auth()->id())->nonCancel();
 
         for ($i = 6; $i >= 0; --$i) {
             $start = $today->copy()->addDay(-$i);
@@ -472,7 +487,7 @@ class OrderController extends Controller
     public function putChangeOrder(UpdateOrderRequest $request)
     {
         //判断该订单是否存在
-        $order = Order::bySellerId(auth()->id())->find(intval($request->input('order_id')));
+        $order = Order::OfSell(auth()->id())->find(intval($request->input('order_id')));
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }
@@ -596,7 +611,7 @@ class OrderController extends Controller
         if ($order->pay_type == $payType['pick_up']) {
             $order->load(['goods.images', 'shop.shopAddress']);
         } else {
-           $order->load(['goods.images', 'deliveryMan', 'shippingAddress.address', 'orderRefund']) ;
+            $order->load(['goods.images', 'deliveryMan', 'shippingAddress.address', 'orderRefund']);
         }
         return $order;
     }
@@ -621,7 +636,7 @@ class OrderController extends Controller
     private function _hiddenOrderAttr($order, $buyer = true)
     {
         $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url']);
+            $goods->addHidden(['introduce']);
         });
         if (!$buyer) {
             $order->user->setVisible(['id', 'shop', 'type']);

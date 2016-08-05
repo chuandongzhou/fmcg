@@ -37,7 +37,6 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.help.master'
             ],
             ProvinceComposer::class => [
-               // 'index.search',
                 'index.master'
             ],
             NodeComposer::class => [
@@ -48,6 +47,7 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.shop-search',
                 'index.master',
                 'includes.navigator',
+                'index.manage-master'
             ],
             KeywordsComposer::class => [
                 'index.search',

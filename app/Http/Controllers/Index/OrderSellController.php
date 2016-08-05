@@ -18,7 +18,6 @@ class OrderSellController extends OrderController
      */
     public function __construct()
     {
-        //parent::__construct();
         $this->middleware('retailer');
     }
 
@@ -42,8 +41,10 @@ class OrderSellController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods',
-            'shippingAddress.address');
+        $orders = Order::OfSell(auth()->id())->WithExistGoods([
+            'user.shop',
+            'shippingAddress.address'
+        ]);
         if (is_numeric($search['search_content'])) {
             $orders = $orders->where('id', $search['search_content']);
         } elseif ($search['search_content']) {
@@ -72,12 +73,14 @@ class OrderSellController extends OrderController
      */
     public function getWaitSend()
     {
-        $orders = Order::bySellerId(auth()->id())->with('user.shop', 'goods.images.image')->NonSend();
+        $orders = Order::OfSell(auth()->id())->WithExistGoods([
+            'user.shop',
+        ])->NonSend();
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view('index.order.order-sell', [
-            'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum($orders->count()),
-            'delivery_man' => $deliveryMan,
+            'orders' => $orders->paginate(),
+            'delivery_man' => $deliveryMan
         ]);
     }
 
@@ -86,10 +89,10 @@ class OrderSellController extends OrderController
      */
     public function getWaitReceive()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->getPayment();
+        $orders = Order::ofSell(auth()->id())->WithExistGoods(['user.shop'])->getPayment();
         return view('index.order.order-sell', [
-            'orders' => $orders->paginate(),
-            'data' => $this->_getOrderNum(-1, $orders->count())
+            'data' => $this->_getOrderNum(-1, $orders->count()),
+            'orders' => $orders->paginate()
         ]);
     }
 
@@ -98,10 +101,12 @@ class OrderSellController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->waitConfirm();
+        $orders = Order::ofSell(auth()->id())->WithExistGoods([
+            'user.shop',
+        ])->waitConfirm();
         return view('index.order.order-sell', [
-            'orders' => $orders->paginate(),
-            'data' => $this->_getOrderNum(-1, -1, $orders->count())
+            'data' => $this->_getOrderNum(-1, -1, $orders->count()),
+            'orders' => $orders->paginate()
         ]);
     }
 
@@ -114,7 +119,7 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::bySellerId(auth()->id())->with('user.shop', 'shop.user', 'goods.images.image',
+        $order = Order::OfSell(auth()->id())->with('user.shop', 'shop.user', 'goods.images.image',
             'shippingAddress.address', 'systemTradeInfo',
             'orderChangeRecode')->find(intval($request->input('order_id')));
         if (!$order) {
@@ -147,7 +152,7 @@ class OrderSellController extends OrderController
 
         $status = cons('order.status');
         $res = Order::with('shippingAddress.address', 'goods')
-            ->bySellerId(auth()->id())->whereIn('status', [$status['non_send'], $status['send']])
+            ->OfSell(auth()->id())->whereIn('status', [$status['non_send'], $status['send']])
             ->whereIn('id', $orderIds)->get();
         if (empty($orderIds) || $res->count() !== count($orderIds)) {
             return $this->error('无订单消息或存在不能导出的订单', null, ['export_error' => '无订单消息或存在不能导出的订单']);
@@ -247,13 +252,14 @@ class OrderSellController extends OrderController
     {
         $userId = auth()->id();
         $data = [
-            'nonSend' => $nonSend >= 0 ? $nonSend : Order::bySellerId($userId)->nonSend()->count(),
+            'nonSend' => $nonSend >= 0 ? $nonSend : Order::OfSell($userId)->nonSend()->count(),
             //待发货
-            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::bySellerId($userId)->getPayment()->count(),
+            'waitReceive' => $waitReceive >= 0 ? $waitReceive : Order::OfSell($userId)->getPayment()->count(),
             //待收款（针对货到付款）
-            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::bySellerId($userId)->waitConfirm()->count(),
+            'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::OfSell($userId)->waitConfirm()->count(),
             //待确认
         ];
+
 
         return $data;
     }

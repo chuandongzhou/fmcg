@@ -22,8 +22,7 @@ class AdvertController extends Controller
         if (Cache::has($indexAdvertConf['name'])) {
             $adverts = Cache::get($indexAdvertConf['name']);
         } else {
-            $adverts = Advert::with('image')->where('type',
-                cons('advert.type.index'))->OfTime()->get();
+            $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->get();
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
         return $this->success(['advert' => $adverts]);

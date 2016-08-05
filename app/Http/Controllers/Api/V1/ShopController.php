@@ -37,6 +37,7 @@ class ShopController extends Controller
     {
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
+
         $type = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
@@ -45,7 +46,7 @@ class ShopController extends Controller
              * COS(y_lat * PI() / 180) * COS(' . $xLng . ' * PI() / 180 - x_lng * PI() / 180 )
               + SIN(' . $yLat . ' * PI() / 180) * SIN(y_lat * PI() / 180)  ) ) distance'), 'id',
             'name', 'min_money', 'user_id', 'contact_person', 'contact_info', 'x_lng', 'y_lat')
-            ->with('images', 'logo', 'shopAddress', 'user')
+            ->with( 'logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
         return $this->success($shops->toArray());
     }
@@ -70,6 +71,7 @@ class ShopController extends Controller
      */
     public function detail($shop)
     {
+
         if (Gate::denies('validate-allow', $shop)) {
             return $this->success(
                 [
@@ -78,12 +80,8 @@ class ShopController extends Controller
                     'isLike' => []
                 ]);
         }
-        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
-        if ($shop->images->isEmpty()) {
-            $advert = ShopService::getAdvertFirstImage();
-            $shop->images[0] = $advert->image;
-        }
+        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $shop->is_like = $isLike ? true : false;
         return $this->success([
             'shop' => $shop
@@ -148,8 +146,6 @@ class ShopController extends Controller
 
         }
         $data = $request->all();
-        /* $addressData = (new AddressService)->getAddressData();
-         $data = array_merge($data, array_except($addressData, 'address_name'));*/
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate()->toArray();
         return $this->success(['goods' => $goods]);

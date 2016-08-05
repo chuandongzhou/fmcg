@@ -72,10 +72,10 @@ class ShopController extends Controller
                 ]);
 
         } else {
-            $finishedOrders = $finishedOrders->bySellerId(auth()->id())->get()->each(function ($order) {
+            $finishedOrders = $finishedOrders->OfSell(auth()->id())->get()->each(function ($order) {
                 $order->setAppends([]);
             });
-            $receivedOrders = $receivedOrders->bySellerId(auth()->id())->get();
+            $receivedOrders = $receivedOrders->OfSell(auth()->id())->get();
             //本月销售图表信息
             $orderGoodsInfo = DB::select('select d.name,c.cate_level_2,sum(b.num) as sum from fmcg_order a join fmcg_order_goods b on a.id = b.order_id join fmcg_goods c on c.id = b.goods_id join fmcg_category d on
  d.id=c.cate_level_2 join fmcg_shop as e on e.id = a.shop_id join fmcg_user f on f.id = e.user_id where f.id = :id and a.`status`= :status and is_cancel = :is_cancel and a.finished_at like :finish_at GROUP BY c.cate_level_2',

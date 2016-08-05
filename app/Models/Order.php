@@ -5,7 +5,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 
-class Order extends Model
+class   Order extends Model
 {
     protected $table = 'order';
     protected $fillable = [
@@ -239,6 +239,8 @@ class Order extends Model
                 return cons()->valueLang('order.pay_status', $payStatus);
             }
             return cons()->valueLang('order.pay_status', $payStatus) . ',' . cons()->valueLang('order.status', $status);
+
+        }
     }
 
     /**
@@ -474,7 +476,6 @@ class Order extends Model
     {
         return $query->where('user_id', $userId)
             ->where('is_cancel', cons('order.is_cancel.off'))
-            ->with('shop.user', 'user', 'goods', 'coupon')
             ->orderBy('id', 'desc');
     }
 
@@ -489,23 +490,23 @@ class Order extends Model
     {
         return $query->whereHas('shop.user', function ($query) use ($userId) {
             $query->where('id', $userId);
-        })->where('is_cancel', cons('order.is_cancel.off'))->with('user.shop', 'goods.images')->orderBy('id', 'desc');
+        })->where('is_cancel', cons('order.is_cancel.off'))->orderBy('id', 'desc');
     }
 
-    /**
-     * 通过shop_id查询卖家
-     *
-     * @param $query
-     * @param $userId
-     * @return mixed
-     */
-    public function scopeBySellerId($query, $userId)
-    {
-        return $query->whereHas('shop.user', function ($query) use ($userId) {
-            $query->where('id', $userId);
-        });
-
-    }
+//    /**
+//     * 通过shop_id查询卖家
+//     *
+//     * @param $query
+//     * @param $userId
+//     * @return mixed
+//     */
+//    public function scopeBySellerId($query, $userId)
+//    {
+//        return $query->whereHas('shop.user', function ($query) use ($userId) {
+//            $query->where('id', $userId);
+//        });
+//
+//    }
 
     /**
      * @param $query
@@ -557,6 +558,7 @@ class Order extends Model
     {
         return $query->where('status', cons('order.status.non_confirm'))->NonCancel();
     }
+
     /**
      * 待收款,货到付款
      *
@@ -670,7 +672,7 @@ class Order extends Model
      */
     public function scopeOfPickUp($query, $type = null)
     {
-        $type = $type ? : cons('order.status.finished');
+        $type = $type ?: cons('order.status.finished');
 
         return $query->where('pay_type', cons('pay_type.pick_up'))->where('status', $type);
     }

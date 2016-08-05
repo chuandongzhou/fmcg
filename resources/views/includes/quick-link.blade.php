@@ -27,7 +27,7 @@
                     $(".quick_links_pop").css("zIndex", "-1");
 
                     $.ajax({
-                        url: '/api/v1/cart',
+                        url: site.api('cart'),
                         method: 'get'
                     }).done(function (data) {
                         var html = '', cartNum = 0, cartPrices = 0;

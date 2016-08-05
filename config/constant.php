@@ -9,8 +9,8 @@ return [
     //支付类型
     'pay_type' => [
         'online' => 1,
-        'cod' => 2
-//        'pick_up' => 3
+        'cod' => 2,
+        'pick_up' => 3
     ],
     //支付方式
     'pay_way' => [

@@ -38,7 +38,7 @@ class Shop extends Model
         'y_lat'
     ];
 
-    protected $appends = ['images_url', 'logo_url', 'image_url'];
+        protected $appends = ['logo_url'];
 
     protected $hidden = ['images', 'logo', 'created_at', 'updated_at'];
 
@@ -56,7 +56,7 @@ class Shop extends Model
             $model->goods()->delete();
             $model->deliveryArea()->delete();
             $model->shopAddress()->delete();
-            $model->advert()->delete();
+            $model->adverts()->delete();
         });
     }
 

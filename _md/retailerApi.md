@@ -515,19 +515,11 @@
     min_money           decimal     最低配送额
     contact_person      string      联系人
     contact_info        string      联系方式
-    images_url          array       店铺图片
     logo_url            string      logo地址
     shop_address        array       店铺地址
     x_lng               float       纬度
     y_lat               float       经度
     user                array       用户
-
-    images_url 字段子集说明
-
-    name                string      图片名
-    path                string      图片路径
-    id                  int         图片id
-    url                 string      图片详细路径
 
     shop_address 字段子集说明
 
@@ -556,15 +548,9 @@
     contact_info        string      联系方式
     introduction        string      店铺介绍
     min_money           decimal     最低配送额
-    images_url          array       店铺图片地址
     is_like             bool        是否已收藏
 
-    images 字段子集介绍
 
-    name                string      图片名
-    path                string      图片路径
-    id                  int         图片id
-    url                 string      图片详细路径
 
 #### 2.4.4 店铺商品[get]   ({shop_id}/goods)
 `请求参数：`
@@ -592,14 +578,9 @@
     is_new              int         是否新品（1是 , 0不是）
     is_promotion        int         是否促销产品
     is_out              int         是否缺货
-    images_url          array       商品图片
+    image_url           string      商品图片
 
-    images 字段子集说明
 
-    name                string      图片名
-    path                string      图片路径
-    id                  int         图片id
-    url                 string      图片详细路径
 
 #### 2.4.5 店铺扩展信息[get]   ({shop_id}/extend)
 `请求参数：`

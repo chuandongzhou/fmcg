@@ -46,7 +46,11 @@ class OrderBuyController extends OrderController
         $search['status'] = isset($search['status']) ? trim($search['status']) : '';
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $orders = Order::ofBuy(auth()->id());
+        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+            'shop.user',
+            'user',
+            'coupon'
+        ]);
         if (is_numeric($search['search_content'])) {
             $orders = $orders->where('id', $search['search_content']);
         } elseif ($search['search_content']) {
@@ -70,10 +74,15 @@ class OrderBuyController extends OrderController
      */
     public function getWaitPay()
     {
-        $orders = Order::ofBuy(auth()->id())->nonPayment();
+        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+            'shop.user',
+            'user',
+            'coupon'
+        ])->nonPayment();
+
         return view('index.order.order-buy', [
-            'orders' => $orders->paginate(),
             'data' => $this->_getOrderNum($orders->count()),
+            'orders' => $orders->paginate(),
             'userBalance' => $this->userBalance['availableBalance']
         ]);
     }
@@ -83,10 +92,14 @@ class OrderBuyController extends OrderController
      */
     public function getWaitReceive()
     {
-        $orders = Order::ofBuy(auth()->id())->nonArrived();
+        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+            'shop.user',
+            'user',
+            'coupon'
+        ])->nonArrived();
         return view('index.order.order-buy', [
-            'orders' => $orders->paginate(),
-            'data' => $this->_getOrderNum(-1, $orders->count())
+            'data' => $this->_getOrderNum(-1, $orders->count()),
+            'orders' => $orders->paginate()
         ]);
     }
 
@@ -95,10 +108,14 @@ class OrderBuyController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofBuy(auth()->id())->waitConfirm();
+        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+            'shop.user',
+            'user',
+            'coupon'
+        ])->waitConfirm();
         return view('index.order.order-buy', [
-            'orders' => $orders->paginate(),
-            'data' => $this->_getOrderNum(-1, -1, $orders->count())
+            'data' => $this->_getOrderNum(-1, -1, $orders->count()),
+            'orders' => $orders->paginate()
         ]);
     }
 

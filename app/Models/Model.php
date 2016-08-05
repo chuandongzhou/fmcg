@@ -155,4 +155,20 @@ class Model extends Eloquent
         return 1 === intval($this->getAttribute('status'));
     }
 
+    /**
+     * 关联含商品
+     *
+     * @param $query
+     * @param array $param
+     * @param array $field
+     * @return mixed
+     */
+    public function scopeWithExistGoods($query, $param = [], $field = ['goods.id', 'goods.name', 'goods.bar_code'])
+    {
+        $param['goods'] = function ($query) use ($field) {
+            $query->select($field);
+        };
+
+        return $query->with($param);
+    }
 }

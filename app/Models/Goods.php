@@ -49,7 +49,7 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['images_url', 'image_url', 'pieces', 'price'];
+    public $appends = ['image_url', 'pieces', 'price'];
 
     protected $hidden = [
         'images',
@@ -307,6 +307,8 @@ class Goods extends Model
     {
         if (!$priceRetailerPickUp || $priceRetailerPickUp <= 0) {
             $this->attributes['price_retailer_pick_up'] = $this->attributes['price_retailer'];
+        } else {
+            $this->attributes['price_retailer_pick_up'] = $priceRetailerPickUp;
         }
     }
 
@@ -319,6 +321,8 @@ class Goods extends Model
     {
         if (!$priceWholesalerPickUp || $priceWholesalerPickUp <= 0) {
             $this->attributes['price_wholesaler_pick_up'] = $this->attributes['price_wholesaler'];
+        } else {
+            $this->attributes['price_wholesaler_pick_up'] = $priceWholesalerPickUp;
         }
     }
 
@@ -403,11 +407,12 @@ class Goods extends Model
     public function getImageUrlAttribute()
     {
 
-         $goodsService = new GoodsImageService();
-         $goodsId = $this->id;
-         if ($goodsService->hasImage($goodsId)) {
-             return $goodsService->getImage($goodsId);
-         }
+        $goodsService = new GoodsImageService();
+        $goodsId = $this->id;
+        if ($goodsService->hasImage($goodsId)) {
+
+            return $goodsService->getImage($goodsId);
+        }
         $image = $this->images->first();
         $url = $image ? $image->image_url : asset('images/goods_default.png');
         $goodsService->setImage($this->id, $url);
