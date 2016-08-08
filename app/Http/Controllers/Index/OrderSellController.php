@@ -150,23 +150,27 @@ class OrderSellController extends OrderController
     {
         $orderIds = (array)$request->input('order_id');
 
+        if (empty($orderIds)) {
+            return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
+        }
+
         $status = cons('order.status');
-        $res = Order::with('shippingAddress.address', 'goods')
+        $result = Order::with('shippingAddress.address', 'goods')
             ->OfSell(auth()->id())->whereIn('status', [$status['non_send'], $status['send']])
             ->whereIn('id', $orderIds)->get();
-        if (empty($orderIds) || $res->count() !== count($orderIds)) {
-            return $this->error('无订单消息或存在不能导出的订单', null, ['export_error' => '无订单消息或存在不能导出的订单']);
+        if ($result->isEmpty()) {
+            return $this->error('要导出的订单不存在', null, ['export_error' => '要导出的订单不存在']);
         }
-        return $this->_getContent($res);
+        return $this->_getExport($result);
     }
 
     /**
      * 生成word文档
      *
-     * @param $res
+     * @param $result
      * @return string
      */
-    public function _getContent($res)
+    public function _getExport($result)
     {
         // Creating the new document...
         $phpWord = new PhpWord();
@@ -182,7 +186,9 @@ class OrderSellController extends OrderController
             'lineHeight' => 1.2,  // 行间距
         ]);
 
-        foreach ($res as $item) {
+        $orderPayTypes = cons('pay_type');
+
+        foreach ($result as $item) {
             $section = $phpWord->addSection();
             $table = $section->addTable('table');
             //表头
@@ -202,6 +208,7 @@ class OrderSellController extends OrderController
             $table->addCell(700)->addText('数量');
             $table->addCell(1500)->addText('单价');
             $table->addCell(1500)->addText('小计');
+
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
                 $table->addCell(1500)->addText($goods->id);
@@ -209,17 +216,30 @@ class OrderSellController extends OrderController
                 $table->addCell(3300)->addText(mb_substr($goods->promotion_info, 0, 20));
                 $table->addCell(700)->addText($goods->pivot->num);
                 $table->addCell(1500)->addText($goods->pivot->price . '/' . cons()->valueLang('goods.pieces',
-                        $goods['pieces_' . $item->user->type_name]));
+                        $goods->pivot->pieces));
                 $table->addCell(1500)->addText($goods->pivot->total_price);
             }
+
             $info = [
                 '付款方式:   ' . $item->payment_type,
                 '备注:   ' . $item->remark,
                 '合计:   ' . $item->price,
-                '收货人:   ' . $item->shippingAddress->consigner,
-                '电话:   ' . $item->shippingAddress->phone,
-                '地址:   ' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name)
             ];
+            if ($item->coupon_id) {
+                $info[] = '优惠:   ' . bcsub($item->price, $item->after_rebates_price, 2);
+                $info[] = '应付:   ' . $item->after_rebates_price;
+            }
+
+            if ($item->pay_type == $orderPayTypes['pick_up']) {
+                $info[] = '提货人:   ' . $item->user->shop->contact_person;
+                $info[] = '电话:   ' . $item->user->shop->contact_info;
+            } else {
+                $info[] = '收货人:   ' . ($item->shippingAddress ? $item->shippingAddress->consigner : '');
+                $info[] = '电话:   ' . ($item->shippingAddress ? $item->shippingAddress->phone : '');
+                $info[] = '地址:   ' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name);
+            }
+
+
             foreach ($info as $v) {
                 $table->addRow();
                 $cell = $table->addCell();
