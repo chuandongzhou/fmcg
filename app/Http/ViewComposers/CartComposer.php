@@ -32,7 +32,6 @@ class CartComposer
                 $cartService->set($cartCount);
             }
         }
-        /* $cartCount = auth()->user() ? auth()->user()->carts->count() : 0;*/
         $view->with('cartNum', $cartCount);
     }
 

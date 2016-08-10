@@ -22,13 +22,19 @@ class SalesmanVisitController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $salesman = salesman_auth()->user();
-        $startOfToday = (new Carbon())->startOfDay();
-        $visit = $salesman->visits()->with('salesmanCustomer')->OfTime($startOfToday)->OfSort()->get();
+        $startDate = $request->input('start_date', (new Carbon())->startOfMonth());
+        $endDate = $request->input('end_date', Carbon::now());
+
+        $visit = $salesman->visits()->with('salesmanCustomer', 'orders')->OfTime($startDate,
+            $endDate)->OfSort()->get()->each(function ($item) {
+            $item->setAppends(['order_detail']);
+        });
         return $this->success(compact('visit'));
     }
 
@@ -64,13 +70,13 @@ class SalesmanVisitController extends Controller
                     "id"  => 324,
                     "num"       => 1
                 ],
-
-            ]
+            ],
+            'order_remark',
+            'display_remark'
 
         ];
        dd($data);*/
         $data = $request->all();
-        //info($data);
         $salesman = salesman_auth()->user();
 
         $result = DB::transaction(function () use ($salesman, $data) {
@@ -83,6 +89,8 @@ class SalesmanVisitController extends Controller
                 if (isset($result['order']['order_form']) && ($orderForms = array_filter($result['order']['order_form']))) {
                     $orderForms['salesman_visit_id'] = $visit->id;
                     $orderForms['salesman_customer_id'] = $data['salesman_customer_id'];
+                    $orderForms['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
+                    $orderForms['display_remark'] = isset($data['display_remark']) ? $data['display_remark'] : '';
                     $orderForms['type'] = $orderConf['type']['order'];
                     $orderForm = $salesman->orders()->create($orderForms);
                     if ($orderForm->exists) {
@@ -122,7 +130,8 @@ class SalesmanVisitController extends Controller
 
                     }
                 }
-                if (isset($result['goodsRecode']) && ($goodsRecodes = $result['goodsRecode'])) {
+                if (!empty($result['goodsRecode'])) {
+                    $goodsRecodes = $result['goodsRecode'];
                     $goodsRecodeArr = [];
                     foreach ($goodsRecodes as $goodsRecode) {
                         $goodsRecodeArr[] = new SalesmanVisitGoodsRecord($goodsRecode);
@@ -202,11 +211,13 @@ class SalesmanVisitController extends Controller
                     'amount' => $goods['return_order']['amount']
                 ];
             }
-            $goodsRecode[] = [
-                'goods_id' => $goods['id'],
-                'stock' => $goods['stock'],
-                'production_date' => $goods['production_date']
-            ];
+            if ($goods['stock'] || $goods['production_date']) {
+                $goodsRecode[] = [
+                    'goods_id' => $goods['id'],
+                    'stock' => $goods['stock'],
+                    'production_date' => $goods['production_date']
+                ];
+            }
 
         }
         return compact('order', 'goodsRecode');

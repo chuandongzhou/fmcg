@@ -28,6 +28,7 @@ class SearchController extends Controller
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getGoodsBySearch($data, $goods);
+
         return view('index.search.index',
             [
                 'goods' => $goods->orderBy('id', 'asc')->paginate(),

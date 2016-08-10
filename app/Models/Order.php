@@ -449,23 +449,6 @@ class   Order extends Model
     }
 
     /**
-     * 根据卖家名字查询订单及卖家信息--getSearch()
-     *
-     * @param $query
-     * @param $search
-     * @return mixed
-     */
-    public function scopeOfSellerShopName($query, $search)
-    {
-        return $query->whereHas('shop', function ($query) use ($search) {
-
-            $query->where('name', 'like', '%' . $search . '%');
-
-
-        });
-    }
-
-    /**
      * 购买订单条件
      *
      * @param $query
@@ -560,14 +543,22 @@ class   Order extends Model
     }
 
     /**
-     * 待收款,货到付款
+     * 待收款,货到付款或自提
      *
      * @param $query
      * @return mixed
      */
     public function scopeGetPayment($query)
     {
-        return $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
+
+        return $query->where(function ($q) {
+            $q->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
+        })->orWhere(function ($q) {
+            $q->where('pay_type', cons('pay_type.pick_up'))->where('status', cons('order.status.non_send'));
+        });
+
+
+        //return $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
     }
 
     /**

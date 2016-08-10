@@ -15,6 +15,8 @@ class SalesmanVisitOrder extends Model
         'is_synced',
         'status',
         'type',
+        'order_remark',
+        'display_remark',
         'salesman_visit_id',
         'salesman_customer_id'
     ];
@@ -105,7 +107,7 @@ class SalesmanVisitOrder extends Model
         }
 
 
-        $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']),function($item){
+        $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']), function ($item) {
             return !is_null($item);
         });
 

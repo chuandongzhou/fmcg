@@ -72,7 +72,7 @@ class SalesmanVisit extends Model
 
     /**
      * 排序
-     * 
+     *
      * @param $query
      * @param string $field
      * @param string $sort
@@ -81,6 +81,28 @@ class SalesmanVisit extends Model
     public function scopeOfSort($query, $field = 'id', $sort = 'DESC')
     {
         return $query->orderBy($field, $sort);
+    }
+
+    /**
+     * 获取订单详情
+     *
+     * @return array
+     */
+    public function getOrderDetailAttribute()
+    {
+        $orders = $this->orders;
+        $types = cons('salesman.order.type');
+
+        $order = $orders->where('type', $types['order'])->first();
+        $returnOrder = $orders->where('type', $types['return_order'])->first();
+
+        $orderAmount = $order ? $order->amount : 0;
+        $returnOrderAmount = $returnOrder ? $returnOrder->amount : 0;
+
+        return [
+            'order_amount' => $orderAmount,
+            'return_order_amount' => $returnOrderAmount
+        ];
     }
 
 }

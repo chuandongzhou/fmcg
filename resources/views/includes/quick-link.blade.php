@@ -45,7 +45,7 @@
                                 html += '<div class="store-panel">' +
                                         '<div class="cart_item_pic"><a href="/goods/' + detailGoods.goods_id + '"><img src="' + detailGoods.image + '"></a></div>' +
                                         '<div class="cart_item_desc"><a href="/goods/' + detailGoods.goods_id + '" class="cart_item_name">' + detailGoods.goods.name + '</a>' +
-                                        '<div class="cart_item_price"><span class="cart_price">￥' + detailGoods.goods.price + '</span></div>' +
+                                        '<div class="cart_item_price"><span class="cart_price">¥' + detailGoods.goods.price + '</span></div>' +
                                         '</div>' +
                                         '</div>';
                             }
@@ -56,7 +56,7 @@
                                 '</div>' +
                                 '<div class="cart_handler">' +
                                 '<div class="cart_handler_header"><span class="cart_handler_left">共<span' +
-                                'class="cart_price cart_num">' + cartNum + '</span>件商品</span><span class="cart_handler_right">￥' + cartPrices + '</span>' +
+                                'class="cart_price cart_num">' + cartNum + '</span>件商品</span><span class="cart_handler_right">¥' + cartPrices + '</span>' +
                                 '</div>' +
                                 '<a href="{{ url('cart') }}" class="cart_go_btn" target="_blank">去购物车结算</a></div>';
                         $('.cart_num').html(cartNum);
@@ -159,7 +159,7 @@
                                         ' </a>' +
                                         ' </li>' +
                                         ' <li>' +
-                                        ' ￥' + data[i].discount +
+                                        ' ¥' + data[i].discount +
                                         '</li>' +
                                         '<li>' +
                                         '满' + data[i].full + '使用' +
@@ -180,7 +180,7 @@
                                         '</a>' +
                                         '</li>' +
                                         ' <li>' +
-                                        ' ￥' + data[i].discount +
+                                        ' ¥' + data[i].discount +
                                         ' </li>' +
                                         '<li>' +
                                         ' 满' + data[i].full + '使用' +
@@ -220,7 +220,7 @@
                                     '<p>' + data[i].end_at + '</p></div>' +
                                     '<ul>' +
                                     '<li>' + data[i].shop.name + '</li>' +
-                                    '<li>￥' + data[i].discount + '</li>' +
+                                    '<li>¥' + data[i].discount + '</li>' +
                                     '<li>满' + data[i].full + '使用</li>' +
                                     '</ul>' +
                                     '</div>';

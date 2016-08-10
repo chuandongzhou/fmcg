@@ -249,6 +249,10 @@
 #### 2.5.1 获取所有拜访[get] (/)
 `请求参数：`
 
+    start_date              date            开始日期 （字符串，如： 2016-8-10）
+    end_date                date            结束日期 （字符串，如： 2016-8-10）
+
+
 `成功返回：`
 
     visit                   array           拜访列表
@@ -258,6 +262,7 @@
     id                      int             拜访id
     created_at              timestamp       拜访时间
     salesman_customer       array           拜访客户信息
+    order_detail            array           拜访订单详情
     
     salesman_customer字段子集说明
     
@@ -266,6 +271,11 @@
     letter                  string          客户名首字母
     contact                 string          联系人
     contact_information     string          联系方式
+
+    order_detail字段子集介绍
+
+    order_amount            decimal         订单总金额
+    return_order_amount     decimal         退货总金额
 
 `失败返回：`
 
@@ -311,6 +321,9 @@
 
     salesman_customer_id    int             客户id
     goods                   array           拜访商品列表
+    display_fee             decimal         陈列费
+    order_remark            string          订单备注
+    display_remark          string          陈列费备注
     display_fee             decimal         陈列费
     mortgage                array           抵费商品列表
     

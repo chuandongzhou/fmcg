@@ -24,9 +24,12 @@ class SalesmanCustomerController extends Controller
             'shop.user')->get()->each(function ($customer) {
             $customer->shop && $customer->shop->setAppends([]);
             $customer->setAppends(['account']);
+            $customer->business_district_id = $customer->businessAddress->district_id;
+            $customer->business_street_id = $customer->businessAddress->street_id;
+            $customer->business_address_address = $customer->businessAddress->address;
         });
-
-        return $this->success(['customers' => $customers]);
+        $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
+        return $this->success(['customers' => $customers->values()]);
     }
 
     /**

@@ -238,7 +238,9 @@
                     @endif
                     @if($order['can_payment'])
                         <a href="javascript:" data-target="#payModal" data-toggle="modal"
-                           class="btn btn-success" data-id="{{ $order->id }}" data-price="{{ $order->after_rebates_price }}">去付款</a>
+                           class="btn btn-success" data-id="{{ $order->id }}"
+                           data-price="{{ $order->after_rebates_price }}">去付款</a>
+                    @elseif($order['can_confirm_arrived'])
                         <a class="btn btn-danger ajax"
                            data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
                            data-method="put"

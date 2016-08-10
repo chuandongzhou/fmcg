@@ -28,7 +28,7 @@ class AuthController extends Controller
             return $this->invalidParam('password', '账号或密码不能为空');
         }
 
-        $salesman = Salesman::where('account', $account)->first();
+        $salesman = Salesman::where('account', $account)->with('shop.shopAddress')->first();
 
         if (!$salesman || !Hash::check($password, $salesman->password)) {
             return $this->invalidParam('password', '账号或密码错误');
@@ -42,6 +42,7 @@ class AuthController extends Controller
         $nowTime = Carbon::now();
 
         $salesman->setAppends(['shop_type', 'avatar_url']);
+
         if ($salesman->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             salesman_auth()->login($salesman, true);
 

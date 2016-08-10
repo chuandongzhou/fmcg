@@ -65,6 +65,7 @@ class GoodsService
             $categories = array_filter($categories, function ($val) use ($categoryIds) {
                 return in_array($val['id'], $categoryIds);
             });
+
         }
         // 省市
         if (isset($data['province_id'])) {

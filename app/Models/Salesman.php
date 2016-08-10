@@ -208,6 +208,16 @@ class Salesman extends Model implements AuthenticatableContract
     }
 
     /**
+     * 获取店铺地址
+     *
+     * @return mixed
+     */
+    public function getShopAddressAttribute()
+    {
+        return $this->shop()->first()->address;
+    }
+
+    /**
      * 按名字检索
      *
      * @param $query

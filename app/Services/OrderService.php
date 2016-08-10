@@ -107,7 +107,8 @@ class OrderService
             $cartService = new CartService($carts);
 
             // 是否送货订单
-            $isDelivery = isset($data['shipping_address_id']);
+            $isDelivery = isset($data['pay_type']);
+
 
             if (!$shops = $cartService->validateOrder($orderGoodsNum, false, $isDelivery)) {
                 return false;
@@ -197,7 +198,7 @@ class OrderService
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal,cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
 
             return true;
         });
