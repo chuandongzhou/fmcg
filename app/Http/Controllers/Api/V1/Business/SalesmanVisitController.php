@@ -8,7 +8,6 @@ use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
 use DB;
 
@@ -27,9 +26,14 @@ class SalesmanVisitController extends Controller
      */
     public function index(Request $request)
     {
+        $carbon = new Carbon();
+
         $salesman = salesman_auth()->user();
-        $startDate = $request->input('start_date', (new Carbon())->startOfMonth());
-        $endDate = $request->input('end_date', Carbon::now());
+        $startDate = $request->input('start_date', $carbon->copy()->startOfMonth());
+        $endDate = $request->input('end_date');
+
+        $endDate = $endDate ? (new Carbon($endDate))->endOfDay() : $carbon->copy();
+
 
         $visit = $salesman->visits()->with('salesmanCustomer', 'orders')->OfTime($startDate,
             $endDate)->OfSort()->get()->each(function ($item) {

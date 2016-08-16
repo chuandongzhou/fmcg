@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Services\GoodsService;
-
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller

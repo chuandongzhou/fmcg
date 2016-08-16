@@ -170,7 +170,7 @@ class SalesmanVisitOrderController extends Controller
                 }
                 $orderData = [
                     'user_id' => $order->customer_user_id,
-                    'shop_id' => auth()->user()->shop->id,
+                    'shop_id' => auth()->user()->shop_id,
                     'price' => $order->amount,
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],

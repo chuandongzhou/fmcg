@@ -213,7 +213,7 @@
                                     {{ isset($goodsCateName[$item->category_id]) ? $goodsCateName[$item->category_id] : '' }}
                                 </td>
                                 <td>{{ $item->updated_at }}</td>
-                                <td>已{{ cons()->valueLang('goods.status' ,$item->status) }}</td>
+                                <td>已<span class="status-name">{{ cons()->valueLang('goods.status' ,$item->status) }}</span></td>
                                 <td class="operating text-center">
                                     @if(!$item->is_mortgage_goods)
                                         <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
@@ -222,11 +222,6 @@
                                     @endif
 
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="editor">编辑</a>
-                                    {{--<a href="javascript:" data-id="{{ $item->id }}" data-method="put"--}}
-                                    {{--data-data='{ "status": "{{ !$item->status }}" }'--}}
-                                    {{--data-done-then="refresh"--}}
-                                    {{--class="no-form shelve">--}}
-
                                     <a href="javascript:" data-method="put"
                                        data-url="{{ url('api/v1/my-goods/shelve')}}"
                                        data-status="{{ $item->status }}"

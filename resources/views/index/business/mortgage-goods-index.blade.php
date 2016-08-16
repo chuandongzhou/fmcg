@@ -36,7 +36,7 @@
                                     {{ $goods->pieces_name }}
                                 </td>
                                 <td>
-                                    {{ $goods->status_name }}
+                                    已<span class="status-name">{{ $goods->status_name }}</span>
                                 </td>
                                 <td>
 
@@ -106,6 +106,6 @@
         formSubmitByGet();
         onCheckChange('.parent', '.child');
         deleteNoForm();
-        ajaxNoForm();
+        ajaxNoForm(true);
     </script>
 @stop

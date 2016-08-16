@@ -93,7 +93,7 @@ class OrderController extends Controller
     public function getWaitConfirmBySeller()
     {
         $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
-        return $this->success($this->_hiddenOrdersAttr($orders));
+        return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
     /**
@@ -188,11 +188,11 @@ class OrderController extends Controller
             return $this->error('请选择需要取消的订单');
         }
 
-        $orders = Order::with('shop.user')->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::with('shop.user', 'user')->whereIn('id', $orderIds)->nonCancel()->get();
 
         $failOrderIds = [];
         foreach ($orders as $order) {
-            if (!$order->can_cancel || !($order->user_id == auth()->id() || $order->shop_id == auth()->user()->shop()->pluck('id'))) {
+            if (!$order->can_cancel || !($order->user_id == auth()->id() || $order->shop_id == auth()->user()->shop_id)) {
                 if (count($orders) == 1) {
                     return $this->error('取消失败');
                 }
@@ -204,6 +204,10 @@ class OrderController extends Controller
                 'cancel_by' => auth()->id(),
                 'cancel_at' => Carbon::now()
             ])->save();
+
+            // 返回优惠券
+            (new OrderService())->backCoupon($order);
+
             //推送通知
             if ($order->user_id == auth()->id()) {
                 $redisKey = 'push:seller:' . $order->shop->user->id;
@@ -215,6 +219,8 @@ class OrderController extends Controller
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_' . $msg);
             (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+
+
         }
 
         return $this->success(['failOrderIds' => $failOrderIds]);

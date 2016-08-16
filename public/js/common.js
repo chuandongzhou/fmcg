@@ -520,9 +520,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-    //, addButton = $('#add-address')
+        //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-    //, addLimit = 500   //最大地址限制
+        //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1352,6 +1352,17 @@ var accDiv = function (arg1, arg2) {
     }
 }
 
+var stripTags = function (str, allow) {
+    // making sure the allow arg is a string containing only tags in lowercase (<a><b><c>)
+    allow = (((allow || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+    var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return str.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+        return allow.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    });
+}
+
 //给Number类型增加一个add方法，，使用时直接用 .add 即可完成计算。
 Number.prototype.add = function (arg) {
     return accAdd(arg, this);
@@ -1371,6 +1382,10 @@ Number.prototype.mul = function (arg) {
 Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
+
+String.prototype.stripTags = function (allow) {
+    return stripTags(this, allow);
+}
 /**
  * 初始化方法
  */

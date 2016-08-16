@@ -182,23 +182,36 @@ class SalesmanCustomerController extends Controller
     {
         $salesman = salesman_auth()->user();
         $customerId = $request->input('salesman_customer_id');
-        $goodsId = $request->input('goods_id');
+        $goodsIds = $request->input('goods_id');
 
         $customer = $salesman->customers()->find($customerId);
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
-        if ($customer->goods()->where(['goods_id' => $goodsId])->pluck('goods_id')) {
-            return $this->success('添加商品成功');
+/*
+        $addGoodsIds = [];
+
+        foreach ($goodsIds as $goodsId) {
+            if ($customer->goods()->where(['goods_id' => $goodsId])->pluck('goods_id')) {
+                continue;
+            }
+            $addGoodsIds[] = $goodsId;
         }
-        $goods = Goods::active()->find($goodsId);
 
+        if (empty($addGoodsIds)) {
+            return $this->error('添加商品成功');
+        }
 
-        if (is_null($goods) || $goods->shop_id != $salesman->shop_id) {
+        $goods = Goods::active()->whereIn('id', $goodsIds)->where('shop_id', $salesman->shop_id)->get([
+            'id',
+            'shop_id'
+        ]);
+
+        if ($goods->isEmpty()) {
             return $this->error('商品不存在');
-        }
+        }*/
 
-        $customer->goods()->attach($goodsId);
+        $customer->goods()->sync((array)$goodsIds);
 
         return $this->success('添加商品成功');
 

@@ -58,6 +58,6 @@ class MortgageGoods extends Model
      */
     public function getStatusNameAttribute()
     {
-        return '已' . cons()->valueLang('status', $this->status);
+        return cons()->valueLang('status', $this->status);
     }
 }

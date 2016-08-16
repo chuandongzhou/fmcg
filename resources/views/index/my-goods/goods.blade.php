@@ -301,7 +301,7 @@
                 </div>
             </div>
             <div class="col-sm-12 text-center save padding-clear">
-                @if (!$goods->id)
+                @if (!$goods->status)
                     <label><input type="checkbox" name="status" value="1"> 立即上架<span class="prompt">(勾选后保存商品会立即上架,可被购买者查看购买)</span></label>
                 @endif
                 <p class="save-btn">

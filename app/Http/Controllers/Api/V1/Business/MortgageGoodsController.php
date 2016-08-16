@@ -37,7 +37,7 @@ class MortgageGoodsController extends Controller
         $status = intval($request->input('status'));
         $statusVal = cons()->valueLang('status', $status);
         if ($mortgageGoods->fill(['status' => $status])->save()) {
-            return $status ? $this->success($mortgageGoods) : $this->success(null);
+            return $status ? $this->success('启用成功') : $this->success(null);
         }
         return $this->error($statusVal . '时出现问题');
     }

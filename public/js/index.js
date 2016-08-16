@@ -263,8 +263,8 @@ function cartFunc() {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
                 shopSumPrice = 0/*,
-                minMoney = obj.find('.min-money'),
-                notEnough = obj.find('.not-enough')*/;
+                 minMoney = obj.find('.min-money'),
+                 notEnough = obj.find('.not-enough')*/;
             obj.find('.goods-list').each(function () {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
@@ -281,18 +281,18 @@ function cartFunc() {
                 descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
-           /* if (shopSumPrice < minMoney.html() && shopSumPrice) {
-                notEnough.removeClass('hidden');
-            } else {
-                notEnough.addClass('hidden');
-            }*/
+            /* if (shopSumPrice < minMoney.html() && shopSumPrice) {
+             notEnough.removeClass('hidden');
+             } else {
+             notEnough.addClass('hidden');
+             }*/
         });
 
-     /*   if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
-            submitBtn.prop('disabled', false);
-        } else {
-            submitBtn.prop('disabled', true);
-        }*/
+        /*   if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
+         submitBtn.prop('disabled', false);
+         } else {
+         submitBtn.prop('disabled', true);
+         }*/
 
         cartSumPriceSpan.html(cartSumPrice);
     };
@@ -586,7 +586,7 @@ function myGoodsFunc() {
         });
     });
 
-    ajaxNoForm();
+    ajaxNoForm(true);
     deleteNoForm();
 }
 
@@ -634,11 +634,17 @@ var deleteNoForm = function () {
 /**
  * 无form异步提交
  */
-var ajaxNoForm = function () {
-    $('.ajax-no-form').button({
+var ajaxNoForm = function (changeStatus) {
+    var
+        ajaxNoForm = $('.ajax-no-form'),
+        onText = ajaxNoForm.data('on'),
+        offText = ajaxNoForm.data('off');
+
+
+    ajaxNoForm.button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
-        onText: $('.ajax-no-form').data('on'),
-        offText: $('.ajax-no-form').data('off')
+        onText: onText,
+        offText: offText
     });
     $(document).on('click', '.ajax-no-form', function () {
         var self = $(this),
@@ -656,15 +662,13 @@ var ajaxNoForm = function () {
             method: 'put',
             data: data
         }).done(function (data, textStatus, jqXHR) {
-            console.log(data);
+            var statusName = self.closest('tr').find('.status-name');
             if ($.isPlainObject(data) && data.message) {
-                //console.log('off');
                 self.data('status', 1).button('off');
-                // statusInfo.html('已上架');
+                changeStatus ? statusName.html(onText.stripTags().trim()) : '';
             } else {
-                //console.log('on');
                 self.data('status', 0).button('on');
-                //statusInfo.html('已下架');
+                changeStatus ? statusName.html(offText.stripTags().trim()) : '';
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.button(status ? 'up' : 'down');
@@ -867,17 +871,17 @@ $(function () {
 })
 
 //店铺广告radio选择
-function radioCheck(){
-    $('.goodsIdRadio').click(function(){
+function radioCheck() {
+    $('.goodsIdRadio').click(function () {
         $('.goodsId').html('商品Id');
-        $('.goodsidDiv').css('display','block');
-        $('.promoteDiv').css('display','none');
+        $('.goodsidDiv').css('display', 'block');
+        $('.promoteDiv').css('display', 'none');
 
     });
-    $('.promoteRadio').click(function(){
+    $('.promoteRadio').click(function () {
         $('.goodsId').html('促销信息');
-        $('.goodsidDiv').css('display','none');
-        $('.promoteDiv').css('display','block');
+        $('.goodsidDiv').css('display', 'none');
+        $('.promoteDiv').css('display', 'block');
     });
 
 }

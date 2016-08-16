@@ -160,6 +160,32 @@ class OrderService
     }
 
     /**
+     * 根据订单返回优惠券
+     *
+     * @param $order
+     * @return bool
+     */
+    public function backCoupon($order)
+    {
+        if (!$order->coupon_id || is_null($order->coupon)) {
+            return true;
+        }
+
+        $user = $order->user;
+
+        $coupon = $user->coupons()->find($order->coupon_id);
+
+        if (is_null($coupon)) {
+            return false;
+        }
+
+        if ($coupon->pivot->fill(['used_at' => null])->save()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 订单修改处理
      *
      * @param $order
@@ -203,6 +229,29 @@ class OrderService
             return true;
         });
         return $flag === true;
+    }
+
+    /**
+     * 验证优惠券
+     *
+     * @param $shopId
+     * @param $couponId
+     * @param $sumPrice
+     * @return bool
+     */
+    public function validateCouponId($shopId, $couponId, $sumPrice)
+    {
+        $coupon = auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->find($couponId);
+
+        if ($coupon) {
+            $pivot = $coupon->pivot;
+            if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
+
+                return $couponId;
+            }
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -255,12 +304,14 @@ class OrderService
                 $successOrders->push($order);
                 $orderGoods = [];
                 foreach ($shop->cart_goods as $cartGoods) {
+                    $pickUpPrice = $cartGoods->goods->pick_up_price;
+                    $cartGoodsNum = $cartGoods->num;
                     $orderGoods[] = new OrderGoods([
                         'goods_id' => $cartGoods->goods_id,
-                        'price' => $cartGoods->goods->pick_up_price,
-                        'num' => $cartGoods->num,
+                        'price' => $pickUpPrice,
+                        'num' => $cartGoodsNum,
                         'pieces' => $cartGoods->goods->pieces_id,
-                        'total_price' => $cartGoods->goods->price * $cartGoods->num,
+                        'total_price' => bcmul($pickUpPrice, $cartGoodsNum, 2)
                     ]);
                 }
                 if ($order->orderGoods()->saveMany($orderGoods)) {
@@ -387,28 +438,6 @@ class OrderService
         return $returnArray;
     }
 
-    /**
-     * 验证优惠券
-     *
-     * @param $shopId
-     * @param $couponId
-     * @param $sumPrice
-     * @return bool
-     */
-    public function validateCouponId($shopId, $couponId, $sumPrice)
-    {
-        $coupon = auth()->user()->coupons()->wherePivot('used_at', null)->OfUseful($shopId, $sumPrice)->find($couponId);
-
-        if ($coupon) {
-            $pivot = $coupon->pivot;
-            if ($pivot->fill(['used_at' => Carbon::now()])->save()) {
-
-                return $couponId;
-            }
-            return false;
-        }
-        return false;
-    }
 
     /**
      * 获取订单pid

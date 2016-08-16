@@ -216,6 +216,7 @@ class BusinessService
             $goodsNames = Goods::whereIn('id', $goodsIds)->lists('name', 'id');
 
 
+
             foreach ($allGoods as $goods) {
                 if ($goods->type == $orderConf['goods']['type']['order']) {
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] + $goods->num : $goods->num;

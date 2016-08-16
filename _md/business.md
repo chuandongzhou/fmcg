@@ -208,7 +208,7 @@
 `请求参数：`
 
     salesman_customer_id        int         客户id
-    goods_id                    int         商品id
+    goods_id                    array       商品id列表
 
 `成功返回：`
 
@@ -377,6 +377,8 @@
     amount                  decimal         订单金额
     display_fee             decimal         陈列费
     status                  tinyint         订单状态（0未审核  1已审核）
+    order_remark            string          订单备注
+    display_remark          string          陈列费备注
     orderGoods              array           订货单商品列表
     mortgageGoods           array           陈列商品列表
     

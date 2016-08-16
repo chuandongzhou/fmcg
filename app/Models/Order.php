@@ -471,8 +471,8 @@ class   Order extends Model
      */
     public function scopeOfSell($query, $userId)
     {
-        return $query->whereHas('shop.user', function ($query) use ($userId) {
-            $query->where('id', $userId);
+        return $query->whereHas('shop', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
         })->where('is_cancel', cons('order.is_cancel.off'))->orderBy('id', 'desc');
     }
 
@@ -551,12 +551,13 @@ class   Order extends Model
     public function scopeGetPayment($query)
     {
 
-        return $query->where(function ($q) {
-            $q->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
-        })->orWhere(function ($q) {
-            $q->where('pay_type', cons('pay_type.pick_up'))->where('status', cons('order.status.non_send'));
+        return $query->where(function($query){
+            $query->where(function ($q) {
+                $q->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
+            })->orWhere(function ($q) {
+                $q->where('pay_type', cons('pay_type.pick_up'))->where('status', cons('order.status.non_send'));
+            });
         });
-
 
         //return $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
     }
