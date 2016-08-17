@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -177,7 +178,29 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function getShopIdAttribute()
     {
-        return $this->shop ? $this->shop->id : 0;
+        $userService = new UserService(true);
+
+        if ($shopId = $userService->getShopDetail($this->id, 'id')) {
+            return $shopId;
+        }
+        return $userService->setShopDetail($this);
     }
+
+    /**
+     * 获取店铺名
+     *
+     * @return int|mixed|string
+     */
+    public function getShopNameAttribute()
+    {
+        $userService = new UserService(true);
+
+        if ($shopName = $userService->getShopDetail($this->id, 'name')) {
+            return $shopName;
+        }
+        return $userService->setShopDetail($this, 'name');
+    }
+
+
 
 }

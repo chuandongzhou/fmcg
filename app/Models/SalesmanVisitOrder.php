@@ -12,7 +12,7 @@ class SalesmanVisitOrder extends Model
     protected $fillable = [
         'amount',
         'display_fee',
-        'is_synced',
+        'order_id',
         'status',
         'type',
         'order_remark',
@@ -25,6 +25,16 @@ class SalesmanVisitOrder extends Model
         'updated_at',
         'order_goods'
     ];
+
+    /**
+     * 平台订单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function order()
+    {
+        return $this->belongsTo('App\Models\Order');
+    }
 
     /**
      * 关联商品表
@@ -187,7 +197,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanSyncAttribute()
     {
-        return $this->customer_shop_id && $this->is_synced != cons('salesman.order.is_synced.synced');
+        return $this->order_id == 0;
     }
 
     /**

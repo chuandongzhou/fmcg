@@ -52,7 +52,7 @@
                         <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td>{{ $user->shop->name }}</td>
+                                <td>{{ $user->shop_name }}</td>
                                 <td>{{ $user->shop->contact_person }}</td>
                                 <td>{{ $user->shop->contact_info }}</td>
                                 <td>{{ $user->shop->address }}</td>

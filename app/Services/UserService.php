@@ -12,8 +12,15 @@ use Carbon\Carbon;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class UserService
+class UserService extends RedisService
 {
+    protected $subName = 'user-shop';
+
+
+    public function __construct($connectionRedis = false)
+    {
+        $connectionRedis && parent::__construct();
+    }
     /**
      * 获取用户余额
      *
@@ -48,4 +55,47 @@ class UserService
         $userTypes = array_flip(cons('user.type'));
         return array_get($userTypes, $user->type, head($userTypes));
     }
+
+
+    /**
+     *  获取店铺详情
+     *
+     * @param $userId
+     * @param $field
+     * @return int|string
+     */
+    public function getShopDetail($userId, $field)
+    {
+        $key = $this->getKey($this->subName . ':' . $userId);
+
+        if (!$this->redis->exists($key)) {
+            return 0;
+        }
+        return $this->redis->hget($key, $field);
+    }
+
+    /**
+     * 设置店铺详情
+     *
+     * @param $user
+     * @param string $returnField
+     * @return mixed
+     */
+    public function setShopDetail($user, $returnField = 'id')
+    {
+        $key = $this->getKey($this->subName . ':' . $user->id);
+
+        if ($this->redis->exists($key)) {
+            $this->del($key);
+        }
+        $shop = $user->shop;
+
+        $value = [
+            'id' => $shop->id,
+            'name' => $shop->name
+        ];
+        $this->redis->hmset($key, $value);
+        return $value[$returnField];
+    }
+
 }

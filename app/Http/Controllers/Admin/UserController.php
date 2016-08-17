@@ -129,7 +129,7 @@ class UserController extends Controller
     public function destroy($user)
     {
         //更新远程
-        (new ChatService)->deleteUsers($user->shop->id);
+        (new ChatService)->deleteUsers($user->shop_id);
         return $user->delete() ? $this->success('删除用户成功') : $this->error('删除用户时遇到错误');
     }
 

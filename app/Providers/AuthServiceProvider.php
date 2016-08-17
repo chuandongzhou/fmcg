@@ -45,13 +45,13 @@ class AuthServiceProvider extends ServiceProvider
          * 我的商店
          */
         $gate->define('validate-shop', function ($user, $shop) {
-            return $user->shop->id === $shop->id;
+            return $user->shop_id === $shop->id;
         });
         /**
          * 验证是否有权限访问店铺
          */
         $gate->define('validate-allow', function ($user, $shop) {
-            return $user->type < $shop->user->type;
+            return $user->type < $shop->user_type;
         });
 
         /**
@@ -75,14 +75,14 @@ class AuthServiceProvider extends ServiceProvider
          * 判断业务员权限
          */
         $gate->define('validate-salesman', function ($user, $salesman) {
-            return $user->shop->id == $salesman->shop_id;
+            return $user->shop_id == $salesman->shop_id;
         });
 
         /**
          * 判断客户权限
          */
         $gate->define('validate-customer', function ($user, $customer) {
-            return $user->shop->id == $customer->salesman->shop_id;
+            return $user->shop_id == $customer->salesman->shop_id;
         });
 
         /**

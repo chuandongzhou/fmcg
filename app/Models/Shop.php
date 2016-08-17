@@ -38,7 +38,7 @@ class Shop extends Model
         'y_lat'
     ];
 
-        protected $appends = ['logo_url'];
+    protected $appends = ['logo_url'];
 
     protected $hidden = ['images', 'logo', 'created_at', 'updated_at'];
 
@@ -544,7 +544,7 @@ class Shop extends Model
      */
     public function getQrcodeUrlAttribute()
     {
-        return ShopService::qrcode($this->id);
+        return (new ShopService())->qrcode($this->id);
     }
 
     /**
@@ -565,6 +565,51 @@ class Shop extends Model
     public function getSalesVolumeAttribute()
     {
         return $this->goods()->sum('sales_volume');
+    }
+
+
+    /**
+     * 获取userName
+     *
+     * @return int|mixed|string
+     */
+    public function getUserNameAttribute()
+    {
+        $shopService = new ShopService(true);
+        if ($userName = $shopService->getUserDetail($this->id, 'name')) {
+            return $userName;
+        }
+        return $shopService->setUserDetail($this, 'name');
+    }
+
+    /**
+     * 获取userType
+     *
+     * @return int|mixed|string
+     */
+    public function getUserTypeAttribute()
+    {
+        $shopService = new ShopService(true);
+
+        if ($userType = $shopService->getUserDetail($this->id, 'type')) {
+            return $userType;
+        }
+        return $shopService->setUserDetail($this, 'type');
+    }
+
+    /**
+     * 获取userType
+     *
+     * @return int|mixed|string
+     */
+    public function getUserBackupMobileAttribute()
+    {
+        $shopService = new ShopService(true);
+
+        if ($userType = $shopService->getUserDetail($this->id, 'mobile')) {
+            return $userType;
+        }
+        return $shopService->setUserDetail($this, 'mobile');
     }
 
 }

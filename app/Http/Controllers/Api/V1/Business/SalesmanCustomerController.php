@@ -272,7 +272,7 @@ class SalesmanCustomerController extends Controller
         if (is_null($user)) {
             return false;
         }
-        $shopId = $user->shop->id;
+        $shopId = $user->shop_id;
 
         $existsCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $shopId)->first();
 

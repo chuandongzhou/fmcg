@@ -11,8 +11,6 @@ use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
 use App\Services\ShippingAddressService;
-use App\Services\ShopService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
@@ -67,6 +65,11 @@ class SalesmanVisitOrderController extends Controller
             return $this->error('订单不存在');
         }
         $attributes = $request->all();
+
+        if ($salesmanVisitOrder->can_sync) {
+            $this->_syncOrders([$salesmanVisitOrder]);
+        }
+
         return $salesmanVisitOrder->fill($attributes)->save() ? $this->success('操作成功') : $this->error('订单不存在');
     }
 
@@ -114,8 +117,16 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
         }
-        return SalesmanVisitOrder::whereIn('id',
-            $orderIds)->update(['status' => cons('salesman.order.status.passed')]) ? $this->success('操作成功') : $this->error('操作失败，请重试');
+
+        $result = $this->_syncOrders($orders);
+
+        if ($result == 'success' && SalesmanVisitOrder::whereIn('id', $orderIds)->update(['status' => cons('salesman.order.status.passed')])
+        ) {
+            return $this->success('操作成功');
+        }
+
+        return $this->error('操作失败，请重试');
+
     }
 
     /**
@@ -129,7 +140,10 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('存在不合法订单');
         }
-        return $this->_syncOrders([$salesmanVisitOrder]);
+
+        $result = $this->_syncOrders([$salesmanVisitOrder]);
+
+        return $result === 'success' ? $this->success('同步成功') : $this->error($result['error']);
     }
 
     /**
@@ -149,35 +163,37 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
         }
-        return $this->_syncOrders($orders);
+        $result = $this->_syncOrders($orders);
+
+        return $result === 'success' ? $this->success('同步成功') : $this->error($result['error']);
     }
 
     /**
      * 同步订单
      *
-     * @param $orders
+     * @param $salesmanVisitOrders
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    private function _syncOrders($orders)
+    private function _syncOrders($salesmanVisitOrders)
     {
-        $result = DB::transaction(function () use ($orders) {
+        $result = DB::transaction(function () use ($salesmanVisitOrders) {
             $syncConf = cons('salesman.order.sync');
             $orderConf = cons('order');
             $shippingAddressService = new ShippingAddressService();
-            foreach ($orders as $order) {
-                if (!$order->can_sync) {
+            foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
+                if (!$salesmanVisitOrder->can_sync) {
                     return ['error' => '存在不能同步的订单'];
                 }
                 $orderData = [
-                    'user_id' => $order->customer_user_id,
+                    'user_id' => $salesmanVisitOrder->customer_user_id,
                     'shop_id' => auth()->user()->shop_id,
-                    'price' => $order->amount,
+                    'price' => $salesmanVisitOrder->amount,
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],
                     //'pay_status' => $orderConf['pay_status']['payment_success'],
                     'status' => $orderConf['status']['non_send'],
                     // 'finished_at' => Carbon::now(),
-                    'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($order->SalesmanCustomer),
+                    'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
                     'remark' => '业务同步订单'
                 ];
 
@@ -188,7 +204,7 @@ class SalesmanVisitOrderController extends Controller
                 $orderTemp = Order::create($orderData);
                 if ($orderTemp->exists) {//添加订单成功,修改orderGoods中间表信息
                     $orderGoods = [];
-                    foreach ($order->orderGoods as $goods) {
+                    foreach ($salesmanVisitOrder->orderGoods as $goods) {
                         // 添加订单商品
                         $orderGoods[] = new OrderGoods([
                             'goods_id' => $goods->goods_id,
@@ -198,7 +214,7 @@ class SalesmanVisitOrderController extends Controller
                             'total_price' => $goods->amount,
                         ]);
                     }
-                    foreach ($order->mortgageGoods as $goods) {
+                    foreach ($salesmanVisitOrder->mortgageGoods as $goods) {
                         // 添加抵费商品
                         $orderGoods[] = new OrderGoods([
                             'goods_id' => $goods->goods_id,
@@ -208,8 +224,8 @@ class SalesmanVisitOrderController extends Controller
                             'total_price' => 0,
                         ]);
                     }
-                    //添加抵费商品
 
+                    //保存订单商品
                     if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
                         return ['error' => '同步时出现错误，请重试'];
                     }
@@ -217,7 +233,7 @@ class SalesmanVisitOrderController extends Controller
                 } else {
                     return ['error' => '同步时出现错误，请重试'];
                 }
-                if (!$order->fill(['is_synced' => cons('salesman.order.is_synced.synced')])->save()) {
+                if (!$salesmanVisitOrder->fill(['order_id' => $orderTemp->id])->save()) {
                     return ['error' => '同步时出现错误，请重试'];
                 }
 
@@ -226,10 +242,18 @@ class SalesmanVisitOrderController extends Controller
             return 'success';
         });
 
-        return $result === 'success' ? $this->success('同步成功') : $this->error($result['error']);
+        return $result;
 
     }
 
+    /**
+     * 更新订单商品
+     *
+     * @param $salesmanVisitOrder
+     * @param $request
+     * @param null $orderGoods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     private function _updateOrderGoods($salesmanVisitOrder, $request, $orderGoods = null)
     {
         if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {

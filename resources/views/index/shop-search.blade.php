@@ -4,7 +4,7 @@
         <div class="col-sm-4 logo">
             <a href="{{ url('/') }}" class="logo-icon"><img src="{{ asset('images/logo.png') }}"/></a>
         </div>
-        @if ($shop->id == $user->shop->id)
+        @if ($shop->id == $user->shop_id)
             <div class="col-sm-4 col-sm-push-4 right-search">
                 <form action="{{ url('shop/' . $shop->id . '/search') }}" class="search" role="search"
                       autocomplete="off">
@@ -100,7 +100,7 @@
                     <li><a class="list-name" href="{{ url('shop/' . $shop->id . '/detail') }}">店家信息</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @if ($shop->id != $user->shop->id)
+                    @if ($shop->id != $user->shop_id)
                         <li class="collect">
                             <a href="javascript:"
                                onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"

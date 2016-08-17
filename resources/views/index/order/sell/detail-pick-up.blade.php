@@ -37,7 +37,7 @@
                 <div class="col-sm-12 receiving-information">
                     <ul>
                         <li class="title">提货人信息</li>
-                        <li><span class="title-info-name">终端商名称 : </span>{{ $order->user->shop->name }} </li>
+                        <li><span class="title-info-name">终端商名称 : </span>{{ $order->user_shop_name }} </li>
                         <li><span class="title-info-name">联系人 : </span>{{  $order->user->shop->contact_person }}
                         </li>
                         <li><span class="title-info-name">联系电话 : </span>{{ $order->user->shop->contact_info }}</li>

@@ -66,6 +66,16 @@ class   Order extends Model
     }
 
     /**
+     * 业务订单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function salesmanVisitOrder()
+    {
+        return $this->hasOne('App\Models\SalesmanVisitOrder');
+    }
+
+    /**
      * 该订单下所有商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -384,6 +394,12 @@ class   Order extends Model
                     && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
+
+    public function getCanSyncAttribute()
+    {
+
+    }
+
     /**
      * 是否可确认收货(买家在线支付)
      *
@@ -431,6 +447,21 @@ class   Order extends Model
     {
         $price = $this->price;
         return ($this->coupon_id && $this->coupon) ? (bcsub($price, $this->coupon->discount, 2)) : $price;
+    }
+
+    /**
+     * 获取买家名
+     *
+     * @return string
+     */
+    public function getUserShopNameAttribute()
+    {
+        if ($this->user_id > 0) {
+            return $this->user ? $this->user->shop_name : '';
+        } elseif ($this->salesmanVisitOrder) {
+            return $this->salesmanVisitOrder->customer_name;
+        }
+        return '';
     }
 
     /**
@@ -551,7 +582,7 @@ class   Order extends Model
     public function scopeGetPayment($query)
     {
 
-        return $query->where(function($query){
+        return $query->where(function ($query) {
             $query->where(function ($q) {
                 $q->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
             })->orWhere(function ($q) {

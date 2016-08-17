@@ -70,7 +70,8 @@
                             <td>{{ $order->created_at }}</td>
                             <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
                             <td>
-                                <a class="btn btn-cancel" href="{{ url('business/order/' . $order->id) }}">查看</a>
+                                <a class="btn btn-cancel"
+                                   href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">查看</a>
                                 @if($order->status == cons('salesman.order.status.not_pass'))
                                     <button
                                             data-url="{{ url('api/v1/business/order/' . $order->id) }}"
@@ -80,13 +81,13 @@
                                 @else
                                     <a class="btn btn-primary"
                                        href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
-                                    {{--@if($order->can_sync)
+                                    @if($order->can_sync)
                                         <button class="btn btn-warning ajax"
                                                 data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"
                                                 data-method="post">
                                             同步
                                         </button>
-                                    @endif--}}
+                                    @endif
                                 @endif
                             </td>
                         </tr>

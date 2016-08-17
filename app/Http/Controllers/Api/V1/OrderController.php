@@ -210,7 +210,7 @@ class OrderController extends Controller
 
             //推送通知
             if ($order->user_id == auth()->id()) {
-                $redisKey = 'push:seller:' . $order->shop->user->id;
+                $redisKey = 'push:seller:' . $order->shop->user_id;
                 $msg = 'buyer';
             } else {
                 $redisKey = 'push:user:' . $order->user_id;
@@ -559,7 +559,7 @@ class OrderController extends Controller
             return $this->error('店铺不存在');
         }
 
-        $result = ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress);
+        $result = (new ShopService())->getShopMinMoneyByShippingAddress($shops, $shippingAddress);
 
         return $this->success(['shopMinMoney' => $result]);
     }
@@ -603,6 +603,16 @@ class OrderController extends Controller
         $tradeNo = $order->systemTradeInfo()->pluck('trade_no');
 
         return $tradeNo ? $tradeNo : '';
+    }
+
+    private function _syncToBusiness($order)
+    {
+        if (!is_null($order->salesmanVisitOrder)) {
+            return true;
+        }
+
+        $shop = $order->shop;
+        $userShopId = $order->user->shop_id;
     }
 
     /**

@@ -154,7 +154,7 @@ class OrderService
                 'order_amount' => $order->price . '',
                 'pay_type' => cons()->valueLang('pay_type', $order->pay_type)
             ];
-            app('pushbox.sms')->queue('order', $order->shop->user->backup_mobile, $data);
+            app('pushbox.sms')->queue('order', $order->shop->user_backup_mobile, $data);
         }
         return true;
     }
@@ -315,7 +315,7 @@ class OrderService
                     ]);
                 }
                 if ($order->orderGoods()->saveMany($orderGoods)) {
-                    $redisKey = 'push:seller:' . $shop->user->id;
+                    $redisKey = 'push:seller:' . $shop->user_id;
                     $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.pick_up');
                     (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 } else {
@@ -406,7 +406,7 @@ class OrderService
                 if ($order->orderGoods()->saveMany($orderGoods)) {
                     if ($payType == $payTypes['cod']) {
                         //货到付款订单直接通知卖家发货
-                        $redisKey = 'push:seller:' . $shop->user->id;
+                        $redisKey = 'push:seller:' . $shop->user_id;
                         $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.non_send.cod');
                         (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                     }

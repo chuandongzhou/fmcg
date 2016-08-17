@@ -388,12 +388,8 @@ return [
         //订单
         'order' => [
             'sync' => [
-                'pay_type' => 2,    // 默认货到付款
+                'pay_type' => 2,
                 'pay_way' => 1,
-            ],
-            //是否已同步
-            'is_synced' => [
-                'synced' => 1,
             ],
             'status' => [
                 'not_pass' => 0,

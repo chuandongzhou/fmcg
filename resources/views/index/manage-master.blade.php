@@ -92,7 +92,7 @@
                             <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
                                data-close-others="true">
                                 <img alt="" class="img-circle" src="{{ $user->shop->logo_url }}"/>
-                                <span class="username username-hide-on-mobile">{{ $user->shop->name }}</span>
+                                <span class="username username-hide-on-mobile">{{ $user->shop_name }}</span>
                             </a>
                         </li>
                         <!--退出登录-->
@@ -127,7 +127,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="javascript:;" data-target="#quick_sidebar_tab_1"
-                           data-toggle="tab"> {{ $user->shop->name }}
+                           data-toggle="tab"> {{ $user->shop_name }}
                             <span class="badge badge-danger total-message-count hide">0</span>
                         </a>
                     </li>

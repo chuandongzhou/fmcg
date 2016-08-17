@@ -402,7 +402,7 @@ class PayController extends Controller
         if ($refundBySeller) {
             $redisKey = 'push:user:' . $order->user->id;
         } else {
-            $redisKey = 'push:seller:' . $order->shop->user->id;
+            $redisKey = 'push:seller:' . $order->shop->user_id;
         }
 
         $redisVal = '您的订单号' . $order->id . ',' . cons()->lang('push_msg.refund');

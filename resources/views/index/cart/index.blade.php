@@ -56,7 +56,7 @@
                                             <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
                                             <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">
                                                 {{ $shop->name }}
-                                                ({{ cons()->valueLang('user.type' ,$shop->user->type)  }})
+                                                ({{ cons()->valueLang('user.type' ,$shop->user_type)  }})
                                             </a>
                                         </div>
                                     </th>

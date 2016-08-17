@@ -19,7 +19,7 @@ class CouponController extends Controller
     {
         $user = auth()->user();
 
-        if (!$shop || $shop->user->type <= $user->type) {
+        if (!$shop || $shop->user_type <= $user->type) {
             return $this->error('店铺不存在');
         }
         $coupons = $shop->coupons->filter(function ($coupon) {

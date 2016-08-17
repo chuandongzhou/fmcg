@@ -11,7 +11,7 @@
                         <div class="avatar_box">
                             <p class="avatar_imgbox"><img src="{{ $user->shop->logo_url }}"/></p>
                             <ul class="user_info">
-                                <li>店铺名：{{ $user->shop->name }}</li>
+                                <li>店铺名：{{ $user->shop_name }}</li>
                                 <li>类　型：{{ cons()->valueLang('user.type' , $user->type) }}</li>
                             </ul>
                         </div>

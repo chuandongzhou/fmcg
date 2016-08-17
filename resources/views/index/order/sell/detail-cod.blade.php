@@ -61,7 +61,7 @@
                         <tr>
                             <td>提交订单</td>
                             <td>{{ $order['created_at'] }}</td>
-                            <td>{{ $order->user->shop->name }}</td>
+                            <td>{{ $order->user_shop_name }}</td>
                         </tr>
                         @if((int)$order['send_at'])
                             <tr>
@@ -76,21 +76,21 @@
                             <tr>
                                 <td>付款</td>
                                 <td>{{ $order['paid_at'] }}</td>
-                                <td>{{ $order->user->shop->name }}</td>
+                                <td>{{ $order->user_shop_name }}</td>
                             </tr>
                         @endif
                         @if((int)$order['finished_at'])
                             <tr>
                                 <td>已完成</td>
                                 <td>{{ $order['finished_at'] }}</td>
-                                <td>{{ $order->user->shop->name }}</td>
+                                <td>{{ $order->user_shop_name }}</td>
                             </tr>
                         @endif
                         @if($order['is_cancel'])
                             <tr>
                                 <td>取消订单</td>
                                 <td>{{ $order['cancel_at'] }}</td>
-                                <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</td>
+                                <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop_name : $order->shop->name }}</td>
                             </tr>
                         @endif
                         </tbody>
@@ -160,7 +160,7 @@
                 <div class="col-sm-12 receiving-information">
                     <ul>
                         <li class="title">收货人信息</li>
-                        <li><span class="title-info-name">终端商名称 : </span>{{ $order->user->shop->name }} </li>
+                        <li><span class="title-info-name">终端商名称 : </span>{{ $order->user_shop_name }} </li>
                         <li><span class="title-info-name">联系人 : </span>{{  $order->shippingAddress->consigner }}
                         </li>
                         <li><span class="title-info-name">联系电话 : </span>{{ $order->shippingAddress->phone }}</li>

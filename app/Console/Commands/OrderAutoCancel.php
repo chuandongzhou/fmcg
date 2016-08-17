@@ -36,7 +36,7 @@ class OrderAutoCancel extends Command
                 'cancel_at' => Carbon::now()
             ])->save();
             //推送通知
-            $redisKey = 'push:seller:' . $order->shop->user->id;
+            $redisKey = 'push:seller:' . $order->shop->user_id;
 
             $redisVal = '订单:' . $order->id . cons()->lang('push_msg.cancel_by_buyer');
             (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));

@@ -3,8 +3,6 @@
 namespace App\Models;
 
 
-use App\Services\ShopService;
-
 class SalesmanCustomer extends Model
 {
     protected $table = 'salesman_customer';
@@ -215,6 +213,6 @@ class SalesmanCustomer extends Model
      */
     public function getAccountAttribute()
     {
-        return $this->shop_id && $this->shop ? $this->shop->user->user_name : '';
+        return $this->shop_id && $this->shop ? $this->shop->user_name : '';
     }
 }

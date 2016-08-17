@@ -113,7 +113,7 @@ class ShippingAddressService
             return false;
         }
         if (!is_null($shops)) {
-            return ShopService::getShopMinMoneyByShippingAddress($shops, $shippingAddress, true);
+            return (new ShopService())->getShopMinMoneyByShippingAddress($shops, $shippingAddress, true);
             /*$address = $shippingAddress->address;
             $where = [
                 'province_id' => $address->province_id,

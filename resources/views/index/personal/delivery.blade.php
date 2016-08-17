@@ -79,7 +79,7 @@
 
                             <td>{{ $delivery->deliveryMan?$delivery->deliveryMan->name:''  }}</td>
                             <td>{{ $delivery->id }}</td>
-                            <td>{{ $delivery->user->shop->name }}</td>
+                            <td>{{ $delivery->user->shop_name }}</td>
                             <td>{{ $delivery->pay_status==1?'已支付':'未支付' }}</td>
                             <td>
                                 @if($delivery->pay_status==1)

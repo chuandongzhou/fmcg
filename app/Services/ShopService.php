@@ -15,9 +15,17 @@ use QrCode;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class ShopService
+class ShopService extends RedisService
 {
-    static function getShopColumn()
+
+    protected $subName = 'shop-user';
+
+    public function __construct($connectionRedis = false)
+    {
+        $connectionRedis && parent::__construct();
+    }
+
+    public function getShopColumn()
     {
         $type = auth()->user()->type;
 
@@ -75,7 +83,7 @@ class ShopService
      * @param $size
      * @return string
      */
-    static function qrcode($uid = 0, $size = null)
+    public function qrcode($uid = 0, $size = null)
     {
         $qrcodePath = config('path.upload_qrcode');
         $relatePath = str_replace(public_path(), '', $qrcodePath);
@@ -100,7 +108,7 @@ class ShopService
      *
      * @return mixed
      */
-    static function getAdvertFirstImage()
+    public function getAdvertFirstImage()
     {
         $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->first();
         return $advert->image ? $advert : new Advert;
@@ -112,7 +120,7 @@ class ShopService
      * @param $shop
      * @return mixed
      */
-    static function getDefaultShippingAddress($shop)
+    public function getDefaultShippingAddress($shop)
     {
         if ($shop instanceof Shop) {
             return $shop->user->shippingAddress->first();
@@ -130,7 +138,7 @@ class ShopService
      * @param bool $validate
      * @return array|bool
      */
-    static function getShopMinMoneyByShippingAddress($shops, $shippingAddress, $validate = false)
+    public function getShopMinMoneyByShippingAddress($shops, $shippingAddress, $validate = false)
     {
         $address = $shippingAddress->address;
         $where = [
@@ -164,13 +172,57 @@ class ShopService
      * @param $account
      * @return mixed
      */
-    static function getShopIdByAccount($account)
+    public function getShopIdByAccount($account)
     {
         if (!$account) {
             return null;
         }
-        $user = User::where('user_name', $account)->with('shop')->first();
-        return $user->shop->id;
+        $user = User::where('user_name', $account)->first();
+        return $user->shop_id;
+    }
+
+
+    /**
+     *  获取店铺详情
+     *
+     * @param $shopId
+     * @param $field
+     * @return int|string
+     */
+    public function getUserDetail($shopId, $field)
+    {
+        $key = $this->getKey($this->subName . ':' . $shopId);
+
+        if (!$this->redis->exists($key)) {
+            return 0;
+        }
+        return $this->redis->hget($key, $field);
+    }
+
+    /**
+     * 设置店铺详情
+     *
+     * @param $shop
+     * @param string $returnField
+     * @return mixed
+     */
+    public function setUserDetail($shop, $returnField = 'id')
+    {
+        $key = $this->getKey($this->subName . ':' . $shop->id);
+
+        if ($this->redis->exists($key)) {
+            return true;
+        }
+        $user = $shop->user;
+
+        $value = [
+            'id' => $user->id,
+            'name' => $user->user_name,
+            'type' => $user->type,
+            'mobile' => $user->backup_mobile
+        ];
+        $this->redis->hmset($key, $value);
+        return $value[$returnField];
     }
 
 }

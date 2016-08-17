@@ -289,7 +289,7 @@ class MyGoodsController extends Controller
             if (is_null($goods[0])) {
                 break;
             }
-            $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user->type);
+            $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user_type);
             $goodsModel = $shop->goods()->create($goodsAttr);
             if ($goodsModel->exists) {
                 $this->saveWithoutImageOfBarCode($goodsModel);

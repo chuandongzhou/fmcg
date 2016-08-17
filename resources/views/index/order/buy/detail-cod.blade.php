@@ -83,7 +83,7 @@
                 <tr>
                     <td>提交订单</td>
                     <td>{{ $order['created_at'] }}</td>
-                    <td>{{ $order->user->shop->name }}</td>
+                    <td>{{ $order->user->shop_name }}</td>
                 </tr>
                 @if((int)$order['send_at'])
                     <tr>
@@ -98,21 +98,21 @@
                     <tr>
                         <td>付款</td>
                         <td>{{ $order['paid_at'] }}</td>
-                        <td>{{ $order->user->shop->name }}</td>
+                        <td>{{ $order->user->shop_name }}</td>
                     </tr>
                 @endif
                 @if((int)$order['finished_at'])
                     <tr>
                         <td>已完成</td>
                         <td>{{ $order['finished_at'] }}</td>
-                        <td>{{ $order->user->shop->name }}</td>
+                        <td>{{ $order->user->shop_name }}</td>
                     </tr>
                 @endif
                 @if($order['is_cancel'])
                     <tr>
                         <td>取消订单</td>
                         <td>{{ $order['cancel_at'] }}</td>
-                        <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop->name : $order->shop->name }}</td>
+                        <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop_name : $order->shop->name }}</td>
                     </tr>
                 @endif
                 </tbody>

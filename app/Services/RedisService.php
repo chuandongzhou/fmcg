@@ -39,12 +39,6 @@ class RedisService
         $this->namespace = $this->name . ':';
     }
 
-    public function __set($name, $value)
-    {
-        // TODO: Implement __set() method.
-        $this->$name = $value;
-    }
-
     /**
      * 设置Redis
      *

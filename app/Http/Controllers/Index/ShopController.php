@@ -102,7 +102,7 @@ class ShopController extends Controller
         }
 
         if ($shop->images->isEmpty()) {
-            $advert = ShopService::getAdvertFirstImage();
+            $advert = (new ShopService())->getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
 

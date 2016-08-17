@@ -108,6 +108,7 @@
                         </table>
                     @endif
                     <div class="text-right">
+                        <a class="btn btn-cancel" href="javascript:history.go(-1)">返回</a>
                         @if($order->status == cons('salesman.order.status.not_pass'))
                             <button
                                     data-url="{{ url('api/v1/business/order/' . $order->id) }}"
@@ -129,6 +130,7 @@
                 @else
                     @if($order->status == cons('salesman.order.status.not_pass'))
                         <div class="text-right">
+                            <a class="btn btn-cancel" href="javascript:history.go(-1)">返回</a>
                             <button
                                     data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                                     data-method="put" data-data='{"status" : "1"}'

@@ -142,7 +142,7 @@ class StatisticsController extends Controller
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get(['id', 'user_id']);
             $sellerTypes = [];                                                          // 卖家类型
             foreach ($shops as $shop) {
-                $sellerTypes[$shop->id] = $shop->user->type;
+                $sellerTypes[$shop->id] = $shop->user_type;
             }
 
             $userType = cons('user.type');

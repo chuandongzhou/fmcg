@@ -79,7 +79,6 @@ class DeliveryController extends Controller
             $order->user->setHidden([]);
         });
 
-        //  dd($orders);
         return $this->success($orders);
 
 

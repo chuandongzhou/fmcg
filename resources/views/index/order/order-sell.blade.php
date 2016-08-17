@@ -62,7 +62,7 @@
                                     </label>
                                     <span class="order-number">订单号 : {{ $order['id'] }}</span>
                                 </th>
-                                <th width="15%">{{ $order['user']['shop']['name'] }}</th>
+                                <th width="15%">{{ $order->user_shop_name }}</th>
                                 <th width="10%"></th>
                                 <th>
                                     @if ($order->user && $order->user->shop_id)

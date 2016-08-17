@@ -59,7 +59,7 @@ class PayService
             $shops = Shop::whereIn('id', array_unique($shopIds))->with('user')->get();
             $accountArr = [];
             foreach ($shops as $shop) {
-                $accountArr[$shop->id] = $shop->user->user_name;
+                $accountArr[$shop->id] = $shop->user_name;
             }
 
             $orderConf = cons('order');

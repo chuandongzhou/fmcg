@@ -56,7 +56,7 @@ class OrderSellController extends OrderController
 
         $orders = $orders->orderBy('id', 'desc')->paginate();
         $orders->each(function ($order) {
-            $order->user->shop->setAppends([]);
+            $order->user && $order->user->shop->setAppends([]);
         });
         return view('index.order.order-sell', [
             'pay_type' => $payType,
@@ -253,7 +253,7 @@ class OrderSellController extends OrderController
 
             $qrCode = $table->addCell(3000, ['align' => 'right']);
             $qrCode->getStyle()->setGridSpan(2);
-            $qrCode->addImage(ShopService::qrcode($item->shop_id));
+            $qrCode->addImage((new ShopService())->qrcode($item->shop_id));
             $section->addFooter();
         }
         $name = date('Ymd') . strtotime('now') . '.docx';

@@ -24,7 +24,7 @@ class ShopController extends Controller
      */
     public function shops()
     {
-        return $this->success(['shopColumn' => ShopService::getShopColumn()]);
+        return $this->success(['shopColumn' => (new ShopService())->getShopColumn()]);
     }
 
     /**

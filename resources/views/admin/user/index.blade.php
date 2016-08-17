@@ -28,7 +28,7 @@
                 <tr>
                     <th scope="row"><input type="checkbox" class="child" name="uid[]" value="{{ $user->id }}"/></th>
                     <td>{{ $user->user_name }}</td>
-                    <td>{{ $user->shop ? $user->shop->name : '' }}</td>
+                    <td>{{ $user->shop ? $user->shop_name : '' }}</td>
                     <td>{{ $user->created_at }}</td>
                     <td>{{ cons()->valueLang('status', $user->status) }}</td>
                     <td>
