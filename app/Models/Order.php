@@ -200,6 +200,7 @@ class   Order extends Model
     {
         $payWay = $this->attributes['pay_way'];
 
+        info($payWay);
         return cons()->valueLang('pay_way.cod', $payWay);
     }
 

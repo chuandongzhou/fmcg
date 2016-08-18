@@ -393,6 +393,7 @@ class OrderService
                 'shipping_address_id' => $shippingAddressService->copyToSnapshot($shippingAddressId),
                 'remark' => $remark
             ];
+
             $couponId = isset($data['shop'][$shop->id]['coupon_id']) ? $data['shop'][$shop->id]['coupon_id'] : null;
             if ($couponId) {
                 $couponId = $this->validateCouponId($shop->id, $couponId, $shop->sum_price);

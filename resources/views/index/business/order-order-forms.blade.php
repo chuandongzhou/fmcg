@@ -56,6 +56,7 @@
                         <td>订单金额</td>
                         <td>时间</td>
                         <td>审核状态</td>
+                        <td>订单状态</td>
                         <td>操作</td>
                     </tr>
                     @foreach($orders as $order)
@@ -69,6 +70,7 @@
                             <td>{{ $order->amount }}</td>
                             <td>{{ $order->created_at }}</td>
                             <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
+                            <td>{{ $order->order_status_name }}</td>
                             <td>
                                 <a class="btn btn-cancel"
                                    href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">查看</a>

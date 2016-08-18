@@ -220,4 +220,14 @@ class SalesmanVisitOrder extends Model
     {
         return $this->salesmanCustomer->shop ? $this->salesmanCustomer->shop->user_id : 0;
     }
+
+    /**
+     * 获取订单状态
+     *
+     * @return string
+     */
+    public function getOrderStatusNameAttribute()
+    {
+        return $this->order_id && $this->order ? $this->order->status_name : '';
+    }
 }

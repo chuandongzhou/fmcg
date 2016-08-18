@@ -152,16 +152,18 @@ class ReportController extends Controller
             $table->addRow();
             $table->addCell(2000, $cellRowSpan)->addText($man->name, null, $cellAlignCenter);
             $table->addCell(1500)->addText('拜访客户数', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('订货单数', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('订货总金额', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('订货单数(拜访+自主)', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('订货总金额(拜访+自主)', null, $cellAlignCenter);
             $table->addCell(1500)->addText('退货单数', null, $cellAlignCenter);
             $table->addCell(1500)->addText('退货总金额', null, $cellAlignCenter);
 
             $table->addRow();
             $table->addCell(2000, $cellRowContinue);
             $table->addCell(1500)->addText($man->visitCustomerCount, null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->orderFormCount, null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->orderFormSumAmount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->orderFormCount . '(' . $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount,
+                    $man->visitOrderFormCount) . ')', null, $cellAlignCenter);
+            $table->addCell(1500)->addText($man->orderFormSumAmount . '(' . $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) . ')',
+                null, $cellAlignCenter);
             $table->addCell(1500)->addText($man->returnOrderCount, null, $cellAlignCenter);
             $table->addCell(1500)->addText($man->returnOrderSumAmount, null, $cellAlignCenter);
         }

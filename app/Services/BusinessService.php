@@ -69,13 +69,19 @@ class BusinessService
                 return $order->type == cons('salesman.order.type.order');
             });
 
+            $visitOrderForms = $orderForms->filter(function ($order) {
+                return $order->salesman_visit_id > 0;
+            });
+
             $visits = $salesman->visits->filter(function ($visit) use ($startDate, $endDate) {
                 return $visit->created_at >= $startDate && $visit->created_at <= $endDate;
             });
 
             $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
             $salesman->orderFormSumAmount = $orderForms->sum('amount');
+            $salesman->visitOrderFormSumAmount = $visitOrderForms->sum('amount');
             $salesman->orderFormCount = $orderForms->count();
+            $salesman->visitOrderFormCount = $visitOrderForms->count();
 
             $returnOrders = $orders->reject(function ($order) {
                 return $order->type == cons('salesman.order.type.order');
@@ -93,12 +99,11 @@ class BusinessService
      *
      * @param $salesmenId
      * @param $data
-     * @param $withOrderGoods
+     * @param array $with
      * @return mixed
      */
-    public function getOrders($salesmenId, $data = [])
+    public function getOrders($salesmenId, $data = [], $with = ['salesmanCustomer', 'salesman'])
     {
-        $with = ['salesmanCustomer', 'salesman'];
 
         if (isset($data['salesman_id']) && ($salesmanId = $data['salesman_id'])) {
             $exists = $salesmenId->toBase()->contains($salesmanId);
@@ -113,7 +118,6 @@ class BusinessService
             $orders = SalesmanVisitOrder::whereIn('salesman_id',
                 $salesmenId)->OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
         }
-
 
 
         return $orders;
@@ -187,7 +191,6 @@ class BusinessService
             }
             $goodsIds = $allGoods->pluck('goods_id')->all();
             $goodsNames = Goods::whereIn('id', $goodsIds)->lists('name', 'id');
-
 
 
             foreach ($allGoods as $goods) {

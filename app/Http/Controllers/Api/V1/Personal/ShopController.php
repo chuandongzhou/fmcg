@@ -26,7 +26,7 @@ class ShopController extends Controller
         if (Gate::denies('validate-shop', $shop)) {
             return $this->error('保存失败');
         }
-        if ($shop->fill(array_except($attributes, 'id'))->save()) {
+        if ($shop->fill($attributes)->save()) {
 
             //更新聊天远程
             $shop->load('user');
@@ -57,10 +57,10 @@ class ShopController extends Controller
             ->where('pay_status', cons('order.pay_status.payment_success'))->nonCancel()->groupBy('receivedday');
         //判断是否是终端商
         if (auth()->user()->type == cons('user.type.retailer')) {
-            $finishedOrders = $finishedOrders->where('user_id',auth()->id())->get()->each(function ($order) {
+            $finishedOrders = $finishedOrders->where('user_id', auth()->id())->get()->each(function ($order) {
                 $order->setAppends([]);
             });
-            $receivedOrders = $receivedOrders->where('user_id',auth()->id())->get();
+            $receivedOrders = $receivedOrders->where('user_id', auth()->id())->get();
             //本月销售图表信息
             $orderGoodsInfo = DB::select('select d.name,c.cate_level_2,sum(b.num) as sum from fmcg_order a join fmcg_order_goods b on a.id = b.order_id join fmcg_goods c on c.id = b.goods_id join fmcg_category d on
  d.id=c.cate_level_2 where a.user_id = :id and a.`status`= :status and is_cancel = :is_cancel and a.finished_at like :finish_at GROUP BY c.cate_level_2',

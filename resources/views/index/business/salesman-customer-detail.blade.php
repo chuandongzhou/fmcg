@@ -81,7 +81,7 @@
                         @foreach($mortgages as $mortgage)
                             <tr>
                                 @if($mortgage == $mortgages->first())
-                                     <td rowspan="{{ $mortgages->count() }}">{{ $createdAt }}</td>
+                                    <td rowspan="{{ $mortgages->count() }}">{{ $createdAt }}</td>
                                 @endif
                                 <td>{{ $mortgage['name'] }}</td>
                                 <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
@@ -103,7 +103,7 @@
                 <tr>
                     <td>商品ID</td>
                     <td>商品名称</td>
-                    <td>拜访时间</td>
+                    <td>时间</td>
                     <td>商品库存</td>
                     <td>生产日期</td>
                     <td>商品单价</td>
@@ -113,13 +113,15 @@
                     <td>退货总金额</td>
                 </tr>
                 @foreach($salesListsData as $goodsId => $salesGoods)
-                    @foreach($salesGoods['visit'] as $visit)
+                    @foreach($salesGoods['visit'] as $visitId =>$visit)
                         <tr>
                             @if($visit == head($salesGoods['visit']))
-                                <td rowspan="{{ count($salesGoods['visit']) }}">{{ $salesGoods['id'] }}</td>
-                                <td rowspan="{{ count($salesGoods['visit']) }}">{{ $salesGoods['name'] }}</td>
+                                <td rowspan="{{ count($salesGoods['visit']) }}" width="8%">{{ $salesGoods['id'] }}</td>
+                                <td rowspan="{{ count($salesGoods['visit']) }}" width="30%">{{ $salesGoods['name'] }}</td>
                             @endif
-                            <td>{{ $visit['time'] }}</td>
+                            <td width="15%">
+                                {{ $visit['time'] }}  ({{ $visitId ? '拜访' : '自主' }})
+                            </td>
                             <td>{{ $visit['stock'] }}</td>
                             <td>{{ $visit['production_date'] }}</td>
                             <td>{{ $visit['order_price'] }}

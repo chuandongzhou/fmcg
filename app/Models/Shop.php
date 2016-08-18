@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Services\AddressService;
 use App\Services\ImageUploadService;
 use App\Services\ShopService;
+use App\Services\UserService;
 
 class Shop extends Model
 {
@@ -459,6 +460,20 @@ class Shop extends Model
             }
         }
         return true;
+    }
+
+    /**
+     * 更新用户店铺redis
+     *
+     * @param $name
+     */
+    public function setNameAttribute($name)
+    {
+        $this->attributes['name'] = $name;
+
+        if ($user = $this->user) {
+            (new UserService(true))->setShopDetail($user);
+        }
     }
 
     /**

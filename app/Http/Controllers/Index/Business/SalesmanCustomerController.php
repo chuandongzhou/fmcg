@@ -199,9 +199,9 @@ class SalesmanCustomerController extends Controller
 
 
         //拜访时产生的订单和退货单
-       /* $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
-            return !is_null($item);
-        });*/
+        /* $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
+             return !is_null($item);
+         });*/
 
         $allOrders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->ofData([
             'start_date' => $beginTime,
@@ -259,11 +259,12 @@ class SalesmanCustomerController extends Controller
 
         $orderGoodsType = $orderConf['goods']['type'];
 
+
         foreach ($salesList as $goodsId => $goodsVisits) {
             $salesListsData[$goodsId]['id'] = $goodsId;
             $salesListsData[$goodsId]['name'] = $orderGoodsDetail[$goodsId];
             foreach ($goodsVisits as $visitId => $goodsList) {
-                $salesListsData[$goodsId]['visit'][] = [
+                $salesListsData[$goodsId]['visit'][$visitId] = [
                     'time' => head($goodsList)['created_at'],
                     'stock' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
@@ -405,7 +406,7 @@ class SalesmanCustomerController extends Controller
         $table->addRow();
         $table->addCell(800, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
         $table->addCell(1700, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
-        $table->addCell(1000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
+        $table->addCell(1000, $cellVAlignCenter)->addText('时间', null, $cellAlignCenter);
         $table->addCell(1000, $cellVAlignCenter)->addText('商品库存', null, $cellAlignCenter);
         $table->addCell(1000, $cellVAlignCenter)->addText('生产日期', null, $cellAlignCenter);
         $table->addCell(1000, $cellVAlignCenter)->addText('商品单价', null, $cellAlignCenter);
@@ -418,12 +419,13 @@ class SalesmanCustomerController extends Controller
             $table->addRow();
             $table->addCell(800, $cellRowSpan)->addText($salesGoods['id'], null, $cellAlignCenter);
             $table->addCell(1700, $cellRowSpan)->addText($salesGoods['name'], null, $cellAlignCenter);
-            foreach ($salesGoods['visit'] as $visit) {
+            foreach ($salesGoods['visit'] as $visitId => $visit) {
                 $piecesName = cons()->valueLang('goods.pieces', $visit['order_pieces']);
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(1000, $cellVAlignCenter)->addText($visit['time'], null, $cellAlignCenter);
+                $table->addCell(1000, $cellVAlignCenter)->addText($visit['time'] . ($visitId ? '(拜访)' : '(自主)'),
+                    null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['stock'], null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['production_date'], null, $cellAlignCenter);
                 $table->addCell(1000,

@@ -42,8 +42,8 @@
                         <tr>
                             <th rowspan="2" width="20%">{{ $man->name }}</th>
                             <th>拜访客户数</th>
-                            <th>订货单数</th>
-                            <th>订货总金额</th>
+                            <th>订货单数(拜访+自主)</th>
+                            <th>订货总金额(拜访+自主)</th>
                             <th>退货单数</th>
                             <th>退货总金额</th>
                             <th>操作</th>
@@ -54,9 +54,11 @@
                             </td>
                             <td>
                                 {{ $man->orderFormCount }}
+                                ({{ $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount, $man->visitOrderFormCount) }})
                             </td>
                             <td>
                                 {{ $man->orderFormSumAmount }}
+                                ({{ $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) }})
                             </td>
                             <td>
                                 {{ $man->returnOrderCount }}
