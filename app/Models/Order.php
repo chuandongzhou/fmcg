@@ -43,7 +43,8 @@ class   Order extends Model
         'can_confirm_collections',
         'can_export',
         'can_payment',
-        'can_confirm_arrived'
+        'can_confirm_arrived',
+        'can_change_price'
     ];
 
     protected $hidden = [];
@@ -421,9 +422,7 @@ class   Order extends Model
     public function getCanChangePriceAttribute()
     {
         $orderConf = cons('order');
-        return $this->attributes['pay_type'] == cons('pay_type.online')
-            ? $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
-            : $this->attributes['status'] < $orderConf['status']['finished'];
+        return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
     }
 
     /**

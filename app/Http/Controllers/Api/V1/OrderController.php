@@ -12,6 +12,8 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
 use App\Models\Goods;
 use App\Models\Order;
+use App\Models\SalesmanVisitOrder;
+use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
 use App\Services\CartService;
 use App\Services\OrderService;
@@ -241,7 +243,11 @@ class OrderController extends Controller
         if (!$order->can_confirm || $order->shop_id != auth()->user()->shop->id) {
             return $this->error('订单不能确认');
         }
-        if ($order->fill(['status' => cons('order.status.non_send'), 'confirm_at' => Carbon::now()])->save()) {
+        if ($this->_syncToBusiness($order) && $order->fill([
+                'status' => cons('order.status.non_send'),
+                'confirm_at' => Carbon::now()
+            ])->save()
+        ) {
             return $this->success('订单确认成功');
         }
         return $this->error('订单确认失败，请重试');
@@ -605,6 +611,12 @@ class OrderController extends Controller
         return $tradeNo ? $tradeNo : '';
     }
 
+    /**
+     * 订单同步至业务
+     *
+     * @param $order
+     * @return bool
+     */
     private function _syncToBusiness($order)
     {
         if (!is_null($order->salesmanVisitOrder)) {
@@ -613,6 +625,50 @@ class OrderController extends Controller
 
         $shop = $order->shop;
         $userShopId = $order->user->shop_id;
+
+        $salesmanCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $userShopId)->first();
+
+
+        if (is_null($salesmanCustomer)) {
+            return true;
+        }
+
+        $orderData = [
+            'salesman_customer_id' => $salesmanCustomer->id,
+            'amount' => $order->price,
+            'order_id' => $order->id,
+            'salesman_id' => $salesmanCustomer->salesman_id,
+            'order_remark' => $order->remark
+        ];
+
+        $result = DB::transaction(function () use ($orderData, $order) {
+
+            $orderTemp = SalesmanVisitOrder::create($orderData);
+
+            if ($orderTemp->exists) {
+                $orderGoods = [];
+                foreach ($order->orderGoods as $goods) {
+                    $orderGoods[] = new SalesmanVisitOrderGoods([
+                        'goods_id' => $goods->goods_id,
+                        'price' => $goods->price,
+                        'num' => $goods->num,
+                        'pieces' => $goods->pieces,
+                        'amount' => $goods->total_price,
+                        'salesman_visit_order_id' => $orderTemp->id
+                    ]);
+                }
+                //保存订单商品
+                if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
+                    return false;
+                }
+                return 'success';
+            } else {
+                return false;
+            }
+
+        });
+
+        return $result === 'success';
     }
 
     /**

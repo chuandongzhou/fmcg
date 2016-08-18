@@ -214,6 +214,19 @@ class OrderService
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
 
+            //如果有业务订单修改业务订单
+            if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
+                $salesmanVisitOrder->fill(['amount' => $order->price])->save();
+                $salesmanVisitOrderGoods = $salesmanVisitOrder->orderGoods()->where('goods_id',
+                    $orderGoods->goods_id)->first();
+                !is_null($salesmanVisitOrderGoods) && $salesmanVisitOrderGoods->fill([
+                    'price' => $price,
+                    'num' => $num,
+                    'amount' => $newTotalPrice
+                ])->save();
+            }
+
+
             $content = "商品编号：{$orderGoods->goods_id}; 原商品数量：{$oldNum},现商品数量：{$orderGoods->num}; 原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
 
             $order->orderChangeRecode()->create([

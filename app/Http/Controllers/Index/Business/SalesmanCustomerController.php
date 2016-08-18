@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Goods;
 use App\Models\SalesmanCustomer;
+use App\Models\SalesmanVisitOrder;
 use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -183,8 +184,6 @@ class SalesmanCustomerController extends Controller
 
         //拜访记录
         $visits = $customer->visits()->OfTime($beginTime, $endTime)->with([
-            'orders.orderGoods',
-            'orders.mortgageGoods',
             'goodsRecord'
         ])->get();
 
@@ -200,9 +199,15 @@ class SalesmanCustomerController extends Controller
 
 
         //拜访时产生的订单和退货单
-        $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
+       /* $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
             return !is_null($item);
-        });
+        });*/
+
+        $allOrders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->ofData([
+            'start_date' => $beginTime,
+            'end_date' => $endTime
+        ])->with('orderGoods', 'mortgageGoods')->get();
+
 
         $orderConf = cons('salesman.order');
 
@@ -210,7 +215,6 @@ class SalesmanCustomerController extends Controller
         $orders = $allOrders->filter(function ($item) use ($orderConf) {
             return $item->type == $orderConf['type']['order'];
         });
-
 
         //退货单
         $returnOrders = $allOrders->filter(function ($item) use ($orderConf) {
@@ -220,9 +224,12 @@ class SalesmanCustomerController extends Controller
         // 所有的订单商品
         $orderGoods = $allOrders->pluck('orderGoods')->collapse();
 
+
+        $goodsIds = array_merge(array_keys($goodsRecodeData), $orderGoods->pluck('goods_id')->all());
+
+
         //所有订单商品详情
-        $orderGoodsDetail = Goods::whereIn('id', array_keys($goodsRecodeData))->lists('name',
-            'id');
+        $orderGoodsDetail = Goods::whereIn('id', array_unique($goodsIds))->lists('name', 'id');
 
         //货抵
         $mortgageGoods = (new BusinessService())->getOrderMortgageGoods($orders)->groupBy('created_at');
@@ -251,7 +258,6 @@ class SalesmanCustomerController extends Controller
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
-
 
         foreach ($salesList as $goodsId => $goodsVisits) {
             $salesListsData[$goodsId]['id'] = $goodsId;
