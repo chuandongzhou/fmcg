@@ -309,7 +309,12 @@ class SalesmanVisitOrderController extends Controller
      */
     public function orderDetail($id)
     {
-        $orders = SalesmanVisitOrder::where('id', $id)->with('orderGoods.goods', 'mortgageGoods')->get();
+        $orders = SalesmanVisitOrder::where('id', $id)->with([
+            'orderGoods.goods' => function ($query) {
+                $query->select('id', 'name');
+            },
+            'mortgageGoods'
+        ])->get();
 
         return $this->success(compact('orders'));
     }
@@ -321,7 +326,11 @@ class SalesmanVisitOrderController extends Controller
      */
     public function returnOrderDetail($id)
     {
-        $order = SalesmanVisitOrder::where('id', $id)->with('orderGoods.goods')->get()->toArray();
+        $order = SalesmanVisitOrder::where('id', $id)->with([
+            'orderGoods.goods' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ])->get()->toArray();
 
         return $this->success(['orderGoods' => $order[0]['order_goods']]);
     }
