@@ -34,7 +34,7 @@ class SalesmanVisitController extends Controller
 
         $endDate = $endDate ? (new Carbon($endDate))->endOfDay() : $carbon->copy();
 
-        $visit = $salesman->customers()->with([
+        $visits = $salesman->customers()->with([
             'orders' => function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             },
@@ -43,6 +43,9 @@ class SalesmanVisitController extends Controller
             },'businessAddress'
         ])->get();
 
+        $visit = $visits->reject(function($v){
+            return count($v->orders) ==0 &&count($v->visits) ==0;
+        });
 
         return $this->success(compact('visit'));
     }
