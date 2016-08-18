@@ -40,7 +40,7 @@ class SalesmanVisitController extends Controller
             },
             'visits' => function ($q) use ($startDate, $endDate) {
                 $q->whereBetween('created_at', [$startDate, $endDate]);
-            }
+            },'businessAddress'
         ])->get();
 
 

@@ -266,6 +266,7 @@
     contact_information     string          联系方式
 	orders					array           订单列表
 	visits                  array           拜访记录列表
+	business_address		object          营业地址
     
     orders字段子集说明
 
@@ -281,6 +282,11 @@
 
     id                     int             拜访ID
 	created_at             timestamp       拜访时间
+
+	business_address字段说明
+	
+	area_name              string         营业地址
+	address                string         营业地址详情
 
 `失败返回：`
 
