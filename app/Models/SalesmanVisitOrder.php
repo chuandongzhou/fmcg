@@ -17,6 +17,7 @@ class SalesmanVisitOrder extends Model
         'type',
         'order_remark',
         'display_remark',
+        'salesman_id',
         'salesman_visit_id',
         'salesman_customer_id'
     ];
@@ -112,8 +113,8 @@ class SalesmanVisitOrder extends Model
         }
 
         if (isset($data['end_date']) && ($endDate = $data['end_date'])) {
-            $date = new Carbon($endDate);
-            $query = $query->where('created_at', '<', $date->copy()->endOfDay());
+            $date = $endDate instanceof Carbon ? $endDate : (new Carbon($endDate))->endOfDay();
+            $query = $query->where('created_at', '<', $date);
         }
 
 
