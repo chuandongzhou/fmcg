@@ -84,6 +84,9 @@ class SalesmanCustomer extends Model
         return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
             cons('salesman.customer.address_type.shipping'));
     }
+    public function orders(){
+        return $this->hasMany('App\Models\SalesmanVisitOrder');
+    }
 
     /**
      * 关联店铺

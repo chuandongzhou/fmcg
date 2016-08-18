@@ -31,7 +31,7 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
 
-        $orders = (new BusinessService())->getOrders([$salesmenId], $data, true);
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
@@ -48,7 +48,7 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
 
-        $orders = (new BusinessService())->getOrders([$salesmenId], $data, true);
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data);
         return $this->success(['orders' => $orders->toArray()]);
     }
 

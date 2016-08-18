@@ -34,11 +34,16 @@ class SalesmanVisitController extends Controller
 
         $endDate = $endDate ? (new Carbon($endDate))->endOfDay() : $carbon->copy();
 
+        $visit = $salesman->customers()->with([
+            'orders' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            },
+            'visits' => function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('created_at', [$startDate, $endDate]);
+            }
+        ])->get();
 
-        $visit = $salesman->visits()->with('salesmanCustomer', 'orders')->OfTime($startDate,
-            $endDate)->OfSort()->get()->each(function ($item) {
-            $item->setAppends(['order_detail']);
-        });
+
         return $this->success(compact('visit'));
     }
 
@@ -225,5 +230,24 @@ class SalesmanVisitController extends Controller
 
         }
         return compact('order', 'goodsRecode');
+    }
+
+    /**
+     * 是否可添加拜访记录
+     *
+     * @param $custome_id
+     *
+     */
+    public function addVisit($customer_id)
+    {
+        if (empty($customer_id) || !is_numeric($customer_id)) {
+            return $this->error('客户ID不能为空或者格式不正确');
+        }
+        $salesman_id = salesman_auth()->id();
+        $start = Carbon::now()->startOfDay();
+        $end = Carbon::now()->endOfDay();
+        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
+            ->whereBetween('created_at', [$start, $end])->select('id')->get()->toArray();
+        return $this->success(compact('visit'));
     }
 }

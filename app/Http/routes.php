@@ -281,8 +281,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
                 $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
             });
+            $router->get('add-visit-record/{customer_id}','SalesmanVisitController@addVisit');
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->resource('visit', 'SalesmanVisitController');
+
             $router->group(['prefix' => 'order'], function ($router) {
                 $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
                 $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');

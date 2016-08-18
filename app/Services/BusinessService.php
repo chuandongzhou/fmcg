@@ -96,9 +96,9 @@ class BusinessService
      * @param $withOrderGoods
      * @return mixed
      */
-    public function getOrders($salesmenId, $data = [], $withOrderGoods = false)
+    public function getOrders($salesmenId, $data = [])
     {
-        $with = $withOrderGoods ? ['salesmanCustomer'] : ['salesmanCustomer', 'salesman'];
+        $with = ['salesmanCustomer', 'salesman'];
 
         if (isset($data['salesman_id']) && ($salesmanId = $data['salesman_id'])) {
             $exists = $salesmenId->toBase()->contains($salesmanId);
@@ -115,34 +115,7 @@ class BusinessService
         }
 
 
-        if ($withOrderGoods) {
-            $orders->each(function ($order) {
-                $orderConf = cons('salesman.order');
-                if ($order->type == $orderConf['type']['order']) {
-                    // $orderGoods = $order->orderGoods;
-                    $orderGoodsIds = $order->orderGoods->pluck('goods_id')->toBase()->unique();
-                    $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
 
-                    $order->orderGoods->each(function ($goods) use ($orderGoodsNames) {
-                        $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
-                    });
-
-                    $order->mortgageGoods = $this->getOrderMortgageGoods([$order]);
-
-                } else {
-
-                    $orderGoods = $order->orderGoods;
-                    $orderGoodsIds = $orderGoods->pluck('goods_id')->toBase()->unique();
-                    $orderGoodsNames = Goods::whereIn('id', $orderGoodsIds)->lists('name', 'id');
-
-                    foreach ($orderGoods as $goods) {
-                        $goods->goodsName = isset($orderGoodsNames[$goods->goods_id]) ? $orderGoodsNames[$goods->goods_id] : '';
-                    }
-                    $order->orderGoods = $orderGoods;
-                }
-
-            });
-        }
         return $orders;
     }
 

@@ -259,23 +259,28 @@
     
     visit字段子集说明
     
-    id                      int             拜访id
-    created_at              timestamp       拜访时间
-    salesman_customer       array           拜访客户信息
-    order_detail            array           拜访订单详情
-    
-    salesman_customer字段子集说明
-    
     number                  int             客户号
     name                    string          客户名
     letter                  string          客户名首字母
     contact                 string          联系人
     contact_information     string          联系方式
+	orders					array           订单列表
+	visits                  array           拜访记录列表
+    
+    orders字段子集说明
 
-    order_detail字段子集介绍
+    id                	    int             订单ID
+	type                    int             订单类型（0 订货单 ， 1退货单 ）
+	created_at              timestamp       订单生成时间
+	amount                  decimal         订单金额
+	order_remark            string          订单备注
+	display_remark          string          陈列费备注
+	
+   
+    visits字段子集介绍
 
-    order_amount            decimal         订单总金额
-    return_order_amount     decimal         退货总金额
+    id                     int             拜访ID
+	created_at             timestamp       拜访时间
 
 `失败返回：`
 
@@ -352,7 +357,17 @@
 
 `成功返回：`
 	
-`失败返回：`   	
+`失败返回：` 
+
+#### 2.5.4 判断是否可以添加拜访 [get] (add-visit-record/{customer_id})
+`请求参数：`
+
+    customer_id          int             客户ID
+
+`成功返回：`
+	visit               array            该字段为空表示可以添加
+	
+`失败返回：` 	
 
 ### 2.6 订单模块order
 #### 2.6.1 获取所有订货单[get] (order-forms)
