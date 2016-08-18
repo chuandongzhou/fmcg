@@ -293,6 +293,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
                 $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
+                $router->get('order-detail/{order_id}','SalesmanVisitOrderController@orderDetail');
+                $router->get('return-order-detail/{order_id}','SalesmanVisitOrderController@returnOrderDetail');
             });
             //抵费商品
             $router->group(['prefix' => 'mortgage-goods'], function ($router) {

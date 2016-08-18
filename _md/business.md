@@ -400,23 +400,7 @@
     status                  tinyint         订单状态（0未审核  1已审核）
     order_remark            string          订单备注
     display_remark          string          陈列费备注
-    orderGoods              array           订货单商品列表
-    mortgageGoods           array           陈列商品列表
-    
-    order_goods字段子集说明
-    
-    goods_id                int             商品id
-    goodsName               string          商品名
-    price                   decimal         单价
-    num                     int             数量
-    pieces                  int             单位id
-    amount                  decimal         金额
-    
-    mortgageGoods字段子集说明
-    
-    name                    string          商品名
-    num                     int             数量
-    pieces                  int             单位id
+   
 
 `失败返回：`
 
@@ -436,16 +420,64 @@
 
      id                      int             退货单号
      amount                  decimal         退货单金额
-     orderGoods              array           退货单商品列表
-     
-      orderGoods字段子集说明
-         
-         goods_id                int             商品id
-         goodsName               string          商品名
-         price                   decimal         单价
-         num                     int             数量
-         pieces                  int             单位id
-         amount                  decimal         金额
+    
+
+#### 2.6.3 获取定货单商品和抵费商品[get] (order-detail/{order_id})
+`请求参数：`
+
+        order_id               int               订单ID                     
+                            
+`成功返回：`
+
+    orders             array                订货单数据
+
+    orders字段子集说明
+
+    order_goods              array           订货单商品列表
+    mortgage_goods           array           陈列商品列表
+    
+    order_goods字段子集说明
+    
+    goods_id                int             商品id
+    price                   decimal         单价
+    num                     int             数量
+    pieces                  int             单位id
+    amount                  decimal         金额
+	goods                   object          商品信息
+
+		goods字段说明
+		name               string          商品名称
+
+    
+    mortgage_goods字段子集说明
+    
+    goods_name              string          商品名
+    pieces                  int             单位id
+	pivot                   object          中间信息
+		
+		pivot字段说明
+		num               int             商品数量
+
+
+#### 2.6.4 获取退货单商品[get] (return-order-detail/{order_id})
+`请求参数：`
+
+        order_id               int               订单ID                     
+                            
+`成功返回：`
+
+     orderGoods            array                订货单数据
+
+    orderGoods字段子集说明
+
+     goods_id                int             商品id
+     price                   decimal         单价
+     num                     int             数量
+     pieces                  int             单位id
+     amount                  decimal         金额
+	 goods                   object          商品信息
+		goods字段说明
+		name                 string          商品名称
 
 ### 2.7 平台商品 goods
 #### 2.7.1 获取所有平台商品[get] (/)

@@ -120,7 +120,8 @@ class SalesmanVisitOrderController extends Controller
 
         $result = $this->_syncOrders($orders);
 
-        if ($result == 'success' && SalesmanVisitOrder::whereIn('id', $orderIds)->update(['status' => cons('salesman.order.status.passed')])
+        if ($result == 'success' && SalesmanVisitOrder::whereIn('id',
+                $orderIds)->update(['status' => cons('salesman.order.status.passed')])
         ) {
             return $this->success('操作成功');
         }
@@ -299,5 +300,29 @@ class SalesmanVisitOrderController extends Controller
             return 'success';
         });
         return $result;
+    }
+
+    /**
+     * 获取订货单信息
+     *
+     * @param  $id
+     */
+    public function orderDetail($id)
+    {
+        $orders = SalesmanVisitOrder::where('id', $id)->with('orderGoods.goods', 'mortgageGoods')->get();
+
+        return $this->success(compact('orders'));
+    }
+
+    /**
+     * 获取退货单信息
+     *
+     * @param $id
+     */
+    public function returnOrderDetail($id)
+    {
+        $order = SalesmanVisitOrder::where('id', $id)->with('orderGoods.goods')->get()->toArray();
+
+        return $this->success(['orderGoods' => $order[0]['order_goods']]);
     }
 }
