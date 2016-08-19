@@ -32,22 +32,7 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::OfBuy(auth()->id())->WithExistGoods(['shop.user', 'user', 'coupon'],
-            [
-                'goods.id',
-                'name',
-                'price_retailer',
-                'price_retailer_pick_up',
-                'pieces_retailer',
-                'min_num_retailer',
-                'specification_retailer',
-                'price_wholesaler',
-                'price_wholesaler_pick_up',
-                'pieces_wholesaler',
-                'min_num_wholesaler',
-                'specification_wholesaler',
-                'bar_code'
-            ])->paginate();
+        $orders = Order::OfBuy(auth()->id())->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -59,7 +44,7 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        $orders = Order::ofBuy(auth()->id())->nonPayment()->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonPayment()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -71,7 +56,7 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy(auth()->id())->nonArrived()->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonArrived()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -83,18 +68,18 @@ class OrderController extends Controller
      */
     public function getWaitConfirmByUser()
     {
-        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->paginate();
+        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
     /**
      * 获取卖家待确认订单
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods.images.image')->WaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods', 'coupon')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -136,7 +121,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->nonSend()->paginate();
+        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -148,7 +133,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell(auth()->id())->getPayment()->paginate();
+        $orders = Order::ofSell(auth()->id())->getPayment()->with('user.shop', 'goods', 'coupon')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -710,7 +695,7 @@ class OrderController extends Controller
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce']);
         });
-        if (!$buyer) {
+        if (!$buyer && $order->user_id > 0) {
             $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
         }
@@ -726,7 +711,8 @@ class OrderController extends Controller
             'can_export',
             'can_payment',
             'can_confirm_arrived',
-            'after_rebates_price'
+            'after_rebates_price',
+            'user_shop_name'
         ]);
         $buyer && $order->shop->setAppends([]);
 

@@ -31,7 +31,7 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
 
-        $orders = (new BusinessService())->getOrders([$salesmenId], $data);
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data, ['salesmanCustomer', 'salesman', 'order']);
         return $this->success(['orders' => $orders->toArray()]);
     }
 
@@ -195,7 +195,7 @@ class SalesmanVisitOrderController extends Controller
                     'status' => $orderConf['status']['non_send'],
                     // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
-                    'remark' => '业务同步订单'
+                    'remark' => $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '陈列费备注：' . $salesmanVisitOrder->display_remark : '')
                 ];
 
                 if (!$orderData['shipping_address_id']) {
@@ -305,33 +305,20 @@ class SalesmanVisitOrderController extends Controller
     /**
      * 获取订货单信息
      *
-     * @param  $id
+     * @param $id
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function orderDetail($id)
     {
-        $orders = SalesmanVisitOrder::where('id', $id)->with([
-            'orderGoods.goods' => function ($query) {
-                $query->select('id', 'name');
-            },
-            'mortgageGoods'
-        ])->get();
-
-        return $this->success(compact('orders'));
-    }
-
-    /**
-     * 获取退货单信息
-     *
-     * @param $id
-     */
-    public function returnOrderDetail($id)
-    {
-        $order = SalesmanVisitOrder::where('id', $id)->with([
+        $order = SalesmanVisitOrder::with([
             'orderGoods.goods' => function ($query) {
                 $query->select('id', 'name');
             }
-        ])->get()->toArray();
+        ])->find($id);
 
-        return $this->success(['orderGoods' => $order[0]['order_goods']]);
+        $order->type == cons('salesman.order.type.order') && $order->load('mortgageGoods', 'order.deliveryMan');
+
+        return $this->success(compact('order'));
     }
+
 }

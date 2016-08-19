@@ -365,10 +365,8 @@
 	
 `失败返回：` 
 
-#### 2.5.4 判断是否可以添加拜访 [get] (add-visit-record/{customer_id})
+#### 2.5.4 判断是否可以添加拜访 [get] (can-add/{customer_id})
 `请求参数：`
-
-    customer_id          int             客户ID
 
 `成功返回：`
 	visit               array            该字段为空表示可以添加
@@ -422,19 +420,18 @@
      amount                  decimal         退货单金额
     
 
-#### 2.6.3 获取定货单商品和抵费商品[get] (order-detail/{order_id})
+#### 2.6.3 获取订单详情[get] (order-detail/{order_id})
 `请求参数：`
-
-        order_id               int               订单ID                     
                             
 `成功返回：`
 
-    orders             array                订货单数据
+    order             array                订货单数据
 
-    orders字段子集说明
+    order字段子集说明
 
     order_goods              array           订货单商品列表
     mortgage_goods           array           陈列商品列表
+    order                    array           平台订单详情 （含送货人信息）
     
     order_goods字段子集说明
     
@@ -445,8 +442,9 @@
     amount                  decimal         金额
 	goods                   object          商品信息
 
-		goods字段说明
-		name               string          商品名称
+    goods字段说明
+
+    name               string          商品名称
 
     
     mortgage_goods字段子集说明
@@ -458,26 +456,6 @@
 		pivot字段说明
 		num               int             商品数量
 
-
-#### 2.6.4 获取退货单商品[get] (return-order-detail/{order_id})
-`请求参数：`
-
-        order_id               int               订单ID                     
-                            
-`成功返回：`
-
-     orderGoods            array                订货单数据
-
-    orderGoods字段子集说明
-
-     goods_id                int             商品id
-     price                   decimal         单价
-     num                     int             数量
-     pieces                  int             单位id
-     amount                  decimal         金额
-	 goods                   object          商品信息
-		goods字段说明
-		name                 string          商品名称
 
 ### 2.7 平台商品 goods
 #### 2.7.1 获取所有平台商品[get] (/)

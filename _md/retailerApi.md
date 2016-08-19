@@ -1028,6 +1028,7 @@
 	can_confirm_collections 	bool		是否可确认收款(针对货到付款)
 	user                array       买家信息
     goods    			array		商品信息
+    user_shop_name              string      买家店铺名
 
 	user 字段子集说明
 		

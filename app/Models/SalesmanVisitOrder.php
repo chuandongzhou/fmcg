@@ -27,6 +27,8 @@ class SalesmanVisitOrder extends Model
         'order_goods'
     ];
 
+    protected $appends = ['order_status_name'];
+
     /**
      * 平台订单
      *
