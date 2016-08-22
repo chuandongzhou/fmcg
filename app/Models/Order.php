@@ -426,17 +426,6 @@ class   Order extends Model
         return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
     }
 
-    /**
-     * 根据不同角色获取单位
-     *
-     * @return mixed
-     */
-    public function getPiecesAttribute()
-    {
-        $userType = $this->user->type;
-        $piece = $userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer;
-        return cons()->valueLang('goods.pieces', $piece);
-    }
 
     /**
      * 获取订单优惠后价格
@@ -446,6 +435,20 @@ class   Order extends Model
     public function getAfterRebatesPriceAttribute()
     {
         $price = $this->price;
+        if ($this->coupon_id && ($coupon = $this->coupon)) {
+            $discount = $coupon->discount;
+            $full = $coupon->full;
+            if ($price < $full) {
+                //订单价格小于优惠券满价格时优惠按比例
+                $discount = bcmul($discount, bcdiv($price, $full, 2), 2);
+            }
+            return bcsub($price, $discount, 2);
+
+        }
+
+        return $price;
+
+
         return ($this->coupon_id && $this->coupon) ? (bcsub($price, $this->coupon->discount, 2)) : $price;
     }
 

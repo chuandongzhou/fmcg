@@ -70,13 +70,28 @@ class DeliveryController extends Controller
     public function orders()
     {
         $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])->whereNull('delivery_finished_at')->with('user.shop',
-            'shippingAddress.address')->get();
+            'shippingAddress.address', 'coupon')->get();
 
         $orders->each(function ($order) {
 
             $order->is_pay = $order->pay_status == 1 ? 1 : 0;
-            $order->pieces = cons('pieces');
-            $order->user->setHidden([]);
+            $order->pieces = cons()->valueLang('goods.pieces');
+            $order->setAppends([
+                'status_name',
+                'payment_type',
+                'step_num',
+                'can_cancel',
+                'can_confirm',
+                'can_send',
+                'can_confirm_collections',
+                'can_export',
+                'can_payment',
+                'can_confirm_arrived',
+                'can_change_price',
+                'user_shop_name',
+                'after_rebates_price'
+            ]);
+            // $order->user&&$order->user->setHidden([]);
         });
 
         return $this->success($orders);
@@ -133,7 +148,21 @@ class DeliveryController extends Controller
             'goods.images.image')->find($request->input('order_id'));
 
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
-        $order->user->setHidden([]);
+        $order->setAppends([
+            'status_name',
+            'payment_type',
+            'step_num',
+            'can_cancel',
+            'can_confirm',
+            'can_send',
+            'can_confirm_collections',
+            'can_export',
+            'can_payment',
+            'can_confirm_arrived',
+            'can_change_price',
+            'user_shop_name',
+            'after_rebates_price'
+        ]);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url', 'pieces']);
 
@@ -190,7 +219,7 @@ class DeliveryController extends Controller
      * @param \App\Http\Requests\Api\v1\UpdateOrderRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function changeOrder(UpdateOrderRequest $request)
+    public function updateOrder(UpdateOrderRequest $request)
     {
         $deliveryId = delivery_auth()->id();
         //判断该订单是否存在

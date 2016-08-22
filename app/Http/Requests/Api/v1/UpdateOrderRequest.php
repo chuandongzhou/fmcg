@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class UpdateOrderRequest extends UserRequest
+class UpdateOrderRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.

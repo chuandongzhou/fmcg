@@ -4,11 +4,6 @@ namespace App\Http\Requests\Api\v1;
 
 
 class DeliveryRequest extends Request{
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

@@ -32,20 +32,16 @@
 
 `成功返回：`
 
-	id               int       订单号
-	price            float     订单金额
-	is_pay           int       支付状态（0未支付，1已支付）
-	pieces           array     所有的商品单位
-	user             array     收货店铺信息
-	shippingAddress  array     收货信息
+	id                  int            订单号
+	price               float          订单金额
+	is_pay              int            支付状态（0未支付，1已支付）
+	pieces              array          所有的商品单位
+	user_shop_name      string         收货店家名
+	after_rebates_price decimal     优惠后订单价格
+	shippingAddress     array          收货信息
 	
-	user字段说明
-	shop             array     收货店家
-
-	shop字段说明
-	name            string      收货店家名
-
 	shippingAddress字段说明
+	
 	consigner       string      收货人
 	phone           string      收货人联系方式
 	x-lng           string      收货地址经度（隐藏字段）
@@ -53,6 +49,7 @@
 	address         array       收货地址
 		
 	address字段说明
+	
 	area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
 	address         string      详细收货地址
 `失败返回：`
@@ -80,6 +77,8 @@
 	user             array       收货店家信息
 	shippingAddress  array       收货信息
 	goods            array       商品信息
+	user_shop_name          string          收货店家名
+    after_rebates_price     decimal         优惠后价格
 	
 	user字段说明
 	shop            array       收货店家

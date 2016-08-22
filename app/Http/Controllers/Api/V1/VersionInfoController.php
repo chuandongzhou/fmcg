@@ -24,7 +24,7 @@ class VersionInfoController extends Controller
         $deviceName = array_search($type, cons('push_device'));
 
         return $this->success([
-            'record' => VersionRecord::where('type', $type)->orderBy('version_no', 'DESC')->first(),
+            'record' => VersionRecord::where('type', $type)->orderBy('id', 'DESC')->first(),
             'download_url' => $redis->get('app-link:' . $deviceName),
         ]);
     }

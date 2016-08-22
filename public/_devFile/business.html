@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <title>business</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -756,7 +755,6 @@ return_order字段子集说明
 <p><code>失败返回：</code></p>
 <h4>2.5.4 判断是否可以添加拜访 [get] (can-add/{customer_id})</h4>
 <p><code>请求参数：</code></p>
-
 <p><code>成功返回：</code>
     visit array 该字段为空表示可以添加</p>
 <p><code>失败返回：</code></p>
@@ -806,16 +804,14 @@ orders字段子集说明（包含分页信息）
 
 <h4>2.6.3 获取订单详情[get] (order-detail/{order_id})</h4>
 <p><code>请求参数：</code></p>
-<pre><code>    order_id               int               订单ID                     
-</code></pre>
-
 <p><code>成功返回：</code></p>
-<pre><code>orders             array                订货单数据
+<pre><code>order             array                订货单数据
 
-orders字段子集说明
+order字段子集说明
 
 order_goods              array           订货单商品列表
 mortgage_goods           array           陈列商品列表
+order                    array           平台订单详情 （含送货人信息）
 
 order_goods字段子集说明
 
@@ -826,8 +822,9 @@ pieces                  int             单位id
 amount                  decimal         金额
 goods                   object          商品信息
 
-    goods字段说明
-    name               string          商品名称
+goods字段说明
+
+name               string          商品名称
 
 
 mortgage_goods字段子集说明
@@ -839,7 +836,6 @@ pivot                   object          中间信息
     pivot字段说明
     num               int             商品数量
 </code></pre>
-
 
 <h3>2.7 平台商品 goods</h3>
 <h4>2.7.1 获取所有平台商品[get] (/)</h4>

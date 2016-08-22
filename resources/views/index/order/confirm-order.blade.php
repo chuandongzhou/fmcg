@@ -172,11 +172,10 @@
                                 <b class="red">
                                     {{ $shops->pluck('cart_goods')->collapse()->count() }}
                                 </b>件商品&nbsp;总商品金额 :&nbsp;
-                            </span>
-                            <span class="red">
-                                ¥ <b class="sum-price"
-                                     data-sum-price="{{ $shops->sum('sum_price') }}">{{ $shops->sum('sum_price') }}</b>
-                            </span>
+                                 </span> <b class="sum-price red" data-sum-price="{{ $shops->sum('sum_price') }}">
+                                ¥ {{ $shops->sum('sum_price') }}
+                            </b>
+
                         </p>
                         <p class="count">
                             <span class="name">优惠券 :&nbsp;</span>
