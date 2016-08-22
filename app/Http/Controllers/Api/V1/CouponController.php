@@ -28,8 +28,27 @@ class CouponController extends Controller
         });
 
         return $this->success(['coupons' => $coupons->values()]);
+        return $this->success(['coupons' => $coupons->values()]);
     }
 
+    /**
+     * 获取店铺可领优惠券数量
+     *
+     * @param $shop
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function couponNum($shop)
+    {
+        $user = auth()->user();
+        $nowDate = (new Carbon)->toDateString();
+        if (!$shop || $shop->user_type <= $user->type) {
+            return $this->error('店铺不存在');
+        }
+        $couponNum = Coupon::whereNotIn('id', function ($query) use ($user) {
+            $query->from('user_coupon')->where('user_id', $user->id)->select('coupon_id');
+        })->where('stock', '>', 0)->where('end_at', '>', $nowDate)->where('shop_id', $shop->id)->count();
+        return $this->success(['couponNum' => $couponNum]);
+    }
 
     /**
      * 获取用户自己优惠券
@@ -39,9 +58,10 @@ class CouponController extends Controller
      */
     public function userCoupon($expire = false)
     {
-        $now =  (new Carbon())->toDateString();
+        $now = (new Carbon())->toDateString();
         $user = auth()->user();
-        $coupons = $user->coupons()->wherePivot('used_at', null)->with('shop')->where('end_at','>=',$now)->orderBy('end_at',
+        $coupons = $user->coupons()->wherePivot('used_at', null)->with('shop')->where('end_at', '>=',
+            $now)->orderBy('end_at',
             'DESC')->take($expire ? 5 : -1)->get()->each(function ($coupon) {
             $coupon->shop->setAppends([]);
         });

@@ -31,13 +31,20 @@
                     <span class="cart_num">{{ $cartNum }}</span></a>
             </li>
             <li id="coupon">
-                <a href="javascript:;" class="history_list pop-show-link"><i class="view"></i></a>
+                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="view"></i></a>
 
-                <div class="mp_tooltip" style=" visibility:hidden;">我的资产<i class="icon_arrow_right_black"></i>
+                <div class="mp_tooltip">我的资产<i class="icon_arrow_right_black"></i>
                 </div>
+
+                <div class=" other_tooltip">
+                    该店铺可领优惠券
+                    <div class="receive-button"><a id="coupon">立即领取</a></div>
+                    <i class="icon_arrow_right_black"></i>
+                </div>
+
             </li>
             <li>
-                <a href="{{ url('like/goods') }}" class="mpbtn_wdsc"><i class="wdsc"></i></a>
+                <a href="{{ url('like/goods') }}" class="mpbtn_wdsc hover_link"><i class="wdsc"></i></a>
 
                 <div class="mp_tooltip">我的收藏<i class="icon_arrow_right_black"></i></div>
             </li>

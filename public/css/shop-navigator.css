@@ -53,7 +53,7 @@
     width:92px;
     position:absolute;
     z-index:2;
-    left:-121px;
+    left:-97px;
     top:0;
     background:#444851;
     color:#d8d8d8;
@@ -61,6 +61,32 @@
     display:block;
     visibility:hidden;
 }
+.quick_links_panel .other_tooltip{
+    height:80px;
+    width:130px;
+    left:-135px;
+    color:#fff;
+    font-size: 13px;
+    line-height:38px;
+    position:absolute;
+    z-index:222;
+    top:0;
+    background:#444851;
+    text-align:center;
+    display:none;
+}
+.quick_links_panel .other_tooltip .receive-button>a{
+    color:#fff;
+    cursor:pointer;
+    font-size: 12px;
+    background-color:#4cb9fe;
+    padding:3px;
+    display:inline;
+    line-height:normal;
+    border-radius:4px;
+}
+
+
 .quick_links_panel .mp_qrcode{
     padding:10px;
     width:148px;

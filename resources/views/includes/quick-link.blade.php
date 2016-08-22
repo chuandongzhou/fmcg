@@ -2,11 +2,24 @@
     @parent
     <script type="text/javascript">
         jQuery(function ($) {
-
             var flip = 0;
             var couponFlip = 0;
+                    @if(request()->is('shop/*'))
+            var shop = '{{ request()->is('shop/*') ? $shop->id : 0 }}'
+            var url = site.api('coupon/coupon-num/' + shop);
+            $.ajax({
+                url: url,
+                method: 'get'
+            }).done(function (data) {
+                if (data.couponNum > 0) {
+                    showOtherTooltip();
+                }
+            })
+            @endif
             //点击购物车图标显示弹框
             $("#shopCart").click(function (e) {
+                hideOtherTooltip();
+
                 e.stopPropagation();
                 couponFlip = 0;
                 if (flip++ % 2 === 0) {
@@ -75,6 +88,8 @@
             })
             //点击我的资产图标显示弹框
             $("#coupon").click(function (e) {
+                hideOtherTooltip();
+
                 e.stopPropagation();
                 flip = 0;
                 if (couponFlip++ % 2 === 0) {
@@ -94,7 +109,7 @@
                             @endif
 
                                     '<div class="my-coupon-num">' +
-                            ' 2' +
+
                             ' </div>' +
                             ' <div class="text">' +
                             ' 优惠券' +
@@ -133,7 +148,7 @@
 
                     var html = '';
                     $.ajax({
-                        url: '/api/v1/coupon/user-coupon',
+                        url: site.api('coupon/user-coupon'),
                         method: 'get'
                     }).done(function (data) {
                         data = data.coupons;
@@ -200,7 +215,7 @@
                     });
                             @if(request()->is('shop/*'))
                     var shop = '{{ request()->is('shop/*') ? $shop->id : 0 }}'
-                    var url = '/api/v1/coupon/' + shop;
+                    var url = site.api('coupon/' + shop);
                     $.ajax({
                         url: url,
                         method: 'get'
@@ -239,6 +254,15 @@
                     $(".quick_links_pop").css("zIndex", "-1")
                 }
             })
+            //隐藏可领取优惠券提示
+            function hideOtherTooltip() {
+                $(".other_tooltip").hide();
+            }
+
+            function showOtherTooltip() {
+                $(".other_tooltip").show();
+            }
+
             //点击按钮关闭弹框
             $("#quick_links_pop").on("click", ".ibar_closebtn", function (e) {
                 flip = 0;
@@ -274,6 +298,14 @@
                     $(".quick_toggle").removeClass('quick_links_allow_gotop');
                 }
             })
+
+
+            $(".hover_link").hover(function () {
+                $(this).siblings('.mp_tooltip').css("visibility", 'inherit');
+            }, function () {
+                $(this).siblings('.mp_tooltip').css("visibility", 'hidden');
+            })
+
             //点击回到顶部按钮
             $(".return_top").click(function () {
                 $('html, body').animate({scrollTop: 0}, 'slow');
