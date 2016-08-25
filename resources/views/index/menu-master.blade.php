@@ -162,7 +162,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item {!! path_active(['personal/delivery*','personal/delivery-man*']) !!}">
+                    <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*']) !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-shopping-basket"></i>
                             <span class="title">配送管理</span>

@@ -7,9 +7,16 @@ html {
 }
 
 body {
+  color: #000;
+  .content {
+    color: #fff;
+  }
+}
+
+body {
   font-family: "Microsoft YaHei", Arial, sans-serif;
   margin-bottom: 100px;
-  width: 100%;
+  width:100%;
 }
 
 ul, li, p, a, h1, h2, h3, h4 {
@@ -110,6 +117,10 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .prompt {
   color: $gray-light;
+}
+.prompt-coupon {
+  color: $gray-light;
+  font-size: 12px;
 }
 
 .go-history {
@@ -237,7 +248,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       #qr-content-panel {
         .tooltip {
           .tooltip-inner {
-            max-width: 340px!important;
+            max-width: 340px !important;
             padding: 0;
           }
           .qr-panel {
@@ -809,8 +820,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 .wholesalers-top-header {
   .right-search {
     padding: 20px 0;
-    .input-group{
-      z-index: 0!important;
+    .input-group {
+      z-index: 0 !important;
     }
   }
 }
@@ -960,7 +971,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   .commodity-border {
     border: 1px solid $blue-light;
     background-color: $body-bg;
-    &:hover{
+    &:hover {
       transform: translate3d(0px, -3px, 0px) rotate(0deg);
       box-shadow: 0 0 5px $brand-primary;
     }
@@ -971,7 +982,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
   .commodity-index-img {
     width: 25% !important;
-    padding: 0!important;
+    padding: 0 !important;
     margin: -1px 0 0 0 !important;
     .prompt {
       width: 80px !important;
@@ -985,17 +996,17 @@ ul, li, p, a, h1, h2, h3, h4 {
       background-position: 0 -205px !important;
     }
   }
-  .commodity-search-product{
-    min-height:300px;
+  .commodity-search-product {
+    min-height: 300px;
     .commodity-border {
       position: relative;
       &:hover {
         position: absolute;
         z-index: 999;
-        width:88%;
+        width: 88%;
         .shopping-store {
           display: inline-block;
-          .sales{
+          .sales {
             font-size: 13px;
             margin-top: 5px;
           }
@@ -1833,7 +1844,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor {
   .attr {
-    border: none!important;
+    border: none !important;
     padding: 5px 0 5px 15px !important;
     margin: 10px 0 !important;
     .items-item {
@@ -1854,6 +1865,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       display: inline-block;
       padding-right: 40px;
       position: relative;
+      margin:0!important;
     }
     .check-item {
       display: inherit;
@@ -1997,9 +2009,9 @@ table {
     }
   }
   .pay-detail {
-    padding:10px 15px;
-    .input-group{
-      z-index: 0!important;
+    padding: 10px 15px;
+    .input-group {
+      z-index: 0 !important;
     }
     .item {
       display: inline-block;
@@ -2077,51 +2089,51 @@ table {
 
   }
   .table-col {
-      table {
-        tr {
-          th {
-            border: none;
-            background-color: $blue-light;;
-            color: $gray-light;
-            vertical-align: middle;
-            font-size: 14px;
-            font-weight: 400!important;
-            .order-number {
-              display: inline-block;
-              margin-left: 20px;
-              label{
-                font-weight: 400!important;
-                font-size: 14px !important;
-              }
+    table {
+      tr {
+        th {
+          border: none;
+          background-color: $blue-light;;
+          color: $gray-light;
+          vertical-align: middle;
+          font-size: 14px;
+          font-weight: 400 !important;
+          .order-number {
+            display: inline-block;
+            margin-left: 20px;
+            label {
+              font-weight: 400 !important;
+              font-size: 14px !important;
             }
           }
-          td {
-            border-right: none;
-            border-left: none;
-            vertical-align: middle;
-            font-size: 13px!important;
-            padding: 2px!important;
-            .store-img {
-              @include square(60px);
-            }
+        }
+        td {
+          border-right: none;
+          border-left: none;
+          vertical-align: middle;
+          font-size: 13px !important;
+          padding: 2px !important;
+          .store-img {
+            @include square(60px);
           }
-          td.pay-detail {
-            border-left: 1px solid $table-border-color;
-            border-right: 1px solid $table-border-color;
-            vertical-align: top;
-            p {
-              margin:10px 0!important;
-            }
+        }
+        td.pay-detail {
+          border-left: 1px solid $table-border-color;
+          border-right: 1px solid $table-border-color;
+          vertical-align: top;
+          p {
+            margin: 10px 0 !important;
           }
-          td.operating {
-            vertical-align: top;
-            p {
-              margin:10px 0!important;
-            }
+        }
+        td.operating {
+          vertical-align: top;
+          p {
+            margin: 10px 0 !important;
           }
         }
       }
     }
+  }
   .order-process {
     border: 1px solid $blue-light;
     margin: 15px 0;
@@ -2139,7 +2151,21 @@ table {
 }
 
 .cart-img {
-  @include square(50px);
+  @include square(60px);
+}
+
+.dropdown-menu-list {
+  & > li {
+    & > a {
+      padding: 10px 3px 5px !important;
+      & > .details {
+        display: inline-block;
+        padding-right: 3px;
+        height: 68px;
+        line-height: 17px;
+      }
+    }
+  }
 }
 
 .cart-txt {
@@ -3285,11 +3311,11 @@ table {
           .btn {
             color: $gray-dark;
           }
-          &.store-name{
+          &.store-name {
             width: 50% !important;
           }
-          &.unit-price{
-            width: 10%!important;
+          &.unit-price {
+            width: 10% !important;
           }
         }
         td.total-money {
@@ -3448,34 +3474,34 @@ table {
   .title {
     margin-bottom: 20px;
     font-weight: 600;
-    &.msg-title{
+    &.msg-title {
       margin-bottom: 0;
     }
   }
-  .item{
-    padding:0 0 50px 90px;
-    &.address-item{
+  .item {
+    padding: 0 0 50px 90px;
+    &.address-item {
       width: 70%;
-      #add-address{
-        color:$gray;
+      #add-address {
+        color: $gray;
       }
     }
   }
-  .delivery-mode{
+  .delivery-mode {
     margin-bottom: 10px;
-    border-bottom:1px solid $banner-gray;
+    border-bottom: 1px solid $banner-gray;
   }
-  .checks{
-    .from-mentioning-btn{
+  .checks {
+    .from-mentioning-btn {
       margin-right: 100px;
     }
   }
-  .control{
+  .control {
     display: block;
   }
-  .control-select{
+  .control-select {
     width: 100%;
-    height:35px;
+    height: 35px;
     display: block;
   }
   .check-item {
@@ -3515,11 +3541,11 @@ table {
       display: inline-block;
     }
   }
-  .cash-on-delivery{
+  .cash-on-delivery {
     display: inline-block;
     margin-left: 100px;
-    &>.item {
-      margin-left: -20px!important;
+    & > .item {
+      margin-left: -20px !important;
       padding: 0;
       .check-item {
         width: 80px !important;
@@ -3527,17 +3553,17 @@ table {
       }
     }
   }
-  .cash-on-item{
-    display:none;
+  .cash-on-item {
+    display: none;
   }
-  .operating{
-    .prompt{
+  .operating {
+    .prompt {
       display: inline-block;
-      color:$gray-lighter;
+      color: $gray-lighter;
       padding: 3px 0;
     }
-    .control-select{
-      width:200px;
+    .control-select {
+      width: 200px;
     }
   }
   .count-panel {
@@ -3551,12 +3577,12 @@ table {
       }
     }
   }
-  .finally{
+  .finally {
     margin-bottom: 20px;
-    .count{
+    .count {
       padding: 5px 0;
       .name {
-        width:140px;
+        width: 160px;
       }
     }
   }
@@ -3629,7 +3655,7 @@ table {
   width: 300px;
   height: 150px;
   background-color: $gray-plain;
-  border-radius: 8px!important;
+  border-radius: 8px !important;
   position: fixed;
   right: 45px;
   bottom: -160px;
@@ -3641,7 +3667,7 @@ table {
     height: 40px;
     line-height: 40px;
     background-color: $brand-primary;
-    border-radius: 8px 8px 0 0!important;
+    border-radius: 8px 8px 0 0 !important;
     padding: 0 !important;
     span {
       display: inline-block;
@@ -3665,9 +3691,11 @@ table {
     width: 100%;
   }
 }
-.control-center-channel{
-  right:5px !important;
+
+.control-center-channel {
+  right: 5px !important;
 }
+
 /*==============help begin=================*/
 .help-menu-list {
   background-color: $gray-plain;
@@ -3991,9 +4019,10 @@ table {
   }
 }
 
-.clerk-name{
-  text-align: left!important;
+.clerk-name {
+  text-align: left !important;
 }
+
 /*==============sales-details end=================*/
 /*==============business-report begin=================*/
 .business-report-title {

@@ -7,6 +7,7 @@ use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
+use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\PhpWord;
 
 class ReportController extends Controller
@@ -56,22 +57,36 @@ class ReportController extends Controller
 
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
-            'orders.orderGoods',
+            'orders.orderGoods.goods',
             'orders.mortgageGoods',
-            'goodsRecord',
+            'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
 
+        //自主下单订单
+
+        $platFormOrders = $salesman->orders()->where('salesman_visit_id', 0)->OfData([
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        ])->with('order.orderGoods.goods')->get();
 
         $startDate = $startDate->toDateString();
         $endDate = $endDate->toDateString();
 
         $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
 
+        $businessService = new BusinessService();
+        $visitFormat = $businessService->formatVisit($visits);
+
+        $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
+
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'visitData' => (new BusinessService())->formatVisit($visits),
+            'visitData' => $visitFormat['visitData'],
+            'visitStatistics' => $visitFormat['visitStatistics'],
+            'platFormOrders' => $platFormOrders,
+            'platFormOrdersList' => $platFormOrders->pluck('orders')->collapse(),
             'salesman' => $salesman,
         ]);
 
@@ -104,12 +119,24 @@ class ReportController extends Controller
             'goodsRecord',
             'salesmanCustomer.shippingAddress'
         ])->get();
-        $visitData = (new BusinessService())->formatVisit($visits);
+
+        $businessService = new BusinessService();
+
+        $visitFormat = $businessService->formatVisit($visits);
+
+        //自主下单订单
+
+        $platFormOrders = $salesman->orders()->where('salesman_visit_id', 0)->OfData([
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        ])->with('order.orderGoods.goods')->get();
+
+        $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
 
         $startDate = $startDate->toDateString();
         $endDate = $endDate->toDateString();
-        $startDate == $endDate ? $this->_exportByDay($salesman, $startDate,
-            $visitData) : $this->_exportByDate($salesman, $startDate, $endDate, $visitData);
+        $startDate == $endDate ? $this->_exportByDay($salesman, $startDate, $visitFormat,
+            $platFormOrders) : $this->_exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders);
 
     }
 
@@ -177,9 +204,11 @@ class ReportController extends Controller
      *
      * @param $salesman
      * @param $startDate
-     * @param $visitData
+     * @param $visitFormat
+     * @param $platFormOrders
+     *
      */
-    private function _exportByDay($salesman, $startDate, $visitData)
+    private function _exportByDay($salesman, $startDate, $visitFormat, $platFormOrders = [])
     {
         // Creating the new document...
         $phpWord = new PhpWord();
@@ -201,16 +230,23 @@ class ReportController extends Controller
             'lineHeight' => 1.2,  // 行间距
         ]);
 
+        $visitData = $visitFormat['visitData'];
+        $visitStatistics = $visitFormat['visitStatistics'];
+
+
         foreach ($visitData as $customerId => $visit) {
             $section = $phpWord->addSection();
             $table = $section->addTable('table');
+            if ($visit == head($visitData)) {
+                $table->addRow();
+                $table->addCell(10500, $gridSpan9)->addText($startDate, ['size' => 30], $cellAlignCenter);
 
-            $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText($startDate, ['size' => 30], $cellAlignCenter);
+                $table->addRow();
+                $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报告', ['size' => 16],
+                    $cellAlignCenter);
 
-            $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报告', null, $cellAlignCenter);
-
+                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders);
+            }
             $table->addRow();
             $table->addCell(1000)->addText('序号', null, $cellAlignCenter);
             $table->addCell(1500)->addText('时间', null, $cellAlignCenter);
@@ -291,6 +327,9 @@ class ReportController extends Controller
                     ['size' => 20], $cellAlignCenter);
             }
         }
+
+        $this->_exportPlatformOrders($phpWord, $platFormOrders);
+
         $name = $salesman->name . $startDate . '业务报告明细.docx';
         $phpWord->save($name, 'Word2007', true);
     }
@@ -301,9 +340,10 @@ class ReportController extends Controller
      * @param $salesman
      * @param $startDate
      * @param $endDate
-     * @param $visitData
+     * @param $visitFormat
+     * @param $platFormOrders
      */
-    private function _exportByDate($salesman, $startDate, $endDate, $visitData)
+    private function _exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders = [])
     {
 
         // Creating the new document...
@@ -330,16 +370,25 @@ class ReportController extends Controller
             'lineHeight' => 1.2,  // 行间距
         ]);
 
+        $visitData = $visitFormat['visitData'];
+        $visitStatistics = $visitFormat['visitStatistics'];
+
+
         foreach ($visitData as $customerId => $visit) {
             $section = $phpWord->addSection();
             $table = $section->addTable('table');
 
-            $table->addRow();
-            $table->addCell(10500, $gridSpan6)->addText($startDate . ' 至 ' . $endDate, ['size' => 30],
-                $cellAlignCenter);
+            if ($visit == head($visitData)) {
+                $table->addRow();
+                $table->addCell(10500, $gridSpan6)->addText($startDate . ' 至 ' . $endDate, ['size' => 30],
+                    $cellAlignCenter);
 
-            $table->addRow();
-            $table->addCell(10500, $gridSpan6)->addText($salesman->name . ' - 业务报告', null, $cellAlignCenter);
+                $table->addRow();
+                $table->addCell(10500, $gridSpan6)->addText($salesman->name . ' - 业务报告', ['size' => 16],
+                    $cellAlignCenter);
+
+                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders);
+            }
 
             $table->addRow();
             $table->addCell(1200, $cellVAlignCenter)->addText('客户编号', null, $cellAlignCenter);
@@ -355,11 +404,10 @@ class ReportController extends Controller
             $table->addCell(1800, $cellVAlignCenter)->addText($visit['contact_information'], null, $cellAlignCenter);
             $table->addCell(3500, $gridSpan2)->addText($visit['shipping_address_name'], null, $cellAlignCenter);
 
-
-            $table->addRow();
-            $table->addCell(1200, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);
-
             if (isset($visit['display_fee'])) {
+                $table->addRow();
+                $table->addCell(1200, $cellRowSpan)->addText('陈列费', null, $cellAlignCenter);
+
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
                 $table->addCell(9300, $gridSpan5)->addText('现金', null, $cellAlignCenter);
@@ -435,9 +483,122 @@ class ReportController extends Controller
             }
         }
 
+        $this->_exportPlatformOrders($phpWord, $platFormOrders);
+
         $name = $salesman->name . $startDate . '至' . $endDate . '业务报告明细.docx';
         $phpWord->save($name, 'Word2007', true);
     }
 
+    /**
+     * 导出统计
+     *
+     * @param \PhpOffice\PhpWord\Element\Table $table
+     * @param $visitStatistics
+     * @param $visitData
+     * @param $platFormOrdersList
+     */
+    private function _exportStatistics(Table $table, $visitStatistics, $visitData, $platFormOrdersList)
+    {
+        $cellAlignCenter = ['align' => 'center'];
+        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+
+        $table->addRow();
+        $table->addCell(3200, $gridSpan2)->addText('拜访客户数：' . count($visitData), ['size' => 16], $cellAlignCenter);
+        $table->addCell(3800, $gridSpan2)
+            ->addText('退货单数：' . (isset($visitStatistics['return_order_count']) ? $visitStatistics['return_order_count'] : 0),
+                ['size' => 16], $cellAlignCenter);
+        $table->addCell(3500,
+            $gridSpan2)->addText('退货金额：' . (isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0),
+            ['size' => 16], $cellAlignCenter);
+
+        $table->addRow();
+        $table->addCell(3200,
+            $gridSpan2)->addText('总订货单数：' . (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()),
+            ['size' => 16], $cellAlignCenter);
+        $table->addCell(3800,
+            $gridSpan2)->addText('拜访订货单数：' . (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0),
+            ['size' => 16], $cellAlignCenter);
+        $table->addCell(3500, $gridSpan2)->addText('自主订货单数：' . $platFormOrdersList->count(), ['size' => 16],
+            $cellAlignCenter);
+
+        $table->addRow();
+        $table->addCell(3200,
+            $gridSpan2)->addText('总订货金额：' . (isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
+            $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), ['size' => 16], $cellAlignCenter);
+        $table->addCell(3800,
+            $gridSpan2)->addText('拜访订货金额：' . (isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0),
+            ['size' => 16], $cellAlignCenter);
+        $table->addCell(3500, $gridSpan2)->addText('自主订货金额：' . $platFormOrdersList->sum('amount'), ['size' => 16],
+            $cellAlignCenter);
+
+    }
+
+    /**
+     * 导出自主下单订单
+     *
+     * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     * @param $platformOrders
+     */
+    private function _exportPlatformOrders(PhpWord $phpWord, $platformOrders)
+    {
+        $cellAlignCenter = ['align' => 'center'];
+        $cellVAlignCenter = ['valign' => 'center'];
+        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
+
+        foreach ($platformOrders as $customer) {
+            $section = $phpWord->addSection();
+            $table = $section->addTable('table');
+
+            if ($customer == $platformOrders->first()) {
+                $table->addRow();
+                $table->addCell(10500, $gridSpan5)->addText('自主下单订单', ['size' => 30], $cellAlignCenter);
+            }
+            $table->addRow();
+            $table->addCell(2500, $cellVAlignCenter)->addText('客户编号', null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText('店铺名称', null, $cellAlignCenter);
+            $table->addCell(1000, $cellVAlignCenter)->addText('联系人', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('电话号码', null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText('营业地址', null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(2500, $cellVAlignCenter)->addText($customer['number'], null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText($customer['shop_name'], null, $cellAlignCenter);
+            $table->addCell(1000, $cellVAlignCenter)->addText($customer['contact'], null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText($customer['contact_information'], null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText($customer['business_address'], null, $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(2500, $cellVAlignCenter)->addText('订单ID', null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan2)->addText('下单时间', null, $cellAlignCenter);
+            $table->addCell(2000, $cellVAlignCenter)->addText('订单状态', null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText('订单金额', null, $cellAlignCenter);
+
+            foreach ($customer['orders'] as $order) {
+                $table->addRow();
+                $table->addCell(2500, $cellVAlignCenter)->addText($order->id, null, $cellAlignCenter);
+                $table->addCell(3500, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(2000, $cellVAlignCenter)->addText($order->order_status_name, null, $cellAlignCenter);
+                $table->addCell(2500, $cellVAlignCenter)->addText($order->amount, null, $cellAlignCenter);
+            }
+
+            $table->addRow();
+            $table->addCell(10500, $gridSpan5)->addText('总计：' . $customer['orders']->sum('amount'), null,
+                $cellAlignCenter);
+
+            $table->addRow();
+            $table->addCell(5000, $gridSpan2)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(3000, $gridSpan2)->addText('订货数量', null, $cellAlignCenter);
+            $table->addCell(2500, $cellVAlignCenter)->addText('订货金额', null, $cellAlignCenter);
+
+            foreach ($customer['orderGoods'] as $orderGoods) {
+                $table->addRow();
+                $table->addCell(5000, $gridSpan2)->addText($orderGoods['name'], null, $cellAlignCenter);
+                $table->addCell(3000, $gridSpan2)->addText($orderGoods['order_num'], null, $cellAlignCenter);
+                $table->addCell(2500, $cellVAlignCenter)->addText($orderGoods['order_amount'], null, $cellAlignCenter);
+            }
+
+        }
+    }
 
 }

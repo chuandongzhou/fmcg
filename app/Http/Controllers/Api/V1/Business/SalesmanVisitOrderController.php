@@ -64,7 +64,7 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
-        $attributes = $request->all();
+        $attributes = $request->except('salesman_id', 'start_date', 'end_date');
 
         if ($salesmanVisitOrder->can_sync) {
             $this->_syncOrders([$salesmanVisitOrder]);
@@ -114,11 +114,13 @@ class SalesmanVisitOrderController extends Controller
             return $this->error('请选择要通过的订单');
         }
         $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->get();
+
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
         }
 
-        $result = $this->_syncOrders($orders);
+        // 订货单才同步
+        $result = $orders->sum('type') == 0 ? $this->_syncOrders($orders) : 'success';
 
         if ($result == 'success' && SalesmanVisitOrder::whereIn('id',
                 $orderIds)->update(['status' => cons('salesman.order.status.passed')])
@@ -170,6 +172,25 @@ class SalesmanVisitOrderController extends Controller
     }
 
     /**
+     * 获取订货单信息
+     *
+     * @param $id
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function orderDetail($id)
+    {
+        $order = SalesmanVisitOrder::with([
+            'orderGoods.goods' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ])->find($id);
+
+        $order->type == cons('salesman.order.type.order') && $order->load('mortgageGoods', 'order.deliveryMan');
+
+        return $this->success(compact('order'));
+    }
+
+    /**
      * 同步订单
      *
      * @param $salesmanVisitOrders
@@ -195,7 +216,7 @@ class SalesmanVisitOrderController extends Controller
                     'status' => $orderConf['status']['non_send'],
                     // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
-                    'remark' => $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '陈列费备注：' . $salesmanVisitOrder->display_remark : '')
+                    'remark' => '订单备注:' . $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '; 陈列费备注:' . $salesmanVisitOrder->display_remark : '')
                 ];
 
                 if (!$orderData['shipping_address_id']) {
@@ -302,23 +323,5 @@ class SalesmanVisitOrderController extends Controller
         return $result;
     }
 
-    /**
-     * 获取订货单信息
-     *
-     * @param $id
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function orderDetail($id)
-    {
-        $order = SalesmanVisitOrder::with([
-            'orderGoods.goods' => function ($query) {
-                $query->select('id', 'name');
-            }
-        ])->find($id);
-
-        $order->type == cons('salesman.order.type.order') && $order->load('mortgageGoods', 'order.deliveryMan');
-
-        return $this->success(compact('order'));
-    }
 
 }

@@ -215,7 +215,7 @@ class SalesmanCustomer extends Model
     }
 
     /**
-     * 获取店铺名
+     * 获取平台账号
      *
      * @return string
      */

@@ -23,7 +23,7 @@ abstract class Request extends BaseRequest
     /**
      * Get the response for a forbidden operation.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function forbiddenResponse()
     {

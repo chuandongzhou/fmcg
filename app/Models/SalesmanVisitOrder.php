@@ -200,7 +200,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanSyncAttribute()
     {
-        return $this->order_id == 0;
+        return $this->order_id == 0 && $this->type == cons('salesman.order.type.order');
     }
 
     /**

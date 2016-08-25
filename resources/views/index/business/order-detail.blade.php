@@ -29,6 +29,12 @@
                 </div>
                 <div class="item"><span class="prompt">联系人 : {{ $order->customer_contact }}</span></div>
                 <div class="item"><span class="prompt">收货地址 : {{ $order->shipping_address }}</span></div>
+                @if($order->type == cons('salesman.order.type.order'))
+                    <div class="item"><span class="prompt">订单备注 : {{ $order->order_remark }}</span></div>
+                    <div class="item"><span class="prompt">陈列费备注 : {{ $order->display_remark }}</span></div>
+                @endif
+
+
                 <hr>
                 <div>{{ $order->type == cons('salesman.order.type.order') ? '订货' : '退货' }}商品</div>
                 <table class="table text-center business-table">

@@ -623,7 +623,8 @@ class OrderController extends Controller
             'amount' => $order->price,
             'order_id' => $order->id,
             'salesman_id' => $salesmanCustomer->salesman_id,
-            'order_remark' => $order->remark
+            'order_remark' => $order->remark,
+            'status' => cons('salesman.order.status.passed')
         ];
 
         $result = DB::transaction(function () use ($orderData, $order) {
