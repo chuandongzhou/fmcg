@@ -67,6 +67,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
         $router->get('delivery', 'DeliveryController@historyDelivery');
+        $router->get('delivery-statistical','DeliveryController@statisticalDelivery');//配送统计
+        $router->get('delivery-report','DeliveryController@report');
         $router->controller('model', 'ModelController');  //模版管理
         $router->resource('coupon', 'CouponController'); // 优惠券
     });
@@ -258,6 +260,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('deal-delivery', 'DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout', 'DeliveryController@logout');//退出登陆
             $router->post('update-order', 'DeliveryController@updateOrder');//修改订单商品数量
+            $router->get('delivery-statistical','DeliveryController@statisticalDelivery');
         });
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {

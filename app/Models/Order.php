@@ -642,8 +642,8 @@ class   Order extends Model
             if ($search['status']) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
-                    $query->where('pay_status', cons('order.pay_status.non_payment'))
-                        ->where('pay_type', '<>', cons('pay_type.pick_up'));
+                    $query->where(['pay_status'=> cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])
+                        ->where('pay_type', cons('pay_type.online'));
                 } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {
                         $query->where([
@@ -701,5 +701,24 @@ class   Order extends Model
         $type = $type ?: cons('order.status.finished');
 
         return $query->where('pay_type', cons('pay_type.pick_up'))->where('status', $type);
+    }
+    /**
+     * 配送历史条件查询
+     * @param $query
+     * @param $search
+     * @return mixed
+     */
+    public function scopeOfDeliverySearch($query,$search){
+        return $query->where(function($query)use($search){
+            if ($search['delivery_man_id'] && is_numeric($search['delivery_man_id'])) {
+                $query->where('delivery_man_id', $search['delivery_man_id']);
+            }
+            if ($search['start_at']) {
+                $query->where('delivery_finished_at', '>', $search['start_at']);
+            }
+            if ($search['end_at']) {
+                $query->where('delivery_finished_at', '<', $search['end_at']);
+            }
+        });
     }
 }

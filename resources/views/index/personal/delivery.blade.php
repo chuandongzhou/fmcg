@@ -57,6 +57,7 @@
                             @endforeach
                         </select>
                         <button class=" btn search search-by-get">搜索</button>
+                        <a class="btn btn-default" href="{{ url('personal/delivery-statistical?'.  http_build_query($search)) }}">汇总统计</a>
                     </form>
                 </div>
             </div>
