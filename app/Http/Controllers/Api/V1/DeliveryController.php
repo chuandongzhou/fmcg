@@ -12,6 +12,7 @@ use App\Http\Requests\Api\v1\DeliveryLoginRequest;
 use DB;
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
+
 class DeliveryController extends Controller
 {
 
@@ -233,20 +234,27 @@ class DeliveryController extends Controller
         $flag = (new OrderService)->changeOrder($order, $attributes, $deliveryId);
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
+
     /**
      * 订单统计
+     *
      * @param \App\Http\Requests $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function statisticalDelivery(Request $request){
+    public function statisticalDelivery(Request $request)
+    {
         $search = $request->all();
         $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
         $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
         $search['delivery_man_id'] = delivery_auth()->id();
-        $delivery = Order::whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(['orderGoods.goods'=>function($query){
-            return $query->select(['id','name']);
-        },'systemTradeInfo','deliveryMan'])->get();
-        $data = DeliveryService::formatDelivery($delivery);
+        $delivery = Order::whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with([
+            'orderGoods.goods' => function ($query) {
+                return $query->select(['id', 'name']);
+            },
+            'systemTradeInfo',
+            'deliveryMan'
+        ])->get();
+        $data = DeliveryService::format($delivery);
         return $this->success($data);
     }
 

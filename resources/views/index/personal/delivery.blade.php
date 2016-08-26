@@ -56,8 +56,8 @@
                                 <option value="{{ $man->id  }}"{{ $man->id==$search['delivery_man_id'] ? 'selected' : ''}}>{{ $man->name }}</option>
                             @endforeach
                         </select>
-                        <button class=" btn search search-by-get">搜索</button>
-                        <a class="btn btn-default" href="{{ url('personal/delivery-statistical?'.  http_build_query($search)) }}">汇总统计</a>
+                        <button type="button" class=" btn search search-by-get">搜索</button>
+                        <button type="button" class="btn btn-default statistical">汇总统计</button>
                     </form>
                 </div>
             </div>
@@ -108,6 +108,16 @@
     @parent
     <script type="text/javascript">
         formSubmitByGet();
+        $('.statistical').click(function () {
+            checksubmit(site.url('personal/delivery-statistical'));
+        });
+        $('.search-by-get').click(function () {
+            checksubmit(stie.url('personal/delivery'));
+        });
+        function checksubmit(url) {
+            $("form").attr('action', url);
+            $('form').submit();
+        }
     </script>
 @stop
 

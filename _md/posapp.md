@@ -166,7 +166,7 @@
 `失败返回：`
 
 
-####2.2.8 修改订单[get] (delivery-statistical)
+####2.2.8 配送统计[get] (delivery-statistical)
 `请求参数：`
 
 	start_at        date           开始时间
@@ -179,28 +179,23 @@
 
 	deliveryMan字段说明
 
-		key        string         deliveryMan的索引表示配送人员名称
-
-		具体字段说明
-			orderNum      int        配送订单数量
-			totalPrice    decimal    配送总金额
-			price         array      配送金额组成统计
-			
-			price字段说明
-
-				key      int        price的索引付款方式（0代表现金，其他按正常情况处理）
-				value    decimal    price的索引对应的值，表示对应付款方式的值（其中易宝支付方式=易宝+pingxx_易宝，支付宝支付=支付宝+支付宝app）				
+		name        string           配送人员姓名
+		num         int              配送单数
+		price       decimal          配送总金额
+		detail      array            配送金额组成
+		
+		detail字段说明
+			pay_type     int        交易方式（0：现金，其他按正常表示）
+			amount       decimal    交易金额（其中:易宝=易宝+pingxx_易宝，支付宝支付=支付宝+支付宝app）
 
 	goods字段说明
-		key        string          goods的索引代表：商品名称
-		value      array           goods索引对应的值
-
-		value具体字段说明
-			key      int            value索引表示：商品规格
-			
-			key对应的值的具体字段说明
-				num         int      商品数量
-				price       decimal  商品金额
+		name       string            商品名称
+		detail     array             按单位统计详细信息
+		
+		detail字段说明
+			pieces     int          商品单位
+			num        int          商品数量
+			amount     decimal      商品金额
 			
 
 
