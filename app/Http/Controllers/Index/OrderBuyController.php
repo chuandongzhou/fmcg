@@ -54,7 +54,7 @@ class OrderBuyController extends OrderController
         if (is_numeric($search['search_content'])) {
             $orders = $orders->where('id', $search['search_content']);
         } elseif ($search['search_content']) {
-            $orders = $orders->ofSelectOptions($search)->ofUserShopName($search['search_content']);
+            $orders = $orders->ofSelectOptions($search)->ofShopName($search['search_content']);
         } else {
             $orders = $orders->ofSelectOptions($search);
         }

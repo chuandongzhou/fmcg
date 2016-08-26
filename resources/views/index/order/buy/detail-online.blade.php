@@ -39,7 +39,7 @@
                     </li>
                 @endif
 
-                <li><span class="title-name">订单备注 : </span>
+                <li><span class="title-name">备注 : </span>
 
                     <p class="remarks-content">{{ $order['remark'] }}</p>
                 </li>

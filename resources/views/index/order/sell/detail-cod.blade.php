@@ -116,7 +116,7 @@
                         </li>
                         <li><span class="title-info-name">订单状态 : </span><span
                                     class="red">{{ $order['status_name'] }}</span></li>
-                        <li><span class="title-info-name">订单备注 :</span>
+                        <li><span class="title-info-name">备注 :</span>
 
                             <p class="remarks-content">{{ $order['remark'] }}</p>
                         </li>

@@ -483,6 +483,21 @@ class   Order extends Model
     }
 
     /**
+     * 按卖家名检索
+     *
+     * @param $query
+     * @param $shopName
+     * @return mixed
+     */
+    public function scopeOfShopName($query, $shopName)
+    {
+        return $query->whereHas('shop', function ($query) use ($shopName) {
+
+            $query->where('name', 'like', '%' . $shopName . '%');
+        });
+    }
+
+    /**
      * 购买订单条件
      *
      * @param $query

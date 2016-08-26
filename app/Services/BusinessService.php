@@ -287,7 +287,7 @@ class BusinessService
 
                 foreach ($order->orderGoods as $orderGoods) {
                     $result[$customerId]['orderGoods'][$orderGoods->goods_id]['name'] = $orderGoods->goods_name;
-                    $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num']) ? ++$result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] : 1;
+                    $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num']) ? ($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] + $orderGoods->num)  : $orderGoods->num;
                     $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'])
                         ? bcadd($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'],
                             $orderGoods->amount, 2) : $orderGoods->amount;

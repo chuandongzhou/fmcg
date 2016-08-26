@@ -335,6 +335,7 @@ class Goods extends Model
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
+
         return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
     }
 

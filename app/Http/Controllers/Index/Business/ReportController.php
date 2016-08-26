@@ -576,7 +576,7 @@ class ReportController extends Controller
 
             foreach ($customer['orders'] as $order) {
                 $table->addRow();
-                $table->addCell(2500, $cellVAlignCenter)->addText($order->id, null, $cellAlignCenter);
+                $table->addCell(2500, $cellVAlignCenter)->addText($order->order_id, null, $cellAlignCenter);
                 $table->addCell(3500, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
                 $table->addCell(2000, $cellVAlignCenter)->addText($order->order_status_name, null, $cellAlignCenter);
                 $table->addCell(2500, $cellVAlignCenter)->addText($order->amount, null, $cellAlignCenter);

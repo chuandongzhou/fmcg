@@ -141,7 +141,7 @@
                             </li>
                         @endif
                         <li>
-                            <span class="title-info-name">订单备注 :</span>
+                            <span class="title-info-name">备注 :</span>
 
                             <p class="remarks-content">{{ $order['remark'] }}</p>
                         </li>
