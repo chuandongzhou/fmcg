@@ -8,7 +8,6 @@ use App\Models\SalesmanVisitOrder;
 use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Http\Controllers\Index\Controller;
 use Gate;
 use PhpOffice\PhpWord\PhpWord;
@@ -208,7 +207,6 @@ class SalesmanCustomerController extends Controller
             'end_date' => $endTime
         ])->with('orderGoods', 'mortgageGoods')->get();
 
-
         $orderConf = cons('salesman.order');
 
         //订单
@@ -255,6 +253,7 @@ class SalesmanCustomerController extends Controller
             }
         }
 
+
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
@@ -266,8 +265,8 @@ class SalesmanCustomerController extends Controller
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
                     'time' => head($goodsList)['created_at'],
-                    'stock' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
-                    'production_date' => isset($goodsRecodeData[$goodsId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
+                    'stock' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
+                    'production_date' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,
                     'order_price' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->price : 0,
                     'order_pieces' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->pieces : 0,

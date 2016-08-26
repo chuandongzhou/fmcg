@@ -175,12 +175,28 @@ class SalesmanVisitController extends Controller
             'salesmanCustomer.shippingAddress',
             'orders.orderGoods.goods'
         ]);
-        $visitData = head((new BusinessService())->formatVisit([$visit], true));
+        $visitData = head((new BusinessService())->formatVisit([$visit], true)['visitData']);
         $visitData['display_fee'] = isset($visitData['display_fee']) ? head($visitData['display_fee'])['display_fee'] : 0;
         $visitData['mortgage'] = isset($visitData['mortgage']) ? head($visitData['mortgage']) : [];
         $visitData['statistics'] = isset($visitData['statistics']) ? array_values($visitData['statistics']) : [];
 
         return $this->success(compact('visitData'));
+    }
+
+    /**
+     * 是否可添加拜访
+     *
+     * @param $customer_id
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function canAdd($customer_id)
+    {
+        $salesman_id = salesman_auth()->id();
+        $start = Carbon::now()->startOfDay();
+        $end = Carbon::now()->endOfDay();
+        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
+            ->whereBetween('created_at', [$start, $end])->lists('id');
+        return $this->success(compact('visit'));
     }
 
     /**
@@ -236,19 +252,5 @@ class SalesmanVisitController extends Controller
         return compact('order', 'goodsRecode');
     }
 
-    /**
-     * 是否可添加拜访
-     *
-     * @param $customer_id
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function canAdd($customer_id)
-    {
-        $salesman_id = salesman_auth()->id();
-        $start = Carbon::now()->startOfDay();
-        $end = Carbon::now()->endOfDay();
-        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
-            ->whereBetween('created_at', [$start, $end])->lists('id');
-        return $this->success(compact('visit'));
-    }
+
 }

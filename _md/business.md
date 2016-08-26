@@ -357,7 +357,7 @@
     
      mortgage字段子集说明
         
-        id                      int             商品ID
+        id                      int             抵费商品ID
         num                     int             数量
 
 

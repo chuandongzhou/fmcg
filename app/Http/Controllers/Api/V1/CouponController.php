@@ -28,7 +28,6 @@ class CouponController extends Controller
         });
 
         return $this->success(['coupons' => $coupons->values()]);
-        return $this->success(['coupons' => $coupons->values()]);
     }
 
     /**

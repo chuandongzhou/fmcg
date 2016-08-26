@@ -52,7 +52,8 @@ class SalesmanVisitOrderController extends Controller
 
         $orders = (new BusinessService())->getOrders($salesmenId, $data);
 
-        return view('index.business.order-return-orders',  ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
+        return view('index.business.order-return-orders',
+            ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
 
     /**
@@ -137,6 +138,14 @@ class SalesmanVisitOrderController extends Controller
 
             $table->addRow(16);
             $table->addCell(9000, $gridSpan7)->addText('收货地址 :' . $order->shipping_address);
+
+            if ($order->type == cons('salesman.order.type.order')) {
+                $table->addRow(16);
+                $table->addCell(9000, $gridSpan7)->addText('订单备注 :' . $order->order_remark);
+
+                $table->addRow(16);
+                $table->addCell(9000, $gridSpan7)->addText('陈列费备注 :' . $order->display_remark);
+            }
 
             $table->addRow(16);
             $table->addCell(1300, $cellRowSpan)->addText('订货商品', null, $cellAlignCenter);
