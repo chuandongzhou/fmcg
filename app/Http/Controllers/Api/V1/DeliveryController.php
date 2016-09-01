@@ -122,7 +122,7 @@ class DeliveryController extends Controller
             $date = (new Carbon($order['delivery_finished_at']))->toDateString();
             $key = array_search($date, array_column($historyOrder, 'date'));
             $order->delivery_finished_at = (new Carbon($order->delivery_finished_at))->getTimestamp();
-            $order->user->setVisible(['shop']);
+            $order->user && $order->user->setVisible(['shop']);
             if ($key === false) {
                 $historyOrder[$j]['date'] = $date;
                 $historyOrder[$j]['data'][] = $order;

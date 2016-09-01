@@ -159,7 +159,7 @@ class SalesmanVisitOrderController extends Controller
             foreach ($data['orderGoods'] as $orderGood) {
                 $table->addRow(16);
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(1300)->addText($orderGood->id, null, $cellAlignCenter);
+                $table->addCell(1300)->addText($orderGood->goods_id, null, $cellAlignCenter);
                 $table->addCell(1300)->addText(str_limit($orderGood->goods_name, 10), null, $cellAlignCenter);
                 $table->addCell(1300)->addText($orderGood->price . '/' . cons()->valueLang('goods.pieces',
                         $orderGood->pieces), null, $cellAlignCenter);

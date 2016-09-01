@@ -182,7 +182,7 @@
                         </tr>
                         @foreach($customer['orders'] as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->order_id }}</td>
                                 <td colspan="2">{{ $order->created_at }}</td>
                                 <td>{{ $order->order_status_name }}</td>
                                 <td>{{ $order->amount }}</td>

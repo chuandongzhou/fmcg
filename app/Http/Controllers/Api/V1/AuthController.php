@@ -13,12 +13,16 @@ use App\Http\Requests\Api\v1\RegisterRequest;
 use App\Models\User;
 use App\Services\RedisService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Hash;
 use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
+
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
     /**
      * 登录
      *
