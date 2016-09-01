@@ -244,8 +244,8 @@ class DeliveryController extends Controller
     public function statisticalDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+        $search['start_at'] = isset($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
+        $search['end_at'] = isset($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
         $search['delivery_man_id'] = delivery_auth()->id();
         $delivery = Order::whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with([
             'orderGoods.goods' => function ($query) {

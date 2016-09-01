@@ -200,7 +200,6 @@ class   Order extends Model
     {
         $payWay = $this->attributes['pay_way'];
 
-        info($payWay);
         return cons()->valueLang('pay_way.cod', $payWay);
     }
 
@@ -719,6 +718,7 @@ class   Order extends Model
             if ($search['end_at']) {
                 $query->where('delivery_finished_at', '<', $search['end_at']);
             }
+            $query->where('delivery_man_id','<>',0);
         });
     }
 }

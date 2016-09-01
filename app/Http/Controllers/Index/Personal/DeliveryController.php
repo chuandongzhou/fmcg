@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Services\DeliveryService;
 use PhpOffice\PhpWord\PhpWord;
+use Carbon\Carbon;
 class DeliveryController extends Controller
 {
 
@@ -19,10 +20,9 @@ class DeliveryController extends Controller
     public function historyDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+        $search['start_at'] = isset($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
+        $search['end_at'] = isset($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
         $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
-
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',
             'shippingAddress.address', 'deliveryMan', 'systemTradeInfo')->orderBy('delivery_finished_at',
@@ -42,9 +42,9 @@ class DeliveryController extends Controller
     public function statisticalDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
+        $search['start_at'] = !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
+        $search['end_at'] = !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(['orderGoods.goods'=>function($query){
                 return $query->select(['id','name']);
@@ -59,9 +59,9 @@ class DeliveryController extends Controller
      */
     public function report(Request $request){
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
+        $search['start_at'] = !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
+        $search['end_at'] = !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(['orderGoods.goods'=>function($query){
             return $query->select(['id','name']);
@@ -122,7 +122,6 @@ class DeliveryController extends Controller
         $table->addCell(3000,$gridSpan2)->addText('商品名称', null, $cellAlignCenter);
         $table->addCell(3000,$gridSpan2)->addText('商品数量', null, $cellAlignCenter);
         $table->addCell(3000,$gridSpan2)->addText('金额', null, $cellAlignCenter);
-        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
         foreach($data['goods'] as $name =>$goods){
 
             foreach($goods as $k => $detail){
