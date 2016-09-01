@@ -193,18 +193,27 @@ class OrderSellController extends OrderController
             $table = $section->addTable('table');
             //表头
             $table->addRow(16, ['align' => 'center']);
-            $cell = $table->addCell(9000);
-            $cell->getStyle()->setGridSpan(6);
-            $cell->addText('送货单');
-            $table->addRow();
-            $cell = $table->addCell();
-            $cell->getStyle()->setGridSpan(6);
-            $cell->addText('订单号:' . $item['id']);
+            $table->addCell(9000, ['gridSpan' => 7])->addText('送货单');
 
-            $table->addRow(20, ['align' => 'center']);
+            $table->addRow();
+            $table->addCell(4300, ['gridSpan' => 3])->addText('客户:' . $item->user_shop_name);
+            $table->addCell(3000, ['gridSpan' => 2])->addText('订单号:' . $item['id']);
+            $table->addCell(3000, ['gridSpan' => 2])->addText('时间:' . $item->created_at->toDateString());
+            $table->addRow(16);
+            if ($item->pay_type == $orderPayTypes['pick_up']) {
+                $table->addCell(9000, ['gridSpan' => 7])
+                    ->addText('提货人：' . ($item->user->shop->contact_person) . ' ' . ($item->user->shop->contact_info));
+
+            } else {
+                $table->addCell(9000, ['gridSpan' => 7])
+                    ->addText('收货地址：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name) . ' ' . ($item->shippingAddress ? $item->shippingAddress->consigner : '') . ' ' . ($item->shippingAddress ? $item->shippingAddress->phone : ''));
+            }
+
+            $table->addRow(20);
             $table->addCell(1500)->addText('货号');
+            $table->addCell(1000)->addText('条形码');
             $table->addCell(1800)->addText('商品名称');
-            $table->addCell(3300)->addText('促销信息');
+            $table->addCell(2300)->addText('促销信息');
             $table->addCell(700)->addText('数量');
             $table->addCell(1500)->addText('单价');
             $table->addCell(1500)->addText('小计');
@@ -212,6 +221,7 @@ class OrderSellController extends OrderController
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
                 $table->addCell(1500)->addText($goods->id);
+                $table->addCell(1500)->addText($goods->bar_code);
                 $table->addCell(1800)->addText($goods->name);
                 $table->addCell(3300)->addText(mb_substr($goods->promotion_info, 0, 20));
                 $table->addCell(700)->addText($goods->pivot->num);
@@ -220,40 +230,21 @@ class OrderSellController extends OrderController
                 $table->addCell(1500)->addText($goods->pivot->total_price);
             }
 
-            $info = [
-                '付款方式:   ' . $item->payment_type,
-                '备注:   ' . $item->remark,
-                '合计:   ' . $item->price,
-            ];
-            if ($item->coupon_id) {
-                $info[] = '优惠:   ' . bcsub($item->price, $item->after_rebates_price, 2);
-                $info[] = '应付:   ' . $item->after_rebates_price;
-            }
+            $table->addRow(16);
+            $table->addCell(9000, ['gridSpan' => 7])
+                ->addText('合计：' . $item->price . ($item->coupon_id ? '  优惠：' . bcsub($item->price, $item->after_rebates_price, 2) . '  应付：' . $item->after_rebates_price : ''), null, ['alignMent' => 'right']);
 
-            if ($item->pay_type == $orderPayTypes['pick_up']) {
-                $info[] = '提货人:   ' . $item->user->shop->contact_person;
-                $info[] = '电话:   ' . $item->user->shop->contact_info;
-            } else {
-                $info[] = '收货人:   ' . ($item->shippingAddress ? $item->shippingAddress->consigner : '');
-                $info[] = '电话:   ' . ($item->shippingAddress ? $item->shippingAddress->phone : '');
-                $info[] = '地址:   ' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name);
-            }
+            $table->addRow(16);
+            $table->addCell(9000, ['gridSpan' => 7])->addText('付款方式：'  .$item->payment_type);
 
-
-            foreach ($info as $v) {
-                $table->addRow();
-                $cell = $table->addCell();
-                $cell->getStyle()->setGridSpan(6);
-                $cell->addText($v);
-            }
             $table->addRow();
             $cell = $table->addCell(6000, ['align' => 'left']);
-            $cell->getStyle()->setGridSpan(4);
-            $cell->addText(date('Y-m-d'));
+            $cell->getStyle()->setGridSpan(5);
+            $cell->addText('备注：'  . $item->remark);
 
-            $qrCode = $table->addCell(3000, ['align' => 'right']);
+            $qrCode = $table->addCell(3000);
             $qrCode->getStyle()->setGridSpan(2);
-            $qrCode->addImage((new ShopService())->qrcode($item->shop_id));
+            $qrCode->addImage((new ShopService())->qrcode($item->shop_id),['align' => 'center']);
             $section->addFooter();
         }
         $name = date('Ymd') . strtotime('now') . '.docx';

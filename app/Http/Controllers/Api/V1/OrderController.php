@@ -93,11 +93,15 @@ class OrderController extends Controller
     {
         $order = Order::where('user_id', auth()->id())->find($request->input('order_id'));
 
+        if (is_null($order)) {
+            return $this->error('订单不存在');
+        }
+
         $order = $this->_orderLoadData($order);
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
-        return $order ? $this->success($this->_hiddenOrderAttr($order)) : $this->error('订单不存在');
+        return $this->success($this->_hiddenOrderAttr($order));
     }
 
 

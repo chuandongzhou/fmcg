@@ -12,6 +12,7 @@ class OrderGoods extends Model
         'price',
         'num',
         'total_price',
+        'pieces',
         'order_id'
     ];
 
