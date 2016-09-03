@@ -189,7 +189,7 @@ class StatisticsController extends Controller
                     }
                 } elseif ($sellerTypes[$order->shop_id] == $userType['supplier']) {
                     //供应商
-                    if ($users[$order->user_id] == $userType['wholesaler']) {
+                    if ($order->user_id && $users[$order->user_id] == $userType['wholesaler']) {
                         //对于批发商
                         //成单数
                         $orderSellerEveryday['supplier']['wholesaler']['count'] = isset($orderSellerEveryday['supplier']['wholesaler']['count']) ? ++$orderSellerEveryday['supplier']['wholesaler']['count'] : 1;

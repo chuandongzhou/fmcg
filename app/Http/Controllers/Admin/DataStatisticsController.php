@@ -92,7 +92,7 @@ class DataStatisticsController extends Controller
 
             foreach ($orders as $order) {
                 //买家
-                if ($users[$order->user_id] == $userType['retailer']) {
+                if (!$order->user_id || $users[$order->user_id] == $userType['retailer']) {
                     //终端
                     $orderEveryday['retailer']['count'] = isset($orderEveryday['retailer']['count']) ? ++$orderEveryday['retailer']['count'] : 1;
                     $orderEveryday['retailer']['amount'] = isset($orderEveryday['retailer']['amount']) ? $orderEveryday['retailer']['amount'] + $order->price : $order->price;

@@ -71,7 +71,7 @@ class LikeController extends Controller
         }
 
         return view('index.like.goods', [
-            'goods' => $goods->orderBy('id', 'DESC')->paginate(16),
+            'goods' => $goods->orderBy('id', 'DESC')->paginate(15),
             'data' => $data,
             'cateArr' => $cateArr
         ]);

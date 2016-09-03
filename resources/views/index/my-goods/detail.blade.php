@@ -96,7 +96,7 @@
                         @if($goods->is_promotion)
                             <li class="clearfix">
                                 <span class="prompt pull-left">促销信息 :&nbsp;</span>
-                                <p class="promotions-content"> {{ $goods->promotion_info }}</p>
+                                <div class="promotions-content"> {{ $goods->promotion_info }}</div>
                             </li>
                         @endif
                     </ul>

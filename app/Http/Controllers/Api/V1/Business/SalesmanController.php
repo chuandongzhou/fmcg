@@ -149,7 +149,7 @@ class SalesmanController extends Controller
         }
         $result = (new SalesmanTargetService())->setTarget($data['salesman_id'], $data['date'], $data['target']);
 
-        return $result ? $this->success('目录设置成功') : $this->success('更新目标成功');
+        return $result ? $this->success('目标设置成功') : $this->success('更新目标成功');
     }
 
     /**
