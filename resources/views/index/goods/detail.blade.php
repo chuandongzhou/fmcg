@@ -1,5 +1,5 @@
 @extends('index.index-master')
-
+@include('includes.jquery-lazeload')
 @section('subtitle')
     {{ $goods->name }}
 @stop
@@ -63,6 +63,7 @@
                                    onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$goods->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
                                    class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
                             </b>
+                            <div class="can-receive-coupon" >{{ $couponNum==0?'':"(该商家有可领取优惠券)" }}</div>
                         </li>
                         <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
                         @if($goods->is_promotion)
@@ -107,29 +108,61 @@
                 </div>
             </div>
         </div>
-        <div class="row nav-wrap">
-            <div class="col-sm-12 switching">
-                <a href="javascript:void(0)" id="location" class="active">配送区域</a>
-                <a href="javascript:void(0)" id="graphic-details">图文详情</a>
-            </div>
-            <div class="col-sm-12 address-wrap  location box active">
-                <div class="item clearfix">
-                    <h5 class="prompt">商品配送区域 :</h5>
-                    <ul class="address-list">
-                        @foreach($goods->deliveryArea as $area)
-                            <p class="col-sm-12">{{ $area->address_name }}</p>
-                        @endforeach
-                    </ul>
-                </div>
-                {{--<div class="item">--}}
-                {{--<h5 class="prompt">商品配送区域大概地图标识 :</h5>--}}
+        <div class="row nav-wrap list-penal " >
+            <div class="col-sm-2 hot-goods-panel" >
+                <div class="col-sm-12 switching hot-goods" >
+                    <a href="javascript:void(0)" >店家热门商品</a>
 
-                {{--<div id="map"></div>--}}
-                {{--</div>--}}
+                </div>
+                @foreach($hotGoods as $goods)
+                <div class=" commodity" >
+                    <div class="commodity-border">
+                        <div class="img-wrap" >
+                            <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
+                                <img class="commodity-img lazy"
+                                     data-original="{{ $goods->image_url }}"/>
+                                <span class="@if($goods->is_out)prompt  lack  @elseif($goods->is_promotion)prompt  promotions @elseif($goods->is_new)prompt  new-listing @endif"></span>
+                            </a>
+                        </div>
+                        <div class="content-panel">
+                            <p class="commodity-name">
+                                <a href="{{ url('goods/' . $goods->id) }}"
+                                   target="_blank">{{ $goods->name }}</a></p>
+
+                            <p class="sell-panel">
+                                <span class="money">¥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                <span class="sales pull-right">最低购买 : {{ $goods->min_num }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div>
-            <div class="col-sm-12 box graphic-details">
-                {!! $goods->introduce !!}
+            <div class="col-sm-10">
+                <div class="col-sm-12 switching">
+                    <a href="javascript:void(0)" id="location" class="active">配送区域</a>
+                    <a href="javascript:void(0)" id="graphic-details">图文详情</a>
+                </div>
+                <div class="col-sm-12 address-wrap  location box active">
+                    <div class="item clearfix">
+                        <h5 class="prompt">商品配送区域 :</h5>
+                        <ul class="address-list">
+                            @foreach($goods->deliveryArea as $area)
+                                <p class="col-sm-12">{{ $area->address_name }}</p>
+                            @endforeach
+                        </ul>
+                    </div>
+                    {{--<div class="item">--}}
+                    {{--<h5 class="prompt">商品配送区域大概地图标识 :</h5>--}}
+
+                    {{--<div id="map"></div>--}}
+                    {{--</div>--}}
+                </div>
+                <div class="col-sm-12 box graphic-details">
+                    {!! $goods->introduce !!}
+                </div>
             </div>
+
         </div>
     </div>
     @include('includes.cart')

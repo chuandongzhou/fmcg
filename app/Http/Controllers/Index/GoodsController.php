@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Index;
 use App\Services\AttrService;
 use App\Services\GoodsService;
 use Gate;
+use App\Models\Goods;
+use App\Services\CouponService;
 
 class GoodsController extends Controller
 {
@@ -27,16 +29,23 @@ class GoodsController extends Controller
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->load('images.image')->load('deliveryArea');
-        $isLike =auth()->user()->likeGoods()->where('id',$goods->id)->pluck('id');
-      /*  $coordinate = $goods->deliveryArea->each(function ($area) {
-            $area->coordinate;
-        });*/
+        $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
+        $shop_id = $goods->shop->id;
+        $couponNum = CouponService::shopCouponNum($shop_id);
+        $hotGoods = Goods::where('shop_id', $shop_id)->active()->with('images.image')->ofCommonSort()->orderBy('id',
+            'DESC')->take(5)->get();
+
+        /*  $coordinate = $goods->deliveryArea->each(function ($area) {
+              $area->coordinate;
+          });*/
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,
             'isLike' => $isLike,
-            'categoriesName' => GoodsService::getGoodsCate($goods)
-         /*   'coordinates' => $coordinate->toJson()*/
+            'categoriesName' => GoodsService::getGoodsCate($goods),
+            'couponNum' => $couponNum,
+            'hotGoods' => $hotGoods
+            /*   'coordinates' => $coordinate->toJson()*/
         ]);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Coupon;
 use Carbon\Carbon;
 use Gate;
-
+use App\Services\CouponService;
 
 class CouponController extends Controller
 {
@@ -39,13 +39,10 @@ class CouponController extends Controller
     public function couponNum($shop)
     {
         $user = auth()->user();
-        $nowDate = (new Carbon)->toDateString();
         if (!$shop || $shop->user_type <= $user->type) {
             return $this->error('店铺不存在');
         }
-        $couponNum = Coupon::whereNotIn('id', function ($query) use ($user) {
-            $query->from('user_coupon')->where('user_id', $user->id)->select('coupon_id');
-        })->where('stock', '>', 0)->where('end_at', '>', $nowDate)->where('shop_id', $shop->id)->count();
+        $couponNum = CouponService::shopCouponNum($shop->id);
         return $this->success(['couponNum' => $couponNum]);
     }
 
