@@ -162,7 +162,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*']) !!}">
+                    <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-shopping-basket"></i>
                             <span class="title">配送管理</span>
@@ -175,7 +175,7 @@
                                     <span class="title">配送人员</span>
                                 </a>
                             </li>
-                            <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery']) }}">
+                            <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery','personal/delivery-statistical']) }}">
                                 <a href="{{ url('personal/delivery') }}" class="nav-link ">
                                     <span class="title">配送历史</span>
                                 </a>
