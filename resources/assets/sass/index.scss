@@ -4170,3 +4170,35 @@ table {
 }
 
 /*==============tips end=================*/
+/*==============templet begin=================*/
+.templet-title{
+  margin:10px 0;
+}
+.templet-list{
+  margin-top: 15px;
+  .item{
+    margin: 10px 0;
+    &.checked{
+      img{
+        border:2px solid $brand-primary;
+      }
+    }
+    h4{
+      text-align: center;
+      padding: 5px 0;
+    }
+    img{
+      @include size(100%,auto);
+      border: solid 2px transparent;
+    }
+    .buttons{
+      text-align: center;
+      margin-top: 10px;
+      button{
+        padding: 7px 30px;
+        border-radius: 4px!important;
+      }
+    }
+  }
+}
+/*==============templet end=================*/

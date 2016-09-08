@@ -10,6 +10,7 @@ class   Order extends Model
     protected $table = 'order';
     protected $fillable = [
         'pid',
+        'numbers',
         'price',
         'pay_type',
         'pay_way',
@@ -22,6 +23,7 @@ class   Order extends Model
         'coupon_id',
         'user_id',
         'shop_id',
+        'download_count',
         'paid_at',
         'confirm_at',
         'send_at',
@@ -369,7 +371,7 @@ class   Order extends Model
      */
     public function getCanExportAttribute()
     {
-        return $this->attributes['status'] == cons('order.status.send') || $this->attributes['status'] == cons('order.status.non_send');
+        return $this->attributes['status'] >= cons('order.status.non_send');
     }
 
     /**
@@ -446,9 +448,6 @@ class   Order extends Model
         }
 
         return $price;
-
-
-        return ($this->coupon_id && $this->coupon) ? (bcsub($price, $this->coupon->discount, 2)) : $price;
     }
 
     /**
@@ -465,6 +464,17 @@ class   Order extends Model
         }
         return '';
     }
+
+    /**
+     * 获取卖家名
+     *
+     * @return string
+     */
+    public function getShopNameAttribute()
+    {
+        return $this->shop ? $this->shop->name : '';
+    }
+
 
     /**
      * 根据买家名字查询订单及买家信息--getSearch()
@@ -656,7 +666,10 @@ class   Order extends Model
             if ($search['status']) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
-                    $query->where(['pay_status'=> cons('order.pay_status.non_payment'),'status'=>cons('order.status.non_send')])
+                    $query->where([
+                        'pay_status' => cons('order.pay_status.non_payment'),
+                        'status' => cons('order.status.non_send')
+                    ])
                         ->where('pay_type', cons('pay_type.online'));
                 } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {
@@ -716,14 +729,17 @@ class   Order extends Model
 
         return $query->where('pay_type', cons('pay_type.pick_up'))->where('status', $type);
     }
+
     /**
      * 配送历史条件查询
+     *
      * @param $query
      * @param $search
      * @return mixed
      */
-    public function scopeOfDeliverySearch($query,$search){
-        return $query->where(function($query)use($search){
+    public function scopeOfDeliverySearch($query, $search)
+    {
+        return $query->where(function ($query) use ($search) {
             if ($search['delivery_man_id'] && is_numeric($search['delivery_man_id'])) {
                 $query->where('delivery_man_id', $search['delivery_man_id']);
             }

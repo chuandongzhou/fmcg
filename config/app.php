@@ -146,6 +146,7 @@ return [
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
         \WeiHeng\Salesman\SalesmanServiceProvider::class,
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
+        \WeiHeng\OrderDownload\OrderDownloadServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,

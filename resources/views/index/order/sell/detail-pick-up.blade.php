@@ -57,6 +57,14 @@
                                       data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                       data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
                             @endif
+                            @if($order['can_export'])
+                                <p><a target="_blank" class="btn btn-success"
+                                      href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载打印</a>
+                                    <br>
+                                    <span class="prompt">（{{ $order->download_count ? '已下载' . $order->download_count . '次'  :'未下载' }}
+                                        ）</span>
+                                </p>
+                            @endif
                         @endif
                     </div>
                 </div>
