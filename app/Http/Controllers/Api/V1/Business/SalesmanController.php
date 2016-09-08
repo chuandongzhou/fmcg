@@ -233,6 +233,6 @@ class SalesmanController extends Controller
         }
 
         $name = auth()->user()->shop->name . $date . '业务员目标' . '.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 }

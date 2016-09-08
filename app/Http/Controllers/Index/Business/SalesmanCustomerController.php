@@ -439,7 +439,7 @@ class SalesmanCustomerController extends Controller
 
 
         $name = $result['customer']->name . $result['beginTime'] . ' 至 ' . $result['endTime'] . '销售明细.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
     }
 

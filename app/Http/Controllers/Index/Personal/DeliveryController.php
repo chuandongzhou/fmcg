@@ -42,8 +42,8 @@ class DeliveryController extends Controller
     public function statisticalDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
-        $search['end_at'] = !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['start_at'] = !empty($search['start_at']) ? $request->input('start_at') : '';
+        $search['end_at'] = !empty($search['end_at']) ?$request->input('end_at') : '';
         $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(['orderGoods.goods'=>function($query){
@@ -59,8 +59,8 @@ class DeliveryController extends Controller
      */
     public function report(Request $request){
         $search = $request->all();
-        $search['start_at'] = !empty($search['start_at']) ? $request->input('start_at')['date'] : '';
-        $search['end_at'] = !empty($search['end_at']) ? $request->input('end_at')['date'] : '';
+        $search['start_at'] = !empty($search['start_at']) ? $request->input('start_at') : '';
+        $search['end_at'] = !empty($search['end_at']) ? $request->input('end_at'): '';
         $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(['orderGoods.goods'=>function($query){
@@ -139,7 +139,7 @@ class DeliveryController extends Controller
 
         }
         $name = '配送统计报告.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
 

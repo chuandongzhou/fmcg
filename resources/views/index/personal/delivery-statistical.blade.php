@@ -38,11 +38,8 @@
                         <td>
                             @if(!empty($search['start_at']) && !empty($search['end_at']))
                                 {{  $search['start_at'] }}至{{ $search['end_at'] }}
-                            @elseif(empty($search['start_at']) && !empty($search['end_at']))
-                                至{{ $search['end_at'] }}
                             @elseif(!empty($search['start_at']) && empty($search['end_at']))
                                 {{  $search['start_at'] }}至今
-                            @else
                             @endif
                         </td>
                         <td>配送单数</td>

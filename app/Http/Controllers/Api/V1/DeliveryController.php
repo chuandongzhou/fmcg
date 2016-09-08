@@ -123,6 +123,21 @@ class DeliveryController extends Controller
             $key = array_search($date, array_column($historyOrder, 'date'));
             $order->delivery_finished_at = (new Carbon($order->delivery_finished_at))->getTimestamp();
             $order->user && $order->user->setVisible(['shop']);
+            $order->setAppends([
+                'status_name',
+                'payment_type',
+                'step_num',
+                'can_cancel',
+                'can_confirm',
+                'can_send',
+                'can_confirm_collections',
+                'can_export',
+                'can_payment',
+                'can_confirm_arrived',
+                'can_change_price',
+                'user_shop_name',
+                'after_rebates_price'
+            ]);
             if ($key === false) {
                 $historyOrder[$j]['date'] = $date;
                 $historyOrder[$j]['data'][] = $order;

@@ -195,7 +195,7 @@ class ReportController extends Controller
             $table->addCell(1500)->addText($man->returnOrderSumAmount, null, $cellAlignCenter);
         }
         $name = $startDate . '至' . $endDate . '业务报告.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
     }
 
@@ -331,7 +331,7 @@ class ReportController extends Controller
         $this->_exportPlatformOrders($phpWord, $platFormOrders);
 
         $name = $salesman->name . $startDate . '业务报告明细.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
     /**
@@ -486,7 +486,7 @@ class ReportController extends Controller
         $this->_exportPlatformOrders($phpWord, $platFormOrders);
 
         $name = $salesman->name . $startDate . '至' . $endDate . '业务报告明细.docx';
-        $phpWord->save($name, 'Word2007', true);
+        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
     /**

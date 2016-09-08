@@ -138,12 +138,8 @@
           
 	id                   int              订单号
 	delivery_finished_at  string          订单完成时间
-    user                  array           收货店家信息
-
-	user字段说明
-	shop                array            店家信息
-
-	shop字段说明          string          收货店家名称
+	user_shop_name        string          收货店家名称
+   
 
 `失败返回：`
 
