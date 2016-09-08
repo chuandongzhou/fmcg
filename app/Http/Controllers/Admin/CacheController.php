@@ -24,6 +24,11 @@ class CacheController extends Controller
         $key = $this->_getCacheKey($request->input('key'));
         $redisService = new RedisService;
         $keys = $redisService->keys($key);
+
+        $keys = array_map(function ($item) {
+            $prefix = config('database.redis.options.prefix');
+            return str_replace($prefix, '', $item);
+        }, $keys);
         return $this->success($redisService->del($keys, false));
 
     }

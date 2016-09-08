@@ -139,7 +139,6 @@ class OrderController extends Controller
      */
     public function getPaySuccess()
     {
-
         return view('index.order.pay-success');
     }
 
@@ -175,7 +174,6 @@ class OrderController extends Controller
         $orderNav = $this->_pageNav($orderCurrent, $per, $orderCount);
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
         $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
-        $showObjName = $this->_inputName($objOfShow);
 
         return view('index.order.order-statistics', [
             'search' => $search,
@@ -189,7 +187,7 @@ class OrderController extends Controller
             'goodsNav' => $goodsNav,
             'orderCurrent' => $orderCurrent,
             'goodsCurrent' => $goodsCurrent,
-            'showObjName' => $showObjName
+            'statisticsType' => $this->_getStatisticsType($objOfShow)
         ]);
     }
 
@@ -199,15 +197,15 @@ class OrderController extends Controller
      * @param $objType
      * @return string
      */
-    private function _inputName($objType)
+    private function _getStatisticsType($objType)
     {
         $user = auth()->user();
         if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && $objType == cons('user.type.supplier'))
         ) {
-            return '卖家名称';
+            return 'buyer';
         }
 
-        return '买家名称';
+        return 'seller';
     }
 
     /**
@@ -265,7 +263,7 @@ class OrderController extends Controller
                     $query->ofPaySuccess();
                 } else if ($search['pay_type'] == cons('pay_type.cod')) { //货到付款
                     $query->ofHasSend();
-                }else {
+                } else {
                     $query->ofPickUp();
                 }
             }

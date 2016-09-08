@@ -51,123 +51,126 @@
                 </div>
             @endif
             <div class="col-sm-12 table-responsive table-col">
-                    @foreach($orders as $order)
-                        <table class="table table-bordered">
-                            <thead>
+                @foreach($orders as $order)
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="50%">
+                                <label>
+                                    <input type="checkbox" class="order_id children" name="order_id[]"
+                                           value="{{ $order['id'] }}"> {{ $order['created_at'] }}
+                                </label>
+                                <span class="order-number">订单号 : {{ $order['id'] }}</span>
+                            </th>
+                            <th width="15%">{{ $order->user_shop_name }}</th>
+                            <th width="10%"></th>
+                            <th>
+                                @if ($order->user && $order->user->shop_id)
+                                    <a href="javascript:"
+                                       onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                       class="contact"><span class="fa fa-commenting-o"></span> 联系客户</a>
+                                @endif
+                            </th>
+                            <th class="text-right">
+                                @if($order->pay_type != cons('pay_type.pick_up'))
+                                    <a href="javascript:" data-target="#shippingAddressMapModal"
+                                       data-toggle="modal"
+                                       data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
+                                       data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
+                                       data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
+                                       data-consigner="{{  isset($order->shippingAddress) ? $order->shippingAddress->consigner : '' }}"
+                                       data-phone= {{ isset($order->shippingAddress) ? $order->shippingAddress->phone : '' }}
+                                    >
+                                        <i class="fa fa-map-marker"></i> 查看收货地址
+                                    </a>
+                                @endif
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($order->goods as $key => $goods)
                             <tr>
-                                <th width="50%">
-                                    <label>
-                                        <input type="checkbox" class="order_id children" name="order_id[]"
-                                               value="{{ $order['id'] }}"> {{ $order['created_at'] }}
-                                    </label>
-                                    <span class="order-number">订单号 : {{ $order['id'] }}</span>
-                                </th>
-                                <th width="15%">{{ $order->user_shop_name }}</th>
-                                <th width="10%"></th>
-                                <th>
-                                    @if ($order->user && $order->user->shop_id)
-                                        <a href="javascript:"
-                                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                           class="contact"><span class="fa fa-commenting-o"></span> 联系客户</a>
-                                    @endif
-                                </th>
-                                <th class="text-right">
-                                    @if($order->pay_type != cons('pay_type.pick_up'))
-                                        <a href="javascript:" data-target="#shippingAddressMapModal"
-                                           data-toggle="modal"
-                                           data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
-                                           data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
-                                           data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
-                                           data-consigner="{{  isset($order->shippingAddress) ? $order->shippingAddress->consigner : '' }}"
-                                           data-phone= {{ isset($order->shippingAddress) ? $order->shippingAddress->phone : '' }}
-                                        >
-                                            <i class="fa fa-map-marker"></i> 查看收货地址
-                                        </a>
-                                    @endif
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($order->goods as $key => $goods)
-                                <tr>
-                                    <td>
-                                        <img class="store-img" src="{{ $goods->image_url }}">
+                                <td>
+                                    <img class="store-img" src="{{ $goods->image_url }}">
 
-                                        <div class="product-panel">
-                                            <a class="product-name ellipsis"
-                                               href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
-                                            {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
-                                        </div>
+                                    <div class="product-panel">
+                                        <a class="product-name ellipsis"
+                                           href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+                                        {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="red">¥{{ $goods['pivot']['price'] }}</span>
+                                    / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
+                                </td>
+                                <td>{{ $goods['pivot']['num'] }}</td>
+                                @if(0 == $key )
+                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
+                                        <p>{{ $order['status_name'] }}</p>
+
+                                        <p>{{ $order['payment_type'] }}</p>
+
+                                        <p><span class="red">¥{{ $order['price'] }}</span></p>
                                     </td>
-                                    <td>
-                                        <span class="red">¥{{ $goods['pivot']['price'] }}</span>
-                                        / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
-                                    </td>
-                                    <td>{{ $goods['pivot']['num'] }}</td>
-                                    @if(0 == $key )
-                                        <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
-                                            <p>{{ $order['status_name'] }}</p>
-
-                                            <p>{{ $order['payment_type'] }}</p>
-
-                                            <p><span class="red">¥{{ $order['price'] }}</span></p>
-                                        </td>
-                                        <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
-                                            <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
-                                                  class="btn btn-primary">查看</a></p>
-                                            @if(!$order['is_cancel'])
-                                                @if($order->can_refund)
-                                                    <p>
-                                                        <a class="btn btn-danger refund" data-target="#refund"
-                                                           data-toggle="modal"
-                                                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                            取消并退款
-                                                        </a>
-                                                    </p>
-                                                @elseif($order['can_cancel'])
-                                                    <p>
-                                                        <a class="btn btn-cancel ajax" data-method='put'
-                                                           data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                                           data-data='{"order_id":{{ $order->id }}}'>
-                                                            取消
-                                                        </a>
-                                                    </p>
-                                                @endif
-                                                @if($order->can_confirm)
-                                                    <p>
-                                                        <a class="btn btn-warning ajax" data-method='put'
-                                                           data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
-                                                            确认订单
-                                                        </a>
-                                                    </p>
-                                                @endif
-                                                @if($order['can_send'])
-                                                    <p>
-                                                        <a class="btn btn-warning send-goods"
-                                                           data-target="#sendModal" data-toggle="modal"
-                                                           data-id="{{ $order['id'] }}">
-                                                            发货
-                                                        </a>
-                                                    </p>
-                                                @elseif($order['can_confirm_collections'])
-                                                    <p><a class="btn btn-info ajax" data-method='put'
-                                                          data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
-                                                          data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
-                                                @endif
-                                                @if($order['can_export'])
-                                                    <p><a target="_blank" class="btn btn-success"
-                                                          href="{{ url('order-sell/export?order_id='.$order['id']) }}">导出</a>
-                                                    </p>
-                                                @endif
+                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
+                                        <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
+                                              class="btn btn-primary">查看</a></p>
+                                        @if(!$order['is_cancel'])
+                                            @if($order->can_refund)
+                                                <p>
+                                                    <a class="btn btn-danger refund" data-target="#refund"
+                                                       data-toggle="modal"
+                                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                        取消并退款
+                                                    </a>
+                                                </p>
+                                            @elseif($order['can_cancel'])
+                                                <p>
+                                                    <a class="btn btn-cancel ajax" data-method='put'
+                                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                                       data-data='{"order_id":{{ $order->id }}}'>
+                                                        取消
+                                                    </a>
+                                                </p>
                                             @endif
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @endforeach
-                </div>
+                                            @if($order->can_confirm)
+                                                <p>
+                                                    <a class="btn btn-warning ajax" data-method='put'
+                                                       data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
+                                                        确认订单
+                                                    </a>
+                                                </p>
+                                            @endif
+                                            @if($order['can_send'])
+                                                <p>
+                                                    <a class="btn btn-warning send-goods"
+                                                       data-target="#sendModal" data-toggle="modal"
+                                                       data-id="{{ $order['id'] }}">
+                                                        发货
+                                                    </a>
+                                                </p>
+                                            @elseif($order['can_confirm_collections'])
+                                                <p><a class="btn btn-info ajax" data-method='put'
+                                                      data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
+                                                      data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
+                                            @endif
+                                            @if($order['can_export'])
+                                                <p><a class="btn btn-success"
+                                                      href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载打印</a>
+                                                    <br>
+                                                    <span class="prompt">（{{ $order->download_count ? '已下载' . $order->download_count . '次'  :'未下载' }}
+                                                        ）</span>
+                                                </p>
+                                            @endif
+                                        @endif
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endforeach
+            </div>
             <div class="col-sm-12 text-right">
                 @if(\Request::is('order-sell'))
                     {!! $orders->appends(array_filter($search))->render() !!}
@@ -176,19 +179,19 @@
                 @endif
             </div>
             @if(\Request::is('order-sell') && $orders->count() )
-            <div class="col-sm-12" id="foot-nav">
-                        <input type="checkbox" class="parent"/>
-                        <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                data-method="put">批量取消
-                        </button>
-                        <a class="btn btn-warning batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
-                        <button class="btn btn-info ajax btn-receive"
-                                data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
-                        </button>
-                        <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
-                           data-method="get">导出
-                        </a>
-                    </div>
+                <div class="col-sm-12" id="foot-nav">
+                    <input type="checkbox" class="parent"/>
+                    <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                            data-method="put">批量取消
+                    </button>
+                    <a class="btn btn-warning batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
+                    <button class="btn btn-info ajax btn-receive"
+                            data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
+                    </button>
+                    <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
+                       data-method="get">下载打印
+                    </a>
+                </div>
             @endif
         </form>
     </div>

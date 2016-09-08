@@ -226,6 +226,7 @@ class OrderController extends Controller
     public function putOrderConfirm($orderId)
     {
         $order = Order::find($orderId);
+
         if (!$order) {
             return $this->error('订单不存在');
         }
@@ -234,7 +235,8 @@ class OrderController extends Controller
         }
         if ($this->_syncToBusiness($order) && $order->fill([
                 'status' => cons('order.status.non_send'),
-                'confirm_at' => Carbon::now()
+                'confirm_at' => Carbon::now(),
+                'numbers' => $this->_getNumbers($order->shop_id)
             ])->save()
         ) {
             return $this->success('订单确认成功');
@@ -588,6 +590,26 @@ class OrderController extends Controller
     }
 
     /**
+     * 设置订单下载模版
+     *
+     * @param $templeteId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postTemplete($templeteId)
+    {
+        $templetes = cons()->valueLang('order.templete');
+        $shopId = auth()->user()->shop_id;
+
+        $templeteId = in_array($templeteId, array_keys($templetes)) ? $templeteId : key($templetes);
+
+        app('order.download')->setTemplete($shopId, $templeteId);
+
+        return $this->success('选择模版成功');
+
+
+    }
+
+    /**
      * 根据订单获取交易流水号
      *
      * @param $order
@@ -722,5 +744,25 @@ class OrderController extends Controller
         $buyer && $order->shop->setAppends([]);
 
         return $order;
+    }
+
+    /**
+     * 获取票据单号
+     *
+     * @param $shopId
+     * @return string
+     */
+    private function _getNumbers($shopId)
+    {
+        $carbon = (new Carbon());
+        $month = $carbon->copy()->format('Y-m');
+        $day = $carbon->copy()->toDateString();
+
+        $like = $month . '-%';
+
+        $orderCount = Order::where('numbers', 'like', $like)->where('shop_id', $shopId)->count();
+
+        $number = $day . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT);
+        return $number;
     }
 }

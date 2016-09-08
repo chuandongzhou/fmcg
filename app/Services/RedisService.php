@@ -23,7 +23,7 @@ class RedisService
      *
      * @var string
      */
-    protected $name = 'fmcg';
+    protected $name = '';
 
     /**
      * 命名空间
@@ -36,7 +36,7 @@ class RedisService
     {
 
         $this->redis = \Redis::connection();
-        $this->namespace = $this->name . ':';
+        $this->namespace = $this->name ? $this->name . ':' : '';
     }
 
     /**
@@ -89,6 +89,7 @@ class RedisService
     public function del($key, $hasPrefix = true)
     {
         $key = $hasPrefix ? $this->getKey($key) : $key;
+
         return empty($key) ? true : $this->redis->del($key);
     }
 
@@ -122,7 +123,7 @@ class RedisService
      * @param $key
      * @return string
      */
-    protected function getKey($key)
+    public function getKey($key)
     {
         return $this->namespace . $key;
     }

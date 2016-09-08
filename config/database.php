@@ -114,6 +114,9 @@ return [
     'redis' => [
 
         'cluster' => false,
+        'options' => [
+            'prefix'   => 'fmcg:',
+        ],
 
         'default' => [
             'host'     => env('REDIS_HOST', 'localhost'),

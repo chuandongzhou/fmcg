@@ -68,15 +68,15 @@
                 @endif
 
                 @if($user->type != cons('user.type.retailer'))
-                    <li class="nav-item  {!!  request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'active' : '' !!}">
+                    <li class="nav-item  {!!  request()->is('order-sell*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'active' : '' !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-edit "></i>
                             <span class="title">订单管理</span>
-                            <span class="{!!  request()->is('order-sell', 'order-sell/*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'selected' : '' !!}"></span>
+                            <span class="{!!  request()->is( 'order-sell*') || (request()->is('order/statistics') && request()->input('obj_type') < 3) ? 'selected' : '' !!}"></span>
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
-                            <li class="nav-item {{ path_active(['order-sell' ,'order-sell/*' ]) }} ">
+                            <li class="nav-item {{ path_active(['order-sell' ,'order-sell/detail*' ]) }} ">
                                 <a href="{{ url('order-sell') }}" class="nav-link ">
                                     <span class="title">订单列表</span>
                                 </a>
@@ -84,6 +84,11 @@
                             <li class="nav-item  {{ request()->is('order/statistics/*') && request()->input('obj_type') < 3 ? 'active' : '' }}">
                                 <a href="{{ url('order/statistics') }}" class="nav-link ">
                                     <span class="title">订单统计</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  {{ request()->is('order-sell/templete')? 'active' : '' }}">
+                                <a href="{{ url('order-sell/templete') }}" class="nav-link ">
+                                    <span class="title">订单打印模版</span>
                                 </a>
                             </li>
                         </ul>

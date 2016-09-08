@@ -47,6 +47,11 @@ return [
             'delivery' => 1,
             'pick_up' => 2
         ],
+        //订单打印模块
+        'templete' => [
+            'first' => 1,
+            'second' => 2
+        ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
     ],
     //用户类别

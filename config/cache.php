@@ -74,6 +74,6 @@ return [
     |
     */
 
-    'prefix' => 'fmcg',
+    //'prefix' => 'fmcg',
 
 ];

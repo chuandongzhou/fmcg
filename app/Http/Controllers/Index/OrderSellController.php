@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Index;
 
 
-use App\Http\Requests;
 use App\Models\DeliveryMan;
-use App\Services\ShopService;
+use App\Services\OrderDownloadService;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use PhpOffice\PhpWord\PhpWord;
 use QrCode;
 
 class OrderSellController extends OrderController
@@ -141,115 +139,42 @@ class OrderSellController extends OrderController
     }
 
     /**
+     * 选择模版页
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getTemplete()
+    {
+        $shopId = auth()->user()->shop_id;
+
+        $defaultTempleteId = app('order.download')->getTemplete($shopId);
+
+        return view('index.order.sell.templete', ['defaultTempleteId' => $defaultTempleteId]);
+    }
+
+    /**
      * 导出订单word文档,只有卖家可以导出
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response|void
      */
     public function getExport(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-
         if (empty($orderIds)) {
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
 
         $status = cons('order.status');
-        $result = Order::with('shippingAddress.address', 'goods')
-            ->OfSell(auth()->id())->whereIn('status', [$status['non_send'], $status['send']])
+        $result = Order::with('shippingAddress.address', 'goods', 'shop')
+            ->OfSell(auth()->id())->where('status', '>=', $status['non_send'])
             ->whereIn('id', $orderIds)->get();
         if ($result->isEmpty()) {
             return $this->error('要导出的订单不存在', null, ['export_error' => '要导出的订单不存在']);
         }
-        return $this->_getExport($result);
+        (new OrderDownloadService())->download($result);
     }
 
-    /**
-     * 生成word文档
-     *
-     * @param $result
-     * @return string
-     */
-    public function _getExport($result)
-    {
-        // Creating the new document...
-        $phpWord = new PhpWord();
-
-        $phpWord->setDefaultFontName('仿宋');
-        $phpWord->setDefaultFontSize(12);
-        $phpWord->addTableStyle('table', ['borderSize' => 1], ['name' => '仿宋', 'size' => 20, 'align ' => 'center']);
-        // Adding an empty Section to the document...
-
-        $phpWord->addParagraphStyle('Normal', [
-            'spaceBefore' => 0,
-            'spaceAfter' => 0,
-            'lineHeight' => 1.2,  // 行间距
-        ]);
-
-        $orderPayTypes = cons('pay_type');
-
-        foreach ($result as $item) {
-            $section = $phpWord->addSection();
-            $table = $section->addTable('table');
-            //表头
-            $table->addRow(16, ['align' => 'center']);
-            $table->addCell(9000, ['gridSpan' => 7])->addText('送货单');
-
-            $table->addRow();
-            $table->addCell(4300, ['gridSpan' => 3])->addText('客户:' . $item->user_shop_name);
-            $table->addCell(3000, ['gridSpan' => 2])->addText('订单号:' . $item['id']);
-            $table->addCell(3000, ['gridSpan' => 2])->addText('时间:' . $item->created_at->toDateString());
-            $table->addRow(16);
-            if ($item->pay_type == $orderPayTypes['pick_up']) {
-                $table->addCell(9000, ['gridSpan' => 7])
-                    ->addText('提货人：' . ($item->user->shop->contact_person) . ' ' . ($item->user->shop->contact_info));
-
-            } else {
-                $table->addCell(9000, ['gridSpan' => 7])
-                    ->addText('收货地址：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name) . ' ' . ($item->shippingAddress ? $item->shippingAddress->consigner : '') . ' ' . ($item->shippingAddress ? $item->shippingAddress->phone : ''));
-            }
-
-            $table->addRow(20);
-            $table->addCell(1500)->addText('货号');
-            $table->addCell(1000)->addText('条形码');
-            $table->addCell(1800)->addText('商品名称');
-            $table->addCell(2300)->addText('促销信息');
-            $table->addCell(700)->addText('数量');
-            $table->addCell(1500)->addText('单价');
-            $table->addCell(1500)->addText('小计');
-
-            foreach ($item->goods as $goods) {
-                $table->addRow(20);
-                $table->addCell(1500)->addText($goods->id);
-                $table->addCell(1500)->addText($goods->bar_code);
-                $table->addCell(1800)->addText($goods->name);
-                $table->addCell(3300)->addText(mb_substr($goods->promotion_info, 0, 20));
-                $table->addCell(700)->addText($goods->pivot->num);
-                $table->addCell(1500)->addText($goods->pivot->price . '/' . cons()->valueLang('goods.pieces',
-                        $goods->pivot->pieces));
-                $table->addCell(1500)->addText($goods->pivot->total_price);
-            }
-
-            $table->addRow(16);
-            $table->addCell(9000, ['gridSpan' => 7])
-                ->addText('合计：' . $item->price . ($item->coupon_id ? '  优惠：' . bcsub($item->price, $item->after_rebates_price, 2) . '  应付：' . $item->after_rebates_price : ''), null, ['alignMent' => 'right']);
-
-            $table->addRow(16);
-            $table->addCell(9000, ['gridSpan' => 7])->addText('付款方式：'  .$item->payment_type);
-
-            $table->addRow();
-            $cell = $table->addCell(6000, ['align' => 'left']);
-            $cell->getStyle()->setGridSpan(5);
-            $cell->addText('备注：'  . $item->remark);
-
-            $qrCode = $table->addCell(3000);
-            $qrCode->getStyle()->setGridSpan(2);
-            $qrCode->addImage((new ShopService())->qrcode($item->shop_id),['align' => 'center']);
-            $section->addFooter();
-        }
-        $name = date('Ymd') . strtotime('now') . '.docx';
-        $phpWord->save($name, 'Word2007', true);
-    }
 
     /**
      * 获取不同状态订单数
@@ -274,4 +199,5 @@ class OrderSellController extends OrderController
 
         return $data;
     }
+
 }

@@ -3,15 +3,15 @@
 
 @section('subtitle', '订单统计')
 @if(request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer'))
-    @section('top-title')
-        <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
-        订单统计
-    @stop
+@section('top-title')
+    <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
+    订单统计
+@stop
 @else
-    @section('top-title')
-        <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
-        订单统计
-    @stop
+@section('top-title')
+    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
+    订单统计
+@stop
 @endif
 
 
@@ -61,7 +61,8 @@
                         </p>
                         <input type="text" class="enter" name="goods_name" placeholder="商品名称"
                                value="{{ $search['goods_name'] or '' }}">
-                        <input type="text" class="enter" name="user_name" placeholder="{{ $showObjName }}"
+                        <input type="text" class="enter" name="user_name"
+                               placeholder="{{ $statisticsType  ==  'buyer' ? '卖家名称' : '买家名称' }}"
                                value="{{ $search['user_name'] or '' }}">
                     </div>
                 </div>
@@ -112,11 +113,7 @@
                                 <tr>
                                     <td>{{ $order['id'] }}</td>
                                     <td>
-                                        @if(auth()->user()->type == cons('user.type.wholesaler')&&$objCurrentType<cons('user.type.wholesaler') ||auth()->user()->type == cons('user.type.supplier'))
-                                            {{ $order['user']['shop']['name'] }}
-                                        @else
-                                            {{ $order['shop']['name'] }}
-                                        @endif
+                                        {{ $statisticsType  ==  'buyer' ?  $order['shop']['name'] : $order->user_shop_name }}
                                     </td>
                                     <td>{{ $order['payment_type'] }}</td>
                                     <td>{{ $order['status_name'] }}</td>
@@ -146,7 +143,7 @@
                             <tr>
                                 <td>{{ $good['id'] }}</td>
                                 <td>{{ $good['name'] }}</td>
-                                <td>{{ $good['num']?round($good['price'] / $good['num'],2):0 }}</td>
+                                <td>{{ $good['num'] ? round($good['price'] / $good['num'],2):0 }}</td>
                                 <td>{{ $good['num'] }}</td>
                                 <td>{{ $good['price'] }}</td>
                             </tr>
@@ -158,7 +155,6 @@
                 <input type="hidden" name="order_page_num" value="{{ $orderCurrent or 1 }}"/>
                 <input type="hidden" name="goods_page_num" value="{{ $goodsCurrent or 1 }}"/>
             </form>
-            {{--{!! $obj->render()  !!}--}}
             <div class="col-sm-12 table-responsive tables">
                 <p class="title-table">订单总计</p>
                 <table class="table table-bordered">

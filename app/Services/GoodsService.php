@@ -191,6 +191,7 @@ class GoodsService
 
         $homeColumnGoodsConf = cons('home_column.goods');
         $cacheKey = $homeColumnGoodsConf['cache']['name_cate'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
+
         $goodsColumns = [];
         if (Cache::has($cacheKey)) {
             $goodsColumns = Cache::get($cacheKey);
