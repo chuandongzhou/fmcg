@@ -733,6 +733,7 @@ class   Order extends Model
             if ($search['end_at']) {
                 $query->where('delivery_finished_at', '<', $search['end_at']);
             }
+            $query->where('delivery_man_id','<>',0);
         });
     }
 }
