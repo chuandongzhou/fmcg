@@ -20,8 +20,8 @@ class DeliveryController extends Controller
     public function historyDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
-        $search['end_at'] = isset($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['start_at'] = isset($search['start_at']) ? $request->input('start_at'): '';
+        $search['end_at'] = isset($search['end_at']) ? $request->input('end_at') : '';
         $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',
@@ -126,7 +126,7 @@ class DeliveryController extends Controller
 
             foreach($goods as $k => $detail){
                 $table->addRow();
-                if(array_column($goods, 'num')[0]==$detail['num']){
+                if(array_keys($goods)[0]==$k){
                     $table->addCell(3000,array_merge($gridSpan2,$cellRowSpan))->addText($name, null, $cellAlignCenter);
                 }else{
                     $table->addCell(null, array_merge($gridSpan2,$cellRowContinue));

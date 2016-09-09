@@ -73,7 +73,7 @@
                 @foreach($data['goods'] as $key => $goods)
                     @foreach($goods as $k => $detail)
                         <tr>
-                            @if(array_column($goods, 'num')[0]==$detail['num'])
+                            @if(array_keys($goods)[0]==$k)
                                 <td colspan="2" rowspan="{{ count($goods) }}">{{ $key }}</td>
                             @endif
                             <td colspan="2">{{ $detail['num'] }}{{ cons()->valueLang('goods.pieces', $k) }}</td>
