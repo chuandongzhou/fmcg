@@ -27,7 +27,7 @@ class CacheController extends Controller
 
         $keys = array_map(function ($item) {
             $prefix = config('database.redis.options.prefix');
-            return str_replace($prefix, '', $item);
+            return substr($item, strlen($prefix));
         }, $keys);
         return $this->success($redisService->del($keys, false));
 

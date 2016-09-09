@@ -31,7 +31,7 @@ class OrderDownloadService
 
             $phpWord->setDefaultFontName('仿宋');
             $phpWord->setDefaultFontSize(12);
-            $phpWord->addTableStyle('table', ['borderSize' => 1], ['name' => '仿宋', 'size' => 20, 'align ' => 'center']);
+            $phpWord->addTableStyle('table', ['borderSize' => 1, 'alignment' => 'center'], ['name' => '仿宋', 'size' => 20, 'align ' => 'center']);
             // Adding an empty Section to the document...
 
             $phpWord->addParagraphStyle('Normal', [
@@ -88,10 +88,10 @@ class OrderDownloadService
 
             $section->addText($userContact);
 
-            $table = $section->addTable(['alignment' => 'center']);
+            $table = $section->addTable('table');
             $table->addRow(20);
             $table->addCell(2200, $vAlign)->addText('商品条码', null, $cellAlignCenter);
-            $table->addCell(3100, $vAlign)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(4100, $vAlign)->addText('商品名称', null, $cellAlignCenter);
             $table->addCell(1800, $vAlign)->addText('商品规格', null, $cellAlignCenter);
             $table->addCell(1500, $vAlign)->addText('单价', null, $cellAlignCenter);
             $table->addCell(700, $vAlign)->addText('单位', null, $cellAlignCenter);
@@ -101,11 +101,13 @@ class OrderDownloadService
 
             $orderGoodsNum = 0;
 
+            $userType = $item->user_type_name;
+
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
                 $table->addCell(2200, $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
                 $table->addCell(3100, $vAlign)->addText($goods->name, null, $cellAlignCenter);
-                $table->addCell(1800, $vAlign)->addText('规格', null, $cellAlignCenter);
+                $table->addCell(1800, $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
                 $table->addCell(1500, $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
                 $table->addCell(700, $vAlign)->addText(cons()->valueLang('goods.pieces',
                     $goods->pivot->pieces), null, $cellAlignCenter);
@@ -138,15 +140,16 @@ class OrderDownloadService
             $text .= '          收款人：' . ($item->systemTradeInfo ? cons()->valueLang('trade.pay_type',
                     $item->systemTradeInfo->pay_type) : '');
 
-            $section->addText($text, [ 'size' => 12], ['width' => 4000]);
+            $section->addText($text, ['size' => 12], ['width' => 4000]);
 
             $this->_addDownloadCount($item);
         }
-        $name = date('Ymd') . strtotime('now') . '.docx';
+        $name = date('Ymd') . strtotime('now') . '.doc';
 
 
         $phpWord->save($name, 'Word2007', true);
     }
+
     /**
      * 模版2
      *
@@ -162,30 +165,30 @@ class OrderDownloadService
         $gridSpan2 = ['valign' => 'center', 'gridSpan' => 2];
         $gridSpan3 = ['valign' => 'center', 'gridSpan' => 3];
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
+        $gridSpan8 = ['valign' => 'center', 'gridSpan' => 8];
 
 
         foreach ($orders as $item) {
             $section = $phpWord->addSection(['orientation' => 'landscape']);
 
             $section->addText($item->shop_name . ' 送货单', ['bold' => true, 'size' => 18], ['alignment' => 'center']);
-            $table = $section->addTable(['alignment' => 'center']);
+            $table = $section->addTable('table');
 
             $table->addRow();
-            $table->addCell(5300, $gridSpan2)->addText('录单日期 ：' . $item->created_at->toDateString());
+            $table->addCell(6300, $gridSpan2)->addText('录单日期 ：' . $item->created_at->toDateString());
             $table->addCell(4000, $gridSpan3)->addText('平台订单号 ：' . $item->id);
             $table->addCell(4000, $gridSpan3)->addText('单据编号 ：' . $item->numbers);
 
-            $table->addRow();
-            $table->addCell(5300, $gridSpan2)->addText('购买单位 ：' . $item->user_shop_name);
-            $table->addCell(4000, $gridSpan3)
-                ->addText($item->pay_type == $orderPayTypes['pick_up'] ? '自提' : '联系电话 ：' . ($item->shippingAddress ? $item->shippingAddress->consigner . '-' . $item->shippingAddress->phone : ''));
-            $table->addCell(4500,
-                $gridSpan3)->addText('地址 ：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name));
+            $userInfo = '购买单位 ：' . $item->user_shop_name;
+            $userInfo .= $item->pay_type == $orderPayTypes['pick_up'] ? '   自提' : '     联系电话 ：' . ($item->shippingAddress ? $item->shippingAddress->consigner . '-' . $item->shippingAddress->phone : '');
+            $userInfo .= '  地址 ：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name);
 
+            $table->addRow();
+            $table->addCell(0, $gridSpan8)->addText($userInfo);
 
             $table->addRow(20);
-            $table->addCell(2200, $vAlign)->addText('商品条码', null, $cellAlignCenter);
-            $table->addCell(3100, $vAlign)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(2400, $vAlign)->addText('商品条码', null, $cellAlignCenter);
+            $table->addCell(3900, $vAlign)->addText('商品名称', null, $cellAlignCenter);
             $table->addCell(1800, $vAlign)->addText('商品规格', null, $cellAlignCenter);
             $table->addCell(1500, $vAlign)->addText('单价', null, $cellAlignCenter);
             $table->addCell(700, $vAlign)->addText('单位', null, $cellAlignCenter);
@@ -195,11 +198,12 @@ class OrderDownloadService
 
             $orderGoodsNum = 0;
 
+            $userType = $item->user_type_name;
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
                 $table->addCell(2200, $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
                 $table->addCell(3100, $vAlign)->addText($goods->name, null, $cellAlignCenter);
-                $table->addCell(1800, $vAlign)->addText('规格', null, $cellAlignCenter);
+                $table->addCell(1800, $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
                 $table->addCell(1500, $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
                 $table->addCell(700, $vAlign)->addText(cons()->valueLang('goods.pieces',
                     $goods->pivot->pieces), null, $cellAlignCenter);
@@ -234,14 +238,12 @@ class OrderDownloadService
 
             $this->_addDownloadCount($item);
         }
-        $name = date('Ymd') . strtotime('now') . '.docx';
+        $name = date('Ymd') . strtotime('now') . '.doc';
 
 
         $phpWord->save($name, 'Word2007', true);
 
     }
-
-
 
 
     /**

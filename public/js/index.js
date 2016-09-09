@@ -794,7 +794,7 @@ function changePriceByDetailPage() {
             num = obj.data('num');
         $('input[name="order_id"]').val(order_id);
         $('input[name="pivot_id"]').val(pivot_id);
-        $('input[name="price"]').val(price);
+        price == 0 ? $('input[name="price"]').val(price).prop('disabled', true) : $('input[name="price"]').val(price).prop('disabled', false);
         $('input[name="num"]').val(num);
     });
     $(".see-more").click(function () {

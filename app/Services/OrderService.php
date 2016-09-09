@@ -199,9 +199,13 @@ class OrderService
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
             return false;
         }
-
         $num = $attributes['num'];
+
         $price = isset($attributes['price']) ? $attributes['price'] : $orderGoods->price;
+
+        if ($num == $orderGoods->num && $price == $orderGoods->price) {
+            return true;
+        }
 
         $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
             $oldTotalPrice = $orderGoods->total_price;
@@ -211,18 +215,29 @@ class OrderService
             $oldPrice = $orderGoods->price;
 
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
-            $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
+
+            // 价格不同才更新
+            $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
 
             //如果有业务订单修改业务订单
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
                 $salesmanVisitOrder->fill(['amount' => $order->price])->save();
-                $salesmanVisitOrderGoods = $salesmanVisitOrder->orderGoods()->where('goods_id',
-                    $orderGoods->goods_id)->first();
-                !is_null($salesmanVisitOrderGoods) && $salesmanVisitOrderGoods->fill([
-                    'price' => $price,
-                    'num' => $num,
-                    'amount' => $newTotalPrice
-                ])->save();
+
+                if ($oldPrice == 0) {
+                    //商品原价为0时更新抵费商品
+                    $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
+                        $orderGoods->goods_id)->first()->pivot;
+                    $fill = ['num' => $num];
+                } else {
+                    $salesmanVisitOrderGoods = $salesmanVisitOrder->orderGoods()->where('goods_id',
+                        $orderGoods->goods_id)->first();
+                    $fill = [
+                        'price' => $price,
+                        'num' => $num,
+                        'amount' => $newTotalPrice
+                    ];
+                }
+                !is_null($salesmanVisitOrderGoods) && $salesmanVisitOrderGoods->fill($fill)->save();
             }
 
 

@@ -10,7 +10,7 @@
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
-            <a class="go-back" href="{{ url('order-buy') }}"><i class="fa fa-reply"></i> 返回</a>
+            <a class="go-back" href="javascript:history.back()"><i class="fa fa-reply"></i> 返回</a>
         </div>
         <div class="col-sm-12 order-panel">
             <ul>

@@ -1126,21 +1126,19 @@ ul, li, p, a, h1, h2, h3, h4 {
 .hot-goods{
   text-align:center;
   margin-bottom:10px;
-
   a{
-    margin-right: 0px;
+    margin-right: 0;
   }
-
 }
 .hot-goods-panel {
-  padding-right:0px;
+  padding-right:0;
   .commodity{
     width:100%;
     padding:0 3px;
   }
 }
 .can-receive-coupon{
-  color: red;
+  color: $red;
   text-indent: 3em;
   font-size: 12px;
   position:absolute;
@@ -1150,7 +1148,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 20%;
   }
 }
-
 .dealer-commodity-wrap {
   .commodity-img {
     height: 100px;
@@ -1188,6 +1185,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 
   .nav-wrap {
+    background-color: $gray-plain;
     margin: 30px 0;
     height: 40px;
     li {
@@ -1201,10 +1199,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-
     .switching {
-      background-color: $gray-plain;
-      border-radius:2px;
       a {
         display: inline-block;
         height: 40px;
@@ -1673,7 +1668,7 @@ ul, li, p, a, h1, h2, h3, h4 {
         margin-left: -1px;
         color: $gray;
         &:last-of-type {
-          margin-left: -5px;
+          margin-left: -8px;
         }
         &.active {
           color: $brand-info;

@@ -397,12 +397,6 @@ class   Order extends Model
                     && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
-
-    public function getCanSyncAttribute()
-    {
-
-    }
-
     /**
      * 是否可确认收货(买家在线支付)
      *
@@ -466,6 +460,16 @@ class   Order extends Model
     }
 
     /**
+     * 获取买家类型
+     *
+     * @return string
+     */
+    public function getUserTypeNameAttribute()
+    {
+        return $this->user_id ? $this->user->type_name : 'retailer';
+    }
+
+    /**
      * 获取卖家名
      *
      * @return string
@@ -488,6 +492,12 @@ class   Order extends Model
         return $query->whereHas('user.shop', function ($query) use ($shopName) {
 
             $query->where('name', 'like', '%' . $shopName . '%');
+        })->orWhere(function ($query) use ($shopName) {
+            $query->where('user_id', 0)->whereHas('salesmanVisitOrder.salesmanCustomer',
+                function ($query) use ($shopName) {
+                    $query->where('name', 'like', '%' . $shopName . '%');
+                });
+
         });
     }
 
@@ -749,7 +759,7 @@ class   Order extends Model
             if ($search['end_at']) {
                 $query->where('delivery_finished_at', '<', $search['end_at']);
             }
-            $query->where('delivery_man_id','<>',0);
+            $query->where('delivery_man_id', '<>', 0);
         });
     }
 }
