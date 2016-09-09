@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-12 templet-title">订单打印默认模板: <b
                     class="print-default">{{ cons()->valueLang('order.templete', $defaultTempleteId) }}</b>
-            <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
+            <button class="btn btn-warning display" data-target="#templeteModal" data-toggle="modal"
                     data-src="{{ asset('images/order-templetes/templete_' . $defaultTempleteId . '.png') }}">预览
             </button>
             <a class="btn btn-default" href="javascript:history.back()">返回</a>
@@ -20,11 +20,12 @@
         <div class="col-sm-12 templet-list">
             <div class="row">
                 @foreach(cons()->valueLang('order.templete') as $templeteId => $templeteName)
-                    <div class="col-sm-4 item">
-                        <h4>{{ $templeteName }}</h4>
+                    <div class="col-sm-4 item {{ $templeteId == $defaultTempleteId ? 'checked' : '' }}">
+                        <h4 class="templete-name">{{ $templeteName }}</h4>
                         <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">
                         <div class="buttons">
-                            <a class="btn btn-primary ajax" data-method="post"
+                            <a class="btn btn-primary ajax no-prompt check-templete" data-method="post"
+                               data-done-then="none"
                                data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}">选择</a>
                             <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
                                     data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">预览
@@ -57,6 +58,15 @@
                         templeteImg = templeteModal.find('.templete-img');
                 templeteImg.attr('src', src);
             });
+            $('.check-templete').on('always.hct.ajax', function () {
+                var obj = $(this),
+                        parent = $(this).closest('.item'),
+                        templeteName = parent.find('.templete-name').html(),
+                        displaySrc = obj.next().data('src');
+                parent.addClass('checked').siblings().removeClass('checked');
+                $('.print-default').html(templeteName);
+                $('.display').data('src', displaySrc);
+            })
         })
     </script>
 @stop
