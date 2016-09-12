@@ -837,6 +837,33 @@ pivot                   object          中间信息
     num               int             商品数量
 </code></pre>
 
+<h4>2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>goods                   array           订单商品列表
+mortgage                array           陈列商品列表
+display_fee             decimal         陈列费
+order_remark            string          订单备注
+display_remark          string          陈列费备注
+
+goods子集详情
+
+id                      int             商品id
+pieces                  int             商品单位
+price                   decimal         商品单价
+num                     int             商品购买数量
+
+mortgage子集详情
+
+id                      int             陈列费商品id
+num                     int             商品陈列数量
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.6.5 订单删除[delete] ({order_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
 <h3>2.7 平台商品 goods</h3>
 <h4>2.7.1 获取所有平台商品[get] (/)</h4>
 <p><code>请求参数：</code></p>

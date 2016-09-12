@@ -75,11 +75,14 @@
                                 <a class="btn btn-cancel"
                                    href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">查看</a>
                                 @if($order->status == cons('salesman.order.status.not_pass'))
-                                    <button
-                                            data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                                             data-method="put" data-data='{"status" : "1"}'
                                             class="btn btn-success ajax">通过
-                                    </button>
+                                    </a>
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                       data-method="delete" class="btn btn-danger delete-no-form">删除
+                                    </a>
+
                                 @else
                                     <a class="btn btn-primary"
                                        href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
@@ -129,7 +132,7 @@
                 obj.closest('form').attr('action', obj.data('url'));
             });
             formSubmitByGet(['order_id[]']);
-
+            deleteNoForm()
         })
     </script>
 @stop

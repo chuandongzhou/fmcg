@@ -70,6 +70,9 @@
                                 >
                                     编辑
                                 </a>
+                                <a class="delete-no-form" data-method="delete"
+                                   data-url="{{ url('api/v1/business/order/goods-delete/' . $goods->id) }}"
+                                   href="javascript:">删除</a>
                             </td>
                         </tr>
                     @endforeach
@@ -108,6 +111,10 @@
                                            data-type="-1">
                                             编辑
                                         </a>
+                                        <a class="delete-no-form" data-method="delete"
+                                           data-url="{{ url('api/v1/business/order/mortgage-goods-delete') }}"
+                                           data-data='{"order_id":{{ $order->id }}, "mortgage_goods_id" : {{ $goods['id'] }}}'
+                                            href="javascript:">删除</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -202,7 +209,7 @@
                     self.button('edit').data('type', 'edit');
                 }
             })
-
+            deleteNoForm();
         })
     </script>
 @stop

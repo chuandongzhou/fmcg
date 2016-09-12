@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Business;
 
 
 use App\Http\Controllers\Api\V1\Controller;
+use App\Http\Requests\Api\v1\DeleteMortgageGoodsRequest;
 use App\Http\Requests\Api\v1\UpdateSalesmanVisitOrderGoodsRequest;
 use App\Models\Order;
 use App\Models\OrderGoods;
@@ -190,6 +191,148 @@ class SalesmanVisitOrderController extends Controller
         return $this->success(compact('order'));
     }
 
+
+    /**
+     * 更新订单所有内容 （删除后添加）
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function updateAll(Request $request, $orderId)
+    {
+        /*$attributes = [
+            'goods' => [
+                [
+                    'id' => 324,
+                    'pieces' => 11,
+                    'price'  => 169,
+                    'num'    => 2
+                ]
+            ],
+            "mortgage" => [
+                [
+                    "id"  => 324,
+                    "num"       => 1
+                ],
+            ],
+            'display_fee' => 100,
+            'order_remark'=>'测试用',
+            'display_remark'=>'测试用'
+        ];*/
+
+        $order = $this->_validateOrder($orderId);
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+        $attributes = $request->all();
+        $result = DB::transaction(function () use ($attributes, $order) {
+            $orderConf = cons('salesman.order');
+            $attributes['salesman_id'] = $order->salesman_id;
+            $attributes['salesman_visit_id'] = $order->salesman_visit_id;
+            $attributes['salesman_customer_id'] = $order->salesman_customer_id;
+            $attributes['type'] = $orderConf['type']['order'];
+            $format = $this->_formatAttribute($attributes);
+            $attributes['amount'] = $format['amount'];
+
+            $orderForm = SalesmanVisitOrder::create($attributes);
+
+            if ($orderForm->exists) {
+                $orderForm->orderGoods()->saveMany($format['orderGoodsArr']);
+                $orderForm->mortgageGoods()->attach($format['mortgageGoodsArr']);
+                $order->delete();
+            }
+            return 'success';
+        });
+
+        return $result == 'success' ? $this->success('更新订单成功') : $this->error('更新订单时出现问题');
+    }
+
+    /**
+     * 删除订单
+     *
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function destroy($orderId)
+    {
+        $order = $this->_validateOrder($orderId);
+
+        return $order && $order->delete() ? $this->success('订单删除成功') : $this->error('订单不存在或不能删除');
+    }
+
+    /**
+     * 删除订单商品
+     *
+     * @param $goodsId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function goodsDelete($goodsId)
+    {
+
+        $orderGoods = SalesmanVisitOrderGoods::with('salesmanVisitOrder')->find($goodsId);
+
+        if (is_null($orderGoods)) {
+            return $this->error('订单商品不存在');
+        }
+
+        $order = $this->_validateOrder($orderGoods->salesman_visit_order_id);
+        if (!$order) {
+            return $this->error('订单商品不存在');
+        }
+
+        $result = DB::transaction(function () use ($orderGoods, $order) {
+            $orderGoodsPrice = $orderGoods->amount;
+            $orderGoods->delete();
+            $orderGoodsPrice > 0 && $order->decrement('amount', $orderGoodsPrice);
+            return 'success';
+        });
+
+        return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
+    }
+
+    /**
+     * 删除陈列商品
+     *
+     * @param \App\Http\Requests\Api\v1\DeleteMortgageGoodsRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function mortgageGoodsDelete(DeleteMortgageGoodsRequest $request)
+    {
+        $order = $this->_validateOrder($request->input('order_id'));
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+        $order->mortgageGoods()->detach($request->input('mortgage_goods_id'));
+        return $this->success('删除陈列费商品成功');
+    }
+
+    /**
+     * 订单验证
+     *
+     * @param $orderId
+     * @return bool
+     */
+    private function _validateOrder($orderId)
+    {
+        $order = SalesmanVisitOrder::find($orderId);
+        if (is_null($order) || $order->status == cons('salesman.order.status.passed')) {
+            return false;
+        }
+        if (auth()->id()) {
+            //网页登录的
+            if (Gate::denies('validate-salesman', $order->salesman)) {
+                return false;
+            }
+
+        } else {
+            if ($order->salesman_id != salesman_auth()->id()) {
+                return false;
+            }
+        }
+        return $order;
+    }
+
     /**
      * 同步订单
      *
@@ -199,7 +342,7 @@ class SalesmanVisitOrderController extends Controller
     private function _syncOrders($salesmanVisitOrders)
     {
         $result = DB::transaction(function () use ($salesmanVisitOrders) {
-            $syncConf = cons('salesman.order.sync');
+            $syncConf = cons('salesman . order . sync');
             $orderConf = cons('order');
             $shippingAddressService = new ShippingAddressService();
             foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
@@ -278,13 +421,13 @@ class SalesmanVisitOrderController extends Controller
      */
     private function _updateOrderGoods($salesmanVisitOrder, $request, $orderGoods = null)
     {
-        if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+        if (is_null($salesmanVisitOrder) || Gate::denies('validate - salesman - order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
 
         $result = DB::transaction(function () use ($salesmanVisitOrder, $request, $orderGoods) {
             if ($orderGoods) {
-                $goodsTypes = cons('salesman.order.goods.type');
+                $goodsTypes = cons('salesman . order . goods . type');
                 $attributes = [];
                 //商品原总金额
                 $goodsOldAmount = $orderGoods->amount;
@@ -298,7 +441,7 @@ class SalesmanVisitOrderController extends Controller
                     if ($orderGoods->fill($attributes)->save()) {
                         $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
                     }
-                } elseif ($orderGoods->type == $goodsTypes['return']) {
+                } elseif ($orderGoods->type == $goodsTypes['return ']) {
                     //退货单
                     $attributes['num'] = $request->input('num');
                     $attributes['amount'] = $request->input('amount');
@@ -323,5 +466,35 @@ class SalesmanVisitOrderController extends Controller
         return $result;
     }
 
+    /**
+     * 格式化订单属性
+     *
+     * @param $attributes
+     * @return array
+     */
+    private function _formatAttribute($attributes)
+    {
+        $amount = 0;
+        $orderGoodsArr = [];
+        $mortgageGoodsArr = [];
+        if (isset($attributes['goods'])) {
+            foreach ($attributes['goods'] as $orderGoods) {
+                $orderGoods['amount'] = bcmul($orderGoods['price'], $orderGoods['num'], 2);
+                $orderGoods['salesman_visit_id'] = $attributes['salesman_visit_id'];
+                $orderGoods['type'] = $attributes['type'];
+                $orderGoods['goods_id'] = $orderGoods['id'];
+                $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
+                $amount = bcadd($amount, $orderGoods['amount']);
+            }
+        }
+        if (isset($attributes['mortgage'])) {
+            foreach ($attributes['mortgage'] as $mortgageGoods) {
+                $mortgageGoodsArr[$mortgageGoods['id']] = [
+                    'num' => $mortgageGoods['num']
+                ];
+            }
+        }
+        return compact('amount', 'orderGoodsArr', 'mortgageGoodsArr');
+    }
 
 }

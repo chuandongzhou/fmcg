@@ -457,6 +457,41 @@
 		num               int             商品数量
 
 
+#### 2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})
+`请求参数：`
+
+    goods                   array           订单商品列表
+    mortgage                array           陈列商品列表
+    display_fee             decimal         陈列费
+    order_remark            string          订单备注
+    display_remark          string          陈列费备注
+
+    goods子集详情
+
+    id                      int             商品id
+    pieces                  int             商品单位
+    price                   decimal         商品单价
+    num                     int             商品购买数量
+
+    mortgage子集详情
+
+    id                      int             陈列费商品id
+    num                     int             商品陈列数量
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.6.5 订单删除[delete] ({order_id})
+`请求参数：`
+
+`成功返回：`
+
+`失败返回：`
+
+
+
+
 ### 2.7 平台商品 goods
 #### 2.7.1 获取所有平台商品[get] (/)
 

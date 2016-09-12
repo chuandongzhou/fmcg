@@ -12,6 +12,7 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\DeliveryMan;
 use App\Models\Goods;
 use App\Models\Order;
+use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
@@ -607,6 +608,34 @@ class OrderController extends Controller
         return $this->success('选择模版成功');
 
 
+    }
+
+    /**
+     * 删除订单商品
+     *
+     * @param $goodsId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function deleteGoodsDelete($goodsId)
+    {
+        $orderGoods = OrderGoods::with('order')->find($goodsId);
+
+        if (is_null($orderGoods) || $orderGoods->order->shop_id != auth()->user()->shop_id) {
+            return $this->error('订单商品不存在');
+        }
+        $order = $orderGoods->order;
+        $result = DB::transaction(function () use ($orderGoods, $order) {
+            $orderGoodsPrice = $orderGoods->total_price;
+            $orderGoods->delete();
+            $orderGoodsPrice > 0 && $order->decrement('price', $orderGoodsPrice);
+            $content = '订单商品id:' . $orderGoods->id . '，已被删除';
+
+            (new OrderService())->addOrderChangeRecord($order, $content);
+            return 'success';
+        });
+
+
+        return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
     }
 
     /**

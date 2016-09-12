@@ -30,6 +30,20 @@ class SalesmanVisitOrder extends Model
     protected $appends = ['order_status_name'];
 
     /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            $model->orderGoods()->delete();
+            $model->mortgageGoods()->detach();
+        });
+    }
+
+    /**
      * 平台订单
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

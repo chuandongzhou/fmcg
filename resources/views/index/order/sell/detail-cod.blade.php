@@ -269,7 +269,10 @@
                                            data-toggle="modal" data-id="{{ $order['id'] }}"
                                            data-price="{{ $goods->pivot->price }}" ,
                                            data-num="{{ $goods->pivot->num }}"
-                                           data-pivot="{{  $goods['pivot']['id'] }}">修改</a></td>
+                                           data-pivot="{{  $goods['pivot']['id'] }}">修改</a>
+                                        <a class="delete-no-form" data-method="delete"
+                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}" href="javascript:">删除</a>
+                                    </td>
                                 @endif
 
                             </tr>
@@ -301,6 +304,7 @@
     <script>
         $(function () {
             changePriceByDetailPage();
+            deleteNoForm(false);
         })
     </script>
 @stop

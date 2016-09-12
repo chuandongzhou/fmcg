@@ -603,7 +603,8 @@ var deleteNoForm = function () {
     $(document).on('click', '.delete-no-form', function () {
         var self = $(this),
             url = self.data('url'),
-            method = self.data('method');
+            method = self.data('method'),
+            data = [];
         // 判断登录
         if (!site.isLogin()) {
             site.redirect('auth/login');
@@ -611,10 +612,14 @@ var deleteNoForm = function () {
         }
 
         self.button('loading');
+
+        $.each(self.data('data') || {}, function (name, value) {
+            data.push({name: name, value: value});
+        });
         $.ajax({
             url: url,
             method: method,
-            data: {}
+            data: data
         }).done(function (data, textStatus, jqXHR) {
             alert('删除成功');
             self.parents('tr').slideUp(function () {
