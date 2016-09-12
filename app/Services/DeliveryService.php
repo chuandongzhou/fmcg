@@ -82,7 +82,7 @@ class DeliveryService
                     $goods[] = $arrs;
                 } else {
                     //已在结果集的商品
-                    $piecesKey = array_search($order->deliveryMan->name,
+                    $piecesKey = array_search($orderGoods->pieces,
                         array_column($goods[$key]['detail'], 'pieces'));
                     if ($piecesKey === false) {
                         //未在结果集的商品单位
