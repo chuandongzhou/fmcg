@@ -629,8 +629,22 @@ class OrderController extends Controller
             $orderGoods->delete();
             $orderGoodsPrice > 0 && $order->decrement('price', $orderGoodsPrice);
             $content = '订单商品id:' . $orderGoods->id . '，已被删除';
-
             (new OrderService())->addOrderChangeRecord($order, $content);
+            //如果有业务订单修改业务订单
+            if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
+                $salesmanVisitOrder->fill(['amount' => $order->price])->save();
+
+                if ($orderGoods->price == 0) {
+                    //商品原价为0时更新抵费商品
+                    $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
+                        $orderGoods->goods_id)->first();
+
+                    $salesmanVisitOrderGoods && $salesmanVisitOrder->mortgageGoods()->detach($salesmanVisitOrderGoods->id);
+                } else {
+                    $salesmanVisitOrder->orderGoods()->where('goods_id', $orderGoods->goods_id)->delete();
+                }
+            }
+
             return 'success';
         });
 

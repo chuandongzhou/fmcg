@@ -10,6 +10,7 @@ class SalesmanVisitOrder extends Model
     protected $table = 'salesman_visit_order';
 
     protected $fillable = [
+        'id',
         'amount',
         'display_fee',
         'order_id',

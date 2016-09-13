@@ -67,7 +67,8 @@ class SalesmanVisitOrderController extends Controller
         }
         $attributes = $request->except('salesman_id', 'start_date', 'end_date');
 
-        if ($salesmanVisitOrder->can_sync) {
+
+        if ($salesmanVisitOrder->can_sync && isset($attributes['status'])) {
             $this->_syncOrders([$salesmanVisitOrder]);
         }
 
@@ -228,6 +229,7 @@ class SalesmanVisitOrderController extends Controller
         $attributes = $request->all();
         $result = DB::transaction(function () use ($attributes, $order) {
             $orderConf = cons('salesman.order');
+            $attributes['id'] = $order->id;
             $attributes['salesman_id'] = $order->salesman_id;
             $attributes['salesman_visit_id'] = $order->salesman_visit_id;
             $attributes['salesman_customer_id'] = $order->salesman_customer_id;
@@ -235,12 +237,13 @@ class SalesmanVisitOrderController extends Controller
             $format = $this->_formatAttribute($attributes);
             $attributes['amount'] = $format['amount'];
 
+            $order->delete();
             $orderForm = SalesmanVisitOrder::create($attributes);
 
             if ($orderForm->exists) {
                 $orderForm->orderGoods()->saveMany($format['orderGoodsArr']);
-                $orderForm->mortgageGoods()->attach($format['mortgageGoodsArr']);
-                $order->delete();
+
+                $orderForm->mortgageGoods()->sync($format['mortgageGoodsArr']);
             }
             return 'success';
         });

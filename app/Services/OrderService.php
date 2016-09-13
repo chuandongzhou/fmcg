@@ -223,19 +223,28 @@ class OrderService
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
                 $salesmanVisitOrder->fill(['amount' => $order->price])->save();
 
+                $fill = [];
                 if ($oldPrice == 0) {
                     //商品原价为0时更新抵费商品
                     $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
                         $orderGoods->goods_id)->first()->pivot;
-                    $fill = ['num' => $num];
+                    if ($salesmanVisitOrderGoods) {
+                        $salesmanVisitOrderGoods = $salesmanVisitOrderGoods->pivot;
+                        $fill = ['num' => $num];
+                    }
+
                 } else {
                     $salesmanVisitOrderGoods = $salesmanVisitOrder->orderGoods()->where('goods_id',
                         $orderGoods->goods_id)->first();
-                    $fill = [
-                        'price' => $price,
-                        'num' => $num,
-                        'amount' => $newTotalPrice
-                    ];
+
+                    if ($salesmanVisitOrderGoods) {
+                        $fill = [
+                            'price' => $price,
+                            'num' => $num,
+                            'amount' => $newTotalPrice
+                        ];
+                    }
+
                 }
                 !is_null($salesmanVisitOrderGoods) && $salesmanVisitOrderGoods->fill($fill)->save();
             }

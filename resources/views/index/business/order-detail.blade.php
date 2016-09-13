@@ -30,8 +30,23 @@
                 <div class="item"><span class="prompt">联系人 : {{ $order->customer_contact }}</span></div>
                 <div class="item"><span class="prompt">收货地址 : {{ $order->shipping_address }}</span></div>
                 @if($order->type == cons('salesman.order.type.order'))
-                    <div class="item"><span class="prompt">订单备注 : {{ $order->order_remark }}</span></div>
-                    <div class="item"><span class="prompt">陈列费备注 : {{ $order->display_remark }}</span></div>
+                    {{--<div class="item"><span class="prompt">订单备注 : {{ $order->order_remark }}</span></div>--}}
+                    <div class="item">
+                        <span class="prompt">订单备注 : </span>
+                        <span class="money old-value">{{ $order->order_remark }}</span>
+                        <input class="edit-money new-value" data-name="order_remark" type="text"
+                               value="{{ $order->order_remark }}">
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit">编辑</button>
+                    </div>
+
+
+                    <div class="item">
+                        <span class="prompt">陈列费备注 : </span>
+                        <span class="money old-value">{{ $order->display_remark }}</span>
+                        <input class="edit-money new-value" data-name="display_remark" type="text"
+                               value="{{ $order->display_remark }}">
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit">编辑</button>
+                    </div>
                 @endif
 
 
@@ -84,9 +99,11 @@
                     <div class="item"><span class="prompt">陈列费 : </span></div>
                     <div class="item">
                         <span class="prompt">现金 : </span>
-                        <b class="money display-fee">{{ $order->display_fee }}</b>
-                        <input class="edit-money display-fee-edit" type="text" value="{{ $order->display_fee }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-type="edit">编辑</button>
+                        <b class="money old-value">{{ $order->display_fee }}</b>
+                        <input class="edit-money new-value" data-name="display_fee" type="text"
+                               value="{{ $order->display_fee }}">
+                        <button class="edit-cash btn btn-primary" type="button" data-parse="true" data-type="edit">编辑
+                        </button>
                     </div>
 
                     @if(!$mortgageGoods->isEmpty())
@@ -114,7 +131,7 @@
                                         <a class="delete-no-form" data-method="delete"
                                            data-url="{{ url('api/v1/business/order/mortgage-goods-delete') }}"
                                            data-data='{"order_id":{{ $order->id }}, "mortgage_goods_id" : {{ $goods['id'] }}}'
-                                            href="javascript:">删除</a>
+                                           href="javascript:">删除</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -177,25 +194,30 @@
                     self.parents(".item").addClass("money-item");
                     self.button("save").data('type', 'save');
                 } else {
-                    var displayFeeControl = self.siblings('.display-fee'),
-                            displayFee = parseFloat(displayFeeControl.html()),
-                            displayFeeEditControl = self.siblings('.display-fee-edit'),
-                            displayFeeEdit = parseFloat(displayFeeEditControl.val());
-                    if (displayFee != displayFeeEdit) {
-                        if (displayFeeEdit < 0) {
+                    var oldValueControl = self.siblings('.old-value'),
+                            isParse = self.data('parse'),
+                            oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
+                            newValueControl = self.siblings('.new-value'),
+                            newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
+                            name = newValueControl.data('name'),
+                            data = {};
+
+                    if (oldValue != newValue) {
+                        if (isParse && newValue < 0) {
                             alert('请正确填写陈列费');
                             return false;
                         }
+
+                        data[name] = newValue;
 
                         self.button('loading');
                         $.ajax({
                             url: site.api('business/order/{{ $order->id }}'),
                             method: 'put',
-                            data: {display_fee: displayFeeEdit}
+                            data: data
                         }).done(function (data, textStatus, jqXHR) {
-                            displayFeeControl.html(displayFeeEdit);
+                            oldValueControl.html(newValue);
                         }).fail(function (jqXHR, textStatus, errorThrown) {
-                            console.log(errorThrown);
                             if (errorThrown == 'Unauthorized') {
                                 site.redirect('auth/login');
                             } else {
