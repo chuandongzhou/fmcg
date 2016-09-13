@@ -45,10 +45,10 @@ return [
         ],
         //订单打印模块
         'templete' => [
-            'first' => '模版一',
-            'second' => '模版二',
-            'third' => '模板三',
-            'fourth' => '模板四'
+            'first' => '296mm*209mm模板一',
+            'second' => '296mm*209mm模板二',
+            'third' => '209mm*296mm模板一',
+            'fourth' => '209mm*296mm模板二'
         ],
     ],
     //用户类别

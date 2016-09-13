@@ -230,7 +230,7 @@ class OrderDownloadService
             $section->addText($text, ['size' => $modelId == cons('order.templete.first') ? 12 : 10],
                 ['width' => $modelId == cons('order.templete.first') ? 4000 : 2800]);
 
-            $this->_addDownloadCount($item);
+            $this->addDownloadCount($item);
         }
         $name = date('Ymd') . strtotime('now') . '.doc';
 
@@ -350,7 +350,7 @@ class OrderDownloadService
             $section->addText($text, ['size' => $modelId == cons('order.templete.second') ? 12 : 10],
                 ['width' => $modelId == cons('order.templete.second') ? 4000 : 2800]);
 
-            $this->_addDownloadCount($item);
+            $this->addDownloadCount($item);
         }
         $name = date('Ymd') . strtotime('now') . '.doc';
 
@@ -364,7 +364,7 @@ class OrderDownloadService
      * @param \App\Models\Order $order
      * @return int
      */
-    private function _addDownloadCount(Order $order)
+    public function addDownloadCount(Order $order)
     {
         return $order->increment('download_count');
     }

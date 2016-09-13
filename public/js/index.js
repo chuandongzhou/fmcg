@@ -811,6 +811,18 @@ function changePriceByDetailPage() {
 }
 
 /**
+ * 订单打印
+ */
+function orderPrint() {
+    //在新窗口打开打印页面
+    $('.print').click(function () {
+        var id = $(this).data('id');
+        var printWindow = window.open(site.url('order-sell/browser-export?order_id=' + id));
+        printWindow.print();
+    });
+}
+
+/**
  * 定位
  */
 function setProvinceName() {

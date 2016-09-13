@@ -5,8 +5,8 @@
         @page { size: landscape; }
     </style>
 @stop
+@section('title', '订单打印 | 订百达 - 订货首选')
 @section('body')
-
 <div class="container temple-table temple-table-y">
     <div class="row">
         <div class="col-sm-12 text-center">
@@ -17,7 +17,7 @@
         <div class="col-sm-12">
             <table class="table-bordered table text-center">
                 <tr>
-                    <td colspan="2" class="text-left">录单日期 ：{{ $order->created_at }}</td>
+                    <td colspan="2" class="text-left">录单日期 ：{{ $order->created_at->toDateString() }}</td>
                     <td colspan="3" class="text-left">平台订单号 ： {{ $order->id }}</td>
                     <td colspan="2" class="text-left">单据编号 ：{{ $order->numbers }}</td>
                 </tr>
@@ -52,7 +52,7 @@
                         {{ $goods->{'specification_' . $order->user_type_name} }}
 
                     </td>
-                    <td>{{ $goods->pivot->pieces }}</td>
+                    <td>{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                     <td>{{ $goods->pivot->num }}</td>
                     <td>{{ $goods->pivot->total_price }}</td>
                     <td>{{ $goods->promotion_info }}</td>

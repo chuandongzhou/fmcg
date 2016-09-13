@@ -157,14 +157,14 @@
                                             @if($order['can_export'])
                                                 <p>
                                                     <a class="btn btn-success print" target="_blank"
-                                                       data-id="{{ $order['id'] }}" >打印</a>
+                                                       data-id="{{ $order['id'] }}">打印</a>
                                                 </p>
                                                 <p>
                                                     <a class="btn btn-success"
-                                                      href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载打印</a>
+                                                       href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
 
                                                     <br>
-                                                    <span class="prompt">（{{ $order->download_count ? '已下载' . $order->download_count . '次'  :'未下载' }}
+                                                    <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
                                                         ）</span>
                                                 </p>
                                             @endif
@@ -195,7 +195,7 @@
                             data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                     </button>
                     <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
-                       data-method="get">下载打印
+                       data-method="get">下载
                     </a>
                 </div>
             @endif
@@ -216,12 +216,7 @@
                 var obj = $(this), url = obj.data('url');
                 $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');
             })
-            //在新窗口打开打印页面
-            $('.print').click(function(){
-                var id = $(this).data('id');
-               var printWindow =  window.open(site.url('order-sell/browser-export?order_id='+id));
-                printWindow.print();
-            });
+            orderPrint();
 
         })
     </script>

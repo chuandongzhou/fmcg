@@ -1,5 +1,5 @@
 @extends('master')
-
+@section('title', '订单打印 | 订百达 - 订货首选')
 @section('body')
 
     <div class="container temple-table" id="divButton">
@@ -12,13 +12,14 @@
             <div class="col-sm-12">
                 <table class="table-bordered table text-center">
                     <tr>
-                        <td colspan="2" class="text-left">录单日期 ：{{ $order->created_at }}</td>
+                        <td colspan="2" class="text-left">录单日期 ：{{ $order->created_at->toDateString() }}</td>
                         <td colspan="3" class="text-left">平台订单号 ： {{ $order->id }}</td>
                         <td colspan="2" class="text-left">单据编号 ：{{ $order->numbers }}</td>
                     </tr>
                     <tr>
                         <td colspan="2" class="text-left"> 购买单位 ：{{ $order->user_shop_name }}</td>
-                        <td colspan="3" class="text-left">{{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}</td>
+                        <td colspan="3"
+                            class="text-left">{{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}</td>
                         <td colspan="2" class="text-left">制单人 ： 管理员</td>
                     </tr>
                     <tr>
@@ -38,7 +39,7 @@
                                 {{ $goods->{'specification_' . $order->user_type_name} }}
 
                             </td>
-                            <td>{{ $goods->pivot->pieces }}</td>
+                            <td>{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                             <td>{{ $goods->pivot->num }}</td>
                             <td>{{ $goods->pivot->total_price }}</td>
                             <td>{{ $goods->promotion_info }}</td>
@@ -52,17 +53,20 @@
                     </tr>
                     <tr>
                         <td colspan="4">备注：{{ $order->remark }}</td>
-                        <td colspan="3">{{ $order->shop_name }}首页地址：<br />
-                            <img src="{{ (new \App\Services\ShopService())->qrcode($order->shop_id) }}" /><br/>
-                            一站式零售服务平台- -订百达</td>
+                        <td colspan="3">{{ $order->shop_name }}首页地址：<br/>
+                            <img src="{{ (new \App\Services\ShopService())->qrcode($order->shop_id) }}"/><br/>
+                            一站式零售服务平台- -订百达
+                        </td>
                     </tr>
                 </table>
             </div>
         </div>
         <div class="row item">
-            <div class="col-xs-4">业务员：{{ $order->salesmanVisitOrder ? $order->salesmanVisitOrder->salesman_name : '' }}</div>
+            <div class="col-xs-4">
+                业务员：{{ $order->salesmanVisitOrder ? $order->salesmanVisitOrder->salesman_name : '' }}</div>
             <div class="col-xs-4"> 送货人：{{ $order->deliveryMan ? $order->deliveryMan->name : '' }}</div>
-            <div class="col-xs-4">  收款人：{{ $order->systemTradeInfo?cons()->valueLang('trade.pay_type',$order->systemTradeInfo->pay_type) : '' }}</div>
+            <div class="col-xs-4">
+                收款人：{{ $order->systemTradeInfo?cons()->valueLang('trade.pay_type',$order->systemTradeInfo->pay_type) : '' }}</div>
         </div>
     </div>
 @stop
