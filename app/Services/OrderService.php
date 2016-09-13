@@ -243,10 +243,8 @@ class OrderService
 
             $content = "商品编号：{$orderGoods->goods_id}; 原商品数量：{$oldNum},现商品数量：{$orderGoods->num}; 原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
 
-            $order->orderChangeRecode()->create([
-                'user_id' => $userId,
-                'content' => $content
-            ]);
+            //添加记录
+            $this->addOrderChangeRecord($order, $content, $userId);
 
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
@@ -256,6 +254,22 @@ class OrderService
             return true;
         });
         return $flag === true;
+    }
+
+    /**
+     * 添加订单修改记录
+     *
+     * @param $order
+     * @param $content
+     * @param null $userId
+     */
+    public function addOrderChangeRecord($order, $content, $userId = null)
+    {
+        $userId = $userId ?: auth()->id();
+        $order->orderChangeRecode()->create([
+            'user_id' => $userId,
+            'content' => $content
+        ]);
     }
 
     /**

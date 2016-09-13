@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Carbon\Carbon;
 use DB;
 
 /**
@@ -16,12 +17,13 @@ class DataStatisticsService
     /**
      * 数据统计
      *
-     * @param $nowTime
+     * @param  $nowTime
      * @param bool|false $isBetween
      * @return array
      */
     public static function getTodayDataStatistics($nowTime, $isBetween = false)
     {
+        $nowTime = $nowTime instanceof Carbon ? $nowTime : (new Carbon($nowTime));
         $userType = cons('user.type');
         $dayAgo = $nowTime->copy()->subDay()->startOfDay();
         $monthAgo = $isBetween ? $dayAgo : $nowTime->copy()->subDays(30);
