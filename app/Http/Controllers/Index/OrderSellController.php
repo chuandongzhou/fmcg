@@ -200,4 +200,34 @@ class OrderSellController extends OrderController
         return $data;
     }
 
+    /**
+     * 查询浏览器打印订单详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getBrowserExport(Request $request)
+    {
+        $orderId = $request->input('order_id');
+        if (empty($orderId)) {
+            return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
+        }
+
+        $status = cons('order.status');
+        $order = Order::with('shippingAddress.address', 'goods', 'shop','user')
+            ->OfSell(auth()->id())->where('status', '>=', $status['non_send'])
+            ->where('id', $orderId)->first();
+        $allNum = 0;
+        foreach($order->goods as $goods){
+            $allNum += $goods->pivot->num;
+        }
+        $order->allNum = $allNum;
+        $order->created_at= $order->created_at->toDateString();
+        $shopId = $order->shop_id;
+        $modelId = app('order.download')->getTemplete($shopId);
+
+            return view('index.order.sell.templet.templet-table'.$modelId,['order'=>$order]);
+
+    }
+
 }

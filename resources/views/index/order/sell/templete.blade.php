@@ -22,14 +22,36 @@
                 @foreach(cons()->valueLang('order.templete') as $templeteId => $templeteName)
                     <div class="col-sm-4 item {{ $templeteId == $defaultTempleteId ? 'checked' : '' }}">
                         <h4 class="templete-name">{{ $templeteName }}</h4>
-                        <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">
+                        @if($templeteId==cons('order.templete.third'))
+                            <img src="{{ asset('images/order-templetes/templete_' . cons('order.templete.first') . '_s.png') }}">
+                        @elseif($templeteId==cons('order.templete.fourth'))
+                            <img src="{{ asset('images/order-templetes/templete_' .  cons('order.templete.second') . '_s.png') }}">
+                        @else
+                            <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">
+                        @endif
+
                         <div class="buttons">
                             <a class="btn btn-primary ajax no-prompt check-templete" data-method="post"
                                data-done-then="none"
                                data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}">选择</a>
-                            <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
-                                    data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">预览
-                            </button>
+                            @if($templeteId==cons('order.templete.third'))
+                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
+                                        data-src="{{ asset('images/order-templetes/templete_' .cons('order.templete.first') . '.png') }}">
+                                    预览
+                                </button>
+                            @elseif($templeteId==cons('order.templete.fourth'))
+                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
+                                        data-src="{{ asset('images/order-templetes/templete_' .  cons('order.templete.second') . '.png') }}">
+                                    预览
+                                </button>
+                            @else
+                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
+                                        data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">
+                                    预览
+                                </button>
+                            @endif
+
+
                         </div>
                     </div>
                 @endforeach

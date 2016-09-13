@@ -110,8 +110,8 @@
         </div>
         <div class="row nav-wrap list-penal " >
             <div class="col-sm-2 hot-goods-panel" >
-                <div class="col-sm-12 switching hot-goods" >
-                    <a href="javascript:void(0)" >店家热门商品</a>
+                <div class="col-sm-12 hot-goods" >
+                    <a >店家热门商品</a>
 
                 </div>
                 @foreach($hotGoods as $good)

@@ -26,7 +26,7 @@
         <div class="col-sm-12 enter-item notice-bar">
             <a class="btn btn-default col-xs-1"
                href="{{ url('personal/delivery-report?'.  http_build_query($search)) }}">下载打印</a>
-            <a class="btn btn-default back" href="{{ url('personal/delivery') }}"><i class="fa fa-reply"></i> 返回</a>
+            <a class="btn btn-default back" href="javascript:history.back()"><i class="fa fa-reply"></i> 返回</a>
         </div>
         <div class="col-sm-12 table-responsive tables">
             <table class="table-bordered table">
@@ -36,10 +36,10 @@
                         <td>{{ $key }}</td>
                         <td>时间</td>
                         <td>
-                            @if(!empty($search['start_at']) && !empty($search['end_at']))
-                                {{  $search['start_at'] }}至{{ $search['end_at'] }}
-                            @elseif(!empty($search['start_at']) && empty($search['end_at']))
+                            @if(!empty($search['start_at']) && empty($search['end_at']))
                                 {{  $search['start_at'] }}至今
+                            @else
+                                {{  $search['start_at'] }}至{{ $search['end_at'] }}
                             @endif
                         </td>
                         <td>配送单数</td>

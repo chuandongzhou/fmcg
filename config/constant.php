@@ -50,7 +50,9 @@ return [
         //订单打印模块
         'templete' => [
             'first' => 1,
-            'second' => 2
+            'second' => 2,
+            'third' => 3,
+            'fourth' => 4
         ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
     ],

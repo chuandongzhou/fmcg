@@ -865,7 +865,7 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .right-search {
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
 }
 
 .wholesalers-header {
@@ -4197,3 +4197,30 @@ table {
   }
 }
 /*==============templet end=================*/
+.temple-table{
+  width:990px;
+  min-width:990px;
+  margin-top: 40px;
+  .title{
+    margin-bottom: 10px;
+  }
+  .contact-information{
+    margin-bottom: 20px;
+  }
+  .item{
+    padding: 10px 0;
+  }
+  table{
+    th{
+      text-align: center;
+    }
+  }
+}
+.temple-table-y{
+  width: 700px !important;
+  min-width: 700px!important;
+  font-size: 12px!important;
+  .title{
+    font-size: 23px;
+  }
+}
