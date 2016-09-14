@@ -712,7 +712,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       text-align: center;
       .ui-stepSequence {
         position: relative;
-        padding: 1px 10px;
+        display: inline-block;
+        width:20px;
+        height:20px;
         border-radius: 50% !important;
         z-index: 103;
         margin-left: 1px;
@@ -1126,12 +1128,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 .hot-goods{
   text-align:center;
   margin-bottom:10px;
+  line-height: 40px;
+  background-color: $gray-plain;
   a{
     margin-right: 0;
   }
 }
 .hot-goods-panel {
   padding-right:0;
+  padding-left: 0;
   .commodity{
     width:100%;
     padding:0 3px;
@@ -1185,7 +1190,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 
   .nav-wrap {
-    background-color: $gray-plain;
+    /*background-color: $gray-plain;*/
     margin: 30px 0;
     height: 40px;
     li {
@@ -1200,6 +1205,7 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
     .switching {
+      background-color: $gray-plain;
       a {
         display: inline-block;
         height: 40px;
