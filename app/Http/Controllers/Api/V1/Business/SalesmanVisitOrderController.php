@@ -345,7 +345,7 @@ class SalesmanVisitOrderController extends Controller
     private function _syncOrders($salesmanVisitOrders)
     {
         $result = DB::transaction(function () use ($salesmanVisitOrders) {
-            $syncConf = cons('salesman . order . sync');
+            $syncConf = cons('salesman.order.sync');
             $orderConf = cons('order');
             $shippingAddressService = new ShippingAddressService();
             foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
@@ -424,13 +424,13 @@ class SalesmanVisitOrderController extends Controller
      */
     private function _updateOrderGoods($salesmanVisitOrder, $request, $orderGoods = null)
     {
-        if (is_null($salesmanVisitOrder) || Gate::denies('validate - salesman - order', $salesmanVisitOrder)) {
-            return $this->error('订单不存在');
+        if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+            return false;
         }
 
         $result = DB::transaction(function () use ($salesmanVisitOrder, $request, $orderGoods) {
             if ($orderGoods) {
-                $goodsTypes = cons('salesman . order . goods . type');
+                $goodsTypes = cons('salesman.order.goods.type');
                 $attributes = [];
                 //商品原总金额
                 $goodsOldAmount = $orderGoods->amount;
@@ -444,7 +444,7 @@ class SalesmanVisitOrderController extends Controller
                     if ($orderGoods->fill($attributes)->save()) {
                         $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
                     }
-                } elseif ($orderGoods->type == $goodsTypes['return ']) {
+                } elseif ($orderGoods->type == $goodsTypes['return']) {
                     //退货单
                     $attributes['num'] = $request->input('num');
                     $attributes['amount'] = $request->input('amount');

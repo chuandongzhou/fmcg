@@ -158,32 +158,40 @@ class StatisticsController extends Controller
                         //当天下单成单数
                         $orderSellerEveryday['wholesaler']['countToday'] = isset($orderSellerEveryday['wholesaler']['countToday']) ? ++$orderSellerEveryday['wholesaler']['countToday'] : 1;
                         //当天下单成单总额
-                        $orderSellerEveryday['wholesaler']['amountToday'] = isset($orderSellerEveryday['wholesaler']['amountToday']) ? $orderSellerEveryday['wholesaler']['amountToday'] + $order->price : $order->price;
+                        $orderSellerEveryday['wholesaler']['amountToday'] = isset($orderSellerEveryday['wholesaler']['amountToday']) ? bcadd($orderSellerEveryday['wholesaler']['amountToday'],
+                            $order->price, 2) : $order->price;
                     }
 
                     //成单总金额
-                    $orderSellerEveryday['wholesaler']['amount'] = isset($orderSellerEveryday['wholesaler']['amount']) ? $orderSellerEveryday['wholesaler']['amount'] + $order->price : $order->price;
+                    $orderSellerEveryday['wholesaler']['amount'] = isset($orderSellerEveryday['wholesaler']['amount']) ? bcadd($orderSellerEveryday['wholesaler']['amount'],
+                        $order->price, 2) : $order->price;
                     if ($order->pay_type == $payType['online']) {
                         // 线上完成总金额
-                        $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmount']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] + $order->price : $order->price;
+                        $orderSellerEveryday['wholesaler']['onlineSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmount']) ? bcadd($orderSellerEveryday['wholesaler']['onlineSuccessAmount'],
+                            $order->price, 2) : $order->price;
                         //线上完成总金额当天下单并完成的金额
                         if ($order->created_at >= $dayStart) {
-                            $orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'] + $order->price : $order->price;
+                            $orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['onlineSuccessAmountToday']) ? bcadd($orderSellerEveryday['wholesaler']['onlineSuccessAmountToday'],
+                                $order->price, 2) : $order->price;
                         }
 
                     } else {
                         //线下完成总金额
-                        $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                        $orderSellerEveryday['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmount']) ? bcadd($orderSellerEveryday['wholesaler']['codSuccessAmount'],
+                            $order->price, 2) : $order->price;
                         //线下完成总金额当天下单并完成的金额
                         if ($order->created_at >= $dayStart) {
-                            $orderSellerEveryday['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['codSuccessAmountToday'] + $order->price : $order->price;
+                            $orderSellerEveryday['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['codSuccessAmountToday']) ? bcadd($orderSellerEveryday['wholesaler']['codSuccessAmountToday'],
+                                $order->price, 2) : $order->price;
                         }
                         //线下pos机完成总金额
                         if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
-                            $orderSellerEveryday['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmount']) ? $orderSellerEveryday['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                            $orderSellerEveryday['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmount']) ? bcadd($orderSellerEveryday['wholesaler']['posSuccessAmount'],
+                                $order->price, 2) : $order->price;
                             //线下pos机完成总金额当天下单并完成的金额
                             if ($order->created_at >= $dayStart) {
-                                $orderSellerEveryday['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmountToday']) ? $orderSellerEveryday['wholesaler']['posSuccessAmountToday'] + $order->price : $order->price;
+                                $orderSellerEveryday['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['wholesaler']['posSuccessAmountToday']) ? bcadd($orderSellerEveryday['wholesaler']['posSuccessAmountToday'],
+                                    $order->price, 2) : $order->price;
                             }
                         }
                     }
@@ -194,12 +202,14 @@ class StatisticsController extends Controller
                         //成单数
                         $orderSellerEveryday['supplier']['wholesaler']['count'] = isset($orderSellerEveryday['supplier']['wholesaler']['count']) ? ++$orderSellerEveryday['supplier']['wholesaler']['count'] : 1;
                         //成单总金额
-                        $orderSellerEveryday['supplier']['wholesaler']['amount'] = isset($orderSellerEveryday['supplier']['wholesaler']['amount']) ? $orderSellerEveryday['supplier']['wholesaler']['amount'] + $order->price : $order->price;
+                        $orderSellerEveryday['supplier']['wholesaler']['amount'] = isset($orderSellerEveryday['supplier']['wholesaler']['amount']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['amount'],
+                            $order->price, 2) : $order->price;
                         if ($order->created_at >= $dayStart) {
                             //成单数当天下单
                             $orderSellerEveryday['supplier']['wholesaler']['countToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['countToday']) ? ++$orderSellerEveryday['supplier']['wholesaler']['countToday'] : 1;
                             //成单总金额当天下单
-                            $orderSellerEveryday['supplier']['wholesaler']['amountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['amountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['amountToday'] + $order->price : $order->price;
+                            $orderSellerEveryday['supplier']['wholesaler']['amountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['amountToday']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['amountToday'],
+                                $order->price, 2) : $order->price;
                         }
                         if ($order->pay_type == $payType['online']) {
                             //线上成单总金额
@@ -211,18 +221,22 @@ class StatisticsController extends Controller
 
                         } else {
                             //线下成单总金额
-                            $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] + $order->price : $order->price;
+                            $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmount'],
+                                $order->price, 2) : $order->price;
                             //线下完成总金额当天下单并完成的金额
                             if ($order->created_at >= $dayStart) {
-                                $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'] + $order->price : $order->price;
+                                $orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['codSuccessAmountToday'],
+                                    $order->price, 2) : $order->price;
                             }
 
                             //线下pos机成单总金额
                             if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
-                                $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount']) ? $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] + $order->price : $order->price;
+                                $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmount'],
+                                    $order->price, 2) : $order->price;
                                 //线下pos机完成总金额当天下单并完成的金额
                                 if ($order->created_at >= $dayStart) {
-                                    $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday']) ? $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'] + $order->price : $order->price;
+                                    $orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday']) ? bcadd($orderSellerEveryday['supplier']['wholesaler']['posSuccessAmountToday'],
+                                        $order->price, 2) : $order->price;
                                 }
                             }
                         }
@@ -231,33 +245,41 @@ class StatisticsController extends Controller
                         //成单数
                         $orderSellerEveryday['supplier']['retailer']['count'] = isset($orderSellerEveryday['supplier']['retailer']['count']) ? ++$orderSellerEveryday['supplier']['retailer']['count'] : 1;
                         //成单总金额
-                        $orderSellerEveryday['supplier']['retailer']['amount'] = isset($orderSellerEveryday['supplier']['retailer']['amount']) ? $orderSellerEveryday['supplier']['retailer']['amount'] + $order->price : $order->price;
+                        $orderSellerEveryday['supplier']['retailer']['amount'] = isset($orderSellerEveryday['supplier']['retailer']['amount']) ? bcadd($orderSellerEveryday['supplier']['retailer']['amount'],
+                            $order->price, 2) : $order->price;
                         if ($order->created_at >= $dayStart) {
                             //成单数当日下单
                             $orderSellerEveryday['supplier']['retailer']['countToday'] = isset($orderSellerEveryday['supplier']['retailer']['countToday']) ? ++$orderSellerEveryday['supplier']['retailer']['countToday'] : 1;
                             //成单总金额当日下单
-                            $orderSellerEveryday['supplier']['retailer']['amountToday'] = isset($orderSellerEveryday['supplier']['retailer']['amountToday']) ? $orderSellerEveryday['supplier']['retailer']['amountToday'] + $order->price : $order->price;
+                            $orderSellerEveryday['supplier']['retailer']['amountToday'] = isset($orderSellerEveryday['supplier']['retailer']['amountToday']) ? bcadd($orderSellerEveryday['supplier']['retailer']['amountToday'],
+                                $order->price, 2) : $order->price;
                         }
                         if ($order->pay_type == $payType['online']) {
                             //线上完成总金额
-                            $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] + $order->price : $order->price;
+                            $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount']) ? bcadd($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmount'],
+                                $order->price, 2) : $order->price;
                             //线上完成总金额当天下单并当天完成的金额
                             if ($order->created_at >= $dayStart) {
-                                $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'] + $order->price : $order->price;
+                                $orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday']) ? bcadd($orderSellerEveryday['supplier']['retailer']['onlineSuccessAmountToday'],
+                                    $order->price, 2) : $order->price;
                             }
                         } else {
                             //线下完成总金额
-                            $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] + $order->price : $order->price;
+                            $orderSellerEveryday['supplier']['retailer']['codSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmount']) ? bcadd($orderSellerEveryday['supplier']['retailer']['codSuccessAmount'],
+                                $order->price, 2) : $order->price;
                             //线下完成总金额当天下单并当天完成的金额
                             if ($order->created_at >= $dayStart) {
-                                $orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'] + $order->price : $order->price;
+                                $orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday']) ? bcadd($orderSellerEveryday['supplier']['retailer']['codSuccessAmountToday'],
+                                    $order->price, 2) : $order->price;
                             }
                             //线下pos机完成总金额
                             if ($order->systemTradeInfo && $order->systemTradeInfo->pay_type == cons('trade.pay_type.pos')) {
-                                $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmount']) ? $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] + $order->price : $order->price;
+                                $orderSellerEveryday['supplier']['retailer']['posSuccessAmount'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmount']) ? bcadd($orderSellerEveryday['supplier']['retailer']['posSuccessAmount'],
+                                    $order->price, 2) : $order->price;
                                 //线下pos机完成总金额当天下单并当天完成的金额
                                 if ($order->created_at >= $dayStart) {
-                                    $orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday']) ? $orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'] + $order->price : $order->price;
+                                    $orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'] = isset($orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday']) ? bcadd($orderSellerEveryday['supplier']['retailer']['posSuccessAmountToday'],
+                                        $order->price, 2) : $order->price;
                                 }
                             }
                         }
