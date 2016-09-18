@@ -29,9 +29,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">标签 :</label>
 
-                    <p class=" col-sm-10  attr">
+                    <div class=" col-sm-10  attr attr-labels">
 
-                    </p>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">选择文件 :</label>

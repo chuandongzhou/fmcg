@@ -157,7 +157,7 @@
                                             @if($order['can_export'])
                                                 <p>
                                                     <a class="btn btn-success print" target="_blank"
-                                                       data-id="{{ $order['id'] }}">打印</a>
+                                                       href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
                                                 </p>
                                                 <p>
                                                     <a class="btn btn-success"

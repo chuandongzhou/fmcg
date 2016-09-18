@@ -138,7 +138,7 @@
                 </div>
                 @endforeach
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-10 pd-right-clear">
                 <div class="col-sm-12 switching">
                     <a href="javascript:void(0)" id="location" class="active">配送区域</a>
                     <a href="javascript:void(0)" id="graphic-details">图文详情</a>

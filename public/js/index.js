@@ -256,15 +256,15 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            //submitBtn = $('input.btn-primary'),
+        //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
                 shopSumPrice = 0/*,
-                 minMoney = obj.find('.min-money'),
-                 notEnough = obj.find('.not-enough')*/;
+             minMoney = obj.find('.min-money'),
+             notEnough = obj.find('.not-enough')*/;
             obj.find('.goods-list').each(function () {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
@@ -811,17 +811,13 @@ function changePriceByDetailPage() {
 }
 
 /**
- * 订单打印
+ * 订单打印方法
  */
-function orderPrint() {
-    //在新窗口打开打印页面
-    $('.print').click(function () {
-        var id = $(this).data('id');
-        var printWindow = window.open(site.url('order-sell/browser-export?order_id=' + id));
-        printWindow.print();
-    });
-}
+function printFun() {
+    window.print();
+    setTimeout("window.close();", 0);
 
+}
 /**
  * 定位
  */
