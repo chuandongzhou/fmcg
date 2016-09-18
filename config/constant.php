@@ -142,7 +142,7 @@ return [
             'price',
         ],
         'page_per_num' => 10,  //店铺每页显示数量
-        'qrcode_size' => 100   //二维码尺寸
+        'qrcode_size' => 80   //二维码尺寸
     ],
     // 交易相关
     'trade' => [

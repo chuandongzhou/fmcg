@@ -206,10 +206,9 @@ class OrderService
         if ($num == $orderGoods->num && $price == $orderGoods->price) {
             return true;
         }
-
         $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
             $oldTotalPrice = $orderGoods->total_price;
-            $newTotalPrice = $num * $price;
+            $newTotalPrice = bcmul($num, $price, 2);
             //增加修改记录
             $oldNum = $orderGoods->num;
             $oldPrice = $orderGoods->price;
@@ -225,9 +224,11 @@ class OrderService
 
                 $fill = [];
                 if ($oldPrice == 0) {
+
+
                     //商品原价为0时更新抵费商品
                     $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
-                        $orderGoods->goods_id)->first()->pivot;
+                        $orderGoods->goods_id)->first();
                     if ($salesmanVisitOrderGoods) {
                         $salesmanVisitOrderGoods = $salesmanVisitOrderGoods->pivot;
                         $fill = ['num' => $num];

@@ -102,8 +102,8 @@ class SalesmanVisitController extends Controller
                 if (isset($result['order']['order_form']) && ($orderForms = array_filter($result['order']['order_form']))) {
                     $orderForms['salesman_visit_id'] = $visit->id;
                     $orderForms['salesman_customer_id'] = $data['salesman_customer_id'];
-                   /* $orderForms['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
-                    $orderForms['display_remark'] = isset($data['display_remark']) ? $data['display_remark'] : '';*/
+                    $orderForms['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
+                    $orderForms['display_remark'] = isset($data['display_remark']) ? $data['display_remark'] : '';
                     $orderForms['type'] = $orderConf['type']['order'];
                     $orderForm = $salesman->orders()->create($orderForms);
                     if ($orderForm->exists) {

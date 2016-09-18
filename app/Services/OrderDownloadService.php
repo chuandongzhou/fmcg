@@ -31,10 +31,9 @@ class OrderDownloadService
 
             $phpWord->setDefaultFontName('仿宋');
             if ($modelId == cons('order.templete.third') || $modelId == cons('order.templete.fourth')) {
-                $phpWord->setDefaultFontSize(10.5);
+                $phpWord->setDefaultFontSize(8);
                 $phpWord->addTableStyle('table', ['borderSize' => 1, 'alignment' => 'center'],
                     ['name' => '仿宋', 'size' => 15, 'align ' => 'center']);
-                // Adding an empty Section to the document...
 
                 $phpWord->addParagraphStyle('Normal', [
                     'spaceBefore' => 0,
@@ -42,7 +41,7 @@ class OrderDownloadService
                     'lineHeight' => 1,  // 行间距
                 ]);
             } else {
-                $phpWord->setDefaultFontSize(12);
+                $phpWord->setDefaultFontSize(8);
                 $phpWord->addTableStyle('table', ['borderSize' => 1, 'alignment' => 'center'],
                     ['name' => '仿宋', 'size' => 20, 'align ' => 'center']);
                 // Adding an empty Section to the document...
@@ -125,16 +124,21 @@ class OrderDownloadService
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
 
 
+        $isLandscape = $modelId == cons('order.templete.first');
+
+        $style = [
+            'marginTop' => 0,
+            'marginRight' => 0,
+            'marginLeft' => 0,
+            'marginBottom' => 0
+        ];
+
+        $isLandscape && $style['orientation'] = 'landscape';
+
         foreach ($orders as $item) {
-            if ($modelId == cons('order.templete.first')) {
-                $section = $phpWord->addSection(['orientation' => 'landscape']);
-            } else {
-                $section = $phpWord->addSection();
-            }
-
-
+            $section = $phpWord->addSection($style);
             $section->addText($item->shop_name . ' 送货单',
-                ['bold' => true, 'size' => $modelId == cons('order.templete.first') ? 18 : 14],
+                ['bold' => true, 'size' => $isLandscape ? 18 : 14],
                 ['alignment' => 'center']);
 
             $shopContact = '联系电话：' . $item->shop->contact_info;
@@ -144,37 +148,43 @@ class OrderDownloadService
 
             $section->addText('');
 
-            $firstRow = '录单日期 ：' . $item->created_at->toDateString();
-            $firstRow .= '        平台订单号 ： ' . $item->id;
-            $firstRow .= '             单据编号 ：' . $item->numbers;
-            $section->addText($firstRow);
+            $table = $section->addTable(['alignment' => 'center']);
+
+            $table->addRow(20);
+            $table->addCell($isLandscape ? 8000 : 5600, $vAlign)->addText('录单日期 ：' . $item->created_at->toDateString());
+            $table->addCell($isLandscape ? 5000 : 3500, $vAlign)->addText('平台订单号 ： ' . $item->id);
+            $table->addCell($isLandscape ? 3500 : 2450, $vAlign)->addText('单据编号 ：' . $item->numbers);
+
+            $table->addRow(20);
             $userContact = '购买单位 ：' . $item->user_shop_name;
             if ($item->pay_type == $orderPayTypes['pick_up']) {
                 $userContact .= '自提';
             } else {
                 $userContact .= '  ' . ($item->shippingAddress ? $item->shippingAddress->consigner . '-' . $item->shippingAddress->phone . '  ' . $item->shippingAddress->address->address_name : '');
             }
-            $userContact .= '      制单人 ： 管理员';
+            $table->addCell($isLandscape ? 13000 : 9100, $gridSpan2)->addText($userContact);
+            $table->addCell($isLandscape ? 3500 : 2450, $vAlign)->addText('制单人 ： 管理员');
 
-            $section->addText($userContact);
 
             $table = $section->addTable('table');
+
+
             $table->addRow(20);
-            $table->addCell($modelId == cons('order.templete.first') ? 2200 : 1540, $vAlign)->addText('商品条码', null,
+            $table->addCell($isLandscape ? 3000 : 2400, $vAlign)->addText('商品条码', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 4100 : 2870, $vAlign)->addText('商品名称', null,
+            $table->addCell($isLandscape ? 5000 : 3200, $vAlign)->addText('商品名称', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 1800 : 1260, $vAlign)->addText('商品规格', null,
+            $table->addCell($isLandscape ? 1800 : 1260, $vAlign)->addText('商品规格', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 1500 : 1050, $vAlign)->addText('单价', null,
+            $table->addCell($isLandscape ? 1500 : 1050, $vAlign)->addText('单价', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 700 : 490, $vAlign)->addText('单位', null,
+            $table->addCell($isLandscape ? 700 : 490, $vAlign)->addText('单位', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 1000 : 700, $vAlign)->addText('数量', null,
+            $table->addCell($isLandscape ? 1000 : 700, $vAlign)->addText('数量', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 1000 : 700, $vAlign)->addText('金额', null,
+            $table->addCell($isLandscape ? 1000 : 700, $vAlign)->addText('金额', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.first') ? 2500 : 1750, $vAlign)->addText('促销信息', null,
+            $table->addCell($isLandscape ? 2500 : 1750, $vAlign)->addText('促销信息', null,
                 $cellAlignCenter);
 
             $orderGoodsNum = 0;
@@ -183,22 +193,22 @@ class OrderDownloadService
 
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
-                $table->addCell($modelId == cons('order.templete.first') ? 2200 : 1540,
+                $table->addCell($isLandscape ? 2200 : 1540,
                     $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 4100 : 2870, $vAlign)->addText($goods->name,
+                $table->addCell($isLandscape ? 4100 : 2870, $vAlign)->addText($goods->name,
                     null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 1800 : 1260,
+                $table->addCell($isLandscape ? 1800 : 1260,
                     $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 1500 : 1050,
+                $table->addCell($isLandscape ? 1500 : 1050,
                     $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 700 : 490,
+                $table->addCell($isLandscape ? 700 : 490,
                     $vAlign)->addText(cons()->valueLang('goods.pieces',
                     $goods->pivot->pieces), null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 1000 : 700,
+                $table->addCell($isLandscape ? 1000 : 700,
                     $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 1000 : 700,
+                $table->addCell($isLandscape ? 1000 : 700,
                     $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.first') ? 2500 : 1750,
+                $table->addCell($isLandscape ? 2500 : 1750,
                     $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
 
                 $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
@@ -212,23 +222,23 @@ class OrderDownloadService
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
 
             $table->addRow();
-            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark);
+            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
             $qrcodeCell = $table->addCell(0, $gridSpan3);
             $qrcodeCell->addText($item->shop_name . '店铺首页地址：');
-            $modelId == cons('order.templete.first') ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,
-                70));
+            $isLandscape ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,
+                60));
             $qrcodeCell->addText('一站式零售服务平台- -订百达');
 
 
-            $text = '制单:';
+            $text = '   制单:';
             $text .= '        业务员：' . ($item->salesmanVisitOrder ? $item->salesmanVisitOrder->salesman_name : '');
             $text .= '        送货人：' . ($item->deliveryMan ? $item->deliveryMan->name : '');
             $text .= '        仓管：';
             $text .= '        收款人：' . ($item->systemTradeInfo ? cons()->valueLang('trade.pay_type',
                     $item->systemTradeInfo->pay_type) : '');
 
-            $section->addText($text, ['size' => $modelId == cons('order.templete.first') ? 12 : 10],
-                ['width' => $modelId == cons('order.templete.first') ? 4000 : 2800]);
+            $section->addText($text, ['size' => $isLandscape ? 12 : 10],
+                ['width' => $isLandscape ? 4000 : 2800]);
 
             $this->addDownloadCount($item);
         }
@@ -256,48 +266,58 @@ class OrderDownloadService
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
         $gridSpan8 = ['valign' => 'center', 'gridSpan' => 8];
 
+        $isLandscape = $modelId == cons('order.templete.second');
+
+        $style = [
+            'marginTop' => 0,
+            'marginRight' => 0,
+            'marginLeft' => 0,
+            'marginBottom' => 0
+        ];
+        $isLandscape && $style['orientation'] = 'landscape';
+
 
         foreach ($orders as $item) {
-            if ($modelId == cons('order.templete.second')) {
-                $section = $phpWord->addSection(['orientation' => 'landscape']);
-            } else {
-                $section = $phpWord->addSection();
-            }
-
+            $section = $phpWord->addSection($style);
             $section->addText($item->shop_name . ' 送货单', ['bold' => true, 'size' => 15], ['alignment' => 'center']);
             $table = $section->addTable('table');
 
             $table->addRow();
-            $table->addCell($modelId == cons('order.templete.second') ? 6300 : 4410,
+            $table->addCell($isLandscape ? 7400 : 5500,
                 $gridSpan2)->addText('录单日期 ：' . $item->created_at->toDateString());
-            $table->addCell($modelId == cons('order.templete.second') ? 4000 : 2800,
+            $table->addCell($isLandscape ? 4000 : 2800,
                 $gridSpan3)->addText('平台订单号 ：' . $item->id);
-            $table->addCell($modelId == cons('order.templete.second') ? 4000 : 2800,
+            $table->addCell($isLandscape ? 4000 : 2800,
                 $gridSpan3)->addText('单据编号 ：' . $item->numbers);
 
             $userInfo = '购买单位 ：' . $item->user_shop_name;
             $userInfo .= $item->pay_type == $orderPayTypes['pick_up'] ? '   自提' : '     联系电话 ：' . ($item->shippingAddress ? $item->shippingAddress->consigner . '-' . $item->shippingAddress->phone : '');
-            $userInfo .= '  地址 ：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name);
+            if ($item->pay_type == $orderPayTypes['pick_up']) {
+                $userInfo .= '  提货地址 ：' . $item->shop->address;
+            } else {
+                $userInfo .= '  地址 ：' . (is_null($item->shippingAddress->address) ? '' : $item->shippingAddress->address->address_name);
+            }
+
 
             $table->addRow();
             $table->addCell(0, $gridSpan8)->addText($userInfo);
 
             $table->addRow(20);
-            $table->addCell($modelId == cons('order.templete.second') ? 2400 : 1680, $vAlign)->addText('商品条码', null,
+            $table->addCell($isLandscape ? 2400 : 2500, $vAlign)->addText('商品条码', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 3900 : 2730, $vAlign)->addText('商品名称', null,
+            $table->addCell($isLandscape ? 5000 : 3000, $vAlign)->addText('商品名称', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 1800 : 1260, $vAlign)->addText('商品规格', null,
+            $table->addCell($isLandscape ? 1800 : 1260, $vAlign)->addText('商品规格', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 1500 : 1050, $vAlign)->addText('单价', null,
+            $table->addCell($isLandscape ? 1500 : 1050, $vAlign)->addText('单价', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 700 : 490, $vAlign)->addText('单位', null,
+            $table->addCell($isLandscape ? 700 : 490, $vAlign)->addText('单位', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 1000 : 700, $vAlign)->addText('数量', null,
+            $table->addCell($isLandscape ? 1000 : 700, $vAlign)->addText('数量', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 1000 : 700, $vAlign)->addText('金额', null,
+            $table->addCell($isLandscape ? 1000 : 700, $vAlign)->addText('金额', null,
                 $cellAlignCenter);
-            $table->addCell($modelId == cons('order.templete.second') ? 2500 : 1750, $vAlign)->addText('促销信息', null,
+            $table->addCell($isLandscape ? 2500 : 1750, $vAlign)->addText('促销信息', null,
                 $cellAlignCenter);
 
             $orderGoodsNum = 0;
@@ -305,22 +325,22 @@ class OrderDownloadService
             $userType = $item->user_type_name;
             foreach ($item->goods as $goods) {
                 $table->addRow(20);
-                $table->addCell($modelId == cons('order.templete.second') ? 2200 : 1540,
+                $table->addCell($isLandscape ? 2200 : 1540,
                     $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 3100 : 2170, $vAlign)->addText($goods->name,
+                $table->addCell($isLandscape ? 3100 : 2170, $vAlign)->addText($goods->name,
                     null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 1800 : 1260,
+                $table->addCell($isLandscape ? 1800 : 1260,
                     $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 1500 : 1050,
+                $table->addCell($isLandscape ? 1500 : 1050,
                     $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 700 : 490,
+                $table->addCell($isLandscape ? 700 : 490,
                     $vAlign)->addText(cons()->valueLang('goods.pieces',
                     $goods->pivot->pieces), null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 1000 : 700,
+                $table->addCell($isLandscape ? 1000 : 700,
                     $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 1000 : 700,
+                $table->addCell($isLandscape ? 1000 : 700,
                     $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
-                $table->addCell($modelId == cons('order.templete.second') ? 2500 : 1750,
+                $table->addCell($isLandscape ? 2500 : 1750,
                     $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
 
                 $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
@@ -334,11 +354,11 @@ class OrderDownloadService
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
 
             $table->addRow();
-            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark);
+            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
             $qrcodeCell = $table->addCell(0, $gridSpan3);
             $qrcodeCell->addText($item->shop_name . '店铺首页地址：');
-            $modelId == cons('order.templete.second') ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,
-                70));
+            $isLandscape ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,
+                60));
             $qrcodeCell->addText('一站式零售服务平台- -订百达');
 
 
@@ -347,8 +367,8 @@ class OrderDownloadService
                 '       收款人：' . ($item->systemTradeInfo ? cons()->valueLang('trade.pay_type',
                     $item->systemTradeInfo->pay_type) : '');
 
-            $section->addText($text, ['size' => $modelId == cons('order.templete.second') ? 12 : 10],
-                ['width' => $modelId == cons('order.templete.second') ? 4000 : 2800]);
+            $section->addText($text, ['size' => $isLandscape ? 12 : 10],
+                ['width' => $isLandscape ? 4000 : 2800]);
 
             $this->addDownloadCount($item);
         }
