@@ -17,10 +17,10 @@
             <div class="col-xs-4">
                 录单日期 ：{{ $order->created_at->toDateString() }}
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-5">
                 平台订单号 ：{{ $order->id }}
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 单据编号 ：{{ $order->numbers }}
             </div>
         </div>
@@ -91,12 +91,15 @@
         </div>
     </div>
 @stop
+@section('css')
+    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+@stop
 @section('js')
     @parent
     <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>
     <script>
         $(function () {
-            printFun();
+            //printFun();
         });
     </script>
 

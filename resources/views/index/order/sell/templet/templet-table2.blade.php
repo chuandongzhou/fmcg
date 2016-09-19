@@ -86,6 +86,9 @@
         </div>
     </div>
 @stop
+@section('css')
+    <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+@stop
 @section('js')
     @parent
     <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>

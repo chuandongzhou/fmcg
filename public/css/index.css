@@ -50,13 +50,13 @@ ul, li, p, a, h1, h2, h3, h4 {
   vertical-align: middle; }
 
 .padding-clear {
-  padding: 0; }
+  padding: 0 !important; }
 
 .pd-left-clear {
-  padding-left: 0; }
+  padding-left: 0 !important; }
 
 .pd-right-clear {
-  padding-right: 0; }
+  padding-right: 0 !important; }
 
 .margin-clear {
   margin: 0 !important; }
@@ -1411,6 +1411,10 @@ ul, li, p, a, h1, h2, h3, h4 {
   .goods-editor .attr .items-item {
     display: inline-block;
     padding: 5px 20px 5px 0; }
+
+.goods-editor .attr-labels {
+  padding: 0 !important;
+  margin: 0 !important; }
 
 .goods-editor .editor-item {
   padding: 5px 0;
@@ -3145,19 +3149,20 @@ table {
 .temple-table {
   width: 990px;
   min-width: 990px;
-  margin-top: 40px; }
+  margin-top: 10px; }
   .temple-table .title {
     margin-bottom: 10px; }
-  .temple-table .contact-information {
-    margin-bottom: 20px; }
-  .temple-table .item {
-    padding: 10px 0; }
-  .temple-table table th, .temple-table .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .temple-table table tr td {
-    text-align: center; }
+  .temple-table table {
+    margin-bottom: 0 !important; }
+    .temple-table table th, .temple-table .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .temple-table table tr td {
+      text-align: center; }
+    .temple-table table td, .temple-table table th, .temple-table .table-list-row .shopping-table-list table tr td, .table-list-row .shopping-table-list .temple-table table tr td {
+      padding: 0 !important;
+      border: 1px solid black !important; }
 
 .temple-table-y {
-  width: 700px !important;
-  min-width: 700px !important;
-  font-size: 12px !important; }
+  width: 1200px !important;
+  min-width: 1200px !important;
+  font-size: 8px !important; }
   .temple-table-y .title {
     font-size: 23px; }

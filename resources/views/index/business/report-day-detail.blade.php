@@ -140,7 +140,8 @@
                                     <td>{{ $statistics['goods_name'] }}</td>
                                     <td>{{ $statistics['stock'] }}</td>
                                     <td>{{ $statistics['production_date'] }}</td>
-                                    <td>{{ $statistics['price'] or 0 }}/{{ $statistics['pieces'] or '件' }}</td>
+                                    <td>{{ $statistics['price'] or 0 }}
+                                        / {{ isset($statistics['pieces']) ? cons()->valueLang('goods.pieces', $statistics['pieces']) : '件' }}</td>
                                     <td>{{ $statistics['order_num'] }}</td>
                                     <td>{{ $statistics['order_amount'] }}</td>
                                     <td>{{ $statistics['return_order_num'] }}</td>
