@@ -158,18 +158,18 @@
                                     </p>
                                 @endif
                                 @if($order['can_export'])
-                                        <p>
-                                            <a class="btn btn-success print" target="_blank"
-                                               data-id="{{ $order['id'] }}" >打印</a>
-                                        </p>
-                                        <p>
-                                            <a class="btn btn-success"
-                                               href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
+                                    <p>
+                                        <a class="btn btn-success print" target="_blank"
+                                           href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
+                                    </p>
+                                    <p>
+                                        <a class="btn btn-success"
+                                           href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
 
-                                            <br>
-                                            <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
-                                                ）</span>
-                                        </p>
+                                        <br>
+                                        <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
+                                            ）</span>
+                                    </p>
 
                                 @endif
                             @endif
@@ -276,7 +276,8 @@
                                            data-num="{{ $goods->pivot->num }}"
                                            data-pivot="{{  $goods['pivot']['id'] }}">修改</a>
                                         <a class="delete-no-form" data-method="delete"
-                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}" href="javascript:">删除</a>
+                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
+                                           href="javascript:">删除</a>
                                     </td>
                                 @endif
 
@@ -310,7 +311,6 @@
         $(function () {
             changePriceByDetailPage();
             deleteNoForm();
-            orderPrint();
         })
     </script>
 @stop

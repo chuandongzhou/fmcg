@@ -20,7 +20,8 @@ class SalesmanVisitOrder extends Model
         'display_remark',
         'salesman_id',
         'salesman_visit_id',
-        'salesman_customer_id'
+        'salesman_customer_id',
+        'created_at'
     ];
 
     protected $hidden = [

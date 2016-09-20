@@ -39,15 +39,6 @@
                         <th>金额</th>
                         <th>促销信息</th>
                     </tr>
-                    <tr>
-                        <td>36985274123654789</td>
-                        <td>商品</td>
-                        <td>1000ml</td>
-                        <td>个</td>
-                        <td>2</td>
-                        <td>2.00</td>
-                        <td>暂无</td>
-                    </tr>
                     @foreach($order->goods as $goods)
                         <tr>
                             <td>{{ $goods->bar_code }}</td>

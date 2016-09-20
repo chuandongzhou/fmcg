@@ -215,8 +215,7 @@
             $('.refund').click(function () {
                 var obj = $(this), url = obj.data('url');
                 $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');
-            })
-            orderPrint();
+            });
 
         })
     </script>

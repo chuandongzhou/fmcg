@@ -236,6 +236,7 @@ class SalesmanVisitOrderController extends Controller
             $attributes['type'] = $orderConf['type']['order'];
             $format = $this->_formatAttribute($attributes);
             $attributes['amount'] = $format['amount'];
+            $attributes['created_at'] = $order->created_at;
 
             $order->delete();
             $orderForm = SalesmanVisitOrder::create($attributes);

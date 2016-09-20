@@ -99,7 +99,7 @@
     <script type="text/javascript" src="{{ asset('js/index.js?v=1.0.0') }}"></script>
     <script>
         $(function () {
-            //printFun();
+            printFun();
         });
     </script>
 
