@@ -283,13 +283,12 @@ class DeliveryController extends Controller
     public function orderGoodsDelete($goodsId)
     {
         $orderGoods = OrderGoods::with('order')->find($goodsId);
-        $userShop = delivery_auth()->user()->shop;
 
-        if (is_null($orderGoods) || $orderGoods->order->shop_id != $userShop->id) {
+        if (is_null($orderGoods) || $orderGoods->order->shop_id != delivery_auth()->user()->shop_id) {
             return $this->error('订单商品不存在');
         }
         $order = $orderGoods->order;
-        $result = DB::transaction(function () use ($orderGoods, $order, $userShop) {
+        $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
             $orderGoods->delete();
             if ($order->orderGoods->count() == 0) {
@@ -300,7 +299,7 @@ class DeliveryController extends Controller
             }
 
             $content = '订单商品id:' . $orderGoods->goods_id . '，已被删除';
-            (new OrderService())->addOrderChangeRecord($order, $content, $userShop->user_id);
+            (new OrderService())->addOrderChangeRecord($order, $content, delivery_auth()->id());
             //如果有业务订单修改业务订单
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
                 $salesmanVisitOrder->fill(['amount' => $order->price])->save();

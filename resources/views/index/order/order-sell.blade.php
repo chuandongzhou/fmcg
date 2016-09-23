@@ -27,7 +27,7 @@
                     订单状态 :
                   <select name="status" class="ajax-select control">
                       <option value="">全部状态</option>
-                      @foreach($order_status as $key => $value)
+                      @foreach(array_except($order_status, 'invalid') as $key => $value)
                           <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
                       @endforeach
                   </select>
