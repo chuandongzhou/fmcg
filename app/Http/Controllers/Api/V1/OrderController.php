@@ -231,7 +231,7 @@ class OrderController extends Controller
         if (!$order) {
             return $this->error('订单不存在');
         }
-        if (!$order->can_confirm || $order->shop_id != auth()->user()->shop->id) {
+        if (!$order->can_confirm || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能确认');
         }
         if ($this->_syncToBusiness($order) && $order->fill([
@@ -243,6 +243,25 @@ class OrderController extends Controller
             return $this->success('订单确认成功');
         }
         return $this->error('订单确认失败，请重试');
+    }
+
+    /**
+     * 订单作废
+     *
+     * @param $orderId
+     * @return string|\WeiHeng\Responses\Apiv1Response
+     */
+    public function putInvalid($orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+        if (!$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
+            return $this->error('订单不能作废');
+        }
+        return $order->fill(['status' => cons('order.status.invalid')])->save() ? $this->success('订单作废成功') : $this->error('作废订单时出现问题');
     }
 
     /**
@@ -500,6 +519,7 @@ class OrderController extends Controller
         return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
     }
 
+
     /**
      * 网页端信息提示
      *
@@ -607,7 +627,6 @@ class OrderController extends Controller
 
         return $this->success('选择模版成功');
 
-
     }
 
     /**
@@ -627,8 +646,14 @@ class OrderController extends Controller
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
             $orderGoods->delete();
-            $orderGoodsPrice > 0 && $order->decrement('price', $orderGoodsPrice);
-            $content = '订单商品id:' . $orderGoods->id . '，已被删除';
+            if ($order->orderGoods->count() == 0) {
+                //订单商品删完了标记为作废
+                $order->fill(['status' => cons('order.status.invalid'), 'price' => 0])->save();
+            } elseif ($orderGoodsPrice > 0) {
+                $order->decrement('price', $orderGoodsPrice);
+            }
+
+            $content = '订单商品id:' . $orderGoods->goods_id . '，已被删除';
             (new OrderService())->addOrderChangeRecord($order, $content);
             //如果有业务订单修改业务订单
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
@@ -644,7 +669,6 @@ class OrderController extends Controller
                     $salesmanVisitOrder->orderGoods()->where('goods_id', $orderGoods->goods_id)->delete();
                 }
             }
-
             return 'success';
         });
 

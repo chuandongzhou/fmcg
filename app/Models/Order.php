@@ -5,7 +5,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 
-class   Order extends Model
+class Order extends Model
 {
     protected $table = 'order';
     protected $fillable = [
@@ -229,7 +229,7 @@ class   Order extends Model
         }
 
         // 未确认  已完成
-        if ($status == $statusConf['non_confirm'] || $status == $statusConf['finished']) {
+        if ($status == $statusConf['non_confirm'] || $status == $statusConf['finished'] || $status == $statusConf['invalid']) {
             return cons()->valueLang('order.status', $status);
         }
 
@@ -421,6 +421,18 @@ class   Order extends Model
         return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
     }
 
+    /**
+     * 是否可作废
+     *
+     * @return bool
+     */
+    public function getCanInvalidAttribute()
+    {
+        $orderConf = cons('order');
+        $status = $this->status;
+        $payStatus = $this->pay_status;
+        return ($status > $orderConf['status']['non_confirm'] && $status < $orderConf['status']['finished']) && $payStatus == $orderConf['pay_status']['non_payment'];
+    }
 
     /**
      * 获取订单优惠后价格
@@ -530,6 +542,7 @@ class   Order extends Model
             ->orderBy('id', 'desc');
     }
 
+
     /**
      * 销售订单条件
      *
@@ -541,7 +554,8 @@ class   Order extends Model
     {
         return $query->whereHas('shop', function ($query) use ($userId) {
             $query->where('user_id', $userId);
-        })->where('is_cancel', cons('order.is_cancel.off'))->orderBy('id', 'desc');
+        })->where('is_cancel', cons('order.is_cancel.off'))->where('status', '<>',
+            cons('order.status.invalid'))->orderBy('id', 'desc');
     }
 
 //    /**

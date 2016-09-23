@@ -501,14 +501,16 @@ class ReportController extends Controller
     {
         $cellAlignCenter = ['align' => 'center'];
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
+        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
 
         $table->addRow();
         $table->addCell(3200, $gridSpan2)->addText('拜访客户数：' . count($visitData), ['size' => 16], $cellAlignCenter);
-        $table->addCell(3800, $gridSpan2)
+        $table->addCell(3800, $gridSpan3)
             ->addText('退货单数：' . (isset($visitStatistics['return_order_count']) ? $visitStatistics['return_order_count'] : 0),
                 ['size' => 16], $cellAlignCenter);
         $table->addCell(3500,
-            $gridSpan2)->addText('退货金额：' . (isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0),
+            $gridSpan5)->addText('退货金额：' . (isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0),
             ['size' => 16], $cellAlignCenter);
 
         $table->addRow();
@@ -516,9 +518,9 @@ class ReportController extends Controller
             $gridSpan2)->addText('总订货单数：' . (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()),
             ['size' => 16], $cellAlignCenter);
         $table->addCell(3800,
-            $gridSpan2)->addText('拜访订货单数：' . (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0),
+            $gridSpan3)->addText('拜访订货单数：' . (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0),
             ['size' => 16], $cellAlignCenter);
-        $table->addCell(3500, $gridSpan2)->addText('自主订货单数：' . $platFormOrdersList->count(), ['size' => 16],
+        $table->addCell(3500, $gridSpan5)->addText('自主订货单数：' . $platFormOrdersList->count(), ['size' => 16],
             $cellAlignCenter);
 
         $table->addRow();
@@ -526,9 +528,9 @@ class ReportController extends Controller
             $gridSpan2)->addText('总订货金额：' . (isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
             $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), ['size' => 16], $cellAlignCenter);
         $table->addCell(3800,
-            $gridSpan2)->addText('拜访订货金额：' . (isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0),
+            $gridSpan3)->addText('拜访订货金额：' . (isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0),
             ['size' => 16], $cellAlignCenter);
-        $table->addCell(3500, $gridSpan2)->addText('自主订货金额：' . $platFormOrdersList->sum('amount'), ['size' => 16],
+        $table->addCell(3500, $gridSpan5)->addText('自主订货金额：' . $platFormOrdersList->sum('amount'), ['size' => 16],
             $cellAlignCenter);
 
     }

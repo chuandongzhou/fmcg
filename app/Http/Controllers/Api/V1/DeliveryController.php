@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\OrderGoods;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use App\Models\DeliveryMan;
@@ -273,5 +274,52 @@ class DeliveryController extends Controller
         return $this->success($data);
     }
 
+    /**
+     * 删除订单商品
+     *
+     * @param $goodsId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function orderGoodsDelete($goodsId)
+    {
+        $orderGoods = OrderGoods::with('order')->find($goodsId);
+        $userShop = delivery_auth()->user()->shop;
 
+        if (is_null($orderGoods) || $orderGoods->order->shop_id != $userShop->id) {
+            return $this->error('订单商品不存在');
+        }
+        $order = $orderGoods->order;
+        $result = DB::transaction(function () use ($orderGoods, $order, $userShop) {
+            $orderGoodsPrice = $orderGoods->total_price;
+            $orderGoods->delete();
+            if ($order->orderGoods->count() == 0) {
+                //订单商品删完了标记为作废
+                $order->fill(['status' => cons('order.status.invalid'), 'price' => 0])->save();
+            } elseif ($orderGoodsPrice > 0) {
+                $order->decrement('price', $orderGoodsPrice);
+            }
+
+            $content = '订单商品id:' . $orderGoods->goods_id . '，已被删除';
+            (new OrderService())->addOrderChangeRecord($order, $content, $userShop->user_id);
+            //如果有业务订单修改业务订单
+            if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
+                $salesmanVisitOrder->fill(['amount' => $order->price])->save();
+
+                if ($orderGoods->price == 0) {
+                    //商品原价为0时更新抵费商品
+                    $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
+                        $orderGoods->goods_id)->first();
+
+                    $salesmanVisitOrderGoods && $salesmanVisitOrder->mortgageGoods()->detach($salesmanVisitOrderGoods->id);
+                } else {
+                    $salesmanVisitOrder->orderGoods()->where('goods_id', $orderGoods->goods_id)->delete();
+                }
+            }
+
+            return 'success';
+        });
+
+
+        return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
+    }
 }

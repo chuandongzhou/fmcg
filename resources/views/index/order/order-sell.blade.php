@@ -92,7 +92,6 @@
                             <tr>
                                 <td>
                                     <img class="store-img" src="{{ $goods->image_url }}">
-
                                     <div class="product-panel">
                                         <a class="product-name ellipsis"
                                            href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
@@ -116,23 +115,6 @@
                                         <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
                                               class="btn btn-primary">查看</a></p>
                                         @if(!$order['is_cancel'])
-                                            @if($order->can_refund)
-                                                <p>
-                                                    <a class="btn btn-danger refund" data-target="#refund"
-                                                       data-toggle="modal"
-                                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                        取消并退款
-                                                    </a>
-                                                </p>
-                                            @elseif($order['can_cancel'])
-                                                <p>
-                                                    <a class="btn btn-cancel ajax" data-method='put'
-                                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                                       data-data='{"order_id":{{ $order->id }}}'>
-                                                        取消
-                                                    </a>
-                                                </p>
-                                            @endif
                                             @if($order->can_confirm)
                                                 <p>
                                                     <a class="btn btn-warning ajax" data-method='put'
@@ -166,6 +148,30 @@
                                                     <br>
                                                     <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
                                                         ）</span>
+                                                </p>
+                                            @endif
+                                            @if($order->can_refund)
+                                                <p>
+                                                    <a class="btn btn-danger refund" data-target="#refund"
+                                                       data-toggle="modal"
+                                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                        取消并退款
+                                                    </a>
+                                                </p>
+                                            @elseif($order['can_cancel'])
+                                                <p>
+                                                    <a class="btn btn-cancel ajax" data-method='put'
+                                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                                       data-data='{"order_id":{{ $order->id }}}'>
+                                                        取消
+                                                    </a>
+                                                </p>
+                                            @elseif($order['can_invalid'])
+                                                <p>
+                                                    <a class="btn btn-danger ajax" data-method='put'
+                                                       data-url="{{ url('api/v1/order/invalid/' . $order->id) }}">
+                                                        作废
+                                                    </a>
                                                 </p>
                                             @endif
                                         @endif

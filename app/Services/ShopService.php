@@ -93,7 +93,7 @@ class ShopService extends RedisService
 
         if (!is_file($qrcodePath . $path)) {
             @mkdir(dirname($qrcodePath . $path), 0777, true);
-            QrCode::format('png')->size($qrcodeSize)->generate(url('shop/' . $uid), $qrcodePath . $path);
+            QrCode::format('png')->size($qrcodeSize)->margin(0)->generate(url('shop/' . $uid), $qrcodePath . $path);
         }
         // 处理缓存
         $mtime = @filemtime($qrcodePath . $path);

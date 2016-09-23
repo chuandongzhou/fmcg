@@ -38,6 +38,7 @@ return [
             'non_send' => '未发货',
             'send' => '已发货',
             'finished' => '已完成',
+            'invalid' => '已作废',
         ],
         'is_cancel' => [//订单是否被取消
             'off' => '未取消',
