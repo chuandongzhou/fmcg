@@ -13,7 +13,7 @@ class UpdateSalesmanVisitOrderGoodsRequest extends SalesmanRequest
     public function rules()
     {
         return [
-            'num' => 'required|integer|min:1|max:10000',
+            'num' => 'required|integer|min:1|max:20000',
             'price' => 'sometimes|required|numeric|min:0',
             'amount' => 'sometimes|required|numeric|min:0',
             'pieces' => 'sometimes|required|numeric|min:0',

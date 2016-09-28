@@ -59,13 +59,13 @@ class CartController extends Controller
         if ($goodsInfo->is_out) {
             return $this->error('该商品缺货');
         }
-        if ($buyNum > 10000) {
+        if ($buyNum > 20000) {
             return $this->error('商品数量不能大于10000');
         }
         //查询是否有相同的商品,存在则合并
         $cart = $this->user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('num'))) {
-            if ($cart->pluck('num') + $buyNum <= 10000) {
+            if ($cart->pluck('num') + $buyNum <= 20000) {
                 $cart->increment('num', $buyNum);
                 return $this->success('加入购物车成功');
             } else {

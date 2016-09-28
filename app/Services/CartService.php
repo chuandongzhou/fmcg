@@ -110,7 +110,7 @@ class CartService
             $buyNum = $num[$cart->goods_id];
             //判断商品购买数量是否小于该商品的最低配送额
             /*$cart->goods->min_num > $buyNum || */
-            if ($cart->goods->is_out || $buyNum > 10000) {
+            if ($cart->goods->is_out || $buyNum > 20000) {
                 $allow = false;
             }
             $updateNum && $cart->fill(['num' => $buyNum])->save();

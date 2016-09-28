@@ -303,7 +303,7 @@ function cartFunc() {
             minNum = buyInput.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(buyInput.val());
-        if (buyNum < 10000) {
+        if (buyNum < 20000) {
             buyInput.val(buyNum + 1);
             var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
             goodsAllMoneyTag.html(goodsAllMoney);
@@ -326,8 +326,8 @@ function cartFunc() {
             minNum = obj.data('minNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(obj.val());
-        if (buyNum > 10000) {
-            obj.val(10000);
+        if (buyNum > 20000) {
+            obj.val(20000);
         } else {
             var goodsAllMoney = buyNum.mul(obj.data('price'));
             goodsAllMoneyTag.html(goodsAllMoney);
@@ -425,7 +425,7 @@ var numChange = function () {
             });
             incNum.on('click', '', function () {
                 var buyNum = parseInt(num.val());
-                if (buyNum < 10000) {
+                if (buyNum < 20000) {
                     num.val(parseInt(num.val()) + 1);
                     changeDescButton();
                 }
@@ -433,8 +433,8 @@ var numChange = function () {
 
             num.on('keyup', '', function () {
                 var obj = $(this), buyNum = parseInt(obj.val());
-                if (buyNum > 10000) {
-                    obj.val(10000);
+                if (buyNum > 20000) {
+                    obj.val(20000);
                 } else {
                     changeDescButton();
                 }

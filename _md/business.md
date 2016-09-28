@@ -223,6 +223,79 @@
 `成功返回：`
 
 `失败返回`
+#### 2.3.7 客户陈列费发放情况查询[post] (customer-display-fee)
+`请求参数：`
+
+	salesman_customer_id        int         客户id
+	start_at                    date        开始时间
+	end_at                      date        结束时间
+
+`成功返回：`
+
+	orders                    array         所有订单
+	display_fee               decimal       协议陈列费
+
+	orders子字子集段说明
+	
+	id                       int           订单ID
+	status                   int           订单状态
+	created_at               date          下单时间
+	display_fee              decimal       陈列费现金
+	order_remark             string        订单备注
+	display_remark           string        陈列费备注
+	mortgage_goods           array         陈列费抵费商品
+	
+	mortgage_goods字段子集说明
+	
+	goods_name              string         抵费商品名称
+	
+	pivot                   array          中间信息
+
+	pivot字段子集说明
+	
+	num                     int            抵费商品数量
+
+`失败返回：`
+
+
+#### 2.3.8 陈列费发放情况查询[post] (display-fee)
+`请求参数：`
+
+	start_at                    date        开始时间
+	end_at                      date        结束时间
+
+`成功返回：`
+
+	orders                    array         所有订单
+	
+	orders子字子集段说明
+	
+	id                       int           订单ID
+	status                   int           订单状态
+	created_at               date          下单时间
+	display_fee              decimal       陈列费现金
+	order_remark             string        订单备注
+	display_remark           string        陈列费备注
+	mortgage_goods           array         陈列费抵费商品
+	
+	mortgage_goods字段子集说明
+	
+	goods_name              string         抵费商品名称
+	
+	pivot                   array          中间信息
+
+	pivot字段子集说明
+	
+	num                     int            抵费商品数量
+
+`失败返回：`
+
+
+	
+	
+	
+	
+
 
 ### 2.4 抵费商品 mortgage-goods
 #### 2.4.1 获取所有抵费商品[get] (/)

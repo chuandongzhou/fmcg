@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Business;
 
-use App\Models\Goods;
+use App\Models\SalesmanVisitOrder;
 use App\Models\Salesman;
 use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
@@ -10,6 +10,8 @@ use App\Models\SalesmanCustomer;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\v1\CustomerDisplayFeeRequest;
+use Carbon\carbon;
 
 class SalesmanCustomerController extends Controller
 {
@@ -188,28 +190,28 @@ class SalesmanCustomerController extends Controller
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
-/*
-        $addGoodsIds = [];
+        /*
+                $addGoodsIds = [];
 
-        foreach ($goodsIds as $goodsId) {
-            if ($customer->goods()->where(['goods_id' => $goodsId])->pluck('goods_id')) {
-                continue;
-            }
-            $addGoodsIds[] = $goodsId;
-        }
+                foreach ($goodsIds as $goodsId) {
+                    if ($customer->goods()->where(['goods_id' => $goodsId])->pluck('goods_id')) {
+                        continue;
+                    }
+                    $addGoodsIds[] = $goodsId;
+                }
 
-        if (empty($addGoodsIds)) {
-            return $this->error('添加商品成功');
-        }
+                if (empty($addGoodsIds)) {
+                    return $this->error('添加商品成功');
+                }
 
-        $goods = Goods::active()->whereIn('id', $goodsIds)->where('shop_id', $salesman->shop_id)->get([
-            'id',
-            'shop_id'
-        ]);
+                $goods = Goods::active()->whereIn('id', $goodsIds)->where('shop_id', $salesman->shop_id)->get([
+                    'id',
+                    'shop_id'
+                ]);
 
-        if ($goods->isEmpty()) {
-            return $this->error('商品不存在');
-        }*/
+                if ($goods->isEmpty()) {
+                    return $this->error('商品不存在');
+                }*/
 
         $customer->goods()->sync((array)$goodsIds);
 
@@ -284,6 +286,59 @@ class SalesmanCustomerController extends Controller
         }
         return $shopId;
 
+    }
+
+    /**
+     * 客户时间段内陈列费发放情况
+     *
+     * @param  \App\Http\Requests\Api\v1\CustomerDisplayFeeRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function customerDisplayFee(CustomerDisplayFeeRequest $request)
+    {
+        $dispalyFee = SalesmanCustomer::where('id',
+        $request->input('salesman_customer_id'))->select('display_fee')->first();
+        return $this->success([
+            'orders' => $this->queryDispalyFee($request),
+            'display_fee' => $dispalyFee->display_fee
+        ]);
+    }
+
+    /**
+     * 指定时间段内陈列费发放情况
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function displayFee(Request $request)
+    {
+        if (empty($request->input('start_at')) || empty($request->input('end_at'))) {
+            return $this->error('开始时间和结束时间不能为空');
+        }
+
+        return $this->success(['orders' => $this->queryDispalyFee($request)]);
+    }
+
+    private function queryDispalyFee($request)
+    {
+        $start_at = (new Carbon($request->input('start_at')))->startOfDay();
+        $end_at = (new Carbon($request->input('end_at')))->endOfDay();
+        $where = ['salesman_id' => salesman_auth()->id()];
+        if ($customer_id = $request->input('salesman_customer_id')) {
+            $where['salesman_customer_id'] = $customer_id;
+        }
+        $orders = SalesmanVisitOrder::where($where)
+            ->whereBetween('created_at', [$start_at, $end_at])->with('mortgageGoods')
+            ->select([
+                'id',
+                'status',
+                'created_at',
+                'display_fee',
+                'order_remark',
+                'display_remark',
+                'salesman_customer_id'
+            ])->get();
+        return $orders;
     }
 
 }
