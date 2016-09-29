@@ -36,4 +36,11 @@ class DeliveryMan extends Model implements AuthenticatableContract
             $this->attributes['password'] = md5($password);
         }
     }
+    /**
+     * 订单
+     *
+     */
+    public function orders(){
+        return $this->belongsToMany('App\Models\Order','order_delivery_man');
+    }
 }

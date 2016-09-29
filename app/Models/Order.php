@@ -148,7 +148,7 @@ class Order extends Model
     {
         return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id',
             'goods_id')->withTrashed()->withPivot('id', 'price',
-            'num', 'total_price', 'pieces');
+            'num', 'total_price', 'pieces','type');
     }
 
     /**
@@ -168,7 +168,7 @@ class Order extends Model
      */
     public function deliveryMan()
     {
-        return $this->belongsTo('App\Models\DeliveryMan')->withTrashed();
+        return $this->belongsToMany('App\Models\DeliveryMan','order_delivery_man')->withTrashed();
     }
 
     /**
@@ -765,7 +765,8 @@ class Order extends Model
     {
         return $query->where(function ($query) use ($search) {
             if ($search['delivery_man_id'] && is_numeric($search['delivery_man_id'])) {
-                $query->where('delivery_man_id', $search['delivery_man_id']);
+                $delivery_id = $search['delivery_man_id'];
+                $query->ofDeliveryMan($delivery_id)->with('deliveryMan');
             }
             if ($search['start_at']) {
                 $query->where('delivery_finished_at', '>', $search['start_at']);
@@ -776,4 +777,27 @@ class Order extends Model
             $query->where('delivery_man_id', '<>', 0);
         });
     }
+
+    /**
+     * 查询配送人员
+     * @param $query
+     * @param $delivery_id
+     */
+    public function scopeOfDeliveryMan($query,$deliveryMan_id){
+        return $query->whereHas('deliveryMan',function($query) use ($deliveryMan_id){
+            $query->where('id',$deliveryMan_id);
+        });
+    }
+
+    /**
+     * 查询订单商品
+     * @param $query
+     */
+    public function scopeOfOrderGoods($query){
+        return $query->with(['orderGoods'=>function($query){
+            $query->where('type',cons('order.goods.type.order_goods'))->with('goods');
+        }]);
+    }
+
+
 }

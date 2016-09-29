@@ -32,15 +32,16 @@
 
 `成功返回：`
 
-	id                  int            订单号
-	price               float          订单金额
-	is_pay              int            支付状态（0未支付，1已支付）
-	pieces              array          所有的商品单位
-	user_shop_name      string         收货店家名
-	created_at          string         下单时间
-	remark              string          订单备注
-	after_rebates_price decimal     优惠后订单价格
-	shippingAddress     array          收货信息
+	id                    int            订单号
+	price                 float          订单金额
+	is_pay                int            支付状态（0未支付，1已支付）
+	pieces                array          所有的商品单位
+	user_shop_name        string         收货店家名
+	created_at            string         下单时间
+	remark                string          订单备注
+	after_rebates_price   decimal     优惠后订单价格
+	shippingAddress       array          收货信息
+	
 	
 	shippingAddress字段说明
 	
@@ -54,6 +55,7 @@
 	
 	area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
 	address         string      详细收货地址
+	
 `失败返回：`
 
 ####2.2.3 完成配送操作[get] (deal-delivery)
@@ -72,52 +74,69 @@
 
 `成功返回：`
 	
-	id               int         订单号
-	price            float       订单金额
-	is_pay           int         支付状态（0未付款，1已付款）
-	delivery_finished_at  string    配送完成时间（该字段时空表示未完成配送）
-	user             array       收货店家信息
-	shippingAddress  array       收货信息
-	goods            array       商品信息
+	id               		int         订单号
+	price           		float       订单金额
+	is_pay           		int         支付状态（0未付款，1已付款）
+	delivery_finished_at  	string    配送完成时间（该字段时空表示未完成配送）
+	user             		array       收货店家信息
+	shippingAddress  		array       收货信息
+	orderGoods            		array       商品信息
 	user_shop_name          string          收货店家名
     after_rebates_price     decimal         优惠后价格
+	mortgageGoods           array           陈列费商品
+	display_fee             decimal         陈列费
 	
 	user字段说明
-	shop            array       收货店家
-	type			int         买家用户类型（1是终端   2是批发）
+	shop            		array       收货店家
+	type					int         买家用户类型（1是终端   2是批发）
 
 	shop字段说明
-	name            string      收货店家名
+	name            		string      收货店家名
 	
 	shippingAddress字段说明
-	consigner       string       收货人姓名
-	phone           string       收货联系电话
-	address         array        收货地址
+	consigner       		string       收货人姓名
+	phone          	 		string       收货联系电话
+	address         		array        收货地址
 	
 	address字段说明
-	area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
-	address         string      详细收货地址
+	area_name       		string      收货地址（area_name和address组合在一起是具体收货地址）
+	address         		string      详细收货地址
 	
-	goods字段说明
-	name            string        商品名称
+	orderGoods字段说明
+	name           			string        商品名称
    
 	specification_retailer  string     规格  （对于终端商）
 	
     specification_wholesaler  string  规格  （对于批发商 供应商时添加）
 
-	promotion_info      string      促销信息    （取当是促销时传入）
+	promotion_info      	string      促销信息    （取当是促销时传入）
 
-	pivot               array        购买商品信息中间表
+	pivot               	array        购买商品信息中间表
 
-	image_url           string      商品图片('第一张')
+	image_url           	string      商品图片('第一张')
 
-    images_url          array       商品全部图片
+    images_url          	array       商品全部图片
 	
 	pivot字段说明
-	price              decimal       购买商品单位价格
-	num                int           购买商品数量
-	total_price        decimal       购买商品总价格
-	pieces             int           单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包 8桶 9杯 10支 11个 12筒） 
+	price              		decimal       购买商品单位价格
+	num                		int           购买商品数量
+	total_price        		decimal       购买商品总价格
+	pieces             		int           单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包 8桶 9杯 10支 11个 12筒） 
+
+
+	mortgageGoods字段子集说明
+
+	name     		string       陈列商品名称
+	image_url 		string       陈列商品图片
+	pivot          array        中间信息
+
+	pivot字段子集说明
+
+	num            int          陈列商品数量
+	price          decimal      陈列商品单价
+	total_price    decimal      陈列商品总价
+	pieces         int          陈列商品单位
+
 `失败返回：`
 
 ####2.2.5 订单历史记录[get] (history-orders)

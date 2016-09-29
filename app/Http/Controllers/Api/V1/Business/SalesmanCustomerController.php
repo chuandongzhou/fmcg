@@ -319,6 +319,11 @@ class SalesmanCustomerController extends Controller
         return $this->success(['orders' => $this->queryDispalyFee($request)]);
     }
 
+    /**
+     * 陈列费订单查询
+     * @param $request
+     * @return mixed
+     */
     private function queryDispalyFee($request)
     {
         $start_at = (new Carbon($request->input('start_at')))->startOfDay();

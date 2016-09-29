@@ -306,6 +306,31 @@ class OrderService
     }
 
     /**
+     * 拆分订单商品
+     *
+     * @param $order
+     * @return array
+     */
+    public function explodeOrderGoods($order)
+    {
+        //订单商品
+        $orderGoods = collect();
+        //陈列费商品
+        $mortgageGoods = collect();
+
+        foreach ($order->goods as $item) {
+
+            if ($item->pivot->type == cons('order.goods.type.mortgage_goods')) {
+                $mortgageGoods->push($item);
+                continue;
+            }
+            $orderGoods->push($item);
+        }
+        $order->addHidden(['goods']);
+        return compact('orderGoods', 'mortgageGoods');
+    }
+
+    /**
      * 订单提交失败时删除已成功的订单
      *
      * @param $successOrders

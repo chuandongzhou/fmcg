@@ -71,7 +71,7 @@ class DeliveryController extends Controller
      */
     public function orders()
     {
-        $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])->whereNull('delivery_finished_at')->with('user.shop',
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->with('user.shop',
             'shippingAddress.address', 'coupon')->get();
 
         $orders->each(function ($order) {
@@ -112,7 +112,7 @@ class DeliveryController extends Controller
         $start_at = (new Carbon($request->input('start_at')))->startOfDay();
         $end_at = (new Carbon($request->input('end_at')))->endOfDay();
 
-        $orders = Order::where(['delivery_man_id' => delivery_auth()->id()])
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())
             ->whereNotNull('delivery_finished_at')
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
             ->with('user.shop', 'shippingAddress.address')->orderBy('delivery_finished_at', 'DESC')->get();
@@ -160,10 +160,12 @@ class DeliveryController extends Controller
      */
     public function detail(Request $request)
     {
-        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->with('user.shop',
+        $order = Order::ofDeliveryMan(delivery_auth()->id())->with('user.shop',
             'shippingAddress.address',
             'goods.images.image')->find($request->input('order_id'));
-
+        $goods = (new OrderService)->explodeOrderGoods($order);
+        $order->orderGoods = $goods['orderGoods'];
+        $order->mortgageGoods = $goods['mortgageGoods'];
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         $order->setAppends([
             'status_name',
@@ -201,7 +203,7 @@ class DeliveryController extends Controller
             return $this->error('订单号不能为空');
         }
 
-        $order = Order::where(['delivery_man_id' => delivery_auth()->id()])->find($orderId);
+        $order = Order::ofDeliveryMan(delivery_auth()->id())->find($orderId);
 
         if (empty($order)) {
             return $this->error('该订单不存在');
@@ -240,7 +242,7 @@ class DeliveryController extends Controller
     {
         $deliveryId = delivery_auth()->id();
         //判断该订单是否存在
-        $order = Order::where('delivery_man_id', $deliveryId)->find(intval($request->input('order_id')));
+        $order = Order::ofDeliveryMan(delivery_auth()->id())->find(intval($request->input('order_id')));
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }
@@ -263,14 +265,11 @@ class DeliveryController extends Controller
         $search['start_at'] = isset($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
         $search['end_at'] = isset($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
         $search['delivery_man_id'] = delivery_auth()->id();
-        $delivery = Order::whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with([
-            'orderGoods.goods' => function ($query) {
-                return $query->select(['id', 'name']);
-            },
+        $delivery = Order::whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(
             'systemTradeInfo',
             'deliveryMan'
-        ])->get();
-        $data = DeliveryService::format($delivery);
+        )->ofOrderGoods()->get();
+        $data = (new DeliveryService)->format($delivery);
         return $this->success($data);
     }
 

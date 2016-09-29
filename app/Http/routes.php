@@ -260,7 +260,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('deal-delivery', 'DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout', 'DeliveryController@logout');//退出登陆
             $router->post('update-order', 'DeliveryController@updateOrder');//修改订单商品数量
-            $router->get('delivery-statistical', 'DeliveryController@statisticalDelivery');
+            $router->get('delivery-statistical', 'DeliveryController@statisticalDelivery');//配送统计
             $router->delete('order-goods-delete/{order_goods_id}',
                 'DeliveryController@orderGoodsDelete')->where('order_goods_id', '[0-9]+'); //订单商品删除
         });

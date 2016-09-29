@@ -77,8 +77,13 @@
                     <tbody>
                     @foreach($deliveries as $delivery)
                         <tr align="center">
+                            @if($delivery->deliveryMan)
+                              <td>{!! implode("，",array_column($delivery->deliveryMan->toArray(), 'name')) !!} </td>
+                            @else
+                                <td></td>
+                            @endif
 
-                            <td>{{ $delivery->deliveryMan?$delivery->deliveryMan->name:''  }}</td>
+                            {{--<td>{{ $delivery->deliveryMan?$delivery->deliveryMan->name:''  }}</td>--}}
                             <td>{{ $delivery->id }}</td>
                             <td>{{ $delivery->user_shop_name }}</td>
                             <td>{{ $delivery->pay_status==1?'已支付':'未支付' }}</td>
