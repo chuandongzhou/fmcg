@@ -78,7 +78,7 @@
                     @foreach($deliveries as $delivery)
                         <tr align="center">
                             @if($delivery->deliveryMan)
-                              <td>{!! implode("，",array_column($delivery->deliveryMan->toArray(), 'name')) !!} </td>
+                              <td>{!! implode("|",array_column($delivery->deliveryMan->toArray(), 'name')) !!} </td>
                             @else
                                 <td></td>
                             @endif
