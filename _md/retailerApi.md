@@ -956,6 +956,7 @@
 
 	id					int			订单ID号
 	price               string      订单总金额
+	display_fee         decimal     陈列费
 	status_name			string		订单显示状态
 	payment_type		string      支付方式
 	is_cancel			int			订单是否被取消(1取消,0未取消)
@@ -972,7 +973,8 @@
 	order_refund        array       退款详情
 	delivery_man		array		送货人信息(仅发货后才有,否则为Null)
 	shipping_address    array       收货信息
-    goods    			array		商品详细信息
+    mortgageGoods    	array		抵费商品详细信息
+    orderGoods    	    array		订单商品详细信息 （格式同mortgageGoods）
 
 	delivery_man 字段子集说明
 
@@ -1098,6 +1100,7 @@
 
 	id						int			订单ID号
 	price               	string      订单总金额
+	display_fee             decimal     陈列费
 	status_name				string		订单显示状态
 	payment_type			string      支付方式(显示)
 	pay_type				int			支付方式
@@ -1115,7 +1118,8 @@
 	trade_no                string      付款成功时交易流水号
 	order_refund            array       退款详情
 	shipping_address    	array       收货信息
-    goods    				array		商品详细信息
+    mortgageGoods    	array		抵费商品详细信息
+    orderGoods    	    array		订单商品详细信息 （格式同mortgageGoods）
     orderChangeRecode       array       订单修改记录
 
 
@@ -1168,7 +1172,7 @@
 `请求参数：`
 
 	order_id  				array		订单id
-	delivery_man_id			int			配送员id号
+	delivery_man_id			array		配送员id数组
 	
 `成功返回：`
 

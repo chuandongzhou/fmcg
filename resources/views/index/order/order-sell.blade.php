@@ -25,13 +25,13 @@
                 </span>
                     <span class="item control-item">
                     订单状态 :
-                  <select name="status" class="ajax-select control">
-                      <option value="">全部状态</option>
-                      @foreach(array_except($order_status, 'invalid') as $key => $value)
-                          <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
-                      @endforeach
-                  </select>
-            </span>
+                      <select name="status" class="ajax-select control">
+                          <option value="">全部状态</option>
+                          @foreach(array_except($order_status, 'invalid') as $key => $value)
+                              <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
+                          @endforeach
+                      </select>
+                  </span>
                     <span class="item">
                 时间段 :
                 <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"

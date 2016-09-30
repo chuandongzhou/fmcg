@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\DeliveryMan;
 use App\Services\OrderDownloadService;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use QrCode;
@@ -117,16 +118,15 @@ class OrderSellController extends OrderController
      */
     public function getDetail(Request $request)
     {
-        $order = Order::OfSell(auth()->id())->with('user.shop', 'shop.user', 'goods.images.image',
+        $order = Order::OfSell(auth()->id())->with('user.shop', 'shop.user', 'goods',
             'shippingAddress.address', 'systemTradeInfo',
             'orderChangeRecode')->find(intval($request->input('order_id')));
         if (!$order) {
             return $this->error('订单不存在');
         }
-        //过滤字段
-        $order->goods->each(function ($goods) {
-            $goods->addHidden(['introduce', 'images_url']);
-        });
+
+        $goods = (new OrderService)->explodeOrderGoods($order);
+
 
         $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
         //拼接需要调用的模板名字
@@ -134,6 +134,8 @@ class OrderSellController extends OrderController
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view($view, [
             'order' => $order,
+            'mortgageGoods' => $goods['mortgageGoods'],
+            'orderGoods' => $goods['orderGoods'],
             'delivery_man' => $deliveryMan
         ]);
     }
@@ -189,9 +191,15 @@ class OrderSellController extends OrderController
         }
 
         $status = cons('order.status');
-        $order = Order::with('shippingAddress.address', 'goods', 'shop', 'user')
+        $order = Order::with('shippingAddress.address', 'shop', 'user')
             ->OfSell(auth()->id())->where('status', '>=', $status['non_send'])
-            ->where('id', $orderId)->first();
+            ->find($orderId);
+        if (is_null($order)) {
+            return $this->error('订单不存在');
+        }
+
+        $orderGoods = (new OrderService())->explodeOrderGoods($order);
+
         $allNum = 0;
         foreach ($order->goods as $goods) {
             $allNum += $goods->pivot->num;
@@ -201,7 +209,12 @@ class OrderSellController extends OrderController
         $modelId = app('order.download')->getTemplete($shopId);
         (new OrderDownloadService())->addDownloadCount($order);
 
-        return view('index.order.sell.templet.templet-table' . $modelId, ['order' => $order]);
+        return view('index.order.sell.templet.templet-table' . $modelId,
+            [
+                'order' => $order,
+                'orderGoods' => $orderGoods['orderGoods'],
+                'mortgageGoods' => $orderGoods['mortgageGoods']
+            ]);
 
     }
 
@@ -228,7 +241,6 @@ class OrderSellController extends OrderController
 
         return $data;
     }
-
 
 
 }

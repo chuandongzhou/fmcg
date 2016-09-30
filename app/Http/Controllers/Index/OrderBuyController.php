@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 
 use App\Http\Requests;
+use App\Services\OrderService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -131,6 +132,7 @@ class OrderBuyController extends OrderController
         if (!$order) {
             return $this->error('订单不存在');
         }
+        $goods = (new OrderService())->explodeOrderGoods($order);
 
         $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
 
@@ -139,6 +141,8 @@ class OrderBuyController extends OrderController
 
         return view($view, [
             'order' => $order,
+            'mortgageGoods' => $goods['mortgageGoods'],
+            'orderGoods' => $goods['orderGoods'],
             'userBalance' => $this->userBalance['availableBalance']
         ]);
     }

@@ -19,8 +19,9 @@ class Order extends Model
         'pay_status',
         'status',
         'shipping_address_id',
-        'delivery_man_id',
+       // 'delivery_man_id',
         'coupon_id',
+        'display_fee',
         'user_id',
         'shop_id',
         'download_count',
@@ -148,7 +149,7 @@ class Order extends Model
     {
         return $this->belongsToMany('App\Models\Goods', 'order_goods', 'order_id',
             'goods_id')->withTrashed()->withPivot('id', 'price',
-            'num', 'total_price', 'pieces','type');
+            'num', 'total_price', 'pieces', 'type');
     }
 
     /**
@@ -168,7 +169,7 @@ class Order extends Model
      */
     public function deliveryMan()
     {
-        return $this->belongsToMany('App\Models\DeliveryMan','order_delivery_man')->withTrashed();
+        return $this->belongsToMany('App\Models\DeliveryMan', 'order_delivery_man')->withTrashed();
     }
 
     /**
@@ -442,7 +443,9 @@ class Order extends Model
     public function getAfterRebatesPriceAttribute()
     {
         $price = $this->price;
-        if ($this->coupon_id && ($coupon = $this->coupon)) {
+        if (($display_fee = $this->display_fee) > 0) {
+            return bcsub($price, $display_fee, 2);
+        } elseif ($this->coupon_id && ($coupon = $this->coupon)) {
             $discount = $coupon->discount;
             $full = $coupon->full;
             if ($price < $full) {
