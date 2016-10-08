@@ -190,21 +190,21 @@ class OrderService
      * @param $order
      * @param $attributes
      * @param $userId
-     * @return bool
+     * @return array
      */
     public function changeOrder($order, $attributes, $userId)
     {
         //判断待修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($attributes['pivot_id']));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
-            return false;
+            return ['status' => false, 'message' => '订单不存在'];
         }
         $num = $attributes['num'];
 
         $price = isset($attributes['price']) ? $attributes['price'] : $orderGoods->price;
 
         if ($num == $orderGoods->num && $price == $orderGoods->price) {
-            return true;
+            return ['status' => true];
         }
         $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
             $oldTotalPrice = $orderGoods->total_price;
@@ -213,10 +213,15 @@ class OrderService
             $oldNum = $orderGoods->num;
             $oldPrice = $orderGoods->price;
 
-            $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
+            $newOrderPrice = bcadd(bcsub($order->price, $oldTotalPrice, 2), $newTotalPrice, 2);
 
+            if ($order->display_fee > $newOrderPrice) {
+                //订单陈列费不能大于订单价格
+                return ['status' => false, 'message' => '订单陈列费不能大于订单价格'];
+            }
+            $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             // 价格不同才更新
-            $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $order->price - $oldTotalPrice + $newTotalPrice])->save();
+            $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $newOrderPrice])->save();
 
             //如果有业务订单修改业务订单
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
@@ -224,8 +229,6 @@ class OrderService
 
                 $fill = [];
                 if ($oldPrice == 0) {
-
-
                     //商品原价为0时更新抵费商品
                     $salesmanVisitOrderGoods = $salesmanVisitOrder->mortgageGoods()->where('goods_id',
                         $orderGoods->goods_id)->first();
@@ -261,9 +264,9 @@ class OrderService
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
             (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
 
-            return true;
+            return ['status' => true];
         });
-        return $flag === true;
+        return $flag;
     }
 
     /**
@@ -319,7 +322,6 @@ class OrderService
         $mortgageGoods = collect();
 
         foreach ($order->goods as $item) {
-
             if ($item->pivot->type == cons('order.goods.type.mortgage_goods')) {
                 $mortgageGoods->push($item);
                 continue;

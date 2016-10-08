@@ -57,7 +57,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($order->goods as $goods)
+                    @foreach($orderGoods as $goods)
                         <tr>
                             <td>{{ $goods->bar_code }}</td>
                             <td width="250px">{{ $goods->name }}</td>
@@ -73,12 +73,39 @@
                     <tr>
                         <td colspan="4">总计</td>
                         <td>{{ $order->allNum }}</td>
-                        <td colspan="2">{{ $order->price }}</td>
+                        <td colspan="2">
+                            {{ $order->price }}
+                            @if($order->coupon_id && $order->coupon)
+                                优惠： {{ bcsub($order->price,$order->after_rebates_price,2 ) }}
+                                应付:{{ $order->after_rebates_price }}
+                            @elseif($order->display_fee > 0)
+                                陈列费：{{ $order->display_fee }}
+                                应付:{{ $order->after_rebates_price }}
+                            @endif
+                        </td>
                     </tr>
+                    @if(!$mortgageGoods->isEmpty())
+                        <tr>
+                            <td align="center" colspan="7">抵费商品</td>
+                        </tr>
+                        @foreach($mortgageGoods as $goods)
+                            <tr>
+                                <td>{{ $goods->bar_code }}</td>
+                                <td width="250px">{{ $goods->name }}</td>
+                                <td>
+                                    {{ $goods->{'specification_' . $order->user_type_name} }}
+                                </td>
+                                <td>{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
+                                <td>{{ $goods->pivot->num }}</td>
+                                <td>{{ $goods->pivot->total_price }}</td>
+                                <td>{{ $goods->promotion_info }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                     <tr>
                         <td colspan="4">备注：{{ $order->remark }}</td>
                         <td colspan="3">{{ $order->shop_name }}首页地址：<br/>
-                            <img src="{{ (new \App\Services\ShopService())->qrcode($order->shop_id) }}"/><br/>
+                            <img src="{{ (new \App\Services\ShopService())->qrcode($order->shop_id,80) }}"/><br/>
                             一站式零售服务平台- -订百达
                         </td>
                     </tr>
@@ -90,7 +117,11 @@
             <div class="col-xs-2">制单:</div>
             <div class="col-xs-3">
                 业务员：{{ $order->salesmanVisitOrder ? $order->salesmanVisitOrder->salesman_name : '' }}</div>
-            <div class="col-xs-2"> 送货人：{{ $order->deliveryMan ? $order->deliveryMan->name : '' }}</div>
+            <div class="col-xs-2">
+                @foreach($order->deliveryMan as $deliveryMan)
+                    {{ $deliveryMan ? $deliveryMan->name : '' }}&nbsp;&nbsp;&nbsp;
+                @endforeach
+            </div>
             <div class="col-xs-2"> 仓管：</div>
             <div class="col-xs-3">
                 收款人：{{ $order->systemTradeInfo?cons()->valueLang('trade.pay_type',$order->systemTradeInfo->pay_type) : '' }}</div>

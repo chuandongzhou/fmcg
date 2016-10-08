@@ -13,16 +13,17 @@
                     </div>
                     <div class="modal-body">
                         @if(isset($delivery_man) && $delivery_man->count())
-                            <div class="form-group row">
+                            <div class="form-group row deliverymen">
                                 <label class="col-sm-2 control-label" for="name">配送人员:</label>
 
-                                <div class="col-sm-10 col-md-6">
-                                    <select name="delivery_man_id" class="form-control">
+                                <div class="col-sm-8 col-md-6">
+                                    <select name="delivery_man_id[]" class="form-control">
                                         @foreach($delivery_man as $index => $item)
                                             <option value="{{ $index }}">{{ $item }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <a class="col-sm-2 add-delivery btn">添加</a>
                             </div>
                         @else
                             没有配送人员信息,请设置。<a href="{{ url('personal/delivery-man') }}">去设置</a>
@@ -46,25 +47,34 @@
     @parent
     <script>
         $(function () {
-            var sendModal = $('#sendModal'), cropperParent = null, btnSend = sendModal.find('.btn-send');
+            var sendModal = $('#sendModal'), cropperParent = null, btnSend = sendModal.find('.btn-send'), addDelivery = $('.add-delivery');
 
             sendModal.on('shown.bs.modal', function (e) {
-                        cropperParent = $(e.relatedTarget);
-
-                        if (cropperParent.hasClass('send-goods')) {
-                            btnSend.attr('data-data', '{"order_id" : "' + cropperParent.data('id') + '"}');
-                        } else if (cropperParent.hasClass('batch-send')) {
-                            cropperParent.closest('form').find('input.order_id').each(function () {
-                                var target = $(this);
-                                if (target.is(':checked')) {
-                                    btnSend.before('<input type="hidden" name="order_id[]" value="' + target.val() + '">');
-                                }
-                            });
+                cropperParent = $(e.relatedTarget);
+                if (cropperParent.hasClass('send-goods')) {
+                    btnSend.attr('data-data', '{"order_id" : "' + cropperParent.data('id') + '"}');
+                } else if (cropperParent.hasClass('batch-send')) {
+                    cropperParent.closest('form').find('input.order_id').each(function () {
+                        var target = $(this);
+                        if (target.is(':checked')) {
+                            btnSend.before('<input type="hidden" name="order_id[]" value="' + target.val() + '">');
                         }
-                    })
-                    .on('hidden.bs.modal', function () {
-                        btnSend.removeAttr('data-data');
                     });
+                }
+
+                addDelivery.on('click', function () {
+                    var deliveryInfoClone = $(this).parents('.deliverymen').clone();
+                    deliveryInfoClone.addClass('delivery-info-clone');
+                    deliveryInfoClone.find('.add-delivery').remove();
+                    deliveryInfoClone.appendTo($('.modal-body'));
+                })
+
+
+            }).on('hidden.bs.modal', function () {
+                btnSend.removeAttr('data-data');
+                $('.delivery-info-clone').remove();
+                addDelivery.unbind('click');
+            });
         });
     </script>
 @stop

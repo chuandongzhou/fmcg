@@ -187,18 +187,18 @@
                                       data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
                             @endif
                             @if($order['can_export'])
-                                    <p>
-                                        <a class="btn btn-success print" target="_blank"
-                                           href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
-                                    </p>
-                                    <p>
-                                        <a class="btn btn-success"
-                                           href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
+                                <p>
+                                    <a class="btn btn-success print" target="_blank"
+                                       href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
+                                </p>
+                                <p>
+                                    <a class="btn btn-success"
+                                       href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
 
-                                        <br>
-                                        <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
-                                            ）</span>
-                                    </p>
+                                    <br>
+                                    <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
+                                        ）</span>
+                                </p>
                             @endif
                         @endif
                     </div>
@@ -227,9 +227,11 @@
                     <div class="col-sm-12 receiving-information">
                         <ul>
                             <li class="title">配送人信息</li>
-                            <li><span class="title-info-name">联系人 : </span>{{ $order['deliveryMan']['name'] }}
-                            </li>
-                            <li><span class="title-info-name">联系电话 : </span>{{ $order['deliveryMan']['phone'] }}</li>
+                            @foreach($order->deliveryMan as $deliveryMan)
+                                <li>
+                                    <span class="title-info-name">联系人 : </span>{{ $deliveryMan->name . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $deliveryMan->phone }}
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 @endif
@@ -244,7 +246,7 @@
                                             <span class="title-info-name"> </span>
                                             {{ $orderChangeRecode->created_at }}
                                             <span class="title-info-name">&nbsp;&nbsp;&nbsp;&nbsp;修改人 : </span>
-                                            {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan->name }}
+                                            {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan()->find($orderChangeRecode->user_id)->pluck('name') }}
                                         </li>
                                         <li class="item">
                                             {{ $orderChangeRecode->content }}
@@ -263,6 +265,7 @@
             </div>
             <div class="row table-row">
                 <div class="col-sm-12 table-responsive table-col">
+                    <p><h4>订单商品 :</h4></p>
                     <table class="table table-bordered table-center">
                         <thead>
                         <tr>
@@ -278,7 +281,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($order['goods'] as $goods)
+                        @foreach($orderGoods as $goods)
                             <tr>
                                 <td>{{ $goods['id'] }}</td>
                                 <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
@@ -292,17 +295,19 @@
                                 <td>{{ $goods['pivot']['price'] }}
                                     / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
                                 <td>{{ $goods['pivot']['num'] }}</td>
-                                <td>{{ $goods['pivot']['price'] * $goods['pivot']['num'] }}</td>
+                                <td>{{ $goods['pivot']['total_price'] }}</td>
                                 @if($order->can_change_price)
                                     <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
-                                           data-toggle="modal" data-id="{{ $order->id }}"
-                                           data-price="{{ $goods->pivot->price }}"
+                                           data-toggle="modal" data-id="{{ $order['id'] }}"
+                                           data-price="{{ $goods->pivot->price }}" ,
                                            data-num="{{ $goods->pivot->num }}"
-                                           data-pivot="{{  $goods->pivot->id }}">修改</a>
+                                           data-pivot="{{  $goods['pivot']['id'] }}">修改</a>
                                         <a class="delete-no-form" data-method="delete"
-                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}" href="javascript:">删除</a>
+                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
+                                           href="javascript:">删除</a>
                                     </td>
                                 @endif
+
                             </tr>
                         @endforeach
                         </tbody>
@@ -313,7 +318,8 @@
                         总额：<b class="red">¥{{ $order->price }}</b>
                         @if($order->coupon_id)
                             <br/> 优惠：<b class="red">¥{{ bcsub($order->price, $order->after_rebates_price, 2) }}</b>
-                            <br><span class="prompt-coupon">(满{{ $order->coupon->full }}减 {{ $order->coupon->discount }})</span>
+                            <br><span class="prompt-coupon">(满{{ $order->coupon->full }}减 {{ $order->coupon->discount }}
+                                )</span>
                             <br/>  应付金额：<b class="red">¥{{ $order->after_rebates_price }}</b>
                         @endif
                     </p>

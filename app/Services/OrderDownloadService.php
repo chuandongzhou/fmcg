@@ -122,6 +122,7 @@ class OrderDownloadService
         $gridSpan2 = ['valign' => 'center', 'gridSpan' => 2];
         $gridSpan3 = ['valign' => 'center', 'gridSpan' => 3];
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
+        $gridSpan8 = ['valign' => 'center', 'gridSpan' => 8];
 
 
         $isLandscape = $modelId == cons('order.templete.first');
@@ -191,7 +192,9 @@ class OrderDownloadService
 
             $userType = $item->user_type_name;
 
-            foreach ($item->goods as $goods) {
+            $orderGoods = (new OrderService())->explodeOrderGoods($item);
+
+            foreach ($orderGoods['orderGoods'] as $goods) {
                 $table->addRow(20);
                 $table->addCell($isLandscape ? 2200 : 1540,
                     $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
@@ -217,9 +220,41 @@ class OrderDownloadService
             $table->addCell(0, $gridSpan5)->addText('总计', null, $cellAlignCenter);
             $table->addCell(0, $vAlign)->addText($orderGoodsNum, null, $cellAlignCenter);
 
-            $price = $item->price . ($item->coupon_id ? '  优惠：' . bcsub($item->price, $item->after_rebates_price,
-                        2) . '  应付：' . $item->after_rebates_price : '');
+            $price = $item->price;
+            if ($item->coupon_id) {
+                $price .= '  优惠：' . bcsub($item->price, $item->after_rebates_price,
+                        2) . '  应付：' . $item->after_rebates_price;
+            } elseif ($item->display_fee > 0) {
+                $price .= '  陈列费：' . $item->display_fee . '  应付：' . $item->after_rebates_price;
+            }
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
+
+            if (!$orderGoods['mortgageGoods']->isEmpty()) {
+                $table->addRow();
+                $table->addCell(0, $gridSpan8)->addText('抵费商品', ['size' => 10], $cellAlignCenter);
+                foreach ($orderGoods['mortgageGoods'] as $goods) {
+                    $table->addRow(20);
+                    $table->addCell($isLandscape ? 2200 : 1540,
+                        $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 4100 : 2870, $vAlign)->addText($goods->name,
+                        null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1800 : 1260,
+                        $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1500 : 1050,
+                        $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 700 : 490,
+                        $vAlign)->addText(cons()->valueLang('goods.pieces',
+                        $goods->pivot->pieces), null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1000 : 700,
+                        $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1000 : 700,
+                        $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 2500 : 1750,
+                        $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
+
+                    $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
+                }
+            }
 
             $table->addRow();
             $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
@@ -229,10 +264,15 @@ class OrderDownloadService
                 60));
             $qrcodeCell->addText('一站式零售服务平台- -订百达');
 
+            $deliveryManText = '';
+
+            foreach ($item->deliveryMan as $deliveryMan) {
+                $deliveryManText .= $deliveryMan->name . '  ';
+            }
 
             $text = '   制单:';
             $text .= '        业务员：' . ($item->salesmanVisitOrder ? $item->salesmanVisitOrder->salesman_name : '');
-            $text .= '        送货人：' . ($item->deliveryMan ? $item->deliveryMan->name : '');
+            $text .= '        送货人：' . $deliveryManText;
             $text .= '        仓管：';
             $text .= '        收款人：' . ($item->systemTradeInfo ? cons()->valueLang('trade.pay_type',
                     $item->systemTradeInfo->pay_type) : '');
@@ -323,7 +363,10 @@ class OrderDownloadService
             $orderGoodsNum = 0;
 
             $userType = $item->user_type_name;
-            foreach ($item->goods as $goods) {
+
+            $orderGoods = (new OrderService())->explodeOrderGoods($item);
+
+            foreach ($orderGoods['orderGoods'] as $goods) {
                 $table->addRow(20);
                 $table->addCell($isLandscape ? 2200 : 1540,
                     $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
@@ -349,9 +392,42 @@ class OrderDownloadService
             $table->addCell(0, $gridSpan5)->addText('总计', null, $cellAlignCenter);
             $table->addCell(0, $vAlign)->addText($orderGoodsNum, null, $cellAlignCenter);
 
-            $price = $item->price . ($item->coupon_id ? '  优惠：' . bcsub($item->price, $item->after_rebates_price,
-                        2) . '  应付：' . $item->after_rebates_price : '');
+            $price = $item->price;
+            if ($item->coupon_id) {
+                $price .= '  优惠：' . bcsub($item->price, $item->after_rebates_price,
+                        2) . '  应付：' . $item->after_rebates_price;
+            } elseif ($item->display_fee > 0) {
+                $price .= '  陈列费：' . $item->display_fee . '  应付：' . $item->after_rebates_price;
+            }
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
+
+            if (!$orderGoods['mortgageGoods']->isEmpty()) {
+                $table->addRow();
+                $table->addCell(0, $gridSpan8)->addText('抵费商品', ['size' => 10], $cellAlignCenter);
+                foreach ($orderGoods['mortgageGoods'] as $goods) {
+                    $table->addRow(20);
+                    $table->addCell($isLandscape ? 2200 : 1540,
+                        $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 3100 : 2170, $vAlign)->addText($goods->name,
+                        null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1800 : 1260,
+                        $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1500 : 1050,
+                        $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 700 : 490,
+                        $vAlign)->addText(cons()->valueLang('goods.pieces',
+                        $goods->pivot->pieces), null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1000 : 700,
+                        $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 1000 : 700,
+                        $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 2500 : 1750,
+                        $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
+
+                    $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
+                }
+            }
+
 
             $table->addRow();
             $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
@@ -361,9 +437,15 @@ class OrderDownloadService
                 60));
             $qrcodeCell->addText('一站式零售服务平台- -订百达');
 
+            $deliveryManText = '';
+
+            foreach ($item->deliveryMan as $deliveryMan) {
+                $deliveryManText .= $deliveryMan->name . '  ';
+            }
+
 
             $text = '   业务员：' . ($item->salesmanVisitOrder ? $item->salesmanVisitOrder->salesman_name : '') .
-                '       送货人：' . ($item->deliveryMan ? $item->deliveryMan->name : '') .
+                '       送货人：' . $deliveryManText .
                 '       收款人：' . ($item->systemTradeInfo ? cons()->valueLang('trade.pay_type',
                     $item->systemTradeInfo->pay_type) : '');
 

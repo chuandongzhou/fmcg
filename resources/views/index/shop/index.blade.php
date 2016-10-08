@@ -1,6 +1,14 @@
 @extends('index.index-master')
 
-@section('subtitle', '首页')
+@section('subtitle')
+    @if($type == 'supplier')
+        供应商列表
+    @elseif($type == 'wholesaler')
+        批发商列表
+    @else
+        商家列表
+    @endif
+@stop
 
 @section('container')
     <div class="container dealer-index index search-page contents">

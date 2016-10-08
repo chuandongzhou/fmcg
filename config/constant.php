@@ -26,6 +26,12 @@ return [
     ],
     //订单表
     'order' => [
+        'goods' => [
+            'type' => [
+                'order_goods' => 0,
+                'mortgage_goods' => 1
+            ]
+        ],
         'pay_status' => [//支付状态
             'non_payment' => 0,        //未支付
             'payment_success' => 1,     //已支付

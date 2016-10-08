@@ -94,7 +94,7 @@
                                             <span class="title-info-name"> </span>
                                             {{ $orderChangeRecode->created_at }}
                                             <span class="title-info-name">&nbsp;&nbsp;&nbsp;&nbsp;修改人 : </span>
-                                            {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop_name : $order->deliveryMan->name }}
+                                            {{ $orderChangeRecode->user_id == auth()->id() ? $order->shop_name : $order->deliveryMan()->find($orderChangeRecode->user_id)->pluck('name') }}
                                         </li>
                                         <li class="item">
                                             {{ $orderChangeRecode->content }}

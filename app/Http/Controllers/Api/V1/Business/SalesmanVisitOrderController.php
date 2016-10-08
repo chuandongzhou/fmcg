@@ -361,6 +361,7 @@ class SalesmanVisitOrderController extends Controller
                     'pay_way' => $syncConf['pay_way'],
                     //'pay_status' => $orderConf['pay_status']['payment_success'],
                     'status' => $orderConf['status']['non_send'],
+                    'display_fee' => $salesmanVisitOrder->display_fee,
                     // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
                     'remark' => '订单备注:' . $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '; 陈列费备注:' . $salesmanVisitOrder->display_remark : '')
@@ -386,6 +387,7 @@ class SalesmanVisitOrderController extends Controller
                     foreach ($salesmanVisitOrder->mortgageGoods as $goods) {
                         // 添加抵费商品
                         $orderGoods[] = new OrderGoods([
+                            'type' => cons('order.goods.type.mortgage_goods'),
                             'goods_id' => $goods->goods_id,
                             'price' => 0,
                             'num' => $goods->pivot->num,

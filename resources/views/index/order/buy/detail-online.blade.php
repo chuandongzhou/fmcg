@@ -161,16 +161,13 @@
             </div>
             @if((int)$order['send_at'])
                 <div class="clearfix item">
-                    <label class="pull-left title-name">配送人信息</label>
-                    <ul class="pull-left">
-                        <li>
-                            <span class="title-info-name">联系人 :</span>
-                            <span>{{ $order['deliveryMan']['name'] }}</span>
-                        </li>
-                        <li>
-                            <span class="title-info-name">联系电话 :</span>
-                            <span>{{ $order['deliveryMan']['phone'] }}</span>
-                        </li>
+                    <ul>
+                        <li class="title">配送人信息</li>
+                        @foreach($order->deliveryMan as $deliveryMan)
+                            <li>
+                                <span class="title-info-name">联系人 : </span>{{ $deliveryMan->name . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $deliveryMan->phone }}
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             @endif

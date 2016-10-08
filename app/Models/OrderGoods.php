@@ -9,6 +9,7 @@ class OrderGoods extends Model
     public $timestamps = false;
     protected $fillable = [
         'goods_id',
+        'type',
         'price',
         'num',
         'total_price',

@@ -3161,8 +3161,11 @@ table {
       border: 1px solid black !important; }
 
 .temple-table-y {
-  width: 1200px !important;
-  min-width: 1200px !important;
-  font-size: 8px !important; }
+  width: auto !important;
+  margin: 0 !important;
+  font-size: 12pt !important; }
   .temple-table-y .title {
-    font-size: 23px; }
+    font-size: 16pt; }
+  .temple-table-y
+.especially {
+    font-size: 14pt; }

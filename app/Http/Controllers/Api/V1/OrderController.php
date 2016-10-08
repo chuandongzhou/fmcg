@@ -101,8 +101,13 @@ class OrderController extends Controller
         $order = $this->_orderLoadData($order);
 
         $order->trade_no = $this->_getTradeNoByOrder($order);
+        $goods = (new OrderService())->explodeOrderGoods($order);
 
-        return $this->success($this->_hiddenOrderAttr($order));
+        return $this->success([
+            'order' => $this->_hiddenOrderAttr($order),
+            'mortgageGoods' => $goods['mortgageGoods'],
+            'orderGoods' => $goods['orderGoods']
+        ]);
     }
 
 
@@ -154,6 +159,10 @@ class OrderController extends Controller
         $orderId = $request->input('order_id');
         $order = Order::OfSell(auth()->id())->find($orderId);
 
+        if (is_null($order)) {
+            return $this->error('订单不存在');
+        }
+
         $order = $this->_hiddenOrderAttr($this->_orderLoadData($order), false);
 
         $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
@@ -161,9 +170,15 @@ class OrderController extends Controller
         });
         $order->trade_no = $this->_getTradeNoByOrder($order);
 
+        $goods = (new OrderService())->explodeOrderGoods($order);
+
         $order->addHidden(['order_change_recode']);
 
-        return $order ? $this->success($order) : $this->error('订单不存在');
+        return $this->success([
+            'order' => $order,
+            'mortgageGoods' => $goods['mortgageGoods'],
+            'orderGoods' => $goods['orderGoods'],
+        ]);
     }
 
     /**
@@ -360,15 +375,24 @@ class OrderController extends Controller
     public function putBatchSend(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $deliveryManId = intval($request->input('delivery_man_id'));
+        $deliveryManIds = array_unique((array)$request->input('delivery_man_id'));
+
+
         //判断送货人员是否是该店铺的
-        if (!DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->find($deliveryManId)) {
-            return $this->error('操作失败');
+        /* if (!DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->find($deliveryManId)) {
+             return $this->error('操作失败');
+         }*/
+        $deliveryMans = auth()->user()->shop->deliveryMans()->whereIn('id', $deliveryManIds)->count();
+
+        if (count($deliveryManIds) != $deliveryMans) {
+            return $this->error('配送人员错误');
         }
+
+
         $orders = Order::OfSell(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
 
         if ($orders->isEmpty()) {
-            return $this->error('操作失败');
+            return $this->error('订单不能为空');
         }
 
         //通知买家订单已发货
@@ -382,15 +406,13 @@ class OrderController extends Controller
                 continue;
             }
 
-            $redisKey = 'push:user:' . $order->user_id;
-            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
-            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+            if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
+                $redisKey = 'push:user:' . $order->user_id;
+                $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
+                (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
 
-            $order->fill([
-                'delivery_man_id' => $deliveryManId,
-                'status' => cons('order.status.send'),
-                'send_at' => Carbon::now()
-            ])->save();
+                $order->deliveryMan()->sync($deliveryManIds);
+            }
         }
 
         return $this->success(['failIds' => $failIds]);
@@ -516,7 +538,7 @@ class OrderController extends Controller
         }
         $attributes = $request->all();
         $flag = (new OrderService)->changeOrder($order, $attributes, auth()->id());
-        return $flag ? $this->success('修改成功') : $this->error('修改失败,稍后再试!');
+        return $flag['status'] ? $this->success('修改成功') : $this->error($flag['message']);
     }
 
 
@@ -762,7 +784,7 @@ class OrderController extends Controller
         if ($order->pay_type == $payType['pick_up']) {
             $order->load(['goods.images', 'shop.shopAddress']);
         } else {
-            $order->load(['goods.images', 'deliveryMan', 'shippingAddress.address', 'orderRefund']);
+            $order->load(['goods', 'deliveryMan', 'shippingAddress.address', 'orderRefund']);
         }
         return $order;
     }
