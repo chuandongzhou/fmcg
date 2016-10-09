@@ -132,7 +132,7 @@ class OrderService
             return $result;
 
         });
-        return array_except($result, 'success_orders');
+        return is_array($result) ? array_except($result, 'success_orders') : $result;
     }
 
 

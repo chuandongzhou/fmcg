@@ -121,8 +121,11 @@ class OrderDownloadService
         $cellAlignCenter = ['align' => 'center'];
         $gridSpan2 = ['valign' => 'center', 'gridSpan' => 2];
         $gridSpan3 = ['valign' => 'center', 'gridSpan' => 3];
+        $gridSpan4 = ['valign' => 'center', 'gridSpan' => 4];
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
         $gridSpan8 = ['valign' => 'center', 'gridSpan' => 8];
+        $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
+        $cellRowContinue = array('vMerge' => 'continue');
 
 
         $isLandscape = $modelId == cons('order.templete.first');
@@ -222,42 +225,55 @@ class OrderDownloadService
 
             $price = $item->price;
             if ($item->coupon_id) {
-                $price .= '  优惠：' . bcsub($item->price, $item->after_rebates_price,
-                        2) . '  应付：' . $item->after_rebates_price;
+                $price .= ' - ' . bcsub($item->price, $item->after_rebates_price,
+                        2) . ' = ' . $item->after_rebates_price;
             } elseif ($item->display_fee > 0) {
-                $price .= '  陈列费：' . $item->display_fee . '  应付：' . $item->after_rebates_price;
+                $price .= ' - ' . $item->display_fee . ' = ' . $item->after_rebates_price;
             }
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
 
-            if (!$orderGoods['mortgageGoods']->isEmpty()) {
+            if (!$orderGoods['mortgageGoods']->isEmpty() || $item->display_fee > 0) {
                 $table->addRow();
                 $table->addCell(0, $gridSpan8)->addText('抵费商品', ['size' => 10], $cellAlignCenter);
                 foreach ($orderGoods['mortgageGoods'] as $goods) {
                     $table->addRow(20);
                     $table->addCell($isLandscape ? 2200 : 1540,
                         $vAlign)->addText($goods->bar_code, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 4100 : 2870, $vAlign)->addText($goods->name,
+                    $table->addCell($isLandscape ? 3100 : 2170, $vAlign)->addText($goods->name,
                         null, $cellAlignCenter);
                     $table->addCell($isLandscape ? 1800 : 1260,
                         $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1500 : 1050,
-                        $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 700 : 490,
-                        $vAlign)->addText(cons()->valueLang('goods.pieces',
-                        $goods->pivot->pieces), null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1000 : 700,
-                        $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1000 : 700,
-                        $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 2500 : 1750,
-                        $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
 
-                    $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
+                    $table->addCell($isLandscape ? 3200 : 2250,
+                        $gridSpan4)->addText($goods->pivot->num . cons()->valueLang('goods.pieces',
+                            $goods->pivot->pieces), null, $cellAlignCenter);
+
+                    if ($goods == $orderGoods['mortgageGoods']->first()) {
+                        $table->addCell($isLandscape ? 2500 : 1750,
+                            $cellRowSpan)->addText($item->remarkGroup['display'], 0, 20);
+                    } else {
+                        $table->addCell(0, $cellRowContinue);
+                    }
+                }
+                if ($item->display_fee > 0) {
+                    $table->addRow(20);
+                    $table->addCell($isLandscape ? 2200 : 1540,
+                        $vAlign)->addText('', null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 3100 : 2170, $vAlign)->addText('现金',
+                        null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 3200 : 2250, $gridSpan5)->addText($item->display_fee, null, $cellAlignCenter);
+
+                    if ($orderGoods['mortgageGoods']->isEmpty()) {
+                        $table->addCell($isLandscape ? 2500 : 1750,
+                            $vAlign)->addText($item->remarkGroup['display_fee']);
+                    } else {
+                        $table->addCell(0, $cellRowContinue);
+                    }
                 }
             }
 
             $table->addRow();
-            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
+            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remarkGroup['remark'], ['size' => 10]);
             $qrcodeCell = $table->addCell(0, $gridSpan3);
             $qrcodeCell->addText($item->shop_name . '店铺首页地址：');
             $isLandscape ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,
@@ -303,8 +319,11 @@ class OrderDownloadService
         $cellAlignCenter = ['align' => 'center'];
         $gridSpan2 = ['valign' => 'center', 'gridSpan' => 2];
         $gridSpan3 = ['valign' => 'center', 'gridSpan' => 3];
+        $gridSpan4 = ['valign' => 'center', 'gridSpan' => 4];
         $gridSpan5 = ['valign' => 'center', 'gridSpan' => 5];
         $gridSpan8 = ['valign' => 'center', 'gridSpan' => 8];
+        $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
+        $cellRowContinue = array('vMerge' => 'continue');
 
         $isLandscape = $modelId == cons('order.templete.second');
 
@@ -394,14 +413,14 @@ class OrderDownloadService
 
             $price = $item->price;
             if ($item->coupon_id) {
-                $price .= '  优惠：' . bcsub($item->price, $item->after_rebates_price,
-                        2) . '  应付：' . $item->after_rebates_price;
+                $price .= ' - ' . bcsub($item->price, $item->after_rebates_price,
+                        2) . ' = ' . $item->after_rebates_price;
             } elseif ($item->display_fee > 0) {
-                $price .= '  陈列费：' . $item->display_fee . '  应付：' . $item->after_rebates_price;
+                $price .= ' - ' . $item->display_fee . ' = ' . $item->after_rebates_price;
             }
             $table->addCell(0, $gridSpan2)->addText($price, null, $cellAlignCenter);
 
-            if (!$orderGoods['mortgageGoods']->isEmpty()) {
+            if (!$orderGoods['mortgageGoods']->isEmpty() || $item->display_fee > 0) {
                 $table->addRow();
                 $table->addCell(0, $gridSpan8)->addText('抵费商品', ['size' => 10], $cellAlignCenter);
                 foreach ($orderGoods['mortgageGoods'] as $goods) {
@@ -412,25 +431,39 @@ class OrderDownloadService
                         null, $cellAlignCenter);
                     $table->addCell($isLandscape ? 1800 : 1260,
                         $vAlign)->addText($goods->{'specification_' . $userType}, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1500 : 1050,
-                        $vAlign)->addText($goods->pivot->price, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 700 : 490,
-                        $vAlign)->addText(cons()->valueLang('goods.pieces',
-                        $goods->pivot->pieces), null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1000 : 700,
-                        $vAlign)->addText($goods->pivot->num, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 1000 : 700,
-                        $vAlign)->addText($goods->pivot->total_price, null, $cellAlignCenter);
-                    $table->addCell($isLandscape ? 2500 : 1750,
-                        $vAlign)->addText(mb_substr($goods->promotion_info, 0, 20));
 
-                    $orderGoodsNum = $orderGoodsNum + $goods->pivot->num;
+                    $table->addCell($isLandscape ? 3200 : 2250,
+                        $gridSpan4)->addText($goods->pivot->num . cons()->valueLang('goods.pieces',
+                            $goods->pivot->pieces), null, $cellAlignCenter);
+
+                    if ($goods == $orderGoods['mortgageGoods']->first()) {
+                        $table->addCell($isLandscape ? 2500 : 1750,
+                            $cellRowSpan)->addText($item->remarkGroup['display'], 0, 20);
+                    } else {
+                        $table->addCell(0, $cellRowContinue);
+                    }
+                }
+                if ($item->display_fee > 0) {
+                    $table->addRow(20);
+                    $table->addCell($isLandscape ? 2200 : 1540,
+                        $vAlign)->addText('', null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 3100 : 2170, $vAlign)->addText('现金',
+                        null, $cellAlignCenter);
+                    $table->addCell($isLandscape ? 3200 : 2250,
+                        $gridSpan5)->addText($item->display_fee, null, $cellAlignCenter);
+
+                    if ($orderGoods['mortgageGoods']->isEmpty()) {
+                        $table->addCell($isLandscape ? 2500 : 1750,
+                            $vAlign)->addText($item->remarkGroup['display_fee']);
+                    } else {
+                        $table->addCell(0, $cellRowContinue);
+                    }
                 }
             }
 
 
             $table->addRow();
-            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remark, ['size' => 10]);
+            $table->addCell(0, $gridSpan5)->addText('备注：' . $item->remarkGroup['remark'], ['size' => 10]);
             $qrcodeCell = $table->addCell(0, $gridSpan3);
             $qrcodeCell->addText($item->shop_name . '店铺首页地址：');
             $isLandscape ? $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id)) : $qrcodeCell->addImage((new ShopService())->qrcode($item->shop_id,

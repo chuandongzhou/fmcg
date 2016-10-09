@@ -231,6 +231,9 @@
             if (!SITE.USER.id) {
                 return false;
             }
+            if(typeof WSDK == 'undefined'){
+                return ;
+            }
             var sdk = new WSDK(), Event = sdk.Event;
                 sdk.Base.login({
                 uid: '{{ $chatConf['shop_id'] }}',

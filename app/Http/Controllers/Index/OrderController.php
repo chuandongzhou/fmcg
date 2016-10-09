@@ -38,7 +38,7 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return redirect()->back()->with('message', '商品缺货或购买数不合法');
+            return redirect()->back()->with('message', '订单信息不合法');
         }
 
         if ($confirmedGoods->update(['status' => 1])) {
@@ -82,7 +82,7 @@ class OrderController extends Controller
 
         $result = (new OrderService)->orderSubmitHandle($data);
         if (!$result) {
-            return redirect('cart')->with('message', '商品缺货或购买数不合法');
+            return redirect('cart')->with('message', '订单信息不合法');
         }
 
         $redirectUrl = url('order-buy');

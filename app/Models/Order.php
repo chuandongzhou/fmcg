@@ -19,7 +19,7 @@ class Order extends Model
         'pay_status',
         'status',
         'shipping_address_id',
-       // 'delivery_man_id',
+        // 'delivery_man_id',
         'coupon_id',
         'display_fee',
         'user_id',
@@ -494,6 +494,26 @@ class Order extends Model
         return $this->shop ? $this->shop->name : '';
     }
 
+    /**
+     * 拆分备注
+     *
+     * @return array
+     */
+    public function getRemarkGroupAttribute()
+    {
+        $remark = $this->remark;
+        $group = [];
+        $explode = '陈列费备注:';
+        if (strstr($remark, $explode)) {
+            $remarkGroup = explode($explode, $remark);
+            $group['remark'] = str_replace('订单备注:', '', $remarkGroup[0]);
+            $group['display'] = $explode . $remarkGroup[1];
+        } else {
+            $group['remark'] = $remark;
+            $group['display'] = '';
+        }
+        return $group;
+    }
 
     /**
      * 根据买家名字查询订单及买家信息--getSearch()
@@ -783,23 +803,29 @@ class Order extends Model
 
     /**
      * 查询配送人员
+     *
      * @param $query
      * @param $delivery_id
      */
-    public function scopeOfDeliveryMan($query,$deliveryMan_id){
-        return $query->whereHas('deliveryMan',function($query) use ($deliveryMan_id){
-            $query->where('id',$deliveryMan_id);
+    public function scopeOfDeliveryMan($query, $deliveryMan_id)
+    {
+        return $query->whereHas('deliveryMan', function ($query) use ($deliveryMan_id) {
+            $query->where('id', $deliveryMan_id);
         });
     }
 
     /**
      * 查询订单商品
+     *
      * @param $query
      */
-    public function scopeOfOrderGoods($query){
-        return $query->with(['orderGoods'=>function($query){
-            $query->where('type',cons('order.goods.type.order_goods'))->with('goods');
-        }]);
+    public function scopeOfOrderGoods($query)
+    {
+        return $query->with([
+            'orderGoods' => function ($query) {
+                $query->where('type', cons('order.goods.type.order_goods'))->with('goods');
+            }
+        ]);
     }
 
 
