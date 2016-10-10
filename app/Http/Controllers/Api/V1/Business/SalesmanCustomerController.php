@@ -297,7 +297,7 @@ class SalesmanCustomerController extends Controller
     public function customerDisplayFee(CustomerDisplayFeeRequest $request)
     {
         $dispalyFee = SalesmanCustomer::where('id',
-        $request->input('salesman_customer_id'))->select('display_fee')->first();
+            $request->input('salesman_customer_id'))->select('display_fee')->first();
         return $this->success([
             'orders' => $this->queryDispalyFee($request),
             'display_fee' => $dispalyFee->display_fee
@@ -321,6 +321,7 @@ class SalesmanCustomerController extends Controller
 
     /**
      * 陈列费订单查询
+     *
      * @param $request
      * @return mixed
      */
@@ -333,7 +334,12 @@ class SalesmanCustomerController extends Controller
             $where['salesman_customer_id'] = $customer_id;
         }
         $orders = SalesmanVisitOrder::where($where)
-            ->whereBetween('created_at', [$start_at, $end_at])->with('mortgageGoods')
+            ->whereBetween('created_at', [$start_at, $end_at])->where(function ($query) {
+                $query->where('display_fee', '>', 0)->orWhere(function ($query) {
+                    $query->has('mortgageGoods');
+                });
+            })
+            ->with('mortgageGoods')
             ->select([
                 'id',
                 'status',
