@@ -201,7 +201,7 @@ class OrderSellController extends OrderController
         $orderGoods = (new OrderService())->explodeOrderGoods($order);
 
         $allNum = 0;
-        foreach ($order->goods as $goods) {
+        foreach ($orderGoods['orderGoods'] as $goods) {
             $allNum += $goods->pivot->num;
         }
         $order->allNum = $allNum;

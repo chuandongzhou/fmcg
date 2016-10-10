@@ -50,6 +50,7 @@
                         <th>商品条码</th>
                         <th>商品名称</th>
                         <th>商品规格</th>
+                        <th>单价</th>
                         <th>单位</th>
                         <th>数量</th>
                         <th>金额</th>
@@ -64,6 +65,7 @@
                             <td>
                                 {{ $goods->{'specification_' . $order->user_type_name} }}
                             </td>
+                            <td>{{$goods->pivot->price}}</td>
                             <td>{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                             <td>{{ $goods->pivot->num }}</td>
                             <td>{{ $goods->pivot->total_price }}</td>
@@ -73,20 +75,20 @@
                     <tr>
                         <td colspan="4">总计</td>
                         <td>{{ $order->allNum }}</td>
-                        <td colspan="2">
+                        <td colspan="3">
                             {{ $order->price }}
                             @if($order->coupon_id && $order->coupon)
-                                优惠： {{ bcsub($order->price,$order->after_rebates_price,2 ) }}
-                                应付:{{ $order->after_rebates_price }}
+                                - {{ bcsub($order->price,$order->after_rebates_price,2 ) }}
+                                = {{ $order->after_rebates_price }}
                             @elseif($order->display_fee > 0)
-                                陈列费：{{ $order->display_fee }}
-                                应付:{{ $order->after_rebates_price }}
+                                - {{ $order->display_fee }}
+                                = {{ $order->after_rebates_price }}
                             @endif
                         </td>
                     </tr>
-                    @if(!$mortgageGoods->isEmpty())
+                    @if(!$mortgageGoods->isEmpty() || $order->display_fee > 0)
                         <tr>
-                            <td align="center" colspan="7">抵费商品</td>
+                            <td align="center" colspan="8">抵费商品</td>
                         </tr>
                         @foreach($mortgageGoods as $goods)
                             <tr>
@@ -95,15 +97,26 @@
                                 <td>
                                     {{ $goods->{'specification_' . $order->user_type_name} }}
                                 </td>
-                                <td>{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
-                                <td>{{ $goods->pivot->num }}</td>
-                                <td>{{ $goods->pivot->total_price }}</td>
-                                <td>{{ $goods->promotion_info }}</td>
+                                <td colspan="3">{{ $goods->pivot->num.cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
+                                @if ($goods == $mortgageGoods->first())
+                                    <td colspan="2"
+                                        rowspan="{{ $order->display_fee > 0 ? $mortgageGoods->count() + 1 : $mortgageGoods->count() }}">{{ $order->remarkGroup['display'] }}</td>
+                                @endif
                             </tr>
                         @endforeach
+                        @if($order->display_fee > 0)
+                            <tr>
+                                <td></td>
+                                <td width="250px">现金</td>
+                                <td colspan="4">{{ $order->display_fee }}</td>
+                                @if($mortgageGoods->isEmpty())
+                                    <td>{{ $order->remarkGroup['display'] }}</td>
+                                @endif
+                            </tr>
+                        @endif
                     @endif
                     <tr>
-                        <td colspan="4">备注：{{ $order->remark }}</td>
+                        <td colspan="5">备注：{{ $order->remarkGroup['remark'] }}</td>
                         <td colspan="3">{{ $order->shop_name }}首页地址：<br/>
                             <img src="{{ (new \App\Services\ShopService())->qrcode($order->shop_id,80) }}"/><br/>
                             一站式零售服务平台- -订百达

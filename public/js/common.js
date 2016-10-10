@@ -567,7 +567,7 @@ var addAddFunc = function () {
             areaName = provinceText + cityText + districtText + streetText;
         $('.modal-header .close').trigger('click');
         container.prepend(
-            '<div class="col-sm-12 fa-border show-map">' +
+            '<div class="col-sm-10 fa-border show-map">' +
             areaName + addressText +
             '<input type="hidden" name="area[id][]" value=""/>' +
             '<input type="hidden" name="area[province_id][]" value="' + province.val() + '"/>' +
