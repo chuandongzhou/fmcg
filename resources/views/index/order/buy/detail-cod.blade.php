@@ -165,9 +165,6 @@
                         <th>商品价格</th>
                         <th>商品数量</th>
                         <th>金额</th>
-                        @if($order->can_change_price)
-                            <th>操作</th>
-                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -186,18 +183,6 @@
                                 / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
                             <td>{{ $goods['pivot']['num'] }}</td>
                             <td>{{ $goods['pivot']['total_price'] }}</td>
-                            @if($order->can_change_price)
-                                <td><a class="change-price" href="javascript:void(0)" data-target="#changePrice"
-                                       data-toggle="modal" data-id="{{ $order['id'] }}"
-                                       data-price="{{ $goods->pivot->price }}" ,
-                                       data-num="{{ $goods->pivot->num }}"
-                                       data-pivot="{{  $goods['pivot']['id'] }}">修改</a>
-                                    <a class="delete-no-form" data-method="delete"
-                                       data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
-                                       href="javascript:">删除</a>
-                                </td>
-                            @endif
-
                         </tr>
                     @endforeach
                     </tbody>

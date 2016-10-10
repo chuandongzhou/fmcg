@@ -17,10 +17,10 @@
             <div class="col-xs-4">
                 录单日期 ：{{ $order->created_at->toDateString() }}
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-4">
                 平台订单号 ：{{ $order->id }}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-4">
                 单据编号 ：{{ $order->numbers }}
             </div>
         </div>
@@ -28,10 +28,10 @@
             <div class="col-xs-4">
                 购买单位 ：{{ $order->user_shop_name }}
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-4">
                 {{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-4">
                 制单人 ： 管理员
             </div>
         </div>

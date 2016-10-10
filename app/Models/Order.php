@@ -267,7 +267,12 @@ class Order extends Model
         $payType = $this->attributes['pay_type'];//支付方式
         $payStatus = $this->attributes['pay_status'];//支付状态
         $status = $this->attributes['status'];//订单状态
-        if ($payType == cons('pay_type.online')) {//在线支付
+        if($status == cons('order.status.invalid')) {
+            //作废
+            return 0;
+        }
+        if ($payType == cons('pay_type.online')) {
+            //在线支付
             return $payStatus ? ($status == 0 ? 2 : $status + 1) : $status;
         }
         //货到付款
