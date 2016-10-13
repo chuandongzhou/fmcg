@@ -315,6 +315,8 @@ password    string       密码
 <pre><code>user_name    string      登录名
 
 password     string      密码
+pos_sign     string      pos机编号
+name         string      司机名称
 </code></pre>
 
 <p><code>失败返回：</code></p>
@@ -496,6 +498,30 @@ goods字段说明
 <h4>2.2.9 订单商品删除[delete] (order-goods-delete/{order<em>goods</em>id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.3.1 修改密码[ post] (modify-password)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>old_password             string             原密码
+password                 string             新密码
+password_confirmation    string             确认新密码
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code>  </p>
+<h4>2.3.2  检查最新版本[get] (latest-version)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>record                  array             版本信息
+download_url            string            下载地址
+
+
+record字段说明
+
+version_name           string             版本名称
+version_no             string             版本号
+content                string             内容
+</code></pre>
+
 <p><code>失败返回：</code></p>
 
 </body>

@@ -23,6 +23,8 @@
 	user_name    string      登录名
 
 	password     string      密码
+	pos_sign     string      pos机编号
+	name         string      司机名称
 
 `失败返回：`
 
@@ -224,6 +226,40 @@
 `成功返回：`
 
 `失败返回：`
+
+#### 2.3.1 修改密码[ post] (modify-password)	
+
+`请求参数：`
+
+	old_password             string             原密码
+	password                 string             新密码
+	password_confirmation    string             确认新密码
+
+`成功返回：`
+
+`失败返回：`  
+
+
+#### 2.3.2  检查最新版本[get] (latest-version)
+
+`请求参数：`
+
+`成功返回：`
+		
+	record                  array             版本信息
+	download_url            string            下载地址
+	
+
+	record字段说明
+	
+	version_name           string             版本名称
+    version_no             string			  版本号
+	content                string             内容
+
+`失败返回：`
+
+
+
 
 	
 	

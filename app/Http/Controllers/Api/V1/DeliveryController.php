@@ -2,18 +2,20 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\OrderGoods;
-use App\Services\OrderService;
-use Illuminate\Http\Request;
 use App\Models\DeliveryMan;
-use Hash;
+use App\Models\VersionRecord;
 use App\Models\Order;
+use DB;
+use Hash;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use App\Http\Requests\Api\v1\DeliveryRequest;
 use App\Http\Requests\Api\v1\DeliveryLoginRequest;
-use DB;
+use App\Http\Requests\Api\v1\UpdatePasswordRequest;
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
-
+use App\Services\RedisService;
+use App\Services\OrderService;
 class DeliveryController extends Controller
 {
 
@@ -320,4 +322,37 @@ class DeliveryController extends Controller
 
         return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
     }
+    /**
+     * 修改密码
+     * @param  App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     *  @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function modifyPassword(UpdatePasswordRequest $request){
+        $attributes = $request->all();
+
+        $user = delivery_auth()->user();
+
+        if (md5($attributes['old_password'])== $user->password)
+        {
+            if ($user->fill(['password' => $attributes['password']])->save()){
+                return $this->success('修改密码成功');
+            }
+            return $this->error('修改密码时遇到错误');
+
+        }
+        return $this->error('原密码错误');
+    }
+
+    /**
+     * 检查最新版本
+     *  @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function latestVersion(){
+
+        return $this->success([
+            'record' => VersionRecord::where('type', cons('push_device.delivery'))->orderBy('id', 'DESC')->first(),
+            'download_url' => (new RedisService())->get('app-link:delivery'),
+        ]);
+    }
+
 }

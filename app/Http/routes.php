@@ -263,6 +263,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('delivery-statistical', 'DeliveryController@statisticalDelivery');//配送统计
             $router->delete('order-goods-delete/{order_goods_id}',
                 'DeliveryController@orderGoodsDelete')->where('order_goods_id', '[0-9]+'); //订单商品删除
+            $router->post('modify-password','DeliveryController@modifyPassword');//修改密码
+            $router->get('latest-version','DeliveryController@latestVersion');//检查最新版本
         });
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
