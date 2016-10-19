@@ -1253,6 +1253,21 @@ var goodsBatchUpload = function () {
     });
 }
 
+/**
+ * 显示/隐藏
+ */
+var visibleSelect = function(){
+    $('.visible-select').on('change', function () {
+        var obj = $(this), val = obj.val(), visibleItemSelector = '.visible-item-' + val;
+        $('.visible-item').not(visibleItemSelector).each(function () {
+            $(this).addClass('hidden').find('input , select').prop('disabled', true);
+        });
+        $(visibleItemSelector).each(function () {
+            $(this).removeClass('hidden').find('input , select').prop('disabled', false);
+        })
+    })
+}
+
 
 /**
  * 浮点数加法

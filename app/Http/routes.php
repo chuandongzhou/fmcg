@@ -287,13 +287,15 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
                 $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
                 $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
-                $router->post('customer-display-fee','SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
-                $router->post('display-fee','SalesmanCustomerController@displayFee');//陈列费发放情况
+                $router->post('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
+                $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
             });
 
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->get('visit/can-add/{customer_id}', 'SalesmanVisitController@canAdd')
                 ->where('customer_id', '[0-9]+');
+            $router->get('visit/surplus-display-fee', 'SalesmanVisitController@surplusDisplayFee');//获取月份陈列费剩余情况
+            $router->get('visit/surplus-mortgage-goods', 'SalesmanVisitController@surplusMortgageGoods');//获取月份陈列商品剩余情况
             $router->resource('visit', 'SalesmanVisitController');
 
             $router->group(['prefix' => 'order'], function ($router) {
@@ -308,6 +310,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->post('batch-sync', 'SalesmanVisitOrderController@batchSync');
                 $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
                 $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
+                $router->put('update-order-display-fee', 'SalesmanVisitOrderController@updateOrderDisplayFee');
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
                 $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');
                 $router->get('return-order-detail/{order_id}', 'SalesmanVisitOrderController@returnOrderDetail');
@@ -315,7 +318,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             });
             //抵费商品
             $router->group(['prefix' => 'mortgage-goods'], function ($router) {
-                $router->get('/', 'MortgageGoodsController@index'); //启/禁用
+                $router->get('/', 'MortgageGoodsController@index');
+                $router->get('all/{salesman_id}', 'MortgageGoodsController@all')->where('salesman_id', '[0-9]+');
                 $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
                 $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
                 $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改

@@ -23,7 +23,7 @@ class SalesmanCustomerController extends Controller
     public function index()
     {
         $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress',
-            'shop.user')->get()->each(function ($customer) {
+            'shop.user', 'mortgageGoods')->get()->each(function ($customer) {
             $customer->shop && $customer->shop->setAppends([]);
             $customer->setAppends(['account']);
             $customer->business_district_id = $customer->businessAddress->district_id;
@@ -76,6 +76,9 @@ class SalesmanCustomerController extends Controller
      */
     public function update(Requests\Api\v1\CreateSalesmanCustomerRequest $request, SalesmanCustomer $customer)
     {
+
+        // dd($request->all());
+
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
@@ -106,6 +109,7 @@ class SalesmanCustomerController extends Controller
      */
     public function updateByApp(Requests\Api\v1\CreateSalesmanCustomerRequest $request, SalesmanCustomer $customer)
     {
+        info($request->all());
         if ($customer && $customer->salesman_id != salesman_auth()->id()) {
             return $this->error('客户不存在');
         }

@@ -18,7 +18,10 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
             'contact' => 'required',
             'contact_information' => 'required',
             'business_area' => 'required',
-            'display_fee' => 'required',
+            'display_type' => 'required',
+            'display_start_month' => 'sometimes|required',
+            'display_end_month' => 'sometimes|required',
+            'display_fee' => 'sometimes|required|numeric|min:0',
             'salesman_id' => 'sometimes|required|integer'
         ];
     }

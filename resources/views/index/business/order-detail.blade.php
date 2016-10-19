@@ -97,14 +97,24 @@
 
                 @if($order->type == cons('salesman.order.type.order'))
                     <div class="item"><span class="prompt">陈列费 : </span></div>
-                    <div class="item">
-                        <span class="prompt">现金 : </span>
-                        <b class="money old-value">{{ $order->display_fee }}</b>
-                        <input class="edit-money new-value" data-name="display_fee" type="text"
-                               value="{{ $order->display_fee }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-parse="true" data-type="edit">编辑
-                        </button>
-                    </div>
+
+                    @if(!$displayFee->isEmpty())
+                        @foreach($displayFee as $item)
+                            <div class="item">
+                                <span class="prompt">月份 : </span><b>{{ $item->month }} </b>
+                                <span class="prompt">现金 : </span><b class="money old-value">{{ $item->used }}</b>
+                                <input class="edit-money new-value" data-name="display_fee" data-id="{{ $item->id }}"
+                                       type="text"
+                                       value="{{ $item->used }}">
+                                <button class="edit-cash btn btn-primary" type="button" data-parse="true"
+                                        data-type="edit">
+                                    编辑
+                                </button>
+                            </div>
+                        @endforeach
+                    @endif
+
+
 
                     @if(!$mortgageGoods->isEmpty())
                         <div class="item"><span class="prompt">抵费商品 : </span></div>
@@ -200,6 +210,7 @@
                             newValueControl = self.siblings('.new-value'),
                             newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
                             name = newValueControl.data('name'),
+                            id = newValueControl.data('id'),
                             data = {};
 
                     if (oldValue != newValue) {
@@ -209,10 +220,13 @@
                         }
 
                         data[name] = newValue;
+                        data['id'] = id;
+                        data['order_id'] = '{{ $order->id }}';
+
 
                         self.button('loading');
                         $.ajax({
-                            url: site.api('business/order/{{ $order->id }}'),
+                            url: site.api('business/order/update-order-display-fee'),
                             method: 'put',
                             data: data
                         }).done(function (data, textStatus, jqXHR) {

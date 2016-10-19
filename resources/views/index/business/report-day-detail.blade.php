@@ -96,11 +96,21 @@
                         </tr>
                         @if(isset($visit['display_fee']))
                             <tr>
-                                <td colspan="9">陈列费</td>
+                                <td rowspan="{{ (count($visit['display_fee']) ? (count($visit['display_fee']) + 2) : 0) + (isset($visit['mortgage']) ? (count(array_flatten($visit['mortgage']))/5 + 2) : 0) }}">
+                                    陈列费
+                                </td>
+                                <td colspan="8">现金</td>
                             </tr>
                             <tr>
-                                <td colspan="9">现金 : {{ $visit['display_fee'][0]['display_fee'] }}</td>
+                                <td colspan="3">月份</td>
+                                <td colspan="5">金额</td>
                             </tr>
+                            @foreach($visit['display_fee'] as $displayFee)
+                                <tr>
+                                    <td colspan="3">{{ $displayFee['month'] }}</td>
+                                    <td colspan="5">{{ $displayFee['display_fee'] }}</td>
+                                </tr>
+                            @endforeach
                         @endif
                         @if(isset($visit['mortgage']))
                             <tr>

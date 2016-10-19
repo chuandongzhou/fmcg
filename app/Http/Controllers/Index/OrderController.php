@@ -294,14 +294,14 @@ class OrderController extends Controller
         }
         //用户名
         if (!empty($search['user_name'])) {
-            if ($user->type == cons('user.type.retailer')) {
+            if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && $objType == cons('user.type.supplier'))) {
                 //查询卖家
                 $query->wherehas('shop', function ($q) use ($search) {
                     $q->where('name', trim($search['user_name']));
                 });
             } else {//查询买家
-                $query->wherehas('user.shop', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', '%' . trim($search['user_name'] . '%'));
+                $query->whereHas('user.shop', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . trim($search['user_name']) . '%');
                 });
             }
         }
@@ -469,23 +469,10 @@ class OrderController extends Controller
         empty($search['goods_name']) ?: $options[] = ["商品名称:", $search['goods_name']];
         if (!empty($search['user_name'])) {
             $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
-            $showObjName = $this->_inputName($objOfShow);
-            $options[] = [$showObjName . ":", $search['user_name']];
+            $showObjName = $this->_getStatisticsType($objOfShow) == 'buyer' ? '买家' : '卖家';
+            $options[] = [$showObjName . ':', $search['user_name']];
         }
 
-        /* $searchAddress = array_only($search, ['province_id', 'city_id', 'district_id']);
-
-         $addressList = DB::table('address')->whereIn('id', $searchAddress)->lists('name', 'id');
-
-         if (!empty($search['province_id'])) {
-             $options[] = ['省:', $addressList[$search['province_id']]];
-         }
-         if (!empty($search['city_id'])) {
-             $options[] = ['城市:', $addressList[$search['city_id']]];
-         }
-         if (!empty($search['district_id'])) {
-             $options[] = ['区县:', $addressList[$search['district_id']]];
-         }*/
 
         return $options;
     }

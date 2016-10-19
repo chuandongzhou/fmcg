@@ -42,6 +42,7 @@ class SalesmanVisitOrder extends Model
         static::deleted(function ($model) {
             $model->orderGoods()->delete();
             $model->mortgageGoods()->detach();
+            $model->displayList()->delete();
         });
     }
 
@@ -73,7 +74,40 @@ class SalesmanVisitOrder extends Model
     public function mortgageGoods()
     {
         return $this->belongsToMany('App\Models\MortgageGoods',
-            'salesman_visit_order_mortgage_goods')->withTrashed()->withPivot('num');
+            'salesman_customer_display_list')->withTrashed()->withPivot('used', 'month', 'salesman_customer_id');
+    }
+
+    /**
+     * 陈列操作记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function displayList()
+    {
+        return $this->hasMany('App\Models\SalesmanCustomerDisplayList');
+    }
+
+    /**
+     * 陈列费
+     *
+     * @return mixed
+     */
+    public function displayFees()
+    {
+        return $this->displayList()->where('mortgage_goods_id', 0);
+    }
+
+
+    /**
+     * 关联抵费商品(新)
+     *
+     * @return mixed
+     */
+    public function newMortgageGoods()
+    {
+        return $this->belongsToMany('App\Models\MortgageGoods',
+            'salesman_customer_display_list')->where('mortgage_goods_id', '>', 0)->withTrashed()->withPivot('month',
+            'used', 'salesman_customer_id');
     }
 
     /**
@@ -248,4 +282,6 @@ class SalesmanVisitOrder extends Model
     {
         return $this->order_id && $this->order ? $this->order->status_name : '';
     }
+
+
 }

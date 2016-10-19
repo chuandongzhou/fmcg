@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Business;
 
 use App\Models\MortgageGoods;
+use App\Models\Salesman;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,9 +17,30 @@ class MortgageGoodsController extends Controller
         $this->middleware('salesman.auth', ['only' => ['index']]);
     }
 
+    /**
+     * 获取登录用户所有陈列商品
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function index()
     {
         $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->paginate()->toArray();
+        return $this->success(compact('mortgageGoods'));
+    }
+
+    /**
+     * @param $salesmanId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function all($salesmanId){
+        $salesman = Salesman::where('shop_id', auth()->user()->shop_id)->find($salesmanId);
+
+        if(is_null($salesman)) {
+            return $this->error('业务员不存在');
+        }
+        $mortgageGoods = $salesman->shop->mortgageGoods()->active()->get()->each(function($mortgage){
+            $mortgage->setAppends(['pieces_name']);
+        });
         return $this->success(compact('mortgageGoods'));
     }
 

@@ -143,6 +143,7 @@ class SalesmanCustomerController extends Controller
     public function edit($salesCustomer)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
+
         return view('index.business.salesman-customer',
             ['salesmen' => $salesmen, 'salesmanCustomer' => $salesCustomer]);
     }
@@ -229,8 +230,14 @@ class SalesmanCustomerController extends Controller
         //所有订单商品详情
         $orderGoodsDetail = Goods::whereIn('id', array_unique($goodsIds))->lists('name', 'id');
 
+        $businessService  = new BusinessService();
+
         //货抵
-        $mortgageGoods = (new BusinessService())->getOrderMortgageGoods($orders)->groupBy('created_at');
+        $mortgageGoods = $businessService->getOrderMortgageGoods($orders)->groupBy('created_at');
+
+        //陈列费
+        $displayFees = $businessService ->getOrderDisplayFees($orders);
+
 
         //客户销售的商品
         $salesList = [];
@@ -282,10 +289,17 @@ class SalesmanCustomerController extends Controller
             //'orderGoodsDetail' => $orderGoodsDetail,
             'returnOrders' => $returnOrders,
             'mortgageGoods' => $mortgageGoods,
+            'displayFees' => $displayFees,
             'salesListsData' => $salesListsData
         ];
     }
 
+
+    /**
+     * 导出
+     *
+     * @param $result
+     */
     private function _export($result)
     {
         // Creating the new document...
@@ -354,14 +368,16 @@ class SalesmanCustomerController extends Controller
 
             $table->addRow();
             $table->addCell(null, $cellRowContinue);
-            $table->addCell(5000, $gridSpan2)->addText('拜访时间', null, $cellAlignCenter);
+            $table->addCell(2000)->addText('月份', null, $cellAlignCenter);
+            $table->addCell(3000)->addText('拜访时间', null, $cellAlignCenter);
             $table->addCell(4000, $gridSpan2)->addText('金额', null, $cellAlignCenter);
 
-            foreach ($result['orders'] as $order) {
+            foreach ($result['displayFees'] as $displayFee) {
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
-                $table->addCell(2000, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
-                $table->addCell(7300, $gridSpan2)->addText($order->display_fee, null, $cellAlignCenter);
+                $table->addCell(2000)->addText($displayFee['month'], null, $cellAlignCenter);
+                $table->addCell(3000)->addText($displayFee['time'], null, $cellAlignCenter);
+                $table->addCell(7300, $gridSpan2)->addText($displayFee['used'], null, $cellAlignCenter);
             }
         }
 

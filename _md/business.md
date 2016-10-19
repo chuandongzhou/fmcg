@@ -103,9 +103,13 @@
     business_address_lat    float           营业地址纬度
     shipping_address_lng    float           收货地址经度
     shipping_address_lat    float           收货地址纬度
-    display_fee             decimal         陈列费
     business_address        array           营业地址详情
     shipping_address        array           营业地址详情
+    display_type            tinyint         陈列类型    （0 无陈列， 1 现金 ， 2 商品）
+    display_start_month     string          陈列开始月份
+    display_end_month       string          陈列结束月份
+    display_fee             decimal         陈列费
+    mortgage_goods          array           陈列商品信息
 
     business_address字段子集说明
 
@@ -128,7 +132,6 @@
     contact                 string          联系人
     contact_information     string          联系方式
     business_area           string          营业面积
-    display_fee             decimal         陈列费
     account                 string          客户的平台账号(选填)
     business_address        array           营业地址
     shipping_address        array           收货地址
@@ -136,6 +139,13 @@
     business_address_lat    float           营业地址纬度
     shipping_address_lng    float           收货地址经度
     shipping_address_lat    float           收货地址纬度
+    display_type            tinyint         陈列类型    （0 无陈列， 1 现金 ， 2 商品）
+    display_start_month     string          陈列开始月份（当display_type不为0时传入。 格式如'2016-10' ）
+    display_end_month       string          陈列结束月份（当display_type不为0时传入。 格式如'2016-12' ）
+    display_fee             decimal         陈列费用（当display_type 为1时入）
+    mortgage_goods          array           抵费商品 （当display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
+
+
 
     business_address字段子集说明
 
@@ -159,7 +169,6 @@
     contact                 string          联系人
     contact_information     string          联系方式
     business_area           string          营业面积
-    display_fee             decimal         陈列费
     account                 string          客户的平台账号(选填)
     business_address        array           营业地址
     shipping_address        array           收货地址
@@ -167,6 +176,11 @@
     business_address_lat    float           营业地址纬度
     shipping_address_lng    float           收货地址经度
     shipping_address_lat    float           收货地址纬度
+    display_type            tinyint         陈列类型    （0 无陈列， 1 现金 ， 2 商品）
+    display_start_month     string          陈列开始月份（当display_type不为0时传入。 格式如'2016-10' ）
+    display_end_month       string          陈列结束月份（当display_type不为0时传入。 格式如'2016-12' ）
+    display_fee             array           陈列费用（当display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
+    mortgage_goods          array           抵费商品 （当display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
 
     business_address字段子集说明
 
@@ -408,8 +422,9 @@
     display_fee             decimal         陈列费
     order_remark            string          订单备注
     display_remark          string          陈列费备注
-    display_fee             decimal         陈列费
-    mortgage                array           抵费商品列表
+    display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
+    mortgage                array           抵费商品（当客户display_type 为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
+
     
     goods字段子集说明
     
@@ -427,11 +442,6 @@
     
         amount              decimal         退款金额
         num                 string          退货数量
-    
-     mortgage字段子集说明
-        
-        id                      int             抵费商品ID
-        num                     int             数量
 
 
 `成功返回：`
@@ -444,7 +454,55 @@
 `成功返回：`
 	visit               array            该字段为空表示可以添加
 	
-`失败返回：` 	
+`失败返回：`
+
+#### 2.5.5 根据月份获取客户剩余陈列商品 [get] (surplus-mortgage-goods)
+`请求参数：`
+
+    customer_id         int                 客户id
+    month               string              月份（'2016-10'）
+
+`成功返回：`
+
+    surplus             array               客户当月剩余陈列商品数量
+    noConfirm           array               当月陈列商品未审核订单
+
+    surplus字段子集介绍
+
+    id                  int                 陈列费商品id
+    name                string              商品名
+    surplus             int                 剩余量
+    pieces_name         string              单位
+
+    noConfirm字段子集介绍
+
+    id                  int                   订货单号
+    time                timestamp             下单时间
+    mortgageGoods       array                 陈列费列表
+
+`失败返回：`
+
+
+#### 2.5.6 根据月份获取剩余陈列费 [get] (surplus-display-fee)
+`请求参数：`
+
+     customer_id         int                 客户id
+     month               string              月份（'2016-10'）
+
+`成功返回：`
+
+    surplus             decimal             客户当月剩余陈列费
+    noConfirm           array               当月陈列费未审核订单
+
+    noConfirm字段子集介绍
+
+    month                       string              月份
+    used                        decimal             金额
+    sales_man_visit_order       int                 订单号
+    created_at                  timestamp           下单时间
+
+
+`失败返回：`
 
 ### 2.6 订单模块order
 #### 2.6.1 获取所有订货单[get] (order-forms)
@@ -534,8 +592,8 @@
 `请求参数：`
 
     goods                   array           订单商品列表
-    mortgage                array           陈列商品列表
-    display_fee             decimal         陈列费
+    display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
+    mortgage                array           抵费商品 （当客户display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
     order_remark            string          订单备注
     display_remark          string          陈列费备注
 
@@ -545,11 +603,6 @@
     pieces                  int             商品单位
     price                   decimal         商品单价
     num                     int             商品购买数量
-
-    mortgage子集详情
-
-    id                      int             陈列费商品id
-    num                     int             商品陈列数量
 
 `成功返回：`
 

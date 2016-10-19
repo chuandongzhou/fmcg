@@ -84,11 +84,13 @@
                                 <td colspan="5">现金</td>
                             </tr>
                             <tr>
+                                <td>月份</td>
                                 <td>拜访时间</td>
                                 <td colspan="4">金额</td>
                             </tr>
                             @foreach($visit['display_fee'] as $displayFee)
                                 <tr>
+                                    <td>{{ $displayFee['month'] }}</td>
                                     <td>{{ $displayFee['created_at'] }}</td>
                                     <td colspan="4">{{ $displayFee['display_fee'] }}</td>
                                 </tr>

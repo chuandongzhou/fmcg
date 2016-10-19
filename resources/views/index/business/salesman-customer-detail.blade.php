@@ -46,21 +46,23 @@
     <div class="row sales-details-tabs">
         <div class="col-xs-12">
             <table class="table text-center table-bordered table-middle">
-                @if($orders->count())
+                @if($displayFees->count())
                     <tr>
-                        <td rowspan="{{ ($orders->count()+ 2) + ($mortgageGoods->count() ? ($mortgageGoods->collapse()->count() + 2) : 0) }}">
+                        <td rowspan="{{ ($displayFees->count()+ 2) + ($mortgageGoods->count() ? ($mortgageGoods->collapse()->count() + 2) : 0) }}">
                             陈列费
                         </td>
                         <td colspan="4">现金</td>
                     </tr>
                     <tr>
-                        <td colspan="2">现金</td>
+                        <td>月份</td>
+                        <td>现金</td>
                         <td colspan="2">拜访时间</td>
                     </tr>
-                    @foreach($orders as $order)
+                    @foreach($displayFees as $displayFee)
                         <tr>
-                            <td colspan="2">{{ $order->display_fee }}</td>
-                            <td colspan="2">{{ $order->created_at }}</td>
+                            <td>{{ $displayFee['month'] }}</td>
+                            <td>{{ $displayFee['used'] }}</td>
+                            <td colspan="2">{{ $displayFee['time'] }}</td>
                         </tr>
                     @endforeach
                 @endif

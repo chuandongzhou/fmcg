@@ -243,6 +243,14 @@ return [
                 'not_pass' => '未审核',
                 'passed' => '已通过'
             ],
+        ],
+        'customer' => [
+            //陈列费
+            'display_type' => [
+                'no' => '暂无',
+                'cash' => '现金',
+                'mortgage' => '陈列商品'
+            ]
         ]
     ]
 ];

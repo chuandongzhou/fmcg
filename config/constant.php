@@ -62,12 +62,6 @@ return [
             'fourth' => 4
         ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
-        'goods' => [
-            'type' => [
-                'order_goods' =>0,
-                'mortgage_goods' =>1
-            ]
-        ],
     ],
     //用户类别
     'user' => [
@@ -403,6 +397,12 @@ return [
             'address_type' => [
                 'business' => 1,
                 'shipping' => 2
+            ],
+            //陈列费
+            'display_type' => [
+                'no' => 0,
+                'cash' => 1,
+                'mortgage' => 2
             ]
         ],
         //订单

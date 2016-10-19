@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class SalesmanCustomer extends Model
 {
     protected $table = 'salesman_customer';
@@ -20,13 +22,18 @@ class SalesmanCustomer extends Model
         'business_address_lat',
         'shipping_address_lng',
         'shipping_address_lat',
+        'display_type',
+        'display_start_month',
+        'display_end_month',
         'display_fee',
+        'mortgage_goods',
         'salesman_id',
         'business_address',
         'shipping_address'
     ];
 
     protected $hidden = ['shop'];
+
 
     /**
      * 模型启动事件
@@ -87,9 +94,11 @@ class SalesmanCustomer extends Model
 
     /**
      * 订单列表
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orders(){
+    public function orders()
+    {
         return $this->hasMany('App\Models\SalesmanVisitOrder');
     }
 
@@ -111,6 +120,39 @@ class SalesmanCustomer extends Model
     public function goods()
     {
         return $this->belongsToMany('App\Models\Goods', 'salesman_customer_sale_goods');
+    }
+
+    /**
+     * 陈列操作记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function displayList()
+    {
+        return $this->hasMany('App\Models\SalesmanCustomerDisplayList');
+    }
+
+    /**
+     * 陈列剩余
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function displaySurplus()
+    {
+        return $this->hasMany('App\Models\SalesmanCustomerDisplaySurplus');
+    }
+
+
+    /**
+     * 陈列费商品
+     *
+     * @return /Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function mortgageGoods()
+    {
+        return $this->belongsToMany('App\Models\MortgageGoods', 'salesman_customer_mortgage')->withPivot([
+            'total',
+        ]);
     }
 
     /**
@@ -139,6 +181,55 @@ class SalesmanCustomer extends Model
         if ($salesmanId) {
             return $query->where('salesman_id', $salesmanId);
         }
+    }
+
+    /**
+     * 查找剩余陈列记录
+     *
+     * @param $query
+     * @param $month
+     * @param int $mortgageGoodsId
+     * @return mixed
+     */
+    public function scopeOfSurplusDisplay($query, $month, $mortgageGoodsId = 0)
+    {
+        if (is_array($mortgageGoodsId)) {
+            return $this->displayList()
+                ->where(['month' => $month])
+                ->whereIn('mortgage_goods_id', $mortgageGoodsId)
+                ->orderBy('id', 'desc');
+        } else {
+            return $this->displayList()->where([
+                'month' => $month,
+                'mortgage_goods_id' => $mortgageGoodsId
+            ])->orderBy('id', 'desc');
+        }
+    }
+
+    /**
+     * 设置陈列商品
+     *
+     * @param $mortgageGoods
+     * @return array
+     */
+    public function setMortgageGoodsAttribute($mortgageGoods)
+    {
+        $result = [];
+        foreach ($mortgageGoods as $id => $num) {
+            $result[$id] = [
+                'total' => $num,
+                'created_at' => Carbon::now(),
+            ];
+        }
+        if ($this->exists) {
+            $this->mortgageGoods()->sync($result);
+        } else {
+            static::created(function ($customer) use ($result) {
+                $customer->mortgageGoods()->sync($result);
+            });
+        }
+
+
     }
 
     /**
@@ -188,10 +279,10 @@ class SalesmanCustomer extends Model
      *
      * @param $account
      */
-   /* public function setAccountAttribute($account)
-    {
-        $this->attributes['shop_id'] = ShopService::getShopIdByAccount($account);
-    }*/
+    /* public function setAccountAttribute($account)
+     {
+         $this->attributes['shop_id'] = ShopService::getShopIdByAccount($account);
+     }*/
 
     /**
      * 获取营业地址
@@ -223,4 +314,6 @@ class SalesmanCustomer extends Model
     {
         return $this->shop_id && $this->shop ? $this->shop->user_name : '';
     }
+
+
 }

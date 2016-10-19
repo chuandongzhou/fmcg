@@ -67,6 +67,7 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
+
         return view('index.business.order-detail', (new BusinessService)->getOrderData($salesmanVisitOrder));
     }
 
