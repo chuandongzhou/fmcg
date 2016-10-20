@@ -72,16 +72,18 @@
                                 <td>
                                     <a class="btn btn-cancel" href="{{ url('business/order/' . $order->id) }}">查看</a>
                                     @if($order->status == cons('salesman.order.status.not_pass'))
-                                        <button type="submit"
-                                                data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                        <a href="javascript:" data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                                                 data-method="put" data-data='{"status" : "1"}'
                                                 class="btn btn-success">通过
-                                        </button>
+                                        </a>
+                                    @else
+                                        <a href="{{ url('business/order/browser-export/' . $order->id) }}" class="btn btn-warning" target="_blank">打印</a>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                     </table>
+
                     <div class="text-right">
                         {!! $orders->render() !!}
                     </div>

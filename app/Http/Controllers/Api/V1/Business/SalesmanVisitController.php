@@ -196,7 +196,7 @@ class SalesmanVisitController extends Controller
             }
             return 'success';
         });
-        return $result === 'success' ? $this->success('拜访记录添加成功') : $this->error($result);
+        return $result === 'success' ? $this->success('拜访记录添加成功') : $this->error(is_string($result) ? $result : '添加拜访记录时出现错误');
     }
 
     /**

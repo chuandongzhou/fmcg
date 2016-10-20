@@ -267,7 +267,7 @@ class Order extends Model
         $payType = $this->attributes['pay_type'];//支付方式
         $payStatus = $this->attributes['pay_status'];//支付状态
         $status = $this->attributes['status'];//订单状态
-        if($status == cons('order.status.invalid')) {
+        if ($status == cons('order.status.invalid')) {
             //作废
             return 0;
         }
@@ -478,6 +478,21 @@ class Order extends Model
         }
         return '';
     }
+
+    /**
+     * 获取买家名联系方式
+     *
+     * @return string
+     */
+    public function getUserContactInfoAttribute()
+    {
+        if ($this->user_id > 0) {
+            return $this->user ? $this->user->shop->contact_info : '';
+        } elseif ($this->salesmanVisitOrder) {
+            return $this->salesmanVisitOrder->customer->contact_info;
+        }
+    }
+
 
     /**
      * 获取买家类型

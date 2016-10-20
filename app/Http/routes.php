@@ -87,6 +87,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->get('export', 'SalesmanVisitOrderController@export');
             $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
             $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+            $router->get('browser-export/{salesman_visit_order}', 'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
     });

@@ -56,6 +56,14 @@ class SalesmanVisitOrderController extends Controller
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
 
+    public function browserExport(SalesmanVisitOrder $salesmanVisitOrder){
+        if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+            return $this->error('订单不存在');
+        }
+
+        return view('index.business.order-print', (new BusinessService)->getOrderData($salesmanVisitOrder));
+    }
+
     /**
      * 订单详情
      *

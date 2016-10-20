@@ -26,7 +26,7 @@
                     <tr>
                         <td colspan="8" class="text-left">
                             购买单位 {{ $order->user_shop_name }} &nbsp;&nbsp;&nbsp;&nbsp;联系电话
-                            ：{{ $order->shop->contact_person }}-{{ $order->shop->contact_info }}&nbsp;&nbsp;&nbsp;&nbsp;地址
+                            ：{{ $order->user_contact_info }}&nbsp;&nbsp;&nbsp;&nbsp;地址
                             ：{{ $order->shop->address }}
                         </td>
                     </tr>

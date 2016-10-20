@@ -69,6 +69,7 @@ class SalesmanVisitOrderController extends Controller
 
 
         if ($salesmanVisitOrder->can_sync && isset($attributes['status'])) {
+            $this->_updateDisplay([$salesmanVisitOrder]);
             $this->_syncOrders([$salesmanVisitOrder]);
         }
 
@@ -149,7 +150,7 @@ class SalesmanVisitOrderController extends Controller
         if (empty($orderIds)) {
             return $this->error('请选择要通过的订单');
         }
-        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->get();
+        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('salesmanCustomer')->get();
 
         if (Gate::denies('validate-salesman-order', $orders)) {
             return $this->error('存在不合法订单');
@@ -161,6 +162,7 @@ class SalesmanVisitOrderController extends Controller
         if ($result == 'success' && SalesmanVisitOrder::whereIn('id',
                 $orderIds)->update(['status' => cons('salesman.order.status.passed')])
         ) {
+            $this->_updateDisplay($orders);
             return $this->success('操作成功');
         }
 
@@ -496,6 +498,55 @@ class SalesmanVisitOrderController extends Controller
     }
 
     /**
+     * 更新客户陈列费
+     *
+     * @param $salesmanVisitOrders
+     */
+    private function _updateDisplay($salesmanVisitOrders)
+    {
+        foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
+            $displayList = $salesmanVisitOrder->displayList;
+            $salesmanCustomer = $salesmanVisitOrder->salesmanCustomer;
+            if (is_null($displayList)) {
+                continue;
+            }
+            foreach ($displayList as $item) {
+                $displaySurplus = $salesmanCustomer->displaySurplus()->where([
+                    'month' => $item->month,
+                    'mortgage_goods_id' => $item->mortgage_goods
+                ])->first();
+
+                if ($displaySurplus) {
+                    $displaySurplus->decriment('surplus', $item->used);
+                } else {
+                    if ($item->mortgage_goods == 0) {
+                        //陈列费
+                        $salesmanCustomer->displaySurplus()->create([
+                            'month' => $item->month,
+                            'mortgage_goods_id' => 0,
+                            'surplus' => bcsub($salesmanCustomer->display_fee, $item->used)
+                        ]);
+
+                    } else {
+                        //抵费商品
+                        $surplus = $salesmanCustomer->mortgageGoods()->find($item->mortgage_goods);
+
+                        if ($surplus) {
+                            $salesmanCustomer->displaySurplus()->create([
+                                'month' => $item->month,
+                                'mortgage_goods_id' => 0,
+                                'surplus' => bcsub($surplus->pivot->total, $item->used)
+                            ]);
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    /**
      * 更新订单商品
      *
      * @param $salesmanVisitOrder
@@ -561,7 +612,7 @@ class SalesmanVisitOrderController extends Controller
     {
         $amount = 0;
         $orderGoodsArr = [];
-      /*  $mortgageGoodsArr = [];*/
+        /*  $mortgageGoodsArr = [];*/
         if (isset($attributes['goods'])) {
             foreach ($attributes['goods'] as $orderGoods) {
                 $orderGoods['amount'] = bcmul($orderGoods['price'], $orderGoods['num'], 2);
@@ -572,15 +623,15 @@ class SalesmanVisitOrderController extends Controller
                 $amount = bcadd($amount, $orderGoods['amount'], 2);
             }
         }
-      /*  if (isset($attributes['mortgage'])) {
-            foreach ($attributes['mortgage'] as $month => $mortgageGoods) {
-                $mortgageGoodsArr[$mortgageGoods['id']] = [
-                    'num' => $mortgageGoods['num'],
-                    'month' => $mortgageGoods['month'],
-                    'salesman_customer_id' => $order->salesman_customer_id
-                ];
-            }
-        }*/
+        /*  if (isset($attributes['mortgage'])) {
+              foreach ($attributes['mortgage'] as $month => $mortgageGoods) {
+                  $mortgageGoodsArr[$mortgageGoods['id']] = [
+                      'num' => $mortgageGoods['num'],
+                      'month' => $mortgageGoods['month'],
+                      'salesman_customer_id' => $order->salesman_customer_id
+                  ];
+              }
+          }*/
         return compact('amount', 'orderGoodsArr'/*, 'mortgageGoodsArr'*/);
     }
 

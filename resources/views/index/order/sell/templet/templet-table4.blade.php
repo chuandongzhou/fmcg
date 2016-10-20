@@ -17,7 +17,8 @@
                         <td colspan="2" class="text-left">单据编号 ：{{ $order->numbers }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="text-left"> 购买单位 ：{{ $order->user_shop_name }}</td>
+                        <td colspan="2" class="text-left"> 购买单位
+                            ：{{ $order->user_shop_name .'-'. $order->user_contact_info }}</td>
                         <td colspan="4"
                             class="text-left">{{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}</td>
                         <td colspan="2" class="text-left">制单人 ： 管理员</td>

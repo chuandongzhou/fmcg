@@ -33,7 +33,7 @@
         </div>
         <div class="row item">
             <div class="col-xs-4">
-                购买单位 ：{{ $order->user_shop_name }}
+                购买单位 ：{{ $order->user_shop_name .'-'. $order->user_contact_info  }}
             </div>
             <div class="col-xs-4">
                 {{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}

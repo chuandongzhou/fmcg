@@ -143,7 +143,7 @@
     display_start_month     string          陈列开始月份（当display_type不为0时传入。 格式如'2016-10' ）
     display_end_month       string          陈列结束月份（当display_type不为0时传入。 格式如'2016-12' ）
     display_fee             decimal         陈列费用（当display_type 为1时入）
-    mortgage_goods          array           抵费商品 （当display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
+    mortgage_goods          array           抵费商品 （当display_type为2时传入，陈列费商品id=>数量 格式。 如[5=>100]）
 
 
 
@@ -179,9 +179,8 @@
     display_type            tinyint         陈列类型    （0 无陈列， 1 现金 ， 2 商品）
     display_start_month     string          陈列开始月份（当display_type不为0时传入。 格式如'2016-10' ）
     display_end_month       string          陈列结束月份（当display_type不为0时传入。 格式如'2016-12' ）
-    display_fee             array           陈列费用（当display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
-    mortgage_goods          array           抵费商品 （当display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
-
+    display_fee             decimal         陈列费用（当display_type 为1时入）
+    mortgage_goods          array           抵费商品 （当display_type为2时传入，陈列费商品id=>数量 格式。 如[5=>100]）
     business_address字段子集说明
 
     province_id             int             省id

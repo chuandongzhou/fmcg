@@ -359,7 +359,6 @@ class BusinessService
         return $displayFees;
     }
 
-
     /**
      * 获取剩余陈列费
      *
@@ -372,7 +371,7 @@ class BusinessService
         $display = $customer->displaySurplus()->where([
             'month' => $month,
             'mortgage_goods_id' => 0
-        ])->orderBy('id', 'desc')->first();
+        ])->first();
 
         return is_null($display) ? $customer->display_fee : $display->surplus;
     }
@@ -483,29 +482,34 @@ class BusinessService
         foreach ($mortgages as $month => $mortgage) {
             $customerSurplus = $this->surplusMortgageGoods($customer, $month);
             $orderMortgageGoodsNum = 0;
-            foreach ($customerSurplus as $item) {
-                if ($mortgage['id'] == $item['id']) {
+            foreach ($mortgage as $detail) {
+                $flag = false;
+                foreach ($customerSurplus as $item) {
+                    if ($detail['id'] == $item['id']) {
+                        if (!is_null($salesmanVisitOrder)) {
+                            $orderMortgageGoodsNum = $salesmanVisitOrder->displayList()->where([
+                                'month' => $month,
+                                'mortgage_goods_id' => $detail['id']
+                            ])->pluck('used');
+                        }
 
-                    if (!is_null($salesmanVisitOrder)) {
-                        $orderMortgageGoodsNum = $salesmanVisitOrder->displayList()->where([
+                        if ($detail['num'] > bcadd($item['surplus'], $orderMortgageGoodsNum)) {
+                            return false;
+                        }
+                        $displayList[] = new SalesmanCustomerDisplayList([
+                            'salesman_customer_id' => $customer->id,
                             'month' => $month,
-                            'mortgage_goods_id' => $mortgage['id']
-                        ])->pluck('used');
+                            'used' => $detail['num'],
+                            'mortgage_goods_id' => $item['id']
+                        ]);
+                        $flag = true;
+                        break;
                     }
-
-                    if ($mortgage['num'] > bcadd($item['surplus'], $orderMortgageGoodsNum)) {
-                        return false;
-                    }
-                    $displayList[] = new SalesmanCustomerDisplayList([
-                        'salesman_customer_id' => $customer->id,
-                        'month' => $month,
-                        'used' => $mortgage['num'],
-                        'mortgage_goods_id' => $item['id']
-                    ]);
-                    break;
+                }
+                if (!$flag) {
+                    return false;
                 }
             }
-            return false;
 
         }
         return $displayList;
