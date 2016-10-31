@@ -195,7 +195,7 @@ return [
         'discount' => '优惠金额',
         'price_retailer_pick_up' => '终端商自提价格',
         'price_wholesaler_pick_up' => '批发商自提价格',
-        'pieces' => '单位'
+        'pieces' => '单位',
     ],
 
 ];

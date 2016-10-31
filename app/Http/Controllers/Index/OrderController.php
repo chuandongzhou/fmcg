@@ -85,11 +85,9 @@ class OrderController extends Controller
             return redirect('cart')->with('message', '订单信息不合法');
         }
 
-        $redirectUrl = url('order-buy');
-        if ($result['pay_type'] == cons('pay_type.online')) {
-            $query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
-            $redirectUrl = url('order/finish-order' . $query);
-        }
+        //$query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
+        $redirectUrl = url('order/finish-order' /*. $query*/);
+
         return redirect($redirectUrl);
     }
 
@@ -101,35 +99,35 @@ class OrderController extends Controller
      */
     public function getFinishOrder(Request $request)
     {
-        $orderId = $request->input('order_id');
+//        $orderId = $request->input('order_id');
+//
+//        if (is_null($orderId)) {
+//            return redirect(url('order-buy'));
+//        }
+//
+//        $type = $request->input('type');
+//        $field = $type == 'all' ? 'pid' : 'id';
+//
+//        $orders = Order::where($field, $orderId)->get([
+//            'pay_type',
+//            'pay_status',
+//            'user_id',
+//            'pay_way',
+//            'is_cancel',
+//            'price'
+//        ]);
+//        if (Gate::denies('validate-online-orders', $orders)) {
+//            return redirect(url('order-buy'));
+//        }
+//        $balance = (new UserService())->getUserBalance();
 
-        if (is_null($orderId)) {
-            return redirect(url('order-buy'));
-        }
-
-        $type = $request->input('type');
-        $field = $type == 'all' ? 'pid' : 'id';
-
-        $orders = Order::where($field, $orderId)->get([
-            'pay_type',
-            'pay_status',
-            'user_id',
-            'pay_way',
-            'is_cancel',
-            'price'
-        ]);
-        if (Gate::denies('validate-online-orders', $orders)) {
-            return redirect(url('order-buy'));
-        }
-        $balance = (new UserService())->getUserBalance();
-
-        return view('index.order.finish-order',
+        return view('index.order.finish-order'/*,
             [
                 'orderId' => $orderId,
                 'type' => $type,
                 'userBalance' => $balance['availableBalance'],
                 'orderSumPrice' => $orders->sum('price')
-            ]);
+            ]*/);
     }
 
     /**

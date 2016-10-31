@@ -320,7 +320,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             //抵费商品
             $router->group(['prefix' => 'mortgage-goods'], function ($router) {
                 $router->get('/', 'MortgageGoodsController@index');
-                $router->get('all/{salesman_id}', 'MortgageGoodsController@all')->where('salesman_id', '[0-9]+');
                 $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
                 $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
                 $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改

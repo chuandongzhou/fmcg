@@ -76,14 +76,16 @@ class SalesmanCustomerController extends Controller
      */
     public function update(Requests\Api\v1\CreateSalesmanCustomerRequest $request, SalesmanCustomer $customer)
     {
-
-        // dd($request->all());
-
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
         $attributes = $request->all();
         $attributes['letter'] = $this->_getLetter($attributes['name']);
+
+        if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
+            return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
+        }
+
         if ($attributes['account']) {
             $shop = auth()->user()->shop;
 
@@ -109,13 +111,15 @@ class SalesmanCustomerController extends Controller
      */
     public function updateByApp(Requests\Api\v1\CreateSalesmanCustomerRequest $request, SalesmanCustomer $customer)
     {
-        info($request->all());
         if ($customer && $customer->salesman_id != salesman_auth()->id()) {
             return $this->error('客户不存在');
         }
         $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
+        if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
+            return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
+        }
 
         if ($attributes['account']) {
             $shop = salesman_auth()->user()->shop;

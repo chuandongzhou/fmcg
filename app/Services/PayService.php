@@ -170,7 +170,8 @@ class PayService
     public function balancepay($field, $orderId)
     {
         $orders = Order::where($field, $orderId)->get();
-        if (Gate::denies('validate-online-orders', $orders)) {
+
+        if (Gate::denies('validate-payment-orders', $orders)) {
             return false;
         }
 

@@ -56,6 +56,12 @@ class SalesmanVisitOrderController extends Controller
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
 
+    /**
+     * 退货单打印
+     *
+     * @param \App\Models\SalesmanVisitOrder $salesmanVisitOrder
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
     public function browserExport(SalesmanVisitOrder $salesmanVisitOrder){
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');

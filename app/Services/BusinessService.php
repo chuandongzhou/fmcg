@@ -171,6 +171,33 @@ class BusinessService
                 $visitStatistics['order_form_amount'] = isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
                     $order->amount, 2) : $order->amount;
 
+
+                if (!is_null($order->displayList)) {
+
+                    foreach ($order->displayList as $item) {
+                        if ($item->mortgage_goods_id == 0) {
+                            $visitData[$customerId]['display_fee'][] = [
+                                'month' => $item->month,
+                                'created_at' => (string)$item->created_at,
+                                'display_fee' => $item->used
+                            ];
+                        } else {
+                            $month = $item->month;
+                            $mortgage = $item->mortgageGoods;
+                            $visitData[$customerId]['mortgage'][$month][]  = [
+                                'id' => $item->mortgage_goods_id,
+                                'name' => $mortgage->goods_name,
+                                'pieces' => $mortgage->pieces,
+                                'num' => $item->used,
+                                'month' => $item->month,
+                                'created_at' => (string)$item->created_at
+                            ];
+                        }
+                    }
+                }
+
+
+               /* //陈列费
                 if (!is_null($order->displayFees)) {
                     foreach ($order->displayFees as $displayFee) {
                         $visitData[$customerId]['display_fee'][] = [
@@ -180,6 +207,14 @@ class BusinessService
                         ];
                     }
                 }
+
+                $mortgageGoods = $this->getOrderMortgageGoods($order);
+
+                //货抵商品
+                foreach ($mortgageGoods as $mortgage) {
+                    $month = $mortgage['month'];
+                    $visitData[$customerId]['mortgage'][$month][] = $mortgage;
+                }*/
 
             }
 
@@ -256,14 +291,7 @@ class BusinessService
 
             }
 
-            $mortgageGoods = $this->getOrderMortgageGoods($orderForm);
 
-
-            //货抵商品
-            foreach ($mortgageGoods as $mortgage) {
-                $date = (new Carbon($mortgage['created_at']))->toDateString();
-                $visitData[$customerId]['mortgage'][$date][] = $mortgage;
-            }
 
         }
 
@@ -325,7 +353,8 @@ class BusinessService
                         'id' => $good->id,
                         'name' => $good->goods_name,
                         'pieces' => $good->pieces,
-                        'num' => $good->pivot->num,
+                        'num' => $good->pivot->used,
+                        'month' => $good->pivot->month,
                         'created_at' => (string)$order->created_at
                     ]);
                 }

@@ -489,7 +489,7 @@ class Order extends Model
         if ($this->user_id > 0) {
             return $this->user ? $this->user->shop->contact_info : '';
         } elseif ($this->salesmanVisitOrder) {
-            return $this->salesmanVisitOrder->customer->contact_info;
+            return $this->salesmanVisitOrder->salesmanCustomer->contact_information;
         }
     }
 
@@ -683,8 +683,6 @@ class Order extends Model
                 $q->where('pay_type', cons('pay_type.pick_up'))->where('status', cons('order.status.non_send'));
             });
         });
-
-        //return $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
     }
 
     /**
@@ -735,9 +733,7 @@ class Order extends Model
                     //查询未付款
                     $query->where([
                         'pay_status' => cons('order.pay_status.non_payment'),
-                        'status' => cons('order.status.non_send')
-                    ])
-                        ->where('pay_type', cons('pay_type.online'));
+                    ]);
                 } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {
                         $query->where([
@@ -825,7 +821,8 @@ class Order extends Model
      * 查询配送人员
      *
      * @param $query
-     * @param $delivery_id
+     * @param $deliveryMan_id
+     * @return mixed
      */
     public function scopeOfDeliveryMan($query, $deliveryMan_id)
     {

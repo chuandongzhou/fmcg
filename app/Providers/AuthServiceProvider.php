@@ -57,7 +57,7 @@ class AuthServiceProvider extends ServiceProvider
         /**
          * 验证在线付款订单
          */
-        $gate->define('validate-online-orders', function ($user, $orders) {
+        $gate->define('validate-payment-orders', function ($user, $orders) {
             if ($orders instanceof Order) {
                 return $orders->can_payment;
             } else if ($orders instanceof Collection) {

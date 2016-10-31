@@ -218,7 +218,7 @@ class SalesmanVisitController extends Controller
             'orders.orderGoods.goods'
         ]);
         $visitData = head((new BusinessService())->formatVisit([$visit], true)['visitData']);
-        $visitData['mortgage'] = isset($visitData['mortgage']) ? head($visitData['mortgage']) : [];
+        $visitData['mortgage'] = isset($visitData['mortgage']) ? $visitData['mortgage'] : [];
         $visitData['statistics'] = isset($visitData['statistics']) ? array_values($visitData['statistics']) : [];
 
         return $this->success(compact('visitData'));

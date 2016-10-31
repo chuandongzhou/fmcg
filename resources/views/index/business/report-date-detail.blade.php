@@ -106,7 +106,7 @@
                                 <td colspan="5">货抵</td>
                             </tr>
                             <tr>
-                                <td>拜访时间</td>
+                                <td>月份</td>
                                 <td>商品名称</td>
                                 <td>商品单位</td>
                                 <td colspan="2">数量</td>
@@ -120,7 +120,6 @@
                                         <td>{{ $mortgage['name'] }}</td>
                                         <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
                                         <td colspan="2">{{ $mortgage['num'] }}</td>
-
                                     </tr>
                                 @endforeach
                             @endforeach
@@ -149,8 +148,8 @@
                             @endforeach
                             <tr>
                                 <td colspan="6">
-                                    <b>订货总金额 : {{ $visit['amount'] }}</b> &nbsp;&nbsp;<b>退货总金额
-                                        : {{ $visit['return_amount'] }}</b>
+                                    <b>订货总金额 : {{ $visit['amount'] }}</b>
+                                    <b>退货总金额 : {{ $visit['return_amount'] }}</b>
                                 </td>
                             </tr>
                         @endif

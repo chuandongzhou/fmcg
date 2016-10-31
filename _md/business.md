@@ -386,10 +386,9 @@
     customer_name           string          客户名
     contact                 string          联系人
     contact_information     string          联系方式
-    display_fee             decimal         订单陈列费
-    
     statistics              array           订单商品
-    mortgage                array           抵费商品
+    mortgage                array           抵费商品 [月份=>商品信息]
+    display_fee             array           订单陈列费 [月份 => 费用]
     
     statistics字段子集说明
     
@@ -405,20 +404,22 @@
     return_order_num        string          退货数量
     image_url               string          商品图片地址
     
-    mortgage字段子集说明
-    
+    mortgage字段子集（商品信息）说明
+
+    id                      int             商品id
     name                    string          商品名
     num                     int             数量
     pieces                  string          单位
-    
- `失败返回：`   
+    month                   string          月份
+
+ `失败返回：`
+
  
 #### 2.5.3 添加拜访 [post] (/)
 `请求参数：`
 
     salesman_customer_id    int             客户id
     goods                   array           拜访商品列表
-    display_fee             decimal         陈列费
     order_remark            string          订单备注
     display_remark          string          陈列费备注
     display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
@@ -560,7 +561,8 @@
     order字段子集说明
 
     order_goods              array           订货单商品列表
-    mortgage_goods           array           陈列商品列表
+    mortgage                 array           抵费商品 [月份=>商品信息]
+    displayFee               array           订单陈列费 [月份 => 费用]
     order                    array           平台订单详情 （含送货人信息）
     
     order_goods字段子集说明
@@ -576,15 +578,13 @@
 
     name               string          商品名称
 
-    
-    mortgage_goods字段子集说明
-    
-    goods_name              string          商品名
-    pieces                  int             单位id
-	pivot                   object          中间信息
-		
-		pivot字段说明
-		num               int             商品数量
+    mortgage字段子集（商品信息）说明
+
+        id                      int             商品id
+        name                    string          商品名
+        num                     int             数量
+        pieces                  string          单位
+        month                   string          月份
 
 
 #### 2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})

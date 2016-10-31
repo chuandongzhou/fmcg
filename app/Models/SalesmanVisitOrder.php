@@ -12,7 +12,6 @@ class SalesmanVisitOrder extends Model
     protected $fillable = [
         'id',
         'amount',
-        'display_fee',
         'order_id',
         'status',
         'type',
@@ -26,7 +25,9 @@ class SalesmanVisitOrder extends Model
 
     protected $hidden = [
         'updated_at',
-        'order_goods'
+        'order_goods',
+        'display_fee',
+        'display_list'
     ];
 
     protected $appends = ['order_status_name'];

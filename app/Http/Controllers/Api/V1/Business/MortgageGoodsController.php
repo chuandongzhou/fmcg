@@ -12,33 +12,17 @@ use Gate;
 
 class MortgageGoodsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('salesman.auth', ['only' => ['index']]);
-    }
 
     /**
-     * 获取登录用户所有陈列商品
+     * 获取所有陈列商品
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function index()
     {
-        $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->paginate()->toArray();
-        return $this->success(compact('mortgageGoods'));
-    }
+        $shop = salesman_auth()->user() ? salesman_auth()->user()->shop : auth()->user()->shop;
 
-    /**
-     * @param $salesmanId
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function all($salesmanId){
-        $salesman = Salesman::where('shop_id', auth()->user()->shop_id)->find($salesmanId);
-
-        if(is_null($salesman)) {
-            return $this->error('业务员不存在');
-        }
-        $mortgageGoods = $salesman->shop->mortgageGoods()->active()->get()->each(function($mortgage){
+        $mortgageGoods = $shop->mortgageGoods()->active()->get()->each(function($mortgage){
             $mortgage->setAppends(['pieces_name']);
         });
         return $this->success(compact('mortgageGoods'));

@@ -333,6 +333,27 @@ class OrderService
     }
 
     /**
+     * 获取票据单号
+     *
+     * @param $shopId
+     * @return string
+     */
+    public function getNumbers($shopId)
+    {
+        $carbon = (new Carbon());
+        $month = $carbon->copy()->format('Y-m');
+        $day = $carbon->copy()->toDateString();
+
+        $like = $month . '-%';
+
+        $orderCount = Order::where('numbers', 'like', $like)->where('shop_id', $shopId)->count();
+
+        $number = $day . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT);
+        return $number;
+    }
+
+
+    /**
      * 订单提交失败时删除已成功的订单
      *
      * @param $successOrders

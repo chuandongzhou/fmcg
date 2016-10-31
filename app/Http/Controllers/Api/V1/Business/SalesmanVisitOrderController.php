@@ -11,6 +11,7 @@ use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
+use App\Services\OrderService;
 use App\Services\ShippingAddressService;
 use Illuminate\Http\Request;
 use Gate;
@@ -223,7 +224,38 @@ class SalesmanVisitOrderController extends Controller
             }
         ])->find($id);
 
-        $order->type == cons('salesman.order.type.order') && $order->load('mortgageGoods', 'order.deliveryMan');
+        if ($order->type == cons('salesman.order.type.order')) {
+            $order->load('order.deliveryMan');
+            if (!is_null($order->displayList)) {
+                foreach ($order->displayList as $item) {
+                    if ($item->mortgage_goods_id == 0) {
+                        $displayFee[] = [
+                            'month' => $item->month,
+                            'created_at' => (string)$item->created_at,
+                            'display_fee' => $item->used
+                        ];
+                    } else {
+                        $month = $item->month;
+                        $mortgageGoods = $item->mortgageGoods;
+                        $mortgage[$month][] = [
+                            'id' => $item->mortgage_goods_id,
+                            'name' => $mortgageGoods->goods_name,
+                            'pieces' => $mortgageGoods->pieces,
+                            'num' => $item->used,
+                            'month' => $item->month,
+                            'created_at' => (string)$item->created_at
+                        ];
+                    }
+                }
+                if (isset($displayFee)) {
+                    $order->displayFee = $displayFee;
+                }
+                if (isset($mortgage)) {
+                    $order->mortgage = $mortgage;
+                }
+
+            }
+        }
 
         return $this->success(compact('order'));
     }
@@ -317,6 +349,7 @@ class SalesmanVisitOrderController extends Controller
             $attributes['created_at'] = $order->created_at;
 
             $order->delete();
+
             $orderForm = SalesmanVisitOrder::create($attributes);
 
             if ($orderForm->exists) {
@@ -429,19 +462,21 @@ class SalesmanVisitOrderController extends Controller
             $syncConf = cons('salesman.order.sync');
             $orderConf = cons('order');
             $shippingAddressService = new ShippingAddressService();
+            $shopId = auth()->user()->shop_id;
             foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
                 if (!$salesmanVisitOrder->can_sync) {
                     return ['error' => '存在不能同步的订单'];
                 }
                 $orderData = [
                     'user_id' => $salesmanVisitOrder->customer_user_id,
-                    'shop_id' => auth()->user()->shop_id,
+                    'shop_id' => $shopId,
                     'price' => $salesmanVisitOrder->amount,
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],
                     //'pay_status' => $orderConf['pay_status']['payment_success'],
                     'status' => $orderConf['status']['non_send'],
                     'display_fee' => $salesmanVisitOrder->displayFees()->sum('used'),
+                    'numbers' => (new OrderService())->getNumbers($shopId),
                     // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
                     'remark' => '订单备注:' . $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '; 陈列费备注:' . $salesmanVisitOrder->display_remark : '')
@@ -506,20 +541,21 @@ class SalesmanVisitOrderController extends Controller
     {
         foreach ($salesmanVisitOrders as $salesmanVisitOrder) {
             $displayList = $salesmanVisitOrder->displayList;
-            $salesmanCustomer = $salesmanVisitOrder->salesmanCustomer;
+
             if (is_null($displayList)) {
                 continue;
             }
+            $salesmanCustomer = $salesmanVisitOrder->salesmanCustomer;
             foreach ($displayList as $item) {
                 $displaySurplus = $salesmanCustomer->displaySurplus()->where([
                     'month' => $item->month,
-                    'mortgage_goods_id' => $item->mortgage_goods
+                    'mortgage_goods_id' => $item->mortgage_goods_id
                 ])->first();
 
                 if ($displaySurplus) {
                     $displaySurplus->decriment('surplus', $item->used);
                 } else {
-                    if ($item->mortgage_goods == 0) {
+                    if ($item->mortgage_goods_id == 0) {
                         //陈列费
                         $salesmanCustomer->displaySurplus()->create([
                             'month' => $item->month,
@@ -529,12 +565,12 @@ class SalesmanVisitOrderController extends Controller
 
                     } else {
                         //抵费商品
-                        $surplus = $salesmanCustomer->mortgageGoods()->find($item->mortgage_goods);
+                        $surplus = $salesmanCustomer->mortgageGoods()->find($item->mortgage_goods_id);
 
                         if ($surplus) {
                             $salesmanCustomer->displaySurplus()->create([
                                 'month' => $item->month,
-                                'mortgage_goods_id' => 0,
+                                'mortgage_goods_id' => $item->mortgage_goods_id,
                                 'surplus' => bcsub($surplus->pivot->total, $item->used)
                             ]);
                         }
@@ -616,8 +652,8 @@ class SalesmanVisitOrderController extends Controller
         if (isset($attributes['goods'])) {
             foreach ($attributes['goods'] as $orderGoods) {
                 $orderGoods['amount'] = bcmul($orderGoods['price'], $orderGoods['num'], 2);
-                $orderGoods['salesman_visit_id'] = $attributes['salesman_visit_id'];
-                $orderGoods['type'] = $attributes['type'];
+                $orderGoods['salesman_visit_id'] = $order->salesman_visit_id;
+                $orderGoods['type'] = $order->type;
                 $orderGoods['goods_id'] = $orderGoods['id'];
                 $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
                 $amount = bcadd($amount, $orderGoods['amount'], 2);

@@ -252,7 +252,7 @@ class OrderController extends Controller
         if ($this->_syncToBusiness($order) && $order->fill([
                 'status' => cons('order.status.non_send'),
                 'confirm_at' => Carbon::now(),
-                'numbers' => $this->_getNumbers($order->shop_id)
+                'numbers' => (new OrderService())->getNumbers($order->shop_id)
             ])->save()
         ) {
             return $this->success('订单确认成功');
@@ -835,23 +835,5 @@ class OrderController extends Controller
         return $order;
     }
 
-    /**
-     * 获取票据单号
-     *
-     * @param $shopId
-     * @return string
-     */
-    private function _getNumbers($shopId)
-    {
-        $carbon = (new Carbon());
-        $month = $carbon->copy()->format('Y-m');
-        $day = $carbon->copy()->toDateString();
 
-        $like = $month . '-%';
-
-        $orderCount = Order::where('numbers', 'like', $like)->where('shop_id', $shopId)->count();
-
-        $number = $day . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT);
-        return $number;
-    }
 }

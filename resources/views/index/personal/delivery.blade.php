@@ -117,7 +117,7 @@
             checksubmit(site.url('personal/delivery-statistical'));
         });
         $('.search-by-get').click(function () {
-            checksubmit(stie.url('personal/delivery'));
+            checksubmit(site.url('personal/delivery'));
         });
         function checksubmit(url) {
             $("form").attr('action', url);

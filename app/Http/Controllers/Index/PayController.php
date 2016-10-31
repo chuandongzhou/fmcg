@@ -29,7 +29,7 @@ class PayController extends Controller
         $field = $type == 'all' ? 'pid' : 'id';
         $orders = Order::where($field, $orderId)->get();
 
-        if (Gate::denies('validate-online-orders', $orders)) {
+        if (Gate::denies('validate-payment-orders', $orders)) {
             return redirect()->back();
         }
         $alipayConf = getAlipayConfig();
@@ -74,7 +74,7 @@ class PayController extends Controller
         $field = $type == 'all' ? 'pid' : 'id';
         $orders = Order::where($field, $orderId)->get();
 
-        if (Gate::denies('validate-online-orders', $orders)) {
+        if (Gate::denies('validate-payment-orders', $orders)) {
             return redirect()->back();
         }
 

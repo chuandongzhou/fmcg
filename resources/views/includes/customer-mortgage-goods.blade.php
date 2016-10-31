@@ -45,8 +45,7 @@
                     mortgageGoodsList = mortgageGoodsModal.find('.mortgage-goods-list'),
                     addBtn = $('.add-btn');
             mortgageGoodsModal.on('shown.bs.modal', function (e) {
-                var salesmanId = $('#salesman_id').val(),
-                        getUrl = site.api('business/mortgage-goods/all/' + salesmanId);
+                var getUrl = site.api('business/mortgage-goods');
                 $.ajax({
                     url: getUrl,
                     method: 'get'
@@ -70,7 +69,6 @@
                 });
 
                 addBtn.on('click', function () {
-                    //alert(mortgageGoodsList.find('.mortgage-goods-item').length);
                     var mortgageGoodsGroup = $('.mortgage-goods-group'), mortgageGoodsGroupHtml = ''
                     mortgageGoodsList.find('.mortgage-goods-item').each(function () {
                         var obj = $(this), goodsNumInput = obj.find('.goods-num');
