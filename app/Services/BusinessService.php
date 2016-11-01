@@ -173,7 +173,6 @@ class BusinessService
 
 
                 if (!is_null($order->displayList)) {
-
                     foreach ($order->displayList as $item) {
                         if ($item->mortgage_goods_id == 0) {
                             $visitData[$customerId]['display_fee'][] = [

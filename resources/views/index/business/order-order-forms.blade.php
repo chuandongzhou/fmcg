@@ -86,13 +86,13 @@
                                 @else
                                     <a class="btn btn-primary"
                                        href="{{ url('business/order/export?order_id[]=' . $order->id) }}">导出</a>
-                                    @if($order->can_sync)
-                                        <button class="btn btn-warning ajax"
-                                                data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"
-                                                data-method="post">
-                                            同步
-                                        </button>
-                                    @endif
+                                    {{--@if($order->can_sync)--}}
+                                        {{--<button class="btn btn-warning ajax"--}}
+                                                {{--data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"--}}
+                                                {{--data-method="post">--}}
+                                            {{--同步--}}
+                                        {{--</button>--}}
+                                    {{--@endif--}}
                                 @endif
                             </td>
                         </tr>
@@ -107,11 +107,11 @@
                             class="btn batch ajax" type="button">
                         <i class="fa fa-check"></i> 批量通过
                     </button>
-                    <button type="submit" class="btn batch ajax"
-                            data-url="{{ url('api/v1/business/order/batch-sync') }}"
-                            data-method="post">
-                        批量同步
-                    </button>
+                    {{--<button type="submit" class="btn batch ajax"--}}
+                            {{--data-url="{{ url('api/v1/business/order/batch-sync') }}"--}}
+                            {{--data-method="post">--}}
+                        {{--批量同步--}}
+                    {{--</button>--}}
                     <button class="btn batch btn-submit" type="submit" data-url="{{ url('business/order/export') }}">
                         批量导出
                     </button>

@@ -86,7 +86,14 @@ class SalesmanVisitOrderController extends Controller
     public function updateOrderDisplayFee(Request $request)
     {
         $orderId = $request->input('order_id');
-        if (!$orderId || is_null($salesmanVisitOrder = salesman_auth()->user()->orders()->find($orderId))) {
+        if (!$orderId || is_null($salesmanVisitOrder = SalesmanVisitOrder::find($orderId))) {
+            return $this->error('订单不存在');
+        }
+        if (auth()->id()) {
+            if (auth()->user()->shop_id != $salesmanVisitOrder->salesman->shop_id) {
+                return $this->error('订单不存在');
+            }
+        } elseif (salesman_auth()->id() != $salesmanVisitOrder->salesman_id) {
             return $this->error('订单不存在');
         }
         $displayId = $request->input('id');

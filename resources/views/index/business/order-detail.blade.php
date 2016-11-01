@@ -36,7 +36,7 @@
                         <span class="money old-value">{{ $order->order_remark }}</span>
                         <input class="edit-money new-value" data-name="order_remark" type="text"
                                value="{{ $order->order_remark }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-type="edit">编辑</button>
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit" data-url="business/order/{{ $order->id }}">编辑</button>
                     </div>
 
 
@@ -45,7 +45,7 @@
                         <span class="money old-value">{{ $order->display_remark }}</span>
                         <input class="edit-money new-value" data-name="display_remark" type="text"
                                value="{{ $order->display_remark }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-type="edit">编辑</button>
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit" data-url="business/order/{{ $order->id }}">编辑</button>
                     </div>
                 @endif
 
@@ -96,9 +96,8 @@
                 <div class="item text-right"><span class="prompt">总计 : {{ $orderGoods->sum('amount') }}</span></div>
 
                 @if($order->type == cons('salesman.order.type.order'))
-                    <div class="item"><span class="prompt">陈列费 : </span></div>
-
                     @if(!$displayFee->isEmpty())
+                        <div class="item"><span class="prompt">陈列费 : </span></div>
                         @foreach($displayFee as $item)
                             <div class="item">
                                 <span class="prompt">月份 : </span><b>{{ $item->month }} </b>
@@ -106,7 +105,7 @@
                                 <input class="edit-money new-value" data-name="display_fee" data-id="{{ $item->id }}"
                                        type="text"
                                        value="{{ $item->used }}">
-                                <button class="edit-cash btn btn-primary" type="button" data-parse="true"
+                                <button class="edit-cash btn btn-primary" type="button" data-parse="true" data-url="business/order/update-order-display-fee"
                                         data-type="edit">
                                     编辑
                                 </button>
@@ -199,7 +198,7 @@
                 editText: '编辑'
             });
             editCash.click(function () {
-                var self = $(this);
+                var self = $(this),url = self.data('url');
                 if (self.data('type') == "edit") {
                     self.parents(".item").addClass("money-item");
                     self.button("save").data('type', 'save');
@@ -223,10 +222,9 @@
                         data['id'] = id;
                         data['order_id'] = '{{ $order->id }}';
 
-
                         self.button('loading');
                         $.ajax({
-                            url: site.api('business/order/update-order-display-fee'),
+                            url: site.api(url),
                             method: 'put',
                             data: data
                         }).done(function (data, textStatus, jqXHR) {
