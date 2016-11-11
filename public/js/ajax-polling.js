@@ -20,7 +20,7 @@ $(function () {//间隔30s自动加载一次
                                     uri = site.baseUrl + '/order-sell';
                                     break;
                                 default :
-                                    uri = site.baseUrl + '/personal/withdraw';
+                                    uri = site.baseUrl + '/personal/finance/withdraw';
                                     break;
                             }
                             check.attr('href', uri);

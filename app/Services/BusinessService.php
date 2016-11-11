@@ -194,27 +194,6 @@ class BusinessService
                         }
                     }
                 }
-
-
-               /* //陈列费
-                if (!is_null($order->displayFees)) {
-                    foreach ($order->displayFees as $displayFee) {
-                        $visitData[$customerId]['display_fee'][] = [
-                            'month' => $displayFee->month,
-                            'created_at' => (string)$displayFee->created_at,
-                            'display_fee' => $displayFee->used
-                        ];
-                    }
-                }
-
-                $mortgageGoods = $this->getOrderMortgageGoods($order);
-
-                //货抵商品
-                foreach ($mortgageGoods as $mortgage) {
-                    $month = $mortgage['month'];
-                    $visitData[$customerId]['mortgage'][$month][] = $mortgage;
-                }*/
-
             }
 
             if ($returnOrder = $returnOrderForm->first()) {
@@ -258,7 +237,6 @@ class BusinessService
                 if ($goods instanceof SalesmanVisitGoodsRecord) {
                     $customerTypeName = $customer->shop_id && $customer->shop ? array_search($customer->shop->user_type,
                         cons('user.type')) : 'retailer';
-
                 }
                 if ($goods->type == $orderConf['goods']['type']['order']) {
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] + $goods->num : $goods->num;
@@ -287,11 +265,7 @@ class BusinessService
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] : 0;
-
             }
-
-
-
         }
 
         return compact('visitData', 'visitStatistics');
@@ -352,12 +326,11 @@ class BusinessService
                         'id' => $good->id,
                         'name' => $good->goods_name,
                         'pieces' => $good->pieces,
-                        'num' => $good->pivot->used,
+                        'num' => (int)$good->pivot->used,
                         'month' => $good->pivot->month,
                         'created_at' => (string)$order->created_at
                     ]);
                 }
-
             }
         }
         return $mortgagesGoods;
@@ -420,7 +393,6 @@ class BusinessService
         //获取本月剩余陈列商品
         $surplusMortgageGoods = $customer->displaySurplus()->where(['month' => $month])->whereIn('mortgage_goods_id',
             $mortgages->pluck('id'))->orderBy('id', 'desc')->get();
-
         foreach ($mortgages as $mortgage) {
             $flag = false;
             foreach ($surplusMortgageGoods as $item) {
@@ -428,7 +400,7 @@ class BusinessService
                     $surplus[] = [
                         'id' => $mortgage->id,
                         'name' => $mortgage->goods_name,
-                        'surplus' => $item->surplus,
+                        'surplus' => (int)$item->surplus,
                         'pieces_name' => $mortgage->pieces_name
                     ];
                     $flag = true;
@@ -439,7 +411,7 @@ class BusinessService
                 $surplus[] = [
                     'id' => $mortgage->id,
                     'name' => $mortgage->goods_name,
-                    'surplus' => $mortgage->pivot->total,
+                    'surplus' => (int)$mortgage->pivot->total,
                     'pieces_name' => $mortgage->pieces_name
                 ];
             }

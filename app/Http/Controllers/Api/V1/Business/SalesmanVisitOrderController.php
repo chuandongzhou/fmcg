@@ -66,7 +66,7 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
-        $attributes = $request->except('salesman_id', 'start_date', 'end_date');
+        $attributes = $request->except('salesman_id', 'start_date', 'end_date', 'order_id');
 
 
         if ($salesmanVisitOrder->can_sync && isset($attributes['status'])) {
@@ -86,16 +86,13 @@ class SalesmanVisitOrderController extends Controller
     public function updateOrderDisplayFee(Request $request)
     {
         $orderId = $request->input('order_id');
-        if (!$orderId || is_null($salesmanVisitOrder = SalesmanVisitOrder::find($orderId))) {
+
+        $salesmanVisitOrder = $this->_validateOrder($orderId);
+
+        if (!$salesmanVisitOrder) {
             return $this->error('订单不存在');
         }
-        if (auth()->id()) {
-            if (auth()->user()->shop_id != $salesmanVisitOrder->salesman->shop_id) {
-                return $this->error('订单不存在');
-            }
-        } elseif (salesman_auth()->id() != $salesmanVisitOrder->salesman_id) {
-            return $this->error('订单不存在');
-        }
+
         $displayId = $request->input('id');
 
         $display = $salesmanVisitOrder->displayFees()->find($displayId);
@@ -141,9 +138,8 @@ class SalesmanVisitOrderController extends Controller
             $result = $this->_updateOrderGoods($salesmanVisitOrder, $request, $orderGoods);
         }
 
-        return $result === 'success' ? $this->success('修改成功') : $this->error('修改订单时出现问题');
+        return $result === 'success' ? $this->success('修改成功') : $this->error(is_string($result) ? $result : '修改订单时出现问题');
     }
-
 
     /**
      * 订单批量通过
@@ -228,7 +224,8 @@ class SalesmanVisitOrderController extends Controller
         $order = SalesmanVisitOrder::with([
             'orderGoods.goods' => function ($query) {
                 $query->select('id', 'name');
-            }
+            },
+            'displayList'
         ])->find($id);
 
         if ($order->type == cons('salesman.order.type.order')) {
@@ -248,10 +245,11 @@ class SalesmanVisitOrderController extends Controller
                             'id' => $item->mortgage_goods_id,
                             'name' => $mortgageGoods->goods_name,
                             'pieces' => $mortgageGoods->pieces,
-                            'num' => $item->used,
+                            'num' => (int)$item->used,
                             'month' => $item->month,
                             'created_at' => (string)$item->created_at
                         ];
+
                     }
                 }
                 if (isset($displayFee)) {
@@ -266,7 +264,6 @@ class SalesmanVisitOrderController extends Controller
 
         return $this->success(compact('order'));
     }
-
 
     /**
      * 更新订单所有内容 （删除后添加）
@@ -316,7 +313,6 @@ class SalesmanVisitOrderController extends Controller
             'order_remark'=>'测试用',
             'display_remark'=>'测试用'
         ];*/
-
         $order = $this->_validateOrder($orderId);
         if (!$order) {
             return $this->error('订单不存在');
@@ -366,6 +362,7 @@ class SalesmanVisitOrderController extends Controller
                     $orderForm->displayList()->saveMany($validate);
                 }
             }
+
             return 'success';
         });
 
@@ -381,7 +378,6 @@ class SalesmanVisitOrderController extends Controller
     public function destroy($orderId)
     {
         $order = $this->_validateOrder($orderId);
-
         return $order && $order->delete() ? $this->success('订单删除成功') : $this->error('订单不存在或不能删除');
     }
 
@@ -560,7 +556,7 @@ class SalesmanVisitOrderController extends Controller
                 ])->first();
 
                 if ($displaySurplus) {
-                    $displaySurplus->decriment('surplus', $item->used);
+                    $displaySurplus->decrement('surplus', $item->used);
                 } else {
                     if ($item->mortgage_goods_id == 0) {
                         //陈列费
@@ -600,7 +596,7 @@ class SalesmanVisitOrderController extends Controller
     private function _updateOrderGoods($salesmanVisitOrder, $request, $orderGoods = null)
     {
         if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
-            return false;
+            return '订单不存在';
         }
 
         $result = DB::transaction(function () use ($salesmanVisitOrder, $request, $orderGoods) {
@@ -631,12 +627,28 @@ class SalesmanVisitOrderController extends Controller
                 //抵费商品
                 $goodsId = $request->input('id');
                 $num = $request->input('num');
-                if (!$goodsId || !$salesmanVisitOrder->mortgageGoods()->find($goodsId)) {
-                    return false;
+                if (!$goodsId || !$mortgage = $salesmanVisitOrder->mortgageGoods()->find($goodsId)) {
+                    return '陈列商品不存在';
                 }
 
+                $customer = $salesmanVisitOrder->salesmanCustomer;
+
+
+                //获取客户剩余
+                $surplusMortgage = (new BusinessService())->surplusMortgageGoods($customer, $mortgage->pivot->month);
+
+                foreach ($surplusMortgage as $mortgage) {
+                    if ($mortgage['id'] == $goodsId) {
+                        if ($mortgage['surplus'] < $num) {
+                            return '陈列商品数量不能大于当月剩余量';
+                        }
+                        break;
+                    }
+                }
+
+
                 $salesmanVisitOrder->mortgageGoods()->detach($goodsId);
-                $salesmanVisitOrder->mortgageGoods()->attach([$goodsId => ['num' => $num]]);
+                $salesmanVisitOrder->mortgageGoods()->attach([$goodsId => ['used' => $num]]);
             }
 
             return 'success';

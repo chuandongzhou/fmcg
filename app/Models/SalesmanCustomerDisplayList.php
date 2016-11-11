@@ -34,6 +34,16 @@ class SalesmanCustomerDisplayList extends Model
      */
     public function mortgageGoods()
     {
-        return $this->belongsTo('App\Models\MortgageGoods');
+        return $this->belongsTo('App\Models\MortgageGoods')->withTrashed();
+    }
+
+    /**
+     * 格式化使用量
+     *
+     * @return int|mixed
+     */
+    public function getUsedAttributes()
+    {
+        return $this->mortgage_goods_id == 0 ? $this->used : intval($this->used);
     }
 }

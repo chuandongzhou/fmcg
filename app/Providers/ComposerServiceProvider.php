@@ -33,7 +33,7 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.search',
                 'index.shop-search',
                 'index.menu-master',
-                'index.personal.tabs',
+                //'index.personal.tabs',
                 'index.help.master'
             ],
             ProvinceComposer::class => [

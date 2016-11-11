@@ -133,7 +133,14 @@ return [
             'cup' => '杯',
             'branch' => '支',
             'individual' => '个',
-            'canister' => '筒'
+            'canister' => '筒',
+            'row' => '排',
+            'piece' => '件',
+            'pair' => '对',
+            'bowl' => '碗',
+            'pot2' => '壶',
+            'hang' => '挂',
+            'carry' => '提'
         ]
     ],
     // 银行列表

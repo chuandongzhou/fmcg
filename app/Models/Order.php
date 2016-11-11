@@ -14,12 +14,10 @@ class Order extends Model
         'price',
         'pay_type',
         'pay_way',
-        //'receive_mode',
         'remark',
         'pay_status',
         'status',
         'shipping_address_id',
-        // 'delivery_man_id',
         'coupon_id',
         'display_fee',
         'user_id',
@@ -351,7 +349,7 @@ class Order extends Model
     public function getCanRefundAttribute()
     {
         return $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
-        && $this->attributes['status'] == cons('order.status.non_confirm');
+        && $this->attributes['status'] == cons('order.status.non_send');
     }
 
     /**
@@ -395,12 +393,6 @@ class Order extends Model
         && $payStatus == $payStatusArr['non_payment']
         && ($status >= $statusArr['non_send'] && $status < $statusArr['finished'])
         && $this->attributes['pay_type'] != cons('pay_type.pick_up');
-        /*
-                return
-                    ($this->attributes['pay_type'] == cons('pay_type.online') || ($this->attributes['pay_type'] == cons('pay_type.cod')) && $this->attributes['status'] == cons('order.status.send'))
-                    && $this->attributes['pay_status'] == cons('order.pay_status.non_payment')
-                    && $this->attributes['status'] == cons('order.status.non_send')
-                    && $this->attributes['is_cancel'] == cons('order.is_cancel.off');*/
     }
 
     /**
@@ -458,7 +450,6 @@ class Order extends Model
                 $discount = bcmul($discount, bcdiv($price, $full, 2), 2);
             }
             return bcsub($price, $discount, 2);
-
         }
 
         return $price;

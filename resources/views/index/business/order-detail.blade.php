@@ -30,13 +30,14 @@
                 <div class="item"><span class="prompt">联系人 : {{ $order->customer_contact }}</span></div>
                 <div class="item"><span class="prompt">收货地址 : {{ $order->shipping_address }}</span></div>
                 @if($order->type == cons('salesman.order.type.order'))
-                    {{--<div class="item"><span class="prompt">订单备注 : {{ $order->order_remark }}</span></div>--}}
                     <div class="item">
                         <span class="prompt">订单备注 : </span>
                         <span class="money old-value">{{ $order->order_remark }}</span>
                         <input class="edit-money new-value" data-name="order_remark" type="text"
                                value="{{ $order->order_remark }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-type="edit" data-url="business/order/{{ $order->id }}">编辑</button>
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit"
+                                data-url="business/order/{{ $order->id }}">编辑
+                        </button>
                     </div>
 
 
@@ -45,7 +46,9 @@
                         <span class="money old-value">{{ $order->display_remark }}</span>
                         <input class="edit-money new-value" data-name="display_remark" type="text"
                                value="{{ $order->display_remark }}">
-                        <button class="edit-cash btn btn-primary" type="button" data-type="edit" data-url="business/order/{{ $order->id }}">编辑</button>
+                        <button class="edit-cash btn btn-primary" type="button" data-type="edit"
+                                data-url="business/order/{{ $order->id }}">编辑
+                        </button>
                     </div>
                 @endif
 
@@ -105,15 +108,14 @@
                                 <input class="edit-money new-value" data-name="display_fee" data-id="{{ $item->id }}"
                                        type="text"
                                        value="{{ $item->used }}">
-                                <button class="edit-cash btn btn-primary" type="button" data-parse="true" data-url="business/order/update-order-display-fee"
+                                <button class="edit-cash btn btn-primary" type="button" data-parse="true"
+                                        data-url="business/order/update-order-display-fee"
                                         data-type="edit">
                                     编辑
                                 </button>
                             </div>
                         @endforeach
                     @endif
-
-
 
                     @if(!$mortgageGoods->isEmpty())
                         <div class="item"><span class="prompt">抵费商品 : </span></div>
@@ -198,7 +200,7 @@
                 editText: '编辑'
             });
             editCash.click(function () {
-                var self = $(this),url = self.data('url');
+                var self = $(this), url = self.data('url');
                 if (self.data('type') == "edit") {
                     self.parents(".item").addClass("money-item");
                     self.button("save").data('type', 'save');
@@ -219,9 +221,10 @@
                         }
 
                         data[name] = newValue;
-                        data['id'] = id;
-                        data['order_id'] = '{{ $order->id }}';
-
+                        if (id > 0) {
+                            data['id'] = id;
+                            data['order_id'] = '{{ $order->id }}';
+                        }
                         self.button('loading');
                         $.ajax({
                             url: site.api(url),

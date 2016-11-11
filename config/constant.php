@@ -219,7 +219,14 @@ return [
             'cup' => 9,
             'branch' => 10,
             'individual' => 11,
-            'canister' => 12
+            'canister' => 12,
+            'row' => 13,
+            'piece' => 14,
+            'pair' => 15,
+            'bowl' => 16,
+            'pot2' => 17,
+            'hang' => 18,
+            'carry' => 19
         ],
         'import_allow_ext' => [
             'xls',

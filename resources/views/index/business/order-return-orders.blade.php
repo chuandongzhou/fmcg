@@ -85,7 +85,7 @@
                     </table>
 
                     <div class="text-right">
-                        {!! $orders->render() !!}
+                        {!! $orders->appends($data)->render() !!}
                     </div>
                     <div class="business-operating">
                         <label><input type="checkbox" class="parent">全选</label>

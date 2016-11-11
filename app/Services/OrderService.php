@@ -234,7 +234,7 @@ class OrderService
                         $orderGoods->goods_id)->first();
                     if ($salesmanVisitOrderGoods) {
                         $salesmanVisitOrderGoods = $salesmanVisitOrderGoods->pivot;
-                        $fill = ['num' => $num];
+                        $fill = ['used' => $num];
                     }
 
                 } else {
@@ -262,7 +262,7 @@ class OrderService
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal,  cons('push_time.msg_life'));
 
             return ['status' => true];
         });

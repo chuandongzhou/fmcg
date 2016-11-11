@@ -283,6 +283,4 @@ class SalesmanVisitOrder extends Model
     {
         return $this->order_id && $this->order ? $this->order->status_name : '';
     }
-
-
 }

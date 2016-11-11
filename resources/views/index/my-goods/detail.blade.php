@@ -50,11 +50,11 @@
                         @else
                             <li>
                                 <span class="prompt">价格(终端商) :</span>
-                                <b class="red">¥{{ $goods->price .' / ' . $goods->pieces  }}</b>
+                                <b class="red">¥{{ $goods->price .' / ' . cons()->valueLang('goods.pieces',$goods->pieces_retailer)  }}</b>
                             </li>
                             <li>
                                 <span class="prompt">价格(批发商) :</span>
-                                <b class="red">¥{{ $goods->price_wholesaler .' / ' . cons()->valueLang('goods.pieces',$goods->pieces_wholesaler)  }}</b>
+                                <b class="red">¥{{ $goods->price_wholesaler .' / ' . $goods->pieces  }}</b>
                             </li>
                         @endif
                         <li><span class="prompt">状态 :</span> <b

@@ -24,4 +24,14 @@ class SalesmanCustomerDisplaySurplus extends Model
     {
         return $this->belongsTo('App\Models\MortgageGoods');
     }
+
+    /**
+     * 格式化剩余量
+     *
+     * @return int|mixed
+     */
+    public function getSurplusAttributes()
+    {
+        return $this->mortgage_goods_id == 0 ? $this->surplus : intval($this->surplus);
+    }
 }

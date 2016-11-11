@@ -27,8 +27,8 @@ class SalesmanVisitOrderController extends Controller
 
         $salesmenId = $salesmen->pluck('id');
         $data = $request->all();
-        $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
-        $orders = (new BusinessService())->getOrders($salesmenId, $data, ['salesmanCustomer', 'salesman', 'order']);
+        $filter = array_merge($data, ['type' => cons('salesman.order.type.order')]);
+        $orders = (new BusinessService())->getOrders($salesmenId, $filter, ['salesmanCustomer', 'salesman', 'order']);
 
         return view('index.business.order-order-forms',
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
@@ -48,9 +48,9 @@ class SalesmanVisitOrderController extends Controller
 
         $salesmenId = $salesmen->pluck('id');
         $data = $request->all();
-        $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
+        $filter = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
 
-        $orders = (new BusinessService())->getOrders($salesmenId, $data);
+        $orders = (new BusinessService())->getOrders($salesmenId, $filter);
 
         return view('index.business.order-return-orders',
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);

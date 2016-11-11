@@ -191,7 +191,7 @@ class MyGoodsController extends Controller
 
         $attributes = [
             'goods_name' => $goods->name,
-            'pieces' => $goods->pieces_retailer,
+            'pieces' => $goods->pieces_id,
             'shop_id' => $shopId
         ];
 

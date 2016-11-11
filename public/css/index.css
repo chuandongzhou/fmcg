@@ -1440,8 +1440,6 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .goods-editor .promotions-msg {
   position: relative; }
-  .goods-editor .promotions-msg input {
-    width: 40%; }
 
 .goods-editor .editor-panel .editor-wrap {
   padding: 10px 15px; }
