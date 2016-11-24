@@ -61,8 +61,14 @@
 
                         var shopPointArray = new Array(), pointArray = new Array();
 
+                        //mp.centerAndZoom(point, 15);
+                        var opts = {
+                            width: 50,     // 信息窗口宽度
+                            height: 25     // 信息窗口高度
+                        };
+
                         for (var i = 0; i < mapData.length; i++) {
-                            var txt = mapData[i]['number'] + " " + mapData[i]['name'], href = mapData[i]['href'] || false;
+                            var txt = mapData[i]['number'] + " " + mapData[i]['name'];
 
                             var shopPoint = new BMap.Point(mapData[i]['businessLng'], mapData[i]['businessLat']);
                             var point = new BMap.Point(mapData[i]['lng'], mapData[i]['lat']);
@@ -78,34 +84,35 @@
                             mp.addOverlay(shopMarker);              // 将标注添加到地图中
                             mp.addOverlay(marker);              // 将标注添加到地图中
 
-                            //mp.centerAndZoom(point, 15);
-                            var opts = {
-                                width: 50,     // 信息窗口宽度
-                                height: 25     // 信息窗口高度
-                            };
-                            var infoWindow = new BMap.InfoWindow(txt, opts);  // 创建信息窗口对象
-                            shopMarker.addEventListener("click", function () {
-                                mp.openInfoWindow(infoWindow, shopPoint); //开启信息窗口
-                            });
-                            marker.addEventListener("click", function () {
-                                mp.openInfoWindow(infoWindow, point); //开启信息窗口
-                            });
+                            addClickHandler(txt, shopMarker);
+                            addClickHandler(txt, marker);
 
                         }
 
-                        var shopPolyline = new BMap.Polyline(shopPointArray, {
+                        function addClickHandler(content, marker) {
+                            marker.addEventListener("click", function (e) {
+                                        openInfo(content, e)
+                                    }
+                            );
+                        }
+
+                        function openInfo(content, e) {
+                            var p = e.target;
+                            var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+                            var infoWindow = new BMap.InfoWindow(content, opts);  // 创建信息窗口对象
+                            mp.openInfoWindow(infoWindow, point); //开启信息窗口
+                        }
+
+                        mp.addOverlay(new BMap.Polyline(shopPointArray, {
                             strokeColor: "red",
                             strokeWeight: 1,
                             strokeOpacity: 0.8
-                        });
-                        var polyline = new BMap.Polyline(pointArray, {
+                        }));
+                        mp.addOverlay(new BMap.Polyline(pointArray, {
                             strokeColor: "blue",
                             strokeWeight: 1,
                             strokeOpacity: 0.8
-                        });
-                        console.log(pointArray);
-                        mp.addOverlay(shopPolyline);
-                        mp.addOverlay(polyline);
+                        }));
 
                         addArrow(shopPolyline, 2, Math.PI / 7, 'red');
                         addArrow(polyline, 2, Math.PI / 7, 'blue');
