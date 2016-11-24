@@ -19,8 +19,9 @@
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="goods_name">商品名称:</label>
 
-                            <div class="col-sm-10 col-md-5">
-                                <input type="text" name="goods_name" class="form-control" placeholder="请输入商品名称"/>
+                            <div class="col-sm-10 col-md-8">
+                                {{--<input type="text" name="goods_name" class="form-control" placeholder="请输入商品名称"/>--}}
+                                <label class="goods-name control-label"></label>
                             </div>
                         </div>
 
@@ -54,7 +55,7 @@
     <script type="text/javascript">
         $(function () {
             var mortgageGoods = $('#mortgageGoodsModal'),
-                    nameControl = mortgageGoods.find('input[name="goods_name"]'),
+                    nameControl = mortgageGoods.find('.goods-name'),
                     piecesControl = mortgageGoods.find('select[name="pieces"]'),
                     submitBtn = mortgageGoods.find('button[type="submit"]');
             mortgageGoods.on('show.bs.modal', function (e) {
@@ -62,7 +63,7 @@
                         name = parent.data('name'),
                         url = parent.data('url'),
                         pieces = parent.data('pieces');
-                nameControl.val(name);
+                nameControl.text(name);
                 piecesControl.val(pieces);
                 submitBtn.data('url', url);
             });

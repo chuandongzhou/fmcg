@@ -419,6 +419,9 @@
 `请求参数：`
 
     salesman_customer_id    int             客户id
+    x_lng                   float           经度
+    y_lat                   float           纬度
+    address                 string          地址
     goods                   array           拜访商品列表
     order_remark            string          订单备注
     display_remark          string          陈列费备注

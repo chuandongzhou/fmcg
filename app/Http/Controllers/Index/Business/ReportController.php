@@ -58,7 +58,7 @@ class ReportController extends Controller
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
             'orders.orderGoods.goods',
-            'orders.mortgageGoods',
+            'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
@@ -79,6 +79,7 @@ class ReportController extends Controller
         $visitFormat = $businessService->formatVisit($visits);
 
         $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
+
 
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,

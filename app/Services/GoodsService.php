@@ -165,7 +165,7 @@ class GoodsService
             }
         }
         return [
-            'goods' => $goods->OfCommonSort(),
+            'goods' => $goods,
             'attrs' => $attrs,
             'searched' => $searched,
             'moreAttr' => $moreAttr

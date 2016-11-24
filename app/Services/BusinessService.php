@@ -147,8 +147,11 @@ class BusinessService
             $visitData[$customerId]['created_at'] = (string)$visit->created_at;
             $visitData[$customerId]['customer_name'] = $customer->name;
             $visitData[$customerId]['contact'] = $customer->contact;
-            $visitData[$customerId]['lng'] = $customer->business_address_lng;
-            $visitData[$customerId]['lat'] = $customer->business_address_lat;
+            $visitData[$customerId]['business_address_lng'] = $customer->business_address_lng;
+            $visitData[$customerId]['business_address_lat'] = $customer->business_address_lat;
+            $visitData[$customerId]['lng'] = $visit->x_lng;
+            $visitData[$customerId]['lat'] = $visit->y_lat;
+            $visitData[$customerId]['address'] = $visit->address;
             $visitData[$customerId]['number'] = $customer->number;
             $visitData[$customerId]['contact_information'] = $customer->contact_information;
             $visitData[$customerId]['shipping_address_name'] = $customer->shipping_address_name;
@@ -187,7 +190,7 @@ class BusinessService
                                 'id' => $item->mortgage_goods_id,
                                 'name' => $mortgage->goods_name,
                                 'pieces' => $mortgage->pieces,
-                                'num' => $item->used,
+                                'num' => (int)$item->used,
                                 'month' => $item->month,
                                 'created_at' => (string)$item->created_at
                             ];
@@ -260,7 +263,7 @@ class BusinessService
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_id'] = $goods->goods_id;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_name'] = $goods instanceof SalesmanVisitGoodsRecord ? $goods->goods->name : $goods->goods_name;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['stock'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->stock : 0;
-                $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : ' - - ';
                 $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] : 0;

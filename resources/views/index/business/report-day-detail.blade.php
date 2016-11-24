@@ -1,6 +1,6 @@
 @extends('index.menu-master')
 @include('includes.timepicker')
-@include('includes.salesman-customer-map')
+@include('includes.salesman-customer-route-map')
 @section('subtitle', '业务管理-业务报告详细')
 
 @section('top-title')
@@ -73,7 +73,8 @@
                             <td>店铺名称</td>
                             <td>联系人</td>
                             <td>联系电话</td>
-                            <td colspan="3">营业地址</td>
+                            <td colspan="2">营业地址</td>
+                            <td>提交地址</td>
                         </tr>
 
                         <tr>
@@ -84,14 +85,19 @@
                             <td>{{ $visit['contact'] }}</td>
                             <td>{{ $visit['contact_information'] }}</td>
 
-                            <td colspan="3">
+                            <td colspan="2">
                                 {{ $visit['shipping_address_name'] }}
                                 <input type="hidden" class="map-data"
+                                       data-business-lng="{{ $visit['business_address_lng'] }}"
+                                       data-business-lat="{{ $visit['business_address_lat'] }}"
                                        data-lng="{{ $visit['lng'] }}"
                                        data-lat="{{ $visit['lat'] }}"
                                        data-number="{{ $visit['visit_id'] }}"
                                        data-name="{{ $visit['customer_name'] }}"
                                 >
+                            </td>
+                            <td>
+                                {{ $visit['address'] }}
                             </td>
                         </tr>
                         @if(isset($visit['display_fee']))
@@ -230,6 +236,8 @@
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');
+                data['businessLng'] = obj.data('businessLng');
+                data['businessLat'] = obj.data('businessLat');
                 data['number'] = '序号' + obj.data('number');
                 data['name'] = obj.data('name');
                 mapData.push(data);

@@ -109,7 +109,10 @@ class SalesmanVisitController extends Controller
 
             ],
             'order_remark' => '',
-            'display_remark' => ''
+            'display_remark' => '',
+            'x_lng' => '',
+            'y_lat' => '',
+            'address' => ''
 
         ];
         dd($data);*/
@@ -124,7 +127,13 @@ class SalesmanVisitController extends Controller
 
         $result = DB::transaction(function () use ($salesman, $data, $customer) {
             $result = $this->_formatData($data);
-            $visit = $salesman->visits()->create(['salesman_customer_id' => $data['salesman_customer_id']]);
+            $visit = $salesman->visits()->create([
+                    'salesman_customer_id' => $data['salesman_customer_id'],
+                    'x_lng' => isset($data['x_lng']) ? $data['x_lng'] : '',
+                    'y_lat' => isset($data['y_lat']) ? $data['y_lat'] : '',
+                    'address' => isset($data['address']) ? $data['address'] : ''
+                ]
+            );
             $orderConf = cons('salesman.order');
             $businessService = new BusinessService();
 
@@ -157,7 +166,6 @@ class SalesmanVisitController extends Controller
                     $orderForm = $salesman->orders()->create($orderForms);
                     if ($orderForm->exists) {
                         $orderGoodsArr = [];
-                        //$mortgageGoodsArr = [];
                         foreach ($orderForms['goods'] as $orderGoods) {
                             $orderGoods['salesman_visit_id'] = $visit->id;
                             $orderGoods['type'] = $orderConf['goods']['type']['order'];

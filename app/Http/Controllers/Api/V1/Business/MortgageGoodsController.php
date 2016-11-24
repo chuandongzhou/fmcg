@@ -80,9 +80,9 @@ class MortgageGoodsController extends Controller
             return $this->error('商品不存在');
         }
 
-        $attributes = $request->all();
+        $pieces = $request->only('pieces');
 
-        return $mortgageGoods->fill($attributes)->save() ? $this->success('修改成功') : $this->error('修改商品时出现问题');
+        return $mortgageGoods->fill($pieces)->save() ? $this->success('修改成功') : $this->error('修改商品时出现问题');
     }
 
     /**

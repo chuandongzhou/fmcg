@@ -241,7 +241,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return !$this->can_export;
+        return $this->status != cons('salesman.order.status.passed');
     }
 
     /**

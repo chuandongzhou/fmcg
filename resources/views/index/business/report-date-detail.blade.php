@@ -78,7 +78,7 @@
                         </tr>
                         @if(isset($visit['display_fee']))
                             <tr>
-                                <td rowspan="{{ (count($visit['display_fee']) ? (count($visit['display_fee']) + 2) : 0) + (isset($visit['mortgage']) ? (count(array_flatten($visit['mortgage']))/5 + 2) : 0) }}">
+                                <td rowspan="{{ (count($visit['display_fee']) ? (count($visit['display_fee']) + 2) : 0) + (isset($visit['mortgage']) ? (count(array_flatten($visit['mortgage']))/6 + 2) : 0) }}">
                                     陈列费
                                 </td>
                                 <td colspan="5">现金</td>
@@ -99,7 +99,7 @@
                         @if(isset($visit['mortgage']))
                             <tr>
                                 @if(!isset($visit['display_fee']))
-                                    <td rowspan="{{ count(array_flatten($visit['mortgage']))/5 + 2 }}">
+                                    <td rowspan="{{ count(array_flatten($visit['mortgage']))/6 + 2 }}">
                                         陈列费
                                     </td>
                                 @endif

@@ -43,6 +43,6 @@ class HomeController extends Controller
 
     public function test()
     {
-
+        dd(auth()->user()->getAuthIdentifier());
     }
 }

@@ -245,19 +245,18 @@
             <label class="col-sm-2 control-label" for="display_fee">抵费商品:</label>
 
             <div class="col-sm-10">
-                <input class="btn btn-default" data-toggle="modal" data-target="#mortgageGoodsModal" value="设置商品" type="button">
+                <input class="btn btn-default" data-toggle="modal" data-target="#mortgageGoodsModal" value="设置商品"
+                       type="button">
 
                 <ul class="mortgage-goods-group">
                     @foreach($salesmanCustomer->mortgageGoods as $mortgageGoods)
                         <li class="clearfix">
                             <label class="control-label col-sm-4 text-left-important">{{ $mortgageGoods->goods_name }}</label><label
-                                    class="control-label col-sm-3">{{ $mortgageGoods->pivot->total }}</label>
+                                    class="control-label col-sm-3">{{ (int)$mortgageGoods->pivot->total  . cons()->valueLang('goods.pieces', $mortgageGoods->pieces) }}</label>
                         </li>
                     @endforeach
                 </ul>
-
             </div>
-
         </div>
 
         <div class="form-group row">

@@ -137,15 +137,15 @@ class SalesmanCustomerController extends Controller
     /**
      * 客户编辑
      *
-     * @param $salesCustomer
+     * @param $salesmanCustomer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($salesCustomer)
+    public function edit($salesmanCustomer)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 
         return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesCustomer]);
+            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer]);
     }
 
     /**
@@ -234,6 +234,7 @@ class SalesmanCustomerController extends Controller
 
         //货抵
         $mortgageGoods = $businessService->getOrderMortgageGoods($orders)->groupBy('created_at');
+
 
         //陈列费
         $displayFees = $businessService ->getOrderDisplayFees($orders);
