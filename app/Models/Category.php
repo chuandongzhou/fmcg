@@ -50,6 +50,15 @@ class Category extends Model
         return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.category'))->ofTime(Carbon::now(),
             100);
     }
+    /**
+     * 左侧广告
+     *
+     * @reeturn mixed
+     */
+    public function leftAdverts(){
+        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.left-category'))->orderBy('id','desc')->ofTime(Carbon::now(),
+            100);
+    }
 
     /**
      * 设置图标

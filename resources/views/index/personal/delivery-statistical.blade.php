@@ -3,85 +3,111 @@
 
 @section('subtitle', '个人中心-配送统计')
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr; <a href="{{ url('personal/delivery') }}">配送历史</a>&rarr;配送统计
-@stop
-@section('css')
-    @parent
-    <style>
-        tr {
-            text-align: center;
-        }
-
-        .notice-bar {
-            margin-bottom: 10px;
-        }
-
-        .back {
-            margin-left: 20px
-        }
-    </style>
+    <a href="{{ url('personal/info') }}">个人中心</a> > <a href="{{ url('personal/delivery') }}">配送历史</a>> <span class="second-level">配送统计</span>
 @stop
 @section('right')
-    <div class="row delivery">
-        <div class="col-sm-12 enter-item notice-bar">
-            <a class="btn btn-default col-xs-1"
-               href="{{ url('personal/delivery-report?'.  http_build_query($search)) }}">下载打印</a>
-            <a class="btn btn-default back" href="javascript:history.back()"><i class="fa fa-reply"></i> 返回</a>
+    <div class="row delivery-statistics">
+        <div class="col-sm-12 operation">
+            <a href="{{  url('personal/delivery?'.  http_build_query(array_except($search , ['num']))) }}"
+               class="btn btn-border-blue"><i class="iconfont icon-fanhui"></i>返回</a>
+            <a href="{{ url('personal/delivery-report?'.  http_build_query($search)) }}" class="btn btn-border-blue">下载打印</a>
         </div>
-        <div class="col-sm-12 table-responsive tables">
-            <table class="table-bordered table">
-                @foreach($data['deliveryMan'] as $key => $deliveryMan)
-                    <tr>
-                        <td>配送人员</td>
-                        <td>{{ $key }}</td>
-                        <td>时间</td>
-                        <td>
-                            @if(!empty($search['start_at']) && empty($search['end_at']))
-                                {{  $search['start_at'] }}至今
-                            @else
-                                {{  $search['start_at'] }}至{{ $search['end_at'] }}
-                            @endif
-                        </td>
-                        <td>配送单数</td>
-                        <td>{{ $deliveryMan['orderNum'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>配送订单总金额</td>
-                        <td>现金</td>
-                        <td>POS机</td>
-                        <td>易宝</td>
-                        <td>支付宝</td>
-                        <td>平台余额</td>
-                    </tr>
-                    <tr>
-                        <td>{{ $deliveryMan['totalPrice'] }}</td>
-                        <td>{{ array_key_exists(0,$deliveryMan['price'])?$deliveryMan['price'][0]:'0.00' }}</td>
-                        <td>{{ array_key_exists(cons('trade.pay_type.pos'),$deliveryMan['price'])?$deliveryMan['price'][cons('trade.pay_type.pos')]:'0.00' }}</td>
-                        <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.yeepay')],$deliveryMan['price'][cons('trade.pay_type.yeepay_wap')],2) }}</td>
-                        <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.alipay_pc')],$deliveryMan['price'][cons('trade.pay_type.alipay')],2) }}</td>
-                        <td>{{ array_key_exists(cons('trade.pay_type.balancepay'),$deliveryMan['price'])?$deliveryMan['price'][cons('trade.pay_type.balancepay')]:'0.00' }}</td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td colspan="6">商品列表</td>
-                </tr>
-                <tr>
-                    <td colspan="2">商品名称</td>
-                    <td colspan="2">商品数量</td>
-                    <td colspan="2">金额</td>
-                </tr>
-                @foreach($data['goods'] as $key => $goods)
-                    @foreach($goods as $k => $detail)
+        <div class="col-sm-12 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>配送人员汇总</b></h3>
+                </div>
+                <div class="panel-container clearfix">
+                    <table class="table table-bordered table-center public-table">
+                        <thead>
                         <tr>
-                            @if(array_keys($goods)[0]==$k)
-                                <td colspan="2" rowspan="{{ count($goods) }}">{{ $key }}</td>
-                            @endif
-                            <td colspan="2">{{ $detail['num'] }}{{ cons()->valueLang('goods.pieces', $k) }}</td>
-                            <td colspan="2">{{ $detail['price'] }}</td>
+                            <th>配送人员</th>
+                            <th>时间</th>
+                            <th>配送单数</th>
+                            <th>配送订单总金额</th>
+                            <th>现金</th>
+                            <th>POS机</th>
+                            <th>易宝</th>
+                            <th>支付宝</th>
+                            <th>平台余额</th>
                         </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($data['deliveryMan'] as $key => $deliveryMan)
+                            <tr>
+                                <td>{{ $key }}</td>
+                                <td> {{  !empty($search['start_at'])?$search['start_at']: $deliveryMan['first_time'] }}
+                                    至{{  !empty($search['end_at'])?$search['end_at']:'今' }}</td>
+                                <td>{{ $deliveryMan['orderNum'] }}</td>
+                                <td>{{ $deliveryMan['totalPrice'] }}</td>
+                                <td>{{ array_key_exists(0,$deliveryMan['price'])?$deliveryMan['price'][0]:'0.00' }}</td>
+                                <td>{{ array_key_exists(cons('trade.pay_type.pos'),$deliveryMan['price'])?$deliveryMan['price'][cons('trade.pay_type.pos')]:'0.00' }}</td>
+                                <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.yeepay')],$deliveryMan['price'][cons('trade.pay_type.yeepay_wap')],2) }}</td>
+                                <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.alipay_pc')],$deliveryMan['price'][cons('trade.pay_type.alipay')],2) }}</td>
+                                <td>{{ array_key_exists(cons('trade.pay_type.balancepay'),$deliveryMan['price'])?$deliveryMan['price'][cons('trade.pay_type.balancepay')]:'0.00' }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-default commodity-summary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>商品汇总</b></h3>
+                </div>
+                <div class="panel-container clearfix">
+
+                    @if(!empty($search['delivery_man_id']) &&  !empty($deliveryNum))
+                        <div class="text-center control-panel">
+                            <select class="control num">
+                                <option value="{{ url('personal/delivery-statistical?'.  http_build_query(array_except($search , ['num']))) }}">全部</option>
+                                @foreach($deliveryNum as $num)
+                                    <option {{ !empty($search['num'])&&$num==$search['num']?'selected':'' }} value="{{ url('personal/delivery-statistical?'.  http_build_query(array_except($search , ['num'])).'&num='.$num) }}"> {{ $num.'人配送' }}</option>
+                                @endforeach
+                            </select>
+                            <button class="btn control btn-border-blue search-by-num">汇总统计</button>
+                        </div>
+                    @endif
+
+                    @foreach($data['goods'] as $deliveryNum => $allgoods)
+                        <table class="table table-bordered table-center public-table">
+                            <thead>
+                            @if(!empty($search['delivery_man_id']))
+                                <tr>
+                                    <td colspan="4" class="delivery-number">{{ $deliveryNum.'人配送' }}</td>
+                                </tr>
+                            @endif
+                            <tr>
+                                <th>商品名称</th>
+                                <th>购买角色</th>
+                                <th>数量</th>
+                                <th>金额</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($allgoods as $goodsName => $goods)
+                                @foreach($goods as $userType => $detail)
+
+                                    @foreach($detail as $goodsPieces=>$goodsDetail)
+                                        <tr>
+                                            @if(array_keys($goods)[0]==$userType && array_keys($detail)[0]==$goodsPieces)
+                                                <td
+                                                        rowspan="{{ count(array_flatten($goods))/2 }}">{{ $goodsName }}</td>
+                                            @endif
+                                            @if(array_keys($detail)[0]==$goodsPieces)
+                                                <td rowspan="{{ count($detail) }}">{{ cons()->valueLang('user.type', cons('user.type.'.$userType)) }}</td>
+                                            @endif
+                                            <td>{{ $goodsDetail['num'].cons()->valueLang('goods.pieces', $goodsPieces) }}</td>
+                                            <td>{{ $goodsDetail['price'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+                            @endforeach
+                            </tbody>
+                        </table>
                     @endforeach
-                @endforeach
-            </table>
+                </div>
+            </div>
         </div>
     </div>
 @stop
@@ -90,6 +116,10 @@
     @parent
     <script type="text/javascript">
         formSubmitByGet();
+        $('.search-by-num').click(function(){
+            var url = $('.num').val();
+            location.href = url;
+        });
     </script>
 @stop
 

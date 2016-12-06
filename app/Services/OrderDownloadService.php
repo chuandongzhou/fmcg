@@ -265,7 +265,7 @@ class OrderDownloadService
 
                     if ($orderGoods['mortgageGoods']->isEmpty()) {
                         $table->addCell($isLandscape ? 2500 : 1750,
-                            $vAlign)->addText($item->remarkGroup['display_fee']);
+                            $vAlign)->addText($item->remarkGroup['display']);
                     } else {
                         $table->addCell(0, $cellRowContinue);
                     }
@@ -454,7 +454,7 @@ class OrderDownloadService
 
                     if ($orderGoods['mortgageGoods']->isEmpty()) {
                         $table->addCell($isLandscape ? 2500 : 1750,
-                            $vAlign)->addText($item->remarkGroup['display_fee']);
+                            $vAlign)->addText($item->remarkGroup['display']);
                     } else {
                         $table->addCell(0, $cellRowContinue);
                     }

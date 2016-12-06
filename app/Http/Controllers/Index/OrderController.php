@@ -85,11 +85,9 @@ class OrderController extends Controller
             return redirect('cart')->with('message', '订单信息不合法');
         }
 
-        $redirectUrl = url('order-buy');
-        if ($result['pay_type'] == cons('pay_type.online')) {
-            $query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
-            $redirectUrl = url('order/finish-order' . $query);
-        }
+        //$query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
+        $redirectUrl = url('order/finish-order' /*. $query*/);
+
         return redirect($redirectUrl);
     }
 
@@ -101,35 +99,35 @@ class OrderController extends Controller
      */
     public function getFinishOrder(Request $request)
     {
-        $orderId = $request->input('order_id');
+//        $orderId = $request->input('order_id');
+//
+//        if (is_null($orderId)) {
+//            return redirect(url('order-buy'));
+//        }
+//
+//        $type = $request->input('type');
+//        $field = $type == 'all' ? 'pid' : 'id';
+//
+//        $orders = Order::where($field, $orderId)->get([
+//            'pay_type',
+//            'pay_status',
+//            'user_id',
+//            'pay_way',
+//            'is_cancel',
+//            'price'
+//        ]);
+//        if (Gate::denies('validate-online-orders', $orders)) {
+//            return redirect(url('order-buy'));
+//        }
+//        $balance = (new UserService())->getUserBalance();
 
-        if (is_null($orderId)) {
-            return redirect(url('order-buy'));
-        }
-
-        $type = $request->input('type');
-        $field = $type == 'all' ? 'pid' : 'id';
-
-        $orders = Order::where($field, $orderId)->get([
-            'pay_type',
-            'pay_status',
-            'user_id',
-            'pay_way',
-            'is_cancel',
-            'price'
-        ]);
-        if (Gate::denies('validate-online-orders', $orders)) {
-            return redirect(url('order-buy'));
-        }
-        $balance = (new UserService())->getUserBalance();
-
-        return view('index.order.finish-order',
+        return view('index.order.finish-order'/*,
             [
                 'orderId' => $orderId,
                 'type' => $type,
                 'userBalance' => $balance['availableBalance'],
                 'orderSumPrice' => $orders->sum('price')
-            ]);
+            ]*/);
     }
 
     /**
@@ -175,6 +173,7 @@ class OrderController extends Controller
         $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
         $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
 
+
         return view('index.order.order-statistics', [
             'search' => $search,
             'pay_type' => $payType,
@@ -217,21 +216,95 @@ class OrderController extends Controller
      * @param int $flag
      * @return string
      */
-    private function _pageNav($pageNum, $per, $count, $flag = 0)
+    private function _pageNav($currentPage, $per, $count, $flag = 0)
     {
-        $pageTotal = $count / $per;
+        $pageTotal = ceil($count / $per);
+        $class = $flag == 0 ? "order-page" : "goods-page";
         $html = '';
         if ($pageTotal > 1) {
-            $html .= '<ul class="pager">';
-            if ($pageNum > 1) {
-                $html .= '<li><a class="prev' . $flag . ' search-by-get">上一页</a></li>';
+            //前一页
+            $html .= '<ul class="pagination management-pagination ' . $class . '">';
+            if ($currentPage == 1) {
+                $html .= '<li class="disabled"> <span>«</span></li>';
+
+            } else {
+                $html .= '<li> <a class="prev search-by-get">«</a></li>';
+            }
+            //数字分页
+            if ($pageTotal < 12) {
+                //总页数小于12页
+                for ($i = 0; $i < $pageTotal; $i++) {
+                    if ($i + 1 == $currentPage) {
+                        $html .= '<li class="active" ><span>' . ($i + 1) . '</span></li>';
+                    } else {
+                        $html .= '<li><a class="search-by-get">' . ($i + 1) . '</a></li>';
+                    }
+                }
+            } else {
+                //总页数大于12页
+                if ($currentPage < 7) {
+                    //当前页在第七页之前
+                    for ($i = 0; $i < 8; $i++) {
+                        if ($i + 1 == $currentPage) {
+                            $html .= '<li class="active" ><span>' . ($i + 1) . '</span></li>';
+                        } else {
+                            $html .= '<li><a class="search-by-get">' . ($i + 1) . '</a></li>';
+                        }
+                    }
+
+                    $html .= '<li class="disabled"  ><span>...</span></li>';
+                    $html .= '<li><a class="search-by-get">' . ($pageTotal - 1) . '</a></li>';
+                    $html .= '<li><a class="search-by-get">' . $pageTotal . '</a></li>';
+
+                } else if ($currentPage >= 7 && $currentPage <= ($pageTotal - 5)) {
+                    //当前页在第7页之后，倒数第六页之前
+                    $html .= '<li><a class="search-by-get">1</a></li>';
+                    $html .= '<li><a class="search-by-get">2</a></li>';
+                    $html .= '<li class="disabled"  ><span>...</span></li>';
+
+                    $html .= '<li><a class="search-by-get">' . ($currentPage - 3) . '</a></li>';
+                    $html .= '<li ><a class="search-by-get">' . ($currentPage - 2) . '</a></li>';
+                    $html .= '<li ><a class="search-by-get">' . ($currentPage - 1) . '</a></li>';
+                    $html .= '<li  class="active" ><span>' . $currentPage . '</span></li>';
+                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 1) . '</a></li>';
+                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 2) . '</a></li>';
+                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 3) . '</a></li>';
+
+                    $html .= '<li class="disabled"  ><span>...</span></li>';
+                    $html .= '<li><a class="search-by-get">' . ($pageTotal - 1) . '</a></li>';
+                    $html .= '<li><a class="search-by-get">' . $pageTotal . '</a></li>';
+
+
+                } else {
+                    //当前页在倒数第六页之后
+                    $html .= '<li><a class="search-by-get">1</a></li>';
+                    $html .= '<li><a class="search-by-get">2</a></li>';
+                    $html .= '<li class="disabled"  ><span>...</span></li>';
+
+                    for ($i = 8; $i >= 0; $i--) {
+                        if (($pageTotal - $i) == $currentPage) {
+                            $html .= '<li class="active" ><span>' . ($pageTotal - $i) . '</span></li>';
+                        } else {
+                            $html .= '<li><a class="search-by-get">' . ($pageTotal - $i) . '</a></li>';
+                        }
+
+                    }
+
+
+                }
+
+            }
+            //后一页
+            if ($currentPage == $pageTotal) {
+                $html .= '<li class="disabled"> <span>»</span></li>';
+
+            } else {
+                $html .= '<li><a  class="next search-by-get">»</a></li>';
             }
 
-            if ($pageTotal > $pageNum) {
-                $html .= '<li><a class="next' . $flag . ' search-by-get">下一页</a></li>';
-            }
             $html .= '</ul>';
         }
+
 
         return $html;
     }
@@ -294,7 +367,7 @@ class OrderController extends Controller
         }
         //用户名
         if (!empty($search['user_name'])) {
-            if ($user->type == cons('user.type.retailer')) {
+            if ($user->type == cons('user.type.retailer') || $objType) {
                 //查询卖家
                 $query->wherehas('shop', function ($q) use ($search) {
                     $q->where('name', trim($search['user_name']));
@@ -469,8 +542,8 @@ class OrderController extends Controller
         empty($search['goods_name']) ?: $options[] = ["商品名称:", $search['goods_name']];
         if (!empty($search['user_name'])) {
             $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
-            $showObjName = $this->_inputName($objOfShow);
-            $options[] = [$showObjName . ":", $search['user_name']];
+            $showObjName = $this->_getStatisticsType($objOfShow) == 'buyer' ? '买家' : '卖家';
+            $options[] = [$showObjName . ':', $search['user_name']];
         }
 
         /* $searchAddress = array_only($search, ['province_id', 'city_id', 'district_id']);

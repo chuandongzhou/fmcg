@@ -6,12 +6,32 @@
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
+    <style>
+        html,body{ background-color:#f1f1f1; }
+    </style>
 @stop
 
+@section('body')
 
+    <nav class="navbar register-nav">
+        <div class="container padding-clear">
+            <ul class="nav-title pull-left">
+                <li><a class="logo-icon" href="/">
+                        <img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
+                <li class="title">注册</li>
+            </ul>
+            <div class="pull-right right-title">
+                <a href="{{ url('/') }}">订百达首页</a>
+                <a href="{{ url('/about') }}">关于我们</a>
+            </div>
+
+        </div>
+    </nav>
+
+@stop
 @section('footer')
-    <div class="footer">
-        <footer class="panel-footer footer">
+
+        <footer class="panel-footer footer register-footer">
             <div class="container text-center text-muted">
                 <div class="row text-center">
                     <div class="col-xs-6">
@@ -83,7 +103,7 @@
                 </div>
             </div>
         </footer>
-    </div>
+
 @stop
 
 @section('js')

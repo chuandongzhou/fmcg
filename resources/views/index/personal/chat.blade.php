@@ -11,7 +11,7 @@
 
             </ul>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-9 padding-clear">
             <div id="msgWrap"></div>
         </div>
     </div>

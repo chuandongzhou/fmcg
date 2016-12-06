@@ -58,7 +58,7 @@ class ReportController extends Controller
         //拜访记录
         $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
             'orders.orderGoods.goods',
-            'orders.mortgageGoods',
+            'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
@@ -219,6 +219,7 @@ class ReportController extends Controller
         $cellAlignCenter = ['align' => 'center'];
         $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
         $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
+        $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
 
         $phpWord->setDefaultFontName('仿宋');
         $phpWord->setDefaultFontSize(10);
@@ -270,8 +271,16 @@ class ReportController extends Controller
                 $table->addCell(10500, $gridSpan9)->addText('陈列费', ['size' => 20], $cellAlignCenter);
 
                 $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('现金 ：' . $visit['display_fee'][0]['display_fee'], null,
-                    $cellAlignCenter);
+                $table->addCell(0, $gridSpan3)->addText('月份 ', null, $cellAlignCenter);
+                $table->addCell(0, $gridSpan6)->addText('现金 ', null, $cellAlignCenter);
+
+                foreach ($visit['display_fee'] as $item) {
+                    $table->addRow();
+                    $table->addCell(0, $gridSpan3)->addText($item['month'], null, $cellAlignCenter);
+                    $table->addCell(0, $gridSpan6)->addText($item['display_fee'], null, $cellAlignCenter);
+                }
+
+
             }
 
             if (isset($visit['mortgage'])) {
@@ -355,7 +364,7 @@ class ReportController extends Controller
         $cellVAlignCenter = ['valign' => 'center'];
         $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
-        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
+        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
         $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
         $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
@@ -414,15 +423,16 @@ class ReportController extends Controller
 
                 $table->addRow();
                 $table->addCell(null, $cellRowContinue);
+                $table->addCell(2000, $cellVAlignCenter)->addText('月份', null, $cellAlignCenter);
                 $table->addCell(2000, $cellVAlignCenter)->addText('拜访时间', null, $cellAlignCenter);
-                $table->addCell(7300, $gridSpan4)->addText('金额', null, $cellAlignCenter);
+                $table->addCell(5300, $gridSpan3)->addText('金额', null, $cellAlignCenter);
 
                 foreach ($visit['display_fee'] as $displayFee) {
                     $table->addRow();
                     $table->addCell(null, $cellRowContinue);
-                    $table->addCell(2000, $cellVAlignCenter)->addText($displayFee['created_at'], null,
-                        $cellAlignCenter);
-                    $table->addCell(7300, $gridSpan4)->addText($displayFee['display_fee'], null, $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($displayFee['month'], null, $cellAlignCenter);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($displayFee['created_at'], null, $cellAlignCenter);
+                    $table->addCell(5300, $gridSpan3)->addText($displayFee['display_fee'], null, $cellAlignCenter);
                 }
             }
             if (isset($visit['mortgage'])) {

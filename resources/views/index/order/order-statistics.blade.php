@@ -4,24 +4,23 @@
 @section('subtitle', '订单统计')
 @if(request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer'))
 @section('top-title')
-    <a href="{{ url('order-buy') }}">进货管理</a> &rarr;
-    订单统计
+    <a href="{{ url('order-buy') }}">进货管理</a> >
+    <span class="second-level">订单统计</span>
 @stop
 @else
 @section('top-title')
-    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
-    订单统计
+    <a href="{{ url('order-sell') }}">订单管理</a> >
+    <span class="second-level">订单统计</span>
 @stop
 @endif
 
 
 
 @section('right')
-    <div class="row my-goods order-report">
+    <div class="row my-goods order-report margin-clear">
         <div class="col-sm-12 content">
             <form action="{{ url('order/statistics') }}" method="get" autocomplete="off">
                 <div class="col-sm-12 enter-item">
-                    时间段
                     <input class="enter datetimepicker" name="start_at"
                            placeholder="{{ empty($search['start_at'])? '开始时间' : $search['start_at']}}" type="text"
                            value="{{ $search['start_at'] or '' }}">至
@@ -45,25 +44,31 @@
                             @endforeach
                         </select>
                     @endif
-                    <button id="submitBtn" class="btn search-by-get" type="submit">统计</button>
+                    <input type="text" class="enter" name="goods_name" placeholder="商品名称"
+                           value="{{ $search['goods_name'] or '' }}">
+                    <input type="text" class="enter" name="user_name"
+                           placeholder="{{ $statisticsType  ==  'buyer' ? '卖家名称' : '买家名称' }}"
+                           value="{{ $search['user_name'] or '' }}">
+                    <input type="hidden" name="obj_type" value="">
+                    <button id="submitBtn" class="btn btn-blue-lighter search-by-get" type="submit">搜索</button>
                     @unless(empty($statistics))
                         <a id="export" href="{{ url('order/stat-export?'.  http_build_query($search)) }}"
-                           class="btn btn-primary">统计导出</a>
+                           class="btn btn-border-blue">统计导出</a>
                     @endunless
                 </div>
                 <div class="col-sm-12 enter-item">
-
-                    <div class="item">
-                        <p class="check-item">
-                            <input class="show-goods-name" name="show_goods_name"
-                                   type="checkbox" {{ $search['show_goods_name'] ? 'checked' : '' }} value="1">
-                            显示商品
-                        </p>
-                        <input type="text" class="enter" name="goods_name" placeholder="商品名称"
-                               value="{{ $search['goods_name'] or '' }}">
-                        <input type="text" class="enter" name="user_name"
-                               placeholder="{{ $statisticsType  ==  'buyer' ? '卖家名称' : '买家名称' }}"
-                               value="{{ $search['user_name'] or '' }}">
+                    <div class="item display-goods">
+                        是否显示商品
+                        <input type="hidden" id="show-goods-name-inp" name="show_goods_name"
+                               value="{{ $search['show_goods_name'] ?1:0 }}"/>
+                        <div class="btn-tabs">
+                            <button type="button"
+                                    class="show-goods-name btn yes {{ $search['show_goods_name'] ? 'active' : '' }}">是
+                            </button>
+                            <button type="button"
+                                    class="no-show-goods-name btn no {{ $search['show_goods_name'] ? '' : 'active' }}">否
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-12 table-responsive tables">
@@ -101,11 +106,11 @@
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['payment_type'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['status_name'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['created_at'] }}</td>
-                                            <td rowspan="{{ $order->goods->count() }}">¥{{ $order['price'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">￥{{ $order['price'] }}</td>
                                         @endif
                                         <td>{{ $value['id'] }}</td>
                                         <td>{{ $value['name'] }}</td>
-                                        <td>¥{{ $value['pivot']['price'] }}</td>
+                                        <td>￥{{ $value['pivot']['price'] }}</td>
                                         <td>{{ $value['pivot']['num'] }}</td>
                                     </tr>
                                 @endforeach
@@ -118,13 +123,17 @@
                                     <td>{{ $order['payment_type'] }}</td>
                                     <td>{{ $order['status_name'] }}</td>
                                     <td>{{ $order['created_at'] }}</td>
-                                    <td>¥{{ $order['price'] }}</td>
+                                    <td>￥{{ $order['price'] }}</td>
                                 </tr>
                             @endif
                         @endforeach
                         </tbody>
+                        <tfoot>
+                        <td colspan="10" class="text-center">
+                            {!! $orderNav !!}
+                        </td>
+                        </tfoot>
                     </table>
-                    {!! $orderNav !!}
                 </div>
                 <div class="col-sm-12 table-responsive tables">
                     <p class="title-table">商品总计</p>
@@ -149,8 +158,12 @@
                             </tr>
                         @endforeach
                         </tbody>
+                        <tfoot>
+                        <td colspan="5" class="text-center">
+                            {!! $goodsNav !!}
+                        </td>
+                        </tfoot>
                     </table>
-                    {!! $goodsNav !!}
                 </div>
                 <input type="hidden" name="order_page_num" value="{{ $orderCurrent or 1 }}"/>
                 <input type="hidden" name="goods_page_num" value="{{ $goodsCurrent or 1 }}"/>
@@ -166,8 +179,8 @@
                         <td>在线支付订单总金额</td>
                         <td>货到付款订单数</td>
                         <td>货到付款总金额</td>
-                        <td>货到付款实收金额</td>
-                        <td>货到付款未收金额</td>
+                        <td>{{ (request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer')) || auth()->user()->type == cons('user.type.retailer')?'货到付款实付金额':'货到付款实收金额' }}</td>
+                        <td>{{ (request()->input('obj_type')==3 && auth()->user()->type != cons('user.type.retailer')) || auth()->user()->type == cons('user.type.retailer')?'货到付款未付金额':'货到付款未收金额' }}</td>
                     </tr>
                     </thead>
                     <tbody>

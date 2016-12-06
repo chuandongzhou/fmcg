@@ -199,14 +199,14 @@ class GoodsService
             //商品
             $goodsColumns = Category::active()
                 ->where('level', 1)
-                ->with('adverts.image')
+                ->with(['adverts.image', 'leftAdverts.image'])
                 ->get(['id', 'level', 'pid', 'name'])
                 ->each(function ($category) use ($data) {
                     $category->setAppends([]);
                     if ($category->level == 1) {
 
                         $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
-                            if (is_null($advert['province_id'])) {
+                            if (empty($advert['province_id'])) {
                                 return true;
                             }
                             if ($data['province_id'] && $data['city_id']) {
@@ -372,7 +372,7 @@ class GoodsService
             return false;
         }
         foreach ($orderGoodsNum as $goodsId => $goodsNum) {
-                Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
+            Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
         }
         return true;
     }

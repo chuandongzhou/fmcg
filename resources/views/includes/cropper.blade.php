@@ -10,17 +10,19 @@
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="cropperModalLabel">上传图片并进行裁剪<span class="extra-text"></span></h4>
+
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="cropperModalLabel">
+                        上传图片并进行裁剪<span class="extra-text"></span>
+                    </div>
                 </div>
 
                 <div class="modal-body">
                     <div class="progress collapse">
                         <div class="progress-bar progress-bar-striped active"></div>
                     </div>
-                    <span class="btn btn-primary fileinput-button">
+                    <span class="btn btn-success fileinput-button">
                         请选择图片文件
                         <input type="file" name="file" data-url="{{ url('api/v1/file/upload-temp') }}" accept="image/*">
                     </span>
@@ -32,7 +34,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary btn-sm btn-crop" data-error-text="裁剪失败">裁剪并提交
+                    <button type="button" class="btn btn-success btn-sm btn-crop" data-error-text="裁剪失败">裁剪并提交
                     </button>
                 </div>
             </div>

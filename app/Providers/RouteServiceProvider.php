@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\Category' => 'category',
         'App\Models\Shop' => 'shop',
         'App\Models\Promoter' => 'promoter',
-        'App\Models\Advert' => ['advert-index', 'advert-user', 'advert-app', 'advert-category'],
+        'App\Models\Advert' => ['advert-index', 'advert-user', 'advert-app', 'advert-category','advert-left-category'],
         'App\Models\Admin' => 'admin',
         'App\Models\OperationRecord' => 'operation-record',
         'App\Models\Goods' => ['my-goods', 'goods'],

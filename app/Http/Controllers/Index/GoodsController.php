@@ -29,12 +29,12 @@ class GoodsController extends Controller
         }
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->load('images.image')->load('deliveryArea');
-        $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
+        $isGoodsLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
         $shop_id = $goods->shop->id;
+        $isLike  = auth()->user()->likeShops()->where('shop_id', $shop_id)->pluck('id');
         $couponNum = CouponService::shopCouponNum($shop_id);
         $hotGoods = Goods::where('shop_id', $shop_id)->active()->with('images.image')->ofCommonSort()->orderBy('id',
             'DESC')->take(5)->get();
-
         /*  $coordinate = $goods->deliveryArea->each(function ($area) {
               $area->coordinate;
           });*/
@@ -44,7 +44,9 @@ class GoodsController extends Controller
             'isLike' => $isLike,
             'categoriesName' => GoodsService::getGoodsCate($goods),
             'couponNum' => $couponNum,
-            'hotGoods' => $hotGoods
+            'hotGoods' => $hotGoods,
+            'shop' => $goods->shop,
+            'isGoodsLike' => $isGoodsLike
             /*   'coordinates' => $coordinate->toJson()*/
         ]);
     }

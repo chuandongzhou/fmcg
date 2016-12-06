@@ -26,7 +26,7 @@ class SalesmanVisitGoodsRecord extends Model
      */
     public function goods()
     {
-        return $this->belongsTo('App\Models\Goods');
+        return $this->belongsTo('App\Models\Goods')->withTrashed();
     }
 
     /**

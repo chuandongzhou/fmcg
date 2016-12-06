@@ -56,7 +56,6 @@ class YeepayController extends Controller
                     //如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
                     $field = $r8_MP == 'all' ? 'pid' : 'id';
 
-                    info('应答机制成功' . $field);
                     $orders = Order::where($field, $r6_Order)->get()->each(function ($order) {
                         $order->setAppends([]);
                     });

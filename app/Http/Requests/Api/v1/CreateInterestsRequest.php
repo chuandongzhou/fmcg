@@ -15,7 +15,7 @@ class CreateInterestsRequest extends UserRequest
         return [
            'status' => 'required|in:0,1',
             'type' =>'required|in:"goods","shops"',
-            'id' =>'required|numeric'
+            'id' =>'required'
         ];
     }
 }

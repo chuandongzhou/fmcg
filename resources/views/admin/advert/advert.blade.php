@@ -27,7 +27,8 @@
                     <select name="street_id" class="address-street form-control hide useless-control"></select>
                 </div>
             </div>
-
+        @endif
+        @if($type == 'category' || $type == 'left-category')
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">商品分类</label>
 
@@ -40,7 +41,7 @@
                     </select>
                 </div>
             </div>
-        @endif
+       @endif
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">广告名称</label>
 

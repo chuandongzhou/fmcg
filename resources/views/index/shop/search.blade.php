@@ -9,46 +9,52 @@
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
             @if (!empty(array_except($get , ['name', 'sort', 'page', 'city_id', 'district_id', 'street_id'])))
-                <div class="col-sm-12 a-menu-panel">
-                    <div class="sort-item">
-                        <a href="{{ url('shop/' . $shop->id . '/search') }}" class="pull-left all-results"><span
-                                    class="fa fa-th-large"></span>
-                            全部结果 <span class="fa fa-angle-right"></span> </a>
+                <div class="col-sm-12 a-menu-panel padding-clear">
+                    @if (isset($get['category_id']))
+                        <div class="search-list-item sort-item">
+                            @if (isset($get['category_id']))
+                                @foreach($categories as $category)
+                                    @if(isset($category['selected']))
+                                        <div class="sort-list">
+                                            <a class="list-title"
+                                               href="{{ url('shop/' . $shop->id . '/search?category_id='.$category['selected']['level'].$category['selected']['id']) }}"><span
+                                                        class="title-txt">{{  $category['selected']['name']}}</span></a>
+                                        </div>
+                                        <span class="fa fa-angle-right"></span>
+                                    @endif
+                                @endforeach
 
-                        @if (isset($get['category_id']))
-                            @foreach($categories as $category)
+                            @endif
+                            @foreach($searched as $attrId => $name)
                                 <div class="sort-list">
-                                    <a class="list-title" href="javascript:">
-                                        <span class="title-txt">{{ isset($category['selected']) ? $category['selected']['name'] : '请选择' }}</span><i
-                                                class="fa fa-angle-down"></i>
-                                    </a>
-
-                                    <div class="list-wrap">
-                                        @foreach($category as $key => $item)
-                                            <a href="{{ url('shop/' . $shop->id . '/search?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"
-                                               class="btn  control">
-                                                {{ $item['name'] }}
-                                            </a>
-                                        @endforeach
-                                    </div>
+                                    <a class="last-category"
+                                       href="{{ url('shop/' . $shop->id . '/search?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}">
+                                        {{ $name }}
+                                        <i class="fa fa-times"></i></a>
                                 </div>
-                                <span class="fa fa-angle-right"></span>
                             @endforeach
-                        @endif
-
-                        @foreach($searched as $attrId => $name)
-                            <div class="sort-list">
-                                <a class="last-category"
-                                   href="{{ url('shop/' . $shop->id . '/search?' . http_build_query(array_except($get , ['attr_' . $attrId]))) }}"> {{ $name }}
-                                    <i class="fa fa-times"></i></a>
+                            <div class="pull-right search-count">
+                                共找到<span class="count">"{{ $goodsCount }}"</span>个相关商品
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endif
                 </div>
 
             @endif
-            <div class="col-sm-12">
-                @if( !isset($get['category_id']) && !empty($categories))
+            <div class="col-sm-12 padding-clear">
+                @if( isset($get['category_id']) && !empty($categories) && !isset($categories[count($categories)-1]['selected']))
+                    <div class="search-list-item sort-item sort-item-panel">
+                        <span class="pull-left title-name">分类 : </span>
+                        <div class="clearfix all-sort-panel">
+                            <p class="pull-left all-sort">
+                                @foreach($categories[count($categories)-1] as $cate )
+                                    <a href="{{ url('shop/' . $shop->id . '/search?category_id='.$cate['level'].$cate['id']) }}">{{ $cate['name'] }}</a>
+                                @endforeach
+                            </p>
+                            <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>
+                        </div>
+                    </div>
+                @elseif(!isset($get['category_id']) && !empty($categories))
                     <div class="search-list-item sort-item sort-item-panel">
                         <span class="pull-left title-name">分类 : </span>
 
@@ -89,32 +95,32 @@
                 @endforeach
 
                 @if(!empty($moreAttr))
-                    <div class="search-list-item sort-item">
-                        <span class="pull-left title-name">更多筛选项 : </span>
+                    @foreach($moreAttr as $attr)
+                        @if(isset($attr['child']))
+                            <div class="search-list-item sort-item sort-item-panel">
+                                <span class="pull-left title-name">{{ $attr['name'] }} : </span>
 
-                        @foreach($moreAttr as $attr)
-                            <div class="sort-list">
-                                <a class="list-title">{{ $attr['name'] }} <i class="fa fa-angle-down"></i></a>
-
-                                <div class="list-wrap">
-                                    @if(isset($attr['child']))
+                                <div class="clearfix all-sort-panel">
+                                    <p class="pull-left all-sort">
                                         @foreach($attr['child'] as $child)
                                             <a href="{{ url('shop/' . $shop->id . '/search?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
                                         @endforeach
-                                    @endif
+                                    </p>
+                                    <a class="more pull-right" href="#"><span>更多</span> <i
+                                                class="fa fa-angle-down"></i></a>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                        @endif
+                    @endforeach
                 @endif
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 padding-clear">
                 <div class="tab-title clearfix">
                     <p class="pull-left sequence">
                         {{--<a href="{{ url('shop/' . $shop->id . '/search'  . (empty(array_except($get , ['sort'])) ? '' :  '?' . http_build_query(array_except($get , ['sort'])))) }}"--}}
-                           {{--class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>--}}
+                        {{--class="{{!isset($get['sort']) ? 'active' : ''}} control">全部</a>--}}
                         <a href="{{ url('shop/' . $shop->id . '/search?sort=name'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
                            class="{{ isset($get['sort']) && $get['sort'] == 'name' ? 'active' : '' }} control">名称</a>
                         <a href="{{ url('shop/' . $shop->id . '/search?sort=price'  . (empty(array_except($get , ['sort'])) ? '' :  '&' . http_build_query(array_except($get , ['sort'])))) }}"
@@ -123,7 +129,7 @@
                            class="control {{ isset($get['sort']) && $get['sort']=='new' ? 'active' : '' }}">最新</a>
                     </p>
 
-                    <p class="pull-right">
+                    <p class="pull-left area">
                         <span>配送区域</span>
                         <select name="province_id" data-id="{{ $data['province_id'] or 0 }}"
                                 class="address-province address hide"></select>

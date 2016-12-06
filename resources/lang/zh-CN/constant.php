@@ -72,7 +72,8 @@ return [
             'index' => '首页', // 首页(外侧)广告
             'user' => '用户', // 用户(内则)广告
             'app' => 'APP', // app广告(启动页)
-            'category' => '商品分类'
+            'category' => '商品分类',
+            'left-category'=>'商品分类左侧栏'
         ],
     ],
     // 交易相关
@@ -133,7 +134,14 @@ return [
             'cup' => '杯',
             'branch' => '支',
             'individual' => '个',
-            'canister' => '筒'
+            'canister' => '筒',
+            'row' => '排',
+            'piece' => '件',
+            'pair' => '对',
+            'bowl' => '碗',
+            'pot2' => '壶',
+            'hang' => '挂',
+            'carry' => '提'
         ]
     ],
     // 银行列表
@@ -243,6 +251,14 @@ return [
                 'not_pass' => '未审核',
                 'passed' => '已通过'
             ],
+        ],
+        'customer' => [
+            //陈列费
+            'display_type' => [
+                'no' => '暂无',
+                'cash' => '现金',
+                'mortgage' => '陈列商品'
+            ]
         ]
     ]
 ];

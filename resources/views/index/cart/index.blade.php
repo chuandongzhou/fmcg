@@ -4,9 +4,8 @@
 
 @section('container')
 
-    <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
-        {{ csrf_field() }}
-        <div class="container dealer-index index shopping-cart">
+    <div class="container-wrap">
+        <div class="container ">
             <div class="row audit-step-outs">
                 <div class="col-xs-3 step step-active">
                     1.查看购物车
@@ -29,6 +28,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
+        {{ csrf_field() }}
         @if($shops->isEmpty())
             <div class="container table-list-row">
                 <div class="row">
@@ -43,16 +45,17 @@
             </div>
         @else
             <div class="container dealer-index index shopping-cart">
-                <div class="row table-list-row">
-                    @foreach($shops as $shop)
-                        <div class="col-xs-12 table-responsive shopping-table-list">
+                <div class="row table-list-row ">
+                    <div class="col-xs-12 table-responsive shopping-table-list">
+                        @foreach($shops as $shop)
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th>
                                         <div class="check-item">
-                                            <span class="span-checkbox  shop-checkbox"><i
-                                                        class="fa fa-check"></i></span>
+                                    <span class="span-checkbox shop-checkbox">
+                                        <i class="fa fa-check"></i>
+                                    </span>
                                             <input class="inp-checkbox parent-checkbox" type="checkbox" checked>
                                             <a class="shop-name" href="{{ url('shop',['id'=> $shop->id]) }}">
                                                 {{ $shop->name }}
@@ -72,24 +75,21 @@
                                     <tr class="goods-list">
                                         <td>
                                             <div class="check-item">
-                                            <span class="span-checkbox  goods-checkbox"><i
-                                                        class="fa fa-check"></i></span>
+                                    <span class="span-checkbox  goods-checkbox">
+                                        <i class="fa fa-check"></i>
+                                    </span>
                                                 <input class="inp-checkbox" checked name="goods_id[]" rel='reason'
                                                        value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}"
                                                        type="checkbox">
                                             </div>
                                             <img class="avatar" src="{{ $cartGoods->image }}">
-
-                                            <div class="product-panel">
-                                                <a class="product-name ellipsis"
-                                                   href="{{ url('goods', ['id' => $cartGoods->goods->id]) }}"
-                                                   target="_blank">{{ $cartGoods->goods->name }}</a>
+                                            <div class="product-panel" style="width:70%!important;">
+                                                <a class="product-name ellipsis">{{ $cartGoods->goods->name }}</a>
                                                 {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
-
                                         </td>
-                                        <td class="text-center">¥<span
-                                                    class="goods-price">{{ $cartGoods->goods->price . '/' . $cartGoods->goods->pieces}}</span>
+                                        <td class="text-center">￥
+                                            <span class="goods-price">{{ $cartGoods->goods->price . '/' . $cartGoods->goods->pieces}}</span>
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="modified desc-num">-</button>
@@ -99,8 +99,8 @@
                                                    value="{{ $cartGoods->num }}">
                                             <button type="button" class="modified inc-num">+</button>
                                         </td>
-                                        <td class="text-center red">¥<span
-                                                    class="goods-all-money">{{ $cartGoods->goods->price * $cartGoods->num }}</span>
+                                        <td class="text-center red">￥
+                                            <span class="goods-all-money">{{ $cartGoods->goods->price * $cartGoods->num }}</span>
                                         </td>
                                         <td class="text-right">
                                             <a href="javascript:void(0)" data-type="goods" data-method="post"
@@ -116,46 +116,51 @@
                                         </td>
                                     </tr>
                                 @endforeach
-
                                 </tbody>
                                 <tfoot>
                                 <tr>
                                     <td colspan="6" class="text-right">
-                                        <p class="lowest-money">最低配送额 <b class="red money">¥<span
-                                                        class="min-money">{{ $shop->min_money }}</span></b>
+                                        <p class="lowest-money">
+                                            (<span class="prompt"><span class="check-min-money">满足最低配送额￥</span>
+                                        <span class="min-money">{{ $shop->min_money }}</span></span>)
                                         </p>
-
-                                        <p class="total-money">合计金额
-                                            <b class="red money">¥<span class="shop-sum-price"></span></b>
-                                            {{--<b class="red not-enough">(金额不足)</b>--}}
-                                        </p>
+                                        <p class="total-money">合计金额 : <span class="red money">￥<span
+                                                        class="shop-sum-price"></span></span></p>
                                     </td>
                                 </tr>
                                 </tfoot>
                             </table>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <!--<div class="col-xs-4 col-xs-offset-4 cart-empty">-->
+                    <!--<span class="fa fa-shopping-cart car-icon"></span>-->
+                    <!--<ul>-->
+                    <!--<li>你还没有添加商品到购物车哦，赶紧去看看吧~~</li>-->
+                    <!--<li><a>去购物></a></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
                 </div>
                 <div class="row" id="car-bottom"></div>
-                <div class="row clearing text-right clearing-container fixed-bottom">
+                <div class="row clearing text-right  ">
                     <div class="col-xs-6 text-left left-operation">
                         <div class="check-item">
-                            <span class="span-checkbox  check-all"><i class="fa fa-check"></i></span>
+                            <span class="span-checkbox check-all"><i class="fa"></i></span>
+                            <input class="inp-checkbox" type="checkbox">
+                            全选
                         </div>
-                        <a href="javascript:" class="batch-deletion ajax btn padding-clear"
+                        <a href="javascript:" class="batch-deletion ajax padding-clear"
                            data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                     </div>
                     <div class="col-xs-6 padding-clear">
-                        <span class="money">总金额<b class="red">¥<span class="cart-sum-price"></span></b></span>
-
-                        <input id="cartInput" type="submit" value="提交" class="btn submit btn-primary"/>
+                        <span class="money">合计总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
                     </div>
-
+                    <div class="col-xs-12 text-right padding-clear">
+                        <button class="btn submit btn-primary" id="cartInput" type="submit">提交</button>
+                    </div>
                 </div>
             </div>
         @endif
     </form>
-
 @stop
 @section('js')
     @parent

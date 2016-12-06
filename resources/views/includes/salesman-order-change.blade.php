@@ -1,37 +1,39 @@
 @section('body')
     @parent
-    <div class="modal fade in" id="salesmanOrder" tabindex="-1" role="dialog" aria-labelledby="salesmanOrderModalLabel"
+    <div class="modal fade in" id="salesmanOrder" tabindex="-1" role="dialog" aria-labelledby="salesmanModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="myModalLabel">
+                        <span>商品编号111</span>
+                    </div>
+                </div>
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/order/change') }}" method="post"
                       data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id"/>
                     <input type="hidden" name="order_id" disabled/>
+                    <div class="modal-body ">
 
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="cropperModalLabel">订单修改<span class="extra-text"></span></h4>
-                    </div>
-                    <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="price">单价:</label>
+                            <label class="col-sm-2 control-label" for="account"> 单价:</label>
 
-                            <div class="col-sm-10 col-md-5">
-                                <input type="text" name="price" class="form-control" placeholder="请输入单价"/>
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="price" name="price" placeholder="请输入单价"
+                                       type="text">
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="num">数量:</label>
+                            <label class="col-sm-2 control-label" for="password"> 数量:</label>
 
-                            <div class="col-sm-10 col-md-5">
-                                <input type="text" name="num" class="form-control" placeholder="请输入数量"/>
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="num" name="num" placeholder="请输入数量"
+                                      >
                             </div>
                         </div>
-
                         <div class="form-group row hidden">
                             <label class="col-sm-2 control-label " for="amount">退货金额:</label>
 
@@ -39,7 +41,6 @@
                                 <input type="text" name="amount" disabled class="form-control" placeholder="请输入退货金额"/>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="pieces">单位:</label>
 
@@ -52,12 +53,12 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="确定">
-                            确定
-                        </button>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-10 col-md-6">
+                                <button type="submit" class="btn btn-submit btn-success">提交</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

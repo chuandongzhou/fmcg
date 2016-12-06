@@ -7,7 +7,12 @@ class SalesmanVisit extends Model
 {
     protected $table = 'salesman_visit';
 
-    protected $fillable = ['salesman_customer_id'];
+    protected $fillable = [
+        'salesman_customer_id',
+        'x_lng',
+        'y_lat',
+        'address'
+    ];
 
     protected $hidden = ['updated_at'];
 

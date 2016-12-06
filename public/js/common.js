@@ -341,16 +341,13 @@ var commonAjaxSetup = function () {
     // 按钮提交
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
             var self = $(this)
-                , form = self.hasClass('no-form') ? $([]) : self.closest('form')
-                , isButton = self.hasClass('btn');
+                , form = self.hasClass('no-form') ? $([]) : self.closest('form');
 
-            if (isButton) {
-                self.button({
-                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
-                    doneText: '操作成功',
-                    failText: '操作失败'
-                });
-            }
+            self.button({
+                loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+                doneText: '操作成功',
+                failText: '操作失败'
+            });
 
             if (typeof tinymce == 'object') {
                 tinyMCE.triggerSave();
@@ -363,7 +360,7 @@ var commonAjaxSetup = function () {
                 , doneThen = self.data('doneThen') || form.data('doneThen')
                 , doneUrl = self.data('doneUrl') || form.data('doneUrl');
 
-            isButton && self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
+           self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
             form.formValidate('reset');
 
             // 序列化表单
@@ -379,7 +376,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.html(data.message || '操作成功');
+                    self.html(data.message || '操作成功');
                     self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -387,14 +384,14 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.html('操作失败');
+                   self.html('操作失败');
 
                     var json = jqXHR['responseJSON'];
                     if (json) {
                         if (json['id'] == 'invalid_params') {
                             form.formValidate(json['errors']);
                         } else {
-                            isButton && setTimeout(function () {
+                            setTimeout(function () {
                                 self.html(json['message']);
                             }, 0);
                         }
@@ -416,7 +413,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('always.hct.ajax', params)
                     && false !== form.triggerHandler('always.hct.ajax', params)
                     && !preventDefault) {
-                    isButton && self.data('alwaysIntervalId', setTimeout(function () {
+                    self.data('alwaysIntervalId', setTimeout(function () {
                         // 处理刷新事件
                         if (textStatus == 'success') {
                             if (doneUrl) {
@@ -520,9 +517,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-        //, addButton = $('#add-address')
+    //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        //, addLimit = 500   //最大地址限制
+    //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1251,6 +1248,21 @@ var goodsBatchUpload = function () {
                 .children('.progress-bar').css('width', text).html(text);
         }
     });
+}
+
+/**
+ * 显示/隐藏
+ */
+var visibleSelect = function(){
+    $('.visible-select').on('change', function () {
+        var obj = $(this), val = obj.val(), visibleItemSelector = '.visible-item-' + val;
+        $('.visible-item').not(visibleItemSelector).each(function () {
+            $(this).addClass('hidden').find('input , select').prop('disabled', true);
+        });
+        $(visibleItemSelector).each(function () {
+            $(this).removeClass('hidden').find('input , select').prop('disabled', false);
+        })
+    })
 }
 
 

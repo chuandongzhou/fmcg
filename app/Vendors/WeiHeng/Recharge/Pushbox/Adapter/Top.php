@@ -130,6 +130,16 @@ class Top extends Adapter
     }
 
     /**
+     * 发送注册成功短信
+     * @param $text
+     * @return \Tinpont\Pushbox\Adapter
+     */
+    public function pushRegister($text){
+
+        return $this->push(new Message('register', ['code' => $text]));
+    }
+
+    /**
      * 审核用户
      *
      * @param $text

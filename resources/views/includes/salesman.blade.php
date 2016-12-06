@@ -3,10 +3,11 @@
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="cropperModalLabel">添加业务员<span class="extra-text"></span></h4>
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="cropperModalLabel">
+                        添加业务员<span class="extra-text"></span>
+                    </div>
                 </div>
                 <form class="form-horizontal ajax-form"
                       data-help-class="col-sm-push-2 col-sm-10"
@@ -17,7 +18,7 @@
                             <label class="col-sm-2 control-label" for="username">头像:</label>
 
                             <div class="col-sm-10 col-md-6">
-                                <button class="btn btn-primary btn-sm" data-height="128" data-width="128"
+                                <button class="btn btn-success btn-sm" data-height="128" data-width="128"
                                         data-target="#cropperModal" data-toggle="modal" data-name="avatar"
                                         type="button">
                                     本地上传(128x128)
@@ -73,8 +74,8 @@
                         </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-method="post"
+                    <div class="modal-footer middle-footer">
+                        <button class="btn btn-success pull-right" data-method="post"
                                 data-url="{{ url('api/v1/business/salesman' ) }}" type="submit">提交
                         </button>
                     </div>

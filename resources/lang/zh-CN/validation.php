@@ -183,7 +183,10 @@ return [
         'shop_id' => '平台id',
         'contact_information' => '联系方式',
         'business_area' => '营业面积',
+        'display_type' => '陈列方式',
         'display_fee' => '陈列费',
+        'display_start_month' => '开始月份',
+        'display_end_month' => '结束月份',
         'salesman_id' => '业务员',
         'date' => '日期',
         'target' => '目标',
@@ -192,7 +195,7 @@ return [
         'discount' => '优惠金额',
         'price_retailer_pick_up' => '终端商自提价格',
         'price_wholesaler_pick_up' => '批发商自提价格',
-        'pieces' => '单位'
+        'pieces' => '单位',
     ],
 
 ];

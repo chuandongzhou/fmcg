@@ -5,46 +5,39 @@
 @include('includes.order-select-delivery_man')
 
 @section('top-title')
-    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
-    订单列表
+    <a href="{{ url('order-sell') }}">订单管理</a> >
+    <span class="second-level"> 订单列表</span>
 @stop
 
 @section('right')
-    <div class="row wholesalers-management">
+    <div class="row wholesalers-management margin-clear">
         @include('index.order.order-sell-menu')
         <form class="form" method="get" action="{{ url('order-sell') }}" autocomplete="off">
             @if (\Request::is('order-sell'))
                 <div class="col-sm-8 pay-detail search-options">
-                <span class="item control-item">支付方式 :
                     <select name="pay_type" class="ajax-select control">
                         <option value="">全部方式</option>
                         @foreach($pay_type as $key => $value)
                             <option value="{{ $key }}" {{ $key==$search['pay_type'] ? 'selected' : ''}}>{{ $value }}</option>
                         @endforeach
                     </select>
-                </span>
-                    <span class="item control-item">
-                    订单状态 :
-                      <select name="status" class="ajax-select control">
-                          <option value="">全部状态</option>
-                          @foreach(array_except($order_status, 'invalid') as $key => $value)
-                              <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
-                          @endforeach
-                      </select>
-                  </span>
-                    <span class="item">
-                时间段 :
-                <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
-                       data-format="YYYY-MM-DD" value="{{ $search['start_at'] or '' }}"/>　至　
-                <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
-                       data-format="YYYY-MM-DD" value="{{ $search['end_at'] or '' }}"/>
-            </span>
+
+                    <select name="status" class="ajax-select control">
+                        <option value="">全部状态</option>
+                        @foreach(array_except($order_status, 'invalid') as $key => $value)
+                            <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
+                        @endforeach
+                    </select>
+                    <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
+                           data-format="YYYY-MM-DD" value="{{ $search['start_at'] or '' }}"/>　至　
+                    <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"
+                           data-format="YYYY-MM-DD" value="{{ $search['end_at'] or '' }}"/>
                 </div>
                 <div class="col-sm-4 right-search search search-options">
                     <div class="input-group">
                         <input type="text" class="form-control" name="search_content" placeholder="终端商、订单号"
                                aria-describedby="course-search" value="{{ $search['search_content'] or '' }}">
-                        <span class="input-group-btn btn-primary">
+                        <span class="input-group-btn">
                     <button class="btn btn-primary ajax-submit search-by-get">搜索</button>
                 </span>
                     </div>
@@ -55,25 +48,23 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th width="50%">
+                            <th width="15%">
                                 <label>
                                     <input type="checkbox" class="order_id children" name="order_id[]"
-                                           value="{{ $order['id'] }}"> {{ $order['created_at'] }}
+                                           value="{{ $order['id'] }}">
+                                    订单号 :<b>{{ $order['id'] }}</b>
                                 </label>
-                                <span class="order-number">订单号 : {{ $order['id'] }}</span>
+                                <span class="order-number">下单时间 : {{ $order['created_at'] }}</span>
                             </th>
-                            <th width="15%">{{ $order->user_shop_name }}</th>
-                            <th width="10%"></th>
-                            <th>
+                            <th width="25%" colspan="4">
+                                <b>{{ $order->user_shop_name }}</b>
                                 @if ($order->user && $order->user->shop_id)
                                     <a href="javascript:"
                                        onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                       class="contact"><span class="fa fa-commenting-o"></span> 联系客户</a>
+                                       class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
                                 @endif
-                            </th>
-                            <th class="text-right">
                                 @if($order->pay_type != cons('pay_type.pick_up'))
-                                    <a href="javascript:" data-target="#shippingAddressMapModal"
+                                    <a href="javascript:" class="check-address" data-target="#shippingAddressMapModal"
                                        data-toggle="modal"
                                        data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
                                        data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
@@ -92,15 +83,18 @@
                             <tr>
                                 <td>
                                     <img class="store-img" src="{{ $goods->image_url }}">
+
                                     <div class="product-panel">
                                         <a class="product-name ellipsis"
                                            href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
                                         {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
+
                                     </div>
                                 </td>
                                 <td>
                                     <span class="red">¥{{ $goods['pivot']['price'] }}</span>
-                                    / {{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
+                                    /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
+                                </td>
                                 </td>
                                 <td>{{ $goods['pivot']['num'] }}</td>
                                 @if(0 == $key )
@@ -109,11 +103,11 @@
 
                                         <p>{{ $order['payment_type'] }}</p>
 
-                                        <p><span class="red">¥{{ $order['price'] }}</span></p>
+                                        <p><span class="red">￥{{ $order['price'] }}</span></p>
                                     </td>
                                     <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
                                         <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
-                                              class="btn btn-primary">查看</a></p>
+                                              class="btn btn-blue">查看</a></p>
                                         @if(!$order['is_cancel'])
                                             @if($order->can_confirm)
                                                 <p>
@@ -132,17 +126,17 @@
                                                     </a>
                                                 </p>
                                             @elseif($order['can_confirm_collections'])
-                                                <p><a class="btn btn-info ajax" data-method='put'
+                                                <p><a class="btn btn-blue ajax" data-method='put'
                                                       data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                                       data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
                                             @endif
                                             @if($order['can_export'])
                                                 <p>
-                                                    <a class="btn btn-success print" target="_blank"
+                                                    <a class="btn btn-blue-lighter print" target="_blank"
                                                        href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
                                                 </p>
                                                 <p>
-                                                    <a class="btn btn-success"
+                                                    <a class="btn btn-blue-lighter"
                                                        href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
 
                                                     <br>
@@ -152,7 +146,7 @@
                                             @endif
                                             @if($order->can_refund)
                                                 <p>
-                                                    <a class="btn btn-danger refund" data-target="#refund"
+                                                    <a class="btn btn-red refund" data-target="#refund"
                                                        data-toggle="modal"
                                                        data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
                                                         取消并退款
@@ -160,7 +154,7 @@
                                                 </p>
                                             @elseif($order['can_cancel'])
                                                 <p>
-                                                    <a class="btn btn-cancel ajax" data-method='put'
+                                                    <a class="btn btn-red ajax" data-method='put'
                                                        data-url="{{ url('api/v1/order/cancel-sure') }}"
                                                        data-data='{"order_id":{{ $order->id }}}'>
                                                         取消
@@ -168,7 +162,7 @@
                                                 </p>
                                             @elseif($order['can_invalid'])
                                                 <p>
-                                                    <a class="btn btn-danger ajax" data-method='put'
+                                                    <a class="btn btn-red ajax" data-method='put'
                                                        data-url="{{ url('api/v1/order/invalid/' . $order->id) }}">
                                                         作废
                                                     </a>
@@ -192,15 +186,15 @@
             </div>
             @if(\Request::is('order-sell') && $orders->count() )
                 <div class="col-sm-12" id="foot-nav">
-                    <input type="checkbox" class="parent"/>
-                    <button class="btn btn-cancel ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                    <input type="checkbox" class="parent">全选
+                    <button class="btn btn-red ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                             data-method="put">批量取消
                     </button>
-                    <a class="btn btn-warning batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
-                    <button class="btn btn-info ajax btn-receive"
+                    <a class="btn btn-primary" data-target="#sendModal" data-toggle="modal">批量发货</a>
+                    <button class="btn btn-blue ajax btn-receive"
                             data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                     </button>
-                    <a class="btn btn-success export" data-url="{{ url('order-sell/export') }}"
+                    <a class="btn btn-blue-lighter export" data-url="{{ url('order-sell/export') }}"
                        data-method="get">下载
                     </a>
                 </div>

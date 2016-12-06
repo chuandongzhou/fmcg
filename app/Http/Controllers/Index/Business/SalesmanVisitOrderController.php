@@ -27,8 +27,8 @@ class SalesmanVisitOrderController extends Controller
 
         $salesmenId = $salesmen->pluck('id');
         $data = $request->all();
-        $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
-        $orders = (new BusinessService())->getOrders($salesmenId, $data, ['salesmanCustomer', 'salesman', 'order']);
+        $filter = array_merge($data, ['type' => cons('salesman.order.type.order')]);
+        $orders = (new BusinessService())->getOrders($salesmenId, $filter, ['salesmanCustomer', 'salesman', 'order']);
 
         return view('index.business.order-order-forms',
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
@@ -48,12 +48,26 @@ class SalesmanVisitOrderController extends Controller
 
         $salesmenId = $salesmen->pluck('id');
         $data = $request->all();
-        $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
+        $filter = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
 
-        $orders = (new BusinessService())->getOrders($salesmenId, $data);
+        $orders = (new BusinessService())->getOrders($salesmenId, $filter);
 
         return view('index.business.order-return-orders',
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
+    }
+
+    /**
+     * 退货单打印
+     *
+     * @param \App\Models\SalesmanVisitOrder $salesmanVisitOrder
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
+    public function browserExport(SalesmanVisitOrder $salesmanVisitOrder){
+        if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+            return $this->error('订单不存在');
+        }
+
+        return view('index.business.order-print', (new BusinessService)->getOrderData($salesmanVisitOrder));
     }
 
     /**
@@ -67,6 +81,7 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
+
         return view('index.business.order-detail', (new BusinessService)->getOrderData($salesmanVisitOrder));
     }
 

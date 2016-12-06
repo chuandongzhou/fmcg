@@ -85,8 +85,6 @@
     line-height:normal;
     border-radius:4px;
 }
-
-
 .quick_links_panel .mp_qrcode{
     padding:10px;
     width:148px;
@@ -148,7 +146,7 @@
 .quick_links li,.quick_toggle li{position:relative;display:block;left:0;top:0px;}
 .history_list,.leave_message,.mpbtn_histroy,.mpbtn_wdsc,.mpbtn_recharge{margin-bottom:6px;}
 
-.quick_links a:hover, .quick_links a.current,.quick_toggle a:hover{background:#ed145b;text-decoration:none;}
+.quick_links a:hover, .quick_links a.current,.quick_toggle a:hover{background:#F25000;text-decoration:none;}
 .quick_links a.message_list .span{
     width:16px;
     display:block;
@@ -161,7 +159,7 @@
     height:21px;
     display:block;
     border-radius:50%;
-    background:#ed145b;
+    background:#F25000;
     text-align:center;
     line-height:21px;
     margin:9px 0 0 10px;
@@ -252,8 +250,7 @@
     top:0;
     bottom:0;
     _height:expression((document.documentElement.clientHeight-100-40)+"px");
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow:hidden;
 }
 .ibar_cart_group{
     padding:0 20px 0 10px;
@@ -293,18 +290,10 @@
     float:left;
     font-size:14px;
 }
-
-.ibar_cart_group_header a {
-    float: right;
-    color: #ed145b
-}
-
-.ibar_cart_group_header a:hover {
-    text-decoration: underline;
-}
-
-.cart_item {
-    padding: 15px 0;
+.ibar_cart_group_header a{float:right;color:#F25000}
+.ibar_cart_group_header a:hover{text-decoration:underline;}
+.cart_item{
+    padding:5px 0 0 0;
     min-width: 240px;
     min-height: 120px;
 }
@@ -348,7 +337,7 @@
     line-height:24px;
     color:#999;
 }
-.cart_price{color:#ed145b;font-weight:700;font-family:Arial,Helvetica;}
+.cart_price{color:#F25000;font-weight:700;font-family:Arial,Helvetica;}
 .cart_handler{
     position:absolute;
     height:80px;
@@ -358,7 +347,7 @@
 }
 .cart_handler_header{width:260px;margin:8px 10px;float:left;}
 .cart_handler_left{float:left;}
-.cart_handler_right{float:right;font-weight:700;font-size:16px;font-family:Arial;color:#ed145b;}
+.cart_handler_right{float:right;font-weight:700;font-size:16px;font-family:Arial;color:#F25000;}
 .cart_go_btn{
     display:block;
     height:33px;
@@ -368,7 +357,7 @@
     color:#fff!important;
     text-align:center;
     text-decoration:none;
-    background:#ed145b;
+    background:#F25000;
     width:260px;
     margin:0 10px;
     float:left;
@@ -412,7 +401,7 @@
     width:255px;
     margin-left:10px;
 }
-.ibar-history-head a{float:right;color:#ed145b;}
+.ibar-history-head a{float:right;color:#F25000;}
 .ibar-history-head a:hover{text-decoration:underline;}
 .imp_item{
     width:255px;
@@ -439,11 +428,11 @@
     line-height:18px;
 }
 .imp_item .tit a:hover{
-    color:#ed145b;
+    color:#F25000;
     line-height:18px;
 }
 .imp_item .price{
-    color:#ed145b;
+    color:#F25000;
     font-weight:700;
     margin-bottom:10px;
 }
@@ -452,8 +441,8 @@
     font-size:14px;
 }
 .imp_item .imp-addCart{
-    background:#f32166;
-    background:-webkit-linear-gradient(top,#fb2f72,#ed145b);
+    background:#F25000;
+    background:-webkit-linear-gradient(top,#F25000,#F25000);
     color:#fff;
     width:90px;
     height:28px;
@@ -563,7 +552,7 @@ i.ibar_recharge-arrow{
     border-bottom:1px solid #ccc;
     z-index:3;
     position:absolute;
-    top:0px;
+    top:0;
     left:-266px;
     display:none;
 }
@@ -641,7 +630,7 @@ i.ibar_recharge-arrow{
 }
 /*飞入购物车*/
 /*#plist{width:100%;height:auto;float:left;overflow:hidden;padding-top:10px;}*/
-/*#plist li{float:left;width:240px;height:auto;overflow:hidden;padding:0px 20px 20px 0px;}*/
+/*#plis t li{float:left;width:240px;height:auto;overflow:hidden;padding:0px 20px 20px 0px;}*/
 /*#plist .extra{padding:2px 0;height:16px;line-height:16px;overflow:hidden;color:#005aa0;float:left;padding-left:2px;}*/
 /*#plist .extra a{float:left;font-size:12px;}*/
 /*#plist .btns{margin-top:5px;zoom:1;float:left;padding-left:2px;}*/

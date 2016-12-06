@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
          * 要显示的商品
          */
         $gate->define('validate-goods', function ($user, $goods) {
-            return $user->type < $goods->user_type && $goods->status == cons('status.on');
+            return ($user->type < $goods->user_type ||  $user->id==$goods->shop->user_id) && $goods->status == cons('status.on');
         });
 
         /**
@@ -51,13 +51,13 @@ class AuthServiceProvider extends ServiceProvider
          * 验证是否有权限访问店铺
          */
         $gate->define('validate-allow', function ($user, $shop) {
-            return $user->type < $shop->user_type;
+            return $user->type < $shop->user_type || $user->id==$shop->user_id;
         });
 
         /**
          * 验证在线付款订单
          */
-        $gate->define('validate-online-orders', function ($user, $orders) {
+        $gate->define('validate-payment-orders', function ($user, $orders) {
             if ($orders instanceof Order) {
                 return $orders->can_payment;
             } else if ($orders instanceof Collection) {

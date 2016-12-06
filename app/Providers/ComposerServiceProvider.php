@@ -23,7 +23,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composers([
             CategoryComposer::class => [
                 'index.index.index',
-                'index.index-master'
+                'index.index-master',
+                'index.shop-search'
             ],
             UserComposer::class => [
                 'master',
@@ -34,7 +35,13 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.shop-search',
                 'index.menu-master',
                 'index.personal.tabs',
-                'index.help.master'
+                'index.help.master',
+                'index.shop.detail',
+                'includes.goods-list',
+                'index.goods.detail',
+                'index.shop-search',
+                'includes.quick-link',
+                'index.personal.security.security-index'
             ],
             ProvinceComposer::class => [
                 'index.master'

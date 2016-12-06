@@ -2,26 +2,26 @@
 @include('includes.timepicker')
 @section('subtitle', '个人中心-商家信息')
 @section('top-title')
-    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
-    账户余额
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> >
+    <span class="second-level"> 账户余额</span>
 @stop
 @section('right')
     <form method="get" action="{{ url('personal/finance/balance') }}" autocomplete="off">
-        <div class="row">
+        <div class="row balance">
             <div class="col-sm-12 ">
                 @include('index.personal.finance-common')
                 <div class="table">
                     <div class="form-group">
-                        时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
-                                    type="text"
-                                    value="{{ $data['start_time'] or '' }}"> 至
-                        <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
+                        <input class="datetimepicker inline-control control" name="start_time" data-format="YYYY-MM-DD"
+                               type="text"
+                               value="{{ $data['start_time'] or '' }}"> 至
+                        <input class="datetimepicker inline-control control" name="end_time" data-format="YYYY-MM-DD"
                                value="{{ $data['end_time'] or '' }}"
                                type="text">
-                        <input type="submit" class="btn btn-default search-by-get">
+                        <input type="submit" value="提交" class="btn btn-blue-lighter search-by-get">
                     </div>
                     <div class="time form-group">
-                        <table class="table table-bordered table-center">
+                        <table class="table table-bordered table-center public-table">
                             <thead>
                             <tr>
                                 <th>订单号</th>
@@ -36,7 +36,7 @@
                             @foreach($tradeInfo as $trade)
                                 <tr>
                                     <td>{{ $trade->order_id }}</td>
-                                    <td><b class="red">¥{{ $trade->amount }}</b></td>
+                                    <td><b class="red">￥{{ $trade->amount }}</b></td>
                                     <td>{{ $trade->target_fee }}</td>
                                     <td>{{ cons()->valueLang('trade.pay_type' , $trade->pay_type) }}</td>
                                     <td>{{ $trade->trade_no }}</td>
@@ -62,6 +62,7 @@
         $(function () {
             picFunc();
             formSubmitByGet();
+            $("[data-toggle='popover']").popover();
         });
     </script>
 @stop

@@ -56,51 +56,51 @@
                         </li>
 
                         <!--购物车-->
+                        @if($user->type!=cons('user.type.supplier'))
+                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                                <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
+                                   data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span class="badge badge-default cart-badge">{{ $cartNum }}</span>
 
-                        <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                            <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
-                               data-hover="dropdown" data-close-others="true">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span class="badge badge-default cart-badge">{{ $cartNum }}</span>
-
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="external">
-                                    <h3> 最新加入商品</h3>
-                                    <a href="{{ url('cart') }}">去购物车查看</a>
-                                </li>
-                                <li>
-                                    <ul class="dropdown-menu-list scroller cart-detail" style="height: 250px;"
-                                        data-handle-color="#637283">
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <!--最新消息-->
-                        <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
-                               data-hover="dropdown"
-                               data-close-others="true">
-                                <i class="fa fa-commenting-o "></i>
-                                <span class="badge badge-default total-message-count hide">0 </span>
-                            </a>
-                            <br>
-                        </li>
-                        <!--登录名-->
-                        <li class="dropdown dropdown-user">
-                            <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
-                               data-close-others="true">
-                                <img alt="" class="img-circle" src="{{ $user->shop->logo_url }}"/>
-                                <span class="username username-hide-on-mobile">{{ $user->shop_name }}</span>
-                            </a>
-                        </li>
-                        <!--退出登录-->
-                        <li class="dropdown dropdown-extended drop-exit ">
-                            <a href="{{ url('auth/logout') }}">
-                                <i class="icon-logout"></i>
-                            </a>
-                        </li>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="external">
+                                        <h3> 最新加入商品</h3>
+                                        <a href="{{ url('cart') }}">去购物车查看</a>
+                                    </li>
+                                    <li>
+                                        <ul class="dropdown-menu-list scroller cart-detail" style="height: 250px;"
+                                            data-handle-color="#637283">
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            @endif
+                                    <!--最新消息-->
+                            <li class="dropdown dropdown-extended dropdown-inbox quick-sidebar-toggler drop-newmsg">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
+                                   data-hover="dropdown"
+                                   data-close-others="true">
+                                    <i class="fa fa-commenting-o "></i>
+                                    <span class="badge badge-default total-message-count hide">0 </span>
+                                </a>
+                                <br>
+                            </li>
+                            <!--登录名-->
+                            <li class="dropdown dropdown-user">
+                                <a href="{{ url('personal/info') }}" class="dropdown-toggle" data-hover="dropdown"
+                                   data-close-others="true">
+                                    <img alt="" class="img-circle" src="{{ $user->shop->logo_url }}"/>
+                                    <span class="username username-hide-on-mobile">{{ $user->shop_name }}</span>
+                                </a>
+                            </li>
+                            <!--退出登录-->
+                            <li class="dropdown dropdown-extended drop-exit ">
+                                <a href="{{ url('auth/logout') }}">
+                                    <i class="icon-logout"></i>
+                                </a>
+                            </li>
                     </ul>
                 </div>
             </div>

@@ -3,16 +3,21 @@
 @section('title' , '关于我们 | 订百达 - 订货首选')
 
 @section('body')
-    <nav class="navbar login-nav">
-        <div class="container padding-clear register">
-            <ul class="nav-title text-center">
-                <li><a href="{{ url('/') }}">首页</a></li>
-                <li><a class="logo-icon" href="#"><img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li><a href="{{ url('about') }}">关于我们</a></li>
+    <nav class="navbar register-nav">
+        <div class="container padding-clear">
+            <ul class="nav-title pull-left">
+                <li><a class="logo-icon" href="/">
+                        <img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
+                <li class="title">关于我们</li>
             </ul>
+            <div class="pull-right right-title">
+                <a href="{{ url('/') }}">订百达首页</a>
+                <a href="{{ url('auth/login') }}">登录</a>
+            </div>
+
         </div>
     </nav>
-    <hr class="register-hr">
+
     <div class="container">
         <div class="row about-contents">
             <div class="col-sm-6 col-sm-offset-3 text-center">
@@ -39,7 +44,8 @@
                 <p>订百达，贴心服务永不堵车。</p>
             </div>
             <div class="col-sm-12 text-center license-img">
-                <a href="{{ asset('images/about-02.jpg') }}" target="_blank"><img src="{{ asset('images/about-02.jpg') }}"></a>
+                <a href="{{ asset('images/about-02.jpg') }}" target="_blank"><img
+                            src="{{ asset('images/about-02.jpg') }}"></a>
             </div>
         </div>
     </div>

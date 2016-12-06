@@ -2,9 +2,9 @@
 @section('subtitle', '财务管理-提现账号')
 
 @section('top-title')
-    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
-    <a href="{{ url('personal/bank') }}">提现账号</a> &rarr;
-    编辑提现账号
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> >
+    <a href="{{ url('personal/bank') }}">提现账号</a> >
+    <span class="second-level"> 编辑提现账号</span>
 @stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/bank/' . $userBank->id) }}"
@@ -14,7 +14,7 @@
             <label class="col-sm-2 control-label" for="card_number">卡号:</label>
 
             <div class="col-sm-10 col-md-6">
-                <input class="form-control" id="card_number" name="card_number" placeholder="请输入银行卡号"
+                <input class="form-control control" id="card_number" name="card_number" placeholder="请输入银行卡号"
                        value="{{ $userBank->card_number }}"
                        type="text">
             </div>
@@ -23,7 +23,7 @@
             <label class="col-sm-2 control-label" for="contact_info">所属银行:</label>
 
             <div class="col-sm-4 col-md-4">
-                <select name="card_type" class="form-control">
+                <select name="card_type" class="form-control control">
                     @foreach(cons()->valueLang('bank.type') as $key => $type)
                         <option value="{{ $key }}" {{ $key == $userBank->card_type ? 'selected' : '' }}>{{ $type }}</option>
                     @endforeach
@@ -34,7 +34,7 @@
             <label class="col-sm-2 control-label" for="card_holder">开户人:</label>
 
             <div class="col-sm-10 col-md-6">
-                <input class="form-control" id="card_holder" name="card_holder" placeholder="请输入开户人"
+                <input class="form-control control" id="card_holder" name="card_holder" placeholder="请输入开户人"
                        value="{{ $userBank->card_holder }}"
                        type="text">
             </div>
@@ -43,14 +43,14 @@
             <label class="col-sm-2 control-label" for="card_address">开户行所在地:</label>
 
             <div class="col-sm-10 col-md-6">
-                <input class="form-control" id="card_address" name="card_address" placeholder="请输入开户行所在地"
+                <input class="form-control control" id="card_address" name="card_address" placeholder="请输入开户行所在地"
                        value="{{ $userBank->card_address }}"
                        type="text">
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-push-2 col-sm-10">
-                <button class="btn btn-primary" type="submit">提交</button>
+                <button class="btn btn-success" type="submit">提交</button>
             </div>
         </div>
     </form>

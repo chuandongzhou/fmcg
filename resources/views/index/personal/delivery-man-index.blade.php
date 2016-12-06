@@ -2,19 +2,22 @@
 @section('subtitle', '个人中心-配送人员')
 @include('includes.delivery-man')
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
-    配送人员
+    <a href="{{ url('personal/info') }}">个人中心</a> >
+    <span class="second-level"> 配送人员</span>
 @stop
 @section('right')
     <form action="#" method="post">
-        <div class="row">
+        <div class="row coupon">
             <div class="col-sm-12 table-responsive">
-                <div>
-                    <a class="add" href="javascript:void(0)" type="button" data-target="#deliveryModal"
-                       data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加配送人员
+                <div class="add-coupon">
+                    <a class="add btn btn-blue-lighter update-modal" href="javascript:" data-toggle="modal"
+                       data-target="#deliveryModal">
+                        <label>
+                            <span class="fa fa-plus"></span>
+                        </label>添加配送人员
                     </a>
                 </div>
-                <table class="table table-bordered table-center">
+                <table class="table table-bordered table-center public-table">
                     <thead>
                     <tr>
                         <th>姓名</th>
@@ -42,13 +45,17 @@
                             <td>
 
                                 <div role="group" class="btn-group btn-group-xs">
-                                    <a href="{{ url('personal/delivery-man/'. $man->id . '/edit') }}"
-                                       class="btn btn-primary">
-                                        <i class="fa fa-edit"></i> 编辑
+                                    <a data-toggle="modal"
+                                       data-target="#deliveryModal" data-id="{{ $man->id }}"
+                                       data-name="{{ $man->name }}" data-phone="{{ $man->phone }}"
+                                       data-user-name="{{ $man->user_name }}" data-pos-sign="{{ $man->pos_sign }}"
+                                       class="edit update-modal">
+                                        <i class="iconfont icon-xiugai"></i> 编辑
                                     </a>
                                     <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
-                                       data-method="delete" class="btn btn-danger ajax" type="button">
-                                        <i class="fa fa-trash-o"></i> 删除
+                                       data-method="delete" class="red delete-no-form" href="javascript:"
+                                       type="button">
+                                        <i class="iconfont icon-shanchu"></i> 删除
                                     </a>
                                 </div>
                             </td>

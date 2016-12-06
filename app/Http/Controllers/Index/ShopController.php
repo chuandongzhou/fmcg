@@ -19,7 +19,7 @@ class ShopController extends Controller
     }
 
     /**
-     * 店铺
+     * 店铺列表
      *
      * @param \Illuminate\Http\Request $request
      * @param string $sort
@@ -47,17 +47,20 @@ class ShopController extends Controller
         //配送区域
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($gets, array_except($addressData, 'address_name'));
-        $shops = $shops->OfDeliveryArea(array_filter($data));
-
+        $shops = $shops->OfDeliveryArea(array_filter($data))->with([
+            'goods' => function ($query) {
+                $query->OfNew();
+            }
+        ]);
         if (isset($gets['name'])) {
             $shops = $shops->where('name', 'like', '%' . $gets['name'] . '%');
         }
         return view('index.shop.index',
-            ['shops' => $shops->paginate(16), 'sort' => $sort, 'get' => $data, 'type' => $type]);
+            ['shops' => $shops->paginate(8), 'sort' => $sort, 'get' => $data, 'type' => $type]);
     }
 
     /**
-     * 店铺首页
+     * 店铺所有商品页
      *
      * @param $shop
      * @param $sort
@@ -70,17 +73,20 @@ class ShopController extends Controller
             return redirect()->back();
         }
 
-        $shop->adverts = $shop->adverts()->with('image')->OfTime()->get();
 
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
         $goods = $shop->goods()->active();
+
         if (in_array($sort, cons('goods.sort'))) {
-            $goods = $goods->{'Of' . ucfirst($sort)}();
+
+            $goods = $sort == 'price' ? $goods->{'Of' . ucfirst($sort)}($shop->user_id) : $goods->{'Of' . ucfirst($sort)}();
+
         } else {
             $goods = $goods->OfCommonSort()->orderBy('id', 'DESC');
         }
         $goods = $goods->paginate();
+//        dd($goods);
         return view('index.shop.shop', [
             'shop' => $shop,
             'goods' => $goods,
@@ -90,7 +96,7 @@ class ShopController extends Controller
     }
 
     /**
-     * 店铺详情
+     * 店铺首页
      *
      * @param $shop
      * @return \Illuminate\View\View
@@ -105,11 +111,19 @@ class ShopController extends Controller
             $advert = (new ShopService())->getAdvertFirstImage();
             $shop->images[0] = $advert->image;
         }
+        $shop->adverts = $shop->shopHomeAdverts()->with('image')->active()->get();
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
-
+        $hotGoods = $shop->goods()->active()->ofHot()->take(10)->get();
+        $recommendGoods = $shop->recommendGoods()->get();
         return view('index.shop.detail',
-            ['shop' => $shop, 'isLike' => $isLike/*, 'coordinates' => $coordinate*/]);
+            [
+                'shop' => $shop,
+                'isLike' => $isLike,
+                'hotGoods' => $hotGoods,
+                'recommendGoods' => $recommendGoods
+                /*, 'coordinates' => $coordinate*/
+            ]);
     }
 
     /**
@@ -126,6 +140,7 @@ class ShopController extends Controller
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getShopGoods($shop, $data);
+        $goodsCount = $result['goods']->active()->count();
         $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate();
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
 
@@ -143,7 +158,8 @@ class ShopController extends Controller
                 'moreAttr' => $result['moreAttr'],
                 'isLike' => $isLike,
                 'get' => $gets,
-                'data' => $data
+                'data' => $data,
+                'goodsCount' => $goodsCount
             ]);
     }
 

@@ -2,9 +2,9 @@
 @section('subtitle', '个人中心-配送区域')
 
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
-    <a href="{{ url('personal/shop') }}">配送区域</a> &rarr;
-    {{ $area->id ? '编辑' : '添加' }}配送区域
+    <a href="{{ url('personal/info') }}">个人中心</a> >
+    <a href="{{ url('personal/delivery-area') }}">配送区域</a> >
+    <span class="second-level"> {{ $area->id ? '编辑' : '添加' }}配送区域</span>
 @stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-area/' . $area->id) }}"
@@ -55,11 +55,8 @@
                        placeholder="请输入备注" value="{{ $area->address }}"/>
             </div>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-push-2 col-sm-10">
-                <button class="btn btn-primary" type="submit">提交</button>
-                <a href="javascript:history.go(-1)" class="btn btn-cancel">取消</a>
-            </div>
+        <div class="modal-footer middle-footer text-center">
+            <button type="submit" class="btn btn-success">提交</button>
         </div>
     </form>
     @parent

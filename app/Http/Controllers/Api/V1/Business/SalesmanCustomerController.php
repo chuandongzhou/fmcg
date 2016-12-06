@@ -23,7 +23,7 @@ class SalesmanCustomerController extends Controller
     public function index()
     {
         $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress',
-            'shop.user')->get()->each(function ($customer) {
+            'shop.user', 'mortgageGoods')->get()->each(function ($customer) {
             $customer->shop && $customer->shop->setAppends([]);
             $customer->setAppends(['account']);
             $customer->business_district_id = $customer->businessAddress->district_id;
@@ -81,6 +81,11 @@ class SalesmanCustomerController extends Controller
         }
         $attributes = $request->all();
         $attributes['letter'] = $this->_getLetter($attributes['name']);
+
+        if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
+            return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
+        }
+
         if ($attributes['account']) {
             $shop = auth()->user()->shop;
 
@@ -112,6 +117,9 @@ class SalesmanCustomerController extends Controller
         $attributes = $request->except(['number']);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
+        if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
+            return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
+        }
 
         if ($attributes['account']) {
             $shop = salesman_auth()->user()->shop;

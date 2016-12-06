@@ -121,7 +121,7 @@ class PayService
                     $shopOwner->save();
                     //通知卖家
                     $redisKey = 'push:seller:' . $shopOwner->id;
-                    $redisVal = '您的订单:' . $orders->first()->id . ',' . cons()->lang('push_msg.finished');
+                    $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
 
                     (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 }
@@ -170,7 +170,8 @@ class PayService
     public function balancepay($field, $orderId)
     {
         $orders = Order::where($field, $orderId)->get();
-        if (Gate::denies('validate-online-orders', $orders)) {
+
+        if (Gate::denies('validate-payment-orders', $orders)) {
             return false;
         }
 

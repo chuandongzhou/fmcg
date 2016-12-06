@@ -4,22 +4,35 @@
 html {
   position: relative;
   min-height: 100%;
+  font-family: "Microsoft YaHei", Arial, sans-serif !important;
 }
 
 body {
+  font-family: "Microsoft YaHei", Arial, sans-serif !important;
+  margin-bottom: 100px;
+  width: 100%;
   color: #000;
 }
 
-body {
-  font-family: "Microsoft YaHei", Arial, sans-serif;
-  margin-bottom: 100px;
-  width:100%;
+ul, li, p, a, h1, h2, h3, h4, div {
+  font-family: "Microsoft YaHei", Arial, sans-serif !important;
 }
 
 ul, li, p, a, h1, h2, h3, h4 {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+a {
+  text-decoration: none;
+  &:focus, &:hover {
+    text-decoration: none;
+  }
+}
+
+.text-left-important {
+  text-align: left !important;
 }
 
 .inline-control {
@@ -88,11 +101,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .pd-left-clear {
-  padding-left: 0!important;
+  padding-left: 0 !important;
 }
 
 .pd-right-clear {
-  padding-right: 0!important;
+  padding-right: 0 !important;
+}
+@mixin left-right-padding{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .margin-clear {
@@ -112,9 +129,14 @@ ul, li, p, a, h1, h2, h3, h4 {
   color: $brand-danger !important;
 }
 
+.orange {
+  color: $theme-orange !important;
+}
+
 .prompt {
   color: $gray-light;
 }
+
 .prompt-coupon {
   color: $gray-light;
   font-size: 12px;
@@ -143,19 +165,74 @@ ul, li, p, a, h1, h2, h3, h4 {
     background-color: $body-bg;
   }
 }
+.page-content{
+  .btn {
+    border-radius: 4px !important;
+    padding:8px 18px;
+    vertical-align:middle;
+  }
+}
+@mixin btn-hover-color($color) {
+  color: $color;
+  &:hover, &:focus {
+    color: $color;
+  }
+}
+
+.btn-blue {
+  @include btn-hover-color($body-bg);
+  background-color: #169bd5;
+  border-radius: 4px !important;
+}
+
+.btn-blue-lighter {
+  @include btn-hover-color($body-bg);
+  background-color: $backstage-blue;
+  border-radius: 4px !important;
+}
+
+.btn-red {
+  @include btn-hover-color($body-bg);
+  background-color: #ff0000;
+}
+
+.btn-border-blue {
+  background-color: $body-bg;
+  color: $backstage-blue;
+  border-radius: 4px !important;
+  border: 1px solid $backstage-blue;
+  &:hover, &:focus {
+    background-color: $backstage-blue;
+    color: $body-bg;
+  }
+
+}
+
+.color-blue {
+  @include btn-hover-color($backstage-blue);
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.edit {
+  @include btn-hover-color(#169bd5);
+  display: inline-block;
+  padding: 0 5px;
+}
 
 .contact {
   padding: 2px 4px;
-  color: $brand-warning;
-  font-size: 13px;
-  vertical-align: middle;
+  color: $backstage-blue !important;
+  font-size: 12px;
   &:hover, &:focus {
-    color: $brand-warning;
+    color: $backstage-blue;
   }
-  .fa {
+  .iconfont {
     transform-origin: center bottom;
     vertical-align: middle;
     margin-top: -3px;
+    color: $backstage-blue;;
+    font-size: 14px;
     animation: bounce 0.5s cubic-bezier(0.30, 2.40, 0.85, 2.50) infinite;
   }
 }
@@ -213,7 +290,7 @@ ul, li, p, a, h1, h2, h3, h4 {
           background-position: 0 0;
         }
         &.contact-information {
-          background-position: 0 -77px;
+          background-position: 0 -78px;
         }
         &.feedback {
           background-position: 0 -155px;
@@ -316,13 +393,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================pop======================================*/
 .mask-outer {
   display: none;
-
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 999;
+  z-index: 99999;
   @include square(100%);
   background: rgba(0, 0, 0, 0.5) !important;
   filter: alpha(opacity=50);
@@ -585,39 +661,6 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 }
 
-.login-nav {
-  margin: 0;
-  .container {
-    width: 100% !important;
-  }
-  .nav-title {
-    li {
-      display: inline-block;
-      padding: 20px;
-      a {
-        display: inline-block;
-        vertical-align: middle;
-        color: $gray-base;
-        &:hover {
-          background-color: transparent;
-        }
-        &.logo-icon {
-          img {
-            width: 50px;
-            height: 45px;
-          }
-        }
-      }
-    }
-  }
-}
-
-.register-nav {
-  .container {
-    min-width: 1200px !important;
-  }
-}
-
 .forgot-modal-title {
   font-weight: 700;
 }
@@ -629,11 +672,109 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================login end======================================*/
 /*======================================register begin======================================*/
-.register {
+.register-nav {
+  margin: 0;
+  background-color: $body-bg;
+  .container {
+    min-width: 1200px !important;
+  }
   .nav-title {
     li {
-      padding: 10px 20px;
+      display: inline-block;
+      padding: 15px;
+      vertical-align: bottom;
+      .logo-icon {
+        img {
+          @include size(70px, 50px)
+        }
+      }
+      &.title {
+        font-size: 20px;
+        color: $word-gray;
+      }
     }
+  }
+  .right-title {
+    height: 80px;
+    line-height: 80px;
+    a {
+      color: $gray;
+      display: inline-block;
+      padding: 0 10px;
+      &:hover, &:focus {
+        color: $gray;
+      }
+    }
+  }
+}
+
+.register-step-wrap {
+  margin: 40px 0;
+  .item {
+    display: inline-block;
+    color: $gray;
+    &.step-active {
+      color: $theme-orange;
+    }
+    &.item-text {
+      font-size: 18px;
+      padding: 0 25px;
+    }
+  }
+}
+
+.register {
+  background-color: $body-bg;
+  padding: 60px 0;
+  .form-control {
+    border-radius: 4px !important;
+    height: 40px !important;
+    margin-bottom: 9px;
+  }
+  .title {
+    margin: 0 0 70px 30px;
+    color: $word-gray;
+    font-size: 18px;
+    .title-username {
+      color: $gray-base;
+      font-weight: 600;
+    }
+    .go-login {
+      font-size: 14px;
+      margin-top: 10px;
+      .go-time {
+        color: $gray-base;
+      }
+      a {
+        color: $gray-base
+      }
+    }
+  }
+  .go-login {
+
+  }
+  .v-code {
+    .btn {
+      border-radius: 4px;
+    }
+    .btn-warning {
+      background-color: $theme-orange;
+    }
+    .btn-default {
+      background-color: $word-gray !important;
+      color: $body-bg;
+      border: 1px solid $word-gray !important;
+      &:hover {
+        background-color: $word-gray !important;
+        border: 1px solid $word-gray !important;
+      }
+    }
+  }
+  .btn-submit {
+    background-color: $theme-orange;
+    padding: 7px 20px;
+    border-radius: 4px;
+    margin-top: 25px;
   }
   .address-map {
     overflow: hidden;
@@ -642,17 +783,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     width: 100%;
     height: 350px;
   }
-  .prompt-item {
-    font-size: 10px;
-  }
-  .prompt-title {
-    color: $gray-lighter;
-  }
-}
-
-.register-hr {
-  margin: 0 0 10px 0;
-  @include min-width;
 }
 
 /*======================================register end======================================*/
@@ -674,8 +804,9 @@ ul, li, p, a, h1, h2, h3, h4 {
   @include min-width;
 }
 
-.guide-footer, .register-footer {
-  background-color: $body-bg;
+.register-footer {
+  background-color: $theme-gray !important;
+  border-top-color: $theme-gray !important;
 }
 
 /*======================================guide end======================================*/
@@ -688,15 +819,15 @@ ul, li, p, a, h1, h2, h3, h4 {
   z-index: 100;
   .ui-stepBar {
     position: relative;
-    @include size(90%, 5px);
-    background: $gray-lighter;
-    top: 50px;
+    @include size(90%, 3px);
+    background: $word-gray;
+    top: 48px;
     left: 6%;
     z-index: 101;
     .ui-stepProcess {
       position: relative;
-      @include size(0, 5px);
-      background: $brand-primary;
+      @include size(0, 3px);
+      background: $theme-orange;
       top: 0;
       left: 0;
       z-index: 102;
@@ -713,27 +844,28 @@ ul, li, p, a, h1, h2, h3, h4 {
       .ui-stepSequence {
         position: relative;
         display: inline-block;
-        width:20px;
-        height:20px;
+        width: 20px;
+        height: 20px;
         border-radius: 50% !important;
         z-index: 103;
         margin-left: 1px;
       }
       .ui-stepName {
         position: relative;
-        line-height: 50px;
+        line-height: 25px;
+        color: $gray;
         z-index: 103;
       }
       .judge-stepSequence-pre-change {
         cursor: pointer;
         &:hover {
-          box-shadow: 0 0 3px 1px $brand-primary;
+          box-shadow: 0 0 3px 1px $theme-orange;
         }
       }
       .judge-stepSequence-hind-change {
         cursor: pointer;
         &:hover {
-          box-shadow: 0 0 3px 1px $gray-lighter;
+          box-shadow: 0 0 3px 1px $word-gray;
         }
       }
     }
@@ -741,12 +873,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .judge-stepSequence-pre {
-  background: $brand-primary;
+  background: $theme-orange;
   color: $body-bg;
 }
 
 .judge-stepSequence-hind {
-  background: $gray-lighter;
+  background: $word-gray;
   color: $gray-base;
 }
 
@@ -763,6 +895,12 @@ ul, li, p, a, h1, h2, h3, h4 {
 /*======================================step begin======================================*/
 /*==================================================================================wholesalers begin======================================================================*/
 /*======================================header begin======================================*/
+@mixin background {
+  background-color: $body-bg;
+  min-height: 800px;
+  margin: 0 25px 0 25px !important;
+}
+
 .drop-newmsg {
   padding: 0 !important;
 }
@@ -790,10 +928,15 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .path-title {
   padding: 0 10px 5px 10px;
-  color: #4cb9fe;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 10px;
+  &>a{
+    @include btn-hover-color($gray);
+  }
+  .second-level {
+    color: $backstage-blue;
+  }
 }
 
 .logo {
@@ -804,24 +947,201 @@ ul, li, p, a, h1, h2, h3, h4 {
 .logo-icon {
   display: inline-block;
   img {
-    width: 80px;
-    height: 50px;
+    @include size(100px, 64px);
   }
 }
 
-.dealer-header {
+.top-header {
   margin: 30px 0 30px 0;
   .logo-icon {
     padding-top: 8px;
   }
+  .container{
+    @include left-right-padding;
+  }
 }
 
 .wholesalers-top-header {
+  .logo {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .right-search {
     padding: 20px 0;
     .input-group {
       z-index: 0 !important;
+      .form-control {
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+      }
+      .input-group-btn {
+        background-color: $body-bg !important;
+        .search-btn {
+          height: 40px;
+          background-color: $theme-orange;
+          outline: none;
+          border: none;
+          margin-right: 10px;
+          border-bottom-right-radius: 4px;
+          border-top-right-radius: 4px;
+
+        }
+        .search-site {
+          height: 40px;
+          background-color: #f7c9b2;
+          color: $theme-orange;
+          border: 1px solid $theme-orange;
+          border-radius: 4px;
+        }
+      }
     }
+  }
+  .shopping-car {
+    .btn {
+      height: 40px;
+      background-color: $theme-orange;
+      line-height: 27px;
+      border-radius: 4px;
+      border: none;
+    }
+  }
+  .shop-header-wrap {
+    padding: 10px 0 10px 20px;
+    position: relative;
+    .shop-name {
+      height: 65px;
+      padding-top: 15px;
+      cursor: pointer;
+      .name {
+        font-size: 17px
+      }
+    }
+    .operate {
+      margin-top: 10px;
+      a {
+        color: $word-gray !important;
+        font-size: 12px;
+        text-decoration: none;
+        &.contact {
+          margin-right: 10px;
+        }
+      }
+    }
+    .more-classify {
+      margin-top: 20px;
+      padding: 3px 5px;
+    }
+  }
+  .shop-detail-popup {
+    position: absolute;
+    z-index: 99;
+    top: 80px;
+    width: 450px;
+    height: 0;
+    overflow: hidden;
+    background-color: $body-bg;
+    transition: height 0.5s;
+    .popup-name {
+      margin: 20px 20px 10px 20px;
+      span {
+        font-size: 14px;
+      }
+      font-size: 16px;
+      display: inline-block;
+      width: 350px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .iconfont {
+      float: left;
+      font-size: 40px;
+      line-height: 39px;
+      height: 40px;
+      width: 40px;
+      color: $banner-gray;
+      margin-right: 10px;
+    }
+    .contact-information {
+      margin: 0 20px 10px 20px;
+      .item {
+        display: inline-block;
+        width: 38%;
+        margin-bottom: 10px;
+        &:first-of-type {
+          width: 28%;
+        }
+        &:last-of-type {
+          width: 30%;
+        }
+        span {
+          font-size: 14px;
+          display: block;
+        }
+      }
+    }
+    .contact-address {
+      margin: 0 20px 10px 20px;
+      ul {
+        span {
+          display: block;
+        }
+      }
+    }
+    .store-introduction {
+      border-top: 1px solid $banner-gray;
+      padding-top: 10px;
+      margin: 0 20px 10px 20px;
+      .content {
+        margin-top: 5px;
+        font-size: 14px;
+        color: $gray-dark;
+      }
+    }
+  }
+  .qr-code-wrap {
+    margin: 25px 0;
+    position: relative;
+    .code-show {
+      cursor: pointer;
+    }
+    .shop-code-show {
+      display: inline-block !important;
+    }
+    .shop-code {
+      display: none;
+      position: absolute;
+      bottom: -165px;
+      left: -45px;
+      z-index: 999;
+      padding: 10px;
+      text-align: center;
+      background-color: $body-bg;
+      img {
+        @include square(115px);
+      }
+      span {
+        font-size: 12px;
+        color: $word-gray;
+        display: inline-block;
+        margin-top: 10px;
+      }
+    }
+  }
+
+}
+
+.shop-pictures {
+  height: 120px;
+  position: relative;
+  img {
+    position: absolute;
+    width: 100%;
+    height: 120px;
+  }
+  .shop-name {
+    height: 120px;
+    line-height: 120px;
   }
 }
 
@@ -835,7 +1155,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 @at-root .search {
   .form-control {
     outline: none;
-    border: 1px solid $brand-primary;
+    border: 1px solid $theme-orange;
+    height: 40px;
   }
 }
 
@@ -848,9 +1169,9 @@ ul, li, p, a, h1, h2, h3, h4 {
       height: auto;
       text-align: center;
       background-color: $body-bg;
+      overflow: inherit !important;
       li {
         padding: 0;
-        position: relative;
         z-index: 10;
         float: none;
       }
@@ -872,6 +1193,8 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 .wholesalers-header {
   min-height: 35px !important;
+  background-color: $theme-orange !important;
+  border-color: $theme-orange !important;
   @include min-width;
   .container {
     padding: 0;
@@ -881,7 +1204,7 @@ ul, li, p, a, h1, h2, h3, h4 {
     .active {
       a.list-name {
         color: $body-bg;
-        background-color: $brand-primary;
+        background-color: #ff0302;
       }
     }
     .navbar-nav {
@@ -889,9 +1212,9 @@ ul, li, p, a, h1, h2, h3, h4 {
         padding: 0;
         .list-name {
           width: 100%;
-          padding: 0 15px;
-          height: 35px;
-          line-height: 35px;
+          padding: 0 30px;
+          height: 40px;
+          line-height: 40px;
         }
       }
     }
@@ -934,16 +1257,24 @@ ul, li, p, a, h1, h2, h3, h4 {
 
 /*======================================index begin======================================*/
 .list-penal {
+  .classify-title {
+    padding: 20px 0 !important;
+    font-size: 17px;
+  }
+  .area-wrap {
+    padding: 20px;
+    background-color: $theme-gray;
+  }
   .banner-slide {
     margin-left: 0;
     .carousel-inner {
       .item {
-        max-height: 452px;
-        min-height: 452px;
+        max-height: 440px;
+        min-height: 440px;
         img {
           width: 100%;
-          max-height: 452px;
-          min-height: 452px;
+          max-height: 440px;
+          min-height: 440px;
         }
       }
     }
@@ -962,47 +1293,61 @@ ul, li, p, a, h1, h2, h3, h4 {
     float: left;
     padding: 0 15px;
     margin-bottom: 10px;
+    border: 1px solid $theme-gray;
+
     .commodity-img {
       width: 100%;
       display: inline-block;
     }
   }
   .commodity-border {
-    border: 1px solid $blue-light;
     background-color: $body-bg;
     &:hover {
-      transform: translate3d(0px, -3px, 0px) rotate(0deg);
-      box-shadow: 0 0 5px $brand-primary;
+      position: relative;
+      z-index: 999;
+      transform: translate3d(0px, -1px, 0px) rotate(0deg);
+      box-shadow: 0 0 5px $theme-orange;
     }
+
   }
   .commodity-index-panel {
-    padding-bottom: -10px !important;
+    margin: 0;
   }
 
   .commodity-index-img {
     width: 25% !important;
     padding: 0 !important;
-    margin: -1px 0 0 0 !important;
+    margin: 0 !important;
+    border-top: none;
+    .img-wrap {
+      position: relative;
+      padding: 5px;
+    }
     .prompt {
-      width: 80px !important;
-      height: 80px !important;
+      width: 20px !important;
+      height: 33px !important;
       background-size: cover !important;
     }
     .promotions {
-      background-position: 0 -102px !important;
+      background-position: 0 0 !important;
+    }
+    .lack {
+      background-position: 0 -78px !important;
     }
     .new-listing {
-      background-position: 0 -205px !important;
+      background-position: 0 -39px !important;
     }
   }
   .commodity-search-product {
-    min-height: 300px;
+    border: 1px solid $theme-gray;
+    padding: 0 !important;
+    min-height: 280px;
     .commodity-border {
-      position: relative;
+      padding: 15px 15px 0 15px;
       &:hover {
         position: absolute;
-        z-index: 999;
-        width: 88%;
+        z-index: 99999;
+        width: 100%;
         .shopping-store {
           display: inline-block;
           .sales {
@@ -1014,20 +1359,21 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .content-panel {
-    padding: 2px 5px;
+    padding: 0 5px;
     a {
       color: $gray;
+      text-decoration: none;
     }
     .commodity-name {
       width: 100%;
-      height: 35px;
-      font-size: 12px;
+      height: 20px;
       overflow: hidden;
+      white-space: nowrap;
       text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      word-break: break-all;
+      margin: 2px 0;
+      a {
+        font-size: 15px;
+      }
     }
     .shopping-store {
       display: none;
@@ -1044,21 +1390,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
     .sell-panel {
       font-size: 12px;
-      .money {
-        color: $brand-danger;
-        font-weight: bolder;
-      }
+      padding: 2px 0 3px 0;
     }
     .store-name {
       font-size: 13px;
       padding: 5px 0;
     }
     .order-count {
-      color: $gray-light;
       font-size: 12px;
+      margin-top: 13px;
     }
     .address-panel {
-      height: 40px;
       position: relative;
       .address {
         position: absolute;
@@ -1073,14 +1415,17 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .thumbnail {
+    padding: 15px !important;
+    border: 1px solid $theme-gray;
+    position: relative;
     .img-wrap .commodity-img {
-      width: 130px !important;
+      width: 150px !important;
       height: inherit !important;
     }
     .store-content {
       background-color: inherit !important;
       padding: 0 0 0 20px !important;
-      margin-left: 130px;
+      margin-left: 150px;
       .commodity-name {
         margin: 0 0 10px 0 !important;
         font-size: 16px;
@@ -1091,7 +1436,12 @@ ul, li, p, a, h1, h2, h3, h4 {
         margin: 0;
       }
       .item {
-        padding-bottom: 5px;
+        padding-bottom: 7px;
+        font-size: 12px;
+        .item-child {
+          display: inline-block;
+          margin-right:10px;
+        }
       }
       .store-presentation {
         text-overflow: ellipsis;
@@ -1101,62 +1451,112 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .img-wrap {
-    position: relative;
-    border: 1px solid $gray-plain;
-    /*&:hover{
-      border: 1px solid $brand-primary;
-    }*/
     .prompt {
       position: absolute;
       display: inline-block;
-      @include square(117px);
-      top: 0;
-      left: 0;
+      @include size(25px, 41px);
+      top: 5px;
+      left: 5px;
       background: url("../images/titles.png") no-repeat left top;
-    }
-    .lack {
-      background-position: 0 0;
+      background-size: cover;
     }
     .promotions {
-      background-position: 0 -150px;
+      background-position: 0 0;
+    }
+    .lack {
+      background-position: 0 -98px;
     }
     .new-listing {
-      background-position: 0 -300px;
+      background-position: 0 -49px;
     }
   }
 }
-.hot-goods{
-  text-align:center;
-  margin-bottom:10px;
+
+.btn-location {
+  border: 1px solid $theme-orange;
+  color: $theme-orange;
+  background-color: $body-bg !important;
+  border-radius: 4px;
+  outline: none !important;
+  &:hover, &:focus {
+    color: $theme-orange !important;
+    border: 1px solid $theme-orange;
+  }
+}
+
+.hot-goods {
+  text-align: center;
   line-height: 40px;
-  background-color: $gray-plain;
-  a{
+  border: 1px solid $gray-plain;
+  a {
     margin-right: 0;
+    text-decoration: none;
+    color: $gray-darker;
   }
 }
+
 .hot-goods-panel {
-  padding-right:0;
+  padding-right: 0;
   padding-left: 0;
-  .commodity{
-    width:100%;
-    padding:0 3px;
+  .commodity {
+    width: 100%;
+    padding: 0 3px;
+    margin: -1px 0 0 0 !important;
+    position: relative;
+    .commodity-name {
+      a {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+      }
+    }
   }
 }
-.can-receive-coupon{
+
+.can-receive-coupon {
   color: $red;
   text-indent: 3em;
   font-size: 12px;
-  position:absolute;
+  position: absolute;
 }
+
 .commodity-other {
   .commodity {
     width: 20%;
   }
 }
+
 .dealer-commodity-wrap {
   .commodity-img {
     height: 100px;
   }
+  .item-wrap {
+    margin-left: -1px;
+    .product-item {
+      text-align: center;
+      border: 1px solid $theme-gray;
+      @include size(25%, 185px);
+      float: left;
+      padding: 7px 0;
+      border-left: none;
+      a {
+        color: $gray-base;
+      }
+      img {
+        @include square(140px);
+      }
+      .commodity-name {
+        display: block;
+        text-align: left;
+        padding: 10px 0 0 20px;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: $gray;
+      }
+    }
+  }
+
 }
 
 @media screen and (max-width: 765px) {
@@ -1190,8 +1590,7 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
 
   .nav-wrap {
-    /*background-color: $gray-plain;*/
-    margin: 30px 0;
+    margin: 30px -15px 30px 0;
     height: 40px;
     li {
       padding: 0;
@@ -1205,16 +1604,17 @@ ul, li, p, a, h1, h2, h3, h4 {
       }
     }
     .switching {
-      background-color: $gray-plain;
+      border: 1px solid $gray-plain;
       a {
         display: inline-block;
         height: 40px;
         line-height: 40px;
-        margin-right: 20px;
+        text-decoration: none;
+        color: $gray-darker;
+        padding: 0 15px;
+        border-right: 1px solid $theme-gray;
         &.active {
-          background-color: $gray-plain;
-          color: $brand-primary;
-          border-bottom: 2px solid $brand-primary;
+          color: $theme-orange;
         }
       }
     }
@@ -1225,20 +1625,40 @@ ul, li, p, a, h1, h2, h3, h4 {
   @include dash-bord;
   height: 400px;
   padding: 0;
+  .title-name {
+    padding: 8px 15px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid $gray-plain-light;
+  }
   .store-panel {
     width: 100%;
-    padding: 8px 0 15px 0;
+    padding: 8px 0;
     .avatar {
-      @include square(70px);
+      @include square(150px);
       border-radius: 50%;
       float: left;
     }
     .store-msg {
-      margin-left: 80px;
+      margin-left: 160px;
+      .store-name {
+        .item {
+          padding: 8px 5px;
+          .left-panel {
+            margin-right: 15px;
+          }
+          &.count-panel {
+            font-size: 12px;
+          }
+        }
+        margin-bottom: 8px;
+      }
+      .panel-name {
+        color: $word-gray;
+      }
       li {
         padding: 1px 0;
-        font-size: 15px;
-        font-weight: 600;
       }
     }
   }
@@ -1246,13 +1666,21 @@ ul, li, p, a, h1, h2, h3, h4 {
     border-top: 1px dashed $gray-lighter;
     margin-top: -1px;
     ul {
-      padding: 10px 0;
-      clear: both;
+      float: left;
+      width: 15%;
+      &:nth-last-child(3) {
+        width: 20%;
+      }
+      &:nth-last-child(2) {
+        width: 18%;
+      }
+      &:last-of-type {
+        width: 32%;
+      }
       .address-panel-item {
-        margin-left: 80px;
+        position: relative;
         .panel-name {
           display: block;
-          color: $gray-light;
           margin-bottom: 5px;
         }
         .content {
@@ -1271,13 +1699,36 @@ ul, li, p, a, h1, h2, h3, h4 {
 
           }
         }
+        &:hover {
+          .shop-code {
+            display: inline-block;
+          }
+        }
+        .shop-code {
+          display: none;
+          position: absolute;
+          left: 0;
+          top: 45px;
+          z-index: 999;
+          padding: 10px 5px;
+          background-color: $body-bg;
+          span {
+            font-size: 12px;
+            color: $word-gray;
+            margin-top: 10px;
+          }
+        }
       }
       .icon {
-        background: url('../images/address-icon.png') no-repeat center;
         @include square(50px);
         display: inline-block;
         float: left;
-        margin-left: 20px;
+        font-size: 36px;
+        line-height: 40px;
+        color: #a9b7b7;
+        &.qr-code {
+          background: url("../images/qr-code-show.png") center top no-repeat;
+        }
       }
       .icon-tel {
         background-position: 0 0;
@@ -1293,11 +1744,9 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .personal-store {
-  border: 1px solid $gray-plain-light !important;
-  background: $body-bg;
+  border: 1px solid $theme-gray !important;
   height: auto;
   padding-top: 5px;
-  margin: 0 0 20px 0;
   .address-panel {
     border: none;
     ul {
@@ -1306,23 +1755,31 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .store-panel {
     li {
-      padding: 1px 0 10px 0 !important;
+      padding: 0 0 10px 0 !important;
 
+    }
+  }
+  .editor-btn {
+    background-color: #00b8ae;
+    color: $body-bg;
+    height: 30px;
+    line-height: 17px !important;
+    .iconfont {
+      font-size: 22px;
     }
   }
 }
 
 .join-title {
-  width: 100%;
-  background-color: $brand-info;
-  padding: 15px 0;
   margin-bottom: 10px;
   a {
-    color: $body-bg;
-    font-size: 2.5em;
     font-weight: bold;
     text-decoration: none;
     outline: none;
+    img {
+      width: 100%;
+      height: 100px;
+    }
   }
 }
 
@@ -1335,17 +1792,21 @@ ul, li, p, a, h1, h2, h3, h4 {
   .controls {
     padding: 0 0 10px 0 !important;
     .item-panel {
-      background-color: $blue-light;
-      margin-top: 20px;
       .item {
         padding: 15px 15px;
         display: inline-block;
         .control {
-          height: 27px;
-          line-height: 13px;
+          height: 40px;
+          border: 1px solid $gray-lighter;
+        }
+        input.control {
+          padding-left: 5px;
+          border-radius: 4px !important;
         }
         .search {
-          margin-bottom: 3px;
+          border-radius: 4px !important;
+          width: 70px;
+          border: 1px solid $backstage-blue;
         }
         .add-goods {
           @extend .search;
@@ -1367,29 +1828,29 @@ ul, li, p, a, h1, h2, h3, h4 {
         display: inline-block;
         padding: 5px 0 0 10px;
         width: 90px;
-        text-align: right;
       }
       .all-sort-panel {
         margin-left: 40px;
         .all-sort {
           width: 85%;
-          padding: 0 6px;
           overflow: hidden;
           a {
             display: inline-block;
             padding: 3px 5px;
             margin: 2px 10px 5px 10px;
-            font-size: 12px;
+            font-size: 14px;
             color: $gray-base;
+            text-decoration: none;
             &.active {
-              background-color: $brand-primary;
+              background-color: $theme-orange;
               color: $body-bg;
+              text-decoration: none;
               &:hover {
                 color: $body-bg;
               }
             }
             &:hover {
-              color: $brand-primary;
+              color: $theme-orange;
             }
           }
         }
@@ -1410,12 +1871,6 @@ ul, li, p, a, h1, h2, h3, h4 {
           position: relative;
           border: 1px solid $body-bg;
           text-decoration: none;
-          &.active {
-            border: 1px solid $gray-plain-light;
-            border-bottom-color: $body-bg;
-            background-color: $body-bg;
-            z-index: 10;
-          }
           .title-txt {
             display: inline-block;
             max-width: 100px;
@@ -1455,10 +1910,14 @@ ul, li, p, a, h1, h2, h3, h4 {
           }
         }
         .last-category {
-          border: 1px dashed $brand-primary;
-          color: $brand-primary;
+          border: 1px solid $gray-lighter;
+          color: $theme-orange;
+          padding: 3px 7px;
           &:hover {
-            border-style: solid;
+            text-decoration: none;
+          }
+          &:focus {
+            text-decoration: none;
           }
         }
       }
@@ -1484,13 +1943,6 @@ ul, li, p, a, h1, h2, h3, h4 {
     .a-menu-panel {
       .sort-list {
         margin: 0 3px;
-        .list-title {
-          &.active {
-            border: 1px solid $body-bg;
-            border-bottom: none;
-            color: $brand-primary;
-          }
-        }
         .list-wrap {
           margin-top: 0;
           border: 3px solid $banner-gray;
@@ -1698,11 +2150,33 @@ ul, li, p, a, h1, h2, h3, h4 {
   }
   .box {
     display: none;
+    border: 1px solid $theme-gray;
+    &.active {
+      display: block;
+    }
   }
   .graphic-details {
-    padding: 15px 15px 15px 95px;
+    padding: 15px;
+    .details {
+      padding: 15px;
+      border-bottom: 1px solid $theme-gray;
+      .item {
+        width: 33%;
+        display: inline-block;
+      }
+    }
   }
   .goods-detail-banner {
+    .classify {
+      margin: 10px 0;
+      color: $gray-light;
+      span {
+        font-size: 18px;
+      }
+      a {
+        color: $gray-light;
+      }
+    }
     .banner {
       .item {
         img {
@@ -1714,18 +2188,98 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .store-detail-wrap {
-    .store-title {
-      border-bottom: 1px dashed $gray-light;
-      h3 {
-        padding: 0 0 10px 0;
+    .item {
+      padding: 10px 15px;
+      .collect-item {
+        height: 40px;
+        line-height: 40px;
+        cursor: pointer;
+        a {
+          color: $word-gray;
+          text-decoration: none;
+          &:hover {
+            color: $word-gray;
+          }
+        }
       }
-      .title-content {
-        padding-bottom: 10px;
-        font-size: 11px;
+      .shopping-btn {
+        width: 110px;
+        padding: 9px 0;
+        border-radius: 4px;
+        border: 1px solid $theme-orange;
+        &:first-of-type {
+          background-color: $theme-orange;
+          color: $body-bg;
+          margin-right: 10px;
+        }
+        &:last-of-type {
+          background-color: $body-bg;
+          color: $theme-orange;
+        }
+      }
+      .option {
+        background-color: $body-bg;
+        color: $gray-base;
+        border: 1px solid $gray-plain-light;
+        position: relative;
+        width: 60px;
+        .fa {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          font-size: 10px;
+          display: none;
+        }
+        &.active {
+          background-color: $theme-orange;
+          color: $body-bg;
+          .fa {
+            display: inline-block;
+          }
+        }
+      }
+      .num {
+        @include size(60px, 30px);
+      }
+      .count-operation {
+        margin: 0 15px 0 10px;
+        .count {
+          display: inline-block;
+          @include size(100%, 15px);
+          outline: none;
+          line-height: 10px;
+          background-color: $body-bg;
+          border: 1px solid $word-gray;
+          margin-top: 1px;
+          &:last-of-type {
+            margin-top: -5px;
+          }
+        }
+      }
+      .num-wrap {
+        margin: -5px 0 0 5px;
+        .minimum {
+          display: inline-block;
+          line-height: 28px;
+        }
       }
     }
-    li {
-      padding: 10px 0;
+    .store-title {
+      font-size: 19px;
+      padding: 0 0 10px 0;
+      color: $gray-base;
+    }
+    .store-detail {
+      background-color: $theme-gray;
+      padding: 0 15px;
+      li {
+        padding: 8px 0;
+        font-size: 13px;
+        color: $gray;
+        .money {
+          font-size: 20px;
+        }
+      }
     }
     .information {
       li {
@@ -1744,31 +2298,51 @@ ul, li, p, a, h1, h2, h3, h4 {
         }
       }
     }
-    .left-panel {
-      width: 30%;
-    }
-    .right-panel {
-      width: 70%;
-      .count {
-        padding: 1px 5px;
-        font-size: 16px;
-        &:hover {
-          color: $body-bg;
+  }
+  .shop-detail-wrap {
+    padding-top: 20px;
+    height: 440px;
+    border: 1px solid $banner-gray;
+    ul {
+      li {
+        padding: 5px 10px;
+        font-size: 12px;
+        line-height: 18px;
+        &.shop-name {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 15px;
+        }
+        &.shop-img {
+          @include square(100px);
         }
       }
-      .collect {
-        color: $brand-primary;
-      }
-      .amount {
-        width: 25%;
-        padding: 3px 0;
-        vertical-align: middle;
+    }
+    .operate {
+      padding: 15px;
+      margin: 15px 0;
+      a {
+        border: 1px solid $theme-gray;
+        padding: 7px 10px;
+        font-size: 13px;
+        color: $word-gray !important;
+        text-decoration: none;
+        &:hover {
+          color: $gray-base !important;
+          .fa {
+            color: $word-gray !important;
+          }
+        }
+        &.contact {
+          margin-right: 10px;
+        }
       }
     }
   }
-
   .title-name {
-    color: $gray-light;
+    color: $gray;
   }
 
   .address-wrap {
@@ -1864,6 +2438,43 @@ ul, li, p, a, h1, h2, h3, h4 {
 }
 
 .goods-editor {
+  @include background;
+  .audit-step-outs {
+    margin-bottom: 40px;
+    .step {
+      color: $body-bg !important;
+      background-color: $banner-gray;
+      font-size: 16px;
+      &.first {
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+      }
+      &.last {
+        border-top-right-radius: 4px !important;
+        border-bottom-right-radius: 4px !important;
+      }
+      span.first {
+        border-left-color: $body-bg !important;
+      }
+      span.last {
+        border-left-color: #30ac36 !important;
+      }
+    }
+    .step-active {
+      background-color: #30ac36;
+      border: 1px solid #30ac36 !important;
+
+    }
+  }
+  .example {
+    background-color: #fefecc;
+    margin-top: 10px;
+    padding: 5px 15px;
+    div {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  }
   .attr {
     border: none !important;
     padding: 5px 0 5px 15px !important;
@@ -1873,29 +2484,41 @@ ul, li, p, a, h1, h2, h3, h4 {
       padding: 5px 20px 5px 0;
     }
   }
-  .attr-labels{
-    padding:0!important;
-    margin:0 !important;
+  .attr-labels {
+    padding: 0 !important;
+    margin: 0 !important;
   }
   .editor-item {
     padding: 5px 0;
     margin: 0;
-    .pieces {
+    @at-root .pieces {
       line-height: 2em;
+      padding: 0;
+    }
+    .spec {
+      line-height: 40px;
     }
     .narrow {
       width: 80px;
     }
-    .items-item {
-      display: inline-block;
-      padding-right: 40px;
-      position: relative;
-      margin:0!important;
+    .control-label {
+      padding: 0;
+      line-height: 38px;
     }
-    .check-item {
-      display: inherit;
-      label {
-        padding-right: 10px;
+    .item {
+      margin-bottom: 10px;
+    }
+    .label-wrap {
+      .control-label {
+        padding-right: 20px;
+      }
+    }
+    .add-address {
+      .prompt {
+        a {
+          text-decoration: underline;
+          color: $blue;
+        }
       }
     }
   }
@@ -1906,36 +2529,19 @@ ul, li, p, a, h1, h2, h3, h4 {
     }
   }
   .editor-panel {
-    .editor-wrap {
-      padding: 10px 15px;
-    }
-    .right-save {
-      padding: 15px 0;
-      .btn {
-        padding: 5px 30px;
-      }
-    }
+    padding: 10px 15px;
   }
   .content-wrap {
-    .add-address {
-      margin: 15px 0;
-    }
     .address-list {
       margin-top: 5px;
       div {
-        border: 1px solid #EEEEEE;
-        border-radius: 3px;
         margin-top: 4px;
         padding: 5px;
         background-color: #fff;
-        color: #808080;
       }
     }
     .pictures {
       margin-top: 10px;
-    }
-    .item {
-      @extend .upload-item;
     }
     .map {
       margin: 10px 0;
@@ -1967,18 +2573,64 @@ ul, li, p, a, h1, h2, h3, h4 {
     .graphic-wrap {
       @extend .preview-wrap;
       textarea {
-        @include size(80%, 100px);
+        @include size(81%, 100px);
       }
     }
   }
-  .save-btn {
-    padding: 10px;
+  @at-root .save {
+    margin: 20px 0 20px 0;
     .btn {
-      width: 40%;
+      @include size(100px, 40px);
+      border-radius: 4px !important;
     }
   }
-  .save {
-    margin-top: 20px;
+  .prompt {
+    font-size: 12px;
+    margin-left: 10px;
+    color: $gray-lighter;
+  }
+  .save-btn {
+    @include size(100px, 40px);
+    margin-top: 30px;
+    border-radius: 4px !important;
+  }
+  .panel {
+    margin-bottom: 0;
+    .panel-heading {
+      background-color: $theme-gray !important;
+      border: 1px solid $theme-gray !important;
+      .panel-title {
+        b {
+          font-size: 14px;
+        }
+      }
+      .prompt {
+        font-size: 12px;
+        margin-left: 15px;
+      }
+    }
+  }
+  .templet-down {
+    display: inline-block;
+    height: 34px;
+  }
+}
+
+.modal-table-wrap {
+  height: 422px;
+  overflow-y: auto;
+}
+
+.modal-address-table {
+  th {
+    border: none !important;
+    padding: 15px 5px !important;
+  }
+  td {
+    border-bottom: 1px dashed $banner-gray;
+    border-top: none !important;
+    font-size: 13px !important;
+    padding: 10px 0 !important;
   }
 }
 
@@ -2002,7 +2654,7 @@ table {
     table-layout: fixed;
     .ellipsis {
       display: inline-block;
-      max-width: 340px;
+      width: 90%;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -2021,33 +2673,107 @@ table {
   }
 }
 
-.wholesalers-management {
-  .notice-bar {
-    border-bottom: 1px solid $brand-primary;
-    margin-bottom: 10px;
-    .btn {
-      color: $gray;
-      font-weight: bold;
+.notice-bar {
+  border-bottom: 1px solid $backstage-blue;
+  margin-bottom: 10px;
+  padding: 0 30px;
+  li {
+    a {
+      border: none;
+      &:hover {
+        background-color: transparent;
+        border: none;
+      }
     }
-    .btn-primary {
-      color: $body-bg;
+    &.active {
+      a {
+        border: 1px solid $backstage-blue;
+        color: $backstage-blue;
+        border-bottom-color: $body-bg;
+        &:hover, &:focus {
+          border: 1px solid $backstage-blue;
+          border-bottom-color: transparent;
+        }
+      }
     }
   }
+  a {
+    display: block;
+    float: left;
+    font-weight: bold;
+    @include size(100px, 40px);
+    line-height: 40px;
+    text-align: center;
+    margin: 0 0 -1px -1px;
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    @include btn-hover-color($word-gray);
+    &.active {
+      border: 1px solid $backstage-blue;
+      color: $backstage-blue;
+      border-bottom-color: $body-bg;
+      .badge {
+        background-color: $backstage-blue;
+      }
+    }
+    .badge {
+      background-color: $word-gray;
+      color: $body-bg;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+  .btn-primary {
+    color: $body-bg;
+  }
+}
+
+.wholesalers-management {
+  background-color: $body-bg;
+  padding: 10px 0;
   .pay-detail {
-    padding: 10px 15px;
+    padding: 10px 0 10px 15px;
     .input-group {
       z-index: 0 !important;
     }
-    .item {
-      display: inline-block;
-      padding: 3px 25px 3px 0;
-      font-size: 12px;
+    .control {
+      @include size(23%, 40px);
+      max-width: 180px;
+      border: 1px solid $gray-lighter !important;
+      outline: none;
+      border-radius: 4px !important;
+    }
+  }
+  .right-search {
+    max-width: 300px;
+    padding-left: 15px;
+    .input-group {
       input {
-        width: 80px;
+        border: 1px solid $gray-lighter;
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
       }
-      .control {
-        padding: 5px 0;
+    }
+    .input-group-btn {
+      .btn {
+        @include size(70px, 40px);
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        background-color: $backstage-blue;
+        border-color: $backstage-blue;
+        &:hover, &:focus {
+          background-color: $backstage-blue;
+        }
       }
+    }
+  }
+  .check-address {
+    color: #169bd5;
+    text-decoration: none;
+    font-size: 12px;
+    margin-left: 10px;
+    &:hover, &:focus {
+      color: #169bd5;
     }
   }
   .order-management {
@@ -2118,7 +2844,7 @@ table {
       tr {
         th {
           border: none;
-          background-color: $blue-light;;
+          background-color: $theme-gray;
           color: $gray-light;
           vertical-align: middle;
           font-size: 14px;
@@ -2155,10 +2881,12 @@ table {
           p {
             margin: 10px 0 !important;
           }
+
         }
       }
     }
   }
+
   .order-process {
     border: 1px solid $blue-light;
     margin: 15px 0;
@@ -2174,6 +2902,7 @@ table {
     padding-right: 15px;
   }
 }
+
 
 .cart-img {
   @include square(60px);
@@ -2222,6 +2951,53 @@ table {
   }
   .user-show {
     padding: 5px;
+    table {
+      tr {
+        td {
+          vertical-align: middle;
+          border: 1px solid $theme-gray;
+          padding: 15px 20px;
+          input, textarea {
+            border: none;
+            outline: none;
+          }
+          select {
+            padding: 7px 5px;
+            margin-right: 5px;
+          }
+          .upload-img {
+            vertical-align: bottom;
+            background-color: #01b9af;
+            color: $body-bg;
+            margin-left: 10px;
+          }
+          .preview {
+            position: relative;
+            @include square(100px);
+            display: inline-block;
+            img {
+              @include square(100px);
+            }
+            a {
+              display: none;
+              position: absolute;
+              left: 0;
+              top: 0;
+              @include square(100%);
+              line-height: 100px;
+              text-align: center;
+              color: $body-bg;
+              background: rgba(000, 000, 000, 0.3) !important;
+            }
+            &:hover {
+              a {
+                display: inline-block;
+              }
+            }
+          }
+        }
+      }
+    }
 
     img.shop-img {
       @include square(95px);
@@ -2232,11 +3008,6 @@ table {
     float: right;
     cursor: pointer;
   }
-
-  .save button {
-    margin-left: 10px;
-  }
-
   .modal {
 
     .modal .address-select {
@@ -2315,11 +3086,151 @@ table {
   }
 }
 
+.delivery-area-wrap {
+  background-color: $body-bg;
+  padding: 20px;
+  @include background;
+  table {
+    th {
+      background-color: $theme-gray;
+    }
+    td {
+      padding: 10px !important;
+    }
+  }
+}
+
+.shopping-address-wrap {
+  .panel-container {
+    padding: 30px;
+    table {
+      th {
+        background-color: $theme-gray;
+      }
+      td {
+        padding: 10px !important;
+      }
+    }
+  }
+}
+
+.security-setting-wrap {
+  background-color: $body-bg;
+  min-height: 700px;
+  padding: 30px;
+  .item {
+    padding: 10px 10px 20px 10px;
+    width: 60%;
+    &.title {
+      font-size: 17px;
+    }
+    .get-code {
+      line-height: 35px;
+    }
+    .code-btn {
+      background-color: #17C4BB;
+      color: $body-bg;
+      float: right;
+      padding: 3px 5px;
+      &:hover, &:focus {
+        color: $body-bg;
+      }
+    }
+    .prompt {
+      font-size: 12px;
+      color: $gray-lighter;
+      margin-left: 20px;
+    }
+    .edit {
+      float: right;
+    }
+  }
+}
+
+.personal-add {
+  background-color: #01b9af;
+  padding: 7px 10px;
+  color: $body-bg;
+  display: inline-block;
+  margin-bottom: 15px;
+  height: 35px;
+  &:hover, &:focus {
+    background-color: #01b9af;
+    color: $body-bg;
+  }
+}
+
+.set-default {
+  color: $gray-base;
+  &:hover, &:focus {
+    color: $gray-base;
+  }
+  .iconfont {
+    color: $gray-lighter;
+    font-size: 21px;
+    vertical-align: bottom;
+  }
+}
+
 /*======================================personal-center end======================================*/
 /*======================================order-detail begin======================================*/
 .order-detail {
+  .go-history {
+    padding: 10px 30px;
+    .btn {
+      @include size(100px, 40px);
+    }
+  }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .panel-container {
+    padding: 5px 40px 20px 40px;
+    .prompt {
+      font-size: 12px;
+    }
+    table {
+      border: 1px solid $gray-plain-light !important;
+      margin-top: 10px;
+      th {
+        color: $gray-light;
+        padding: 15px 0;
+      }
+      td {
+        vertical-align: middle;
+        .prop-item {
+          a {
+            font-size: 12px;
+            color: #17c4bb;
+          }
+        }
+        .store-img {
+          @include square(80px);
+        }
+        .change-price {
+          color: #17c4bb;
+        }
+        &.pay-item {
+          text-align: right !important;
+          .money {
+            display: inline-block;
+            margin-right: 50px;
+          }
+        }
+      }
+    }
+    .contacts {
+      li {
+        float: left;
+        padding: 10px;
+        &.label-prompt {
+          color: $word-gray;
+        }
+      }
+    }
+  }
   .order-tracking {
-    border: 1px solid $brand-primary;
     padding: 10px 15px;
     .orders-submit-detail {
       .submit-detail-item {
@@ -2345,7 +3256,7 @@ table {
   .order-receipt {
     margin-top: 20px;
     padding: 10px 15px;
-    border: 1px solid $gray-lighter;
+
     .order-information {
       li {
         padding-bottom: 15px;
@@ -2484,7 +3395,10 @@ table {
 /*======================================order-detail end======================================*/
 /*======================================order-report begin======================================*/
 .order-report {
+  padding: 0 20px;
   .content {
+    background-color: $body-bg;
+    padding: 20px 30px;
     .title {
       padding: 0;
       margin-bottom: 10px;
@@ -2501,10 +3415,48 @@ table {
       }
     }
     .enter-item {
-      padding: 0;
+      padding: 0 0 10px 0;
       .item {
         display: inline-block;
         padding: 5px 0;
+        &.display-goods {
+          .btn-tabs {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left:10px;
+            @include size(110px, 30px);
+            .btn {
+              position: absolute;
+              top:0;
+              margin:0;
+              padding:0;
+              @include size(55px, 30px);
+              border-radius: 0 !important;
+              line-height: 16px;
+              background-color: $body-bg;
+              color: $word-gray;
+              border: 1px solid $word-gray;
+              &.active {
+                background-color: #009900;
+                color: $body-bg;
+              }
+            }
+            .yes {
+              left:0;
+              border-top-left-radius: 10px !important;
+              border-bottom-left-radius: 10px !important;
+              border-right: 0;
+            }
+            .no {
+              right:0;
+              border-top-right-radius: 10px !important;
+              border-bottom-right-radius: 10px !important;
+              border-left: 0;
+            }
+          }
+        }
+
       }
       .address {
         margin: 0 10px;
@@ -2513,20 +3465,30 @@ table {
         margin-right: 10px;
       }
       .enter {
-        height: 30px;
-        margin-right: 10px;
+        height: 40px;
+        padding: 0 5px;
         vertical-align: middle;
+        border: 1px solid $gray-lighter !important;
+        border-radius: 4px !important;
+        width: 13%;
       }
       .btn {
-        @extend .enter;
-        width: 100px;
+        height: 40px;
         margin: 5px;
+        line-height: 25px;
+        border-radius: 4px !important;
+        &:focus, &:hover {
+          color: $body-bg;
+        }
+        &.export-btn {
+          border: 1px solid $backstage-blue;
+          color: $backstage-blue;
+        }
       }
     }
     .tables {
       padding: 10px 0;
       .title-table {
-        padding: 10px 0;
         font-weight: bold;
       }
       table {
@@ -2549,6 +3511,15 @@ table {
             }
           }
         }
+        tfoot {
+          tr {
+            td {
+              a.page {
+                color: #009900;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -2568,10 +3539,11 @@ table {
 /*======================================index begin======================================*/
 .dealer-top-header {
   .container {
-    background-color: $brand-primary;
+    background-color: $theme-gray;
+    @include left-right-padding;
   }
   width: 100%;
-  background-color: $brand-primary;
+  background-color: $theme-gray;
   .top-title {
     padding: 7px 0;
     color: #fff;
@@ -2584,17 +3556,19 @@ table {
       padding: 5px 3px;
       display: inline-block;
       line-height: 31px;
-      border: 1px solid $brand-primary;
+      border: 1px solid $theme-gray;
       position: relative;
       z-index: 999;
+      color: $word-gray;
+      font-size: 12px;
       .city-value {
         display: inline-block;
         vertical-align: bottom;
-        font-size: 13px;
+        font-size: 12px;
       }
       .location-text {
-        color: $gray-base;
         text-decoration: none;
+        color: $word-gray;
         display: inline-block;
       }
       &.selected-border {
@@ -2608,9 +3582,9 @@ table {
       margin-top: -2px;
       position: absolute;
       background-color: $body-bg;
-      padding: 5px 10px;
+      padding: 5px 14px;
       min-height: 320px;
-      min-width: 380px;
+      width: 400px;
       z-index: 888;
       display: none;
       .list-wrap {
@@ -2640,11 +3614,11 @@ table {
         }
       }
       .nav-tabs {
-        border-bottom: 1px solid $brand-primary;
+        border-bottom: 1px solid $theme-orange;
         li {
           &.active {
             a {
-              border: 1px solid $brand-primary;
+              border: 1px solid $theme-orange;
               border-bottom-color: $body-bg;
             }
           }
@@ -2657,12 +3631,46 @@ table {
         }
       }
     }
+    .login-info-wrap {
+      display: inline-block;
+      a {
+        color: $word-gray;
+        text-decoration: none;
+        padding: 10px;
+        font-size: 12px;
+        &.name-panel {
+          position: relative;
+          &:hover {
+            background-color: $body-bg;
+            .exit {
+              display: block;
+            }
+          }
+          .exit {
+            position: absolute;
+            cursor: pointer;
+            display: none;
+            top: 35px;
+            width: 100%;
+            padding: 10px 5px 10px 5px;
+            z-index: 9999;
+            text-align: center;
+            color: $word-gray;
+            font-size: 14px;
+            background-color: $body-bg;
+          }
+        }
+        &:hover {
+          color: $theme-orange;
+        }
+      }
+    }
   }
   .operating-wrap {
     .collect-select {
       position: relative;
       .collect-selected {
-        border: 1px solid $brand-primary;
+        border: 1px solid $theme-gray;
         border-bottom: none;
         margin-top: -1px;
         vertical-align: middle;
@@ -2675,7 +3683,7 @@ table {
 
       .select-list {
         display: none;
-        text-align: left;
+        text-align: center;
         position: absolute;
         width: 100%;
         top: 35px;
@@ -2684,8 +3692,9 @@ table {
         border: 1px solid $gray-plain-light;
         border-top: none;
         background-color: $body-bg;
+        padding-bottom: 5px;
         li {
-          padding: 2px 0 2px 10px;
+          padding: 2px 0;
           width: 100%;
           a {
             padding: 0 !important;
@@ -2717,16 +3726,48 @@ table {
       }
     }
     a {
-      color: $gray-base;
-      padding: 10px !important;
-      font-size: 13px;
+      color: $word-gray;
+      padding: 10px 15px !important;
+      font-size: 12px;
       &:hover, &:focus {
         background-color: transparent;
-        color: $gray;
+        color: $theme-orange !important;
+        text-decoration: none;
       }
-      /*&.home {
-        color: $brand-warning;
-      }*/
+    }
+    .notice {
+      &:hover {
+        background-color: $body-bg;
+        .upcoming-events-wrap {
+          height: 111px;
+        }
+      }
+    }
+    .upcoming-events-wrap {
+      position: absolute;
+      top: 42px;
+      right: 0;
+      height: 0;
+      width: 310px;
+      z-index: 9999;
+      overflow: hidden;
+      transition: height 1s ease 0s;
+      box-shadow: 0 0 5px $gray-lighter;
+      .upcoming-events {
+        background-color: $body-bg;
+        padding: 15px;
+        li {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size: 12px;
+          padding: 5px 0;
+          a {
+            color: $word-gray;
+          }
+        }
+      }
     }
   }
 
@@ -2742,25 +3783,27 @@ table {
     font-size: 13px;
     text-decoration: none;
     &:hover {
-      color: $brand-primary;
+      color: $theme-orange;
     }
   }
 }
 
-.dealer-header {
+.top-header {
   .search {
     min-width: 78%;
     .input-group {
       margin-top: 2px;
+      height: 40px;
       min-width: 50%;
-      border: 1px solid $brand-primary;
+      border-radius: 4px;
+      border: 1px solid $theme-orange;
       .select-role {
         display: inline-block;
-        background-color: $gray-plain;
         color: $gray-lighter;
-        padding: 5px 2px;
+        padding: 9px 2px;
         position: relative;
-        @include size(68px, 33px);
+        border-radius: 4px;
+        @include size(65px, 40px);
         .selected {
           span {
             display: inline-block;
@@ -2772,34 +3815,56 @@ table {
           text-decoration: none;
           color: $gray-base;
           vertical-align: middle;
+          .fa {
+            color: $gray-lighter;
+          }
         }
         .select-list {
           display: none;
           position: absolute;
-          background-color: $gray-plain;
-          top: 33px;
+          top: 40px;
           left: 0;
           width: 100%;
           z-index: 99999;
+          padding-top: 2px;
+          border: 1px solid $theme-gray;
+          border-top: none;
+          margin-top: -1px;
+          background-color: $body-bg;
           li {
-            padding-right: 10px;
             a {
               color: $gray-base;
               font-size: 13px;
               display: inline-block;
-              padding-bottom: 3px;
+              padding: 3px;
+              width: 100%;
+              &:hover {
+                background-color: #ffefe7;
+              }
             }
           }
         }
+
       }
       .control {
-        @include size(80%, 33px);
+        @include size(80%, 40px);
         padding: 0 5px;
         outline: none;
         border: none;
       }
-      .search-btn {
-        width: 100%;
+      .input-group-btn {
+        background-color: $theme-orange;
+        .search-btn {
+          width: 100%;
+          background-color: $theme-orange;
+          border-color: $theme-orange;
+          height: 40px;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+          &:focus {
+            outline: none;
+          }
+        }
       }
     }
     .search-keyword {
@@ -2812,9 +3877,12 @@ table {
       height: 100%;
       padding: 10px;
       .btn {
-        padding: 6px 10px 6px 15px;
+        padding: 9px 10px 9px 15px;
+        background-color: $theme-orange;
+        height: 40px;
+        border-radius: 4px;
         &:hover {
-          background-color: $brand-danger;
+          background-color: $theme-orange;
         }
         .shopping-num {
           color: $brand-warning;
@@ -2825,42 +3893,51 @@ table {
 }
 
 .categories-btn {
-  background-color: $blue-lighter;
+  background-color: $theme-orange;
   padding-top: 10px;
-  box-shadow: 1px -1px 15px $gray-light;
+  margin-top: 10px;
   position: relative;
   z-index: 99;
-  .btn {
-    width: 100%;
-    background-color: $blue-lighter;
-    border: 1px solid $blue-lighter;
-    &:hover {
-      background-color: $blue-lighter;
-      border: 1px solid $blue-lighter;
-    }
+  height: 40px;
+  width: 140px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  text-align: center;
+  a {
+    color: $body-bg;
+    font-size: 16px;
+    text-decoration: none;
   }
 
 }
 
 .nav-name {
-  background-color: $brand-primary;
   margin-top: 10px;
   a {
-    color: $body-bg;
-    &:hover {
-
-    }
+    color: $gray-base;
+    display: inline-block;
+    width: 115px;
+    text-align: center;
+    text-decoration: none;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
   }
 }
 
 .categories {
   position: relative;
+  width: 100%;
   .menu-wrap {
     position: absolute;
     left: 0;
+    top: 1px;
     text-align: center;
-    @include size(100%, 401px);
-    border: 1px solid $banner-gray;
+    @include size(100%, 0);
+    overflow: hidden;
+    border: 1px solid $theme-gray;
+    background-color: $body-bg;
+    transition: height 0.5s;
     z-index: 666;
     li {
       margin-top: 1px;
@@ -2869,25 +3946,25 @@ table {
       .one-title {
         display: inline-block;
         padding: 10px 0 10px 5px;
-        border-bottom: 1px solid $banner-gray;
         height: 100%;
         width: 80%;
         text-align: center;
         margin-bottom: -1px;
-        color: $gray-base;
+        color: #666666;
         text-decoration: none;
-        .icon {
+        font-size: 16px;
+        .iconfont {
           height: 20px;
           width: 20px;
+          color: $gray-lighter;
           margin-right: 3px;
           vertical-align: middle
         }
       }
     }
     .hover-effect {
-      background-color: $blue-lighter;
       .one-title {
-        color: $body-bg;
+        color: $theme-orange;
       }
     }
   }
@@ -2896,8 +3973,9 @@ table {
     position: absolute;
     left: 0;
     z-index: 666;
+    top: 2px;
     background-color: $body-bg;
-    border: 1px solid $blue-lighter;
+    border: 1px solid $gray-plain-light;
     margin: -1px;
     padding-left: 10px;
     @include size(100%, min(401px));
@@ -2915,6 +3993,7 @@ table {
         padding: 2px 5px 3px 5px;
         color: $gray-base;
         font-size: 13px;
+        font-weight: 600;
         a {
           border: none;
           padding: 0;
@@ -2933,17 +4012,27 @@ table {
         border-right: 1px solid $gray-plain-light;
         &:hover {
           color: $brand-danger;
+          text-decoration: none;
         }
       }
     }
   }
 }
 
-.banner-wrap {
-  border-top: 1px solid $brand-primary;
+.categories-menu-item {
+  .categories {
+    width: 140px !important;
+  }
+}
+
+.container-wrap {
+  border-top: 2px solid $theme-gray;
+  .container{
+    @include left-right-padding;
+  }
   @at-root .banner-slide {
     .carousel-indicators {
-      text-align: right;
+      text-align: center;
       li {
         margin: 0 5px;
       }
@@ -2952,19 +4041,15 @@ table {
   .index-slide {
     .carousel-indicators {
       li {
-        border-radius: inherit !important;
-        @include square(16px);
-        font-size: 10px;
         padding: 0 5px;
-        background-color: $gray-light !important;
-        color: $body-bg !important;
+        background-color: #f7c9b2 !important;
         border: none !important;
         &.active {
-          color: $gray-base !important;
-          background-color: $body-bg !important;
+          background-color: $theme-orange !important;
         }
       }
     }
+
   }
   .dealer-index-banner {
     .carousel-inner {
@@ -3000,90 +4085,101 @@ table {
 .dealer-index {
   .list-penal {
     .title {
-      margin: 15px 0 5px 0;
+      margin: 15px 0 1px 0;
       .category-name {
         padding: 8px 2px;
         font-size: 15px;
         font-weight: bold;
-        color: $brand-primary;
-        border-bottom: 1px solid $brand-primary;
-        a {
-          font-size: 13px;
-          display: inline-block;
-          margin-left: 10px;
-        }
-      }
-    }
-    /*.carousel-indicators {
-      position: relative !important;
-      height: 40px;
-      bottom: 0 !important;
-      margin-left: inherit !important;
-      width: 100% !important;
-      left: inherit !important;
-      background-color: $blue-lighter;
-      li {
-        color: $body-bg;
-        display: inline-block;
-        float: left;
-        height: 40px !important;
-        margin: 0 !important;
-        text-indent: 0 !important;
-        border-radius: 0 !important;
-        border: 0 !important;
-        line-height: 35px;
-        text-align: center;
-        background-color: $blue-lighter;
-        &.active {
-          background-color: $brand-primary !important;
-          height: inherit !important;
-          color: $body-bg;
-        }
-      }
-    }*/
-  }
-  .secondary-menu {
-    @include clearfix;
-    height: 450px;
-    overflow: hidden;
-    li {
-      width: 50%;
-      float: left;
-      text-align: center;
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      a {
-        display: inline-block;
-        width: 100%;
-        padding: 10px 3px;
         color: $gray;
-        font-size: 13px;
-        &:hover {
-          background-color: $gray-plain-light;
-          text-decoration: none;
+        border-bottom: 2px solid $gray-plain;
+        margin-bottom: -1px;
+        .first-letter {
+          display: inline-block;
+          height: 30px;
+          line-height: 30px;
+          width: 30px;
+          color: $body-bg;
+          margin-right: 10px;
+          background-color: $word-gray;
+          //          &.jiu-bg {
+          //            background-color: #ff0000;
+          //          }
+          //          &.shi-bg {
+          //            background-color: #008100;
+          //          }
+          //          &.chu-bg {
+          //            background-color: #0099ff;
+          //          }
+          //          &.jia-bg {
+          //            background-color: #f35000;
+          //          }
+          //          &.mei-bg {
+          //            background-color: #ff6699;
+          //          }
         }
       }
     }
+  }
+  .left-menu-wrap {
+    @include size(220px, 440px);
+    background-color: $theme-gray;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 220px;
+    }
+    .secondary-menu {
+      @include clearfix;
+      li {
+        width: 50%;
+        float: left;
+        text-align: center;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        a {
+          display: inline-block;
+          @include size(100%, 55px);
+          line-height: 55px;
+          color: $gray-dark;
+          font-size: 13px;
+          &:hover {
+            color: $theme-orange;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+  .center-wrap {
+    @include size(700px, 440px);
+  }
+  .right-wrap {
+    @include size(280px, 440px);
   }
 }
 
 /*======================================index end======================================*/
 /*======================================search begin======================================*/
 .search-page {
-  .search-sort {
-    margin: 0;
-  }
   .search-list-item {
     padding: 5px 0;
     border: none;
-    border-bottom: 1px dashed $gray-plain-light;
+    margin: 0;
+    border-bottom: 1px solid $theme-gray;
     a {
       color: $gray-base;
       display: inline-block;
       padding: 0 15px;
       &.active {
         background-color: $brand-primary;
+      }
+    }
+    .search-count {
+      height: 30px;
+      line-height: 30px;
+      .count {
+        color: $theme-orange;
       }
     }
   }
@@ -3104,26 +4200,28 @@ table {
   line-height: 40px;
   padding-right: 10px;
   border: 1px solid $gray-plain-light;
-  background-color: $gray-plain;
   .sequence {
     a {
-      color: $gray;
+      color: $gray-darker;
       display: inline-block;
       border-right: 1px solid $gray-plain-light;
-      padding: 0 10px;
+      padding: 0 15px;
       margin-left: -4px;
       height: 100%;
       &:first-of-type {
         margin: 0;
       }
       &:hover {
-        color: $brand-primary;
+        color: $theme-orange;
+        text-decoration: none;
       }
       &.active {
-        background-color: $brand-primary;
-        color: $body-bg;
+        color: $theme-orange;
       }
     }
+  }
+  .area {
+    padding: 0 15px;
   }
 }
 
@@ -3156,9 +4254,20 @@ table {
 }
 
 .goods-tables {
+  background-color: $body-bg;
+  margin: 0 25px;
+  padding: 30px 20px;
+  min-height: 600px;
   .operating {
     height: 40px;
     line-height: 40px;
+    margin-top: 30px;
+    .editor {
+      color: #169bd5;
+    }
+    .under {
+      color: $theme-orange;
+    }
     .pagination {
       margin: 0;
     }
@@ -3181,32 +4290,38 @@ table {
   .goods-table-panel {
     .table-title {
       margin-bottom: 0 !important;
+      border: 1px solid $gray-plain-light !important;
       thead {
         margin-top: 0 !important;
         tr {
           th {
             border: none !important;
             text-align: center;
-            color: $gray;
+            color: $gray-base;
             line-height: 35px;
-            background-color: $gray-plain;
+            padding: 10px 0;
+            background-color: #e3fbe3;
           }
         }
       }
     }
     .goods-table {
-      margin-top: -1px;
-      border: 1px solid #ddd;
       table {
         border: none !important;
         margin-bottom: -1px !important;
         tr {
+          &:hover {
+            td {
+              background-color: #e3fbe3;
+            }
+          }
           td {
             vertical-align: middle;
             border: none !important;
-            border-bottom: 1px dashed $gray-plain-light !important;
+            border-bottom: 1px solid $theme-gray !important;
             text-align: center;
             font-size: 12px;
+            padding: 20px 0;
             &:first-of-type {
               text-align: left !important;
             }
@@ -3216,6 +4331,7 @@ table {
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              color: $gray;
             }
             .store-img {
               @include square(60px);
@@ -3228,50 +4344,56 @@ table {
       }
     }
   }
+  .commodity-class {
+    margin-bottom: 10px;
+    .control {
+      height: 35px;
+      padding: 0 10px;
+      outline: none;
+    }
+  }
 }
 
 .store-tab-title {
-  margin-top: 0;
+  margin: 20px 0;
+
 }
 
 /*======================================search end======================================*/
 /*======================================shopping-car begin======================================*/
 .audit-step-outs {
+  margin: 30px 0 0 0;
   .step {
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
     position: relative;
-    background-color: $gray-plain;
+    border: 1px solid $gray-plain-light;
     .triangle-right {
       position: absolute;
       top: 0;
       display: inline-block;
       @include square(0);
-      border-top: 20px solid transparent;
-      border-left: 35px solid;
-      border-bottom: 20px solid transparent;
+      border-top: 25px solid transparent;
+      border-left: 25px solid;
+      border-bottom: 25px solid transparent;
       z-index: 3;
+      margin-top: -1px;
     }
     span.first {
       border-left-color: $gray-plain-light;
-      right: -35px;
+      right: -26px;
     }
     span.last {
-      border-left-color: $gray-plain;
-      right: -33px;
+      border-left-color: $body-bg;
+      right: -25px;
     }
   }
   .step-active {
-    background-color: $brand-danger;
-    color: $body-bg;
+    border: 1px solid $theme-orange;
+    color: $theme-orange;
     span.first {
-      border-left-color: $brand-danger;
-      right: -35px;
-    }
-    span.last {
-      border-left-color: $brand-danger;
-      right: -33px;
+      border-left-color: $theme-orange;
     }
   }
 }
@@ -3287,9 +4409,19 @@ table {
   .shopping-table-list {
     padding: 0;
     table {
+      &:hover {
+        border: 1px solid $theme-orange !important;
+        tfoot {
+          tr:last-of-type {
+            td {
+              border-bottom: 1px solid $theme-orange !important;
+            }
+          }
+        }
+      }
       thead {
         th {
-          background-color: $blue-light;
+          background-color: $theme-gray;
           color: $gray-light;
         }
       }
@@ -3301,12 +4433,13 @@ table {
             .control {
               width: 85%;
               padding: 3px 0;
+              margin: 10px 0 10px 30px;
               vertical-align: middle;
             }
           }
           .lowest-money {
             display: inline-block;
-            padding: 0 30px;
+            font-size: 13px;
           }
           .total-money {
             display: inline-block;
@@ -3315,6 +4448,9 @@ table {
       }
       tfoot {
         @extend .address;
+        td {
+          background-color: $body-bg !important;
+        }
       }
       tr {
         th {
@@ -3327,9 +4463,12 @@ table {
           padding: 15px 8px;
 
           .money {
-            font-size: 18px;
+            font-size: 16px;
           }
-
+          .num {
+            border: 1px solid $gray-plain-light;
+            outline: none;
+          }
           .avatar {
             @include square(50px);
           }
@@ -3416,7 +4555,7 @@ table {
 }
 
 .modified {
-  background-color: $gray-plain;
+  background-color: $body-bg;
   outline: none;
   border: 1px solid $gray-plain-light;
   @include size(23px, 25px);
@@ -3435,19 +4574,25 @@ table {
   display: inline-block;
   .span-checkbox {
     display: inline-block;
+    position: relative;
     @include square(16px);
     border: 1px solid $gray-lighter;
     line-height: 13px;
     font-size: 17px;
     vertical-align: middle;
     cursor: pointer;
+    background-color: $body-bg;
   }
   .inp-checkbox {
     opacity: 0;
     filter: alpha(opacity=0);
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   .shop-name {
     color: inherit;
+    margin-left: 5px;
   }
 
 }
@@ -3463,7 +4608,6 @@ table {
 }
 
 .clearing {
-  background-color: $banner-gray;
   padding: 0;
   .money {
     .red {
@@ -3473,11 +4617,10 @@ table {
     }
   }
   .submit {
-    padding: 15px 40px;
-  }
-  .left-operation {
-    height: 50px;
-    line-height: 50px;
+    padding: 10px 40px;
+    margin-top: 10px;
+    color: $body-bg;
+
   }
 }
 
@@ -3486,11 +4629,14 @@ table {
 }
 
 .batch-deletion {
-  color: #222;
   display: inline-block;
   margin-left: 10px;
+  border: 1px solid $theme-gray;
+  color: $theme-orange;
+  padding: 3px 5px;
+  border-radius: 4px;
   &:focus, &:hover {
-    color: #222;
+    color: $theme-orange;
   }
 }
 
@@ -3498,22 +4644,27 @@ table {
   padding: 10px;
   .title {
     margin-bottom: 20px;
-    font-weight: 600;
+    padding: 15px;
+    background-color: $theme-gray;
     &.msg-title {
       margin-bottom: 0;
     }
   }
   .item {
-    padding: 0 0 50px 90px;
-    &.address-item {
-      width: 70%;
-      #add-address {
-        color: $gray;
-      }
+    padding: 10px 0 20px 90px;
+    .address-item {
+      width: 80%;
+      display: inline-block;
+      line-height: 50px;
+    }
+    #add-address {
+      color: $gray;
+      height: 50px;
+      line-height: 50px;
+      margin-right: 50px;
     }
   }
   .delivery-mode {
-    margin-bottom: 10px;
     border-bottom: 1px solid $banner-gray;
   }
   .checks {
@@ -3525,18 +4676,26 @@ table {
     display: block;
   }
   .control-select {
-    width: 100%;
     height: 35px;
-    display: block;
   }
   .check-item {
     position: relative;
-    width: 200px;
+    width: 150px;
+    padding: 10px;
     background-color: $body-bg;
-    border: 3px solid $banner-gray;
+    border: 1px solid $banner-gray;
     color: $gray-base;
     &:hover {
       color: $gray-base;
+    }
+    &.active {
+      border: 1px solid $theme-orange;
+      .fa {
+        display: inline-block;
+      }
+      .triangle {
+        display: inline-block;
+      }
     }
   }
   .fa-check {
@@ -3553,29 +4712,16 @@ table {
     right: 0;
     width: 0;
     height: 0;
-    border-bottom: 20px solid $brand-primary;
+    border-bottom: 20px solid $theme-orange;
     border-left: 20px solid transparent;
     display: none;
-  }
-  .check-item.active {
-    border: 3px solid $brand-primary;
-    .fa {
-      display: inline-block;
-    }
-    .triangle {
-      display: inline-block;
-    }
   }
   .cash-on-delivery {
     display: inline-block;
     margin-left: 100px;
-    & > .item {
-      margin-left: -20px !important;
-      padding: 0;
-      .check-item {
-        width: 80px !important;
-        margin: 10px 20px 0 20px;
-      }
+    select {
+      border: none;
+      outline: none
     }
   }
   .cash-on-item {
@@ -3589,6 +4735,8 @@ table {
     }
     .control-select {
       width: 200px;
+      display: block;
+      margin: 10px 0 10px 30px;
     }
   }
   .count-panel {
@@ -3597,8 +4745,10 @@ table {
       text-align: left;
       .name {
         display: inline-block;
-        width: 100px;
         text-align: right;
+      }
+      .prompt {
+        font-size: 13px;
       }
     }
   }
@@ -3609,6 +4759,19 @@ table {
       .name {
         width: 160px;
       }
+    }
+  }
+  .delivery-option {
+    border: 1px solid $gray-plain-light;
+    padding: 0;
+    margin-bottom: 10px;
+    .tel-num {
+      display: inline-block;
+      margin: 0 5px;
+    }
+    table {
+      width: 96% !important;
+      margin: auto auto 10px auto;
     }
   }
 }
@@ -3654,6 +4817,26 @@ table {
   }
 }
 
+.management-pagination {
+  .active {
+    span {
+      background-color: #17c4bb !important;
+      color: $body-bg !important;
+      border-color: #17c4bb !important;
+    }
+  }
+  li {
+    a {
+      color: $gray-lighter !important;
+      background-color: $body-bg !important;
+      &:hover {
+        color: $body-bg !important;
+        background-color: #17c4bb !important;
+      }
+    }
+  }
+}
+
 .pager {
   @extend .pagination;
 }
@@ -3691,7 +4874,7 @@ table {
   .title {
     height: 40px;
     line-height: 40px;
-    background-color: $brand-primary;
+    background-color: $theme-orange;
     border-radius: 8px 8px 0 0 !important;
     padding: 0 !important;
     span {
@@ -3874,18 +5057,33 @@ table {
 /*==============about end=================*/
 /*==============message begin=================*/
 .user-list-wrap {
-  border: 1px solid $gray-lighter;
+  background-color: $body-bg;
+  padding: 25px 0 0 50px;
+  height:800px;
+  #wkit-content {
+    .wkit-chat-wrap{
+      background-color:$theme-gray!important;
+      .wkit-soft-input{
+        background-color:$theme-gray!important;
+      }
+      .wkit-msg-input {
+        textarea {
+          background-color: $theme-gray !important;
+        }
+      }
+    }
+  }
   .user-list-panel {
-    background-color: $gray-plain;
-    height: 500px;
+    background-color: $gray;
+    @include size(200px,500px);
     overflow-y: auto;
-    border-radius: 4px;
+    border-top-left-radius: 4px!important;
+    border-bottom-left-radius: 4px!important;
     ul {
       li {
-        padding: 10px;
-        border-bottom: 1px solid #e9e7e7;
+        padding: 15px 10px;
         &:hover {
-          background-color: $gray-plain-light;
+          background-color: #646464;
           cursor: pointer;
         }
         &:last-of-type {
@@ -3895,20 +5093,12 @@ table {
           margin-left: 45px;
           .last-msg-time {
             font-size: 11px;
-          }
-          .last-msg {
-            display: inline-block;
-            font-size: 11px;
-            padding: 0 5px;
-            width: 65%;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
+            color:$gray-lighter;
           }
         }
         .avatar {
-          border-radius: 50%;
-          -webkit-border-radius: 50%;
+          border-radius: 10%!important;
+          -webkit-border-radius: 10%!important;
           @include square(40px);
           float: left;
         }
@@ -3917,13 +5107,14 @@ table {
           padding: 0 5px;
           font-size: 12px;
           font-weight: bolder;
-          width: 65%;
+          width: 100%;
+          color:$gray-plain-light;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
         }
         .badge {
-          background-color: $brand-primary !important;
+          background-color: $red !important;
           font-size: 11px;
         }
       }
@@ -3944,30 +5135,53 @@ table {
 }
 
 /*==============message end=================*/
-/*==============home end=================*/
+/*==============home begin=================*/
 .home-orders-list {
   margin-bottom: 20px;
   .item-wrap {
     border: 1px solid $gray-plain-light;
     background-color: $body-bg;
-    border-radius: 2px;
-    padding: 5px 0;
-    .title {
-      padding: 5px;
-      border-bottom: 1px solid $gray-plain-light;
-      font-size: 1.3rem;
-      .order-prompt {
-        background-color: $blue;
-        border-radius: 3px;
-        color: $body-bg;
-        padding: 0 1px;
-        font-size: 1.2rem;
+    border-radius: 4px !important;
+    padding: 5px 0 0 0;
+    opacity: 0.7;
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+    .icon-panel {
+      padding: 10px;
+      .iconfont {
+        font-size: 55px;
+        line-height: 62px;
+        color: $banner-gray;
       }
     }
+    .title {
+      padding: 5px 10px;
+      font-size: 15px;
+      text-align: right;
+      color: $gray;
+    }
     .quantity {
-      padding: 10px 5px;
-      font-size: 17px;
+      padding: 10px;
+      font-size: 22px;
       font-weight: 600;
+      text-align: right;
+      color: $gray-base;
+    }
+    .check-btn {
+      text-align: center;
+      background-color: #00b8ae;
+      color: $body-bg;
+      padding: 5px 0;
+      border-bottom-left-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+      .iconfont {
+        float: right;
+        margin-right: 5px;
+        font-size: 22px;
+        line-height: 18px;
+      }
     }
   }
 }
@@ -3976,7 +5190,7 @@ table {
   height: 300px;
   .panel-container {
     height: 260px;
-
+    overflow-y: auto;
   }
 }
 
@@ -3987,7 +5201,6 @@ table {
 }
 
 .panel-container {
-  overflow-y: auto;
   padding: 5px 10px;
   .chart {
     width: 100%;
@@ -3999,11 +5212,13 @@ table {
     height: 400px
   }
   .item {
-    border-top: 1px solid $gray-plain-light;
     padding-top: 5px;
-    &:first-of-type {
-      border: none
-    }
+  }
+  .check-year {
+    padding: 10px 0 0 100px;
+    margin-bottom: -25px;
+    position: relative;
+    z-index: 9;
   }
 }
 
@@ -4019,16 +5234,52 @@ table {
   }
 }
 
-/*==============home end=================*/
-/*==============sales-details begin=================*/
-.sales-details-panel {
-  .item {
-    padding: 5px 0;
+.panel-default {
+  border: 1px solid $theme-gray !important;
+  .panel-heading {
+    background-color: $body-bg !important;
   }
 }
 
-.sales-details-tabs {
-  padding: 10px 0;
+/*==============home end=================*/
+/*==============sales-details begin=================*/
+.panel-title {
+  font-size: 15px;
+}
+
+.sales-details-panel {
+  margin: 25px 0 0 25px;
+  .panel-title {
+    padding-top: 20px;
+    b {
+      margin-right: 50px;
+    }
+  }
+  .panel-container {
+    padding: 20px;
+  }
+  table {
+    tr {
+      td, th {
+        padding: 15px 5px;
+      }
+      .title {
+        background-color: #ffffe6;
+      }
+      .title-blue {
+        background-color: #e2f8f7;
+      }
+      .text-right {
+        text-align: right !important;
+      }
+    }
+  }
+  table:first-of-type {
+    margin-top: 0 !important;
+  }
+  table {
+    margin-top: -1px !important;
+  }
 }
 
 .business-table {
@@ -4176,65 +5427,706 @@ table {
 
 /*==============tips end=================*/
 /*==============templet begin=================*/
-.templet-title{
-  margin:10px 0;
+.print-templet {
+  background-color: $body-bg;
+  margin: 0 25px !important;
+  min-height: 600px;
 }
-.templet-list{
+
+.popup {
+  @include size(450px, 150px);
+  background-color: $body-bg;
+  position: absolute;
+  left: 50%;
+  margin-left: -75px;
+  z-index: 99;
+  border-radius: 4px !important;
+  border: 1px solid $gray-lighter;
+  top: -150px;
+  transition: top 1s ease 0s;
+  h3 {
+    font-size: 16px;
+    background-color: $gray-plain-light;
+    height: 40px;
+    line-height: 40px;
+    font-weight: 600;
+    color: $word-gray;
+    padding: 0 15px;
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+  }
+  .content {
+    padding: 30px;
+  }
+}
+
+.templet-title {
+  margin: 10px 0;
+  .go-back {
+    background-color: $body-bg;
+    border: 1px solid $backstage-blue;
+    @include btn-hover-color($backstage-blue);
+  }
+  .btn {
+    &:first-of-type {
+      margin-left: 15px;
+    }
+    &:last-of-type {
+      margin-right: 15px;
+    }
+  }
+  .prompt-last {
+    font-size: 12px;
+  }
+}
+
+.templet-list {
   margin-top: 15px;
-  .item{
+  .item {
     margin: 10px 0;
-    &.checked{
-      img{
-        border:2px solid $brand-primary;
+    &.checked {
+      img {
+        border: 2px solid $brand-primary;
       }
     }
-    h4{
-      text-align: center;
-      padding: 5px 0;
-    }
-    img{
-      @include size(100%,auto);
+    img {
+      @include size(100%, auto);
       border: solid 2px transparent;
     }
-    .buttons{
+    .choice-item {
       text-align: center;
-      margin-top: 10px;
-      button{
-        padding: 7px 30px;
-        border-radius: 4px!important;
+      padding: 10px 0;
+    }
+    .mask-panel {
+      position: relative;
+      &:hover {
+        a {
+          display: block;
+        }
+      }
+      a {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        @include square(100%);
+        background: rgba(000, 000, 000, 0.3) !important;
+        filter: Alpha(opacity=30);
+        color: $body-bg;
+        padding-top: 25%;
+        text-align: center;
       }
     }
   }
 }
+
 /*==============templet end=================*/
-.temple-table{
-  width:990px;
-  min-width:990px;
+.temple-table {
+  width: 990px;
+  min-width: 990px;
   margin-top: 10px;
-  .title{
+  font-size: 8px !important;
+  .title {
     margin-bottom: 10px;
   }
-  table{
-    margin-bottom: 0!important;
-    th{
+  table {
+    margin-bottom: 0 !important;
+    th {
       text-align: center;
     }
-    td,th{
-      padding:0!important;
-      border:1px solid black!important;
+    td, th {
+      position: absolute;
+      padding: 0 !important;
+      border: 1px solid black !important;
     }
   }
 }
+
 .temple-table-y {
   width: auto !important;
-  margin:0 !important;
+  margin: 0 !important;
   font-size: 12pt !important;
   .title {
     font-size: 16pt;
   }
-  .especially
-  {
+  .especially {
     font-size: 14pt;
   }
 }
 
+/*==============index templet begin=================*/
+.setup-template {
+  @include background;
+  .item {
+    div {
+      display: inline-block;
+      position: relative;
+      a {
+        position: absolute;
+        display: none;
+        @include square(100%);
+        color: $body-bg;
+        line-height: 200px;
+        top: 0;
+        left: 0;
+        background: rgba(000, 000, 000, 0.3) !important;
+      }
+      img {
+        @include square(200px);
+      }
+      &:hover {
+        a {
+          display: inline-block;
+        }
+      }
+    }
+    label {
+      display: block;
+      padding: 10px 0;
+      input {
+        vertical-align: top;
+      }
+    }
+  }
+  .btns {
+    padding: 40px;
+    .check-index {
+      border-radius: 4px !important;
+      color: $body-bg;
+      background-color: $word-gray;
+      margin-left:10px;
+    }
+
+  }
+}
+
+.choice-template {
+  padding-bottom: 20px;
+  .template-item {
+    background-color: $body-bg;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  .title {
+    font-weight: 600;
+    padding: 10px;
+    line-height: 35px;
+    .check-index {
+      border-radius: 4px !important;
+      width: 100px;
+      color: $body-bg;
+      padding: 8px 5px;
+      background-color: $word-gray;
+    }
+  }
+  .item-wrap {
+    padding-left: 60px;
+    .item {
+      padding: 5px 15px;
+      &.prompt {
+        font-size: 13px;
+      }
+      #selected-color {
+        display: inline-block;
+        @include square(17px);
+        border: 1px solid $word-gray;
+      }
+      .dropdown-menu {
+        width: 130px !important;
+        text-align: center !important;
+        margin: 0;
+        li {
+          display: inline-block;
+        }
+      }
+    }
+    .upload-banner-item {
+      .option-banner {
+        img {
+          width: 100%;
+          max-width: 1200px;
+          max-height: 120px;
+        }
+      }
+      .upload-shopimg {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #15c3ba;
+        color: $body-bg;
+        border-radius: 4px !important;
+        border: none;
+        margin: 8px 0;
+      }
+      .name {
+        line-height: 30px;
+        margin: 8px 0;
+      }
+      .option {
+        padding: 8px 0;
+        input[type='text'] {
+          width: 100%;
+          border: 1px solid $gray-plain-light;
+          outline: none;
+          padding: 3px 0;
+        }
+        .option-banner {
+          padding: 10px 0;
+          border: 1px solid $theme-gray;
+          position: relative;
+          a {
+            position: absolute;
+            display: none;
+            top: 0;
+            left: 0;
+            color: $body-bg;
+            @include square(100%);
+            line-height: 110px;
+            text-align: center;
+            background: rgba(000, 000, 000, 0.3) !important;
+          }
+          &:hover {
+            a {
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+  }
+  .recommend {
+    padding-left: 60px;
+    .btn {
+      border-radius: 4px !important;
+      width: 100px;
+      background-color: #15c3ba;
+      color: $body-bg;
+    }
+  }
+  .btn-submit {
+    width: 100px;
+    color: $body-bg;
+    border-radius: 4px !important;
+  }
+  .shop-img {
+    position: relative;
+    overflow: hidden;
+    img {
+      height: 100%;
+      width: auto;
+      left: 50%;
+      position: relative;
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      -moz-transform: translateX(-50%);
+    }
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include square(100%);
+      outline: none;
+      background: rgba(255, 255, 255, 0.5) !important;
+      filter: Alpha(opacity=50);
+      border: none;
+      padding: 0 5px;
+      font-size: 25px;
+    }
+  }
+}
+
+.modal-body {
+  .commodity-index-img {
+    width: 20% !important;
+    position: relative;
+    .choice {
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 9;
+    }
+  }
+  .img-wrap {
+    padding: 10px;
+  }
+}
+
+.choice-header {
+  background-color: $theme-gray;
+  color: $word-gray;
+  border-bottom: none;
+  span {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .close {
+    @include size(50px, 20px);
+    font-size: 14px;
+    text-indent: 0;
+    color: $gray-base;
+  }
+}
+
+.prop-header {
+  .modal-title {
+    color: $gray;
+  }
+}
+
+.middle-footer {
+  text-align: center;
+  border-top: none;
+  .btn {
+    border-radius: 4px !important;
+    width: 100px;
+  }
+}
+
+.btn-submit {
+  border-radius: 4px !important;
+  width: 100px;
+}
+
+/*==============index templet end=================*/
+.coupon {
+  @include background;
+  padding: 30px 15px 0 15px;
+  .add-coupon {
+    margin-bottom: 20px;
+  }
+
+}
+
+.public-table {
+  th, td {
+    padding: 15px 5px !important;
+  }
+  thead {
+    th, td {
+      background-color: $theme-gray;
+    }
+  }
+
+  tbody {
+    tr:nth-child(2n) {
+      td {
+        background-color: $theme-gray;
+      }
+    }
+  }
+}
+
+.balance {
+  @include background;
+  padding: 30px 20px 0 20px;
+  table {
+    td {
+      &.operating {
+        color: $brand-primary;
+      }
+    }
+  }
+  .control {
+    @include size(180px, 40px);
+    border-radius: 4px !important;
+    border: 1px solid $gray-lighter;
+  }
+  .btn-blue-lighter {
+    @include size(70px, 40px);
+    border-radius: 4px !important;
+  }
+}
+
+.popover {
+  .popover-content {
+    font-size: 12px;
+    background-color: #fefe1f;
+    padding: 3px 5px !important;
+  }
+  .arrow:after {
+    border-bottom-color: #fefe1f !important;
+  }
+
+}
+
+.add-bank-account {
+  margin-left: 25px;
+}
+
+.bank-list-wrap {
+  @include background;
+  margin-top: 20px !important;
+  padding: 25px;
+  .item {
+    .panel {
+      border: 3px solid $gray-plain-light;
+      border-radius: 4px !important;
+      &:hover{
+        p{
+          .operate{
+            display: inline-block;
+          }
+        }
+      }
+      p {
+        padding: 10px;
+        color: $word-gray;
+        margin: 0;
+        .operate{
+          display: none;
+        }
+        .edit {
+          padding: 0;
+        }
+        &.account-number {
+          background-color: $gray-plain-light;
+          color: $gray-base;
+          a {
+            color: $gray-base;
+            &:hover, &:focus {
+              color: $gray-base;
+            }
+          }
+        }
+        .iconfont {
+          width: 30px;
+          text-align: center;
+        }
+      }
+    }
+    &.active {
+      .panel {
+        border: 3px solid $backstage-blue;
+        p {
+          &.account-number {
+            background-color: $backstage-blue;
+            color: $body-bg;
+            .iconfont {
+              font-size: 25px;
+              color: $banner-gray;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (min-width: 1500px) {
+    .item{
+      width:25%!important;
+    }
+  }
+}
+
+.delivery {
+  @include background;
+  padding: 20px;
+  .control {
+    height: 40px;
+    margin-right: 10px;
+  }
+  .enter {
+    width: 180px;
+    border-radius: 4px !important;
+    border: 1px solid $gray-lighter;
+  }
+  .control-search {
+    margin-bottom: 20px;
+    .btn {
+      border-radius: 4px !important;
+      padding: 0 15px;
+    }
+    .btn-default {
+      background-color: $body-bg;
+      color: $backstage-blue;
+      border: 1px solid $backstage-blue;
+      &:hover {
+        background-color: $backstage-blue;
+        color: $body-bg;
+      }
+    }
+  }
+}
+
+.delivery-statistics {
+  margin: 0 25px 0 25px !important;
+  .operation {
+    .btn {
+      padding: 8px 15px;
+    }
+    margin-bottom: 20px;
+  }
+  .panel {
+    .panel-container {
+      padding: 25px;
+      .control-panel {
+        margin-bottom: 15px;
+        .control {
+          @include size(100px, 35px);
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+      }
+    }
+    &.commodity-summary {
+      table {
+        tr {
+          td {
+            background-color: $body-bg;
+            vertical-align: middle !important;
+          }
+        }
+      }
+    }
+  }
+  .deliver-number{
+    color:$backstage-blue;
+  }
+}
+
+.salesman-controls {
+  .control {
+    height: 40px;
+    border-radius: 4px !important;
+    vertical-align: middle;
+    margin: 0 10px 0 10px;
+    &[type='text'] {
+      border: 1px solid $gray-lighter;
+    }
+  }
+
+  .control:first-of-type {
+    margin-left: 0;
+  }
+  .btn {
+    height: 40px;
+    padding: 8px 15px;
+    line-height: 25px !important;
+  }
+}
+
+.salesman {
+  @include background;
+  padding: 25px;
+  .salesman-controls {
+    .control-item {
+      margin-left: 30px;
+      input {
+        border: 1px solid $gray-lighter;
+        border-radius: 4px !important;
+      }
+    }
+  }
+  .table {
+    .check {
+      padding-right: 15px !important;
+    }
+  }
+  .remove-panel {
+    padding-left: 40px;
+    .btn {
+      margin-left: 15px;
+    }
+  }
+  .create {
+    .form-control {
+      height: 40px;
+      border-radius: 4px !important;
+      border: 1px solid $gray-lighter;
+    }
+    .pieces {
+      line-height: 35px;
+      width: 20px;
+    }
+    .display-goods {
+      div {
+        height: 40px;
+        padding: 6px 12px;
+        .btn {
+          @include size(80px, 40px);
+          border-radius: 4px !important;
+          border: 1px solid $gray-lighter;
+          color: $brand-success;
+          background-color: $body-bg;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.salesman-table-wrap {
+  @include size(800px, 450px);
+  overflow-y: auto;
+}
+
+.salesman-goods-table {
+  width: 766px;
+  tr {
+    td, th {
+      padding: 0;
+      &:nth-of-type(1) {
+        width: 10% !important;
+      }
+      &:nth-of-type(2) {
+        width: 55% !important;
+      }
+      &:nth-of-type(3) {
+        width: 20% !important;
+      }
+      &:nth-of-type(4) {
+        width: 15% !important;
+      }
+      input[type='text'] {
+        width: 100%;
+        border: none;
+        outline: none;
+        background-color: $gray-plain-light;
+        padding: 3px;
+      }
+    }
+  }
+}
+
+.business-detail {
+  .edit-text {
+    &[type="textarea"] {
+      width: 100%;
+    }
+    display: none;
+  }
+}
+
+.collection {
+  @include background;
+  padding: 25px;
+  .list-penal {
+    margin-top: 30px;
+    .operation {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      .remove {
+        display: none;
+      }
+    }
+    .thumbnail, .commodity {
+      &:hover {
+        .remove {
+          display: inline-block;
+        }
+      }
+    }
+    .commodity {
+      padding-top: 15px;
+    }
+  }
+  .batch-delete {
+    margin-top: 30px;
+    .btn {
+      margin-left: 20px;
+    }
+  }
+}

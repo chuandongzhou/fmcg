@@ -6,7 +6,7 @@
         <div class="page-sidebar navbar-collapse collapse">
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
-                <li class="nav-item start {!! path_active(['personal/shop','personal/password','personal/delivery-area*','personal/shipping-address*','personal/info']) !!}">
+                <li class="nav-item start {!! path_active(['personal/shop','personal/security/*','personal/delivery-area*','personal/shipping-address*','personal/info']) !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-smile-o"></i>
                         <span class="title">个人中心</span>
@@ -36,9 +36,9 @@
                                 </a>
                             </li>
                         @endif
-                        <li class="nav-item start {{ path_active('personal/password') }}">
-                            <a href="{{ url('personal/password') }}" class="nav-link ">
-                                <span class="title">修改密码</span>
+                        <li class="nav-item start {{ path_active('personal/security/*') }}">
+                            <a href="{{ url('personal/security/index') }}" class="nav-link ">
+                                <span class="title">安全设置</span>
                             </a>
                         </li>
                     </ul>
@@ -81,7 +81,7 @@
                                     <span class="title">订单列表</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->is('order/statistics/*') && request()->input('obj_type') < 3 ? 'active' : '' }}">
+                            <li class="nav-item  {{ request()->is('order/statistics','order/statistics/*') && request()->input('obj_type') < 3 ? 'active' : '' }}">
                                 <a href="{{ url('order/statistics') }}" class="nav-link ">
                                     <span class="title">订单统计</span>
                                 </a>
@@ -135,11 +135,11 @@
                                     <span class="title">新增商品</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ path_active('my-goods/batch-create') }}">
-                                <a href="{{ url('my-goods/batch-create') }}" class="nav-link ">
-                                    <span class="title">批量导入</span>
-                                </a>
-                            </li>
+                            {{--<li class="nav-item  {{ path_active('my-goods/batch-create') }}">--}}
+                                {{--<a href="{{ url('my-goods/batch-create') }}" class="nav-link ">--}}
+                                    {{--<span class="title">批量导入</span>--}}
+                                {{--</a>--}}
+                            {{--</li>--}}
                         </ul>
                     </li>
                     <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*']) !!} ">
@@ -285,9 +285,19 @@
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
-                            <li class="nav-item  {{ path_active('personal/model/*') }}">
-                                <a href="{{ url('personal/model/advert') }}" class="nav-link ">
-                                    <span class="title">首页广告</span>
+                            {{--<li class="nav-item  {{ path_active('personal/model/*') }}">--}}
+                                {{--<a href="{{ url('personal/model/advert') }}" class="nav-link ">--}}
+                                    {{--<span class="title">首页广告</span>--}}
+                                {{--</a>--}}
+                            {{--</li>--}}
+                            <li class="nav-item  {{ path_active('personal/model/model-edit') }}">
+                                <a href="{{ url('personal/model/model-edit') }}" class="nav-link ">
+                                    <span class="title">模板设置</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  {{ path_active('personal/model/model-choice') }}">
+                                <a href="{{ url('personal/model/model-choice') }}" class="nav-link ">
+                                    <span class="title">模板选择</span>
                                 </a>
                             </li>
                         </ul>

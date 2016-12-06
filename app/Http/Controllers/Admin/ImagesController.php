@@ -84,6 +84,7 @@ class ImagesController extends Controller
 
         $images = $request->input('images');
 
+        info($images);
         $images = (new ImageUploadService($images))->formatImagePost();
 
 

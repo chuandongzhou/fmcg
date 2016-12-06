@@ -46,6 +46,23 @@ class LikeController extends Controller
             return $this->success(null);
         }
     }
+    /**
+     * 批量删除
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function putBatch(Request $request){
+        $type = $request->input('type');
+        $likeTypes = array_keys(cons('like.type'));
+        $relate = 'like' . ucfirst(in_array($type, $likeTypes) ? $type : head($likeTypes));
+        if(empty($request->input('id'))){
+            return $this->error($type=='goods'?'请选择需要删除的商品':'请选择需要删除的店铺');
+        }
+        auth()->user()->$relate()->detach($request->input('id'));
+        return $this->success(null);
+
+
+    }
 
     /**
      * 获取收藏的店铺信息

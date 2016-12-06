@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Business;
 
 use App\Models\MortgageGoods;
+use App\Models\Salesman;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,14 +12,19 @@ use Gate;
 
 class MortgageGoodsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('salesman.auth', ['only' => ['index']]);
-    }
 
+    /**
+     * 获取所有陈列商品
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function index()
     {
-        $mortgageGoods = salesman_auth()->user()->shop->mortgageGoods()->active()->paginate()->toArray();
+        $shop = salesman_auth()->user() ? salesman_auth()->user()->shop : auth()->user()->shop;
+
+        $mortgageGoods = $shop->mortgageGoods()->active()->get()->each(function($mortgage){
+            $mortgage->setAppends(['pieces_name']);
+        });
         return $this->success(compact('mortgageGoods'));
     }
 
@@ -74,9 +80,9 @@ class MortgageGoodsController extends Controller
             return $this->error('商品不存在');
         }
 
-        $attributes = $request->all();
+        $pieces = $request->only('pieces');
 
-        return $mortgageGoods->fill($attributes)->save() ? $this->success('修改成功') : $this->error('修改商品时出现问题');
+        return $mortgageGoods->fill($pieces)->save() ? $this->success('修改成功') : $this->error('修改商品时出现问题');
     }
 
     /**

@@ -1,12 +1,27 @@
-@extends('index.index-master')
+@extends('index.master')
 @include('includes.jquery-lazeload')
 @section('subtitle')
     {{ $goods->name }}
 @stop
 @section('container')
+    @include('index.shop-search')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
             <div class="col-sm-5 goods-detail-banner">
+
+                <div class="classify">
+                    @foreach($categoriesName as $key=>$cate)
+                        @if($cate == $categoriesName->first())
+                            <span>{{ $cate['name'] }}</span>>
+                        @else
+                            <a href="{{ url('search?category_id=' . $cate['level'] . $cate['id']) }}" target="_blank">
+                                {{ $cate['name'] }}
+                            </a>
+                            {{ $cate == $categoriesName->last() ? '' : ' > ' }}
+                        @endif
+
+                    @endforeach
+                </div>
                 <div id="myCarousel" class="carousel slide banner-slide">
                     <ol class="carousel-indicators">
                         @foreach($goods->images_url as $key =>$image)
@@ -25,99 +40,97 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-7 store-detail-wrap">
+            <div class="col-sm-4 store-detail-wrap pd-left-clear">
                 <div class="store-title">
-                    <h3 class="store-name">{{ $goods->name }}</h3>
-
-                    <p class="title-content prompt">
-                        @foreach($categoriesName as $cate)
-                            <a href="{{ url('search?category_id=' . $cate['level'] . $cate['id']) }}" target="_blank">
-                                {{ $cate['name'] }}
-                            </a>
-                            {{ $cate == $categoriesName->last() ? '' : ' -> ' }}
-                        @endforeach
-                    </p>
+                    {{ $goods->name }}
+                </div>
+                <ul class="store-detail">
+                    <li><span class="title-name">价格 : </span><span class="red"><span
+                                    class="money">￥{{ $goods->price }}</span>/{{  $goods->pieces }}</span></li>
+                    <li><span class="title-name">商品条形码 : </span>{{ $goods->bar_code }}</li>
+                    <li><span class="title-name">商品ID : </span>{{ $goods->id }}</li>
+                    <li><span class="title-name">保质期 : </span>{{ $goods->shelf_life}}</li>
+                    <li><span class="title-name">规格 : </span>{{ $goods->specification or '暂无' }}</li>
+                    <li>
+                        <span class="title-name">退换货 : </span>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ($goods->is_back ? '' : '不可退 不可换')  }}
+                    </li>
+                </ul>
+                {{--<div class="item">--}}
+                {{--<span class="prompt label-name">口味 : </span>--}}
+                {{--<button class="btn option active">麻辣<i class="fa fa-check"></i></button>--}}
+                {{--<button class="btn option">微辣<i class="fa fa-check"></i></button>--}}
+                {{--<button class="btn option">不辣<i class="fa fa-check"></i></button>--}}
+                {{--</div>--}}
+                <div class="item clearfix">
+                    <span class="prompt label-name pull-left">数量 : </span>
+                    <div class="pull-left num-wrap">
+                        <input type="text" class="amount num pull-left" name="num" value="{{ $goods->min_num }}"
+                               data-min-num="{{ $goods->min_num }}">
+                        <span class="count-operation pull-left">
+                            <input class=" count desc-num pull-left desc-num" type="button" value="-" disabled><br>
+                            <input class=" count inc-num pull-right inc-num" type="button" value="+">
+                        </span>
+                        <span class="minimum"><span class="prompt">最低购买量:</span> {{ $goods->min_num }}</span>
+                    </div>
                 </div>
 
-                <div class="clearfix store-detail">
-                    <ul class="pull-left left-panel">
-                        <li><span class="prompt">商品ID :</span> <b>{{ $goods->id }}</b></li>
-                        <li><span class="prompt">价格 :</span> <b>¥{{ $goods->price . ' / ' . $goods->pieces }}</b></li>
-                        <li><span class="prompt">保质期 :</span> <b>{{ $goods->shelf_life}}</b></li>
-                        @foreach($attrs as $key=>$attr)
-                            <li>
-                                <span class="prompt">{{ $key }} :</span> <b>{{ $attr }}</b>
-                            </li>
-                        @endforeach
-
-                        <li><span class="prompt">累计销售量 :</span> <b>{{ $goods->sales_volume }}</b></li>
-                    </ul>
-                    <ul class="pull-left right-panel">
-                        <li>
-                            <span class="prompt">商家 :</span>
-                            <b>
-                                <a href="{{ url('shop/' . $goods->shop->id) }}" target="_blank">
-                                    {{ $goods->shop->name }}
-                                </a>
-                                <a href="javascript:"
-                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$goods->shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                   class="contact"><span class="fa fa-commenting-o"></span> 联系客服</a>
-                            </b>
-                            <div class="can-receive-coupon" >{{ $couponNum==0?'':"(该商家有可领取优惠券)" }}</div>
-                        </li>
-                        <li><span class="prompt">条形码 :</span> <b>{{ $goods->bar_code }}</b></li>
-                        @if($goods->is_promotion)
-                            <li class="clearfix"><span class="prompt pull-left">促销信息 : </span>
-
-                                <div class="promotions-content">{{ $goods->promotion_info }}</div></li>
+                <div class="item">
+                    <div class="pull-left">
+                        @if($goods->is_out)
+                            <a href="javascript:void(0)" class="btn shopping-btn disabled" disabled="">缺货</a>
+                        @else
+                            <a href="javascript:void(0)"
+                               data-url="{{  $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$goods->id) }}"
+                               class="btn shopping-btn join-cart {{ $user->id==$shop->user_id?'disabled':'' }}">加入购物车</a>
                         @endif
+                        <a class="btn shopping-btn" href="{{ url('cart') }}">去购物车结算</a>
+                    </div>
+                    <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods" data-type="goods" data-method="post"
+                         data-id="{{ $goods->id }}" style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}">
+                        @if(is_null($isGoodsLike))
+                            <i class="fa fa-star-o"></i> 收藏本商品
+                        @else
+                            <i class="fa fa-star"></i> 已收藏
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 shop-detail-wrap">
+                <ul>
+                    <li class="shop-name"><a href="{{ url('shop/'.$shop->id) }}" target="_blank">{{ $shop->name }}</a> </li>
+                    <li><img class="shop-img" src="{{ $shop->logo_url }}"></li>
+                    <li><span class="prompt">联系人 : </span>{{ $shop->contact_person  }}</li>
+                    <li><span class="prompt">联系方式 : </span>{{ $shop->contact_info }}</li>
+                    <li><span class="prompt">最低配送额 : </span>￥{{ $shop->min_money }}</li>
+                    <li><span class="prompt">店家地址 : </span>{{ $shop->address }}</li>
+                </ul>
+                <div class="operate">
+                    @if($user->id==$shop->user_id)
+                        <a href="javascript:" class="contact list-name" style="cursor:text"><span class="fa fa-commenting-o" ></span> 联系客服</a>
+                    @else
+                        <a href="javascript:"
+                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                           class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                    @endif
 
-                        <li>
-                            <span class="prompt">退换货 :</span>
-                            <b>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ($goods->is_back ? '' : '不可退 不可换')  }}</b>
-                        </li>
-                        <li>
-                            <span class="prompt">即期品 :</span>
-                            <b>{{ cons()->valueLang('goods.type' ,$goods->is_expire ) }}</b>
-                        </li>
-                        <li><span class="prompt">规格 :</span> <b>{{ $goods->specification or '暂无' }}</b></li>
-                        <li>
-                            <button disabled class="btn count btn-cancel desc-num">-</button>
-                            <input type="text" class="amount num" name="num" value="{{ $goods->min_num }}"
-                                   data-min-num="{{ $goods->min_num }}">
-                            <button class="btn count btn-cancel inc-num">+</button>
-                            <span class="prompt"> 最低购买量 :</span> {{ $goods->min_num }}
-                        </li>
-                        <li>
-                            @if($goods->is_out)
-                                <a href="javascript:void(0)" class="btn btn-primary disabled" disabled="">缺货</a>
-                            @else
-                                <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
-                                   class="btn btn-primary join-cart">加入购物车</a>
-                            @endif
-                            <a href="javascript:void(0)" data-type="goods" data-method="post"
-                               class="btn btn-default btn-like" data-id="{{ $goods->id }}">
-                                @if(is_null($isLike))
-                                    <i class="fa fa-star-o"></i> 加入收藏夹
-                                @else
-                                    <i class="fa fa-star"></i> 已收藏
-                                @endif
-                            </a>
-                        </li>
-                    </ul>
+                    <a style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}" class="{{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops" data-type="shops" data-method="post" data-id="{{ $shop->id }}">
+                        @if(is_null($isLike))
+                            <i class="fa fa-star-o"></i> 收藏本店
+                        @else
+                            <i class="fa fa-star"></i> 已收藏
+                        @endif
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="row nav-wrap list-penal " >
-            <div class="col-sm-2 hot-goods-panel" >
-                <div class="col-sm-12 hot-goods" >
-                    <a >店家热门商品</a>
-
+        <div class="row nav-wrap list-penal">
+            <div class="col-sm-2 hot-goods-panel">
+                <div class="col-sm-12 hot-goods ">
+                    <a>店家热门商品</a>
                 </div>
                 @foreach($hotGoods as $good)
-                <div class=" commodity" >
-                    <div class="commodity-border">
-                        <div class="img-wrap" >
+                    <div class="commodity commodity-border">
+                        <div class="img-wrap">
                             <a href="{{ url('goods/' . $good->id) }}" target="_blank">
                                 <img class="commodity-img lazy"
                                      data-original="{{ $good->image_url }}"/>
@@ -127,25 +140,38 @@
                         <div class="content-panel">
                             <p class="commodity-name">
                                 <a href="{{ url('goods/' . $good->id) }}"
-                                   target="_blank">{{ $good->name }}</a></p>
+                                   target="_blank">{{ $good->name }}</a>
+                            </p>
 
                             <p class="sell-panel">
-                                <span class="money">¥{{ $good->price . '/' . $good->pieces }}</span>
+                                <span class="money red">¥{{ $good->price . '/' . $good->pieces }}</span>
                                 <span class="sales pull-right">最低购买 : {{ $good->min_num }}</span>
                             </p>
                         </div>
                     </div>
-                </div>
                 @endforeach
             </div>
             <div class="col-sm-10 pd-right-clear">
                 <div class="col-sm-12 switching">
-                    <a href="javascript:void(0)" id="location" class="active">配送区域</a>
-                    <a href="javascript:void(0)" id="graphic-details">图文详情</a>
+                    <a href="javascript:void(0)" id="graphic-details" class="active">图文详情</a>
+                    <a href="javascript:void(0)" id="location" >配送区域</a>
                 </div>
-                <div class="col-sm-12 address-wrap  location box active">
-                    <div class="item clearfix">
-                        <h5 class="prompt">商品配送区域 :</h5>
+                <div class="col-sm-12 graphic-details box active">
+                    <div class="row">
+                        <div class="col-sm-12 details">
+                            @foreach($attrs as $key=>$attr)
+                                <div class="item">{{ $key }} :{{ $attr }}</div>
+                            @endforeach
+                            <div class="item">包装:{{ $good->pieces }}</div>
+                        </div>
+                        <div class="col-sm-12 padding-clear">
+                            {!! $goods->introduce !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 address-wrap location box ">
+                    <div class="item">
+                        <h5 class="title-name">商品配送区域:</h5>
                         <ul class="address-list">
                             @foreach($goods->deliveryArea as $area)
                                 <p class="col-sm-12">{{ $area->address_name }}</p>
@@ -153,16 +179,13 @@
                         </ul>
                     </div>
                     {{--<div class="item">--}}
-                    {{--<h5 class="prompt">商品配送区域大概地图标识 :</h5>--}}
-
-                    {{--<div id="map"></div>--}}
+                    {{--<h5 class="title-name ">商品配送区域大概地图标识:</h5>--}}
+                    {{--<p class="map ">--}}
+                    {{--<img src="http://placehold.it/470x350">--}}
+                    {{--</p>--}}
                     {{--</div>--}}
                 </div>
-                <div class="col-sm-12 box graphic-details">
-                    {!! $goods->introduce !!}
-                </div>
             </div>
-
         </div>
     </div>
     @include('includes.cart')

@@ -13,7 +13,7 @@ class UpdateMortgageGoodsRequest extends SalesmanRequest
     public function rules()
     {
         return [
-            'goods_name' => 'required',
+//            'goods_name' => 'required',
             'pieces' => 'required',
         ];
     }

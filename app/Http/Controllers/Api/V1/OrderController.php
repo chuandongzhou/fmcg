@@ -252,7 +252,7 @@ class OrderController extends Controller
         if ($this->_syncToBusiness($order) && $order->fill([
                 'status' => cons('order.status.non_send'),
                 'confirm_at' => Carbon::now(),
-                'numbers' => $this->_getNumbers($order->shop_id)
+                'numbers' => (new OrderService())->getNumbers($order->shop_id)
             ])->save()
         ) {
             return $this->success('订单确认成功');

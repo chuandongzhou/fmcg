@@ -2,9 +2,9 @@
 
 @section('subtitle', '商品详情')
 @section('top-title')
-    <a href="{{ url('my-goods') }}">商品管理</a> &rarr;
-    <a href="{{ url('my-goods') }}">我的商品</a> &rarr;
-    商品详情
+    <a href="{{ url('my-goods') }}">商品管理</a> >
+    <a href="{{ url('my-goods') }}">我的商品</a> >
+    <span class="second-level"> 商品详情</span>
 @stop
 @section('right')
     <div class="row">
@@ -45,12 +45,12 @@
                         @if(auth()->user()->type==cons('user.type.wholesaler'))
                             <li>
                                 <span class="prompt">价格 :</span>
-                                <b class="red">¥{{ $goods->price .' / ' . $goods->pieces  }}</b>
+                                <b class="red">¥{{ $goods->price_retailer .' / ' .cons()->valueLang('goods.pieces',$goods->pieces_retailer)   }}</b>
                             </li>
                         @else
                             <li>
                                 <span class="prompt">价格(终端商) :</span>
-                                <b class="red">¥{{ $goods->price .' / ' . $goods->pieces  }}</b>
+                                <b class="red">¥{{ $goods->price_retailer .' / ' .cons()->valueLang('goods.pieces',$goods->pieces_retailer)   }}</b>
                             </li>
                             <li>
                                 <span class="prompt">价格(批发商) :</span>

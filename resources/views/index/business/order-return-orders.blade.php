@@ -3,96 +3,108 @@
 @include('includes.timepicker')
 
 @section('top-title')
-    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
-    退货单
+    <a href="{{ url('business/salesman') }}">业务管理</a> >
+    <span class="second-level">退货单</span>
 @stop
 
 @include('includes.cropper')
 
 @section('right')
-        <div class="row">
-            <div class="col-xs-12">
-                <form class="form-horizontal ajax-form" data-done-then="refresh" action="{{ url('business/order/return-orders') }}" autocomplete="off">
-                    <div class="form-group editor-item">
-                        <div class="col-sm-6">
-                            <div class="col-sm-5  padding-clear">
-                                <input name="start_date" value="{{ $data['start_date'] or '' }}" placeholder="请输入开始日期"
-                                       type="text" class="form-control datetimepicker" data-format="YYYY-MM-DD">
-                            </div>
-                            <div class="col-sm-1 padding-clear">
-                                <label class="control-label col-sm-1">至</label>
-                            </div>
-                            <div class="col-sm-5 padding-clear">
-                                <input name="end_date" value="{{ $data['end_date'] or '' }}" placeholder="请输入结束日期"
-                                       type="text" class="form-control datetimepicker col-sm-2" data-format="YYYY-MM-DD">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <select name="status" class=" form-control">
-                                <option value="">请选择状态</option>
-                                @foreach(cons()->valueLang('salesman.order.status') as $key => $status)
-                                    <option value="{{ $key }}" {{ isset($data['status']) && $key == $data['status'] ? 'selected' : '' }} >{{ $status }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
-                            <select name="salesman_id" class="form-control">
-                                <option value="">请选择业务员</option>
-                                @foreach($salesmen as $salesman)
-                                    <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <input type="submit" class="btn btn-submit btn-default search-by-get"
-                               data-url="{{ url('business/order/order-forms') }}">
-                    </div>
-                    <table class="table business-table text-center">
-                        <tr>
-                            <td></td>
-                            <td>单号</td>
-                            <td>客户名称</td>
-                            <td>业务员</td>
-                            <td>退货金额</td>
-                            <td>时间</td>
-                            <td>审核状态</td>
-                            <td>操作</td>
-                        </tr>
-                        @foreach($orders as $order)
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="order_id[]" value="{{ $order->id }}" class="child">
-                                </td>
-                                <td>{{ $order->id }}</td>
-                                <td>{{ $order->customer_name }}</td>
-                                <td>{{ $order->salesman_name }}</td>
-                                <td>{{ $order->amount }}</td>
-                                <td>{{ $order->created_at }}</td>
-                                <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
-                                <td>
-                                    <a class="btn btn-cancel" href="{{ url('business/order/' . $order->id) }}">查看</a>
-                                    @if($order->status == cons('salesman.order.status.not_pass'))
-                                        <button type="submit"
-                                                data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                                                data-method="put" data-data='{"status" : "1"}'
-                                                class="btn btn-success">通过
-                                        </button>
-                                    @endif
-                                </td>
-                            </tr>
+        <div class="row delivery">
+            <div class="col-sm-12 control-search">
+                <form action="{{ url('business/order/return-orders') }}" class="form-horizontal ajax-form" data-done-then="refresh" autocomplete="off">
+                    <input class="enter control datetimepicker" name="start_date"
+                           value="{{ $data['start_date'] or '' }}" placeholder="请输入开始日期" type="text"
+                           data-format="YYYY-MM-DD"
+                    >至
+                    <input class="enter control datetimepicker"
+                           type="text" data-format="YYYY-MM-DD"
+                           name="end_date" value="{{ $data['end_date'] or '' }}" placeholder="请输入结束日期">
+                    <select name="status" class="control">
+                        <option value="">请选择状态</option>
+                        @foreach(cons()->valueLang('salesman.order.status') as $key => $status)
+                            <option value="{{ $key }}" {{ isset($data['status']) && $key == $data['status'] ? 'selected' : '' }} >{{ $status }}</option>
                         @endforeach
-                    </table>
-                    <div class="text-right">
-                        {!! $orders->render() !!}
-                    </div>
-                    <div class="business-operating">
-                        <label><input type="checkbox" class="parent">全选</label>
-                        <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"
-                                class="btn batch ajax" type="button">
-                            <i class="fa fa-check"></i> 批量通过
-                        </button>
-                    </div>
+                    </select>
+                    <select name="salesman_id" class="control">
+                        <option value="">请选择业务员</option>
+                        @foreach($salesmen as $salesman)
+                            <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="text" class="control" name="customer" placeholder="请输入单号/客户名称"
+                           aria-describedby="course-search" value="{{ $data['customer'] or '' }}">
+
+                    <button type="submit"
+                            class=" btn btn-blue-lighter search control search-by-get">提交
+                    </button>
                 </form>
+            </div>
+            <div class="col-sm-12 table-responsive table-wrap">
+                <table class="table-bordered table table-center public-table business-table">
+                    <thead>
+                    <tr align="center">
+                        <th></th>
+                        <th>单号</th>
+                        <th>客户名称</th>
+                        <th>业务员</th>
+                        <th>退货金额</th>
+                        <th>时间</th>
+                        <th>审核状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    @foreach($orders as $order)
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="order_id[]" value="{{ $order->id }}" class="child">
+                            </td>
+                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->customer_name }}</td>
+                            <td>{{ $order->salesman_name }}</td>
+                            <td>{{ $order->amount }}</td>
+                            <td>{{ $order->created_at }}</td>
+                            <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
+                            <td>
+
+                                <a class=" edit"href="{{ url('business/order/' . $order->id) }}">
+                                    <i class="iconfont icon-iconmingchengpaixu65"></i>查看
+                                </a>
+                                @if($order->status == cons('salesman.order.status.not_pass'))
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                       data-method="put" data-data='{"status" : "1"}'
+                                       class=" ajax">
+                                        <i class="iconfont  icon-tongguo"></i>通过
+                                    </a>
+                                @else
+                                    <a class=""
+                                       href="{{ url('business/order/browser-export/' . $order->id) }}">
+                                        <i class="iconfont  icon-1"></i>打印</a>
+                                    {{--@if($order->can_sync)--}}
+                                    {{--<button class="btn btn-warning ajax"--}}
+                                    {{--data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"--}}
+                                    {{--data-method="post">--}}
+                                    {{--同步--}}
+                                    {{--</button>--}}
+                                    {{--@endif--}}
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                <div class="business-operating">
+                    <label><input type="checkbox" class="parent">全选</label>
+                    <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"
+                            class="btn btn-primary batch ajax" type="button">
+                        <i class="fa fa-check"></i> 批量通过
+                    </button>
+                </div>
+                <div class="text-right">
+                    {!! $orders->appends($data)->render() !!}
+                </div>
             </div>
         </div>
     @parent

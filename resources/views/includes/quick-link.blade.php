@@ -4,17 +4,18 @@
         jQuery(function ($) {
             var flip = 0;
             var couponFlip = 0;
-                    @if(request()->is('shop/*'))
-            var shop = '{{ request()->is('shop/*') ? $shop->id : 0 }}'
-            var url = site.api('coupon/coupon-num/' + shop);
-            $.ajax({
-                url: url,
-                method: 'get'
-            }).done(function (data) {
-                if (data.couponNum > 0) {
-                    showOtherTooltip();
-                }
-            })
+            //查询店铺是否有可领取优惠券
+             @if(request()->is('shop/*')&& $shop->id!=$user->shop->id )
+                var shop = '{{ request()->is('shop/*')? $shop->id : 0 }}'
+                var url = site.api('coupon/coupon-num/' + shop);
+                $.ajax({
+                    url: url,
+                    method: 'get'
+                }).done(function (data) {
+                    if (data.couponNum > 0) {
+                        showOtherTooltip();
+                    }
+                })
             @endif
             //点击购物车图标显示弹框
             $("#shopCart").click(function (e) {
@@ -127,7 +128,7 @@
                             '</div>' +
                             '</div>' +
 
-                            @if(request()->is('shop/*'))
+                            @if(request()->is('shop/*') &&  $shop->id!=$user->shop->id)
                                     '<div class="ga-expiredsoon recevie-coupon-head">' +
                             '<div class="es-head">' +
                             '可领取优惠券' +
@@ -213,40 +214,40 @@
                     }).always(function () {
                         $('.coupon-loading-img').remove();
                     });
-                            @if(request()->is('shop/*'))
-                    var shop = '{{ request()->is('shop/*') ? $shop->id : 0 }}'
-                    var url = site.api('coupon/' + shop);
-                    $.ajax({
-                        url: url,
-                        method: 'get'
-                    }).done(function (data) {
+                    @if(request()->is('shop/*') &&  $shop->id!=$user->shop->id)
+                        var shop = '{{ request()->is('shop/*') ? $shop->id : 0 }}'
+                        var url = site.api('coupon/' + shop);
+                        $.ajax({
+                            url: url,
+                            method: 'get'
+                        }).done(function (data) {
 
-                        var h = '';
-                        data = data.coupons;
+                            var h = '';
+                            data = data.coupons;
 
-                        for (var i = 0; i < data.length; i++) {
-                            h += '<div class="coupon bgc-orange">' +
-                                    '<div class="receive-wrap" data-id="' + data[i].id + '"><a class="not-receive">立即领取</a><a class="already-receive"><span' +
-                                    ' class="fa fa-check"></span>已领</a></div>' +
-                                    '<div class="validity"><p>有效期</p>' +
+                            for (var i = 0; i < data.length; i++) {
+                                h += '<div class="coupon bgc-orange">' +
+                                        '<div class="receive-wrap" data-id="' + data[i].id + '"><a class="not-receive">立即领取</a><a class="already-receive"><span' +
+                                        ' class="fa fa-check"></span>已领</a></div>' +
+                                        '<div class="validity"><p>有效期</p>' +
 
-                                    '<p>' + data[i].start_at + '</p>' +
+                                        '<p>' + data[i].start_at + '</p>' +
 
-                                    '<p>' + data[i].end_at + '</p></div>' +
-                                    '<ul>' +
-                                    '<li>' + data[i].shop.name + '</li>' +
-                                    '<li>¥' + data[i].discount + '</li>' +
-                                    '<li>满' + data[i].full + '使用</li>' +
-                                    '</ul>' +
-                                    '</div>';
+                                        '<p>' + data[i].end_at + '</p></div>' +
+                                        '<ul>' +
+                                        '<li>' + data[i].shop.name + '</li>' +
+                                        '<li>¥' + data[i].discount + '</li>' +
+                                        '<li>满' + data[i].full + '使用</li>' +
+                                        '</ul>' +
+                                        '</div>';
 
-                        }
-                        $('.recevie-coupon-head').find('.coupon-loading-img').remove();
-                        $('.my-recevie-coupon-wrap').html(h);
+                            }
+                            $('.recevie-coupon-head').find('.coupon-loading-img').remove();
+                            $('.my-recevie-coupon-wrap').html(h);
 
-                    }).always(function () {
-                        $('.recevie-coupon-head').find('.coupon-loading-img').remove();
-                    });
+                        }).always(function () {
+                            $('.recevie-coupon-head').find('.coupon-loading-img').remove();
+                        });
                     @endif
 
                 } else {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index\Personal;
 
 use App\Http\Controllers\Index\Controller;
 use App\Models\Advert;
+use App\models\ShopSignature;
 
 class ModelController extends Controller
 {
@@ -38,14 +39,41 @@ class ModelController extends Controller
         $advert = $this->shop->adverts()->find($advertId);
 
         return view('index.personal.model-advert', [
-        'advert' => is_null($advert) ? new Advert : $advert
-    ]);
+            'advert' => is_null($advert) ? new Advert : $advert
+        ]);
     }
+
     /**
-    *返回添加店铺广告界面
-     *@return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *返回添加店铺广告界面
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getCreate(){
+    public function getCreate()
+    {
         return view('index.personal.model-advert', ['advert' => new Advert]);
     }
+
+    /**
+     * 返回模板设置界面
+     */
+    public function getModelEdit()
+    {
+        $shop = auth()->user()->shop()->with(['shopRecommendGoods', 'shopHomeAdverts'])->first();
+
+        $goods = $shop->shopRecommendGoods->toArray();
+        $goodsId = implode(',', array_column($goods, 'goods_id'));
+
+        return view('index.personal.model-edit', ['goodsId' => $goodsId, 'shop' => $shop]);
+    }
+
+    /**
+     * 模板选择
+     *   *@return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getModelChoice()
+    {
+
+        return view('index.personal.model-choice');
+    }
+
 }

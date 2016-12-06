@@ -4,10 +4,11 @@
         <div class="modal-content" style="width:70%;margin:auto">
             <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/finance/add-withdraw') }}"
                   method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="cropperModalLabel">账户提现<span class="extra-text"></span></h4>
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="cropperModalLabel">
+                        账户提现<span class="extra-text"></span>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
@@ -57,7 +58,7 @@
                     <div class="text-right">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消
                         </button>
-                        <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="确定">确定
+                        <button type="submit" class="btn btn-success btn-sm btn-add" data-text="确定">确定
                         </button>
                     </div>
                 </div>

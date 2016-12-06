@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Coupon extends Model
 {
     use softDeletes;
@@ -22,6 +23,19 @@ class Coupon extends Model
     // protected $dates = ['start_at', 'end_at', 'deleted_at'];
 
     protected $appends = ['diff_time'];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册创建事件
+        static::creating(function ($model) {
+            $model->attributes['total'] = $model->attributes['stock'];
+        });
+    }
 
     /**
      * 关联店铺

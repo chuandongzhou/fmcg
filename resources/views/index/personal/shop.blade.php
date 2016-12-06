@@ -1,9 +1,10 @@
 @extends('index.menu-master')
 @include('includes.cropper')
+@include('includes.templet-model')
 @section('subtitle', '个人中心-商家信息')
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
-    店铺信息
+    <a href="{{ url('personal/info') }}">个人中心</a> >
+    <span class="second-level"> 店铺信息</span>
 @stop
 @section('right')
     <div class="row">
@@ -13,10 +14,8 @@
                   autocomplete="off">
                 <div class="col-sm-12 user-show">
                     @include('includes.shop')
-                    <div class="col-sm-12 text-center save">
-                        <button class="btn btn-bg btn-primary" type="submit"><i class="fa fa-save"></i> 保存</button>
-                        <button class="btn btn-bg btn-warning" type="button" onclick="javascript:history.go(-1)"><i
-                                    class="fa fa-reply"></i> 取消
+                    <div class="col-sm-12 save">
+                        <button class="btn btn-success" type="submit">提交</button>
                         </button>
                     </div>
                 </div>

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Goods;
 use App\Models\MortgageGoods;
 use App\Models\SalesmanCustomer;
+use App\Models\SalesmanCustomerDisplayList;
+use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Shop;
@@ -24,26 +26,21 @@ class BusinessService
      * @param $salesmanVisitOrder
      * @return array
      */
-    public function getOrderData($salesmanVisitOrder)
+    public function getOrderData(SalesmanVisitOrder $salesmanVisitOrder)
     {
-
         $orderTypeConf = cons('salesman.order');
-        $orderGoodsConf = $orderTypeConf['goods']['type'];
 
         $data = [
             'order' => $salesmanVisitOrder
         ];
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
-            $goods = $salesmanVisitOrder->orderGoods->load('goods');
-            $orderGoods = $goods->filter(function ($item) use ($orderGoodsConf) {
-                return $item->type == $orderGoodsConf['order'];
-            });
-            $data['orderGoods'] = $orderGoods;
+
+            $data['displayFee'] = $salesmanVisitOrder->displayFees;
+
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
-        } else {
-            $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
         }
+        $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
         return $data;
     }
 
@@ -150,8 +147,11 @@ class BusinessService
             $visitData[$customerId]['created_at'] = (string)$visit->created_at;
             $visitData[$customerId]['customer_name'] = $customer->name;
             $visitData[$customerId]['contact'] = $customer->contact;
-            $visitData[$customerId]['lng'] = $customer->business_address_lng;
-            $visitData[$customerId]['lat'] = $customer->business_address_lat;
+            $visitData[$customerId]['business_address_lng'] = $customer->business_address_lng;
+            $visitData[$customerId]['business_address_lat'] = $customer->business_address_lat;
+            $visitData[$customerId]['lng'] = $visit->x_lng;
+            $visitData[$customerId]['lat'] = $visit->y_lat;
+            $visitData[$customerId]['address'] = $visit->address;
             $visitData[$customerId]['number'] = $customer->number;
             $visitData[$customerId]['contact_information'] = $customer->contact_information;
             $visitData[$customerId]['shipping_address_name'] = $customer->shipping_address_name;
@@ -174,10 +174,29 @@ class BusinessService
                 $visitStatistics['order_form_amount'] = isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
                     $order->amount, 2) : $order->amount;
 
-                $order->display_fee && ($visitData[$customerId]['display_fee'][] = [
-                    'created_at' => (string)$order->created_at,
-                    'display_fee' => $order->display_fee
-                ]);
+
+                if (!is_null($order->displayList)) {
+                    foreach ($order->displayList as $item) {
+                        if ($item->mortgage_goods_id == 0) {
+                            $visitData[$customerId]['display_fee'][] = [
+                                'month' => $item->month,
+                                'created_at' => (string)$item->created_at,
+                                'display_fee' => $item->used
+                            ];
+                        } else {
+                            $month = $item->month;
+                            $mortgage = $item->mortgageGoods;
+                            $visitData[$customerId]['mortgage'][$month][]  = [
+                                'id' => $item->mortgage_goods_id,
+                                'name' => $mortgage->goods_name,
+                                'pieces' => $mortgage->pieces,
+                                'num' => (int)$item->used,
+                                'month' => $item->month,
+                                'created_at' => (string)$item->created_at
+                            ];
+                        }
+                    }
+                }
             }
 
             if ($returnOrder = $returnOrderForm->first()) {
@@ -221,7 +240,6 @@ class BusinessService
                 if ($goods instanceof SalesmanVisitGoodsRecord) {
                     $customerTypeName = $customer->shop_id && $customer->shop ? array_search($customer->shop->user_type,
                         cons('user.type')) : 'retailer';
-
                 }
                 if ($goods->type == $orderConf['goods']['type']['order']) {
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] + $goods->num : $goods->num;
@@ -245,28 +263,23 @@ class BusinessService
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_id'] = $goods->goods_id;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['goods_name'] = $goods instanceof SalesmanVisitGoodsRecord ? $goods->goods->name : $goods->goods_name;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['stock'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->stock : 0;
-                $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : 0;
+                $visitData[$customerId]['statistics'][$goods->goods_id]['production_date'] = isset($goodsRecodeData[$goods->goods_id]) ? $goodsRecodeData[$goods->goods_id]->production_date : ' - - ';
                 $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_order_num'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['return_amount']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['return_amount'] : 0;
                 $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] : 0;
-
             }
-
-            $mortgageGoods = $this->getOrderMortgageGoods($orderForm);
-
-
-            //货抵商品
-            foreach ($mortgageGoods as $mortgage) {
-                $date = (new Carbon($mortgage['created_at']))->toDateString();
-                $visitData[$customerId]['mortgage'][$date][] = $mortgage;
-            }
-
         }
 
         return compact('visitData', 'visitStatistics');
     }
 
+    /**
+     * 格式化客户订单
+     *
+     * @param $orders
+     * @return \Illuminate\Support\Collection
+     */
     public function formatOrdersByCustomer($orders)
     {
         $result = [];
@@ -287,7 +300,7 @@ class BusinessService
 
                 foreach ($order->orderGoods as $orderGoods) {
                     $result[$customerId]['orderGoods'][$orderGoods->goods_id]['name'] = $orderGoods->goods_name;
-                    $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num']) ? ($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] + $orderGoods->num)  : $orderGoods->num;
+                    $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num']) ? ($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_num'] + $orderGoods->num) : $orderGoods->num;
                     $result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'] = isset($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'])
                         ? bcadd($result[$customerId]['orderGoods'][$orderGoods->goods_id]['order_amount'],
                             $orderGoods->amount, 2) : $orderGoods->amount;
@@ -315,14 +328,196 @@ class BusinessService
                     $mortgagesGoods->push([
                         'id' => $good->id,
                         'name' => $good->goods_name,
+                        'image_url' => $good->goods->image_url,
+                        'promotion_info' => $good->goods->promotion_info,
                         'pieces' => $good->pieces,
-                        'num' => $good->pivot->num,
+                        'num' => (int)$good->pivot->used,
+                        'month' => $good->pivot->month,
                         'created_at' => (string)$order->created_at
+                    ]);
+                }
+            }
+        }
+        return $mortgagesGoods;
+    }
+
+    /**
+     * 获取订单陈列费
+     *
+     * @param $orders
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderDisplayFees($orders)
+    {
+        $displayFees = collect([]);
+        foreach ($orders as $order) {
+            if ($displayFee = $order->displayFees) {
+                foreach ($displayFee as $item) {
+                    $displayFees->push([
+                        'month' => $item->month,
+                        'used' => $item->used,
+                        'time' => (string)$item->created_at
                     ]);
                 }
 
             }
         }
-        return $mortgagesGoods;
+        return $displayFees;
+    }
+
+    /**
+     * 获取剩余陈列费
+     *
+     * @param \App\Models\SalesmanCustomer $customer
+     * @param $month
+     * @return mixed
+     */
+    public function surplusDisplayFee(SalesmanCustomer $customer, $month)
+    {
+        $display = $customer->displaySurplus()->where([
+            'month' => $month,
+            'mortgage_goods_id' => 0
+        ])->first();
+
+        return is_null($display) ? $customer->display_fee : $display->surplus;
+    }
+
+    /**
+     * 获取剩余陈列商品
+     *
+     * @param $customer
+     * @param $month
+     * @param null $mortgages
+     * @return array
+     */
+    public function surplusMortgageGoods($customer, $month, $mortgages = null)
+    {
+        $surplus = [];
+
+        $mortgages = is_null($mortgages) ? $customer->mortgageGoods : $mortgages;
+        //获取本月剩余陈列商品
+        $surplusMortgageGoods = $customer->displaySurplus()->where(['month' => $month])->whereIn('mortgage_goods_id',
+            $mortgages->pluck('id'))->orderBy('id', 'desc')->get();
+        foreach ($mortgages as $mortgage) {
+            $flag = false;
+            foreach ($surplusMortgageGoods as $item) {
+                if ($item->mortgage_goods_id == $mortgage->id) {
+                    $surplus[] = [
+                        'id' => $mortgage->id,
+                        'name' => $mortgage->goods_name,
+                        'surplus' => (int)$item->surplus,
+                        'pieces_name' => $mortgage->pieces_name
+                    ];
+                    $flag = true;
+                    break;
+                }
+            }
+            if (!$flag) {
+                $surplus[] = [
+                    'id' => $mortgage->id,
+                    'name' => $mortgage->goods_name,
+                    'surplus' => (int)$mortgage->pivot->total,
+                    'pieces_name' => $mortgage->pieces_name
+                ];
+            }
+
+        }
+        return $surplus;
+    }
+
+
+    /**
+     * 验证陈列费
+     *
+     * @param $displayFee
+     * @param $orderAmount
+     * @param \App\Models\SalesmanCustomer $customer
+     * @param \App\Models\SalesmanVisitOrder|null $salesmanVisitOrder
+     * @return array|bool
+     */
+    public function validateDisplayFee(
+        $displayFee,
+        $orderAmount,
+        SalesmanCustomer $customer,
+        SalesmanVisitOrder $salesmanVisitOrder = null
+    ) {
+        $totalCash = 0;
+        $displayList = [];
+
+        foreach ($displayFee as $month => $item) {
+            $customerSurplus = $this->surplusDisplayFee($customer, $month);
+            $orderDisplayFee = 0;
+            if (!is_null($salesmanVisitOrder)) {
+                $orderDisplayFee = $salesmanVisitOrder->displayList()->where([
+                    'month' => $month,
+                    'mortgage_goods_id' => 0
+                ])->pluck('used');
+            }
+            if ($item > bcadd($customerSurplus, $orderDisplayFee, 2)) {
+                return false;
+            }
+            $totalCash = bcadd($totalCash, $item, 2);
+            $displayList[] = new SalesmanCustomerDisplayList([
+                'salesman_customer_id' => $customer->id,
+                'month' => $month,
+                'used' => $item,
+            ]);
+        }
+        if ($totalCash > $orderAmount) {
+            return false;
+        }
+        return $displayList;
+    }
+
+    /**
+     * 验证陈列商品
+     *
+     * @param $mortgages
+     * @param \App\Models\SalesmanCustomer $customer
+     * @param \App\Models\SalesmanVisitOrder|null $salesmanVisitOrder
+     * @return array|bool
+     */
+    public function validateMortgage(
+        $mortgages,
+        SalesmanCustomer $customer,
+        SalesmanVisitOrder $salesmanVisitOrder = null
+    ) {
+        $displayList = [];
+
+        foreach ($mortgages as $month => $mortgage) {
+            $customerSurplus = $this->surplusMortgageGoods($customer, $month);
+            $orderMortgageGoodsNum = 0;
+            foreach ($mortgage as $detail) {
+                $flag = false;
+                foreach ($customerSurplus as $item) {
+                    if ($detail['id'] == $item['id']) {
+                        if (!is_null($salesmanVisitOrder)) {
+                            $orderMortgageGoodsNum = $salesmanVisitOrder->displayList()->where([
+                                'month' => $month,
+                                'mortgage_goods_id' => $detail['id']
+                            ])->pluck('used');
+                        }
+
+                        if ($detail['num'] > bcadd($item['surplus'], $orderMortgageGoodsNum)) {
+                            return false;
+                        }
+                        $displayList[] = new SalesmanCustomerDisplayList([
+                            'salesman_customer_id' => $customer->id,
+                            'month' => $month,
+                            'used' => $detail['num'],
+                            'mortgage_goods_id' => $item['id']
+                        ]);
+                        $flag = true;
+                        break;
+                    }
+                }
+                if (!$flag) {
+                    return false;
+                }
+            }
+
+        }
+        return $displayList;
+
     }
 }

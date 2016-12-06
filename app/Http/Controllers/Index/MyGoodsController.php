@@ -7,6 +7,7 @@ use App\Models\Goods;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Http\Requests;
+use App\Http\Requests\Index\UpdateGoodsRequest;
 use App\Services\AttrService;
 use Illuminate\Http\Request;
 use DB;
@@ -37,12 +38,21 @@ class MyGoodsController extends Controller
         $result = GoodsService::getShopGoods($shop, $data, ['mortgageGoods']);
         $myGoods = $result['goods']->orderBy('id', 'DESC')->paginate();
 
-        $cateIds = $myGoods->pluck('category_id')->all();
         $cateName = [];
 
         foreach (CategoryService::getCategories() as $key => $category) {
-            if (in_array($key, $cateIds)) {
-                $cateName[$key] = $category['name'];
+
+            foreach ($myGoods as $goods) {
+                if ($goods->cate_level_1 && $key == $goods->cate_level_1) {
+                    $cateName[$goods->id]['cate_level_1'] = $category['name'];
+                }
+                if ($goods->cate_level_2 && $key == $goods->cate_level_2) {
+                    $cateName[$goods->id]['cate_level_2'] = $category['name'];
+                }
+                if ($goods->cate_level_3 && $key == $goods->cate_level_3) {
+                    $cateName[$goods->id]['cate_level_3'] = $category['name'];
+                }
+
             }
         }
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
@@ -154,6 +164,50 @@ class MyGoodsController extends Controller
             return Response::download($file);
         }
         return $this->error('文件不存在');
+    }
+
+    /**
+     * @param  \App\Http\Requests\Index\UpdateGoodsRequest $request
+     * @return Response
+     */
+    public function updateNext(UpdateGoodsRequest $request)
+    {
+
+        if (!empty($request->input('goods_id'))) {
+            $goods = Goods::find($request->input('goods_id'));
+            if (Gate::denies('validate-my-goods', $goods)) {
+                return redirect(url('my-goods'));
+            }
+            $goodsAttr = $goods->attr;
+            //获取所有标签
+            $attrGoods = [];
+            foreach ($goodsAttr as $attr) {
+                $attrGoods[$attr->pid] = $attr->pivot->toArray();
+            }
+
+            $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
+                $goods->category_id)->get()->toArray();
+
+            $attrResults = (new AttrService($attrResults))->format();
+
+        } else {
+            $goods = new Goods;
+            $cateId = $request->input('cate_level_3') ? $request->input('cate_level_3') : ($request->input('cate_level_2') ? $request->input('cate_level_2') : $request->input('cate_level_1'));
+            $attrResults = Attr::where('category_id', $cateId)->get()->toArray();
+            $attrResults = (new AttrService($attrResults))->format();
+            $attrGoods = '';
+        }
+        //店铺配送地址
+        $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
+        $shopDelivery = $shop->deliveryArea;
+        $goods->shopDeliveryArea = $shopDelivery;
+        return view('index.my-goods.goods-next', [
+            'goods' => $goods,
+            'attrs' => $attrResults,
+            'attrGoods' => $attrGoods,
+            'data' => $request->all()
+        ]);
+
     }
 
     /**

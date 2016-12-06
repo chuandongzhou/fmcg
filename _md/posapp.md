@@ -188,33 +188,45 @@
 ####2.2.8 配送统计[get] (delivery-statistical)
 `请求参数：`
 
-	start_at        date           开始时间
-	end_at          date           结束时间
+	start_at        	date           			开始时间
+	end_at          	date           			结束时间
+	num					int			   			订单配送人数（可选参数）
 
 `成功返回：`
 
-	deliveryMan     array          配送人员统计
-	goods           array          商品统计
+	deliveryNum     	array          			所有配送订单人数
+	data            	array          			统计数据
+
+	data字段说明
+	
+	goods          		array          			 商品统计
+	deliveryMan    		array         			 配送人员统计
 
 	deliveryMan字段说明
 
-		name        string           配送人员姓名
-		num         int              配送单数
-		price       decimal          配送总金额
-		detail      array            配送金额组成
+		name        	string           		 配送人员姓名
+		num         	int             		 配送单数
+		price       	decimal         		 配送总金额
+		detail      	array            		 配送金额组成
 		
 		detail字段说明
-			pay_type     int        交易方式（0：现金，其他按正常表示）
-			amount       decimal    交易金额（其中:易宝=易宝+pingxx_易宝，支付宝支付=支付宝+支付宝app）
+			pay_type     int        		交易方式（0：现金，其他按正常表示）
+			amount       decimal    		交易金额（其中:易宝=易宝+pingxx_易宝，支付宝支付=支付宝+支付宝app）
 
 	goods字段说明
-		name       string            商品名称
-		detail     array             按单位统计详细信息
-		
-		detail字段说明
-			pieces     int          商品单位
-			num        int          商品数量
-			amount     decimal      商品金额
+		deliveryManNum     int     			订单配送人数
+		allGoods           array   			按商品名称分类明细
+
+	allGoods字段说明
+		name          string          		商品名称
+		data          array                按购买单位分类明细
+
+
+	data字段说明
+
+		pieces     int          		商品单位
+		num        int          		商品数量
+		amount     decimal      		商品金额
 			
 
 

@@ -45,7 +45,7 @@ abstract class AdvertController extends Controller
      */
     public function create()
     {
-        if ($this->type == 'category') {
+        if ($this->type == 'category' || $this->type == 'left-category') {
             $categories = Category::where('pid', 0)->get();
         }
         return view('admin.advert.advert', [
@@ -65,6 +65,16 @@ abstract class AdvertController extends Controller
     {
         $attributes = $request->all();
         $attributes['type'] = cons('advert.type.' . $this->type);
+        if ($this->type == 'left-category') {
+            $leftCategoryAdverts = Advert::where([
+                'type' => $attributes['type'],
+                'category_id' => $attributes['category_id']
+            ])->lists('id')->toArray();
+            if (!empty($leftCategoryAdverts)) {
+                Advert::destroy($leftCategoryAdverts);
+            }
+
+        }
 
         if (Advert::create($attributes)->exists) {
             return $this->success('添加广告成功');
@@ -92,7 +102,7 @@ abstract class AdvertController extends Controller
      */
     public function edit($advert)
     {
-        if ($this->type == 'category') {
+        if ($this->type == 'category' || $this->type == 'left-category') {
             $categories = Category::where('pid', 0)->get();
         }
         return view('admin.advert.advert', [

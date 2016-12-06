@@ -3,9 +3,9 @@
 @section('subtitle', '业务管理-业务员添加')
 
 @section('top-title')
-    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
-    <a href="{{ url('business/salesman') }}">业务员管理</a> &rarr;
-    业务员{{ $salesman->id ? '编辑' : '新增' }}
+    <a href="{{ url('business/salesman') }}">业务管理</a> >
+    <a href="{{ url('business/salesman') }}">业务员管理</a> >
+    <span class="second-level">业务员{{ $salesman->id ? '编辑' : '新增' }}</span>
 @stop
 
 @section('right')

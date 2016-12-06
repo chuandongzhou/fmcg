@@ -1,27 +1,17 @@
 @extends('index.menu-master')
 @section('subtitle', '商品收藏')
 @section('top-title')
-    <a href="{{ url('like/shops') }}">我的收藏</a> &rarr;
-    商品收藏
+    <a href="{{ url('like/shops') }}">我的收藏</a> >
+    <span class="second-level">商品收藏</span>
 @stop
 @section('right')
-    <div class="row my-goods index">
-        <div class="col-sm-12 collect search-page">
+
+    <div class="row collection index ">
+        <div class="col-sm-12 collect">
             <div class="row">
-                <div class="col-sm-12">
-                    <p class="search-list-item">
-                        <label>类别 : </label>
-                        <a href="{{ url('like/goods?cate_level_2=0') }}"
-                           class="btn control {{ empty($data['cate_level_2']) ? 'active' : '' }}">全部</a>
-                        @foreach($cateArr as $cate)
-                            <a href="{{ url('like/goods?cate_level_2='.$cate['id']) }}"
-                               class="btn control {{ (isset($data['cate_level_2']) && $cate['id'] == $data['cate_level_2']) ? 'active' : '' }}">{{ $cate['name'] }}</a>
-                        @endforeach
-                    </p>
-                </div>
                 <form action="{{ url('like/goods') }}" method="get" autocomplete="off">
-                    <div class="col-sm-12 control-panel">
-                        <label>配送区域</label>
+                    <div class="col-sm-12 salesman-controls">
+
                         <select data-id="{{ $data['province_id'] or 0 }}" class="control address-province"
                                 name="province_id"></select>
                         <select data-id="{{ $data['city_id'] or 0 }}" class="control address-city"
@@ -30,43 +20,52 @@
                                 name="district_id"></select>
                         <select data-id="{{ $data['street_id'] or 0 }}" class="control address-street"
                                 name="street_id"></select>
-                        <input type="text" placeholder="商品名称" class="control" name="name"
+                        <input type="text" placeholder="请输入店铺名称" class="control" name="name"
                                value="{{ $data['name'] or '' }}">
-                        <button class=" btn btn-cancel search search-by-get">搜索</button>
+                        <button class=" btn btn-blue-lighter  search-by-get">搜索</button>
                     </div>
                 </form>
             </div>
-            <div class="row list-penal commodity-other">
-                @foreach($goods as $good)
-                    <div class="col-sm-3 commodity new-listing">
-                        <div class="commodity-border">
+            <form>
+                <div class="row list-penal">
+                    @foreach($goods as $good)
+                        <div class="col-sm-3 commodity">
                             <div class="img-wrap">
-                                <a href="{{ url('goods/'.$good['id']) }}" target="_blank">
-                                    <img class="commodity-img" src="{{ $good->image_url }}">
-                                    <span class="prompt new-listing"></span>
-                                </a>
+                                <img class="commodity-img" src="{{ $good->image_url }}">
+                            </div>
+                            <div class="operation">
+                                <div class="text-right"><input type="checkbox" name="id[]" value="{{ $good->id }}"
+                                                               class="child"/></div>
+                                <div class="remove">
+                                    <a data-url="{{ url('api/v1/like/interests') }}" data-method="put"
+                                       data-data='{"id":{{ $good->id }}, "type" : "goods","status":0}'
+                                       class="red ajax">
+                                        <i class="iconfont icon-shanchu"></i>删除
+                                    </a>
+                                </div>
                             </div>
                             <div class="content-panel">
-                                <p class="commodity-name">
-                                    <a href="{{ url('goods/'.$good['id']) }}" target="_blank">
-                                        {{ $good->name }}
-                                    </a>
-                                </p>
-                                <p class="sell-panel">
-                                    <span class="money">¥{{ $good->price }}</span>
-                                    <span class="sales pull-right">销量 : {{ $good->sales_volume }}</span>
-                                </p>
-
+                                <div class="commodity-name">{{ $good->name }}</div>
+                                <div class="sell-panel">
+                                    <span class="money red"><b>￥{{ $good->price.'/'.$good->pieces }}</b></span>
+                                    <span class="sales pull-right">最低购买量 : {{ $good->min_num }}</span>
+                                </div>
                             </div>
                         </div>
+                    @endforeach
+                    <div class="col-sm-12 batch-delete">
+                        <label><input type="checkbox" class="parent"/>全选 </label>
+                        <input type="hidden" name="type" value="goods"/>
+                        <button data-method="put" data-url="{{ url('api/v1/like/batch') }}"
+                                class="btn btn-red batch ajax">批量删除
+                        </button>
                     </div>
-                @endforeach
-            </div>
-            <div class="row">
-                <div class="col-xs-12 text-right">
-                    {!! $goods->appends(array_filter($data))->render() !!}
+                    <div class="text-right col-sm-12">
+                        {!! $goods->appends(array_filter($data))->render() !!}
+                    </div>
                 </div>
-            </div>
+            </form>
+
         </div>
     </div>
 @stop
@@ -78,5 +77,6 @@
     @parent
     <script type="text/javascript">
         formSubmitByGet();
+        onCheckChange('.parent', '.child');
     </script>
 @stop

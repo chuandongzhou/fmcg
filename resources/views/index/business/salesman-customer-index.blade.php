@@ -3,36 +3,31 @@
 @section('subtitle', '业务管理-客户管理')
 
 @section('top-title')
-    <a href="{{ url('business/salesman') }}">业务管理</a> &rarr;
-    客户管理
+    <a href="{{ url('business/salesman') }}">业务管理</a> >
+    <span class="second-level">客户管理</span>
 @stop
 
 @section('right')
-    <form class="form-horizontal" method="get" action="{{ url('business/salesman-customer') }}" autocomplete="off">
-        <div class="col-sm-12 form-group">
-            <span class="item control-item">
-                <select name="salesman_id" class="inline-control">
+    <div class="row salesman">
+        <form class="form-horizontal" method="get" action="" autocomplete="off">
+            <div class="col-sm-12 form-group salesman-controls">
+                <a class="btn btn-blue-lighter" href="{{ url('business/salesman-customer/create') }}"><i
+                            class="fa fa-plus"></i>新增客户</a>
+                <select name="salesman_id" class="control">
                     <option value="">全部业务员</option>
                     @foreach($salesmen as $salesman)
                         <option value="{{ $salesman->id }}" {{ $salesman->id == $salesmanId ? 'selected' : '' }}>{{ $salesman->name }}</option>
                     @endforeach
                 </select>
-            </span>
-            <span class="item control-item">
-               <input class="inline-control" type="text" name="name" value="{{ $name }}" placeholder="客户名称">
-            </span>
-            <span class="item control-item">
-                <button type="submit" class="btn btn-default search-by-get">查询</button>
-                <a class="btn btn-default" href="{{ url('business/salesman-customer/create') }}">新增客户</a>
-                <a class="btn btn-default customer-map" href="javascript:" data-target="#customerAddressMapModal"
+                <input class="control" type="text" name="name" value="{{ $name }}" placeholder="客户名称">
+                <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
+                <a class="btn btn-border-blue customer-map" href="javascript:" data-target="#customerAddressMapModal"
                    data-toggle="modal">
                     <i class="fa fa-map-marker"></i> 客户分布图
                 </a>
-            </span>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 table-responsive">
-                <table class="table table-bordered table-center table-middle salesman-customer-table">
+            </div>
+            <div class="col-sm-12 table-responsive padding-clear">
+                <table class="table table-bordered table-center table-middle public-table salesman-customer-table">
                     <thead>
                     <tr>
                         <th>编号</th>
@@ -83,14 +78,11 @@
                             </td>
                             <td>
                                 <div role="group" class="btn-group btn-group-xs">
-                                    <a class="btn btn-primary"
+                                    <a class=" edit"
                                        href="{{ url('business/salesman-customer/' . $customer->id . '/edit') }}">
-                                        <i class="fa fa-edit"></i> 编辑
-                                    </a>
-
-                                    <a class="btn btn-default"
-                                       href="{{ url('business/salesman-customer/' . $customer->id) }}">
-                                        <i class="fa fa-info"></i> 明细
+                                        <i class="iconfont icon-xiugai"></i> 编辑
+                                    </a><a class="edit" href="{{ url('business/salesman-customer/' . $customer->id) }}">
+                                        <i class="iconfont icon-iconmingchengpaixu65"></i> 明细
                                     </a>
 
                                     <input type="hidden" class="map-data"
@@ -107,8 +99,8 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
     @parent
 @stop
 @section('js')

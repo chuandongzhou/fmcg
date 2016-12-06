@@ -10,15 +10,14 @@
 @stop
 @section('right')
     <div class="modal fade" id="shippingAddressMapModal" tabindex="-1" role="dialog"
-         aria-labelledby="shippingAddressMapModalLabel"
-         aria-hidden="true">
+         aria-labelledby="shippingAddressMapModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="shippingAddressMapModalLabel">收货人地址<span class="extra-text"></span>
-                    </h4>
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="shippingAddressMapModalLabel">
+                        <span>收货人地址</span>
+                    </div>
                 </div>
 
                 <div class="modal-body">
@@ -33,7 +32,6 @@
                     <div id="address-map" style="">
                     </div>
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
                 </div>

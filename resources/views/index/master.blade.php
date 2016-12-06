@@ -3,6 +3,7 @@
 @section('title')@yield('subtitle') | 订百达 - 订货首选@stop
 
 @include('includes.chat')
+@include('includes.notice')
 
 @if(!request()->cookie('province_id'))
     @include('includes.first-load-model')
@@ -24,7 +25,7 @@
     <div class="dealer-top-header">
         <div class="container ">
             <div class="row">
-                <div class="col-sm-4 city-wrap">
+                <div class="col-xs-6 city-wrap">
                     <div class="location-panel">
                         <i class="fa fa-map-marker"></i> 所在地：
                         <a href="#" class="location-text">
@@ -55,8 +56,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="login-info-wrap">
+                        @if(isset($user))
+                            <a href="{{ url("personal/info") }}" class="name-panel">
+                                <span class="user-name">{{ $user->shop_name }}</span>
+                                ({{ cons()->valueLang('user.type' , $user->type) }})
+                                <span class="exit"
+                                      onclick="window.location.href='{{ url('auth/logout') }}';return false;">退出</span>
+                            </a>
+                        @else
+                            <a href="{{ url('auth/login') }}" class="red">登录</a>
+                        @endif
+                        <a href="{{ url('personal/chat') }}">消息( <span class="total-message-count">0</span> )</a>
+                    </div>
+
                 </div>
-                <div class="col-sm-8">
+                <div class="col-xs-6">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed navbar-button" data-toggle="collapse"
                                 data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
@@ -66,46 +82,45 @@
                             <span class="icon-bar"></span>
                         </button>
                     </div>
-                    <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9"
-                         aria-expanded="false" style="height: 1px;">
-                        <ul class="nav navbar-nav navbar-right operating-wrap">
-                            @if((isset($user) && $user->type <= cons('user.type.wholesaler')) || is_null($user))
-                                <li><a href="{{ url('/') }}" class="home"><span class="fa fa-home"></span> 订百达首页</a>
-                                </li>
-                            @endif
-                            <li><a href="{{ url('personal/info') }}"><span class="fa fa-star-o"></span> 管理中心</a></li>
+                    <div class="navbar-collapse collapse top-nav-list" id="bs-example-navbar-collapse-9">
+                        <ul class="nav navbar-nav navbar-right pull-right operating-wrap">
+                            {{--@if((isset($user) && $user->type <= cons('user.type.wholesaler')) || is_null($user))--}}
+                            <li><a href="{{ url('/') }}">订百达首页</a></li>
+                            {{--@endif--}}
+
+                            <li><a href="{{ url('personal/info') }}">管理中心</a></li>
                             <li>
                                 <a href="{{ isset($user) && $user->type > cons('user.type.retailer') ? url('order-sell') : url('order-buy') }}">
-                                    <span class="fa fa-file-text-o"></span> 我的订单
-                                </a>
+                                    我的订单</a></li>
+                            <li class="notice"><a href="#"> 活动公告</a>
+                                <div class="upcoming-events-wrap">
+                                    <ul class="upcoming-events">
+                                        @foreach((new \App\Services\NoticeService())->getNotice() as $key=>$notice)
+                                            <li>
+                                                <a class="content-title" href="javascript:" data-target="#noticeModal"
+                                                   data-toggle="modal"
+                                                   data-content="{{ $notice->content }}"
+                                                   title="{{ $notice->title }}">{{ ($key+1). '.' .$notice->title }}
+                                                </a>
+                                            </li>
+
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </li>
-                            <li><a href="{{ url('help') }}"><span class="fa fa-question-circle"></span> 帮助中心</a></li>
-                            <li><a href="{{ url('personal/chat') }}">消息(<span
-                                            class="red total-message-count">0</span>)</a></li>
+                            <li><a href="{{ url('help') }}"> 帮助中心</a></li>
                             @if((isset($user) && $user->type < cons('user.type.supplier')) || is_null($user))
                                 <li class="collect-select">
-                                    <a class="collect-selected"><span class="selected">收藏夹</span> <span
-                                                class="fa fa-angle-down"></span></a>
+                                    <a href="{{ url('like/goods') }}" class="collect-selected">
+                                        <span class="selected">收藏夹</span>
+                                        <span class="fa fa-angle-down"></span>
+                                    </a>
                                     <ul class="select-list">
-                                        <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
                                         <li><a href="{{ url('like/goods') }}">商品收藏</a></li>
+                                        <li><a href="{{ url('like/shops') }}">店铺收藏</a></li>
                                     </ul>
                                 </li>
                             @endif
-                            @if(isset($user))
-                                <li class="user-name-wrap">
-                                    <a href="{{ url('personal/info') }}" class="name-panel"><span
-                                                class="user-name">{{ $user->shop_name }}</span>( {{ cons()->valueLang('user.type' , $user->type) }}
-                                        )</a>
-                                    <a href="{{ url('auth/logout') }}" class="exit"><i class="fa fa-sign-out"></i>
-                                        退出</a>
-                                </li>
-                            @else
-                                <li class="user-name-wrap">
-                                    <a href="{{ url('auth/login') }}" class="red">登录</a>
-                                </li>
-                            @endif
-
                         </ul>
                     </div>
                 </div>
@@ -122,11 +137,16 @@
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
+        {{--<div class="msg-channel" id="alert-div">--}}
+            {{--<div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a>--}}
+            {{--</div>--}}
+            {{--<a class="check" href="#">点击查看>>>></a>--}}
+        {{--</div>--}}
         <div class="msg-channel" id="alert-div">
-            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a></div>
+            <p class="title"><span class="pull-left">你有新消息</span><span onclick="popClose('.msg-channel')"
+                                                                    class="close-btn fa fa-remove pull-right"></span></p>
             <a class="check" href="#">点击查看>>>></a>
         </div>
-
     @endif
 @stop
 

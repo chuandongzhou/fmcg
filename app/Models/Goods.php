@@ -110,6 +110,25 @@ class Goods extends Model
     }
 
     /**
+     * recommendGoods推荐商品店铺
+     * * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function recommendShop()
+    {
+        return $this->belongsToMany('App\Models\Shop', 'shop_recommend_goods', 'goods_id', 'shop_id');
+    }
+
+    /**
+     * 商品单位表
+     *
+     */
+    public function goodsPieces()
+    {
+        return $this->hasOne('App\Models\GoodsPieces');
+    }
+
+
+    /**
      * 购物车内的商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -194,10 +213,11 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopeOfPrice($query)
+    public function scopeOfPrice($query, $shop_user_id = 0)
     {
         $typeName = (new UserService())->getUserTypeName();
-        $typeName = ($typeName == 'supplier' ? 'retailer' : $typeName);
+        info($this->user_type);
+        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shop_user_id ? 'retailer' : $typeName));
         return $query->orderBy('price_' . $typeName, 'asc');
     }
 
@@ -335,8 +355,7 @@ class Goods extends Model
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
-
-        return $userType == $this->user_type ? $this->price_retailer : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler : $this->price_retailer);
+        return $userType == $this->user_type && $userType != cons('user.type.supplier') ? $this->price_retailer : ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier') ? $this->price_wholesaler : $this->price_retailer);
     }
 
     /**
@@ -371,8 +390,11 @@ class Goods extends Model
     public function getPiecesIdAttribute()
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
-        $piece = $userType == $this->user_type ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') ? $this->pieces_wholesaler : $this->pieces_retailer);
+
+        $piece = $userType == $this->user_type && $userType != cons('user.type.supplier') ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier') ? $this->pieces_wholesaler : $this->pieces_retailer);
+
         return $piece;
+
     }
 
     /**

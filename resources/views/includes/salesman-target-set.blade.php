@@ -9,10 +9,12 @@
                       data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
 
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="cropperModalLabel">业务员目标设置<span class="extra-text"></span></h4>
+
+                    <div class="modal-header choice-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                        <div class="modal-title forgot-modal-title" id="cropperModalLabel">
+                            <span>业务员目标设置</span>
+                        </div>
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
@@ -46,9 +48,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="确定">
+                    <div class="modal-footer middle-footer">
+                        <button type="submit" class="btn btn-success btn-sm btn-add pull-right" data-text="确定">
                             确定
                         </button>
                     </div>

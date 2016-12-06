@@ -5,7 +5,7 @@ return [
         'app_secret' => '3aecbfce77c9b040ce33a03123e65b91',
         'signature_id' => '1600',
         'templates' => [
-            'register' => '000',
+            'register' => '2941',
             'code' => '2954',
             'audit_passed' => '2943',
             'audit_not_passed' => '2944',

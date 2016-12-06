@@ -9,7 +9,7 @@ namespace App\Services;
 
 use Predis\Client;
 use Predis\ClientInterface;
-
+use Illuminate\Support\Facades\Redis;
 class RedisService
 {
 
@@ -35,7 +35,7 @@ class RedisService
     public function __construct()
     {
 
-        $this->redis = \Redis::connection();
+        $this->redis = Redis::connection();
         $this->namespace = $this->name ? $this->name . ':' : '';
     }
 

@@ -234,7 +234,7 @@ class OrderService
                         $orderGoods->goods_id)->first();
                     if ($salesmanVisitOrderGoods) {
                         $salesmanVisitOrderGoods = $salesmanVisitOrderGoods->pivot;
-                        $fill = ['num' => $num];
+                        $fill = ['used' => $num];
                     }
 
                 } else {
@@ -262,7 +262,7 @@ class OrderService
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal,  cons('push_time.msg_life'));
 
             return ['status' => true];
         });
@@ -331,6 +331,27 @@ class OrderService
         $order->addHidden(['goods']);
         return compact('orderGoods', 'mortgageGoods');
     }
+
+    /**
+     * 获取票据单号
+     *
+     * @param $shopId
+     * @return string
+     */
+    public function getNumbers($shopId)
+    {
+        $carbon = (new Carbon());
+        $month = $carbon->copy()->format('Y-m');
+        $day = $carbon->copy()->toDateString();
+
+        $like = $month . '-%';
+
+        $orderCount = Order::where('numbers', 'like', $like)->where('shop_id', $shopId)->count();
+
+        $number = $day . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT);
+        return $number;
+    }
+
 
     /**
      * 订单提交失败时删除已成功的订单

@@ -5,10 +5,11 @@
             <div class="modal-content">
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man') }}"
                       method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="cropperModalLabel">添加配送人员<span class="extra-text"></span></h4>
+                    <div class="modal-header choice-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                        <div class="modal-title forgot-modal-title" id="deliveryModalLabel">
+                            <span>添加配送人员</span>
+                        </div>
                     </div>
                     <div class="modal-body address-select">
 
@@ -71,12 +72,53 @@
                         </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-sm btn-add" data-text="添加">添加</button>
+                    <div class="modal-footer middle-footer">
+                        <button type="submit" class="btn btn-success btn-sm btn-add pull-right" data-text="添加">添加</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     @parent
+@stop
+@section('js')
+    @parent
+    <script type="text/javascript">
+        $(function () {
+            var deliveryModal = $('#deliveryModal'),
+                    form = deliveryModal.find('form');
+            $('.update-modal').click(function () {
+                var obj = $(this);
+                if (obj.hasClass('add')) {
+                    form.attr('action', site.api('personal/delivery-man'));
+                    form.attr('method', 'post');
+
+                } else {
+                    $('#deliveryModal span').html('编辑配送人员');
+                    $('.btn-add').html('提交');
+                    var id = obj.data('id'),
+                            name = obj.data('name'),
+                            phone = obj.data('phone'),
+                            userName = obj.data('user-name'),
+                            posSign = obj.data('pos-sign');
+                    $('input[name="name"]').val(name);
+                    $('input[name="phone"]').val(phone);
+                    $('input[name="user_name"]').val(userName);
+                    $('input[name="pos_sign"]').val(posSign);
+                    form.attr('action', site.api('personal/delivery-man/' + id));
+                    form.attr('method', 'put');
+
+
+                }
+            });
+            deliveryModal.on('hidden.bs.modal', function (e) {
+
+                $('input[name="name"]').val('');
+                $('input[name="phone"]').val('');
+                $('input[name="user_name"]').val('');
+                $('input[name="pos_sign"]').val('');
+            });
+
+        });
+    </script>
 @stop

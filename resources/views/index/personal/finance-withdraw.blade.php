@@ -7,21 +7,21 @@
 @stop
 @section('right')
     <form method="get" action="{{ url('personal/finance/withdraw') }}" autocomplete="off">
-        <div class="row">
+        <div class="row balance">
             <div class="col-sm-12 ">
                 @include('index.personal.finance-common')
                 <div class="table-responsive">
-                    <div class="time form-group">
-                        提现单号 : <input type="text" class=" inline-control" name="id" value="{{ $data['id'] or '' }}"/>
-                        时间段： <input class="datetimepicker inline-control" name="start_time" data-format="YYYY-MM-DD"
+                    <div class="time form-group table">
+                        提现单号 : <input type="text" class=" inline-control control" name="id" value="{{ $data['id'] or '' }}"/>
+                        时间段： <input class="datetimepicker inline-control control" name="start_time" data-format="YYYY-MM-DD"
                                     type="text" value="{{ $data['start_time'] or '' }}"> 至
-                        <input class="datetimepicker inline-control" name="end_time" data-format="YYYY-MM-DD"
+                        <input class="datetimepicker inline-control control" name="end_time" data-format="YYYY-MM-DD"
                                value="{{ $data['end_time'] or '' }}"
                                type="text">
-                        <input type="submit" class="btn btn-default search-by-get">
+                        <input type="submit" value="提交" class="btn btn-blue-lighter search-by-get">
                     </div>
 
-                    <table class="table table-bordered table-center">
+                    <table class="table table-bordered table-center table-middle public-table">
                         <thead>
                         <tr>
                             <th>提现单号</th>
@@ -62,6 +62,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="text-right">
+                    {!! $withdraws->appends($data)->render() !!}
+                </div>
             </div>
         </div>
     </form>
@@ -70,11 +73,12 @@
          aria-hidden="true" style="padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <p class="modal-title">操作详情:
-                    </p>
+
+                <div class="modal-header choice-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <div class="modal-title forgot-modal-title" id="cropperModalLabel">
+                        <span>操作详情:</span>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="text-left"></div>
@@ -93,6 +97,7 @@
         $(function () {
             getWithdrawTimeItem();
             formSubmitByGet();
+            $("[data-toggle='popover']").popover();
         });
     </script>
 @stop

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Germey\Geetest\CaptchaGeetest;
 
 class AuthController extends Controller
 {
@@ -19,7 +20,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use CaptchaGeetest,AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
      * Create a new authentication controller instance.
@@ -51,9 +52,28 @@ class AuthController extends Controller
      */
     public function register()
     {
-        return view('auth.register');
+        return view('auth.register-user');
     }
-
+    /**
+     *
+     */
+    public function setPassword(){
+       $user =  session('user');
+        if(empty($user)){
+            return redirect('auth.register-user');
+        }
+        return view('auth.register-password',['user'=>$user]);
+    }
+    /**
+     * 添加商铺信息
+     */
+    public function addShop(){
+        $user =  session('user');
+        if(empty($user)){
+            return redirect('auth.register-user');
+        }
+        return view('auth.register-user-shop',['user'=>$user]);
+    }
     /**
      * 注册成功
      *
@@ -65,7 +85,9 @@ class AuthController extends Controller
         if (!session('shop.name')) {
             return $this->error('请先注册', 'auth/register');
         }
-        return view('auth.reg-success');
+        $user =  session('user');
+        session()->forget('user');
+        return view('auth.reg-success',['user_name'=>$user['user_name'] ]);
     }
 
     /**

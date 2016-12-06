@@ -58,6 +58,13 @@ class Shop extends Model
             $model->deliveryArea()->delete();
             $model->shopAddress()->delete();
             $model->adverts()->delete();
+            $model->shopRecommendGoods()->delete();
+            $model->shopHomeAdverts()->delete();
+            $model->ShopSignature()->delete();
+        });
+        static::updated(function ($model) {
+            info($model->user);
+            (new UserService(true))->setShopDetail($model->user);
         });
     }
 
@@ -196,6 +203,48 @@ class Shop extends Model
             $query->where('type', cons('advert.type.shop'))->orWhere('type', cons('advert.type.promote'));
         });
 
+    }
+
+    /**
+     * 关联推荐商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function recommendGoods()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'shop_recommend_goods', 'shop_id',
+            'goods_id')->withTrashed();
+    }
+
+    /**
+     * 该店铺所有推荐商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopRecommendGoods()
+    {
+        return $this->hasMany('App\Models\ShopRecommendGoods');
+    }
+
+    /**
+     * 首页广告
+     *
+     * @return mixed
+     */
+    public function shopHomeAdverts()
+    {
+        return $this->hasMany('App\Models\ShopHomeAdvert');
+
+    }
+
+    /**
+     * 店招
+     *
+     * @return mixed
+     */
+    public function ShopSignature()
+    {
+        return $this->hasOne('App\Models\ShopSignature');
     }
 
     /**
@@ -579,7 +628,18 @@ class Shop extends Model
      */
     public function getSalesVolumeAttribute()
     {
-        return $this->goods()->sum('sales_volume');
+        $num = $this->goods()->sum('sales_volume');
+        $res = $num < 10000 ? $num : (floor($num/100)/100).'万';
+        return $res;
+    }
+
+    /**
+     * 获取店家商品数量
+     *
+     */
+    public function getGoodsCountAttribute()
+    {
+        return $this->goods()->count();
     }
 
 

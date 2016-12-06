@@ -49,7 +49,7 @@ class PayController extends Controller
             return $this->error('获取失败，请重试');
         }
 
-        if (Gate::denies('validate-online-orders', $orders)) {
+        if (Gate::denies('validate-payment-orders', $orders)) {
             return $this->error('获取失败，请重试');
         }
         $orderIds = $orders->pluck('shop_id')->all();

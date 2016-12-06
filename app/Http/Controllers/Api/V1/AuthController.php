@@ -10,8 +10,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
 use App\Http\Requests\Api\v1\BackupSendSmsRequest;
 use App\Http\Requests\Api\v1\RegisterRequest;
+use App\Http\Requests\Api\v1\RegisterUserRequest;
+use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
+use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
 use App\Services\RedisService;
+use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -23,6 +27,7 @@ class AuthController extends Controller
 {
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
     /**
      * 登录
      *
@@ -98,6 +103,68 @@ class AuthController extends Controller
     }
 
     /**
+     * 注册用户
+     *
+     * @param \App\Http\Requests\Api\v1\RegisterUserRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     * @throws \Exception
+     */
+    public function postRegisterUser(RegisterUserRequest $request)
+    {
+        $data = $request->only('user_name', 'backup_mobile', 'type');
+        //验证验证码
+        $code = $request->input('code');
+        $res = (new CodeService)->validateCode('register', $code, $data['user_name']);
+        if (!$res['status']) {
+            return $this->error($res['mes']);
+        }
+        session(['user' => $data]);
+        return $this->success('验证成功');
+
+    }
+
+    /**
+     * 设置密码
+     *App\Http\Requests\Api\v1\RegisterSetPasswordRequest $request
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postSetPassword(RegisterSetPasswordRequest $request)
+    {
+        session(['user' => $request->all()]);
+        return $this->success('设置密码成功');
+    }
+
+    /**
+     * 添加商户信息
+     *App\Http\Requests\Api\v1\RegisterUserShopRequest $request
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postUserShop(RegisterUserShopRequest $request)
+    {
+
+        if (empty($request->input('user_name'))) {
+            return $this->error('注册用户时遇到问题');
+        }
+        $user = User::where('user_name', $request->input('user_name'))->first();
+        $shopInput = $request->except('username');
+        $shopModel = $user->shop();
+
+        if ($user->type == cons('user.type.retailer')) {
+            unset($shopInput['area']);
+        }
+
+        if ($shopModel->create($shopInput)->exists) {
+
+            return $this->success('注册成功');
+        } else {
+            $user->delete();
+            return $this->error('注册用户时遇到问题');
+        }
+    }
+
+    /**
      * 找回密码
      *
      * @param \App\Http\Requests\Api\v1\BackupPasswordRequest $request
@@ -113,15 +180,13 @@ class AuthController extends Controller
         if ($user->shop->license_num != $data['license_num']) {
             return $this->error('营业执照编号不正确');
         }
-        $validateCodeConf = cons('validate_code');
-        $redisKey = $validateCodeConf['backup']['pre_name'] . $data['user_name'];
-
+        //验证验证码
         $code = $request->input('code');
-        $redis = Redis::connection();
-        if (!$redis->exists($redisKey) || $redis->get($redisKey) != $code) {
-            return $this->error('验证码错误');
+        $res = (new CodeService)->validateCode('backup', $code, $data['user_name']);
+        if (!$res['status']) {
+            return $this->error($res['mes']);
         }
-        $redis->del($redisKey);
+
         if ($user->fill(['password' => $data['password']])->save()) {
             return $this->success('修改密码成功');
         }
@@ -151,20 +216,13 @@ class AuthController extends Controller
         if ($user->shop->license_num != $data['license_num']) {
             return $this->error('营业执照错误');
         }
-        $validateCodeConf = cons('validate_code');
-        $redisKey = $validateCodeConf['backup']['pre_name'] . $data['user_name'];
-        $redis = Redis::connection();
-        if ($redis->exists($redisKey)) {
-            return $this->error('短信发送过于频繁');
-        }
-        $code = str_random($validateCodeConf['length']);
-
-        $result = app('pushbox.sms')->send('code', $data['backup_mobile'], $code);
-        if (empty($result)) {
-            return $this->error('发送失败,请重试');
+        //发送验证码
+        $res = (new CodeService)->sendCode('code', 'backup', $request->input('backup_mobile'),
+            $request->input('user_name'));
+        if ($res['status']) {
+            return $this->success($res['mes']);
         } else {
-            (new RedisService)->setRedis($redisKey, $code, $validateCodeConf['backup']['expire']);
-            return $this->success('发送成功');
+            return $this->error($res['mes']);
         }
     }
 
@@ -191,4 +249,25 @@ class AuthController extends Controller
         $result['has_file'] = count($request->file());
         return $result;
     }
+
+    /**
+     * 发送注册验证码
+     *
+     */
+    public function postRegSendSms(Request $request)
+    {
+        if (empty($request->input('backup_mobile'))) {
+            return $this->error('密保手机不能为空');
+        }
+        //发送验证码
+        $res = (new CodeService)->sendCode('register', 'register', $request->input('backup_mobile'),
+            $request->input('user_name'));
+        if ($res['status']) {
+            return $this->success($res['mes']);
+        } else {
+            return $this->error($res['mes']);
+        }
+
+    }
+
 }

@@ -111,10 +111,10 @@
                                 '   <img class="avatar" src=" ' + shops[i].logo_url + ' "> ' +
                                 '   <div class="user-item"> ' +
                                 '       <span class="user-name">' + shops[i].name + '</span> ' +
-                                '       <span class="pull-right last-msg-time prompt">' + userList[i][0] + '</span> ' +
+//                                '       <span class="pull-right last-msg-time prompt">' + userList[i][0] + '</span> ' +
                                 '   </div> ' +
                                 '   <div class="user-item"> ' +
-                                '       <span class="last-msg prompt">' + userList[i][1] + '</span> ' +
+                                 '       <span class=" last-msg-time prompt">' + userList[i][0] + '</span> ' +
                                 '       <span class="pull-right badge hide">0</span> ' +
                                 '   </div> ' +
                                 '</li>';
@@ -143,10 +143,10 @@
                     });
                     @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
                         var id = parseInt({!!  request()->input('uid') !!});
-                        userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                        userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#646464');
                         setReadState(sdk, id + "");
                      @elseif(request()->is('personal/chat'))
-                             userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#e0e0e0');
+                             userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#646464');
                         setReadState(sdk, firstId);
                     @endif
 

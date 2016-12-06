@@ -1,9 +1,9 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-配送人员')
 @section('top-title')
-    <a href="{{ url('personal/info') }}">个人中心</a> &rarr;
-    <a href="{{ url('personal/delivery-man') }}">配送人员</a> &rarr;
-    配送人员编辑
+    <a href="{{ url('personal/info') }}">个人中心</a> >
+    <a href="{{ url('personal/delivery-man') }}">配送人员</a> >
+    <span class="second-level">配送人员编辑</span>
 @stop
 @section('right')
     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man/' . $deliveryMan->id) }}"
@@ -71,7 +71,7 @@
 
         <div class="form-group row">
             <div class="col-sm-push-2 col-sm-10">
-                <button class="btn btn-primary" type="submit">提交</button>
+                <button class="btn btn-success" type="submit">提交</button>
                 <a href="javascript:history.go(-1)" class="btn btn-cancel">取消</a>
             </div>
         </div>

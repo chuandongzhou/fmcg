@@ -11,15 +11,11 @@
                 <div class="content-panel">
                     <div class="commodity-name">
                         <a href="{{ url('goods/' . $item->id) }}" target="_blank">{{ $item->name }}</a></div>
-                    <div class="sell-panel">
-                        <span class="money">¥{{ $item->price . '/' . $item->pieces }}</span>
+                    <div class="sell-panel ">
+                        <span class="money red">¥{{ $item->price . '/' . $item->pieces }}</span>
                         <span class="sales pull-right">最低购买量 : {{ $item->min_num }}</span>
                     </div>
-                    <div class="store-name">
-                        <a href="{{ asset('shop/' . (isset($shop) ? $shop->id : $item->shop->id )) }}" target="_blank">
-                            {{ isset($shop) ?  $shop->name : $item->shop->name  }}
-                        </a>
-                    </div>
+
                     <div class="shopping-store">
                         <button type="button" data-group="group{{ $item->id }}" class="count modified desc-num"
                                 disabled>-
@@ -31,8 +27,10 @@
                         @if($item->is_out)
                             <a href="javascript:void(0)" class="btn btn-primary disabled join-cart" disabled="">缺货</a>
                         @else
-                            <a href="javascript:void(0)" data-url="{{ url('api/v1/cart/add/'.$item->id) }}"
-                               class="btn btn-primary join-cart" data-group="group{{ $item->id }}">加入购物车</a>
+                            <a href="javascript:void(0)"
+                               data-url="{{ isset($shop)&&$user->id==$shop->user_id?'':url('api/v1/cart/add/'.$item->id) }}"
+                               class="btn btn-primary join-cart {{ isset($shop)&&$user->id==$shop->user_id?'disabled':'' }}"
+                               data-group="group{{ $item->id }}">加入购物车</a>
                         @endif
                         <div class="sales prompt">累积销量：{{ $item->sales_volume }}</div>
                     </div>

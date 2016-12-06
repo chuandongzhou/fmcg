@@ -12,7 +12,6 @@ class SalesmanVisitOrder extends Model
     protected $fillable = [
         'id',
         'amount',
-        'display_fee',
         'order_id',
         'status',
         'type',
@@ -26,7 +25,9 @@ class SalesmanVisitOrder extends Model
 
     protected $hidden = [
         'updated_at',
-        'order_goods'
+        'order_goods',
+        'display_fee',
+        'display_list'
     ];
 
     protected $appends = ['order_status_name'];
@@ -42,6 +43,7 @@ class SalesmanVisitOrder extends Model
         static::deleted(function ($model) {
             $model->orderGoods()->delete();
             $model->mortgageGoods()->detach();
+            $model->displayList()->delete();
         });
     }
 
@@ -73,7 +75,40 @@ class SalesmanVisitOrder extends Model
     public function mortgageGoods()
     {
         return $this->belongsToMany('App\Models\MortgageGoods',
-            'salesman_visit_order_mortgage_goods')->withTrashed()->withPivot('num');
+            'salesman_customer_display_list')->withTrashed()->withPivot('used', 'month', 'salesman_customer_id');
+    }
+
+    /**
+     * 陈列操作记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function displayList()
+    {
+        return $this->hasMany('App\Models\SalesmanCustomerDisplayList');
+    }
+
+    /**
+     * 陈列费
+     *
+     * @return mixed
+     */
+    public function displayFees()
+    {
+        return $this->displayList()->where('mortgage_goods_id', 0);
+    }
+
+
+    /**
+     * 关联抵费商品(新)
+     *
+     * @return mixed
+     */
+    public function newMortgageGoods()
+    {
+        return $this->belongsToMany('App\Models\MortgageGoods',
+            'salesman_customer_display_list')->where('mortgage_goods_id', '>', 0)->withTrashed()->withPivot('month',
+            'used', 'salesman_customer_id');
     }
 
     /**
@@ -139,8 +174,19 @@ class SalesmanVisitOrder extends Model
         $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']), function ($item) {
             return !is_null($item);
         });
-
-        return $query->where($filter);
+        $query = $query->where($filter);
+        if (isset($data['customer']) && !empty($data['customer'])) {
+            $customer = $data['customer'];
+            if (is_numeric($customer)) {
+                return $query->where('id',$customer);
+            } else {
+                return $query = $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
+                    $query->where('name', 'like', $customer);
+                });
+            }
+        } else {
+            return $query;
+        }
 
 
     }
@@ -206,7 +252,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return !$this->can_export;
+        return $this->status != cons('salesman.order.status.passed');
     }
 
     /**

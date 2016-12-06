@@ -2,17 +2,25 @@
 
 namespace App\Http\Requests\Index;
 
-use App\Http\Requests\Api\v1\Request as BaseRequest;
-
-abstract class Request extends BaseRequest
+use Illuminate\Foundation\Http\FormRequest as formRequest;
+use Illuminate\Contracts\Validation\Validator;
+abstract class Request extends formRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
+
+    /**
+     * 默认validator
+     *
+     * @param \Illuminate\Contracts\Validation\Factory $factory
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function defaultValidator($factory)
+    {
+        $rules = $this->container->call([$this, 'rules']);
+        return $factory->make($this->all(), $rules, $this->messages(), $this->attributes());
+    }
+
 }

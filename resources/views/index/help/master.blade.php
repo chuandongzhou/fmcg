@@ -1,7 +1,7 @@
 @extends('index.index-master')
 
 @section('container')
-    <div class="container">
+    <div class="container container-wrap">
         <div class="row">
             <div class="col-sm-2">
                 <ul class="help-menu-list">

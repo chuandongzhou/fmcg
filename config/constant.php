@@ -113,7 +113,9 @@ return [
             'app' => 3, // app广告(启动页)
             'category' => 4, //商品分类广告
             'shop' => 5, //店铺首页广告
-            'promote' => 6 //店铺促销信息
+            'promote' => 6, //店铺促销信息
+            'signature' => 7, //店招
+            'left-category' =>8 //商品分类左侧广告
         ],
         'cache' => [
             'index' => [
@@ -144,6 +146,7 @@ return [
             'images' => 3,          //店铺图片
             'business_license' => 4, //经营许可证
             'agency_contract' => 5, //代理合同
+            'signature' => 6, //店招
         ],
         'address_type' => [
             'shop_address' => 1,        //店铺地址
@@ -154,6 +157,7 @@ return [
             'new',
             'price',
         ],
+        'home_page_per_num' => 15,
         'page_per_num' => 10,  //店铺每页显示数量
         'qrcode_size' => 60   //二维码尺寸
     ],
@@ -225,7 +229,14 @@ return [
             'cup' => 9,
             'branch' => 10,
             'individual' => 11,
-            'canister' => 12
+            'canister' => 12,
+            'row' => 13,
+            'piece' => 14,
+            'pair' => 15,
+            'bowl' => 16,
+            'pot2' => 17,
+            'hang' => 18,
+            'carry' => 19
         ],
         'import_allow_ext' => [
             'xls',
@@ -336,6 +347,10 @@ return [
         'backup' => [
             'pre_name' => 'backup:code:',
             'expire' => 60,
+        ],
+        'register' =>[
+            'pre_name' => 'register:code',
+            'expire' => 60
         ]
     ],
     //地址
@@ -403,6 +418,12 @@ return [
             'address_type' => [
                 'business' => 1,
                 'shipping' => 2
+            ],
+            //陈列费
+            'display_type' => [
+                'no' => 0,
+                'cash' => 1,
+                'mortgage' => 2
             ]
         ],
         //订单

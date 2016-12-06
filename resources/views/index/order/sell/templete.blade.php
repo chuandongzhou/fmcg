@@ -1,27 +1,30 @@
 @extends('index.menu-master')
 @section('subtitle' , '订单下载模版')
 @include('includes.shipping-address-map')
+@include('includes.templet-model')
+
 @section('top-title')
-    <a href="{{ url('order-sell') }}">订单管理</a> &rarr;
-    订单打印模版
+    <a href="{{ url('order-sell') }}">订单管理</a> >
+    <span class="second-level">订单打印模版</span>
 @stop
 @section('right')
-    <div class="row">
-        <div class="col-sm-12 templet-title">订单打印默认模板: <b
-                    class="print-default">{{ cons()->valueLang('order.templete', $defaultTempleteId) }}</b>
-            <button class="btn btn-warning display" data-target="#templeteModal" data-toggle="modal"
+    @include('includes.success-meg')
+    <div class="row print-templet margin-clear">
+        <div class="col-sm-12 templet-title">
+            <span class="prompt">已选订单打印默认模板:</span>
+            <b class="print-default">{{ cons()->valueLang('order.templete', $defaultTempleteId) }}</b>
+            <button class="btn btn-blue-lighter display" data-target="#templeteModal" data-toggle="modal"
                     data-src="{{ asset('images/order-templetes/templete_' . $defaultTempleteId . '.png') }}">预览
             </button>
-            <a class="btn btn-default" href="javascript:history.back()">返回</a>
-        </div>
-        <div class="col-sm-12">
-            <div>模板选择:</div>
+            <a class="btn go-back" href="javascript:history.back()">返回</a>
+            <span class="prompt prompt-last">您可以在下列中选择订单打印模板，点击模板图片可预览大图</span>
         </div>
         <div class="col-sm-12 templet-list">
             <div class="row">
+
                 @foreach(cons()->valueLang('order.templete') as $templeteId => $templeteName)
-                    <div class="col-sm-4 item {{ $templeteId == $defaultTempleteId ? 'checked' : '' }}">
-                        <h4 class="templete-name">{{ $templeteName }}</h4>
+                <div class="col-sm-4 item">
+                    <div class="mask-panel">
                         @if($templeteId==cons('order.templete.third'))
                             <img src="{{ asset('images/order-templetes/templete_' . cons('order.templete.first') . '_s.png') }}">
                         @elseif($templeteId==cons('order.templete.fourth'))
@@ -29,35 +32,17 @@
                         @else
                             <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">
                         @endif
-
-                        <div class="buttons">
-                            <a class="btn btn-primary ajax no-prompt check-templete" data-method="post"
-                               data-done-then="none"
-                               data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}">选择</a>
-                            @if($templeteId==cons('order.templete.third'))
-                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
-                                        data-src="{{ asset('images/order-templetes/templete_' .cons('order.templete.first') . '.png') }}">
-                                    预览
-                                </button>
-                            @elseif($templeteId==cons('order.templete.fourth'))
-                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
-                                        data-src="{{ asset('images/order-templetes/templete_' .  cons('order.templete.second') . '.png') }}">
-                                    预览
-                                </button>
-                            @else
-                                <button class="btn btn-warning" data-target="#templeteModal" data-toggle="modal"
-                                        data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">
-                                    预览
-                                </button>
-                            @endif
-
-
-                        </div>
+                            <a href="javascript:;" class="templet-modal" data-target="#templetModal" data-toggle="modal">点击预览</a>
                     </div>
+                    <div class="choice-item">
+                        <label><input data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}" class="select-templet {{ $templeteId }}" type="radio" name="templet" {{ $templeteId == $defaultTempleteId ? 'checked disabled="disabled"' : '' }} />{{ $templeteName }}</label>
+                    </div>
+                </div>
                 @endforeach
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="templeteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg" style="width:980px;">
@@ -73,6 +58,7 @@
     @parent
     <script type="text/javascript">
         $(function () {
+            //模板选择成功事件
             var templeteModal = $('#templeteModal');
             templeteModal.on('show.bs.modal', function (e) {
                 var parent = $(e.relatedTarget),
@@ -80,15 +66,34 @@
                         templeteImg = templeteModal.find('.templete-img');
                 templeteImg.attr('src', src);
             });
-            $('.check-templete').on('always.hct.ajax', function () {
-                var obj = $(this),
-                        parent = $(this).closest('.item'),
-                        templeteName = parent.find('.templete-name').html(),
-                        displaySrc = obj.next().data('src');
-                parent.addClass('checked').siblings().removeClass('checked');
-                $('.print-default').html(templeteName);
-                $('.display').data('src', displaySrc);
-            })
+            //选择模板
+            $('.select-templet').click(function(){
+                $('.select-templet').each(function(){
+                    $(this).removeAttr('disabled');
+                });
+                $(this).attr("disabled",true);
+                var url = $("input[type=radio]:checked").data('url');
+                $.ajax({
+                    url: url,
+                    method: 'post'
+                }).done(function () {
+                    $('.success-meg-content').html('模板修改成功');
+                    showSuccessMeg();
+
+                }).fail(function(){
+                    $('.success-meg-content').html('模板修改失败');
+                    $(".popup").css({"opacity":"1","top":"20px"});
+                    setTimeout(function(){
+                        $(".popup").css({"opacity": "0","top":"-150px"});
+                    },3000);
+                    $('.select-templet').each(function(){
+                        $(this).removeClass('checked').removeAttr('disabled');
+                    });
+                    $('.{{ $defaultTempleteId }}').addClass('checked').attr("disabled",true);
+
+                });
+            });
+
         })
     </script>
 @stop

@@ -7,13 +7,11 @@
                 <form class="form-horizontal ajax-form" method="post" data-help-class="col-sm-push-2 col-sm-10"
                       autocomplete="off">
                     <input type="hidden" name="_method" value="put">
-
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <h4 class="modal-title" id="refundpModalLabel">订单退款<span class="extra-text"></span>
-                        </h4>
+                    <div class="modal-header choice-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
+                        <div class="modal-title forgot-modal-title" id="refundpModalLabel">
+                            订单退款 <span class="extra-text">选择要添加的配送区域</span>
+                        </div>
                     </div>
                     <div class="modal-body">
                         <div class="modal-title form-group" id="cropperModalLabel">

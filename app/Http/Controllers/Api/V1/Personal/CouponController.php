@@ -31,7 +31,10 @@ class CouponController extends Controller
         $attributes = $request->all();
 
         $attributes['start_at'] = (new Carbon())->toDateString();
-        $attributes['total'] = $attributes['stock'];
+
+        if ($attributes['full'] < $attributes['discount']) {
+            return $this->error('优惠金额不能大于最低订单金额');
+        }
 
         $shop = auth()->user()->shop;
 
