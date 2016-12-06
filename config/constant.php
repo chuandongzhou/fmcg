@@ -62,12 +62,6 @@ return [
             'fourth' => 4
         ],
         'auto_receive_time' => 72, //自动收货时间  （小时）
-        'goods' => [
-            'type' => [
-                'order_goods' =>0,
-                'mortgage_goods' =>1
-            ]
-        ],
     ],
     //用户类别
     'user' => [

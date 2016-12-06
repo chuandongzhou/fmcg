@@ -91,6 +91,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->get('export', 'SalesmanVisitOrderController@export');
             $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
             $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+            $router->get('browser-export/{salesman_visit_order}', 'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
     });
@@ -298,8 +299,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
                 $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
                 $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
-                $router->post('customer-display-fee','SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
-                $router->post('display-fee','SalesmanCustomerController@displayFee');//陈列费发放情况
+                $router->post('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
+                $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
             });
 
             $router->resource('salesman-customer', 'SalesmanCustomerController');

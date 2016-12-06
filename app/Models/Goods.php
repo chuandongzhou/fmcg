@@ -389,12 +389,14 @@ class Goods extends Model
      */
     public function getPiecesIdAttribute()
     {
+        $userTypes = cons('user.type');
+
+        $retailerPieces = $this->pieces_retailer;
+        $wholesalerPieces = $this->pieces_wholesaler;
+
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
-
-        $piece = $userType == $this->user_type && $userType != cons('user.type.supplier') ? $this->pieces_retailer : ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier') ? $this->pieces_wholesaler : $this->pieces_retailer);
-
+        $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
         return $piece;
-
     }
 
     /**

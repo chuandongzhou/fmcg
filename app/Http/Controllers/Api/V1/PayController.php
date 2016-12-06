@@ -105,7 +105,8 @@ class PayController extends Controller
         $refundBySeller = $request->input('is_seller');
 
         $order = $refundBySeller ? Order::where('shop_id',
-            auth()->user()->shop->id)->find($orderId) : Order::where('user_id', auth()->id())->find($orderId);
+            auth()->user()->shop_id)->find($orderId) : Order::where('user_id', auth()->id())->find($orderId);
+
 
         if (!$order || !$order->can_refund) {
             return $this->error('订单不存在或不能退款');

@@ -33,7 +33,7 @@
         </div>
         <div class="row item">
             <div class="col-xs-4">
-                购买单位 ：{{ $order->user_shop_name }}
+                购买单位 ：{{ $order->user_shop_name .'-'. $order->user_contact_info  }}
             </div>
             <div class="col-xs-4">
                 {{ $order->shippingAddress&&$order->shippingAddress->address?$order->shippingAddress->address->address_name:'' }}
@@ -88,7 +88,7 @@
                     </tr>
                     @if(!$mortgageGoods->isEmpty() || $order->display_fee > 0)
                         <tr>
-                            <td align="center" colspan="8">抵费商品</td>
+                            <td align="center" colspan="8">陈列费</td>
                         </tr>
                         @foreach($mortgageGoods as $goods)
                             <tr>
@@ -97,9 +97,9 @@
                                 <td>
                                     {{ $goods->{'specification_' . $order->user_type_name} }}
                                 </td>
-                                <td colspan="3">{{ $goods->pivot->num.cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
+                                <td colspan="2">{{ $goods->pivot->num.cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}</td>
                                 @if ($goods == $mortgageGoods->first())
-                                    <td colspan="2"
+                                    <td colspan="3"
                                         rowspan="{{ $order->display_fee > 0 ? $mortgageGoods->count() + 1 : $mortgageGoods->count() }}">{{ $order->remarkGroup['display'] }}</td>
                                 @endif
                             </tr>
@@ -108,9 +108,9 @@
                             <tr>
                                 <td></td>
                                 <td width="250px">现金</td>
-                                <td colspan="4">{{ $order->display_fee }}</td>
+                                <td colspan="3">{{ $order->display_fee }}</td>
                                 @if($mortgageGoods->isEmpty())
-                                    <td>{{ $order->remarkGroup['display'] }}</td>
+                                    <td colspan="3">{{ $order->remarkGroup['display'] }}</td>
                                 @endif
                             </tr>
                         @endif

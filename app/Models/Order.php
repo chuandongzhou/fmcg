@@ -14,12 +14,10 @@ class Order extends Model
         'price',
         'pay_type',
         'pay_way',
-        //'receive_mode',
         'remark',
         'pay_status',
         'status',
         'shipping_address_id',
-        // 'delivery_man_id',
         'coupon_id',
         'display_fee',
         'user_id',
@@ -267,7 +265,7 @@ class Order extends Model
         $payType = $this->attributes['pay_type'];//支付方式
         $payStatus = $this->attributes['pay_status'];//支付状态
         $status = $this->attributes['status'];//订单状态
-        if($status == cons('order.status.invalid')) {
+        if ($status == cons('order.status.invalid')) {
             //作废
             return 0;
         }
@@ -693,8 +691,6 @@ class Order extends Model
                 $q->where('pay_type', cons('pay_type.pick_up'))->where('status', cons('order.status.non_send'));
             });
         });
-
-        //return $query->where('pay_type', cons('pay_type.cod'))->where('status', cons('order.status.send'));
     }
 
     /**

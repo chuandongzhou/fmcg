@@ -38,7 +38,6 @@
                         <th>营业地址</th>
                         <th>收货地址</th>
                         <th>营业面积</th>
-                        <th>陈列费用</th>
                         <th>业务员</th>
                         <th>操作</th>
                     </tr>
@@ -69,9 +68,6 @@
                             </td>
                             <td>
                                 {{ $customer->business_area }}
-                            </td>
-                            <td>
-                                {{ $customer->display_fee }}
                             </td>
                             <td>
                                 {{ $customer->salesman->name }}

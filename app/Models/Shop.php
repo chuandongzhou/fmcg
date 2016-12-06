@@ -66,6 +66,10 @@ class Shop extends Model
             info($model->user);
             (new UserService(true))->setShopDetail($model->user);
         });
+        static::updated(function ($model) {
+            info($model->user);
+            (new UserService(true))->setShopDetail($model->user);
+        });
     }
 
     /**
@@ -506,24 +510,12 @@ class Shop extends Model
                 static::created(function ($model) use ($areas) {
                     $model->deliveryArea()->saveMany($areas);
                 });
+
             }
         }
         return true;
     }
 
-    /**
-     * 更新用户店铺redis
-     *
-     * @param $name
-     */
-    public function setNameAttribute($name)
-    {
-        $this->attributes['name'] = $name;
-
-        if ($user = $this->user) {
-            (new UserService(true))->setShopDetail($user);
-        }
-    }
 
     /**
      * 获取logo链接

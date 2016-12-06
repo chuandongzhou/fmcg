@@ -80,6 +80,7 @@ class ReportController extends Controller
 
         $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
 
+
         return view('index.business.' . $viewName, [
             'startDate' => $startDate,
             'endDate' => $endDate,

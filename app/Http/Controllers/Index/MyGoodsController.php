@@ -36,7 +36,7 @@ class MyGoodsController extends Controller
         $shop = auth()->user()->shop;
 
         $result = GoodsService::getShopGoods($shop, $data, ['mortgageGoods']);
-        $myGoods = $result['goods']->orderBy('id', 'DESC')->paginate();
+        $myGoods = $result['goods']->orderBy('updated_at', 'DESC')->paginate();
 
         $cateName = [];
 

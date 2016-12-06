@@ -42,6 +42,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.shop-search',
                 'includes.quick-link',
                 'index.personal.security.security-index'
+                //'index.personal.tabs',
+                'index.help.master'
             ],
             ProvinceComposer::class => [
                 'index.master'
