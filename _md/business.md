@@ -96,6 +96,7 @@
     letter                  char            客户名首字母
     shop_id                 int             客户的平台id
     account                 string          客户的平台账号
+    type                    int             客户类型（1 为终端商， 2 批发商）
     contact                 string          联系人
     contact_information     string          联系方式
     business_area           string          营业面积
@@ -130,6 +131,7 @@
 
     name                    string          客户名称
     contact                 string          联系人
+    type                    int             客户类型（登录业务员店铺为供应商时传入[1 为终端商， 2 批发商]）
     contact_information     string          联系方式
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
@@ -167,6 +169,7 @@
 
     name                    string          客户名称
     contact                 string          联系人
+    type                    int             客户类型（登录业务员店铺为供应商时传入[1 为终端商， 2 批发商]）
     contact_information     string          联系方式
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
@@ -236,37 +239,52 @@
 `成功返回：`
 
 `失败返回`
-#### 2.3.7 客户陈列费发放情况查询[post] (customer-display-fee)
+#### 2.3.7 客户陈列费发放情况查询[get] (customer-display-fee)
 `请求参数：`
 
-	salesman_customer_id        int         客户id
-	start_at                    date        开始时间
-	end_at                      date        结束时间
+	keyword                        string      客户关键字
+	month                          date        月份
 
 `成功返回：`
 
-	orders                    array         所有订单
-	display_fee               decimal       协议陈列费
+	customers                 array         所有客户
+
+	customers子字子集段说明
+	
+	id                          int             客户id
+	name                        string          客户名
+	display_type                int             客户陈列类型
+	display_fee                 decimal         应发现金（当display_type为 1 时使用）
+	business_address_name       string          客户营业地址
+	orders                      array           订单实发陈列费列表
+	mortgage_goods              array           应发抵费商品 （当display_type为 2 时使用）
 
 	orders子字子集段说明
-	
-	id                       int           订单ID
-	status                   int           订单状态
-	created_at               date          下单时间
-	display_fee              decimal       陈列费现金
-	order_remark             string        订单备注
-	display_remark           string        陈列费备注
-	mortgage_goods           array         陈列费抵费商品
-	
-	mortgage_goods字段子集说明
-	
-	goods_name              string         抵费商品名称
-	
-	pivot                   array          中间信息
 
-	pivot字段子集说明
-	
-	num                     int            抵费商品数量
+	id                          int             订单id
+	order_status_name           string          订单状态
+	used                        decimal         此订单实发陈列费现金（当display_type为 1 时使用）
+	mortgages                   array           此订单实发陈列费商品 （当display_type为 2 时使用）
+    created_at                  timestamp       订单创建时间
+
+        mortgages字段子集说明
+
+        id                      int             陈列费商品id
+        name                    string          陈列费商品名
+        used                    int             发放数量
+
+    mortgage_goods子字子集段说明
+
+    id                          int             陈列商品id
+    goods_name                  string          商品名
+    pivot                       array           应发陈列费商品信息
+
+        pivot子字子集段说明
+
+        total                   int             应发陈列费商品
+
+
+
 
 `失败返回：`
 

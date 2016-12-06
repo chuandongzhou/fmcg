@@ -292,6 +292,6 @@ class SalesmanVisitOrder extends Model
      */
     public function getOrderStatusNameAttribute()
     {
-        return $this->order_id && $this->order ? $this->order->status_name : '';
+        return $this->order_id && $this->order ? $this->order->status_name : '未审核';
     }
 }

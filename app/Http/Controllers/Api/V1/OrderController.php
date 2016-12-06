@@ -276,7 +276,13 @@ class OrderController extends Controller
         if (!$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能作废');
         }
-        return $order->fill(['status' => cons('order.status.invalid')])->save() ? $this->success('订单作废成功') : $this->error('作废订单时出现问题');
+        if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
+            // 返回优惠券
+            (new OrderService())->backCoupon($order);
+            return $this->success('订单作废成功');
+        }
+
+        return $this->error('作废订单时出现问题');
     }
 
     /**

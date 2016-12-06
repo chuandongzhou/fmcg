@@ -18,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
         // SQL查询日志记录
         if (config('app.debug')) {
             \DB::listen(function ($query, $bindings, $time, $name) {
-                $data = compact('bindings', 'time', 'name');
+                $path = app('request')->path();
+                $data = compact('bindings', 'time', 'name', 'path');
 
                 // Format binding data for sql insertion
                 foreach ($bindings as $i => $binding) {
@@ -33,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 $query = str_replace(['%', '?'], ['%%', '%s'], $query);
                 $finalQuery = vsprintf($query, $bindings);
 
-                info($finalQuery , $data);
+                info($finalQuery, $data);
             });
         }
     }

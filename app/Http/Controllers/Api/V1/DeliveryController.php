@@ -16,6 +16,7 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
 use App\Services\RedisService;
 use App\Services\OrderService;
+
 class DeliveryController extends Controller
 {
 
@@ -73,7 +74,7 @@ class DeliveryController extends Controller
      */
     public function orders()
     {
-        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->with('user.shop',
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->useful()->with('user.shop',
             'shippingAddress.address', 'coupon')->get();
 
         $orders->each(function ($order) {

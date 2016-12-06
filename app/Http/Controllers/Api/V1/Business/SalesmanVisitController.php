@@ -240,11 +240,12 @@ class SalesmanVisitController extends Controller
      */
     public function canAdd($customer_id)
     {
-        $salesman_id = salesman_auth()->id();
-        $start = Carbon::now()->startOfDay();
-        $end = Carbon::now()->endOfDay();
-        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
-            ->whereBetween('created_at', [$start, $end])->lists('id');
+//        $salesman_id = salesman_auth()->id();
+//        $start = Carbon::now()->startOfDay();
+//        $end = Carbon::now()->endOfDay();
+//        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
+//            ->whereBetween('created_at', [$start, $end])->lists('id');
+        $visit = [];
         return $this->success(compact('visit'));
     }
 

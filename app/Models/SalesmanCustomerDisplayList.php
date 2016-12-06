@@ -46,4 +46,5 @@ class SalesmanCustomerDisplayList extends Model
     {
         return $this->mortgage_goods_id == 0 ? $this->used : intval($this->used);
     }
+
 }

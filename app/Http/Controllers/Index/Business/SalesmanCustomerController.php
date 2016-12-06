@@ -198,6 +198,7 @@ class SalesmanCustomerController extends Controller
         }
 
 
+
         //拜访时产生的订单和退货单
         /* $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
              return !is_null($item);
@@ -228,7 +229,7 @@ class SalesmanCustomerController extends Controller
 
 
         //所有订单商品详情
-        $orderGoodsDetail = Goods::whereIn('id', array_unique($goodsIds))->lists('name', 'id');
+        $orderGoodsDetail = Goods::whereIn('id', array_unique($goodsIds))->withTrashed()->lists('name', 'id');
 
         $businessService  = new BusinessService();
 
@@ -262,6 +263,7 @@ class SalesmanCustomerController extends Controller
         }
 
 
+
         $salesListsData = [];
 
         $orderGoodsType = $orderConf['goods']['type'];
@@ -270,6 +272,7 @@ class SalesmanCustomerController extends Controller
         foreach ($salesList as $goodsId => $goodsVisits) {
             $salesListsData[$goodsId]['id'] = $goodsId;
             $salesListsData[$goodsId]['name'] = $orderGoodsDetail[$goodsId];
+
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
                     'time' => head($goodsList)['created_at'],

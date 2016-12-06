@@ -62,9 +62,9 @@ class MyGoodsController extends Controller
 
                 $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
 
-                if (!is_null($images)) {
-                    $this->_setImages($images, $goods->bar_code);
-                }
+            if (!is_null($images) && is_null($goods->images)) {
+                $this->_setImages($images, $goods->bar_code);
+            }
 
                 // 更新标签
                 isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
@@ -74,8 +74,6 @@ class MyGoodsController extends Controller
             }
 
         }
-
-
         return $this->error('添加商品出现错误');
     }
 

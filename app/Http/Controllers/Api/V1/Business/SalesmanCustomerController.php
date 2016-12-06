@@ -46,13 +46,20 @@ class SalesmanCustomerController extends Controller
             return $this->error('添加客户失败，请重试');
         }
 
+        if (array_get($attributes,
+                'display_type') == cons('salesman.customer.display_type.mortgage') && !isset($attributes['mortgage_goods'])
+        ) {
+            return $this->error('抵费商品不能为空');
+        }
+
+
         $attributes['number'] = $this->_getCustomerNumber($salesman);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
         if ($attributes['account']) {
             $shop = $salesman->shop;
 
-            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'])) {
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes)) {
                 return $this->invalidParam('account', '账号不存在或已被关联');
             }
         } else {
@@ -89,7 +96,7 @@ class SalesmanCustomerController extends Controller
         if ($attributes['account']) {
             $shop = auth()->user()->shop;
 
-            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'], $customer)) {
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes, $customer)) {
                 return $this->invalidParam('account', '账号不存在或已被关联');
             }
         } else {
@@ -124,7 +131,7 @@ class SalesmanCustomerController extends Controller
         if ($attributes['account']) {
             $shop = salesman_auth()->user()->shop;
 
-            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes['account'], $customer)) {
+            if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes, $customer)) {
                 return $this->invalidParam('account', '账号不存在或已被关联');
             }
         } else {
@@ -247,6 +254,110 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
+     * 客户某月陈列费发放情况
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function customerDisplayFee(Request $request)
+    {
+        $salesman = salesman_auth()->user();
+        $keyword = $request->input('keyword');
+        $month = $request->input('month');
+
+        $displayTypes = cons('salesman.customer.display_type');
+
+        $like = '%' . $keyword . '%';
+
+        $customers = $salesman->customers()->where('name', 'LIKE', $like)->where('display_type', '>',
+            $displayTypes['no'])->where(function ($q) use ($month) {
+            $q->where('display_start_month', '<=', $month)->where('display_end_month', '>=', $month);
+        })->with([
+            'displayList' => function ($query) use ($month) {
+                $query->where(['month' => $month])->select([
+                    'id',
+                    'salesman_customer_id',
+                    'month',
+                    'used',
+                    'salesman_visit_order_id',
+                    'mortgage_goods_id'
+                ]);
+            },
+            'displayList.order.order'
+        ])->get(['id', 'name', 'display_type', 'salesman_id', 'display_fee']);
+
+        foreach ($customers as $customer) {
+            $isMortgage = $customer->display_type == $displayTypes['mortgage'];
+            if ($isMortgage) {
+                $customer->load('mortgageGoods');
+                $customer->displayList->load('mortgageGoods');
+            }
+            $customer->setAppends(['business_address_name']);
+            $customer->addHidden(['business_address']);
+            if ($customer->displayList) {
+                $orders = [];
+                foreach ($customer->displayList as $item) {
+                    $order = $item->order;
+                    $order->setAppends(['order_status_name']);
+                    $order->addHidden(['order']);
+                    if (isset($orders[$order->id]) && $item->mortgageGoods) {
+                        //商品
+                        $orders[$order->id]['mortgages'][] = [
+                            'id' => $item->mortgageGoods->id,
+                            'name' => $item->mortgageGoods->goods_name,
+                            'used' => $item->used,
+                            'pieces' => $item->mortgageGoods->pieces
+                        ];
+                    } else {
+                        if ($isMortgage && $item->mortgageGoods) {
+                            $orders[$order->id] = [
+                                'id' => $order->id,
+                                'order_status_name' => $order->order_status_name,
+                                'created_at' => (string)$order->created_at
+                            ];
+                            $orders[$order->id]['mortgages'][] = [
+                                'id' => $item->mortgageGoods->id,
+                                'name' => $item->mortgageGoods->goods_name,
+                                'used' => (int)$item->used,
+                                'pieces' => $item->mortgageGoods->pieces
+                            ];
+                        } elseif (!$item->mortgage_goods_id) {
+                            //陈列费现金
+                            $orders[$order->id] = [
+                                'id' => $order->id,
+                                'order_status_name' => $order->order_status_name,
+                                'used' => $item->used,
+                                'created_at' => (string)$order->created_at
+                            ];
+                        }
+                    }
+                }
+                $customer->orders = array_values($orders);
+                $customer->addHidden(['displayList']);
+            }
+
+        }
+
+        return $this->success(compact('customers'));
+    }
+
+    /**
+     * 指定时间段内陈列费发放情况
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function displayFee(Request $request)
+    {
+        if (empty($request->input('start_at')) || empty($request->input('end_at'))) {
+            return $this->error('开始时间和结束时间不能为空');
+        }
+
+        return $this->success(['orders' => $this->_queryDispalyFee($request)]);
+    }
+
+
+    /**
      * 获取客户号
      *
      * @param \App\Models\Salesman $salesman
@@ -265,21 +376,21 @@ class SalesmanCustomerController extends Controller
      */
     private function _getLetter($name)
     {
-        return strtoupper(pinyin_abbr($name)[0]);
+        return $name ? strtoupper(pinyin_abbr($name)[0]) : '';
     }
 
     /**
      * 验证用户名
      *
      * @param $shop
-     * @param $account
+     * @param $attributes
      * @param $customer
      * @return bool
      */
-    private function _validateAccount($shop, $account, $customer = null)
+    private function _validateAccount($shop, $attributes, $customer = null)
     {
-        $user = User::where('user_name', $account)->with('shop')->first();
-        if (is_null($user)) {
+        $user = User::where('user_name', $attributes['account'])->first();
+        if (is_null($user) || array_get($attributes, 'type', cons('user.type.retailer')) != $user->type) {
             return false;
         }
         $shopId = $user->shop_id;
@@ -296,36 +407,6 @@ class SalesmanCustomerController extends Controller
 
     }
 
-    /**
-     * 客户时间段内陈列费发放情况
-     *
-     * @param  \App\Http\Requests\Api\v1\CustomerDisplayFeeRequest $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function customerDisplayFee(CustomerDisplayFeeRequest $request)
-    {
-        $dispalyFee = SalesmanCustomer::where('id',
-            $request->input('salesman_customer_id'))->select('display_fee')->first();
-        return $this->success([
-            'orders' => $this->queryDispalyFee($request),
-            'display_fee' => $dispalyFee->display_fee
-        ]);
-    }
-
-    /**
-     * 指定时间段内陈列费发放情况
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \WeiHeng\Responses\Apiv1Response
-     */
-    public function displayFee(Request $request)
-    {
-        if (empty($request->input('start_at')) || empty($request->input('end_at'))) {
-            return $this->error('开始时间和结束时间不能为空');
-        }
-
-        return $this->success(['orders' => $this->queryDispalyFee($request)]);
-    }
 
     /**
      * 陈列费订单查询
@@ -333,7 +414,7 @@ class SalesmanCustomerController extends Controller
      * @param $request
      * @return mixed
      */
-    private function queryDispalyFee($request)
+    private function _queryDispalyFee($request)
     {
         $start_at = (new Carbon($request->input('start_at')))->startOfDay();
         $end_at = (new Carbon($request->input('end_at')))->endOfDay();
