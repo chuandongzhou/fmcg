@@ -7,7 +7,7 @@
 
 @section('top-title')
     <a href="{{ url('business/salesman') }}">业务管理</a> >
-    <a href="{{ url('business/salesman-customer') }}"> <span class="second-level">客户管理</span></a> >
+    <a href="{{ url('business/salesman-customer') }}"> 客户管理</a> >
     <span class="second-level">客户{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
 @stop
 

@@ -17,7 +17,7 @@ class CouponController extends Controller
     {
         $shop = auth()->user()->shop;
 
-        $coupons = $shop->coupons;
+        $coupons = $shop->coupons()->orderBy('end_at','desc')->get();
 
         return view('index.personal.coupon-index', ['coupons' => $coupons]);
     }

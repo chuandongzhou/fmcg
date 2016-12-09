@@ -3,47 +3,47 @@
 @section('subtitle' , '购物车')
 
 @section('container')
-
-    <div class="container-wrap">
-        <div class="container ">
-            <div class="row audit-step-outs">
-                <div class="col-xs-3 step step-active">
-                    1.查看购物车
-                    <span></span>
-                    <span class="triangle-right first"></span>
-                    <span class="triangle-right last"></span>
-                </div>
-                <div class="col-xs-3 step">
-                    2.确认订单消息
-                    <span class="triangle-right first"></span>
-                    <span class="triangle-right last"></span>
-                </div>
-                <div class="col-xs-3 step">
-                    3.成功提交订单
-                    <span class="triangle-right first"></span>
-                    <span class="triangle-right last"></span>
-                </div>
-                <div class="col-xs-3 step">
-                    4.等待确认
+    @if($shops->isEmpty())
+        <div class="container table-list-row">
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-4 cart-empty">
+                    <span class="fa fa-shopping-cart car-icon"></span>
+                    <ul>
+                        <li>你还没有添加商品到购物车哦，赶紧去看看吧~~</li>
+                        <li><a href="{{ url('/') }}">去购物></a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-    <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
-        {{ csrf_field() }}
-        @if($shops->isEmpty())
-            <div class="container table-list-row">
-                <div class="row">
-                    <div class="col-xs-4 col-xs-offset-4 cart-empty">
-                        <span class="fa fa-shopping-cart car-icon"></span>
-                        <ul>
-                            <li>你还没有添加商品到购物车哦，赶紧去看看吧~~</li>
-                            <li><a href="{{ url('/') }}">去购物></a></li>
-                        </ul>
+    @else
+        <div class="container-wrap">
+            <div class="container ">
+                <div class="row audit-step-outs">
+                    <div class="col-xs-3 step step-active">
+                        1.查看购物车
+                        <span></span>
+                        <span class="triangle-right first"></span>
+                        <span class="triangle-right last"></span>
+                    </div>
+                    <div class="col-xs-3 step">
+                        2.确认订单消息
+                        <span class="triangle-right first"></span>
+                        <span class="triangle-right last"></span>
+                    </div>
+                    <div class="col-xs-3 step">
+                        3.成功提交订单
+                        <span class="triangle-right first"></span>
+                        <span class="triangle-right last"></span>
+                    </div>
+                    <div class="col-xs-3 step">
+                        4.等待确认
                     </div>
                 </div>
             </div>
-        @else
+        </div>
+        <form class="form-horizontal" action="{{ url('order/confirm-order') }}" method="post" autocomplete="off">
+            {{ csrf_field() }}
+
             <div class="container dealer-index index shopping-cart">
                 <div class="row table-list-row ">
                     <div class="col-xs-12 table-responsive shopping-table-list">
@@ -73,11 +73,11 @@
                                 <tbody>
                                 @foreach($shop['cart_goods'] as $cartGoods)
                                     <tr class="goods-list">
-                                        <td>
+                                        <td width="50%">
                                             <div class="check-item">
-                                    <span class="span-checkbox  goods-checkbox">
-                                        <i class="fa fa-check"></i>
-                                    </span>
+                                                <span class="span-checkbox  goods-checkbox">
+                                                    <i class="fa fa-check"></i>
+                                                </span>
                                                 <input class="inp-checkbox" checked name="goods_id[]" rel='reason'
                                                        value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}"
                                                        type="checkbox">
@@ -159,8 +159,8 @@
                     </div>
                 </div>
             </div>
-        @endif
-    </form>
+        </form>
+    @endif
 @stop
 @section('js')
     @parent

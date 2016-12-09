@@ -8,7 +8,7 @@
     @parent
     @include('index.search')
     <div class="container categories-wrap">
-        <div class="row margin-clear">
+        <div class="row">
             <div class="col-xs-2 categories-btn">
                 <a>全部商品分类</a>
             </div>
@@ -20,7 +20,7 @@
                 <a href="{{ url('shop?type=supplier') }}">供应商</a>
             </div>
         </div>
-        <div class="row categories-menu-item margin-clear">
+        <div class="row categories-menu-item">
             <div class="col-xs-2 categories padding-clear">
                 <ul class="menu-wrap">
                     @foreach($categories as $category)
@@ -91,7 +91,7 @@
         @foreach($goodsColumns as $index=>$column)
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
-                    <div class="col-xs-12 title">
+                    <div class="col-xs-12 title padding-clear">
                         <div class="category-name"><span class="text-center first-letter">{{ strtoupper(pinyin_abbr($column->name)[0]) }}</span>{{ $column->name  }}</div>
                     </div>
                     <div class="col-xs-12 padding-clear">

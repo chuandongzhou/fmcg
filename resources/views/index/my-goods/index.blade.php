@@ -16,13 +16,26 @@
                     @if (isset($get['category_id']))
                         <div class="search-list-item sort-item">
                             @if (isset($get['category_id']))
-                                @foreach($categories as $category)
+                                @foreach($categories as $key => $category)
                                     @if(isset($category['selected']))
-                                        <div class="sort-list">
-                                            <a class="list-title"
-                                               href="{{ url('my-goods?category_id='.$category['selected']['level'].$category['selected']['id']) }}"><span
-                                                        class="title-txt">{{  $category['selected']['name']}}</span></a>
-                                        </div>
+                                        @if(array_keys($categories)[0]==$key)
+                                            <select class="control select-category">
+                                                <option value="{{ url('my-goods') }}">全部分类</option>
+                                                @foreach($category as $key => $item)
+                                                    <option value="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"  {{ $category['selected']['id']==$item['id']?'selected':'' }}>
+                                                        {{ $item['name'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
+                                        @else
+                                            <div class="sort-list">
+                                                <a class="list-title"
+                                                   href="{{ url('my-goods?category_id='.$category['selected']['level'].$category['selected']['id']) }}"><span
+                                                            class="title-txt">{{  $category['selected']['name']}}</span></a>
+                                            </div>
+                                        @endif
+
                                         <span class="fa fa-angle-right"></span>
                                     @endif
                                 @endforeach
@@ -174,7 +187,7 @@
                                     <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
                                     <img class="store-img lazy" data-original="{{ $item->image_url }}">
                                     <a class="product-name ellipsis"
-                                       href="{{ url('my-goods/' . $item->id) }}"> {{ $item->name }}</a>
+                                       href="{{ url('goods/' . $item->id) }}"> {{ $item->name }}</a>
                                 </td>
                                 <td>
                                     <p>{{ $item->price_retailer}}元</p>
@@ -199,16 +212,16 @@
                                     @if(!$item->is_mortgage_goods)
                                         <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
                                            data-url="{{ url('api/v1/my-goods/' . $item->id . '/mortgage') }}"
-                                           class="no-form mortgage" title="设为抵费商品">抵费</a>
+                                           class="no-form mortgage color-blue" title="设为抵费商品">抵费</a>
                                     @endif
-                                    <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="editor">编辑</a>
+                                    <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="edit">编辑</a>
                                     <a href="javascript:" data-method="put"
                                        data-url="{{ url('api/v1/my-goods/shelve')}}"
                                        data-status="{{ $item->status }}"
                                        data-data='{ "id": "{{ $item->id }}" }'
                                        data-on='上架'
                                        data-off='下架'
-                                       class="ajax-no-form">
+                                       class="ajax-no-form orange">
                                         {{ cons()->valueLang('goods.status' , !$item->status) }}
                                     </a>
                                     <a class="red delete-no-form" data-method="delete"

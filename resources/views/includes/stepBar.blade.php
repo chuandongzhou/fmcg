@@ -4,13 +4,15 @@
     <script src="{{ asset('js/stepBar.js') }}"></script>
     <script type="text/javascript">
         $(function () {
-
+            stepBarFun();
+        });
+        $(window).resize(function(){
+            stepBarFun();
+        });
+        function stepBarFun(){
             stepBar.init("stepBar", {
                 step: {{ $order['step_num'] }},
-                change: true,
-                animation: true
             });
-
-        });
+        }
     </script>
 @endsection

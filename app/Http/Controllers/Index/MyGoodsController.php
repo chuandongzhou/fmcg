@@ -84,7 +84,8 @@ class MyGoodsController extends Controller
             $area->id = '';
         });
         $goods = new Goods;
-        $goods->deliveryArea = $shopDelivery;
+        //店铺配送地址
+        $goods->shopDeliveryArea = $shopDelivery;
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => [],
@@ -141,6 +142,10 @@ class MyGoodsController extends Controller
 
         $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
             $goods->category_id)->get()->toArray();
+        //店铺配送地址
+        $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
+        $shopDelivery = $shop->deliveryArea;
+        $goods->shopDeliveryArea = $shopDelivery;
 
         $attrResults = (new AttrService($attrResults))->format();
         return view('index.my-goods.goods', [
@@ -166,49 +171,6 @@ class MyGoodsController extends Controller
         return $this->error('文件不存在');
     }
 
-    /**
-     * @param  \App\Http\Requests\Index\UpdateGoodsRequest $request
-     * @return Response
-     */
-    public function updateNext(UpdateGoodsRequest $request)
-    {
-
-        if (!empty($request->input('goods_id'))) {
-            $goods = Goods::find($request->input('goods_id'));
-            if (Gate::denies('validate-my-goods', $goods)) {
-                return redirect(url('my-goods'));
-            }
-            $goodsAttr = $goods->attr;
-            //获取所有标签
-            $attrGoods = [];
-            foreach ($goodsAttr as $attr) {
-                $attrGoods[$attr->pid] = $attr->pivot->toArray();
-            }
-
-            $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
-                $goods->category_id)->get()->toArray();
-
-            $attrResults = (new AttrService($attrResults))->format();
-
-        } else {
-            $goods = new Goods;
-            $cateId = $request->input('cate_level_3') ? $request->input('cate_level_3') : ($request->input('cate_level_2') ? $request->input('cate_level_2') : $request->input('cate_level_1'));
-            $attrResults = Attr::where('category_id', $cateId)->get()->toArray();
-            $attrResults = (new AttrService($attrResults))->format();
-            $attrGoods = '';
-        }
-        //店铺配送地址
-        $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
-        $shopDelivery = $shop->deliveryArea;
-        $goods->shopDeliveryArea = $shopDelivery;
-        return view('index.my-goods.goods-next', [
-            'goods' => $goods,
-            'attrs' => $attrResults,
-            'attrGoods' => $attrGoods,
-            'data' => $request->all()
-        ]);
-
-    }
 
     /**
      * 格式化查询每件

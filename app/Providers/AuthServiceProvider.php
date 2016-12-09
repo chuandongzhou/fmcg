@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
          * 要显示的商品
          */
         $gate->define('validate-goods', function ($user, $goods) {
-            return ($user->type < $goods->user_type ||  $user->id==$goods->shop->user_id) && $goods->status == cons('status.on');
+            return ($user->type < $goods->user_type&& $goods->status == cons('status.on')) ||  $user->id==$goods->shop->user_id ;
         });
 
         /**

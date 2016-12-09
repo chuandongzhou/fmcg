@@ -114,11 +114,13 @@
                                                 <th>金额</th>
 
                                             </tr>
-                                            <tr>
-                                                <td rowspan="2">{{ $displayFee['month'] }}</td>
-                                                <td>{{ $displayFee['created_at'] }}</td>
-                                                <td>{{ $displayFee['display_fee'] }}</td>
-                                            </tr>
+                                            @foreach($visit['display_fee'] as $displayFee)
+                                                <tr>
+                                                    <td >{{ $displayFee['month'] }}</td>
+                                                    <td>{{ $displayFee['created_at'] }}</td>
+                                                    <td>{{ $displayFee['display_fee'] }}</td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     @endif
@@ -143,7 +145,7 @@
                                                         @if ($mortgage == head($mortgages))
                                                             <td rowspan="{{ count($mortgages) }}">{{ $date }}</td>
                                                         @endif
-                                                            <td>{{ $mortgage['created_at'] }}</td>
+                                                        <td>{{ $mortgage['created_at'] }}</td>
                                                         <td>{{ $mortgage['name'] }}</td>
                                                         <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
                                                         <td>{{ $mortgage['num'] }}</td>

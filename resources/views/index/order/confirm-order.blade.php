@@ -37,7 +37,7 @@
                                 <span class="triangle"></span>
                                 <span class="fa fa-check"></span>
                             </a>
-                            <a class="btn check-item  active delivery">送货
+                            <a class="btn check-item  active delivery-btn">送货
                                 <span class="triangle"></span>
                                 <span class="fa fa-check"></span>
                             </a>

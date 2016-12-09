@@ -81,7 +81,7 @@
                         <tbody>
                         @foreach($order->goods as $key => $goods)
                             <tr>
-                                <td>
+                                <td width="50%">
                                     <img class="store-img" src="{{ $goods->image_url }}">
 
                                     <div class="product-panel">
@@ -91,21 +91,21 @@
 
                                     </div>
                                 </td>
-                                <td>
+                                <td width="10%" class="bordered text-center">
                                     <span class="red">¥{{ $goods['pivot']['price'] }}</span>
                                     /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
                                 </td>
                                 </td>
-                                <td>{{ $goods['pivot']['num'] }}</td>
+                                <td width="10%" class="bordered text-center">{{ 'x'.$goods['pivot']['num'] }}</td>
                                 @if(0 == $key )
-                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center">
+                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered" width="15%">
                                         <p>{{ $order['status_name'] }}</p>
 
                                         <p>{{ $order['payment_type'] }}</p>
 
                                         <p><span class="red">￥{{ $order['price'] }}</span></p>
                                     </td>
-                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center">
+                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered" width="15%">
                                         <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
                                               class="btn btn-blue">查看</a></p>
                                         @if(!$order['is_cancel'])
@@ -132,7 +132,7 @@
                                             @endif
                                             @if($order['can_export'])
                                                 <p>
-                                                    <a class="btn btn-blue-lighter print" target="_blank"
+                                                    <a class="btn btn-blue-lighter" target="_blank"
                                                        href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
                                                 </p>
                                                 <p>

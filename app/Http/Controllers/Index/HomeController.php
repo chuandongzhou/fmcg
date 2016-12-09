@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Index;
 use App\Models\Advert;
 use App\Services\GoodsService;
 use Illuminate\Support\Facades\Cache;
-
 class HomeController extends Controller
 {
     /**
@@ -43,6 +42,6 @@ class HomeController extends Controller
 
     public function test()
     {
-        dd(auth()->user()->getAuthIdentifier());
+
     }
 }

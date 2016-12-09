@@ -1,8 +1,8 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-消息管理')
 @section('top-title')
-    <a href="{{ url('personal/chat') }}">消息列表</a> &rarr;
-    消息列表
+    <a href="{{ url('personal/chat') }}">消息列表</a> >
+    <span class="second-level"> 消息列表</span>
 @stop
 @section('right')
     <div class="row user-list-wrap">

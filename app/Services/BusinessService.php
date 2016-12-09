@@ -6,6 +6,7 @@ use App\Models\Goods;
 use App\Models\MortgageGoods;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanCustomerDisplayList;
+use App\Models\SalesmanCustomerDisplaySurplus;
 use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
 use App\Models\SalesmanVisitOrder;
@@ -29,15 +30,22 @@ class BusinessService
     public function getOrderData(SalesmanVisitOrder $salesmanVisitOrder)
     {
         $orderTypeConf = cons('salesman.order');
-
         $data = [
             'order' => $salesmanVisitOrder
         ];
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
+            //查询陈列费剩余
+            $salesmanVisitOrder->displayFees->each(function ($displayFee) use ($salesmanVisitOrder) {
+                $display = $salesmanVisitOrder->salesmanCustomer->displaySurplus()->where([
+                    'month' => $displayFee->month,
+                    'mortgage_goods_id' => 0
+                ])->first();
 
+                $displayFee->surplus = bcadd(is_null($display) ? $salesmanVisitOrder->salesmanCustomer->display_fee : $display->surplus,
+                    $displayFee->used, 2);
+            });
             $data['displayFee'] = $salesmanVisitOrder->displayFees;
-
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
         }
         $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
@@ -186,7 +194,7 @@ class BusinessService
                         } else {
                             $month = $item->month;
                             $mortgage = $item->mortgageGoods;
-                            $visitData[$customerId]['mortgage'][$month][]  = [
+                            $visitData[$customerId]['mortgage'][$month][] = [
                                 'id' => $item->mortgage_goods_id,
                                 'name' => $mortgage->goods_name,
                                 'pieces' => $mortgage->pieces,
@@ -323,6 +331,7 @@ class BusinessService
     {
         $mortgagesGoods = collect([]);
         foreach ($orders as $order) {
+            $customer = $order->salesmanCustomer;
             if ($goods = $order->mortgageGoods) {
                 foreach ($goods as $good) {
                     $mortgagesGoods->push([
@@ -333,8 +342,16 @@ class BusinessService
                         'pieces' => $good->pieces,
                         'num' => (int)$good->pivot->used,
                         'month' => $good->pivot->month,
+                        'total' => $customer->mortgageGoods()->where('mortgage_goods.id',
+                            $good->id)->first()->pivot->total,
+                        'surplus' => SalesmanCustomerDisplaySurplus::where([
+                            'salesman_customer_id' => $customer->id,
+                            'month' => $good->pivot->month,
+                            'mortgage_goods_id' => $good->id
+                        ])->first(),
                         'created_at' => (string)$order->created_at
                     ]);
+
                 }
             }
         }

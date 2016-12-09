@@ -83,9 +83,10 @@
                                data-url="{{  $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$goods->id) }}"
                                class="btn shopping-btn join-cart {{ $user->id==$shop->user_id?'disabled':'' }}">加入购物车</a>
                         @endif
-                        <a class="btn shopping-btn" href="{{ url('cart') }}">去购物车结算</a>
+                        <a class="btn shopping-btn disabled" href="{{ url('cart') }}">去购物车结算</a>
                     </div>
-                    <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods" data-type="goods" data-method="post"
+                    <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods"
+                         data-type="goods" data-method="post"
                          data-id="{{ $goods->id }}" style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}">
                         @if(is_null($isGoodsLike))
                             <i class="fa fa-star-o"></i> 收藏本商品
@@ -97,7 +98,8 @@
             </div>
             <div class="col-sm-3 shop-detail-wrap">
                 <ul>
-                    <li class="shop-name"><a href="{{ url('shop/'.$shop->id) }}" target="_blank">{{ $shop->name }}</a> </li>
+                    <li class="shop-name"><a href="{{ url('shop/'.$shop->id) }}" target="_blank">{{ $shop->name }}</a>
+                    </li>
                     <li><img class="shop-img" src="{{ $shop->logo_url }}"></li>
                     <li><span class="prompt">联系人 : </span>{{ $shop->contact_person  }}</li>
                     <li><span class="prompt">联系方式 : </span>{{ $shop->contact_info }}</li>
@@ -106,14 +108,17 @@
                 </ul>
                 <div class="operate">
                     @if($user->id==$shop->user_id)
-                        <a href="javascript:" class="contact list-name" style="cursor:text"><span class="fa fa-commenting-o" ></span> 联系客服</a>
+                        <a href="javascript:" class="contact list-name" style="cursor:text"><span
+                                    class="fa fa-commenting-o"></span> 联系客服</a>
                     @else
                         <a href="javascript:"
                            onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                           class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
+                           class="contact list-name"><span class=" iconfont icon-kefu"></span> 联系客服</a>
                     @endif
 
-                    <a style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}" class="{{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops" data-type="shops" data-method="post" data-id="{{ $shop->id }}">
+                    <a style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}"
+                       class="{{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops" data-type="shops"
+                       data-method="post" data-id="{{ $shop->id }}">
                         @if(is_null($isLike))
                             <i class="fa fa-star-o"></i> 收藏本店
                         @else
@@ -154,7 +159,7 @@
             <div class="col-sm-10 pd-right-clear">
                 <div class="col-sm-12 switching">
                     <a href="javascript:void(0)" id="graphic-details" class="active">图文详情</a>
-                    <a href="javascript:void(0)" id="location" >配送区域</a>
+                    <a href="javascript:void(0)" id="location">配送区域</a>
                 </div>
                 <div class="col-sm-12 graphic-details box active">
                     <div class="row">
@@ -170,14 +175,24 @@
                     </div>
                 </div>
                 <div class="col-sm-12 address-wrap location box ">
-                    <div class="item">
-                        <h5 class="title-name">商品配送区域:</h5>
-                        <ul class="address-list">
-                            @foreach($goods->deliveryArea as $area)
-                                <p class="col-sm-12">{{ $area->address_name }}</p>
-                            @endforeach
-                        </ul>
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <table  class="table margin-clear ">
+                                <tr>
+                                    <th>商品配送区域</th>
+                                </tr>
+                                @foreach($goods->deliveryArea as $area)
+
+                                    <tr>
+                                        <td>{{ $area->address_name }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
                     </div>
+
+
                     {{--<div class="item">--}}
                     {{--<h5 class="title-name ">商品配送区域大概地图标识:</h5>--}}
                     {{--<p class="map ">--}}

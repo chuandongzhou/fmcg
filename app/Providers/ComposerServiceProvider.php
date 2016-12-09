@@ -41,7 +41,7 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.goods.detail',
                 'index.shop-search',
                 'includes.quick-link',
-                'index.personal.security.security-index'
+                'index.personal.security.security-index',
                 //'index.personal.tabs',
                 'index.help.master'
             ],

@@ -32,19 +32,25 @@
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
                                                     <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?'未付款':'未发货' }}</div>
+                                                    <div class="ui-stepName ui-stepTime">{{ $order->created_at->format('Y-m-d H:i') }}</div>
 
                                                 </li>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
                                                     <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?'已付款':'已发货' }}</div>
+                                                    <div class="ui-stepName">{{$order->pay_type==cons('pay_type.online')?($order->pay_status>cons('order.pay_status.non_payment')?(new Carbon\Carbon($order->paid_at))->format('Y-m-d H:i'):''):($order->status>=cons('order.status.send') && $order->status<cons('order.status.invalid')?(new Carbon\Carbon($order->send_at))->format('Y-m-d H:i'):'') }}</div>
+
                                                 </li>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
                                                     <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?'已发货':'已付款' }}</div>
+                                                    <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?($order->status>=cons('order.status.send') && $order->status<cons('order.status.invalid')?(new Carbon\Carbon($order->send_at))->format('Y-m-d H:i'):''):($order->pay_status>cons('order.pay_status.non_payment')?(new Carbon\Carbon($order->paid_at))->format('Y-m-d H:i'):'') }}</div>
                                                 </li>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
                                                     <div class="ui-stepName">已完成</div>
+                                                    <div class="ui-stepName ui-stepTime">{{ $order->status==cons('order.status.finished')?(new Carbon\Carbon($order->finished_at))->format('Y-m-d H:i'):'' }}</div>
+
                                                 </li>
                                             </ul>
                                         </div>
@@ -62,8 +68,8 @@
                             <h3 class="panel-title">订单信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center">
-                                <tr>
+                            <table class="table table-bordered table-center public-table">
+                                <thead>
                                     <th>订单号</th>
                                     <th>订单金额</th>
                                     <th>陈列费/优惠券</th>
@@ -71,7 +77,21 @@
                                     <th>支付方式</th>
                                     <th>订单状态</th>
                                     <th>备注</th>
-                                    <td rowspan="2">
+                                    <th>操作</th>
+                                </thead>
+
+                                <tr>
+                                    <td>{{ $order['id'] }}</td>
+                                    <td>￥{{ $order['price'] }}</td>
+                                    <td>
+                                        {{ $order->coupon_id?' ￥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
+                                    <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
+                                    <td>{{ $order['payment_type'] }}
+                                        {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'--' }}
+                                    </td>
+                                    <td><span class="orange">{{ $order['status_name'] }}</span></td>
+                                    <td width="15%">{{ empty($order['remark'])?'--':$order['remark'] }}</td>
+                                    <td class="operate">
                                         @if(!$order['is_cancel'])
                                             @if($order->pay_type==cons('pay_type.pick_up'))
                                                 @if($order['can_cancel'])
@@ -109,19 +129,6 @@
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>{{ $order['id'] }}</td>
-                                    <td>￥{{ $order['price'] }}</td>
-                                    <td>
-                                        {{ $order->coupon_id?' ￥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'') }}</td>
-                                    <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
-                                    <td>{{ $order['payment_type'] }}
-                                        {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
-                                    </td>
-                                    <td><span class="orange">{{ $order['status_name'] }}</span></td>
-                                    <td width="15%">{{ $order['remark'] }}</td>
-                                </tr>
-
                             </table>
                         </div>
                     </div>
@@ -132,13 +139,13 @@
                             <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up')?'提货人信息':'商家信息' }}</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center">
-                                <tr>
+                            <table class="table table-bordered table-center public-table">
+                                <thead>
                                     <th>商家信息</th>
                                     <th>联系人</th>
                                     <th>联系电话</th>
                                     <th>{{  $order->pay_type!=cons('pay_type.pick_up')?'收货地址':'提货地址' }}</th>
-                                </tr>
+                                </thead>
                                 <tr>
                                     <td><p>{{ $order['shop']['name'] }}</p>
                                         <p class="prop-item">
@@ -151,11 +158,11 @@
                                     <td>{{ $order['shop']['contact_info'] }}</td>
                                     @if( $order->pay_type!=cons('pay_type.pick_up'))
                                         <td>
-                                            <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
+                                            <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '--' }}</p>
                                         </td>
                                      @else
                                         <td>
-                                            <p> {{  $order->shop ? $order->shop->address : '' }}</p>
+                                            <p> {{  $order->shop ? $order->shop->address : '--' }}</p>
                                             <p class="prop-item">
                                                 <a href="javascript:" data-target="#shippingAddressMapModal" data-toggle="modal"
                                                    data-x-lng="{{ $order->shop ?  $order->shop->x_lng : 0 }}"
@@ -200,12 +207,12 @@
                                 <h3 class="panel-title">订单修改记录</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center">
-                                    <tr>
+                                <table class="table table-bordered table-center public-table">
+                                    <thead>
                                         <th>时间</th>
                                         <th>修改人</th>
                                         <th>修改内容</th>
-                                    </tr>
+                                    </thead>
                                     @foreach($order->orderChangeRecode->reverse() as $orderChangeRecode)
                                         <tr>
                                             <td>{{ $orderChangeRecode->created_at }}</td>
@@ -226,16 +233,16 @@
                             <h3 class="panel-title">订单商品</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center">
+                            <table class="table table-bordered table-center public-table">
 
-                                <tr>
+                                <thead>
                                     <th>商品编号</th>
                                     <th>商品图片</th>
                                     <th>商品名称</th>
                                     <th>商品价格</th>
                                     <th>商品数量</th>
                                     <th>金额</th>
-                                </tr>
+                                </thead>
                                 @foreach($orderGoods as $goods)
                                     <tr>
                                         <td>{{ $goods['id'] }}</td>
@@ -251,7 +258,7 @@
                                         </td>
                                         <td>{{ $goods['pivot']['price'] }}
                                             /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
-                                        <td>{{ $goods['pivot']['num'] }}</td>
+                                        <td>{{ 'x'.$goods['pivot']['num'] }}</td>
                                         <td>{{ $goods['pivot']['total_price'] }}</td>
                                     </tr>
                                 @endforeach
@@ -271,13 +278,13 @@
                                 <h3 class="panel-title">抵费商品</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center">
-                                    <tr>
+                                <table class="table table-bordered table-center public-table">
+                                    <thead>
                                         <th>商品编号</th>
                                         <th>商品图片</th>
                                         <th>商品名称</th>
                                         <th>商品数量</th>
-                                    </tr>
+                                    </thead>
                                     @foreach($mortgageGoods as $goods)
                                         <tr>
                                             <td>{{ $goods['id'] }}</td>
@@ -289,7 +296,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ $goods['pivot']['num'] }}</td>
+                                            <td>{{ 'x'.$goods['pivot']['num'] }}</td>
                                         </tr>
 
                                     @endforeach
@@ -305,12 +312,12 @@
                                 <h3 class="panel-title">订单记录</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center">
-                                    <tr>
+                                <table class="table table-bordered table-center public-table">
+                                    <thead>
                                         <th>订单操作</th>
                                         <th>操作时间</th>
                                         <th>操作人</th>
-                                    </tr>
+                                    </thead>
 
                                     <tr>
                                         <td>提交订单</td>

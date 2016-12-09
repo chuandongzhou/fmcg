@@ -168,6 +168,28 @@ a:hover {
   vertical-align: middle;
 }
 
+.page-header.navbar .page-logo {
+  width: 160px !important;
+}
+
+@media (min-width: 992px) {
+  .page-sidebar {
+    width: 160px !important;
+  }
+
+  .page-sidebar-menu.page-sidebar-menu-hover-submenu li:hover .sub-menu {
+    margin-left: 160px !important;
+  }
+
+  .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu {
+    width: 160px !important;
+  }
+
+  .page-content-wrapper .page-content {
+    margin-left: 160px !important;
+  }
+}
+
 .btn-blue {
   color: #fff;
   background-color: #169bd5;
@@ -233,6 +255,17 @@ a:hover {
 .edit:hover,
 .edit:focus {
   color: #169bd5;
+}
+
+.print {
+  color: #F25000;
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.print:hover,
+.print:focus {
+  color: #F25000;
 }
 
 .contact {
@@ -940,7 +973,7 @@ a:hover {
   height: 3px;
   background: #999999;
   top: 48px;
-  left: 6%;
+  left: 5%;
   z-index: 101;
 }
 
@@ -957,7 +990,6 @@ a:hover {
 .ui-stepBar-wrap .ui-stepInfo-wrap {
   margin: 0 auto;
   width: 90%;
-  height: 100%;
 }
 
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo {
@@ -965,6 +997,14 @@ a:hover {
   float: left;
   padding-top: 36px;
   text-align: center;
+}
+
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo:first-of-type .ui-stepSequence {
+  background-color: #F25000 !important;
+}
+
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo:first-of-type .ui-stepSequence:hover {
+  box-shadow: 0 0 3px 1px #F25000;
 }
 
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence {
@@ -982,6 +1022,14 @@ a:hover {
   line-height: 25px;
   color: #555555;
   z-index: 103;
+}
+
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo:first-of-type .ui-stepTime {
+  margin-left: 16%;
+}
+
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo:last-of-type .ui-stepTime {
+  margin-right: 16%;
 }
 
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-pre-change {
@@ -1213,8 +1261,8 @@ a:hover {
   float: left;
   font-size: 40px;
   line-height: 39px;
-  height: 40px;
   width: 40px;
+  height: 40px;
   color: #d2d2d2;
   margin-right: 10px;
 }
@@ -1394,8 +1442,8 @@ a:hover {
 }
 
 .wholesalers-header .container .navbar-nav li .list-name {
-  width: 100%;
   padding: 0 30px;
+  width: 100%;
   height: 40px;
   line-height: 40px;
 }
@@ -2050,7 +2098,6 @@ a:hover {
 .personal-store .editor-btn {
   background-color: #00b8ae;
   color: #fff;
-  height: 30px;
   line-height: 17px !important;
 }
 
@@ -2737,6 +2784,13 @@ a:hover {
   padding: 0 0 20px 30px;
 }
 
+.goods-detail .address-wrap table tr td,
+.goods-detail .address-wrap table tr th,
+.goods-detail .address-wrap .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list .goods-detail .address-wrap table tr td {
+  border: none !important;
+}
+
 .goods-detail .address-wrap .item {
   margin: 10px 0;
 }
@@ -3008,7 +3062,7 @@ a:hover {
 }
 
 .save .btn {
-  width: 100px;
+  min-width: 100px;
   height: 40px;
   border-radius: 4px !important;
 }
@@ -3173,6 +3227,7 @@ table .product-panel .promotions {
   color: #fff;
   display: inline-block;
   margin-left: 5px;
+  font-weight: 600 !important;
 }
 
 .notice-bar .btn-primary {
@@ -3193,7 +3248,6 @@ table .product-panel .promotions {
 }
 
 .wholesalers-management .pay-detail .control {
-  width: 23%;
   height: 40px;
   max-width: 180px;
   border: 1px solid #b4b4b4 !important;
@@ -3350,9 +3404,12 @@ table .product-panel .promotions {
   height: 60px;
 }
 
-.wholesalers-management .table-col table tr td.pay-detail {
+.wholesalers-management .table-col table tr td.bordered {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
+}
+
+.wholesalers-management .table-col table tr td.pay-detail {
   vertical-align: top;
 }
 
@@ -3823,6 +3880,14 @@ table .product-panel .promotions {
   color: #49adec;
 }
 
+.order-detail .order-receipt .order-msg-table tr td.operate p {
+  margin: 10px 0;
+}
+
+.order-detail .order-receipt .order-msg-table tr td.operate p .btn {
+  padding: 3px 15px;
+}
+
 .order-detail .table-row .table-col {
   padding: 20px 0 0 0;
 }
@@ -4200,34 +4265,53 @@ table .product-panel .promotions {
 .dealer-top-header .city-wrap .login-info-wrap a {
   color: #999999;
   text-decoration: none;
-  padding: 10px;
   font-size: 12px;
+}
+
+.dealer-top-header .city-wrap .login-info-wrap a.login {
+  padding: 10px;
 }
 
 .dealer-top-header .city-wrap .login-info-wrap a.name-panel {
   position: relative;
+  display: inline-block;
 }
 
 .dealer-top-header .city-wrap .login-info-wrap a.name-panel:hover {
   background-color: #fff;
 }
 
+.dealer-top-header .city-wrap .login-info-wrap a.name-panel:hover .user-name {
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+}
+
 .dealer-top-header .city-wrap .login-info-wrap a.name-panel:hover .exit {
   display: block;
+}
+
+.dealer-top-header .city-wrap .login-info-wrap a.name-panel .user-name {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #f1f1f1;
 }
 
 .dealer-top-header .city-wrap .login-info-wrap a.name-panel .exit {
   position: absolute;
   cursor: pointer;
-  display: none;
   top: 35px;
+  left: 0;
   width: 100%;
   padding: 10px 5px 10px 5px;
   z-index: 9999;
   text-align: center;
   color: #999999;
+  display: none;
   font-size: 14px;
   background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-top: none;
 }
 
 .dealer-top-header .city-wrap .login-info-wrap a:hover {
@@ -4325,8 +4409,8 @@ table .product-panel .promotions {
   position: absolute;
   top: 42px;
   right: 0;
-  height: 0;
   width: 310px;
+  height: 0;
   z-index: 9999;
   overflow: hidden;
   transition: height 1s ease 0s;
@@ -4476,9 +4560,9 @@ table .product-panel .promotions {
 .top-header .public-personal .controls .item-panel .item .add-goods .input-group .input-group-btn .search-btn,
 .public-personal .controls .item-panel .item .top-header .add-goods .input-group .input-group-btn .search-btn {
   width: 100%;
+  height: 40px;
   background-color: #F25000;
   border-color: #F25000;
-  height: 40px;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -4498,7 +4582,7 @@ table .product-panel .promotions {
 
 .top-header .right-btn li {
   height: 100%;
-  padding: 10px;
+  padding: 10px 0 10px 10px;
 }
 
 .top-header .right-btn li .btn {
@@ -4522,8 +4606,8 @@ table .product-panel .promotions {
   margin-top: 10px;
   position: relative;
   z-index: 99;
-  height: 40px;
   width: 140px;
+  height: 40px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   text-align: center;
@@ -4543,10 +4627,10 @@ table .product-panel .promotions {
   color: #000;
   display: inline-block;
   width: 115px;
-  text-align: center;
-  text-decoration: none;
   height: 40px;
   line-height: 40px;
+  text-align: center;
+  text-decoration: none;
   font-size: 16px;
 }
 
@@ -4578,8 +4662,8 @@ table .product-panel .promotions {
 .categories .menu-wrap li .one-title {
   display: inline-block;
   padding: 10px 0 10px 5px;
-  height: 100%;
   width: 80%;
+  height: 100%;
   text-align: center;
   margin-bottom: -1px;
   color: #666666;
@@ -4588,8 +4672,8 @@ table .product-panel .promotions {
 }
 
 .categories .menu-wrap li .one-title .iconfont {
-  height: 20px;
   width: 20px;
+  height: 20px;
   color: #b4b4b4;
   margin-right: 3px;
   vertical-align: middle;
@@ -4663,11 +4747,6 @@ table .product-panel .promotions {
   border-top: 2px solid #f1f1f1;
 }
 
-.container-wrap .container {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
 .banner-slide .carousel-indicators {
   text-align: center;
 }
@@ -4731,9 +4810,9 @@ table .product-panel .promotions {
 
 .dealer-index .list-penal .title .category-name .first-letter {
   display: inline-block;
+  width: 30px;
   height: 30px;
   line-height: 30px;
-  width: 30px;
   color: #fff;
   margin-right: 10px;
   background-color: #999999;
@@ -4923,8 +5002,9 @@ table .product-panel .promotions {
   margin-top: 30px;
 }
 
-.goods-tables .operating .editor {
-  color: #169bd5;
+.goods-tables .operating a {
+  display: inline-block;
+  padding: 0 5px;
 }
 
 .goods-tables .operating .under {
@@ -5641,9 +5721,9 @@ table .product-panel .promotions {
 
 .msg-channel .check {
   display: inline-block;
-  height: 110px;
   padding-top: 35px;
   width: 100%;
+  height: 110px;
 }
 
 .control-center-channel {
@@ -6272,7 +6352,7 @@ table .product-panel .promotions {
   position: absolute;
   left: 50%;
   margin-left: -75px;
-  z-index: 99;
+  z-index: 99999;
   border-radius: 4px !important;
   border: 1px solid #b4b4b4;
   top: -150px;
@@ -6400,7 +6480,6 @@ table .product-panel .promotions {
 .temple-table table th,
 .temple-table .table-list-row .shopping-table-list table tr td,
 .table-list-row .shopping-table-list .temple-table table tr td {
-  position: absolute;
   padding: 0 !important;
   border: 1px solid black !important;
 }
@@ -6608,8 +6687,8 @@ table .product-panel .promotions {
 }
 
 .choice-template .shop-img img {
-  height: 100%;
   width: auto;
+  height: 100%;
   left: 50%;
   position: relative;
   -webkit-transform: translateX(-50%);
@@ -6865,6 +6944,11 @@ table .product-panel .promotions {
   color: #fff;
 }
 
+.delivery table tr td.operating a {
+  display: inline-block;
+  padding: 0 5px;
+}
+
 .delivery-statistics {
   margin: 0 25px 0 25px !important;
 }
@@ -7032,8 +7116,21 @@ table .product-panel .promotions {
   padding: 3px;
 }
 
-.business-detail .edit-text {
+.business-detail .commodity-num {
+  display: inline-block;
+}
+
+.business-detail .enter-num-panel {
   display: none;
+  position: relative;
+}
+
+.business-detail .enter-num-panel .prompt {
+  color: #b4b4b4;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  background-color: #fff;
 }
 
 .business-detail .edit-text[type="textarea"] {

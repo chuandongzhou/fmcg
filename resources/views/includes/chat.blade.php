@@ -80,7 +80,7 @@
             userListPanel.on('click', '.user-msg', function () {
                 var obj = $(this), touid = obj.data('touid').toString();
                 var sdk = WKIT.Conn.sdk;
-                obj.prop('disabled', true).css('background-color', '#e0e0e0').siblings().prop('disabled', false).css('background-color', '#f2f2f2');
+                obj.prop('disabled', true).css('background-color', '#646464').siblings().prop('disabled', false).css('background-color', '#555555');
                 WKIT.switchTouid({
                     touid: touid,
                     toAvatar: obj.find('img').attr('src')

@@ -69,36 +69,23 @@
         $(function () {
             var bankModal = $('#bankModal'),
                     form = bankModal.find('form');
-            $('.update-modal').click(function () {
-                var obj = $(this);
-                if (obj.hasClass('add-bank-account')) {
-                    form.attr('action', site.api('personal/bank'));
-                    form.attr('method', 'post');
-
-                } else {
-                    $('#bankModal span').html('编辑银行账号');
-                    var id = obj.data('id'),
-                            cardNumber = obj.data('card-number'),
-                            cardType = obj.data('card-type'),
-                            cardHolder = obj.data('card-holder'),
-                            cardAddress = obj.data('card-address');
-                    $('input[name="card_number"]').val(cardNumber);
-                    $('input[name="card_holder"]').val(cardHolder);
-                    $('input[name="card_address"]').val(cardAddress);
-                    $('select[name="card_type"] option[value=' + cardType + ']').attr("selected", "selected");
-                    form.attr('action', site.api('personal/bank/' + id));
-                    form.attr('method', 'put');
-
-
-                }
+            bankModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget);
+                $('#bankModal span').html(obj.hasClass('add-bank-account') ? '添加银行账号' : '编辑银行账号');
+                $('.btn-add').html(obj.hasClass('add-bank-account') ? '添加' : '提交');
+                var id = obj.data('id') || 0,
+                        cardNumber = obj.data('card-number') || '',
+                        cardType = obj.data('card-type') || 1,
+                        cardHolder = obj.data('card-holder') || '',
+                        cardAddress = obj.data('card-address') || '';
+                $('input[name="card_number"]').val(cardNumber);
+                $('input[name="card_holder"]').val(cardHolder);
+                $('input[name="card_address"]').val(cardAddress);
+                $('select[name="card_type"] option[value=' + cardType + ']').attr("selected", "selected");
+                form.attr('action', site.api(obj.hasClass('add-bank-account') ? 'personal/bank' : 'personal/bank/' + id));
+                form.attr('method', obj.hasClass('add-bank-account') ? 'post' : 'put');
             });
-            bankModal.on('hidden.bs.modal', function (e) {
 
-                $('input[name="card_number"]').val('');
-                $('input[name="card_holder"]').val('');
-                $('input[name="card_address"]').val('');
-                $("#cardType option:first").attr("selected", "selected");
-            });
 
         });
     </script>

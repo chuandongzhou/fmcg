@@ -2,8 +2,8 @@
 @include('includes.timepicker')
 @section('subtitle', '财务管理-提现记录')
 @section('top-title')
-    <a href="{{ url('personal/finance/balance') }}">财务管理</a> &rarr;
-    提现记录
+    <a href="{{ url('personal/finance/balance') }}">财务管理</a> >
+    <span class="second-level"> 提现记录</span>
 @stop
 @section('right')
     <form method="get" action="{{ url('personal/finance/withdraw') }}" autocomplete="off">
@@ -82,9 +82,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-left"></div>
-                    <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">关闭</button>
-                    </div>
+
                 </div>
             </div>
         </div>

@@ -7,80 +7,94 @@
                     <img src="{{ asset('images/logo.png') }}">
                 </a>
             </div>
-            <div class="col-sm-4 shop-header-wrap">
-                <div class="shop-name">
-                    <h4 class="name">{{ $shop->name }}</h4>
-                    <div class="operate">
-                        @if($user->id==$shop->user_id)
-                            <a href="javascript:" class="contact list-name" style="cursor:text"><span
-                                        class="fa fa-commenting-o"></span> 联系客服</a>
-                        @else
-                            <a href="javascript:"
-                               onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                               class="contact list-name"><span class="fa fa-commenting-o"></span> 联系客服</a>
-                        @endif
-
-                        <a href="javascript:void(0)" data-type="shops" data-method="post"
-                           class="btn {{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops"
-                           data-id="{{ $shop->id }}" style="cursor:{{ $user->id==$shop->user_id?'text':'pointer' }}">
-                            @if(is_null($isLike))
-                                <i class="fa fa-star-o"></i> 加入收藏夹
+            @if(request()->is('goods/*'))
+                <div class="col-sm-4 shop-header-wrap">
+                    <select class="more-classify">
+                        <option>更多分类</option>
+                        @foreach($categories as $cate)
+                            <option value="{{ url('search?category_id=' . $cate['level'] . $cate['id']) }}"> {{ $cate['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @else
+                <div class="col-sm-4 shop-header-wrap">
+                    <div class="shop-name">
+                        <h4 class="name">{{ $shop->name }}</h4>
+                        <div class="operate">
+                            @if($user->id==$shop->user_id)
+                                <a href="javascript:" class="contact list-name" style="cursor:text"><span
+                                            class="iconfont icon-kefu"></span> 联系客服</a>
                             @else
-                                <i class="fa fa-star"></i> 已收藏
+                                <a href="javascript:"
+                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$shop->id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                   class="contact list-name"><span class=" iconfont icon-kefu"></span> 联系客服</a>
                             @endif
-                        </a>
+
+                            <a href="javascript:void(0)" data-type="shops" data-method="post"
+                               class="btn {{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops"
+                               data-id="{{ $shop->id }}"
+                               style="cursor:{{ $user->id==$shop->user_id?'text':'pointer' }}">
+                                @if(is_null($isLike))
+                                    <i class="fa fa-star-o"></i> 加入收藏夹
+                                @else
+                                    <i class="fa fa-star"></i> 已收藏
+                                @endif
+                            </a>
+                        </div>
+                    </div>
+                    <div class="shop-detail-popup">
+                        <div class="popup-name">
+                            <span class="prompt">店铺名称: </span>
+                            {{ $shop->name }}
+                        </div>
+                        <div class="contact-information">
+                            <ul class="item">
+                                <i class="iconfont icon-lianxiren"></i>
+                                <li>
+                                    <span class="prompt">联系人</span>
+                                    <span>{{ $shop->contact_person }}</span>
+                                </li>
+                            </ul>
+                            <ul class="item">
+                                <i class="iconfont icon-dianhua"></i>
+                                <li>
+                                    <span class="prompt">联系方式</span>
+                                    <span>{{ $shop->contact_info }}</span>
+                                </li>
+                            </ul>
+                            <ul class="item">
+                                <i class="iconfont icon-peisong"></i>
+                                <li>
+                                    <span class="prompt">最低配送额</span>
+                                    <span>¥{{ $shop->min_money }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="contact-address">
+                            <ul>
+                                <i class="iconfont icon-lianxidizhi"></i>
+                                <li>
+                                    <span class="prompt">店家地址</span>
+                                    <span>{{ $shop->address }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="store-introduction">
+                            <div class="prompt">店家介绍 :</div>
+                            <p class="content">{{ $shop->introduction }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="shop-detail-popup">
-                    <div class="popup-name">
-                        <span class="prompt">店铺名称: </span>
-                        {{ $shop->name }}
-                    </div>
-                    <div class="contact-information">
-                        <ul class="item">
-                            <i class="iconfont icon-lianxiren"></i>
-                            <li>
-                                <span class="prompt">联系人</span>
-                                <span>{{ $shop->contact_person }}</span>
-                            </li>
-                        </ul>
-                        <ul class="item">
-                            <i class="iconfont icon-dianhua"></i>
-                            <li>
-                                <span class="prompt">联系方式</span>
-                                <span>{{ $shop->contact_info }}</span>
-                            </li>
-                        </ul>
-                        <ul class="item">
-                            <i class="iconfont icon-peisong"></i>
-                            <li>
-                                <span class="prompt">最低配送额</span>
-                                <span>¥{{ $shop->min_money }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="contact-address">
-                        <ul>
-                            <i class="iconfont icon-lianxidizhi"></i>
-                            <li>
-                                <span class="prompt">店家地址</span>
-                                <span>{{ $shop->address }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="store-introduction">
-                        <div class="prompt">店家介绍 :</div>
-                        <p class="content">{{ $shop->introduction }}</p>
+                <div class="col-sm-1 qr-code-wrap">
+                    <img src="{{ asset('images/qr-code-show.png') }}" class="code-show">
+                    <div class="shop-code">
+                        <img src="{{ (new \App\Services\ShopService())->qrcode($shop->id,150) }}">
+                        <span>扫一扫 进入手机店铺</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-1 qr-code-wrap">
-                <img src="{{ asset('images/qr-code-show.png') }}" class="code-show">
-                <div class="shop-code">
-                    <img src="{{ (new \App\Services\ShopService())->qrcode($shop->id,150) }}">
-                    <span>扫一扫 进入手机店铺</span>
-                </div>
-            </div>
+            @endif
+
+
             <div class="col-sm-4  right-search">
                 <form class="search search-form" role="search" autocomplete="off" method="get">
                     <div class="input-group">
@@ -114,7 +128,8 @@
             <div class="container">
                 <div class="row margin-clear">
                     <div class="col-sm-12 padding-clear">
-                        <h3 class="shop-name" style="color:{{ $shop->ShopSignature?$shop->ShopSignature->color:'' }}">{{  $shop->ShopSignature?$shop->ShopSignature->text:'' }}</h3>
+                        <h3 class="shop-name"
+                            style="color:{{ $shop->ShopSignature?$shop->ShopSignature->color:'' }}">{{  $shop->ShopSignature?$shop->ShopSignature->text:'' }}</h3>
                     </div>
                 </div>
             </div>
@@ -198,6 +213,9 @@
                 $("form").attr('action', url);
                 $('form').submit();
             }
+            $('.more-classify').change(function(){
+                window.location.href = $(this).val();
+            });
         });
     </script>
 @stop

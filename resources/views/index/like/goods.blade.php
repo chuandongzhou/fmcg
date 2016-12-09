@@ -31,7 +31,9 @@
                     @foreach($goods as $good)
                         <div class="col-sm-3 commodity">
                             <div class="img-wrap">
-                                <img class="commodity-img" src="{{ $good->image_url }}">
+                               <a href="{{ url('goods/'.$good->id) }}" target="_blank">
+                                   <img class="commodity-img" src="{{ $good->image_url }}">
+                               </a>
                             </div>
                             <div class="operation">
                                 <div class="text-right"><input type="checkbox" name="id[]" value="{{ $good->id }}"
@@ -45,7 +47,9 @@
                                 </div>
                             </div>
                             <div class="content-panel">
-                                <div class="commodity-name">{{ $good->name }}</div>
+                                <a href="{{ url('goods/'.$good->id) }}" target="_blank">
+                                    <div class="commodity-name">{{ $good->name }}</div>
+                                </a>
                                 <div class="sell-panel">
                                     <span class="money red"><b>￥{{ $good->price.'/'.$good->pieces }}</b></span>
                                     <span class="sales pull-right">最低购买量 : {{ $good->min_num }}</span>

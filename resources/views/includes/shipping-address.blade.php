@@ -2,7 +2,7 @@
     <div class="modal modal1  fade" id="shippingAddressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content" >
+            <div class="modal-content">
                 <div class="modal-header choice-header prop-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <div class="modal-title forgot-modal-title" id="shippingAddressModalLabel">
@@ -72,7 +72,7 @@
                         <div class="form-group">
                             <div class="col-sm-push-2 col-sm-10">
                                 <div id="address-map"
-                                     style="margin-top: 20px; overflow: hidden; zoom: 1; position: relative; height: 350px; width: 100%; z-index: 0; color: rgb(0, 0, 0); text-align: left; background-color: rgb(243, 241, 236);">
+                                     style="margin-top:20px;overflow: hidden;zoom: 1;position: relative;height: 350px;width:100%;">
 
                                 </div>
                             </div>
@@ -98,12 +98,14 @@
     <script type="text/javascript">
         $(function () {
 
-            $('.submitBtn').on('done.hct.ajax', function (data, textStatus) {
-                $('#shippingAddressModal').modal('hide');
-                $('.success-meg-content').html(data.message || '操作成功');
-                showSuccessMeg();
-                return false;
-            });
+//            //操作成功提示
+//            $('.submitBtn').on('done.hct.ajax', function (data, textStatus) {
+//                $('#shippingAddressModal').modal('hide');
+//                $('.success-meg-content').html(data.message || '操作成功');
+//                showSuccessMeg();
+//                return false;
+//            });
+            //地址变化
             var province = $('select[name="province_id"]'),
                     city = $('select[name="city_id"]'),
                     district = $('select[name="district_id"]'),
@@ -118,57 +120,37 @@
             var shippingAddressModal = $('#shippingAddressModal'),
                     form = shippingAddressModal.find('form');
 
-            $('.update-shipping-address').click(function () {
-                var obj = $(this);
-                if (obj.hasClass('personal-add')) {
-                    form.attr('action', site.api('personal/shipping-address'));
-                    form.attr('method', 'post');
+            //点击添加或者编辑按钮修改数据
 
-                    getShopAddressMap(0, 0);
-                } else {
+            $('#shippingAddressModal').on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget);
+                $('#shippingAddressModalLabel span').html(obj.hasClass('personal-add') ?'添加收货地址':'编辑收货地址');
+                var id = obj.data('id') || '',
+                        address = obj.data('address') || '',
+                        provinceId = obj.data('province-id') || '',
+                        cityId = obj.data('city-id') || '',
+                        districtId = obj.data('district-id') || '',
+                        streetId = obj.data('street-id') || '',
+                        areaName = obj.data('area-name') || '',
+                        x_lng = obj.data('x-lng') || 0,
+                        y_lat = obj.data('y-lat') || 0,
+                        consigner = obj.data('consigner') || '',
+                        phone = obj.data('phone') || '';
+                province.data('id', provinceId);
+                city.data('id', cityId);
+                district.data('id', districtId);
+                street.data('id', streetId);
+                $('input[name="consigner"]').val(consigner);
+                $('input[name="phone"]').val(phone);
+                $('input[name="address"]').val(address);
+                $('input[name="area_name"]').val(areaName);
+                $('input[name="x_lng"]').val(x_lng);
+                $('input[name="y_lat"]').val(y_lat);
+                form.attr('action', site.api(obj.hasClass('personal-add') ?'personal/shipping-address':'personal/shipping-address/' + id));
+                form.attr('method', obj.hasClass('personal-add') ? 'post' : 'put');
 
-                    $('#shippingAddressModalLabel span').html('编辑收货地址');
-                    var id = obj.data('id'),
-                            address = obj.data('address'),
-                            provinceId = obj.data('province-id'),
-                            cityId = obj.data('city-id'),
-                            districtId = obj.data('district-id'),
-                            streetId = obj.data('street-id'),
-                            areaName = obj.data('area-name'),
-                            x_lng = obj.data('x-lng'),
-                            y_lat = obj.data('y-lat'),
-                            consigner = obj.data('consigner'),
-                            phone = obj.data('phone');
-                    province.data('id', provinceId);
-                    city.data('id', cityId);
-                    district.data('id', districtId);
-                    street.data('id', streetId);
-                    $('input[name="consigner"]').val(consigner);
-                    $('input[name="phone"]').val(phone);
-                    $('input[name="address"]').val(address);
-                    $('input[name="area_name"]').val(areaName);
-                    $('input[name="x_lng"]').val(x_lng);
-                    $('input[name="y_lat"]').val(y_lat);
-                    form.attr('action', site.api('personal/shipping-address/' + id));
-                    form.attr('method', 'put');
-
-                    setAddress(province, city, district, street);
-                    getShopAddressMap(x_lng, y_lat);
-                }
-            });
-
-            shippingAddressModal.on('hidden.bs.modal', function (e) {
-                province.data('id', '');
-                city.data('id', '');
-                district.data('id', '');
-                street.data('id','');
-                $('input[name="consigner"]').val('');
-                $('input[name="phone"]').val('');
-                $('input[name="address"]').val('');
-                $('input[name="area_name"]').val('');
-                $('input[name="x_lng"]').val('');
-                $('input[name="y_lat"]').val('');
                 setAddress(province, city, district, street);
+                getShopAddressMap(x_lng, y_lat);
             });
 
         })

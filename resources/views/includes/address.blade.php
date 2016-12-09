@@ -14,7 +14,7 @@
                     </div>
                     <div class="modal-body address-select">
                         <div class="address-group">
-                            <div class="form-group row">
+                            <div class="form-group row address-panel">
                                 <label class="col-sm-2 control-label" for="num">配送区域:</label>
                                 <div class="col-sm-10">
                                     <select class="address address-province inline-control add-province"
@@ -88,49 +88,31 @@
                     city = $('select[name="city_id"]'),
                     district = $('select[name="district_id"]'),
                     street = $('.address-street');
-            $('.update-modal').click(function () {
-                var obj = $(this);
-                if (obj.hasClass('personal-add')) {
-                    form.attr('action', site.api('personal/delivery-area'));
-                    form.attr('method', 'post');
-//                    form.data('url', site.api('personal/delivery-area'));
-//                    form.data('method', 'post');
+            addressModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget);
+                $('#addressModal span').html(obj.hasClass('personal-add') ? '添加配送区域' : '编辑配送区域');
+                var id = obj.data('id') || '',
+                        address = obj.data('address') || '',
+                        minMoney = obj.data('min-money') || '',
+                        provinceId = obj.data('province-id') || '',
+                        cityId = obj.data('city-id') || '',
+                        districtId = obj.data('district-id') || '',
+                        areaName = obj.data('area-name') || '';
+                province.data('id', provinceId);
+                city.data('id', cityId);
+                district.data('id', districtId);
+                $('input[name="min_money"]').val(minMoney);
+                $('input[name="area_name"]').val(areaName);
+                $('input[name="address"]').val(address);
+                form.attr('action', site.api(obj.hasClass('personal-add') ? 'personal/delivery-area' : 'personal/delivery-area/' + id));
+                form.attr('method', obj.hasClass('personal-add') ? 'post' : 'put');
 
-
-                } else {
-
-                    $('#addressModalLabel span').html('编辑配送区域');
-                    var id = obj.data('id'),
-                            address = obj.data('address'),
-                            minMoney = obj.data('min-money'),
-                            provinceId = obj.data('province-id'),
-                            cityId = obj.data('city-id'),
-                            districtId = obj.data('district-id'),
-                            areaName = obj.data('area-name');
-                    province.data('id', provinceId);
-                    city.data('id', cityId);
-                    district.data('id', districtId);
-                    $('input[name="min_money"]').val(minMoney);
-                    $('input[name="area_name"]').val(areaName);
-                    $('input[name="address"]').val(address);
-                    form.attr('action', site.api('personal/delivery-area/' + id));
-                    form.attr('method', 'put');
-
-                    setAddress(province, city, district, street);
-
-
-                }
-            });
-            addressModal.on('hidden.bs.modal', function (e) {
-                province.data('id', '');
-                city.data('id', '');
-                district.data('id', '');
-                $('input[name="min_money"]').val('');
-                $('input[name="area_name"]').val('');
-                $('input[name="address"]').val('');
                 setAddress(province, city, district, street);
+
             });
 
-        });
+
+        })
+        ;
     </script>
 @stop

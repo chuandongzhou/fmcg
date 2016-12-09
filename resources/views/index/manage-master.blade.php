@@ -113,7 +113,7 @@
     <div class="page-container public-personal contents">
         @yield('container')
         <div class="msg-channel control-center-channel" id="alert-div">
-            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a>
+            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn  pull-right"><i class="fa fa-remove"></i></a>
             </div>
             <a class="check" href="#">点击查看>>>></a>
         </div>

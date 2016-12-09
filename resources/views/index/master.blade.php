@@ -60,13 +60,12 @@
                     <div class="login-info-wrap">
                         @if(isset($user))
                             <a href="{{ url("personal/info") }}" class="name-panel">
-                                <span class="user-name">{{ $user->shop_name }}</span>
-                                ({{ cons()->valueLang('user.type' , $user->type) }})
+                                <span class="user-name">{{ $user->shop_name }}({{ cons()->valueLang('user.type' , $user->type) }})</span>
                                 <span class="exit"
                                       onclick="window.location.href='{{ url('auth/logout') }}';return false;">退出</span>
                             </a>
                         @else
-                            <a href="{{ url('auth/login') }}" class="red">登录</a>
+                            <a href="{{ url('auth/login') }}" class="red login">登录</a>
                         @endif
                         <a href="{{ url('personal/chat') }}">消息( <span class="total-message-count">0</span> )</a>
                     </div>
@@ -137,14 +136,9 @@
     @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
-        {{--<div class="msg-channel" id="alert-div">--}}
-            {{--<div class="title"><span class="pull-left">你有新消息</span><a class="close-btn fa fa-remove pull-right"></a>--}}
-            {{--</div>--}}
-            {{--<a class="check" href="#">点击查看>>>></a>--}}
-        {{--</div>--}}
-        <div class="msg-channel" id="alert-div">
-            <p class="title"><span class="pull-left">你有新消息</span><span onclick="popClose('.msg-channel')"
-                                                                    class="close-btn fa fa-remove pull-right"></span></p>
+        <div class="msg-channel control-center-channel" id="alert-div">
+            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn  pull-right"><i class="fa fa-remove"></i></a>
+            </div>
             <a class="check" href="#">点击查看>>>></a>
         </div>
     @endif

@@ -172,6 +172,37 @@ a {
     vertical-align:middle;
   }
 }
+.page-header{
+  &.navbar {
+    .page-logo{
+      width:160px!important;
+    }
+  }
+}
+@media (min-width: 992px) {
+  .page-sidebar{
+    width:160px!important;
+  }
+  .page-sidebar-menu{
+    &.page-sidebar-menu-hover-submenu {
+      li {
+        &:hover{
+          .sub-menu{
+            margin-left:160px!important;
+          }
+        }
+        .sub-menu{
+          width:160px!important;
+        }
+      }
+    }
+  }
+  .page-content-wrapper {
+    .page-content{
+      margin-left:160px!important;
+    }
+  }
+}
 @mixin btn-hover-color($color) {
   color: $color;
   &:hover, &:focus {
@@ -219,6 +250,11 @@ a {
   display: inline-block;
   padding: 0 5px;
 }
+.print{
+  @include btn-hover-color($theme-orange);
+  display: inline-block;
+  padding: 0 5px;
+}
 
 .contact {
   padding: 2px 4px;
@@ -244,8 +280,7 @@ a {
     vertical-align: middle;
     margin: 15px 0 0 20px;
     img {
-      width: 70px;
-      height: 51px;
+      @include size(70px,51px);
     }
   }
   .items-item {
@@ -363,8 +398,7 @@ a {
         min-width: 340px;
         textarea {
           display: block;
-          width: 100%;
-          height: 130px;
+          @include size(100%,130px);
           resize: none;
           border: 1px solid #ddd;
         }
@@ -500,8 +534,7 @@ a {
         top: 0;
         right: 0;
         img {
-          width: 54px;
-          height: 49px;
+          @include size(54px,49px);
         }
       }
       .login-left-img {
@@ -537,8 +570,7 @@ a {
               z-index: 99;
               left: 0;
               top: 0;
-              width: 0;
-              height: 0;
+              @include square(0);
               border-top: 72px solid transparent;
               border-left: 40px solid #ececec;
               border-bottom: 72px solid transparent;
@@ -547,8 +579,7 @@ a {
               position: absolute;
               right: 0;
               top: 0;
-              width: 0;
-              height: 0;
+              @include square(0);
               border-top: 72px solid transparent;
               border-right: 40px solid #ececec;
               border-bottom: 72px solid transparent;
@@ -645,8 +676,7 @@ a {
           img {
             border-radius: 50%;
             padding: 5px;
-            width: 100%;
-            height: auto;
+            @include size(100%,auto);
           }
         }
         .item-name {
@@ -780,8 +810,7 @@ a {
     overflow: hidden;
     zoom: 1;
     position: relative;
-    width: 100%;
-    height: 350px;
+    @include size(100%,350px);
   }
 }
 
@@ -822,7 +851,7 @@ a {
     @include size(90%, 3px);
     background: $word-gray;
     top: 48px;
-    left: 6%;
+    left: 5%;
     z-index: 101;
     .ui-stepProcess {
       position: relative;
@@ -835,17 +864,24 @@ a {
   }
   .ui-stepInfo-wrap {
     margin: 0 auto;
-    @include size(90%, 100%);
+    width:90%;
     .ui-stepInfo {
       position: relative;
       float: left;
       padding-top: 36px;
       text-align: center;
+      &:first-of-type{
+        .ui-stepSequence{
+          background-color: #F25000!important;
+          &:hover {
+            box-shadow: 0 0 3px 1px $theme-orange;
+          }
+        }
+      }
       .ui-stepSequence {
         position: relative;
         display: inline-block;
-        width: 20px;
-        height: 20px;
+        @include square(20px);
         border-radius: 50% !important;
         z-index: 103;
         margin-left: 1px;
@@ -855,6 +891,16 @@ a {
         line-height: 25px;
         color: $gray;
         z-index: 103;
+      }
+      &:first-of-type{
+        .ui-stepTime{
+          margin-left:16%;
+        }
+      }
+      &:last-of-type{
+        .ui-stepTime{
+          margin-right:16%;
+        }
       }
       .judge-stepSequence-pre-change {
         cursor: pointer;
@@ -1036,8 +1082,7 @@ a {
     position: absolute;
     z-index: 99;
     top: 80px;
-    width: 450px;
-    height: 0;
+    @include size(450px,0);
     overflow: hidden;
     background-color: $body-bg;
     transition: height 0.5s;
@@ -1057,8 +1102,7 @@ a {
       float: left;
       font-size: 40px;
       line-height: 39px;
-      height: 40px;
-      width: 40px;
+      @include square(40px);
       color: $banner-gray;
       margin-right: 10px;
     }
@@ -1136,8 +1180,7 @@ a {
   position: relative;
   img {
     position: absolute;
-    width: 100%;
-    height: 120px;
+    @include size(100%,120px);
   }
   .shop-name {
     height: 120px;
@@ -1211,9 +1254,8 @@ a {
       li {
         padding: 0;
         .list-name {
-          width: 100%;
           padding: 0 30px;
-          height: 40px;
+          @include size(100%,40px);
           line-height: 40px;
         }
       }
@@ -1365,8 +1407,7 @@ a {
       text-decoration: none;
     }
     .commodity-name {
-      width: 100%;
-      height: 20px;
+      @include size(100%,20px);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -1762,7 +1803,6 @@ a {
   .editor-btn {
     background-color: #00b8ae;
     color: $body-bg;
-    height: 30px;
     line-height: 17px !important;
     .iconfont {
       font-size: 22px;
@@ -1777,8 +1817,7 @@ a {
     text-decoration: none;
     outline: none;
     img {
-      width: 100%;
-      height: 100px;
+      @include size(100%,100px);
     }
   }
 }
@@ -2347,6 +2386,13 @@ a {
 
   .address-wrap {
     padding: 0 0 20px 30px;
+    table{
+      tr{
+        td,th{
+          border:none!important;
+        }
+      }
+    }
     .item {
       margin: 10px 0;
       .address-list {
@@ -2580,7 +2626,8 @@ a {
   @at-root .save {
     margin: 20px 0 20px 0;
     .btn {
-      @include size(100px, 40px);
+      min-width:100px;
+      height:40px;
       border-radius: 4px !important;
     }
   }
@@ -2721,6 +2768,7 @@ table {
       color: $body-bg;
       display: inline-block;
       margin-left: 5px;
+      font-weight: 600!important;
     }
   }
   .btn-primary {
@@ -2737,7 +2785,7 @@ table {
       z-index: 0 !important;
     }
     .control {
-      @include size(23%, 40px);
+      height:40px;
       max-width: 180px;
       border: 1px solid $gray-lighter !important;
       outline: none;
@@ -2868,9 +2916,11 @@ table {
             @include square(60px);
           }
         }
-        td.pay-detail {
+        td.bordered{
           border-left: 1px solid $table-border-color;
           border-right: 1px solid $table-border-color;
+        }
+        td.pay-detail {
           vertical-align: top;
           p {
             margin: 10px 0 !important;
@@ -3256,7 +3306,6 @@ table {
   .order-receipt {
     margin-top: 20px;
     padding: 10px 15px;
-
     .order-information {
       li {
         padding-bottom: 15px;
@@ -3293,11 +3342,24 @@ table {
         }
       }
     }
+    .order-msg-table{
+      tr{
+        td{
+          &.operate {
+            p{
+              margin:10px 0;
+              .btn{
+                padding:3px 15px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
   .table-row {
     .table-col {
       padding: 20px 0 0 0;
-
       table {
         thead {
           tr {
@@ -3636,28 +3698,44 @@ table {
       a {
         color: $word-gray;
         text-decoration: none;
-        padding: 10px;
         font-size: 12px;
+        &.login{
+          padding:10px;
+        }
         &.name-panel {
           position: relative;
+          display: inline-block;
           &:hover {
             background-color: $body-bg;
+            .user-name{
+              border:1px solid $gray-plain-light;
+              border-bottom:none;
+            }
             .exit {
               display: block;
             }
           }
+          .user-name{
+            display: inline-block;
+            width:100%;
+            padding: 10px;
+            border:1px solid $theme-gray;
+          }
           .exit {
             position: absolute;
             cursor: pointer;
-            display: none;
             top: 35px;
+            left:0;
             width: 100%;
             padding: 10px 5px 10px 5px;
             z-index: 9999;
             text-align: center;
             color: $word-gray;
+            display: none;
             font-size: 14px;
             background-color: $body-bg;
+            border:1px solid $gray-plain-light;
+            border-top:none;
           }
         }
         &:hover {
@@ -3747,8 +3825,7 @@ table {
       position: absolute;
       top: 42px;
       right: 0;
-      height: 0;
-      width: 310px;
+      @include size(310px,0);
       z-index: 9999;
       overflow: hidden;
       transition: height 1s ease 0s;
@@ -3807,8 +3884,7 @@ table {
         .selected {
           span {
             display: inline-block;
-            width: 80%;
-            height: 100%;
+            @include size(80%,100%);
           }
         }
         a {
@@ -3855,10 +3931,9 @@ table {
       .input-group-btn {
         background-color: $theme-orange;
         .search-btn {
-          width: 100%;
+          @include size(100%,40px);
           background-color: $theme-orange;
           border-color: $theme-orange;
-          height: 40px;
           border-top-right-radius: 4px;
           border-bottom-right-radius: 4px;
           &:focus {
@@ -3875,7 +3950,7 @@ table {
   .right-btn {
     li {
       height: 100%;
-      padding: 10px;
+      padding: 10px 0 10px 10px;
       .btn {
         padding: 9px 10px 9px 15px;
         background-color: $theme-orange;
@@ -3898,8 +3973,7 @@ table {
   margin-top: 10px;
   position: relative;
   z-index: 99;
-  height: 40px;
-  width: 140px;
+  @include size(140px,40px);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   text-align: center;
@@ -3916,11 +3990,10 @@ table {
   a {
     color: $gray-base;
     display: inline-block;
-    width: 115px;
+    @include size(115px,40px);
+    line-height: 40px;
     text-align: center;
     text-decoration: none;
-    height: 40px;
-    line-height: 40px;
     font-size: 16px;
   }
 }
@@ -3946,16 +4019,14 @@ table {
       .one-title {
         display: inline-block;
         padding: 10px 0 10px 5px;
-        height: 100%;
-        width: 80%;
+        @include size(80%,100%);
         text-align: center;
         margin-bottom: -1px;
         color: #666666;
         text-decoration: none;
         font-size: 16px;
         .iconfont {
-          height: 20px;
-          width: 20px;
+          @include square(20px);
           color: $gray-lighter;
           margin-right: 3px;
           vertical-align: middle
@@ -4027,9 +4098,6 @@ table {
 
 .container-wrap {
   border-top: 2px solid $theme-gray;
-  .container{
-    @include left-right-padding;
-  }
   @at-root .banner-slide {
     .carousel-indicators {
       text-align: center;
@@ -4095,9 +4163,8 @@ table {
         margin-bottom: -1px;
         .first-letter {
           display: inline-block;
-          height: 30px;
+          @include square(30px);
           line-height: 30px;
-          width: 30px;
           color: $body-bg;
           margin-right: 10px;
           background-color: $word-gray;
@@ -4125,8 +4192,7 @@ table {
     background-color: $theme-gray;
     overflow: hidden;
     img {
-      width: 100%;
-      height: 220px;
+      @include size(100%,220px);
     }
     .secondary-menu {
       @include clearfix;
@@ -4262,8 +4328,9 @@ table {
     height: 40px;
     line-height: 40px;
     margin-top: 30px;
-    .editor {
-      color: #169bd5;
+    a{
+      display: inline-block;
+      padding:0 5px;
     }
     .under {
       color: $theme-orange;
@@ -4710,8 +4777,7 @@ table {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 0;
-    height: 0;
+    @include square(0);
     border-bottom: 20px solid $theme-orange;
     border-left: 20px solid transparent;
     display: none;
@@ -4843,8 +4909,7 @@ table {
 
 /*==============baidu map css start=================*/
 #map, #map-modal {
-  width: 100%;
-  height: 400px;
+  @include size(100%,400px);
   overflow: hidden;
   margin: 0;
 }
@@ -4854,14 +4919,12 @@ table {
   overflow: hidden;
   zoom: 1;
   position: relative;
-  width: 100%;
-  height: 200px;
+  @include size(100%,200px);
 }
 
 /*==============baidu map css end=================*/
 .msg-channel {
-  width: 300px;
-  height: 150px;
+  @include size(300px,150px);
   background-color: $gray-plain;
   border-radius: 8px !important;
   position: fixed;
@@ -4894,9 +4957,8 @@ table {
   }
   .check {
     display: inline-block;
-    height: 110px;
     padding-top: 35px;
-    width: 100%;
+    @include size(100%,110px);
   }
 }
 
@@ -4989,13 +5051,11 @@ table {
 }
 
 #modal-agreement {
-  width: 90%;
-  height: 90%;
+  @include square(90%);
   margin: 30px auto auto auto;
   .modal-content {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    @include square(100%);
     .modal-body {
       position: absolute;
       overflow-y: auto;
@@ -5044,8 +5104,7 @@ table {
   .license-img {
     margin: 45px 0;
     img {
-      width: 220px;
-      height: 300px;
+      @include size(220px,300px);
     }
   }
   .img-bg01 {
@@ -5121,8 +5180,7 @@ table {
     }
   }
   #msgWrap {
-    width: 700px;
-    height: 500px;
+    @include size(700px,500px);
   }
 }
 
@@ -5130,8 +5188,7 @@ table {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 700px;
-  height: 470px;
+  @include size(700px,470px);
 }
 
 /*==============message end=================*/
@@ -5402,8 +5459,7 @@ table {
 #tips .arrow, #tips .arrow:after {
   position: absolute;
   display: block;
-  width: 0;
-  height: 0;
+  @include square(0);
   border: transparent solid;
 }
 
@@ -5439,7 +5495,7 @@ table {
   position: absolute;
   left: 50%;
   margin-left: -75px;
-  z-index: 99;
+  z-index: 99999;
   border-radius: 4px !important;
   border: 1px solid $gray-lighter;
   top: -150px;
@@ -5535,7 +5591,6 @@ table {
       text-align: center;
     }
     td, th {
-      position: absolute;
       padding: 0 !important;
       border: 1px solid black !important;
     }
@@ -5714,8 +5769,7 @@ table {
     position: relative;
     overflow: hidden;
     img {
-      height: 100%;
-      width: auto;
+      @include size(auto,100%);
       left: 50%;
       position: relative;
       -webkit-transform: translateX(-50%);
@@ -5948,6 +6002,18 @@ table {
       }
     }
   }
+  table{
+    tr{
+      td{
+        &.operating{
+          a{
+            display: inline-block;
+            padding:0 5px;
+          }
+        }
+      }
+    }
+  }
 }
 
 .delivery-statistics {
@@ -6058,7 +6124,7 @@ table {
 }
 
 .salesman-table-wrap {
-  @include size(800px, 450px);
+  @include size(800px,450px);
   overflow-y: auto;
 }
 
@@ -6091,11 +6157,24 @@ table {
 }
 
 .business-detail {
+  .commodity-num{
+    display: inline-block;
+  }
+  .enter-num-panel{
+    display: none;;
+    position: relative;
+    .prompt{
+      color:$gray-lighter;
+      position:absolute;
+      width:100%;
+      left:0;
+      background-color: $body-bg;
+    }
+  }
   .edit-text {
     &[type="textarea"] {
       width: 100%;
     }
-    display: none;
   }
 }
 

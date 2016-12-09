@@ -13,7 +13,6 @@ class ShopHomeAdvert extends Model
         'status',
         ];
     protected $appends = ['image_url'];
-    protected $dates = ['start_at', 'end_at'];
 
     /**
      * 模型启动事件

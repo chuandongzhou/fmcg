@@ -46,7 +46,7 @@ class ShopController extends Controller
              * COS(y_lat * PI() / 180) * COS(' . $xLng . ' * PI() / 180 - x_lng * PI() / 180 )
               + SIN(' . $yLat . ' * PI() / 180) * SIN(y_lat * PI() / 180)  ) ) distance'), 'id',
             'name', 'min_money', 'user_id', 'contact_person', 'contact_info', 'x_lng', 'y_lat')
-            ->with( 'logo', 'shopAddress', 'user')
+            ->with('logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
         return $this->success($shops->toArray());
     }
@@ -160,10 +160,10 @@ class ShopController extends Controller
     public function adverts($shop)
     {
 
-//        $adverts = $shop->adverts()->OfTime()->get()->each(function ($advert) {
-//            $advert->setAppends(['goods_id', 'image_url']);
-//        });
-        $adverts = $shop->shopHomeAdverts()->active()->get();
+        $adverts = $shop->adverts()->OfTime()->get()->each(function ($advert) {
+            $advert->setAppends(['goods_id', 'image_url']);
+        });
+//        $adverts = $shop->shopHomeAdverts()->active()->get();
         return $this->success(['adverts' => $adverts]);
     }
 

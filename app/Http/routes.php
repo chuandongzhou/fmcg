@@ -6,11 +6,11 @@
 $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('login', 'AuthController@login');
     $router->get('register', 'AuthController@register');
-    $router->get('register-set-password','AuthController@setPassword');
-    $router->get('register-add-shop','AuthController@addShop');
+    $router->get('register-set-password', 'AuthController@setPassword');
+    $router->get('register-add-shop', 'AuthController@addShop');
     $router->get('reg-success', 'AuthController@regSuccess');
     $router->get('logout', 'AuthController@logout');
-    $router->get('geetest','AuthController@getGeetest');
+    $router->get('geetest', 'AuthController@getGeetest');
 });
 
 /**
@@ -47,7 +47,6 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
     $router->get('my-goods/batch-create', 'MyGoodsController@batchCreate');  //批量增加商品
     $router->get('my-goods/download-template', 'MyGoodsController@downloadTemplate');  //批量增加商品
-    $router->post('my-goods/update-next','MyGoodsController@updateNext');//编辑（添加）商品提交商品基本信息
     $router->resource('my-goods', 'MyGoodsController');          //商品管理
     $router->get('goods/{goods}', 'GoodsController@detail')->where('goods', '[0-9]+');          //商品详情
     $router->get('cart', 'CartController@index');          // 购物车
@@ -91,7 +90,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->get('export', 'SalesmanVisitOrderController@export');
             $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
             $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-            $router->get('browser-export/{salesman_visit_order}', 'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
+            $router->get('browser-export/{salesman_visit_order}',
+                'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
     });
@@ -115,7 +115,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('advert-user', 'AdvertUserController'); // 用户端广告
     $router->resource('advert-app', 'AdvertAppController'); // APP广告
     $router->resource('advert-category', 'AdvertCategoryController'); // 商品分类广告
-    $router->resource('advert-left-category','AdvertLeftCategoryController');//商品分类左侧广告
+    $router->resource('advert-left-category', 'AdvertLeftCategoryController');//商品分类左侧广告
     $router->resource('role', 'RoleController');
     $router->get('user/audit', 'UserController@audit');    //未审核账号列表
     $router->put('user/audit/{user}', 'UserController@auditUpdate');    //审核账号
@@ -213,13 +213,13 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->resource('delivery-area', 'DeliveryAreaController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //商家配送区域
             $router->get('order-data', 'ShopController@orderData');//商家首页订单统计信息
-          //  $router->put('password', 'SecurityController@password');          //修改密码
-            $router->get('backup-sms','SecurityController@backupSms');//安全设置发送原密保手机验证码
-            $router->post('validate-backup-sms','SecurityController@validateBackupSms');//密保手机验证码验证
-            $router->post('new-backup-sms','SecurityController@sendNewBackupSms');//获取新密保手机验证码
-            $router->post('edit-backup-phone','SecurityController@editBackupPhone');//设置新密保手机
-            $router->post('validate-old-password','SecurityController@validateOldPassword');//验证原密码
-            $router->post('edit-password','SecurityController@editPassword');//修改
+            //  $router->put('password', 'SecurityController@password');          //修改密码
+            $router->get('backup-sms', 'SecurityController@backupSms');//安全设置发送原密保手机验证码
+            $router->post('validate-backup-sms', 'SecurityController@validateBackupSms');//密保手机验证码验证
+            $router->post('new-backup-sms', 'SecurityController@sendNewBackupSms');//获取新密保手机验证码
+            $router->post('edit-backup-phone', 'SecurityController@editBackupPhone');//设置新密保手机
+            $router->post('validate-old-password', 'SecurityController@validateOldPassword');//验证原密码
+            $router->post('edit-password', 'SecurityController@editPassword');//修改
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
             $router->resource('bank', 'UserBankController',
@@ -275,8 +275,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('delivery-statistical', 'DeliveryController@statisticalDelivery');//配送统计
             $router->delete('order-goods-delete/{order_goods_id}',
                 'DeliveryController@orderGoodsDelete')->where('order_goods_id', '[0-9]+'); //订单商品删除
-            $router->post('modify-password','DeliveryController@modifyPassword');//修改密码
-            $router->get('latest-version','DeliveryController@latestVersion');//检查最新版本
+            $router->post('modify-password', 'DeliveryController@modifyPassword');//修改密码
+            $router->get('latest-version', 'DeliveryController@latestVersion');//检查最新版本
         });
         //业务管理
         $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {

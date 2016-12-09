@@ -61,7 +61,7 @@
                             <h3 class="panel-title">{{ $order->type == cons('salesman.order.type.order') ? '订货信息' : '退货信息' }}</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table ">
+                            <table class="table table-bordered table-center public-table">
                                 <thead>
                                 <tr>
                                     <td>订货单号</td>
@@ -94,15 +94,20 @@
                                     @if($order->type == cons('salesman.order.type.order'))
                                         <td width="20%">
                                             <div id="order-note">{{ $order->order_remark }}</div>
+                                            <div class="enter-num-panel ">
                                         <textarea class="edit-text" autofocus
                                                   maxlength="50"
                                                   data-name="order_remark">{{ $order->order_remark }}</textarea>
+                                            </div>
                                         </td>
                                         <td width="20%">
-                                            <div id="display-fee-notes">{{ $order->order_remark }}</div>
-                                        <textarea class="edit-text" autofocus
-                                                  maxlength="50"
-                                                  data-name="display_remark">{{ $order->order_remark }}</textarea>
+                                            <div id="display-fee-notes">{{ $order->display_remark }}</div>
+                                            <div class="enter-num-panel ">
+                                                <textarea class="edit-text" autofocus
+                                                          maxlength="50"
+                                                          data-name="display_remark">{{ $order->display_remark }}</textarea>
+                                            </div>
+
                                         </td>
                                     @endif
                                 </tr>
@@ -115,12 +120,12 @@
                             <h3 class="panel-title">收货人信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center">
-                                <tr>
+                            <table class="table table-bordered table-center public-table">
+                                <thead>
                                     <th>联系人</th>
                                     <th>联系电话</th>
                                     <th>收货地址</th>
-                                </tr>
+                                </thead>
                                 <tr>
                                     <td>{{ $order->customer_contact }}</td>
                                     <td>{{ $order->salesmanCustomer->contact_information }}</td>
@@ -148,9 +153,9 @@
                                 商品</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center">
+                            <table class="table table-bordered table-center public-table">
 
-                                <tr>
+                                <thead>
                                     <th>商品编号</th>
                                     <th>商品图片</th>
                                     <th>商品名称</th>
@@ -162,7 +167,7 @@
                                     @endif
                                     <th>金额</th>
                                     <th>操作</th>
-                                </tr>
+                                </thead>
                                 @foreach($orderGoods as $goods)
                                     <tr>
                                         <td>{{ $goods->goods_id }}</td>
@@ -193,7 +198,7 @@
                                                data-pieces="{{ $goods->pieces }}"
                                                data-type="{{ $goods->type }}"
                                                data-amount="{{ $goods->amount }}"><i
-                                                        class="iconfont icon-xiugai"></i>修改</a>
+                                                        class="iconfont icon-xiugai"></i>编辑</a>
                                             <a class="red delete-no-form" data-method="delete"
                                                data-url="{{ url('api/v1/business/order/goods-delete/' . $goods->id) }}"><i
                                                         class="iconfont icon-shanchu"></i>删除</a>
@@ -211,14 +216,14 @@
                                     <h3 class="panel-title">抵费商品</h3>
                                 </div>
                                 <div class="panel-container table-responsive">
-                                    <table class="table table-bordered table-center">
-                                        <tr>
+                                    <table class="table table-bordered table-center public-table">
+                                        <thead>
                                             <th>商品编号</th>
                                             <th>商品图片</th>
                                             <th>商品名称</th>
                                             <th>商品数量</th>
                                             <th>操作</th>
-                                        </tr>
+                                        </thead>
                                         @foreach($mortgageGoods as $goods)
                                             <tr>
                                                 <td>{{ $goods['id'] }}</td>
@@ -236,15 +241,27 @@
                                                     </div>
                                                 </td>
                                                 <td width="20%">
-                                                    <div id="commodity-num{{ $goods['id'] }}">{{  $goods['num'] }}</div>
-                                                    <input data-id="{{ $goods['id'] }}" data-name="num"
-                                                           class="edit-text" autofocus value="{{  $goods['num'] }}"/>
+                                                    <div class="commodity-num"
+                                                         id="commodity-num{{ $goods['id'] }}">{{  $goods['num'] }}</div>
+
+                                                    <div class="enter-num-panel pull-left">
+                                                        <input data-id="{{ $goods['id'] }}" data-name="num"
+                                                               class="edit-text" autofocus
+                                                               value="{{  $goods['num'] }}"/>
+                                                        <div class="prompt">
+                                                            剩余可设置陈列数量:{{ !is_null($goods['surplus'])?(int)$goods['surplus']['surplus']:$goods['total'] }}
+                                                            {{ cons()->valueLang('goods.pieces', $goods['pieces']) }}
+                                                        </div>
+                                                    </div>
+                                                    <span class="pull-right">{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}</span>
+
+
                                                 </td>
                                                 <td>
                                                     <a class="edit commodity-num{{ $goods['id'] }}"
                                                        data-url="business/order/change"
                                                        onclick="editText('commodity-num{{ $goods['id'] }}')"><i
-                                                                class="iconfont icon-xiugai "></i>修改</a>
+                                                                class="iconfont icon-xiugai "></i>编辑</a>
                                                     <a class="red delete-no-form" data-method="delete"
                                                        data-url="{{ url('api/v1/business/order/mortgage-goods-delete') }}"
                                                        data-data='{"order_id":{{ $order->id }}, "mortgage_goods_id" : {{ $goods['id'] }}}'><i
@@ -262,28 +279,32 @@
                                     <h3 class="panel-title">陈列费</h3>
                                 </div>
                                 <div class="panel-container table-responsive">
-                                    <table class="table table-bordered table-center">
-                                        <tr>
+                                    <table class="table table-bordered table-center public-table">
+                                        <thead>
                                             <th>月份</th>
                                             <th>现金</th>
                                             <th>操作</th>
-                                        </tr>
+                                        </thead>
                                         @foreach($displayFee as $item)
                                             <tr>
                                                 <td>{{ $item->month }}</td>
                                                 <td width="20%">
                                                     <b class="red old-value"
                                                        id="money{{ $item->id }}">{{ $item->used }}</b>
-                                                    <input data-name="display_fee" data-id="{{ $item->id }}"
-                                                           class="edit-text" autofocus
-                                                           value="{{ $item->used }}"/>
+
+                                                    <div class="enter-num-panel ">
+                                                        <input data-name="display_fee" data-id="{{ $item->id }}"
+                                                               class="edit-text" autofocus
+                                                               value="{{ $item->used }}"/>
+                                                        <div class="prompt">剩余可设置陈列数量:{{ $item->surplus }}</div>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <a class="edit money{{ $item->id }}"
                                                        data-url="business/order/update-order-display-fee"
                                                        data-id="{{ $item->id }}" data-parse="true" data-type="edit"
                                                        onclick="editText('money{{ $item->id }}')"><i
-                                                                class="iconfont icon-xiugai "></i>修改</a>
+                                                                class="iconfont icon-xiugai "></i>编辑</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -307,16 +328,14 @@
             var content = $("#" + id);
             if (content.is(":visible")) {
                 $("." + id).html("<i class='iconfont icon-baocun'></i> 保存");
-                content.hide().siblings(".edit-text").show();
+                content.hide().siblings(".enter-num-panel").show();
+
             } else {
-
                 var self = $("." + id), url = self.data('url');
-
-
                 var oldValueControl = content,
                         isParse = self.data('parse'),
                         oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
-                        newValueControl = content.siblings('.edit-text'),
+                        newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
                         newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
                         name = newValueControl.data('name'),
                         id = newValueControl.data('id'),
@@ -339,20 +358,26 @@
                         data: data
                     }).done(function (data, textStatus, jqXHR) {
 
+
                         self.html("<i class='iconfont icon-xiugai'></i> 编辑");
                         content.html(newValue);
-                        content.show().siblings(".edit-text").hide();
+                        content.show().siblings(".enter-num-panel").hide();
+
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         if (errorThrown == 'Unauthorized') {
                             site.redirect('auth/login');
                         } else {
                             tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
                             content.html(oldValue);
-                            content.show().siblings(".edit-text").hide();
+                            content.show().siblings(".enter-num-panel").hide();
                             self.html("<i class='iconfont icon-xiugai'></i> 编辑");
                         }
                     });
 
+                } else {
+                    self.html("<i class='iconfont icon-xiugai'></i> 编辑");
+                    content.html(newValue);
+                    content.show().siblings(".enter-num-panel").hide();
                 }
 
 

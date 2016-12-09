@@ -39,7 +39,7 @@ class ImagesController extends Controller
      */
     public function check()
     {
-        $goodsImages = Images::with('image', 'goods')->where('status', 0)->paginate(30);
+        $goodsImages = Images::with('image', 'goods')->where('status', 0)->orderBy('created_at','desc')->paginate(30);
         return view('admin.images.check', [
             'goodsImages' => $goodsImages
         ]);

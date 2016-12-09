@@ -5,7 +5,7 @@
     <div class="quick_links_panel">
         <div id="quick_links" class="quick_links">
             <li>
-                <a href="javascript:;" class="my_qlinks"><i class="setting"></i></a>
+                <a href="javascript:;" class="my_qlinks"><i class="iconfont icon-wode setting"></i></a>
                 @if(isset($user))
                     <div class="ibar_login_box status_login">
                         <div class="avatar_box">
@@ -25,13 +25,13 @@
                 @endif
             </li>
             <li id="shopCart">
-                <a href="javascript:;" class="message_list pop-show-link"><i class="message"></i>
+                <a href="javascript:;" class="message_list pop-show-link"><i class="iconfont icon-gouwuche message"></i>
 
                     <div class="span">购物车</div>
                     <span class="cart_num">{{ $cartNum }}</span></a>
             </li>
-            <li id="coupon">
-                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="view"></i></a>
+            <li id="coupon-panel">
+                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="iconfont icon-tubiao12 view"></i></a>
 
                 <div class="mp_tooltip">我的资产<i class="icon_arrow_right_black"></i>
                 </div>
@@ -44,7 +44,7 @@
 
             </li>
             <li>
-                <a href="{{ url('like/goods') }}" class="mpbtn_wdsc hover_link"><i class="wdsc"></i></a>
+                <a href="{{ url('like/goods') }}" class="mpbtn_wdsc hover_link"><i class="iconfont icon-shoucang wdsc"></i></a>
 
                 <div class="mp_tooltip">我的收藏<i class="icon_arrow_right_black"></i></div>
             </li>

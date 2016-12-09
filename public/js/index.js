@@ -63,7 +63,6 @@ function getOrderButtonEvent() {
 }
 
 
-
 /**
  * 加入购物车
  */
@@ -133,8 +132,8 @@ function cartFunc() {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
                 shopSumPrice = 0,
-             minMoney = obj.find('.min-money'),
-             checkMinMoney = obj.find('.check-min-money');
+                minMoney = obj.find('.min-money'),
+                checkMinMoney = obj.find('.check-min-money');
             obj.find('.goods-list').each(function () {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
@@ -151,14 +150,14 @@ function cartFunc() {
                 descBtn.prop('disabled', buyNum <= minNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
-             if (shopSumPrice < minMoney.html() && shopSumPrice) {
+            if (shopSumPrice < minMoney.html() && shopSumPrice) {
                 checkMinMoney.html('不满足最低配送额￥').addClass('red');
-                 minMoney.addClass('red');
+                minMoney.addClass('red');
 
-             } else {
-                 checkMinMoney.html('满足最低配送额￥').removeClass('red');
-                 minMoney.removeClass('red');
-             }
+            } else {
+                checkMinMoney.html('满足最低配送额￥').removeClass('red');
+                minMoney.removeClass('red');
+            }
         });
 
         /*   if ($('.not-enough:visible').length == 0 && cartSumPrice > 0) {
@@ -358,7 +357,7 @@ function likeFunc() {
                 status = null;
             }
             //self.data('status', status).button(status ? 'liked' : 'like');
-            $('.like-'+type).data('status', status).button(status ? 'liked' : 'like');
+            $('.like-' + type).data('status', status).button(status ? 'liked' : 'like');
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.button(status ? 'liked' : 'like');
             if (errorThrown == 'Unauthorized') {
@@ -369,8 +368,6 @@ function likeFunc() {
         });
     });
 }
-
-
 
 
 /**
@@ -548,15 +545,15 @@ var statisticsFunc = function () {
     });
     //order_page_num
 
-    $('.order-page a').on('click',function(){
+    $('.order-page a').on('click', function () {
         //
         var obj = $(this);
-        if(obj.hasClass('prev')){
-            target0.attr('value', target_value0-1);
-        }else if(obj.hasClass('next')){
-            target0.attr('value',target_value0+1);
-        }else{
-            target0.attr('value',parseInt(obj.html()));
+        if (obj.hasClass('prev')) {
+            target0.attr('value', target_value0 - 1);
+        } else if (obj.hasClass('next')) {
+            target0.attr('value', target_value0 + 1);
+        } else {
+            target0.attr('value', parseInt(obj.html()));
         }
     });
     //$('.next0').on('click', function () {
@@ -567,15 +564,15 @@ var statisticsFunc = function () {
     //});
     //goods_page_num
 
-    $('.goods-page a').on('click',function(){
+    $('.goods-page a').on('click', function () {
         //
         var obj = $(this);
-        if(obj.hasClass('prev')){
-            target1.attr('value',target_value1-1);
-        }else if(obj.hasClass('next')){
-            target1.attr('value', target_value1+1);
-        }else{
-            target1.attr('value',parseInt(obj.html()));
+        if (obj.hasClass('prev')) {
+            target1.attr('value', target_value1 - 1);
+        } else if (obj.hasClass('next')) {
+            target1.attr('value', target_value1 + 1);
+        } else {
+            target1.attr('value', parseInt(obj.html()));
         }
     });
 
@@ -817,23 +814,22 @@ function menuFunc() {
 
     $('#menu-list .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
-        $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().
-        children('.menu-down-wrap').css('display', 'none');
+        $(this).children('.menu-down-wrap').css('display', 'block').parents('li').siblings().children('.menu-down-wrap').css('display', 'none');
     })
 
     $('.categories-menu-item').mouseleave(function () {
         $('.categories .menu-wrap li').removeClass('hover-effect');
         $('.menu-down-layer').css('display', 'none');
         $('#menu-down-wrap .menu-down-layer').css('border', 'none');
-        $('.categories-wrap .categories .menu-wrap').css('height','0');
+        $('.categories-wrap .categories .menu-wrap').css('height', '0');
     })
 
     //店铺首页
-    $('.shop-header-wrap .shop-name').mouseenter(function(){
-        $('.shop-detail-popup').css("height",'350px');
+    $('.shop-header-wrap .shop-name').mouseenter(function () {
+        $('.shop-detail-popup').css("height", '350px');
     })
-    $('.shop-header-wrap').mouseleave(function(){
-        $('.shop-detail-popup').css("height",'0');
+    $('.shop-header-wrap').mouseleave(function () {
+        $('.shop-detail-popup').css("height", '0');
     })
 
 
@@ -848,8 +844,8 @@ function menuFunc() {
             }
         })
     })
-    $('.categories-btn>a').mouseenter(function(){
-        $('.categories-wrap .categories .menu-wrap').css('height','401px');
+    $('.categories-btn>a').mouseenter(function () {
+        $('.categories-wrap .categories .menu-wrap').css('height', '401px');
     })
 
     //search role begin
@@ -899,10 +895,10 @@ function menuFunc() {
     })
 
     //店铺 二维码
-    $('.qr-code-wrap .code-show').mouseenter(function(){
+    $('.qr-code-wrap .code-show').mouseenter(function () {
         $('.qr-code-wrap .shop-code').addClass("shop-code-show");
     })
-    $('.qr-code-wrap').mouseleave(function(){
+    $('.qr-code-wrap').mouseleave(function () {
         $('.shop-code').removeClass("shop-code-show");
     })
 
@@ -941,8 +937,8 @@ function tabBox() {
     })
 }
 /**
-* 商品显示与收起
-*/
+ * 商品显示与收起
+ */
 function displayList() {
     $(".sort-item-panel").each(function () {
         var height = $(this).children(".all-sort-panel").height();
@@ -972,23 +968,185 @@ function popClose(name) {
     $(name).css("display", "none");
 }
 
-function showSuccessMeg(url){
-    $(".popup").css({"opacity":"1","top":"20px"});
-    setTimeout(function(){
-        $(".popup").css({"opacity": "0","top":"-150px"});
-        if(url){
+function showSuccessMeg(url) {
+    $(".popup").css({"opacity": "1", "top": "20px"});
+    setTimeout(function () {
+        $(".popup").css({"opacity": "0", "top": "-150px"});
+        if (url) {
             window.location.href = url;
-        }else{
+        } else {
             location.reload();
         }
 
-    },3000);
+    }, 3000);
 }
 //设置地址
 function setAddress(province, city, district, street) {
 
     var address = new Address(province, city, district, street);
 }
+//添加(编辑)商品验证
+function validform() {
+    $.validator.addMethod("images_check", function (value) {
+        if (value != '' && !jQuery.isArray(value)) {
+            return false;
+        }
+        return true;
+    }, "必须是一个数组");
+    $.validator.addMethod("pieces_level_2_check", function () {
+        if ($('select[name="pieces_level_2"]').val() == '' && $('input[name="system_1"]').val() != '') {
+            return false;
+        }
+        return true;
+
+    }, "二级单位必须");
+    $.validator.addMethod("system_1_check", function () {
+        if ($('select[name="pieces_level_2"]').val() != '' && $('input[name="system_1"]').val() == '') {
+            return false;
+        }
+        return true;
+    }, "一级单位进制必须");
+    $.validator.addMethod("pieces_level_3_check", function () {
+        if ($('select[name="pieces_level_3"]').val() == '' && $('input[name="system_2"]').val() != '') {
+            return false;
+        }
+        return true;
+    }, "三级单位必须");
+    $.validator.addMethod("system_2_check", function () {
+        if ($('select[name="pieces_level_3"]').val() != '' && $('input[name="system_2"]').val() == '') {
+            return false;
+        }
+        return true;
+    }, "二级单位进制必须");
+    $.validator.addMethod("pieces_level_2_same_check", function () {
+        if ($('select[name="pieces_level_2"]').val() == $('select[name="pieces_level_1"]').val()) {
+            return false;
+        }
+        return true;
+    }, "二级单位不能与一级单位相同");
+    $.validator.addMethod("pieces_level_3_same_check", function () {
+        if ($('select[name="pieces_level_3"]').val() == $('select[name="pieces_level_2"]').val() || $('select[name="pieces_level_3"]').val() == $('select[name="pieces_level_1"]').val()) {
+            return false;
+        }
+        return true;
+    }, "三级单位不能与一级单位或二级单位相同");
+    return $("form").validate({
+        debug: true,
+        errorClass: 'red ajax-error',
+        errorElement: 'span',
+        rules: {
+            name: {
+                required: true
+            },
+            bar_code: {
+                required: true,
+                digits: true,
+                minlength: 7,
+                maxlength: 18,
+            },
+            cate_level_1: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            cate_level_2: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            pieces_level_1: {
+                required: true,
+            },
+            specification: {
+                required: true,
+            },
+            images: {
+                images_check: true
+            },
+            pieces_level_2: {
+                pieces_level_2_check: true,
+                pieces_level_2_same_check: true
+            },
+            system_1: {
+                system_1_check: true
+            },
+            pieces_level_3: {
+                pieces_level_3_check: true,
+                pieces_level_2_same_check: true
+            },
+            system_2: {
+                system_2_check: true
+            }
+        },
+        messages: {
+            name: {
+                required: '商品名称必填填写',
+            },
+            bar_code: {
+                required: '商品条形码必须填写',
+                digits: '必须是数字',
+                minlength: '至少7位',
+                maxlength: '至多18位',
+            },
+            cate_level_1: {
+                required: '一级分类必须',
+                number: '必须是数字',
+                min: '一级分类必须大于0'
+
+            },
+            cate_level_2: {
+                required: '二级分类必须',
+                number: '必须是数字',
+                min: '二级分类必须大于1'
+
+            },
+            pieces_level_1: {
+                required: '一级单位必须选择',
+            },
+            specification: {
+                required: '最小单位规格必须',
+            }
+        }
+    });
+}
+//选择单位变化时商品单位变化
+function selectedChange() {
+
+    $('select[name="pieces_retailer"]').change(function () {
+
+        var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
+        $('.pieces_retailer').html(html);
+        var value = $(this).find("option:selected").val();
+        if (value == $('select[name="pieces_level_1"]').val()) {
+
+            $('input[name="specification_retailer"]').val($('input[name="specification"]').val());
+
+        } else if (value == $('select[name="pieces_level_2"]').val()) {
+            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+
+        } else if (value == $('select[name="pieces_level_3"]').val()) {
+            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val()+ '*' + $('input[name="specification"]').val());
+
+        }
+    });
+    $('select[name="pieces_wholesaler"]').change(function () {
+        var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
+        $('.pieces_wholesaler').html(html);
+        var value = $(this).find("option:selected").val();
+        if (value == $('select[name="pieces_level_1"]').val()) {
+            $('input[name="specification_wholesaler"]').val($('input[name="specification"]').val());
+
+        } else if (value == $('select[name="pieces_level_2"]').val()) {
+            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+
+        } else if (value == $('select[name="pieces_level_3"]').val()) {
+            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val()+ '*' + $('input[name="specification"]').val());
+
+        }
+    });
+
+}
+
 
 
 

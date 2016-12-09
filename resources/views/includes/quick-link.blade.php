@@ -24,7 +24,7 @@
                 e.stopPropagation();
                 couponFlip = 0;
                 if (flip++ % 2 === 0) {
-                    var cart_head_html = '<a href="javascript:;" class="ibar_closebtn" title="关闭"></a>' +
+                    var cart_head_html = '<a href="javascript:;" class="ibar_closebtn" title="关闭"><i class="fa fa-remove"></i></a>' +
                             '<div class="ibar_plugin_title">' +
                             '<h3>' +
                             '购物车' +
@@ -88,13 +88,13 @@
                 }
             })
             //点击我的资产图标显示弹框
-            $("#coupon").click(function (e) {
+            $("#coupon-panel").click(function (e) {
                 hideOtherTooltip();
 
                 e.stopPropagation();
                 flip = 0;
                 if (couponFlip++ % 2 === 0) {
-                    var coupon_head_html = '<a href="javascript:;" class="ibar_closebtn" title="关闭"></a>' +
+                    var coupon_head_html = '<a href="javascript:;" class="ibar_closebtn" title="关闭"><i class="fa fa-remove"></i></a>' +
                             '<div class="ibar_plugin_title">' +
                             '<h3>' +
                             '我的资产' +
@@ -156,7 +156,7 @@
                         $('.my-coupon-num').html(data.length);
                         for (var i = 0; i < data.length; i++) {
                             if (data[i].diff_time == '') {
-                                html += '<div class="coupon bgc-blue">' +
+                                html += '<div class="coupon-panel bgc-blue">' +
                                         '<div class="validity">' +
                                         '<p>' +
                                         ' 有效期' +
@@ -183,7 +183,7 @@
                                         ' </ul>' +
                                         '</div>';
                             } else {
-                                html += '<div class="coupon bgc-red">' +
+                                html += '<div class="coupon-panel bgc-red">' +
                                         ' <div class="expiration">' +
                                         '<span>' +
                                         data[i].diff_time + '后过期' +
@@ -226,7 +226,7 @@
                             data = data.coupons;
 
                             for (var i = 0; i < data.length; i++) {
-                                h += '<div class="coupon bgc-orange">' +
+                                h += '<div class="coupon-panel bgc-orange">' +
                                         '<div class="receive-wrap" data-id="' + data[i].id + '"><a class="not-receive">立即领取</a><a class="already-receive"><span' +
                                         ' class="fa fa-check"></span>已领</a></div>' +
                                         '<div class="validity"><p>有效期</p>' +

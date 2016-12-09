@@ -2,8 +2,8 @@
 @include('includes.templet-model')
 @section('subtitle', '模版管理- 模板选择')
 @section('top-title')
-    <a href="{{ url('personal/model/model-edit') }}">模版管理</a> &rarr;
-    模板选择
+    <a href="{{ url('personal/model/model-edit') }}">模版管理</a> >
+    <span class="second-level"> 模板选择</span>
 @stop
 @section('right')
     <div class="row setup-template">

@@ -34,7 +34,7 @@ var stepBar = {
     speed : 1000,
     stepEasingForward : "easeOutCubic",
     stepEasingBackward : "easeOutElastic",
-    
+
     init : function(id, option){
         if (typeof id == "object" || id.indexOf("#") == 0) {
             this.bar = $(id);
@@ -72,7 +72,7 @@ var stepBar = {
         }
     },
     layout : function(){
-        this.bar.find(".ui-stepInfo .ui-stepSequence").addClass("judge-stepSequence-hind");
+        //this.bar.find(".ui-stepInfo .ui-stepSequence").addClass("judge-stepSequence-hind");
         this.bar.find(".ui-stepInfo:first-child .ui-stepSequence").addClass("judge-stepSequence-pre");
     },
     classHover : function(){
@@ -87,7 +87,7 @@ var stepBar = {
             this.itemWidth = Math.floor((this.barWidth * 0.9) / (this.itemCount - 1));
             this.bar.find(".ui-stepLayout").width(Math.floor(this.barWidth * 0.9 + this.itemWidth));
             this.item.width(this.itemWidth);
-            this.bar.find(".ui-stepLayout").css({"margin-left": -Math.floor(this.itemWidth / 2) + 2 });
+            this.bar.find(".ui-stepLayout").css({"margin-left": -Math.floor(this.itemWidth / 2)+2 });
             if(this.change){
                 this._event();
             }
@@ -110,10 +110,10 @@ var stepBar = {
         _this.processWidth = calc * (_this.triggerStep - 1) + "%";
         if(_this.animation){
             if(_this.triggerStep < _this.curStep){
-                 _this._animate();
-                 _this.curStep--;
+                _this._animate();
+                _this.curStep--;
             } else {
-                 _this.curStep++;
+                _this.curStep++;
             }
             _this.curProcessWidth = calc * (_this.curStep - 1) + "%";
             _this.bar.find(".ui-stepProcess").stop(true).animate({"width" : _this.curProcessWidth}, _this.speed, function(){

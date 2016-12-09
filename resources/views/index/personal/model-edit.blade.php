@@ -4,8 +4,8 @@
 @include('includes.templet-model')
 @section('subtitle', '个人中心-首页广告')
 @section('top-title')
-    <a href="{{ url('personal/model/model-edit') }}">模版管理</a> &rarr;
-    模板设置
+    <a href="{{ url('personal/model/model-edit') }}">模版管理</a> >
+    <span class="second-level">  模板设置</span>
 @stop
 @section('css')
     @parent

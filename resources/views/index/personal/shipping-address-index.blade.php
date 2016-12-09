@@ -6,7 +6,7 @@
 @stop
 @section('right')
     @include('includes.shipping-address')
-    @include('includes.success-meg')
+
     <form action="#" method="post">
         <div class="row shopping-address-wrap margin-clear">
             <div class="col-sm-12 table-responsive">

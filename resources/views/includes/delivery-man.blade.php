@@ -73,7 +73,8 @@
 
                     </div>
                     <div class="modal-footer middle-footer">
-                        <button type="submit" class="btn btn-success btn-sm btn-add pull-right" data-text="添加">添加</button>
+                        <button type="submit" class="btn btn-success btn-sm btn-add pull-right" data-text="添加">添加
+                        </button>
                     </div>
                 </form>
             </div>
@@ -87,36 +88,22 @@
         $(function () {
             var deliveryModal = $('#deliveryModal'),
                     form = deliveryModal.find('form');
-            $('.update-modal').click(function () {
-                var obj = $(this);
-                if (obj.hasClass('add')) {
-                    form.attr('action', site.api('personal/delivery-man'));
-                    form.attr('method', 'post');
+            deliveryModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget);
+                $('#deliveryModal span').html(obj.hasClass('add') ? '添加配送人员' : '编辑配送人员');
+                $('.btn-add').html('提交');
+                var id = obj.data('id') || '',
+                        name = obj.data('name') || '',
+                        phone = obj.data('phone') || '',
+                        userName = obj.data('user-name') || '',
+                        posSign = obj.data('pos-sign') || '';
+                $('input[name="name"]').val(name);
+                $('input[name="phone"]').val(phone);
+                $('input[name="user_name"]').val(userName);
+                $('input[name="pos_sign"]').val(posSign);
+                form.attr('action', site.api(obj.hasClass('add') ?'personal/delivery-man':'personal/delivery-man/' + id));
+                form.attr('method', obj.hasClass('add') ? 'post' : 'put');
 
-                } else {
-                    $('#deliveryModal span').html('编辑配送人员');
-                    $('.btn-add').html('提交');
-                    var id = obj.data('id'),
-                            name = obj.data('name'),
-                            phone = obj.data('phone'),
-                            userName = obj.data('user-name'),
-                            posSign = obj.data('pos-sign');
-                    $('input[name="name"]').val(name);
-                    $('input[name="phone"]').val(phone);
-                    $('input[name="user_name"]').val(userName);
-                    $('input[name="pos_sign"]').val(posSign);
-                    form.attr('action', site.api('personal/delivery-man/' + id));
-                    form.attr('method', 'put');
-
-
-                }
-            });
-            deliveryModal.on('hidden.bs.modal', function (e) {
-
-                $('input[name="name"]').val('');
-                $('input[name="phone"]').val('');
-                $('input[name="user_name"]').val('');
-                $('input[name="pos_sign"]').val('');
             });
 
         });

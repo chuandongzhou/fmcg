@@ -360,7 +360,7 @@ var commonAjaxSetup = function () {
                 , doneThen = self.data('doneThen') || form.data('doneThen')
                 , doneUrl = self.data('doneUrl') || form.data('doneUrl');
 
-           self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
+            self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
             form.formValidate('reset');
 
             // 序列化表单
@@ -376,15 +376,17 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
+
                     self.html(data.message || '操作成功');
-                    self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
+                    self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
+                    //self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)
                     && !preventDefault) {
-                   self.html('操作失败');
+                    self.html('操作失败');
 
                     var json = jqXHR['responseJSON'];
                     if (json) {
@@ -441,6 +443,23 @@ var commonAjaxSetup = function () {
             return false;
         });
 };
+
+/**
+ * ajax异步提交成功消息提示
+ *
+ */
+var successMeg = function (mes) {
+    $('.modal').modal('hide');
+    var popup = $('<div class="popup"><h3>温馨提示 :</h3><div class="success-meg-content content">' + mes + '</div></div>');
+    popup.appendTo('body');
+    var top = document.body.scrollTop + 80;
+
+    popup.css({"opacity": "1", "top": top+"px"});
+    setTimeout(function () {
+        popup.css({"opacity": "0", "top": "-150px"});
+    }, 3000);
+
+}
 
 /**
  * 通用上传设置
@@ -780,11 +799,12 @@ var getAttr = function () {
                 format: true
             }, function (data) {
                 var html = '';
+                console.log(data);
                 for (var index in data) {
                     var options = '<option value="0">请选择</option>';
-                    html += '<div class="items-item">';
-                    html += '<label>' + data[index]['name'] + '</label>';
-                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class="attrs inline-control" >';
+                    html += '<label class="control-label col-sm-2">' + data[index]['name'] + '</label>';
+                    html += '<div class="col-sm-2 item">';
+                    html += ' <select name="attrs[' + data[index]['attr_id'] + ']" class=" form-control" >';
                     for (var i in data[index]['child']) {
                         options += ' <option value="' + data[index]['child'][i]['attr_id'] + '">' + data[index]['child'][i]['name'] + '</option>'
                     }
@@ -1253,7 +1273,7 @@ var goodsBatchUpload = function () {
 /**
  * 显示/隐藏
  */
-var visibleSelect = function(){
+var visibleSelect = function () {
     $('.visible-select').on('change', function () {
         var obj = $(this), val = obj.val(), visibleItemSelector = '.visible-item-' + val;
         $('.visible-item').not(visibleItemSelector).each(function () {

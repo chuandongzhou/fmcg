@@ -162,7 +162,7 @@
                 配送地区
             </div>
             <div class="col-sm-12 area-wrap">
-                <table class="table-bordered table margin-clear">
+                <table class="table-bordered table margin-clear table-center">
 
                     <tr>
                         <th>配送区域</th>
