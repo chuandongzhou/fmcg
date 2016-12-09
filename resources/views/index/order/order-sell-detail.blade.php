@@ -89,6 +89,7 @@
                                         {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
                                     </td>
                                     <td><span class="orange">{{ $order['status_name'] }}</span></td>
+                                    <td><span>{{ $order->type_name }}</span></td>
                                     <td width="15%">{{ !empty($order['remark'])?$order['remark']:'--' }}</td>
 
                                     <td class="operate">
