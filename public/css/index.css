@@ -1003,10 +1003,6 @@ a:hover {
   background-color: #F25000 !important;
 }
 
-.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo:first-of-type .ui-stepSequence:hover {
-  box-shadow: 0 0 3px 1px #F25000;
-}
-
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence {
   position: relative;
   display: inline-block;
@@ -1034,10 +1030,6 @@ a:hover {
 
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-pre-change {
   cursor: pointer;
-}
-
-.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-pre-change:hover {
-  box-shadow: 0 0 3px 1px #F25000;
 }
 
 .ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .judge-stepSequence-hind-change {
@@ -6794,6 +6786,13 @@ table .product-panel .promotions {
 }
 
 .public-table tbody tr:nth-child(2n) td {
+  background-color: #f1f1f1;
+}
+
+.table-th-color thead th,
+.table-th-color thead .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table tr .table-th-color thead td,
+.table-th-color thead td {
   background-color: #f1f1f1;
 }
 

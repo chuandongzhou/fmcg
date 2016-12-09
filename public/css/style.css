@@ -11240,7 +11240,7 @@ button.close {
   content: "\e60e";
 }
 
-.icon-jiaju:before {
+.icon-jiafang:before {
   content: "\e612";
 }
 
@@ -11328,7 +11328,7 @@ button.close {
   content: "\e603";
 }
 
-.icon-jiushui:before {
+.icon-16jiushui:before {
   content: "\e614";
 }
 
@@ -11340,8 +11340,12 @@ button.close {
   content: "\e610";
 }
 
-.icon-shipin:before {
+.icon-shipin01:before {
   content: "\e615";
+}
+
+.icon-zhiding:before {
+  content: "\e6fc";
 }
 
 .image-preview > img {

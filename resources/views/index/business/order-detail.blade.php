@@ -120,7 +120,7 @@
                             <h3 class="panel-title">收货人信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table table-bordered table-center table-th-color">
                                 <thead>
                                     <th>联系人</th>
                                     <th>联系电话</th>
@@ -153,7 +153,7 @@
                                 商品</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table table-bordered table-center table-th-color">
 
                                 <thead>
                                     <th>商品编号</th>
@@ -216,7 +216,7 @@
                                     <h3 class="panel-title">抵费商品</h3>
                                 </div>
                                 <div class="panel-container table-responsive">
-                                    <table class="table table-bordered table-center public-table">
+                                    <table class="table table-bordered table-center table-th-color">
                                         <thead>
                                             <th>商品编号</th>
                                             <th>商品图片</th>
@@ -279,7 +279,7 @@
                                     <h3 class="panel-title">陈列费</h3>
                                 </div>
                                 <div class="panel-container table-responsive">
-                                    <table class="table table-bordered table-center public-table">
+                                    <table class="table table-bordered table-center table-th-color">
                                         <thead>
                                             <th>月份</th>
                                             <th>现金</th>

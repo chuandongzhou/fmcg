@@ -50,7 +50,7 @@
             </li>
         </div>
         <div class="quick_toggle">
-            <li><a href="javascript:;" class="return_top"><i class="top"></i></a></li>
+            <li><a href="javascript:;" class="return_top"><i class="iconfont icon-zhiding top"></i>置顶</a></li>
         </div>
     </div>
     <div id="quick_links_pop" class="quick_links_pop ">

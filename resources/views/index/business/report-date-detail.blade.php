@@ -97,7 +97,7 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <th>有效时间</th>
+                                                <th>月份</th>
                                                 <th>拜访时间</th>
                                                 <th>金额</th>
                                             </tr>
@@ -120,7 +120,7 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <th>有效时间</th>
+                                                <th>月份</th>
                                                 <th>拜访时间</th>
                                                 <th>商品名称</th>
                                                 <th>商品单位</th>

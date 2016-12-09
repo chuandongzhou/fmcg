@@ -873,9 +873,6 @@ a {
       &:first-of-type{
         .ui-stepSequence{
           background-color: #F25000!important;
-          &:hover {
-            box-shadow: 0 0 3px 1px $theme-orange;
-          }
         }
       }
       .ui-stepSequence {
@@ -904,9 +901,9 @@ a {
       }
       .judge-stepSequence-pre-change {
         cursor: pointer;
-        &:hover {
-          box-shadow: 0 0 3px 1px $theme-orange;
-        }
+//        &:hover {
+//          box-shadow: 0 0 3px 1px $theme-orange;
+//        }
       }
       .judge-stepSequence-hind-change {
         cursor: pointer;
@@ -5868,6 +5865,13 @@ table {
       td {
         background-color: $theme-gray;
       }
+    }
+  }
+}
+.table-th-color{
+  thead {
+    th, td {
+      background-color: $theme-gray;
     }
   }
 }

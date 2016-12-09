@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>
-Created by FontForge 20120731 at Tue Nov 15 10:29:37 2016
+Created by FontForge 20120731 at Fri Dec  9 10:14:23 2016
  By admin
 </metadata>
 <defs>
@@ -194,5 +194,8 @@ q-15 -118 34 -175t178 -56q129 -1 178 56t34 175q-80 1 -133 -32.5t-79 -92.5v0v0v0v
 M102 843h74v-256h-74v256v0v0v0v0zM102 843zM873 587h50v-170h-50v170v0v0v0v0zM873 587zM787 315q-37 85 -141 83q-11 -78 22 -116t119 -38t118.5 38t22.5 116q-104 2 -141 -83v0v0v0v0zM787 315zM799 623h49v-206h-49v206v0v0v0v0zM799 623zM787 160q-37 86 -141 84
 q-11 -79 22 -117t119 -37q86 -1 118.5 37t22.5 117q-104 2 -141 -84v0v0v0v0zM787 160zM787 11q-37 86 -141 84q-11 -79 22 -117t119 -37q86 -1 118.5 37t22.5 117q-104 2 -141 -84v0v0v0v0zM787 11zM724 623h49v-206h-49v206v0v0v0v0zM724 623zM649 587h49v-170h-49v170v0
 v0v0v0zM649 587z" />
+    <glyph glyph-name="zhiding" unicode="&#xe6fc;" 
+d="M570 486q-17 17 -40.5 17t-39.5 -17l-364 -365q-16 -16 -16 -40t16 -42q17 -16 40.5 -16t40.5 16l322 326l323 -326q16 -16 39.5 -16t40 16.5t16.5 40t-16 41.5zM898 741h-738q-24 0 -41 -16.5t-17 -40.5t17 -41t41 -17h739q25 0 41.5 17t16.5 41q-1 24 -18 40.5
+t-41 16.5z" />
   </font>
 </defs></svg>

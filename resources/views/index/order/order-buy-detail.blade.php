@@ -68,7 +68,7 @@
                             <h3 class="panel-title">订单信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table table-bordered table-center table-th-color">
                                 <thead>
                                     <th>订单号</th>
                                     <th>订单金额</th>
@@ -139,7 +139,7 @@
                             <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up')?'提货人信息':'商家信息' }}</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table table-bordered table-center table-th-color">
                                 <thead>
                                     <th>商家信息</th>
                                     <th>联系人</th>
@@ -207,7 +207,7 @@
                                 <h3 class="panel-title">订单修改记录</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center public-table">
+                                <table class="table table-bordered table-center table-th-color">
                                     <thead>
                                         <th>时间</th>
                                         <th>修改人</th>
@@ -233,7 +233,7 @@
                             <h3 class="panel-title">订单商品</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table table-bordered table-center table-th-color">
 
                                 <thead>
                                     <th>商品编号</th>
@@ -278,7 +278,7 @@
                                 <h3 class="panel-title">抵费商品</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center public-table">
+                                <table class="table table-bordered table-center table-th-color">
                                     <thead>
                                         <th>商品编号</th>
                                         <th>商品图片</th>
@@ -312,7 +312,7 @@
                                 <h3 class="panel-title">订单记录</h3>
                             </div>
                             <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center public-table">
+                                <table class="table table-bordered table-center table-th-color">
                                     <thead>
                                         <th>订单操作</th>
                                         <th>操作时间</th>
