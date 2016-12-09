@@ -10,8 +10,6 @@ use App\Models\SalesmanCustomer;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\v1\CustomerDisplayFeeRequest;
-use Carbon\carbon;
 
 class SalesmanCustomerController extends Controller
 {
@@ -183,7 +181,7 @@ class SalesmanCustomerController extends Controller
             'pieces_retailer',
             'price_wholesaler',
             'pieces_wholesaler',
-        ])->get()->each(function ($item) {
+        ])->withGoodsPieces()->get()->each(function ($item) {
             $item->setAppends(['image_url']);
         });
         return $this->success(['goods' => $goods]);
@@ -283,7 +281,8 @@ class SalesmanCustomerController extends Controller
                     'mortgage_goods_id'
                 ]);
             },
-            'displayList.order.order'
+            'displayList.order.order',
+            'businessAddress'
         ])->get(['id', 'name', 'display_type', 'salesman_id', 'display_fee']);
 
         foreach ($customers as $customer) {

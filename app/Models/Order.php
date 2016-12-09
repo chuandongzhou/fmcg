@@ -23,6 +23,7 @@ class Order extends Model
         'user_id',
         'shop_id',
         'download_count',
+        'type',
         'paid_at',
         'confirm_at',
         'send_at',
@@ -398,7 +399,6 @@ class Order extends Model
             $result = $status > $statusArr['non_send'];
         }
 
-
         return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] && $this->attributes['pay_type'] != cons('pay_type.pick_up');
     }
 
@@ -531,6 +531,16 @@ class Order extends Model
             $group['display'] = '';
         }
         return $group;
+    }
+
+    /**
+     * 订单类型
+     *
+     * @return string
+     */
+    public function getTypeNameAttribute()
+    {
+        return cons()->valueLang('order.type', $this->type);
     }
 
     /**
@@ -736,10 +746,14 @@ class Order extends Model
     public function scopeOfSelectOptions($query, $search)
     {
         return $query->where(function ($query) use ($search) {
-            if ($search['pay_type']) {
+            if (array_get($search, 'pay_type')) {
                 $query->where('pay_type', $search['pay_type']);
             }
-            if ($search['status']) {
+
+            if (!is_null(array_get($search, 'type'))) {
+                $query->where('type', $search['type']);
+            }
+            if (array_get($search, 'status')) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
                     $query->where([
@@ -756,10 +770,10 @@ class Order extends Model
                     $query->where('status', cons('order.status.' . $search['status']));
                 }
             }
-            if ($search['start_at']) {
+            if (array_get($search, 'start_at')) {
                 $query->where('created_at', '>=', $search['start_at']);
             }
-            if ($search['end_at']) {
+            if (array_get($search, 'end_at')) {
                 $endAt = (new Carbon($search['end_at']))->endOfDay();
                 $query->where('created_at', '<=', $endAt);
             }

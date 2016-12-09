@@ -74,6 +74,7 @@
                                     <th>应付金额</th>
                                     <th>支付方式</th>
                                     <th>订单状态</th>
+                                    <th>订单类型</th>
                                     <th>备注</th>
                                     <th>操作</th>
                                 </thead>
@@ -162,7 +163,7 @@
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up')?'提货人信息':'收货人信息' }}</h3>
+                            <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up') ? '提货人信息' : '收货人信息' }}</h3>
                         </div>
                         <div class="panel-container table-responsive">
                             <table class="table table-bordered table-center table-th-color">

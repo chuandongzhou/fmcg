@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Model;
+use App\Models\Order;
 use App\Services\GoodsService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 class HomeController extends Controller
 {
@@ -44,4 +47,5 @@ class HomeController extends Controller
     {
 
     }
+
 }

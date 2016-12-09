@@ -904,14 +904,6 @@ function menuFunc() {
 
 }
 
-function fixedBottom() {
-    var distanceTop = $('#car-bottom').offset().top - $(window).height();
-    if ($(window).scrollTop() > distanceTop) {
-        $('.clearing-container').removeClass('fixed-bottom')
-    } else {
-        $('.clearing-container').addClass('fixed-bottom')
-    }
-}
 
 function selectedFunc() {
     $('.span-checkbox').click(function () {

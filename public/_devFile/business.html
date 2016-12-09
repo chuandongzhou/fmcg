@@ -312,8 +312,8 @@
 
             /* 创建伸缩/展开侧边目录栏 */
             var control = $('<div>'),
-                    shrink = $('<span>'),
-                    stretch = $('<span>');
+                shrink = $('<span>'),
+                stretch = $('<span>');
             control.css({
                 position: 'fixed',
                 top: -1,
@@ -354,28 +354,28 @@
             });
 
             var menuList = $('body').children(':header'),
-                    menuObject = [],
-                    headerObject = {
-                        h1: 0,
-                        h2: 0,
-                        h3: 0,
-                        h4: 0,
-                        h5: 0,
-                        h6: 0
-                    },
-                    headerParentObj = {
-                        h1: null,
-                        h2: 'h1',
-                        h3: 'h2',
-                        h4: 'h3',
-                        h5: 'h4',
-                        h6: 'h5'
-                    },
-                    previousTagName;
+                menuObject = [],
+                headerObject = {
+                    h1: 0,
+                    h2: 0,
+                    h3: 0,
+                    h4: 0,
+                    h5: 0,
+                    h6: 0
+                },
+                headerParentObj = {
+                    h1: null,
+                    h2: 'h1',
+                    h3: 'h2',
+                    h4: 'h3',
+                    h5: 'h4',
+                    h6: 'h5'
+                },
+                previousTagName;
             /* 为菜单创建锚点 */
             menuList.each(function (index, element) {
                 var href = index ? $(element).html().split(' ')[0] : '0.',
-                        tagName = $(element)[0]['tagName'].toLowerCase();
+                    tagName = $(element)[0]['tagName'].toLowerCase();
                 menuObject[index] = {
                     id: href,
                     parentId: 0,
@@ -407,7 +407,7 @@
                 }
                 for (var i in childList) {
                     var ul = $('<ul>'),
-                            li = $('<li>');
+                        li = $('<li>');
                     ul.css({
                         paddingLeft: 20
                     });
@@ -620,6 +620,13 @@ price_retailer              decimal     终端商价格
 pieces_retailer             int         终端商单位
 price_wholesaler            decimal     批发商价格
 pieces_wholesaler           int         批发商单位
+goods_pieces                array       商品单位（新， 为null时未设置）
+
+goods_pieces字段子集介绍
+
+pieces_level_1              int         一级单位
+pieces_level_2              int         二级单位（为null时未设置）
+pieces_level_3              int         三级单位（为null时未设置）
 </code></pre>
 
 <p><code>失败返回</code></p>
@@ -737,6 +744,7 @@ pieces                  int             商品单位id
 <p><code>请求参数：</code></p>
 <pre><code>start_date              date            开始日期 （字符串，如： 2016-8-10）
 end_date                date            结束日期 （字符串，如： 2016-8-10）
+name                    string          客户名
 </code></pre>
 
 <p><code>成功返回：</code></p>
@@ -959,7 +967,14 @@ goods                   object          商品信息
 
 goods字段说明
 
-name               string          商品名称
+name                        string          商品名称
+goods_pieces                array       商品单位（新， 为null时未设置）
+
+goods_pieces字段子集介绍
+
+pieces_level_1              int         一级单位
+pieces_level_2              int         二级单位（为null时未设置）
+pieces_level_3              int         三级单位（为null时未设置）
 
 mortgage字段子集（商品信息）说明
 
@@ -1005,13 +1020,20 @@ num                     int             商品购买数量
 
 data 字段子集说明
 
-id                  int         商品id
-name                string      商品名
-price_retailer      decimal     价格（对于终端商）
-price_wholesaler    decimal     价格（对于批发商）
-pieces_retailer     int         单位（对于终端商）
-pieces_wholesaler   int         单位（对于批发商）
-image_url           string      商品图片
+id                          int         商品id
+name                        string      商品名
+price_retailer              decimal     价格（对于终端商）
+price_wholesaler            decimal     价格（对于批发商）
+pieces_retailer             int         单位（对于终端商）
+pieces_wholesaler           int         单位（对于批发商）
+image_url                   string      商品图片
+goods_pieces                array       商品单位（新， 为null时未设置）
+
+goods_pieces字段子集介绍
+
+pieces_level_1              int         一级单位
+pieces_level_2              int         二级单位（为null时未设置）
+pieces_level_3              int         三级单位（为null时未设置）
 </code></pre>
 
 <h4>2.7.2 店铺分类[get] (categories)</h4>

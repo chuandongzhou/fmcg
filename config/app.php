@@ -138,7 +138,6 @@ return [
         App\Providers\AuthServiceProvider::class,
         Overtrue\LaravelPinyin\ServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        Germey\Geetest\GeetestServiceProvider::class,
         /*
          * Custom Service Providers...
          */

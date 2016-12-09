@@ -13,7 +13,7 @@ use App\Models\ShippingAddressSnapshot;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class ShippingAddressService
+class ShippingAddressService extends BaseService
 {
     /**
      * 复制收货地址至快照
@@ -25,6 +25,7 @@ class ShippingAddressService
     public function copyToSnapshot($shippingAddressId)
     {
         if (!$shippingAddressId) {
+            $this->setError('收货地址为空');
             return false;
         }
         $shippingAddress = ShippingAddress::where('id', $shippingAddressId)->first([
@@ -38,6 +39,7 @@ class ShippingAddressService
         ]);
 
         if (!$shippingAddress) {
+            $this->setError('收货地址为空');
             return false;
         }
         $addressData = $shippingAddress->toArray();
@@ -48,6 +50,7 @@ class ShippingAddressService
 
             if (!$addressDetail) {
                 $shippingAddressSnapshot->delete();
+                $this->setError('收货地址为空');
                 return false;
             }
             $shippingAddressSnapshot->address()->create([
@@ -60,10 +63,17 @@ class ShippingAddressService
             ]);
             return $shippingAddressSnapshot->id;
         }
+        $this->setError('创建收货地址错误');
         return false;
 
     }
 
+    /**
+     * 复制用户收货地址至快照
+     *
+     * @param \App\Models\SalesmanCustomer $salesmanCustomer
+     * @return bool|mixed
+     */
     public function copySalesmanCustomerShippingAddressToSnapshot(SalesmanCustomer $salesmanCustomer)
     {
         $addressData = [
@@ -80,6 +90,7 @@ class ShippingAddressService
 
             if (!$addressDetail) {
                 $shippingAddressSnapshot->delete();
+                $this->setError('收货地址为空');
                 return false;
             }
             $shippingAddressSnapshot->address()->create([
@@ -92,6 +103,7 @@ class ShippingAddressService
             ]);
             return $shippingAddressSnapshot->id;
         }
+        $this->setError('创建收货地址错误');
         return false;
     }
 
@@ -110,6 +122,7 @@ class ShippingAddressService
         $shippingAddress = ShippingAddress::where('user_id', $userId)->find($shippingAddressId);
 
         if (is_null($shippingAddress)) {
+            $this->setError('收货地址不存在');
             return false;
         }
         if (!is_null($shops)) {

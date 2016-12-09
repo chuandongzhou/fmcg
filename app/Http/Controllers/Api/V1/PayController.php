@@ -87,8 +87,9 @@ class PayController extends Controller
     {
         $type = $request->input('type');
         $field = $type == 'all' ? 'pid' : 'id';
-        $result = (new PayService())->balancepay($field, $orderId);
-        return $result ? $this->success('支付成功') : $this->error('余额不足');
+        $payService = new PayService();
+        $result = $payService->balancepay($field, $orderId);
+        return $result ? $this->success('支付成功') : $this->error($payService->getError());
     }
 
     /**

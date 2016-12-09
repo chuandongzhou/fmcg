@@ -229,10 +229,8 @@ class DeliveryService
      * @return array
      */
 
-    public
-    function deliveryStatistical(
-        $search
-    ) {
+    public function deliveryStatistical($search)
+    {
 
         $search['start_at'] = !empty($search['start_at']) ? (new Carbon($search['start_at']))->startOfDay() : '';
         $search['end_at'] = !empty($search['end_at']) ? (new Carbon($search['end_at']))->endOfDay() : '';

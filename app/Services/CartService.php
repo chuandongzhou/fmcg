@@ -13,7 +13,7 @@ use Cache;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class CartService
+class CartService extends BaseService
 {
 
     protected $data = [], $cacheKey;
@@ -101,6 +101,7 @@ class CartService
     {
         $carts = $this->data;
         if ($carts->isEmpty() || empty($num)) {
+            $this->setError('购物车为空');
             return false;
         }
         //是否通过验证
@@ -116,6 +117,7 @@ class CartService
             $updateNum && $cart->fill(['num' => $buyNum])->save();
         }
         if (!$allow) {
+            $this->setError('商品缺货或数量大于两万');
             return false;
         }
 

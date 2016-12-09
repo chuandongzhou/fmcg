@@ -251,8 +251,9 @@ class DeliveryController extends Controller
 
         $attributes = $request->all();
 
-        $flag = (new OrderService)->changeOrder($order, $attributes, $deliveryId);
-        return $flag['status'] ? $this->success('修改成功') : $this->error($flag['message']);
+        $orderService = new OrderService;
+        $flag = $orderService->changeOrder($order, $attributes, $deliveryId);
+        return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
 
     /**

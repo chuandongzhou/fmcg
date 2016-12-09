@@ -217,6 +217,13 @@
     pieces_retailer             int         终端商单位
     price_wholesaler            decimal     批发商价格
     pieces_wholesaler           int         批发商单位
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
 `失败返回`
 
@@ -355,6 +362,7 @@
 
     start_date              date            开始日期 （字符串，如： 2016-8-10）
     end_date                date            结束日期 （字符串，如： 2016-8-10）
+    name                    string          客户名
 
 
 `成功返回：`
@@ -597,7 +605,14 @@
 
     goods字段说明
 
-    name               string          商品名称
+    name                        string          商品名称
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
     mortgage字段子集（商品信息）说明
 
@@ -653,13 +668,20 @@
 
     data 字段子集说明
 
-    id                  int         商品id
-    name                string      商品名
-    price_retailer      decimal     价格（对于终端商）
-    price_wholesaler    decimal     价格（对于批发商）
-    pieces_retailer     int         单位（对于终端商）
-    pieces_wholesaler   int         单位（对于批发商）
-    image_url           string      商品图片
+    id                          int         商品id
+    name                        string      商品名
+    price_retailer              decimal     价格（对于终端商）
+    price_wholesaler            decimal     价格（对于批发商）
+    pieces_retailer             int         单位（对于终端商）
+    pieces_wholesaler           int         单位（对于批发商）
+    image_url                   string      商品图片
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
 #### 2.7.2 店铺分类[get] (categories)
 `请求参数：`

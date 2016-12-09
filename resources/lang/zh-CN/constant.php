@@ -40,6 +40,11 @@ return [
             'finished' => '已完成',
             'invalid' => '已作废',
         ],
+        //类型
+        'type' => [
+            'platform' => '自主订单',
+            'business' => '业务订单'
+        ],
         'is_cancel' => [//订单是否被取消
             'off' => '未取消',
             'on' => '已取消',
@@ -73,7 +78,7 @@ return [
             'user' => '用户', // 用户(内则)广告
             'app' => 'APP', // app广告(启动页)
             'category' => '商品分类',
-            'left-category'=>'商品分类左侧栏'
+            'left-category' => '商品分类左侧栏'
         ],
     ],
     // 交易相关
