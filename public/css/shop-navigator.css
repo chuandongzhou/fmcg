@@ -33,7 +33,7 @@
     position:relative;
     overflow:hidden;
     top:0;
-    left:0px;
+    left:0;
     *left:-15px;
     z-index:1;
     margin:0;
@@ -122,7 +122,7 @@
     overflow:hidden;
 
 }
-.quick_toggle .return_top{display:none;}
+.quick_toggle .return_top{display:none;line-height: 57px!important;text-align: center;font-size: 12px!important;}
 .quick_links_allow_gotop .return_top{display:block;}
 
 
@@ -184,8 +184,8 @@
 .quick_links .chongzhi{background:url(../images/chongzhi.png) no-repeat;width:35px;height:35px;top:2px;left:3px;}
 .quick_links .wdsc{left:3px;font-size: 18px;}
 .quick_toggle .mpbtn_qrcode{width:18px;height:18px;top:11px;left:11px;background-position:0 -302px;}
-.quick_toggle .top{background-position:0 -201px;width:17px;height:14px;top:12px;left:12px;}
-.quick_toggle a:hover .top, .quick_links a.current .top{background-position:-33px -201px;}
+.quick_toggle .top{width:17px;height:14px;line-height:14px;top:6px;left:12px;}
+.quick_toggle a:hover .top, .quick_links a.current .top{}
 .quick_toggle i.kfzx{width:15px;height:16px;top:11px;left:12px;background-position:0 -175px;}
 .quick_toggle a:hover i.kfzx{background-position:-33px -175px;}
 /* quick_links_pop */
