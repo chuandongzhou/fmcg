@@ -98,14 +98,16 @@
                                 </td>
                                 <td width="10%" class="bordered text-center">{{ 'x'.$goods['pivot']['num'] }}</td>
                                 @if(0 == $key )
-                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered" width="15%">
+                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
+                                        width="15%">
                                         <p>{{ $order['status_name'] }}</p>
 
                                         <p>{{ $order['payment_type'] }}</p>
 
-                                        <p><span class="red">￥{{ $order['price'] }}</span></p>
+                                        <p><span class="red">￥{{ $order['after_rebates_price'] }}</span></p>
                                     </td>
-                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered" width="15%">
+                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                        width="15%">
                                         <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
                                               class="btn btn-blue">查看</a></p>
                                         @if(!$order['is_cancel'])
@@ -139,9 +141,11 @@
                                                     <a class="btn btn-blue-lighter"
                                                        href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
 
-                                                    <br>
-                                                    <span class="prompt">（{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
-                                                        ）</span>
+
+                                                <div class="prompt">
+                                                    （{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
+                                                    ）
+                                                </div>
                                                 </p>
                                             @endif
                                             @if($order->can_refund)

@@ -62,7 +62,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <a class="pull-right" id="add-address" href="javascript:void(0)" type="button"
+                            <a class="pull-right add" id="add-address " href="javascript:void(0)" type="button"
                                data-target="#shippingAddressModal" data-toggle="modal">
                                 <label>
                                     <span class="fa fa-plus"></span>
@@ -100,7 +100,7 @@
                     <div class="col-sm-12 table-responsive shopping-table-list delivery-option">
                         <h4 class="title">商品清单 : </h4>
                         @foreach($shops as $shop)
-                        <table class="table table-bordered">
+                        <table class="table table-bordered shop-item">
                             <tbody>
                             <tr>
                                 <th colspan="3">{{ $shop->name }}({{ cons()->valueLang('user.type' , $shop->user->type) }})</th>
@@ -156,8 +156,8 @@
 
                                     <div class="count-panel">
                                         <p class="count min-money">
-                                            <span class="prompt min-money-span" data-money="{{ $shop->min_money  }}">
-                                               ({{ $shop->sum_price>$shop->min_money?'满足最低配送额￥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }})
+                                            <span class="prompt min-money-span {{ $shop->sum_price>=$shop->min_money?'':'red' }}" data-money="{{ $shop->min_money  }}">
+                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额￥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }})
                                             </span>
                                             <span class="name">合计 :&nbsp;</span>
                                             <span class="red shop-sum-price" data-price="{{ $shop->sum_price }}">{{ $shop->sum_price }}</span>
@@ -216,7 +216,15 @@
             $('.address-phone').html(addressPhone);
         });
 
-
+        //不是自提时，检查是否所有店铺都满足最低配送额
+        function checkeSubmitBtn(){
+            $('.min-money-span').each(function(){
+                if($(this).hasClass('red')){
+                    $('.submit-order').prop('disabled',true).removeClass('btn-primary').addClass('btn-cancel');
+                }
+            });
+        }
+        checkeSubmitBtn();
 
         deliveryWayList.children('.check-item').on('click', function () {
             var obj = $(this), deliveryItem = $(".delivery-item");
@@ -229,6 +237,7 @@
                 });
                 confirmFunc.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
                 $('.min-money').hide();
+                $('.submit-order').prop('disabled',false).removeClass('btn-cancel').addClass('btn-primary');
             } else {
                 deliveryItem.show();
                 deliveryItem.each(function () {
@@ -237,6 +246,7 @@
                 });
                 confirmFunc.deliveryMode({{ cons('order.delivery_mode.delivery') }});
                 $('.min-money').show();
+                checkeSubmitBtn();
             }
             obj.addClass('active').siblings().removeClass("active");
         });

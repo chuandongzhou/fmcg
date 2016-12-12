@@ -309,6 +309,20 @@ a {
   @include min-width;
   margin-top: 20px;
   padding: 20px 0;
+  .popover{
+    .popover-content {
+      font-size: 13px;
+      background-color: $body-bg;
+      .form-control{
+        outline: none;
+      }
+      .btn-submit{
+        border-radius: 0!important;
+        width:auto!important;
+        padding-bottom:7px;
+      }
+    }
+  }
   .list-inline {
     display: inline-block;
     li {
@@ -336,7 +350,7 @@ a {
       }
       .tooltip {
         .tooltip-arrow {
-          border-top-color: $brand-primary;
+          border-top-color: $theme-orange;
         }
       }
       .contact-panel {
@@ -345,10 +359,10 @@ a {
           color: $gray;
           max-width: 290px;
           font-weight: bolder;
-          font-size: 12px;
-          height: 100px;
-          padding: 30px 10px;
-          border: 1px solid $brand-primary;
+          font-size: 13px;
+          height: 75px;
+          padding: 15px;
+          border: 1px solid $theme-orange;
           div {
             padding: 2px 0;
           }
@@ -361,7 +375,7 @@ a {
             padding: 0;
           }
           .qr-panel {
-            border: 2px solid $brand-primary;
+            border: 2px solid $theme-orange;
             @include size(335px, 125px);
             background-color: $body-bg;
             padding-top: 3px;
@@ -393,7 +407,6 @@ a {
       }
     }
     .feedback-panel {
-
       .popover {
         min-width: 340px;
         textarea {
@@ -412,6 +425,7 @@ a {
     position: static;
   }
 }
+
 
 .page-footer {
   position: static !important;
@@ -2351,7 +2365,7 @@ a {
           white-space: nowrap;
           font-size: 15px;
         }
-        &.shop-img {
+        .shop-img {
           @include square(100px);
         }
       }
@@ -2698,7 +2712,7 @@ table {
     table-layout: fixed;
     .ellipsis {
       display: inline-block;
-      width: 90%;
+      max-width: 355px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -3830,6 +3844,7 @@ table {
       .upcoming-events {
         background-color: $body-bg;
         padding: 15px;
+        height:100%;
         li {
           width: 100%;
           overflow: hidden;
@@ -4046,7 +4061,7 @@ table {
     border: 1px solid $gray-plain-light;
     margin: -1px;
     padding-left: 10px;
-    @include size(100%, min(401px));
+    width:100%;
     overflow-y: auto;
     .item {
       padding: 0 10px 5px 0;
@@ -4121,7 +4136,8 @@ table {
       .item {
         padding: 0;
         img {
-          @include size(100%, 400px);
+          @include size(100%, auto);
+          max-height:450px
         }
       }
     }
@@ -5906,7 +5922,6 @@ table {
   .arrow:after {
     border-bottom-color: #fefe1f !important;
   }
-
 }
 
 .add-bank-account {

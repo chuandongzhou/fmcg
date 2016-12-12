@@ -85,7 +85,7 @@
                                             <img class="avatar" src="{{ $cartGoods->image }}">
                                             <div class="product-panel" style="width:70%!important;">
                                                 <a class="product-name ellipsis">{{ $cartGoods->goods->name }}</a>
-                                                {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
+                                                {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis" title="'.$cartGoods->goods->promotion_info.'"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>
                                         <td class="text-center">￥
@@ -104,7 +104,7 @@
                                         </td>
                                         <td class="text-right">
                                             <a href="javascript:void(0)" data-type="goods" data-method="post"
-                                               class="btn btn-xs btn-like" data-id="{{ $cartGoods->goods_id }}">
+                                               class="btn btn-xs btn-like " data-id="{{ $cartGoods->goods_id }}">
                                                 @if($cartGoods->is_like) <i class="fa fa-star"></i> 已收藏@else<i
                                                         class="fa fa-star-o"></i> 加入收藏夹 @endif
                                             </a>
@@ -148,7 +148,7 @@
                             <input class="inp-checkbox" type="checkbox">
                             全选
                         </div>
-                        <a href="javascript:" class="batch-deletion ajax padding-clear"
+                        <a href="javascript:" class="batch-deletion ajax"
                            data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                     </div>
                     <div class="col-xs-6 padding-clear">

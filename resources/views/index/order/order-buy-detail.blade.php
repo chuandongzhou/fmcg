@@ -252,7 +252,7 @@
                                         <td width="30%">
                                             <div class="product-panel">
                                                 <a class="product-name"
-                                                   href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                   href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
                                                 {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>
@@ -292,7 +292,7 @@
                                             <td>
                                                 <div class="product-panel">
                                                     <a class="product-name"
-                                                       href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                       href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>

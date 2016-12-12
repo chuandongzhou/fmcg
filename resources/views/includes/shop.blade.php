@@ -51,7 +51,7 @@
     </tr>
     <tr>
         <td>所在地</td>
-        <td colspan="3" class="text-left-important">
+        <td colspan="3" class="text-left-important address-panel">
             <select data-group="shop" name="address[province_id]"
                     data-id="{{ $shop->shopAddress ? $shop->shopAddress->province_id : '' }}"
                     class="address-province  address">

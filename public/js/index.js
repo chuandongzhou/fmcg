@@ -153,7 +153,6 @@ function cartFunc() {
             if (shopSumPrice < minMoney.html() && shopSumPrice) {
                 checkMinMoney.html('不满足最低配送额￥').addClass('red');
                 minMoney.addClass('red');
-
             } else {
                 checkMinMoney.html('满足最低配送额￥').removeClass('red');
                 minMoney.removeClass('red');
@@ -195,16 +194,23 @@ function cartFunc() {
     });
     buyInput.on('keyup', '', function () {
         var obj = $(this),
-            minNum = obj.data('minNum'),
+            minNum = obj.data('min-num'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(obj.val());
-        if (buyNum > 20000) {
+        //if (buyNum > 20000) {
+        //    obj.val(20000);
+        //} else {
+        if (buyNum < minNum) {
+            obj.val(minNum);
+            buyNum = minNum;
+        } else if (buyNum > 20000) {
             obj.val(20000);
-        } else {
-            var goodsAllMoney = buyNum.mul(obj.data('price'));
-            goodsAllMoneyTag.html(goodsAllMoney);
-            initMoney();
+            buyNum = 20000;
         }
+        var goodsAllMoney = buyNum.mul(obj.data('price'));
+        goodsAllMoneyTag.html(goodsAllMoney);
+        initMoney();
+        //}
 
     });
     //checkBox选择
@@ -307,6 +313,9 @@ var numChange = function () {
                 var obj = $(this), buyNum = parseInt(obj.val());
                 if (buyNum > 20000) {
                     obj.val(20000);
+                } else if (buyNum < minNum) {
+                    obj.val(minNum);
+                    ;
                 } else {
                     changeDescButton();
                 }
@@ -357,7 +366,12 @@ function likeFunc() {
                 status = null;
             }
             //self.data('status', status).button(status ? 'liked' : 'like');
-            $('.like-' + type).data('status', status).button(status ? 'liked' : 'like');
+            if ($('.like-' + type).length) {
+                $('.like-' + type).data('status', status).button(status ? 'liked' : 'like');
+            } else {
+                self.data('status', status).button(status ? 'liked' : 'like');
+            }
+
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.button(status ? 'liked' : 'like');
             if (errorThrown == 'Unauthorized') {
@@ -844,8 +858,12 @@ function menuFunc() {
             }
         })
     })
+    var bannerHeight = $(".banner-slide .carousel-inner img").height();
+    $('.categories-wrap .menu-down-wrap .menu-down-layer').css('height', bannerHeight + "px");
+
     $('.categories-btn>a').mouseenter(function () {
-        $('.categories-wrap .categories .menu-wrap').css('height', '401px');
+        var bannerHeight = $(".banner-slide .carousel-inner img").height();
+        $('.categories-wrap .categories .menu-wrap').css('height', bannerHeight + "px");
     })
 
     //search role begin
@@ -1125,7 +1143,7 @@ function selectedChange() {
             $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val()+ '*' + $('input[name="specification"]').val());
+            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
 
         }
     });
@@ -1140,7 +1158,7 @@ function selectedChange() {
             $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val()+ '*' + $('input[name="specification"]').val());
+            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
 
         }
     });

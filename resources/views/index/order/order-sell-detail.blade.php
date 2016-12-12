@@ -66,7 +66,7 @@
                             <h3 class="panel-title">订单信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center table-th-color">
+                            <table class="table table-bordered table-center table-th-color order-msg-table">
                                 <thead>
                                     <th>订单号</th>
                                     <th>订单金额</th>
@@ -281,7 +281,7 @@
                                         <td width="30%">
                                             <div class="product-panel">
                                                 <a class="product-name"
-                                                   href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                   href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
                                                 {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>
@@ -306,7 +306,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="6" class="pay-item">
+                                    <td colspan="{{ $order->can_change_price?'7':'6' }}" class="pay-item">
                                         总额 : <span class="red">￥{{ $order->price }}</span>
                                     </td>
                                 </tr>
@@ -335,7 +335,7 @@
                                             <td>
                                                 <div class="product-panel">
                                                     <a class="product-name"
-                                                       href="{{ url('my-goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                       href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>

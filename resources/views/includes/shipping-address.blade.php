@@ -124,7 +124,7 @@
 
             $('#shippingAddressModal').on('shown.bs.modal', function (e) {
                 var obj = $(e.relatedTarget);
-                $('#shippingAddressModalLabel span').html(obj.hasClass('personal-add') ?'添加收货地址':'编辑收货地址');
+                $('#shippingAddressModalLabel span').html(obj.hasClass('add') ?'添加收货地址':'编辑收货地址');
                 var id = obj.data('id') || '',
                         address = obj.data('address') || '',
                         provinceId = obj.data('province-id') || '',
@@ -146,8 +146,8 @@
                 $('input[name="area_name"]').val(areaName);
                 $('input[name="x_lng"]').val(x_lng);
                 $('input[name="y_lat"]').val(y_lat);
-                form.attr('action', site.api(obj.hasClass('personal-add') ?'personal/shipping-address':'personal/shipping-address/' + id));
-                form.attr('method', obj.hasClass('personal-add') ? 'post' : 'put');
+                form.attr('action', site.api(obj.hasClass('add') ?'personal/shipping-address':'personal/shipping-address/' + id));
+                form.attr('method', obj.hasClass('add') ? 'post' : 'put');
 
                 setAddress(province, city, district, street);
                 getShopAddressMap(x_lng, y_lat);

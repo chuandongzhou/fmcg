@@ -88,7 +88,7 @@
                         @for($i=0;$i<4;$i++)
                             @if(isset($shop->goods[$i]))
                                 <div class=" product-item ">
-                                    <a href="{{ url('goods/' .$shop->goods[$i]->id) }}">
+                                    <a href="{{ url('goods/' .$shop->goods[$i]->id) }}" target="_blank">
                                         <img class="commodity-img lazy"
                                              data-original="{{ $shop->goods[$i]->image_url }}">
                                         <span class="commodity-name">{{ $shop->goods[$i]->name }}</span>

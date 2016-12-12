@@ -91,7 +91,7 @@
 
                                         <p>{{ $order['payment_type'] }}</p>
 
-                                        <p><span class="red">¥{{ $order['price'] }}</span></p>
+                                        <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
                                     </td>
                                     <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered" width="15%">
                                         <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"

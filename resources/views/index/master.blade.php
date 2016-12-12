@@ -60,7 +60,8 @@
                     <div class="login-info-wrap">
                         @if(isset($user))
                             <a href="{{ url("personal/info") }}" class="name-panel">
-                                <span class="user-name">{{ $user->shop_name }}({{ cons()->valueLang('user.type' , $user->type) }})</span>
+                                <span class="user-name">{{ $user->shop_name }}
+                                    ({{ cons()->valueLang('user.type' , $user->type) }})</span>
                                 <span class="exit"
                                       onclick="window.location.href='{{ url('auth/logout') }}';return false;">退出</span>
                             </a>
@@ -137,7 +138,8 @@
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
         <div class="msg-channel control-center-channel" id="alert-div">
-            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn  pull-right"><i class="fa fa-remove"></i></a>
+            <div class="title"><span class="pull-left">你有新消息</span><a class="close-btn  pull-right"><i
+                            class="fa fa-remove"></i></a>
             </div>
             <a class="check" href="#">点击查看>>>></a>
         </div>
@@ -148,9 +150,9 @@
     <div class="footer">
         @yield('join-us')
         <footer class="panel-footer footer">
-            <div class="container text-center text-muted">
-                <div class="row text-center">
-                    <div class="col-xs-6">
+            <div class="container  text-muted">
+                <div class="row ">
+                    <div class="col-xs-6 pd-left-clear">
                         <ul class="list-inline">
                             <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
                             <li>
@@ -220,6 +222,7 @@
                 </div>
             </div>
         </footer>
+        <div id="allmap"></div>
     </div>
 @stop
 

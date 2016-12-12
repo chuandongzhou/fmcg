@@ -58,6 +58,7 @@
     @parent
     <script type="text/javascript">
         $(function () {
+            $(".popup").css({"opacity": "0","top":"-150px"});
             //模板选择成功事件
             var templeteModal = $('#templeteModal');
             templeteModal.on('show.bs.modal', function (e) {

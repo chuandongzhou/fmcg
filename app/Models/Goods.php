@@ -395,7 +395,7 @@ class Goods extends Model
         $wholesalerPieces = $this->pieces_wholesaler;
 
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
-        $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
+        $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userType >= $userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
         return $piece;
     }
 

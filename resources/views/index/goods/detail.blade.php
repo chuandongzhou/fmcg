@@ -83,7 +83,7 @@
                                data-url="{{  $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$goods->id) }}"
                                class="btn shopping-btn join-cart {{ $user->id==$shop->user_id?'disabled':'' }}">加入购物车</a>
                         @endif
-                        <a class="btn shopping-btn disabled" href="{{ url('cart') }}">去购物车结算</a>
+                        <a class="btn shopping-btn {{ $user->id==$shop->user_id?'disabled':'' }}" href="{{ url('cart') }}">去购物车结算</a>
                     </div>
                     <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods"
                          data-type="goods" data-method="post"
