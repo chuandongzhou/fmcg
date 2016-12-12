@@ -14,7 +14,7 @@ use Carbon\Carbon;
 use DB;
 use Gate;
 
-class PayService
+class PayService extends BaseService
 {
 
     /**
@@ -172,6 +172,7 @@ class PayService
         $orders = Order::where($field, $orderId)->get();
 
         if (Gate::denies('validate-payment-orders', $orders)) {
+            $this->setError('订单不存在');
             return false;
         }
 
@@ -179,16 +180,19 @@ class PayService
         $userBalance = (new UserService())->getUserBalance();
 
         if ($userBalance['availableBalance'] < $totalFee) {
+            $this->setError('余额不足');
             return false;
         }
         if (auth()->user()->decrement('balance', $totalFee)) {
             $result = $this->addTradeInfo($orders, $totalFee, 0, '', 'balancepay');
             if (!$result) {
                 auth()->user()->increment('balance', $totalFee);
+                $this->setError('支付时出现问题');
                 return false;
             }
             return true;
         }
+        $this->setError('支付时出现问题');
         return false;
     }
 

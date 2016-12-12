@@ -216,7 +216,6 @@ class Goods extends Model
     public function scopeOfPrice($query, $shop_user_id = 0)
     {
         $typeName = (new UserService())->getUserTypeName();
-        info($this->user_type);
         $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shop_user_id ? 'retailer' : $typeName));
         return $query->orderBy('price_' . $typeName, 'asc');
     }
@@ -317,6 +316,23 @@ class Goods extends Model
         return $this->scopeOfStatus($query, 0);
     }
 
+    /**
+     * 关联商品单位
+     *
+     * @param $query
+     * @param array $fields
+     * @return mixed
+     */
+    public function scopeWithGoodsPieces(
+        $query,
+        $fields = ['goods_id', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3']
+    ) {
+        return $query->with([
+            'goodsPieces' => function ($query) use ($fields) {
+                $query->select($fields);
+            }
+        ]);
+    }
 
     /**
      * 设置终端商自提价格

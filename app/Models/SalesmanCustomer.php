@@ -12,6 +12,7 @@ class SalesmanCustomer extends Model
     protected $fillable = [
         'number',
         'name',
+        'type',
         'account',
         'shop_id', //平台id
         'letter',

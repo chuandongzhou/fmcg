@@ -19,7 +19,7 @@ use Carbon\Carbon;
  * Date: 2015/8/17
  * Time: 17:45
  */
-class BusinessService
+class BusinessService extends BaseService
 {
     /**
      * 获取订单详情
@@ -471,6 +471,7 @@ class BusinessService
                 ])->pluck('used');
             }
             if ($item > bcadd($customerSurplus, $orderDisplayFee, 2)) {
+                $this->setError('陈列费不能高于选择月份余额');
                 return false;
             }
             $totalCash = bcadd($totalCash, $item, 2);
@@ -481,6 +482,7 @@ class BusinessService
             ]);
         }
         if ($totalCash > $orderAmount) {
+            $this->setError('陈列费不能高于订单金额');
             return false;
         }
         return $displayList;
@@ -516,6 +518,7 @@ class BusinessService
                         }
 
                         if ($detail['num'] > bcadd($item['surplus'], $orderMortgageGoodsNum)) {
+                            $this->setError('抵费商品数量不能大于选择月份剩余数量');
                             return false;
                         }
                         $displayList[] = new SalesmanCustomerDisplayList([
@@ -529,6 +532,7 @@ class BusinessService
                     }
                 }
                 if (!$flag) {
+                    $this->setError('抵费商品数量不存在');
                     return false;
                 }
             }

@@ -4,6 +4,8 @@
 @include('includes.shipping-address-map')
 @include('includes.order-select-delivery_man')
 
+@section('subtitle', '订单列表')
+
 @section('top-title')
     <a href="{{ url('order-sell') }}">订单管理</a> >
     <span class="second-level"> 订单列表</span>
@@ -15,17 +17,23 @@
         <form class="form" method="get" action="{{ url('order-sell') }}" autocomplete="off">
             @if (\Request::is('order-sell'))
                 <div class="col-sm-8 pay-detail search-options">
+                    <select name="type" class="ajax-select control">
+                        <option value="">全部类型</option>
+                        @foreach(cons()->valueLang('order.type') as $key => $value)
+                            <option value="{{ $key }}" {{ !is_null(array_get($search, 'type')) && $key == array_get($search, 'type') ? 'selected' : ''}}>{{ $value }}</option>
+                        @endforeach
+                    </select>
                     <select name="pay_type" class="ajax-select control">
                         <option value="">全部方式</option>
-                        @foreach($pay_type as $key => $value)
-                            <option value="{{ $key }}" {{ $key==$search['pay_type'] ? 'selected' : ''}}>{{ $value }}</option>
+                        @foreach(cons()->valueLang('pay_type') as $key => $value)
+                            <option value="{{ $key }}" {{ $key==array_get($search, 'pay_type') ? 'selected' : ''}}>{{ $value }}</option>
                         @endforeach
                     </select>
 
                     <select name="status" class="ajax-select control">
                         <option value="">全部状态</option>
                         @foreach(array_except($order_status, 'invalid') as $key => $value)
-                            <option value="{{ $key }}" {{ $key==$search['status'] ? 'selected' : ''}}>{{ $value }}</option>
+                            <option value="{{ $key }}" {{ $key == array_get($search, 'status') ? 'selected' : ''}}>{{ $value }}</option>
                         @endforeach
                     </select>
                     <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
@@ -52,7 +60,7 @@
                                 <label>
                                     <input type="checkbox" class="order_id children" name="order_id[]"
                                            value="{{ $order['id'] }}">
-                                    订单号 :<b>{{ $order['id'] }}</b>
+                                    订单号 :<b>{{ $order['id'] . '(' . $order->type_name . ')' }} </b>
                                 </label>
                                 <span class="order-number">下单时间 : {{ $order['created_at'] }}</span>
                             </th>

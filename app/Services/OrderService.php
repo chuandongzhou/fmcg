@@ -11,7 +11,7 @@ use App\Models\PushDevice;
 use DB;
 
 
-class OrderService
+class OrderService extends BaseService
 {
 
     /**
@@ -96,6 +96,7 @@ class OrderService
                 $cart->goods->setAppends([]);
             });
             if ($carts->isEmpty()) {
+                $this->setError('购物车为空');
                 return false;
             }
             $orderGoodsNum = [];  //存放商品的购买数量  商品id => 商品数量
@@ -197,14 +198,15 @@ class OrderService
         //判断待修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($attributes['pivot_id']));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
-            return ['status' => false, 'message' => '订单不存在'];
+            $this->setError( '订单不存在');
+            return false;
         }
         $num = $attributes['num'];
 
         $price = isset($attributes['price']) ? $attributes['price'] : $orderGoods->price;
 
         if ($num == $orderGoods->num && $price == $orderGoods->price) {
-            return ['status' => true];
+            return true;
         }
         $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
             $oldTotalPrice = $orderGoods->total_price;
@@ -217,7 +219,8 @@ class OrderService
 
             if ($order->display_fee > $newOrderPrice) {
                 //订单陈列费不能大于订单价格
-                return ['status' => false, 'message' => '订单陈列费不能大于订单价格'];
+                $this->setError( '订单陈列费不能大于订单价格');
+                return false;
             }
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
             // 价格不同才更新
@@ -264,7 +267,7 @@ class OrderService
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
             (new RedisService)->setRedis($redisKey, $redisVal,  cons('push_time.msg_life'));
 
-            return ['status' => true];
+            return true;
         });
         return $flag;
     }
@@ -419,11 +422,13 @@ class OrderService
                     (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 } else {
                     $this->_deleteSuccessOrders($successOrders);
+                    $this->setError('订单提交时出现问题');
                     return false;
                 }
 
             } else {
                 $this->_deleteSuccessOrders($successOrders);
+                $this->setError('订单提交时出现问题');
                 return false;
             }
         }
@@ -458,6 +463,7 @@ class OrderService
         if (!isset($data['shipping_address_id']) || !$shippingAddressService->validate($data['shipping_address_id'],
                 null, $shops)
         ) {
+            $this->setError('收货地址不存在');
             return false;
         }
         $shippingAddressId = $data['shipping_address_id'];
@@ -512,11 +518,13 @@ class OrderService
                     }
                 } else {
                     $this->_deleteSuccessOrders($successOrders);
+                    $this->setError('订单提交时出现问题');
                     return false;
                 }
 
             } else {
                 $this->_deleteSuccessOrders($successOrders);
+                $this->setError('订单提交时出现问题');
                 return false;
             }
         }

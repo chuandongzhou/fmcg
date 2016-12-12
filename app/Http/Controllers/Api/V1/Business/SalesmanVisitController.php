@@ -34,10 +34,10 @@ class SalesmanVisitController extends Controller
         $salesman = salesman_auth()->user();
         $startDate = $request->input('start_date', $carbon->copy()->startOfMonth());
         $endDate = $request->input('end_date');
-
         $endDate = $endDate ? (new Carbon($endDate))->endOfDay() : $carbon->copy();
+        $name = $request->input('name');
 
-        $visits = $salesman->customers()->with([
+        $visits = $salesman->customers()->ofName($name)->with([
             'orders' => function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate])->with('order');
             },
@@ -57,8 +57,8 @@ class SalesmanVisitController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function store(Request $request)
     {
@@ -113,7 +113,6 @@ class SalesmanVisitController extends Controller
             'x_lng' => '',
             'y_lat' => '',
             'address' => ''
-
         ];
         dd($data);*/
         $data = $request->all();
@@ -147,7 +146,7 @@ class SalesmanVisitController extends Controller
 
                         if (!$validate) {
                             $visit->delete();
-                            return '陈列费不能高于订单金额或选择月份余额';
+                            return $businessService->getError();
                         }
 
                     } elseif ($customer->display_type == cons('salesman.customer.display_type.mortgage') && isset($data['mortgage'])) {
@@ -155,7 +154,7 @@ class SalesmanVisitController extends Controller
                         $validate = $businessService->validateMortgage($data['mortgage'], $customer);
                         if (!$validate) {
                             $visit->delete();
-                            return '抵费商品数量不能大于选择月份剩余数量';
+                            return $businessService->getError();
                         }
                     }
                     $orderForms['salesman_visit_id'] = $visit->id;
@@ -240,11 +239,12 @@ class SalesmanVisitController extends Controller
      */
     public function canAdd($customer_id)
     {
-        $salesman_id = salesman_auth()->id();
-        $start = Carbon::now()->startOfDay();
-        $end = Carbon::now()->endOfDay();
-        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
-            ->whereBetween('created_at', [$start, $end])->lists('id');
+//        $salesman_id = salesman_auth()->id();
+//        $start = Carbon::now()->startOfDay();
+//        $end = Carbon::now()->endOfDay();
+//        $visit = SalesmanVisit::where(['salesman_customer_id' => $customer_id, 'salesman_id' => $salesman_id])
+//            ->whereBetween('created_at', [$start, $end])->lists('id');
+        $visit = [];
         return $this->success(compact('visit'));
     }
 

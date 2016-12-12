@@ -16,6 +16,7 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
 use App\Services\RedisService;
 use App\Services\OrderService;
+
 class DeliveryController extends Controller
 {
 
@@ -73,7 +74,7 @@ class DeliveryController extends Controller
      */
     public function orders()
     {
-        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->with('user.shop',
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->useful()->with('user.shop',
             'shippingAddress.address', 'coupon')->get();
 
         $orders->each(function ($order) {
@@ -250,8 +251,9 @@ class DeliveryController extends Controller
 
         $attributes = $request->all();
 
-        $flag = (new OrderService)->changeOrder($order, $attributes, $deliveryId);
-        return $flag['status'] ? $this->success('修改成功') : $this->error($flag['message']);
+        $orderService = new OrderService;
+        $flag = $orderService->changeOrder($order, $attributes, $deliveryId);
+        return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
 
     /**

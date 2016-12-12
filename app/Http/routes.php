@@ -299,7 +299,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
                 $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
                 $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
-                $router->post('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
+                $router->get('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
                 $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
             });
 

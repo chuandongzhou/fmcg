@@ -225,7 +225,10 @@ class SalesmanVisitOrderController extends Controller
             'orderGoods.goods' => function ($query) {
                 $query->select('id', 'name');
             },
-            'displayList'
+            'orderGoods.goods.goodsPieces' => function($query) {
+                $query->select('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'goods_id');
+            },
+            'displayList.mortgageGoods'
         ])->find($id);
 
         if ($order->type == cons('salesman.order.type.order')) {
@@ -332,14 +335,14 @@ class SalesmanVisitOrderController extends Controller
                     $customer, $order);
 
                 if (!$validate) {
-                    return '陈列费不能高于订单金额或选择月份余额';
+                    return $businessService->getError();
                 }
 
             } elseif ($customer->display_type == cons('salesman.customer.display_type.mortgage') && isset($attributes['mortgage'])) {
                 //验证抵费商品
                 $validate = $businessService->validateMortgage($attributes['mortgage'], $customer, $order);
                 if (!$validate) {
-                    return '抵费商品数量不能大于选择月份剩余数量';
+                    return $businessService->getError();
                 }
             }
 
@@ -476,7 +479,7 @@ class SalesmanVisitOrderController extends Controller
                     'price' => $salesmanVisitOrder->amount,
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],
-                    //'pay_status' => $orderConf['pay_status']['payment_success'],
+                    'type' => '1',
                     'status' => $orderConf['status']['non_send'],
                     'display_fee' => $salesmanVisitOrder->displayFees()->sum('used'),
                     'numbers' => (new OrderService())->getNumbers($shopId),
@@ -486,7 +489,7 @@ class SalesmanVisitOrderController extends Controller
                 ];
 
                 if (!$orderData['shipping_address_id']) {
-                    return ['error' => '客户收货地址不存在'];
+                    return ['error' => $shippingAddressService->getError()];
                 }
 
                 $orderTemp = Order::create($orderData);
@@ -565,7 +568,6 @@ class SalesmanVisitOrderController extends Controller
                             'mortgage_goods_id' => 0,
                             'surplus' => bcsub($salesmanCustomer->display_fee, $item->used)
                         ]);
-
                     } else {
                         //抵费商品
                         $surplus = $salesmanCustomer->mortgageGoods()->find($item->mortgage_goods_id);
@@ -577,9 +579,7 @@ class SalesmanVisitOrderController extends Controller
                                 'surplus' => bcsub($surplus->pivot->total, $item->used)
                             ]);
                         }
-
                     }
-
                 }
             }
         }

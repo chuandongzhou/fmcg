@@ -140,7 +140,6 @@
                     <!--</ul>-->
                     <!--</div>-->
                 </div>
-                <div class="row" id="car-bottom"></div>
                 <div class="row clearing text-right  ">
                     <div class="col-xs-6 text-left left-operation">
                         <div class="check-item">
@@ -166,11 +165,7 @@
     @parent
     <script type="text/javascript">
         $(document).ready(function () {
-            fixedBottom();
             cartFunc();
-            $(window).scroll(function () {
-                fixedBottom();
-            });
             likeFunc();
             @if (session('message'))
                alert('{{ session('message') }}');

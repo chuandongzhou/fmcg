@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-class GoodsPieces extends Model{
+class GoodsPieces extends Model
+{
     protected $table = 'goods_pieces';
     protected $fillable = [
         'pieces_level_1',
@@ -15,7 +16,8 @@ class GoodsPieces extends Model{
     ];
     public $timestamps = false;
 
-    public function goods(){
+    public function goods()
+    {
         return $this->belongsTo('App\Models\Goods');
     }
 

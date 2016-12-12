@@ -204,7 +204,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function getShopTypeAttribute()
     {
-        return $this->shop()->first()->user()->pluck('type');
+        return $this->shop->user_type;
     }
 
     /**

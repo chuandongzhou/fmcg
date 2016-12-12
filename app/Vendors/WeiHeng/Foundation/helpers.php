@@ -87,8 +87,8 @@ if (!function_exists('avatar_url')) {
         $default = cons('salesman.avatar');
 
         $avatarPath = config('path.upload_avatar');
-        $relatePath = str_replace(public_path() , '', $avatarPath);
-        $relatePath = str_replace('\\' , '', $relatePath);
+        $relatePath = str_replace(public_path(), '', $avatarPath);
+        $relatePath = str_replace('\\', '', $relatePath);
 
         // 处理size
         array_key_exists($size, $default) || $size = 64;
@@ -121,14 +121,14 @@ if (!function_exists('salesman_avatar_url')) {
         $default = cons('salesman.avatar');
         $avatarPath = config('path.upload_salesman_avatar');
         $relatePath = str_replace(public_path(), '', $avatarPath);
-        $relatePath = str_replace('\\' , '', $relatePath);
+        $relatePath = str_replace('\\', '', $relatePath);
 
         // 处理size
         array_key_exists($size, $default) || $size = 64;
 
         // 处理分割后的ID
         $path = implode('/', divide_uid($uid, "_{$size}.jpg"));
-        
+
         // 处理缓存
         $mtime = @filemtime($avatarPath . $path);
         if (false !== $mtime) {
@@ -374,3 +374,17 @@ if (!function_exists('percentage')) {
     }
 }
 
+if (!function_exists('in_windows')) {
+    /**
+     * 判断当前访问是否在微信里面
+     *
+     * @return bool
+     */
+    function in_windows()
+    {
+        $request = app('request');
+        $userAgent = strtolower($request->server('HTTP_USER_AGENT'));
+        $path = strtolower($request->path());
+        return false !== strpos($userAgent, 'windows nt') && strpos($path, 'upload/file') === false && strpos($path, 'auth/logout') === false;
+    }
+}

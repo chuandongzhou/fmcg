@@ -23,6 +23,7 @@ class Order extends Model
         'user_id',
         'shop_id',
         'download_count',
+        'type',
         'paid_at',
         'confirm_at',
         'send_at',
@@ -302,8 +303,8 @@ class Order extends Model
     {
         $orderConf = cons('order');
         return $this->attributes['status'] == $orderConf['status']['non_confirm']
-        && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
-        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']/* && ($this->attributes['user_id'] == auth()->id() || $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id'))*/
+            && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
+            && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']/* && ($this->attributes['user_id'] == auth()->id() || $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id'))*/
             ;
     }
 
@@ -315,7 +316,7 @@ class Order extends Model
     public function getCanConfirmAttribute()
     {
         return $this->attributes['status'] == cons('order.status.non_confirm')
-        && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
+            && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
     }
 
     /**
@@ -349,7 +350,7 @@ class Order extends Model
     public function getCanRefundAttribute()
     {
         return $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
-        && $this->attributes['status'] == cons('order.status.non_send');
+            && $this->attributes['status'] == cons('order.status.non_send');
     }
 
     /**
@@ -365,7 +366,7 @@ class Order extends Model
         $statusConf = cons('order.status');
 
         return ($payType == $payTypeConf['cod'] && $status == $statusConf['send'])
-        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
+            || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
     }
 
     /**
@@ -398,7 +399,6 @@ class Order extends Model
             $result = $status > $statusArr['non_send'];
         }
 
-
         return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] && $this->attributes['pay_type'] != cons('pay_type.pick_up');
     }
 
@@ -410,8 +410,8 @@ class Order extends Model
     public function getCanConfirmArrivedAttribute()
     {
         return $this->attributes['pay_type'] == cons('pay_type.online')
-        && $this->attributes['status'] == cons('order.status.send')
-        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success');
+            && $this->attributes['status'] == cons('order.status.send')
+            && $this->attributes['pay_status'] == cons('order.pay_status.payment_success');
     }
 
 
@@ -531,6 +531,16 @@ class Order extends Model
             $group['display'] = '';
         }
         return $group;
+    }
+
+    /**
+     * 订单类型
+     *
+     * @return string
+     */
+    public function getTypeNameAttribute()
+    {
+        return cons()->valueLang('order.type', $this->type);
     }
 
     /**
@@ -736,10 +746,14 @@ class Order extends Model
     public function scopeOfSelectOptions($query, $search)
     {
         return $query->where(function ($query) use ($search) {
-            if ($search['pay_type']) {
+            if (array_get($search, 'pay_type')) {
                 $query->where('pay_type', $search['pay_type']);
             }
-            if ($search['status']) {
+
+            if (!is_null(array_get($search, 'type'))) {
+                $query->where('type', $search['type']);
+            }
+            if (array_get($search, 'status')) {
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
                     $query->where([
@@ -756,10 +770,10 @@ class Order extends Model
                     $query->where('status', cons('order.status.' . $search['status']));
                 }
             }
-            if ($search['start_at']) {
+            if (array_get($search, 'start_at')) {
                 $query->where('created_at', '>=', $search['start_at']);
             }
-            if ($search['end_at']) {
+            if (array_get($search, 'end_at')) {
                 $endAt = (new Carbon($search['end_at']))->endOfDay();
                 $query->where('created_at', '<=', $endAt);
             }
@@ -856,5 +870,15 @@ class Order extends Model
         ]);
     }
 
+    /**
+     * 有效订单
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeUseful($query)
+    {
+        return $query->where('is_cancel', 0)->where('status', '<>', cons('order.status.invalid'));
+    }
 
 }

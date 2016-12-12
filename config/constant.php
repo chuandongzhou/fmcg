@@ -46,6 +46,11 @@ return [
             'finished' => 3,            //完成
             'invalid' => 4              //作废
         ],
+        //类型
+        'type' => [
+            'platform' => 0,            //平台
+            'business' => 1,            //业务
+        ],
         'is_cancel' => [ //订单是否被取消，默认是未取消
             'off' => 0,
             'on' => 1,
@@ -109,7 +114,7 @@ return [
             'shop' => 5, //店铺首页广告
             'promote' => 6, //店铺促销信息
             'signature' => 7, //店招
-            'left-category' =>8 //商品分类左侧广告
+            'left-category' => 8 //商品分类左侧广告
         ],
         'cache' => [
             'index' => [
@@ -342,7 +347,7 @@ return [
             'pre_name' => 'backup:code:',
             'expire' => 60,
         ],
-        'register' =>[
+        'register' => [
             'pre_name' => 'register:code',
             'expire' => 60
         ]

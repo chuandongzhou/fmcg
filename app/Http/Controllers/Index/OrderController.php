@@ -38,7 +38,7 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return redirect()->back()->with('message', '订单信息不合法');
+            return redirect()->back()->with('message', $cartService->getError());
         }
 
         if ($confirmedGoods->update(['status' => 1])) {
@@ -79,10 +79,11 @@ class OrderController extends Controller
     public function postSubmitOrder(Request $request)
     {
         $data = $request->all();
+        $orderService = new OrderService;
 
-        $result = (new OrderService)->orderSubmitHandle($data);
+        $result = $orderService->orderSubmitHandle($data);
         if (!$result) {
-            return redirect('cart')->with('message', '订单信息不合法');
+            return redirect('cart')->with('message', $orderService->getError());
         }
 
         //$query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
@@ -443,29 +444,28 @@ class OrderController extends Controller
         $goodStat = [];
         foreach ($res as $value) {
             //订单相关统计
-            $stat['totalAmount'] += $value['price'];
+            $stat['totalAmount'] = bcadd($stat['totalAmount'], $value['price'], 2);
             if ($value['pay_type'] == cons('pay_type.online')) {
                 ++$stat['onlineNum'];
-                $stat['onlineAmount'] += $value['price'];
+                $stat['onlineAmount'] = bcadd($stat['onlineAmount'], $value['price'], 2);
             } else {
                 ++$stat['codNum'];
-                $stat['codAmount'] += $value['price'];
+                $stat['codAmount'] = bcadd($stat['codAmount'], $value['price'], 2);
                 if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
-                    $stat['codReceiveAmount'] += $value['price'];
+                    $stat['codReceiveAmount'] = bcadd($stat['codReceiveAmount'], $value['price'], 2);
                 }
             }
             //商品相关统计
             foreach ($value['goods'] as $good) {
                 $num = $good['pivot']['num'];
                 if ($num > 0) {
-                    $price = $good['pivot']['price'] * $num;
+                    $price = bcmul($good['pivot']['price'], $num, 2);
                     $name = $good['name'];
                     $id = $good['id'];
                     if (isset($goodStat[$good['id']])) {
                         $goodStat[$good['id']]['num'] += $num;
-                        $goodStat[$good['id']]['price'] += $price;
+                        $goodStat[$good['id']]['price'] = bcadd($goodStat[$good['id']]['price'], $price, 2);
                     } else {
-
                         $goodStat[$good['id']] = ['id' => $id, 'name' => $name, 'price' => $price, 'num' => $num];
                     }
                 }

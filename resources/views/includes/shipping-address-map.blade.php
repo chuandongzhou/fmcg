@@ -44,11 +44,11 @@
             var shippingAddressMapModal = $('#shippingAddressMapModal');
             shippingAddressMapModal.on('shown.bs.modal', function (e) {
                 var mapParent = $(e.relatedTarget),
-                        mapXLng = mapParent.data('xLng') || 0,
-                        mapYLat = mapParent.data('yLat') || 0,
-                        mapAddress = mapParent.data('address') || '',
-                        consigner = mapParent.data('consigner') || '',
-                        phone = mapParent.data('phone') || '';
+                    mapXLng = mapParent.data('xLng') || 0,
+                    mapYLat = mapParent.data('yLat') || 0,
+                    mapAddress = mapParent.data('address') || '',
+                    consigner = mapParent.data('consigner') || '',
+                    phone = mapParent.data('phone') || '';
                 $('.address-of-map').html(mapAddress);
                 $('.consigner-of-map').html(consigner);
                 $('.phone-of-map').html(phone);

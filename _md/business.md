@@ -96,6 +96,7 @@
     letter                  char            客户名首字母
     shop_id                 int             客户的平台id
     account                 string          客户的平台账号
+    type                    int             客户类型（1 为终端商， 2 批发商）
     contact                 string          联系人
     contact_information     string          联系方式
     business_area           string          营业面积
@@ -130,6 +131,7 @@
 
     name                    string          客户名称
     contact                 string          联系人
+    type                    int             客户类型（登录业务员店铺为供应商时传入[1 为终端商， 2 批发商]）
     contact_information     string          联系方式
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
@@ -167,6 +169,7 @@
 
     name                    string          客户名称
     contact                 string          联系人
+    type                    int             客户类型（登录业务员店铺为供应商时传入[1 为终端商， 2 批发商]）
     contact_information     string          联系方式
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
@@ -214,6 +217,13 @@
     pieces_retailer             int         终端商单位
     price_wholesaler            decimal     批发商价格
     pieces_wholesaler           int         批发商单位
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
 `失败返回`
 
@@ -236,37 +246,52 @@
 `成功返回：`
 
 `失败返回`
-#### 2.3.7 客户陈列费发放情况查询[post] (customer-display-fee)
+#### 2.3.7 客户陈列费发放情况查询[get] (customer-display-fee)
 `请求参数：`
 
-	salesman_customer_id        int         客户id
-	start_at                    date        开始时间
-	end_at                      date        结束时间
+	keyword                        string      客户关键字
+	month                          date        月份
 
 `成功返回：`
 
-	orders                    array         所有订单
-	display_fee               decimal       协议陈列费
+	customers                 array         所有客户
+
+	customers子字子集段说明
+	
+	id                          int             客户id
+	name                        string          客户名
+	display_type                int             客户陈列类型
+	display_fee                 decimal         应发现金（当display_type为 1 时使用）
+	business_address_name       string          客户营业地址
+	orders                      array           订单实发陈列费列表
+	mortgage_goods              array           应发抵费商品 （当display_type为 2 时使用）
 
 	orders子字子集段说明
-	
-	id                       int           订单ID
-	status                   int           订单状态
-	created_at               date          下单时间
-	display_fee              decimal       陈列费现金
-	order_remark             string        订单备注
-	display_remark           string        陈列费备注
-	mortgage_goods           array         陈列费抵费商品
-	
-	mortgage_goods字段子集说明
-	
-	goods_name              string         抵费商品名称
-	
-	pivot                   array          中间信息
 
-	pivot字段子集说明
-	
-	num                     int            抵费商品数量
+	id                          int             订单id
+	order_status_name           string          订单状态
+	used                        decimal         此订单实发陈列费现金（当display_type为 1 时使用）
+	mortgages                   array           此订单实发陈列费商品 （当display_type为 2 时使用）
+    created_at                  timestamp       订单创建时间
+
+        mortgages字段子集说明
+
+        id                      int             陈列费商品id
+        name                    string          陈列费商品名
+        used                    int             发放数量
+
+    mortgage_goods子字子集段说明
+
+    id                          int             陈列商品id
+    goods_name                  string          商品名
+    pivot                       array           应发陈列费商品信息
+
+        pivot子字子集段说明
+
+        total                   int             应发陈列费商品
+
+
+
 
 `失败返回：`
 
@@ -337,6 +362,7 @@
 
     start_date              date            开始日期 （字符串，如： 2016-8-10）
     end_date                date            结束日期 （字符串，如： 2016-8-10）
+    name                    string          客户名
 
 
 `成功返回：`
@@ -579,7 +605,14 @@
 
     goods字段说明
 
-    name               string          商品名称
+    name                        string          商品名称
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
     mortgage字段子集（商品信息）说明
 
@@ -635,13 +668,20 @@
 
     data 字段子集说明
 
-    id                  int         商品id
-    name                string      商品名
-    price_retailer      decimal     价格（对于终端商）
-    price_wholesaler    decimal     价格（对于批发商）
-    pieces_retailer     int         单位（对于终端商）
-    pieces_wholesaler   int         单位（对于批发商）
-    image_url           string      商品图片
+    id                          int         商品id
+    name                        string      商品名
+    price_retailer              decimal     价格（对于终端商）
+    price_wholesaler            decimal     价格（对于批发商）
+    pieces_retailer             int         单位（对于终端商）
+    pieces_wholesaler           int         单位（对于批发商）
+    image_url                   string      商品图片
+    goods_pieces                array       商品单位（新， 为null时未设置）
+
+    goods_pieces字段子集介绍
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位（为null时未设置）
+    pieces_level_3              int         三级单位（为null时未设置）
 
 #### 2.7.2 店铺分类[get] (categories)
 `请求参数：`

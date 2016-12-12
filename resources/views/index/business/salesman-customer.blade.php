@@ -12,33 +12,53 @@
 @stop
 
 @section('right')
-    <div class="row salesman">
-        <div class="col-sm-12 create ">
-            <form class="form-horizontal ajax-form"
-                  action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"
-                  method="{{ $salesmanCustomer->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"
-                  data-done-url="{{ url('business/salesman-customer') }}" autocomplete="off">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="username"><span class="red">*</span> 客户名称:</label>
-                    <div class="col-sm-6 col-md-4">
-                        <input class="form-control" id="name" name="name" placeholder="请输入客户名称"
-                               value="{{ $salesmanCustomer->name }}" type="text">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="salesman_id"><span class="red">*</span> 业务员:</label>
-                    <div class="col-sm-6 col-md-4">
-                        <select class="form-control" id="salesman_id" name="salesman_id">
-                            <option value="">请选择业务员</option>
-                            @foreach($salesmen as $key=>$salesman)
-                                <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
-                            @endforeach
-                        </select>
+    <form class="form-horizontal ajax-form"
+          action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"
+          method="{{ $salesmanCustomer->id ? 'put' : 'post' }}" data-help-class="col-sm-push-2 col-sm-10"
+          data-done-url="{{ url('business/salesman-customer') }}" autocomplete="off">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="username"><span class="red">*</span>客户名称:</label>
 
-                    </div>
+            <div class="col-sm-10 col-md-6">
+                <input class="form-control" id="name" name="name" placeholder="请输入客户名称"
+                       value="{{ $salesmanCustomer->name }}"
+                       type="text">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 control-label" for="salesman_id"><span class="red">*</span>业务员:</label>
+
+            <div class="col-sm-10 col-md-6">
+                <select class="form-control" id="salesman_id" name="salesman_id">
+                    <option value="">请选择业务员</option>
+                    @foreach($salesmen as $key=>$salesman)
+                        <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
+                    @endforeach
+                </select>
+
+            </div>
+        </div>
+
+        @if(($userType = auth()->user()->type) == cons('user.type.supplier'))
+            <div class="form-group row">
+                <label class="col-sm-2 control-label" for="type">客户类型:</label>
+
+                <div class="col-sm-10 col-md-6">
+                    <select class="form-control" id="type" name="type">
+                        <option value="">请选择客户类型</option>
+                        @foreach(cons()->valueLang('user.type') as $type=>$name)
+                            @if($type < $userType)
+                                <option value="{{ $type }}" {{ $type ==  $salesmanCustomer->type ? 'selected' : '' }}> {{ $name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 control-label" for="contact"><span class="red">*</span> 联系人:</label>
+            </div>
+        @endif
+        <div class="form-group row">
+            <label class="col-sm-2 control-label" for="contact"><span class="red">*</span>联系人:</label>
 
                     <div class="col-sm-6 col-md-4">
                         <input class="form-control" id="contact" name="contact" placeholder="请输入联系人"

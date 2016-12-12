@@ -276,7 +276,13 @@ class OrderController extends Controller
         if (!$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能作废');
         }
-        return $order->fill(['status' => cons('order.status.invalid')])->save() ? $this->success('订单作废成功') : $this->error('作废订单时出现问题');
+        if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
+            // 返回优惠券
+            (new OrderService())->backCoupon($order);
+            return $this->success('订单作废成功');
+        }
+
+        return $this->error('作废订单时出现问题');
     }
 
     /**
@@ -497,7 +503,7 @@ class OrderController extends Controller
         $cartService = new CartService($carts);
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
-            return $this->error('确认失败');
+            return $this->error($cartService->getError());
         }
 
         if ($confirmedGoods->update(['status' => 1])) {
@@ -511,16 +517,17 @@ class OrderController extends Controller
      * 提交订单
      *
      * @param \Illuminate\Http\Request $request
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postSubmitOrder(Request $request)
     {
 
         $data = $request->all();
+        $orderService = new OrderService;
 
-        $result = (new OrderService)->orderSubmitHandle($data);
+        $result = $orderService->orderSubmitHandle($data);
 
-        return $result ? $this->success($result) : $this->error('提交订单时遇到问题');
+        return $result ? $this->success($result) : $this->error($orderService->getError());
     }
 
     /**
@@ -537,8 +544,11 @@ class OrderController extends Controller
             return $this->error('订单不存在或不能修改');
         }
         $attributes = $request->all();
-        $flag = (new OrderService)->changeOrder($order, $attributes, auth()->id());
-        return $flag['status'] ? $this->success('修改成功') : $this->error($flag['message']);
+
+        $orderService = new OrderService;
+        $flag = $orderService->changeOrder($order, $attributes, auth()->id());
+
+        return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
 
 

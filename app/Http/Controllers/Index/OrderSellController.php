@@ -27,8 +27,6 @@ class OrderSellController extends OrderController
     public function getIndex(Request $request)
     {
         //卖家可执行功能列表
-        //支付方式
-        $payType = cons()->valueLang('pay_type');
         //订单状态
         $orderStatus = cons()->lang('order.status');
         $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
@@ -36,10 +34,11 @@ class OrderSellController extends OrderController
 
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
-        $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
-        $search['status'] = isset($search['status']) ? trim($search['status']) : '';
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+        //$search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
+        //$search['status'] = isset($search['status']) ? trim($search['status']) : '';
+        //$search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
+        //$search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
+
         $orders = Order::OfSell(auth()->id())->WithExistGoods([
             'user.shop',
             'shippingAddress.address'
@@ -58,7 +57,6 @@ class OrderSellController extends OrderController
             $order->user && $order->user->shop->setAppends([]);
         });
         return view('index.order.order-sell', [
-            'pay_type' => $payType,
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
             'orders' => $orders,

@@ -152,7 +152,7 @@
                             <tr>
                                 <td>{{ $good['id'] }}</td>
                                 <td>{{ $good['name'] }}</td>
-                                <td>{{ $good['num'] ? round($good['price'] / $good['num'],2):0 }}</td>
+                                <td>{{ $good['num'] ? bcdiv($good['price'] ,$good['num'],2):0 }}</td>
                                 <td>{{ $good['num'] }}</td>
                                 <td>{{ $good['price'] }}</td>
                             </tr>
@@ -192,7 +192,7 @@
                         <td>{{ $otherStat['codNum'] }}</td>
                         <td>{{ $otherStat['codAmount'] }}</td>
                         <td>{{ $otherStat['codReceiveAmount'] }}</td>
-                        <td>{{ $otherStat['codAmount'] - $otherStat['codReceiveAmount'] }}</td>
+                        <td>{{ bcsub($otherStat['codAmount'] , $otherStat['codReceiveAmount'], 2) }}</td>
                     </tr>
                     </tbody>
                 </table>
