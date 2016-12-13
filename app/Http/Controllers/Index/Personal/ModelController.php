@@ -73,7 +73,7 @@ class ModelController extends Controller
     public function getModelChoice()
     {
 
-        return view('index.personal.model-choice');
+        return view('index.personal.model-choice',['shop' => auth()->user()->shop]);
     }
 
 }

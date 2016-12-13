@@ -5,9 +5,9 @@
 @include('includes.chat')
 @include('includes.notice')
 
-@if(!request()->cookie('province_id'))
-    @include('includes.first-load-model')
-@endif
+{{--@if(!request()->cookie('province_id'))--}}
+{{--@include('includes.first-load-model')--}}
+{{--@endif--}}
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
@@ -237,7 +237,32 @@
 
 @section('js')
     <script type="text/javascript">
-        $(function () {
+        //没有定位获取用户当前位置
+                @if(!request()->cookie('province_id'))
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(116.331398, 39.897445);
+        map.centerAndZoom(point, 12);
+
+        function myFun(result) {
+            var cityName = result.name;
+            map.setCenter(cityName);
+            $.ajax({
+                url: site.api('address/city-detail'),
+                method: 'get',
+                data: {name: cityName}
+            }).done(function (data, textStatus, jqXHR) {
+                console.log(data);
+                setCookie('province_id', data.province_id);
+                setCookie('city_id', data.city_id);
+                window.location.reload();
+            });
+        }
+
+        var myCity = new BMap.LocalCity();
+        myCity.get(myFun);
+        @endif
+    $(function () {
+
             //意见反馈
             $('.feedback-panel > a').popover({
                 container: '.feedback-panel',
@@ -264,6 +289,7 @@
                     }
                 })
             }
+
 
         });
     </script>

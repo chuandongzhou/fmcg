@@ -20,7 +20,7 @@
                                 name="district_id"></select>
                         <select data-id="{{ $data['street_id'] or 0 }}" class="control address-street"
                                 name="street_id"></select>
-                        <input type="text" placeholder="请输入店铺名称" class="control" name="name"
+                        <input type="text" placeholder="请输入商品名称" class="control" name="name"
                                value="{{ $data['name'] or '' }}">
                         <button class=" btn btn-blue-lighter  search-by-get">搜索</button>
                     </div>

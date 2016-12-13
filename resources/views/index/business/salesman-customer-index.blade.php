@@ -9,17 +9,17 @@
 
 @section('right')
     <div class="row salesman">
-        <form class="form-horizontal" method="get" action="" autocomplete="off">
+        <form class="form-horizontal" method="get" action="{{ url('business/salesman-customer') }}" autocomplete="off">
             <div class="col-sm-12 form-group salesman-controls">
                 <a class="btn btn-blue-lighter" href="{{ url('business/salesman-customer/create') }}"><i
                             class="fa fa-plus"></i>新增客户</a>
-                <select name="salesman_id" class="control">
+                <select name="salesman_id" class="ajax-select control">
                     <option value="">全部业务员</option>
                     @foreach($salesmen as $salesman)
-                        <option value="{{ $salesman->id }}" {{ $salesman->id == $salesmanId ? 'selected' : '' }}>{{ $salesman->name }}</option>
+                        <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
                     @endforeach
                 </select>
-                <input class="control" type="text" name="name" value="{{ $name }}" placeholder="客户名称">
+                <input class="control" type="text" name="name" value="{{ isset($data['name'])?$data['name']:'' }}" placeholder="客户名称">
                 <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
                 <a class="btn btn-border-blue customer-map" href="javascript:" data-target="#customerAddressMapModal"
                    data-toggle="modal">
@@ -94,6 +94,9 @@
                     @endforeach
                     </tbody>
                 </table>
+                <div class="text-right">
+                    {!! $customers->appends($data)->render() !!}
+                </div>
             </div>
         </form>
     </div>

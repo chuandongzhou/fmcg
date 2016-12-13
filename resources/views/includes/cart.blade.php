@@ -1,9 +1,8 @@
-
-        <!--弹出层-->
+<!--弹出层-->
 <div class="mask-outer">
     <div class="pop-general text-center">
         <div class="pop-content">
-            <a class="fa fa-close pull-right close-btn" href="javascript:void(0)"></a>
+            <a class="pull-right close-btn" href="javascript:void(0)"><i class="fa fa-remove"></i></a>
 
             <p class="pop-tips"><i class="fa fa-check-circle-o"></i><span class="txt">已成功加入购物车</span></p>
 

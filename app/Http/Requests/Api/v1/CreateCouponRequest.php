@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\v1;
 
+use Carbon\carbon;
 
 class CreateCouponRequest extends UserRequest
 {
@@ -12,12 +13,13 @@ class CreateCouponRequest extends UserRequest
      */
     public function rules()
     {
+        $now = Carbon::now();
         return [
             'full' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
             'start_at' => 'date',
-            'end_at' => 'date|after:start_at',
+            'end_at' => 'required|date|after:'. $now,
         ];
     }
 }

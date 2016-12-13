@@ -10,7 +10,7 @@
                     <div class="modal-header choice-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                         <div class="modal-title forgot-modal-title" id="refundpModalLabel">
-                            订单退款 <span class="extra-text">选择要添加的配送区域</span>
+                            订单退款 <span class="extra-text"></span>
                         </div>
                     </div>
                     <div class="modal-body">

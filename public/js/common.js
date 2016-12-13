@@ -452,9 +452,8 @@ var successMeg = function (mes) {
     $('.modal').modal('hide');
     var popup = $('<div class="popup"><h3>温馨提示 :</h3><div class="success-meg-content content">' + mes + '</div></div>');
     popup.appendTo('body');
-    var top = document.body.scrollTop + 80;
 
-    popup.css({"opacity": "1", "top": top+"px"});
+    popup.css({"opacity": "1", "top": 100 + "px"});
     setTimeout(function () {
         popup.css({"opacity": "0", "top": "-150px"});
     }, 3000);

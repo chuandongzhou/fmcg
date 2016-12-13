@@ -4702,6 +4702,7 @@ table .product-panel .promotions {
   margin: -1px;
   padding-left: 10px;
   width: 100%;
+  height: 401px;
   overflow-y: auto;
 }
 
@@ -5076,7 +5077,7 @@ table .product-panel .promotions {
   border: none !important;
   border-bottom: 1px solid #f1f1f1 !important;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   padding: 20px 0;
 }
 
@@ -6357,7 +6358,7 @@ table .product-panel .promotions {
   width: 450px;
   height: 150px;
   background-color: #fff;
-  position: absolute;
+  position: fixed;
   left: 50%;
   margin-left: -75px;
   z-index: 99999;
@@ -6766,7 +6767,7 @@ table .product-panel .promotions {
 
 .middle-footer .btn {
   border-radius: 4px !important;
-  width: 100px;
+  min-width: 100px;
 }
 
 .btn-submit {
@@ -7177,6 +7178,16 @@ table .product-panel .promotions {
 .collection .list-penal .operation .msg-channel .title .upload-item .close-btn,
 .msg-channel .title .upload-item .collection .list-penal .operation .close-btn {
   display: none;
+}
+
+.collection .list-penal .operation .remove .red,
+.collection .list-penal .operation .upload-item span .red,
+.upload-item .collection .list-penal .operation span .red,
+.collection .list-penal .operation .upload-item .msg-channel .title .close-btn .red,
+.upload-item .msg-channel .title .collection .list-penal .operation .close-btn .red,
+.collection .list-penal .operation .msg-channel .title .upload-item .close-btn .red,
+.msg-channel .title .upload-item .collection .list-penal .operation .close-btn .red {
+  background-color: #fff;
 }
 
 .collection .list-penal .thumbnail:hover .remove,

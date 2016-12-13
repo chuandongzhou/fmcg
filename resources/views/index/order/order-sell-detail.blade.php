@@ -68,15 +68,15 @@
                         <div class="panel-container table-responsive">
                             <table class="table table-bordered table-center table-th-color order-msg-table">
                                 <thead>
-                                    <th>订单号</th>
-                                    <th>订单金额</th>
-                                    <th>陈列费/优惠券</th>
-                                    <th>应付金额</th>
-                                    <th>支付方式</th>
-                                    <th>订单状态</th>
-                                    <th>订单类型</th>
-                                    <th>备注</th>
-                                    <th>操作</th>
+                                <th>订单号</th>
+                                <th>订单金额</th>
+                                <th>陈列费/优惠券</th>
+                                <th>应付金额</th>
+                                <th>支付方式</th>
+                                <th>订单状态</th>
+                                <th>订单类型</th>
+                                <th>备注</th>
+                                <th>操作</th>
                                 </thead>
 
                                 <tr>
@@ -169,12 +169,12 @@
                         <div class="panel-container table-responsive">
                             <table class="table table-bordered table-center table-th-color">
                                 <thead>
-                                    <th>终端商名称</th>
-                                    <th>联系人</th>
-                                    <th>联系电话</th>
-                                    @if( $order->pay_type!=cons('pay_type.pick_up'))
-                                        <th>收货地址</th>
-                                    @endif
+                                <th>{{ cons()->valueLang('user.type',$order->user->type) }}名称</th>
+                                <th>联系人</th>
+                                <th>联系电话</th>
+                                @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                    <th>收货地址</th>
+                                @endif
                                 </thead>
                                 <tr>
                                     <td><p>{{ $order->user_shop_name }}</p>
@@ -237,9 +237,9 @@
                             <div class="panel-container table-responsive">
                                 <table class="table table-bordered table-center table-th-color">
                                     <thead>
-                                        <th>时间</th>
-                                        <th>修改人</th>
-                                        <th>修改内容</th>
+                                    <th>时间</th>
+                                    <th>修改人</th>
+                                    <th>修改内容</th>
                                     </thead>
                                     @foreach($order->orderChangeRecode->reverse() as $orderChangeRecode)
                                         <tr>
@@ -264,15 +264,15 @@
                             <table class="table table-bordered table-center table-th-color">
 
                                 <thead>
-                                    <th>商品编号</th>
-                                    <th>商品图片</th>
-                                    <th>商品名称</th>
-                                    <th>商品价格</th>
-                                    <th>商品数量</th>
-                                    <th>金额</th>
-                                    @if($order->can_change_price)
-                                        <th>操作</th>
-                                    @endif
+                                <th>商品编号</th>
+                                <th>商品图片</th>
+                                <th>商品名称</th>
+                                <th>商品价格</th>
+                                <th>商品数量</th>
+                                <th>金额</th>
+                                @if($order->can_change_price)
+                                    <th>操作</th>
+                                @endif
                                 </thead>
                                 @foreach($orderGoods as $goods)
                                     <tr>
@@ -325,10 +325,10 @@
                             <div class="panel-container table-responsive">
                                 <table class="table table-bordered table-center table-th-color">
                                     <thead>
-                                        <th>商品编号</th>
-                                        <th>商品图片</th>
-                                        <th>商品名称</th>
-                                        <th>商品数量</th>
+                                    <th>商品编号</th>
+                                    <th>商品图片</th>
+                                    <th>商品名称</th>
+                                    <th>商品数量</th>
                                     </thead>
                                     @foreach($mortgageGoods as $goods)
                                         <tr>
@@ -349,96 +349,108 @@
                         </div>
                     </div>
                 @endif
-                @if($order->pay_type!=cons('pay_type.pick_up'))
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">订单记录</h3>
-                            </div>
-                            <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center table-th-color">
-                                    <thead>
-                                        <th>订单操作</th>
-                                        <th>操作时间</th>
-                                        <th>操作人</th>
-                                    </thead>
 
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">订单记录</h3>
+                        </div>
+                        <div class="panel-container table-responsive">
+                            <table class="table table-bordered table-center table-th-color">
+                                <thead>
+                                <th>订单操作</th>
+                                <th>操作时间</th>
+                                <th>操作人</th>
+                                </thead>
+
+                                <tr>
+                                    <td>提交订单</td>
+                                    <td>{{ $order['created_at'] }}</td>
+                                    <td>{{ $order->user_shop_name }}</td>
+                                </tr>
+                                @if((int)$order['confirm_at'])
                                     <tr>
-                                        <td>提交订单</td>
-                                        <td>{{ $order['created_at'] }}</td>
-                                        <td>{{ $order->user_shop_name }}</td>
+                                        <td>确认订单</td>
+                                        <td>{{ $order['confirm_at'] }}</td>
+                                        <td>{{ $order->shop->name }}</td>
                                     </tr>
-                                    @if($order->pay_type==cons('pay_type.cod'))
-                                        @if((int)$order['send_at'])
-                                            <tr>
-                                                <td>
-                                                    订单发货
-                                                </td>
-                                                <td>{{ $order['send_at'] }}</td>
-                                                <td>{{ $order->shop->name }}</td>
-                                            </tr>
-                                        @endif
-                                        @if((int)$order['paid_at'])
-                                            <tr>
-                                                <td>付款</td>
-                                                <td>{{ $order['paid_at'] }}</td>
-                                                <td>{{ $order->user_shop_name }}</td>
-                                            </tr>
-                                        @endif
-
-                                    @else
-                                        @if((int)$order['paid_at'])
-                                            <tr>
-                                                <td>付款</td>
-                                                <td>{{ $order['paid_at'] }}</td>
-                                                <td>{{ $order->user_shop_name }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($order->pay_status == cons('order.pay_status.refund')  || $order->pay_status == cons('order.pay_status.refund_success'))
-                                            <tr>
-                                                <td>申请退款</td>
-                                                <td>{{ $order->orderRefund->created_at }}</td>
-                                                <td>{{ $order->user_shop_name }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($order->pay_status == cons('order.pay_status.refund_success'))
-                                            <tr>
-                                                <td>退款成功</td>
-                                                <td>{{ $order->refund_at }}</td>
-                                                <td>{{ $order->shop->name }}</td>
-                                            </tr>
-                                        @endif
-                                        @if((int)$order['send_at'])
-                                            <tr>
-                                                <td>
-                                                    订单发货
-                                                </td>
-                                                <td>{{ $order['send_at'] }}</td>
-                                                <td>{{ $order->shop->name }}</td>
-                                            </tr>
-                                        @endif
-
-                                    @endif
-                                    @if((int)$order['finished_at'])
+                                @endif
+                                @if($order->pay_type==cons('pay_type.cod'))
+                                    @if((int)$order['send_at'])
                                         <tr>
-                                            <td>已完成</td>
-                                            <td>{{ $order['finished_at'] }}</td>
+                                            <td>
+                                                订单发货
+                                            </td>
+                                            <td>{{ $order['send_at'] }}</td>
+                                            <td>{{ $order->shop->name }}</td>
+                                        </tr>
+                                    @endif
+                                    @if((int)$order['paid_at'])
+                                        <tr>
+                                            <td>付款</td>
+                                            <td>{{ $order['paid_at'] }}</td>
                                             <td>{{ $order->user_shop_name }}</td>
                                         </tr>
                                     @endif
-                                    @if($order['is_cancel'])
+                                @elseif($order->pay_type==cons('pay_type.online'))
+                                    @if((int)$order['paid_at'])
                                         <tr>
-                                            <td>取消订单</td>
-                                            <td>{{ $order['cancel_at'] }}</td>
-                                            <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop_name : $order->shop->name }}</td>
+                                            <td>付款</td>
+                                            <td>{{ $order['paid_at'] }}</td>
+                                            <td>{{ $order->user_shop_name }}</td>
                                         </tr>
                                     @endif
+                                    @if($order->pay_status == cons('order.pay_status.refund')  || $order->pay_status == cons('order.pay_status.refund_success'))
+                                        <tr>
+                                            <td>申请退款</td>
+                                            <td>{{ $order->orderRefund->created_at }}</td>
+                                            <td>{{ $order->user_shop_name }}</td>
+                                        </tr>
+                                    @endif
+                                    @if($order->pay_status == cons('order.pay_status.refund_success'))
+                                        <tr>
+                                            <td>退款成功</td>
+                                            <td>{{ $order->refund_at }}</td>
+                                            <td>{{ $order->shop->name }}</td>
+                                        </tr>
+                                    @endif
+                                    @if((int)$order['send_at'])
+                                        <tr>
+                                            <td>
+                                                订单发货
+                                            </td>
+                                            <td>{{ $order['send_at'] }}</td>
+                                            <td>{{ $order->shop->name }}</td>
+                                        </tr>
+                                    @endif
+                                @endif
+                                @if((int)$order['finished_at'])
+                                    <tr>
+                                        <td>已完成</td>
+                                        <td>{{ $order['finished_at'] }}</td>
+                                        <td>{{ $order->user_shop_name }}</td>
+                                    </tr>
+                                @endif
+                                @if($order['is_cancel'])
+                                    <tr>
+                                        <td>取消订单</td>
+                                        <td>{{ $order['cancel_at'] }}</td>
+                                        <td>{{ $order['cancel_by'] == $order->user->id ? $order->user->shop_name : $order->shop->name }}</td>
+                                    </tr>
+                                @endif
+                                @if($order['status']==cons('order.status.invalid'))
+                                <tr>
+                                    <td>作废订单</td>
+                                    <td>{{ $order['updated_at'] }}</td>
+                                    <td>{{ $order->shop->name }}</td>
+                                </tr>
+                                @endif
 
-                                </table>
-                            </div>
+                            </table>
                         </div>
                     </div>
-                @endif
+                </div>
+
             </div>
         </div>
     </div>

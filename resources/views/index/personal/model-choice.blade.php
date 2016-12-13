@@ -7,6 +7,10 @@
 @stop
 @section('right')
     <div class="row setup-template">
+        <div class="col-sm-12 btns">
+            选完模板后去查看店铺首页效果
+            <a class="btn check-index" href="{{ url('shop/'.$shop->id) }}">查看店铺首页</a>
+        </div>
         <div class="col-sm-3 item text-center">
             <div>
                 <img src="http://placehold.it/200">
@@ -17,25 +21,20 @@
         <div class="col-sm-3 item text-center">
             <div>
                 <img src="http://placehold.it/200">
-                <a href="javascript" clas="templet-modal" data-target="#templetModal" data-toggle="modal">点击预览</a>
+                <a href="javascript" class="templet-modal" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
-            <label><input type="radio" name="template" checked> 模板01</label>
-        </div>
-
-        <div class="col-sm-12 btns">
-            <button class="btn btn-submit">提交</button>
-            <a class="btn check-index" href="{{ url('/') }}">查看店铺首页</a>
+            <label><input type="radio" name="template"> 模板01</label>
         </div>
     </div>
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
-        $(function(){
+        $(function () {
             $('.templet-modal').click(function () {
-                $('.templet-dialog').css('width','200px');
-                $('.templet-content').css({'width':'200px','height':'200px'});
-                $('.templet-img').attr('src',$(this).siblings("img").attr('src'));
+                $('.templet-dialog').css('width', '200px');
+                $('.templet-content').css({'width': '200px', 'height': '200px'});
+                $('.templet-img').attr('src', $(this).siblings("img").attr('src'));
             });
         });
     </script>

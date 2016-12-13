@@ -67,6 +67,29 @@ class AddressController extends Controller
     }
 
     /**
+     * 根据城市名获取城市id和省id
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getCityDetail(Request $request)
+    {
+        $cityName = $request->input('name');
+        if (Cache::has($cityName)) {
+            $data = Cache::get($cityName);
+        } else {
+            $address = DB::table('address')->where('name', $cityName)->first();
+            $data['city_id'] = $address->id;
+            $data['province_id'] = $address->pid;
+            Cache::forever($cityName, $data);
+        }
+
+        return $this->success(['city_id' => $data['city_id'], 'province_id' => $data['province_id']]);
+
+
+    }
+
+    /**
      * 获取省id
      *
      * @param $provinces

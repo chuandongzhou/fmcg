@@ -238,6 +238,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
         $router->post('address/province-id', 'AddressController@getProvinceIdByName');
+        $router->get('address/city-detail','AddressController@getCityDetail');
         $router->controller('auth', 'AuthController');
         $router->group(['prefix' => 'coupon'], function ($router) {
             $router->get('user-coupon/{expire?}', 'CouponController@userCoupon');

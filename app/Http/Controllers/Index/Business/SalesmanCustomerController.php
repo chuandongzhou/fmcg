@@ -41,17 +41,11 @@ class SalesmanCustomerController extends Controller
             ->OfSalesman($salesmanId)
             ->OfName($name)
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
-            ->get()->each(function ($customer) {
-                $customer->shop && $customer->shop->setAppends([]);
-                $customer->setAppends(['account']);
-                $customer->business_district_id = $customer->businessAddress->district_id;
-                $customer->business_street_id = $customer->businessAddress->street_id;
-                $customer->business_address_address = $customer->businessAddress->address;
-            });
+            ->paginate();
 
-        $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
+       // $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
-            ['salesmen' => $salesmen, 'customers' => $customers, 'salesmanId' => $salesmanId, 'name' => $name]);
+            ['salesmen' => $salesmen, 'customers' => $customers, 'data' => $request->all()]);
     }
 
     /**
@@ -198,7 +192,6 @@ class SalesmanCustomerController extends Controller
         }
 
 
-
         //拜访时产生的订单和退货单
         /* $allOrders = $visits->pluck('orders')->collapse()->filter(function ($item) {
              return !is_null($item);
@@ -231,14 +224,14 @@ class SalesmanCustomerController extends Controller
         //所有订单商品详情
         $orderGoodsDetail = Goods::whereIn('id', array_unique($goodsIds))->withTrashed()->lists('name', 'id');
 
-        $businessService  = new BusinessService();
+        $businessService = new BusinessService();
 
         //货抵
         $mortgageGoods = $businessService->getOrderMortgageGoods($orders)->groupBy('created_at');
 
 
         //陈列费
-        $displayFees = $businessService ->getOrderDisplayFees($orders);
+        $displayFees = $businessService->getOrderDisplayFees($orders);
 
 
         //客户销售的商品
@@ -261,7 +254,6 @@ class SalesmanCustomerController extends Controller
                 $salesList[$record->goods_id][$record->salesman_visit_id][-1] = ['created_at' => $record->visit->created_at];
             }
         }
-
 
 
         $salesListsData = [];

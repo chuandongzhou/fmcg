@@ -56,7 +56,7 @@
                             <label class="col-sm-2 control-label"   for="end_at">结束日期:</label>
 
                             <div class="col-sm-10 col-md-6">
-                                <input class="form-control datetimepicker" id="end_at" data-format="YYYY-MM-DD" name="end_at" placeholder="请输入结束时间"
+                                <input class="form-control datetimepicker" id="end_at" data-format="YYYY-MM-DD" data-min-date="1" name="end_at" placeholder="请输入结束时间"
                                        type="text">
                             </div>
                         </div>

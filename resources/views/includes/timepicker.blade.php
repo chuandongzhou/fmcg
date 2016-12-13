@@ -13,6 +13,12 @@
         $(function () {
             $('.datetimepicker').each(function (i, obj) {
                 var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD HH:mm:ss';
+                if (obj.data('min-date')) {
+                    var date = new Date();
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var day = date.getDate() +  (parseInt(obj.data('min-date')) -1) ;
+                }
 
                 obj.datetimepicker({
                     icons: {
@@ -28,6 +34,7 @@
                     },
                     locale: 'zh-cn',
                     format: format,
+                    minDate: obj.data('min-date')? new Date(year + '-' + month + '-' + day) : false,
                     widgetPositioning: {
                         horizontal: 'auto',
                         vertical: 'bottom'

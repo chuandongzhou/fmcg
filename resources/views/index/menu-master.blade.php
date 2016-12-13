@@ -24,11 +24,13 @@
                                 <span class="title">店铺信息</span>
                             </a>
                         </li>
-                        <li class="nav-item start {{ path_active(['personal/delivery-area*']) }}">
-                            <a href="{{ url('personal/delivery-area') }}" class="nav-link ">
-                                <span class="title">配送区域</span>
-                            </a>
-                        </li>
+                        @if ($user->type != cons('user.type.retailer'))
+                            <li class="nav-item start {{ path_active(['personal/delivery-area*']) }}">
+                                <a href="{{ url('personal/delivery-area') }}" class="nav-link ">
+                                    <span class="title">配送区域</span>
+                                </a>
+                            </li>
+                        @endif
                         @if ($user->type != cons('user.type.supplier'))
                             <li class="nav-item start {{ path_active(['personal/shipping-address*']) }}">
                                 <a href="{{ url('personal/shipping-address') }}" class="nav-link ">
@@ -136,9 +138,9 @@
                                 </a>
                             </li>
                             {{--<li class="nav-item  {{ path_active('my-goods/batch-create') }}">--}}
-                                {{--<a href="{{ url('my-goods/batch-create') }}" class="nav-link ">--}}
-                                    {{--<span class="title">批量导入</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="{{ url('my-goods/batch-create') }}" class="nav-link ">--}}
+                            {{--<span class="title">批量导入</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                         </ul>
                     </li>
@@ -286,9 +288,9 @@
                         </a>
                         <ul class="sub-menu">
                             {{--<li class="nav-item  {{ path_active('personal/model/*') }}">--}}
-                                {{--<a href="{{ url('personal/model/advert') }}" class="nav-link ">--}}
-                                    {{--<span class="title">首页广告</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="{{ url('personal/model/advert') }}" class="nav-link ">--}}
+                            {{--<span class="title">首页广告</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             <li class="nav-item  {{ path_active('personal/model/model-edit') }}">
                                 <a href="{{ url('personal/model/model-edit') }}" class="nav-link ">

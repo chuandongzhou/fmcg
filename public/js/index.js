@@ -859,11 +859,12 @@ function menuFunc() {
         })
     })
     var bannerHeight = $(".banner-slide .carousel-inner img").height();
-    $('.categories-wrap .menu-down-wrap .menu-down-layer').css('height', bannerHeight + "px");
+    $('#categories-wrap .menu-down-wrap .menu-down-layer').css('height', bannerHeight + "px");
 
     $('.categories-btn>a').mouseenter(function () {
         var bannerHeight = $(".banner-slide .carousel-inner img").height();
-        $('.categories-wrap .categories .menu-wrap').css('height', bannerHeight + "px");
+        $('.categories-wrap .categories .menu-wrap').css('height', "401px");
+        $('#categories-wrap .categories .menu-wrap').css('height', bannerHeight + "px");
     })
 
     //search role begin

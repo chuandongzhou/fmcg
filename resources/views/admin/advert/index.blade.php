@@ -1,7 +1,8 @@
 @extends('admin.master')
 
 @section('right-container')
-    @if($type == 'category')
+
+    @if($type == 'category' || $type == 'left-category')
         <form class="form-horizontal" action="{{ url('admin/advert-category') }}" method="get" autocomplete="off">
             <div class="form-group">
                 <label class="col-sm-2 control-label">区域：</label>

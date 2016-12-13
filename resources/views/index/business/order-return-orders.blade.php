@@ -36,7 +36,7 @@
                            aria-describedby="course-search" value="{{ $data['customer'] or '' }}">
 
                     <button type="submit"
-                            class=" btn btn-blue-lighter search control search-by-get">提交
+                            class=" btn btn-blue-lighter search control search-by-get btn-submit">提交
                     </button>
                 </form>
             </div>
@@ -44,7 +44,7 @@
                 <table class="table-bordered table table-center public-table business-table">
                     <thead>
                     <tr align="center">
-                        <th></th>
+                        <th>选择</th>
                         <th>单号</th>
                         <th>客户名称</th>
                         <th>业务员</th>
@@ -69,7 +69,7 @@
                             <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
                             <td>
 
-                                <a class=" edit"href="{{ url('business/order/' . $order->id) }}">
+                                <a class=" color-blue"href="{{ url('business/order/' . $order->id) }}">
                                     <i class="iconfont icon-iconmingchengpaixu65"></i>查看
                                 </a>
                                 @if($order->status == cons('salesman.order.status.not_pass'))
@@ -79,9 +79,9 @@
                                         <i class="iconfont  icon-tongguo"></i>通过
                                     </a>
                                 @else
-                                    <a class=""
+                                    <a class="orange"
                                        href="{{ url('business/order/browser-export/' . $order->id) }}">
-                                        <i class="iconfont  icon-1"></i>打印</a>
+                                        <i class="iconfont  icon-dayin"></i>打印</a>
                                     {{--@if($order->can_sync)--}}
                                     {{--<button class="btn btn-warning ajax"--}}
                                     {{--data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"--}}

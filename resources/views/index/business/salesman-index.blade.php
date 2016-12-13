@@ -24,7 +24,7 @@
                 <table class="table table-bordered table-center table-middle public-table">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>选择</th>
                         <th>名称</th>
                         <th>账号</th>
                         <th>联系方式</th>

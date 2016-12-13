@@ -20,7 +20,7 @@
                 <input class="enter control datetimepicker" name="end_at"
                        placeholder="结束时间" type="text" data-format="YYYY-MM-DD"
                        value="{{ $search['end_at'] or '' }}">
-                <select name="delivery_man_id" class="control">
+                <select name="delivery_man_id" class="control ajax-select">
                     <option value="">所有配送人员</option>
                     @foreach($deliveryMen as $man)
                         <option value="{{ $man->id  }}"{{ isset($search['delivery_man_id'])&&$man->id==$search['delivery_man_id'] ? 'selected' : ''}}>{{ $man->name }}</option>
@@ -90,6 +90,7 @@
     <script src="{{ asset('js/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
+            formSubmitByGet();
             $('.datetimepicker').each(function (i, obj) {
                 var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD';
                 var date = new Date();

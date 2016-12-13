@@ -21,7 +21,7 @@
                         <table class="table table-bordered table-center public-table">
                             <thead>
                             <tr>
-                                <th></th>
+                                <th>选择</th>
                                 <th>商品名称</th>
                                 <th>商品单位</th>
                                 <th>状态</th>

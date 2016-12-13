@@ -215,6 +215,16 @@ class GoodsService
                             return $advert['province_id'] == $data['province_id'];
                         })->take(5);
                     }
+
+                    $category->leftAdverts = $category->leftAdverts->filter(function ($leftAdvert) use ($data) {
+                        if (empty($leftAdvert['province_id'])) {
+                            return true;
+                        }
+                        if ($data['province_id'] && $data['city_id']) {
+                            return $leftAdvert['province_id'] == $data['province_id'] && $leftAdvert['city_id'] == $data['city_id'];
+                        }
+                        return $leftAdvert['province_id'] == $data['province_id'];
+                    })->take(1);
                 });
 
             $displayCount = $homeColumnGoodsConf['count']; //显示条数

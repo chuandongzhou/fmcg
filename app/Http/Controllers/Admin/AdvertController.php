@@ -68,7 +68,9 @@ abstract class AdvertController extends Controller
         if ($this->type == 'left-category') {
             $leftCategoryAdverts = Advert::where([
                 'type' => $attributes['type'],
-                'category_id' => $attributes['category_id']
+                'category_id' => $attributes['category_id'],
+                'province_id'=>$attributes['province_id'],
+                'city_id'=>$attributes['city_id']
             ])->lists('id')->toArray();
             if (!empty($leftCategoryAdverts)) {
                 Advert::destroy($leftCategoryAdverts);

@@ -6,7 +6,7 @@
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
           action="{{ url('admin/advert-' . $type . '/' . $advert->id) }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-then="referer" autocomplete="off">
-        @if($type == 'category')
+        @if($type == 'category'|| $type == 'left-category')
             <div class="form-group">
                 <label class="col-sm-2 control-label">地址</label>
 
