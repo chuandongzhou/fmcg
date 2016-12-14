@@ -6,6 +6,7 @@ namespace WeiHeng\WechatPay;
 use App\Models\Order;
 use App\Models\SystemTradeInfo;
 use App\Models\WechatPayCode;
+use App\Models\WechatPayUrl;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 
@@ -27,9 +28,9 @@ class WechatPay
      */
     public function created($options, $orderId)
     {
-        $wechatPayCode = WechatPayCode::create([
+        $wechatPayCode = WechatPayUrl::create([
             'order_id' => $orderId,
-            'deal_code' => $options['deal_code'],
+            'code_url' => $options['codeUrl'],
             'created_at' => Carbon::now()
         ]);
         return $wechatPayCode->exists;
@@ -45,8 +46,6 @@ class WechatPay
     public function getQrCode(Order $order)
     {
         $options = $this->getPayOptions($order);
-        dd($options);
-
         $url = $this->config['url'];
         $client = new Client();
         $res = $client->post($url, ['form_params' => $options]);

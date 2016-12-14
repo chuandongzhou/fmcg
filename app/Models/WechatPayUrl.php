@@ -3,15 +3,17 @@
 namespace App\Models;
 
 
-class WechatPayCode extends Model
+class WechatPayUrl extends Model
 {
-    protected $table = 'wechat_pay_code';
+    protected $table = 'wechat_pay_url';
 
     public $timestamps = false;
 
     protected $fillable = [
         'order_id',
-        'deal_code',
+        'code_url',
         'created_at'
     ];
+
+    protected $dates = ['created_at'];
 }

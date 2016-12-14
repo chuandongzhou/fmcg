@@ -186,9 +186,9 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function wechatPayCode()
+    public function wechatPayUrl()
     {
-        return $this->hasOne('App\Models\WechatPayCode');
+        return $this->hasOne('App\Models\WechatPayUrl');
     }
 
     /**

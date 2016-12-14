@@ -25,21 +25,21 @@ class WechatPayController extends Controller
      */
     public function getQrCode($orderId)
     {
-        $order = Order::with('wechatPayCode')->find($orderId);
+        $order = Order::with('wechatPayUrl')->find($orderId);
         if (Gate::denies('validate-payment-orders', $order)) {
             return $this->error('订单不存在或已支付');
         }
 
-        if (!is_null($wechatPayCode = $order->wechatPayCode)) {
+        if (!is_null($wechatPayUrl = $order->wechatPayUrl)) {
             //有二维码时直接返回
 
             $nowTime = Carbon::now();
-            if ($nowTime->diffInHours($wechatPayCode->created_at) >= 2) {
+            if ($nowTime->diffInHours($wechatPayUrl->created_at) >= 2) {
                 return $this->error('二维码已过期,请选择其它渠道');
             } else {
                 return $this->success([
-                    'deal_code' => $wechatPayCode->deal_code,
-                    'created_at' => $wechatPayCode->created_at
+                    'code_url' => $wechatPayUrl->code_url,
+                    'created_at' => (string)$wechatPayUrl->created_at
                 ]);
             }
         }
@@ -56,8 +56,8 @@ class WechatPayController extends Controller
         }
 
         return $wechatPay->created($result, $orderId) ? $this->success([
-            'deal_code' => $result['deal_code'],
-            'created_at' => Carbon::now()
+            'code_url' => $result['codeUrl'],
+            'created_at' => (string)Carbon::now()
         ]) : $this->error('创建二维码时出现问题');
     }
 
