@@ -116,7 +116,9 @@ class WechatPay
             'orderAmount' => (int)bcmul($order->price, 100),
             'curCode' => 'CNY',
             'orderTime' => str_replace(['-', ':', ' '], '', $order->created_at),
-            'orderTimestamp' => Carbon::now()->format('YmdHis')
+            'orderTimestamp' => Carbon::now()->format('YmdHis'),
+            'productName' => $order->shop_name,
+            'productDesc' => '订单号：' . $order->id . ' 金额：' . $order->price
         ];
         $sign = $this->getSign($options);
         return array_add($options, 'sign', $sign);

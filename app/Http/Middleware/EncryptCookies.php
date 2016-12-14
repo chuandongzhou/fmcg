@@ -45,8 +45,9 @@ class EncryptCookies extends BaseEncrypter
                     //超出30分钟未操作退出登录
                     return redirect(url('auth/logout'));
                 }
+                $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
             }
-            $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
+
         }
 
         $response = $next($request);

@@ -25,8 +25,8 @@ class WechatPayController extends Controller
      */
     public function getQrCode($orderId)
     {
-        $order = Order::with('wechatPayUrl')->find($orderId);
-        if (Gate::denies('validate-payment-orders', $order)) {
+        $order = Order::with('wechatPayUrl', 'shop')->find($orderId);
+        if (is_null($order) || !$order->can_payment) {
             return $this->error('订单不存在或已支付');
         }
 

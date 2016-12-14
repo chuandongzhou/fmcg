@@ -245,6 +245,7 @@ class DeliveryController extends Controller
         $deliveryId = delivery_auth()->id();
         //判断该订单是否存在
         $order = Order::ofDeliveryMan(delivery_auth()->id())->find(intval($request->input('order_id')));
+
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }

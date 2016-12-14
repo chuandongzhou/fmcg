@@ -433,7 +433,7 @@ class Order extends Model
     public function getCanChangePriceAttribute()
     {
         $orderConf = cons('order');
-        return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'];
+        return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'] && is_null($this->wechatPayUrl);
     }
 
     /**
