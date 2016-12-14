@@ -188,7 +188,7 @@ class Order extends Model
      */
     public function wechatPayCode()
     {
-        return $this->hasOne('App\Models\WechatPayController');
+        return $this->hasOne('App\Models\WechatPayCode');
     }
 
     /**

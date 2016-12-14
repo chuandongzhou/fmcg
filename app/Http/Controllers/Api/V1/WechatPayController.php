@@ -74,7 +74,8 @@ class WechatPayController extends Controller
 
         $wechatPay = app('wechat.pay');
         if (!$wechatPay->verifySign($data)) {
-            info('微信支付回调错误' . $data);
+            info('微信支付回调错误：');
+            info($data);
             return $this->success($wechatPay->buildResponse(false));
         }
 

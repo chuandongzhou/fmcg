@@ -45,6 +45,7 @@ class WechatPay
     public function getQrCode(Order $order)
     {
         $options = $this->getPayOptions($order);
+        dd($options);
 
         $url = $this->config['url'];
         $client = new Client();
@@ -109,7 +110,7 @@ class WechatPay
         $options = [
             'service' => 'getCodeUrl',
             'merchantNo' => $this->config['merchantNo'],
-            'bgUrl' => url('api/v1/wechat-pay/result'),
+            'bgUrl' => url('api/v1/wechat-pay/pay-result'),
             'version' => 'V1.0',
             'payChannelCode' => 'CX_WX',
             'orderNo' => $order->id,
@@ -144,7 +145,7 @@ class WechatPay
      */
     public function verifySign($options = [])
     {
-        return strtoupper($options['sign']) === $this->getSign($options);
+        return isset($options['sign']) && strtoupper($options['sign']) === $this->getSign($options);
     }
 
 
