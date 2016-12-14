@@ -15,7 +15,7 @@ class RegisterRequest extends Request
     {
         return [
             'user_name' => 'required|alpha_num|between:4,16|unique:user',
-            'password' => 'required|between:6,18|confirmed',
+            'password' => 'required|between:6,18|alpha_num|confirmed',
             'type' => 'required|in:1,2,3',
             'logo' => 'sometimes|required',
             'name' => 'required|unique:shop',

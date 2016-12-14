@@ -107,8 +107,7 @@ a {
 .pd-right-clear {
   padding-right: 0 !important;
 }
-
-@mixin left-right-padding {
+@mixin left-right-padding{
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -117,14 +116,7 @@ a {
   margin: 0 !important;
 }
 
-.btn-cancel {
-  color: $body-bg;
-  background-color: $brand-cancel;
-  border-color: $brand-cancel;
-  &:hover {
-    color: $body-bg;
-  }
-}
+
 
 .red {
   color: $brand-danger !important;
@@ -166,48 +158,44 @@ a {
     background-color: $body-bg;
   }
 }
-
-.page-content {
+.page-content{
   .btn {
     border-radius: 4px !important;
-    padding: 8px 18px;
-    vertical-align: middle;
+    padding:8px 18px;
+    vertical-align:middle;
   }
 }
-
-.page-header {
+.page-header{
   &.navbar {
-    .page-logo {
-      width: 160px !important;
+    .page-logo{
+      width:160px!important;
     }
   }
 }
-
 @media (min-width: 992px) {
-  .page-sidebar {
-    width: 160px !important;
+  .page-sidebar{
+    width:160px!important;
   }
-  .page-sidebar-menu {
+  .page-sidebar-menu{
     &.page-sidebar-menu-hover-submenu {
       li {
-        &:hover {
-          .sub-menu {
-            margin-left: 160px !important;
+        &:hover{
+          .sub-menu{
+            margin-left:160px!important;
           }
         }
-        .sub-menu {
-          width: 160px !important;
+        .sub-menu{
+          width:160px!important;
         }
       }
     }
   }
   .page-content-wrapper {
-    .page-content {
-      margin-left: 160px !important;
+    .page-content{
+      margin-left:160px!important;
     }
   }
 }
-
 @mixin btn-hover-color($color) {
   color: $color;
   &:hover, &:focus {
@@ -230,6 +218,15 @@ a {
 .btn-red {
   @include btn-hover-color($body-bg);
   background-color: #ff0000;
+  border-radius:4px!important;
+}
+
+.btn-cancel {
+  color: $body-bg;
+  background-color: $brand-cancel;
+  border-color: $brand-cancel;
+  @include btn-hover-color($body-bg);
+  border-radius:4px!important;
 }
 
 .btn-border-blue {
@@ -255,8 +252,7 @@ a {
   display: inline-block;
   padding: 0 5px;
 }
-
-.print {
+.print{
   @include btn-hover-color($theme-orange);
   display: inline-block;
   padding: 0 5px;
@@ -286,7 +282,7 @@ a {
     vertical-align: middle;
     margin: 15px 0 0 20px;
     img {
-      @include size(70px, 51px);
+      @include size(70px,51px);
     }
   }
   .items-item {
@@ -315,17 +311,17 @@ a {
   @include min-width;
   margin-top: 20px;
   padding: 20px 0;
-  .popover {
+  .popover{
     .popover-content {
       font-size: 13px;
       background-color: $body-bg;
-      .form-control {
+      .form-control{
         outline: none;
       }
-      .btn-submit {
-        border-radius: 0 !important;
-        width: auto !important;
-        padding-bottom: 7px;
+      .btn-submit{
+        border-radius: 0!important;
+        width:auto!important;
+        padding-bottom:7px;
       }
     }
   }
@@ -417,7 +413,7 @@ a {
         min-width: 340px;
         textarea {
           display: block;
-          @include size(100%, 130px);
+          @include size(100%,130px);
           resize: none;
           border: 1px solid #ddd;
         }
@@ -431,6 +427,7 @@ a {
     position: static;
   }
 }
+
 
 .page-footer {
   position: static !important;
@@ -553,7 +550,7 @@ a {
         top: 0;
         right: 0;
         img {
-          @include size(54px, 49px);
+          @include size(54px,49px);
         }
       }
       .login-left-img {
@@ -695,7 +692,7 @@ a {
           img {
             border-radius: 50%;
             padding: 5px;
-            @include size(100%, auto);
+            @include size(100%,auto);
           }
         }
         .item-name {
@@ -829,7 +826,7 @@ a {
     overflow: hidden;
     zoom: 1;
     position: relative;
-    @include size(100%, 350px);
+    @include size(100%,350px);
   }
 }
 
@@ -883,15 +880,15 @@ a {
   }
   .ui-stepInfo-wrap {
     margin: 0 auto;
-    width: 90%;
+    width:90%;
     .ui-stepInfo {
       position: relative;
       float: left;
       padding-top: 36px;
       text-align: center;
-      &:first-of-type {
-        .ui-stepSequence {
-          background-color: #F25000 !important;
+      &:first-of-type{
+        .ui-stepSequence{
+          background-color: #F25000!important;
         }
       }
       .ui-stepSequence {
@@ -908,21 +905,21 @@ a {
         color: $gray;
         z-index: 103;
       }
-      &:first-of-type {
-        .ui-stepTime {
-          margin-left: 16%;
+      &:first-of-type{
+        .ui-stepTime{
+          margin-left:16%;
         }
       }
-      &:last-of-type {
-        .ui-stepTime {
-          margin-right: 16%;
+      &:last-of-type{
+        .ui-stepTime{
+          margin-right:16%;
         }
       }
       .judge-stepSequence-pre-change {
         cursor: pointer;
-        //        &:hover {
-        //          box-shadow: 0 0 3px 1px $theme-orange;
-        //        }
+//        &:hover {
+//          box-shadow: 0 0 3px 1px $theme-orange;
+//        }
       }
       .judge-stepSequence-hind-change {
         cursor: pointer;
@@ -993,7 +990,7 @@ a {
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 10px;
-  & > a {
+  &>a{
     @include btn-hover-color($gray);
   }
   .second-level {
@@ -1018,7 +1015,7 @@ a {
   .logo-icon {
     padding-top: 8px;
   }
-  .container {
+  .container{
     @include left-right-padding;
   }
 }
@@ -1098,7 +1095,7 @@ a {
     position: absolute;
     z-index: 99;
     top: 80px;
-    @include size(450px, 0);
+    @include size(450px,0);
     overflow: hidden;
     background-color: $body-bg;
     transition: height 0.5s;
@@ -1196,7 +1193,7 @@ a {
   position: relative;
   img {
     position: absolute;
-    @include size(100%, 120px);
+    @include size(100%,120px);
   }
   .shop-name {
     height: 120px;
@@ -1271,7 +1268,7 @@ a {
         padding: 0;
         .list-name {
           padding: 0 30px;
-          @include size(100%, 40px);
+          @include size(100%,40px);
           line-height: 40px;
         }
       }
@@ -1423,7 +1420,7 @@ a {
       text-decoration: none;
     }
     .commodity-name {
-      @include size(100%, 20px);
+      @include size(100%,20px);
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -1497,7 +1494,7 @@ a {
         font-size: 12px;
         .item-child {
           display: inline-block;
-          margin-right: 10px;
+          margin-right:10px;
         }
       }
       .store-presentation {
@@ -1833,7 +1830,7 @@ a {
     text-decoration: none;
     outline: none;
     img {
-      @include size(100%, 100px);
+      @include size(100%,100px);
     }
   }
 }
@@ -2402,10 +2399,10 @@ a {
 
   .address-wrap {
     padding: 0 0 20px 30px;
-    table {
-      tr {
-        td, th {
-          border: none !important;
+    table{
+      tr{
+        td,th{
+          border:none!important;
         }
       }
     }
@@ -2642,8 +2639,8 @@ a {
   @at-root .save {
     margin: 20px 0 20px 0;
     .btn {
-      min-width: 100px;
-      height: 40px;
+      min-width:100px;
+      height:40px;
       border-radius: 4px !important;
     }
   }
@@ -2784,7 +2781,7 @@ table {
       color: $body-bg;
       display: inline-block;
       margin-left: 5px;
-      font-weight: 600 !important;
+      font-weight: 600!important;
     }
   }
   .btn-primary {
@@ -2801,7 +2798,7 @@ table {
       z-index: 0 !important;
     }
     .control {
-      height: 40px;
+      height:40px;
       max-width: 180px;
       border: 1px solid $gray-lighter !important;
       outline: none;
@@ -2932,7 +2929,7 @@ table {
             @include square(60px);
           }
         }
-        td.bordered {
+        td.bordered{
           border-left: 1px solid $table-border-color;
           border-right: 1px solid $table-border-color;
         }
@@ -2968,6 +2965,7 @@ table {
     padding-right: 15px;
   }
 }
+
 
 .cart-img {
   @include square(60px);
@@ -3357,14 +3355,14 @@ table {
         }
       }
     }
-    .order-msg-table {
-      tr {
-        td {
+    .order-msg-table{
+      tr{
+        td{
           &.operate {
-            p {
-              margin: 10px 0;
-              .btn {
-                padding: 3px 15px;
+            p{
+              margin:10px 0;
+              .btn{
+                padding:3px 15px;
               }
             }
           }
@@ -3501,13 +3499,13 @@ table {
             position: relative;
             display: inline-block;
             vertical-align: middle;
-            margin-left: 10px;
+            margin-left:10px;
             @include size(110px, 30px);
             .btn {
               position: absolute;
-              top: 0;
-              margin: 0;
-              padding: 0;
+              top:0;
+              margin:0;
+              padding:0;
               @include size(55px, 30px);
               border-radius: 0 !important;
               line-height: 16px;
@@ -3520,13 +3518,13 @@ table {
               }
             }
             .yes {
-              left: 0;
+              left:0;
               border-top-left-radius: 10px !important;
               border-bottom-left-radius: 10px !important;
               border-right: 0;
             }
             .no {
-              right: 0;
+              right:0;
               border-top-right-radius: 10px !important;
               border-bottom-right-radius: 10px !important;
               border-left: 0;
@@ -3714,33 +3712,33 @@ table {
         color: $word-gray;
         text-decoration: none;
         font-size: 12px;
-        &.login {
-          padding: 10px;
+        &.login{
+          padding:10px;
         }
         &.name-panel {
           position: relative;
           display: inline-block;
           &:hover {
             background-color: $body-bg;
-            .user-name {
-              border: 1px solid $gray-plain-light;
-              border-bottom: none;
+            .user-name{
+              border:1px solid $gray-plain-light;
+              border-bottom:none;
             }
             .exit {
               display: block;
             }
           }
-          .user-name {
+          .user-name{
             display: inline-block;
-            width: 100%;
+            width:100%;
             padding: 10px;
-            border: 1px solid $theme-gray;
+            border:1px solid $theme-gray;
           }
           .exit {
             position: absolute;
             cursor: pointer;
             top: 35px;
-            left: 0;
+            left:0;
             width: 100%;
             padding: 10px 5px 10px 5px;
             z-index: 9999;
@@ -3749,8 +3747,8 @@ table {
             display: none;
             font-size: 14px;
             background-color: $body-bg;
-            border: 1px solid $gray-plain-light;
-            border-top: none;
+            border:1px solid $gray-plain-light;
+            border-top:none;
           }
         }
         &:hover {
@@ -3840,7 +3838,7 @@ table {
       position: absolute;
       top: 42px;
       right: 0;
-      @include size(310px, 0);
+      @include size(310px,0);
       z-index: 9999;
       overflow: hidden;
       transition: height 1s ease 0s;
@@ -3848,7 +3846,7 @@ table {
       .upcoming-events {
         background-color: $body-bg;
         padding: 15px;
-        height: 100%;
+        height:100%;
         li {
           width: 100%;
           overflow: hidden;
@@ -3900,7 +3898,7 @@ table {
         .selected {
           span {
             display: inline-block;
-            @include size(80%, 100%);
+            @include size(80%,100%);
           }
         }
         a {
@@ -3947,7 +3945,7 @@ table {
       .input-group-btn {
         background-color: $theme-orange;
         .search-btn {
-          @include size(100%, 40px);
+          @include size(100%,40px);
           background-color: $theme-orange;
           border-color: $theme-orange;
           border-top-right-radius: 4px;
@@ -3989,7 +3987,7 @@ table {
   margin-top: 10px;
   position: relative;
   z-index: 99;
-  @include size(140px, 40px);
+  @include size(140px,40px);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   text-align: center;
@@ -4006,7 +4004,7 @@ table {
   a {
     color: $gray-base;
     display: inline-block;
-    @include size(115px, 40px);
+    @include size(115px,40px);
     line-height: 40px;
     text-align: center;
     text-decoration: none;
@@ -4035,7 +4033,7 @@ table {
       .one-title {
         display: inline-block;
         padding: 10px 0 10px 5px;
-        @include size(80%, 100%);
+        @include size(80%,100%);
         text-align: center;
         margin-bottom: -1px;
         color: #666666;
@@ -4065,7 +4063,7 @@ table {
     border: 1px solid $gray-plain-light;
     margin: -1px;
     padding-left: 10px;
-    @include size(100%, 401px);
+    @include size(100%,401px);
     overflow-y: auto;
     .item {
       padding: 0 10px 5px 0;
@@ -4141,7 +4139,7 @@ table {
         padding: 0;
         img {
           @include size(100%, auto);
-          max-height: 450px
+          max-height:450px
         }
       }
     }
@@ -4209,7 +4207,7 @@ table {
     background-color: $theme-gray;
     overflow: hidden;
     img {
-      @include size(100%, 220px);
+      @include size(100%,220px);
     }
     .secondary-menu {
       @include clearfix;
@@ -4345,9 +4343,9 @@ table {
     height: 40px;
     line-height: 40px;
     margin-top: 30px;
-    a {
+    a{
       display: inline-block;
-      padding: 0 5px;
+      padding:0 5px;
     }
     .under {
       color: $theme-orange;
@@ -4485,6 +4483,33 @@ table {
 .pay-way {
   img {
     @include size(100px, 35px);
+  }
+  .title{
+    .item{
+      display: inline-block;
+      vertical-align:middle;
+      margin-right:10px;
+      .prompt{
+        color:$gray-lighter;
+      }
+    }
+    margin:10px 0 30px 20px;
+    font-size: 15px;
+  }
+  .balance-panel{
+    display: inline-block;
+    vertical-align:middle;
+    margin-left:20px;
+  }
+}
+.refund-wrap{
+  color:$gray-base;
+  .title{
+    padding:10px 0;
+  }
+  .refund-content{
+    padding:0 15px;
+    margin-bottom:15px;
   }
 }
 
@@ -4926,7 +4951,7 @@ table {
 
 /*==============baidu map css start=================*/
 #map, #map-modal {
-  @include size(100%, 400px);
+  @include size(100%,400px);
   overflow: hidden;
   margin: 0;
 }
@@ -4936,12 +4961,12 @@ table {
   overflow: hidden;
   zoom: 1;
   position: relative;
-  @include size(100%, 200px);
+  @include size(100%,200px);
 }
 
 /*==============baidu map css end=================*/
 .msg-channel {
-  @include size(300px, 150px);
+  @include size(300px,150px);
   background-color: $gray-plain;
   border-radius: 8px !important;
   position: fixed;
@@ -4975,7 +5000,7 @@ table {
   .check {
     display: inline-block;
     padding-top: 35px;
-    @include size(100%, 110px);
+    @include size(100%,110px);
   }
 }
 
@@ -5121,7 +5146,7 @@ table {
   .license-img {
     margin: 45px 0;
     img {
-      @include size(220px, 300px);
+      @include size(220px,300px);
     }
   }
   .img-bg01 {
@@ -5135,12 +5160,12 @@ table {
 .user-list-wrap {
   background-color: $body-bg;
   padding: 25px 0 0 50px;
-  height: 800px;
+  height:800px;
   #wkit-content {
-    .wkit-chat-wrap {
-      background-color: $theme-gray !important;
-      .wkit-soft-input {
-        background-color: $theme-gray !important;
+    .wkit-chat-wrap{
+      background-color:$theme-gray!important;
+      .wkit-soft-input{
+        background-color:$theme-gray!important;
       }
       .wkit-msg-input {
         textarea {
@@ -5151,10 +5176,10 @@ table {
   }
   .user-list-panel {
     background-color: $gray;
-    @include size(200px, 500px);
+    @include size(200px,500px);
     overflow-y: auto;
-    border-top-left-radius: 4px !important;
-    border-bottom-left-radius: 4px !important;
+    border-top-left-radius: 4px!important;
+    border-bottom-left-radius: 4px!important;
     ul {
       li {
         padding: 15px 10px;
@@ -5169,12 +5194,12 @@ table {
           margin-left: 45px;
           .last-msg-time {
             font-size: 11px;
-            color: $gray-lighter;
+            color:$gray-lighter;
           }
         }
         .avatar {
-          border-radius: 10% !important;
-          -webkit-border-radius: 10% !important;
+          border-radius: 10%!important;
+          -webkit-border-radius: 10%!important;
           @include square(40px);
           float: left;
         }
@@ -5184,7 +5209,7 @@ table {
           font-size: 12px;
           font-weight: bolder;
           width: 100%;
-          color: $gray-plain-light;
+          color:$gray-plain-light;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
@@ -5197,7 +5222,7 @@ table {
     }
   }
   #msgWrap {
-    @include size(700px, 500px);
+    @include size(700px,500px);
   }
 }
 
@@ -5205,7 +5230,7 @@ table {
   position: absolute;
   right: 0;
   bottom: 0;
-  @include size(700px, 470px);
+  @include size(700px,470px);
 }
 
 /*==============message end=================*/
@@ -5666,7 +5691,7 @@ table {
       border-radius: 4px !important;
       color: $body-bg;
       background-color: $word-gray;
-      margin-left: 10px;
+      margin-left:10px;
     }
 
   }
@@ -5786,7 +5811,7 @@ table {
     position: relative;
     overflow: hidden;
     img {
-      @include size(auto, 100%);
+      @include size(auto,100%);
       left: 50%;
       position: relative;
       -webkit-transform: translateX(-50%);
@@ -5857,7 +5882,7 @@ table {
 
 .btn-submit {
   border-radius: 4px !important;
-  width: 100px;
+  min-width: 100px;
 }
 
 /*==============index templet end=================*/
@@ -5888,8 +5913,7 @@ table {
     }
   }
 }
-
-.table-th-color {
+.table-th-color{
   thead {
     th, td {
       background-color: $theme-gray;
@@ -5941,9 +5965,9 @@ table {
     .panel {
       border: 3px solid $gray-plain-light;
       border-radius: 4px !important;
-      &:hover {
-        p {
-          .operate {
+      &:hover{
+        p{
+          .operate{
             display: inline-block;
           }
         }
@@ -5952,7 +5976,7 @@ table {
         padding: 10px;
         color: $word-gray;
         margin: 0;
-        .operate {
+        .operate{
           display: none;
         }
         .edit {
@@ -5992,8 +6016,8 @@ table {
     }
   }
   @media (min-width: 1500px) {
-    .item {
-      width: 25% !important;
+    .item{
+      width:25%!important;
     }
   }
 }
@@ -6026,13 +6050,13 @@ table {
       }
     }
   }
-  table {
-    tr {
-      td {
-        &.operating {
-          a {
+  table{
+    tr{
+      td{
+        &.operating{
+          a{
             display: inline-block;
-            padding: 0 5px;
+            padding:0 5px;
           }
         }
       }
@@ -6071,8 +6095,8 @@ table {
       }
     }
   }
-  .deliver-number {
-    color: $backstage-blue;
+  .deliver-number{
+    color:$backstage-blue;
   }
 }
 
@@ -6148,7 +6172,7 @@ table {
 }
 
 .salesman-table-wrap {
-  @include size(800px, 450px);
+  @include size(800px,450px);
   overflow-y: auto;
 }
 
@@ -6181,17 +6205,17 @@ table {
 }
 
 .business-detail {
-  .commodity-num {
+  .commodity-num{
     display: inline-block;
   }
-  .enter-num-panel {
+  .enter-num-panel{
     display: none;;
     position: relative;
-    .prompt {
-      color: $gray-lighter;
-      position: absolute;
-      width: 100%;
-      left: 0;
+    .prompt{
+      color:$gray-lighter;
+      position:absolute;
+      width:100%;
+      left:0;
       background-color: $body-bg;
     }
   }
@@ -6213,8 +6237,8 @@ table {
       right: 10px;
       .remove {
         display: none;
-        .red {
-          background-color: $body-bg;
+        .red{
+          background-color:$body-bg;
         }
       }
     }

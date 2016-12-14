@@ -1,6 +1,6 @@
 @section('body')
     <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="noticeModalLabel"
-         aria-hidden="true">
+         aria-hidden="true" style="top:25%">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header choice-header">

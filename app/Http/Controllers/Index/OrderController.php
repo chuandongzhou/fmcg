@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Maatwebsite\Excel\Facades\Excel;
@@ -355,10 +356,11 @@ class OrderController extends Controller
 
         //时间
         if (isset($search['start_at'])) {
-            $query->where('created_at', '>=', $search['start_at']);
+
+            $query->where('created_at', '>=', (new Carbon($search['start_at']))->startOfDay());
         }
         if (isset($search['end_at'])) {
-            $query->where('created_at', '<=', $search['end_at']);
+            $query->where('created_at', '<=', (new Carbon($search['end_at']))->endOfDay());
         }
         //商品名
         if (!empty($search['goods_name'])) {

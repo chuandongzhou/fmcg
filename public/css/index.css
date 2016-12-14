@@ -114,16 +114,6 @@ a:hover {
   margin: 0 !important;
 }
 
-.btn-cancel {
-  color: #fff;
-  background-color: #b4b4b4;
-  border-color: #b4b4b4;
-}
-
-.btn-cancel:hover {
-  color: #fff;
-}
-
 .red {
   color: #fe462f !important;
 }
@@ -215,10 +205,24 @@ a:hover {
 .btn-red {
   color: #fff;
   background-color: #ff0000;
+  border-radius: 4px !important;
 }
 
 .btn-red:hover,
 .btn-red:focus {
+  color: #fff;
+}
+
+.btn-cancel {
+  color: #fff;
+  background-color: #b4b4b4;
+  border-color: #b4b4b4;
+  color: #fff;
+  border-radius: 4px !important;
+}
+
+.btn-cancel:hover,
+.btn-cancel:focus {
   color: #fff;
 }
 
@@ -5176,6 +5180,40 @@ table .product-panel .promotions {
   height: 35px;
 }
 
+.pay-way .title {
+  margin: 10px 0 30px 20px;
+  font-size: 15px;
+}
+
+.pay-way .title .item {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.pay-way .title .item .prompt {
+  color: #b4b4b4;
+}
+
+.pay-way .balance-panel {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 20px;
+}
+
+.refund-wrap {
+  color: #000;
+}
+
+.refund-wrap .title {
+  padding: 10px 0;
+}
+
+.refund-wrap .refund-content {
+  padding: 0 15px;
+  margin-bottom: 15px;
+}
+
 .table-list-row {
   margin-top: 40px;
 }
@@ -6772,7 +6810,7 @@ table .product-panel .promotions {
 
 .btn-submit {
   border-radius: 4px !important;
-  width: 100px;
+  min-width: 100px;
 }
 
 /*==============index templet end=================*/

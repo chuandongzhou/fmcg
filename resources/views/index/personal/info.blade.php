@@ -54,13 +54,16 @@
                                             <span>{{ $shop->contact_info }}</span>
                                         </li>
                                     </ul>
-                                    <ul>
-                                        <i class="icon iconfont icon-peisong"></i>
-                                        <li class="address-panel-item">
-                                            <span class="panel-name">最低配送额</span>
-                                            <span>¥600</span>
-                                        </li>
-                                    </ul>
+                                    @if($shop->user->type!=cons('user.type.retailer'))
+                                        <ul>
+                                            <i class="icon iconfont icon-peisong"></i>
+                                            <li class="address-panel-item">
+                                                <span class="panel-name">最低配送额</span>
+                                                <span>￥600</span>
+                                            </li>
+                                        </ul>
+                                    @endif
+
 
                                     <ul>
                                         <i class="icon iconfont icon-dizhi"></i>

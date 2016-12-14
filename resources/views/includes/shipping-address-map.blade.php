@@ -22,7 +22,7 @@
 
                 <div class="modal-body">
                     <div class="shipping-address-info">
-                        <div class="model-management-item"><span class="prompt">收货地址</span> : <span
+                        <div class="model-management-item"><span class="prompt addressName">收货地址</span> : <span
                                     class="address-of-map"></span></div>
                         <div class="model-management-item"><span class="prompt">联系人</span> : <span
                                     class="consigner-of-map"></span></div>
@@ -44,15 +44,20 @@
             var shippingAddressMapModal = $('#shippingAddressMapModal');
             shippingAddressMapModal.on('shown.bs.modal', function (e) {
                 var mapParent = $(e.relatedTarget),
-                    mapXLng = mapParent.data('xLng') || 0,
-                    mapYLat = mapParent.data('yLat') || 0,
-                    mapAddress = mapParent.data('address') || '',
-                    consigner = mapParent.data('consigner') || '',
-                    phone = mapParent.data('phone') || '';
+                        mapXLng = mapParent.data('xLng') || 0,
+                        mapYLat = mapParent.data('yLat') || 0,
+                        mapAddress = mapParent.data('address') || '',
+                        consigner = mapParent.data('consigner') || '',
+                        phone = mapParent.data('phone') || '';
                 $('.address-of-map').html(mapAddress);
                 $('.consigner-of-map').html(consigner);
                 $('.phone-of-map').html(phone);
                 getShopAddressMap(mapXLng, mapYLat);
+                if (mapParent.data('name') && mapParent.data('name') == 'pick_up') {
+
+                    $('.modal-title span').html('商家信息');
+                    $('.addressName').html('商家地址');
+                }
             });
         })
     </script>

@@ -23,10 +23,10 @@
                 <div class="col-sm-12 enter-item">
                     <input class="enter datetimepicker" name="start_at"
                            placeholder="{{ empty($search['start_at'])? '开始时间' : $search['start_at']}}" type="text"
-                           value="{{ $search['start_at'] or '' }}">至
+                           value="{{ $search['start_at'] or '' }}" data-format="YYYY-MM-DD">至
                     <input class="enter datetimepicker" name="end_at"
                            placeholder="{{ empty($search['end_at']) ? '结束时间' : $search['end_at']}}" type="text"
-                           value="{{ $search['end_at'] or '' }}">
+                           value="{{ $search['end_at'] or '' }}" data-format="YYYY-MM-DD">
                     <select class="enter" name="pay_type">
                         <option value="">全部方式</option>
                         @foreach($pay_type as $key => $value)

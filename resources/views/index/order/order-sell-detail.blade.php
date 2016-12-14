@@ -88,7 +88,14 @@
                                     <td>{{ $order['payment_type'] }}
                                         {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
                                     </td>
-                                    <td><span class="orange">{{ $order['status_name'] }}</span></td>
+                                    <td><span class="orange">{{ $order['status_name'] }}</span>
+                                        @if($order['pay_status']==cons('order.pay_status.refund_success'))
+                                            <a class="iconfont icon-tixing pull-right" title=""
+                                               data-container="body" data-toggle="popover" data-placement="bottom"
+                                               data-content="退款原因:（{{ $order->orderRefund->reason }}）">
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td><span>{{ $order->type_name }}</span></td>
                                     <td width="15%">{{ !empty($order['remark'])?$order['remark']:'--' }}</td>
 
@@ -439,11 +446,11 @@
                                     </tr>
                                 @endif
                                 @if($order['status']==cons('order.status.invalid'))
-                                <tr>
-                                    <td>作废订单</td>
-                                    <td>{{ $order['updated_at'] }}</td>
-                                    <td>{{ $order->shop->name }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>作废订单</td>
+                                        <td>{{ $order['updated_at'] }}</td>
+                                        <td>{{ $order->shop->name }}</td>
+                                    </tr>
                                 @endif
 
                             </table>
@@ -464,6 +471,7 @@
         $(function () {
             changePriceByDetailPage();
             deleteNoForm();
+            $("[data-toggle='popover']").popover();
         })
     </script>
 @stop

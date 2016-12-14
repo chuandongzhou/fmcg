@@ -28,7 +28,8 @@
                     <div class="panel-body">
                         <div class="title">
                             <div>
-                                恭喜你注册成功,您的账号<span class="title-username">{{ $user_name }}</span>,为了防止账号被盗请妥善保管好账号密码。
+                                <span class="title-username">恭喜你注册成功</span>,您的账号<span
+                                        class="title-username">{{ $user_name }}</span>正在审核中,为了防止账号被盗请妥善保管好账号密码，后台审核通过后会以短信的方式通知您，请注意查收短信。
                             </div>
                             <div class="go-login">
                                 <span class="go-time" id="jumTo">3</span>秒后跳转至首页,<a
@@ -48,6 +49,7 @@
     <script type="text/javascript">
         $(function () {
             var t;
+
             function delayURL() {
                 var delay = $(".go-time").html();
                 if (delay > 0) {
@@ -59,6 +61,7 @@
                     window.location.href = site.baseUrl; //跳转首页地址
                 }
             }
+
             window.onload = function () {
                 t = setInterval(function () {
                     delayURL();

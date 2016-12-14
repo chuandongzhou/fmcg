@@ -13,7 +13,7 @@ class UpdatePasswordRequest extends Request
     public function rules()
     {
         return [
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|alpha_num|confirmed'
         ];
     }
 }

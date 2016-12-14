@@ -72,7 +72,9 @@
                             <table class="table table-bordered table-center table-th-color order-msg-table">
                                 <thead>
                                 <th>订单号</th>
-                                <th>商家名称</th>
+                                @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                    <th>商家名称</th>
+                                @endif
                                 <th>订单金额</th>
                                 <th>陈列费/优惠券</th>
                                 <th>应付金额</th>
@@ -84,12 +86,14 @@
 
                                 <tr>
                                     <td>{{ $order['id'] }}</td>
-                                    <td><p>{{ $order['shop']['name'] }}</p>
-                                        <p class="prop-item">
-                                            <a href="javascript:"
-                                               onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                               class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
-                                        </p></td>
+                                    @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                        <td><p>{{ $order['shop']['name'] }}</p>
+                                            <p class="prop-item">
+                                                <a href="javascript:"
+                                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
+                                            </p></td>
+                                    @endif
                                     <td>￥{{ $order['price'] }}</td>
                                     <td>
                                         {{ $order->coupon_id?' ¥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
@@ -97,7 +101,21 @@
                                     <td>{{ $order['payment_type'] }}
                                         {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'--' }}
                                     </td>
-                                    <td><span class="orange">{{ $order['status_name'] }}</span></td>
+                                    <td>
+                                        <span class="orange">{{ $order['status_name'] }}</span>
+                                        @if($order['status']==cons('order.status.non_confirm'))
+                                            <p class="prompt">(等待卖家确认)</p>
+                                        @endif
+                                        @if($order['pay_status']==cons('order.pay_status.refund_success'))
+
+                                                <a class="iconfont icon-tixing pull-right"
+                                                   data-container="body" data-toggle="popover" data-placement="bottom"
+                                                   data-content="退款原因:（{{ $order->orderRefund->reason }}）">
+                                                </a>
+
+
+                                        @endif
+                                    </td>
                                     <td width="15%">{{ empty($order['remark'])?'--':$order['remark'] }}</td>
                                     <td class="operate">
                                         @if(!$order['is_cancel'])
@@ -132,7 +150,6 @@
                                                        data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a>
                                                 @endif
                                             @endif
-
                                         @endif
                                     </td>
                                 </tr>
@@ -141,24 +158,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up') ? '提货人信息' : '收货人信息' }}</h3>
-                        </div>
-                        <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center table-th-color">
-                                <thead>
-                                <th>联系人</th>
-                                <th>联系电话</th>
-                                @if( $order->pay_type!=cons('pay_type.pick_up'))
+                @if( $order->pay_type!=cons('pay_type.pick_up'))
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">收货人信息</h3>
+                            </div>
+                            <div class="panel-container table-responsive">
+                                <table class="table table-bordered table-center table-th-color">
+                                    <thead>
+                                    <th>联系人</th>
+                                    <th>联系电话</th>
                                     <th>收货地址</th>
-                                @endif
-                                </thead>
-                                <tr>
-                                    <td>{{   $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->consigner:$order->user->shop->contact_person }}</td>
-                                    <td>{{ $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->phone:$order->user->shop->contact_info }}</td>
-                                    @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                    </thead>
+                                    <tr>
+                                        <td>{{   $order->shippingAddress->consigner }}</td>
+                                        <td>{{ $order->shippingAddress->phone }}</td>
                                         <td>
                                             <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
                                             <p class="prop-item">
@@ -173,12 +188,58 @@
                                                 </a>
                                             </p>
                                         </td>
-                                    @endif
-                                </tr>
-                            </table>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">商家信息</h3>
+                            </div>
+                            <div class="panel-container table-responsive">
+                                <table class="table table-bordered table-center table-th-color">
+                                    <thead>
+                                    <th>商家名称</th>
+                                    <th>联系人</th>
+                                    <th>联系电话</th>
+                                    <th>店铺地址</th>
+                                    </thead>
+                                    <tr>
+                                        <td>
+                                            <p>{{ $order['shop']['name'] }}</p>
+                                            <p class="prop-item">
+                                                <a href="javascript:"
+                                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
+                                            </p>
+                                        </td>
+                                        <td>{{ $order['shop']['contact_person'] }}</td>
+                                        <td>{{ $order['shop']['contact_info'] }}</td>
+                                        <td>
+                                            <p> {{  $order->shop ? $order->shop->address : ''  }}</p>
+                                            <p class="prop-item">
+                                                <a href="javascript:" data-target="#shippingAddressMapModal"
+                                                   data-toggle="modal"
+                                                   data-name="pick_up"
+                                                   data-x-lng="{{ $order->shop ?  $order->shop->x_lng : 0  }}"
+                                                   data-y-lat="{{ $order->shop ?  $order->shop->y_lat : 0}}"
+                                                   data-address="{{ $order->shop ? $order->shop->address : '' }}"
+                                                   data-consigner="{{ $order->shop ? $order->shop->contact_person : ''  }}"
+                                                   data-phone= {{  $order->shop ? $order->shop->contact_info : '' }}>
+                                                    <i class="iconfont icon-chakanditu"></i> 查看地图
+                                                </a>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                @endif
                 @if($order->pay_type!=cons('pay_type.pick_up') && (int)$order['send_at'])
                     <div class="col-sm-12">
                         <div class="panel panel-default">
@@ -409,4 +470,12 @@
         </div>
     </div>
 
+@stop
+@section('js')
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle='popover']").popover();
+        });
+    </script>
+    @parent
 @stop
