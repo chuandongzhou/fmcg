@@ -86,14 +86,20 @@
                                 </td>
                                 <td width="10%" class="bordered text-center">{{ 'x'.$goods['pivot']['num'] }}</td>
                                 @if(0 == $key)
-                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered" width="15%">
-                                        <p>{{ $order['status_name'] }}</p>
+                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
+                                        width="15%">
+                                        <p>{{ $order['status_name'] }}
+                                        @if($order['status']==cons('order.status.non_confirm'))
+                                            <p class="prompt">(等待卖家确认)</p>
+                                            @endif
+                                            </p>
 
-                                        <p>{{ $order['payment_type'] }}</p>
+                                            <p>{{ $order['payment_type'] }}</p>
 
-                                        <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                            <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
                                     </td>
-                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered" width="15%">
+                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                        width="15%">
                                         <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
                                               class="btn btn-blue">查看</a></p>
                                         @if(!$order['is_cancel'])
@@ -128,18 +134,20 @@
                         @endforeach
                         @if(count($order['goods']) == 0)
                             <tr>
-                                <td align="center"  width="70%">
+                                <td align="center" width="70%">
                                     无订单商品
                                 </td>
 
-                                <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered" width="15%">
+                                <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
+                                    width="15%">
                                     <p>{{ $order['status_name'] }}</p>
 
                                     <p>{{ $order['payment_type'] }}</p>
 
                                     <p><span class="red">￥{{ $order['price'] }}</span></p>
                                 </td>
-                                <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered" width="15%">
+                                <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                    width="15%">
                                     <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
                                           class="btn btn-blue">查看</a></p>
                                     @if(!$order['is_cancel'])
@@ -183,20 +191,20 @@
                     {!! $orders->render() !!}
                 @endif
             </div>
-                @if(\Request::is('order-buy') && $orders->count())
-                    <div class="col-sm-12" id="foot-nav">
-                        <input type="checkbox" id="check-all" class="parent"/>
-                        <button class="btn btn-red ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                data-method="put">
-                            批量取消
-                        </button>
-                        <button class="btn btn-info ajax btn-receive"
-                                data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
-                                data-method="put">
-                            确认收货
-                        </button>
-                    </div>
-                @endif
+            @if(\Request::is('order-buy') && $orders->count())
+                <div class="col-sm-12" id="foot-nav">
+                    <input type="checkbox" id="check-all" class="parent"/>
+                    <button class="btn btn-red ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
+                            data-method="put">
+                        批量取消
+                    </button>
+                    <button class="btn btn-info ajax btn-receive"
+                            data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                            data-method="put">
+                        确认收货
+                    </button>
+                </div>
+            @endif
         </form>
     </div>
 @stop
