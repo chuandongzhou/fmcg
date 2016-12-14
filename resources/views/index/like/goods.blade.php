@@ -51,7 +51,7 @@
                                     <div class="commodity-name">{{ $good->name }}</div>
                                 </a>
                                 <div class="sell-panel">
-                                    <span class="money red"><b>￥{{ $good->price.'/'.$good->pieces }}</b></span>
+                                    <span class="money red"><b>¥{{ $good->price.'/'.$good->pieces }}</b></span>
                                     <span class="sales pull-right">最低购买量 : {{ $good->min_num }}</span>
                                 </div>
                             </div>

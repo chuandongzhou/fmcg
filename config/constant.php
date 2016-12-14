@@ -173,7 +173,8 @@ return [
             'alipay_pc' => 4,           //支付宝
             'alipay' => 5,              //支付宝app
             //'alipay_wap' => 6,           //支付宝（app网页）
-            'balancepay' => 7               //余额支付
+            'balancepay' => 7,               //余额支付,
+            'wechat_pay' => 8           //微信支付
         ],
         'pay_status' => [
             'success' => 1,         //成功

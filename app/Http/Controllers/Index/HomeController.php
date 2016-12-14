@@ -6,8 +6,11 @@ use App\Models\Advert;
 use App\Models\Model;
 use App\Models\Order;
 use App\Services\GoodsService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
+use Zend\Http\Client\Adapter\Curl;
+
 class HomeController extends Controller
 {
     /**
@@ -45,7 +48,7 @@ class HomeController extends Controller
 
     public function test()
     {
-
+        //return  array_add(['name' => 'Desk', 'age' => 30], 'price', 100);
     }
 
 }

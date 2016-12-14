@@ -144,7 +144,7 @@
 
                                     <p>{{ $order['payment_type'] }}</p>
 
-                                    <p><span class="red">￥{{ $order['price'] }}</span></p>
+                                    <p><span class="red">¥{{ $order['price'] }}</span></p>
                                 </td>
                                 <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
                                     width="15%">

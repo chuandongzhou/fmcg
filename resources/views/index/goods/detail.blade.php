@@ -46,7 +46,7 @@
                 </div>
                 <ul class="store-detail">
                     <li><span class="title-name">价格 : </span><span class="red"><span
-                                    class="money">￥{{ $goods->price }}</span>/{{  $goods->pieces }}</span></li>
+                                    class="money">¥{{ $goods->price }}</span>/{{  $goods->pieces }}</span></li>
                     <li><span class="title-name">商品条形码 : </span>{{ $goods->bar_code }}</li>
                     <li><span class="title-name">商品ID : </span>{{ $goods->id }}</li>
                     <li><span class="title-name">保质期 : </span>{{ $goods->shelf_life}}</li>
@@ -103,7 +103,7 @@
                     <li><img class="shop-img" src="{{ $shop->logo_url }}"></li>
                     <li><span class="prompt">联系人 : </span>{{ $shop->contact_person  }}</li>
                     <li><span class="prompt">联系方式 : </span>{{ $shop->contact_info }}</li>
-                    <li><span class="prompt">最低配送额 : </span>￥{{ $shop->min_money }}</li>
+                    <li><span class="prompt">最低配送额 : </span>¥{{ $shop->min_money }}</li>
                     <li><span class="prompt">店家地址 : </span>{{ $shop->address }}</li>
                 </ul>
                 <div class="operate">

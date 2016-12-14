@@ -41,7 +41,7 @@ class EncryptCookies extends BaseEncrypter
                 $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
             } else {
                 $diffInMinutes = Carbon::now()->diffInMinutes(Carbon::createFromTimestamp($lastHandleTime));
-                if ($diffInMinutes >= 30) {
+                if ($diffInMinutes >= 60) {
                     //超出30分钟未操作退出登录
                     return redirect(url('auth/logout'));
                 }

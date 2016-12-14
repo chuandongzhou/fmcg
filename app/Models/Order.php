@@ -182,6 +182,16 @@ class Order extends Model
     }
 
     /**
+     * 微信支付二维码
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function wechatPayCode()
+    {
+        return $this->hasOne('App\Models\WechatPayController');
+    }
+
+    /**
      * 支付形式
      *
      * @return mixed

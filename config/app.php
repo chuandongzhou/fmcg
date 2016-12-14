@@ -142,6 +142,7 @@ return [
          * Custom Service Providers...
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
+        \WeiHeng\WechatPay\WechatPayServiceProvider::class,
         \WeiHeng\Admin\AdminServiceProvider::class,
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
         \WeiHeng\Salesman\SalesmanServiceProvider::class,

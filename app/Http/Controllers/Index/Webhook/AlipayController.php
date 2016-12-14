@@ -40,7 +40,6 @@ class AlipayController extends Controller
                 return "success";
             }
 
-
             //获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
             $orderId = $request->input('out_trade_no');     //商户订单号
             $tradeNo = $request->input('trade_no');         //支付宝交易号

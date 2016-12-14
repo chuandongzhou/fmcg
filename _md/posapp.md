@@ -271,6 +271,27 @@
 `失败返回：`
 
 
+### 2.4 微信二维码支付 wechat-pay
+
+#### 2.4.1  获取二维码[get] (qrcode/{order_id})
+
+`请求参数：`
+
+`成功返回：`
+
+    deal_code             string                二维码地址
+    
+    
+#### 2.4.2  获取订单支付状态[get] (order-pay-status/{order_id})
+
+`请求参数：`
+
+`成功返回：`
+
+    pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
+
+    
+
 
 
 	

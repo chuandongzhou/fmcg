@@ -88,7 +88,7 @@
                                                 {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis" title="'.$cartGoods->goods->promotion_info.'"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>
-                                        <td class="text-center">￥
+                                        <td class="text-center">¥
                                             <span class="goods-price">{{ $cartGoods->goods->price . '/' . $cartGoods->goods->pieces}}</span>
                                         </td>
                                         <td class="text-center">
@@ -99,7 +99,7 @@
                                                    value="{{ $cartGoods->num }}">
                                             <button type="button" class="modified inc-num">+</button>
                                         </td>
-                                        <td class="text-center red">￥
+                                        <td class="text-center red">¥
                                             <span class="goods-all-money">{{ $cartGoods->goods->price * $cartGoods->num }}</span>
                                         </td>
                                         <td class="text-right">
@@ -121,10 +121,10 @@
                                 <tr>
                                     <td colspan="6" class="text-right">
                                         <p class="lowest-money">
-                                            (<span class="prompt"><span class="check-min-money">满足最低配送额￥</span>
+                                            (<span class="prompt"><span class="check-min-money">满足最低配送额¥</span>
                                         <span class="min-money">{{ $shop->min_money }}</span></span>)
                                         </p>
-                                        <p class="total-money">合计金额 : <span class="red money">￥<span
+                                        <p class="total-money">合计金额 : <span class="red money">¥<span
                                                         class="shop-sum-price"></span></span></p>
                                     </td>
                                 </tr>
@@ -151,7 +151,7 @@
                            data-url="{{ url('api/v1/cart/batch-delete') }}" data-method="delete">删除选中</a>
                     </div>
                     <div class="col-xs-6 padding-clear">
-                        <span class="money">合计总金额<b class="red">￥<span class="cart-sum-price"></span></b></span>
+                        <span class="money">合计总金额<b class="red">¥<span class="cart-sum-price"></span></b></span>
                     </div>
                     <div class="col-xs-12 text-right padding-clear">
                         <button class="btn submit btn-primary" id="cartInput" type="submit">提交</button>

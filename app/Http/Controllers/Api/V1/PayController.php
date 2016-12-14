@@ -113,13 +113,7 @@ class PayController extends Controller
             return $this->error('订单不存在或不能退款');
         }
 
-        $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->select([
-            'order_id',
-            'pay_type',
-            'amount',
-            'charge_id',
-            'trade_no'
-        ])->first();
+        $tradeInfo = SystemTradeInfo::where('order_id', $orderId)->first();
 
         if (!$tradeInfo) {
             return $this->error('订单不存在或不能退款');
@@ -174,6 +168,17 @@ class PayController extends Controller
                 } else {
                     return false;
                 }
+            } elseif ($tradeInfo->pay_type == $payTypes['wechat_pay']) {
+                $result = $this->_refundByWechatPay($tradeInfo, $reason);
+
+                if ($result) {
+                    $order->orderRefund()->create(['reason' => $reason]);
+                    //通知 卖家/买 已退款
+                    $this->_setRefundNotice($order, $refundBySeller);
+                } else {
+                    return false;
+                }
+
             } else {
                 return false;
             }
@@ -273,7 +278,6 @@ class PayController extends Controller
      */
     private function _refundByYeepay($tradeInfo, $reason)
     {
-
         $yeepayConf = config('yeepay');
 
         $params = array(
@@ -295,6 +299,23 @@ class PayController extends Controller
 
     }
 
+    /**
+     * @param $tradeInfo
+     * @param $reason
+     * @return bool
+     */
+    private function _refundByWechatPay($tradeInfo, $reason)
+    {
+        $wechatPay = app('wechat.pay');
+
+        $result = $wechatPay->refund($tradeInfo, $reason);
+
+        if (!$wechatPay->verifySign($result)) {
+            return false;
+        }
+
+        return $result['dealCode'] === 10000;
+    }
 
     /**
      *  获取hamc

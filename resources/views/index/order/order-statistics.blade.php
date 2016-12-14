@@ -106,11 +106,11 @@
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['payment_type'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['status_name'] }}</td>
                                             <td rowspan="{{ $order->goods->count() }}">{{ $order['created_at'] }}</td>
-                                            <td rowspan="{{ $order->goods->count() }}">￥{{ $order['price'] }}</td>
+                                            <td rowspan="{{ $order->goods->count() }}">¥{{ $order['price'] }}</td>
                                         @endif
                                         <td>{{ $value['id'] }}</td>
                                         <td>{{ $value['name'] }}</td>
-                                        <td>￥{{ $value['pivot']['price'] }}</td>
+                                        <td>¥{{ $value['pivot']['price'] }}</td>
                                         <td>{{ $value['pivot']['num'] }}</td>
                                     </tr>
                                 @endforeach
@@ -123,7 +123,7 @@
                                     <td>{{ $order['payment_type'] }}</td>
                                     <td>{{ $order['status_name'] }}</td>
                                     <td>{{ $order['created_at'] }}</td>
-                                    <td>￥{{ $order['price'] }}</td>
+                                    <td>¥{{ $order['price'] }}</td>
                                 </tr>
                             @endif
                         @endforeach

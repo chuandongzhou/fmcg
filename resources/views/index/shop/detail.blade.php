@@ -53,7 +53,7 @@
                                 <div class="commodity-name">{{ $hotGoodsDetail->name }}</div>
                             </a>
                             <div class="sell-panel">
-                                <span class="money red">￥{{ $hotGoodsDetail->price . '/' . $hotGoodsDetail->pieces }}</span>
+                                <span class="money red">¥{{ $hotGoodsDetail->price . '/' . $hotGoodsDetail->pieces }}</span>
                                 <span class="sales pull-right">最低购买量 : {{ $hotGoodsDetail->min_num }}</span>
                             </div>
                             {{--<div class="store-name prompt">{{ $hotGoodsDetail->shop->name }}</div>--}}
@@ -107,7 +107,7 @@
                                 <div class="commodity-name">{{ $recommendGoodsDetail->name }}</div>
                             </a>
                             <div class="sell-panel">
-                                <span class="money red">￥{{ $recommendGoodsDetail->price . '/' . $recommendGoodsDetail->pieces }}</span>
+                                <span class="money red">¥{{ $recommendGoodsDetail->price . '/' . $recommendGoodsDetail->pieces }}</span>
                                 <span class="sales pull-right">最低购买量 : {{ $recommendGoodsDetail->min_num }}</span>
                             </div>
                             {{--<div class="store-name prompt">{{ $recommendGoodsDetail->shop->name }}</div>--}}

@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <title>posapp</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -313,8 +312,8 @@
 
             /* 创建伸缩/展开侧边目录栏 */
             var control = $('<div>'),
-                    shrink = $('<span>'),
-                    stretch = $('<span>');
+                shrink = $('<span>'),
+                stretch = $('<span>');
             control.css({
                 position: 'fixed',
                 top: -1,
@@ -355,28 +354,28 @@
             });
 
             var menuList = $('body').children(':header'),
-                    menuObject = [],
-                    headerObject = {
-                        h1: 0,
-                        h2: 0,
-                        h3: 0,
-                        h4: 0,
-                        h5: 0,
-                        h6: 0
-                    },
-                    headerParentObj = {
-                        h1: null,
-                        h2: 'h1',
-                        h3: 'h2',
-                        h4: 'h3',
-                        h5: 'h4',
-                        h6: 'h5'
-                    },
-                    previousTagName;
+                menuObject = [],
+                headerObject = {
+                    h1: 0,
+                    h2: 0,
+                    h3: 0,
+                    h4: 0,
+                    h5: 0,
+                    h6: 0
+                },
+                headerParentObj = {
+                    h1: null,
+                    h2: 'h1',
+                    h3: 'h2',
+                    h4: 'h3',
+                    h5: 'h4',
+                    h6: 'h5'
+                },
+                previousTagName;
             /* 为菜单创建锚点 */
             menuList.each(function (index, element) {
                 var href = index ? $(element).html().split(' ')[0] : '0.',
-                        tagName = $(element)[0]['tagName'].toLowerCase();
+                    tagName = $(element)[0]['tagName'].toLowerCase();
                 menuObject[index] = {
                     id: href,
                     parentId: 0,
@@ -408,7 +407,7 @@
                 }
                 for (var i in childList) {
                     var ul = $('<ul>'),
-                            li = $('<li>');
+                        li = $('<li>');
                     ul.css({
                         paddingLeft: 20
                     });
@@ -669,6 +668,19 @@ content                string             内容
 </code></pre>
 
 <p><code>失败返回：</code></p>
+<h3>2.4 微信二维码支付 wechat-pay</h3>
+<h4>2.4.1 获取二维码[get] (qrcode/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>deal_code             string                二维码地址
+</code></pre>
+
+<h4>2.4.2 获取订单支付状态[get] (order-pay-status/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>pay_status             tinyint              订单支付状态（0=&gt;未支付， 1=&gt; 支付成功）
+</code></pre>
+
 
 </body>
 </html>

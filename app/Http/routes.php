@@ -343,6 +343,12 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->get('categories', 'GoodsController@category'); //启/禁用
                 $router->get('/', 'GoodsController@goods'); //启/禁用
             });
+
+        });
+        $router->group(['prefix' => 'wechat-pay'], function ($router) {
+            $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
+            $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id', '[0-9]+');
+            $router->any('pay-result', 'WechatPayController@payResult');
         });
 
     });

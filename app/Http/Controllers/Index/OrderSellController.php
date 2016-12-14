@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Index;
 use App\Models\DeliveryMan;
 use App\Services\OrderDownloadService;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use QrCode;
@@ -52,7 +53,7 @@ class OrderSellController extends OrderController
         }
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
-        $orders = $orders->orderBy('id', 'desc')->paginate();
+        $orders = $orders->orderBy('updated_at', 'desc')->paginate();
         $orders->each(function ($order) {
             $order->user && $order->user->shop->setAppends([]);
         });
@@ -123,19 +124,21 @@ class OrderSellController extends OrderController
             return $this->error('订单不存在');
         }
 
-        $goods = (new OrderService)->explodeOrderGoods($order);
+        $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 
+        $goods = (new OrderService)->explodeOrderGoods($order);
 
 //        $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
 //        //拼接需要调用的模板名字
 //        $view = 'index.order.sell.detail-' . $viewName;
         $view = 'index.order.order-sell-detail';
-        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
         return view($view, [
             'order' => $order,
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
-            'delivery_man' => $deliveryMan
+            'delivery_man' => $deliveryMan,
+            'backUrl' => $diffTime > 10 ? 'javascript:history.back()' : url('order-sell')
         ]);
     }
 

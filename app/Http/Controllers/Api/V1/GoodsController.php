@@ -35,6 +35,7 @@ class   GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
+
         $goods = Goods::active()->with('images.image')->select([
             'id',
             'name',

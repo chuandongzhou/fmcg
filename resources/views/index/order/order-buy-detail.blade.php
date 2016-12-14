@@ -92,7 +92,7 @@
                                         </p></td>
                                     <td>￥{{ $order['price'] }}</td>
                                     <td>
-                                        {{ $order->coupon_id?' ￥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
+                                        {{ $order->coupon_id?' ¥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
                                     <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
                                     <td>{{ $order['payment_type'] }}
                                         {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'--' }}
@@ -262,7 +262,7 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="6" class="pay-item">
-                                        总额 : <span class="red">￥{{ $order->price }}</span>
+                                        总额 : <span class="red">¥{{ $order->price }}</span>
                                     </td>
                                 </tr>
                             </table>

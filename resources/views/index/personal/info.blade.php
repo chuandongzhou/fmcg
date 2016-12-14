@@ -58,7 +58,7 @@
                                         <i class="icon iconfont icon-peisong"></i>
                                         <li class="address-panel-item">
                                             <span class="panel-name">最低配送额</span>
-                                            <span>￥600</span>
+                                            <span>¥600</span>
                                         </li>
                                     </ul>
 

@@ -198,7 +198,7 @@
                                 '<p class="commodity-name">' + allGoods[i]['name'] + '</p>' +
 
                                 '<p class="sell-panel">' +
-                                '<b class="money red">￥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
+                                '<b class="money red">¥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
                                 '</p>' +
                                 '</a>' +
                                 '</div>' +

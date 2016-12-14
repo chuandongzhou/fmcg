@@ -9,7 +9,7 @@
 @section('right')
     <div class="row order-detail">
         <div class="col-sm-12 go-history">
-            <a class="go-back btn btn-border-blue" href="javascript:history.back()"><i class="iconfont icon-fanhui"></i>
+            <a class="go-back btn btn-border-blue" href="{{ $backUrl }}"><i class="iconfont icon-fanhui"></i>
                 返回</a>
         </div>
         <div class="col-sm-12">
@@ -81,9 +81,9 @@
 
                                 <tr>
                                     <td>{{ $order['id'] }}</td>
-                                    <td>￥{{ $order['price'] }}</td>
+                                    <td>¥{{ $order['price'] }}</td>
                                     <td>
-                                        {{ $order->coupon_id?' ￥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
+                                        {{ $order->coupon_id?' ¥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
                                     <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
                                     <td>{{ $order['payment_type'] }}
                                         {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
@@ -277,8 +277,8 @@
                                 @foreach($orderGoods as $goods)
                                     <tr>
                                         <td>{{ $goods['id'] }}</td>
-                                        <td><img class="store-img"
-                                                 src={{ $goods['image_url'] }}>
+                                        <td>
+                                            <img class="store-img" src={{ $goods['image_url'] }}>
                                         </td>
                                         <td width="30%">
                                             <div class="product-panel">
@@ -308,8 +308,8 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="{{ $order->can_change_price?'7':'6' }}" class="pay-item">
-                                        总额 : <span class="red">￥{{ $order->price }}</span>
+                                    <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
+                                        总额 : <span class="red">¥{{ $order->price }}</span>
                                     </td>
                                 </tr>
                             </table>

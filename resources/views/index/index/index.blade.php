@@ -77,8 +77,7 @@
                             @foreach($adverts as $key=>$advert )
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                     <a href="{{ $advert->url }}" target="_blank">
-                                        <img src="{{ $advert->image_url }}"
-                                             alt="{{ $advert->name }}">
+                                        <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
                                     </a>
                                 </div>
                             @endforeach
@@ -130,14 +129,14 @@
                                             <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
                                                 <p class="commodity-name">{{ $goods->name }}</p>
 
-                                                <p class="sell-panel">
-                                                    <span class="money red">￥{{ $goods->price . '/' . $goods->pieces }}</span>
-                                                </p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
+                                                        <p class="sell-panel">
+                                                            <span class="money red">¥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
 
                         </div>
                         <div class=" pd-left-clear right-wrap pull-left">

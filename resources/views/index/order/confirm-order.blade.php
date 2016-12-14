@@ -111,7 +111,7 @@
                                         <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
                                         {{ $cartGoods->goods->name }}
                                     </td>
-                                    <td class="text-left unit-price">￥ <span
+                                    <td class="text-left unit-price">¥ <span
                                                 class="goods-price-{{ $cartGoods->goods->id }} goods-price"
                                                 data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price.'/'.$cartGoods->goods->pieces }}</span>
                                     </td>
@@ -157,7 +157,7 @@
                                     <div class="count-panel">
                                         <p class="count min-money">
                                             <span class="prompt min-money-span {{ $shop->sum_price>=$shop->min_money?'':'red' }}" data-money="{{ $shop->min_money  }}">
-                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额￥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }})
+                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额¥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }})
                                             </span>
                                             <span class="name">合计 :&nbsp;</span>
                                             <span class="red shop-sum-price" data-price="{{ $shop->sum_price }}">{{ $shop->sum_price }}</span>
@@ -179,16 +179,16 @@
                                     {{ $shops->pluck('cart_goods')->collapse()->count() }}
                                 </b>件商品&nbsp;总商品金额 :&nbsp;
                                  </span> <b class="sum-price red" data-sum-price="{{ $shops->sum('sum_price') }}">
-                                    ￥ {{ $shops->sum('sum_price') }}
+                                    ¥ {{ $shops->sum('sum_price') }}
                                 </b>
                             </p>
                             <p class="count">
                                 <span class="name">优惠券 :&nbsp;</span>
-                                <span class="red">-￥<b class="sum-discount">0</b></span>
+                                <span class="red">-¥<b class="sum-discount">0</b></span>
                             </p>
                             <p class="count">
                                 <span class="name">应付金额 :&nbsp;</span>
-                                <span class="red">￥ <b class="amount"></b></span></p>
+                                <span class="red">¥ <b class="amount"></b></span></p>
                         </div>
                     </div>
                     <div class="col-sm-12 text-right padding-clear">
@@ -286,16 +286,16 @@
                         sumDiscount = sumDiscount.add(discount);
                         shopSumPriceControl.html((shopSumPrice.sub(discount)) + '(' + shopSumPrice + '-' + discount + ')');
                         if(shopSumPrice.sub(discount)>ShopMinMoney){
-                            shopMinMoneySpan.html('满足最低配送额￥'+ShopMinMoney);
+                            shopMinMoneySpan.html('满足最低配送额¥'+ShopMinMoney);
                         }else{
-                            shopMinMoneySpan.html('不满足最低配送额￥'+ShopMinMoney);
+                            shopMinMoneySpan.html('不满足最低配送额¥'+ShopMinMoney);
                         }
                     } else {
                         shopSumPriceControl.html(shopSumPrice.toFixed(2));
                         if(shopSumPrice.toFixed(2)>ShopMinMoney){
-                            shopMinMoneySpan.html('满足最低配送额￥'+ShopMinMoney);
+                            shopMinMoneySpan.html('满足最低配送额¥'+ShopMinMoney);
                         }else{
-                            shopMinMoneySpan.html('不满足最低配送额￥'+ShopMinMoney);
+                            shopMinMoneySpan.html('不满足最低配送额¥'+ShopMinMoney);
                         }
 
                     }
