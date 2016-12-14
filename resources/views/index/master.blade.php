@@ -246,16 +246,18 @@
         function myFun(result) {
             var cityName = result.name;
             map.setCenter(cityName);
-            $.ajax({
-                url: site.api('address/city-detail'),
-                method: 'get',
-                data: {name: cityName}
-            }).done(function (data, textStatus, jqXHR) {
-                console.log(data);
-                setCookie('province_id', data.province_id);
-                setCookie('city_id', data.city_id);
-                window.location.reload();
-            });
+            if (document.cookie.indexOf("province_id=") == -1) {
+                $.ajax({
+                    url: site.api('address/city-detail'),
+                    method: 'get',
+                    data: {name: cityName}
+                }).done(function (data, textStatus, jqXHR) {
+                    setCookie('province_id', data.province_id);
+                    setCookie('city_id', data.city_id);
+                    window.location.reload();
+                });
+
+            }
         }
 
         var myCity = new BMap.LocalCity();
