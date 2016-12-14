@@ -280,6 +280,7 @@
 `成功返回：`
 
     deal_code             string                二维码地址
+    created_at            timestamp             二维码生成时间
     
     
 #### 2.4.2  获取订单支付状态[get] (order-pay-status/{order_id})

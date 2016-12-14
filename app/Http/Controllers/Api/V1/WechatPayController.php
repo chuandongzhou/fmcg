@@ -37,7 +37,10 @@ class WechatPayController extends Controller
             if ($nowTime->diffInHours($wechatPayCode->created_at) >= 2) {
                 return $this->error('二维码已过期,请选择其它渠道');
             } else {
-                return $this->success(['deal_code' => $wechatPayCode->deal_code]);
+                return $this->success([
+                    'deal_code' => $wechatPayCode->deal_code,
+                    'created_at' => $wechatPayCode->created_at
+                ]);
             }
         }
 
@@ -52,8 +55,10 @@ class WechatPayController extends Controller
             return $this->error($result['dealMsg']);
         }
 
-        return $wechatPay->created($result,
-            $orderId) ? $this->success(['deal_code' => $result['deal_code']]) : $this->error('创建二维码时出现问题');
+        return $wechatPay->created($result, $orderId) ? $this->success([
+            'deal_code' => $result['deal_code'],
+            'created_at' => Carbon::now()
+        ]) : $this->error('创建二维码时出现问题');
     }
 
     /**
@@ -92,7 +97,7 @@ class WechatPayController extends Controller
      */
     public function orderPayStatus($orderId)
     {
-        $order =  Order::find($orderId);
+        $order = Order::find($orderId);
 
         if (is_null($order)) {
             return $this->error('订单不存在');
