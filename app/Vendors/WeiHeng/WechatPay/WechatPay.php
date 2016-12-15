@@ -5,7 +5,6 @@ namespace WeiHeng\WechatPay;
 
 use App\Models\Order;
 use App\Models\SystemTradeInfo;
-use App\Models\WechatPayCode;
 use App\Models\WechatPayUrl;
 use Carbon\Carbon;
 use GuzzleHttp\Client;

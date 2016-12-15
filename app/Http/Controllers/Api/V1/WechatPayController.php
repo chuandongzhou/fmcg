@@ -74,17 +74,18 @@ class WechatPayController extends Controller
 
         $wechatPay = app('wechat.pay');
         if (!$wechatPay->verifySign($data)) {
-            info('微信支付回调错误：');
-            info($data);
+            //info('微信支付回调错误：' . $request->server('ip'));
             return $this->success($wechatPay->buildResponse(false));
         }
+        info($request->server('ip'));
 
         $orders = Order::whereId($data['orderNo'])->get()->each(function ($order) {
             $order->setAppends([]);
         });
 
+        $fee = isset($data['fee']) ? $data['fee'] : $data['orderAmount'] * 7 / 1000;
         $result = (new PayService())->addTradeInfo($orders, bcdiv($data['orderAmount'], 100, 2),
-            bcdiv($data['fee'], 100, 2), $data['cxOrderNo'], 'wechat_pay', $data['sign']);
+            bcdiv($fee, 100, 2), $data['cxOrderNo'], 'wechat_pay', $data['sign']);
 
         return $this->success($wechatPay->buildResponse($result === true));
 
