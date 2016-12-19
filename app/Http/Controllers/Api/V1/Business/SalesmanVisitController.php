@@ -77,7 +77,8 @@ class SalesmanVisitController extends Controller
                     ],
                     'return_order' => [
                         'amount' => 160,
-                        'num' => 2
+                        'num' => 2,
+                        'pieces' => 1
                     ]
                 ]
             ],
@@ -392,6 +393,7 @@ class SalesmanVisitController extends Controller
                 $order['return_order']['goods'][] = [
                     'goods_id' => $goods['id'],
                     'num' => $goods['return_order']['num'],
+                    'pieces' => isset($goods['return_order']['pieces']) ? $goods['return_order']['pieces'] : 0,
                     'amount' => $goods['return_order']['amount']
                 ];
             }

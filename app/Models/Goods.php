@@ -415,6 +415,18 @@ class Goods extends Model
         return $piece;
     }
 
+    public function getPiecesListAttribute(){
+        $pieces = $this->goodsPieces;
+        $items = ['pieces_level_1', 'pieces_level_2', 'pieces_level_3'];
+        $piecesList = collect([]);
+        foreach ($items as $item ) {
+            if(!is_null($piecesId = $pieces->$item)) {
+                $piecesList->push($piecesId);
+            }
+        }
+        return $piecesList;
+    }
+
     /**
      * 根据不同角色获取规格
      *

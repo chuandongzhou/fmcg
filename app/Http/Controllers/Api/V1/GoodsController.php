@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\GoodsColumn;
+use App\Services\AddressService;
 use App\Services\AttrService;
 use Gate;
 use App\Models\Goods;
@@ -35,6 +36,9 @@ class   GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
+
+        $addressData = (new AddressService)->getAddressData();
+        $gets = array_merge($gets, array_except($addressData, 'address_name'));
 
         $goods = Goods::active()->with('images.image')->select([
             'id',
@@ -90,6 +94,29 @@ class   GoodsController extends Controller
     public function getPieces()
     {
         return $this->success(['pieces' => cons()->valueLang('goods.pieces')]);
+    }
+
+    /**
+     * 获取商品单位
+     *
+     * @param $goodsId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getGoodsPieces($goodsId)
+    {
+        $goods = Goods::withTrashed()->with('goodsPieces')->find($goodsId);
+        if (is_null($goods)) {
+            return $this->error('商品不存在');
+        }
+        $piecesList = $goods->pieces_list;
+        $piecesName = [];
+        $pieces = cons()->valueLang('goods.pieces');
+
+        foreach ($piecesList as $item) {
+            $piecesName[$item] = $pieces[$item];
+        }
+
+        return $this->success(compact('piecesName'));
     }
 
     /**

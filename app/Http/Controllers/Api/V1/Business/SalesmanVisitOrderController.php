@@ -68,7 +68,6 @@ class SalesmanVisitOrderController extends Controller
         }
         $attributes = $request->except('salesman_id', 'start_date', 'end_date', 'order_id');
 
-
         if ($salesmanVisitOrder->can_sync && isset($attributes['status'])) {
             $this->_updateDisplay([$salesmanVisitOrder]);
             $this->_syncOrders([$salesmanVisitOrder]);
@@ -225,7 +224,7 @@ class SalesmanVisitOrderController extends Controller
             'orderGoods.goods' => function ($query) {
                 $query->select('id', 'name');
             },
-            'orderGoods.goods.goodsPieces' => function($query) {
+            'orderGoods.goods.goodsPieces' => function ($query) {
                 $query->select('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'goods_id');
             },
             'displayList.mortgageGoods'
@@ -598,6 +597,9 @@ class SalesmanVisitOrderController extends Controller
         if (is_null($salesmanVisitOrder) || Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return '订单不存在';
         }
+        if (!$salesmanVisitOrder->can_pass) {
+            return '已通过订单不能修改';
+        }
 
         $result = DB::transaction(function () use ($salesmanVisitOrder, $request, $orderGoods) {
             if ($orderGoods) {
@@ -619,6 +621,7 @@ class SalesmanVisitOrderController extends Controller
                     //退货单
                     $attributes['num'] = $request->input('num');
                     $attributes['amount'] = $request->input('amount');
+                    $attributes['pieces'] = $request->input('pieces');
                     if ($orderGoods->fill($attributes)->save()) {
                         $salesmanVisitOrder->fill(['amount' => $salesmanVisitOrder->amount - $goodsOldAmount + $attributes['amount']])->save();
                     }

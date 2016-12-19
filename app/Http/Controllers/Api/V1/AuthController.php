@@ -217,13 +217,11 @@ class AuthController extends Controller
             return $this->error('营业执照错误');
         }
         //发送验证码
-        $res = (new CodeService)->sendCode('code', 'backup', $request->input('backup_mobile'),
+
+        $codeService = new CodeService;
+        $res = $codeService->sendCode('code', 'backup', $request->input('backup_mobile'),
             $request->input('user_name'));
-        if ($res['status']) {
-            return $this->success($res['mes']);
-        } else {
-            return $this->error($res['mes']);
-        }
+        return $res ? $this->success('发送成功') : $this->error($codeService->getError());
     }
 
     /**

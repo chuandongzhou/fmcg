@@ -80,7 +80,7 @@
                                         @endif
                                         <td>{{ $mortgage['name'] }}</td>
                                         <td>{{ cons()->valueLang('goods.pieces' , $mortgage['pieces']) }}</td>
-                                        <td>{ $mortgage['num'] }}</td>
+                                        <td>{{ $mortgage['num'] }}</td>
                                     </tr>
                                 @endforeach
                             @endforeach

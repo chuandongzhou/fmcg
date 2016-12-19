@@ -247,8 +247,9 @@
                                             <th>订货数量</th>
                                             <th>订货总金额</th>
                                         </tr>
-                                        @foreach($customer['orderGoods'] as $orderGoods)
+                                        @foreach($customer['orderGoods'] as $id=>$orderGoods)
                                             <tr>
+                                                <td>{{ $id }}</td>
                                                 <td>{{ $orderGoods['name'] }}</td>
                                                 <td>{{ $orderGoods['order_num'] }}</td>
                                                 <td>{{ $orderGoods['order_amount'] }}</td>

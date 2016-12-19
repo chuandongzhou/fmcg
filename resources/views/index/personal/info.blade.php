@@ -20,26 +20,33 @@
                             <div class="store-msg">
                                 <div class="store-name">
                                     <div class="item"><span class="panel-name">店铺名称 : </span>{{ $shop->name }}</div>
-                                    <div class="item count-panel">
-                                        <div class="pull-left left-panel"><span
-                                                    class="panel-name">店铺销量 : </span>{{ $shop->sales_volume }}</div>
-                                        <div><span class="panel-name">共</span> {{ $shop->goods_count }}<span>件商品</span>
+                                    @if($type!=cons('user.type.retailer'))
+                                        <div class="item count-panel">
+                                            <div class="pull-left left-panel">
+                                                <span class="panel-name">店铺销量 : </span>{{ $shop->sales_volume }}
+                                            </div>
+                                            <div>
+                                                <span class="panel-name">共</span> {{ $shop->goods_count }}
+                                                <span>件商品</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                                 <div class="address-panel clearfix">
-                                    <ul>
-                                        <i class="icon qr-code"></i>
-                                        <li class="address-panel-item">
-                                            <span class="panel-name">店铺</span>
-                                            <span>二维码</span>
+                                    @if($type!=cons('user.type.retailer'))
+                                        <ul>
+                                            <i class="icon qr-code"></i>
+                                            <li class="address-panel-item">
+                                                <span class="panel-name">店铺</span>
+                                                <span>二维码</span>
 
-                                            <div class="shop-code">
-                                                <img src="{{ (new \App\Services\ShopService())->qrcode($shop->id,150) }}">
-                                                <span>扫一扫 进入手机店铺</span>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                                <div class="shop-code">
+                                                    <img src="{{ (new \App\Services\ShopService())->qrcode($shop->id,150) }}">
+                                                    <span>扫一扫 进入手机店铺</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    @endif
                                     <ul>
                                         <i class="icon iconfont icon-lianxiren"></i>
                                         <li class="address-panel-item">
@@ -54,12 +61,12 @@
                                             <span>{{ $shop->contact_info }}</span>
                                         </li>
                                     </ul>
-                                    @if($shop->user->type!=cons('user.type.retailer'))
+                                    @if($type!=cons('user.type.retailer'))
                                         <ul>
                                             <i class="icon iconfont icon-peisong"></i>
                                             <li class="address-panel-item">
                                                 <span class="panel-name">最低配送额</span>
-                                                <span>￥600</span>
+                                                <span>￥{{ $shop->min_money }}</span>
                                             </li>
                                         </ul>
                                     @endif

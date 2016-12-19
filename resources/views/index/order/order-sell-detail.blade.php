@@ -26,7 +26,7 @@
                                         <div class="ui-stepProcess"></div>
                                     </div>
                                     <div class="ui-stepInfo-wrap">
-                                        <div class="ui-stepLayout" border="0" cellpadding="0" cellspacing="0">
+                                        <div class="ui-stepLayout">
                                             <ul>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
@@ -70,7 +70,7 @@
                                 <thead>
                                 <th>订单号</th>
                                 <th>订单金额</th>
-                                <th>陈列费/优惠券</th>
+                                <th>{{ $order->coupon_id ? '优惠券' : ($order->display_fee > 0 ? '陈列费' : '陈列费/优惠券') }}</th>
                                 <th>应付金额</th>
                                 <th>支付方式</th>
                                 <th>订单状态</th>
@@ -83,13 +83,13 @@
                                     <td>{{ $order['id'] }}</td>
                                     <td>¥{{ $order['price'] }}</td>
                                     <td>
-                                        {{ $order->coupon_id?' ¥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
+                                        {{ $order->coupon_id ? ' ¥' . bcsub($order->price, $order->after_rebates_price, 2) : ($order->display_fee > 0 ? $order->display_fee : '--') }}</td>
                                     <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
                                     <td>{{ $order['payment_type'] }}
-                                        {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
+                                        {{ $order->pay_type==cons('pay_type.cod') ? '('.$order->pay_way_lang.')' : '' }}
                                     </td>
                                     <td><span class="orange">{{ $order['status_name'] }}</span>
-                                        @if($order['pay_status']==cons('order.pay_status.refund_success'))
+                                        @if($order['pay_status'] == cons('order.pay_status.refund_success'))
                                             <a class="iconfont icon-tixing pull-right" title=""
                                                data-container="body" data-toggle="popover" data-placement="bottom"
                                                data-content="退款原因:（{{ $order->orderRefund->reason }}）">
@@ -97,7 +97,7 @@
                                         @endif
                                     </td>
                                     <td><span>{{ $order->type_name }}</span></td>
-                                    <td width="15%">{{ !empty($order['remark'])?$order['remark']:'--' }}</td>
+                                    <td width="15%">{{ !empty($order['remark']) ? $order['remark'] : '--' }}</td>
 
                                     <td class="operate">
                                         @if(!$order['is_cancel'])
@@ -176,7 +176,7 @@
                         <div class="panel-container table-responsive">
                             <table class="table table-bordered table-center table-th-color">
                                 <thead>
-                                <th>{{ cons()->valueLang('user.type',$order->user->type) }}名称</th>
+                                <th>{{ cons()->lang('user.type')[$order->user_type_name] }}名称</th>
                                 <th>联系人</th>
                                 <th>联系电话</th>
                                 @if( $order->pay_type!=cons('pay_type.pick_up'))

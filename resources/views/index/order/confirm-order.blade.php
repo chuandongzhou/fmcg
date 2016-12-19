@@ -48,21 +48,29 @@
                         <h4 class="title msg-title">收货信息</h4>
                         <div class="item clearfix">
                             <div class="pull-left address-item">
-                                <div>
-                                    <label><input type="radio" name="option" checked/><span class="address-consigner">{{ $shippingAddress[0]->consigner }}</span></label>
-                                    <span class="tel-num address-phone">{{ $shippingAddress[0]->phone }}</span>
-                                    <select class="control-select operation-buttons address-select" name="shipping_address_id">
-                                        @foreach($shippingAddress as $address)
-                                            <option value="{{ $address->id }}"
-                                                    {{ $address->is_default ? 'selected' : '' }} data-consigner="{{ $address->consigner }}"
-                                                    data-phone="{{ $address->phone }}">
-                                                {{ $address->address->address_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @if(!$shippingAddress->isEmpty())
+                                    <div>
+                                        <label><input type="radio" name="option" checked/><span
+                                                    class="address-consigner"> {{ $shippingAddress[0]->consigner }}</span></label>
+                                        <span class="tel-num address-phone">{{ $shippingAddress[0]->phone }}</span>
+                                        <select class="control-select operation-buttons address-select"
+                                                name="shipping_address_id">
+                                            @foreach($shippingAddress as $address)
+                                                <option value="{{ $address->id }}"
+                                                        {{ $address->is_default ? 'selected' : '' }} data-consigner="{{ $address->consigner }}"
+                                                        data-phone="{{ $address->phone }}">
+                                                    {{ $address->address->address_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @else
+                                    <div>
+                                        无收货地址，请添加
+                                    </div>
+                                @endif
                             </div>
-                            <a class="pull-right add" id="add-address " href="javascript:void(0)" type="button"
+                            <a class="pull-right add" id="add-address" href="javascript:void(0)" type="button"
                                data-target="#shippingAddressModal" data-toggle="modal">
                                 <label>
                                     <span class="fa fa-plus"></span>
@@ -78,20 +86,20 @@
                                 <a class="btn check-item online-pay active pay-type">在线支付
                                     <span class="triangle"></span>
                                     <span class="fa fa-check"></span>
-                                    <input type="radio" name="pay_type" class="hidden" value="online" checked />
+                                    <input type="radio" name="pay_type" class="hidden" value="online" checked/>
                                 </a>
                             </div>
                             <div class="cash-on-delivery pull-left">
                                 <a class="btn check-item  pay-type">
-                                    <input type="radio"name="pay_type" class="hidden" value="cod">
+                                    <input type="radio" name="pay_type" class="hidden" value="cod">
                                     货到付款:
                                     <select name="pay_way">
                                         <option value="card"> 刷卡</option>
                                         <option value="cash"> 现金</option>
                                     </select>
 
-                                    <span class="triangle"></span><span
-                                            class="fa fa-check"></span>
+                                    <span class="triangle"></span>
+                                    <span class="fa fa-check"></span>
                                 </a>
                             </div>
                         </div>
@@ -100,74 +108,79 @@
                     <div class="col-sm-12 table-responsive shopping-table-list delivery-option">
                         <h4 class="title">商品清单 : </h4>
                         @foreach($shops as $shop)
-                        <table class="table table-bordered shop-item">
-                            <tbody>
-                            <tr>
-                                <th colspan="3">{{ $shop->name }}({{ cons()->valueLang('user.type' , $shop->user->type) }})</th>
-                            </tr>
-                            @foreach($shop['cart_goods'] as $key => $cartGoods)
-                                <tr class="goods-item" data-id="{{ $cartGoods->goods->id }}">
-                                    <td class="store-name">
-                                        <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
-                                        {{ $cartGoods->goods->name }}
-                                    </td>
-                                    <td class="text-left unit-price">¥ <span
-                                                class="goods-price-{{ $cartGoods->goods->id }} goods-price"
-                                                data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price.'/'.$cartGoods->goods->pieces }}</span>
-                                    </td>
-                                    <td class="text-left">x <span class="goods-num"
-                                                                    data-num="{{ $cartGoods->num }}">{{ $cartGoods->num }}</span>
+                            <table class="table table-bordered shop-item">
+                                <tbody>
+                                <tr>
+                                    <th colspan="3">{{ $shop->name }}
+                                        ({{ cons()->valueLang('user.type' , $shop->user->type) }})
+                                    </th>
+                                </tr>
+                                @foreach($shop['cart_goods'] as $key => $cartGoods)
+                                    <tr class="goods-item" data-id="{{ $cartGoods->goods->id }}">
+                                        <td class="store-name">
+                                            <img class="avatar" src="{{ $cartGoods->goods->image_url }}">
+                                            {{ $cartGoods->goods->name }}
+                                        </td>
+                                        <td class="text-left unit-price">¥ <span
+                                                    class="goods-price-{{ $cartGoods->goods->id }} goods-price"
+                                                    data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price.'/'.$cartGoods->goods->pieces }}</span>
+                                        </td>
+                                        <td class="text-left">x <span class="goods-num"
+                                                                      data-num="{{ $cartGoods->num }}">{{ $cartGoods->num }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="operating">
+                                            <span class="prompt">添加订单备注 :</span>
+                                            <input name="shop[{{ $shop->id }}][remark]" class="control" type="text"/>
+                                        </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="operating">
-                                        <span class="prompt">添加订单备注 :</span>
-                                        <input name="shop[{{ $shop->id }}][remark]" class="control" type="text"/>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    @if(!$shop->coupons->isEmpty())
-                                        <div class="operating">
-                                            <span class="prompt">优惠券 :</span>
-                                            <select class="control-select coupon-control"
-                                                    name="shop[{{ $shop->id }}][coupon_id]">
-                                                @foreach($shop->coupons as $coupon)
-                                                    <option value="{{ $coupon->id }}"
-                                                            data-discount="{{ $coupon->discount }}"
-                                                            data-full="{{ $coupon->full }}"
-                                                    >
-                                                        满 {{ $coupon->full }}
-                                                        减 {{ $coupon->discount }}</option>
-                                                @endforeach
-                                                <option value="0" data-discount="0">不使用优惠券</option>
-                                            </select>
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
+                                <tr>
+                                    <td colspan="3">
+                                        @if(!$shop->coupons->isEmpty())
+                                            <div class="operating">
+                                                <span class="prompt">优惠券 :</span>
+                                                <select class="control-select coupon-control"
+                                                        name="shop[{{ $shop->id }}][coupon_id]">
+                                                    @foreach($shop->coupons as $coupon)
+                                                        <option value="{{ $coupon->id }}"
+                                                                data-discount="{{ $coupon->discount }}"
+                                                                data-full="{{ $coupon->full }}"
+                                                        >
+                                                            满 {{ $coupon->full }}
+                                                            减 {{ $coupon->discount }}</option>
+                                                    @endforeach
+                                                    <option value="0" data-discount="0">不使用优惠券</option>
+                                                </select>
+                                            </div>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
 
-                                    <div class="count-panel">
-                                        <p class="count min-money">
-                                            <span class="prompt min-money-span {{ $shop->sum_price>=$shop->min_money?'':'red' }}" data-money="{{ $shop->min_money  }}">
-                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额¥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }})
+                                        <div class="count-panel">
+                                            <p class="count min-money">
+                                            <span class="prompt min-money-span {{ $shop->sum_price>=$shop->min_money?'':'red' }}"
+                                                  data-money="{{ $shop->min_money  }}">
+                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额¥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }}
+                                                )
                                             </span>
-                                            <span class="name">合计 :&nbsp;</span>
-                                            <span class="red shop-sum-price" data-price="{{ $shop->sum_price }}">{{ $shop->sum_price }}</span>
+                                                <span class="name">合计 :&nbsp;</span>
+                                                <span class="red shop-sum-price"
+                                                      data-price="{{ $shop->sum_price }}">{{ $shop->sum_price }}</span>
 
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tfoot>
-                        </table>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
                         @endforeach
 
                     </div>
@@ -205,22 +218,22 @@
     @parent
     <script type="text/javascript">
         var deliveryWayList = $('.delivery-way-list'),
-                payTypeList = $('.pay-type-list'),
-                payWay = $('.pay-way'),
-                address = $('.address-select');
+            payTypeList = $('.pay-type-list'),
+            payWay = $('.pay-way'),
+            address = $('.address-select');
 
-        $('.address-select').change(function(){
-            var addressPhone = $ (this).find ("option:selected").data('phone');
+        $('.address-select').change(function () {
+            var addressPhone = $(this).find("option:selected").data('phone');
             var addressConsigner = $(this).find("option:selected").data('consigner');
             $('.address-consigner').html(addressConsigner);
             $('.address-phone').html(addressPhone);
         });
 
         //不是自提时，检查是否所有店铺都满足最低配送额
-        function checkeSubmitBtn(){
-            $('.min-money-span').each(function(){
-                if($(this).hasClass('red')){
-                    $('.submit-order').prop('disabled',true).removeClass('btn-primary').addClass('btn-cancel');
+        function checkeSubmitBtn() {
+            $('.min-money-span').each(function () {
+                if ($(this).hasClass('red')) {
+                    $('.submit-order').prop('disabled', true).removeClass('btn-primary').addClass('btn-cancel');
                 }
             });
         }
@@ -237,7 +250,7 @@
                 });
                 confirmFunc.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
                 $('.min-money').hide();
-                $('.submit-order').prop('disabled',false).removeClass('btn-cancel').addClass('btn-primary');
+                $('.submit-order').prop('disabled', false).removeClass('btn-cancel').addClass('btn-primary');
             } else {
                 deliveryItem.show();
                 deliveryItem.each(function () {
@@ -261,41 +274,41 @@
 
             self.addClass("active").parents().siblings().children().removeClass("active");
         });
-//        payWay.children('.check-item').on('click', function () {
-//            var obj = $(this);
-//
-//            obj.children('input[name="pay_way"]').prop('checked', true);
-//            obj.addClass('active').siblings().removeClass("active");
-//        });
+        //        payWay.children('.check-item').on('click', function () {
+        //            var obj = $(this);
+        //
+        //            obj.children('input[name="pay_way"]').prop('checked', true);
+        //            obj.addClass('active').siblings().removeClass("active");
+        //        });
 
         var confirmFunc = {
             discountAmount: function () {
                 var discountControl = $('select.coupon-control'),
-                        sumDiscount = 0,
-                        sumPriceControl = $('.sum-price'),
-                        sumDiscountControl = $('.sum-discount'),
-                        amountControl = $('.amount');
+                    sumDiscount = 0,
+                    sumPriceControl = $('.sum-price'),
+                    sumDiscountControl = $('.sum-discount'),
+                    amountControl = $('.amount');
                 discountControl.each(function () {
                     var obj = $(this),
-                            discount = parseFloat(obj.children('option:selected').data('discount')),
-                            shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
-                            shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
-                            shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
-                            var ShopMinMoney = parseFloat(shopMinMoneySpan.data('money'));
+                        discount = parseFloat(obj.children('option:selected').data('discount')),
+                        shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
+                        shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
+                        shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
+                    var ShopMinMoney = parseFloat(shopMinMoneySpan.data('money'));
                     if (discount) {
                         sumDiscount = sumDiscount.add(discount);
                         shopSumPriceControl.html((shopSumPrice.sub(discount)) + '(' + shopSumPrice + '-' + discount + ')');
-                        if(shopSumPrice.sub(discount)>ShopMinMoney){
-                            shopMinMoneySpan.html('满足最低配送额¥'+ShopMinMoney);
-                        }else{
-                            shopMinMoneySpan.html('不满足最低配送额¥'+ShopMinMoney);
+                        if (shopSumPrice.sub(discount) > ShopMinMoney) {
+                            shopMinMoneySpan.html('满足最低配送额¥' + ShopMinMoney);
+                        } else {
+                            shopMinMoneySpan.html('不满足最低配送额¥' + ShopMinMoney);
                         }
                     } else {
                         shopSumPriceControl.html(shopSumPrice.toFixed(2));
-                        if(shopSumPrice.toFixed(2)>ShopMinMoney){
-                            shopMinMoneySpan.html('满足最低配送额¥'+ShopMinMoney);
-                        }else{
-                            shopMinMoneySpan.html('不满足最低配送额¥'+ShopMinMoney);
+                        if (shopSumPrice.toFixed(2) > ShopMinMoney) {
+                            shopMinMoneySpan.html('满足最低配送额¥' + ShopMinMoney);
+                        } else {
+                            shopMinMoneySpan.html('不满足最低配送额¥' + ShopMinMoney);
                         }
 
                     }
@@ -365,8 +378,8 @@
                     var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'), goodsItem = obj.find('.goods-item');
                     goodsItem.each(function () {
                         var self = $(this),
-                                goodsPrice = parseFloat(self.find('.goods-price').data('price')),
-                                goodsNum = self.find('.goods-num').data('num');
+                            goodsPrice = parseFloat(self.find('.goods-price').data('price')),
+                            goodsNum = self.find('.goods-num').data('num');
                         sumPrice = sumPrice.add(goodsPrice.mul(goodsNum));
                     });
 
@@ -386,8 +399,8 @@
             formatCouponControl: function () {
                 $('.shop-item').each(function () {
                     var obj = $(this),
-                            shopSumPrice = obj.find('.shop-sum-price').data('price'),
-                            couponControl = obj.find('.coupon-control');
+                        shopSumPrice = obj.find('.shop-sum-price').data('price'),
+                        couponControl = obj.find('.coupon-control');
                     if (couponControl.length) {
                         var couponId = 0;
                         couponControl.children('option').each(function () {

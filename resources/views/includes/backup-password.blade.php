@@ -86,10 +86,10 @@
     <script>
         $(function () {
             var cropper = $('#backupModal'),
-                    userName = cropper.find('input[name="user_name"]'),
-                    backupMobile = cropper.find('input[name="backup_mobile"]'),
-                    licenseNum = cropper.find('input[name="license_num"]'),
-                    password = cropper.find('input[name="password"]');
+                userName = cropper.find('input[name="user_name"]'),
+                backupMobile = cropper.find('input[name="backup_mobile"]'),
+                licenseNum = cropper.find('input[name="license_num"]'),
+                password = cropper.find('input[name="password"]');
             passwordConfirm = cropper.find('input[name="password_confirmation"]');
 
             cropper.on('hidden.bs.modal', function () {
@@ -99,22 +99,18 @@
                 password.val('');
                 passwordConfirm.val('');
             });
-            $('.send-sms').on('always.hct.ajax', function (data, textStatus) {
-                if (textStatus.status >= 200 && textStatus.status < 300) {
-                    var $this = $(this);
-                    // 成功进行倒计时
-                    timeIntervalFunc({
-                        tick: function (i) {
-                            $this.html(i + ' 秒后重试');
-                        },
-                        done: function () {
-                            $this.button('reset');
-                        },
-                        count: 120
-                    });
-                }
-                return true;
-
+            $('.send-sms').on('done.hct.ajax', function (data, textStatus) {
+                var $this = $(this);
+                // 成功进行倒计时
+                timeIntervalFunc({
+                    tick: function (i) {
+                        $this.html(i + ' 秒后重试');
+                    },
+                    done: function () {
+                        $this.button('reset');
+                    },
+                    count: 120
+                });
             })
         });
     </script>

@@ -59,13 +59,14 @@ class OrderController extends Controller
         $user = auth()->user();
         $carts = $user->carts()->where('status', 1)->with('goods')->get();
         if ($carts->isEmpty()) {
-            return redirect('cart');
+            return redirect('cart')->with('message', '购物车为空');
         }
         $shops = (new CartService($carts))->formatCarts(null, true);
 
 
         //收货地址
         $shippingAddress = $user->shippingAddress()->with('address')->get();
+
 
 
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);

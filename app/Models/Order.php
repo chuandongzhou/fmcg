@@ -509,8 +509,10 @@ class Order extends Model
      */
     public function getUserTypeNameAttribute()
     {
-        return $this->user_id ? $this->user->type_name : 'retailer';
+        return $this->user_id && $this->user ? $this->user->type_name : ($this->salesmanVisitOrder ? array_search($this->salesmanVisitOrder->customer_type,
+            cons('user.type')) : 'retailer');
     }
+
 
     /**
      * 获取卖家名

@@ -128,8 +128,6 @@
 `请求参数`
 
     sort        	string              排序 （name , price , new）
-    province_id 	int                 省id
-    city_id     	int                 市id
     district_id 	int                 县id
     street_id   	int                 街道id
     name        	string              商品名

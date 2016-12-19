@@ -346,11 +346,16 @@ return [
         'length' => 4,
         'backup' => [
             'pre_name' => 'backup:code:',
-            'expire' => 60,
+            'expire' => 120,
         ],
+        'update' => [
+            'pre_name' => 'update-auth:code:',
+            'expire' => 120,
+        ],
+
         'register' => [
             'pre_name' => 'register:code',
-            'expire' => 60
+            'expire' => 120
         ]
     ],
     //地址

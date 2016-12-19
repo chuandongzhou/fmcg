@@ -62,7 +62,8 @@ class SalesmanVisitOrderController extends Controller
      * @param \App\Models\SalesmanVisitOrder $salesmanVisitOrder
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
-    public function browserExport(SalesmanVisitOrder $salesmanVisitOrder){
+    public function browserExport(SalesmanVisitOrder $salesmanVisitOrder)
+    {
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
@@ -82,7 +83,8 @@ class SalesmanVisitOrderController extends Controller
             return $this->error('订单不存在');
         }
 
-        return view('index.business.order-detail', (new BusinessService)->getOrderData($salesmanVisitOrder));
+        $viewName = $salesmanVisitOrder->type == cons('salesman.order.type.return_order') ? 'order-return-detail' : 'order-detail';
+        return view('index.business.' . $viewName, (new BusinessService)->getOrderData($salesmanVisitOrder));
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Goods;
 use App\Models\Model;
 use App\Models\Order;
 use App\Services\GoodsService;
@@ -48,7 +49,7 @@ class HomeController extends Controller
 
     public function test()
     {
-        //return  array_add(['name' => 'Desk', 'age' => 30], 'price', 100);
+
     }
 
 }

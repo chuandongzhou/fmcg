@@ -209,16 +209,18 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
         $router->resource('my-goods', 'MyGoodsController');
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
+            $router->group(['prefix' => 'security'], function ($router) {
+                $router->get('send-sms', 'SecurityController@sendSms');//安全设置发送原密保手机验证码
+                $router->post('validate-backup-sms', 'SecurityController@validateBackupSms');//密保手机验证码验证
+                $router->get('new-backup-sms', 'SecurityController@sendNewBackupSms');//获取新密保手机验证码
+                $router->post('edit-backup-phone', 'SecurityController@editBackupPhone');//设置新密保手机
+                $router->post('validate-old-password', 'SecurityController@validateOldPassword');//验证原密码
+            });
             $router->put('shop/{shop}', 'ShopController@shop');          //商家信息
             $router->resource('delivery-area', 'DeliveryAreaController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //商家配送区域
             $router->get('order-data', 'ShopController@orderData');//商家首页订单统计信息
             //  $router->put('password', 'SecurityController@password');          //修改密码
-            $router->get('backup-sms', 'SecurityController@backupSms');//安全设置发送原密保手机验证码
-            $router->post('validate-backup-sms', 'SecurityController@validateBackupSms');//密保手机验证码验证
-            $router->post('new-backup-sms', 'SecurityController@sendNewBackupSms');//获取新密保手机验证码
-            $router->post('edit-backup-phone', 'SecurityController@editBackupPhone');//设置新密保手机
-            $router->post('validate-old-password', 'SecurityController@validateOldPassword');//验证原密码
             $router->post('edit-password', 'SecurityController@editPassword');//修改
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
@@ -238,7 +240,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('like', 'LikeController');
         $router->post('address/street', 'AddressController@street');
         $router->post('address/province-id', 'AddressController@getProvinceIdByName');
-        $router->get('address/city-detail','AddressController@getCityDetail');
+        $router->get('address/city-detail', 'AddressController@getCityDetail');
         $router->controller('auth', 'AuthController');
         $router->group(['prefix' => 'coupon'], function ($router) {
             $router->get('user-coupon/{expire?}', 'CouponController@userCoupon');
@@ -347,7 +349,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
         $router->group(['prefix' => 'wechat-pay'], function ($router) {
             $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
-            $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id', '[0-9]+');
+            $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id',
+                '[0-9]+');
             $router->any('pay-result', 'WechatPayController@payResult');
         });
 

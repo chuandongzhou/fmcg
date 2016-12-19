@@ -9,9 +9,8 @@ use App\Http\Requests\Api\v1\CodeRequest;
 use App\Http\Requests\Api\v1\UpdateBackupPhoneRequest;
 use Hash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
-use App\Services\RedisService;
 use App\Services\CodeService;
+use Illuminate\Session\Store as Session;
 
 class SecurityController extends Controller
 {
@@ -37,7 +36,7 @@ class SecurityController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function backupSms()
+    public function sendSms()
     {
         $user = auth()->user();;
         if ($user->status != cons('status.on')) {
@@ -46,13 +45,11 @@ class SecurityController extends Controller
         if ($user->audit_status != cons('user.audit_status.pass')) {
             return $this->error('账户未审核');
         }
+        $codeService = new CodeService;
         //发送验证码
-        $res = (new CodeService)->sendCode('code','backup', $user->backup_mobile, $user->user_name);
-        if ($res['status']) {
-            return $this->success($res['mes']);
-        } else {
-            return $this->error($res['mes']);
-        }
+        $res = $codeService->sendCode('code', 'update', $user->backup_mobile, $user->user_name);
+
+        return $res ? $this->success('发送成功') : $this->error($codeService->getError());
 
     }
 
@@ -63,18 +60,20 @@ class SecurityController extends Controller
      * @return \WeiHeng\Responses\Apiv1Response
      */
 
-    public function validateBackupSms(CodeRequest $request)
+    public function validateBackupSms(CodeRequest $request, Session $session)
     {
         $code = $request->input('code');
         $user = auth()->user();
         //验证验证码
-        $res = (new CodeService)->validateCode('backup', $code, $user->user_name);
-        if ($res['status']) {
-            return $this->success($res['mes']);
-        } else {
-            return $this->error($res['mes']);
+        $codeService = new CodeService;
+        $res = $codeService->validateCode('update', $code, $user->user_name);
+        if ($res) {
+            $validatePhoneFor = $session->get('validate.for');
+            $session->forget('validate.for');
+            $session->set('edit.' . $validatePhoneFor, true);
+            return $this->success('验证成功');
         }
-
+        return $this->error($codeService->getError());
     }
 
     /**
@@ -91,12 +90,9 @@ class SecurityController extends Controller
         }
         $user = auth()->user();
         //发送验证码
-        $res = (new CodeService)->sendCode('code','backup', $phone, $user->user_name);
-        if ($res['status']) {
-            return $this->success($res['mes']);
-        } else {
-            return $this->error($res['mes']);
-        }
+        $codeService = new CodeService;
+        $res = $codeService->sendCode('code', 'backup', $phone, $user->user_name);
+        return $res ? $this->success('发送成功') : $this->error($codeService->getError());
     }
 
     /**
@@ -105,17 +101,19 @@ class SecurityController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function editBackupPhone(UpdateBackupPhoneRequest $requst)
+    public function editBackupPhone(UpdateBackupPhoneRequest $requst, Session $session)
     {
         $code = $requst->input('code');
         $phone = $requst->input('backup_mobile');
         $user = auth()->user();
         //验证验证码
-        $res = (new CodeService)->validateCode('backup', $code, $user->user_name);
-        if (!$res['status']) {
-            return $this->error($res['mes']);
+        $codeService = new CodeService;
+        $res = $codeService->validateCode('update', $code, $user->user_name);
+        if (!$res) {
+            return $this->error($codeService->getError());
         }
         if ($user->fill(['backup_mobile' => $phone])->save()) {
+            $session->forget('edit.backup-phone');
             return $this->success('修改密保手机成功');
         }
         return $this->error('修改密保手机时遇到错误');
@@ -129,13 +127,15 @@ class SecurityController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function validateOldPassword(Request $request)
+    public function validateOldPassword(Request $request, Session $session)
     {
         $password = $request->input('old_password');
 
         $user = auth()->user();
 
         if (Hash::check($password, $user->password)) {
+            $session->forget('validate.for');
+            $session->set('edit.password', true);
             return $this->success('验证成功');
         }
         return $this->error('原密码错误');
@@ -149,12 +149,13 @@ class SecurityController extends Controller
      * @return \WeiHeng\Responses\Apiv1Response
      */
 
-    public function editPassword(UpdatePasswordRequest $request)
+    public function editPassword(UpdatePasswordRequest $request, Session $session)
     {
         $password = $request->input('password');
 
         $user = auth()->user();
         if ($user->fill(['password' => $password])->save()) {
+            $session->forget('edit.password');
             return $this->success('修改密码成功');
         }
         return $this->error('修改失败');

@@ -11,8 +11,8 @@
         <div class="col-sm-12 security-setting-wrap">
             <div class="item">账户上次登录时间 : {{ $user->last_login_at }}</div>
             <div class="item">
-                保密手机 : {{  substr_replace($user->backup_mobile,'****',3,4) }} <span class="prompt">(用于接收短信和修改密码使用)</span>
-                <a href="{{ url('personal/security/old-backup-phone?type=old-backup-phone') }}"><span class="edit"><i class="iconfont icon-xiugai"></i>修改</span></a>
+                密保手机 : {{  substr_replace($user->backup_mobile,'****',3,4) }} <span class="prompt">(用于接收短信和修改密码使用)</span>
+                <a href="{{ url('personal/security/validate-phone?type=backup-phone') }}"><span class="edit"><i class="iconfont icon-xiugai"></i>修改</span></a>
             </div>
             <div class="item">
                 密码 <span class="prompt">(用于登录和修改密码使用，请妥善保管)</span>

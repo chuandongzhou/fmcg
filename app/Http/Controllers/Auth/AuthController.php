@@ -43,7 +43,7 @@ class AuthController extends Controller
 //        if (!$type || !$typeId = array_get(cons('user.type') ,$type)) {
 //            return redirect('auth/guide');
 //        }
-
+        app('cookie')->queue('last_handle_time', 0, -2628000);
         return view('auth.login');
     }
 
@@ -98,7 +98,6 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        app('cookie')->queue('last_handle_time', 0, -2628000);
         return redirect('auth/login');
     }
 }

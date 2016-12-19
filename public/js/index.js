@@ -975,9 +975,6 @@ function displayList() {
         }
     })
 }
-function popClose(name) {
-    $(name).css("display", "none");
-}
 
 function showSuccessMeg(url) {
     $(".popup").css({"opacity": "1", "top": "20px"});
@@ -988,7 +985,6 @@ function showSuccessMeg(url) {
         } else {
             location.reload();
         }
-
     }, 3000);
 }
 //设置地址

@@ -388,3 +388,36 @@ if (!function_exists('in_windows')) {
         return false !== strpos($userAgent, 'windows nt') && strpos($path, 'upload/file') === false && strpos($path, 'auth/logout') === false;
     }
 }
+
+if (!function_exists('obfuscate_string')) {
+
+    /**
+     * 模糊字符串
+     *
+     * @param string $string
+     * @param int $keepTail
+     * @return string
+     */
+    function obfuscate_string($string, $keepTail = 0)
+    {
+        if (empty($string) || !is_string($string)) {
+            return '';
+        }
+
+        $len = mb_strlen($string);
+        $olen = floor($len / 2) - 1;
+
+        if ($len < $keepTail) {
+            return $string;
+        }
+
+        $tail = mb_substr($string, $len - $keepTail, $keepTail);
+        $string = mb_substr($string, 0, $len - $keepTail);
+        $nlen = mb_strlen($string);
+        if ($olen > $nlen) {
+            return str_repeat('*', $nlen) . $tail;
+        }
+
+        return mb_substr($string, 0, $nlen - $olen) . str_repeat('*', $olen) . $tail;
+    }
+}

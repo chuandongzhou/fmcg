@@ -178,7 +178,7 @@ class SalesmanVisitOrder extends Model
         if (isset($data['customer']) && !empty($data['customer'])) {
             $customer = $data['customer'];
             if (is_numeric($customer)) {
-                return $query->where('id',$customer);
+                return $query->where('id', $customer);
             } else {
                 return $query = $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
                     $query->where('name', 'like', $customer);
@@ -293,5 +293,15 @@ class SalesmanVisitOrder extends Model
     public function getOrderStatusNameAttribute()
     {
         return $this->order_id && $this->order ? $this->order->status_name : '未审核';
+    }
+
+    /**
+     * 获取客户类型
+     *
+     * @return int
+     */
+    public function getCustomerTypeAttribute()
+    {
+        return $this->salesmanCustomer ? $this->salesmanCustomer->type : 1;
     }
 }

@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                    {{--<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>--}}
                     <button type="button" class="btn btn-success btn-sm btn-crop" data-error-text="裁剪失败">裁剪并提交
                     </button>
                 </div>

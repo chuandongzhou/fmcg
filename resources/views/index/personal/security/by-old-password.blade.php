@@ -9,9 +9,9 @@
 @section('right')
     <div class="row margin-clear">
         <div class="col-sm-12 security-setting-wrap">
-            <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/validate-old-password') }}"
+            <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/security/validate-old-password') }}"
                   method="post"
-                  data-done-url="{{ url('personal/security/edit-password') }}">
+                  data-done-url="{{ url('personal/security/password') }}">
                 <div class="item title">您在通过原来密保手机验证码重新设置密保手机号</div>
                 <div class="item">
 

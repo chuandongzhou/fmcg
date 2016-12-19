@@ -316,5 +316,15 @@ class SalesmanCustomer extends Model
         return $this->shop_id && $this->shop ? $this->shop->user_name : '';
     }
 
+    /**
+     * 获取客户类型名
+     *
+     * @return mixed
+     */
+    public function getTypeNameAttribute()
+    {
+        return array_search($this->type, cons('user.type'));
+    }
+
 
 }

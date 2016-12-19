@@ -279,7 +279,7 @@
 
 `成功返回：`
 
-    deal_code             string                二维码地址
+    code_url              string                二维码地址
     created_at            timestamp             二维码生成时间
     
     

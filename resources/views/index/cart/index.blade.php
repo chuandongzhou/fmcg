@@ -132,13 +132,6 @@
                             </table>
                         @endforeach
                     </div>
-                    <!--<div class="col-xs-4 col-xs-offset-4 cart-empty">-->
-                    <!--<span class="fa fa-shopping-cart car-icon"></span>-->
-                    <!--<ul>-->
-                    <!--<li>你还没有添加商品到购物车哦，赶紧去看看吧~~</li>-->
-                    <!--<li><a>去购物></a></li>-->
-                    <!--</ul>-->
-                    <!--</div>-->
                 </div>
                 <div class="row clearing text-right  ">
                     <div class="col-xs-6 text-left left-operation">
@@ -173,4 +166,3 @@
         })
     </script>
 @stop
-

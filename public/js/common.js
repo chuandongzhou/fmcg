@@ -384,8 +384,7 @@ var commonAjaxSetup = function () {
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
-                    && false !== form.triggerHandler('fail.hct.ajax', params)
-                    && !preventDefault) {
+                    && false !== form.triggerHandler('fail.hct.ajax', params)) {
                     self.html('操作失败');
 
                     var json = jqXHR['responseJSON'];
@@ -397,6 +396,11 @@ var commonAjaxSetup = function () {
                                 self.html(json['message']);
                             }, 0);
                         }
+                    }
+                    if(preventDefault) {
+                        setTimeout(function(){
+                            self.button('reset');
+                        }, delay)
                     }
                 }
 
@@ -415,6 +419,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('always.hct.ajax', params)
                     && false !== form.triggerHandler('always.hct.ajax', params)
                     && !preventDefault) {
+
                     self.data('alwaysIntervalId', setTimeout(function () {
                         // 处理刷新事件
                         if (textStatus == 'success') {
@@ -450,14 +455,14 @@ var commonAjaxSetup = function () {
  */
 var successMeg = function (mes) {
     $('.modal').modal('hide');
-    var popup = $('<div class="popup"><h3>温馨提示 :</h3><div class="success-meg-content content">' + mes + '</div></div>');
-    popup.appendTo('body');
-
-    popup.css({"opacity": "1", "top": 100 + "px"});
+    var popup = $('#popup');
+    if(!popup.length) {
+        popup = $('<div class="popup" id="popup"><h3>温馨提示 :</h3><div class="success-meg-content content">' + mes + '</div></div>').appendTo('body');
+    }
+    popup.animate({"opacity": "1", "top": 100 + "px"});
     setTimeout(function () {
-        popup.css({"opacity": "0", "top": "-150px"});
+        popup.animate({"opacity": "0", "top": "-150px"});
     }, 3000);
-
 }
 
 /**
