@@ -398,7 +398,7 @@ class ReportController extends Controller
                 $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报表', ['size' => 16],
                     $cellAlignCenter);
 
-                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders);
+                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders->pluck('orders')->collapse());
             }
             $table->addRow();
             $table->addCell(10500, $gridSpan9)->addText('客戶信息', null,
@@ -551,9 +551,10 @@ class ReportController extends Controller
         $table->addCell(1500)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0), null, $cellAlignCenter);
         $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0), null, $cellAlignCenter);
         $table->addCell(1500)->addText($platFormOrdersList->count(), null, $cellAlignCenter);
-        $table->addCell(1000)->addText($platFormOrdersList->sum('amount'), null, $cellAlignCenter);
+        $table->addCell(1000)->addText( $platFormOrdersList->sum('amount'), null, $cellAlignCenter);
         $table->addCell(1000)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()), null, $cellAlignCenter);
-        $table->addCell(1000)->addText( (isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()), null, $cellAlignCenter);
+          $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
+                  $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), null, $cellAlignCenter);
 
 
     }
