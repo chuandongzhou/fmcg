@@ -28,8 +28,8 @@
                 </div>
             </div>
             <div class="row table-list-row confirm-order ">
-                <form class="form-horizontal" action="{{ url('order/submit-order') }}" method="post" autocomplete="off">
-                    {{ csrf_field() }}
+                <form class="form-horizontal ajax-form" action="{{ url('api/v1/order/submit-order') }}" data-done-url="{{ url('order/finish-order') }}" method="post" autocomplete="off">
+
                     <div class="col-sm-12 delivery-mode delivery-option">
                         <h4 class="title">提货方式</h4>
                         <div class="item checks delivery-way-list">
@@ -47,22 +47,26 @@
                     <div class="col-sm-12 delivery-item delivery-option">
                         <h4 class="title msg-title">收货信息</h4>
                         <div class="item clearfix">
-                            <div class="pull-left address-item">
+                            <div class="pull-left address-item option-panel">
                                 @if(!$shippingAddress->isEmpty())
-                                    <div>
-                                        <label><input type="radio" name="option" checked/><span
-                                                    class="address-consigner"> {{ $shippingAddress[0]->consigner }}</span></label>
-                                        <span class="tel-num address-phone">{{ $shippingAddress[0]->phone }}</span>
-                                        <select class="control-select operation-buttons address-select"
-                                                name="shipping_address_id">
-                                            @foreach($shippingAddress as $address)
-                                                <option value="{{ $address->id }}"
-                                                        {{ $address->is_default ? 'selected' : '' }} data-consigner="{{ $address->consigner }}"
-                                                        data-phone="{{ $address->phone }}">
-                                                    {{ $address->address->address_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <input class="shipping_address_inp" name="shipping_address_id" type="hidden"
+                                           value="{{  !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->id: $shippingAddress->where('is_default',1)[0]->id }}"/>
+                                    <div class="default-checked" id="default-checked">
+                                        <div class="content">
+                                            <span>{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->consigner:$shippingAddress->where('is_default',1)[0]->consigner }}</span>
+                                            <span class="tel-num">{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->phone:$shippingAddress->where('is_default',1)[0]->phone }}</span>
+                                            <div class="address">{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->address->address_name:$shippingAddress->where('is_default',1)[0]->address->address_name }}</div>
+                                        </div>
+                                        <i class="fa fa-angle-down"></i>
+                                    </div>
+                                    <div class="option-wrap">
+                                        @foreach($shippingAddress as $address)
+                                            <div class="option-item address-select" data-id="{{ $address->id }}">
+                                                <span> {{$address->consigner }}</span>
+                                                <span class="tel-num">{{ $address->phone }}</span>
+                                                <span class="address">{{ $address->address->address_name }}</span>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 @else
                                     <div>
@@ -70,7 +74,7 @@
                                     </div>
                                 @endif
                             </div>
-                            <a class="pull-right add" id="add-address" href="javascript:void(0)" type="button"
+                            <a class=" add" id="add-address" href="javascript:void(0)" type="button"
                                data-target="#shippingAddressModal" data-toggle="modal">
                                 <label>
                                     <span class="fa fa-plus"></span>
@@ -89,18 +93,21 @@
                                     <input type="radio" name="pay_type" class="hidden" value="online" checked/>
                                 </a>
                             </div>
-                            <div class="cash-on-delivery pull-left">
-                                <a class="btn check-item  pay-type">
-                                    <input type="radio" name="pay_type" class="hidden" value="cod">
-                                    货到付款:
-                                    <select name="pay_way">
-                                        <option value="card"> 刷卡</option>
-                                        <option value="cash"> 现金</option>
-                                    </select>
-
-                                    <span class="triangle"></span>
-                                    <span class="fa fa-check"></span>
-                                </a>
+                            <div class="cash-on-delivery  pull-left">
+                                    <div class="btn check-item option-panel pay-type">
+                                        <input type="hidden" value="cash" name="pay_way"/>
+                                        <input type="radio" name="pay_type" class="hidden" value="cod">
+                                        <div class="default-checked">货到付款 :
+                                            <span class="content">现金</span>
+                                            <span class="fa fa-angle-down"></span>
+                                        </div>
+                                        <span class="triangle"></span>
+                                        <span class="fa fa-check"></span>
+                                        <div class="option-wrap cash-on-item text-center ">
+                                            <div class="option-item pay_way_select" data-value="cash">现金</div>
+                                            <div class="option-item pay_way_select" data-value="card">刷卡</div>
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -205,7 +212,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 text-right padding-clear">
-                        <button class="btn btn-primary submit-order">提交订单</button>
+                        <button type="submit" class="btn btn-primary submit-order">提交订单</button>
                     </div>
                 </form>
             </div>
@@ -218,16 +225,9 @@
     @parent
     <script type="text/javascript">
         var deliveryWayList = $('.delivery-way-list'),
-            payTypeList = $('.pay-type-list'),
-            payWay = $('.pay-way'),
-            address = $('.address-select');
-
-        $('.address-select').change(function () {
-            var addressPhone = $(this).find("option:selected").data('phone');
-            var addressConsigner = $(this).find("option:selected").data('consigner');
-            $('.address-consigner').html(addressConsigner);
-            $('.address-phone').html(addressPhone);
-        });
+                payTypeList = $('.pay-type-list'),
+                payWay = $('.pay-way'),
+                address = $('.address-select');
 
         //不是自提时，检查是否所有店铺都满足最低配送额
         function checkeSubmitBtn() {
@@ -265,35 +265,23 @@
         });
         payTypeList.find('.pay-type').on('click', function () {
             var self = $(this);
-            if (self.hasClass("online-pay")) {
-                $(".cash-on-item").hide().find('input[name="pay_way"]').prop('disabled', true);
-            } else if (self.siblings().hasClass("cash-on-item")) {
-                $(".cash-on-item").show().find('input[name="pay_way"]').prop('disabled', false);
-            }
-            self.find('input[name="pay_type"]').prop('checked', true);
-
+            self.find('input[name="pay_type"]').attr('checked', 'checked');
+            self.parent().siblings().find('input[name="pay_type"]').removeAttr('checked');
             self.addClass("active").parents().siblings().children().removeClass("active");
         });
-        //        payWay.children('.check-item').on('click', function () {
-        //            var obj = $(this);
-        //
-        //            obj.children('input[name="pay_way"]').prop('checked', true);
-        //            obj.addClass('active').siblings().removeClass("active");
-        //        });
-
         var confirmFunc = {
             discountAmount: function () {
                 var discountControl = $('select.coupon-control'),
-                    sumDiscount = 0,
-                    sumPriceControl = $('.sum-price'),
-                    sumDiscountControl = $('.sum-discount'),
-                    amountControl = $('.amount');
+                        sumDiscount = 0,
+                        sumPriceControl = $('.sum-price'),
+                        sumDiscountControl = $('.sum-discount'),
+                        amountControl = $('.amount');
                 discountControl.each(function () {
                     var obj = $(this),
-                        discount = parseFloat(obj.children('option:selected').data('discount')),
-                        shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
-                        shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
-                        shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
+                            discount = parseFloat(obj.children('option:selected').data('discount')),
+                            shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
+                            shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
+                            shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
                     var ShopMinMoney = parseFloat(shopMinMoneySpan.data('money'));
                     if (discount) {
                         sumDiscount = sumDiscount.add(discount);
@@ -378,8 +366,8 @@
                     var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'), goodsItem = obj.find('.goods-item');
                     goodsItem.each(function () {
                         var self = $(this),
-                            goodsPrice = parseFloat(self.find('.goods-price').data('price')),
-                            goodsNum = self.find('.goods-num').data('num');
+                                goodsPrice = parseFloat(self.find('.goods-price').data('price')),
+                                goodsNum = self.find('.goods-num').data('num');
                         sumPrice = sumPrice.add(goodsPrice.mul(goodsNum));
                     });
 
@@ -399,8 +387,8 @@
             formatCouponControl: function () {
                 $('.shop-item').each(function () {
                     var obj = $(this),
-                        shopSumPrice = obj.find('.shop-sum-price').data('price'),
-                        couponControl = obj.find('.coupon-control');
+                            shopSumPrice = obj.find('.shop-sum-price').data('price'),
+                            couponControl = obj.find('.coupon-control');
                     if (couponControl.length) {
                         var couponId = 0;
                         couponControl.children('option').each(function () {
@@ -431,6 +419,30 @@
         });
         confirmFunc.discountAmount();
         confirmFunc.shopMinMoney();
+
+        $(".default-checked").click(function (e) {
+            $(this).siblings(".option-wrap").slideToggle();
+        })
+
+        $(".option-item").click(function () {
+            var checkedHtml = $(this).html(), self = $(this);
+
+            self.hasClass('address-select') && $('input[name="shipping_address_id"]').val(self.data('id'));
+            self.hasClass('pay_way_select') &&  $('input[name="pay_way"]').val(self.data('value'));
+            self.parents(".option-wrap").siblings(".default-checked").children(".content").html(checkedHtml);
+            self.parents(".option-wrap").slideUp();
+        })
+
+        $('.option-panel').click(function (e) {
+            e.stopPropagation();
+        })
+
+        $(document).click(function (e) {
+            e = e || window.event;
+            if (e.target != $('.option-panel')[0]) {
+                $(".option-panel .option-wrap").slideUp();
+            }
+        });
     </script>
 @stop
 

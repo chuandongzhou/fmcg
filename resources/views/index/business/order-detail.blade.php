@@ -132,7 +132,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                {{ $order->type == cons('salesman.order.type.order') ? '订货' : '退货' }}商品
+                                {{ $order->type == cons('salesman.order.type.order') ? '订货商品' : '退货商品' }}
                             </h3>
                         </div>
                         <div class="panel-container table-responsive">
@@ -231,6 +231,7 @@
 
                                                 <div class="enter-num-panel pull-left">
                                                     <input data-id="{{ $goods['id'] }}" data-name="num"
+                                                           data-month="{{ $goods['month'] }}"
                                                            class="edit-text" autofocus
                                                            value="{{  $goods['num'] }}"/>
                                                     {{--<div class="prompt">--}}
@@ -238,10 +239,10 @@
                                                     {{--{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}--}}
                                                     {{--</div>--}}
                                                 </div>
-                                                <span class="pull-right">{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}</span>
+                                                <span class="pull-right goods-pieces">{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}</span>
                                             </td>
                                             <td>
-                                                <a class="edit commodity-num{{ $goods['id'] }}"
+                                                <a class="edit commodity-num commodity-num{{ $goods['id'] }}"
                                                    data-url="business/order/change"
                                                    onclick="editText('commodity-num{{ $goods['id'] }}')">
                                                     <i class="iconfont icon-xiugai "></i>编辑</a>
@@ -283,7 +284,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a class="edit money{{ $item->id }}"
+                                                <a class="edit money money{{ $item->id }}"
                                                    data-url="business/order/update-order-display-fee"
                                                    data-id="{{ $item->id }}" data-parse="true" data-type="edit"
                                                    onclick="editText('money{{ $item->id }}')"><i
@@ -307,30 +308,66 @@
     <script type="text/javascript">
 
         function editText(id) {
-            var content = $("#" + id);
+            var content = $("#" + id), self = $("." + id);
             if (content.is(":visible")) {
                 $("." + id).html("<i class='iconfont icon-baocun'></i> 保存");
                 content.hide().siblings(".enter-num-panel").show();
 
+                if (self.hasClass('money') || self.hasClass('commodity-num')) {
+                    content.next('.enter-num-panel').append('<div class="prompt"><div>剩余陈列:<span class="surplus"><i class="fa fa-spinner fa-pulse"></i></span></div><div>未审核陈列:<span class="non-confirm"><i class="fa fa-spinner fa-pulse"></i></span></div></div>');
+                    var url = self.hasClass('commodity-num') ? site.api('business/order/mortgage-goods-surplus') : site.api('business/order/display-fee-surplus'),
+                            data = self.hasClass('commodity-num') ? {
+                                id: content.siblings('.enter-num-panel').children('.edit-text').data('id'),
+                                month: content.next('.enter-num-panel').find('input').data('month'),
+                                order_id: '{{ $order->id }}'
+                            } : {
+                                customer_id: '{{ $order->salesmanCustomer->id }}',
+                                month: self.parent().prev().prev().html(),
+                                order_id: '{{ $order->id }}'
+                            };
+
+                    $.ajax({
+                        url: url,
+                        method: 'get',
+                        data: data
+                    }).done(function (data) {
+                        var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥'+data.surplus, nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥'+data.nonConfirm;
+                        var messageContainer = content.next('.enter-num-panel').find('.prompt');
+                        messageContainer.find('.surplus').html(surplus);
+                        messageContainer.find('.non-confirm').html(nonConfirm);
+                    }).fail(function () {
+                        content.next('.enter-num-panel').find('.prompt').html('查询失败');
+
+                    });
+                }
+
             } else {
-                var self = $("." + id), url = self.data('url');
+
+                var url = self.data('url');
                 var oldValueControl = content,
-                    isParse = self.data('parse'),
-                    oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
-                    newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
-                    newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
-                    name = newValueControl.data('name'),
-                    id = newValueControl.data('id'),
-                    data = {};
+                        isParse = self.data('parse'),
+                        oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
+                        newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
+                        newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
+                        name = newValueControl.data('name'),
+                        id = newValueControl.data('id'),
+                        data = {};
                 if (oldValue != newValue) {
                     if (isParse && newValue < 0) {
                         alert('请正确填写陈列费');
                         return false;
                     }
+                    var load = '<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>';
+                    $('body').append(load);
                     data[name] = newValue;
                     if (id > 0) {
                         data['id'] = id;
-                        data['order_id'] = '{{ $order->id }}';
+                        data['order_id'] = '{{  $order->id }}';
+
+                    }
+                    if (self.hasClass('commodity-num')) {
+                        data['month'] = newValueControl.data('month');
+                        data['customer_id'] = '{{ $order->salesmanCustomer->id }}';
                     }
                     self.html('<i class="fa fa-spinner fa-pulse"></i> 操作中');
                     $.ajax({
@@ -341,6 +378,7 @@
 
                         self.html("<i class='iconfont icon-xiugai'></i> 编辑");
                         content.html(newValue);
+                        content.next('.enter-num-panel').find('input').val(newValue);
                         content.show().siblings(".enter-num-panel").hide();
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         if (errorThrown == 'Unauthorized') {
@@ -348,15 +386,20 @@
                         } else {
                             tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
                             content.html(oldValue);
+                            content.next('.enter-num-panel').find('input').val(oldValue);
                             content.show().siblings(".enter-num-panel").hide();
                             self.html("<i class='iconfont icon-xiugai'></i> 编辑");
                         }
+                    }).always(function () {
+                        self.parent().children('.prompt').remove();
+                        $('body').find('.loading').remove();
                     });
 
                 } else {
                     self.html("<i class='iconfont icon-xiugai'></i> 编辑");
-                    content.html(newValue);
                     content.show().siblings(".enter-num-panel").hide();
+                    self.parent().children('.prompt').remove();
+                    $('body').find('.loading').remove();
                 }
 
 

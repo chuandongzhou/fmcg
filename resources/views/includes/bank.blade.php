@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body address-select">
                     <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/bank') }}"
-                          method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+                          method="post" data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="card_number">卡号:</label>
 
@@ -84,6 +84,8 @@
                 $('select[name="card_type"] option[value=' + cardType + ']').attr("selected", "selected");
                 form.attr('action', site.api(obj.hasClass('add-bank-account') ? 'personal/bank' : 'personal/bank/' + id));
                 form.attr('method', obj.hasClass('add-bank-account') ? 'post' : 'put');
+            }).on('hide.bs.modal', function (e) {
+                form.formValidate('reset');
             });
 
 

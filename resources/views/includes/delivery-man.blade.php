@@ -4,7 +4,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/delivery-man') }}"
-                      method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+                      method="post" data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                     <div class="modal-header choice-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                         <div class="modal-title forgot-modal-title" id="deliveryModalLabel">
@@ -104,6 +104,8 @@
                 form.attr('action', site.api(obj.hasClass('add') ?'personal/delivery-man':'personal/delivery-man/' + id));
                 form.attr('method', obj.hasClass('add') ? 'post' : 'put');
 
+            }).on('hide.bs.modal', function (e) {
+                form.formValidate('reset');
             });
 
         });

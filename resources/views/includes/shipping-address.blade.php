@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal ajax-form no-prompt"
                           action="{{ url('api/v1/personal/shipping-address') }}"
-                          method="post" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+                          method="post" data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="card_number"><span class="red">*</span>
                                 收货人:</label>
@@ -122,7 +122,7 @@
 
             //点击添加或者编辑按钮修改数据
 
-            $('#shippingAddressModal').on('shown.bs.modal', function (e) {
+            shippingAddressModal.on('shown.bs.modal', function (e) {
                 var obj = $(e.relatedTarget);
                 $('#shippingAddressModalLabel span').html(obj.hasClass('add') ?'添加收货地址':'编辑收货地址');
                 var id = obj.data('id') || '',
@@ -151,6 +151,8 @@
 
                 setAddress(province, city, district, street);
                 getShopAddressMap(x_lng, y_lat);
+            }).on('hide.bs.modal', function (e) {
+                form.formValidate('reset');
             });
 
         })

@@ -43,7 +43,7 @@
             }
             //首次加载店铺商品
             $('.my-goods').click(function () {
-                $('.goods-list').html('<div class="loading-img" style="text-align:center;" ><img src="' + "{{ asset('images/loading.gif') }}" + '"/></div>');
+
                 getGoods(1);
             });
             //分页查询
@@ -84,6 +84,7 @@
                     return false;
                 }
                 $('.goods-submit').prop('disabled', true);
+                $('.goods-submit').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
                 $.ajax({
                     url: site.api('personal/model/recommend-goods'),
                     method: 'post',
@@ -102,6 +103,9 @@
             });
             // 获取商品分页内容
             function getGoods(currentPage) {
+                var oldHtml = $('.goods-list').html();
+                $('.page ul li').prop('disabled',true);
+                $('.goods-list').html('<div class="loading-img" style="text-align:center;" ><img src="' + "{{ asset('images/loading.gif') }}" + '"/></div>');
                 $.ajax({
                     url: site.api('personal/model/goods-page?currentPage=' + currentPage),
                     method: 'get'
@@ -213,6 +217,8 @@
                     if (!$('.goods-list').children('.img-wrap').length) {
                         $('.close').click();
                     }
+                    $('.page ul li').prop('disabled',false);
+                    $('.goods-list').html(oldHtml);
                     alert('获取失败');
 
 

@@ -85,7 +85,7 @@
                                value="{{ $salesmanCustomer->business_area }}"
                                type="text">
                     </div>
-                    <div class="col-sm-1 ">
+                    <div class="col-sm-1 company">
                         平米
                     </div>
                 </div>

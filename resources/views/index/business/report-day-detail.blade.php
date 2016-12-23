@@ -6,7 +6,7 @@
 @section('top-title')
     <a href="{{ url('business/salesman') }}">业务管理</a> >
     <a href="{{ url('business/report') }}">业务员报告</a> >
-    <span class="second-level">业务报告明细</span>
+    <span class="second-level">业务报表明细</span>
 @stop
 
 @section('right')
@@ -24,7 +24,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <b>{{ $salesman->name }} - 业务报告</b>
+                        <b>{{ $salesman->name }} - 业务报表</b>
                         <span>{{ $startDate }}</span>
                     </h3>
                 </div>
@@ -69,134 +69,149 @@
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade in active" id="home">
                                 @foreach($visitData  as  $customerId => $visit)
-                                    <table class="table table-center table-bordered margin-clear business-table">
-                                        <thead>
-                                        <tr>
-                                            <th colspan="5" class="title-blue">客户信息</th>
-                                        </tr>
-                                        <tr>
-                                            <th>客户编号</th>
-                                            <th>店铺名称</th>
-                                            <th>联系人</th>
-                                            <th>联系电话</th>
-                                            <th>营业地址</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>{{ $customerId }}</td>
-                                            <td>{{ $visit['customer_name'] }}</td>
-                                            <td>{{ $visit['contact'] }}</td>
-                                            <td>{{ $visit['contact_information'] }}</td>
-                                            <td> {{ $visit['shipping_address_name'] }}
-                                                <input type="hidden" class="map-data"
-                                                       data-business-lng="{{ $visit['business_address_lng'] }}"
-                                                       data-business-lat="{{ $visit['business_address_lat'] }}"
-                                                       data-lng="{{ $visit['lng'] }}"
-                                                       data-lat="{{ $visit['lat'] }}"
-                                                       data-number="{{ $visit['visit_id'] }}"
-                                                       data-name="{{ $visit['customer_name'] }}"
-                                                ></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    @if(isset($visit['display_fee']))
-                                        <table class="table table-center table-bordered margin-clear">
+                                    <div class="table-list">
+                                        <table class="table table-center table-bordered margin-clear business-table">
                                             <thead>
                                             <tr>
-                                                <th colspan="3" class="title">陈列费（现金）</th>
+                                                <th colspan="6" class="title-blue">客户信息</th>
+                                            </tr>
+                                            <tr>
+                                                <th>客户编号</th>
+                                                <th>店铺名称</th>
+                                                <th>联系人</th>
+                                                <th>联系电话</th>
+                                                <th>营业地址</th>
+                                                <th>提交地址</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <th>月份</th>
-                                                <th>拜访时间</th>
-                                                <th>金额</th>
+                                                <td>{{ $customerId }}</td>
+                                                <td>{{ $visit['customer_name'] }}</td>
+                                                <td>{{ $visit['contact'] }}</td>
+                                                <td>{{ $visit['contact_information'] }}</td>
+                                                <td> {{ $visit['shipping_address_name'] }}
+                                                    <input type="hidden" class="map-data"
+                                                           data-business-lng="{{ $visit['business_address_lng'] }}"
+                                                           data-business-lat="{{ $visit['business_address_lat'] }}"
+                                                           data-lng="{{ $visit['lng'] }}"
+                                                           data-lat="{{ $visit['lat'] }}"
+                                                           data-number="{{ $visit['visit_id'] }}"
+                                                           data-name="{{ $visit['customer_name'] }}"
+                                                    ></td>
+                                                <td>{{ $visit['address'] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">订单总金额</td>
+                                                <td colspan="3">退货总金额</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"><b class="red">{{ $visit['amount'] }}</b></td>
+                                                <td colspan="3">{{ $visit['return_amount'] }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        @if(isset($visit['display_fee']) || isset($visit['mortgage']) || isset($visit['statistics']) )
+                                            <div class="toggle-table">
+                                                @if(isset($visit['display_fee']))
+                                                    <table class="table table-center table-bordered margin-clear">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="3" class="title">陈列费（现金）</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>月份</th>
+                                                            <th>拜访时间</th>
+                                                            <th>金额</th>
 
-                                            </tr>
-                                            @foreach($visit['display_fee'] as $displayFee)
-                                                <tr>
-                                                    <td >{{ $displayFee['month'] }}</td>
-                                                    <td>{{ $displayFee['created_at'] }}</td>
-                                                    <td>{{ $displayFee['display_fee'] }}</td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    @endif
-                                    @if(isset($visit['mortgage']))
-                                        <table class="table table-center table-bordered margin-clear">
-                                            <thead>
-                                            <tr>
-                                                <th colspan="5" class="title">陈列费（货抵）</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th>月份</th>
-                                                <th>拜访时间</th>
-                                                <th>商品名称</th>
-                                                <th>商品单位</th>
-                                                <th>数量</th>
-                                            </tr>
-                                            @foreach($visit['mortgage'] as $date=>$mortgages)
-                                                @foreach($mortgages as $mortgage)
-                                                    <tr>
-                                                        @if ($mortgage == head($mortgages))
-                                                            <td rowspan="{{ count($mortgages) }}">{{ $date }}</td>
-                                                        @endif
-                                                        <td>{{ $mortgage['created_at'] }}</td>
-                                                        <td>{{ $mortgage['name'] }}</td>
-                                                        <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
-                                                        <td>{{ $mortgage['num'] }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    @endif
-                                    @if(isset($visit['statistics']))
-                                        <table class="table text-center table-bordered table-center">
-                                            <thead>
-                                            <tr>
-                                                <th colspan="10" class="text-center title">销售统计</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th>商品ID</th>
-                                                <th>商品名称</th>
-                                                <th>商品库存</th>
-                                                <th>生产日期</th>
-                                                <th>商品单价</th>
-                                                <th>订货数量</th>
-                                                <th>订货总金额</th>
-                                                <th>退货数量</th>
-                                                <th>退货总金额(元)</th>
-                                            </tr>
-                                            @foreach($visit['statistics'] as $goodsId=>$statistics)
-                                                <tr>
-                                                    <td>{{ $goodsId }}</td>
-                                                    <td>{{ $statistics['goods_name'] }}</td>
-                                                    <td>{{ $statistics['stock'] }}</td>
-                                                    <td>{{ $statistics['production_date'] }}</td>
-                                                    <td>{{ $statistics['price'] or 0 }}
-                                                        / {{ isset($statistics['pieces']) ? cons()->valueLang('goods.pieces', $statistics['pieces']) : '件' }}</td>
-                                                    <td>{{ $statistics['order_num'] }}</td>
-                                                    <td>{{ $statistics['order_amount'] }}</td>
-                                                    <td>{{ $statistics['return_order_num'] }}</td>
-                                                    <td>{{ $statistics['return_amount'] }}</td>
-                                                </tr>
-                                            @endforeach
-                                            <tr>
-                                                <td colspan="10" class="text-right">
-                                                    订单总金额:<b class="red">{{ $visit['amount'] }}</b>
-                                                    退货总金额:{{ $visit['return_amount'] }}
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    @endif
+                                                        </tr>
+                                                        @foreach($visit['display_fee'] as $displayFee)
+                                                            <tr>
+                                                                <td>{{ $displayFee['month'] }}</td>
+                                                                <td>{{ $displayFee['created_at'] }}</td>
+                                                                <td>{{ $displayFee['display_fee'] }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @endif
+                                                @if(isset($visit['mortgage']))
+                                                    <table class="table table-center table-bordered margin-clear">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="5" class="title">陈列费（货抵）</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>月份</th>
+                                                            <th>拜访时间</th>
+                                                            <th>商品名称</th>
+                                                            <th>商品单位</th>
+                                                            <th>数量</th>
+                                                        </tr>
+                                                        @foreach($visit['mortgage'] as $date=>$mortgages)
+                                                            @foreach($mortgages as $mortgage)
+                                                                <tr>
+                                                                    @if ($mortgage == head($mortgages))
+                                                                        <td rowspan="{{ count($mortgages) }}">{{ $date }}</td>
+                                                                    @endif
+                                                                    <td>{{ $mortgage['created_at'] }}</td>
+                                                                    <td>{{ $mortgage['name'] }}</td>
+                                                                    <td>{{ cons()->valueLang('goods.pieces', $mortgage['pieces']) }}</td>
+                                                                    <td>{{ $mortgage['num'] }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @endif
+                                                @if(isset($visit['statistics']))
+                                                    <table class="table text-center table-bordered table-center margin-clear">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="10" class="text-center title">销售统计</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>商品ID</th>
+                                                            <th>商品名称</th>
+                                                            <th>商品库存</th>
+                                                            <th>生产日期</th>
+                                                            <th>商品单价</th>
+                                                            <th>订货数量</th>
+                                                            <th>订货总金额</th>
+                                                            <th>退货数量</th>
+                                                            <th>退货总金额(元)</th>
+                                                        </tr>
+                                                        @foreach($visit['statistics'] as $goodsId=>$statistics)
+                                                            <tr>
+                                                                <td>{{ $goodsId }}</td>
+                                                                <td>{{ $statistics['goods_name'] }}</td>
+                                                                <td>{{ $statistics['stock'] }}</td>
+                                                                <td>{{ $statistics['production_date'] }}</td>
+                                                                <td>{{ $statistics['price'] or 0 }}
+                                                                    / {{ isset($statistics['pieces']) ? cons()->valueLang('goods.pieces', $statistics['pieces']) : '件' }}</td>
+                                                                <td>{{ $statistics['order_num'] }}</td>
+                                                                <td>{{ $statistics['order_amount'] }}</td>
+                                                                <td>{{ $statistics['return_order_num'] }}</td>
+                                                                <td>{{ $statistics['return_amount'] }}</td>
+                                                            </tr>
+                                                        @endforeach
+
+                                                        </tbody>
+                                                    </table>
+                                                @endif
+                                            </div>
+                                            <div class="toggle-panel text-center">
+                                                <a><i class="fa fa-angle-down"></i> 展开销售明细</a>
+                                            </div>
+                                        @endif
+                                    </div>
+
                                 @endforeach
                             </div>
                             <div class="tab-pane fade" id="ios">
@@ -282,19 +297,32 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        var customerMapData = function () {
-            var mapData = [];
-            $('.business-table  .map-data').each(function () {
-                var obj = $(this), data = [];
-                data['lng'] = obj.data('lng');
-                data['lat'] = obj.data('lat');
-                data['businessLng'] = obj.data('businessLng');
-                data['businessLat'] = obj.data('businessLat');
-                data['number'] = '序号' + obj.data('number');
-                data['name'] = obj.data('name');
-                mapData.push(data);
+        $(function () {
+            $(".toggle-panel a").click(function () {
+                var toggle_table = $(this).parents().prev(".toggle-table"), self = $(this);
+                if (toggle_table.is(":hidden")) {
+                    toggle_table.slideDown();
+                    self.html("<i class='fa fa-angle-up'></i> 收起销售明细");
+                } else {
+                    toggle_table.slideUp();
+                    self.html("<i class='fa fa-angle-down'></i> 展开销售明细");
+                }
             });
-            return mapData;
-        };
+            var customerMapData = function () {
+                var mapData = [];
+                $('.business-table  .map-data').each(function () {
+                    var obj = $(this), data = [];
+                    data['lng'] = obj.data('lng');
+                    data['lat'] = obj.data('lat');
+                    data['businessLng'] = obj.data('businessLng');
+                    data['businessLat'] = obj.data('businessLat');
+                    data['number'] = '序号' + obj.data('number');
+                    data['name'] = obj.data('name');
+                    mapData.push(data);
+                });
+                return mapData;
+            };
+        });
+
     </script>
 @stop

@@ -342,6 +342,9 @@ var commonAjaxSetup = function () {
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
+            if(!self.data('no-loading') && !form.data('no-loading')){
+                $('body').append('<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>');
+            }
 
             self.button({
                 loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
@@ -382,6 +385,7 @@ var commonAjaxSetup = function () {
                     //self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
+                $('body').find('.loading').remove();
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)) {
@@ -430,6 +434,7 @@ var commonAjaxSetup = function () {
                             } else if (doneThen == 'referer') {
                                 site.redirectReferer();
                             } else {
+                                $('body').find('.loading').remove();
                                 self.button('reset');
                             }
                             return;
@@ -462,6 +467,7 @@ var successMeg = function (mes) {
     popup.animate({"opacity": "1", "top": 100 + "px"});
     setTimeout(function () {
         popup.animate({"opacity": "0", "top": "-150px"});
+        $('body').find('.loading').remove();
     }, 3000);
 }
 

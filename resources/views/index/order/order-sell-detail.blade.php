@@ -2,6 +2,7 @@
 @section('subtitle' , '订单详情')
 @include('includes.shipping-address-map')
 @include('includes.order-change-price')
+@include('includes.order-refund')
 @section('top-title')
     <a href="{{ url('order-sell') }}">订单管理</a> >
     <span class="second-level">订单详情</span>
@@ -30,7 +31,7 @@
                                             <ul>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
-                                                    <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?'未付款':'未发货' }}</div>
+                                                    <div class="ui-stepName">提交订单</div>
                                                     <div class="ui-stepName ui-stepTime">{{ $order->created_at->format('Y-m-d H:i') }}</div>
 
                                                 </li>
@@ -70,7 +71,7 @@
                                 <thead>
                                 <th>订单号</th>
                                 <th>订单金额</th>
-                                <th>{{ $order->coupon_id ? '优惠券' : ($order->display_fee > 0 ? '陈列费' : '陈列费/优惠券') }}</th>
+                                <th>{{ $order->type==cons('order.type.business') ? '陈列费' :  '优惠券' }}</th>
                                 <th>应付金额</th>
                                 <th>支付方式</th>
                                 <th>订单状态</th>
@@ -78,7 +79,6 @@
                                 <th>备注</th>
                                 <th>操作</th>
                                 </thead>
-
                                 <tr>
                                     <td>{{ $order['id'] }}</td>
                                     <td>¥{{ $order['price'] }}</td>
@@ -296,7 +296,7 @@
                                         </td>
                                         <td>{{ $goods['pivot']['price'] }}
                                             /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
-                                        <td>{{ 'x'.$goods['pivot']['num'] }}</td>
+                                        <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
                                         <td>{{ $goods['pivot']['total_price'] }}</td>
                                         @if($order->can_change_price)
                                             <td><a class="edit change-price" href="javascript:void(0)"
@@ -348,7 +348,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ 'x'.$goods['pivot']['num'] }}</td>
+                                            <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
                                         </tr>
                                     @endforeach
                                 </table>
@@ -472,6 +472,10 @@
             changePriceByDetailPage();
             deleteNoForm();
             $("[data-toggle='popover']").popover();
+            $('.refund').click(function () {
+                var obj = $(this), url = obj.data('url');
+                $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');
+            });
         })
     </script>
 @stop

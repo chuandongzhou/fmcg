@@ -104,7 +104,7 @@
                                     /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
                                 </td>
                                 </td>
-                                <td width="10%" class="bordered text-center">{{ 'x'.$goods['pivot']['num'] }}</td>
+                                <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
                                 @if(0 == $key )
                                     <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
                                         width="15%">
@@ -202,7 +202,7 @@
                     <button class="btn btn-red ajax" data-url="{{ url('api/v1/order/cancel-sure') }}"
                             data-method="put">批量取消
                     </button>
-                    <a class="btn btn-primary" data-target="#sendModal" data-toggle="modal">批量发货</a>
+                    <a class="btn btn-primary batch-send" data-target="#sendModal" data-toggle="modal">批量发货</a>
                     <button class="btn btn-blue ajax btn-receive"
                             data-url="{{ url('api/v1/order/batch-finish-of-sell') }}" data-method="put">确认收款
                     </button>

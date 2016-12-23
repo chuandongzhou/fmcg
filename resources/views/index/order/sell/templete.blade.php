@@ -48,6 +48,7 @@
             $(".popup").css({"opacity": "0", "top": "-150px"});
             //选择模板
             $('.select-templet').change(function () {
+                $('body').append('<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>');
                 var obj = $(this);
                 $('.select-templet').each(function () {
                     $(this).prop('disabled', false);
@@ -59,6 +60,7 @@
                 }).done(function () {
                     successMeg('模板修改成功');
                 }).fail(function () {
+                    $('body').find('.loading').remove();
                     $('.success-meg-content').html('模板修改失败');
                     $(".popup").css({"opacity": "1", "top": "20px"});
                     setTimeout(function () {
@@ -72,6 +74,7 @@
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
+
                 });
             });
         })

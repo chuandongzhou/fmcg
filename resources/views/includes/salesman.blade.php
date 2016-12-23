@@ -11,7 +11,7 @@
                 </div>
                 <form class="form-horizontal ajax-form"
                       data-help-class="col-sm-push-2 col-sm-10"
-                      data-done-url="{{ url('business/salesman') }}" autocomplete="off">
+                      data-done-url="{{ url('business/salesman') }}" data-no-loading="true" autocomplete="off">
                     <div class="modal-body ">
 
                         <div class="form-group">

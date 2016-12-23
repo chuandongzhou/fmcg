@@ -406,6 +406,7 @@ function myGoodsFunc() {
      * 抵费商品
      */
     $(document).on('click', '.mortgage', function () {
+        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method');
@@ -423,8 +424,10 @@ function myGoodsFunc() {
         }).done(function (data, textStatus, jqXHR) {
             self.button('mortgaged').fadeOut(1500, function () {
                 self.remove();
+                $('body').find('.loading').remove();
             });
         }).fail(function (jqXHR, textStatus, errorThrown) {
+            $('body').find('.loading').remove();
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');
             } else {
@@ -449,6 +452,7 @@ var deleteNoForm = function () {
      * 商品删除
      */
     $(document).on('click', '.delete-no-form', function () {
+        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method'),
@@ -480,6 +484,8 @@ var deleteNoForm = function () {
                 tips(self, apiv1FirstError(jqXHR['responseJSON'], '操作失败'));
                 self.button('reset');
             }
+        }).always(function () {
+            $('body').find('.loading').remove();
         });
     });
 };
@@ -500,6 +506,7 @@ var ajaxNoForm = function (changeStatus) {
         offText: offText
     });
     $(document).on('click', '.ajax-no-form', function () {
+        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             status = self.data('status'),
             url = self.data('url'),
@@ -523,7 +530,9 @@ var ajaxNoForm = function (changeStatus) {
                 self.data('status', 0).button('on');
                 changeStatus ? statusName.html(offText.stripTags().trim()) : '';
             }
+            $('body').find('.loading').remove();
         }).fail(function (jqXHR, textStatus, errorThrown) {
+            $('body').find('.loading').remove();
             self.button(status ? 'up' : 'down');
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');

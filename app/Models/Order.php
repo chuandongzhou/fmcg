@@ -776,7 +776,10 @@ class Order extends Model
                         $query->where([
                             'pay_type' => cons('pay_type.online'),
                             'pay_status' => cons('order.pay_status.payment_success')
-                        ])->orWhere(['pay_type' => cons('pay_type.cod')]);
+                        ])->orWhere(function ($query) {
+                            $query->where('pay_type', cons('pay_type.cod'))->where('pay_status', '<=',
+                                cons('order.pay_status.payment_success'));
+                        });;
                     })->where('status', cons('order.status.non_send'));
                 } else {
                     $query->where('status', cons('order.status.' . $search['status']));

@@ -210,7 +210,7 @@
 
                             <li class="nav-item {{ path_active(['business/report*']) }}">
                                 <a href="{{ url('business/report') }}" class="nav-link ">
-                                    <span class="title">业务报告</span>
+                                    <span class="title">业务报表</span>
                                 </a>
                             </li>
 

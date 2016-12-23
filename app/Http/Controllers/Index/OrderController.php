@@ -189,7 +189,9 @@ class OrderController extends Controller
             'goodsNav' => $goodsNav,
             'orderCurrent' => $orderCurrent,
             'goodsCurrent' => $goodsCurrent,
-            'statisticsType' => $this->_getStatisticsType($objOfShow)
+            'statisticsType' => $this->_getStatisticsType($objOfShow),
+            'orderCount' => $orderCount,
+            'goodsCount' => $goodsCount
         ]);
     }
 

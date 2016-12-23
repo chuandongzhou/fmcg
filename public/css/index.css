@@ -1692,6 +1692,7 @@ a:hover {
   padding: 15px !important;
   border: 1px solid #f1f1f1;
   position: relative;
+  height: 185px;
 }
 
 .list-penal .thumbnail .img-wrap .commodity-img {
@@ -3767,7 +3768,7 @@ table .product-panel .promotions {
 }
 
 .order-detail .panel-container {
-  padding: 5px 40px 20px 40px;
+  padding: 5px 40px 25px 40px;
 }
 
 .order-detail .panel-container .prompt {
@@ -3895,7 +3896,7 @@ table .product-panel .promotions {
   margin: 10px 0;
 }
 
-.order-detail .order-receipt .order-msg-table tr td.operate p .btn {
+.order-detail .order-receipt .order-msg-table tr td.operate .btn {
   padding: 3px 15px;
 }
 
@@ -5493,21 +5494,79 @@ table .product-panel .promotions {
   margin-bottom: 0;
 }
 
+.confirm-order .fa-angle-down {
+  font-size: 20px;
+  color: #b4b4b4;
+  margin-left: 10px;
+}
+
+.confirm-order .option-wrap {
+  position: absolute;
+  display: none;
+  width: 100%;
+  z-index: 9;
+  background-color: #fff;
+}
+
+.confirm-order .option-wrap .option-item {
+  padding: 0 10px;
+}
+
+.confirm-order .option-wrap .option-item:hover {
+  background-color: #f1f1f1;
+}
+
 .confirm-order .item {
   padding: 10px 0 20px 90px;
 }
 
 .confirm-order .item .address-item {
-  width: 80%;
+  min-width: 50%;
   display: inline-block;
-  line-height: 50px;
+  line-height: 30px;
+  margin-right: 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.confirm-order .item .address-item label {
+  font-weight: 100;
+}
+
+.confirm-order .item .address-item .address,
+.confirm-order .item .address-item .table-list-row .shopping-table-list table tfoot,
+.table-list-row .shopping-table-list table .confirm-order .item .address-item tfoot {
+  display: inline-block;
+}
+
+.confirm-order .item .address-item .default-checked {
+  margin-top: 15px;
+  padding: 0 10px;
+}
+
+.confirm-order .item .address-item .default-checked .content {
+  display: inline-block;
+}
+
+.confirm-order .item .address-item .option-wrap {
+  z-index: 10;
 }
 
 .confirm-order .item #add-address {
   color: #555555;
-  height: 50px;
-  line-height: 50px;
+  display: inline-block;
+  margin-top: 20px;
   margin-right: 50px;
+  width: 30%;
+  text-align: center;
+}
+
+.confirm-order .item #add-address:hover {
+  color: #F25000;
+}
+
+.confirm-order .delivery-item .item {
+  padding-left: 80px;
 }
 
 .confirm-order .delivery-mode {
@@ -5529,10 +5588,25 @@ table .product-panel .promotions {
 .confirm-order .check-item {
   position: relative;
   width: 150px;
-  padding: 10px;
+  padding: 10px 0;
   background-color: #fff;
   border: 1px solid #d2d2d2;
   color: #000;
+}
+
+.confirm-order .check-item .option-wrap {
+  top: 42px;
+}
+
+.confirm-order .check-item .option-wrap .option-item {
+  border: 1px solid #d2d2d2;
+  height: 40px;
+  line-height: 40px;
+  margin-top: -1px;
+}
+
+.confirm-order .check-item .option-wrap .option-item:first-of-type {
+  margin-top: 0;
 }
 
 .confirm-order .check-item:hover {
@@ -5576,9 +5650,12 @@ table .product-panel .promotions {
   margin-left: 100px;
 }
 
-.confirm-order .cash-on-delivery select {
-  border: none;
-  outline: none;
+.confirm-order .cash-on-delivery .check-item {
+  padding: 0 !important;
+}
+
+.confirm-order .cash-on-delivery .check-item .default-checked {
+  padding: 10px 0;
 }
 
 .confirm-order .cash-on-item {
@@ -6146,7 +6223,6 @@ table .product-panel .promotions {
   padding: 10px 0 0 100px;
   margin-bottom: -25px;
   position: relative;
-  z-index: 9;
 }
 
 .home-name {
@@ -6182,6 +6258,11 @@ table .product-panel .promotions {
   margin: 25px 0 0 25px;
 }
 
+.sales-details-panel .table-list {
+  margin-bottom: 30px;
+  border: 1px solid #555555 !important;
+}
+
 .sales-details-panel .panel-title {
   padding-top: 20px;
 }
@@ -6213,21 +6294,35 @@ table .product-panel .promotions {
   text-align: right !important;
 }
 
-.sales-details-panel table:first-of-type {
+.sales-details-panel .toggle-table {
+  display: none;
+}
+
+.sales-details-panel .toggle-table table:first-of-type {
   margin-top: 0 !important;
 }
 
-.sales-details-panel table {
+.sales-details-panel .toggle-table table {
   margin-top: -1px !important;
+}
+
+.sales-details-panel .toggle-panel {
+  padding: 10px 0;
+  margin-top: -1px;
+}
+
+.sales-details-panel .toggle-panel a {
+  color: #4cb9fe;
+}
+
+.sales-details-panel .toggle-panel a:hover,
+.sales-details-panel .toggle-panel a:focus {
+  color: #4cb9fe;
 }
 
 .business-table tr th,
 .business-table .table-list-row .shopping-table-list table tr td,
-.table-list-row .shopping-table-list table .business-table tr td {
-  border: 1px solid #777777 !important;
-  vertical-align: middle !important;
-}
-
+.table-list-row .shopping-table-list table .business-table tr td,
 .business-table tr td {
   border: 1px solid #777777 !important;
   vertical-align: middle !important;
@@ -6970,6 +7065,7 @@ table .product-panel .promotions {
 .delivery .control {
   height: 40px;
   margin-right: 10px;
+  vertical-align: middle;
 }
 
 .delivery .enter {
@@ -7094,9 +7190,8 @@ table .product-panel .promotions {
   border: 1px solid #b4b4b4;
 }
 
-.salesman .create .pieces {
+.salesman .create .company {
   line-height: 35px;
-  width: 20px;
 }
 
 .salesman .create .display-goods div {
@@ -7255,4 +7350,25 @@ table .product-panel .promotions {
 
 .collection .batch-delete .btn {
   margin-left: 20px;
+}
+
+.loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.loading img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  margin-left: -40px;
+  margin-top: -40px;
 }

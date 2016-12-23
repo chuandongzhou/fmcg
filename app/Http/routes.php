@@ -329,6 +329,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
                 $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');
                 $router->get('return-order-detail/{order_id}', 'SalesmanVisitOrderController@returnOrderDetail');
+                $router->get('display-fee-surplus','SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
+                $router->get('mortgage-goods-surplus','SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
 
             });
             //抵费商品

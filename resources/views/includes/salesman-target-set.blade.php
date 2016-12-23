@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/salesman/target-set') }}"
-                      method="post"
+                      method="post" data-no-loading="true"
                       data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
 

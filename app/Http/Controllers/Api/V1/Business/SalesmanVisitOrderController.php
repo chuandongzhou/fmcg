@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
+use App\Models\SalesmanCustomer;
 use App\Services\BusinessService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
@@ -103,14 +104,20 @@ class SalesmanVisitOrderController extends Controller
         if ($displayFee <= 0) {
             return $this->error('陈列费必须大于0');
         }
-        $customerSurplusFee = (new BusinessService())->surplusDisplayFee($salesmanVisitOrder->salesmanCustomer,
-            $display->month);
+        //修改后的陈列费总金额
+        $sumDisplayFee = bcadd(bcsub($salesmanVisitOrder->displayFees()->sum('used'), $display->used, 2), $displayFee,
+            2);
 
-        if ($displayFee > bcadd($customerSurplusFee, $display->used, 2)) {
+        if ($sumDisplayFee >= $salesmanVisitOrder->amount) {
+            return $this->error('陈列费不能大于订单金额');
+        }
+        $customerSurplusFee = (new BusinessService())->canSetDisplayFee($salesmanVisitOrder->salesmanCustomer,
+            $display->month, $orderId);
+        if ($displayFee > bcsub($customerSurplusFee['surplus'],$customerSurplusFee['nonConfirm'],2)) {
             return $this->error('陈列费不能大于该月剩余');
         }
 
-        return $display->fill(['used' => $displayFee])->save() ? $this->success('陈列费修改成功') : $this->error('修改陈列费时遇到问题');
+        return $display->fill(['used' => $displayFee])->save() ? $this->success('陈列费修改成功' . $sumDisplayFee) : $this->error('修改陈列费时遇到问题');
 
     }
 
@@ -134,6 +141,17 @@ class SalesmanVisitOrderController extends Controller
                 return $this->error('订单不存在');
             }
             $salesmanVisitOrder = $orderGoods->salesmanVisitOrder;
+            //如果有陈列费 验证订单金额不能大于陈列金额
+            if ($salesmanVisitOrder->displayFees()) {
+                $orderAmount = bcadd(bcsub($salesmanVisitOrder->amount, $orderGoods->amount, 2),
+                    bcmul($request->input('num'), $request->input('price'), 2), 2);
+                $displayFeeAmount = $salesmanVisitOrder->displayFees()->sum('used');
+                if ($displayFeeAmount >= $orderAmount) {
+                    return $this->error('订单金额不能小于陈列费金额');
+                }
+            }
+
+
             $result = $this->_updateOrderGoods($salesmanVisitOrder, $request, $orderGoods);
         }
 
@@ -430,6 +448,38 @@ class SalesmanVisitOrderController extends Controller
     }
 
     /**
+     * 获取抵费商品剩余
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function mortgageGoodsSurplus(Request $request)
+    {
+
+        $order = SalesmanVisitOrder::find($request->input('order_id'));
+        $data = (new BusinessService())->canSetMortgageGoods($order, $request->input('month'), $request->input('id'));
+
+        return $this->success(['surplus' => $data['surplus'], 'nonConfirm' => $data['nonConfirm']]);
+
+
+    }
+
+
+    /**
+     * 获取成列费剩余
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function displayFeeSurplus(Request $request)
+    {
+        $customer = SalesmanCustomer::find($request->input('customer_id'));
+        $month = $request->input('month');
+        $data = (new BusinessService())->canSetDisplayFee($customer, $month, $request->input('order_id'));
+        return $this->success(['surplus' => $data['surplus'], 'nonConfirm' => $data['nonConfirm']]);
+    }
+
+    /**
      * 订单验证
      *
      * @param $orderId
@@ -480,7 +530,7 @@ class SalesmanVisitOrderController extends Controller
                     'pay_way' => $syncConf['pay_way'],
                     'type' => '1',
                     'status' => $orderConf['status']['non_send'],
-                    'display_fee' => $salesmanVisitOrder->displayFees()->sum('used'),
+                    'display_fee' => !empty($salesmanVisitOrder->displayFees()->sum('used')) ? $salesmanVisitOrder->displayFees()->sum('used') : '0.00',
                     'numbers' => (new OrderService())->getNumbers($shopId),
                     // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
@@ -638,20 +688,16 @@ class SalesmanVisitOrderController extends Controller
 
 
                 //获取客户剩余
-                $surplusMortgage = (new BusinessService())->surplusMortgageGoods($customer, $mortgage->pivot->month);
-
-                foreach ($surplusMortgage as $mortgage) {
-                    if ($mortgage['id'] == $goodsId) {
-                        if ($mortgage['surplus'] < $num) {
-                            return '陈列商品数量不能大于当月剩余量';
-                        }
-                        break;
-                    }
+                $surplusMortgage = (new BusinessService())->canSetMortgageGoods($salesmanVisitOrder,
+                    $request->input('month'), $goodsId);
+                if (($surplusMortgage['surplus']-$surplusMortgage['nonConfirm'])< $num) {
+                    return '陈列商品数量不能大于当月剩余量';
                 }
-
-
-                $salesmanVisitOrder->mortgageGoods()->detach($goodsId);
-                $salesmanVisitOrder->mortgageGoods()->attach([$goodsId => ['used' => $num]]);
+                $salesmanVisitOrder->displayList()->where([
+                    'salesman_customer_id' => $request->input('customer_id'),
+                    'month' => $request->input('month'),
+                    'mortgage_goods_id' => $goodsId
+                ])->first()->fill(['used' => $num])->save();
             }
 
             return 'success';

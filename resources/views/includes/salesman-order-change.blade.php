@@ -7,11 +7,11 @@
                 <div class="modal-header choice-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <div class="modal-title forgot-modal-title" id="myModalLabel">
-                        {{--<span>商品编号111</span>--}}
+                        <span>商品修改</span>
                     </div>
                 </div>
                 <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/order/change') }}" method="post"
-                      data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+                      data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id"/>
                     <div class="modal-body ">
@@ -64,20 +64,20 @@
     <script type="text/javascript">
         $(function () {
             var salesmanOrderModal = $('#salesmanOrder'),
-                priceControl = $('input[name="price"]'),
-                numControl = $('input[name="num"]'),
-                piecesControl = $('select[name="pieces"]'),
-                amountControl = $('input[name="amount"]'),
-                idControl = $('input[name="id"]');
+                    priceControl = $('input[name="price"]'),
+                    numControl = $('input[name="num"]'),
+                    piecesControl = $('select[name="pieces"]'),
+                    amountControl = $('input[name="amount"]'),
+                    idControl = $('input[name="id"]');
             salesmanOrderModal.on('show.bs.modal', function (e) {
                 var parent = $(e.relatedTarget),
-                    price = parent.data('price'),
-                    id = parent.data('id'),
-                    num = parent.data('num'),
-                    pieces = parent.data('pieces'),
-                    type = parent.data('type'),
-                    amount = parent.data('amount'),
-                    goodsId = parent.data('goodsId');
+                        price = parent.data('price'),
+                        id = parent.data('id'),
+                        num = parent.data('num'),
+                        pieces = parent.data('pieces'),
+                        type = parent.data('type'),
+                        amount = parent.data('amount'),
+                        goodsId = parent.data('goodsId');
                 getGoodsPieces(goodsId, pieces);
                 priceControl.val(price);
                 numControl.val(num);

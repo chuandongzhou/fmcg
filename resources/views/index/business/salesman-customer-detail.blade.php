@@ -85,6 +85,27 @@
                                 @endforeach
                             @endforeach
                             </tbody>
+                        @elseif($displayFees->count())
+                            <thead>
+                            <tr>
+                                <th colspan="4" class=" title">陈列费（现金）</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>月份</th>
+                                <th>现金</th>
+                                <td colspan="2">拜访时间</td>
+                            </tr>
+                            @foreach($displayFees as $displayFee)
+                                <tr>
+                                    <td>{{ $displayFee['month'] }}</td>
+                                    <td>{{ $displayFee['used'] }}</td>
+                                    <td colspan="2">{{ $displayFee['time'] }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+
                         @endif
                     </table>
                     <table class="table table-bordered table-center">
@@ -97,9 +118,14 @@
                         <tr>
                             <th>商品ID</th>
                             <th>商品名称</th>
+                            <th>时间</th>
+                            <th>商品库存</th>
+                            <th>生产日期</th>
+                            <th>商品单价</th>
                             <th>订货数量</th>
                             <th>订货总金额</th>
                             <th>退货数量</th>
+
                             <th>退货总金额(元)</th>
                         </tr>
                         @foreach($salesListsData as $goodsId => $salesGoods)
@@ -107,8 +133,16 @@
                                 <tr>
                                     @if($visit == head($salesGoods['visit']))
                                         <td rowspan="{{ count($salesGoods['visit']) }}">{{ $salesGoods['id'] }}</td>
-                                        <td rowspan="{{ count($salesGoods['visit']) }}" width="20%">{{ $salesGoods['name'] }}</td>
+                                        <td rowspan="{{ count($salesGoods['visit']) }}"
+                                            width="20%">{{ $salesGoods['name'] }}</td>
                                     @endif
+                                        <td width="15%">
+                                            {{ $visit['time'] }}  ({{ $visitId ? '拜访' : '自主' }})
+                                        </td>
+                                        <td>{{ $visit['stock'] }}</td>
+                                        <td>{{ $visit['production_date'] }}</td>
+                                        <td>{{ $visit['order_price'] }}
+                                            /{{ cons()->valueLang('goods.pieces' , $visit['order_pieces'])}}</td>
                                     <td>{{ $visit['order_num']  . cons()->valueLang('goods.pieces' , $visit['order_pieces']) }}</td>
                                     <td>{{ $visit['order_amount'] }}</td>
                                     <td>{{ $visit['return_num'] }}</td>

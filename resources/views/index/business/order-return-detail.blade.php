@@ -15,8 +15,9 @@
 
     <div class="row order-detail business-detail">
         <div class="col-sm-12 go-history">
-            @if($order->can_pass)
+
                 <a class="btn go-back btn-border-blue" href="javascript:history.go(-1)">返回</a>
+            @if($order->can_pass)
                 <button
                         data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                         data-method="put" data-data='{"status" : "1"}'
@@ -55,7 +56,7 @@
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">收货人信息</h3>
+                            <h3 class="panel-title">客户信息</h3>
                         </div>
                         <div class="panel-container table-responsive">
                             <table class="table table-bordered table-center table-th-color">
@@ -63,7 +64,7 @@
                                 <tr>
                                     <th>联系人</th>
                                     <th>联系电话</th>
-                                    <th>收货地址</th>
+                                    <th>客户地址</th>
                                 </tr>
                                 </thead>
                                 <tr>

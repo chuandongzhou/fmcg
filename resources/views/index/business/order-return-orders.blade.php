@@ -10,38 +10,40 @@
 @include('includes.cropper')
 
 @section('right')
+    <form action="{{ url('business/order/return-orders') }}" class="form-horizontal ajax-form" data-done-then="refresh"
+          autocomplete="off">
         <div class="row delivery">
             <div class="col-sm-12 control-search">
-                <form action="{{ url('business/order/return-orders') }}" class="form-horizontal ajax-form" data-done-then="refresh" autocomplete="off">
-                    <input class="enter control datetimepicker" name="start_date"
-                           value="{{ $data['start_date'] or '' }}" placeholder="请输入开始日期" type="text"
-                           data-format="YYYY-MM-DD"
-                    >至
-                    <input class="enter control datetimepicker"
-                           type="text" data-format="YYYY-MM-DD"
-                           name="end_date" value="{{ $data['end_date'] or '' }}" placeholder="请输入结束日期">
-                    <select name="status" class="control">
-                        <option value="">请选择状态</option>
-                        @foreach(cons()->valueLang('salesman.order.status') as $key => $status)
-                            <option value="{{ $key }}" {{ isset($data['status']) && $key == $data['status'] ? 'selected' : '' }} >{{ $status }}</option>
-                        @endforeach
-                    </select>
-                    <select name="salesman_id" class="control">
-                        <option value="">请选择业务员</option>
-                        @foreach($salesmen as $salesman)
-                            <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
-                        @endforeach
-                    </select>
-                    <input type="text" class="control" name="customer" placeholder="请输入单号/客户名称"
-                           aria-describedby="course-search" value="{{ $data['customer'] or '' }}">
 
-                    <button type="submit"
-                            class=" btn btn-blue-lighter search control search-by-get btn-submit">提交
-                    </button>
-                </form>
+                <input class="enter control datetimepicker" name="start_date"
+                       value="{{ $data['start_date'] or '' }}" placeholder="请输入开始日期" type="text"
+                       data-format="YYYY-MM-DD"
+                >至
+                <input class="enter control datetimepicker"
+                       type="text" data-format="YYYY-MM-DD"
+                       name="end_date" value="{{ $data['end_date'] or '' }}" placeholder="请输入结束日期">
+                <select name="status" class="control">
+                    <option value="">请选择状态</option>
+                    @foreach(cons()->valueLang('salesman.order.status') as $key => $status)
+                        <option value="{{ $key }}" {{ isset($data['status']) && $key == $data['status'] ? 'selected' : '' }} >{{ $status }}</option>
+                    @endforeach
+                </select>
+                <select name="salesman_id" class="control">
+                    <option value="">请选择业务员</option>
+                    @foreach($salesmen as $salesman)
+                        <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
+                    @endforeach
+                </select>
+                <input type="text" class="control enter" name="customer" placeholder="请输入单号/客户名称"
+                       aria-describedby="course-search" value="{{ $data['customer'] or '' }}">
+
+                <button type="submit"
+                        class=" btn btn-blue-lighter search control search-by-get btn-submit">提交
+                </button>
+
             </div>
             <div class="col-sm-12 table-responsive table-wrap">
-                <table class="table-bordered table table-center public-table business-table">
+                <table class="table-bordered table table-center public-table">
                     <thead>
                     <tr align="center">
                         <th>选择</th>
@@ -69,7 +71,7 @@
                             <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
                             <td>
 
-                                <a class=" color-blue"href="{{ url('business/order/' . $order->id) }}">
+                                <a class=" color-blue" href="{{ url('business/order/' . $order->id) }}">
                                     <i class="iconfont icon-iconmingchengpaixu65"></i>查看
                                 </a>
                                 @if($order->status == cons('salesman.order.status.not_pass'))
@@ -79,7 +81,7 @@
                                         <i class="iconfont  icon-tongguo"></i>通过
                                     </a>
                                 @else
-                                    <a class="orange"
+                                    <a class="orange" target="_blank"
                                        href="{{ url('business/order/browser-export/' . $order->id) }}">
                                         <i class="iconfont  icon-dayin"></i>打印</a>
                                     {{--@if($order->can_sync)--}}
@@ -107,6 +109,7 @@
                 </div>
             </div>
         </div>
+    </form>
     @parent
 @stop
 

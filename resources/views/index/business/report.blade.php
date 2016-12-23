@@ -2,7 +2,7 @@
 @section('subtitle', '业务管理-业务员目标')
 @section('top-title')
     <a href="{{ url('business/salesman') }}">业务管理</a> >
-    <span class="second-level"> 业务报告</span>
+    <span class="second-level"> 业务报表</span>
 @stop
 
 

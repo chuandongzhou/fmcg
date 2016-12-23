@@ -32,7 +32,7 @@
                                             <ul>
                                                 <li class="ui-stepInfo">
                                                     <a class="ui-stepSequence"></a>
-                                                    <div class="ui-stepName">{{ $order->pay_type==cons('pay_type.online')?'未付款':'未发货' }}</div>
+                                                    <div class="ui-stepName">提交订单</div>
                                                     <div class="ui-stepName ui-stepTime">{{ $order->created_at->format('Y-m-d H:i') }}</div>
 
                                                 </li>
@@ -76,7 +76,7 @@
                                     <th>商家名称</th>
                                 @endif
                                 <th>订单金额</th>
-                                <th>陈列费/优惠券</th>
+                                <th>{{ $order->type==cons('order.type.business') ? '陈列费' :  '优惠券' }}</th>
                                 <th>应付金额</th>
                                 <th>支付方式</th>
                                 <th>订单状态</th>
@@ -317,7 +317,7 @@
                                         </td>
                                         <td>{{ $goods['pivot']['price'] }}
                                             /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
-                                        <td>{{ 'x'.$goods['pivot']['num'] }}</td>
+                                        <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
                                         <td>{{ $goods['pivot']['total_price'] }}</td>
                                     </tr>
                                 @endforeach

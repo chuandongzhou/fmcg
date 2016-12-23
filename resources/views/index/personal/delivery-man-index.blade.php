@@ -53,7 +53,7 @@
                                         <i class="iconfont icon-xiugai"></i> 编辑
                                     </a>
                                     <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
-                                       data-method="delete" class="red delete-no-form" href="javascript:"
+                                       data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                        type="button">
                                         <i class="iconfont icon-shanchu"></i> 删除
                                     </a>

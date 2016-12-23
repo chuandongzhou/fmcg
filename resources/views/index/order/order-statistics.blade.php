@@ -128,11 +128,13 @@
                             @endif
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="10" class="text-center">
-                            {!! $orderNav !!}
-                        </td>
-                        </tfoot>
+                        @if($orderCount>5)
+                            <tfoot>
+                            <td colspan="10" class="text-center">
+                                {!! $orderNav !!}
+                            </td>
+                            </tfoot>
+                        @endif
                     </table>
                 </div>
                 <div class="col-sm-12 table-responsive tables">
@@ -158,11 +160,13 @@
                             </tr>
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="5" class="text-center">
-                            {!! $goodsNav !!}
-                        </td>
-                        </tfoot>
+                        @if($goodsCount>5)
+                            <tfoot>
+                            <td colspan="5" class="text-center">
+                                {!! $goodsNav !!}
+                            </td>
+                            </tfoot>
+                        @endif
                     </table>
                 </div>
                 <input type="hidden" name="order_page_num" value="{{ $orderCurrent or 1 }}"/>

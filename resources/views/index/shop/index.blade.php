@@ -14,7 +14,7 @@
     <div class="container-wrap">
         <div class="container dealer-index index search-page contents">
             <div class="row">
-                <div class="col-sm-12 pd-right-clear">
+                <div class="col-sm-12 padding-clear">
                     <div class="tab-title store-tab-title clearfix">
                         <p class="pull-left sequence">
                             <a href="{{ url('shop'. ($type ? '?type='.$type : '')) }}"
@@ -41,7 +41,7 @@
             </div>
             @foreach($shops  as $shop)
                 <div class="row list-penal dealer-commodity-wrap">
-                    <div class="col-sm-6 pd-right-clear">
+                    <div class="col-sm-6 padding-clear">
                         <div class="thumbnail clearfix">
                             <div class="img-wrap pull-left">
                                 <a href="{{ url('shop/' . $shop->id) }}" target="_blank">
