@@ -3029,6 +3029,7 @@ a:hover {
   margin-top: 4px;
   padding: 5px;
   background-color: #fff;
+  cursor: pointer;
 }
 
 .goods-editor .content-wrap .pictures {

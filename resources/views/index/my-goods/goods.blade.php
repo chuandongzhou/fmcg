@@ -216,15 +216,15 @@
                                     <div class="col-sm-2">
                                         <select class="form-control" name="pieces_retailer">
                                             <option value="">请选择</option>
-                                            @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_1!='')
+                                            @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
                                                 <option class="retailer_pieces_level_1"
                                                         value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
                                             @endif
-                                            @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_2!='')
+                                            @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_2))
                                                 <option class="retailer_pieces_level_2"
                                                         value="{{ $goods->goodsPieces->pieces_level_2 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_2==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_2) }}</option>
                                             @endif
-                                            @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_3!='')
+                                            @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_3))
                                                 <option class="retailer_pieces_level_3"
                                                         value="{{ $goods->goodsPieces->pieces_level_3 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_3==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_3) }}</option>
                                             @endif
@@ -241,7 +241,7 @@
                                                class="form-control" placeholder="请输入价格"/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear">元/
-                                        <span class="pieces_retailer">{{ $goods->pieces_retailer?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                        <span class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
                                     </div>
                                     <label class="control-label col-sm-2"><span class="red">*</span> 自提价
                                         :</label>
@@ -252,7 +252,7 @@
                                                placeholder="请输自提价"/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear">元/<span
-                                                class="pieces_retailer">{{ $goods->pieces_retailer?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group editor-item">
@@ -264,7 +264,7 @@
                                                name="min_num_retailer" class="form-control" placeholder="如 3 "/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear"><span
-                                                class="pieces_retailer">{{  $goods->pieces_retailer?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
                                     </div>
                                     <label class="control-label col-sm-2">规格 :</label>
 
@@ -289,15 +289,15 @@
                                         <div class="col-sm-2">
                                             <select class="form-control" name="pieces_wholesaler">
                                                 <option value="">请选择</option>
-                                                @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_1!='')
+                                                @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
                                                     <option class="wholesaler_pieces_level_1"
                                                             value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_wholesaler ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
                                                 @endif
-                                                @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_2!='')
+                                                @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_2))
                                                     <option class="wholesaler_pieces_level_2"
                                                             value="{{ $goods->goodsPieces->pieces_level_2 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_2==$goods->pieces_wholesaler ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_2) }}</option>
                                                 @endif
-                                                @if($goods->goodsPieces && $goods->goodsPieces->pieces_level_3!='')
+                                                @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_3))
                                                     <option class="wholesaler_pieces_level_3"
                                                             value="{{ $goods->goodsPieces->pieces_level_3 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_3==$goods->pieces_wholesaler ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_3) }}</option>
                                                 @endif
@@ -315,7 +315,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear">元/<span
                                                     class="pieces_wholesaler">
-                                                 {{ $goods->pieces_wholesaler?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
+                                                 {{ cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
 
                                             </span>
                                         </div>
@@ -328,7 +328,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear">元/<span
                                                     class="pieces_wholesaler">
-                                                 {{  $goods->pieces_wholesaler?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
+                                                 {{  cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
 
                                             </span>
                                         </div>
@@ -343,7 +343,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear"><span
                                                     class="pieces_wholesaler">
-                                                {{  $goods->pieces_wholesaler?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
+                                                {{  cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
 
                                             </span>
                                         </div>
@@ -463,6 +463,8 @@
                                                 <input type="hidden" name="area[street_id][]" value="">
                                                 <input type="hidden" name="area[area_name][]" value="">
                                                 <input type="hidden" name="area[address][]" value="">
+                                                <input type="hidden" name="area[min_money][]"
+                                                       value=" "/>
                                             </div>
                                             @foreach($goods->deliveryArea as $area)
 
@@ -481,6 +483,8 @@
                                                            value="{{ $area->area_name }}"/>
                                                     <input type="hidden" name="area[address][]"
                                                            value="{{ $area->address }}"/>
+                                                    <input type="hidden" name="area[min_money][]"
+                                                           value="{{ $area->min_money }}"/>
                                                 </div>
                                             @endforeach
                                         </div>

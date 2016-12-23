@@ -61,7 +61,14 @@
             //删除地址
             $('.address-list').on('click', '.close-icon', function () {
                 $(this).parent().fadeOut('normal', function () {
+                    var self = $(this);
                     $(this).remove();
+                    $('input[name="choice-address"]').each(function(){
+                        var obj = $(this);
+                        if(obj.data('address-name')==(self.children('input[name="area[area_name][]"]').val()+self.children('input[name="area[address][]"]').val())){
+                            obj.prop('checked',false);
+                        }
+                    });
                 });
             });
             //添加地址
@@ -90,7 +97,7 @@
                                 '<span class="fa fa-times-circle pull-right close-icon"></span>' +
                                 '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
                                 '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-                                '<input type="hidden" name="area[extra_common_param][]" value="' + minMoney + '"/> ' +
+                                '<input type="hidden" name="area[min_money][]" value="' + minMoney + '"/> ' +
                                 '</div>';
                     }
                 });

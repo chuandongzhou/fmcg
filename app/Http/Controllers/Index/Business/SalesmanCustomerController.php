@@ -204,6 +204,14 @@ class SalesmanCustomerController extends Controller
 
         $orderConf = cons('salesman.order');
 
+        $allOrders->each(function($order){
+            $order->orderGoods->each(function($goods)use($order){
+                $goods->visit_created_at = $order->salesmanVisit->created_at;
+
+            });
+
+        });
+
         //订单
         $orders = $allOrders->filter(function ($item) use ($orderConf) {
             return $item->type == $orderConf['type']['order'];
@@ -267,7 +275,7 @@ class SalesmanCustomerController extends Controller
 
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
-                    'time' => head($goodsList)['created_at'],
+                    'time' => $goodsList[$orderGoodsType['order']]->visit_created_at,
                     'stock' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,
