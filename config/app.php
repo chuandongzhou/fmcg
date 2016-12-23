@@ -212,7 +212,7 @@ return [
         'PushNotification' => \Davibennun\LaravelPushNotification\Facades\PushNotification::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
-        'Geetest' => Germey\Geetest\Geetest::class,
+        //'Geetest' => Germey\Geetest\Geetest::class,
     ],
 
 ];

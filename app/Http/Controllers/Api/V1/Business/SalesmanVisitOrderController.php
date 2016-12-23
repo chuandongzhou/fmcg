@@ -240,7 +240,8 @@ class SalesmanVisitOrderController extends Controller
     {
         $order = SalesmanVisitOrder::with([
             'orderGoods.goods' => function ($query) {
-                $query->select('id', 'name');
+                $query->select('id', 'name', 'price_wholesaler', 'price_retailer', 'pieces_wholesaler',
+                    'pieces_retailer');
             },
             'orderGoods.goods.goodsPieces' => function ($query) {
                 $query->select('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'goods_id');

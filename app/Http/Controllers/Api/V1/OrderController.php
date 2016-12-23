@@ -840,10 +840,9 @@ class OrderController extends Controller
             'after_rebates_price',
             'user_shop_name'
         ]);
-        $buyer && $order->shop->setAppends([]);
+        $buyer && $order->shop && $order->shop->setAppends([]);
 
         return $order;
     }
-
 
 }

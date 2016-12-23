@@ -37,12 +37,13 @@ class SalesmanVisitController extends Controller
         $endDate = $endDate ? (new Carbon($endDate))->endOfDay() : $carbon->copy();
         $name = $request->input('name');
 
-        $visits = $salesman->customers()->ofName($name)->with([
-            'orders' => function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('created_at', [$startDate, $endDate])->with('order');
+        $visits = SalesmanCustomer::ofName($name)->with([
+            'orders' => function ($query) use ($startDate, $endDate, $salesman) {
+                $query->where('salesman_id', $salesman->id)->whereBetween('created_at',
+                    [$startDate, $endDate])->with('order');
             },
-            'visits' => function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('created_at', [$startDate, $endDate]);
+            'visits' => function ($q) use ($startDate, $endDate, $salesman) {
+                $q->where('salesman_id', $salesman->id)->whereBetween('created_at', [$startDate, $endDate]);
             },
             'businessAddress'
         ])->get();

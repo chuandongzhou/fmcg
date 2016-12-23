@@ -606,7 +606,11 @@
     goods字段说明
 
     name                        string          商品名称
-    goods_pieces                array       商品单位（新， 为null时未设置）
+    price_retailer              float           终端商价格
+    price_wholesaler            float           批发商价格
+    pieces_retailer             float           终端商单位
+    pieces_wholesaler           float           批发商单位
+    goods_pieces                array           商品单位（新， 为null时未设置）
 
     goods_pieces字段子集介绍
 

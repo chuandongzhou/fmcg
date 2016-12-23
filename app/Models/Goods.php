@@ -415,6 +415,11 @@ class Goods extends Model
         return $piece;
     }
 
+    /**
+     * 获取单位
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getPiecesListAttribute(){
         $pieces = $this->goodsPieces;
         $items = ['pieces_level_1', 'pieces_level_2', 'pieces_level_3'];

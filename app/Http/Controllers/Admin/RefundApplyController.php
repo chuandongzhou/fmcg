@@ -29,7 +29,6 @@ class RefundApplyController extends Controller
             ->whereIn('order_id', $this->refundOrdersId)
             ->orderBy('id', 'asc')
             ->paginate();
-        info($this->alipayPayTypes);
         return view('admin.trade.refund', ['trades' => $trades]);
     }
 

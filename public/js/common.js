@@ -382,7 +382,6 @@ var commonAjaxSetup = function () {
 
                     self.html(data.message || '操作成功');
                     self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
-                    //self.hasClass('no-prompt') || alert(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 $('body').find('.loading').remove();

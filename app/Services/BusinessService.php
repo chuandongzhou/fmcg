@@ -122,7 +122,6 @@ class BusinessService extends BaseService
             }
 
         } else {
-
             $orders = SalesmanVisitOrder::whereIn('salesman_id',
                 $salesmenId)->OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
         }
