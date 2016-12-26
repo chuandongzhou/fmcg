@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-lg templet-dialog">
             <div class="modal-content templet-content" style="margin:auto">
                 <div class="modal-body text-center" style="padding:0;">
-                    <img style="width:100%;" class="templet-img" src="http://placehold.it/1000x800">
+                    <img style="width:100%;" class="templet-img" src="">
                 </div>
             </div>
         </div>

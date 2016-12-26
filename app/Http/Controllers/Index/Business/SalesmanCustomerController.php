@@ -275,7 +275,7 @@ class SalesmanCustomerController extends Controller
 
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
-                    'time' => $goodsList[$orderGoodsType['order']]->visit_created_at,
+                    'time' => isset($goodsList[$orderGoodsType['order']])?$goodsList[$orderGoodsType['order']]->visit_created_at:head($goodsList)['created_at'],
                     'stock' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,

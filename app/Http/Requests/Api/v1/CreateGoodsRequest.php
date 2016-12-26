@@ -45,6 +45,12 @@ class CreateGoodsRequest extends UserRequest
     public function validator($factory)
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
+            if(!is_numeric($this->input('pieces_retailer'))){
+                $validator->errors()->add('pieces_retailer', '终端商单位 不能为空');
+            }
+            if(!empty($this->input('price_wholesaler')) && !is_numeric($this->input('pieces_wholesaler'))){
+                $validator->errors()->add('pieces_wholesaler', '批发商单位 不能为空');
+            }
             if ($this->input('pieces_level_2')!='' && $this->input('system_1')=='') {
 
                 $validator->errors()->add('system_1', '二级单位进制 不能为空');

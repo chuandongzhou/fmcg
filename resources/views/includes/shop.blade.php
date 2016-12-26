@@ -96,7 +96,7 @@
         <td class="text-left-important">
             <div class="preview image-preview">
                 <img src="{{ $shop->license_url }}"  width="100px" height="100px">
-                <a class="{{ !$shop->license?'hidden':'' }}  templet-modal" href="javascript:;" data-target="#templetModal" data-toggle="modal">点击预览</a>
+                <a class="{{ !$shop->license?'hidden':'' }}  templet-modal" href="javascript:;" data-src="{{ $shop->license_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
             @if(!$shop->license)
                 <span data-name="business_license" class="btn upload-img fileinput-button">
@@ -111,7 +111,7 @@
             <div class="preview image-preview">
                 <img src="{{ $shop->business_license_url }}"
                    width="100px" height="100px" >
-                <a class="{{ !$shop->businessLicense?'hidden':'' }} templet-modal" href="javascript:;" data-target="#templetModal" data-toggle="modal">点击预览</a>
+                <a class="{{ !$shop->businessLicense?'hidden':'' }} templet-modal" href="javascript:;" data-src="{{ $shop->business_license_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
             @if(!$shop->businessLicense)
                 <span data-name="business_license" class="btn upload-img fileinput-button">
@@ -130,7 +130,7 @@
             <div class="image-preview preview">
                 <img src="{{ $shop->agency_contract_url }}"
                      >
-                <a class="{{ !$shop->agencyContract?'hidden':'' }} templet-modal"  href="javascript:;" data-target="#templetModal" data-toggle="modal">点击预览</a>
+                <a class="{{ !$shop->agencyContract?'hidden':'' }} templet-modal"  href="javascript:;" data-src="{{ $shop->agency_contract_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
             @if(!$shop->agencyContract)
                 <span data-name="agency_contract" class="btn upload-img fileinput-button">

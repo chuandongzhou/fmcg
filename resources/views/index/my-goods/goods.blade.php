@@ -215,7 +215,7 @@
 
                                     <div class="col-sm-2">
                                         <select class="form-control" name="pieces_retailer">
-                                            <option value="">请选择</option>
+                                            <option value="请选择">请选择</option>
                                             @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
                                                 <option class="retailer_pieces_level_1"
                                                         value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
@@ -241,7 +241,7 @@
                                                class="form-control" placeholder="请输入价格"/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear">元/
-                                        <span class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
+                                        <span class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
                                     </div>
                                     <label class="control-label col-sm-2"><span class="red">*</span> 自提价
                                         :</label>
@@ -252,7 +252,7 @@
                                                placeholder="请输自提价"/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear">元/<span
-                                                class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
+                                                class="pieces_retailer">{{is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group editor-item">
@@ -264,7 +264,7 @@
                                                name="min_num_retailer" class="form-control" placeholder="如 3 "/>
                                     </div>
                                     <div class="col-sm-1 pieces padding-clear"><span
-                                                class="pieces_retailer">{{ cons()->valueLang('goods.pieces',$goods->pieces_retailer) }}</span>
+                                                class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
                                     </div>
                                     <label class="control-label col-sm-2">规格 :</label>
 
@@ -288,7 +288,7 @@
 
                                         <div class="col-sm-2">
                                             <select class="form-control" name="pieces_wholesaler">
-                                                <option value="">请选择</option>
+                                                <option value="请选择">请选择</option>
                                                 @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
                                                     <option class="wholesaler_pieces_level_1"
                                                             value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_wholesaler ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
@@ -315,7 +315,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear">元/<span
                                                     class="pieces_wholesaler">
-                                                 {{ cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
+                                                 {{ is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
 
                                             </span>
                                         </div>
@@ -328,7 +328,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear">元/<span
                                                     class="pieces_wholesaler">
-                                                 {{  cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
+                                                 {{  is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
 
                                             </span>
                                         </div>
@@ -343,7 +343,7 @@
                                         </div>
                                         <div class="col-sm-1 pieces padding-clear"><span
                                                     class="pieces_wholesaler">
-                                                {{  cons()->valueLang('goods.pieces',$goods->pieces_wholesaler) }}
+                                                {{   is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
 
                                             </span>
                                         </div>
@@ -413,6 +413,11 @@
                                             可换货
                                         </label>
                                         <label class="control-label">
+                                            <input name="is_back" value="1"
+                                                   {{ $goods->is_back ? 'checked' : '' }} type="checkbox">
+                                            可退货
+                                        </label>
+                                        <label class="control-label">
                                             <input type="checkbox" name="is_promotion" value="1"
                                                     {{ $goods->is_promotion ? 'checked' : '' }} >
                                             促销
@@ -428,7 +433,7 @@
                                                {{ $goods->is_promotion ? '' : 'disabled' }} id="promotion_info"/>
                                     </div>
                                 </div>
-                                <div class="form-group  editor-item">
+                                <div class="form-group  editor-item graphic-wrap">
                                     <label class="control-label col-sm-2">商品图文介绍 :</label>
 
                                     <div class="col-sm-9 padding-clear">
@@ -553,6 +558,14 @@
 
             //二级单位变化时
             $('select[name="pieces_level_2"]').change(function () {
+                if ($(this).find("option:selected").val() == '') {
+                    $('.system_1').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').text()==$('.pieces_retailer').html() && $('.pieces_retailer').html('');
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text()==$('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').length && $('select[name="pieces_retailer"] .retailer_pieces_level_2').remove();
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').remove();
+                    return false;
+                }
                 $(this).find("option:selected").val() != '' && $('.system_1').html($(this).find("option:selected").text());
                 if ($('select[name="pieces_retailer"] .retailer_pieces_level_2').length) {
                     $('.pieces_retailer').html() == $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() && $('.pieces_retailer').html($('select[name="pieces_level_2"] option:selected').text());
@@ -571,6 +584,14 @@
             });
             //三级单位变化时
             $('select[name="pieces_level_3"]').change(function () {
+                if ($(this).find("option:selected").val() == '') {
+                    $('.system_2').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').text()==$('.pieces_retailer').html() && $('.pieces_retailer').html('');
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text()==$('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').length && $('select[name="pieces_retailer"] .retailer_pieces_level_3').remove();
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').remove();
+                    return false;
+                }
                 $(this).find("option:selected").val() != '' && $('.system_2').html($(this).find("option:selected").text());
                 if ($('select[name="pieces_retailer"] .retailer_pieces_level_3').length) {
                     $('.pieces_retailer').html() == $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() && $('.pieces_retailer').html($('select[name="pieces_level_3"] option:selected').text());
@@ -584,7 +605,7 @@
                     $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').val($(this).val());
                     $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text($('select[name="pieces_level_3"] option:selected').text());
                 } else {
-                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_3" value="' + $(this).val() + '" >' + $('select[name="pieces_level_2"] option:selected').text() + '</option>');
+                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_3" value="' + $(this).val() + '" >' + $('select[name="pieces_level_3"] option:selected').text() + '</option>');
                 }
             });
 

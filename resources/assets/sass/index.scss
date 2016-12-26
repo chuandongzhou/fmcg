@@ -2604,7 +2604,6 @@ a {
         margin-top: 4px;
         padding: 5px;
         background-color: #fff;
-        cursor:pointer;
       }
     }
     .pictures {
@@ -5386,6 +5385,8 @@ table {
     padding: 10px 0 0 100px;
     margin-bottom: -25px;
     position: relative;
+    width:40%;
+    z-index:999;
   }
 }
 
@@ -5418,7 +5419,7 @@ table {
   margin: 25px 0 0 25px;
   .table-list{
     margin-bottom:30px;
-    border:1px solid $gray!important;
+    border:1px solid $word-gray!important;
   }
   .panel-title {
     padding-top: 20px;
@@ -5447,9 +5448,6 @@ table {
   }
   .toggle-table {
     display: none;
-    table:first-of-type {
-      margin-top: 0 !important;
-    }
     table {
       margin-top: -1px !important;
     }
@@ -6232,6 +6230,7 @@ table {
     }
     .company {
       line-height: 35px;
+      width:65px;
     }
     .display-goods {
       div {

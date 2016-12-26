@@ -17,7 +17,7 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
             // 'account' => 'string|exists:user,user_name',
             'contact' => 'required',
             'contact_information' => 'required',
-            'business_area' => 'required',
+            'business_area' => 'required|numeric',
             'display_type' => 'required',
             //'display_start_month' => 'sometimes|required_with:display_end_month',
             //'display_end_month' => 'sometimes|required_with:display_start_month',

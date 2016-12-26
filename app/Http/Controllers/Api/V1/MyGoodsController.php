@@ -17,6 +17,7 @@ use App\Services\ImportService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
+use DB;
 
 class MyGoodsController extends Controller
 {
@@ -42,39 +43,42 @@ class MyGoodsController extends Controller
      */
     public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
-        $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-            'system_2', 'specification');
-        $attributes['user_type'] = auth()->user()->type;
-        $goods = auth()->user()->shop->goods()->create($attributes);
-        $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-            'system_2', 'specification');
 
-        $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
-            ['pieces_level_3', 'system_2']) : $piecesAttributes;
-        $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
-            ['pieces_level_2','system_1']) : $piecesAttributes;
-        info($piecesAttributes);
-        if ($goods->exists) {
-            $goodsPieces = $goods->goodsPieces()->create($piecesAttributes);
-            if ($goodsPieces->exists) {
-                // 更新配送地址
-                $this->updateDeliveryArea($goods, $request->input('area'));
+        $result = DB::transaction(function () use ($request) {
+            $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
+                'system_2', 'specification');
+            $attributes['user_type'] = auth()->user()->type;
+            $goods = auth()->user()->shop->goods()->create($attributes);
+            $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
+                'system_2', 'specification');
 
-                $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
+            $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
+                ['pieces_level_3', 'system_2']) : $piecesAttributes;
+            $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
+                ['pieces_level_2','system_1']) : $piecesAttributes;
+            if ($goods->exists) {
+                $goodsPieces = $goods->goodsPieces()->create($piecesAttributes);
+                if ($goodsPieces->exists) {
+                    // 更新配送地址
+                    $this->updateDeliveryArea($goods, $request->input('area'));
 
-            if (!is_null($images) && is_null($goods->images)) {
-                $this->_setImages($images, $goods->bar_code);
+                    $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
+
+                    if (!is_null($images) && is_null($goods->images)) {
+                        $this->_setImages($images, $goods->bar_code);
+                    }
+
+                    // 更新标签
+                    isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+                    //保存没有图片的条形码
+                    $this->saveWithoutImageOfBarCode($goods);
+                    return true;
+                }
+
             }
+        });
 
-                // 更新标签
-                isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
-                //保存没有图片的条形码
-                $this->saveWithoutImageOfBarCode($goods);
-                return $this->created('添加商品成功');
-            }
-
-        }
-        return $this->error('添加商品出现错误');
+        return $result?$this->success('添加商品成功'):$this->error('添加商品出现错误');
     }
 
     /**
@@ -110,46 +114,51 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-            'system_2', 'specification');
 
-        //是否退换货补充
-        $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
-        $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
-        $attributes['is_new'] = isset($attributes['is_new']) ? $attributes['is_new'] : 0;
-        $attributes['is_out'] = isset($attributes['is_out']) ? $attributes['is_out'] : 0;
-        $attributes['is_expire'] = isset($attributes['is_expire']) ? $attributes['is_expire'] : 0;
-
-        if (!isset($attributes['is_promotion'])) {
-            $attributes['is_promotion'] = 0;
-            $attributes['promotion_info'] = '';
-        }
-
-        if ($goods->fill($attributes)->save()) {
-            //更新商品单位
-            $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
+        $result = DB::transaction(function () use ($request,$goods) {
+            $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
 
-            $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
-                ['pieces_level_3', 'system_2']) : $piecesAttributes;
-            $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
-                ['pieces_level_2','system_1']) : $piecesAttributes;
-            $goodsPieces = $goods->goodsPieces->fill($piecesAttributes)->save();
-            // 更新配送地址
-            $this->updateDeliveryArea($goods, $request->input('area'));
+            //是否退换货补充
+            $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
+            $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
+            $attributes['is_new'] = isset($attributes['is_new']) ? $attributes['is_new'] : 0;
+            $attributes['is_out'] = isset($attributes['is_out']) ? $attributes['is_out'] : 0;
+            $attributes['is_expire'] = isset($attributes['is_expire']) ? $attributes['is_expire'] : 0;
 
-            $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
-            if (!is_null($images)) {
-                $this->_setImages($images, $goods->bar_code);
+            if (!isset($attributes['is_promotion'])) {
+                $attributes['is_promotion'] = 0;
+                $attributes['promotion_info'] = '';
             }
 
-            // 更新标签
-            isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+            if ($goods->fill($attributes)->save()) {
+                $goods->goodsPieces->delete();
+                //更新商品单位
+                $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
+                    'system_2', 'specification');
 
-            $this->saveWithoutImageOfBarCode($goods);
-            return $this->success('更新商品成功');
-        }
-        return $this->error('更新商品时遇到问题');
+                $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
+                    ['pieces_level_3', 'system_2']) : $piecesAttributes;
+                $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
+                    ['pieces_level_2','system_1']) : $piecesAttributes;
+                $goods->goodsPieces()->create($piecesAttributes);
+                // 更新配送地址
+                $this->updateDeliveryArea($goods, $request->input('area'));
+
+                $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
+                if (!is_null($images)) {
+                    $this->_setImages($images, $goods->bar_code);
+                }
+
+                // 更新标签
+                isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+
+                $this->saveWithoutImageOfBarCode($goods);
+                return true;
+            }
+        });
+
+        return $result?$this->success('更新商品成功'):$this->error('更新商品时遇到问题');
     }
 
     /**

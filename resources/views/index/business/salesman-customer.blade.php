@@ -226,7 +226,7 @@
                                value="{{ $salesmanCustomer->display_start_month }}"
                                type="text">
                     </div>
-                    <div class="col-sm-1 col-md-1 pieces">
+                    <div class="col-sm-1 col-md-1 company text-center">
                         至
                     </div>
                     <div class="col-sm-4 col-md-3">

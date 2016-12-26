@@ -1017,7 +1017,7 @@ function validform() {
 
     }, "二级单位必须");
     $.validator.addMethod("system_1_check", function () {
-        if ($('select[name="pieces_level_2"]').val() != '' && $('input[name="system_1"]').val() == '') {
+        if (($('select[name="pieces_level_2"]').val() != '' || $('input[name="system_2"]').val() != '' || $('select[name="pieces_level_3"]').val() != '')&& $('input[name="system_1"]').val() == '' ) {
             return false;
         }
         return true;

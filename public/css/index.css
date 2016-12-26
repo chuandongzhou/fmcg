@@ -3029,7 +3029,6 @@ a:hover {
   margin-top: 4px;
   padding: 5px;
   background-color: #fff;
-  cursor: pointer;
 }
 
 .goods-editor .content-wrap .pictures {
@@ -6224,6 +6223,8 @@ table .product-panel .promotions {
   padding: 10px 0 0 100px;
   margin-bottom: -25px;
   position: relative;
+  width: 40%;
+  z-index: 999;
 }
 
 .home-name {
@@ -6261,7 +6262,7 @@ table .product-panel .promotions {
 
 .sales-details-panel .table-list {
   margin-bottom: 30px;
-  border: 1px solid #555555 !important;
+  border: 1px solid #999999 !important;
 }
 
 .sales-details-panel .panel-title {
@@ -6297,10 +6298,6 @@ table .product-panel .promotions {
 
 .sales-details-panel .toggle-table {
   display: none;
-}
-
-.sales-details-panel .toggle-table table:first-of-type {
-  margin-top: 0 !important;
 }
 
 .sales-details-panel .toggle-table table {
@@ -7193,6 +7190,7 @@ table .product-panel .promotions {
 
 .salesman .create .company {
   line-height: 35px;
+  width: 65px;
 }
 
 .salesman .create .display-goods div {
