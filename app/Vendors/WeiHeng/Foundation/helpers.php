@@ -376,7 +376,7 @@ if (!function_exists('percentage')) {
 
 if (!function_exists('in_windows')) {
     /**
-     * 判断当前访问是否在微信里面
+     * 是否是浏览器
      *
      * @return bool
      */

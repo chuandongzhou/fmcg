@@ -136,8 +136,9 @@ class ReportController extends Controller
 
         $startDate = $startDate->toDateString();
         $endDate = $endDate->toDateString();
-       /* $startDate == $endDate ? $this->_exportByDay($salesman, $startDate, $visitFormat,
-            $platFormOrders) :*/ $this->_exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders);
+        /* $startDate == $endDate ? $this->_exportByDay($salesman, $startDate, $visitFormat,
+             $platFormOrders) :*/
+        $this->_exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders);
 
     }
 
@@ -366,8 +367,6 @@ class ReportController extends Controller
         $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
         $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
-        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
-        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
         $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
 
@@ -391,14 +390,17 @@ class ReportController extends Controller
 
             if ($visit == head($visitData)) {
                 $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText($startDate == $endDate ?$startDate:$startDate . ' 至 ' . $endDate, ['size' => 30],
+                $table->addCell(10500,
+                    $gridSpan9)->addText($startDate == $endDate ? $startDate : $startDate . ' 至 ' . $endDate,
+                    ['size' => 30],
                     $cellAlignCenter);
 
                 $table->addRow();
                 $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报表', ['size' => 16],
                     $cellAlignCenter);
 
-                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders->pluck('orders')->collapse());
+                $this->_exportStatistics($table, $visitStatistics, $visitData,
+                    $platFormOrders->pluck('orders')->collapse());
             }
             $table->addRow();
             $table->addCell(10500, $gridSpan9)->addText('客戶信息', null,
@@ -416,28 +418,20 @@ class ReportController extends Controller
             $table->addCell(2000, $gridSpan2)->addText($visit['customer_name'], null, $cellAlignCenter);
             $table->addCell(2000, $gridSpan2)->addText($visit['contact'], null, $cellAlignCenter);
             $table->addCell(1800, $gridSpan2)->addText($visit['contact_information'], null, $cellAlignCenter);
-            $table->addCell(3500, $cellVAlignCenter)->addText($visit['shipping_address_name'], null, $cellAlignCenter);
+            $table->addCell(3500, $cellVAlignCenter)->addText($visit['business_address_name'], null, $cellAlignCenter);
 
 
-            if($startDate == $endDate){
-                $table->addRow();
-                $table->addCell(3500, $gridSpan5)->addText('订货总金额', null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan4)->addText('退货总金额', null, $cellAlignCenter);
-                $table->addRow();
-                $table->addCell(3500, $gridSpan5)->addText($visit['amount'], null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan4)->addText($visit['return_amount'], null, $cellAlignCenter);
-            }else{
-                $table->addRow();
-                $table->addCell(3500, $gridSpan3)->addText('拜访次数', null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan3)->addText('订货总金额', null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan3)->addText('退货总金额', null, $cellAlignCenter);
-                $table->addRow();
-                $table->addCell(3500, $gridSpan3)->addText($visit['visit_count'], null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan3)->addText($visit['amount'], null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan3)->addText($visit['return_amount'], null, $cellAlignCenter);
-
-            }
-
+            $table->addRow();
+            $table->addCell(3500, $gridSpan3)->addText('订货总金额', null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan3)->addText('退货总金额', null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan3)->addText($startDate == $endDate ? '拜访时间' : '拜访次数', null,
+                $cellAlignCenter);
+            $table->addRow();
+            $table->addCell(3500, $gridSpan3)->addText($visit['amount'], null, $cellAlignCenter);
+            $table->addCell(3500, $gridSpan3)->addText($visit['return_amount'], null, $cellAlignCenter);
+            $table->addCell(3500,
+                $gridSpan3)->addText($startDate == $endDate ? $visit['created_at'] : $visit['visit_count'], null,
+                $cellAlignCenter);
 
             if (isset($visit['display_fee'])) {
                 $table->addRow();
@@ -470,10 +464,11 @@ class ReportController extends Controller
                 $table->addCell(3500, $cellVAlignCenter)->addText('商品数量', null, $cellAlignCenter);
                 foreach ($visit['mortgage'] as $date => $mortgages) {
                     $table->addRow();
-                    $table->addCell(2000, array_merge($gridSpan2,$cellRowSpan))->addText($date, null, $cellAlignCenter);
+                    $table->addCell(2000, array_merge($gridSpan2, $cellRowSpan))->addText($date, null,
+                        $cellAlignCenter);
                     foreach ($mortgages as $mortgage) {
                         $table->addRow();
-                        $table->addCell(null, array_merge($gridSpan2,$cellRowContinue));
+                        $table->addCell(null, array_merge($gridSpan2, $cellRowContinue));
                         $table->addCell(2000, $gridSpan2)->addText($mortgage['created_at'], null, $cellAlignCenter);
                         $table->addCell(2000, $gridSpan2)->addText($mortgage['name'], null, $cellAlignCenter);
                         $table->addCell(1800, $gridSpan2)->addText(cons()->valueLang('goods.pieces',
@@ -518,7 +513,7 @@ class ReportController extends Controller
 
         $this->_exportPlatformOrders($phpWord, $platFormOrders);
 
-        $name = $startDate == $endDate?$salesman->name.$startDate . '业务报表明细.docx':$salesman->name . $startDate . '至' . $endDate . '业务报表明细.docx';
+        $name = $startDate == $endDate ? $salesman->name . $startDate . '业务报表明细.docx' : $salesman->name . $startDate . '至' . $endDate . '业务报表明细.docx';
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
@@ -545,16 +540,21 @@ class ReportController extends Controller
         $table->addCell(1000)->addText('总订货金额', null, $cellAlignCenter);
 
         $table->addRow();
-        $table->addCell(1000)->addText( count($visitData), null, $cellAlignCenter);
-        $table->addCell(1500)->addText((isset($visitStatistics['return_order_count']) ? $visitStatistics['return_order_count'] : 0), null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0), null, $cellAlignCenter);
-        $table->addCell(1500)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0), null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0), null, $cellAlignCenter);
+        $table->addCell(1000)->addText(count($visitData), null, $cellAlignCenter);
+        $table->addCell(1500)->addText((isset($visitStatistics['return_order_count']) ? $visitStatistics['return_order_count'] : 0),
+            null, $cellAlignCenter);
+        $table->addCell(1000)->addText((isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0),
+            null, $cellAlignCenter);
+        $table->addCell(1500)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0),
+            null, $cellAlignCenter);
+        $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0),
+            null, $cellAlignCenter);
         $table->addCell(1500)->addText($platFormOrdersList->count(), null, $cellAlignCenter);
-        $table->addCell(1000)->addText( $platFormOrdersList->sum('amount'), null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()), null, $cellAlignCenter);
-          $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
-                  $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), null, $cellAlignCenter);
+        $table->addCell(1000)->addText($platFormOrdersList->sum('amount'), null, $cellAlignCenter);
+        $table->addCell(1000)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()),
+            null, $cellAlignCenter);
+        $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
+            $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), null, $cellAlignCenter);
 
 
     }

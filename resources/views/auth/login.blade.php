@@ -46,7 +46,15 @@
                                 <button type="button" class="register-btn btn btn-primary" data-toggle="modal"
                                         data-target="#myModal-agreement">注册
                                 </button>
-                                <button type="submit" class="login-btn btn btn-warning no-prompt">登录</button>
+                                <button type=" {{ request()->cookie('login_error') >=2?'button':'submit' }} "
+                                        class="login-btn btn btn-warning no-prompt geetest-btn">登录
+                                </button>
+                                <div id="mask"></div>
+                                <div id="popup-captcha">
+                                    @if(request()->cookie('login_error') >=2)
+                                        {!! Geetest::render('popup') !!}
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="col-xs-12 text-right forget-pwd">
@@ -92,6 +100,7 @@
 
 @section('js')
     @parent
+    <script src="https://static.geetest.com/static/tools/gt.js"></script>
     <script type="text/javascript">
         $(function () {
             $("body").addClass("login-body");
@@ -99,7 +108,63 @@
                 var self = $(this), roleName = self.children(".item-name").text();
                 $(".role-title").text(roleName);
                 $('#type').val(self.children(".item-name").data('type'));
-            })
+            });
+            //验证码的显示与隐藏
+            $("#mask").click(function () {
+                $("#mask, #popup-captcha").hide();
+            });
+            $(".login-btn").click(function () {
+                $(this).attr('type', 'submit');
+                $("#mask, #popup-captcha").show();
+            });
+            //登录失败事件
+            $('.ajax-form').on('fail.hct.ajax', function (jqXHR, textStatus, errorThrown) {
+                $(".login-btn").html('登录').button('reset');
+                var json = textStatus['responseJSON'];
+                if (json) {
+                    if (json['id'] == 'invalid_params') {
+                        if (json['errors'].loginError) {
+                            if (json['errors'].loginError >= 2) {
+                                //连续登录失败两次以上
+                                if (!$('#popup-captcha div').length) {
+                                    //页面未加载验证码
+                                    var handlerEmbed = function (captchaObj) {
+                                        $("#popup-captcha").closest('form').submit(function (e) {
+                                            var validate = captchaObj.getValidate();
+                                            if (!validate) {
+                                                alert('请完成验证');
+                                                e.preventDefault();
+                                            }
+                                        });
+                                        captchaObj.bindOn($('#popup-captcha').closest('form').find('.login-btn'));
+                                        captchaObj.appendTo("#popup-captcha");
+
+                                    };
+                                    $.ajax({
+                                        url: '/auth/geetest' + "?t=" + (new Date()).getTime(),
+                                        type: "get",
+                                        dataType: "json",
+                                        success: function (data) {
+                                            initGeetest({
+                                                gt: data.gt,
+                                                challenge: data.challenge,
+                                                product: "popup",
+                                                offline: !data.success,
+                                                lang: 'zh-cn'
+                                            }, handlerEmbed);
+                                        }
+                                    });
+                                }
+                                $('.login-btn').attr('type', 'button');
+                            }
+                            delete json['errors']['loginError'];
+                        }
+                        $('form').formValidate(json['errors']);
+                    }
+                }
+                return false;
+
+            });
         });
     </script>
 @stop

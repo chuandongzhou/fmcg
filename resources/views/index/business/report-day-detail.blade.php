@@ -15,7 +15,7 @@
             <a href="javascript:history.back()" class="btn btn-border-blue"><i class="iconfont icon-fanhui"></i>返回</a>
             <a class="btn btn-border-blue customer-map" href="javascript:" data-target="#customerAddressMapModal"
                data-toggle="modal">
-                <i class="fa fa-map-marker"></i> 线路图
+                <i class="fa fa-map-marker"></i> 拜访线路图
             </a>
             <a href="{{ url("business/report/{$salesman->id}/export?start_date={$startDate}&end_date={$endDate}") }}"
                class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
@@ -73,7 +73,8 @@
                                         <table class="table table-center table-bordered margin-clear business-table">
                                             <thead>
                                             <tr>
-                                                <th colspan="6" class="title-blue">客户信息</th>
+                                                <th colspan="6" class="title-blue">
+                                                    客户信息{{ array_search($customerId,array_keys($visitData))+1 }}</th>
                                             </tr>
                                             <tr>
                                                 <th>客户编号</th>
@@ -90,7 +91,7 @@
                                                 <td>{{ $visit['customer_name'] }}</td>
                                                 <td>{{ $visit['contact'] }}</td>
                                                 <td>{{ $visit['contact_information'] }}</td>
-                                                <td> {{ $visit['shipping_address_name'] }}
+                                                <td> {{ $visit['business_address_name'] }}
                                                     <input type="hidden" class="map-data"
                                                            data-business-lng="{{ $visit['business_address_lng'] }}"
                                                            data-business-lat="{{ $visit['business_address_lat'] }}"
@@ -102,12 +103,15 @@
                                                 <td>{{ $visit['address'] }}</td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3">订单总金额</td>
-                                                <td colspan="3">退货总金额</td>
+                                                <td colspan="2">订单总金额</td>
+                                                <td colspan="2">退货总金额</td>
+                                                <td colspan="2">拜访时间</td>
+
                                             </tr>
                                             <tr>
-                                                <td colspan="3"><b class="red">{{ $visit['amount'] }}</b></td>
-                                                <td colspan="3">{{ $visit['return_amount'] }}</td>
+                                                <td colspan="2"><b class="red">{{ $visit['amount'] }}</b></td>
+                                                <td colspan="2">{{ $visit['return_amount'] }}</td>
+                                                <td colspan="2">{{ $visit['created_at'] }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -297,32 +301,32 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        $(function () {
-            $(".toggle-panel a").click(function () {
-                var toggle_table = $(this).parents().prev(".toggle-table"), self = $(this);
-                if (toggle_table.is(":hidden")) {
-                    toggle_table.slideDown();
-                    self.html("<i class='fa fa-angle-up'></i> 收起销售明细");
-                } else {
-                    toggle_table.slideUp();
-                    self.html("<i class='fa fa-angle-down'></i> 展开销售明细");
-                }
-            });
-            var customerMapData = function () {
-                var mapData = [];
-                $('.business-table  .map-data').each(function () {
-                    var obj = $(this), data = [];
-                    data['lng'] = obj.data('lng');
-                    data['lat'] = obj.data('lat');
-                    data['businessLng'] = obj.data('businessLng');
-                    data['businessLat'] = obj.data('businessLat');
-                    data['number'] = '序号' + obj.data('number');
-                    data['name'] = obj.data('name');
-                    mapData.push(data);
-                });
-                return mapData;
-            };
+
+        $(".toggle-panel a").click(function () {
+            var toggle_table = $(this).parents().prev(".toggle-table"), self = $(this);
+            if (toggle_table.is(":hidden")) {
+                toggle_table.slideDown();
+                self.html("<i class='fa fa-angle-up'></i> 收起销售明细");
+            } else {
+                toggle_table.slideUp();
+                self.html("<i class='fa fa-angle-down'></i> 展开销售明细");
+            }
         });
+        var customerMapData = function () {
+            var mapData = [];
+            $('.business-table  .map-data').each(function () {
+                var obj = $(this), data = [];
+                data['lng'] = obj.data('lng');
+                data['lat'] = obj.data('lat');
+                data['businessLng'] = obj.data('businessLng');
+                data['businessLat'] = obj.data('businessLat');
+                data['number'] = '序号' + obj.data('number');
+                data['name'] = obj.data('name');
+                mapData.push(data);
+            });
+            return mapData;
+        };
+
 
     </script>
 @stop

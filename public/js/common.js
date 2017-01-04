@@ -340,10 +340,11 @@ var commonAjaxSetup = function () {
     $(document.body)
     // 按钮提交
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
+            $(this).prop('disabled', true);
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
-            if(!self.data('no-loading') && !form.data('no-loading')){
-                $('body').append('<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>');
+            if (!self.data('no-loading') && !form.data('no-loading')) {
+                $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
             }
 
             self.button({
@@ -400,8 +401,8 @@ var commonAjaxSetup = function () {
                             }, 0);
                         }
                     }
-                    if(preventDefault) {
-                        setTimeout(function(){
+                    if (preventDefault) {
+                        setTimeout(function () {
                             self.button('reset');
                         }, delay)
                     }
@@ -460,7 +461,7 @@ var commonAjaxSetup = function () {
 var successMeg = function (mes) {
     $('.modal').modal('hide');
     var popup = $('#popup');
-    if(!popup.length) {
+    if (!popup.length) {
         popup = $('<div class="popup" id="popup"><h3>温馨提示 :</h3><div class="success-meg-content content">' + mes + '</div></div>').appendTo('body');
     }
     popup.animate({"opacity": "1", "top": 100 + "px"});
@@ -692,7 +693,7 @@ var commonCropSetup = function () {
  */
 var commonMethodSetup = function () {
     // 全局placeholderplaceholder
-    $('input, textarea').placeholder();
+    //$('input, textarea').placeholder();
 
     // 全局限制textarea长度
     $.valHooks.textarea = {

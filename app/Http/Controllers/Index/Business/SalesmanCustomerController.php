@@ -43,7 +43,7 @@ class SalesmanCustomerController extends Controller
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
 
-       // $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
+//        $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
             ['salesmen' => $salesmen, 'customers' => $customers, 'data' => $request->all()]);
     }
@@ -206,7 +206,7 @@ class SalesmanCustomerController extends Controller
 
         $allOrders->each(function($order){
             $order->orderGoods->each(function($goods)use($order){
-                $goods->visit_created_at = $order->salesmanVisit->created_at;
+                $goods->visit_created_at = $order->salesmanVisit?$order->salesmanVisit->created_at:$goods->created_at;
 
             });
 

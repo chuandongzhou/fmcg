@@ -67,7 +67,7 @@
                             <td>{{ $order->customer_name }}</td>
                             <td>{{ $order->salesman_name }}</td>
                             <td>{{ $order->amount }}</td>
-                            <td>{{ $order->created_at }}</td>
+                            <td>{{ $order->updated_at }}</td>
                             <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
                             <td>{{ $order->order_status_name }}</td>
                             <td>

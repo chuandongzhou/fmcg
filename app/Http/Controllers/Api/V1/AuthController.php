@@ -14,14 +14,14 @@ use App\Http\Requests\Api\v1\RegisterUserRequest;
 use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
 use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
-use App\Services\RedisService;
 use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Hash;
-use Illuminate\Support\Facades\Redis;
+use App\Services\ValidateService;
+use App\Http\Requests\Api\v1\RegisterUserSendSmsRequest;
 
 class AuthController extends Controller
 {
@@ -36,8 +36,20 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
+        $inWindows = in_windows();
         $account = $request->input('account');
         $password = $request->input('password');
+        $cookie = app('cookie');
+        if ($inWindows && $request->cookie('login_error') >= 2) {
+            if (!$request->input('geetest_challenge')) {
+                return $this->invalidParam('password', '请完成验证');
+            }
+            $res = (new ValidateService)->validateGeetest($request);
+            if (!$res) {
+                return $this->invalidParam('password', '请完成验证');
+            }
+
+        }
         if (!$account || !$password) {
             return $this->invalidParam('password', '账号或密码不能为空');
         }
@@ -46,7 +58,11 @@ class AuthController extends Controller
         $user = User::where('user_name', $account)->first();
 
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
-            return $this->invalidParam('password', '账号或密码错误');
+            if ($inWindows) {
+                $loginError = $request->cookie('login_error');
+                $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
+            }
+            return $this->invalidParams(['password' => ['账号或密码错误'], 'loginError' => ($loginError + 1)]);
         }
 
         if ($user->status != cons('status.on')) {
@@ -65,6 +81,7 @@ class AuthController extends Controller
 
         if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             auth()->login($user, true);
+            $cookie->queue('login_error', null, -1);
             return $this->success(['user' => $user]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
@@ -114,9 +131,10 @@ class AuthController extends Controller
         $data = $request->only('user_name', 'backup_mobile', 'type');
         //验证验证码
         $code = $request->input('code');
-        $res = (new CodeService)->validateCode('register', $code, $data['user_name']);
-        if (!$res['status']) {
-            return $this->error($res['mes']);
+        $codeService = new CodeService();
+        $res = $codeService->validateCode('register', $code, $data['user_name']);
+        if (!$res) {
+            return $this->error($codeService->getError());
         }
         session(['user' => $data]);
         return $this->success('验证成功');
@@ -182,9 +200,10 @@ class AuthController extends Controller
         }
         //验证验证码
         $code = $request->input('code');
-        $res = (new CodeService)->validateCode('backup', $code, $data['user_name']);
-        if (!$res['status']) {
-            return $this->error($res['mes']);
+        $codeService = new CodeService();
+        $res = $codeService->validateCode('backup', $code, $data['user_name']);
+        if (!$res) {
+            return $this->error($codeService->getError());
         }
 
         if ($user->fill(['password' => $data['password']])->save()) {
@@ -251,21 +270,23 @@ class AuthController extends Controller
     /**
      * 发送注册验证码
      *
+     * @param \App\Http\Requests\Api\v1\RegisterUserSendSmsRequest $request
      */
-    public function postRegSendSms(Request $request)
+    public function postRegSendSms(RegisterUserSendSmsRequest $request)
     {
-        if (empty($request->input('backup_mobile'))) {
-            return $this->error('密保手机不能为空');
+        $res = (new ValidateService)->validateGeetest($request);
+        if (!$res) {
+            return $this->invalidParam('backup_mobile', '请完成验证');
         }
         //发送验证码
-        $res = (new CodeService)->sendCode('register', 'register', $request->input('backup_mobile'),
+        $codeService = new CodeService();
+        $res = $codeService->sendCode('register', 'register', $request->input('backup_mobile'),
             $request->input('user_name'));
-        if ($res['status']) {
-            return $this->success($res['mes']);
+        if ($res) {
+            return $this->success('发送成功');
         } else {
-            return $this->error($res['mes']);
+            return $this->error($codeService->getError());
         }
 
     }
-
 }

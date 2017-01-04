@@ -17,7 +17,7 @@
                 <div class="modal-header choice-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <div class="modal-title forgot-modal-title" id="shippingAddressMapModalLabel">
-                        <span>客户分布图</span>
+                        <span>客户拜访线路图</span>
                     </div>
                 </div>
 
@@ -37,9 +37,6 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
-                </div>
             </div>
         </div>
     </div>

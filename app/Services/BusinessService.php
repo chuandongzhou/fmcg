@@ -123,7 +123,7 @@ class BusinessService extends BaseService
 
         } else {
             $orders = SalesmanVisitOrder::whereIn('salesman_id',
-                $salesmenId)->OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
+                $salesmenId)->OfData($data)->with($with)->orderBy('updated_at', 'desc')->paginate();
         }
 
 
@@ -162,6 +162,7 @@ class BusinessService extends BaseService
             $visitData[$customerId]['number'] = $customer->number;
             $visitData[$customerId]['contact_information'] = $customer->contact_information;
             $visitData[$customerId]['shipping_address_name'] = $customer->shipping_address_name;
+            $visitData[$customerId]['business_address_name'] = $customer->business_address_name;
             $visitData[$customerId]['visit_count'] = isset($visitData[$customerId]['visit_count'])?$visitData[$customerId]['visit_count']+1:1;
 
 

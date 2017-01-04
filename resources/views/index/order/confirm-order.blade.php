@@ -130,7 +130,7 @@
                                         </td>
                                         <td class="text-left unit-price">¥ <span
                                                     class="goods-price-{{ $cartGoods->goods->id }} goods-price"
-                                                    data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price.'/'.$cartGoods->goods->pieces }}</span>
+                                                    data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price }}</span>{{ '/'.$cartGoods->goods->pieces }}
                                         </td>
                                         <td class="text-left">x <span class="goods-num"
                                                                       data-num="{{ $cartGoods->num }}">{{ $cartGoods->num }}</span>

@@ -32,9 +32,9 @@
 @section('footer')
 
         <footer class="panel-footer footer register-footer">
-            <div class="container text-center text-muted">
-                <div class="row text-center">
-                    <div class="col-xs-6">
+            <div class="container  text-muted">
+                <div class="row ">
+                    <div class="col-xs-6 pd-left-clear">
                         <ul class="list-inline">
                             <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
                             <li>

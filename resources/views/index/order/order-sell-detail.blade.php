@@ -348,7 +348,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
+                                            <td>{{ '╳ '.$goods['pivot']['num'].'/'.cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
                                         </tr>
                                     @endforeach
                                 </table>

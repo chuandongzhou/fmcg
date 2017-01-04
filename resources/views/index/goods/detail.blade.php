@@ -83,7 +83,8 @@
                                data-url="{{  $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$goods->id) }}"
                                class="btn shopping-btn join-cart {{ $user->id==$shop->user_id?'disabled':'' }}">加入购物车</a>
                         @endif
-                        <a class="btn shopping-btn {{ $user->id==$shop->user_id?'disabled':'' }}" href="{{ url('cart') }}">去购物车结算</a>
+                        <a class="btn shopping-btn {{ $user->id==$shop->user_id?'disabled':'' }}"
+                           href="{{ url('cart') }}">去购物车结算</a>
                     </div>
                     <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods"
                          data-type="goods" data-method="post"
@@ -167,7 +168,7 @@
                             @foreach($attrs as $key=>$attr)
                                 <div class="item">{{ $key }} :{{ $attr }}</div>
                             @endforeach
-                            <div class="item">包装:{{ $good->pieces }}</div>
+                            <div class="item">包装:{{ $goods->pieces }}</div>
                         </div>
                         <div class="col-sm-12 padding-clear">
                             {!! $goods->introduce !!}
@@ -178,7 +179,7 @@
 
                     <div class="row">
                         <div class="col-sm-5">
-                            <table  class="table margin-clear ">
+                            <table class="table margin-clear ">
                                 <tr>
                                     <th>商品配送区域</th>
                                 </tr>

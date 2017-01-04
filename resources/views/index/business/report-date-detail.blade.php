@@ -69,7 +69,7 @@
                                         <table class="table table-center table-bordered margin-clear first">
                                             <thead>
                                             <tr>
-                                                <th colspan="5" class="title-blue">客户信息</th>
+                                                <th colspan="5" class="title-blue">客户信息{{ array_search($customerId,array_keys($visitData))+1 }}</th>
                                             </tr>
                                             <tr>
                                                 <th>客户编号</th>
@@ -85,7 +85,7 @@
                                                 <td>{{ $visit['customer_name'] }}</td>
                                                 <td>{{ $visit['contact'] }}</td>
                                                 <td>{{ $visit['contact_information'] }}</td>
-                                                <td>{{ $visit['shipping_address_name'] }}</td>
+                                                <td>{{ $visit['business_address_name'] }}</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">

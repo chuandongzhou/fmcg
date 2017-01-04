@@ -55,30 +55,30 @@ class MyGoodsController extends Controller
             $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
                 ['pieces_level_3', 'system_2']) : $piecesAttributes;
             $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
-                ['pieces_level_2','system_1']) : $piecesAttributes;
+                ['pieces_level_2', 'system_1']) : $piecesAttributes;
             if ($goods->exists) {
-                $goodsPieces = $goods->goodsPieces()->create($piecesAttributes);
-                if ($goodsPieces->exists) {
-                    // 更新配送地址
-                    $this->updateDeliveryArea($goods, $request->input('area'));
+                $goods->goodsPieces()->create($piecesAttributes);
 
-                    $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
+                // 更新配送地址
+                $this->updateDeliveryArea($goods, $request->input('area'));
 
-                    if (!is_null($images) && is_null($goods->images)) {
-                        $this->_setImages($images, $goods->bar_code);
-                    }
+                $images = $request->hasFile('images') ? $request->file('images') : $request->input('images');
 
-                    // 更新标签
-                    isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
-                    //保存没有图片的条形码
-                    $this->saveWithoutImageOfBarCode($goods);
-                    return true;
+                if (!is_null($images) && empty($goods->images->toArray())) {
+                    $this->_setImages($images, $goods->bar_code);
                 }
+
+                // 更新标签
+                isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+                //保存没有图片的条形码
+                $this->saveWithoutImageOfBarCode($goods);
+                return true;
+
 
             }
         });
 
-        return $result?$this->success('添加商品成功'):$this->error('添加商品出现错误');
+        return $result ? $this->success('添加商品成功') : $this->error('添加商品出现错误');
     }
 
     /**
@@ -115,7 +115,7 @@ class MyGoodsController extends Controller
             return $this->forbidden('权限不足');
         }
 
-        $result = DB::transaction(function () use ($request,$goods) {
+        $result = DB::transaction(function () use ($request, $goods) {
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
 
@@ -140,7 +140,7 @@ class MyGoodsController extends Controller
                 $piecesAttributes = $piecesAttributes['pieces_level_3'] == '' ? array_except($piecesAttributes,
                     ['pieces_level_3', 'system_2']) : $piecesAttributes;
                 $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
-                    ['pieces_level_2','system_1']) : $piecesAttributes;
+                    ['pieces_level_2', 'system_1']) : $piecesAttributes;
                 $goods->goodsPieces()->create($piecesAttributes);
                 // 更新配送地址
                 $this->updateDeliveryArea($goods, $request->input('area'));
@@ -158,7 +158,7 @@ class MyGoodsController extends Controller
             }
         });
 
-        return $result?$this->success('更新商品成功'):$this->error('更新商品时遇到问题');
+        return $result ? $this->success('更新商品成功') : $this->error('更新商品时遇到问题');
     }
 
     /**

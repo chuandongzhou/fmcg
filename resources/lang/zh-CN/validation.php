@@ -75,6 +75,7 @@ return [
     "timezone" => ":attribute 必须是一个合法的时区值。",
     "unique" => ":attribute 已经存在。",
     "url" => ":attribute 格式不正确。",
+    "geetest" => ":attribute 验证失败",
 
     /*
     |--------------------------------------------------------------------------
@@ -196,6 +197,7 @@ return [
         'price_retailer_pick_up' => '终端商自提价格',
         'price_wholesaler_pick_up' => '批发商自提价格',
         'pieces' => '单位',
+        'geetest_challenge' =>'验证码',
     ],
 
 ];

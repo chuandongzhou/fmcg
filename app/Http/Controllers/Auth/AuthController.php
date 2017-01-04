@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Germey\Geetest\CaptchaGeetest;
+use Illuminate\Support\Facades\Config;
 
 class AuthController extends Controller
 {
@@ -19,7 +21,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins,CaptchaGeetest;
 
     /**
      * Create a new authentication controller instance.

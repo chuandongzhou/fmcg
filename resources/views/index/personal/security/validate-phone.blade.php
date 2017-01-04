@@ -49,6 +49,7 @@
     <script>
         $(function () {
             $('.send-sms').on('done.hct.ajax', function (data, textStatus) {
+                $('body').find('.loading').remove();
                 var $this = $(this);
                 // 成功进行倒计时
                 timeIntervalFunc({

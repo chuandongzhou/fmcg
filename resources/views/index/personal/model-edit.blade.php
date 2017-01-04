@@ -60,7 +60,7 @@
                                 <input type="hidden" id="color-input" name="color" value="{{ $shop->ShopSignature?$shop->ShopSignature->color:'#000000' }}"/>
                             </div>
                             <div class="col-sm-12 item">
-                                <button type="submit" class="btn btn-success btn-submit">提交</button>
+                                <button type="submit" class="btn btn-success ">提交</button>
                             </div>
                         </div>
                     </form>

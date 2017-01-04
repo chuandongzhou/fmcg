@@ -99,7 +99,7 @@
                                         {{ $order->coupon_id?' ¥'.bcsub($order->price, $order->after_rebates_price, 2):($order->display_fee > 0?$order->display_fee:'--') }}</td>
                                     <td><span class="orange">¥{{ $order->after_rebates_price }}</span></td>
                                     <td>{{ $order['payment_type'] }}
-                                        {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'--' }}
+                                        {{ $order->pay_type==cons('pay_type.cod')?'('.$order->pay_way_lang.')':'' }}
                                     </td>
                                     <td>
                                         <span class="orange">{{ $order['status_name'] }}</span>
@@ -355,7 +355,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ 'x'.$goods['pivot']['num'] }}</td>
+                                            <td>{{ '╳'.$goods['pivot']['num'].'/'.cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
                                         </tr>
 
                                     @endforeach

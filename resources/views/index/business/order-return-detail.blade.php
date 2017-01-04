@@ -20,7 +20,7 @@
             @if($order->can_pass)
                 <button
                         data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                        data-method="put" data-data='{"status" : "1"}'
+                        data-method="put" data-data='{"status" : "1"}' data-done-url="{{ url('business/order/return-orders') }}"
                         class="btn btn-blue-lighter ajax">通过
                 </button>
 

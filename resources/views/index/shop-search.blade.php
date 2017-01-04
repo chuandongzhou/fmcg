@@ -109,7 +109,7 @@
                     @if ($keywords)
                         <div class="text-left search-keyword">
                             @foreach($keywords as $key=>$val)
-                                <a href="{{ url('shop/' . $shop->id . '/search?name=' . $key) }}">{{ $key }}</a>
+                                <a href="{{ url('shop/' . $shop->id . '/search?name=' . $key) }}">{{ substr($key,0,6) }}</a>
                             @endforeach
                         </div>
                     @endif

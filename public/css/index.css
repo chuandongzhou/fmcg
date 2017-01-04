@@ -2,6 +2,7 @@ html {
   position: relative;
   min-height: 100%;
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
+  -ms-overflow-style: scrollbar;
 }
 
 body {
@@ -9,6 +10,7 @@ body {
   margin-bottom: 100px;
   width: 100%;
   color: #000;
+  -ms-overflow-style: scrollbar;
 }
 
 ul,
