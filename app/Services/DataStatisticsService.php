@@ -28,8 +28,6 @@ class DataStatisticsService
         $dayAgo = $nowTime->copy()->subDay()->startOfDay();
         $monthAgo = $isBetween ? $dayAgo : $nowTime->copy()->subDays(30);
         // 活跃用户数
-
-
         $activeUser = User::select(DB::raw('count(*) as num,type'))->where('last_login_at', '>',
             $monthAgo)->groupBy('type')->lists('num', 'type');
 

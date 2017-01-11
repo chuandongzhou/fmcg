@@ -77,11 +77,9 @@ class StatisticsController extends Controller
             'max_retailer_reg_num' => $dataStatistics->sortByDesc('retailer_reg_num')->first(),
             'max_supplier_reg_num' => $dataStatistics->sortByDesc('supplier_reg_num')->first(),
         ];
-        /*
-         * 每日订单统计
-         */
-        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->where('is_cancel',
-            cons('order.is_cancel.off'))->get();
+
+        //订单统计
+        $orders = Order::whereBetween('created_at', [$dayStart, $dayEnd])->where('is_cancel', cons('order.is_cancel.off'))->get();
 
         $orderEveryday = []; //当日订单统计
 

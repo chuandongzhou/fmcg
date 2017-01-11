@@ -8,7 +8,7 @@
         }
     </style>
 @stop
-@section('right')
+@section('body')
     <div class="modal fade" id="customerAddressMapModal" tabindex="-1" role="dialog"
          aria-labelledby="customerAddressMapModalLabel"
          aria-hidden="true">
@@ -39,11 +39,13 @@
         $(function () {
             var customerAddressMapModal = $('#customerAddressMapModal');
             customerAddressMapModal.on('shown.bs.modal', function (e) {
-                var mapData = customerMapData();
+                var parent = $(e.relatedTarget);
+                var mapData = parent.data('shopCoordinate') ? parent.data('shopCoordinate') : customerMapData();
 
+                console.log(mapData);
                 // 百度地图API功能
                 var mp = new BMap.Map("customer-map");
-                mp.centerAndZoom(new BMap.Point(mapData[0]['lng'], mapData[0]['lat']), 15);
+                mp.centerAndZoom(new BMap.Point(mapData.length ? mapData[0]['lng'] : 104.078511, mapData.length ? mapData[0]['lat'] : 30.556547), 15);
                 mp.enableScrollWheelZoom();
                 // 复杂的自定义覆盖物
                 function ComplexCustomOverlay(point, text, mouseoverText, href) {
@@ -70,7 +72,7 @@
                     div.style.whiteSpace = "nowrap";
                     div.style.MozUserSelect = "none";
                     div.style.fontSize = "12px";
-                    div.setAttribute("data-href",this._href) ;
+                    div.setAttribute("data-href", this._href);
 
                     var span = this._span = document.createElement("span");
                     div.appendChild(span);

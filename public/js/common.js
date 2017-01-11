@@ -546,9 +546,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-    //, addButton = $('#add-address')
+        //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-    //, addLimit = 500   //最大地址限制
+        //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1403,6 +1403,18 @@ var stripTags = function (str, allow) {
     return str.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
         return allow.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     });
+};
+/**
+ * 获取数组keys
+ * @param arr
+ * @returns {Array}
+ */
+var arrayKeys = function (arr) {
+    var keys = [];
+    for (var index in arr) {
+        keys.push(index);
+    }
+    return keys;
 }
 
 //给Number类型增加一个add方法，，使用时直接用 .add 即可完成计算。
@@ -1424,10 +1436,16 @@ Number.prototype.mul = function (arg) {
 Number.prototype.div = function (arg) {
     return accDiv(this, arg);
 };
-
+//字符串去tag
 String.prototype.stripTags = function (allow) {
     return stripTags(this, allow);
-}
+};
+
+//获取数组keys
+Array.prototype.keys = function () {
+    return arrayKeys(this);
+};
+
 /**
  * 初始化方法
  */

@@ -162,6 +162,7 @@ return [
         'role_id' => '角色分组ID',
         'image' => '图片',
         'url' => '链接地址',
+        'download_url' => '下载地址',
         'start_at' => '开始时间',
         'end_at' => '结束时间',
         'pid' => '父级ID',

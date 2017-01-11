@@ -12,26 +12,16 @@ class TradeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getIndex(Request $request)
     {
-        $data = array_filter($request->all());
-        $map = [];
-        $trades = [];
-        // TODO: 搜索可优化
-        if (isset($data['order_id']) || isset($data['trade_no'])) {
-            if (isset($data['order_id']) && $data['order_id'] != '') {
-                $map['order_id'] = $data['order_id'];
-            }
-            if (isset($data['trade_no']) && $data['trade_no']) {
-                $map['trade_no'] = $data['trade_no'];
-            }
-            if (isset($attributes['pay_type']) && $attributes['pay_type']) {
-                $map['pay_type'] = $attributes['pay_type'];
-            }
-            $trades = SystemTradeInfo::where($map)->paginate();
-        }
+        $data = $request->all();
+
+        $trades = SystemTradeInfo::where($data)->paginate();
+
+
         return view('admin.trade.select',
             [
                 'trades' => $trades,

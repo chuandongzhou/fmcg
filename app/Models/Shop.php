@@ -6,11 +6,17 @@ use App\Services\AddressService;
 use App\Services\ImageUploadService;
 use App\Services\ShopService;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shop extends Model
 {
+
+    use SoftDeletes;
+
     protected $table = 'shop';
+
     protected $timestamp = false;
+
     protected $fillable = [
         'logo',
         'name',
@@ -348,9 +354,11 @@ class Shop extends Model
     public function scopeOfDeliveryArea($query, $data, $relation = 'deliveryArea')
     {
         $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
-        return $query->whereHas($relation, function ($query) use ($data) {
-            $query->where(array_filter($data));
-        });
+        if (!empty($data)) {
+            return $query->whereHas($relation, function ($query) use ($data) {
+                $query->where(array_filter($data));
+            });
+        }
     }
 
     /**
@@ -621,7 +629,7 @@ class Shop extends Model
     public function getSalesVolumeAttribute()
     {
         $num = $this->goods()->sum('sales_volume');
-        $res = $num < 10000 ? $num : (floor($num/100)/100).'万';
+        $res = $num < 10000 ? $num : (floor($num / 100) / 100) . '万';
         return $res;
     }
 

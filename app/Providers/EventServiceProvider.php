@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        'eloquent.*' => [
+            \App\Listeners\CreateAdminNotification::class,
         ],
     ];
 

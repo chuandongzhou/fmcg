@@ -24,6 +24,7 @@ class Top extends Adapter
      */
     protected $baseUri = 'http://gw.api.taobao.com/router/rest';
 
+
     /**
      * 默认参数
      *
@@ -33,7 +34,9 @@ class Top extends Adapter
         'v' => '2.0',
         'format' => 'json',
         'sign_method' => 'md5',
-        'method' => 'taobao.open.sms.sendmsg',
+        'method' => 'alibaba.aliqin.fc.sms.num.send',
+        'sms_type' => 'normal',
+        'sms_free_sign_name' => '订百达零售服务平台'
     ];
 
     /**
@@ -93,7 +96,7 @@ class Top extends Adapter
             $token = $device->getToken();
             $result = $this->send($template, $token, $context);
 
-            if ($result['code'] === 1) {
+            if ($result['err_code'] === '0') {
                 $this->success[] = $token;
             } else {
                 $this->fails[] = $token;
@@ -131,10 +134,12 @@ class Top extends Adapter
 
     /**
      * 发送注册成功短信
+     *
      * @param $text
      * @return \Tinpont\Pushbox\Adapter
      */
-    public function pushRegister($text){
+    public function pushRegister($text)
+    {
 
         return $this->push(new Message('register', ['code' => $text]));
     }
@@ -203,13 +208,13 @@ class Top extends Adapter
         }
 
         $params = [
-            'signature_id' => $this->signatureId,
-            'template_id' => $templateId,
-            'mobile' => $mobile,
-            'context' => $context,
+            //'signature_id' => $this->signatureId,
+            'sms_template_code' => $templateId,
+            'rec_num' => $mobile,
+            'sms_param' => json_encode($context),
         ];
 
-        return $this->handleResponse($this->post(['send_message_request' => json_encode($params)]));
+        return $this->handleResponse($this->post($params));
     }
 
     /**
@@ -238,10 +243,12 @@ class Top extends Adapter
     protected function handleResponse(ResponseInterface $response)
     {
         $json = (array)json_decode($response->getBody()->getContents(), true);
+
         $result = $json ? last($json) : [];
+
         $result && $result = $result['result'];
 
-        if (!isset($result['code']) || $result['code'] !== 1) {
+        if (!isset($result['err_code']) || $result['err_code'] != 0) {
             info('Top sms error', $json);
         }
 
@@ -265,7 +272,6 @@ class Top extends Adapter
                 $string .= ($key . $value);
             }
         }
-
         return strtoupper(md5($string . $appSecret));
     }
 

@@ -145,7 +145,6 @@
                                 <th>商品名称</th>
                                 <td>商品单价</td>
                                 <td>订货数量</td>
-
                                 <th>金额</th>
                                 @if($order->can_pass)
                                     <th>操作</th>

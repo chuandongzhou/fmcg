@@ -31,7 +31,6 @@ class VersionRecordController extends Controller
      */
     public function create()
     {
-
         return view('admin.operation.version-record');
     }
 

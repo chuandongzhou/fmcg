@@ -34,8 +34,11 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
 
-        $orders = (new BusinessService())->getOrders([$salesmenId], $data, ['salesmanCustomer', 'salesman', 'order']);
-        return $this->success(['orders' => $orders->toArray()]);
+        $orders = (new BusinessService())->getOrders([$salesmenId], $data,
+            ['salesmanCustomer.businessAddress', 'salesman', 'order']);
+        return $this->success([
+            'orders' => $orders->toArray()
+        ]);
     }
 
     /**
@@ -113,7 +116,7 @@ class SalesmanVisitOrderController extends Controller
         }
         $customerSurplusFee = (new BusinessService())->canSetDisplayFee($salesmanVisitOrder->salesmanCustomer,
             $display->month, $orderId);
-        if ($displayFee > bcsub($customerSurplusFee['surplus'],$customerSurplusFee['nonConfirm'],2)) {
+        if ($displayFee > bcsub($customerSurplusFee['surplus'], $customerSurplusFee['nonConfirm'], 2)) {
             return $this->error('陈列费不能大于该月剩余');
         }
 
@@ -246,7 +249,7 @@ class SalesmanVisitOrderController extends Controller
             'orderGoods.goods.goodsPieces' => function ($query) {
                 $query->select('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'goods_id');
             },
-            'displayList.mortgageGoods'
+            'displayList.mortgageGoods',
         ])->find($id);
 
         if ($order->type == cons('salesman.order.type.order')) {
@@ -691,7 +694,7 @@ class SalesmanVisitOrderController extends Controller
                 //获取客户剩余
                 $surplusMortgage = (new BusinessService())->canSetMortgageGoods($salesmanVisitOrder,
                     $request->input('month'), $goodsId);
-                if (($surplusMortgage['surplus']-$surplusMortgage['nonConfirm'])< $num) {
+                if (($surplusMortgage['surplus'] - $surplusMortgage['nonConfirm']) < $num) {
                     return '陈列商品数量不能大于当月剩余量';
                 }
                 $salesmanVisitOrder->displayList()->where([

@@ -471,6 +471,7 @@
     
         amount              decimal         退款金额
         num                 string          退货数量
+        pieces              int             单位id
 
 
 `成功返回：`

@@ -48,7 +48,7 @@
                             <div class="clearfix all-sort-panel">
                                 <p class="pull-left all-sort">
                                     @foreach($categories[count($categories)-1] as $cate )
-                                        <a href="{{ url('search?category_id='.$cate['level'].$cate['id']) }}">{{ $cate['name'] }}</a>
+                                        <a href="{{ url('search?category_id='.$cate['level'].$cate['id'] .(isset($get['name']) ? '&name=' . $get['name'] : '')) }}">{{ $cate['name'] }}</a>
                                     @endforeach
                                 </p>
                                 <a class="more pull-right" href="#"><span>更多</span> <i class="fa fa-angle-down"></i></a>

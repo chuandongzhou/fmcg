@@ -488,6 +488,16 @@ class Order extends Model
     }
 
     /**
+     * 获取卖家类型
+     *
+     * @return mixed|\WeiHeng\Constant\Constant
+     */
+    public function getShopUserTypeAttribute()
+    {
+        return $this->shop ? $this->shop->user_type : cons('user.type.wholesaler');
+    }
+
+    /**
      * 获取买家名联系方式
      *
      * @return string
@@ -564,16 +574,18 @@ class Order extends Model
      */
     public function scopeOfUserShopName($query, $shopName)
     {
-        return $query->where(function ($query) use ($shopName) {
-            $query->whereHas('user.shop', function ($query) use ($shopName) {
-                $query->where('name', 'like', '%' . $shopName . '%');
-            })->orWhere(function ($query) use ($shopName) {
-                $query->where('user_id', 0)->whereHas('salesmanVisitOrder.salesmanCustomer',
-                    function ($query) use ($shopName) {
-                        $query->where('name', 'like', '%' . $shopName . '%');
-                    });
+        if ($shopName) {
+            return $query->where(function ($query) use ($shopName) {
+                $query->whereHas('user.shop', function ($query) use ($shopName) {
+                    $query->where('name', 'like', '%' . $shopName . '%');
+                })->orWhere(function ($query) use ($shopName) {
+                    $query->where('user_id', 0)->whereHas('salesmanVisitOrder.salesmanCustomer',
+                        function ($query) use ($shopName) {
+                            $query->where('name', 'like', '%' . $shopName . '%');
+                        });
+                });
             });
-        });
+        }
 
     }
 
@@ -586,10 +598,12 @@ class Order extends Model
      */
     public function scopeOfShopName($query, $shopName)
     {
-        return $query->whereHas('shop', function ($query) use ($shopName) {
+        if ($shopName) {
+            return $query->whereHas('shop', function ($query) use ($shopName) {
 
-            $query->where('name', 'like', '%' . $shopName . '%');
-        });
+                $query->where('name', 'like', '%' . $shopName . '%');
+            });
+        }
     }
 
     /**

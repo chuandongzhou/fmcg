@@ -250,6 +250,29 @@ return [
             'success' => '成功'
         ],
     ],
+    'admin' => [
+        'notification' => [
+            'role-create' => '创建角色',
+            'admin-create' => '创建管理员',
+            'user-create' => '创建用户',
+            'category-create' => '创建商品分类',
+            'attr-create' => '创建商品标签',
+            'images-create' => '添加商品图片',
+            'advert-create' => '添加广告',
+            'promoter-create' => '添加推广',
+            'version-recode-create' => '版本更新',
+            'shop-column-create' => '店铺栏目添加',
+            'notice-create' => '添加公告',
+            'role-update' => '角色更新',
+            'admin-update' => '管理员更新',
+            'category-update' => '商品分类更新',
+            'attr-update' => '商品标签更新',
+            'advert-update' => '广告更新',
+            'promoter-update' => '推广人员更新',
+            'shop-column-update' => '店铺栏目更新',
+            'notice-update' => '公告更新',
+        ],
+    ],
     // 业务员
     'salesman' => [
         'order' => [

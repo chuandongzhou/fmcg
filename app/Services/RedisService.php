@@ -10,6 +10,7 @@ namespace App\Services;
 use Predis\Client;
 use Predis\ClientInterface;
 use Illuminate\Support\Facades\Redis;
+
 class RedisService
 {
 
@@ -34,7 +35,6 @@ class RedisService
 
     public function __construct()
     {
-
         $this->redis = Redis::connection();
         $this->namespace = $this->name ? $this->name . ':' : '';
     }
@@ -50,11 +50,11 @@ class RedisService
     {
         $redisKey = $this->getKey($key);
         //$expire = $expire ? $expire : cons('push_time.msg_life');
-        if (!$this->redis->exists($redisKey)) {
-            $this->redis->set($redisKey, $redisValue);
-            $expire && $this->redis->expire($redisKey, $expire);
+        if ($this->redis->exists($redisKey)) {
+            $this->redis->del($redisKey);
         }
-
+        $this->redis->set($redisKey, $redisValue);
+        $expire && $this->redis->expire($redisKey, $expire);
     }
 
     /**

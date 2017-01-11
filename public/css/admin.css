@@ -1,90 +1,162 @@
 @charset "UTF-8";
+html, body {
+  font-family: "Microsoft YaHei", Arial, sans-serif !important; }
+
+.navbar-default {
+  background-color: #333333;
+  border-color: #333333;
+  height: 60px; }
+  .navbar-default .nav > li {
+    color: #fff;
+    font-size: 13px; }
+    .navbar-default .nav > li a {
+      line-height: 27px; }
+    .navbar-default .nav > li.date {
+      height: 60px;
+      padding-top: 12px; }
+      .navbar-default .nav > li.date span {
+        display: block; }
+    .navbar-default .nav > li.account {
+      position: relative;
+      border: 1px solid #333333;
+      width: 100px;
+      margin: 0 90px 0 30px;
+      text-align: center; }
+      .navbar-default .nav > li.account:hover .select-wrap {
+        display: block; }
+      .navbar-default .nav > li.account .select-wrap {
+        text-align: center;
+        position: absolute;
+        width: 100%;
+        top: 58px;
+        padding: 0;
+        display: none; }
+        .navbar-default .nav > li.account .select-wrap li {
+          background-color: #333333;
+          height: 40px;
+          line-height: 40px; }
+          .navbar-default .nav > li.account .select-wrap li a {
+            text-decoration: none;
+            color: #fff; }
+          .navbar-default .nav > li.account .select-wrap li:hover {
+            background-color: #505050; }
+  .navbar-default .navbar-brand {
+    height: 60px;
+    line-height: 27px;
+    font-size: 25px; }
+    .navbar-default .navbar-brand:hover {
+      color: #fff; }
+
+.notice-bar {
+  border-bottom: 1px solid #e4e4e4;
+  margin-bottom: 10px;
+  background-color: #f2f2f2;
+  height: 45px; }
+  .notice-bar a {
+    display: block;
+    float: left;
+    min-width: 100px;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 10px;
+    text-align: center;
+    margin: 0 0 -1px -1px;
+    border: 1px solid #e4e4e4;
+    border-top-left-radius: 7px !important;
+    border-top-right-radius: 7px !important;
+    color: #666666; }
+    .notice-bar a:hover, .notice-bar a:focus {
+      text-decoration: none; }
+    .notice-bar a:hover, .notice-bar a:focus {
+      color: #666666; }
+    .notice-bar a.active {
+      color: #333333;
+      border-bottom-color: #fff;
+      background-color: #fff;
+      height: 45px;
+      line-height: 45px; }
+
+.panel-group .panel + .panel {
+  margin-top: -1px !important; }
+
+.panel-group .panel .panel-title a:hover, .panel-group .panel .panel-title a:focus {
+  text-decoration: none; }
+
+.panel-group .panel-default .panel-heading {
+  padding: 14px; }
+
+.panel-group .panel-default > .panel-heading {
+  color: #000; }
+
+.panel-group .panel-default .panel-body {
+  padding: 10px 0; }
 
 #accordion ul {
   list-style-type: none;
   padding-left: 0;
-}
-
-#accordion ul li {
-  display: block;
-  height: 25px;
-  line-height: 25px;
-  border-bottom: 1px solid RGB(245, 245, 245);
-}
-
-#accordion ul li a {
-  display: inline-block;
-}
-
-#accordion ul li a,
-#accordion ul li a:hover {
-  text-decoration: none;
-}
+  margin-bottom: 0; }
+  #accordion ul li {
+    display: block;
+    height: 40px;
+    line-height: 40px; }
+    #accordion ul li a {
+      display: inline-block;
+      text-decoration: none;
+      color: #666666;
+      padding: 0 8px; }
+      #accordion ul li a:hover {
+        text-decoration: none;
+        color: #4cb9fe; }
+      #accordion ul li a.active {
+        color: #4cb9fe; }
 
 .btn-cancel {
-  background-color: #b4b4b4;
-}
+  background-color: #b4b4b4; }
 
 /**********************************用户详情开始***************************************/
-
 .user-show {
-  padding: 5px;
-}
-
-.user-show img.shop-img {
-  width: 95px;
-  height: 95px;
-}
+  padding: 5px; }
+  .user-show img.shop-img {
+    width: 95px;
+    height: 95px; }
 
 .shop-img span {
   float: right;
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 .save button {
-  margin-left: 10px;
-}
+  margin-left: 10px; }
 
 .modal .modal .address-select {
   width: 30%;
   display: inline;
-  margin-bottom: 5px;
-}
+  margin-bottom: 5px; }
 
 .modal .modal-body .address-detail {
-  margin: 10px 0;
-}
+  margin: 10px 0; }
 
 .modal .address-select .address {
   width: 90%;
   display: inline;
-  margin-bottom: 5px;
-}
+  margin-bottom: 5px; }
 
 .address-list {
-  margin-top: 5px;
-}
-
-.address-list div {
-  border: 1px solid #EEEEEE;
-  border-radius: 3px;
-  margin-top: 4px;
-  padding: 5px;
-  color: #808080;
-}
+  margin-top: 5px; }
+  .address-list div {
+    border: 1px solid #EEEEEE;
+    border-radius: 3px;
+    margin-top: 4px;
+    padding: 5px;
+    color: #808080; }
 
 .pictures {
-  margin-top: 10px;
-}
+  margin-top: 10px; }
 
 /**********************************用户详情结束***************************************/
-
 /**********************************交易信息开始***************************************/
-
 .pay_type {
   height: 34px;
-  line-height: 34px;
-}
+  line-height: 34px; }
 
 .inline-control {
   background-image: none;
@@ -96,19 +168,14 @@
   line-height: 28px;
   padding: 3px 6px;
   margin: 0 10px;
-  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-}
-
-.inline-control:hover {
-  border-color: #66afe9;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
-  outline: 0 none;
-}
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s; }
+  .inline-control:hover {
+    border-color: #66afe9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    outline: 0 none; }
 
 /**********************************交易信息结束***************************************/
-
 /*========================登录开始 ==========================*/
-
 .login .loginBox {
   width: 500px;
   height: 230px;
@@ -116,59 +183,44 @@
   left: 50%;
   top: 50%;
   margin-left: -250px;
-  margin-top: -165px;
-}
+  margin-top: -165px; }
 
 .login .input-group {
-  width: 100%;
-}
+  width: 100%; }
 
 .login .submit {
-  width: 100%;
-}
+  width: 100%; }
 
 .login .logo {
-  margin-bottom: 50px;
-}
+  margin-bottom: 50px; }
 
 /*========================登录结束 ==========================*/
-
 /*======================商品图片开始 ========================*/
-
 .goods-pictures .cate-name {
   display: inline-block;
   width: 80%;
   padding: 7px 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
-}
+  overflow: hidden; }
 
 /*======================商品图片结束 ========================*/
-
 textarea {
-  resize: none;
-}
+  resize: none; }
 
 /*==============baidu map css start=================*/
-
-#map,
-#map-modal {
+#map, #map-modal {
   width: 100%;
   height: 400px;
   overflow: hidden;
-  margin: 0;
-}
+  margin: 0; }
 
 /*==============baidu map css end=================*/
-
 /*==============   文件上传开始   =================*/
-
 .import-goods-btn {
   position: relative;
   overflow: hidden;
-  display: inline-block;
-}
+  display: inline-block; }
 
 .import-goods-btn input {
   position: absolute;
@@ -177,21 +229,225 @@ textarea {
   margin: 0;
   opacity: 0;
   filter: alpha(opacity=0);
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 /*==============   文件上传结束   =================*/
+/*==============   注册统计开始   =================*/
+.content-wrap {
+  border: 1px solid #e4e4e4;
+  margin: -11px 0 0 -1px;
+  padding: 30px; }
 
+.control {
+  border: 1px solid #169bd5;
+  border-radius: 4px !important;
+  height: 35px;
+  line-height: 34px;
+  vertical-align: middle;
+  padding: 0 10px;
+  min-width: 85px;
+  outline: none; }
+  .control + .control {
+    margin-left: 15px; }
+
+.enter-control {
+  border: 1px solid #e4e4e4;
+  border-radius: 4px !important;
+  height: 35px;
+  vertical-align: middle;
+  padding: 0 10px;
+  outline: none; }
+  .enter-control + .enter-control {
+    margin-right: 15px; }
+  .enter-control.date {
+    width: 150px;
+    text-align: center; }
+  .enter-control.product-name {
+    width: 200px;
+    margin: 0 8px; }
+
+.btn-blue {
+  color: #fff;
+  background-color: #169bd5;
+  border-radius: 4px !important; }
+  .btn-blue:hover, .btn-blue:focus {
+    color: #fff; }
+
+.btn-border-blue {
+  background-color: #fff;
+  color: #169bd5;
+  border-radius: 4px !important;
+  border: 1px solid #169bd5; }
+  .btn-border-blue:hover, .btn-border-blue:focus {
+    background-color: #169bd5;
+    color: #fff; }
+
+.public-table {
+  margin-top: 20px; }
+  .public-table th, .public-table td {
+    padding: 15px 5px !important;
+    text-align: center; }
+  .public-table th {
+    background-color: #f1f1f1; }
+
+.icon-tixing {
+  color: #169bd5;
+  font-size: 19px; }
+  .icon-tixing, .icon-tixing:hover, .icon-tixing:focus {
+    text-decoration: none;
+    color: #169bd5; }
+
+.popover .popover-content {
+  font-size: 12px;
+  background-color: #fefe1f;
+  padding: 3px 5px !important; }
+
+.popover .arrow {
+  left: 48% !important; }
+
+.popover .arrow:after {
+  border-bottom-color: #fefe1f !important; }
+
+.chart {
+  width: 100%;
+  height: 360px;
+  margin-bottom: 30px; }
+
+/*==============   注册统计结束   =================*/
+/*==============   金额统计开始   =================*/
+.time-format {
+  background-color: #fff;
+  border: none;
+  outline: none;
+  color: #333333; }
+  .time-format + .time-format {
+    padding: 0 10px; }
+  .time-format:hover {
+    color: #4cb9fe;
+    text-decoration: none; }
+
+.chart-wrap {
+  position: relative;
+  margin-top: 50px; }
+
+.chart-year {
+  position: absolute;
+  width: 40%;
+  text-align: right;
+  top: 3px; }
+
+.money-table {
+  margin-top: 30px; }
+  .money-table tr th {
+    background-color: #1c9ed7;
+    color: #fff; }
+  .money-table tr td, .money-table tr th {
+    text-align: center;
+    padding: 10px !important; }
+  .money-table tr:nth-child(2n) td {
+    background-color: #f1f1f1; }
+  .money-table + .money-table tr th {
+    background-color: #e3e3e3;
+    color: #666666; }
+  .money-table + .money-table tr td, .money-table + .money-table tr th {
+    border: 1px solid #fff; }
+
+.management-pagination .active span {
+  background-color: #4cb9fe !important;
+  color: #fff !important;
+  border-color: #17c4bb !important; }
+
+.management-pagination li a {
+  color: #b4b4b4 !important;
+  background-color: #fff !important; }
+  .management-pagination li a:hover {
+    color: #fff !important;
+    background-color: #17c4bb !important; }
+
+/*==============   金额统计结束   =================*/
+/*==============   商品销售统计开始   =================*/
+.title-name {
+  margin-top: 30px;
+  font-size: 15px;
+  font-weight: 600; }
+
+.item-panel {
+  margin: 10px -30px 30px -30px;
+  height: 20px;
+  background-color: #f1f1f1; }
+
+.commodity-name, .operating {
+  color: #333333; }
+  .commodity-name:hover, .commodity-name:focus, .operating:hover, .operating:focus {
+    color: #333333;
+    text-decoration: none; }
+
+.operating .iconfont {
+  color: #169bd5; }
+
+.modal-list {
+  margin-bottom: 50px; }
+  .modal-list li {
+    float: left;
+    list-style: none;
+    padding: 0; }
+    .modal-list li span {
+      color: #999999; }
+    .modal-list li + li {
+      margin-left: 20px; }
+
+.edit {
+  color: #4cb9fe; }
+  .edit:hover, .edit:focus {
+    color: #4cb9fe;
+    text-decoration: none;
+    outline: none; }
+
+.remove {
+  color: #f00; }
+  .remove:hover, .remove:focus {
+    color: #f00;
+    text-decoration: none;
+    outline: none; }
+
+.dis-modal-title {
+  color: #4cb9fe;
+  font-size: 17px; }
+
+.modal-body {
+  position: relative; }
+
+.modal-list-left {
+  position: absolute;
+  left: 0; }
+  .modal-list-left li {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px; }
+    .modal-list-left li span {
+      color: #999999; }
+    .modal-list-left li i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #c34d51; }
+
+/*==============   商品销售统计结束   =================*/
+/*==============   运维管理开始   =================*/
+.control-radius {
+  border-radius: 4px !important; }
+
+td.text-left {
+  text-align: left !important; }
+
+/*==============   运维管理结束   =================*/
 .padding-clear {
-  padding: 0 !important;
-}
+  padding: 0 !important; }
 
 .attr {
   padding: 5px 0 5px 15px;
-  margin: 10px 0;
-}
-
-.attr .items-item {
-  display: inline-block;
-  padding: 5px 20px 5px 0;
-}
+  margin: 10px 0; }
+  .attr .items-item {
+    display: inline-block;
+    padding: 5px 20px 5px 0; }

@@ -8,6 +8,7 @@
 namespace App\Models;
 
 
+use App\Services\CategoryService;
 use App\Services\GoodsImageService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -250,11 +251,13 @@ class Goods extends Model
     {
         $goodsBuilder = clone $query;
         $goodsIds = $goodsBuilder->lists('id');
-        $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
-        $goodsIds = DB::table('address_data')->where(array_filter($data))->where('addressable_type',
-            "App\\Models\\Goods")->whereIn('addressable_id', $goodsIds)->lists('addressable_id');
-        return $query->whereIn('id', $goodsIds);
 
+        $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
+        if (!empty($data)) {
+            $goodsIds = DB::table('address_data')->where(array_filter($data))->where('addressable_type',
+                "App\\Models\\Goods")->whereIn('addressable_id', $goodsIds)->lists('addressable_id');
+            return $query->whereIn('id', $goodsIds);
+        }
 
         /* $data = array_only($data, ['province_id', 'city_id', 'district_id', 'street_id']);
          return $query->whereHas('deliveryArea', function ($query) use ($data) {
@@ -420,12 +423,13 @@ class Goods extends Model
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getPiecesListAttribute(){
+    public function getPiecesListAttribute()
+    {
         $pieces = $this->goodsPieces;
         $items = ['pieces_level_1', 'pieces_level_2', 'pieces_level_3'];
         $piecesList = collect([]);
-        foreach ($items as $item ) {
-            if(!is_null($piecesId = $pieces->$item)) {
+        foreach ($items as $item) {
+            if (!is_null($piecesId = $pieces->$item)) {
                 $piecesList->push($piecesId);
             }
         }
@@ -494,13 +498,46 @@ class Goods extends Model
     }
 
     /**
-     * 获取商品分类
+     * 获取商品分类ID
      *
      * @return mixed
      */
     public function getCategoryIdAttribute()
     {
         return $this->cate_level_3 ? $this->cate_level_3 : ($this->cate_level_2 ? $this->cate_level_2 : $this->cate_level_1);
+    }
+
+    /**
+     * 获取商品分类名
+     *
+     * @return string
+     */
+    public function getCategoryNameAttribute()
+    {
+        $categorys = CategoryService::getCategories();
+
+        $categoryName = '';
+        if ($level1 = $this->cate_level_1) {
+            $categoryName .= $categorys[$level1]['name'];
+        }
+        if ($level2 = $this->cate_level_2) {
+            $categoryName .= '/' . $categorys[$level2]['name'];
+        }
+        if ($level3 = $this->cate_level_3) {
+            $categoryName .= '/' . $categorys[$level3]['name'];
+        }
+
+        return $categoryName;
+    }
+
+    /**
+     * 获取店铺名
+     *
+     * @return string
+     */
+    public function getShopNameAttribute()
+    {
+        return $this->shop ? $this->shop->name : '- -';
     }
 
     /**
