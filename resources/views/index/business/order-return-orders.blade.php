@@ -80,6 +80,8 @@
                                        class=" ajax">
                                         <i class="iconfont  icon-tongguo"></i>通过
                                     </a>
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}" data-method="delete"
+                                       class="red ajax" type="button"><i class="iconfont icon-shanchu"></i>删除</a>
                                 @else
                                     <a class="orange" target="_blank"
                                        href="{{ url('business/order/browser-export/' . $order->id) }}">

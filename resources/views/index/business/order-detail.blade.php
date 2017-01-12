@@ -210,7 +210,7 @@
                                     <th>商品数量</th>
                                     <th>操作</th>
                                     </thead>
-                                    @foreach($mortgageGoods as $goods)
+                                    @foreach($mortgageGoods as $key => $goods)
                                         <tr>
                                             <td>{{ $goods['id'] }}</td>
                                             <td><img class="store-img"
@@ -228,7 +228,7 @@
                                             </td>
                                             <td width="20%">
                                                 <div class="commodity-num"
-                                                     id="commodity-num{{ $goods['id'] }}">{{  $goods['num'] }}</div>
+                                                     id="commodity-num{{ $key.$goods['id'] }}">{{  $goods['num'] }}</div>
 
                                                 <div class="enter-num-panel pull-left">
                                                     <input data-id="{{ $goods['id'] }}" data-name="num"
@@ -243,9 +243,9 @@
                                                 <span class="pull-right goods-pieces">{{ cons()->valueLang('goods.pieces', $goods['pieces']) }}</span>
                                             </td>
                                             <td>
-                                                <a class="edit commodity-num commodity-num{{ $goods['id'] }}"
+                                                <a class="edit commodity-num commodity-num{{ $key.$goods['id'] }}"
                                                    data-url="business/order/change"
-                                                   onclick="editText('commodity-num{{ $goods['id'] }}')">
+                                                   onclick="editText('commodity-num{{ $key.$goods['id'] }}')">
                                                     <i class="iconfont icon-xiugai "></i>编辑</a>
                                                 <a class="red delete-no-form" data-method="delete"
                                                    data-url="{{ url('api/v1/business/order/mortgage-goods-delete') }}"
@@ -270,12 +270,12 @@
                                     <th>现金</th>
                                     <th>操作</th>
                                     </thead>
-                                    @foreach($displayFee as $item)
+                                    @foreach($displayFee as $key => $item)
                                         <tr>
                                             <td>{{ $item->month }}</td>
                                             <td width="20%">
                                                 <b class="red old-value"
-                                                   id="money{{ $item->id }}">{{ $item->used }}</b>
+                                                   id="money{{ $key.$item->id }}">{{ $item->used }}</b>
 
                                                 <div class="enter-num-panel ">
                                                     <input data-name="display_fee" data-id="{{ $item->id }}"
@@ -285,10 +285,10 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a class="edit money money{{ $item->id }}"
+                                                <a class="edit money money{{ $key.$item->id }}"
                                                    data-url="business/order/update-order-display-fee"
                                                    data-id="{{ $item->id }}" data-parse="true" data-type="edit"
-                                                   onclick="editText('money{{ $item->id }}')"><i
+                                                   onclick="editText('money{{ $key.$item->id }}')"><i
                                                             class="iconfont icon-xiugai "></i>编辑</a>
                                             </td>
                                         </tr>

@@ -302,8 +302,9 @@ var commonJQueryExtendSetup = function () {
                     control.focus();
                     firstControl = false;
                 }
-                var formGroup = control.closest('.form-group').addClass('has-' + state)
+                var formGroup = control.closest('.form-group').length? control.closest('.form-group') : control.parent()
                     , helpBlock = formGroup.find('.ajax-error');
+                formGroup.addClass('has-' + state);
 
                 if (!helpBlock.length) {
                     helpBlock = $('<p class="help-block ajax-error"></p>').addClass(self.data('help-class')).appendTo(formGroup);
@@ -1403,6 +1404,19 @@ var stripTags = function (str, allow) {
     return str.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
         return allow.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     });
+}
+//获取商品单位
+var getGoodsPieces = function (goodsId, defaultPieces) {
+    $.get(site.api('goods/goods-pieces/' + goodsId), '', function (data) {
+        var piecesName = data['piecesName'], options = '<option value="">请选择单位</option>';
+        for (var i in piecesName) {
+            if (i == defaultPieces)
+                options += '<option value="' + i + '" selected>' + piecesName[i] + '</option>';
+            else
+                options += '<option value="' + i + '">' + piecesName[i] + '</option>';
+        }
+        $('select[name="pieces"]').html(options);
+    }, 'json')
 }
 
 //给Number类型增加一个add方法，，使用时直接用 .add 即可完成计算。

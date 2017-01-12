@@ -86,7 +86,7 @@
                                type="text">
                     </div>
                     <div class="col-sm-1 company">
-                        平米
+                        平方米
                     </div>
                 </div>
 

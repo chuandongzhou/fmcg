@@ -11,6 +11,7 @@ use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\SalesmanCustomer;
+use App\Models\ConfirmOrderDetail;
 use App\Services\BusinessService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
@@ -113,7 +114,7 @@ class SalesmanVisitOrderController extends Controller
         }
         $customerSurplusFee = (new BusinessService())->canSetDisplayFee($salesmanVisitOrder->salesmanCustomer,
             $display->month, $orderId);
-        if ($displayFee > bcsub($customerSurplusFee['surplus'],$customerSurplusFee['nonConfirm'],2)) {
+        if ($displayFee > bcsub($customerSurplusFee['surplus'], $customerSurplusFee['nonConfirm'], 2)) {
             return $this->error('陈列费不能大于该月剩余');
         }
 
@@ -554,6 +555,22 @@ class SalesmanVisitOrderController extends Controller
                             'pieces' => $goods->pieces,
                             'total_price' => $goods->amount,
                         ]);
+
+                        $confirmOrderDetail = ConfirmOrderDetail::where([
+                            'goods_id' => $goods->goods_id,
+                            'customer_id' => $salesmanVisitOrder->salesman_customer_id
+                        ])->first();
+                        if (empty($confirmOrderDetail)) {
+                            ConfirmOrderDetail::create([
+                                'goods_id' => $goods->goods_id,
+                                'price' => $goods->price,
+                                'pieces' => $goods->pieces,
+                                'shop_id' => !empty($salesmanVisitOrder->salesmanCustomer->shop_id) ? $salesmanVisitOrder->salesmanCustomer->shop_id : 0,
+                                'customer_id' => $salesmanVisitOrder->salesman_customer_id,
+                            ]);
+                        } else {
+                            $confirmOrderDetail->fill(['price' => $goods->price, 'pieces' => $goods->pieces])->save();
+                        }
                     }
                     foreach ($salesmanVisitOrder->mortgageGoods as $goods) {
                         // 添加抵费商品
@@ -691,7 +708,7 @@ class SalesmanVisitOrderController extends Controller
                 //获取客户剩余
                 $surplusMortgage = (new BusinessService())->canSetMortgageGoods($salesmanVisitOrder,
                     $request->input('month'), $goodsId);
-                if (($surplusMortgage['surplus']-$surplusMortgage['nonConfirm'])< $num) {
+                if (($surplusMortgage['surplus'] - $surplusMortgage['nonConfirm']) < $num) {
                     return '陈列商品数量不能大于当月剩余量';
                 }
                 $salesmanVisitOrder->displayList()->where([

@@ -6,7 +6,7 @@
         <td class="text-left-important">
            <span class="image-preview">
              <img class="img-thumbnail"
-                  src="{{ $shop->logo_url }}">
+                  src="{{ $shop->logo_url }}" width="100" height="100">
            </span>
             <button class="btn upload-img" data-height="100" data-width="100"
                     data-target="#cropperModal" data-toggle="modal" data-name="logo" type="button">
@@ -95,7 +95,7 @@
         <td>营业执照</td>
         <td class="text-left-important">
             <div class="preview image-preview">
-                <img src="{{ $shop->license_url }}"  width="100px" height="100px">
+                <img src="{{ $shop->license_url }}"  width="100" height="100">
                 <a class="{{ !$shop->license?'hidden':'' }}  templet-modal" href="javascript:;" data-src="{{ $shop->license_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
             @if(!$shop->license)
@@ -110,7 +110,7 @@
         <td class="text-left-important">
             <div class="preview image-preview">
                 <img src="{{ $shop->business_license_url }}"
-                   width="100px" height="100px" >
+                   width="100" height="100" >
                 <a class="{{ !$shop->businessLicense?'hidden':'' }} templet-modal" href="javascript:;" data-src="{{ $shop->business_license_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>
             @if(!$shop->businessLicense)
@@ -128,7 +128,7 @@
         <td>代理合同</td>
         <td colspan="3" class="text-left-important">
             <div class="image-preview preview">
-                <img src="{{ $shop->agency_contract_url }}"
+                <img src="{{ $shop->agency_contract_url }}" width="100" height="100"
                      >
                 <a class="{{ !$shop->agencyContract?'hidden':'' }} templet-modal"  href="javascript:;" data-src="{{ $shop->agency_contract_url }}" data-target="#templetModal" data-toggle="modal">点击预览</a>
             </div>

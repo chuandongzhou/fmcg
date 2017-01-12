@@ -249,7 +249,7 @@
                     self.find('select,input').prop('disabled', true);
                 });
                 confirmFunc.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
-                $('.min-money').hide();
+                $('.min-money-span').hide();
                 $('.submit-order').prop('disabled', false).removeClass('btn-cancel').addClass('btn-primary');
             } else {
                 deliveryItem.show();

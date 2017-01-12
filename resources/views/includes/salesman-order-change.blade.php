@@ -95,19 +95,6 @@
                 amountControl.prop('disabled', true).closest('.form-group').addClass('hidden');
             });
 
-            //获取商品单位
-            var getGoodsPieces = function (goodsId, defaultPieces) {
-                $.get(site.api('goods/goods-pieces/' + goodsId), '', function (data) {
-                    var piecesName = data['piecesName'], options = '<option value="">请选择单位</option>';
-                    for (var i in piecesName) {
-                        if (i == defaultPieces)
-                            options += '<option value="' + i + '" selected>' + piecesName[i] + '</option>';
-                        else
-                            options += '<option value="' + i + '">' + piecesName[i] + '</option>';
-                    }
-                    $('select[name="pieces"]').html(options);
-                }, 'json')
-            }
         })
     </script>
 @stop

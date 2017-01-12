@@ -13,7 +13,7 @@ class CreateDeliveryManRequest extends UserRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|max:30',
             'phone' => 'required|numeric|digits_between:7,14',
             'user_name' => 'digits:6|unique:delivery_man',
             'password' => 'required_with:user_name|digits_between:6,18|confirmed',

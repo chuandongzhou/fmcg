@@ -35,16 +35,6 @@ class BusinessService extends BaseService
         ];
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
-            /* //查询陈列费剩余
-             $salesmanVisitOrder->displayFees->each(function ($displayFee) use ($salesmanVisitOrder) {
-                 $display = $salesmanVisitOrder->salesmanCustomer->displaySurplus()->where([
-                     'month' => $displayFee->month,
-                     'mortgage_goods_id' => 0
-                 ])->first();
-
-                 $displayFee->surplus = bcadd(is_null($display) ? $salesmanVisitOrder->salesmanCustomer->display_fee : $display->surplus,
-                     $displayFee->used, 2);
-             });*/
             $data['displayFee'] = $salesmanVisitOrder->displayFees;
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
         }
@@ -333,7 +323,6 @@ class BusinessService extends BaseService
     {
         $mortgagesGoods = collect([]);
         foreach ($orders as $order) {
-            //$customer = $order->salesmanCustomer;
             if ($goods = $order->mortgageGoods) {
                 foreach ($goods as $good) {
                     $mortgagesGoods->push([
@@ -344,13 +333,6 @@ class BusinessService extends BaseService
                         'pieces' => $good->pieces,
                         'num' => (int)$good->pivot->used,
                         'month' => $good->pivot->month,
-                        /* 'total' => $customer->mortgageGoods()->where('mortgage_goods.id',
-                             $good->id)->first()->pivot->total,
-                         'surplus' => SalesmanCustomerDisplaySurplus::where([
-                             'salesman_customer_id' => $customer->id,
-                             'month' => $good->pivot->month,
-                             'mortgage_goods_id' => $good->id
-                         ])->first(),*/
                         'created_at' => (string)$order->created_at
                     ]);
 

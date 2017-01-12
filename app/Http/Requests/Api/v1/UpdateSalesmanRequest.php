@@ -17,7 +17,7 @@ class UpdateSalesmanRequest extends SalesmanRequest
             'avatar' => 'sometimes|required',
             //'account' => 'required|between:4,18|unique:salesman,account,' . $salesman->id,
             'password' => 'between:6,18|confirmed',
-            'name' => 'required',
+            'name' => 'required|max:10',
             'contact_information' => 'required'
         ];
     }

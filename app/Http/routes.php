@@ -304,6 +304,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
                 $router->get('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
                 $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
+                $router->get('purchased-goods','SalesmanCustomerController@purchasedGoods');//客户曾购买商品
             });
 
             $router->resource('salesman-customer', 'SalesmanCustomerController');

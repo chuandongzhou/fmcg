@@ -52,6 +52,7 @@
                                                data-toggle="modal"
                                                data-url="{{ url('api/v1/business/mortgage-goods/' . $goods->id ) }}"
                                                data-name="{{ $goods->goods_name }}"
+                                               data-goods-id="{{ $goods->goods_id }}"
                                                data-pieces="{{ $goods->pieces }}"><i class="fa fa-edit"></i> 编辑
                                             </a>
                                             <a href="javascript:" data-method="put"

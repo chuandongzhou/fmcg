@@ -111,7 +111,7 @@
                                     <tr>
                                         <td>{{ $goods->goods_id }}</td>
                                         <td><img class="store-img"
-                                                 src="{{ $goods->goods->image_url }}">
+                                                 src="{{ $goods->goods?$goods->goods->image_url:'' }}">
                                         </td>
                                         <td width="30%">
                                             <div class="product-panel">

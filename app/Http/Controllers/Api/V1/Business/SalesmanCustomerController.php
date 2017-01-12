@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Business;
 
 use App\Models\SalesmanVisitOrder;
 use App\Models\Salesman;
+use App\Models\ConfirmOrderDetail;
 use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
 use App\Models\SalesmanCustomer;
@@ -438,6 +439,19 @@ class SalesmanCustomerController extends Controller
                 'salesman_customer_id'
             ])->get();
         return $orders;
+    }
+
+    /**
+     * 客户曾购买商品查询
+     * @param \Illuminate\Http\Request $request
+     */
+    public function purchasedGoods(Request $request){
+        $customerId = $request->input('customer_id');
+        if(empty($customerId) || empty(SalesmanCustomer::where('salesman_id',salesman_auth()->id())->find($customerId))){
+            return $this->error('客户信息错误');
+        }
+        return $this->success(['data'=>ConfirmOrderDetail::where('customer_id',$customerId)->get()]);
+
     }
 
 }

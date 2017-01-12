@@ -31,9 +31,7 @@
                             <div class="col-sm-2 col-md-2">
                                 <select name="pieces" class="form-control">
                                     <option value="">请选择单位</option>
-                                    @foreach(cons()->valueLang('goods.pieces') as $id=> $pieces)
-                                        <option value="{{ $id }}">{{ $pieces }}</option>
-                                    @endforeach
+
                                 </select>
                             </div>
                         </div>
@@ -62,8 +60,10 @@
                 var parent = $(e.relatedTarget),
                         name = parent.data('name'),
                         url = parent.data('url'),
+                        goodsId = parent.data('goods-id'),
                         pieces = parent.data('pieces');
                 nameControl.text(name);
+                getGoodsPieces(goodsId,pieces);
                 piecesControl.val(pieces);
                 submitBtn.data('url', url);
             });

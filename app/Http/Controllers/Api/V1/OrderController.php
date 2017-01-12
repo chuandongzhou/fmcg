@@ -16,6 +16,7 @@ use App\Models\OrderGoods;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
+use App\Models\ConfirmOrderDetail;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\RedisService;
@@ -249,12 +250,38 @@ class OrderController extends Controller
         if (!$order->can_confirm || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能确认');
         }
-        if ($this->_syncToBusiness($order) && $order->fill([
-                'status' => cons('order.status.non_send'),
-                'confirm_at' => Carbon::now(),
-                'numbers' => (new OrderService())->getNumbers($order->shop_id)
-            ])->save()
-        ) {
+
+        $flag = DB::transaction(function () use ($order) {
+            $shopId= $order->user->shop->id;
+            info($shopId);
+            foreach ($order->orderGoods as $goods) {
+                $confirmOrderDetail = ConfirmOrderDetail::where([
+                    'goods_id' => $goods->goods_id,
+                    'shop_id' => $shopId
+                ])->first();
+                if (empty($confirmOrderDetail)) {
+                    ConfirmOrderDetail::create([
+                        'goods_id' => $goods->goods_id,
+                        'price' => $goods->price,
+                        'pieces' => $goods->pieces,
+                        'shop_id' => $shopId,
+                    ]);
+                } else {
+                   $confirmOrderDetail->fill(['price' => $goods->price,'pieces' => $goods->pieces])->save();
+                }
+            }
+            $res = $this->_syncToBusiness($order) && $order->fill([
+                    'status' => cons('order.status.non_send'),
+                    'confirm_at' => Carbon::now(),
+                    'numbers' => (new OrderService())->getNumbers($order->shop_id)
+                ])->save();
+            if (!$res) {
+                return false;
+            }
+            return true;
+        });
+
+        if ($flag) {
             return $this->success('订单确认成功');
         }
         return $this->error('订单确认失败，请重试');

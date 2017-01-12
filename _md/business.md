@@ -329,7 +329,18 @@
 `失败返回：`
 
 
-	
+####2.3.9 客户曾购买的商品查询[get] (purchased-goods)	
+`请求参数：`
+
+	customer_id           int             客户ID
+
+`成功返回：`
+	data                 array            所有购买信息
+
+	data字段子集说明
+	goods_id             int              商品ID
+	price                decimal          商品价格
+	pieces               int              商品单位
 	
 	
 	
