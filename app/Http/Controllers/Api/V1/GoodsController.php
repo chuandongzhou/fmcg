@@ -15,7 +15,7 @@ use App\Models\Goods;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
 
-class   GoodsController extends Controller
+class GoodsController extends Controller
 {
     /**
      * 获取热门商品列表
@@ -46,6 +46,8 @@ class   GoodsController extends Controller
             'sales_volume',
             'price_retailer',
             'price_wholesaler',
+            'pieces_retailer',
+            'pieces_wholesaler',
             'bar_code',
             'is_new',
             'is_promotion',

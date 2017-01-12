@@ -373,7 +373,6 @@ if (!function_exists('percentage')) {
         return bcmul(bcdiv($dividend, $divisor, $scale + 2), 100, $scale) . '%';
     }
 }
-
 if (!function_exists('in_windows')) {
     /**
      * 是否是浏览器
@@ -385,10 +384,10 @@ if (!function_exists('in_windows')) {
         $request = app('request');
         $userAgent = strtolower($request->server('HTTP_USER_AGENT'));
         $path = strtolower($request->path());
-        return false !== strpos($userAgent, 'windows nt') && strpos($path, 'upload/file') === false && strpos($path, 'auth/logout') === false;
+        return false !== strpos($userAgent, 'windows nt') && strpos($path, 'upload/file') === false && strpos($path,
+                'auth/logout') === false;
     }
 }
-
 if (!function_exists('obfuscate_string')) {
 
     /**
@@ -419,5 +418,106 @@ if (!function_exists('obfuscate_string')) {
         }
 
         return mb_substr($string, 0, $nlen - $olen) . str_repeat('*', $olen) . $tail;
+    }
+
+    if (!function_exists('object_get_ex')) {
+        /**
+         * Get an item from an object using "dot" notation.
+         *
+         * @param  object $object
+         * @param  string $key
+         * @param  mixed $default
+         * @return mixed
+         */
+        function object_get_ex($object, $key, $default = null)
+        {
+            if (is_null($key) || trim($key) == '') {
+                return $object;
+            }
+
+            foreach (explode('.', $key) as $segment) {
+                if (!is_object($object) || is_null($object = $object->{$segment})) {
+                    return value($default);
+                }
+            }
+
+            return $object;
+        }
+    }
+}
+if (!function_exists('list_in_hours')) {
+    /**
+     * 小时区间
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @return array
+     */
+    function list_in_hours(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        $lists = [$start->format('Y-m-d H')];
+
+        while ($start->lt($end)) {
+            $start = $start->addHour();
+            $lists[] = $start->format('Y-m-d H');
+        }
+        return $lists;
+    }
+}
+if (!function_exists('list_in_days')) {
+    /**
+     * 天区间
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @return array
+     */
+    function list_in_days(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        $lists = [$start->format('Y-m-d')];
+
+        while ($start->lt($end)) {
+            $start = $start->addDay();
+            $lists[] = $start->format('Y-m-d');
+        }
+        return $lists;
+    }
+}
+if (!function_exists('list_in_months')) {
+    /**
+     * 月区间
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @return array
+     */
+    function list_in_months(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        $lists = [$start->format('Y-m')];
+
+        while ($start->lt($end) && $start->format('Y-m') !== $end->format('Y-m')) {
+            $start = $start->addMonth();
+            $lists[] = $start->format('Y-m');
+        }
+        return $lists;
+    }
+}
+if (!function_exists('list_in_years')) {
+    /**
+     * 年区间
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @return array
+     */
+    function list_in_years(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        $lists = [$start->format('Y')];
+
+        while ($start->lt($end) && $start->year !== $end->year) {
+            $start = $start->addYear();
+            $lists[] = $start->format('Y');
+        }
+        return $lists;
     }
 }

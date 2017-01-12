@@ -409,7 +409,28 @@ return [
     ],
     //后台配置
     'admin' => [
-        'super_admin_name' => 'admin'
+        'super_admin_name' => 'admin',
+        'notification' => [
+            'role-create' => 1,
+            'admin-create' => 2,
+            'user-create' => 3,
+            'category-create' => 4,
+            'attr-create' => 5,
+            'images-create' => 6,
+            'advert-create' => 7,
+            'promoter-create' => 8,
+            'version-recode-create' => 9,
+            'shop-column-create' => 10,
+            'notice-create' => 11,
+            'role-update' => 12,
+            'admin-update' => 13,
+            'category-update' => 14,
+            'attr-update' => 15,
+            'advert-update' => 16,
+            'promoter-update' => 17,
+            'shop-column-update' => 18,
+            'notice-update' => 19,
+        ],
     ],
     //业务员
     'salesman' => [

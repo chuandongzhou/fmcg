@@ -11,7 +11,7 @@
 
 @section('header')
     <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
@@ -20,10 +20,20 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url('admin') }}">订百达</a>
+                <a class="navbar-brand" href="{{ url('admin') }}">订百达管理后台</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li class="right"><a href="{{ url('admin/auth/logout') }}"><i class="fa fa-sign-out"></i> 退出</a></li>
+                {{--<li class="date">--}}
+                    {{--<span>2016/12/16</span>--}}
+                    {{--<span>17:05:20</span>--}}
+                {{--</li>--}}
+                <li class="account">
+                    <a href="javascript:">{{ admin_auth()->user()->name }}</a>
+                    <ul class="select-wrap">
+                        <li><a href="{{ url('admin/admin/password') }}">修改密码</a></li>
+                        <li><a href="{{ url('admin/auth/logout') }}"><i class="fa fa-sign-out"></i> 退出</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>

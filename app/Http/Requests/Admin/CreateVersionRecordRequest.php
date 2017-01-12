@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Http\Requests\Request;
-
 class CreateVersionRecordRequest extends Request
 {
 
@@ -17,8 +15,9 @@ class CreateVersionRecordRequest extends Request
         return [
             'version_name' => 'required',
             'version_no' => 'required',
-            'type' => 'required|numeric',
-            'content' => 'required'
+            'type' => 'required',
+            'content' => 'required',
+            'download_url' => 'required|url'
         ];
     }
 }

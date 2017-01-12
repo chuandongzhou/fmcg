@@ -175,7 +175,9 @@ class SalesmanController extends Controller
 
         // 今日拜访数
         $todayVisitCount = $salesman->visits()->whereBetween('created_at',
-            [Carbon::today(), (new Carbon())->endOfDay()])->count();
+            [Carbon::today(), (new Carbon())->endOfDay()])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count();
+
+        //info($todayVisitCount);
 
         return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
             'todayVisitCount');

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\SystemTradeInfo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SystemTradeInfoController extends Controller

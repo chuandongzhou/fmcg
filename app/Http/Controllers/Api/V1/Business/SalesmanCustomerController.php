@@ -55,7 +55,7 @@ class SalesmanCustomerController extends Controller
         $attributes['number'] = $this->_getCustomerNumber($salesman);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
 
-        if ($attributes['account']) {
+        if (array_get($attributes, 'account')) {
             $shop = $salesman->shop;
 
             if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes)) {
@@ -65,8 +65,8 @@ class SalesmanCustomerController extends Controller
             $attributes['shop_id'] = null;
         }
 
-
-        if ($salesman->customers()->create(array_except($attributes, 'account'))->exists) {
+        $salesmanCustomer = $salesman->customers()->create(array_except($attributes, 'account'));
+        if ($salesmanCustomer->exists) {
             return $this->success('添加客户成功');
         }
         return $this->error('添加客户时出现问题');
@@ -92,7 +92,7 @@ class SalesmanCustomerController extends Controller
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
 
-        if ($attributes['account']) {
+        if (array_get($attributes, 'account')) {
             $shop = auth()->user()->shop;
 
             if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes, $customer)) {
@@ -127,7 +127,7 @@ class SalesmanCustomerController extends Controller
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
 
-        if ($attributes['account']) {
+        if (array_get($attributes, 'account')) {
             $shop = salesman_auth()->user()->shop;
 
             if (!$attributes['shop_id'] = $this->_validateAccount($shop, $attributes, $customer)) {

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use PhpOffice\PhpWord\PhpWord;
 
 class PromoterController extends Controller
 {
@@ -47,6 +48,7 @@ class PromoterController extends Controller
     public function store(Requests\Admin\CreatePromoterRequest $request)
     {
         $attributes = $request->all();
+        $attributes['end_at'] = array_get($attributes, 'end_at') ?: null;
         if (Promoter::create($attributes)->exists) {
             return $this->success('添加推广人员成功');
         }
@@ -114,11 +116,10 @@ class PromoterController extends Controller
      */
     public function statistics(Request $request)
     {
-        $month = $request->input('month', (new Carbon())->format('Y-m'));
-        $carbon = new Carbon($month);
-        $startOfMonth = clone $carbon->startOfMonth();
-        $endOfMonth =clone $carbon->endOfMonth();
+        $dates = $request->all();
 
+        $startDay = array_get($dates, 'start_day', (new Carbon())->startOfMonth()->format('Y-m-d'));
+        $endDay = array_get($dates, 'end_day', Carbon::now()->format('Y-m-d'));
 
         $promoterId = $request->input('id');
 
@@ -127,11 +128,140 @@ class PromoterController extends Controller
         } else {
             $promoters = Promoter::with('shops')->get();
         }
-        $promoters->each(function ($promoter) use ($startOfMonth, $endOfMonth) {
-            //新注册数
-            $promoter->shopRegisterCount = $promoter->shops->filter(function ($item) use ($startOfMonth, $endOfMonth) {
-                return $item->created_at >= $startOfMonth && $item->created_at <= $endOfMonth;
-            })->count();
+
+        $promoters = $this->_formatPromoters($promoters, $startDay, $endDay);
+
+        return view('admin.promoter.statistics',
+            [
+                'promoters' => $promoters,
+                'startDay' => $startDay,
+                'endDay' => $endDay,
+                'promoterId' => $promoterId,
+                'allPromoters' => Promoter::lists('name', 'id')
+            ]);
+
+    }
+
+    public function export(Request $request)
+    {
+        $dates = $request->all();
+
+        $startDay = array_get($dates, 'start_day', (new Carbon())->startOfMonth()->format('Y-m-d'));
+        $endDay = array_get($dates, 'end_day', Carbon::now()->format('Y-m-d'));
+
+        $promoterId = $request->input('id');
+
+        if ($promoterId) {
+            $promoters = Promoter::where('id', $promoterId)->with('shops')->get();
+        } else {
+            $promoters = Promoter::with('shops')->get();
+        }
+
+        $promoters = $this->_formatPromoters($promoters, $startDay, $endDay);
+
+        // Creating the new document...
+        $phpWord = new PhpWord();
+
+        $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
+        $cellAlignCenter = array('align' => 'center');
+        $phpWord->setDefaultFontName('仿宋');
+        $phpWord->setDefaultFontSize(12);
+        $phpWord->addTableStyle('table', $styleTable);
+
+        $style = [
+            'marginTop' => 500,
+            'marginRight' => 0,
+            'marginLeft' => 500,
+            'marginBottom' => 0,
+            'orientation' => 'landscape'
+        ];
+
+        $section = $phpWord->addSection($style);
+        $table = $section->addTable('table');
+
+        $titles = [
+            '推广员' => 1200,
+            '推广码' => 1000,
+            '注册终端数' => 1500,
+            '注册批发商数' => 1800,
+            '总注册数量' => 1500,
+            '下单客户数' => 1500,
+            '成交客户数' => 1500,
+            '订单数' => 1000,
+            '成交订单数' => 1500,
+            '下单金额' => 2000,
+            '成交金额' => 1800,
+        ];
+
+        //第一行
+        $table->addRow(100);
+        foreach ($titles as $name => $width) {
+            $table->addCell($width, ['fill' => '#f2f2f2'])->addText($name, ['bold' => true], $cellAlignCenter);
+        }
+
+        foreach ($promoters as $promoter) {
+            $table->addRow(100);
+            $table->addCell()->addText($promoter->name, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->spreading_code, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->retailerShopRegisterCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->wholesalerShopRegisterCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->retailerShopRegisterCount + $promoter->wholesalerShopRegisterCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->submitOrdersUsersCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->finishedOrdersUserCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->submitOrdersCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->finishedOrdersCount, null, $cellAlignCenter);
+            $table->addCell()->addText(number_format( $promoter->submitOrdersAmount , 2), null, $cellAlignCenter);
+            $table->addCell()->addText(number_format( $promoter->finishedOrdersAmount , 2), null, $cellAlignCenter);
+        }
+
+
+        $name = $startDay . '至' . $endDay . '推广统计.docx';
+        $phpWord->save($name, 'Word2007', true);
+
+
+    }
+
+    /**
+     * 格式化推广数据
+     *
+     * @param $promoters
+     * @param $startDay
+     * @param $endDay
+     * @return mixed
+     */
+    private function _formatPromoters($promoters, $startDay, $endDay)
+    {
+        $userType = cons('user.type');
+        $promoters->each(function ($promoter) use ($startDay, $endDay, $userType) {
+            $wholesalerShopRegisterCount = 0;
+            $retailerShopRegisterCount = 0;
+            $shops = [];
+
+            foreach ($promoter->shops as $shop) {
+                if ($shop->created_at >= $startDay && $shop->created_at <= $endDay) {
+                    if ($shop->user_type == $userType['retailer']) {
+                        $retailerShopRegisterCount++;
+                    } else {
+                        $wholesalerShopRegisterCount++;
+                    }
+                    if (!isset($shops[$shop->id])) {
+                        $shops[$shop->id] = [
+                            'lng' => $shop->shopAddress ? $shop->x_lng : 0,
+                            'lat' => $shop->shopAddress ? $shop->y_lat : 0,
+                            'number' => $shop->id,
+                            'name' => $shop->name,
+                            'href' => url('shop/' . $shop->id)
+                        ];
+                    }
+                }
+            }
+            $promoter->wholesalerShopRegisterCount = $wholesalerShopRegisterCount;
+
+            $promoter->retailerShopRegisterCount = $wholesalerShopRegisterCount;
+
+            $promoter->shopsCoordinate = json_encode(array_values($shops));
+
+
             //总用户数  直接 $promoter->shops->count();
 
             $userIds = $promoter->shops->pluck('user_id');
@@ -139,8 +269,8 @@ class PromoterController extends Controller
 
             //下单
             $submitOrders = Order::NonCancel()->whereIn('user_id', $userIds)->whereBetween('created_at',
-                [$startOfMonth, $endOfMonth])->get();
-            
+                [$startDay, $endDay])->get();
+
             //下单用户数
             $promoter->submitOrdersUsersCount = $submitOrders->pluck('user_id')->toBase()->unique()->count();
             //下单数
@@ -150,33 +280,22 @@ class PromoterController extends Controller
 
             //完成的订单
             $finishedOrders = Order::whereIn('user_id', $userIds)->whereBetween('finished_at',
-                [$startOfMonth, $endOfMonth])->get();
-
-            //当前月份提交并完成订单
-            $currentMonthSubmitOrders = $finishedOrders->filter(function ($item) use ($startOfMonth, $endOfMonth) {
-                return $item->created_at >= $startOfMonth && $item->created_at <= $endOfMonth;
-            });
+                [$startDay, $endDay])->get();
 
             //成单数
             $promoter->finishedOrdersCount = $finishedOrders->count();
 
             //当前月份提交并完成订单数
-            $promoter->currentMonthFinishedOrdersCount = $currentMonthSubmitOrders->count();
+            $promoter->currentMonthFinishedOrdersCount = $finishedOrders->count();
+
+            //成单用户数
+            $promoter->finishedOrdersUserCount = $finishedOrders->pluck('user_id')->toBase()->unique()->count();
 
             //成单总金额
             $promoter->finishedOrdersAmount = $finishedOrders->sum('price');
 
-            //当前月份提交并完成订单金额
-            $promoter->currentMonthFinishedOrdersAmount = $currentMonthSubmitOrders->sum('price');
         });
 
-        return view('admin.promoter.statistics',
-            [
-                'promoters' => $promoters,
-                'month' => $month,
-                'promoterId' => $promoterId,
-                'allPromoters' => Promoter::lists('name', 'id')
-            ]);
-
+        return $promoters;
     }
 }

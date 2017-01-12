@@ -49,7 +49,7 @@ class Sms
      */
     public function send($template, $mobiles, $text)
     {
-        return $this->adapter->to($mobiles)->{'push' . ucfirst($template)}($text)->success();
+        return $this->adapter->to($mobiles)->{'push' . ucfirst($template)}($this->parseText($text))->success();
     }
 
     /**
@@ -108,6 +108,24 @@ class Sms
         $this->queue = $queue;
 
         return $this;
+    }
+
+    /**
+     * 格式化参数
+     *
+     * @param $text
+     * @return array|string
+     */
+    public function parseText($text)
+    {
+        if (!is_array($text)) {
+            return (string)$text;
+        }
+        foreach ($text as $key => $value) {
+            !is_string($value) && ($text[$key] = (string)$value);
+        }
+        return $text;
+
     }
 
     /**

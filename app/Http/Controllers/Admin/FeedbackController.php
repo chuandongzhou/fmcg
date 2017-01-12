@@ -13,17 +13,17 @@ class FeedbackController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getIndex(Request $request)
     {
-        $createdAt = new Carbon($request->input('feed_time'));
-        if ($createdAt) {
-            $feedbacks = Feedback::whereBetween('created_at', [$createdAt->copy()->startOfDay() ,$createdAt->copy()->endOfDay()])->paginate();
-        } else {
-            $feedbacks = Feedback::paginate();
-        }
-        return view('admin.feedback.index', ['feedbacks' => $feedbacks, 'feedTime' => $createdAt]);
+        $dates = $request->all();
+        $beginDay = array_get($dates, 'begin_day');
+        $endDay = array_get($dates, 'end_day');
+        $feedbacks = Feedback::ofDates($dates)->paginate();
+
+        return view('admin.feedback.index', ['feedbacks' => $feedbacks, 'beginDay' => $beginDay, 'endDay' => $endDay]);
     }
 
     /**

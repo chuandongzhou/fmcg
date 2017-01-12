@@ -6,7 +6,6 @@ namespace App\Models;
 class OrderGoods extends Model
 {
     protected $table = 'order_goods';
-    public $timestamps = false;
     protected $fillable = [
         'goods_id',
         'type',
@@ -14,7 +13,7 @@ class OrderGoods extends Model
         'num',
         'total_price',
         'pieces',
-        'order_id'
+        'order_id',
     ];
 
     /**

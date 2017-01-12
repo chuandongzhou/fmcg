@@ -99,7 +99,7 @@ class BusinessService extends BaseService
      * @param array $with
      * @return mixed
      */
-    public function getOrders($salesmenId, $data = [], $with = ['salesmanCustomer', 'salesman'])
+    public function getOrders($salesmenId, $data = [], $with = ['salesmanCustomer.businessAddress', 'salesman'])
     {
 
         if (isset($data['salesman_id']) && ($salesmanId = $data['salesman_id'])) {

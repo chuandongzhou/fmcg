@@ -32,22 +32,20 @@ class EncryptCookies extends BaseEncrypter
 
         // 是否在浏览器
         $inWindows = in_windows();
-        if ($inWindows && auth()->id() && !$request->ajax()) {
+        if ($inWindows && auth()->id() && !$request->ajax() && !starts_with($request->path(), 'admin')) {
             $cookieJar = app('cookie');
             $nowTimestamp = Carbon::now()->timestamp;
 
             $expire = Carbon::now()->addDays(30)->diffInMinutes();
-            if (!$lastHandleTime = $request->cookie('last_handle_time')) {
-                $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
-            } else {
+            if ($lastHandleTime = $request->cookie('last_handle_time')) {
                 $diffInMinutes = Carbon::now()->diffInMinutes(Carbon::createFromTimestamp($lastHandleTime));
                 if ($diffInMinutes >= 60) {
                     //超出30分钟未操作退出登录
                     return redirect(url('auth/logout'));
                 }
-                $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
-            }
 
+            }
+            $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
         }
 
         $response = $next($request);

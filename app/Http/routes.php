@@ -141,6 +141,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->controller('refund', 'RefundApplyController');        //退款申请信息
     $router->delete('promoter/batch', 'PromoterController@deleteBatch');    //批量删除推广人员
     $router->get('promoter/statistics', 'PromoterController@statistics');    //批量删除推广人员
+    $router->get('promoter/export', 'PromoterController@export');    //导出
     $router->resource('promoter', 'PromoterController');             //推广人员管理
     $router->resource('operation-record', 'OperationRecordController');    //运维操作记录
     $router->controller('data-statistics', 'DataStatisticsController');    //运营数据统计
@@ -155,6 +156,27 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('chat', 'ChatController@index'); // 消息
     $router->controller('cache', 'CacheController'); // 消息
     $router->get('goods/import', 'GoodsController@import');//批量导入商品
+    $router->group(['prefix' => 'operation-data'], function ($router) {
+        $router->get('user', 'OperationDataController@user');
+        $router->get('user-register', 'OperationDataController@userRegister');
+        $router->get('user-export', 'OperationDataController@userExport');
+        $router->get('financial', 'OperationDataController@financial');
+        $router->get('financial-export', 'OperationDataController@financialExport');
+        $router->get('order-create-map', 'OperationDataController@orderCreateMap');
+        $router->get('order-amount', 'OperationDataController@orderAmount');
+        $router->get('order-amount-export', 'OperationDataController@orderAmountExport');
+        $router->get('complete-amount', 'OperationDataController@completeAmount');
+        $router->get('complete-amount-export', 'OperationDataController@completeAmountExport');
+        $router->get('sales-rank', 'OperationDataController@salesRank');
+        $router->get('sales-rank-export', 'OperationDataController@salesRankExport');
+        $router->get('goods-sales', 'OperationDataController@goodsSales');
+        $router->get('goods-sales-export', 'OperationDataController@goodsSalesExport');
+        $router->get('goods-sales-map/{goods_id}', 'OperationDataController@goodsSalesMap')->where('goods_id', '[0-9]+');;
+    });
+    $router->get('operation/notification', 'OperationController@notification');
+    $router->get('operation/export', 'OperationController@export');
+    $router->get('operation/notification-export', 'OperationController@notificationExport');
+    $router->resource('operation', 'OperationController');
 
 });
 
@@ -330,8 +352,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
                 $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');
                 $router->get('return-order-detail/{order_id}', 'SalesmanVisitOrderController@returnOrderDetail');
-                $router->get('display-fee-surplus','SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
-                $router->get('mortgage-goods-surplus','SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
+                $router->get('display-fee-surplus', 'SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
+                $router->get('mortgage-goods-surplus', 'SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
 
             });
             //抵费商品

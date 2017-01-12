@@ -1,29 +1,8 @@
 @extends('admin.master')
 
-@section('subtitle' , '用户管理')
+@section('subtitle' , '更新记录')
 
 @section('right-container')
-    <form class="form-horizontal ajax-form" method="post"
-          action="{{ url('api/v1/version/app-url') }}" data-help-class="col-sm-push-2 col-sm-10"
-          data-done-url="{{ url('admin/version-record') }}" autocomplete="off">
-        @foreach(cons()->lang('push_device') as $key => $item)
-            <div class="form-group">
-                <label for="{{ $key  }}" class="col-sm-2 control-label">{{ $item }}下载地址</label>
-
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" id="{{ $key  }}" name="{{ $key }}"
-                           placeholder="请输入{{ $item }}下载地址"
-                           value="{{ $redis->get('app-link:' . $key ) }}"/>
-                </div>
-            </div>
-        @endforeach
-
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-bg btn-primary">保存</button>
-            </div>
-        </div>
-    </form>
 
     <form class="form-horizontal ajax-form" method="post"
           action="{{ url('admin/operation-record/') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">

@@ -4474,7 +4474,6 @@ var addressData = {
 };
 
 function Address(provinceObj, cityObj, districtObj, streetObj) {
-
     /**
      * protect 根据ID生成option的html
      *

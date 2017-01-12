@@ -11,8 +11,6 @@ namespace App\Services;
 class GoodsImageService extends RedisService
 {
 
-
-    // protected $field = 'image_url';
     protected $key = 'goods:image:';
 
 

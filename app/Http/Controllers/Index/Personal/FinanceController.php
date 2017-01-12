@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class FinanceController extends Controller
 {
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getBalance(Request $request)
     {
 

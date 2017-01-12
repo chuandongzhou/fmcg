@@ -117,6 +117,7 @@ class SalesmanVisitController extends Controller
             'address' => ''
         ];
         dd($data);*/
+
         $data = $request->all();
         $salesman = salesman_auth()->user();
 
@@ -183,6 +184,7 @@ class SalesmanVisitController extends Controller
                     $result['order']['return_order']['salesman_visit_id'] = $visit->id;
                     $result['order']['return_order']['type'] = $orderConf['type']['return_order'];
                     $result['order']['return_order']['salesman_customer_id'] = $data['salesman_customer_id'];
+                    //info($result['order']['return_order']);
                     $returnOrder = $salesman->orders()->create($result['order']['return_order']);
                     if ($returnOrder->exists) {
                         $orderGoodsArr = [];
@@ -394,7 +396,7 @@ class SalesmanVisitController extends Controller
                 $order['return_order']['goods'][] = [
                     'goods_id' => $goods['id'],
                     'num' => $goods['return_order']['num'],
-                    'pieces' => isset($goods['return_order']['pieces']) ? $goods['return_order']['pieces'] : 0,
+                    'pieces' => array_get($goods['return_order'], 'pieces', 0),
                     'amount' => $goods['return_order']['amount']
                 ];
             }
