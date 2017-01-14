@@ -28,7 +28,7 @@ class SalesmanController extends Controller
     public function index(Request $request)
     {
         $name = $request->input('name');
-        $salesmen = $this->shop->salesmen()->active()->OfName($name, true)->paginate();
+        $salesmen = $this->shop->salesmen()->OfName($name, true)->paginate();
         return view('index.business.salesman-index', ['salesmen' => $salesmen, 'name' => $name]);
     }
 

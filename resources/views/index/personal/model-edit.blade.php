@@ -83,7 +83,7 @@
                                         <div class="option option-upload clearfix">
                                             <div class=" option-banner image-preview">
                                                 <img src="{{ $shopHomeAdvert->image_url }}"/>
-                                                <a href="javascript:;" class="templet-modal" data-target="#templetModal"
+                                                <a href="javascript:;" class="templet-modal" data-target="#templetModal" data-width="1200px"
                                                    data-toggle="modal">点击预览</a>
                                             </div>
                                             <span class="pull-left name"> 广告轮播图{{ $key+1 }}</span>
@@ -120,7 +120,7 @@
                                         <div class="option option-upload clearfix">
                                             <div class=" option-banner image-preview">
                                                 <img src="{{ count($shop->shopHomeAdverts)==0&&$i==0?asset('images/shop-banner.jpg'):asset('images/default-shop-banner-edit.png') }}"/>
-                                                <a href="javascript:;" class="templet-modal" data-target="#templetModal"
+                                                <a href="javascript:;" class="templet-modal" data-target="#templetModal" data-width="1200px"
                                                    data-toggle="modal">点击预览</a>
                                             </div>
                                             <span class="pull-left name"> 广告轮播图{{ count($shop->shopHomeAdverts)+$i+1 }}</span>

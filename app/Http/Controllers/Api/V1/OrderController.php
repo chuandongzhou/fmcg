@@ -253,7 +253,6 @@ class OrderController extends Controller
 
         $flag = DB::transaction(function () use ($order) {
             $shopId= $order->user->shop->id;
-            info($shopId);
             foreach ($order->orderGoods as $goods) {
                 $confirmOrderDetail = ConfirmOrderDetail::where([
                     'goods_id' => $goods->goods_id,

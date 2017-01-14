@@ -46,7 +46,7 @@
                                 <tbody>
                                 <tr>
                                     <td>{{ $order->id }}</td>
-                                    <td>{{ $order->created_at->toDateString() }}</td>
+                                    <td>{{ $order->created_at }}</td>
                                     <td>{{ $order->salesman_name }}</td>
                                     <td>{{ $order->customer_name }}</td>
                                 </tr>

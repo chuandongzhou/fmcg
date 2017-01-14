@@ -315,6 +315,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->put('update-by-app', 'SalesmanController@updateByApp');
             });
 
+            $router->post('salesman/lock','SalesmanController@postLock');
             $router->put('salesman/password', 'SalesmanController@password');  //修改密码
             $router->resource('salesman', 'SalesmanController');
 

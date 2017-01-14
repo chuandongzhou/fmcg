@@ -16,7 +16,7 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
             'name' => 'required|max:30',
             // 'account' => 'string|exists:user,user_name',
             'contact' => 'required|max:10',
-            'contact_information' => 'required|regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/',
+            'contact_information' => ['required', 'regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/'],
             'business_area' => 'required|numeric',
             'display_type' => 'required',
             //'display_start_month' => 'sometimes|required_with:display_end_month',

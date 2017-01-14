@@ -18,10 +18,10 @@
                             <label class="col-sm-2 control-label" for="username">头像:</label>
 
                             <div class="col-sm-10 col-md-6">
-                                <button class="btn btn-success btn-sm" data-height="128" data-width="128"
+                                <button class="btn btn-success btn-sm" data-height="64" data-width="64"
                                         data-target="#cropperModal" data-toggle="modal" data-name="avatar"
                                         type="button">
-                                    本地上传(128x128)
+                                    本地上传(64x64)
                                 </button>
                                 <div class="image-preview">
                                     <img class="img-thumbnail" src="">

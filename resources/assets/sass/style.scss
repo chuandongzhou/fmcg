@@ -1,6 +1,6 @@
 @import "variables";
-@import "bootstrap/bootstrap";
-@import "fontawesome/font-awesome";
+@import "bootstrap";
+@import "font-awesome";
 
 @font-face {
   font-family: "iconfont";
@@ -102,6 +102,8 @@
 .icon-qushitu:before { content: "\e66c"; }
 
 .icon-renkoufenbu:before { content: "\e61d"; }
+
+.icon-dongjietubiao:before { content: "\e635"; }
 
 .image-preview > img {
   margin: 5px 0;

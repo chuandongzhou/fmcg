@@ -128,7 +128,7 @@
             }).on('fail.hct.ajax', function (jqXHR, textStatus, errorThrown) {
                 var $this = $(this);
                 var json = textStatus['responseJSON'];
-                $this.next('button').html(json['message']).prop('disabled', true);
+                $this.next('button').html(typeof(json)!='undefined'?json['message']: '获取失败').prop('disabled', true);
                 setTimeout(function () {
                     $this.next('button').html('重新获取').prop('disabled', false);
                 }, 2000);

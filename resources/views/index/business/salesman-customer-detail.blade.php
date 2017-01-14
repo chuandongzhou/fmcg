@@ -140,7 +140,7 @@
                                             {{ $visit['time'] }}  ({{ $visitId ? '拜访' : '自主' }})
                                         </td>
                                         <td>{{ $visit['stock'] }}</td>
-                                        <td>{{ $visit['production_date'] }}</td>
+                                        <td>{{ $visit['production_date']==0?'--':$visit['production_date'] }}</td>
                                         <td>{{ $visit['order_price'] }}
                                             /{{ cons()->valueLang('goods.pieces' , $visit['order_pieces'])}}</td>
                                     <td>{{ $visit['order_num']  . cons()->valueLang('goods.pieces' , $visit['order_pieces']) }}</td>

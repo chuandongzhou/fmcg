@@ -16,7 +16,6 @@ body {
   -ms-overflow-style: scrollbar;
 }
 
-
 ul, li, p, a, h1, h2, h3, h4, div {
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
 }
@@ -33,7 +32,11 @@ a {
     text-decoration: none;
   }
 }
-
+.image-preview{
+  img{
+    margin:0!important;
+  }
+}
 .text-left-important {
   text-align: left !important;
 }
@@ -115,7 +118,12 @@ a {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-
+@mixin btn-hover-color($color) {
+  color: $color;
+  &:hover, &:focus {
+    color: $color;
+  }
+}
 .margin-clear {
   margin: 0 !important;
 }
@@ -130,6 +138,16 @@ a {
 
 .prompt {
   color: $gray-light;
+}
+
+.black{
+  color:$gray-dark;
+  @include btn-hover-color($gray-dark);
+}
+
+.gray-light{
+  color:$gray-lighter;
+  @include btn-hover-color($gray-lighter);
 }
 
 .prompt-coupon {
@@ -202,12 +220,7 @@ a {
   }
 }
 
-@mixin btn-hover-color($color) {
-  color: $color;
-  &:hover, &:focus {
-    color: $color;
-  }
-}
+
 
 .btn-blue {
   @include btn-hover-color($body-bg);
@@ -244,7 +257,6 @@ a {
     background-color: $backstage-blue;
     color: $body-bg;
   }
-
 }
 
 .color-blue {
@@ -1776,6 +1788,7 @@ a {
           z-index: 999;
           padding: 10px 5px;
           background-color: $body-bg;
+          text-align:center;
           span {
             font-size: 12px;
             color: $word-gray;
@@ -5444,6 +5457,9 @@ table {
       .title-blue {
         background-color: #e2f8f7;
       }
+      .title-gray{
+        background-color:$gray-plain;
+      }
       .text-right {
         text-align: right !important;
       }
@@ -5974,7 +5990,7 @@ table {
 
 }
 
-.public-table {
+.popover  {
   th, td {
     padding: 15px 5px !important;
   }
@@ -6233,7 +6249,7 @@ table {
     }
     .company {
       line-height: 35px;
-      width:95px;
+      width:65px;
     }
     .display-goods {
       div {
@@ -6358,3 +6374,41 @@ table {
     margin-top:-40px;
   }
 }
+/*==============404 begin=================*/
+.error-wrap {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  min-width: 1200px;
+  padding-bottom: 50px;
+  background-color: #f6f6f6;
+}
+
+.error-wrap {
+  img {
+    height: 40%;
+    width: 40%;
+  }
+  .back-index {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    margin-left: -50px;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    color: #f0ad4e;
+    font-size: 17px;
+    border: 1px solid #64ccfa;
+    font-weight: 700;
+  }
+  .back-index {
+    &:hover, &:focus {
+      border: 1px solid #64ccfa !important;
+      background-color: inherit !important;
+      color: #f0ad4e !important;
+      font-weight: 700 !important;
+    }
+  }
+}
+
+/*==============404 end=================*/

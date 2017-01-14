@@ -194,7 +194,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function getAvatarUrlAttribute()
     {
-        return salesman_avatar_url(array_get($this->attributes, $this->primaryKey), 128);
+        return salesman_avatar_url(array_get($this->attributes, $this->primaryKey), 64);
     }
 
     /**

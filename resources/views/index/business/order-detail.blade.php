@@ -51,7 +51,6 @@
 
                                     <td>订货单号</td>
                                     <td>订货时间</td>
-
                                     <td>业务员</td>
                                     <td>客户名称</td>
                                     <td>
@@ -60,19 +59,22 @@
                                            data-url="business/order/{{ $order->id }}"><i
                                                     class="iconfont icon-xiugai"></i> 编辑</a>
                                     </td>
-                                    <td>
-                                        陈列费备注
-                                        <a class="edit display-fee-notes" onclick="editText('display-fee-notes')"
-                                           data-type="edit"
-                                           data-url="business/order/{{ $order->id }}"><i
-                                                    class="iconfont icon-xiugai"></i> 编辑</a>
-                                    </td>
+                                    @if(!$mortgageGoods->isEmpty() || !$displayFee->isEmpty())
+                                        <td>
+                                            陈列费备注
+                                            <a class="edit display-fee-notes" onclick="editText('display-fee-notes')"
+                                               data-type="edit"
+                                               data-url="business/order/{{ $order->id }}"><i
+                                                        class="iconfont icon-xiugai"></i> 编辑</a>
+                                        </td>
+                                    @endif
+
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <td>{{ $order->id }}</td>
-                                    <td>{{ $order->created_at->toDateString() }}</td>
+                                    <td>{{ $order->created_at }}</td>
                                     <td>{{ $order->salesman_name }}</td>
                                     <td>{{ $order->customer_name }}</td>
                                     <td width="20%">
@@ -83,14 +85,16 @@
                                                   data-name="order_remark">{{ $order->order_remark }}</textarea>
                                         </div>
                                     </td>
-                                    <td width="20%">
-                                        <div id="display-fee-notes">{{ $order->display_remark }}</div>
-                                        <div class="enter-num-panel ">
+                                    @if(!$mortgageGoods->isEmpty() || !$displayFee->isEmpty())
+                                        <td width="20%">
+                                            <div id="display-fee-notes">{{ $order->display_remark }}</div>
+                                            <div class="enter-num-panel ">
                                                 <textarea class="edit-text" autofocus
                                                           maxlength="50"
                                                           data-name="display_remark">{{ $order->display_remark }}</textarea>
-                                        </div>
-                                    </td>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                                 </tbody>
                             </table>
@@ -204,6 +208,7 @@
                                 <table class="table table-bordered table-center table-th-color">
                                     <thead>
                                     <th>商品编号</th>
+                                    <th>陈列费（月份）</th>
                                     <th>商品图片</th>
                                     <th>商品名称</th>
                                     <th>商品数量</th>
@@ -212,6 +217,7 @@
                                     @foreach($mortgageGoods as $key => $goods)
                                         <tr>
                                             <td>{{ $goods['id'] }}</td>
+                                            <td>{{ $goods['month'] }}</td>
                                             <td><img class="store-img"
                                                      src="{{ $goods['image_url'] }}">
                                             </td>
@@ -265,7 +271,7 @@
                             <div class="panel-container table-responsive">
                                 <table class="table table-bordered table-center table-th-color">
                                     <thead>
-                                    <th>月份</th>
+                                    <th>陈列费（月份）</th>
                                     <th>现金</th>
                                     <th>操作</th>
                                     </thead>
@@ -331,7 +337,7 @@
                         method: 'get',
                         data: data
                     }).done(function (data) {
-                        var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥'+data.surplus, nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥'+data.nonConfirm;
+                        var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥' + data.surplus, nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥' + data.nonConfirm;
                         var messageContainer = content.next('.enter-num-panel').find('.prompt');
                         messageContainer.find('.surplus').html(surplus);
                         messageContainer.find('.non-confirm').html(nonConfirm);
@@ -357,7 +363,7 @@
                         alert('请正确填写陈列费');
                         return false;
                     }
-                    var load = '<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>';
+                    var load = '<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>';
                     $('body').append(load);
                     data[name] = newValue;
                     if (id > 0) {

@@ -53,7 +53,17 @@
                                         <i class="iconfont icon-xiugai"></i> 编辑
                                     </a>
                                     <a class="color-blue" href="{{ url('business/report/' . $man->id) }}">
-                                        <i class="iconfont icon-jingzhibaogao"></i> 报告</a>
+                                        <i class="iconfont icon-jingzhibaogao"></i> 报告&nbsp;</a>
+                                    @if($man->status==cons('status.off'))
+                                        <a class="ajax gray-light" data-url="{{ url('api/v1/business/salesman/lock') }}"  data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }' data-method="post" type="button">
+                                            <i class="iconfont icon-dongjietubiao"></i> 解冻&nbsp;
+                                        </a>
+                                    @else
+                                        <a class="black ajax" data-url="{{ url('api/v1/business/salesman/lock') }}" data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }' data-method="post" type="button">
+                                            <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
+                                        </a>
+                                    @endif
+
                                     <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}" data-method="delete"
                                        class="red ajax" type="button"><i class="iconfont icon-shanchu"></i> 删除
                                     </a>
