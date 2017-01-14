@@ -232,6 +232,20 @@ class Goods extends Model
     }
 
     /**
+     * 按名称搜索
+     *
+     * @param $query
+     * @param $name
+     * @return mixed
+     */
+    public function scopeOfGoodsName($query, $name)
+    {
+        if ($name) {
+            return $query->where('name', 'like', '%' . $name . '%');
+        }
+    }
+
+    /**
      * 查询促销产品
      *
      * @param $query

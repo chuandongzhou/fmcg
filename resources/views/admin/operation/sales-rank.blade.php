@@ -12,10 +12,10 @@
     <div class="content-wrap">
         <form class="form-horizontal" action="{{ url('admin/operation-data/sales-rank') }}" method="get"
               autocomplete="off">
-            <a href="{{ url('admin/operation-data/sales-rank?t=today') }}" class="time-format">今天</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=yesterday') }}" class="time-format">昨天</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=week') }}" class="time-format">本周</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=month') }}" class="time-format">本月</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=today') }}" class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=yesterday') }}" class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=week') }}" class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=month') }}" class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
             <input type="text" name="begin_day" class="enter-control date datetimepicker" data-format="YYYY-MM-DD"
                    value="{{ $beginDay }}">
             <label class="control-label">-</label>

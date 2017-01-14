@@ -29,7 +29,7 @@ abstract class AdvertController extends Controller
         $data = $request->all();
 
         $adverts = Advert::where('type',
-            cons('advert.type.' . $this->type))->OfAddress(array_filter($data))->paginate();
+            cons('advert.type.' . $this->type))->OfAddress(array_filter($data))->orderBy('sort', 'DESC')->paginate();
 
         return view('admin.advert.index', [
             'type' => $this->type,

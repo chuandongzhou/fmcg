@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
-use App\Models\OrderGoods;
 use App\Services\GoodsService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -25,7 +23,7 @@ class HomeController extends Controller
             $adverts = Cache::get($indexAdvertConf['name']);
         } else {
             $adverts = Advert::with('image')->where('type',
-                cons('advert.type.index'))->OfTime()->get();
+                cons('advert.type.index'))->OfTime()->orderBy('sort', 'DESC')->get();
             Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
         }
         return view('index.index.index', [
@@ -46,13 +44,7 @@ class HomeController extends Controller
 
     public function test()
     {
-        /* $orderGoods = OrderGoods::with('order')->where('created_at', '0000-00-00 00:00:00')->get();
 
-         foreach ($orderGoods as $orderGood) {
-             $order = $orderGood->order;
-             $createdAt = $order ? $order->created_at : new Carbon();
-             $orderGood->fill(['created_at' => $createdAt, 'updated_at' => $createdAt])->save();
-         }*/
     }
 
 }

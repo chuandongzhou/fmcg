@@ -92,7 +92,7 @@
                             <li>
                                 <a href="{{ isset($user) && $user->type > cons('user.type.retailer') ? url('order-sell') : url('order-buy') }}">
                                     我的订单</a></li>
-                            <li class="notice"><a href="#"> 活动公告</a>
+                            <li class="notice"><a href="javascript:"> 活动公告</a>
                                 <div class="upcoming-events-wrap">
                                     <ul class="upcoming-events">
                                         @foreach((new \App\Services\NoticeService())->getNotice() as $key=>$notice)
@@ -103,7 +103,6 @@
                                                    title="{{ $notice->title }}">{{ ($key+1). '.' .$notice->title }}
                                                 </a>
                                             </li>
-
                                         @endforeach
                                     </ul>
                                 </div>
@@ -131,10 +130,8 @@
 
 @section('body')
     @yield('container')
-    @if ( !is_null(auth()->user()))
+    @if ( !is_null(auth()->id()))
         @include('includes.navigator')
-    @endif
-    @if(isset($user))
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
         <div class="msg-channel control-center-channel" id="alert-div">
@@ -238,61 +235,59 @@
 @section('js')
     <script type="text/javascript">
         //没有定位获取用户当前位置
-                @if(!request()->cookie('province_id'))
-        var map = new BMap.Map("allmap");
-        var point = new BMap.Point(116.331398, 39.897445);
-        map.centerAndZoom(point, 12);
-
-        function myFun(result) {
-            var cityName = result.name;
-            map.setCenter(cityName);
-            if (document.cookie.indexOf("province_id=") == -1) {
-                $.ajax({
-                    url: site.api('address/city-detail'),
-                    method: 'get',
-                    data: {name: cityName}
-                }).done(function (data, textStatus, jqXHR) {
-                    setCookie('province_id', data.province_id);
-                    setCookie('city_id', data.city_id);
-                    window.location.reload();
-                });
-
-            }
-        }
-
-        var myCity = new BMap.LocalCity();
-        myCity.get(myFun);
-        @endif
-    $(function () {
-
-            //意见反馈
-            $('.feedback-panel > a').popover({
-                container: '.feedback-panel',
-                placement: 'top',
-                html: true,
-                content: function () {
-                    return $(this).parent().siblings('.content').html();
-                }
-            })
-
-            //扫二维码下载app
-            tooltipFunc('#qr-content-panel > a', '#qr-content-panel');
-            //联系方式
-            tooltipFunc('.contact-panel > a', '.contact-panel');
-
-            //调用tooltip插件
-            function tooltipFunc(item, container) {
-                $(item).tooltip({
-                    container: container,
+        $(function () {
+                //意见反馈
+                $('.feedback-panel > a').popover({
+                    container: '.feedback-panel',
                     placement: 'top',
                     html: true,
-                    title: function () {
+                    content: function () {
                         return $(this).parent().siblings('.content').html();
                     }
                 })
-            }
 
+                //扫二维码下载app
+                tooltipFunc('#qr-content-panel > a', '#qr-content-panel');
+                //联系方式
+                tooltipFunc('.contact-panel > a', '.contact-panel');
 
-        });
-    </script>
+                //调用tooltip插件
+                function tooltipFunc(item, container) {
+                    $(item).tooltip({
+                        container: container,
+                        placement: 'top',
+                        html: true,
+                        title: function () {
+                            return $(this).parent().siblings('.content').html();
+                        }
+                    })
+                }
+
+            @if(!request()->cookie('province_id'))
+                var map = new BMap.Map("allmap");
+                var point = new BMap.Point(116.331398, 39.897445);
+                map.centerAndZoom(point, 12);
+
+                function myFun(result) {
+                    var cityName = result.name;
+                    map.setCenter(cityName);
+                    if (document.cookie.indexOf("province_id=") == -1) {
+                        $.ajax({
+                            url: site.api('address/city-detail'),
+                            method: 'get',
+                            data: {name: cityName}
+                        }).done(function (data, textStatus, jqXHR) {
+                            setCookie('province_id', data.province_id);
+                            setCookie('city_id', data.city_id);
+                            window.location.reload();
+                        });
+
+                    }
+                }
+                var myCity = new BMap.LocalCity();
+                myCity.get(myFun);
+            @endif
+
+            });
+        </script>
 @stop

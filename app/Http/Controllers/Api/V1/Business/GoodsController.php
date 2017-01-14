@@ -45,7 +45,7 @@ class GoodsController extends Controller
     {
         $data = $request->all();
 
-        $result = GoodsService::getShopGoods($this->shop, $data);
+        $result = GoodsService::getShopGoods($this->shop, $data, ['images']);
         $goods = $result['goods']->active()->withGoodsPieces()->orderBy('id', 'DESC')->select([
             'id',
             'name',

@@ -30,10 +30,10 @@
                 </tr>
                 <tr>
                     <td>注册数</td>
-                    <td>{{ $regUser[$userTypes['supplier']] or 0 }}</td>
-                    <td>{{ $regUser[$userTypes['wholesaler']] or 0 }}</td>
-                    <td>{{ $regUser[$userTypes['retailer']] or 0 }}</td>
-                    <td>{{ is_null($regUser) ? 0 : $regUser->sum() }}</td>
+                    <td>{{ $supplierRegNum = $dataStatistics->sum('supplier_reg_num') }}</td>
+                    <td>{{ $wholesalerRegNum = $dataStatistics->sum('wholesaler_reg_num') }}</td>
+                    <td>{{ $retailerRegNum = $dataStatistics->sum('retailer_reg_num') }}</td>
+                    <td>{{ $supplierRegNum + $wholesalerRegNum + $retailerRegNum }}</td>
                 </tr>
                 <tr>
                     <td>
@@ -43,9 +43,9 @@
                         </a>
                         活跃用户数
                     </td>
-                    <td>{{ $activeUser ? $activeUser->active_user[0] : 0 }}</td>
-                    <td>{{ $activeUser ? $activeUser->active_user[1] : 0 }}</td>
-                    <td>{{ $activeUser ? $activeUser->active_user[2] : 0 }}</td>
+                    <td>{{ $activeUser ? $activeUser->active_user[0] .'(' . $activeUser->created_at . ')' : 0 }}</td>
+                    <td>{{ $activeUser ? $activeUser->active_user[1] .'(' . $activeUser->created_at . ')'  : 0 }}</td>
+                    <td>{{ $activeUser ? $activeUser->active_user[2] .'(' . $activeUser->created_at . ')'  : 0 }}</td>
                     <td>{{ $activeUser ? array_sum($activeUser->active_user) : 0 }}</td>
                 </tr>
                 <tr>

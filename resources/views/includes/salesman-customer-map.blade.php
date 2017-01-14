@@ -42,7 +42,6 @@
                 var parent = $(e.relatedTarget);
                 var mapData = parent.data('shopCoordinate') ? parent.data('shopCoordinate') : customerMapData();
 
-                console.log(mapData);
                 // 百度地图API功能
                 var mp = new BMap.Map("customer-map");
                 mp.centerAndZoom(new BMap.Point(mapData.length ? mapData[0]['lng'] : 104.078511, mapData.length ? mapData[0]['lat'] : 30.556547), 15);

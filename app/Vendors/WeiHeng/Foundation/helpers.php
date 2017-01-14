@@ -383,9 +383,7 @@ if (!function_exists('in_windows')) {
     {
         $request = app('request');
         $userAgent = strtolower($request->server('HTTP_USER_AGENT'));
-        $path = strtolower($request->path());
-        return false !== strpos($userAgent, 'windows nt') && strpos($path, 'upload/file') === false && strpos($path,
-                'auth/logout') === false;
+        return false !== strpos($userAgent, 'windows nt');
     }
 }
 if (!function_exists('obfuscate_string')) {
@@ -519,5 +517,17 @@ if (!function_exists('list_in_years')) {
             $lists[] = $start->format('Y');
         }
         return $lists;
+    }
+}
+if (!function_exists('parse_province')) {
+    /**
+     * 去掉省名多余部分
+     *
+     * @param $province
+     * @return mixed
+     */
+    function parse_province($province)
+    {
+        return str_replace(['省', '自治区', '壮族', '回族', '维吾尔族', '特别行政区'], '', $province);
     }
 }

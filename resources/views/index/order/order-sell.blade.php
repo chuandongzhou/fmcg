@@ -36,6 +36,7 @@
                             <option value="{{ $key }}" {{ $key == array_get($search, 'status') ? 'selected' : ''}}>{{ $value }}</option>
                         @endforeach
                     </select>
+                    <label>下单时间：</label>
                     <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
                            data-format="YYYY-MM-DD" value="{{ $search['start_at'] or '' }}"/>　至　
                     <input type="text" class="datetimepicker control" id="end-time" placeholder="结束时间" name="end_at"

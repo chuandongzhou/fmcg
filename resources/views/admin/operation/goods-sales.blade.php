@@ -29,8 +29,8 @@
                             class="address-district useless-control hide control"> </select>
                     <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
                             class="address-street useless-control hide control"> </select>
-                    <input type="text" class="enter-control product-name" name="bar_code"
-                           value="{{ $data['bar_code'] or '' }}" placeholder="请输入商品条形码/商品名称">
+                    <input type="text" class="enter-control product-name" name="q"
+                           value="{{ $data['q'] or '' }}" placeholder="请输入商品条形码/商品名称">
                     <select class="control" name="user_type">
                         <option value="">请选择店铺类型</option>
                         @foreach(cons()->valueLang('user.type') as $type => $name)

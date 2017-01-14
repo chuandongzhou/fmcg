@@ -10,10 +10,10 @@
         <form class="form-horizontal" action="{{ url('admin/operation-data/complete-amount') }}" method="get"
               autocomplete="off">
             <input type="text" class="enter-control" name="name" placeholder="请输入出售商名称" value="{{ $name }}">
-            <a href="{{ url('admin/operation-data/complete-amount?t=today') }}" class="time-format">今天</a>
-            <a href="{{ url('admin/operation-data/complete-amount?t=yesterday') }}" class="time-format">昨天</a>
-            <a href="{{ url('admin/operation-data/complete-amount?t=week') }}" class="time-format">本周</a>
-            <a href="{{ url('admin/operation-data/complete-amount?t=month') }}" class="time-format">本月</a>
+            <a href="{{ url('admin/operation-data/complete-amount?t=today') }}" class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
+            <a href="{{ url('admin/operation-data/complete-amount?t=yesterday') }}" class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
+            <a href="{{ url('admin/operation-data/complete-amount?t=week') }}" class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
+            <a href="{{ url('admin/operation-data/complete-amount?t=month') }}" class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
             <input type="text" name="begin_day" class="enter-control date datetimepicker" data-format="YYYY-MM-DD"
                    value="{{ $beginDay }}">
             <label class="control-label">-</label>
@@ -33,7 +33,7 @@
                         <th>成交总金额（元）</th>
                         <th>在线收款金额（元）</th>
                         <th>线下收款金额（元）</th>
-                        <th>已完成收款金额（元）</th>
+                        <th>pos收款金额（元）</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,14 +43,14 @@
                         <td>{{ number_format( $supplierForWholesalerAmount = $supplier['wholesaler']['amount'],2) }}</td>
                         <td>{{ number_format( $supplierForWholesalerOnline = $supplier['wholesaler']['onlineAmount'],2) }}</td>
                         <td>{{ number_format( $supplierForWholesalerOffline =  $supplier['wholesaler']['offAmount'],2) }}</td>
-                        <td>{{ number_format( $supplierForWholesalerAll = bcadd($supplierForWholesalerOnline,$supplierForWholesalerOffline,2),2) }}</td>
+                        <td>{{ number_format( $supplierForWholesalerPos =  $supplier['wholesaler']['posAmount'],2) }}</td>
                     </tr>
                     <tr>
                         <td>{{ $supplierForRetailerCount = $supplier['retailer']['count'] }}（终端）</td>
                         <td>{{ number_format( $supplierForRetailerAmount = $supplier['retailer']['amount'],2) }}</td>
                         <td>{{ number_format( $supplierForRetailerOnline = $supplier['retailer']['onlineAmount'],2) }}</td>
                         <td>{{ number_format( $supplierForRetailerOffline =  $supplier['retailer']['offAmount'],2) }}</td>
-                        <td>{{ number_format( $supplierForRetailerAll = bcadd($supplierForRetailerOnline,$supplierForRetailerOffline,2),2) }}</td>
+                        <td>{{ number_format( $supplierForRetailerPos =  $supplier['retailer']['posAmount'],2) }}</td>
                     </tr>
                     <tr>
                         <td>批发商</td>
@@ -58,7 +58,7 @@
                         <td>{{ number_format( $retailerOrderAmount = $wholesaler['amount'],2) }}</td>
                         <td>{{ number_format( $retailerByOnline = $wholesaler['onlineAmount'],2) }}</td>
                         <td>{{ number_format( $retailerByOffline = $wholesaler['offAmount'],2) }}</td>
-                        <td>{{ number_format( $retailerAll = bcadd($retailerByOnline,$retailerByOffline,2),2) }}</td>
+                        <td>{{ number_format( $retailerByPos = $wholesaler['posAmount'],2) }}</td>
                     </tr>
                     <tr>
                         <td>总计</td>
@@ -66,7 +66,7 @@
                         <td>{{ number_format($supplierForWholesalerAmount + $supplierForRetailerAmount + $retailerOrderAmount, 2) }}</td>
                         <td>{{ number_format($supplierForWholesalerOnline + $supplierForRetailerOnline + $retailerByOnline, 2) }}</td>
                         <td>{{ number_format($supplierForWholesalerOffline + $supplierForRetailerOffline + $retailerByOffline, 2) }}</td>
-                        <td>{{ number_format($supplierForWholesalerAll + $supplierForRetailerAll + $retailerAll , 2) }}</td>
+                        <td>{{ number_format($supplierForWholesalerPos + $supplierForRetailerPos + $retailerByPos , 2) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -79,7 +79,7 @@
                     <th>成交总金额(元)</th>
                     <th>在线收款金额(元)</th>
                     <th>线下收款金额(元)</th>
-                    <th>已完成收款金额(元)</th>
+                    <th>pos收款金额(元)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -88,9 +88,9 @@
                         <td>{{ $shopName }}（{{ cons()->lang('user.type')[$shop['type']] }}）</td>
                         <td>{{ array_get($shop, 'orderCount', 0) }}</td>
                         <td>{{ number_format(array_get($shop, 'orderAmount', 0), 2) }}</td>
-                        <td>{{ number_format($onlinePay = array_get($shop, 'onLinePay', 0), 2) }}</td>
-                        <td>{{ number_format($offlinePay = array_get($shop, 'offLinePay', 0), 2) }}</td>
-                        <td>{{ number_format(bcadd($onlinePay, $offlinePay, 2), 2) }}</td>
+                        <td>{{ number_format(array_get($shop, 'onLinePay', 0), 2) }}</td>
+                        <td>{{ number_format(array_get($shop, 'offLinePay', 0), 2) }}</td>
+                        <td>{{ number_format(array_get($shop, 'posPay', 0), 2) }}</td>
                     </tr>
                 @endforeach
                 </tbody>

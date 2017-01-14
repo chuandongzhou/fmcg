@@ -24,7 +24,8 @@ class ComposerServiceProvider extends ServiceProvider
             CategoryComposer::class => [
                 'index.index.index',
                 'index.index-master',
-                'index.shop-search'
+                'index.shop-search',
+                'errors.404'
             ],
             UserComposer::class => [
                 'master',
@@ -43,7 +44,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'includes.quick-link',
                 'index.personal.security.security-index',
                 //'index.personal.tabs',
-                'index.help.master'
+                'index.help.master',
+                'errors.404'
             ],
             ProvinceComposer::class => [
                 'index.master'

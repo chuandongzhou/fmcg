@@ -17,7 +17,7 @@ class ChatService
 
     public function __construct()
     {
-        $messageConf = config('push.top');
+        $messageConf = config('push.im');
 
         $this->appKey = $messageConf['app_key'];
         $this->secretKey = $messageConf['app_secret'];

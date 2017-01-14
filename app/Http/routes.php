@@ -84,6 +84,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
         $router->get('report/export', 'ReportController@exportIndex');
+        $router->get('display-info', 'DisplayInfoController@index');
+        $router->get('display-info/export', 'DisplayInfoController@export');
         $router->resource('report', 'ReportController');
         $router->resource('mortgage-goods', 'MortgageGoodsController');
         $router->group(['prefix' => 'order'], function ($router) {
@@ -171,7 +173,8 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
         $router->get('sales-rank-export', 'OperationDataController@salesRankExport');
         $router->get('goods-sales', 'OperationDataController@goodsSales');
         $router->get('goods-sales-export', 'OperationDataController@goodsSalesExport');
-        $router->get('goods-sales-map/{goods_id}', 'OperationDataController@goodsSalesMap')->where('goods_id', '[0-9]+');;
+        $router->get('goods-sales-map/{goods_id}', 'OperationDataController@goodsSalesMap')->where('goods_id',
+            '[0-9]+');;
     });
     $router->get('operation/notification', 'OperationController@notification');
     $router->get('operation/export', 'OperationController@export');

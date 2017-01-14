@@ -28,6 +28,7 @@
                         @endforeach
                     </select>
                     <input type="hidden" id="target-url" value="{{ url('order-buy/search') }}"/>
+                    <label>下单时间：</label>
                     <input type="text" class="datetimepicker control" placeholder="开始时间" name="start_at"
                            value="{{ $search['start_at'] or '' }}"
                            data-format="YYYY-MM-DD"/>　至　

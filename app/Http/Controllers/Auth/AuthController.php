@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Germey\Geetest\CaptchaGeetest;
-use Illuminate\Support\Facades\Config;
 
 class AuthController extends Controller
 {
@@ -98,6 +97,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        //app('cookie')->queue('last_handle_time', 0, -2628000);
         auth()->logout();
         return redirect('auth/login');
     }

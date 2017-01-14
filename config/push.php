@@ -12,7 +12,12 @@ return [
             'withdraw' => '2946',
             'order' => 'SMS_baichun_3329'
         ],
+
+    ],
+    'im' => [
+        'app_key' => '23318997',
+        'app_secret' => '3aecbfce77c9b040ce33a03123e65b91',
         // 消息通用密码
         'message_password' => substr(md5('dingbaida2016315'), 10, 8)
-    ],
+    ]
 ];

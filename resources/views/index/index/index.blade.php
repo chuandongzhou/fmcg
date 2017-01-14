@@ -68,10 +68,8 @@
                             @foreach($adverts as $key=>$advert )
                                 <li class="{{ $key == 0 ? 'active' : '' }}" data-target="#myCarousel"
                                     data-slide-to="{{ $key }}">
-
                                 </li>
                             @endforeach
-
                         </ol>
                         <div class="carousel-inner">
                             @foreach($adverts as $key=>$advert )
@@ -81,7 +79,6 @@
                                     </a>
                                 </div>
                             @endforeach
-
                         </div>
                     </div>
                 </div>
@@ -93,17 +90,18 @@
             @if(!$column->goods->isEmpty())
                 <div class="row list-penal">
                     <div class="col-xs-12 title padding-clear">
-                        <div class="category-name"><span
-                                    class="text-center first-letter">{{ strtoupper(pinyin_abbr($column->name)[0]) }}</span>{{ $column->name  }}
+                        <div class="category-name">
+                            <span class="text-center first-letter">
+                                {{ strtoupper(pinyin_abbr($column->name)[0]) }}
+                            </span>{{ $column->name  }}
                         </div>
                     </div>
                     <div class="col-xs-12 padding-clear">
-
                         <div class="padding-clear left-menu-wrap pull-left">
-
-                            <a href="{{  $column->leftAdverts?$column->leftAdverts->url:'' }}"><img
-                                        class="commodity-img lazy"
-                                        data-original="{{ $column->leftAdverts?$column->leftAdverts->image_url:asset('images/advert/left-category.jpg') }}"></a>
+                            <a href="{{  !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->url : 'javascript:' }}">
+                                <img class="commodity-img lazy"
+                                     data-original="{{ !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->image_url:asset('images/advert/left-category.jpg') }}">
+                            </a>
 
                             <ul class="secondary-menu">
                                 @foreach($categories[$column->id]['child'] as $child)
@@ -114,7 +112,6 @@
                             </ul>
                         </div>
                         <div class="pull-left center-wrap commodity-panel commodity-index-panel padding-clear">
-
                             @foreach($column->goods as $goods)
                                 @if ($goods->price > 0)
                                     <div class="commodity commodity-index-img commodity-border ">
@@ -129,15 +126,14 @@
                                             <a href="{{ url('goods/' . $goods->id) }}" target="_blank">
                                                 <p class="commodity-name">{{ $goods->name }}</p>
 
-                                                        <p class="sell-panel">
-                                                            <span class="money red">¥{{ $goods->price . '/' . $goods->pieces }}</span>
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
-
+                                                <p class="sell-panel">
+                                                    <span class="money red">¥{{ $goods->price . '/' . $goods->pieces }}</span>
+                                                </p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                         <div class=" pd-left-clear right-wrap pull-left">
                             <div id="myCarousel{{ $index }}" class=" carousel slide banner-slide">
@@ -146,8 +142,7 @@
                                         @foreach($column->adverts as $key => $advert)
                                             <div class="item {{ $key == 0 ? 'active' : '' }}">
                                                 <a href="{{ $advert->url }}" target="_blank">
-                                                    <img src="{{ $advert->image_url }}"
-                                                         alt="{{ $advert->name }}">
+                                                    <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
                                                 </a>
                                             </div>
                                         @endforeach
@@ -157,7 +152,6 @@
                                             <li class="{{ $key == 0 ? 'active' : '' }}"
                                                 data-target="#myCarousel{{ $index }}"
                                                 data-slide-to="{{ $key }}">
-
                                             </li>
                                         @endforeach
                                     </ul>
@@ -171,21 +165,17 @@
                                         </div>
                                     </div>
                                 @endif
-
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             @endif
         @endforeach
-
     </div>
 @stop
 
 @section('join-us')
-    @if(!isset($user))
+    @if(is_null(auth()->id()))
         <div class="container join-title text-center padding-clear">
             <a href="javascript:" data-toggle="modal"
                data-target="#myModal-agreement"><img src="{{ asset('images/bottom.jpg') }}"/></a>

@@ -17,6 +17,7 @@ class CreateAdvertRequest extends Request
             'name' => 'required',
             'image' => 'required',
             'url' => 'required|url',
+            'sort' => 'required|integer',
             'start_at' => 'required|date',
             'end_at' => 'date|after:start_at',
         ];

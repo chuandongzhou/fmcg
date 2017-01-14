@@ -488,6 +488,21 @@ class Order extends Model
     }
 
     /**
+     * 获取买家地址
+     *
+     * @return string
+     */
+    public function getUserShopAddressAttribute()
+    {
+        if ($this->user_id > 0) {
+            return $this->user ? $this->user->shop->shopAddress : (new AddressData());
+        } elseif ($this->salesmanVisitOrder) {
+            return $this->salesmanVisitOrder->business_address;
+        }
+        return '';
+    }
+
+    /**
      * 获取卖家类型
      *
      * @return mixed|\WeiHeng\Constant\Constant

@@ -68,7 +68,6 @@ class OrderController extends Controller
         $shippingAddress = $user->shippingAddress()->with('address')->get();
 
 
-
         return view('index.order.confirm-order', ['shops' => $shops, 'shippingAddress' => $shippingAddress]);
     }
 
@@ -582,7 +581,7 @@ class OrderController extends Controller
                             '',
                             $value['id'],
                             $value['name'],
-                            '¥' . $value['pivot']['price'],
+                            $value['pivot']['price'],
                             $value['pivot']['num']
                         ];
                     } else {
@@ -592,10 +591,10 @@ class OrderController extends Controller
                             $order['payment_type'],
                             $order['status_name'],
                             $order['created_at'],
-                            '¥' . $order['price'],
+                            $order['price'],
                             $value['id'],
                             $value['name'],
-                            '¥' . $value['pivot']['price'],
+                            $value['pivot']['price'],
                             $value['pivot']['num']
                         ];
                     }
@@ -607,7 +606,7 @@ class OrderController extends Controller
                     $order['payment_type'],
                     $order['status_name'],
                     $order['created_at'],
-                    '¥' . $order['price'],
+                    $order['price'],
                 ];
             }
         }

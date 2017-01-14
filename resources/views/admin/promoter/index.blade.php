@@ -43,7 +43,7 @@
                                 <i class="iconfont icon-xiugai"></i>编辑
                             </a>
 
-                            <a class="remove ajax" href="javascript:;" data-method="delete"  data-url="{{ url('admin/promoter/batch') }}">
+                            <a class="remove ajax" href="javascript:;" data-method="delete"  data-url="{{ url('admin/promoter/' . $promoter->id) }}">
                                 <i class="iconfont icon-shanchu"></i>删除
                             </a>
 

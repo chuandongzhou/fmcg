@@ -76,7 +76,9 @@ class PromoterController extends Controller
      */
     public function update(Requests\Admin\UpdatePromoterRequest $request, $promoter)
     {
-        if ($promoter->fill($request->all())->save()) {
+        $attributes = $request->all();
+        $attributes['end_at'] = array_get($attributes, 'end_at') ?: null;
+        if ($promoter->fill($attributes)->save()) {
             return $this->success('修改推广人员成功');
         }
         return $this->error('修改推广人员时遇到错误');
@@ -142,6 +144,11 @@ class PromoterController extends Controller
 
     }
 
+    /**
+     * 导出
+     *
+     * @param \Illuminate\Http\Request $request
+     */
     public function export(Request $request)
     {
         $dates = $request->all();
@@ -205,13 +212,14 @@ class PromoterController extends Controller
             $table->addCell()->addText($promoter->spreading_code, null, $cellAlignCenter);
             $table->addCell()->addText($promoter->retailerShopRegisterCount, null, $cellAlignCenter);
             $table->addCell()->addText($promoter->wholesalerShopRegisterCount, null, $cellAlignCenter);
-            $table->addCell()->addText($promoter->retailerShopRegisterCount + $promoter->wholesalerShopRegisterCount, null, $cellAlignCenter);
+            $table->addCell()->addText($promoter->retailerShopRegisterCount + $promoter->wholesalerShopRegisterCount,
+                null, $cellAlignCenter);
             $table->addCell()->addText($promoter->submitOrdersUsersCount, null, $cellAlignCenter);
             $table->addCell()->addText($promoter->finishedOrdersUserCount, null, $cellAlignCenter);
             $table->addCell()->addText($promoter->submitOrdersCount, null, $cellAlignCenter);
             $table->addCell()->addText($promoter->finishedOrdersCount, null, $cellAlignCenter);
-            $table->addCell()->addText(number_format( $promoter->submitOrdersAmount , 2), null, $cellAlignCenter);
-            $table->addCell()->addText(number_format( $promoter->finishedOrdersAmount , 2), null, $cellAlignCenter);
+            $table->addCell()->addText(number_format($promoter->submitOrdersAmount, 2), null, $cellAlignCenter);
+            $table->addCell()->addText(number_format($promoter->finishedOrdersAmount, 2), null, $cellAlignCenter);
         }
 
 
@@ -235,7 +243,7 @@ class PromoterController extends Controller
         $promoters->each(function ($promoter) use ($startDay, $endDay, $userType) {
             $wholesalerShopRegisterCount = 0;
             $retailerShopRegisterCount = 0;
-            $shops = [];
+
 
             foreach ($promoter->shops as $shop) {
                 if ($shop->created_at >= $startDay && $shop->created_at <= $endDay) {
@@ -244,28 +252,16 @@ class PromoterController extends Controller
                     } else {
                         $wholesalerShopRegisterCount++;
                     }
-                    if (!isset($shops[$shop->id])) {
-                        $shops[$shop->id] = [
-                            'lng' => $shop->shopAddress ? $shop->x_lng : 0,
-                            'lat' => $shop->shopAddress ? $shop->y_lat : 0,
-                            'number' => $shop->id,
-                            'name' => $shop->name,
-                            'href' => url('shop/' . $shop->id)
-                        ];
-                    }
                 }
             }
             $promoter->wholesalerShopRegisterCount = $wholesalerShopRegisterCount;
 
             $promoter->retailerShopRegisterCount = $wholesalerShopRegisterCount;
 
-            $promoter->shopsCoordinate = json_encode(array_values($shops));
-
 
             //总用户数  直接 $promoter->shops->count();
 
             $userIds = $promoter->shops->pluck('user_id');
-
 
             //下单
             $submitOrders = Order::NonCancel()->whereIn('user_id', $userIds)->whereBetween('created_at',
@@ -279,8 +275,30 @@ class PromoterController extends Controller
             $promoter->submitOrdersAmount = $submitOrders->sum('price');
 
             //完成的订单
-            $finishedOrders = Order::whereIn('user_id', $userIds)->whereBetween('finished_at',
-                [$startDay, $endDay])->get();
+            $finishedOrders = Order::whereIn('user_id',
+                $userIds)->with('user.shop.shopAddress')->whereBetween('finished_at', [$startDay, $endDay])->get();
+
+            //成单客户
+            $address = config('address.address');
+
+
+            $shops = [];
+            $users = [];
+
+            foreach ($finishedOrders as $order) {
+                $userId = $order->user_id;
+                if (!in_array($userId, $users)) {
+                    $provinceId = $order->user_shop_address->province_id;
+                    $shops[$provinceId] = [
+                        'name' => parse_province($address[$provinceId]['name']),
+                        'value' => isset($shops[$provinceId]) ? ++$shops[$provinceId]['value'] : 1
+                    ];
+                    array_push($users, $userId);
+                }
+            }
+
+            $promoter->shops = json_encode(array_values($shops));
+
 
             //成单数
             $promoter->finishedOrdersCount = $finishedOrders->count();

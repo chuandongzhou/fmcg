@@ -256,6 +256,10 @@ class SalesmanVisitOrderController extends Controller
             'displayList.mortgageGoods',
         ])->find($id);
 
+        if (is_null($order)) {
+            return $this->error('订单不存在');
+        }
+
         if ($order->type == cons('salesman.order.type.order')) {
             $order->load('order.deliveryMan');
             if (!is_null($order->displayList)) {
@@ -590,9 +594,11 @@ class SalesmanVisitOrderController extends Controller
                         ]);
                     }
 
-                    //保存订单商品
-                    if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
-                        return ['error' => '同步时出现错误，请重试'];
+                    if (!empty($orderGoods)) {
+                        //保存订单商品
+                        if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
+                            return ['error' => '同步时出现错误，请重试'];
+                        }
                     }
 
                 } else {

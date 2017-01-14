@@ -234,7 +234,11 @@
                                     <span class="title">抵陈列费商品</span>
                                 </a>
                             </li>
-
+                            <li class="nav-item {{ path_active(['business/mortgage-goods*']) }}">
+                                <a href="{{ url('business/display-info') }}" class="nav-link ">
+                                    <span class="title">陈列费发放情况</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif

@@ -47,17 +47,21 @@ class Category extends Model
      */
     public function adverts()
     {
-        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.category'))->ofTime(Carbon::now(),
-            100);
+        return $this->hasMany('App\Models\Advert')
+            ->where('type', cons('advert.type.category'))
+            ->ofTime(Carbon::now(), 100)->orderBy('sort', 'desc');
     }
+
     /**
      * 左侧广告
      *
      * @reeturn mixed
      */
-    public function leftAdverts(){
-        return $this->hasMany('App\Models\Advert')->where('type', cons('advert.type.left-category'))->orderBy('id','desc')->ofTime(Carbon::now(),
-            100);
+    public function leftAdverts()
+    {
+        return $this->hasMany('App\Models\Advert')
+            ->where('type', cons('advert.type.left-category'))
+            ->orderBy('sort', 'desc')->ofTime(Carbon::now(), 100);
     }
 
     /**

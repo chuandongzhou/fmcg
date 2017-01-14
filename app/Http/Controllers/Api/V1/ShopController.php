@@ -119,9 +119,7 @@ class ShopController extends Controller
         if (empty($shopIds)) {
             return [];
         }
-        $shops = Shop::with(['logo', 'user'])->whereIn('id', $shopIds)->get(['name', 'id', 'user_id'])->each(function (
-            $shop
-        ) {
+        $shops = Shop::with(['logo', 'user'])->whereIn('id', $shopIds)->get(['name', 'id', 'user_id'])->each(function ($shop) {
             $shop->setAppends(['logo_url']);
         });
         return $this->success(['shops' => $shops->keyBy('id')]);

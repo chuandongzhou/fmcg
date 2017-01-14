@@ -26,6 +26,7 @@ class Advert extends Model
         'city_id',
         'category_id',
         'name',
+        'sort',
         'type',
         'url',
         'start_at',

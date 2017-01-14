@@ -97,7 +97,7 @@
                     for (var i in shops) {
                         @if(!empty(request()->input('uid')) && request()->is('personal/chat'))
                             var uid = parseInt({!!  request()->input('uid') !!});
-                            if(uid== i){
+                            if(uid == i){
                                 firstLogoUrl = shops[i].logo_url;
                                 firstId = {!!  request()->input('uid') !!}+'';
                             }
@@ -242,7 +242,9 @@
                 timeout: 5000,
                 success: function (data) {
                     //获取联系人列表
-                    allRecentContact(sdk, Event);
+                   @if(request()->is('personal/*', 'order*', 'my-goods*', 'business*', 'like*'))
+                        allRecentContact(sdk, Event);
+                   @endif
 //                    getUnreadMsgCount(sdk, true);
 
                     Event.on('CHAT.MSG_RECEIVED', function (data) {

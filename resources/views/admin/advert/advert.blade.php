@@ -41,7 +41,7 @@
                     </select>
                 </div>
             </div>
-       @endif
+        @endif
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">广告名称</label>
 
@@ -63,6 +63,15 @@
                 <div class="image-preview w160">
                     <img src="{{ $advert->image_url }}" class="img-thumbnail">
                 </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">排序</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="sort" name="sort" placeholder="请输入排序"
+                       value="{{ $advert->sort }}">
             </div>
         </div>
 

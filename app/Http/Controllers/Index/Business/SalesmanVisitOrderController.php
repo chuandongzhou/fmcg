@@ -79,7 +79,9 @@ class SalesmanVisitOrderController extends Controller
      */
     public function detail(SalesmanVisitOrder $salesmanVisitOrder)
     {
-        if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
+        if (Gate::denies('validate-salesman-order',
+                $salesmanVisitOrder) || (!$salesmanVisitOrder->can_pass) && $salesmanVisitOrder->type == cons('salesman.order.type.order')
+        ) {
             return $this->error('订单不存在');
         }
 

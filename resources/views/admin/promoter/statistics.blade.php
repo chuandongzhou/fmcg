@@ -2,7 +2,7 @@
 
 @include('includes.timepicker')
 
-@include('includes.salesman-customer-map')
+@include('admin.promoter.customer-map')
 
 @section('subtitle' , '推广统计')
 
@@ -22,7 +22,8 @@
                    data-format="YYYY-MM-DD"
                    value="{{ $endDay }}">
             <input type="submit" class="btn btn-blue control" value="查询"/>
-            <a href="{{ url("admin/promoter/export?start_day={$startDay}&end_day={$endDay}") }}" class="btn btn-border-blue control">导出</a>
+            <a href="{{ url("admin/promoter/export?start_day={$startDay}&end_day={$endDay}") }}"
+               class="btn btn-border-blue control">导出</a>
         </form>
         <table class="table public-table table-bordered">
             <tr>
@@ -51,11 +52,16 @@
                     <td>{{ $promoter->submitOrdersCount }}</td>
                     <td>{{ $promoter->finishedOrdersCount }}</td>
                     <td>{{ number_format( $promoter->submitOrdersAmount , 2) }}</td>
-                    <td>{{ number_format( $promoter->finishedOrdersAmount , 2) }}</td>
+                    <td>{{ number_format( $promoter->OrdersAmount , 2) }}</td>
                     <td>
-                        <a class="btn shop-coordinate" href="javascript:;" data-target="#customerAddressMapModal"
+                        <a class="edit" href="javascript:;" data-target="#customerMapModal"
                            data-toggle="modal"
-                           data-coordinate= {{ $promoter->shopsCoordinate }}>
+                           data-shops={{ $promoter->shops }}
+                           data-name= {{ $promoter->name }}
+                           data-spreading-code= {{ $promoter->spreading_code }}
+                           data-finish-amount= {{ $promoter->OrdersAmount }}
+                           data-user-count= {{ $promoter->finishedOrdersUserCount }}
+                        >
                             <i class="iconfont icon-renkoufenbu"></i> 客户分布
                         </a>
                     </td>
@@ -63,41 +69,4 @@
             @endforeach
         </table>
     </div>
-@stop
-@section('js-lib')
-    @parent
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mUrGqwp43ceCzW41YeqmwWUG"></script>
-@stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $('.shop-coordinate').each(function () {
-            var $this = $(this), coordinate = $this.data('coordinate'), mapData = [];;
-            for (var i in coordinate) {
-                var obj = coordinate[i], data = [];
-                data['lng'] = obj.lng;
-                data['lat'] = obj.lat;
-                data['number'] = '客户 ' + obj.number;
-                data['name'] = obj.name;
-                data['href'] = obj.href;
-                mapData.push(data);
-            }
-            $this.data('shopCoordinate', mapData);
-        });
-
-
-        //        var customerMapData = function () {
-        //            var mapData = [];
-        //            $('.salesman-customer-table  .map-data').each(function () {
-        //                var obj = $(this), data = [];
-        //                data['lng'] = obj.data('lng');
-        //                data['lat'] = obj.data('lat');
-        //                data['number'] = '客户 ' + obj.data('number');
-        //                data['name'] = obj.data('name');
-        //                data['href'] = site.url('business/salesman-customer/' + obj.data('id'));
-        //                mapData.push(data);
-        //            });
-        //            return mapData;
-        //        };
-    </script>
 @stop

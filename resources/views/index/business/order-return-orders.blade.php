@@ -1,5 +1,5 @@
 @extends('index.menu-master')
-@section('subtitle', '业务管理-订货单')
+@section('subtitle', '业务管理-退货单')
 @include('includes.timepicker')
 
 @section('top-title')

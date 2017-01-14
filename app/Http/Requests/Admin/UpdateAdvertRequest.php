@@ -17,6 +17,7 @@ class UpdateAdvertRequest extends Request
             'name' => 'sometimes|required',
             'image' => 'sometimes|required',
             'url' => 'sometimes|required|url',
+            'sort' => 'required|integer',
             'start_at' => 'sometimes|required|date',
             'end_at' => 'date|after:start_at',
         ];

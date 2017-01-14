@@ -19,11 +19,11 @@ class ChatComposer
      */
     public function compose(View $view)
     {
-        $pushConf = config('push.top');
+        $pushConf = config('push.im');
         $config = [
             'pwd' => $pushConf['message_password'],
             'key' => $pushConf['app_key'],
-            'shop_id' => auth()->user() ? auth()->user()->shop()->pluck('id') : 0
+            'shop_id' => auth()->user() ? auth()->user()->shop_id : 0
         ];
         $view->with('chatConf', $config);
     }

@@ -17,7 +17,7 @@ class TradeController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $data = $request->all();
+        $data = array_except($request->all(), 'page');
 
         $trades = SystemTradeInfo::where($data)->paginate();
 

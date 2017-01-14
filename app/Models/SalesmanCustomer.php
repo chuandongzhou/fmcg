@@ -166,7 +166,7 @@ class SalesmanCustomer extends Model
     public function scopeOfName($query, $name)
     {
         if ($name) {
-            return $query->where('name', 'LIKE', '%' . $name . '%');
+            return $query->where('salesman_customer.name', 'LIKE', '%' . $name . '%');
         }
     }
 

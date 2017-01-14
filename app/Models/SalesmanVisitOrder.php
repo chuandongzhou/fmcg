@@ -236,6 +236,20 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
+     * 获取客户地址
+     *
+     * @return string
+     */
+    public function getBusinessAddressAttribute()
+    {
+        $salesmanCustomer = $this->salesmanCustomer;
+        if (is_null($salesmanCustomer)) {
+            return '';
+        }
+        return $salesmanCustomer->businessAddress;
+    }
+
+    /**
      *  是否可导出
      *
      * @return bool
@@ -282,7 +296,8 @@ class SalesmanVisitOrder extends Model
      */
     public function getCustomerUserIdAttribute()
     {
-        return $this->salesmanCustomer->shop ? $this->salesmanCustomer->shop->user_id : 0;
+        $salesmanCustomer = $this->salesmanCustomer;
+        return $salesmanCustomer->shop ? $salesmanCustomer->shop->user_id : bcmul($salesmanCustomer->id, -1);
     }
 
     /**

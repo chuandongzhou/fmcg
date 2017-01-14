@@ -3263,7 +3263,9 @@ table {
   .go-history {
     padding: 10px 30px;
     .btn {
-      @include size(100px, 40px);
+      //@include size(100px, 40px);
+      min-width: 100px;
+      height: 40px;
     }
   }
   .panel-title {
