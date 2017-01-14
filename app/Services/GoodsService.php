@@ -224,7 +224,7 @@ class GoodsService
                             return $leftAdvert['province_id'] == $data['province_id'] && $leftAdvert['city_id'] == $data['city_id'];
                         }
                         return $leftAdvert['province_id'] == $data['province_id'];
-                    })->take(1);
+                    })->first();
                 });
 
             $displayCount = $homeColumnGoodsConf['count']; //显示条数

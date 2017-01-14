@@ -18,7 +18,7 @@
     <div class="row order-detail business-detail">
         <div class="col-sm-12 go-history">
             <a class="btn go-back btn-border-blue" href="javascript:history.go(-1)">返回</a>
-            @if($order->can_pass)
+            @if($order->status == cons('salesman.order.status.not_pass'))
                 <button
                         data-url="{{ url('api/v1/business/order/' . $order->id) }}"
                         data-method="put" data-data='{"status" : "1"}'

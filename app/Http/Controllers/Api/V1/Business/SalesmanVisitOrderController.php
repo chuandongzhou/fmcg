@@ -71,6 +71,9 @@ class SalesmanVisitOrderController extends Controller
         if (Gate::denies('validate-salesman-order', $salesmanVisitOrder)) {
             return $this->error('订单不存在');
         }
+        if ($salesmanVisitOrder->orderGoods->isEmpty()) {
+            return $this->error('操作失败:订货商品不能为空');
+        }
         $attributes = $request->except('salesman_id', 'start_date', 'end_date', 'order_id');
 
         if ($salesmanVisitOrder->can_sync && isset($attributes['status'])) {
@@ -142,7 +145,7 @@ class SalesmanVisitOrderController extends Controller
             $goodsId = $request->input('id');
             $orderGoods = SalesmanVisitOrderGoods::with('salesmanVisitOrder')->find($goodsId);
             if (is_null($orderGoods)) {
-                return $this->error('订单不存在');
+                return $this->error('订单不存在或订单信息已改变，请重新刷新');
             }
             $salesmanVisitOrder = $orderGoods->salesmanVisitOrder;
             //如果有陈列费 验证订单金额不能大于陈列金额

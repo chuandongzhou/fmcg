@@ -181,7 +181,7 @@ class SalesmanVisitOrder extends Model
                 return $query->where('id', $customer);
             } else {
                 return $query = $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
-                    $query->where('name', 'like', $customer);
+                    $query->where('name', 'like', '%'.$customer.'%');
                 });
             }
         } else {
@@ -252,7 +252,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return $this->status != cons('salesman.order.status.passed');
+        return $this->status != cons('salesman.order.status.passed') && !$this->orderGoods->isEmpty();
     }
 
     /**

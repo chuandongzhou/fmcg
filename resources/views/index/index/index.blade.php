@@ -101,9 +101,9 @@
 
                         <div class="padding-clear left-menu-wrap pull-left">
 
-                            <a href="{{  !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->url:'' }}"><img
+                            <a href="{{  $column->leftAdverts?$column->leftAdverts->url:'' }}"><img
                                         class="commodity-img lazy"
-                                        data-original="{{ !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->image_url:asset('images/advert/left-category.jpg') }}"></a>
+                                        data-original="{{ $column->leftAdverts?$column->leftAdverts->image_url:asset('images/advert/left-category.jpg') }}"></a>
 
                             <ul class="secondary-menu">
                                 @foreach($categories[$column->id]['child'] as $child)
