@@ -220,8 +220,6 @@ a {
   }
 }
 
-
-
 .btn-blue {
   @include btn-hover-color($body-bg);
   background-color: #169bd5;
@@ -3263,9 +3261,8 @@ table {
   .go-history {
     padding: 10px 30px;
     .btn {
-      //@include size(100px, 40px);
-      min-width: 100px;
-      height: 40px;
+      min-width:100px;
+      height:40px;
     }
   }
   .panel-title {
@@ -5633,7 +5630,7 @@ table {
   background-color: $body-bg;
   position: fixed;
   left: 50%;
-  margin-left: -75px;
+  margin-left: -225px;
   z-index: 99999;
   border-radius: 4px !important;
   border: 1px solid $gray-lighter;
@@ -5959,6 +5956,7 @@ table {
     font-size: 14px;
     text-indent: 0;
     color: $gray-base;
+    background-image: none!important;
   }
 }
 
@@ -6251,7 +6249,7 @@ table {
     }
     .company {
       line-height: 35px;
-      width:65px;
+      width:75px;
     }
     .display-goods {
       div {

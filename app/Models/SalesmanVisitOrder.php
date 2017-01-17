@@ -266,7 +266,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return $this->status != cons('salesman.order.status.passed') && !$this->orderGoods->isEmpty();
+        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/;
     }
 
     /**
