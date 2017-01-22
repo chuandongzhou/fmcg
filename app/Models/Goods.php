@@ -352,6 +352,19 @@ class Goods extends Model
     }
 
     /**
+     * 按类型搜索
+     *
+     * @param $query
+     * @param int $userType
+     */
+    public function scopeOfUserType($query, $userType = 2)
+    {
+        if ($userType) {
+            $query->where('user_type', $userType);
+        }
+    }
+
+    /**
      * 设置终端商自提价格
      *
      * @param $priceRetailerPickUp

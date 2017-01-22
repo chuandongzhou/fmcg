@@ -126,9 +126,9 @@ class PromoterController extends Controller
         $promoterId = $request->input('id');
 
         if ($promoterId) {
-            $promoters = Promoter::where('id', $promoterId)->with('shops')->get();
+            $promoters = Promoter::where('id', $promoterId)->with('shops.user')->get();
         } else {
-            $promoters = Promoter::with('shops')->get();
+            $promoters = Promoter::with('shops.user')->get();
         }
 
         $promoters = $this->_formatPromoters($promoters, $startDay, $endDay);
@@ -239,25 +239,44 @@ class PromoterController extends Controller
      */
     private function _formatPromoters($promoters, $startDay, $endDay)
     {
+        $endDay =(new Carbon($endDay))->endOfDay();
         $userType = cons('user.type');
         $promoters->each(function ($promoter) use ($startDay, $endDay, $userType) {
+            $supplierShopRegisterCount = 0;
             $wholesalerShopRegisterCount = 0;
             $retailerShopRegisterCount = 0;
 
+            $supplierUserActiveCount = 0;
+            $wholesalerUserActiveCount = 0;
+            $retailerUserActiveCount = 0;
 
             foreach ($promoter->shops as $shop) {
                 if ($shop->created_at >= $startDay && $shop->created_at <= $endDay) {
                     if ($shop->user_type == $userType['retailer']) {
                         $retailerShopRegisterCount++;
-                    } else {
+                    } elseif ($shop->user_type == $userType['wholesaler']) {
                         $wholesalerShopRegisterCount++;
+                    }else {
+                        $supplierShopRegisterCount++;
+                    }
+                }
+                $user = $shop->user;
+                if ($user->last_login_at >= $startDay && $user->last_login_at <= $endDay) {
+                    if ($user->type == $userType['retailer']) {
+                        $retailerUserActiveCount++;
+                    } elseif ($user->type == $userType['wholesaler']) {
+                        $wholesalerUserActiveCount++;
+                    }else {
+                        $supplierUserActiveCount++;
                     }
                 }
             }
+            $promoter->supplierShopRegisterCount = $supplierShopRegisterCount;
             $promoter->wholesalerShopRegisterCount = $wholesalerShopRegisterCount;
-
-            $promoter->retailerShopRegisterCount = $wholesalerShopRegisterCount;
-
+            $promoter->retailerShopRegisterCount = $retailerShopRegisterCount;
+            $promoter->supplierUserActiveCount = $supplierUserActiveCount;
+            $promoter->wholesalerUserActiveCount = $wholesalerUserActiveCount;
+            $promoter->retailerUserActiveCount = $retailerUserActiveCount;
 
             //总用户数  直接 $promoter->shops->count();
 
@@ -298,7 +317,6 @@ class PromoterController extends Controller
             }
 
             $promoter->shops = json_encode(array_values($shops));
-
 
             //成单数
             $promoter->finishedOrdersCount = $finishedOrders->count();

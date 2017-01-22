@@ -34,6 +34,8 @@ class BusinessService extends BaseService
             'order' => $salesmanVisitOrder
         ];
 
+        $salesmanVisitOrder->load(['mortgageGoods.goods', 'orderGoods.goods']);
+
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
             $data['displayFee'] = $salesmanVisitOrder->displayFees;
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
@@ -153,7 +155,7 @@ class BusinessService extends BaseService
             $visitData[$customerId]['contact_information'] = $customer->contact_information;
             $visitData[$customerId]['shipping_address_name'] = $customer->shipping_address_name;
             $visitData[$customerId]['business_address_name'] = $customer->business_address_name;
-            $visitData[$customerId]['visit_count'] = isset($visitData[$customerId]['visit_count'])?$visitData[$customerId]['visit_count']+1:1;
+            $visitData[$customerId]['visit_count'] = isset($visitData[$customerId]['visit_count']) ? $visitData[$customerId]['visit_count'] + 1 : 1;
 
 
             //订单货单
@@ -325,11 +327,12 @@ class BusinessService extends BaseService
         foreach ($orders as $order) {
             if ($goods = $order->mortgageGoods) {
                 foreach ($goods as $good) {
+                    $item = $good->goods;
                     $mortgagesGoods->push([
                         'id' => $good->id,
                         'name' => $good->goods_name,
-                        'image_url' => $good->goods->image_url,
-                        'promotion_info' => $good->goods->promotion_info,
+                        'image_url' => $item ? $item->image_url : asset('images/goods_default.png'),
+                        'promotion_info' => $item ? $item->promotion_info : '',
                         'pieces' => $good->pieces,
                         'num' => (int)$good->pivot->used,
                         'month' => $good->pivot->month,
@@ -550,6 +553,7 @@ class BusinessService extends BaseService
 
     /**
      * 查询可设置陈列费
+     *
      * @param \App\Models\SalesmanCustomer $customer
      * @param $month
      * @param $order_id
@@ -572,28 +576,35 @@ class BusinessService extends BaseService
 
     /**
      * 查询可设置陈列商品
+     *
      * @param \App\Models\SalesmanVisitOrder $order
      * @param $month
      * @param $goods_id
      * @return array
      */
-    public function canSetMortgageGoods(SalesmanVisitOrder $order, $month,$goods_id){
+    public function canSetMortgageGoods(SalesmanVisitOrder $order, $month, $goods_id)
+    {
         $customer = $order->salesmanCustomer;
         $surplus = SalesmanCustomerDisplaySurplus::where([
             'salesman_customer_id' => $customer->id,
-            'month' =>$month,
+            'month' => $month,
             'mortgage_goods_id' => $goods_id
         ])->first();
         //剩余数量
         $customerSurplus = is_null($surplus) ? $customer->mortgageGoods()->where('mortgage_goods.id',
-           $goods_id)->withTrashed()->first()->pivot->total : $surplus->surplus;
+            $goods_id)->withTrashed()->first()->pivot->total : $surplus->surplus;
         //所有未审核数量
         $nonConfirm = $this->nonConfirmDisplay($customer, $month,
             $goods_id);
         //本订单数量
-        $orderUsed = SalesmanCustomerDisplayList::where(['salesman_visit_order_id'=>$order->id,'mortgage_goods_id'=>$goods_id,'month'=>$month,'salesman_customer_id'=>$customer->id])->first()->used;
+        $orderUsed = SalesmanCustomerDisplayList::where([
+            'salesman_visit_order_id' => $order->id,
+            'mortgage_goods_id' => $goods_id,
+            'month' => $month,
+            'salesman_customer_id' => $customer->id
+        ])->first()->used;
         //其他订单未审核数量(所有未审核-本订单数量)
-        $nonConfirm = bcsub($nonConfirm,$orderUsed,2);
+        $nonConfirm = bcsub($nonConfirm, $orderUsed, 2);
         return ['surplus' => $customerSurplus, 'nonConfirm' => $nonConfirm];
 
     }

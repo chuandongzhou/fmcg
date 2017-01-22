@@ -116,7 +116,7 @@
 
         </div>
         <div class="text-right">
-            <ul class="pagination management-pagination">
+            <ul class="pagination">
             </ul>
         </div>
     </div>
@@ -130,7 +130,7 @@
     @parent
     <script type="text/javascript">
         formSubmitByGet();
-        tablePage($('.shop-group'), 10, $('.pagination'));
+        tablePage($('.shop-group'), $('.pagination'));
         $("[data-toggle='popover']").popover();
     </script>
 @stop

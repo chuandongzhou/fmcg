@@ -11,7 +11,9 @@
                 <div class="modal-body">
                     <ul class="modal-list">
                         <li><span>时间 :</span> {{ $beginDay }} 至 {{ $endDay }} </li>
-                        <li><span>区域 :</span> 成都</li>
+                        <li>
+                            <span>区域 :</span>
+                            <span class="address-name"><i class="fa fa-spinner fa-pulse"></i></span></li>
                         <li>
                             <span>商品ID :</span>
                             <span class="goods-id"><i class="fa fa-spinner fa-pulse"></i></span>
@@ -46,12 +48,15 @@
         $(function () {
             var goodsIdPanel = $('.goods-id'),
                 barcodePanel = $('.bar-code'),
-                goodsNamePanel = $('.goods-name');
+                goodsNamePanel = $('.goods-name'),
+                addressAddressPanel = $('.address-name');
             $('#goodsSalesModal').on('shown.bs.modal', function (e) {
                 var parent = $(e.relatedTarget),
                     id = parent.data('id'),
                     beginDay = parent.data('beginDay'),
-                    endDay = parent.data('endDay'), obj = $('#myChart')[0];
+                    endDay = parent.data('endDay'), obj = $('#myChart')[0],
+                    provinceId = parent.data('provinceId'),
+                    cityId = parent.data('cityId');
                 $.get(site.url('admin/operation-data/goods-sales-map/' + id), {
                     begin_day: beginDay,
                     end_day: endDay
@@ -62,6 +67,7 @@
                     goodsIdPanel.html(goods.id);
                     barcodePanel.html(goods.bar_code);
                     goodsNamePanel.html(goods.name);
+                    addressAddressPanel.html(getAddressName(provinceId, cityId));
                     echartsSet(obj, '商品销售金额统计', legend, data.dates, [
                         {
                             name: legend[0],
@@ -77,5 +83,24 @@
                 goodsNamePanel.html('<i class="fa fa-spinner fa-pulse"></i>');
             })
         })
+
+        /**
+         * 获取地址名
+         * @param provinceId
+         * @param cityId
+         * @returns {string}
+         */
+        function getAddressName(provinceId, cityId) {
+            var address = '';
+            if (provinceId) {
+                address += addressData[provinceId][0];
+                if (cityId) {
+                    address += addressData[cityId][0];
+                }
+            } else {
+                address = '无';
+            }
+            return address
+        }
     </script>
 @stop

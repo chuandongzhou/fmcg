@@ -9,13 +9,17 @@
         <a href="javascript:" class="active">销售排行</a>
         <a href="{{ url('admin/operation-data/goods-sales') }}">商品销售详情</a>
     </div>
-    <div class="content-wrap">
+    <div class="content-wrap sales-details">
         <form class="form-horizontal" action="{{ url('admin/operation-data/sales-rank') }}" method="get"
               autocomplete="off">
-            <a href="{{ url('admin/operation-data/sales-rank?t=today') }}" class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=yesterday') }}" class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=week') }}" class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
-            <a href="{{ url('admin/operation-data/sales-rank?t=month') }}" class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=today') }}"
+               class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=yesterday') }}"
+               class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=week') }}"
+               class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
+            <a href="{{ url('admin/operation-data/sales-rank?t=month') }}"
+               class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
             <input type="text" name="begin_day" class="enter-control date datetimepicker" data-format="YYYY-MM-DD"
                    value="{{ $beginDay }}">
             <label class="control-label">-</label>
@@ -30,6 +34,15 @@
                     class="address-district useless-control hide control"> </select>
             <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
                     class="address-street useless-control hide control"> </select>
+
+            <select name="type" class="control">
+                <option value="">用户类型</option>
+                @foreach(cons()->valueLang('user.type') as $key => $item)
+                    @if($key != cons('user.type.retailer'))
+                        <option value="{{ $key }}" {{ array_get($data, 'type') == $key ? 'selected' : '' }}>{{ $item }}</option>
+                    @endif
+                @endforeach
+            </select>
 
             <input type="submit" class="btn btn-blue control search-by-get" value="查询"/>
             <a href="{{ url('admin/operation-data/sales-rank-export?' . http_build_query($data)) }}"

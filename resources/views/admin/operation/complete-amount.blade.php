@@ -112,6 +112,6 @@
     @parent
     <script type="text/javascript">
         formSubmitByGet();
-        tablePage($('.shop-group'), 10, $('.pagination'));
+        tablePage($('.shop-group'), $('.pagination'));
     </script>
 @stop

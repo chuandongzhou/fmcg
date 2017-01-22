@@ -98,9 +98,9 @@
                     </div>
                     <div class="col-xs-12 padding-clear">
                         <div class="padding-clear left-menu-wrap pull-left">
-                            <a href="{{  !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->url : 'javascript:' }}">
+                            <a href="{{  !is_null($column->leftAdverts)?$column->leftAdverts->url : 'javascript:' }}">
                                 <img class="commodity-img lazy"
-                                     data-original="{{ !$column->leftAdverts->isEmpty()?$column->leftAdverts[0]->image_url:asset('images/advert/left-category.jpg') }}">
+                                     data-original="{{ !is_null($column->leftAdverts)?$column->leftAdverts->image_url:asset('images/advert/left-category.jpg') }}">
                             </a>
 
                             <ul class="secondary-menu">

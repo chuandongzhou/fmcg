@@ -49,18 +49,18 @@
                     <td>{{ $activeUser ? array_sum($activeUser->active_user) : 0 }}</td>
                 </tr>
                 <tr>
-                    <td>历史最高注册数</td>
-                    <td>{{ $maxArray['max_supplier_reg_num'] ? $maxArray['max_supplier_reg_num']->supplier_reg_num . " ({$maxArray['max_supplier_reg_num']->created_at})" :0  }}</td>
-                    <td>{{ $maxArray['max_wholesaler_reg_num'] ? $maxArray['max_wholesaler_reg_num']->wholesaler_reg_num . " ({$maxArray['max_wholesaler_reg_num']->created_at})" :0  }}</td>
-                    <td>{{ $maxArray['max_retailer_reg_num'] ? $maxArray['max_retailer_reg_num']->retailer_reg_num ." ({$maxArray['max_retailer_reg_num']->created_at})" :0  }}</td>
+                    <td>下单用户数</td>
+                    <td> - - </td>
+                    <td> {{ $orderGroup['wholesalerOrders']->pluck('user_id')->toBase()->unique()->count() }}</td>
+                    <td> {{ $orderGroup['retailerOrders']->pluck('user_id')->toBase()->unique()->count() }}</td>
                     <td> - - </td>
                 </tr>
 
                 <tr>
-                    <td>历史最高登录数</td>
-                    <td>{{ $maxArray['max_supplier_login_num'] ? $maxArray['max_supplier_login_num']->supplier_login_num . " ({$maxArray['max_supplier_login_num']->created_at})" :0  }}</td>
-                    <td>{{ $maxArray['max_wholesaler_login_num'] ? $maxArray['max_wholesaler_login_num']->wholesaler_login_num . " ({$maxArray['max_wholesaler_login_num']->created_at})" :0  }}</td>
-                    <td>{{ $maxArray['max_retailer_login_num'] ? $maxArray['max_retailer_login_num']->retailer_login_num ." ({$maxArray['max_retailer_login_num']->created_at})" :0  }}</td>
+                    <td>成单用户数</td>
+                    <td> - - </td>
+                    <td>{{ $completeOrderGroup['wholesalerOrders']->pluck('user_id')->toBase()->unique()->count() }}</td>
+                    <td>{{ $completeOrderGroup['retailerOrders']->pluck('user_id')->toBase()->unique()->count() }}</td>
                     <td> - - </td>
                 </tr>
             </table>

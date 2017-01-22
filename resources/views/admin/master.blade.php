@@ -46,7 +46,6 @@
             <div class="col-sm-2">
                 <div class="row left-container">
                     <div class="panel-group text-center" id="accordion">
-
                         @foreach($nodes as $key => $node)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -65,10 +64,9 @@
                                                 @foreach($node['child'] as $childNode)
                                                     @if($childNode['active'])
                                                         <li>
-                                                            <a href="{{ url($childNode['url']) }}">{{ $childNode['name'] }}</a>
+                                                            <a class="{{ path_active($childNode['url']) }}" href="{{ url($childNode['url']) }}">{{ $childNode['name'] }}</a>
                                                             @if($childNode['manage_url'])
-                                                                <a href="{{ url($childNode['manage_url']) }}"
-                                                                   class="manger">管理</a>
+                                                                <a class="manger {{ path_active($childNode['manage_url']) }}"  href="{{ url($childNode['manage_url']) }}">管理</a>
                                                             @endif
                                                         </li>
                                                     @endif

@@ -7,14 +7,12 @@ use App\Models\Goods;
 use App\Models\Order;
 use App\Models\OrderGoods;
 use App\Models\Shop;
-use App\Models\User;
-use App\Services\CategoryService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\PhpWord;
-
 
 class OperationDataController extends Controller
 {
@@ -26,8 +24,9 @@ class OperationDataController extends Controller
      */
     public function user(Request $request)
     {
-        $beginDay = $request->input('begin_day', Carbon::now()->format('Y-m-d'));
-        $endDay = $request->input('end_day', $beginDay);
+        $now = Carbon::now();
+        $beginDay = $request->input('begin_day', $now->copy()->startOfMonth()->format('Y-m-d'));
+        $endDay = $request->input('end_day', $now->format('Y-m-d'));
 
         //用户数据
         return view('admin.operation.user', $this->_getUserData($beginDay, $endDay));
@@ -42,16 +41,11 @@ class OperationDataController extends Controller
     {
         $beginDay = $request->input('begin_day', Carbon::now()->format('Y-m-d'));
         $endDay = $request->input('end_day', $beginDay);
-        $data = $this->_getUserData($beginDay, $endDay);
-
-        Excel::create('用户数据统计', function ($excel) use ($data) {
-            $excel->sheet('Excel sheet', function ($sheet) use ($data) {
-                $userTypes = $data['userTypes'];
-                $dataStatistics = $data['dataStatistics'];
-                $activeUser = $data['activeUser'];
-                $maxArray = $data['maxArray'];
 
 
+        Excel::create('用户数据统计', function ($excel) use ($beginDay, $endDay) {
+            $excel->sheet('Excel sheet', function ($sheet) use ($beginDay, $endDay) {
+                extract($this->_getUserData($beginDay, $endDay));
                 $sheet->setWidth(array(
                     'A' => 20,
                     'B' => 20,
@@ -80,17 +74,17 @@ class OperationDataController extends Controller
                     $activeUser ? array_sum($activeUser->active_user) : 0
                 ]);
                 $sheet->row(4, [
-                    '历史最高注册数',
-                    $maxArray['max_supplier_reg_num'] ? $maxArray['max_supplier_reg_num']->supplier_reg_num . " ({$maxArray['max_supplier_reg_num']->created_at})" : 0,
-                    $maxArray['max_wholesaler_reg_num'] ? $maxArray['max_wholesaler_reg_num']->wholesaler_reg_num . " ({$maxArray['max_wholesaler_reg_num']->created_at})" : 0,
-                    $maxArray['max_retailer_reg_num'] ? $maxArray['max_retailer_reg_num']->retailer_reg_num . " ({$maxArray['max_retailer_reg_num']->created_at})" : 0,
+                    '下单用户数',
+                    ' - - ',
+                    $orderGroup['wholesalerOrders']->pluck('user_id')->toBase()->unique()->count(),
+                    $orderGroup['retailerOrders']->pluck('user_id')->toBase()->unique()->count(),
                     ' - - '
                 ]);
                 $sheet->row(5, [
-                    '历史最高登录数',
-                    $maxArray['max_supplier_login_num'] ? $maxArray['max_supplier_login_num']->supplier_login_num . " ({$maxArray['max_supplier_login_num']->created_at})" : 0,
-                    $maxArray['max_wholesaler_login_num'] ? $maxArray['max_wholesaler_login_num']->wholesaler_login_num . " ({$maxArray['max_wholesaler_login_num']->created_at})" : 0,
-                    $maxArray['max_retailer_login_num'] ? $maxArray['max_retailer_login_num']->retailer_login_num . " ({$maxArray['max_retailer_login_num']->created_at})" : 0,
+                    '成单用户数',
+                    ' - - ',
+                    $completeOrderGroup['wholesalerOrders']->pluck('user_id')->toBase()->unique()->count(),
+                    $completeOrderGroup['retailerOrders']->pluck('user_id')->toBase()->unique()->count(),
                     ' - - '
                 ]);
             });
@@ -111,7 +105,7 @@ class OperationDataController extends Controller
 
         $beginDay = $date['beginDay'];
         $dayEnd = (new Carbon($date['endDay']))->endOfDay();
-        $with = ['user', 'salesmanVisitOrder.salesmanCustomer', 'systemTradeInfo'];
+        $with = ['user', 'salesmanVisitOrder.salesmanCustomer', 'systemTradeInfo', 'shop'];
 
         // 下单统计
         $orders = Order::whereBetween('created_at', [$beginDay, $dayEnd])
@@ -123,22 +117,13 @@ class OperationDataController extends Controller
                 $order->setAppends(['user_type_name']);
             });
 
-        //成单统计
-        $completeOrders = Order::whereBetween('finished_at', [$beginDay, $dayEnd])
-            ->with(array_merge($with, ['coupon']))
-            ->where('is_cancel', cons('order.is_cancel.off'))
-            ->get();
-
-        $result = $this->_getOrdersData($orders, $completeOrders);
-
-
-        return view('admin.operation.financial', [
+        $data = array_merge([
             'beginDay' => $date['beginDay'],
             'endDay' => $date['endDay'],
-            'retailer' => $result['retailer'],
-            'wholesaler' => $result['wholesaler'],
             'data' => $data
-        ]);
+        ], $this->_getFinancial($orders));
+
+        return view('admin.operation.financial', $data);
     }
 
     /**
@@ -164,69 +149,241 @@ class OperationDataController extends Controller
                 $order->setAppends(['user_type_name']);
             });
 
-        //成单统计
-        $completeOrders = Order::whereBetween('finished_at', [$beginDay, $dayEnd])
-            ->with(array_merge($with, ['coupon']))
-            ->where('is_cancel', cons('order.is_cancel.off'))
-            ->get();
-
-        $result = $this->_getOrdersData($orders, $completeOrders);
-        $retailer = $result['retailer'];
-        $wholesaler = $result['wholesaler'];
+        extract($this->_getFinancial($orders));
 
         // Creating the new document...
         $phpWord = new PhpWord();
-        $cellAlignCenter = array('align' => 'center');
+        $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
+        $cellRowContinue = array('vMerge' => 'continue');
 
-        $table = $this->_getTable($phpWord, ['名称' => 3000, '终端商' => 3000, '批发商' => 3000, '总计' => 3000]);
-        $table->addRow();
-        $table->addCell()->addText('下单笔数', null, $cellAlignCenter);
-        $table->addCell()->addText($retailer['orderCount'], null, $cellAlignCenter);
-        $table->addCell()->addText($wholesaler['orderCount'], null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailer['orderCount'], $wholesaler['orderCount']), null, $cellAlignCenter);
+        $titles = [
+            '' => 1000,
+            '渠道' => 1200,
+            '下单总笔数' => 1800,
+            '下单总金额' => 1800,
+            '需支付金额' => 1600,
+            '已完成支付金额' => 2200,
+            '在线支付金额' => 2200,
+            '现金支付金额' => 2200,
+            '未完成支付金额' => 2200,
+        ];
+        $table = $this->_getTable($phpWord, $titles);
 
-        $table->addRow();
-        $table->addCell()->addText('下单金额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderAmount'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderAmount'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderAmount'], $wholesaler['orderAmount'], 2), 2),
-            null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('线上支付总金额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderPaidByOnline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderPaidByOnline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderPaidByOnline'], $wholesaler['orderPaidByOnline'],
-            2), 2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('线上完成总额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderCompleteByOnline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderCompleteByOnline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderCompleteByOnline'],
-            $wholesaler['orderCompleteByOnline'], 2), 2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('线下支付总金额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderPaidByOffline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderPaidByOffline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderPaidByOffline'],
-            $wholesaler['orderPaidByOffline'], 2), 2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('线下完成总额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderCompleteByOffline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderCompleteByOffline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderCompleteByOffline'],
-            $wholesaler['orderCompleteByOffline'], 2), 2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('线下POS机完成总额', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailer['orderCompleteByPos'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesaler['orderCompleteByPos'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format(bcadd($retailer['orderCompleteByPos'],
-            $wholesaler['orderCompleteByPos'], 2), 2), null, $cellAlignCenter);
-
+        //买家金融统计数据
+        $data = [
+            //终端商
+            [
+                '终端商' => $cellRowSpan,
+                '自主订单',
+                number_format($retailerOwnerCount = $retailer['owner']['count']),
+                number_format($retailerOwnerAmount = $retailer['owner']['amount'], 2),
+                number_format($retailerOwnerAfterRebates = $retailer['owner']['afterRebates'], 2),
+                number_format($retailerOwnerCompleteAmount = $retailer['owner']['completeAmount'], 2),
+                number_format($retailerOwnerCompleteAmountByOnline = $retailer['owner']['completeAmountByOnline'], 2),
+                number_format($retailerOwnerCompleteAmountByOffline = bcsub($retailerOwnerCompleteAmount,
+                    $retailerOwnerCompleteAmountByOnline, 2), 2),
+                number_format($retailerOwnerNotAmount = bcsub($retailerOwnerAfterRebates, $retailerOwnerCompleteAmount,
+                    2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '业务订单',
+                number_format($retailerBusinessCount = $retailer['business']['count']),
+                number_format($retailerBusinessAmount = $retailer['business']['amount'], 2),
+                number_format($retailerBusinessAfterRebates = $retailer['business']['afterRebates'], 2),
+                number_format($retailerBusinessCompleteAmount = $retailer['business']['completeAmount'], 2),
+                number_format($retailerBusinessCompleteAmountByOnline = $retailer['business']['completeAmountByOnline'],
+                    2),
+                number_format($retailerBusinessCompleteAmountByOffline = bcsub($retailerBusinessCompleteAmount,
+                    $retailerBusinessCompleteAmountByOnline, 2), 2),
+                number_format($retailerBusinessNotAmount = bcsub($retailerBusinessAfterRebates,
+                    $retailerBusinessCompleteAmount, 2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '自提订单',
+                number_format($retailerPickUpCount = $retailer['pickUp']['count']),
+                number_format($retailerPickUpAmount = $retailer['pickUp']['amount'], 2),
+                number_format($retailerPickUpAfterRebates = $retailer['pickUp']['afterRebates'], 2),
+                number_format($retailerPickUpCompleteAmount = $retailer['pickUp']['completeAmount'], 2),
+                number_format($retailerPickUpCompleteAmountByOnline = $retailer['pickUp']['completeAmountByOnline'], 2),
+                number_format($retailerPickUpCompleteAmountByOffline = bcsub($retailerPickUpCompleteAmount,
+                    $retailerPickUpCompleteAmountByOnline, 2), 2),
+                number_format($retailerPickUpNotAmount = bcsub($retailerPickUpAfterRebates,
+                    $retailerPickUpCompleteAmount, 2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '总计',
+                number_format($retailerCount = $retailerOwnerCount + $retailerBusinessCount + $retailerPickUpCount),
+                number_format($retailerAmount = $retailerOwnerAmount + $retailerBusinessAmount + $retailerPickUpAmount,
+                    2),
+                number_format($retailerAfterRebates = $retailerOwnerAfterRebates + $retailerBusinessAfterRebates + $retailerPickUpAfterRebates,
+                    2),
+                number_format($retailerCompleteAmount = $retailerOwnerCompleteAmount + $retailerBusinessCompleteAmount + $retailerPickUpCompleteAmount,
+                    2),
+                number_format($retailerCompleteAmountByOnline = $retailerOwnerCompleteAmountByOnline + $retailerPickUpCompleteAmountByOnline + $retailerPickUpCompleteAmountByOnline,
+                    2),
+                number_format($retailerCompleteAmountByOffline = $retailerOwnerCompleteAmountByOffline + $retailerBusinessCompleteAmountByOffline + $retailerPickUpCompleteAmountByOffline,
+                    2),
+                number_format($retailerCompleteNotAmount = $retailerOwnerNotAmount + $retailerBusinessNotAmount + $retailerPickUpNotAmount,
+                    2),
+            ],
+            //批发商
+            [
+                '批发' => $cellRowSpan,
+                '自主订单',
+                number_format($wholesalerOwnerCount = $wholesaler['owner']['count']),
+                number_format($wholesalerOwnerAmount = $wholesaler['owner']['amount'], 2),
+                number_format($wholesalerOwnerAfterRebates = $wholesaler['owner']['afterRebates'], 2),
+                number_format($wholesalerOwnerCompleteAmount = $wholesaler['owner']['completeAmount'], 2),
+                number_format($wholesalerOwnerCompleteAmountByOnline = $wholesaler['owner']['completeAmountByOnline'],
+                    2),
+                number_format($wholesalerOwnerCompleteAmountByOffline = bcsub($wholesalerOwnerCompleteAmount,
+                    $wholesalerOwnerCompleteAmountByOnline, 2), 2),
+                number_format($wholesalerOwnerNotAmount = bcsub($wholesalerOwnerAfterRebates,
+                    $wholesalerOwnerCompleteAmount, 2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '业务订单',
+                number_format($wholesalerBusinessCount = $wholesaler['business']['count']),
+                number_format($wholesalerBusinessAmount = $wholesaler['business']['amount'], 2),
+                number_format($wholesalerBusinessAfterRebates = $wholesaler['business']['afterRebates'], 2),
+                number_format($wholesalerBusinessCompleteAmount = $wholesaler['business']['completeAmount'], 2),
+                number_format($wholesalerBusinessCompleteAmountByOnline = $wholesaler['business']['completeAmountByOnline'],
+                    2),
+                number_format($wholesalerBusinessCompleteAmountByOffline = bcsub($wholesalerBusinessCompleteAmount,
+                    $wholesalerBusinessCompleteAmountByOnline, 2), 2),
+                number_format($wholesalerBusinessNotAmount = bcsub($wholesalerBusinessAfterRebates,
+                    $wholesalerBusinessCompleteAmount, 2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '自提订单',
+                number_format($wholesalerPickUpCount = $wholesaler['pickUp']['count']),
+                number_format($wholesalerPickUpAmount = $wholesaler['pickUp']['amount'], 2),
+                number_format($wholesalerPickUpAfterRebates = $wholesaler['pickUp']['afterRebates'], 2),
+                number_format($wholesalerPickUpCompleteAmount = $wholesaler['pickUp']['completeAmount'], 2),
+                number_format($wholesalerPickUpCompleteAmountByOnline = $wholesaler['pickUp']['completeAmountByOnline'],
+                    2),
+                number_format($wholesalerPickUpCompleteAmountByOffline = bcsub($wholesalerPickUpCompleteAmount,
+                    $wholesalerPickUpCompleteAmountByOnline, 2), 2),
+                number_format($wholesalerPickUpNotAmount = bcsub($wholesalerPickUpAfterRebates,
+                    $wholesalerPickUpCompleteAmount, 2), 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '总计',
+                number_format($wholesalerCount = $wholesalerOwnerCount + $wholesalerBusinessCount + $wholesalerPickUpCount),
+                number_format($wholesalerAmount = $wholesalerOwnerAmount + $wholesalerBusinessAmount + $wholesalerPickUpAmount,
+                    2),
+                number_format($wholesalerAfterRebates = $wholesalerOwnerAfterRebates + $wholesalerBusinessAfterRebates + $wholesalerPickUpAfterRebates,
+                    2),
+                number_format($wholesalerCompleteAmount = $wholesalerOwnerCompleteAmount + $wholesalerBusinessCompleteAmount + $wholesalerPickUpCompleteAmount,
+                    2),
+                number_format($wholesalerCompleteAmountByOnline = $wholesalerOwnerCompleteAmountByOnline + $wholesalerPickUpCompleteAmountByOnline + $wholesalerPickUpCompleteAmountByOnline,
+                    2),
+                number_format($wholesalerCompleteAmountByOffline = $wholesalerOwnerCompleteAmountByOffline + $wholesalerBusinessCompleteAmountByOffline + $wholesalerPickUpCompleteAmountByOffline,
+                    2),
+                number_format($wholesalerCompleteNotAmount = $wholesalerOwnerNotAmount + $wholesalerBusinessNotAmount + $wholesalerPickUpNotAmount,
+                    2),
+            ],
+            //总计
+            [
+                '合计' => ['valign' => 'center', 'gridSpan' => 2],
+                number_format($retailerCount + $wholesalerCount),
+                number_format($retailerAmount + $wholesalerAmount, 2),
+                number_format($retailerAfterRebates + $wholesalerAfterRebates, 2),
+                number_format($retailerCompleteAmount + $wholesalerCompleteAmount, 2),
+                number_format($retailerCompleteAmountByOnline + $wholesalerCompleteAmountByOnline, 2),
+                number_format($retailerCompleteAmountByOffline + $wholesalerCompleteAmountByOffline, 2),
+                number_format($retailerCompleteNotAmount + $wholesalerCompleteNotAmount, 2)
+            ]
+        ];
+        $this->_fillData($table, $data);
+        $sellerTitles = [
+            '' => 1000,
+            '渠道' => 1000,
+            '已完成总笔数' => 1800,
+            '已完成总金额' => 1800,
+            '在线支付金额' => 1800,
+            '现金支付金额' => 1800,
+            '未完成总金额' => 2200,
+            '未收款总金额' => 2200,
+            '未配送总金额' => 2200,
+        ];
+        $sellerTable = $this->_getTable($phpWord, $sellerTitles);
+        //卖家金融统计数据
+        $sellerData = [
+            [
+                '供应商' => $cellRowSpan,
+                '终端商',
+                number_format($supplierByRetailerCompleteCount = $supplierByRetailer['completeCount']),
+                number_format($supplierByRetailerCompleteAmount = $supplierByRetailer['completeAmount'], 2),
+                number_format($supplierByRetailerCompleteAmountByOnlinePay = $supplierByRetailer['completeAmountByOnlinePay'],
+                    2),
+                number_format($supplierByRetailerCompleteAmountByOffPay = $supplierByRetailerCompleteAmount - $supplierByRetailerCompleteAmountByOnlinePay,
+                    2),
+                number_format($supplierByRetailerNotCompleteAmount = $supplierByRetailer['notCompleteAmount'], 2),
+                number_format($supplierByRetailerNotReceiveAmount = $supplierByRetailer['notReceiveAmount'], 2),
+                number_format($supplierByRetailerNotDeliveryAmount = $supplierByRetailer['notDeliveryAmount'], 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '批发商',
+                number_format($supplierByWholesalerCompleteCount = $supplierByWholesaler['completeCount']),
+                number_format($supplierByWholesalerCompleteAmount = $supplierByWholesaler['completeAmount'], 2),
+                number_format($supplierByWholesalerCompleteAmountByOnlinePay = $supplierByWholesaler['completeAmountByOnlinePay'],
+                    2),
+                number_format($supplierByWholesalerCompleteAmountByOffPay = $supplierByWholesalerCompleteAmount - $supplierByWholesalerCompleteAmountByOnlinePay,
+                    2),
+                number_format($supplierByWholesalerNotCompleteAmount = $supplierByWholesaler['notCompleteAmount'], 2),
+                number_format($supplierByWholesalerNotReceiveAmount = $supplierByWholesaler['notReceiveAmount'], 2),
+                number_format($supplierByWholesalerNotDeliveryAmount = $supplierByWholesaler['notDeliveryAmount'], 2),
+            ],
+            [
+                '' => $cellRowContinue,
+                '总计',
+                number_format($supplierCount = $supplierByRetailerCompleteCount + $supplierByWholesalerCompleteCount),
+                number_format($supplierAmount = $supplierByRetailerCompleteAmount + $supplierByWholesalerCompleteAmount,
+                    2),
+                number_format($supplierOnlineAmount = $supplierByRetailerCompleteAmountByOnlinePay + $supplierByWholesalerCompleteAmountByOnlinePay,
+                    2),
+                number_format($supplierOfflineAmount = $supplierByRetailerCompleteAmountByOffPay + $supplierByWholesalerCompleteAmountByOffPay,
+                    2),
+                number_format($supplierNotCompleteAmount = $supplierByRetailerNotCompleteAmount + $supplierByWholesalerNotCompleteAmount,
+                    2),
+                number_format($supplierNotReceiveAmount = $supplierByRetailerNotReceiveAmount + $supplierByWholesalerNotReceiveAmount,
+                    2),
+                number_format($supplierNotDeliveryAmount = $supplierByRetailerNotDeliveryAmount + $supplierByWholesalerNotDeliveryAmount,
+                    2),
+            ],
+            [
+                '批发商',
+                '终端商',
+                number_format($wholesalerByRetailerCompleteCount = $wholesalerByRetailer['completeCount']),
+                number_format($wholesalerByRetailerCompleteAmount = $wholesalerByRetailer['completeAmount'], 2),
+                number_format($wholesalerByRetailerCompleteAmountByOnlinePay = $wholesalerByRetailer['completeAmountByOnlinePay'],
+                    2),
+                number_format($wholesalerByRetailerCompleteAmountByOffPay = $wholesalerByRetailerCompleteAmount - $wholesalerByRetailerCompleteAmountByOnlinePay,
+                    2),
+                number_format($wholesalerByRetailerNotCompleteAmount = $wholesalerByRetailer['notCompleteAmount'], 2),
+                number_format($wholesalerByRetailerNotReceiveAmount = $wholesalerByRetailer['notReceiveAmount'], 2),
+                number_format($wholesalerByRetailerNotDeliveryAmount = $wholesalerByRetailer['notDeliveryAmount'], 2),
+            ],
+            [
+                '合计' => ['valign' => 'center', 'gridSpan' => 2],
+                number_format($supplierCount + $wholesalerByRetailerCompleteCount),
+                number_format($supplierAmount + $wholesalerByRetailerCompleteAmount, 2),
+                number_format($supplierOnlineAmount + $wholesalerByRetailerCompleteAmountByOnlinePay, 2),
+                number_format($supplierOfflineAmount + $wholesalerByRetailerCompleteAmountByOffPay, 2),
+                number_format($supplierNotCompleteAmount + $wholesalerByRetailerNotCompleteAmount, 2),
+                number_format($supplierNotReceiveAmount + $wholesalerByRetailerNotReceiveAmount, 2),
+                number_format($supplierNotDeliveryAmount + $wholesalerByRetailerNotDeliveryAmount, 2),
+            ]
+        ];
+        $this->_fillData($sellerTable, $sellerData);
         $name = $beginDay . '至' . $endDay . '金融数据统计.docx';
         $phpWord->save($name, 'Word2007', true);
     }
@@ -250,6 +407,7 @@ class OperationDataController extends Controller
         // 下单统计
         $orders = Order::whereBetween('created_at', [$beginDay, $dayEnd])
             ->where('is_cancel', cons('order.is_cancel.off'))
+            ->where('status', '<>', cons('order.status.invalid'))
             ->ofUserShopName($name)
             ->with($with)
             ->get()
@@ -323,45 +481,42 @@ class OperationDataController extends Controller
 
         $table = $this->_getTable($phpWord, $titles);
 
-        $table->addRow();
-        $table->addCell()->addText('终端商', null, $cellAlignCenter);
-        $table->addCell()->addText($retailerOrderCount = $retailer['orderCount'], null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerOrderAmount = $retailer['orderAmount'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerOrderPaidByOnline = $retailer['orderPaidByOnline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerOrderPaidByOffline = $retailer['orderPaidByOffline'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText( number_format( $retailerOrderRebatesAmount = $retailer['orderRebatesAmount'],2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerPaidSuccess = $retailer['paidSuccess'], 2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerNotPaid = bcsub($retailerOrderRebatesAmount, $retailerPaidSuccess,
-            2), 2), null, $cellAlignCenter);
+        $data = [
+            [
+                '终端商',
+                $retailerOrderCount = $retailer['orderCount'],
+                number_format($retailerOrderAmount = $retailer['orderAmount'], 2),
+                number_format($retailerOrderPaidByOnline = $retailer['orderPaidByOnline'], 2),
+                number_format($retailerOrderPaidByOffline = $retailer['orderPaidByOffline'], 2),
+                number_format($retailerOrderRebatesAmount = $retailer['orderRebatesAmount'], 2),
+                number_format($retailerPaidSuccess = $retailer['paidSuccess'], 2),
+                number_format($retailerNotPaid = bcsub($retailerOrderRebatesAmount, $retailerPaidSuccess, 2), 2),
+            ],
+            [
+                '批发商',
+                $wholesalerOrderCount = $wholesaler['orderCount'],
+                number_format($wholesalerOrderAmount = $wholesaler['orderAmount'], 2),
+                number_format($wholesalerOrderPaidByOnline = $wholesaler['orderPaidByOnline'], 2),
+                number_format($wholesalerOrderPaidByOffline = $wholesaler['orderPaidByOffline'], 2),
 
-        $table->addRow();
-        $table->addCell()->addText('批发商', null, $cellAlignCenter);
-        $table->addCell()->addText($wholesalerOrderCount = $wholesaler['orderCount'], null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesalerOrderAmount = $wholesaler['orderAmount'], 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesalerOrderPaidByOnline = $wholesaler['orderPaidByOnline'], 2),
-            null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesalerOrderPaidByOffline = $wholesaler['orderPaidByOffline'], 2),
-            null, $cellAlignCenter);
+                number_format($wholesalerOrderRebatesAmount = $wholesaler['orderRebatesAmount'], 2),
 
-        $table->addCell()->addText(number_format( $wholesalerOrderRebatesAmount = $wholesaler['orderRebatesAmount'],2),
-            null, $cellAlignCenter);
+                number_format($wholesalerPaidSuccess = $wholesaler['paidSuccess'], 2),
+                number_format($wholesalerNotPaid = bcsub($wholesalerOrderRebatesAmount, $wholesalerPaidSuccess, 2), 2),
+            ],
+            [
+                '总计',
+                bcadd($retailerOrderCount, $wholesalerOrderCount),
+                bcadd($retailerOrderAmount, $wholesalerOrderAmount, 2),
+                bcadd($retailerOrderPaidByOnline, $wholesalerOrderPaidByOnline, 2),
+                bcadd($retailerOrderPaidByOffline, $wholesalerOrderPaidByOffline, 2),
+                bcadd($retailerOrderRebatesAmount, $wholesalerOrderRebatesAmount, 2),
+                bcadd($retailerPaidSuccess, $wholesalerPaidSuccess, 2),
+                bcadd($retailerNotPaid, $wholesalerNotPaid, 2),
+            ]
+        ];
 
-        $table->addCell()->addText(number_format($wholesalerPaidSuccess = $wholesaler['paidSuccess'], 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($wholesalerNotPaid = bcsub($wholesalerOrderRebatesAmount,
-            $wholesalerPaidSuccess, 2), 2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell()->addText('总计', null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerOrderCount, $wholesalerOrderCount), null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerOrderAmount, $wholesalerOrderAmount, 2), null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerOrderPaidByOnline, $wholesalerOrderPaidByOnline, 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerOrderPaidByOffline, $wholesalerOrderPaidByOffline, 2), null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerOrderRebatesAmount, $wholesalerOrderRebatesAmount, 2), null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerPaidSuccess, $wholesalerPaidSuccess, 2), null, $cellAlignCenter);
-        $table->addCell()->addText(bcadd($retailerNotPaid, $wholesalerNotPaid, 2), null, $cellAlignCenter);
+        $this->_fillData($table, $data);
 
         $titles1 = [
             '购买商名称' => 3000,
@@ -386,11 +541,13 @@ class OperationDataController extends Controller
                 $cellAlignCenter);
             $table1->addCell()->addText(number_format($offlinePay = array_get($shop, 'offLinePay', 0), 2), null,
                 $cellAlignCenter);
-            $table1->addCell()->addText(number_format($orderRebatesAmount = array_get($shop, 'orderRebatesAmount', 0), 2), null,
+            $table1->addCell()->addText(number_format($orderRebatesAmount = array_get($shop, 'orderRebatesAmount', 0),
+                2), null,
                 $cellAlignCenter);
             $table1->addCell()->addText(number_format($paySuccess = array_get($shop, 'paySuccess', 0), 2), null,
                 $cellAlignCenter);
-            $table1->addCell()->addText(number_format(bcsub($orderRebatesAmount, $paySuccess, 2), 2), null, $cellAlignCenter);
+            $table1->addCell()->addText(number_format(bcsub($orderRebatesAmount, $paySuccess, 2), 2), null,
+                $cellAlignCenter);
         }
 
         $name = $beginDay . '至' . $endDay . '下单金额统计.docx';
@@ -489,53 +646,42 @@ class OperationDataController extends Controller
 
         $table = $this->_getTable($phpWord, $titles);
 
-        $table->addRow();
-        $table->addCell(0, $cellRowSpan)->addText('供应商', null, $cellAlignCenter);
-        $table->addCell()->addText($supplierForWholesalerCount = $supplier['wholesaler']['count'] . '（批发）', null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerAmount = $supplier['wholesaler']['amount'],
-                2) . '（批发）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerOnline = $supplier['wholesaler']['onlineAmount'],
-                2) . '（批发）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerOffline = $supplier['wholesaler']['offAmount'],
-                2) . '（批发）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format( $supplierForWholesalerPos =  $supplier['wholesaler']['posAmount'],2) . '（批发）', null, $cellAlignCenter);
+        $data = [
+            [
+                '供应商' => $cellRowSpan,
+                $supplierForWholesalerCount = $supplier['wholesaler']['count'] . '（批发）',
+                number_format($supplierForWholesalerAmount = $supplier['wholesaler']['amount'], 2) . '（批发）',
+                number_format($supplierForWholesalerOnline = $supplier['wholesaler']['onlineAmount'], 2) . '（批发）',
+                number_format($supplierForWholesalerOffline = $supplier['wholesaler']['offAmount'], 2) . '（批发）',
+                number_format($supplierForWholesalerPos = $supplier['wholesaler']['posAmount'], 2) . '（批发）',
+            ],
+            [
+                '' => $cellRowContinue,
+                $supplierForRetailerCount = $supplier['retailer']['count'] . '（终端）',
+                number_format($supplierForRetailerAmount = $supplier['retailer']['amount'], 2) . '（终端）',
+                number_format($supplierForRetailerOnline = $supplier['retailer']['onlineAmount'], 2) . '（终端）',
+                number_format($supplierForRetailerOffline = $supplier['retailer']['offAmount'], 2) . '（终端）',
+                number_format($supplierForRetailerPos = $supplier['retailer']['posAmount'], 2) . '（终端）',
+            ],
+            [
+                '批发商',
+                $retailerOrderCount = $wholesaler['count'],
+                number_format($retailerOrderAmount = $wholesaler['amount'], 2),
+                number_format($retailerByOnline = $wholesaler['onlineAmount'], 2),
+                number_format($retailerByOffline = $wholesaler['offAmount'], 2),
+                number_format($retailerByPos = $wholesaler['posAmount'], 2),
+            ],
+            [
+                '总计',
+                number_format($supplierForWholesalerCount + $supplierForRetailerCount + $retailerOrderCount),
+                number_format($supplierForWholesalerAmount + $supplierForRetailerAmount + $retailerOrderAmount, 2),
+                number_format($supplierForWholesalerOnline + $supplierForRetailerOnline + $retailerByOnline, 2),
+                number_format($supplierForWholesalerOffline + $supplierForRetailerOffline + $retailerByOffline, 2),
+                number_format($supplierForWholesalerPos + $supplierForRetailerPos + $retailerByPos, 2),
+            ]
+        ];
 
-        $table->addRow();
-        $table->addCell(0, $cellRowContinue);
-        $table->addCell()->addText($supplierForRetailerCount = $supplier['retailer']['count'] . '（终端）', null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForRetailerAmount = $supplier['retailer']['amount'],
-                2) . '（终端）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForRetailerOnline = $supplier['retailer']['onlineAmount'],
-                2) . '（终端）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForRetailerOffline = $supplier['retailer']['offAmount'],
-                2) . '（终端）', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format( $supplierForRetailerPos =  $supplier['retailer']['posAmount'],2) . '（终端）', null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell(0)->addText('批发商', null, $cellAlignCenter);
-        $table->addCell()->addText($retailerOrderCount = $wholesaler['count'], null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerOrderAmount = $wholesaler['amount'], 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerByOnline = $wholesaler['onlineAmount'], 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format($retailerByOffline = $wholesaler['offAmount'], 2), null,
-            $cellAlignCenter);
-        $table->addCell()->addText(number_format( $retailerByPos = $wholesaler['posAmount'],2), null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell(0)->addText('总计', null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerCount + $supplierForRetailerCount + $retailerOrderCount),
-            null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerAmount + $supplierForRetailerAmount + $retailerOrderAmount,
-            2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerOnline + $supplierForRetailerOnline + $retailerByOnline,
-            2), null, $cellAlignCenter);
-        $table->addCell()->addText(number_format($supplierForWholesalerOffline + $supplierForRetailerOffline + $retailerByOffline,
-            2), null, $cellAlignCenter);
-        $table->addCell()->addText( number_format($supplierForWholesalerPos + $supplierForRetailerPos + $retailerByPos , 2),
-            null, $cellAlignCenter);
+        $this->_fillData($table, $data);
 
         $titles1 = [
             '出售商名称' => 3300,
@@ -585,9 +731,8 @@ class OperationDataController extends Controller
                 'user',
                 'salesmanVisitOrder.salesmanCustomer'
             ])
-            ->get()->each(function ($order) {
-                $order->setAppends(['user_type_name']);
-            });
+            ->where('status', '<>', cons('order.status.invalid'))
+            ->get();
         $result = $this->_formatOrders($orders, $beginDay, $endDay);
         return $this->success($result);
 
@@ -717,28 +862,12 @@ class OperationDataController extends Controller
         $endDay = $date['endDay'];
         $dayEnd = (new Carbon($endDay))->endOfDay();
 
-        $where = array_filter(array_only($data, ['user_type']));
-        $q = array_get($data, 'q');
+        $result = $this->_getGoodsSalesData($data, $beginDay, $dayEnd);
 
-        $name = null;
-        is_numeric($q) ? ($where['bar_code'] = $q) : ($name = $q);
+        $orderGoods = $result['orderGoods'];
+        $goods = $result['goods'];
 
-        //符合条件的商品
-        $goods = Goods::withTrashed()->where($where)->ofGoodsName($name)->ofDeliveryArea($data)->whereHas('orderGoods',
-            function ($query) use ($beginDay, $dayEnd) {
-                $query->whereBetween('created_at', [$beginDay, $dayEnd]);
-            })->with('shop')->select('id', 'name', 'cate_level_1', 'cate_level_2', 'cate_level_3', 'bar_code',
-            'shop_id', 'user_type')->get()->keyBy('id');
-
-        $goodsIds = $goods->keys('id');
-
-        //符合条件的订单商品
-        $orderGoods = OrderGoods::whereIn('goods_id', $goodsIds)
-            ->whereBetween('created_at', [$beginDay, $dayEnd])
-            ->groupBy('goods_id')
-            ->select(DB::raw('sum(total_price) as amount,sum(num) as count, goods_id'))
-            ->paginate();
-
+        //$orderGoods = $this->paginate($orderGoods);
 
         return view('admin.operation.goods-sales',
             compact('orderGoods', 'goods', 'beginDay', 'endDay', 'data'));
@@ -757,23 +886,10 @@ class OperationDataController extends Controller
         $endDay = $date['endDay'];
         $dayEnd = (new Carbon($endDay))->endOfDay();
 
-        $where = array_filter(array_only($data, ['bar_code', 'user_type']));
+        $result = $this->_getGoodsSalesData($data, $beginDay, $dayEnd);
 
-        //符合条件的商品
-        $goods = Goods::withTrashed()->where($where)->ofDeliveryArea($data)->whereHas('orderGoods',
-            function ($query) use ($beginDay, $dayEnd) {
-                $query->whereBetween('created_at', [$beginDay, $dayEnd]);
-            })->with('shop')->select('id', 'name', 'cate_level_1', 'cate_level_2', 'cate_level_3', 'bar_code',
-            'shop_id', 'user_type')->get()->keyBy('id');
-
-        $goodsIds = $goods->keys('id');
-
-        //符合条件的订单商品
-        $orderGoods = OrderGoods::whereIn('goods_id', $goodsIds)
-            ->whereBetween('created_at', [$beginDay, $dayEnd])
-            ->groupBy('goods_id')
-            ->select(DB::raw('sum(price) as amount,sum(num) as count, goods_id'))
-            ->get();
+        $orderGoods = $result['orderGoods'];
+        $goods = $result['goods'];
 
         // Creating the new document...
         $phpWord = new PhpWord();
@@ -823,9 +939,14 @@ class OperationDataController extends Controller
         $beginDay = $date['beginDay'];
         $endDay = $date['endDay'];
         $dayEnd = (new Carbon($endDay))->endOfDay();
+        $orderConfig = cons('order');
 
-        $orderGoods = OrderGoods::with('goods')->where('goods_id', $goodsId)->whereBetween('created_at',
+        $orderGoods = OrderGoods::with('goods')->whereHas('order', function ($query) use ($orderConfig) {
+            $query->where('is_cancel', $orderConfig['is_cancel']['off'])
+                ->where('status', '<>', $orderConfig['status']['invalid']);
+        })->where('goods_id', $goodsId)->whereBetween('created_at',
             [$beginDay, $dayEnd])->get();
+
 
         $result = $this->_formatOrderGoods($orderGoods, $beginDay, $endDay);
 
@@ -874,17 +995,18 @@ class OperationDataController extends Controller
         //活跃用户数
         $activeUser = $dataStatistics->last();
 
-        //历史最高注册数和登录数
-        $maxArray = [
-            'max_wholesaler_login_num' => $dataStatistics->sortByDesc('wholesaler_login_num')->first(),
-            'max_retailer_login_num' => $dataStatistics->sortByDesc('retailer_login_num')->first(),
-            'max_supplier_login_num' => $dataStatistics->sortByDesc('supplier_login_num')->first(),
-            'max_wholesaler_reg_num' => $dataStatistics->sortByDesc('wholesaler_reg_num')->first(),
-            'max_retailer_reg_num' => $dataStatistics->sortByDesc('retailer_reg_num')->first(),
-            'max_supplier_reg_num' => $dataStatistics->sortByDesc('supplier_reg_num')->first(),
-        ];
-        $userTypes = cons('user.type');
-        return compact('beginDay', 'endDay', 'activeUser', 'maxArray', 'userTypes', 'dataStatistics');
+
+        $dayEnd = (new Carbon($endDay))->endOfDay();
+        //下单
+        $orders = Order::with('user', 'salesmanVisitOrder')->whereBetween('created_at', [$beginDay, $dayEnd])->get();
+
+        $orderGroup = $this->_orderGroupByBuyer($orders);
+
+        //成单
+        $completeOrders = Order::with('user', 'salesmanVisitOrder')->whereBetween('finished_at',
+            [$beginDay, $dayEnd])->get();
+        $completeOrderGroup = $this->_orderGroupByBuyer($completeOrders);
+        return compact('beginDay', 'endDay', 'activeUser', 'orderGroup', 'completeOrderGroup', 'dataStatistics');
     }
 
     /**
@@ -944,33 +1066,13 @@ class OperationDataController extends Controller
      * 获取订单
      *
      * @param $orders
-     * @param $completeOrders
      * @return array
      */
-    private function _getOrdersData($orders, $completeOrders = null)
+    private function _getOrdersData($orders)
     {
-
-        $payType = cons('trade.pay_type');
-        $payStatus = cons('order.pay_status');
-        $orderPayType = cons('pay_type');
-
         //终端商下单
         $retailerOrders = $orders->filter(function ($item) {
             return $item->user_type_name == 'retailer';
-        });
-        //终端商线上支付单
-        $retailerPaidByOnline = $retailerOrders->filter(function ($item) use ($orderPayType) {
-            return $item->pay_type == $orderPayType['online'];
-        });
-
-        //终端商线下支付单
-        $retailerPaidByOffline = $retailerOrders->reject(function ($item) use ($orderPayType) {
-            return $item->pay_type == $orderPayType['online'];
-        });
-
-        //终端商已完成支付
-        $retailerPaidSuccess = $retailerOrders->filter(function ($item) use ($payStatus) {
-            return $item->pay_status == $payStatus['payment_success'];
         });
 
         //批发商下单
@@ -978,101 +1080,185 @@ class OperationDataController extends Controller
             return $item->user_type_name == 'wholesaler';
         });
 
-        //批发线上支付单
-        $wholesalerPaidByOnline = $wholesalerOrders->filter(function ($item) use ($orderPayType) {
+        return [
+            'retailer' => array_merge($this->_getOrdersGroupByChannel($retailerOrders), [
+                'orderCount' => $retailerOrders->count(),
+                'orderAmount' => $retailerOrders->sum('price'),
+                'orderRebatesAmount' => $retailerOrders->sum('after_rebates_price'),
+            ]),
+            'wholesaler' => array_merge($this->_getOrdersGroupByChannel($wholesalerOrders), [
+                'orderCount' => $wholesalerOrders->count(),
+                'orderAmount' => $wholesalerOrders->sum('price'),
+                'orderRebatesAmount' => $wholesalerOrders->sum('after_rebates_price'),
+            ])
+        ];
+    }
+
+    /**
+     * 订单按渠道分组
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getOrdersGroupByChannel(Collection $orders)
+    {
+        $payStatus = cons('order.pay_status');
+        $orderPayType = cons('pay_type');
+        //终端商线上支付单
+        $online = $orders->filter(function ($item) use ($orderPayType) {
             return $item->pay_type == $orderPayType['online'];
         });
 
-        //批发商线下支付单
-        $wholesalerPaidByOffline = $wholesalerOrders->reject(function ($item) use ($orderPayType) {
+        //终端商线下支付单
+        $offline = $orders->reject(function ($item) use ($orderPayType) {
             return $item->pay_type == $orderPayType['online'];
         });
 
-        //批发商已完成支付
-        $wholesalerPaidSuccess = $wholesalerOrders->filter(function ($item) use ($payStatus) {
+        //终端商已完成支付
+        $paidSuccess = $orders->filter(function ($item) use ($payStatus) {
             return $item->pay_status == $payStatus['payment_success'];
         });
 
+        return [
+            'orderPaidByOnline' => $online->sum('price'),
+            'orderPaidByOffline' => $offline->sum('price'),
+            'paidSuccess' => $paidSuccess->sum('after_rebates_price')
+        ];
+    }
 
-        $data = [
-            'retailer' => [
-                'orderCount' => $retailerOrders->count(),
-                'orderAmount' => $retailerOrders->sum('price'),
-                'orderPaidByOnline' => $retailerPaidByOnline->sum('price'),
-                'orderPaidByOffline' => $retailerPaidByOffline->sum('price'),
-                'orderRebatesAmount' => $retailerOrders->sum('after_rebates_price'),
-                'paidSuccess' => $retailerPaidSuccess->sum('after_rebates_price')
-            ],
-            'wholesaler' => [
-                'orderCount' => $wholesalerOrders->count(),
-                'orderAmount' => $wholesalerOrders->sum('price'),
-                'orderPaidByOnline' => $wholesalerPaidByOnline->sum('price'),
-                'orderPaidByOffline' => $wholesalerPaidByOffline->sum('price'),
-                'orderRebatesAmount' => $wholesalerOrders->sum('after_rebates_price'),
-                'paidSuccess' => $wholesalerPaidSuccess->sum('after_rebates_price')
-            ],
+    /**
+     * 获取金融数据
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getFinancial(Collection $orders)
+    {
+        //终端商下单
+        $retailerOrders = $orders->filter(function ($item) {
+            return $item->user_type_name == 'retailer';
+        });
+
+        //批发商下单
+        $wholesalerOrders = $orders->filter(function ($item) {
+            return $item->user_type_name == 'wholesaler';
+        });
+
+        //订单按卖家渠道分组
+        $group = $this->_orderGroupBySeller($orders);
+
+        return [
+            'retailer' => $this->_getFinancialGroupByChannel($retailerOrders),
+            'wholesaler' => $this->_getFinancialGroupByChannel($wholesalerOrders),
+            'wholesalerByRetailer' => $this->_getFinancialForSeller($group['wholesalerOrders']),
+            'supplierByWholesaler' => $this->_getFinancialForSeller($group['supplierOrdersBuyByWholesaler']),
+            'supplierByRetailer' => $this->_getFinancialForSeller($group['supplierOrdersBuyByRetailer']),
         ];
 
-        if ($completeOrders) {
-            //批发商成单
-            $retailerCompleteOrders = $completeOrders->filter(function ($item) {
-                return $item->user_type_name == 'retailer';
-            });
+    }
 
-            //线上完成
+    /**
+     * 金融数据按渠道分组
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getFinancialGroupByChannel(Collection $orders)
+    {
+        $orderPayType = cons('pay_type');
+        //自主订单
+        $ownerOrders = $orders->filter(function ($item) use ($orderPayType) {
+            return $item->type == 0 && $item->pay_type != $orderPayType['pick_up'];
+        });
 
-            $retailerCompleteByOnline = $retailerCompleteOrders->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
-            });
+        //业务订单
 
-            //线下完成
+        $businessOrders = $orders->filter(function ($item) use ($orderPayType) {
+            return $item->type == 1;
+        });
 
-            $retailerCompleteByOffline = $retailerCompleteOrders->filter(function ($item) use ($payType) {
-                return is_null($item->systemTradeInfo) || $item->systemTradeInfo->pay_type == $payType['pos'];
-            });
+        //自提订单
 
-            //线下pos机
-            $retailerCompleteByPos = $retailerCompleteByOffline->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
-            });
+        $pickUpOrders = $orders->filter(function ($item) use ($orderPayType) {
+            return $item->pay_type == $orderPayType['pick_up'];
+        });
 
 
-            //终端商成单
-            $wholesalerCompleteOrders = $completeOrders->filter(function ($item) {
-                return $item->user_type_name == 'wholesaler';
-            });
+        return [
+            'owner' => $this->_getFinancialDetail($ownerOrders),
+            'business' => $this->_getFinancialDetail($businessOrders),
+            'pickUp' => $this->_getFinancialDetail($pickUpOrders),
+        ];
 
-            //线上完成
-            $wholesalerCompleteByOnline = $wholesalerCompleteOrders->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
-            });
+    }
 
-            //线下完成
+    /**
+     * 获取金融数据详情
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getFinancialDetail(Collection $orders)
+    {
+        $payStatus = cons('order.pay_status');
+        //已完成的订单
+        $completeOrders = $orders->filter(function ($item) use ($payStatus) {
+            return $item->pay_status == $payStatus['payment_success'];
+        });
 
-            $wholesalerCompleteByOffline = $wholesalerCompleteOrders->filter(function ($item) use ($payType) {
-                return is_null($item->systemTradeInfo) || $item->systemTradeInfo->pay_type == $payType['pos'];
-            });
+        return [
+            'count' => $orders->count(),
+            'amount' => $orders->sum('price'),
+            'afterRebates' => $orders->sum('after_rebates_price'),
+            'completeAmount' => $completeOrders->sum('after_rebates_price'),
+            'completeAmountByOnline' => $completeOrders->filter(function ($item) {
+                return !is_null($item->systemTradeInfo);
+            })->sum('after_rebates_price'),
+        ];
+    }
 
-            //线下pos机
-            $wholesalerCompleteByPos = $wholesalerCompleteByOffline->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
-            });
+    /**
+     * 卖家金融数据
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getFinancialForSeller(Collection $orders)
+    {
+        $orderStatus = cons('order.status');
+        $payStatus = cons('order.pay_status');
+        //已完成订单
+        $completeOrders = $orders->filter(function ($item) use ($orderStatus) {
+            return $item->status == $orderStatus['finished'];
+        });
 
-            $retailerComplete = [
-                'orderCompleteByOnline' => $retailerCompleteByOnline->sum('after_rebates_price'),
-                'orderCompleteByOffline' => $retailerCompleteByOffline->sum('after_rebates_price'),
-                'orderCompleteByPos' => $retailerCompleteByPos->sum('after_rebates_price')
-            ];
-            $wholesalerComplete = [
-                'orderCompleteByOnline' => $wholesalerCompleteByOnline->sum('after_rebates_price'),
-                'orderCompleteByOffline' => $wholesalerCompleteByOffline->sum('after_rebates_price'),
-                'orderCompleteByPos' => $wholesalerCompleteByPos->sum('after_rebates_price')
-            ];
-            $data['retailer'] = array_merge($data['retailer'], $retailerComplete);
-            $data['wholesaler'] = array_merge($data['wholesaler'], $wholesalerComplete);
-        }
+        //已完成在线支付
+        $completeOrdersByOnlinePay = $completeOrders->filter(function ($item) use ($orderStatus) {
+            return !is_null($item->systemTradeInfo);
+        });
 
-        return $data;
+        //未完成订单
+        $notCompleteOrders = $orders->filter(function ($item) use ($orderStatus) {
+            return $item->status > $orderStatus['non_confirm'] && $item->status < $orderStatus['finished'];
+        });
+        //未收款订单
+        $notReceiveOrders = $notCompleteOrders->filter(function ($item) use ($payStatus) {
+            return $item->pay_status == $payStatus['non_payment'];
+        });
+
+        //未配送订单
+        $notDeliveryOrders = $notCompleteOrders->filter(function ($item) use ($orderStatus) {
+            return $item->status == $orderStatus['non_send'];
+        });
+
+        return [
+            'completeCount' => $completeOrders->count(),
+            'completeAmount' => $completeOrders->sum('after_rebates_price'),
+            'completeAmountByOnlinePay' => $completeOrdersByOnlinePay->sum('after_rebates_price'),
+            'notCompleteAmount' => $notCompleteOrders->sum('after_rebates_price'),
+            'notReceiveAmount' => $notReceiveOrders->sum('after_rebates_price'),
+            'notDeliveryAmount' => $notDeliveryOrders->sum('after_rebates_price'),
+        ];
 
     }
 
@@ -1086,15 +1272,7 @@ class OperationDataController extends Controller
      */
     private function _formatOrders($orders, $beginDay, $endDay)
     {
-        //终端商下单
-        $retailerOrders = $orders->filter(function ($item) {
-            return $item->user_type_name == 'retailer';
-        });
-
-        //批发商下单
-        $wholesalerOrders = $orders->filter(function ($item) {
-            return $item->user_type_name == 'wholesaler';
-        });
+        extract($this->_orderGroupByBuyer($orders));
 
         $beginDayCarbon = new Carbon($beginDay);
         $endDayCarbon = new Carbon($endDay);
@@ -1178,7 +1356,7 @@ class OperationDataController extends Controller
                 $index = explode(' ', $hour)[1] . ':00';
                 $orderGoodsList[$index] = $orderGoods->filter(function ($goods) use ($hour) {
                     return $goods->created_at->format('Y-m-d H') == $hour;
-                })->sum('price');
+                })->sum('total_price');
             }
 
         } elseif ($diffDays <= 31) {
@@ -1186,21 +1364,21 @@ class OperationDataController extends Controller
             foreach ($dates as $day) {
                 $orderGoodsList[$day] = $orderGoods->filter(function ($goods) use ($day) {
                     return $goods->created_at->format('Y-m-d') == $day;
-                })->sum('price');
+                })->sum('total_price');
             }
         } elseif ($diffDays <= 366) {
             $dates = list_in_months($beginDayCarbon, $endDayCarbon);
             foreach ($dates as $month) {
                 $orderGoodsList[$month] = $orderGoods->filter(function ($goods) use ($month) {
                     return $goods->created_at->format('Y-m') == $month;
-                })->sum('price');
+                })->sum('total_price');
             }
         } else {
             $dates = list_in_years($beginDayCarbon, $endDayCarbon);
             foreach ($dates as $year) {
                 $orderGoodsList[$year] = $orderGoods->filter(function ($goods) use ($year) {
                     return $goods->created_at->format('Y') == $year;
-                })->sum('price');
+                })->sum('total_price');
             }
         }
         return [
@@ -1211,7 +1389,7 @@ class OperationDataController extends Controller
     }
 
     /**
-     * 按店铺分组
+     * 按店铺名分组
      *
      * @param $orders
      * @param $buyer '是否买家'
@@ -1269,7 +1447,7 @@ class OperationDataController extends Controller
             if (is_null($order->systemTradeInfo)) {
                 $shop[$name]['offLinePay'] = isset($shop[$name]['offLinePay']) ? bcadd($shop[$name]['offLinePay'],
                     $order->after_rebates_price, 2) : $order->after_rebates_price;
-            } elseif(!is_null($order->systemTradeInfo) && $order->systemTradeInfo->pay_type == $order['pos']) {
+            } elseif (!is_null($order->systemTradeInfo) && $order->systemTradeInfo->pay_type == $order['pos']) {
                 $shop[$name]['posPay'] = isset($shop[$name]['posPay']) ? bcadd($shop[$name]['posPay'],
                     $order->after_rebates_price, 2) : $order->after_rebates_price;
             } else {
@@ -1288,67 +1466,38 @@ class OperationDataController extends Controller
      */
     private function _getCompleteOrderData($orders)
     {
-        $userTypes = cons('user.type');
-        $payType = cons('trade.pay_type');
-        $supplierOrders = $orders->filter(function ($order) use ($userTypes) {
-            return $order->shop_user_type == $userTypes['supplier'];
-        });
+        extract($this->_orderGroupBySeller($orders));
 
-        $supplierOrdersBuyByWholesaler = $supplierOrders->filter(function ($item) {
-            return $item->user_type_name == 'wholesaler';
-        });
-
-        $supplierOrdersBuyByRetailer = $supplierOrders->reject(function ($item) {
-            return $item->user_type_name == 'wholesaler';
-        });
-
-        $wholesalerOrders = $orders->reject(function ($order) use ($userTypes) {
-            return $order->shop_user_type == $userTypes['supplier'];
-        });
-
-        $wholesaler = [
-            'count' => $wholesalerOrders->count(),
-            'amount' => $wholesalerOrders->sum('after_rebates_price'),
-            'onlineAmount' => $wholesalerOrders->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
-            })->sum('after_rebates_price'),
-            'offAmount' => $wholesalerOrders->filter(function ($item) use ($payType) {
-                return is_null($item->systemTradeInfo);
-            })->sum('after_rebates_price'),
-            'posAmount' => $wholesalerOrders->filter(function ($item) use ($payType) {
-                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
-            })->sum('after_rebates_price'),
-        ];
-
+        $wholesaler = $this->_getCompleteOrderDetail($wholesalerOrders);
         $supplier = [
-            'retailer' => [
-                'count' => $supplierOrdersBuyByRetailer->count(),
-                'amount' => $supplierOrdersBuyByRetailer->sum('after_rebates_price'),
-                'onlineAmount' => $supplierOrdersBuyByRetailer->filter(function ($item) use ($payType) {
-                    return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
-                })->sum('after_rebates_price'),
-                'offAmount' => $supplierOrdersBuyByRetailer->filter(function ($item) use ($payType) {
-                    return is_null($item->systemTradeInfo);
-                })->sum('after_rebates_price'),
-                'posAmount' => $supplierOrdersBuyByRetailer->filter(function ($item) use ($payType) {
-                    return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
-                })->sum('after_rebates_price')
-            ],
-            'wholesaler' => [
-                'count' => $supplierOrdersBuyByWholesaler->count(),
-                'amount' => $supplierOrdersBuyByWholesaler->sum('after_rebates_price'),
-                'onlineAmount' => $supplierOrdersBuyByWholesaler->filter(function ($item) use ($payType) {
-                    return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
-                })->sum('after_rebates_price'),
-                'offAmount' => $supplierOrdersBuyByWholesaler->filter(function ($item){
-                    return is_null($item->systemTradeInfo);
-                })->sum('after_rebates_price'),
-                'posAmount' => $supplierOrdersBuyByWholesaler->filter(function ($item) use ($payType) {
-                    return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
-                })->sum('after_rebates_price')
-            ]
+            'retailer' => $this->_getCompleteOrderDetail($supplierOrdersBuyByRetailer),
+            'wholesaler' => $this->_getCompleteOrderDetail($supplierOrdersBuyByWholesaler),
         ];
         return compact('wholesaler', 'supplier');
+    }
+
+    /**
+     * 获取完成订单详情
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _getCompleteOrderDetail(Collection $orders)
+    {
+        $payType = cons('trade.pay_type');
+        return [
+            'count' => $orders->count(),
+            'amount' => $orders->sum('after_rebates_price'),
+            'onlineAmount' => $orders->filter(function ($item) use ($payType) {
+                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type != $payType['pos'];
+            })->sum('after_rebates_price'),
+            'offAmount' => $orders->filter(function ($item) {
+                return is_null($item->systemTradeInfo);
+            })->sum('after_rebates_price'),
+            'posAmount' => $orders->filter(function ($item) use ($payType) {
+                return !is_null($item->systemTradeInfo) && $item->systemTradeInfo->pay_type == $payType['pos'];
+            })->sum('after_rebates_price')
+        ];
     }
 
     /**
@@ -1361,28 +1510,32 @@ class OperationDataController extends Controller
      */
     private function _getRankData($data, $beginDay, $dayEnd)
     {
-        //符合条件的商品
-        $goods = Goods::withTrashed()->ofDeliveryArea($data)->whereHas('orderGoods',
-            function ($query) use ($beginDay, $dayEnd) {
-                $query->whereBetween('created_at', [$beginDay, $dayEnd]);
-            })->select('id', 'name', 'cate_level_1', 'cate_level_2', 'cate_level_3')->get()->keyBy('id');
-
-        $goodsIds = $goods->keys('id');
         $orderConfig = cons('order');
-
+        $userType = array_get($data, 'type');
         //符合条件的订单商品
-        $orderGoods = OrderGoods::whereIn('goods_id', $goodsIds)
-            ->whereHas('order', function ($query) use ($orderConfig) {
-                $query->where('is_cancel', $orderConfig['is_cancel']['off'])
-                    ->where('status', '<>', $orderConfig['status']['invalid']);
-            })
+        $orderGoods = OrderGoods::whereHas('order', function ($query) use ($orderConfig) {
+            $query->where('is_cancel', $orderConfig['is_cancel']['off'])
+                ->where('status', '<>', $orderConfig['status']['invalid']);
+        })
             ->whereBetween('created_at', [$beginDay, $dayEnd])
             ->groupBy('goods_id')
             ->select(DB::raw('sum(total_price) as amount, goods_id'))
-            ->orderBy('amount', 'DESC')->take(10)->get('amount', 'goods_id');
+            ->orderBy('amount', 'DESC')->get('amount', 'goods_id');
+
+        //符合条件的商品
+        $goods = Goods::withTrashed()->whereIn('id',
+            $orderGoods->pluck('goods_id'))->ofDeliveryArea($data)->ofUserType($userType)->select('id',
+            'name', 'cate_level_1', 'cate_level_2',
+            'cate_level_3')->get()->keyBy('id');
+        $goodsIds = $goods->keys('id')->all();
+
+        $orderGoods = $orderGoods->filter(function ($item) use ($goodsIds) {
+            return in_array($item->goods_id, $goodsIds);
+        })->take(10);
+
 
         //符合条件的店铺
-        $shops = Shop::ofDeliveryArea($data, 'shopAddress')->whereHas('Orders',
+        $shops = Shop:: ofUserType($userType)->ofDeliveryArea($data, 'shopAddress')->whereHas('Orders',
             function ($query) use ($beginDay, $dayEnd) {
                 $query->whereBetween('created_at', [$beginDay, $dayEnd]);
             })->get(['id', 'name'])->keyBy('id');
@@ -1434,5 +1587,117 @@ class OperationDataController extends Controller
                 array('align' => 'center'));
         }
         return $table;
+    }
+
+    /**
+     * 数据填充
+     *
+     * @param $table
+     * @param $data
+     */
+    private function _fillData($table, $data)
+    {
+        $cellAlignCenter = array('align' => 'center');
+        foreach ($data as $items) {
+            $table->addRow();
+            foreach ($items as $key => $item) {
+                if (is_array($item)) {
+                    $table->addCell(0, $item)->addText($key, null, $cellAlignCenter);
+                } else {
+                    $table->addCell()->addText($item, null, $cellAlignCenter);
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取销售商品数据
+     *
+     * @param $data
+     * @param $beginDay
+     * @param $dayEnd
+     * @return mixed
+     */
+    private function _getGoodsSalesData($data, $beginDay, $dayEnd)
+    {
+        $where = array_filter(array_only($data, ['user_type']));
+        $q = array_get($data, 'q');
+
+        $name = null;
+        is_numeric($q) ? ($where['bar_code'] = $q) : ($name = $q);
+
+        $orderConfig = cons('order');
+
+        //符合条件的订单商品
+        $orderGoodsTemp = OrderGoods::whereHas('order', function ($query) use ($orderConfig) {
+            $query->where('is_cancel', $orderConfig['is_cancel']['off'])
+                ->where('status', '<>', $orderConfig['status']['invalid']);
+        })->whereBetween('created_at', [$beginDay, $dayEnd])
+            ->groupBy('goods_id')
+            ->select(DB::raw('sum(total_price) as amount,sum(num) as count, goods_id'))
+            ->get();
+
+        //符合条件的商品
+        $goods = Goods::withTrashed()->whereIn('id',
+            $orderGoodsTemp->pluck('goods_id'))->where($where)->ofGoodsName($name)->ofDeliveryArea($data)->with('shop')->select('id',
+            'name', 'cate_level_1', 'cate_level_2', 'cate_level_3', 'bar_code',
+            'shop_id', 'user_type')->get()->keyBy('id');
+
+        $goodsIds = $goods->keys('id')->all();
+
+        $orderGoods = $orderGoodsTemp->filter(function ($item) use ($goodsIds) {
+            return in_array($item->goods_id, $goodsIds);
+        });
+
+        return compact('orderGoods', 'goods');
+    }
+
+    /**
+     * 订单按卖家分组
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _orderGroupBySeller(Collection $orders)
+    {
+        $userTypes = cons('user.type');
+
+        $supplierOrders = $orders->filter(function ($order) use ($userTypes) {
+            return $order->shop_user_type == $userTypes['supplier'];
+        });
+
+        $supplierOrdersBuyByWholesaler = $supplierOrders->filter(function ($item) {
+            return $item->user_type_name == 'wholesaler';
+        });
+
+        $supplierOrdersBuyByRetailer = $supplierOrders->reject(function ($item) {
+            return $item->user_type_name == 'wholesaler';
+        });
+
+        $wholesalerOrders = $orders->reject(function ($order) use ($userTypes) {
+            return $order->shop_user_type == $userTypes['supplier'];
+        });
+
+        return compact('supplierOrdersBuyByWholesaler', 'supplierOrdersBuyByRetailer', 'wholesalerOrders');
+    }
+
+    /**
+     * 订单按买家分组
+     *
+     * @param \Illuminate\Support\Collection $orders
+     * @return array
+     */
+    private function _orderGroupByBuyer(Collection $orders)
+    {
+        //终端商下单
+        $retailerOrders = $orders->filter(function ($item) {
+            return $item->user_type_name == 'retailer';
+        });
+
+        //批发商下单
+        $wholesalerOrders = $orders->filter(function ($item) {
+            return $item->user_type_name == 'wholesaler';
+        });
+        return compact('retailerOrders', 'wholesalerOrders');
     }
 }

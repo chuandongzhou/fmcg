@@ -381,6 +381,24 @@ class Shop extends Model
     }
 
     /**
+     * 按类型搜索
+     *
+     * @param $query
+     * @param $userType
+     * @return mixed
+     */
+    public function scopeOfUserType($query, $userType = null)
+    {
+        if ($userType) {
+            return $query->whereHas('user', function ($q) use ($userType) {
+                if ($userType) {
+                    $q->where('type', $userType);
+                }
+            });
+        }
+    }
+
+    /**
      * 设置logo
      *
      * @param $logo

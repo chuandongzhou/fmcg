@@ -31,7 +31,8 @@ class InfoController extends Controller
                     'is_cancel' => cons('order.is_cancel.off'),
                     'finish_at' => '%' . $month . '%'
                 ]);
-        } else {
+        }
+        else {
             //订单统计
             $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ',true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<'.$payStatus['payment_success'].')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if((pay_type=' . $payType['cod'] . ' and status=' . $status['send'] . ') or (pay_type=' . $payType['pick_up'] . ' and status=' . $status['non_send'] . '),true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->OfSell(auth()->id())->nonCancel()->first();
             //本月销售图表信息

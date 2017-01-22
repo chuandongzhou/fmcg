@@ -289,6 +289,15 @@ textarea {
     text-align: center; }
   .public-table th {
     background-color: #f1f1f1; }
+  .public-table .title-blue th, .public-table .title-blue td {
+    background-color: #4cb9fe;
+    color: #fff; }
+  .public-table .middle {
+    vertical-align: middle !important; }
+  .public-table .gray {
+    background-color: #f1f1f1; }
+    .public-table .gray td {
+      background-color: #f1f1f1; }
 
 .icon-tixing {
   color: #169bd5;
@@ -438,6 +447,24 @@ table tr td .icon-tixing, table tr th .icon-tixing {
       background-color: #c34d51; }
 
 /*==============   商品销售统计结束   =================*/
+/*==============   商品销售详情开始   =================*/
+@media (max-width: 1400px) {
+  .sales-details .enter-control.date {
+    width: 100px; }
+  .sales-details .enter-control.product-name {
+    width: 155px; }
+  .sales-details select.control {
+    width: 135px; }
+  .sales-details .btn.control {
+    min-width: 60px; }
+  .table-scroll {
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: auto; }
+    .table-scroll .table {
+      min-width: 1300px; } }
+
+/*==============   商品销售详情结束   =================*/
 /*==============   运维管理开始   =================*/
 .control-radius {
   border-radius: 4px !important; }

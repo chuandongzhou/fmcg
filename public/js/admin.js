@@ -64,7 +64,6 @@ var echartsSet = function (obj, title, legend, xAxis, series) {
     myChart.setOption(option);
 };
 
-
 /**
  * 用户数据统计
  */
@@ -95,7 +94,7 @@ var userData = function () {
                 data: data.retailer_reg
             }
         ]);
-        echartsSet(obj1, '用户在线数量统计', legend, data.created_at, [
+        echartsSet(obj1, '用户登录数量统计', legend, data.created_at, [
             {
                 name: legend[0],
                 type: 'line',
@@ -121,6 +120,9 @@ var userData = function () {
     })
 };
 
+/**
+ * 金融数据统计
+ */
 var financial = function () {
     var obj = $('#myChart')[0], beginDay = $('input[name="begin_day"]'), endDay = $('input[name="end_day"]');
     $.get(site.url('admin/operation-data/order-create-map'), {
@@ -152,21 +154,51 @@ var financial = function () {
  * @param pageSize       每页显示条数
  * @param pagination     分页数据存放
  */
-var tablePage = function ($table, pageSize, pagination) {
-    var currentPage = 0;//设置当前页默认值为
+var tablePage = function ($table, pagination, pageSize) {
+    var sumRows = $table.find('tbody tr').length,//获取数据总行数
+        pageSize = pageSize || 5,
+        sumPages = Math.ceil(sumRows / pageSize),//得到总页数
+        currentPage = 0;//设置当前页默认值为
+
     $table.bind('paging', function () {
-        $table.find('tbody tr').hide().slice(currentPage * pageSize, (currentPage + 1) * pageSize).show();
-//先将tbody中所有的行隐藏，再通过slice结合当前页数和页面显示的数目展现数据
+        if (currentPage <= 0) {
+            currentPage = 0;
+            pagination.find('.prev').addClass('disabled')
+        } else {
+            pagination.find('.prev').removeClass('disabled')
+        }
+        if (currentPage >= sumPages - 1) {
+            currentPage = sumPages - 1;
+            pagination.find('.next').addClass('disabled');
+        }
+        else {
+            pagination.find('.next').removeClass('disabled');
+        }
+        pagination.find('.page-' + (currentPage + 1)).addClass('active').siblings().removeClass('active');
+        $table.find('tbody tr').hide().slice(currentPage * pageSize, (currentPage + 1) * pageSize).show();//先将tbody中所有的行隐藏，再通过slice结合当前页数和页面显示的数目展现数据
     });
-    var sumRows = $table.find('tbody tr').length;//获取数据总行数
-    var sumPages = Math.ceil(sumRows / pageSize);//得到总页数
-    for (var pageIndex = 0; pageIndex < sumPages; pageIndex++) {
-        $('<li><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
-            currentPage = event.data["newPage"];
-            $table.trigger("paging");
-//为每一个要显示的页数上添加触发分页函数
+
+    if (sumPages > 1) {
+        //上一页
+        $('<li class="prev"><a href="javascript:"> « </a></li>').bind("click", function () {
+            currentPage = currentPage - 1;
+            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
         }).appendTo(pagination);
+
+        for (var pageIndex = 0; pageIndex < sumPages; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+            }).appendTo(pagination);
+        }
+
+        //下一页
+        $('<li class="next"><a href="javascript:"> » </a></li>').bind("click", function () {
+            currentPage = currentPage + 1;
+            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+        }).appendTo(pagination);
+
+        $table.trigger("paging");
     }
-    $table.trigger("paging");
 
 }

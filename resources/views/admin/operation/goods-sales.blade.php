@@ -12,7 +12,7 @@
     </div>
     <div class="content-wrap">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 sales-details">
                 <form class="form-horizontal" action="{{ url('admin/operation-data/goods-sales') }}" method="get"
                       autocomplete="off">
                     <input type="text" name="begin_day" class="enter-control date datetimepicker"
@@ -30,9 +30,9 @@
                     <select name="street_id" data-id="{{ $data['street_id'] or 0 }}"
                             class="address-street useless-control hide control"> </select>
                     <input type="text" class="enter-control product-name" name="q"
-                           value="{{ $data['q'] or '' }}" placeholder="请输入商品条形码/商品名称">
+                           value="{{ $data['q'] or '' }}" placeholder="商品条形码/商品名称">
                     <select class="control" name="user_type">
-                        <option value="">请选择店铺类型</option>
+                        <option value="">店铺类型</option>
                         @foreach(cons()->valueLang('user.type') as $type => $name)
                             @if($type != cons('user.type.retailer'))
                                 <option value="{{ $type }}" {{ isset($data['user_type']) && $data['user_type'] == $type ? 'selected' : '' }}>{{ $name }}</option>
@@ -44,7 +44,7 @@
                        class="btn btn-border-blue control">导出</a>
                 </form>
 
-                <table class="table public-table table-bordered">
+                <table class="table public-table table-bordered goods-list">
                     <tr>
                         <th>商品ID</th>
                         <th>商品条形码</th>
@@ -70,6 +70,8 @@
                                    data-id="{{ $goodsId }}"
                                    data-begin-day="{{ $beginDay }}"
                                    data-end-day="{{ $endDay }}"
+                                   data-province-id = "{{ $data['province_id'] or 0 }}"
+                                   data-city-id = "{{ $data['city_id'] or 0 }}"
                                 >
                                     <i class="iconfont icon-qushitu"></i>分析图势</a>
                             </td>
@@ -80,7 +82,8 @@
         </div>
     </div>
     <div class="text-right">
-        {!!  $orderGoods->appends($data)->render()  !!}
+        <ul class="pagination">
+        </ul>
     </div>
 @stop
 
@@ -92,6 +95,7 @@
 @section('js')
     @parent
     <script type="text/javascript">
+        tablePage($('.goods-list'), $('.pagination'), 15);
         formSubmitByGet();
     </script>
 @stop

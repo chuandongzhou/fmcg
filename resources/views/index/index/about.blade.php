@@ -12,7 +12,9 @@
             </ul>
             <div class="pull-right right-title">
                 <a href="{{ url('/') }}">订百达首页</a>
-                <a href="{{ url('auth/login') }}">登录</a>
+                @if(!auth()->id())
+                    <a href="{{ url('auth/login') }}">登录</a>
+                @endif
             </div>
 
         </div>

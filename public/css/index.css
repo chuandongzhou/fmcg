@@ -85,6 +85,18 @@ a {
 .prompt {
   color: #777777; }
 
+.black {
+  color: #333333;
+  color: #333333; }
+  .black:hover, .black:focus {
+    color: #333333; }
+
+.gray-light {
+  color: #b4b4b4;
+  color: #b4b4b4; }
+  .gray-light:hover, .gray-light:focus {
+    color: #b4b4b4; }
+
 .prompt-coupon {
   color: #777777;
   font-size: 12px; }

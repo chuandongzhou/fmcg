@@ -10,10 +10,6 @@ class ChatController extends Controller
 {
     public function index()
     {
-//        $users = User::where('audit_status', 1)->where('user_name', 'supplier')->with('shop')->first();
-//        $result = (new MessageService())->usersHandle($users);
-//        dd($result);
-//
 
         $users = User::where('audit_status', 1)->with('shop')->paginate(15);
         $shopIds = $users->implode('shop.id', ',');
