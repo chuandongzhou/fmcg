@@ -182,7 +182,7 @@ class SalesmanCustomerController extends Controller
             'pieces_retailer',
             'price_wholesaler',
             'pieces_wholesaler',
-        ])->withGoodsPieces()->get()->each(function ($item) {
+        ])->whereNull('deleted_at')->where('status',cons('status.on'))->withGoodsPieces()->get()->each(function ($item) {
             $item->setAppends(['image_url']);
         });
         return $this->success(['goods' => $goods]);
