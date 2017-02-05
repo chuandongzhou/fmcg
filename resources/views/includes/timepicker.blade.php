@@ -12,13 +12,25 @@
     <script type="text/javascript">
         $(function () {
             $('.datetimepicker').each(function (i, obj) {
-                var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD HH:mm:ss';
-                if (obj.data('min-date')) {
-                    var date = new Date();
+                var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD HH:mm:ss', minDate = obj.data('min-date'), maxDate = obj.data('max-date');
+                if (minDate || maxDate) {
+                    var date = new Date(), minDateContent, maxDateContent;
                     var year = date.getFullYear();
                     var month = date.getMonth() + 1;
-                    var day = date.getDate() +  (parseInt(obj.data('min-date')) -1) ;
+                    var day = date.getDate();
                 }
+                if (minDate && typeof minDate != 'boolean') {
+                    minDateContent = new Date(obj.data('min-date'));
+                } else if (minDate && typeof minDate == 'boolean') {
+                    minDateContent = new Date(year + '-' + month + '-' + day);
+                }
+                if (maxDate && typeof maxDate != 'boolean') {
+                    maxDateContent = new Date(maxDate);
+                } else if (maxDate && typeof maxDate == 'boolean') {
+                    console.log(year + '-' + month + '-' + day);
+                    maxDateContent = new Date(year + '-' + month + '-' + day);
+                }
+
 
                 obj.datetimepicker({
                     icons: {
@@ -34,7 +46,9 @@
                     },
                     locale: 'zh-cn',
                     format: format,
-                    minDate: obj.data('min-date')? new Date(year + '-' + month + '-' + day) : false,
+                    minDate: minDate ? minDateContent : false,
+                    useCurrent: maxDate ? false : true,
+                    maxDate: maxDate ? maxDateContent : false,
                     widgetPositioning: {
                         horizontal: 'auto',
                         vertical: 'bottom'

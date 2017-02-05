@@ -33,8 +33,14 @@ class SalesmanAuthenticate
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest()) {
-            return response('Unauthorized.', 401);
+        if (!in_windows()) {
+            if ($this->auth->guest()) {
+                return response('Unauthorized.', 401);
+            } else {
+                if ($this->auth->user()->status == cons('status.off')) {
+                    return response('suspended', 403);
+                }
+            }
         }
 
         return $next($request);

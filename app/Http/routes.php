@@ -77,26 +77,27 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     });
 
     //业务管理
-    $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
-        $router->get('salesman/target', 'SalesmanController@target');
-        $router->resource('salesman', 'SalesmanController');
-        $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
-        $router->resource('salesman-customer', 'SalesmanCustomerController');
-        $router->get('report/{salesman_id}/export', 'ReportController@export');
-        $router->get('report/export', 'ReportController@exportIndex');
-        $router->get('display-info', 'DisplayInfoController@index');
-        $router->get('display-info/export', 'DisplayInfoController@export');
-        $router->resource('report', 'ReportController');
-        $router->resource('mortgage-goods', 'MortgageGoodsController');
-        $router->group(['prefix' => 'order'], function ($router) {
-            $router->get('export', 'SalesmanVisitOrderController@export');
-            $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
-            $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-            $router->get('browser-export/{salesman_visit_order}',
-                'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
-            $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
+    $router->group(['prefix' => 'business', 'namespace' => 'Business'],
+        function ($router) {
+            $router->get('salesman/target', 'SalesmanController@target');
+            $router->resource('salesman', 'SalesmanController');
+            $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+            $router->resource('salesman-customer', 'SalesmanCustomerController');
+            $router->get('report/{salesman_id}/export', 'ReportController@export');
+            $router->get('report/export', 'ReportController@exportIndex');
+            $router->get('display-info', 'DisplayInfoController@index');
+            $router->get('display-info/export', 'DisplayInfoController@export');
+            $router->resource('report', 'ReportController');
+            $router->resource('mortgage-goods', 'MortgageGoodsController');
+            $router->group(['prefix' => 'order'], function ($router) {
+                $router->get('export', 'SalesmanVisitOrderController@export');
+                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+                $router->get('browser-export/{salesman_visit_order}',
+                    'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
+                $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
+            });
         });
-    });
 
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
@@ -307,75 +308,78 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('latest-version', 'DeliveryController@latestVersion');//检查最新版本
         });
         //业务管理
-        $router->group(['prefix' => 'business', 'namespace' => 'Business'], function ($router) {
-            $router->post('auth/login', 'AuthController@login');
-            $router->get('auth/logout', 'AuthController@logout');
-            $router->group(['prefix' => 'salesman'], function ($router) {
-                $router->get('home-data', 'SalesmanController@homeData');
-                $router->get('export-target', 'SalesmanController@exportTarget');
-                $router->delete('batch-delete', 'SalesmanController@batchDelete');
-                $router->put('target-set', 'SalesmanController@targetSet');
-                $router->put('update-by-app', 'SalesmanController@updateByApp');
+        $router->post('business/auth/login', 'Business\AuthController@login');
+        $router->get('business/auth/logout', 'Business\AuthController@logout');
+        $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'salesman.auth'],
+            function ($router) {
+                $router->group(['prefix' => 'salesman'], function ($router) {
+                    $router->get('home-data', 'SalesmanController@homeData');
+                    $router->get('export-target', 'SalesmanController@exportTarget');
+                    $router->delete('batch-delete', 'SalesmanController@batchDelete');
+                    $router->put('target-set', 'SalesmanController@targetSet');
+                    $router->put('update-by-app', 'SalesmanController@updateByApp');
+                });
+
+                $router->post('salesman/lock', 'SalesmanController@postLock');
+                $router->put('salesman/password', 'SalesmanController@password');  //修改密码
+                $router->resource('salesman', 'SalesmanController');
+
+                $router->group(['prefix' => 'salesman-customer'], function ($router) {
+                    $router->put('update-by-app/{salesman_customer}',
+                        'SalesmanCustomerController@updateByApp');
+                    $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
+                    $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
+                    $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
+                    $router->get('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
+                    $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
+                    $router->get('purchased-goods', 'SalesmanCustomerController@purchasedGoods');//客户曾购买商品
+                });
+
+                $router->resource('salesman-customer', 'SalesmanCustomerController');
+                $router->get('visit/can-add/{customer_id}', 'SalesmanVisitController@canAdd')
+                    ->where('customer_id', '[0-9]+');
+                $router->get('visit/surplus-display-fee', 'SalesmanVisitController@surplusDisplayFee');//获取月份陈列费剩余情况
+                $router->get('visit/surplus-mortgage-goods',
+                    'SalesmanVisitController@surplusMortgageGoods');//获取月份陈列商品剩余情况
+                $router->resource('visit', 'SalesmanVisitController');
+
+                $router->group(['prefix' => 'order'], function ($router) {
+                    $router->delete('{order_id}', 'SalesmanVisitOrderController@destroy')->where('order_id', '[0-9]+');
+                    $router->delete('goods-delete/{goods_id}',
+                        'SalesmanVisitOrderController@goodsDelete')->where('goods_id', '[0-9]+');
+                    $router->delete('mortgage-goods-delete', 'SalesmanVisitOrderController@mortgageGoodsDelete');
+                    $router->post('update-all/{salesman_order_id}', 'SalesmanVisitOrderController@updateAll');
+                    $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+                    $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+                    $router->post('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
+                    $router->post('batch-sync', 'SalesmanVisitOrderController@batchSync');
+                    $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
+                    $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
+                    $router->put('update-order-display-fee', 'SalesmanVisitOrderController@updateOrderDisplayFee');
+                    $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
+                    $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');
+                    $router->get('return-order-detail/{order_id}', 'SalesmanVisitOrderController@returnOrderDetail');
+                    $router->get('display-fee-surplus', 'SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
+                    $router->get('mortgage-goods-surplus',
+                        'SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
+
+                });
+                //抵费商品
+                $router->group(['prefix' => 'mortgage-goods'], function ($router) {
+                    $router->get('/', 'MortgageGoodsController@index');
+                    $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
+                    $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
+                    $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
+                    $router->delete('batch-delete', 'MortgageGoodsController@batchDestroy'); //移除
+                    $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
+                });
+
+                $router->group(['prefix' => 'goods'], function ($router) {
+                    $router->get('categories', 'GoodsController@category'); //启/禁用
+                    $router->get('/', 'GoodsController@goods'); //启/禁用
+                });
+
             });
-
-            $router->post('salesman/lock','SalesmanController@postLock');
-            $router->put('salesman/password', 'SalesmanController@password');  //修改密码
-            $router->resource('salesman', 'SalesmanController');
-
-            $router->group(['prefix' => 'salesman-customer'], function ($router) {
-                $router->put('update-by-app/{salesman_customer}',
-                    'SalesmanCustomerController@updateByApp');
-                $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
-                $router->get('sale-goods', 'SalesmanCustomerController@saleGoods');
-                $router->delete('delete-sale-goods', 'SalesmanCustomerController@deleteSaleGoods');
-                $router->get('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
-                $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
-                $router->get('purchased-goods','SalesmanCustomerController@purchasedGoods');//客户曾购买商品
-            });
-
-            $router->resource('salesman-customer', 'SalesmanCustomerController');
-            $router->get('visit/can-add/{customer_id}', 'SalesmanVisitController@canAdd')
-                ->where('customer_id', '[0-9]+');
-            $router->get('visit/surplus-display-fee', 'SalesmanVisitController@surplusDisplayFee');//获取月份陈列费剩余情况
-            $router->get('visit/surplus-mortgage-goods', 'SalesmanVisitController@surplusMortgageGoods');//获取月份陈列商品剩余情况
-            $router->resource('visit', 'SalesmanVisitController');
-
-            $router->group(['prefix' => 'order'], function ($router) {
-                $router->delete('{order_id}', 'SalesmanVisitOrderController@destroy')->where('order_id', '[0-9]+');
-                $router->delete('goods-delete/{goods_id}',
-                    'SalesmanVisitOrderController@goodsDelete')->where('goods_id', '[0-9]+');
-                $router->delete('mortgage-goods-delete', 'SalesmanVisitOrderController@mortgageGoodsDelete');
-                $router->post('update-all/{salesman_order_id}', 'SalesmanVisitOrderController@updateAll');
-                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
-                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-                $router->post('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
-                $router->post('batch-sync', 'SalesmanVisitOrderController@batchSync');
-                $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
-                $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
-                $router->put('update-order-display-fee', 'SalesmanVisitOrderController@updateOrderDisplayFee');
-                $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
-                $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');
-                $router->get('return-order-detail/{order_id}', 'SalesmanVisitOrderController@returnOrderDetail');
-                $router->get('display-fee-surplus', 'SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
-                $router->get('mortgage-goods-surplus', 'SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
-
-            });
-            //抵费商品
-            $router->group(['prefix' => 'mortgage-goods'], function ($router) {
-                $router->get('/', 'MortgageGoodsController@index');
-                $router->put('{mortgage_goods}/status', 'MortgageGoodsController@status'); //启/禁用
-                $router->put('batch-status', 'MortgageGoodsController@batchStatus');//批量启/禁用
-                $router->put('{mortgage_goods}', 'MortgageGoodsController@update'); //修改
-                $router->delete('batch-delete', 'MortgageGoodsController@batchDestroy'); //移除
-                $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
-            });
-
-            $router->group(['prefix' => 'goods'], function ($router) {
-                $router->get('categories', 'GoodsController@category'); //启/禁用
-                $router->get('/', 'GoodsController@goods'); //启/禁用
-            });
-
-        });
         $router->group(['prefix' => 'wechat-pay'], function ($router) {
             $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
             $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id',

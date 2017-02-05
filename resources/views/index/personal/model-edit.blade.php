@@ -76,7 +76,7 @@
                           data-done-url="{{ url('personal/model/model-edit') }}"
                           autocomplete="off">
                         <div class="row">
-                            <div class="col-sm-12 item prompt">提示：建议上传尺寸1200*400的jpg图片</div>
+                            <div class="col-sm-12 item prompt">提示：建议上传尺寸1200*200的jpg图片</div>
                             @if(!empty($shop->shopHomeAdverts))
                                 @foreach($shop->shopHomeAdverts as $key => $shopHomeAdvert)
                                     <div class="col-sm-3 item upload-banner-item">
@@ -89,7 +89,7 @@
                                             <span class="pull-left name"> 广告轮播图{{ $key+1 }}</span>
                                             <input type="hidden" class="cropper-hidden" name="images[image][]"
                                                    value="{{ $shopHomeAdvert->image_url }}"/>
-                                            <button data-height="400" data-width="1200" data-target="#cropperModal"
+                                            <button data-height="200" data-width="1200" data-target="#cropperModal"
                                                     data-toggle="modal"
                                                     class="pull-right  upload-shopimg" type="button"
                                                     id="pic-upload" data-name="images[image][]">
@@ -126,7 +126,7 @@
                                             <span class="pull-left name"> 广告轮播图{{ count($shop->shopHomeAdverts)+$i+1 }}</span>
                                             <input type="hidden" class="cropper-hidden" name="images[image][]"
                                                    value=""/>
-                                            <button data-height="400" data-width="1200" data-target="#cropperModal"
+                                            <button data-height="200" data-width="1200" data-target="#cropperModal"
                                                     data-toggle="modal"
                                                     class="pull-right  upload-shopimg" type="button"
                                                     id="pic-upload" data-name="images[image][]">

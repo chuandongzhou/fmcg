@@ -1046,13 +1046,19 @@ function validform() {
         }
         return true;
     }, "三级单位不能与一级单位或二级单位相同");
+    $.validator.addMethod('nameTrim',function(){
+        if($('input[name="name"]').val().trim()==""){
+            return false;
+        }
+    },'商品名称必须填写');
     return $("form").validate({
         debug: true,
         errorClass: 'red ajax-error',
         errorElement: 'span',
         rules: {
             name: {
-                required: true
+                required: true,
+                nameTrim: true
             },
             bar_code: {
                 required: true,

@@ -1,13 +1,8 @@
 @extends('index.menu-master')
-
+@include('includes.timepicker')
 @section('subtitle', '个人中心-配送历史查询')
 @section('top-title')
     <a href="{{ url('personal/info') }}">个人中心</a> > <span class="second-level"> 配送历史</span>
-@stop
-@section('css')
-    @parent
-    <link href="{{ asset('js/lib/jquery/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}"
-          rel="stylesheet">
 @stop
 
 @section('right')
@@ -15,10 +10,10 @@
         <div class="col-sm-12 control-search">
             <form action="" method="get" autocomplete="off">
                 <input class="enter control datetimepicker" name="start_at"
-                       placeholder="开始时间" type="text" data-format="YYYY-MM-DD"
+                       placeholder="开始时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
                        value="{{ $search['start_at'] or '' }}">至
                 <input class="enter control datetimepicker" name="end_at"
-                       placeholder="结束时间" type="text" data-format="YYYY-MM-DD"
+                       placeholder="结束时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
                        value="{{ $search['end_at'] or '' }}">
                 <select name="delivery_man_id" class="control ajax-select">
                     <option value="">所有配送人员</option>
@@ -82,47 +77,6 @@
         </div>
 
     </div>
-@stop
-@section('js-lib')
-    @parent
-    <script src="{{ asset('js/lib/jquery/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('js/lib/jquery/moment/locales.min.js') }}"></script>
-    <script src="{{ asset('js/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script type="text/javascript">
-        $(function () {
-            formSubmitByGet();
-            $('.datetimepicker').each(function (i, obj) {
-                var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD';
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
-                var day = date.getDate() - 1;
-
-
-                obj.datetimepicker({
-                    icons: {
-                        time: "fa fa-clock-o",
-                        date: "fa fa-calendar",
-                        up: "fa fa-arrow-up",
-                        down: "fa fa-arrow-down",
-                        previous: "fa fa-chevron-left",
-                        next: "fa fa-chevron-right",
-                        today: "fa fa-screenshot",
-                        clear: "fa fa-trash",
-                        close: "fa fa-remove"
-                    },
-                    locale: 'zh-cn',
-                    format: format,
-                    useCurrent: false,
-                    maxDate: new Date(year + '-' + month + '-' + day),
-                    widgetPositioning: {
-                        horizontal: 'auto',
-                        vertical: 'bottom'
-                    }
-                });
-            });
-        });
-    </script>
 @stop
 @section('js')
     @parent
