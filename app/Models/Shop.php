@@ -69,11 +69,6 @@ class Shop extends Model
             $model->ShopSignature()->delete();
         });
         static::updated(function ($model) {
-            info($model->user);
-            (new UserService(true))->setShopDetail($model->user);
-        });
-        static::updated(function ($model) {
-            info($model->user);
             (new UserService(true))->setShopDetail($model->user);
         });
     }

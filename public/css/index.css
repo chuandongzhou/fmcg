@@ -4584,7 +4584,7 @@ table {
     margin-bottom: 20px; }
     .delivery .control-search .btn {
       border-radius: 4px !important;
-      padding: 0 15px; }
+     }
     .delivery .control-search .btn-default {
       background-color: #fff;
       color: #17C4BB;

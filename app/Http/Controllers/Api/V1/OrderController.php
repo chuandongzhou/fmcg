@@ -838,7 +838,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @param $order
+     * @param Order $order
      * @param bool $buyer
      * @return mixed
      */
@@ -847,7 +847,7 @@ class OrderController extends Controller
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce']);
         });
-        if (!$buyer && $order->user_id > 0) {
+        if (!$buyer && $order->user_id > 0 && $order->user) {
             $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
         }

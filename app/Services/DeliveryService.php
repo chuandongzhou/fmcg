@@ -23,8 +23,8 @@ class DeliveryService
             foreach ($order->orderGoods as $orderGoods) {
                 $pieces = $orderGoods->pieces . '';
 
-                $goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$pieces]['num'] = isset($goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$orderGoods->pieces]['num']) ? (int)$goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$orderGoods->pieces]['num'] + (int)$orderGoods->num : $orderGoods->num;
-                $goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$pieces]['price'] = isset($goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$orderGoods->pieces]['price']) ? bcadd($goods[$orderDelivery][$orderGoods->goods->name][$order->user_type_name][$orderGoods->pieces]['price'],
+                $goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$pieces]['num'] = isset($goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$orderGoods->pieces]['num']) ? (int)$goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$orderGoods->pieces]['num'] + (int)$orderGoods->num : $orderGoods->num;
+                $goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$pieces]['price'] = isset($goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$orderGoods->pieces]['price']) ? bcadd($goods[$orderDelivery][$orderGoods->goods_name][$order->user_type_name][$orderGoods->pieces]['price'],
                     $orderGoods->total_price, 2) : $orderGoods->total_price;
             }
             if (!empty($order->systemTradeInfo)) {

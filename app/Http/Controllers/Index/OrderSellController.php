@@ -131,9 +131,6 @@ class OrderSellController extends OrderController
 
         $goods = (new OrderService)->explodeOrderGoods($order);
 
-//        $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
-//        //拼接需要调用的模板名字
-//        $view = 'index.order.sell.detail-' . $viewName;
         $view = 'index.order.order-sell-detail';
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
         return view($view, [

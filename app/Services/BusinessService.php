@@ -247,8 +247,8 @@ class BusinessService extends BaseService
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_num']) ? $visitData[$customerId]['statistics'][$goods->goods_id]['order_num'] + $goods->num : $goods->num;
                     $visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'] = isset($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount']) ? bcadd($visitData[$customerId]['statistics'][$goods->goods_id]['order_amount'],
                         $goods->amount, 2) : $goods->amount;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['price'] = $goods instanceof SalesmanVisitGoodsRecord ? $goods->goods->{'price_' . $customerTypeName} : $goods->price;
-                    $visitData[$customerId]['statistics'][$goods->goods_id]['pieces'] = $goods instanceof SalesmanVisitGoodsRecord ? $goods->goods->{'pieces_' . $customerTypeName} : $goods->pieces;
+                    $visitData[$customerId]['statistics'][$goods->goods_id]['price'] = $goods instanceof SalesmanVisitGoodsRecord ? '- -' : $goods->price;
+                    $visitData[$customerId]['statistics'][$goods->goods_id]['pieces'] = $goods instanceof SalesmanVisitGoodsRecord ? null : $goods->pieces;
 
                     $visitData[$customerId]['amount'] = bcadd($visitData[$customerId]['amount'], $goods->amount, 2);
 

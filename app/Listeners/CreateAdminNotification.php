@@ -42,7 +42,7 @@ class CreateAdminNotification
     protected $textTemplates = [
         'role-create' => '角色 [<a href="/admin/role/{$id}/edit">{$name}</a>] 添加成功',
         'admin-create' => '管理员账户 [<a href="/admin/admin/{$id}/edit">{$name}</a>] 添加成功，所属角色：{$role.name}',
-        'user-create' => '用户 [<a href="/admin/shop/{$shop_id}/edit">{$name}</a>] 注册成功',
+        'user-create' => '用户 [<a href="/admin/user/{$id}/edit">{$name}</a>] 注册成功',
         'category-create' => '商品分类 [<a href="/admin/category/{$id}/edit">{$name}</a>] 添加成功',
         'attr-create' => '商品标签 [<a href="/admin/attr/{$id}/edit">{$name}</a>] 添加成功',
         'images-create' => '商品图片条形码 [<a href="/admin/images">{$bar_code}</a>] 添加成功',

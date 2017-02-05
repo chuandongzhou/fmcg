@@ -47,6 +47,16 @@ class OrderGoods extends Model
     }
 
     /**
+     * 商品名
+     *
+     * @return string
+     */
+    public function getGoodsNameAttribute()
+    {
+        return $this->goods ? $this->goods->name : '';
+    }
+
+    /**
      * 获取商品图片
      *
      * @return string

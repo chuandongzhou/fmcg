@@ -71,7 +71,7 @@ class PromoterController extends Controller
      * Update the specified resource in storage.
      *
      * @param \App\Http\Requests\Admin\UpdatePromoterRequest $request
-     * @param $promoter
+     * @param Promoter $promoter
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function update(Requests\Admin\UpdatePromoterRequest $request, $promoter)

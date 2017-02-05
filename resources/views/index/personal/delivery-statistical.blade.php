@@ -87,12 +87,10 @@
                             <tbody>
                             @foreach($allgoods as $goodsName => $goods)
                                 @foreach($goods as $userType => $detail)
-
                                     @foreach($detail as $goodsPieces=>$goodsDetail)
                                         <tr>
                                             @if(array_keys($goods)[0]==$userType && array_keys($detail)[0]==$goodsPieces)
-                                                <td
-                                                        rowspan="{{ count(array_flatten($goods))/2 }}">{{ $goodsName }}</td>
+                                                <td rowspan="{{ count(array_flatten($goods))/2 }}">{{ $goodsName  }}</td>
                                             @endif
                                             @if(array_keys($detail)[0]==$goodsPieces)
                                                 <td rowspan="{{ count($detail) }}">{{ cons()->valueLang('user.type', cons('user.type.'.$userType)) }}</td>

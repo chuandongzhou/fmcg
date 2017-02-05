@@ -16,13 +16,13 @@ class DeliveryController extends Controller
      * 配送历史查询．
      *
      * @param \Illuminate\Http\Request $request
-     * $return \Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function historyDelivery(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) && !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay(): '';
-        $search['end_at'] = isset($search['end_at'])  && !empty($search['end_at'])? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['start_at'] = isset($search['start_at']) && !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
+        $search['end_at'] = isset($search['end_at']) && !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
         $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',
@@ -36,16 +36,16 @@ class DeliveryController extends Controller
 
     /**
      * 配送统计
-     *  * @param \Illuminate\Http\Request $request
-     * $return \Illuminate\View\View
      *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function statisticalDelivery(Request $request)
     {
         $search = $request->all();
-       $data = (new DeliveryService())->deliveryStatistical($search);
-     //   dd($data);
-        return view('index.personal.delivery-statistical', ['data' => $data['delivery'], 'search' => $search,'deliveryNum'=>$data['deliveryNum']]);
+        $data = (new DeliveryService())->deliveryStatistical($search);
+        return view('index.personal.delivery-statistical',
+            ['data' => $data['delivery'], 'search' => $search, 'deliveryNum' => $data['deliveryNum']]);
     }
 
     /**
@@ -115,9 +115,9 @@ class DeliveryController extends Controller
         $table->addRow();
         $table->addCell(9000, $gridSpan6)->addText('商品列表', null, $cellAlignCenter);
 
-        foreach($data['goods'] as $deliveryNum => $allgoods){
+        foreach ($data['goods'] as $deliveryNum => $allgoods) {
             $table->addRow();
-            $table->addCell(9000, $gridSpan6)->addText($deliveryNum.'人', null, $cellAlignCenter);
+            $table->addCell(9000, $gridSpan6)->addText($deliveryNum . '人', null, $cellAlignCenter);
             $table->addRow();
             $table->addCell(3000, $gridSpan2)->addText('商品名称', null, $cellAlignCenter);
             $table->addCell(3000, $gridSpan2)->addText('购买角色', null, $cellAlignCenter);
@@ -126,22 +126,26 @@ class DeliveryController extends Controller
             foreach ($allgoods as $goodsName => $goods) {
 
                 foreach ($goods as $userType => $detail) {
-                    foreach($detail as $goodsPieces=>$goodsDetail){
+                    foreach ($detail as $goodsPieces => $goodsDetail) {
                         $table->addRow();
-                        if (array_keys($goods)[0]==$userType && array_keys($detail)[0]==$goodsPieces) {
+                        if (array_keys($goods)[0] == $userType && array_keys($detail)[0] == $goodsPieces) {
                             $table->addCell(3000, array_merge($gridSpan2, $cellRowSpan))->addText($goodsName, null,
                                 $cellAlignCenter);
                         } else {
                             $table->addCell(null, array_merge($gridSpan2, $cellRowContinue));
                         }
-                        if(array_keys($detail)[0]==$goodsPieces){
-                            $table->addCell(3000, array_merge($gridSpan2, $cellRowSpan))->addText(cons()->valueLang('user.type', cons('user.type.'.$userType)), null,
+                        if (array_keys($detail)[0] == $goodsPieces) {
+                            $table->addCell(3000,
+                                array_merge($gridSpan2, $cellRowSpan))->addText(cons()->valueLang('user.type',
+                                cons('user.type.' . $userType)), null,
                                 $cellAlignCenter);
-                        }else{
+                        } else {
                             $table->addCell(null, array_merge($gridSpan2, $cellRowContinue));
                         }
 
-                        $table->addCell(3000, $gridSpan1)->addText($goodsDetail['num'] .cons()->valueLang('goods.pieces', $goodsPieces), null,
+                        $table->addCell(3000,
+                            $gridSpan1)->addText($goodsDetail['num'] . cons()->valueLang('goods.pieces', $goodsPieces),
+                            null,
                             $cellAlignCenter);
                         $table->addCell(3000, $gridSpan1)->addText($goodsDetail['price'], null, $cellAlignCenter);
 
