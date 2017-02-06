@@ -1017,7 +1017,7 @@ function validform() {
 
     }, "二级单位必须");
     $.validator.addMethod("system_1_check", function () {
-        if (($('select[name="pieces_level_2"]').val() != '' || $('input[name="system_2"]').val() != '' || $('select[name="pieces_level_3"]').val() != '')&& $('input[name="system_1"]').val() == '' ) {
+        if (($('select[name="pieces_level_2"]').val() != '' || $('input[name="system_2"]').val() != '' || $('select[name="pieces_level_3"]').val() != '') && $('input[name="system_1"]').val() == '') {
             return false;
         }
         return true;
@@ -1046,11 +1046,12 @@ function validform() {
         }
         return true;
     }, "三级单位不能与一级单位或二级单位相同");
-    $.validator.addMethod('nameTrim',function(){
-        if($('input[name="name"]').val().trim()==""){
+    $.validator.addMethod('nameTrim', function () {
+        if ($('input[name="name"]').val().trim() == "") {
             return false;
         }
-    },'商品名称必须填写');
+        return true;
+    }, '商品名称必须填写');
     return $("form").validate({
         debug: true,
         errorClass: 'red ajax-error',

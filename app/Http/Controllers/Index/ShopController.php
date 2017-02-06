@@ -107,10 +107,10 @@ class ShopController extends Controller
             return back()->withInput();
         }
 
-        if ($shop->images->isEmpty()) {
-            $advert = (new ShopService())->getAdvertFirstImage();
-            $shop->images[0] = $advert->image;
-        }
+//        if ($shop->images->isEmpty()) {
+//            $advert = (new ShopService())->getAdvertFirstImage();
+//            $shop->images[0] = $advert->image;
+//        }
         $shop->adverts = $shop->shopHomeAdverts()->with('image')->active()->get();
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();

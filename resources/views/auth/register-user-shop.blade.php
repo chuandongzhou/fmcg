@@ -32,11 +32,12 @@
                               action="{{  url('api/v1/auth/register')  }}"
                               accept-charset="UTF-8" data-done-url="{{ url('auth/reg-success') }}" autocomplete="off">
                             <fieldset>
-                                <input type="hidden" name="user_name" value="{{ $user['user_name'] }}" />
-                                <input type="hidden" name="type" value="{{ $user['type'] }}" />
-                                <input type="hidden" name="backup_mobile" value="{{ $user['backup_mobile'] }}" />
-                                <input type="hidden" name="password" value="{{ $user['password'] }}" />
-                                <input type="hidden" name="password_confirmation" value="{{ $user['password_confirmation'] }}" />
+                                <input type="hidden" name="user_name" value="{{ $user['user_name'] }}"/>
+                                <input type="hidden" name="type" value="{{ $user['type'] }}"/>
+                                <input type="hidden" name="backup_mobile" value="{{ $user['backup_mobile'] }}"/>
+                                <input type="hidden" name="password" value="{{ $user['password'] }}"/>
+                                <input type="hidden" name="password_confirmation"
+                                       value="{{ $user['password_confirmation'] }}"/>
                                 <div class="form-group">
                                     <label class="col-xs-3 control-label" for="name"><span class="red">*</span>
                                         <span class="prompt">店家名称:</span></label>
@@ -49,7 +50,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-xs-3 control-label" for="username"><span class="red">*</span> <span
+                                    <label class="col-xs-3 control-label" for="username"><span
+                                                class="red">*</span> <span
                                                 class="prompt">联系人:</span></label>
 
                                     <div class="col-xs-9 col-md-6">
@@ -200,8 +202,9 @@
 
                                     <div class="col-sm-9 col-md-8 padding-clear">
                                         <div class="col-sm-12">
-                                            <a id="add-address" class="btn btn-default" href="javascript:" data-target="#addressModal"
-                                               data-toggle="modal" data-loading-text="地址达到最大数量" >添加配送区域</a>
+                                            <a id="add-address" class="btn btn-default personal-add" href="javascript:"
+                                               data-target="#addressModal"
+                                               data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
                                         </div>
                                         <div class="address-list col-lg-12">
 
@@ -233,7 +236,7 @@
     <script type="text/javascript">
         $(function () {
 
-           getShopAddressMap(0, 0);
+            getShopAddressMap(0, 0);
             picFunc();
             $('select.address').change(function () {
                 var provinceControl = $('select[name="address[province_id]"]'),
@@ -246,23 +249,23 @@
                         streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
-            $('select[name="type"]').change(function () {
-                var type = $(this).val(),
-                        wholesalerType = '{{ cons('user.type.wholesaler') }}',
-                        agencyContract = $('span[name="agency_contract"]'),
-                        addAddress = $('#add-address');
-                if (type < wholesalerType) {
-                    addAddress.prop('disabled' , true).closest('.form-group').addClass('hidden').find('.address-list').html('');
+
+            var type = $('input[name="type"]').val(),
+                    wholesalerType = '{{ cons('user.type.wholesaler') }}',
+                    agencyContract = $('span[name="agency_contract"]'),
+                    addAddress = $('#add-address');
+            if (type < wholesalerType) {
+                addAddress.prop('disabled', true).closest('.form-group').addClass('hidden').find('.address-list').html('');
+                agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
+            } else {
+                if (type == wholesalerType) {
                     agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
                 } else {
-                    if(type == wholesalerType) {
-                        agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);
-                    }else {
-                        agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
-                    }
-                    addAddress.prop('disabled' , false).closest('.form-group').removeClass('hidden');
+                    agencyContract.closest('.form-group').removeClass('hidden').find('input[type="file"]').prop('disabled', false);
                 }
-            })
+                addAddress.prop('disabled', false).closest('.form-group').removeClass('hidden');
+            }
+
         })
     </script>
 @stop

@@ -252,7 +252,7 @@ class OrderController extends Controller
         }
 
         $flag = DB::transaction(function () use ($order) {
-            $shopId= $order->user->shop->id;
+            $shopId = $order->user->shop->id;
             foreach ($order->orderGoods as $goods) {
                 $confirmOrderDetail = ConfirmOrderDetail::where([
                     'goods_id' => $goods->goods_id,
@@ -266,7 +266,7 @@ class OrderController extends Controller
                         'shop_id' => $shopId,
                     ]);
                 } else {
-                   $confirmOrderDetail->fill(['price' => $goods->price,'pieces' => $goods->pieces])->save();
+                    $confirmOrderDetail->fill(['price' => $goods->price, 'pieces' => $goods->pieces])->save();
                 }
             }
             $res = $this->_syncToBusiness($order) && $order->fill([
@@ -704,7 +704,7 @@ class OrderController extends Controller
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
             $orderGoods->delete();
-            if ($order->orderGoods->count() == 0) {
+            if ($order->orderGoods()->where('type', cons('order.goods.type.order_goods'))->count() == 0) {
                 //订单商品删完了标记为作废
                 $order->fill(['status' => cons('order.status.invalid'), 'price' => 0])->save();
             } elseif ($orderGoodsPrice > 0) {

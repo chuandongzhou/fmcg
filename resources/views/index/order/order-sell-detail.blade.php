@@ -306,10 +306,9 @@
                                                    data-num="{{ $goods->pivot->num }}"
                                                    data-pivot="{{  $goods['pivot']['id'] }}"><i
                                                             class="iconfont icon-xiugai"></i>修改</a>
-                                                <a class=" red ajax" data-method="delete"
-                                                   data-done-url="{{ url('order-sell/detail?order_id='.$order->id) }}"
-                                                   data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}">
-                                                    <i class="iconfont icon-shanchu"></i>删除</a>
+                                                <a class="ajax red"
+                                                   data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
+                                                   data-method="delete"><i class="iconfont icon-shanchu"></i>删除</a>
                                             </td>
                                         @endif
                                     </tr>

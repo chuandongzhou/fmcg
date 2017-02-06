@@ -3,7 +3,7 @@
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form class="form-horizontal ajax-form" action=""
+                <form class="form-horizontal ajax-form address-form" action=""
                       method="" data-help-class="col-sm-push-2 col-sm-10"
                       data-done-url="{{ url('personal/delivery-area') }}" data-no-loading="true" autocomplete="off">
                     <div class="modal-header choice-header">
@@ -82,7 +82,6 @@
     <script type="text/javascript">
         $(function () {
             addressSelectChange();
-
             var addressModal = $('#addressModal'),
                     form = addressModal.find('form'), province = $('select[name="province_id"]'),
                     city = $('select[name="city_id"]'),
@@ -112,6 +111,11 @@
             }).on('hide.bs.modal', function (e) {
                 form.formValidate('reset');
             });
+
+            @if(isset($model) && $model == 'shop')
+                addAddFunc();
+            @endif
+
 
 
         })

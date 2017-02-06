@@ -10,7 +10,7 @@
     <form action="#" method="post">
         <div class="row shopping-address-wrap margin-clear">
             <div class="col-sm-12 table-responsive">
-                <a class="personal-add" id="add-address" type="button"
+                <a class="personal-add add" id="add-address" type="button"
                    data-target="#shippingAddressModal"
                    data-toggle="modal"><label><span class="fa fa-plus"></span></label>添加收货地址
                 </a>

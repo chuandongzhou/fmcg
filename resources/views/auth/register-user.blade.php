@@ -65,7 +65,8 @@
                                         <button type="button"
                                                 class="btn btn-warning  form-control send-sms no-prompt geetest-btn"
                                                 data-url="{{ url('api/v1/auth/reg-send-sms') }}" data-method="post"
-                                                data-done-then="none" data-prevent-default="none">获取验证码
+                                                data-done-then="none" data-prevent-default="none"
+                                                data-no-loading="true">获取验证码
                                         </button>
                                         <div id="mask"></div>
                                         <div id="popup-captcha">
@@ -120,6 +121,7 @@
                         $this.next('button').html(i + ' 秒后重试');
                     },
                     done: function () {
+                        $this.prop('disabled', false);
                         $this.next('button').prop('disabled', false).removeClass('btn-default').addClass('btn-success');
                         $this.next('button').html('重新获取');
                     },
@@ -128,7 +130,7 @@
             }).on('fail.hct.ajax', function (jqXHR, textStatus, errorThrown) {
                 var $this = $(this);
                 var json = textStatus['responseJSON'];
-                $this.next('button').html(typeof(json)!='undefined'?json['message']: '获取失败').prop('disabled', true);
+                $this.next('button').html(typeof(json) != 'undefined' ? json['message'] : '获取失败').prop('disabled', true);
                 setTimeout(function () {
                     $this.next('button').html('重新获取').prop('disabled', false);
                 }, 2000);

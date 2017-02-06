@@ -302,7 +302,7 @@ var commonJQueryExtendSetup = function () {
                     control.focus();
                     firstControl = false;
                 }
-                var formGroup = control.closest('.form-group').length? control.closest('.form-group') : control.parent()
+                var formGroup = control.closest('.form-group').length ? control.closest('.form-group') : control.parent()
                     , helpBlock = formGroup.find('.ajax-error');
                 formGroup.addClass('has-' + state);
 
@@ -547,9 +547,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-        //, addButton = $('#add-address')
+    //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        //, addLimit = 500   //最大地址限制
+    //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -607,6 +607,7 @@ var addAddFunc = function () {
             minMoneyText +
             '</div>'
         );
+        return false;
     });
 };
 

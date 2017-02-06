@@ -108,11 +108,11 @@ class ShopService extends RedisService
      *
      * @return mixed
      */
-    public function getAdvertFirstImage()
-    {
-        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->first();
-        return $advert->image ? $advert : new Advert;
-    }
+//    public function getAdvertFirstImage()
+//    {
+//        $advert = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->first();
+//        return $advert->image ? $advert : new Advert;
+//    }
 
     /**
      * 获取店铺默认收货地址

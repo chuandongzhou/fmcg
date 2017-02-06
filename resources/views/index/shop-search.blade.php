@@ -188,13 +188,13 @@
                     </li>
                     <li><a class="list-name" href="{{ url('shop/' . $shop->id) }}">店铺首页</a></li>
                     <li>
-                        <a href="{{  request()->is('shop/all-goods/*','goods/*')?url('shop/' . $shop->id.'#rxp'):'#rxp' }}"
+                        <a href="{{  request()->is('shop/all-goods/*','goods/*','shop/*/search*')?url('shop/' . $shop->id.'#rxp'):'#rxp' }}"
                            class="list-name">热销品</a></li>
                     <li>
-                        <a href="{{  request()->is('shop/all-goods/*','goods/*')?url('shop/' . $shop->id.'#dptj'):'#dptj' }}"
+                        <a href="{{  request()->is('shop/all-goods/*','goods/*','shop/*/search*')?url('shop/' . $shop->id.'#dptj'):'#dptj' }}"
                            class="list-name">店铺推荐</a></li>
                     <li>
-                        <a href="{{  request()->is('shop/all-goods/*','goods/*')?url('shop/' . $shop->id.'#psdq'):'#psdq' }}"
+                        <a href="{{  request()->is('shop/all-goods/*','goods/*','shop/*/search*')?url('shop/' . $shop->id.'#psdq'):'#psdq' }}"
                            class="list-name">配送地区</a></li>
                 </ul>
             </div>

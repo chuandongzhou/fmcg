@@ -141,7 +141,7 @@ class MyGoodsController extends Controller
         }
 
         $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
-            $goods->category_id)->get()->toArray();
+            $goods->category_id)->active()->get()->toArray();
         //店铺配送地址
         $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea;

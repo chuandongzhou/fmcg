@@ -56,7 +56,7 @@ class OrderSellController extends OrderController
         $orders = $orders->orderBy('updated_at', 'desc')->paginate();
         $orders->each(function ($order) {
             $order->user && $order->user->shop->setAppends([]);
-           $order->goods =  $order->goods->filter(function($good){
+            $order->goods = $order->goods->filter(function ($good) {
                 return $good->pivot->type == cons('order.goods.type.order_goods');
             });
         });
@@ -124,7 +124,7 @@ class OrderSellController extends OrderController
             'shippingAddress.address', 'systemTradeInfo',
             'orderChangeRecode')->find(intval($request->input('order_id')));
         if (!$order) {
-            return $this->error('订单不存在');
+            return redirect('order-sell');
         }
 
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
