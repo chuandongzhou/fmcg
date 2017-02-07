@@ -202,7 +202,7 @@
 
                                     <div class="col-sm-9 col-md-8 padding-clear">
                                         <div class="col-sm-12">
-                                            <a id="add-address" class="btn btn-default personal-add" href="javascript:"
+                                            <a id="add-address" class="btn btn-default" href="javascript:"
                                                data-target="#addressModal"
                                                data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
                                         </div>
@@ -240,20 +240,20 @@
             picFunc();
             $('select.address').change(function () {
                 var provinceControl = $('select[name="address[province_id]"]'),
-                        cityControl = $('select[name="address[city_id]"]'),
-                        districtControl = $('select[name="address[district_id]"]'),
-                        streetControl = $('select[name="address[street_id]"]'),
-                        provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
-                        cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
-                        districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
-                        streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
+                    cityControl = $('select[name="address[city_id]"]'),
+                    districtControl = $('select[name="address[district_id]"]'),
+                    streetControl = $('select[name="address[street_id]"]'),
+                    provinceVal = provinceControl.val() ? provinceControl.find("option:selected").text() : '',
+                    cityVal = cityControl.val() ? cityControl.find("option:selected").text() : '',
+                    districtVal = districtControl.val() ? districtControl.find("option:selected").text() : '',
+                    streetVal = streetControl.val() ? streetControl.find("option:selected").text() : '';
                 $('input[name="address[area_name]"]').val(provinceVal + cityVal + districtVal + streetVal);
             })
 
             var type = $('input[name="type"]').val(),
-                    wholesalerType = '{{ cons('user.type.wholesaler') }}',
-                    agencyContract = $('span[name="agency_contract"]'),
-                    addAddress = $('#add-address');
+                wholesalerType = '{{ cons('user.type.wholesaler') }}',
+                agencyContract = $('span[name="agency_contract"]'),
+                addAddress = $('#add-address');
             if (type < wholesalerType) {
                 addAddress.prop('disabled', true).closest('.form-group').addClass('hidden').find('.address-list').html('');
                 agencyContract.closest('.form-group').addClass('hidden').find('input[type="file"]').prop('disabled', true);

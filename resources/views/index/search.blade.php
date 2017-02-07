@@ -26,7 +26,7 @@
                             <li><a href="javascript:void(0)" data-type="supplier">供应商</a></li>
                         </ul>
                     </div>
-                    <input type="text" name="name" class="control pull-right" aria-describedby="course-search">
+                    <input type="text" name="name" value="{{ isset($data) ? array_get($data, 'name') : '' }}" class="control pull-right" aria-describedby="course-search">
                     <span class="input-group-btn btn-primary">
                         <button class="btn btn-primary search-btn" type="submit">搜索</button>
                     </span>

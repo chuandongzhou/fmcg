@@ -98,8 +98,7 @@
             <div class="col-sm-4  right-search">
                 <form class="search search-form" role="search" autocomplete="off" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="name" placeholder="请输入商品名称"
-                               aria-describedby="course-search">
+                        <input type="text" class="form-control" name="name" value="{{ isset($data) ? array_get($data, 'name') : '' }}" placeholder="请输入商品名称" aria-describedby="course-search">
                     <span class="input-group-btn ">
                         <button type="button" class="btn btn-primary search-btn search-shop">搜本店</button>
                          <button type="button" class="btn btn-primary search-site search-station">搜本站</button>

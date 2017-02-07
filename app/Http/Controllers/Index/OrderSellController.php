@@ -126,6 +126,7 @@ class OrderSellController extends OrderController
 
         $view = 'index.order.order-sell-detail';
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
+
         return view($view, [
             'order' => $order,
             'mortgageGoods' => $goods['mortgageGoods'],
