@@ -89,102 +89,105 @@
                         </thead>
                         <tbody>
                         @foreach($order->goods as $key => $goods)
-                            <tr>
-                                <td width="50%">
-                                    <img class="store-img" src="{{ $goods->image_url }}">
+                            @if($goods['pivot']['type']==cons('order.goods.type.order_goods'))
+                                <tr>
+                                    <td width="50%">
+                                        <img class="store-img" src="{{ $goods->image_url }}">
 
-                                    <div class="product-panel">
-                                        <a class="product-name ellipsis"
-                                           href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
-                                        {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
+                                        <div class="product-panel">
+                                            <a class="product-name ellipsis"
+                                               href="{{  url('my-goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+                                            {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
 
-                                    </div>
-                                </td>
-                                <td width="10%" class="bordered text-center">
-                                    <span class="red">¥{{ $goods['pivot']['price'] }}</span>
-                                    /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
-                                </td>
-                                </td>
-                                <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
-                                @if(0 == $key )
-                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
-                                        width="15%">
-                                        <p>{{ $order['status_name'] }}</p>
-
-                                        <p>{{ $order['payment_type'] }}</p>
-
-                                        <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                        </div>
                                     </td>
-                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
-                                        width="15%">
-                                        <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
-                                              class="btn btn-blue">查看</a></p>
-                                        @if(!$order['is_cancel'])
-                                            @if($order->can_confirm)
-                                                <p>
-                                                    <a class="btn btn-warning ajax" data-method='put'
-                                                       data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
-                                                        确认订单
-                                                    </a>
-                                                </p>
-                                            @endif
-                                            @if($order['can_send'])
-                                                <p>
-                                                    <a class="btn btn-warning send-goods"
-                                                       data-target="#sendModal" data-toggle="modal"
-                                                       data-id="{{ $order['id'] }}">
-                                                        发货
-                                                    </a>
-                                                </p>
-                                            @elseif($order['can_confirm_collections'])
-                                                <p><a class="btn btn-blue ajax" data-method='put'
-                                                      data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
-                                                      data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
-                                            @endif
-                                            @if($order['can_export'])
-                                                <p>
-                                                    <a class="btn btn-blue-lighter" target="_blank"
-                                                       href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
-                                                </p>
-                                                <p>
-                                                    <a class="btn btn-blue-lighter"
-                                                       href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
-
-
-                                                <div class="prompt">
-                                                    （{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
-                                                    ）
-                                                </div>
-                                                </p>
-                                            @endif
-                                            @if($order->can_refund)
-                                                <p>
-                                                    <a class="btn btn-red refund" data-target="#refund"
-                                                       data-toggle="modal"
-                                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                        取消并退款
-                                                    </a>
-                                                </p>
-                                            @elseif($order['can_cancel'])
-                                                <p>
-                                                    <a class="btn btn-red ajax" data-method='put'
-                                                       data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                                       data-data='{"order_id":{{ $order->id }}}'>
-                                                        取消
-                                                    </a>
-                                                </p>
-                                            @elseif($order['can_invalid'])
-                                                <p>
-                                                    <a class="btn btn-red ajax" data-method='put'
-                                                       data-url="{{ url('api/v1/order/invalid/' . $order->id) }}">
-                                                        作废
-                                                    </a>
-                                                </p>
-                                            @endif
-                                        @endif
+                                    <td width="10%" class="bordered text-center">
+                                        <span class="red">¥{{ $goods['pivot']['price'] }}</span>
+                                        /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}
                                     </td>
-                                @endif
-                            </tr>
+                                    </td>
+                                    <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
+                                    @if(0 == $key )
+                                        <td rowspan="{{ count($order['goods'])}}"
+                                            class="pay-detail text-center bordered"
+                                            width="15%">
+                                            <p>{{ $order['status_name'] }}</p>
+
+                                            <p>{{ $order['payment_type'] }}</p>
+
+                                            <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                        </td>
+                                        <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                            width="15%">
+                                            <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
+                                                  class="btn btn-blue">查看</a></p>
+                                            @if(!$order['is_cancel'])
+                                                @if($order->can_confirm)
+                                                    <p>
+                                                        <a class="btn btn-warning ajax" data-method='put'
+                                                           data-url="{{ url('api/v1/order/order-confirm/' . $order->id) }}">
+                                                            确认订单
+                                                        </a>
+                                                    </p>
+                                                @endif
+                                                @if($order['can_send'])
+                                                    <p>
+                                                        <a class="btn btn-warning send-goods"
+                                                           data-target="#sendModal" data-toggle="modal"
+                                                           data-id="{{ $order['id'] }}">
+                                                            发货
+                                                        </a>
+                                                    </p>
+                                                @elseif($order['can_confirm_collections'])
+                                                    <p><a class="btn btn-blue ajax" data-method='put'
+                                                          data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
+                                                          data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
+                                                @endif
+                                                @if($order['can_export'])
+                                                    <p>
+                                                        <a class="btn btn-blue-lighter" target="_blank"
+                                                           href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
+                                                    </p>
+                                                    <p>
+                                                        <a class="btn btn-blue-lighter"
+                                                           href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
+
+
+                                                    <div class="prompt">
+                                                        （{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
+                                                        ）
+                                                    </div>
+                                                    </p>
+                                                @endif
+                                                @if($order->can_refund)
+                                                    <p>
+                                                        <a class="btn btn-red refund" data-target="#refund"
+                                                           data-toggle="modal"
+                                                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                            取消并退款
+                                                        </a>
+                                                    </p>
+                                                @elseif($order['can_cancel'])
+                                                    <p>
+                                                        <a class="btn btn-red ajax" data-method='put'
+                                                           data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                                           data-data='{"order_id":{{ $order->id }}}'>
+                                                            取消
+                                                        </a>
+                                                    </p>
+                                                @elseif($order['can_invalid'])
+                                                    <p>
+                                                        <a class="btn btn-red ajax" data-method='put'
+                                                           data-url="{{ url('api/v1/order/invalid/' . $order->id) }}">
+                                                            作废
+                                                        </a>
+                                                    </p>
+                                                @endif
+                                            @endif
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endif
                         @endforeach
                         </tbody>
                     </table>

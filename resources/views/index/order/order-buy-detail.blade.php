@@ -81,7 +81,7 @@
                                 <th>支付方式</th>
                                 <th>订单状态</th>
                                 <th>备注</th>
-                                <th>操作</th>
+                                <th class="operate-title">操作</th>
                                 </thead>
 
                                 <tr>
@@ -108,10 +108,10 @@
                                         @endif
                                         @if($order['pay_status']==cons('order.pay_status.refund_success'))
 
-                                                <a class="iconfont icon-tixing pull-right"
-                                                   data-container="body" data-toggle="popover" data-placement="bottom"
-                                                   data-content="退款原因:（{{ $order->orderRefund->reason }}）">
-                                                </a>
+                                            <a class="iconfont icon-tixing pull-right"
+                                               data-container="body" data-toggle="popover" data-placement="bottom"
+                                               data-content="退款原因:（{{ $order->orderRefund->reason }}）">
+                                            </a>
 
 
                                         @endif
@@ -355,7 +355,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ '╳'.$goods['pivot']['num'].'/'.cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
+                                            <td>{{ '╳'.$goods['pivot']['num'].cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
                                         </tr>
 
                                     @endforeach
@@ -475,6 +475,9 @@
     <script type="text/javascript">
         $(function () {
             $("[data-toggle='popover']").popover();
+            if (!$('.operate').find('a').length) {
+                $('.operate,.operate-title').css('display', 'none');
+            }
         });
     </script>
     @parent

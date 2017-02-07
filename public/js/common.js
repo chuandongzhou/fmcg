@@ -590,7 +590,7 @@ var addAddFunc = function () {
             districtText = district.is(':visible') ? district.find("option:selected").text() : '',
             streetText = !street.is(':visible') || street.find("option:selected").text() == '请选择街道...' ? '' : street.find("option:selected").text(),
             addressText = address.val(),
-            minMoneyText = minMoney.length ? '<input type="hidden" name="area[extra_common_param][]" value="' + minMoney.val() + '"/>' : '',
+            minMoneyText = minMoney.length ? minMoney.val() : '',
             areaName = provinceText + cityText + districtText + streetText;
         $('.modal-header .close').trigger('click');
         container.prepend(
@@ -603,8 +603,8 @@ var addAddFunc = function () {
             '<input type="hidden" name="area[street_id][]" value="' + street.val() + '"/>' +
             '<span class="fa fa-times-circle pull-right close-icon"></span>' +
             '<input type="hidden" name="area[area_name][]" value="' + areaName + '"/>' +
-            '<input type="hidden" name="area[address][]" value="' + addressText + '"/>' +
-            minMoneyText +
+            '<input type="hidden" name="area[address][]" value="' + addressText + '"/>'
+            + "(" + minMoneyText + ")" +
             '</div>'
         );
         return false;

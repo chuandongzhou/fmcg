@@ -53,17 +53,10 @@ class OrderSellController extends OrderController
         }
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
-        $orders = $orders->orderBy('updated_at', 'desc')->paginate();
-        $orders->each(function ($order) {
-            $order->user && $order->user->shop->setAppends([]);
-            $order->goods = $order->goods->filter(function ($good) {
-                return $good->pivot->type == cons('order.goods.type.order_goods');
-            });
-        });
         return view('index.order.order-sell', [
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
-            'orders' => $orders,
+            'orders' => $orders->orderBy('updated_at', 'desc')->paginate(),
             'delivery_man' => $deliveryMan,
             'search' => $search
         ]);

@@ -19,7 +19,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers,CaptchaGeetest;
+    use AuthenticatesAndRegistersUsers, CaptchaGeetest;
 
     /**
      * Create a new authentication controller instance.
@@ -54,26 +54,31 @@ class AuthController extends Controller
     {
         return view('auth.register-user');
     }
+
     /**
      *
      */
-    public function setPassword(){
-       $user =  session('user');
-        if(empty($user)){
-            return redirect('auth.register-user');
+    public function setPassword()
+    {
+        $user = session('user');
+        if (empty($user)) {
+            return redirect('auth/register');
         }
-        return view('auth.register-password',['user'=>$user]);
+        return view('auth.register-password', ['user' => $user]);
     }
+
     /**
      * 添加商铺信息
      */
-    public function addShop(){
-        $user =  session('user');
-        if(empty($user)){
-            return redirect('auth.register-user');
+    public function addShop()
+    {
+        $user = session('user');
+        if (empty($user)) {
+            return redirect('auth/register-set-password');
         }
-        return view('auth.register-user-shop',['user'=>$user]);
+        return view('auth.register-user-shop', ['user' => $user]);
     }
+
     /**
      * 注册成功
      *
@@ -85,9 +90,9 @@ class AuthController extends Controller
         if (!session('shop.name')) {
             return $this->error('请先注册', 'auth/register');
         }
-        $user =  session('user');
+        $user = session('user');
         session()->forget('user');
-        return view('auth.reg-success',['user_name'=>$user['user_name'] ]);
+        return view('auth.reg-success', ['user_name' => $user['user_name']]);
     }
 
     /**

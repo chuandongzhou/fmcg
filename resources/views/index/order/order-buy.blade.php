@@ -70,68 +70,72 @@
                         </thead>
                         <tbody>
                         @foreach($order['goods'] as $key => $goods)
-                            <tr>
-                                <td width="50%">
-                                    <img class="store-img" src="{{ $goods['image_url'] }}">
+                            @if($goods['pivot']['type']==cons('order.goods.type.order_goods'))
+                                <tr>
+                                    <td width="50%">
+                                        <img class="store-img" src="{{ $goods['image_url'] }}">
 
-                                    <div class="product-panel">
-                                        <a class="product-name ellipsis"
-                                           href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
-                                        {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
+                                        <div class="product-panel">
+                                            <a class="product-name ellipsis"
+                                               href="{{  url('goods/' . $goods['id']) }}">{{ $goods->name }}</a>
+                                            {!! $goods->is_promotion ? '<div class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</div>' : '' !!}
 
-                                    </div>
-                                </td>
-                                <td width="10%" class="bordered text-center">
-                                    <span class="red">¥{{ $goods['pivot']['price'] }}</span>
-                                    / {{  cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}
-                                </td>
-                                <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
-                                @if(0 == $key)
-                                    <td rowspan="{{ count($order['goods'])}}" class="pay-detail text-center bordered"
-                                        width="15%">
-                                        <p>{{ $order['status_name'] }}
-                                        @if($order['status']==cons('order.status.non_confirm'))
-                                            <p class="prompt">(等待卖家确认)</p>
-                                            @endif
-                                            </p>
-
-                                            <p>{{ $order['payment_type'] }}</p>
-
-                                            <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                        </div>
                                     </td>
-                                    <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
-                                        width="15%">
-                                        <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
-                                              class="btn btn-blue">查看</a></p>
-                                        @if(!$order['is_cancel'])
-                                            @if ($order->can_refund)
-                                                <p>
-                                                    <a class="btn btn-danger refund" data-target="#refund"
-                                                       data-toggle="modal"
-                                                       data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
-                                                        退款
-                                                    </a>
+                                    <td width="10%" class="bordered text-center">
+                                        <span class="red">¥{{ $goods['pivot']['price'] }}</span>
+                                        / {{  cons()->valueLang('goods.pieces', $goods->pivot->pieces) }}
+                                    </td>
+                                    <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
+                                    @if(0 == $key)
+                                        <td rowspan="{{ count($order['goods'])}}"
+                                            class="pay-detail text-center bordered"
+                                            width="15%">
+                                            <p>{{ $order['status_name'] }}
+                                            @if($order['status']==cons('order.status.non_confirm'))
+                                                <p class="prompt">(等待卖家确认)</p>
+                                                @endif
                                                 </p>
-                                            @elseif($order['can_cancel'])
-                                                <p><a class="btn btn-red ajax"
-                                                      data-url="{{ url('api/v1/order/cancel-sure') }}"
-                                                      data-method="put"
-                                                      data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
+
+                                                <p>{{ $order['payment_type'] }}</p>
+
+                                                <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                        </td>
+                                        <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                            width="15%">
+                                            <p><a href="{{ url('order-buy/detail?order_id='.$order['id']) }}"
+                                                  class="btn btn-blue">查看</a></p>
+                                            @if(!$order['is_cancel'])
+                                                @if ($order->can_refund)
+                                                    <p>
+                                                        <a class="btn btn-danger refund" data-target="#refund"
+                                                           data-toggle="modal"
+                                                           data-url="{{ url('api/v1/pay/refund/' . $order->id) }}">
+                                                            退款
+                                                        </a>
+                                                    </p>
+                                                @elseif($order['can_cancel'])
+                                                    <p><a class="btn btn-red ajax"
+                                                          data-url="{{ url('api/v1/order/cancel-sure') }}"
+                                                          data-method="put"
+                                                          data-data='{"order_id":{{ $order['id'] }}}'>取消</a></p>
+                                                @endif
+                                                @if($order['can_payment'])
+                                                    <p><a href="javascript:" data-target="#payModal" data-toggle="modal"
+                                                          class="btn btn-success" data-id="{{ $order->id }}"
+                                                          data-price="{{ $order->after_rebates_price }}">去付款</a></p>
+                                                @elseif($order['can_confirm_arrived'])
+                                                    <p><a class="btn btn-danger ajax"
+                                                          data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
+                                                          data-method="put"
+                                                          data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
+                                                @endif
                                             @endif
-                                            @if($order['can_payment'])
-                                                <p><a href="javascript:" data-target="#payModal" data-toggle="modal"
-                                                      class="btn btn-success" data-id="{{ $order->id }}"
-                                                      data-price="{{ $order->after_rebates_price }}">去付款</a></p>
-                                            @elseif($order['can_confirm_arrived'])
-                                                <p><a class="btn btn-danger ajax"
-                                                      data-url="{{ url('api/v1/order/batch-finish-of-buy') }}"
-                                                      data-method="put"
-                                                      data-data='{"order_id":{{ $order['id'] }}}'>确认收货</a></p>
-                                            @endif
-                                        @endif
-                                    </td>
-                                @endif
-                            </tr>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endif
+
                         @endforeach
                         @if(count($order['goods']) == 0)
                             <tr>

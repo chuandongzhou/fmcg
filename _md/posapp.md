@@ -162,6 +162,7 @@
 	id                   int              订单号
 	delivery_finished_at  string          订单完成时间
 	user_shop_name        string          收货店家名称
+	pay_status           int              支付状态（0，未支付；1，已支付）
    
 
 `失败返回：`

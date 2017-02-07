@@ -125,7 +125,6 @@ class DeliveryController extends Controller
         foreach ($orders as $order) {
             $date = (new Carbon($order['delivery_finished_at']))->toDateString();
             $key = array_search($date, array_column($historyOrder, 'date'));
-            $order->delivery_finished_at = (new Carbon($order->delivery_finished_at))->getTimestamp();
             $order->user && $order->user->setVisible(['shop']);
             $order->setAppends([
                 'status_name',
