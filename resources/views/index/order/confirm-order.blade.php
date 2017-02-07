@@ -28,7 +28,8 @@
                 </div>
             </div>
             <div class="row table-list-row confirm-order ">
-                <form class="form-horizontal ajax-form" action="{{ url('api/v1/order/submit-order') }}" data-done-url="{{ url('order/finish-order') }}" method="post" autocomplete="off">
+                <form class="form-horizontal ajax-form" action="{{ url('api/v1/order/submit-order') }}"
+                      data-done-url="{{ url('order/finish-order') }}" method="post" autocomplete="off">
 
                     <div class="col-sm-12 delivery-mode delivery-option">
                         <h4 class="title">提货方式</h4>
@@ -94,26 +95,26 @@
                                 </a>
                             </div>
                             <div class="cash-on-delivery  pull-left">
-                                    <div class="btn check-item option-panel pay-type">
-                                        <input type="hidden" value="cash" name="pay_way"/>
-                                        <input type="radio" name="pay_type" class="hidden" value="cod">
-                                        <div class="default-checked">货到付款 :
-                                            <span class="content">现金</span>
-                                            <span class="fa fa-angle-down"></span>
-                                        </div>
-                                        <span class="triangle"></span>
-                                        <span class="fa fa-check"></span>
-                                        <div class="option-wrap cash-on-item text-center ">
-                                            <div class="option-item pay_way_select" data-value="cash">现金</div>
-                                            <div class="option-item pay_way_select" data-value="card">刷卡</div>
-                                        </div>
+                                <div class="btn check-item option-panel pay-type">
+                                    <input type="hidden" value="cash" name="pay_way"/>
+                                    <input type="radio" name="pay_type" class="hidden" value="cod">
+                                    <div class="default-checked">货到付款 :
+                                        <span class="content">现金</span>
+                                        <span class="fa fa-angle-down"></span>
                                     </div>
+                                    <span class="triangle"></span>
+                                    <span class="fa fa-check"></span>
+                                    <div class="option-wrap cash-on-item text-center ">
+                                        <div class="option-item pay_way_select" data-value="cash">现金</div>
+                                        <div class="option-item pay_way_select" data-value="card">刷卡</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-sm-12 table-responsive shopping-table-list delivery-option">
-                        <h4 class="title">商品清单 : </h4>
+                        <h4 class="title">商品清单</h4>
                         @foreach($shops as $shop)
                             <table class="table table-bordered shop-item">
                                 <tbody>
@@ -147,9 +148,9 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="3">
-                                        @if(!$shop->coupons->isEmpty())
+                                @if(!$shop->coupons->isEmpty())
+                                    <tr>
+                                        <td colspan="3">
                                             <div class="operating">
                                                 <span class="prompt">优惠券 :</span>
                                                 <select class="control-select coupon-control"
@@ -165,9 +166,9 @@
                                                     <option value="0" data-discount="0">不使用优惠券</option>
                                                 </select>
                                             </div>
-                                        @endif
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td colspan="3">
 
@@ -225,9 +226,9 @@
     @parent
     <script type="text/javascript">
         var deliveryWayList = $('.delivery-way-list'),
-                payTypeList = $('.pay-type-list'),
-                payWay = $('.pay-way'),
-                address = $('.address-select');
+            payTypeList = $('.pay-type-list'),
+            payWay = $('.pay-way'),
+            address = $('.address-select');
 
         //不是自提时，检查是否所有店铺都满足最低配送额
         function checkeSubmitBtn() {
@@ -272,16 +273,16 @@
         var confirmFunc = {
             discountAmount: function () {
                 var discountControl = $('select.coupon-control'),
-                        sumDiscount = 0,
-                        sumPriceControl = $('.sum-price'),
-                        sumDiscountControl = $('.sum-discount'),
-                        amountControl = $('.amount');
+                    sumDiscount = 0,
+                    sumPriceControl = $('.sum-price'),
+                    sumDiscountControl = $('.sum-discount'),
+                    amountControl = $('.amount');
                 discountControl.each(function () {
                     var obj = $(this),
-                            discount = parseFloat(obj.children('option:selected').data('discount')),
-                            shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
-                            shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
-                            shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
+                        discount = parseFloat(obj.children('option:selected').data('discount')),
+                        shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
+                        shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
+                        shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
                     var ShopMinMoney = parseFloat(shopMinMoneySpan.data('money'));
                     if (discount) {
                         sumDiscount = sumDiscount.add(discount);
@@ -366,8 +367,8 @@
                     var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'), goodsItem = obj.find('.goods-item');
                     goodsItem.each(function () {
                         var self = $(this),
-                                goodsPrice = parseFloat(self.find('.goods-price').data('price')),
-                                goodsNum = self.find('.goods-num').data('num');
+                            goodsPrice = parseFloat(self.find('.goods-price').data('price')),
+                            goodsNum = self.find('.goods-num').data('num');
                         sumPrice = sumPrice.add(goodsPrice.mul(goodsNum));
                     });
 
@@ -387,8 +388,8 @@
             formatCouponControl: function () {
                 $('.shop-item').each(function () {
                     var obj = $(this),
-                            shopSumPrice = obj.find('.shop-sum-price').data('price'),
-                            couponControl = obj.find('.coupon-control');
+                        shopSumPrice = obj.find('.shop-sum-price').data('price'),
+                        couponControl = obj.find('.coupon-control');
                     if (couponControl.length) {
                         var couponId = 0;
                         couponControl.children('option').each(function () {
@@ -428,7 +429,7 @@
             var checkedHtml = $(this).html(), self = $(this);
 
             self.hasClass('address-select') && $('input[name="shipping_address_id"]').val(self.data('id'));
-            self.hasClass('pay_way_select') &&  $('input[name="pay_way"]').val(self.data('value'));
+            self.hasClass('pay_way_select') && $('input[name="pay_way"]').val(self.data('value'));
             self.parents(".option-wrap").siblings(".default-checked").children(".content").html(checkedHtml);
             self.parents(".option-wrap").slideUp();
         })

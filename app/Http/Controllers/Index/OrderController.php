@@ -42,11 +42,10 @@ class OrderController extends Controller
             return redirect()->back()->with('message', $cartService->getError());
         }
 
-        if ($confirmedGoods->update(['status' => 1])) {
-            return redirect('order/confirm-order');
-        } else {
-            return redirect()->back();
-        }
+        $confirmedGoods->update(['status' => 1]);
+
+        return redirect('order/confirm-order');
+
     }
 
     /**
@@ -563,7 +562,7 @@ class OrderController extends Controller
      */
     private function _spliceOrderContent($orders, $flag)
     {
-        $orderContent[] = ['订单号', '收件人', '支付方式', '订单状态', '创建时间', '订单金额'];
+        $orderContent[] = ['订单号', '店铺名', '收件人', '支付方式', '订单状态', '创建时间', '订单金额'];
         if ($flag) {
             $orderContent[0] = array_merge($orderContent[0], ['商品编号', '商品名称', '商品单价', '商品数量']);
         }
@@ -587,6 +586,7 @@ class OrderController extends Controller
                     } else {
                         $orderContent[] = [
                             $order['id'],
+                            $order['user_shop_name'],
                             $order['shippingAddress']['consigner'],
                             $order['payment_type'],
                             $order['status_name'],
@@ -602,6 +602,7 @@ class OrderController extends Controller
             } else {
                 $orderContent[] = [
                     $order['id'],
+                    $order['user_shop_name'],
                     $order['shippingAddress']['consigner'],
                     $order['payment_type'],
                     $order['status_name'],

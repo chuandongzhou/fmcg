@@ -251,7 +251,7 @@ class UserController extends Controller
      */
     private function _sendAuditSms($user, $result, $reason)
     {
-        app('pushbox.sms')->send('audit', $user->backup_mobile,
+        app('pushbox.sms')->queue('audit', $user->backup_mobile,
             [
                 'account' => $user->user_name,
                 'result' => $result,

@@ -131,10 +131,10 @@ class AuthController extends Controller
         $data = $request->only('user_name', 'backup_mobile', 'type');
         //验证验证码
         $code = $request->input('code');
-        $codeService = new CodeService();
-        $res = $codeService->validateCode('register', $code, $data['user_name']);
-        if (!$res) {
-            return $this->error($codeService->getError());
+        /*$codeService = new CodeService();
+        $res =  $codeService->validateCode('register', $code, $data['user_name']);*/
+        if (! app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
+            return $this->error('短信验证码错误');
         }
         session(['user' => $data]);
         return $this->success('验证成功');
@@ -200,10 +200,10 @@ class AuthController extends Controller
         }
         //验证验证码
         $code = $request->input('code');
-        $codeService = new CodeService();
-        $res = $codeService->validateCode('backup', $code, $data['user_name']);
-        if (!$res) {
-            return $this->error($codeService->getError());
+        /*$codeService = new CodeService();
+        $res = $codeService->validateCode('backup', $code, $data['user_name']);*/
+        if (!app('pushbox.sms')->verifyCode('code', $data['backup_mobile'], $code)) {
+            return $this->error('短信验证码错误');
         }
 
         if ($user->fill(['password' => $data['password']])->save()) {
@@ -235,12 +235,8 @@ class AuthController extends Controller
         if ($user->shop->license_num != $data['license_num']) {
             return $this->error('营业执照错误');
         }
-        //发送验证码
 
-        $codeService = new CodeService;
-        $res = $codeService->sendCode('code', 'backup', $request->input('backup_mobile'),
-            $request->input('user_name'));
-        return $res ? $this->success('发送成功') : $this->error($codeService->getError());
+        return app('pushbox.sms')->sendCode('code', $data['backup_mobile']) ? $this->success('发送成功') : $this->error('发送短信过于频繁');
     }
 
     /**
@@ -271,6 +267,7 @@ class AuthController extends Controller
      * 发送注册验证码
      *
      * @param \App\Http\Requests\Api\v1\RegisterUserSendSmsRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postRegSendSms(RegisterUserSendSmsRequest $request)
     {
@@ -278,14 +275,10 @@ class AuthController extends Controller
         if (!$res) {
             return $this->invalidParam('backup_mobile', '请完成验证');
         }
-        //发送验证码
-        $codeService = new CodeService();
-        $res = $codeService->sendCode('register', 'register', $request->input('backup_mobile'),
-            $request->input('user_name'));
-        if ($res) {
+        if (app('pushbox.sms')->sendCode('register', $request->input('backup_mobile'))) {
             return $this->success('发送成功');
         } else {
-            return $this->error($codeService->getError());
+            return $this->error('发送短信过于频繁');
         }
 
     }

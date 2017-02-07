@@ -1441,9 +1441,6 @@ a {
       white-space: nowrap;
       text-overflow: ellipsis;
       margin: 2px 0;
-      a {
-        font-size: 15px;
-      }
     }
     .shopping-store {
       display: none;
@@ -6135,6 +6132,7 @@ table {
     margin-bottom: 20px;
     .btn {
       border-radius: 4px !important;
+      padding: 0 15px;
     }
     .btn-default {
       background-color: $body-bg;

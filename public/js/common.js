@@ -811,7 +811,6 @@ var getAttr = function () {
                 format: true
             }, function (data) {
                 var html = '';
-                console.log(data);
                 for (var index in data) {
                     var options = '<option value="0">请选择</option>';
                     html += '<label class="control-label col-sm-2">' + data[index]['name'] + '</label>';

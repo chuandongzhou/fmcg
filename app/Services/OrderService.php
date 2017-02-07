@@ -151,7 +151,7 @@ class OrderService extends BaseService
         foreach ($orders as $order) {
             $data = [
                 'order_id' => $order->id,
-                'order_amount' => $order->price . '',
+                'order_amount' => $order->price ,
                 'pay_type' => cons()->valueLang('pay_type', $order->pay_type)
             ];
             app('pushbox.sms')->queue('order', $order->shop->user_backup_mobile, $data);

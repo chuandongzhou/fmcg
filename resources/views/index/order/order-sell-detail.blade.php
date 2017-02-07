@@ -14,8 +14,8 @@
                 返回</a>
         </div>
         <div class="col-sm-12">
-            @if($order->pay_type!=cons('pay_type.pick_up'))
-                <div class="row order-tracking">
+            <div class="row order-receipt">
+                @if($order->pay_type!=cons('pay_type.pick_up'))
                     <div class="col-sm-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -58,9 +58,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            @endif
-            <div class="row order-receipt">
+                @endif
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">

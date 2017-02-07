@@ -24,7 +24,7 @@ class PushboxServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('pushbox.sms', function ($app) {
-            return new Sms(new Top($app['config']['push.top']), $app['queue.connection']);
+            return new Sms(new Top($app['config']['push.top']), $app['queue.connection'], $app['cache.store'], $app['config']);
         });
     }
 

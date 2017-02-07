@@ -36,8 +36,7 @@ class CategoryController extends Controller
         if (!isset($data['format']) || $data['format'] != 'true') {
             //$attrs = $attrService->getAttrsByCategoryId($id);
             $categoryPid = $this->categories[$id]['pid'];
-            $attrs = array_merge($attrService->getAttrsByCategoryId($id),
-                $attrService->getAttrsByCategoryId($categoryPid));
+            $attrs = array_merge($attrService->getAttrsByCategoryId($id), $attrService->getAttrsByCategoryId($categoryPid));
             $result = [];
             foreach ($attrs as $attr) {
                 if ($attr['pid'] == 0) {

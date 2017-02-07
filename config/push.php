@@ -5,11 +5,11 @@ return [
         'app_secret' => '77d3c2a6295d2599014cb72c23ee5773',
         'signature_id' => '1600',
         'templates' => [
-            'register' => '2941',
-            'code' => '2954',
-            'audit_passed' => '2943',
-            'audit_not_passed' => '2944',
-            'withdraw' => '2946',
+            'register' => 'SMS_baichun_2941',             //验证码
+            'code' => 'SMS_baichun_2954',        //密码重置
+            'audit_passed' => 'SMS_baichun_2943',
+            'audit_not_passed' => 'SMS_baichun_2944',
+            'withdraw' => 'SMS_baichun_2946',
             'order' => 'SMS_baichun_3329'
         ],
 

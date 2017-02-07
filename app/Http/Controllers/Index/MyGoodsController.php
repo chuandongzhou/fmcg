@@ -139,15 +139,16 @@ class MyGoodsController extends Controller
         foreach ($goodsAttr as $attr) {
             $attrGoods[$attr->pid] = $attr->pivot->toArray();
         }
+        $attrService = new AttrService();
+        $attrResults = $attrService->getAttrsByCategoryId($goods->category_id);
 
-        $attrResults = Attr::select(['attr_id', 'pid', 'name'])->where('category_id',
-            $goods->category_id)->active()->get()->toArray();
+        //$attrResults = Attr::active()->select(['attr_id', 'pid', 'name'])->where('category_id', $goods->category_id)->get()->toArray();
         //店铺配送地址
         $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea;
         $goods->shopDeliveryArea = $shopDelivery;
 
-        $attrResults = (new AttrService($attrResults))->format();
+        $attrResults = $attrService->format($attrResults);
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => $attrResults,

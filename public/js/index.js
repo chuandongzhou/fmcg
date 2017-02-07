@@ -125,7 +125,7 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-        //submitBtn = $('input.btn-primary'),
+            //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
