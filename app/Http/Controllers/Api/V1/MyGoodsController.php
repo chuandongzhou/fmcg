@@ -172,7 +172,7 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        if ($goods->delete()) {
+        if (!$goods->status && $goods->delete()) {
             return $this->success('删除商品成功');
         }
         return $this->error('删除商品时遇到问题');
@@ -188,6 +188,7 @@ class MyGoodsController extends Controller
     {
         $goodsId = $request->input('id');
         $goods = Goods::find($goodsId);
+
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }

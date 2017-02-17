@@ -25,9 +25,9 @@
                 @foreach(cons()->valueLang('order.templete') as $templeteId => $templeteName)
                     <div class="col-sm-4 item">
                         <div class="mask-panel">
-                            <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">
+                            <img src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">
                             <a href="javascript:" class="templet-modal" data-target="#templetModal" data-toggle="modal"
-                               data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '.png') }}">点击预览</a>
+                               data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">点击预览</a>
                         </div>
                         <div class="choice-item">
                             <label><input data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}"

@@ -229,6 +229,7 @@ class WechatPay
      */
     private function _formatResponse($result)
     {
+        info((array)json_decode($result));
         return (array)json_decode($result);
     }
 }

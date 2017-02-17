@@ -16,6 +16,7 @@ class SendPushToQueue extends Command
      * @var string
      */
     protected $signature = 'queue:push';
+    protected $redis;
 
 
     /**
@@ -42,8 +43,7 @@ class SendPushToQueue extends Command
             $whenPush = cons('push_time.when_push');
             foreach ($ids as $id) {
                 if ($this->redis->ttl($id) < $whenPush) {
-                    $job = (new PushOrderMsg(substr($id, strrpos($id, ':') + 1),
-                        $this->redis->get($id)))->onQueue('pushNotice');
+                    $job = (new PushOrderMsg(substr($id, strrpos($id, ':') + 1), $this->redis->get($id)))->onQueue('pushNotice');
                     $this->dispatch($job);
                     $this->redis->del($id);
                 }

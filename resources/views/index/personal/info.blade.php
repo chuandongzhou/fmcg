@@ -27,7 +27,7 @@
                                             </div>
                                             <div>
                                                 <span class="panel-name">共</span> {{ $shop->goods_count }}
-                                                <span>件商品</span>
+                                                <span class="panel-name">件商品</span>
                                             </div>
                                         </div>
                                     @endif

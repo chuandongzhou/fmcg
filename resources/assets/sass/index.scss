@@ -812,9 +812,6 @@ a {
       }
     }
   }
-  .go-login {
-
-  }
   .v-code {
     .btn {
       border-radius: 4px;
@@ -844,8 +841,18 @@ a {
     position: relative;
     @include size(100%, 350px);
   }
+  .address-list {
+    div  {
+      padding: 3px 0 5px 0;
+      text-indent: 13px;
+      height:26px;
+      margin-top:10px;
+      & + div {
+        margin-top: 5px;
+      }
+    }
+  }
 }
-
 /*======================================register end======================================*/
 /*======================================passed begin======================================*/
 .passed-ok {
@@ -1487,8 +1494,12 @@ a {
     position: relative;
     height: 185px;
     .img-wrap {
+      margin:25px 0 0 20px;
+      width:100px;
+      border-radius:50%;
+      overflow:hidden;
       .commodity-img {
-        width: 150px !important;
+        width: 100px !important;
         height: inherit !important;
       }
     }
@@ -1496,7 +1507,7 @@ a {
     .store-content {
       background-color: inherit !important;
       padding: 0 0 0 20px !important;
-      margin-left: 150px;
+      margin-left: 130px;
       .commodity-name {
         margin: 0 0 10px 0 !important;
         font-size: 16px;
@@ -3334,7 +3345,6 @@ table {
     }
   }
   .order-receipt {
-    margin-top: 20px;
     padding: 10px 15px;
     .order-information {
       li {

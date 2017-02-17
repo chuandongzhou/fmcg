@@ -38,11 +38,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-//        $type = $request->input('type');
-//
-//        if (!$type || !$typeId = array_get(cons('user.type') ,$type)) {
-//            return redirect('auth/guide');
-//        }
         app('cookie')->queue('last_handle_time', 0, -2628000);
         return view('auth.login');
     }
@@ -54,7 +49,6 @@ class AuthController extends Controller
     {
         return view('auth.register-user');
     }
-
     /**
      *
      */
@@ -62,7 +56,7 @@ class AuthController extends Controller
     {
         $user = session('user');
         if (empty($user)) {
-            return redirect('auth/register');
+            return redirect(url('auth/register'));
         }
         return view('auth.register-password', ['user' => $user]);
     }
@@ -74,7 +68,7 @@ class AuthController extends Controller
     {
         $user = session('user');
         if (empty($user)) {
-            return redirect('auth/register-set-password');
+            return redirect(url('auth/register'));
         }
         return view('auth.register-user-shop', ['user' => $user]);
     }

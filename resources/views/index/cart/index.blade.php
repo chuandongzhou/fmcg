@@ -84,7 +84,10 @@
                                             </div>
                                             <img class="avatar" src="{{ $cartGoods->image }}">
                                             <div class="product-panel" style="width:70%!important;">
-                                                <a class="product-name ellipsis">{{ $cartGoods->goods->name }}</a>
+                                                <a class="product-name ellipsis"
+                                                   href="{{ url('goods/' . $cartGoods->goods_id) }}" target="_blank">
+                                                    {{ $cartGoods->goods->name }}
+                                                </a>
                                                 {!! $cartGoods->goods->is_promotion ? '<p class="promotions">(<span class="ellipsis" title="'.$cartGoods->goods->promotion_info.'"> ' . $cartGoods->goods->promotion_info . '</span>)</p>' : '' !!}
                                             </div>
                                         </td>

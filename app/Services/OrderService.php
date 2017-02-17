@@ -34,8 +34,7 @@ class OrderService extends BaseService
             $res = $this->pushAndroid($device->token, $msgArray);
         }
         if ($res) {//推送成功,推送条数+1
-            $device->send_count += $device->send_count;
-            $device->save();
+            $device->increment('send_count');
         }
 
         return $res;
@@ -121,7 +120,7 @@ class OrderService extends BaseService
             }
             if ($result) {
                 // 增加商品销量
-                GoodsService::addGoodsSalesVolume($orderGoodsNum);
+                //GoodsService::addGoodsSalesVolume($orderGoodsNum);
                 // 删除购物车
                 $goodsNum = $user->carts()->where('status', 1)->delete();
                 //减少购物车数量

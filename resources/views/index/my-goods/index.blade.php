@@ -27,7 +27,6 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-
                                         @else
                                             <div class="sort-list">
                                                 <a class="list-title"
@@ -35,7 +34,6 @@
                                                             class="title-txt">{{  $category['selected']['name']}}</span></a>
                                             </div>
                                         @endif
-
                                         <span class="fa fa-angle-right"></span>
                                     @endif
                                 @endforeach
@@ -221,12 +219,11 @@
                                        data-data='{ "id": "{{ $item->id }}" }'
                                        data-on='上架'
                                        data-off='下架'
-                                       class="ajax-no-form orange">
+                                       class="ajax-no-form orange ">
                                         {{ cons()->valueLang('goods.status' , !$item->status) }}
                                     </a>
-                                    <a class="red delete-no-form" data-method="delete"
+                                    <a class="red delete-no-form {{ $item->status ? 'hidden' : '' }} delete" data-method="delete"
                                        data-url="{{ url('api/v1/my-goods/' . $item->id) }}" href="javascript:">删除</a>
-                                </td>
                                 </td>
                             </tr>
                         @endforeach
@@ -236,7 +233,6 @@
             </div>
             <div class="col-sm-12 operating">
                 <label class="all-check"><input type="checkbox" id="parent"> 全选</label>
-
 
                 <button class="btn btn-blue-lighter " type="submit" data-data='{"status":"1"}'>批量上架</button>
                 <button class="btn btn-blue-lighter " type="submit" data-data='{"status":"0"}'>批量下架</button>

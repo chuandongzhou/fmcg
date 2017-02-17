@@ -2,7 +2,8 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="{{ $user->id ? 'put' : 'post' }}"
-          action="{{ url('admin/user/' . $user->id) }}" data-help-class="col-sm-push-2 col-sm-10" data-done-then="referer" autocomplete="off">
+          action="{{ url('admin/user/' . $user->id) }}" data-help-class="col-sm-push-2 col-sm-10"
+          data-done-then="referer" autocomplete="off">
 
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">用户名</label>
@@ -10,6 +11,15 @@
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="username" name="user_name" placeholder="请输入用户名"
                        value="{{ $user->user_name }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">密保手机</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="backup_mobile" name="backup_mobile" placeholder="请输入密保手机"
+                       value="{{ $user->backup_mobile }}">
             </div>
         </div>
 

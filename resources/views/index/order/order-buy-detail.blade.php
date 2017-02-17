@@ -90,7 +90,7 @@
                                             <p class="prop-item">
                                                 <a href="javascript:"
                                                    onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
+                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客服</a>
                                             </p></td>
                                     @endif
                                     <td>￥{{ $order['price'] }}</td>
@@ -354,7 +354,7 @@
                                                     {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
                                                 </div>
                                             </td>
-                                            <td>{{ '╳'.$goods['pivot']['num'].cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
+                                            <td>{{ '╳'.$goods['pivot']['num'] .cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
                                         </tr>
 
                                     @endforeach

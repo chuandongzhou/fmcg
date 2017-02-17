@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html {
   position: relative;
   min-height: 100%;
@@ -637,6 +638,13 @@ a {
     position: relative;
     width: 100%;
     height: 350px; }
+  .register .address-list div {
+    padding: 3px 0 5px 0;
+    text-indent: 13px;
+    height: 26px;
+    margin-top: 10px; }
+    .register .address-list div + div {
+      margin-top: 5px; }
 
 /*======================================register end======================================*/
 /*======================================passed begin======================================*/
@@ -1107,8 +1115,6 @@ a {
     white-space: nowrap;
     text-overflow: ellipsis;
     margin: 2px 0; }
-    .list-penal .content-panel .commodity-name a {
-      font-size: 15px; }
   .list-penal .content-panel .shopping-store {
     display: none;
     margin: 5px 0; }
@@ -1145,13 +1151,18 @@ a {
   border: 1px solid #f1f1f1;
   position: relative;
   height: 185px; }
-  .list-penal .thumbnail .img-wrap .commodity-img {
-    width: 150px !important;
-    height: inherit !important; }
+  .list-penal .thumbnail .img-wrap {
+    margin: 25px 0 0 20px;
+    width: 100px;
+    border-radius: 50%;
+    overflow: hidden; }
+    .list-penal .thumbnail .img-wrap .commodity-img {
+      width: 100px !important;
+      height: inherit !important; }
   .list-penal .thumbnail .store-content {
     background-color: inherit !important;
     padding: 0 0 0 20px !important;
-    margin-left: 150px; }
+    margin-left: 130px; }
     .list-penal .thumbnail .store-content .commodity-name {
       margin: 0 0 10px 0 !important;
       font-size: 16px;
@@ -1265,8 +1276,7 @@ a {
   padding: 0; }
   .wholesalers-index .left-store-logo .banner .item img {
     width: 100%;
-    max-height: 200px;
-    border: 1px solid #b4b4b4; }
+    max-height: 200px; }
 
 .wholesalers-index .store-info-logo {
   padding-left: 0; }
@@ -2493,7 +2503,6 @@ table {
         padding: 0 0 0 30px; }
 
 .order-detail .order-receipt {
-  margin-top: 20px;
   padding: 10px 15px; }
   .order-detail .order-receipt .order-information li, .order-detail .order-receipt .receiving-information li {
     padding-bottom: 15px; }
@@ -3095,12 +3104,14 @@ table {
     border: none !important; }
     .container-wrap .index-slide .carousel-indicators li.active {
       background-color: #F25000 !important; }
-  .container-wrap .dealer-index-banner .carousel-inner .item {
-    padding: 0; }
-    .container-wrap .dealer-index-banner .carousel-inner .item img {
-      width: 100%;
-      height: auto;
-      max-height: 450px; }
+  .container-wrap .dealer-index-banner .carousel-inner {
+    min-height: 80px; }
+    .container-wrap .dealer-index-banner .carousel-inner .item {
+      padding: 0; }
+      .container-wrap .dealer-index-banner .carousel-inner .item img {
+        width: 100%;
+        height: auto;
+        max-height: 450px; }
   .container-wrap .upcoming-events {
     height: 401px;
     border: 1px solid #d2d2d2;
@@ -4202,7 +4213,7 @@ table {
   background-color: #fff;
   position: fixed;
   left: 50%;
-  margin-left: -75px;
+  margin-left: -225px;
   z-index: 99999;
   border-radius: 4px !important;
   border: 1px solid #b4b4b4;
@@ -4396,7 +4407,7 @@ table {
           color: #fff;
           width: 100%;
           height: 100%;
-          line-height: 110px;
+          line-height: 55px;
           text-align: center;
           background: rgba(0, 0, 0, 0.3) !important; }
         .choice-template .item-wrap .upload-banner-item .option .option-banner:hover a {
@@ -4460,7 +4471,8 @@ table {
     height: 20px;
     font-size: 14px;
     text-indent: 0;
-    color: #000; }
+    color: #000;
+    background-image: none !important; }
 
 .prop-header .modal-title {
   color: #555555; }
@@ -4584,7 +4596,7 @@ table {
     margin-bottom: 20px; }
     .delivery .control-search .btn {
       border-radius: 4px !important;
-     }
+      padding: 0 15px; }
     .delivery .control-search .btn-default {
       background-color: #fff;
       color: #17C4BB;
@@ -4655,7 +4667,7 @@ table {
     border: 1px solid #b4b4b4; }
   .salesman .create .company {
     line-height: 35px;
-    width: 65px; }
+    width: 75px; }
   .salesman .create .display-goods div {
     height: 40px;
     padding: 6px 12px; }
@@ -4782,3 +4794,35 @@ table {
   font-weight: 700 !important; }
 
 /*==============404 end=================*/
+/*==============checkbox 公共按钮=================*/
+.checkbox-btn {
+  display: none; }
+  .checkbox-btn + label {
+    background-color: #FFF;
+    border: 1px solid #C1CACA;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    border-radius: 5px !important;
+    display: inline-block;
+    position: relative;
+    margin-right: 30px; }
+    .checkbox-btn + label:active {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1); }
+  .checkbox-btn:checked + label {
+    background-color: #ECF2F7;
+    border: 1px solid #92A1AC;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+    color: #243441; }
+    .checkbox-btn:checked + label:after {
+      content: '\2714';
+      position: absolute;
+      top: -3px;
+      left: 0;
+      color: #758794;
+      width: 100%;
+      text-align: center;
+      font-size: 1.1em;
+      padding: 1px 0 0 0;
+      vertical-align: text-top; }
+
+/*==============checkbox 公共按钮=================*/

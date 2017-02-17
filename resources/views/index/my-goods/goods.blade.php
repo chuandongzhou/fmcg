@@ -403,7 +403,7 @@
                                             缺货
                                         </label>
                                         <label class="control-label">
-                                            <input type="checkbox" name="is_expire" alue="1"
+                                            <input type="checkbox" name="is_expire" value="1"
                                                     {{ $goods->is_expire ? 'checked' : '' }}>
                                             即期品
                                         </label>

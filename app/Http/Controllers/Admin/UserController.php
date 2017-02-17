@@ -70,8 +70,8 @@ class UserController extends Controller
         $user = User::Create($attributes);
         if ($user->exists) {
             //插入商店
-            $user->shop()->create([]);
-            // Shop::create(['user_id' => $user->id]);
+            $user->shop()->create(['name' => $user->user_name]);
+            //Shop::create(['user_id' => $user->id]);
 
             return $this->success('添加用户成功');
         }

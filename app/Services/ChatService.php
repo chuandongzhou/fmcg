@@ -79,6 +79,9 @@ class ChatService
      */
     public function deleteUsers($userIds)
     {
+        if (!$userIds) {
+            return true;
+        }
         $top = new \TopClient();
         $top->appkey = $this->appKey;
         $top->secretKey = $this->secretKey;

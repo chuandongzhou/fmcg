@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 
 class WechatPayController extends Controller
 {
-
     /**
      * 获取二维码订单
      *
@@ -70,14 +69,12 @@ class WechatPayController extends Controller
     public function payResult(Request $request)
     {
         $data = $request->all();
-        info($data);
 
         $wechatPay = app('wechat.pay');
         if (!$wechatPay->verifySign($data)) {
             //info('微信支付回调错误：' . $request->server('ip'));
             return $this->success($wechatPay->buildResponse(false));
         }
-        info($request->server('ip'));
 
         $orders = Order::whereId($data['orderNo'])->get()->each(function ($order) {
             $order->setAppends([]);

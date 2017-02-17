@@ -89,7 +89,9 @@ class UserService extends RedisService
             $this->del($key);
         }
         $shop = $user->shop;
-
+        if (!$shop) {
+            return null;
+        }
         $value = [
             'id' => $shop->id,
             'name' => $shop->name

@@ -17,6 +17,19 @@ class OrderGoods extends Model
     ];
 
     /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::created(function ($model) {
+            Goods::where('id', $model->goods_id)->increment('sales_volume', $model->num);
+        });
+    }
+
+    /**
      * 订单表
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

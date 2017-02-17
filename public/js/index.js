@@ -452,6 +452,9 @@ var deleteNoForm = function () {
      * 商品删除
      */
     $(document).on('click', '.delete-no-form', function () {
+        if (!confirm('真的要删除吗？')) {
+            return false;
+        }
         $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             url = self.data('url'),
@@ -506,7 +509,6 @@ var ajaxNoForm = function (changeStatus) {
         offText: offText
     });
     $(document).on('click', '.ajax-no-form', function () {
-        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             status = self.data('status'),
             url = self.data('url'),
@@ -525,14 +527,14 @@ var ajaxNoForm = function (changeStatus) {
             var statusName = self.closest('tr').find('.status-name');
             if ($.isPlainObject(data) && data.message) {
                 self.data('status', 1).button('off');
+                self.next('.delete').addClass('hidden');
                 changeStatus ? statusName.html(onText.stripTags().trim()) : '';
             } else {
                 self.data('status', 0).button('on');
+                self.next('.delete').removeClass('hidden');
                 changeStatus ? statusName.html(offText.stripTags().trim()) : '';
             }
-            $('body').find('.loading').remove();
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            $('body').find('.loading').remove();
             self.button(status ? 'up' : 'down');
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');
