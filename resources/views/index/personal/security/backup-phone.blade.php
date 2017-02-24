@@ -63,5 +63,6 @@
                     count: 120
                 });
             })
+        })
     </script>
 @stop

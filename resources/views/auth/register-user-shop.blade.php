@@ -202,7 +202,7 @@
 
                                     <div class="col-sm-9 col-md-8 padding-clear">
                                         <div class="col-sm-12">
-                                            <a id="add-address" class="btn btn-default" href="javascript:"
+                                            <a id="add-address" class="btn btn-default personal-add" href="javascript:"
                                                data-target="#addressModal"
                                                data-toggle="modal" data-loading-text="地址达到最大数量">添加配送区域</a>
                                         </div>

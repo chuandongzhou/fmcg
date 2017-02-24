@@ -191,6 +191,7 @@ class DeliveryController extends Controller
         return $this->success($order);
 
     }
+
     /**
      * 处理完成配送
      *
@@ -273,17 +274,18 @@ class DeliveryController extends Controller
             'deliveryMan'
         )->ofOrderGoods()->get();
         $deliveryNum = array();
-        foreach($delivery as $order){
+        foreach ($delivery as $order) {
             $num = $order->deliveryMan->lists('name')->count();
-            array_search($num,$deliveryNum)===false?array_push($deliveryNum,$num):'';
+            array_search($num, $deliveryNum) === false ? array_push($deliveryNum, $num) : '';
         };
-        if(!empty($search['num'])){
-            $delivery = $delivery->filter(function ($item) use($search){
+        if (!empty($search['num'])) {
+            $delivery = $delivery->filter(function ($item) use ($search) {
                 return $item->deliveryMan->lists('name')->count() == $search['num'];
             });
         }
-        $data = (new DeliveryService)->format($delivery,$search['delivery_man_id'],DeliveryMan::find(delivery_auth()->id())->name);
-        return $this->success(['deliveryNum'=>$deliveryNum,'data'=>$data]);
+        $data = (new DeliveryService)->format($delivery, $search['delivery_man_id'],
+            DeliveryMan::find(delivery_auth()->id())->name);
+        return $this->success(['deliveryNum' => $deliveryNum, 'data' => $data]);
     }
 
     /**
@@ -337,7 +339,7 @@ class DeliveryController extends Controller
     /**
      * 修改密码
      *
-     * @param  App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     * @param  \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function modifyPassword(UpdatePasswordRequest $request)
