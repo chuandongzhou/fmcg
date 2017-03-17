@@ -139,7 +139,7 @@
             </div>
             <div class="col-sm-12  table-responsive tables">
                 <p class="title-table">商品总计</p>
-                <table class="MyTable3 table-scroll">
+                <table class="table table-bordered MyTable table-scroll">
                     <thead>
                     <tr>
                         <td>商品名称</td>
