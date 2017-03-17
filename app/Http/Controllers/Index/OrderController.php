@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Index;
 
 use App\Services\CartService;
 use App\Services\OrderService;
-use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class OrderController extends Controller
 {
@@ -141,366 +144,205 @@ class OrderController extends Controller
         return view('index.order.pay-success');
     }
 
-
     /**
-     * 订单统计,全部显示商家名字
+     * 卖家订单统计
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getStatistics(Request $request)
+    public function getStatisticsOfSell(Request $request)
     {
-        //订单对象类型
-        $objType = cons()->valueLang('user.type');
-        array_forget($objType, auth()->user()->type);
-        //支付类型
-        $payType = cons()->valueLang('pay_type');
-        //查询条件判断
-        $search = $request->all();
 
-        $search['show_goods_name'] = isset($search['show_goods_name']) ? $search['show_goods_name'] : 0;
-        $orderCurrent = isset($search['order_page_num']) ? intval($search['order_page_num']) : 1;
-        $goodsCurrent = isset($search['goods_page_num']) ? intval($search['goods_page_num']) : 1;
-        $per = cons('statistics_per');//分页数
-        $statistics = $this->_searchAllOrderByOptions($search);
-        $orderCount = $statistics->count();//订单总数
-        $stat = $statistics->forPage($orderCurrent, $per);
-        $res = $this->_orderStatistics($statistics);
-        $goodsCount = count($res['goods']);//商品总数
-        $otherStat = $res['stat'];
-        $statGoods = collect($res['goods'])->forPage($goodsCurrent, $per);
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //买家名称
+        $userShopName = array_get($data, 'user_shop_name');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
-        $orderNav = $this->_pageNav($orderCurrent, $per, $orderCount);
-        $goodsNav = $this->_pageNav($goodsCurrent, $per, $goodsCount, 1);
-        $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
+        $orders = Order::ofSell(auth()->id())
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->ofUserShopName($userShopName)
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        //dd($this->_orderGoodsStatistics($orders));
+
+        $orderStatistics = $this->_groupOrderByTypeForStatistics($orders);
+
+        return view('index.order.order-statistics-of-sell',
+            array_merge(compact('startTime', 'endTime', 'userShopName', 'payType', 'data'), $orderStatistics));
+
+    }
+
+    /**
+     * 按店铺查买家详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getStatisticsOfSellUserDetail(Request $request)
+    {
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //买家名称
+        $userId = array_get($data, 'user_id');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
 
-        return view('index.order.order-statistics', [
-            'search' => $search,
-            'pay_type' => $payType,
-            'obj_type' => $objType,
-            'objCurrentType' => $request->input('obj_type') ? $request->input('obj_type') : '',
-            'statistics' => $stat,
-            'otherStat' => $otherStat,
-            'goods' => $statGoods,
-            'orderNav' => $orderNav,
-            'goodsNav' => $goodsNav,
-            'orderCurrent' => $orderCurrent,
-            'goodsCurrent' => $goodsCurrent,
-            'statisticsType' => $this->_getStatisticsType($objOfShow),
-            'orderCount' => $orderCount,
-            'goodsCount' => $goodsCount
+        $orders = Order::ofSell(auth()->id())
+            ->ofBuy($userId)
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        extract($this->_groupOrderByType($orders));
+
+        return view('index.order.order-statistics-of-sell-user-detail', [
+            'orders' => $orders,
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
+            'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
         ]);
+
     }
 
     /**
-     * user_name显示信息
-     *
-     * @param $objType
-     * @return string
-     */
-    private function _getStatisticsType($objType)
-    {
-        $user = auth()->user();
-        if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && $objType == cons('user.type.supplier'))
-        ) {
-            return 'buyer';
-        }
-
-        return 'seller';
-    }
-
-    /**
-     * 分页
-     *
-     * @param $pageNum
-     * @param $per
-     * @param $count
-     * @param int $flag
-     * @return string
-     */
-    private function _pageNav($currentPage, $per, $count, $flag = 0)
-    {
-        $pageTotal = ceil($count / $per);
-        $class = $flag == 0 ? "order-page" : "goods-page";
-        $html = '';
-        if ($pageTotal > 1) {
-            //前一页
-            $html .= '<ul class="pagination management-pagination ' . $class . '">';
-            if ($currentPage == 1) {
-                $html .= '<li class="disabled"> <span>«</span></li>';
-
-            } else {
-                $html .= '<li> <a class="prev search-by-get">«</a></li>';
-            }
-            //数字分页
-            if ($pageTotal < 12) {
-                //总页数小于12页
-                for ($i = 0; $i < $pageTotal; $i++) {
-                    if ($i + 1 == $currentPage) {
-                        $html .= '<li class="active" ><span>' . ($i + 1) . '</span></li>';
-                    } else {
-                        $html .= '<li><a class="search-by-get">' . ($i + 1) . '</a></li>';
-                    }
-                }
-            } else {
-                //总页数大于12页
-                if ($currentPage < 7) {
-                    //当前页在第七页之前
-                    for ($i = 0; $i < 8; $i++) {
-                        if ($i + 1 == $currentPage) {
-                            $html .= '<li class="active" ><span>' . ($i + 1) . '</span></li>';
-                        } else {
-                            $html .= '<li><a class="search-by-get">' . ($i + 1) . '</a></li>';
-                        }
-                    }
-
-                    $html .= '<li class="disabled"  ><span>...</span></li>';
-                    $html .= '<li><a class="search-by-get">' . ($pageTotal - 1) . '</a></li>';
-                    $html .= '<li><a class="search-by-get">' . $pageTotal . '</a></li>';
-
-                } else if ($currentPage >= 7 && $currentPage <= ($pageTotal - 5)) {
-                    //当前页在第7页之后，倒数第六页之前
-                    $html .= '<li><a class="search-by-get">1</a></li>';
-                    $html .= '<li><a class="search-by-get">2</a></li>';
-                    $html .= '<li class="disabled"  ><span>...</span></li>';
-
-                    $html .= '<li><a class="search-by-get">' . ($currentPage - 3) . '</a></li>';
-                    $html .= '<li ><a class="search-by-get">' . ($currentPage - 2) . '</a></li>';
-                    $html .= '<li ><a class="search-by-get">' . ($currentPage - 1) . '</a></li>';
-                    $html .= '<li  class="active" ><span>' . $currentPage . '</span></li>';
-                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 1) . '</a></li>';
-                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 2) . '</a></li>';
-                    $html .= '<li ><a class="search-by-get">' . ($currentPage + 3) . '</a></li>';
-
-                    $html .= '<li class="disabled"  ><span>...</span></li>';
-                    $html .= '<li><a class="search-by-get">' . ($pageTotal - 1) . '</a></li>';
-                    $html .= '<li><a class="search-by-get">' . $pageTotal . '</a></li>';
-
-
-                } else {
-                    //当前页在倒数第六页之后
-                    $html .= '<li><a class="search-by-get">1</a></li>';
-                    $html .= '<li><a class="search-by-get">2</a></li>';
-                    $html .= '<li class="disabled"  ><span>...</span></li>';
-
-                    for ($i = 8; $i >= 0; $i--) {
-                        if (($pageTotal - $i) == $currentPage) {
-                            $html .= '<li class="active" ><span>' . ($pageTotal - $i) . '</span></li>';
-                        } else {
-                            $html .= '<li><a class="search-by-get">' . ($pageTotal - $i) . '</a></li>';
-                        }
-
-                    }
-
-
-                }
-
-            }
-            //后一页
-            if ($currentPage == $pageTotal) {
-                $html .= '<li class="disabled"> <span>»</span></li>';
-
-            } else {
-                $html .= '<li><a  class="next search-by-get">»</a></li>';
-            }
-
-            $html .= '</ul>';
-        }
-
-
-        return $html;
-    }
-
-    /**
-     * 根据查询条件查询满足条件的订单
-     *
-     * @param $search
-     * @return mixed
-     */
-    private function _searchAllOrderByOptions($search)
-    {
-        $user = auth()->user();
-        $query = Order::where(function ($query) use ($search) {
-            //付款方式
-            if (empty($search['pay_type'])) {
-                $query->where(function ($query) {
-                    //在线支付情况，只查询付款完成以后的状态
-                    $query->ofPaySuccess();
-                })->orWhere(function ($query) {
-                    //货到付款情况，只查询发货以后的状态
-                    $query->ofHasSend();
-                })->orWhere(function ($query) {
-                    //货到付款情况，只查询发货以后的状态
-                    $query->ofPickUp();
-                });
-            } else {
-                if ($search['pay_type'] == cons('pay_type.online')) {//在线支付
-                    $query->ofPaySuccess();
-                } else if ($search['pay_type'] == cons('pay_type.cod')) { //货到付款
-                    $query->ofHasSend();
-                } else {
-                    $query->ofPickUp();
-                }
-            }
-        });
-
-        $objType = empty($search['obj_type']) ? null : $search['obj_type'];
-
-        if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && !is_null($objType))) {
-            //卖家
-            $this->_orderFilter($query, $user, $objType);
-        } else {
-            // '买家';
-            $this->_orderFilter($query, $user, $objType, true);
-        }
-
-        //时间
-        if (isset($search['start_at'])) {
-
-            $query->where('created_at', '>=', (new Carbon($search['start_at']))->startOfDay());
-        }
-        if (isset($search['end_at'])) {
-            $query->where('created_at', '<=', (new Carbon($search['end_at']))->endOfDay());
-        }
-        //商品名
-        if (!empty($search['goods_name'])) {
-            $query->wherehas('goods', function ($q) use ($search) {
-                $q->where('name', 'LIKE', '%' . trim($search['goods_name']) . '%');
-            });
-        }
-        //用户名
-        if (!empty($search['user_name'])) {
-            if ($user->type == cons('user.type.retailer') || ($user->type == cons('user.type.wholesaler') && $objType == cons('user.type.supplier'))) {
-                //查询卖家
-                $query->wherehas('shop', function ($q) use ($search) {
-                    $q->where('name', trim($search['user_name']));
-                });
-            } else {//查询买家
-                $query->whereHas('user.shop', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', '%' . trim($search['user_name']) . '%');
-                });
-            }
-        }
-        //地址
-        /*  $query->wherehas('shop.shopAddress', function ($query) use ($search) {//根据店铺地址查询
-              empty($search['province_id']) ?: $query->where('province_id', $search['province_id']);
-              empty($search['city_id']) ?: $query->where('city_id', $search['city_id']);
-              empty($search['district_id']) ?: $query->where('district_id', $search['district_id']);
-          });*/
-
-        return $query->nonCancel()->with('user.shop', 'shop', 'goods')->orderBy('id',
-            'desc')->get();//第一个是买家的店铺,第二个是卖的店铺
-    }
-
-
-    /**
-     * 过滤订单属于买家还是卖家
-     *
-     * @param $query
-     * @param $user
-     * @param null $objType
-     * @param bool|false $isBuyer
-     */
-    private function _orderFilter($query, $user, $objType = null, $isBuyer = false)
-    {
-        if ($isBuyer) {
-            // '买家';
-            //查询买家
-            $query->wherehas('shop.user', function ($q) use ($objType, $user) {
-                $q->where('id', $user->id);
-            });
-            if (!is_null($objType)) {
-                $query->wherehas('user', function ($q) use ($objType) {
-                    $q->where('type', $objType);
-                });
-            }
-        } else {
-            // '卖家';
-            //查询卖家
-            $query->where('user_id', $user->id);
-            if (!is_null($objType)) {
-                $query->wherehas('shop.user', function ($q) use ($objType) {
-                    $q->where('type', $objType);
-                });
-            }
-        }
-    }
-
-    /**
-     * 订单和商品统计
-     *
-     * @param array $res
-     * @return mixed
-     */
-    private function _orderStatistics($res)
-    {
-        $stat['totalNum'] = count($res);//订单总数
-        $stat['totalAmount'] = 0;//订单总金额
-        //在线支付订单
-        $stat['onlineNum'] = 0;
-        $stat['onlineAmount'] = 0;
-        //货到付款订单
-        $stat['codNum'] = 0;
-        $stat['codAmount'] = 0;
-        $stat['codReceiveAmount'] = 0;//实收金额
-        $goodStat = [];
-        foreach ($res as $value) {
-            //订单相关统计
-            $stat['totalAmount'] = bcadd($stat['totalAmount'], $value['price'], 2);
-            if ($value['pay_type'] == cons('pay_type.online')) {
-                ++$stat['onlineNum'];
-                $stat['onlineAmount'] = bcadd($stat['onlineAmount'], $value['price'], 2);
-            } else {
-                ++$stat['codNum'];
-                $stat['codAmount'] = bcadd($stat['codAmount'], $value['price'], 2);
-                if ($value['pay_status'] == cons('order.pay_status.payment_success')) {
-                    $stat['codReceiveAmount'] = bcadd($stat['codReceiveAmount'], $value['price'], 2);
-                }
-            }
-            //商品相关统计
-            foreach ($value['goods'] as $good) {
-                $num = $good['pivot']['num'];
-                if ($num > 0) {
-                    $price = bcmul($good['pivot']['price'], $num, 2);
-                    $name = $good['name'];
-                    $id = $good['id'];
-                    if (isset($goodStat[$good['id']])) {
-                        $goodStat[$good['id']]['num'] += $num;
-                        $goodStat[$good['id']]['price'] = bcadd($goodStat[$good['id']]['price'], $price, 2);
-                    } else {
-                        $goodStat[$good['id']] = ['id' => $id, 'name' => $name, 'price' => $price, 'num' => $num];
-                    }
-                }
-            }
-        }
-
-        return ['stat' => $stat, 'goods' => $goodStat];
-    }
-
-    /**
-     * 导出订单统计,excel
+     * 买家订单统计导出
      *
      * @param \Illuminate\Http\Request $request
+     *
      */
-    public function getStatExport(Request $request)
+    public function getStatisticsOfSellExport(Request $request)
     {
-        //查询条件判断
-        $search = $request->all();
-        $stat = $this->_searchAllOrderByOptions(array_filter($search));
-        $otherStat = $this->_orderStatistics($stat);
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //买家名称
+        $userShopName = array_get($data, 'user_shop_name');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
-        Excel::create('订单统计', function ($excel) use ($stat, $search, $otherStat) {
+        $user = auth()->user();
 
-            $excel->sheet('sheet1', function ($sheet) use ($stat, $search, $otherStat) {
+        $orders = Order::ofSell(auth()->id())
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->ofUserShopName($userShopName)
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        //dd($this->_orderGoodsStatistics($orders));
+
+        $orderStatistics = $this->_groupOrderByTypeForStatistics($orders);
+
+        $excelName = $startTime . '-' . $endTime . ' ' . $user->shop_name . '订单（出货）统计';
+
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($orderStatistics) {
+            $excel->sheet('订单总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+
                 // Set auto size for sheet
                 $sheet->setAutoSize(true);
 
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 10,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 15,
+                    'F' => 10,
+                    'G' => 20,
+                    'H' => 20,
+                    'I' => 20,
+                    'J' => 20,
+                    'K' => 15,
+                    'L' => 15,
+                ));
+
+                //标题
+                $titles = [
+                    '',
+                    '订单数',
+                    '总金额',
+                    '实收金额',
+                    '手续费',
+                    '未收金额',
+                    '在线支付订单数',
+                    '在线支付金额',
+                    '货到付款订单数',
+                    '货到付款金额',
+                    '自提订单数',
+                    '自提订单金额'
+                ];
+
+                //自主订单
+                $ownOrders = $orderStatistics['ownOrdersStatistics'];
+                array_unshift($ownOrders, '自主订单');
+                //业务订单
+                $businessOrders = $orderStatistics['businessOrdersStatistics'];
+                array_unshift($businessOrders, '业务订单');
+
+                $total = ['合计'];
+
+                foreach ($ownOrders as $key => $value) {
+                    if ($key) {
+                        $total[] = $value + $businessOrders[$key];
+                    }
+                }
+                $sheet->rows([$titles, array_values($ownOrders), array_values($businessOrders), $total]);
+
+                //单元格居中
+                $sheet->cells('A1:L4', function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
                 //打印条件
-                $options = $this->_spliceOptions($search);
+                /*$options = $this->_spliceOptions($search);
 
                 //订单信息统计
-                $orderContent = $this->_spliceOrderContent($stat, isset($search['show_goods_name']));
+                $orderInfo = $this->_spliceOrderContent($stat, isset($search['show_goods_name']));
+                $orderContent = $orderInfo['orderContent'];
+                $mergeArray = $orderInfo['mergeArray'];
 
                 //商品信息统计
                 $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
@@ -511,159 +353,581 @@ class OrderController extends Controller
 
                 $out = array_merge($options, $orderContent, $goodsContent, $orderStat);
 
-
                 $sheet->rows($out);
 
+
+                //总行数
+                $rowCount = count($out);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 10,
+                    'B' => 30,
+                    'C' => 15,
+                    'D' => 15,
+                    'E' => 15,
+                    'F' => 20,
+                    'G' => 10,
+                    'H' => 15,
+                    'I' => 50,
+                    'J' => 10,
+                    'K' => 10,
+                ));
+                //单元格合并
+                $sheet->setMergeColumn(array(
+                    'columns' => array('A', 'B', 'C', 'D', 'E', 'F', 'G'),
+                    'rows' => $mergeArray
+                ));
+
+                //单元格居中
+                $sheet->cells('A1:K' . $rowCount, function ($cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                    // manipulate the range of cells
+                });*/
             });
-
+            $excel->sheet('客户总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 30,
+                    'C' => 30,
+                    'D' => 10,
+                    'E' => 15,
+                    'F' => 10,
+                    'G' => 20,
+                    'H' => 35,
+                    'I' => 10,
+                ));
+                $titles = [
+                    '客户名称',
+                    '订单数(业务订单+自主订单)',
+                    '总金额(业务订单+自主订单)',
+                    '实收金额',
+                    '手续费',
+                    '未收金额',
+                    '联系方式',
+                    '地址',
+                    '业务员'
+                ];
+                $shops = [];
+                foreach ($orderStatistics['orderStatisticsGroupName'] as $item) {
+                    $shops[] = [
+                        $item['shopName'],
+                        $item['orderCount'] . '(' . $item['businessOrderCount'] . '+' . $item['ownOrderCount'] . ')',
+                        $item['amount'] . '(' . $item['businessOrderAmount'] . '+' . $item['ownOrderAmount'] . ')',
+                        $item['actualAmount'],
+                        $item['targetFee'],
+                        $item['notPaidAmount'],
+                        $item['contact'],
+                        $item['address'],
+                        $item['user_salesman']
+                    ];
+                }
+                $sheet->rows(array_merge([$titles], $shops));
+                //单元格居中
+                $sheet->cells('A1:H' . (count($shops) + 1), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+            });
+            $excel->sheet('商品总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+                $this->_exportGoods($sheet, $orderStatistics);
+            });
         })->export('xls');
+
     }
 
     /**
-     * 拼接过滤信息
+     * 买家订单统计
      *
-     * @param $search
-     * @return array
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    private function _spliceOptions($search)
+    public function getStatisticsOfBuy(Request $request)
     {
-        $options = [];
-        if (!empty($search['start_at'])) {
-            $options[] = ["开始时间:", $search['start_at']];
-            if (!empty($search['end_at'])) {
-                $options[] = ["结束时间:", $search['end_at']];
-            }
-        }
-        empty($search['pay_type']) ?: $options[] = [
-            "支付方式:",
-            cons()->valueLang('pay_type')[$search['pay_type']]
-        ];
-        empty($search['obj_type']) ?: $options[] = [
-            "订单对象:",
-            cons()->valueLang('user.type')[$search['obj_type']]
-        ];
-        empty($search['goods_name']) ?: $options[] = ["商品名称:", $search['goods_name']];
-        if (!empty($search['user_name'])) {
-            $objOfShow = isset($search['obj_type']) ? $search['obj_type'] : 0;
-            $showObjName = $this->_getStatisticsType($objOfShow) == 'buyer' ? '买家' : '卖家';
-            $options[] = [$showObjName . ':', $search['user_name']];
-        }
 
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //卖家名称
+        $shopName = array_get($data, 'hop_name');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
-        return $options;
+        $orders = Order::ofBuy(auth()->id())
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->ofShopName($shopName)
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        //dd($this->_orderGoodsStatistics($orders));
+
+        $orderStatistics = $this->_groupOrderByTypeForStatistics($orders, false);
+
+        return view('index.order.order-statistics-of-buy',
+            array_merge(compact('startTime', 'endTime', 'shopName', 'payType', 'data'), $orderStatistics));
+
     }
 
     /**
-     * 拼接订单统计详情
+     * 按店铺查卖家详情
      *
-     * @param $orders
-     * @param $flag
-     * @return array
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    private function _spliceOrderContent($orders, $flag)
+    public function getStatisticsOfBuyUserDetail(Request $request)
     {
-        $orderContent[] = ['订单号', '店铺名', '收件人', '支付方式', '订单状态', '创建时间', '订单金额'];
-        if ($flag) {
-            $orderContent[0] = array_merge($orderContent[0], ['商品编号', '商品名称', '商品单价', '商品数量']);
-        }
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //买家名称
+        $shopId = array_get($data, 'shop_id');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
-        foreach ($orders as $order) {
-            if ($flag) {
-                foreach ($order['goods'] as $key => $value) {
+
+        $orders = Order::ofBuy(auth()->id())
+            ->where('shop_id', $shopId)
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        extract($this->_groupOrderByType($orders));
+
+        return view('index.order.order-statistics-of-buy-user-detail', [
+            'orders' => $orders,
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
+            'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
+        ]);
+
+    }
+
+    /**
+     * 买家订单统计导出
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     */
+    public function getStatisticsOfBuyExport(Request $request)
+    {
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        //卖家名称
+        $shopName = array_get($data, 'hop_name');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
+
+        $user = auth()->user();
+
+        $orders = Order::ofBuy(auth()->id())
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->ofShopName($shopName)
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+
+        //dd($this->_orderGoodsStatistics($orders));
+
+        $orderStatistics = $this->_groupOrderByTypeForStatistics($orders, false);
+
+        $excelName = $startTime . '-' . $endTime . ' ' . $user->shop_name . '订单（进货）统计';
+
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($orderStatistics) {
+            $excel->sheet('订单总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 10,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 15,
+                    'F' => 20,
+                    'G' => 20,
+                    'H' => 20,
+                    'I' => 20,
+                    'J' => 15,
+                    'K' => 15,
+                ));
+
+                //标题
+                $titles = [
+                    '',
+                    '订单数',
+                    '总金额',
+                    '已付金额',
+                    '未付金额',
+                    '在线支付订单数',
+                    '在线支付金额',
+                    '货到付款订单数',
+                    '货到付款金额',
+                    '自提订单数',
+                    '自提订单金额'
+                ];
+
+                //自主订单
+                $ownOrders = array_except($orderStatistics['ownOrdersStatistics'], 'targetFee');
+                array_unshift($ownOrders, '自主订单');
+                //业务订单
+                $businessOrders = array_except($orderStatistics['businessOrdersStatistics'], 'targetFee');
+                array_unshift($businessOrders, '业务订单');
+
+                $total = ['合计'];
+
+                foreach ($ownOrders as $key => $value) {
                     if ($key) {
-                        $orderContent[] = [
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            $value['id'],
-                            $value['name'],
-                            $value['pivot']['price'],
-                            $value['pivot']['num']
-                        ];
-                    } else {
-                        $orderContent[] = [
-                            $order['id'],
-                            $order['user_shop_name'],
-                            $order['shippingAddress']['consigner'],
-                            $order['payment_type'],
-                            $order['status_name'],
-                            $order['created_at'],
-                            $order['price'],
-                            $value['id'],
-                            $value['name'],
-                            $value['pivot']['price'],
-                            $value['pivot']['num']
-                        ];
+                        $total[] = $value + $businessOrders[$key];
                     }
                 }
-            } else {
-                $orderContent[] = [
-                    $order['id'],
-                    $order['user_shop_name'],
-                    $order['shippingAddress']['consigner'],
-                    $order['payment_type'],
-                    $order['status_name'],
-                    $order['created_at'],
-                    $order['price'],
+                $sheet->rows([$titles, array_values($ownOrders), array_values($businessOrders), $total]);
+
+                //单元格居中
+                $sheet->cells('A1:K4', function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('店铺总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 30,
+                    'C' => 30,
+                    'D' => 10,
+                    'E' => 15,
+                    'F' => 20,
+                    'G' => 35,
+                    'H' => 10,
+                ));
+                $titles = [
+                    '店铺名称',
+                    '订单数(业务订单+自主订单)',
+                    '总金额(业务订单+自主订单)',
+                    '已付金额',
+                    '未付金额',
+                    '联系方式',
+                    '地址',
                 ];
+                $shops = [];
+                foreach ($orderStatistics['orderStatisticsGroupName'] as $item) {
+                    $shops[] = [
+                        $item['shopName'],
+                        $item['orderCount'] . '(' . $item['businessOrderCount'] . '+' . $item['ownOrderCount'] . ')',
+                        $item['amount'] . '(' . $item['businessOrderAmount'] . '+' . $item['ownOrderAmount'] . ')',
+                        $item['actualAmount'],
+                        $item['notPaidAmount'],
+                        $item['contact'],
+                        $item['address']
+                    ];
+                }
+                $sheet->rows(array_merge([$titles], $shops));
+                //单元格居中
+                $sheet->cells('A1:H' . (count($shops) + 1), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+            });
+            $excel->sheet('商品总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
+               $this->_exportGoods($sheet, $orderStatistics);
+            });
+        })->export('xls');
+
+    }
+
+    /**
+     * 导出商品统计
+     *
+     * @param \Maatwebsite\Excel\Classes\LaravelExcelWorksheet $sheet
+     * @param $orderStatistics
+     */
+    private function _exportGoods(LaravelExcelWorksheet $sheet, $orderStatistics){
+        // 设置宽度
+        $sheet->setWidth(array(
+            'A' => 60,
+            'B' => 10,
+            'C' => 10,
+            'D' => 15,
+            'E' => 10
+        ));
+        $titles = [
+            '商品名称',
+            '总进货量',
+            '总金额',
+            '平均单价',
+            '进货数量',
+        ];
+        $goods = [];
+        //合并
+        $mergeArray = [];
+        foreach ($orderStatistics['orderGoodsStatistics'] as $item) {
+            $start = count($goods) + 2;
+            foreach ($item['pieces'] as $piece => $value) {
+                if ($value == head($item['pieces'])) {
+                    $mergeArray[$start] = [$start, $start];
+                    $goods[] = [
+                        $item['name'],
+                        $item['num'],
+                        $item['amount'],
+                        bcdiv($value['amount'], $value['num'], 2) . '/' . cons()->valueLang('goods.pieces',
+                            $piece),
+                        $value['num']
+                    ];
+                } else {
+                    $mergeArray[$start] = [$start, $start + 1];
+                    $goods[] = [
+                        '',
+                        '',
+                        '',
+                        bcdiv($value['amount'], $value['num'], 2) . '/' . cons()->valueLang('goods.pieces',
+                            $piece),
+                        $value['num']
+                    ];
+                }
+
             }
         }
-
-        return $orderContent;
+        $sheet->rows(array_merge([$titles], $goods));
+        $sheet->setMergeColumn(array(
+            'columns' => array('A','B','C'),
+            'rows' => $mergeArray
+        ));
+        //单元格居中
+        $sheet->cells('A1:E' . (count($goods) + 1), function (CellWriter $cells) {
+            $cells->setAlignment('center');
+            $cells->setValignment('center');
+        });
     }
 
     /**
-     * 拼接商品统计详情
+     * 订单总统计
      *
-     * @param $goods
+     * @param $orders
+     * @param bool $isSeller
      * @return array
      */
-    private function _spliceGoodsContent($goods)
+    private function _groupOrderByTypeForStatistics(Collection $orders, $isSeller = true)
     {
-        $goodsContent[] = ['商品总计'];
-        $goodsContent[] = ['商品编号', '商品名称', '平均单价', '商品数量', '商品支出金额'];
 
-        foreach ($goods as $good) {
-            $goodsContent[] = [$good['id'], $good['name'], $good['price'] / $good['num'], $good['num'], $good['price']];
+        extract($this->_groupOrderByType($orders));
+
+        return [
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
+            'orderStatisticsGroupName' => $this->_orderStatisticsGroupName($orders, $isSeller),
+            'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
+        ];
+    }
+
+    /**
+     * 按订单类型拆分
+     *
+     * @param $orders
+     * @return array
+     */
+    private function _groupOrderByType(Collection $orders)
+    {
+
+        $orderConf = cons('order');
+        //自主订单
+        $ownOrders = $orders->filter(function ($order) use ($orderConf) {
+            return $order->type == $orderConf['type']['platform'];
+        });
+
+        //业务订单
+        $businessOrders = $orders->reject(function ($order) use ($orderConf) {
+            return $order->type == $orderConf['type']['platform'];
+        });
+
+        return compact('ownOrders', 'businessOrders');
+
+
+    }
+
+    /**
+     * 订单统计
+     *
+     * @param $orders
+     * @return array
+     */
+    private function _orderStatistics(Collection $orders)
+    {
+        $orderConf = cons('order');
+        $payTypes = cons('pay_type');
+        //已支付订单
+        $paidOrders = $orders->filter(function ($order) use ($orderConf) {
+            return $order->pay_status == $orderConf['pay_status']['payment_success'];
+        });
+        //未支付订单
+        $notPaidOrders = $orders->reject(function ($order) use ($orderConf) {
+            return $order->pay_status == $orderConf['pay_status']['payment_success'];
+        });
+
+        // 在线支付订单
+        $onlinePayOrders = $orders->filter(function ($order) use ($payTypes) {
+            return $order->pay_type == $payTypes['online'];
+        });
+
+        // 货到付款订单
+        $codPayOrders = $orders->filter(function ($order) use ($payTypes) {
+            return $order->pay_type == $payTypes['cod'];
+        });
+
+        // 自提订单
+        $pickUpOrders = $orders->filter(function ($order) use ($payTypes) {
+            return $order->pay_type == $payTypes['pick_up'];
+        });
+
+        return [
+            'count' => $orders->count(),
+            'amount' => $orders->sum('after_rebates_price'),
+            'actualAmount' => $paidOrders->sum('actual_amount'),
+            'targetFee' => $paidOrders->sum('target_fee'),
+            'notPaidAmount' => $notPaidOrders->sum('after_rebates_price'),
+            'onlinePayCount' => $onlinePayOrders->count(),
+            'onlinePayAmount' => $onlinePayOrders->sum('after_rebates_price'),
+            'codPayCount' => $codPayOrders->count(),
+            'codPayAmount' => $codPayOrders->sum('after_rebates_price'),
+            'pickUpCount' => $pickUpOrders->count(),
+            'pickUpAmount' => $pickUpOrders->sum('after_rebates_price'),
+
+        ];
+
+    }
+
+    /**
+     * 订单按店铺名拆分
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $orders
+     * @param $isSeller
+     *
+     * @return array
+     */
+    private function _orderStatisticsGroupName(Collection $orders, $isSeller = true)
+    {
+        $shopNameType = $isSeller ? 'user_shop_name' : 'shop_name';
+
+        $shopNames = $orders->pluck($shopNameType)->toBase()->unique();
+
+        $nameStatistics = [];
+        foreach ($shopNames as $shopName) {
+            $nameStatistics[$shopName] = $this->_orderStatisticsByShopName($orders, $shopName, $shopNameType);
+        }
+        return $nameStatistics;
+    }
+
+    /**
+     * 按店铺名统计
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $allOrders
+     * @param $shopName
+     * @param $shopNameType
+     * @return array
+     */
+    private function _orderStatisticsByShopName(Collection $allOrders, $shopName, $shopNameType)
+    {
+        $orders = $allOrders->filter(function ($order) use ($shopName, $shopNameType) {
+            return $order->{$shopNameType} == $shopName;
+        });
+
+        $firstOrder = $orders->first();
+
+        if (empty($firstOrder)) {
+            return [];
         }
 
-        return $goodsContent;
+        $isSeller = $shopNameType == 'user_shop_name';
+
+        $orderStatistics = $this->_orderStatistics($orders);
+        extract($this->_groupOrderByType($orders));
+
+        $shopDetails = [
+            'id' => $isSeller ? $firstOrder->user_id : $firstOrder->shop_id,
+            'shopName' => $shopName,
+            'contact' => $isSeller ? $firstOrder->user_contact . '-' . $firstOrder->user_contact_info : $firstOrder->shop_contact,
+            'address' => $isSeller ? $firstOrder->user_shop_address : $firstOrder->shop_address,
+            'orderCount' => $orders->count(),
+            'businessOrderCount' => $businessOrders->count(),
+            'businessOrderAmount' => $businessOrders->sum('after_rebates_price'),
+            'ownOrderCount' => $ownOrders->count(),
+            'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
+        ];
+        if ($isSeller) {
+            $shopDetails['user_salesman'] = $firstOrder->user_salesman;
+        }
+        return array_merge($shopDetails, $orderStatistics);
     }
 
     /**
-     * 拼接订单汇总详情
+     * 订单商品统计
      *
-     * @param $stat
+     * @param \Illuminate\Database\Eloquent\Collection $orders
      * @return array
      */
-    private function _spliceOrderStat($stat)
+    private function _orderGoodsStatistics(Collection $orders)
     {
-        $res[] = ['订单总计'];
-        $res[] = [
-            '订单数',
-            '总金额',
-            '在线支付订单数',
-            '在线支付订单总金额',
-            '货到付款订单数',
-            '货到付款总金额',
-            '货到付款实收金额',
-            '货到付款未收金额'
-        ];
-        $res[] = [
-            $stat['totalNum'],
-            $stat['totalAmount'],
-            $stat['onlineNum'],
-            $stat['onlineAmount'],
-            $stat['codNum'],
-            $stat['codAmount'],
-            $stat['codReceiveAmount'],
-            $stat['codAmount'] - $stat['codReceiveAmount']
-        ];
 
-        return $res;
+        $orderGoods = $orders->pluck('orderGoods')->collapse();
+
+        $goodsStatistics = [];
+
+        foreach ($orderGoods as $item) {
+            $goodsId = $item->goods_id;
+            $pieces = $item->pieces;
+            !isset($goodsStatistics[$goodsId]['name']) && ($goodsStatistics[$goodsId]['name'] = $item->goods_name);
+
+            $goodsStatistics[$goodsId]['num'] = isset($goodsStatistics[$goodsId]['num']) ? bcadd($goodsStatistics[$goodsId]['num'],
+                $item->num) : $item->num;
+            $goodsStatistics[$goodsId]['amount'] = isset($goodsStatistics[$goodsId]['amount']) ? bcadd($goodsStatistics[$goodsId]['amount'],
+                $item->total_price) : $item->total_price;
+
+            $goodsStatistics[$goodsId]['pieces'][$pieces] ['amount'] = isset($goodsStatistics[$goodsId]['pieces'][$pieces]['amount']) ? bcadd($goodsStatistics[$goodsId]['pieces'][$pieces]['amount'],
+                $item->total_price) : $item->total_price;
+            $goodsStatistics[$goodsId]['pieces'][$pieces] ['num'] = isset($goodsStatistics[$goodsId]['pieces'][$pieces]['num']) ? bcadd($goodsStatistics[$goodsId]['pieces'][$pieces]['num'],
+                $item->num) : $item->num;
+        }
+        return $goodsStatistics;
+
     }
-
 }

@@ -61,7 +61,8 @@
                                 <span class="order-number">下单时间 :{{ $order['created_at'] }}</span>
                             </th>
                             <th width="25%" colspan="4">
-                                <b>{{ $order->shop_name }}</b>
+                                <b><a href="{{ url('shop/' . $order->shop_id) }}"
+                                      target="_blank">{{ $order->shop_name }}</a></b>
                                 <a href="javascript:"
                                    onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
                                    class="contact"><span class="iconfont icon-kefu"></span> 联系客服</a>
@@ -94,12 +95,12 @@
                                             <p>{{ $order['status_name'] }}
                                             @if($order['status']==cons('order.status.non_confirm'))
                                                 <p class="prompt">(等待卖家确认)</p>
-                                                @endif
-                                                </p>
+                                            @endif
 
-                                                <p>{{ $order['payment_type'] }}</p>
+                                            <p>{{ $order['payment_type'] }}</p>
 
-                                                <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                            <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
+                                            </p>
                                         </td>
                                         <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
                                             width="15%">

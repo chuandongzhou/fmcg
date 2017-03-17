@@ -55,7 +55,7 @@
                                 <div class="form-group">
                                     <label class="col-xs-3 control-label">
                                         <span class="red ">*</span>
-                                        <span class="prompt">保密手机:</span>
+                                        <span class="prompt">密保手机:</span>
                                     </label>
                                     <div class="col-xs-4">
                                         <input class="form-control" placeholder="请输入手机号码" type="text"
@@ -134,8 +134,6 @@
                 setTimeout(function () {
                     $this.next('button').html('重新获取').prop('disabled', false);
                 }, 2000);
-
-
             });
 
         });

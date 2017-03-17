@@ -135,7 +135,7 @@ class MyGoodsController extends Controller
             }
 
             if ($goods->fill($attributes)->save()) {
-                $goods->goodsPieces->delete();
+                $goods->goodsPieces && $goods->goodsPieces->delete();
                 //更新商品单位
                 $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                     'system_2', 'specification');

@@ -4192,51 +4192,61 @@ table .product-panel .promotions {
   color: #009900;
 }
 
-.order-report .tableLayout + .tableLayout {
-  margin-top: 20px;
+.report-detail .title-table {
+  margin-bottom: 20px;
 }
 
-.order-report .tableLayout .tableHead {
-  min-width: 1033px;
+.tableLayout {
+  margin-bottom: 20px;
 }
 
-.order-report .tableLayout .tableHead table {
-  min-width: 1033px;
-}
-
-.order-report .tableLayout .tableHead table thead tr td {
+.tableLayout thead tr td,
+.tableLayout thead tr th,
+.tableLayout thead .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table .tableLayout thead tr td {
   background-color: #f2f2f2;
 }
 
-.order-report .tableLayout .tableData {
+.tableLayout tr td,
+.tableLayout tr th,
+.tableLayout .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table .tableLayout tr td {
+  text-align: center;
+}
+
+.tableLayout .tableHead {
+  min-width: 1033px;
+}
+
+.tableLayout .tableHead table {
+  min-width: 1033px;
+}
+
+.tableLayout .tableData {
   min-width: 1049px;
 }
 
-.order-report .tableLayout .tableData table {
+.tableLayout .tableData table {
   min-width: 1033px;
 }
 
-.order-report .tableLayout .tableColumn table tr td {
+.tableLayout .tableColumn table tr td {
   background-color: #f2f2f2;
 }
 
-.order-report .tableLayout table thead td {
+.tableLayout table thead td {
   height: 35px;
 }
 
-.order-report .tableLayout table thead td .prompt {
+.tableLayout table thead td .prompt {
   font-size: 12px;
   color: #b4b4b4;
 }
 
-.order-report .tableLayout table tr td {
+.tableLayout table tr td {
   min-width: 125px;
   padding: 8px !important;
   border: 1px solid #ddd;
-}
-
-.report-detail .title-table {
-  margin-bottom: 20px;
 }
 
 /*======================================order-report end======================================*/

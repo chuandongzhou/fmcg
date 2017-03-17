@@ -44,7 +44,42 @@
 	　
 `接口返回：`
 
-#### 2.1.3 注册[post] (register)
+#### 2.1.3 注册（获取验证码）[post] (reg-send-sms)
+
+`请求参数：`
+
+    type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+    user_name                   string      账号
+    backup_mobile               string      密保手机
+ 
+`接口返回：`
+    
+    
+
+#### 2.1.4 注册（创建帐户）[post] (register-user)
+
+`请求参数：`
+    
+    type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+    user_name                   string      账号
+    backup_mobile               string      密保手机
+    code                        string      验证码
+    
+`接口返回：`   
+
+#### 2.1.5 注册（设置密码）[post] (set-password)
+
+`请求参数：`
+    
+    type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+    user_name                   string      账号
+    backup_mobile               string      密保手机
+    password                    string      密码
+    password_confirmation       string      确认密码
+    
+`接口返回：` 
+
+#### 2.1.6 注册（填写商户信息）[post] (register)
 
 `请求参数：`
 
@@ -90,6 +125,29 @@
 `成功返回:`
 
 `失败返回：`
+
+#### 2.1.7 找回密码（获取验证码）[post] (send-sms)
+
+`请求参数：`
+
+    user_name                   string      账号
+    backup_mobile               string      密保手机
+    license_num                 string      营业执照注册号
+ 
+`接口返回：`
+    
+#### 2.1.8 找回密码（确认找回）[post] (backup)
+
+`请求参数：`
+
+    user_name                   string      账号
+    backup_mobile               string      密保手机
+    license_num                 string      营业执照注册号
+    password                    string      新密码
+    password_confirmation       string      新密码确认
+    code                        string      手机验证码
+ 
+`接口返回：`
 
 ### 2.2 商品模块 goods
 #### 2.2.1 获取商品栏目[get] (goods)
@@ -1414,7 +1472,7 @@
     y_lat               float       纬度
     area_name           string      省名+市名+县名+街道名
     address             string      详细地址
-
+    is_default          int         是否设置为默认（1是， 0或不传为否）
 `成功返回：`
 
 `失败返回：`
@@ -1550,6 +1608,7 @@
 
 #### 2.12.2 添加配送人员[post]
 `请求参数:`
+
 	user_name           string      pos机登录名
 	password            string      pos机登录密码
 	password_confirmation   string  pos机密码确认

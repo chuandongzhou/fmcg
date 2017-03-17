@@ -30,6 +30,16 @@ class SalesmanVisitGoodsRecord extends Model
     }
 
     /**
+     * 获取商品名
+     *
+     * @return string
+     */
+    public function getGoodsNameAttribute()
+    {
+        return $this->goods ? $this->goods->name : '';
+    }
+
+    /**
      * 商品图片
      *
      * @return string

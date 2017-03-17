@@ -57,11 +57,3 @@
         {{ $promoters->render() }}
     </div>
 @stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            onCheckChange('#parent', '.child');
-        })
-    </script>
-@stop

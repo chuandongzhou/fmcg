@@ -42,16 +42,16 @@ class RegisterUserShopRequest extends Request
                 if (!$address['address']) {
                     $validator->errors()->add('address[address]', '详细地址 不能为空');
                 }
-                if(mb_strlen($address['address'],'utf-8') > 30){
+                if (mb_strlen($address['address'], 'utf-8') > 30) {
                     $validator->errors()->add('address[address]', '详细地址 不超过30字');
                 }
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
-                if($address['city_id'] && !$address['district_id'] && !empty($this->lowerLevelAddress($address['city_id']))){
+                if ($address['city_id'] && !$address['district_id'] && !empty($this->lowerLevelAddress($address['city_id']))) {
                     $validator->errors()->add('address[district_id]', '区/县 不能为空');
                 }
-                if($address['district_id'] && !$address['street_id'] && !empty($this->lowerLevelAddress($address['district_id']))){
+                if ($address['district_id'] && !$address['street_id'] && !empty($this->lowerLevelAddress($address['district_id']))) {
                     $validator->errors()->add('address[street_id]', '街道 不能为空');
                 }
             }

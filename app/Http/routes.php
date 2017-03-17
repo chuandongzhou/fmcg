@@ -84,10 +84,12 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->get('report/{salesman_id}/export', 'ReportController@export');
+            $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
             $router->get('report/export', 'ReportController@exportIndex');
+            $router->resource('report', 'ReportController');
             $router->get('display-info', 'DisplayInfoController@index');
             $router->get('display-info/export', 'DisplayInfoController@export');
-            $router->resource('report', 'ReportController');
+
             $router->resource('mortgage-goods', 'MortgageGoodsController');
             $router->group(['prefix' => 'order'], function ($router) {
                 $router->get('export', 'SalesmanVisitOrderController@export');
@@ -181,7 +183,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('operation/export', 'OperationController@export');
     $router->get('operation/notification-export', 'OperationController@notificationExport');
     $router->resource('operation', 'OperationController');
-
+    $router->resource('payment-channel', 'PaymentChannelController');
 });
 
 
@@ -387,5 +389,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->any('pay-result', 'WechatPayController@payResult');
         });
 
+        //支付渠道
+
+        $router->get('payment-channel', 'PaymentChannelController@index');
     });
 });

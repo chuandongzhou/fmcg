@@ -23,6 +23,7 @@ class CreateShippingAddressRequest extends UserRequest
         return [
             'consigner' => 'required|max:10',
             'phone' => ['required', 'regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/'],
+            'is_default' => 'sometimes|required|boolean',
             'province_id' => 'required|numeric',
             'city_id' => 'required|numeric',
 //            'district_id' => 'required|numeric',

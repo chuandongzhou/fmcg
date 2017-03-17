@@ -326,5 +326,14 @@ class SalesmanCustomer extends Model
         return array_search($this->type, cons('user.type'));
     }
 
+    /**
+     * 获取业务员名
+     *
+     * @return string
+     */
+    public function getSalesmanNameAttribute()
+    {
+        return $this->salesman ? $this->salesman->name : '';
+    }
 
 }

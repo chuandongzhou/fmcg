@@ -236,7 +236,7 @@ class DeliveryService
         $search['end_at'] = !empty($search['end_at']) ? (new Carbon($search['end_at']))->endOfDay() : '';
         $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
 
-        $delivery = Order::ofSell(auth()->id())->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->ofOrderGoods()->with('systemTradeInfo',
+        $delivery = Order::ofSell(auth()->id())->useful()->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->ofOrderGoods()->with('systemTradeInfo',
             'deliveryMan')->orderBy('delivery_finished_at', 'asc')->get();
         $deliveryNum = array();
         foreach ($delivery as $order) {

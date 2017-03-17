@@ -81,7 +81,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->id())->with('user.shop', 'goods', 'coupon')->WaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -119,8 +119,8 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::OfSell(auth()->id())->with('user.shop', 'goods', 'coupon')->orderBy('id',
-            'desc')->where('is_cancel', cons('order.is_cancel.off'))->paginate();
+        $orders = Order::OfSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->orderBy('id',
+            'desc')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -132,7 +132,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon')->paginate();
+        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -144,7 +144,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell(auth()->id())->getPayment()->with('user.shop', 'goods', 'coupon')->paginate();
+        $orders = Order::ofSell(auth()->id())->getPayment()->nonCancel()->with('user.shop', 'goods', 'coupon')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -158,7 +158,7 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::OfSell(auth()->id())->find($orderId);
+        $order = Order::OfSell(auth()->id())->useful()->find($orderId);
 
         if (is_null($order)) {
             return $this->error('订单不存在');
@@ -370,7 +370,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::OfSell(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::OfSell(auth()->id())->useful()->whereIn('id', $orderIds)->get();
         if ($orders->isEmpty()) {
             return $this->error('确认收款失败');
         }
@@ -421,7 +421,7 @@ class OrderController extends Controller
         }
 
 
-        $orders = Order::OfSell(auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::OfSell(auth()->id())->useful()->whereIn('id', $orderIds)->get();
 
         if ($orders->isEmpty()) {
             return $this->error('订单不能为空');
@@ -466,7 +466,7 @@ class OrderController extends Controller
 
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
         $today = Carbon::today();
-        $builder = Order::OfSell(auth()->id())->nonCancel();
+        $builder = Order::OfSell(auth()->id())->useful();
 
         for ($i = 6; $i >= 0; --$i) {
             $start = $today->copy()->addDay(-$i);
@@ -565,7 +565,7 @@ class OrderController extends Controller
     public function putChangeOrder(UpdateOrderRequest $request)
     {
         //判断该订单是否存在
-        $order = Order::OfSell(auth()->id())->find(intval($request->input('order_id')));
+        $order = Order::OfSell(auth()->id())->useful()->find(intval($request->input('order_id')));
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }

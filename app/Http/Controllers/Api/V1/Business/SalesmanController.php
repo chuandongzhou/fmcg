@@ -105,8 +105,8 @@ class SalesmanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Salesman $salesman
-     * @return \Illuminate\Http\Response
+     * @param $salesman
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function destroy($salesman)
     {
@@ -180,8 +180,6 @@ class SalesmanController extends Controller
                 (new Carbon())->endOfDay()
             ])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count();
 
-        //info($todayVisitCount);
-
         return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
             'todayVisitCount');
     }
@@ -189,6 +187,8 @@ class SalesmanController extends Controller
     /**
      * 解冻/冻结
      * @param \Illuminate\Http\Request $request
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postLock(Request $request)
     {

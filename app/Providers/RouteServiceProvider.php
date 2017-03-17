@@ -36,7 +36,8 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\SalesmanVisit' => 'visit',
         'App\Models\SalesmanVisitOrder' => 'salesman-visit-order',
         'App\Models\MortgageGoods' => 'mortgage-goods',
-        'App\Models\Coupon' => 'coupon'
+        'App\Models\Coupon' => 'coupon',
+        'App\Models\PaymentChannel' => 'payment-channel'
     ];
 
     /**

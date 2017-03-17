@@ -38,20 +38,16 @@ class ShippingAddressController extends Controller
     /**
      * 设置默认
      *
-     * @param $id
+     * @param $shippingAddress
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function addressDefault($id)
+    public function addressDefault($shippingAddress)
     {
-        $addressInfo = ShippingAddress::find($id);
+        $addressInfo = $shippingAddress instanceof ShippingAddress ? $shippingAddress : ShippingAddress::find($shippingAddress);
         if (Gate::denies('validate-user', $addressInfo)) {
             return $this->error('设置失败，请重试');
         }
-        if ($addressInfo['is_default'] == 1) {
-            return $this->success('设置成功');
-        }
-
-        auth()->user()->ShippingAddress()->where('is_default', 1)->update(['is_default' => 0]);
+        auth()->user()->shippingAddress()->where('is_default', 1)->update(['is_default' => 0]);
 
         if ($addressInfo->fill(['is_default' => 1])->save()) {
             return $this->success('设置成功');
@@ -67,10 +63,12 @@ class ShippingAddressController extends Controller
      */
     public function store(Requests\Api\v1\CreateShippingAddressRequest $request)
     {
-        $address = $request->except(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
+        $addressAttr = ['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address'];
+        $address = $request->except($addressAttr);
         $shippingAddress = auth()->user()->shippingAddress()->create($address);
         if ($shippingAddress->exists) {
-            $shipping =  $request->only(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
+            $shippingAddress->is_default == 1 && $this->addressDefault($shippingAddress);
+            $shipping = $request->only($addressAttr);
             $addressModel = $shippingAddress->address()->create($shipping);
             if ($addressModel->exists) {
                 return $this->success('添加成功');
@@ -90,13 +88,20 @@ class ShippingAddressController extends Controller
      */
     public function update(Requests\Api\v1\CreateShippingAddressRequest $request, $address)
     {
-        $shippingAddress = $request->except(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
+        $shippingAddress = $request->except([
+            'province_id',
+            'city_id',
+            'district_id',
+            'street_id',
+            'area_name',
+            'address'
+        ]);
         if (Gate::denies('validate-user', $address)) {
             return $this->error('保存收货地址时出现问题');
         }
 
         if ($address->fill($shippingAddress)->save()) {
-            $shipping =  $request->only(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
+            $shipping = $request->only(['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address']);
             $address->address->fill($shipping)->save();
             return $this->success('保存收货地址成功');
         }

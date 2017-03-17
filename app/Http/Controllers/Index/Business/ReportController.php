@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers\Index\Business;
 
-use App\Models\Goods;
+use App\Models\SalesmanCustomerDisplayList;
+use App\Models\SalesmanVisit;
+use App\Models\SalesmanVisitGoodsRecord;
+use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
-use PhpOffice\PhpWord\Element\Table;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 use PhpOffice\PhpWord\PhpWord;
 
 class ReportController extends Controller
@@ -49,47 +56,366 @@ class ReportController extends Controller
             return $this->error('业务员不存在');
         }
 
+        $carbon = new Carbon();
         $data = $request->all();
+        //开始时间
+        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
 
-        $startDate = isset($data['start_date']) ? new Carbon($data['start_date']) : (new Carbon())->startOfDay();
-        $endDate = isset($data['end_date']) ? (new Carbon($data['end_date']))->endOfDay() : Carbon::now();
-
+        $dateEnd = (new Carbon($endDate))->endOfDay();
 
         //拜访记录
-        $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
+        $visits = $salesman->visits()->ofTime($startDate, $dateEnd)->with([
             'orders.orderGoods.goods',
             'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
 
-        //自主下单订单
-
-        $platFormOrders = $salesman->orders()->where('salesman_visit_id', 0)->OfData([
+        $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
-            'end_date' => $endDate
+            'end_date' => $dateEnd
         ])->with('order.orderGoods.goods')->get();
 
-        $startDate = $startDate->toDateString();
-        $endDate = $endDate->toDateString();
+        return view('index.business.report-detail',
+            array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
+    }
 
-        $viewName = $startDate == $endDate ? 'report-day-detail' : 'report-date-detail';
+    /**
+     * 客户统计详情
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $salesmanId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+     */
+    public function customerDetail(Request $request, $salesmanId)
+    {
+        $shop = auth()->user()->shop;
+        $salesman = $shop->salesmen()->find($salesmanId);
+        if (is_null($salesman)) {
+            return $this->error('业务员不存在');
+        }
 
-        $businessService = new BusinessService();
-        $visitFormat = $businessService->formatVisit($visits);
+        $carbon = new Carbon();
+        $data = $request->all();
 
-        $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
+        //客户id
+        $customerId = array_get($data, 'customer_id');
+        if (!$customerId) {
+            return $this->error('客户不存在');
+        }
+        //开始时间
+        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
+
+        $dateEnd = (new Carbon($endDate))->endOfDay();
+
+        $visits = SalesmanVisit::ofTime($startDate, $dateEnd)->where([
+            'salesman_id' => $salesmanId,
+            'salesman_customer_id' => $customerId
+        ])->with([
+            'orders.orderGoods.goods',
+            'orders.displayList.mortgageGoods',
+            'goodsRecord.goods',
+            'salesmanCustomer.shippingAddress'
+        ])->get();
 
 
-        return view('index.business.' . $viewName, [
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'visitData' => $visitFormat['visitData'],
-            'visitStatistics' => $visitFormat['visitStatistics'],
-            'platFormOrders' => $platFormOrders,
-            'platFormOrdersList' => $platFormOrders->pluck('orders')->collapse(),
-            'salesman' => $salesman,
-        ]);
+        return view('index.business.report-customer-detail', $this->_getDetailData($visits));
+    }
+
+    /**
+     * 拜访数据
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @param \Illuminate\Database\Eloquent\Collection $orders
+     * @return array
+     */
+    private function _getVisitData(Collection $visits, Collection $orders)
+    {
+
+        $orderTypes = cons('salesman.order.type');
+        //订货单
+        $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
+            return $order->type == $orderTypes['order'] && $order->salesman_visit_id > 0;
+        });
+
+        //退货单
+        $returnOrders = $orders->filter(function ($order) use ($orderTypes) {
+            return $order->type == $orderTypes['return_order'];
+        });
+
+        //自主订货单
+        $ownOrders = $orders->filter(function ($order) use ($orderTypes) {
+            return $order->type == $orderTypes['order'] && $order->salesman_visit_id == 0;
+        });
+
+        $customerIds = $visits->pluck('salesman_customer_id')->toBase()->unique();
+
+        $visitStatistics = [
+            'customerCount' => $customerIds->count(),
+            'returnOrderCount' => $returnOrders->count(),
+            'returnOrderAmount' => $returnOrders->sum('amount'),
+            'visitOrderCount' => $visitOrders->count(),
+            'visitOrderAmount' => $visitOrders->sum('amount'),
+            'ownOrderCount' => $ownOrders->count(),
+            'ownOrderAmount' => $ownOrders->sum('amount'),
+            'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
+            'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'))
+        ];
+
+        $visitList = [];
+        foreach ($customerIds as $customerId) {
+            $visitList[] = $this->_getVisitList($visits, $customerId);
+        }
+
+        return compact('visitStatistics', 'visitList', 'ownOrders');
+    }
+
+    /**
+     * 详情数据
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @return array
+     */
+    private function _getDetailData(Collection $visits)
+    {
+        //详情拜访列表
+        $visitLists = $this->_getVisitListForDetail($visits);
+
+        //销售统计
+        $salesGoods = $this->_getSalesGoods($visits);
+
+        //陈列费
+
+        $displays = $this->_getDisplay($visits);
+
+        return compact('visitLists', 'salesGoods', 'displays');
+    }
+
+    /**
+     * 获取陈列
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @return array
+     */
+    private function _getDisplay(Collection $visits)
+    {
+        $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
+
+        $displays = SalesmanCustomerDisplayList::whereIn('salesman_visit_order_id', $orderIds)->get();
+
+        $data = [];
+
+        foreach ($displays as $display) {
+            $data[] = [
+                'time' => $display->created_at,
+                'month' => $display->month,
+                'name' => $display->mortgage_goods_name,
+                'used' => $display->used
+            ];
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * 销售商品统计
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @return array
+     */
+    private function _getSalesGoods(Collection $visits)
+    {
+        //拜访id列表
+        $visitIds = $visits->pluck('id');
+
+        //商品记录
+        $goodsRecords = SalesmanVisitGoodsRecord::whereIn('salesman_visit_id', $visitIds)->get();
+
+        //销售商品
+        $salesGoods = SalesmanVisitOrderGoods::whereIn('salesman_visit_id', $visitIds)->get();
+
+        $goodsIds = $salesGoods->pluck('goods_id')->toBase()->unique();
+
+
+        $salesGoodsLists = [];
+        foreach ($goodsIds as $goodsId) {
+            $salesGoodsLists[$goodsId] = $this->_salesGoodsStatistics($salesGoods, $goodsRecords, $goodsId);
+        }
+
+        //有访问无订单的商品
+        $recordGoods = $goodsRecords->filter(function ($item) use ($goodsIds) {
+            return !$goodsIds->contains($item->goods_id);
+        });
+
+        foreach ($recordGoods as $goods) {
+            $salesGoodsLists[$goods->goods_id] = [
+                'id' => $goods->goods_id,
+                'name' => $goods->goods_name,
+                'stock' => $goods->stock,
+                'productionDate' => $goods->production_date,
+                'returnCount' => 0,
+                'returnAmount' => 0,
+                'count' => 0,
+                'amount' => 0,
+                'pieces' => [['amount' => 0, 'num' => 0]]
+            ];
+        }
+        return $salesGoodsLists;
+    }
+
+    /**
+     * 销售商品数据
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $salesGoods
+     * @param \Illuminate\Database\Eloquent\Collection $goodsRecords
+     * @param $goodsId
+     * @return array
+     */
+    private function _salesGoodsStatistics(Collection $salesGoods, Collection $goodsRecords, $goodsId)
+    {
+
+        $config = cons('salesman.order.goods.type');
+        //所有商品
+        $salesGoods = $salesGoods->filter(function ($item) use ($goodsId) {
+            return $item->goods_id == $goodsId;
+        });
+
+        //订货商品
+        $orderGoods = $salesGoods->filter(function ($item) use ($config) {
+            return $item->type == $config['order'];
+        });
+        //退货商品
+        $returnGoods = $salesGoods->reject(function ($item) use ($config) {
+            return $item->type == $config['order'];
+        });
+
+        $firstGoods = $salesGoods->first();
+        $lastRecord = $goodsRecords->last(function ($key, $record) use ($goodsId) {
+            return $record->goods_id == $goodsId;
+        });
+
+        $data = [
+            'id' => $goodsId,
+            'name' => $firstGoods->goods_name,
+            'stock' => $lastRecord ? $lastRecord->stock : '- -',
+            'productionDate' => $lastRecord ? $lastRecord->production_date : '- -',
+            'returnCount' => $returnGoods->sum('num'),
+            'returnAmount' => $returnGoods->sum('amount'),
+            'count' => $orderGoods->sum('num'),
+            'amount' => $orderGoods->sum('amount'),
+        ];
+        if (!$orderGoods->isEmpty()) {
+            //平均
+            foreach ($orderGoods as $item) {
+                $pieces = $item->pieces;
+                $data['pieces'][$pieces] ['amount'] = isset($data['pieces'][$pieces]['amount']) ? bcadd($data['pieces'][$pieces]['amount'],
+                    $item->total_price) : $item->amount;
+                $data['pieces'][$pieces] ['num'] = isset($data['pieces'][$pieces]['num']) ? bcadd($data['pieces'][$pieces]['num'],
+                    $item->num) : $item->num;
+            }
+        } else {
+            $data['pieces'][] = [
+                'amount' => 0,
+                'num' => 0
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * 详情拜访列表
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @return array
+     */
+    private function _getVisitListForDetail(Collection $visits)
+    {
+        //拜访列表
+        $visitLists = [];
+        foreach ($visits as $visit) {
+            //订单数
+            $orders = $visit->orders;
+
+            $orderTypes = cons('salesman.order.type');
+            //订货单
+            $visitOrder = $orders->filter(function ($order) use ($orderTypes) {
+                return $order->type == $orderTypes['order'];
+            })->first();
+
+            //退货单
+            $returnOrder = $orders->filter(function ($order) use ($orderTypes) {
+                return $order->type == $orderTypes['return_order'];
+            })->first();
+            $visitLists[] = [
+                'time' => $visit->created_at,
+                'commitAddress' => $visit->address,
+                'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
+                'returnAmount' => $returnOrder ? $returnOrder->amount : 0,
+                'hasDisplay' => $visitOrder && $visitOrder->displayFee ? '有' : '无'
+            ];
+        }
+
+        return $visitLists;
+    }
+
+    /**
+     * 拜访列表
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $visits
+     * @param $customerId
+     * @return array
+     */
+    private function _getVisitList(Collection $visits, $customerId)
+    {
+        //客户拜访
+        $customerVisits = $visits->filter(function ($visit) use ($customerId) {
+            return $visit->salesman_customer_id == $customerId;
+        });
+
+        $lastVisit = $customerVisits->first();
+
+        //客户信息
+        $salesmanCustomer = $lastVisit->salesmanCustomer;
+
+        //订单数
+        $orders = $customerVisits->pluck('orders')->collapse();
+
+        $orderTypes = cons('salesman.order.type');
+        //订货单
+        $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
+            return $order->type == $orderTypes['order'];
+        });
+
+        //退货单
+        $returnOrders = $orders->filter(function ($order) use ($orderTypes) {
+            return $order->type == $orderTypes['return_order'];
+        });
+
+        return [
+            'id' => $customerId,
+            'name' => $salesmanCustomer ? $salesmanCustomer->name : '',
+            'contact' => $salesmanCustomer ? $salesmanCustomer->contact : '',
+            'contactInfo' => $salesmanCustomer ? $salesmanCustomer->contact_information : '',
+            'businessAddress' => $salesmanCustomer ? $salesmanCustomer->business_address_name : '',
+            'business_address_lng' => $salesmanCustomer->business_address_lng,
+            'business_address_lat' => $salesmanCustomer->business_address_lat,
+            'lng' => $lastVisit->x_lng,
+            'lat' => $lastVisit->y_lat,
+            'visit_id' => $lastVisit->id,
+            'commitAddress' => $lastVisit->address,
+            'visitTime' => $lastVisit->created_at,
+            'visitCount' => $customerVisits->count(),
+            'orderCount' => $visitOrders->count(),
+            'orderAmount' => $visitOrders->sum('amount'),
+            'returnOrderCount' => $returnOrders->count(),
+            'returnOrderAmount' => $returnOrders->sum('amount'),
+        ];
 
     }
 
@@ -108,37 +434,178 @@ class ReportController extends Controller
             return $this->error('业务员不存在');
         }
 
+        $carbon = new Carbon();
         $data = $request->all();
+        //开始时间
+        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
 
-        $startDate = isset($data['start_date']) ? new Carbon($data['start_date']) : (new Carbon())->startOfMonth();
-        $endDate = isset($data['end_date']) ? (new Carbon($data['end_date']))->endOfDay() : Carbon::now();
+        $dateEnd = (new Carbon($endDate))->endOfDay();
 
         //拜访记录
-        $visits = $salesman->visits()->OfTime($startDate, $endDate)->with([
-            'orders.orderGoods',
-            'orders.mortgageGoods',
-            'goodsRecord',
+        $visits = $salesman->visits()->ofTime($startDate, $dateEnd)->with([
+            'orders.orderGoods.goods',
+            'orders.displayList.mortgageGoods',
+            'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
 
-        $businessService = new BusinessService();
-
-        $visitFormat = $businessService->formatVisit($visits);
-
-        //自主下单订单
-
-        $platFormOrders = $salesman->orders()->where('salesman_visit_id', 0)->OfData([
+        $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
-            'end_date' => $endDate
+            'end_date' => $dateEnd
         ])->with('order.orderGoods.goods')->get();
 
-        $platFormOrders = $businessService->formatOrdersByCustomer($platFormOrders);
+        extract($this->_getVisitData($visits, $visitOrders));
 
-        $startDate = $startDate->toDateString();
-        $endDate = $endDate->toDateString();
-        /* $startDate == $endDate ? $this->_exportByDay($salesman, $startDate, $visitFormat,
-             $platFormOrders) :*/
-        $this->_exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders);
+        $excelName = $startDate . '-' . $endDate . ' ' . $salesman->name . '业务报表';
+
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitStatistics, $visitList, $ownOrders) {
+            $excel->sheet('总计', function (LaravelExcelWorksheet $sheet) use ($visitStatistics) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 10,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 15,
+                    'F' => 20,
+                    'G' => 20,
+                    'H' => 20,
+                    'I' => 20,
+                ));
+
+                //标题
+                $titles = [
+                    '拜访客户数',
+                    '总订货单数',
+                    '总订货金额',
+                    '拜访订货单数',
+                    '拜访订货金额',
+                    '自主订货单数',
+                    '自主订货金额',
+                    '退货总单数',
+                    '退货金额',
+                ];
+
+                $sheet->rows([$titles, $visitStatistics]);
+
+                //单元格居中
+                $sheet->cells('A1:I2', function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('拜访总计', function (LaravelExcelWorksheet $sheet) use ($visitList) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 10,
+                    'B' => 20,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 40,
+                    'F' => 20,
+                    'G' => 20,
+                    'H' => 20,
+                    'I' => 20,
+                    'J' => 20,
+                ));
+
+                //标题
+                $titles = [
+                    '客户编号',
+                    '店铺名称',
+                    '联系人',
+                    '联系电话',
+                    '营业地址',
+                    '拜访次数',
+                    '订货单数',
+                    '订货总金额',
+                    '退货单数',
+                    '退货总金额'
+                ];
+
+
+                foreach ($visitList as $key => $item) {
+                    array_forget($visitList[$key], [
+                        'business_address_lng',
+                        'business_address_lat',
+                        'lng',
+                        'lat',
+                        'visit_id',
+                        'commitAddress',
+                        'visitTime'
+                    ]);
+                }
+
+                $data = array_merge([$titles], $visitList);
+
+                $sheet->rows($data);
+
+                //单元格居中
+                $sheet->cells('A1:J' . count($data), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('自主订单', function (LaravelExcelWorksheet $sheet) use ($ownOrders) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 10,
+                    'B' => 20,
+                    'C' => 20,
+                    'D' => 10,
+                    'E' => 20,
+                    'F' => 10,
+                ));
+                //标题
+                $titles = [
+                    '客户编号',
+                    '客户名称',
+                    '下单时间',
+                    '订单ID',
+                    '订单状态',
+                    '订单金额',
+                ];
+
+                $data = [$titles];
+
+
+                foreach($ownOrders as $ownOrder) {
+                    $data[] = [
+                        $ownOrder->salesman_customer_id,
+                        $ownOrder->customer_name,
+                        $ownOrder->created_at,
+                        $ownOrder->order_id,
+                        $ownOrder->order_status_name,
+                        $ownOrder->amount
+                    ];
+                }
+
+                $sheet->rows($data);
+
+                //单元格居中
+                $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+        })->export('xls');
 
     }
 
@@ -200,431 +667,4 @@ class ReportController extends Controller
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
     }
-
-    /**
-     * 业务员报告按天导出
-     *
-     * @param $salesman
-     * @param $startDate
-     * @param $visitFormat
-     * @param $platFormOrders
-     *
-     */
-    private function _exportByDay($salesman, $startDate, $visitFormat, $platFormOrders = [])
-    {
-        // Creating the new document...
-        $phpWord = new PhpWord();
-
-        $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
-
-
-        $cellAlignCenter = ['align' => 'center'];
-        $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
-        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
-        $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
-
-        $phpWord->setDefaultFontName('仿宋');
-        $phpWord->setDefaultFontSize(10);
-        $phpWord->addTableStyle('table', $styleTable);
-
-        $phpWord->addParagraphStyle('Normal', [
-            'spaceBefore' => 0,
-            'spaceAfter' => 0,
-            'lineHeight' => 1.2,  // 行间距
-        ]);
-
-        $visitData = $visitFormat['visitData'];
-        $visitStatistics = $visitFormat['visitStatistics'];
-
-
-        foreach ($visitData as $customerId => $visit) {
-            $section = $phpWord->addSection();
-            $table = $section->addTable('table');
-            if ($visit == head($visitData)) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText($startDate, ['size' => 30], $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报表', ['size' => 16],
-                    $cellAlignCenter);
-
-                $this->_exportStatistics($table, $visitStatistics, $visitData, $platFormOrders);
-            }
-            $table->addRow();
-            $table->addCell(1000)->addText('序号', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('时间', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('客户', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('店铺名称', null, $cellAlignCenter);
-            $table->addCell(1000)->addText('联系人', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('联系电话', null, $cellAlignCenter);
-            $table->addCell(3000, $gridSpan3)->addText('营业地址', null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(1000)->addText($visit['visit_id'], null, $cellAlignCenter);
-            $table->addCell(1500)->addText($visit['created_at'], null, $cellAlignCenter);
-            $table->addCell(1000)->addText($customerId, null, $cellAlignCenter);
-            $table->addCell(1500)->addText($visit['customer_name'], null, $cellAlignCenter);
-            $table->addCell(1000)->addText($visit['contact'], null, $cellAlignCenter);
-            $table->addCell(1500)->addText($visit['contact_information'], null, $cellAlignCenter);
-            $table->addCell(3000, $gridSpan3)->addText($visit['shipping_address_name'], null, $cellAlignCenter);
-
-            if (isset($visit['display_fee'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('陈列费', ['size' => 20], $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(0, $gridSpan3)->addText('月份 ', null, $cellAlignCenter);
-                $table->addCell(0, $gridSpan6)->addText('现金 ', null, $cellAlignCenter);
-
-                foreach ($visit['display_fee'] as $item) {
-                    $table->addRow();
-                    $table->addCell(0, $gridSpan3)->addText($item['month'], null, $cellAlignCenter);
-                    $table->addCell(0, $gridSpan6)->addText($item['display_fee'], null, $cellAlignCenter);
-                }
-
-
-            }
-
-            if (isset($visit['mortgage'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('货抵', ['size' => 20], $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(3500, $gridSpan3)->addText('商品名称', null, $cellAlignCenter);
-                $table->addCell(4000, $gridSpan3)->addText('商品单位', null, $cellAlignCenter);
-                $table->addCell(3000, $gridSpan3)->addText('数量', null, $cellAlignCenter);
-
-                foreach (head($visit['mortgage']) as $mortgage) {
-                    $table->addRow();
-                    $table->addCell(3500, $gridSpan3)->addText($mortgage['name'], null, $cellAlignCenter);
-                    $table->addCell(4000, $gridSpan3)->addText(cons()->valueLang('goods.pieces', $mortgage['pieces']),
-                        null, $cellAlignCenter);
-                    $table->addCell(3000, $gridSpan3)->addText($mortgage['num'], null, $cellAlignCenter);
-                }
-            }
-
-            if (isset($visit['statistics'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('客户销售商品', ['size' => 20], $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(1000)->addText('商品ID', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('商品名称', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('商品库存', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('生产日期', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('商品单价', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('订货数量', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('订货总金额', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('退货数量', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('退货总金额', null, $cellAlignCenter);
-
-                foreach ($visit['statistics'] as $goodsId => $statistics) {
-                    $table->addRow();
-                    $table->addCell(1000)->addText($goodsId, null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces',
-                            $statistics['pieces']) : '件'),
-                        null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['return_order_num'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['return_amount'], null, $cellAlignCenter);
-                }
-                $table->addRow();
-                $table->addCell(10500,
-                    $gridSpan9)->addText("订货总金额：{$visit['amount']}   退货总金额：{$visit['return_amount']}",
-                    ['size' => 20], $cellAlignCenter);
-            }
-        }
-
-        $this->_exportPlatformOrders($phpWord, $platFormOrders);
-
-        $name = $salesman->name . $startDate . '业务报表明细.docx';
-        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
-    }
-
-    /**
-     * 业务员报告按天导出
-     *
-     * @param $salesman
-     * @param $startDate
-     * @param $endDate
-     * @param $visitFormat
-     * @param $platFormOrders
-     */
-    private function _exportByDate($salesman, $startDate, $endDate, $visitFormat, $platFormOrders = [])
-    {
-
-        // Creating the new document...
-        $phpWord = new PhpWord();
-
-        $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
-
-        $cellAlignCenter = ['align' => 'center'];
-        $cellVAlignCenter = ['valign' => 'center'];
-        $gridSpan9 = ['gridSpan' => 9, 'valign' => 'center'];
-        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
-        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
-        $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
-        $cellRowContinue = array('vMerge' => 'continue');
-
-        $phpWord->setDefaultFontName('仿宋');
-        $phpWord->setDefaultFontSize(10);
-        $phpWord->addTableStyle('table', $styleTable);
-
-        $phpWord->addParagraphStyle('Normal', [
-            'spaceBefore' => 0,
-            'spaceAfter' => 0,
-            'lineHeight' => 1.2,  // 行间距
-        ]);
-
-        $visitData = $visitFormat['visitData'];
-        $visitStatistics = $visitFormat['visitStatistics'];
-
-
-        foreach ($visitData as $customerId => $visit) {
-            $section = $phpWord->addSection();
-            $table = $section->addTable('table');
-
-            if ($visit == head($visitData)) {
-                $table->addRow();
-                $table->addCell(10500,
-                    $gridSpan9)->addText($startDate == $endDate ? $startDate : $startDate . ' 至 ' . $endDate,
-                    ['size' => 30],
-                    $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText($salesman->name . ' - 业务报表', ['size' => 16],
-                    $cellAlignCenter);
-
-                $this->_exportStatistics($table, $visitStatistics, $visitData,
-                    $platFormOrders->pluck('orders')->collapse());
-            }
-            $table->addRow();
-            $table->addCell(10500, $gridSpan9)->addText('客戶信息', null,
-                $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(1200, $gridSpan2)->addText('客户编号', null, $cellAlignCenter);
-            $table->addCell(2000, $gridSpan2)->addText('店铺名称', null, $cellAlignCenter);
-            $table->addCell(2000, $gridSpan2)->addText('联系人', null, $cellAlignCenter);
-            $table->addCell(1800, $gridSpan2)->addText('联系电话', null, $cellAlignCenter);
-            $table->addCell(3500, $cellVAlignCenter)->addText('营业地址', null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(1200, $gridSpan2)->addText($customerId, null, $cellAlignCenter);
-            $table->addCell(2000, $gridSpan2)->addText($visit['customer_name'], null, $cellAlignCenter);
-            $table->addCell(2000, $gridSpan2)->addText($visit['contact'], null, $cellAlignCenter);
-            $table->addCell(1800, $gridSpan2)->addText($visit['contact_information'], null, $cellAlignCenter);
-            $table->addCell(3500, $cellVAlignCenter)->addText($visit['business_address_name'], null, $cellAlignCenter);
-
-
-            $table->addRow();
-            $table->addCell(3500, $gridSpan3)->addText('订货总金额', null, $cellAlignCenter);
-            $table->addCell(3500, $gridSpan3)->addText('退货总金额', null, $cellAlignCenter);
-            $table->addCell(3500, $gridSpan3)->addText($startDate == $endDate ? '拜访时间' : '拜访次数', null,
-                $cellAlignCenter);
-            $table->addRow();
-            $table->addCell(3500, $gridSpan3)->addText($visit['amount'], null, $cellAlignCenter);
-            $table->addCell(3500, $gridSpan3)->addText($visit['return_amount'], null, $cellAlignCenter);
-            $table->addCell(3500,
-                $gridSpan3)->addText($startDate == $endDate ? $visit['created_at'] : $visit['visit_count'], null,
-                $cellAlignCenter);
-
-            if (isset($visit['display_fee'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('陈列费（现金）', null,
-                    $cellAlignCenter);
-
-
-                $table->addRow();
-                $table->addCell(2000, $gridSpan3)->addText('月份', null, $cellAlignCenter);
-                $table->addCell(2000, $gridSpan3)->addText('拜访时间', null, $cellAlignCenter);
-                $table->addCell(5300, $gridSpan3)->addText('金额', null, $cellAlignCenter);
-
-                foreach ($visit['display_fee'] as $displayFee) {
-                    $table->addRow();
-                    $table->addCell(2000, $gridSpan3)->addText($displayFee['month'], null, $cellAlignCenter);
-                    $table->addCell(2000, $gridSpan3)->addText($displayFee['created_at'], null, $cellAlignCenter);
-                    $table->addCell(5300, $gridSpan3)->addText($displayFee['display_fee'], null, $cellAlignCenter);
-                }
-            }
-            if (isset($visit['mortgage'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('陈列费（货抵）', null,
-                    $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(2000, $gridSpan2)->addText('月份', null, $cellAlignCenter);
-                $table->addCell(2000, $gridSpan2)->addText('拜访时间', null, $cellAlignCenter);
-                $table->addCell(2000, $gridSpan2)->addText('商品名称', null, $cellAlignCenter);
-                $table->addCell(1800, $gridSpan2)->addText('商品单位', null, $cellAlignCenter);
-                $table->addCell(3500, $cellVAlignCenter)->addText('商品数量', null, $cellAlignCenter);
-                foreach ($visit['mortgage'] as $date => $mortgages) {
-                    $table->addRow();
-                    $table->addCell(2000, array_merge($gridSpan2, $cellRowSpan))->addText($date, null,
-                        $cellAlignCenter);
-                    foreach ($mortgages as $mortgage) {
-                        $table->addRow();
-                        $table->addCell(null, array_merge($gridSpan2, $cellRowContinue));
-                        $table->addCell(2000, $gridSpan2)->addText($mortgage['created_at'], null, $cellAlignCenter);
-                        $table->addCell(2000, $gridSpan2)->addText($mortgage['name'], null, $cellAlignCenter);
-                        $table->addCell(1800, $gridSpan2)->addText(cons()->valueLang('goods.pieces',
-                            $mortgage['pieces']), null, $gridSpan2);
-                        $table->addCell(3500, $cellAlignCenter)->addText($mortgage['num'], null, $cellAlignCenter);
-                    }
-                }
-            }
-            if (isset($visit['statistics'])) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan9)->addText('销售统计', null, $cellAlignCenter);
-
-                $table->addRow();
-                $table->addCell(1000)->addText('商品ID', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('商品名称', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('商品库存', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('生产日期', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('商品单价', null, $cellAlignCenter);
-                $table->addCell(1500)->addText('订货数量', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('订货总金额', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('退货数量', null, $cellAlignCenter);
-                $table->addCell(1000)->addText('退货总金额', null, $cellAlignCenter);
-
-                foreach ($visit['statistics'] as $goodsId => $statistics) {
-                    $table->addRow();
-                    $table->addCell(1000)->addText($goodsId, null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['goods_name'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['stock'], null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['production_date'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText((isset($statistics['price']) ? $statistics['price'] : 0) . '/' . (isset($statistics['pieces']) ? cons()->valueLang('goods.pieces',
-                            $statistics['pieces']) : '件'),
-                        null, $cellAlignCenter);
-                    $table->addCell(1500)->addText($statistics['order_num'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['order_amount'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['return_order_num'], null, $cellAlignCenter);
-                    $table->addCell(1000)->addText($statistics['return_amount'], null, $cellAlignCenter);
-                }
-
-
-            }
-        }
-
-        $this->_exportPlatformOrders($phpWord, $platFormOrders);
-
-        $name = $startDate == $endDate ? $salesman->name . $startDate . '业务报表明细.docx' : $salesman->name . $startDate . '至' . $endDate . '业务报表明细.docx';
-        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
-    }
-
-    /**
-     * 导出统计
-     *
-     * @param \PhpOffice\PhpWord\Element\Table $table
-     * @param $visitStatistics
-     * @param $visitData
-     * @param $platFormOrdersList
-     */
-    private function _exportStatistics(Table $table, $visitStatistics, $visitData, $platFormOrdersList)
-    {
-        $cellAlignCenter = ['align' => 'center'];
-        $table->addRow();
-        $table->addCell(1000)->addText('拜访客户数', null, $cellAlignCenter);
-        $table->addCell(1500)->addText('退货单数', null, $cellAlignCenter);
-        $table->addCell(1000)->addText('退货金额', null, $cellAlignCenter);
-        $table->addCell(1500)->addText('拜访订货单数', null, $cellAlignCenter);
-        $table->addCell(1000)->addText('拜访订货金额', null, $cellAlignCenter);
-        $table->addCell(1500)->addText('自主订货单数', null, $cellAlignCenter);
-        $table->addCell(1000)->addText('自主订货金额', null, $cellAlignCenter);
-        $table->addCell(1000)->addText('总订货单数', null, $cellAlignCenter);
-        $table->addCell(1000)->addText('总订货金额', null, $cellAlignCenter);
-
-        $table->addRow();
-        $table->addCell(1000)->addText(count($visitData), null, $cellAlignCenter);
-        $table->addCell(1500)->addText((isset($visitStatistics['return_order_count']) ? $visitStatistics['return_order_count'] : 0),
-            null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['return_order_amount']) ? $visitStatistics['return_order_amount'] : 0),
-            null, $cellAlignCenter);
-        $table->addCell(1500)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] : 0),
-            null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? $visitStatistics['order_form_amount'] : 0),
-            null, $cellAlignCenter);
-        $table->addCell(1500)->addText($platFormOrdersList->count(), null, $cellAlignCenter);
-        $table->addCell(1000)->addText($platFormOrdersList->sum('amount'), null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['order_form_count']) ? $visitStatistics['order_form_count'] + $platFormOrdersList->count() : $platFormOrdersList->count()),
-            null, $cellAlignCenter);
-        $table->addCell(1000)->addText((isset($visitStatistics['order_form_amount']) ? bcadd($visitStatistics['order_form_amount'],
-            $platFormOrdersList->sum('amount'), 2) : $platFormOrdersList->sum('amount')), null, $cellAlignCenter);
-
-
-    }
-
-    /**
-     * 导出自主下单订单
-     *
-     * @param \PhpOffice\PhpWord\PhpWord $phpWord
-     * @param $platformOrders
-     */
-    private function _exportPlatformOrders(PhpWord $phpWord, $platformOrders)
-    {
-        $cellAlignCenter = ['align' => 'center'];
-        $cellVAlignCenter = ['valign' => 'center'];
-        $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
-        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
-
-        foreach ($platformOrders as $customer) {
-            $section = $phpWord->addSection();
-            $table = $section->addTable('table');
-
-            if ($customer == $platformOrders->first()) {
-                $table->addRow();
-                $table->addCell(10500, $gridSpan5)->addText('自主下单订单', ['size' => 30], $cellAlignCenter);
-            }
-            $table->addRow();
-            $table->addCell(2500, $cellVAlignCenter)->addText('客户编号', null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText('店铺名称', null, $cellAlignCenter);
-            $table->addCell(1000, $cellVAlignCenter)->addText('联系人', null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText('电话号码', null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText('营业地址', null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(2500, $cellVAlignCenter)->addText($customer['number'], null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText($customer['shop_name'], null, $cellAlignCenter);
-            $table->addCell(1000, $cellVAlignCenter)->addText($customer['contact'], null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText($customer['contact_information'], null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText($customer['business_address'], null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(2500, $cellVAlignCenter)->addText('订单ID', null, $cellAlignCenter);
-            $table->addCell(3500, $gridSpan2)->addText('下单时间', null, $cellAlignCenter);
-            $table->addCell(2000, $cellVAlignCenter)->addText('订单状态', null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText('订单金额', null, $cellAlignCenter);
-
-            foreach ($customer['orders'] as $order) {
-                $table->addRow();
-                $table->addCell(2500, $cellVAlignCenter)->addText($order->order_id, null, $cellAlignCenter);
-                $table->addCell(3500, $gridSpan2)->addText($order->created_at, null, $cellAlignCenter);
-                $table->addCell(2000, $cellVAlignCenter)->addText($order->order_status_name, null, $cellAlignCenter);
-                $table->addCell(2500, $cellVAlignCenter)->addText($order->amount, null, $cellAlignCenter);
-            }
-
-            $table->addRow();
-            $table->addCell(10500, $gridSpan5)->addText('总计：' . $customer['orders']->sum('amount'), null,
-                $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(5000, $gridSpan2)->addText('商品名称', null, $cellAlignCenter);
-            $table->addCell(3000, $gridSpan2)->addText('订货数量', null, $cellAlignCenter);
-            $table->addCell(2500, $cellVAlignCenter)->addText('订货金额', null, $cellAlignCenter);
-
-            foreach ($customer['orderGoods'] as $orderGoods) {
-                $table->addRow();
-                $table->addCell(5000, $gridSpan2)->addText($orderGoods['name'], null, $cellAlignCenter);
-                $table->addCell(3000, $gridSpan2)->addText($orderGoods['order_num'], null, $cellAlignCenter);
-                $table->addCell(2500, $cellVAlignCenter)->addText($orderGoods['order_amount'], null, $cellAlignCenter);
-            }
-
-        }
-    }
-
 }

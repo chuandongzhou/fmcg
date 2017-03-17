@@ -488,28 +488,17 @@ class Order extends Model
     }
 
     /**
-     * 获取买家地址
+     * 获取买家联系人
      *
      * @return string
      */
-    public function getUserShopAddressAttribute()
+    public function getUserContactAttribute()
     {
         if ($this->user_id > 0) {
-            return $this->user ? $this->user->shop->shopAddress : (new AddressData());
+            return $this->user ? $this->user->shop->contact_person : '';
         } elseif ($this->salesmanVisitOrder) {
-            return $this->salesmanVisitOrder->business_address;
+            return $this->salesmanVisitOrder->salesmanCustomer->contact;
         }
-        return '';
-    }
-
-    /**
-     * 获取卖家类型
-     *
-     * @return mixed|\WeiHeng\Constant\Constant
-     */
-    public function getShopUserTypeAttribute()
-    {
-        return $this->shop ? $this->shop->user_type : cons('user.type.wholesaler');
     }
 
     /**
@@ -526,6 +515,20 @@ class Order extends Model
         }
     }
 
+    /**
+     * 获取买家地址
+     *
+     * @return string
+     */
+    public function getUserShopAddressAttribute()
+    {
+        if ($this->user_id > 0) {
+            return $this->user ? $this->user->shop->shopAddress : (new AddressData());
+        } elseif ($this->salesmanVisitOrder) {
+            return $this->salesmanVisitOrder->business_address;
+        }
+        return '';
+    }
 
     /**
      * 获取买家类型
@@ -538,6 +541,40 @@ class Order extends Model
             cons('user.type')) : 'retailer');
     }
 
+    /**
+     * 获取业务员
+     *
+     * @return string
+     */
+    public function getUserSalesmanAttribute(){
+
+        if ($this->user_id > 0) {
+            return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
+        } elseif ($this->salesmanVisitOrder) {
+            return $this->salesmanVisitOrder->salesman_name;
+        }
+        return '';
+    }
+
+    /**
+     * 获取卖家地址
+     *
+     * @return string
+     */
+    public function getShopAddressAttribute()
+    {
+        return $this->shop ? $this->shop->address : '';
+    }
+
+    /**
+     * 获取卖家类型
+     *
+     * @return mixed|\WeiHeng\Constant\Constant
+     */
+    public function getShopUserTypeAttribute()
+    {
+        return $this->shop ? $this->shop->user_type : cons('user.type.wholesaler');
+    }
 
     /**
      * 获取卖家名
@@ -547,6 +584,16 @@ class Order extends Model
     public function getShopNameAttribute()
     {
         return $this->shop ? $this->shop->name : '';
+    }
+
+    /**
+     * 获取卖家联系方式
+     *
+     * @return string
+     */
+    public function getShopContactAttribute()
+    {
+        return $this->shop ? $this->shop->contact_person . '-' . $this->shop->contact_info : '';
     }
 
     /**
@@ -578,6 +625,35 @@ class Order extends Model
     public function getTypeNameAttribute()
     {
         return cons()->valueLang('order.type', $this->type);
+    }
+
+    /**
+     * 获取支付类型名
+     *
+     * @return string
+     */
+    public function getPayTypeNameAttribute(){
+        return cons()->valueLang('pay_type', $this->pay_type);
+    }
+
+    /**
+     * 获取订单手续费
+     *
+     * @return int
+     */
+    public function getTargetFeeAttribute()
+    {
+        return $this->systemTradeInfo ? $this->systemTradeInfo->target_fee : 0;
+    }
+
+    /**
+     * 获取实际支付金额
+     *
+     * @return mixed
+     */
+    public function getActualAmountAttribute()
+    {
+        return $this->systemTradeInfo ? $this->systemTradeInfo->amount : $this->after_rebates_price;
     }
 
     /**
@@ -635,7 +711,6 @@ class Order extends Model
             ->orderBy('id', 'desc');
     }
 
-
     /**
      * 销售订单条件
      *
@@ -647,8 +722,7 @@ class Order extends Model
     {
         return $query->whereHas('shop', function ($query) use ($userId) {
             $query->where('user_id', $userId);
-        })->where('is_cancel', cons('order.is_cancel.off'))->where('status', '<>',
-            cons('order.status.invalid'));
+        });
     }
 
 //    /**
@@ -762,7 +836,6 @@ class Order extends Model
             });
         })->where('status', cons('order.status.non_send'))->nonCancel();
     }
-
 
     /**
      * 待收货,分在线支付和货到付款来讨论
@@ -925,4 +998,38 @@ class Order extends Model
         return $query->where('is_cancel', 0)->where('status', '<>', cons('order.status.invalid'));
     }
 
+    /**
+     * 按创建时间
+     *
+     * @param $query
+     * @param null $startTime
+     * @param null $endTime
+     * @return mixed
+     */
+    public function scopeOfCreatedAt($query, $startTime = null, $endTime = null)
+    {
+        return $query->where(function ($query) use ($startTime, $endTime) {
+            if ($startTime) {
+                $query->where('created_at', '>', $startTime);
+            }
+            if ($endTime) {
+                $query->where('created_at', '<', $endTime);
+            }
+        });
+    }
+
+    /**
+     * 按支付方式
+     *
+     * @param $query
+     * @param null $payType
+     * @return mixed
+     */
+    public function scopeOfPayType($query, $payType = null)
+    {
+        $payTypes = cons('pay_type');
+        if ($payType && in_array($payType, $payTypes)) {
+            return $query->where('pay_type', $payType);
+        }
+    }
 }

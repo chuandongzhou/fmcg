@@ -714,6 +714,10 @@ td.text-left {
   padding: 5px 20px 5px 0;
 }
 
+.attr .item {
+  margin-bottom: 5px;
+}
+
 .loading {
   position: fixed;
   width: 100%;

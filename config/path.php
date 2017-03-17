@@ -8,4 +8,5 @@ return [
     'upload_salesman_avatar' => public_path('upload/salesman-avatar/'), // 头像目录
     'upload_temp' => public_path('upload/temp/'), // 临时上传目录
     'upload_qrcode' => public_path('upload/qrcode/'), // 店铺二维码地址
+    'payment_channel_icon' => public_path('upload/payment-channel-icon/'), // 支付渠道icon
 ];

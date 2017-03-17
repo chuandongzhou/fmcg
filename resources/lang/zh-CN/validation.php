@@ -199,6 +199,7 @@ return [
         'price_wholesaler_pick_up' => '批发商自提价格',
         'pieces' => '单位',
         'geetest_challenge' =>'验证码',
+        'identification_code' => '识别码'
     ],
 
 ];

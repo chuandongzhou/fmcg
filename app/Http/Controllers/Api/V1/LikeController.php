@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\CreateInterestsRequest;
 use App\Models\Category;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -46,17 +47,20 @@ class LikeController extends Controller
             return $this->success(null);
         }
     }
+
     /**
      * 批量删除
+     *
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function putBatch(Request $request){
+    public function putBatch(Request $request)
+    {
         $type = $request->input('type');
         $likeTypes = array_keys(cons('like.type'));
         $relate = 'like' . ucfirst(in_array($type, $likeTypes) ? $type : head($likeTypes));
-        if(empty($request->input('id'))){
-            return $this->error($type=='goods'?'请选择需要删除的商品':'请选择需要删除的店铺');
+        if (empty($request->input('id'))) {
+            return $this->error($type == 'goods' ? '请选择需要删除的商品' : '请选择需要删除的店铺');
         }
         auth()->user()->$relate()->detach($request->input('id'));
         return $this->success(null);
@@ -81,8 +85,8 @@ class LikeController extends Controller
             $shops = $shops->OfDeliveryArea($data);
         }
         $shops = $shops->paginate();
-        $shops->each(function($shop){
-            $shop->setAppends(['logo_url']);
+        $shops->each(function (Shop $shop) {
+            $shop->setAppends(['logo_url', 'user_type']);
         });
         return $this->success(['shops' => $shops->toArray()]);
     }
@@ -91,7 +95,7 @@ class LikeController extends Controller
      * 获取收藏的商品信息
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postGoods(Request $request)
     {
@@ -102,11 +106,11 @@ class LikeController extends Controller
             $goods->where('name', 'like', '%' . $data['name'] . '%');
         }
         if (!empty($data['province_id'])) {
-           $goods->OfDeliveryArea($data);
+            $goods->OfDeliveryArea($data);
         }
 
         return $this->success([
-            'goods' => $goods->paginate()->toArray(),
+            'goods' => $goods->active()->paginate()->toArray(),
         ]);
     }
 }

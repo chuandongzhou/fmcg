@@ -123,7 +123,7 @@ class GoodsService
          * 状态
          */
         if (isset($data['status'])) {
-            $goods->OfStatus($data['status']);
+            $goods->ofStatus($data['status']);
         }
         $attrs = [];
         if (isset($data['category_id'])) {

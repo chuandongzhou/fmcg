@@ -110,4 +110,15 @@ class SalesmanVisit extends Model
         ];
     }
 
+
+    /**
+     * 获取客户名
+     *
+     * @return string
+     */
+    public function getSalesmanCustomerNameAttribute()
+    {
+        return $this->salesmanCustomer ? $this->salesmanCustomer->name : '';
+    }
+
 }

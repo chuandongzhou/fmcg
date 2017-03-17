@@ -346,8 +346,8 @@ function likeFunc() {
     $(document).on('click', '.btn-like', function () {
         var self = $(this),
             id = self.data('id'),
-            status = self.children('.fa-star').length > 0
-        type = self.data('type') || 'goods';
+            status = self.children('.fa-star').length > 0,
+            type = self.data('type') || 'goods';
         // 判断登录
         if (!site.isLogin()) {
             site.redirect('auth/login');
@@ -550,63 +550,20 @@ var ajaxNoForm = function (changeStatus) {
  * 统计页面js处理
  */
 var statisticsFunc = function () {
-    var target0 = $('input[name="order_page_num"]');
-    var target_value0 = parseInt(target0.attr('value'));
-    var target1 = $('input[name="goods_page_num"]');
-    var target_value1 = parseInt(target1.attr('value'));
-    $('.show-goods-name').click(function () {
-        //提交表单 显示商品
-        $('#show-goods-name-inp').val(1);
-        $('#submitBtn').trigger('click');
-    });
-    $('.no-show-goods-name').click(function () {
-        //提交表单 不显示商品
-        $('#show-goods-name-inp').val(0);
-        $('#submitBtn').trigger('click');
-    });
-    $('#submitBtn').click(function () {
-        target0.attr('value', 1);
-        target1.attr('value', 1);
-    });
-    //order_page_num
-
-    $('.order-page a').on('click', function () {
-        //
-        var obj = $(this);
-        if (obj.hasClass('prev')) {
-            target0.attr('value', target_value0 - 1);
-        } else if (obj.hasClass('next')) {
-            target0.attr('value', target_value0 + 1);
-        } else {
-            target0.attr('value', parseInt(obj.html()));
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
         }
-    });
-    //$('.next0').on('click', function () {
-    //    target0.attr('value', target_value0 + 1);
-    //});
-    //$('.prev0').on('click', function () {
-    //    target0.attr('value', target_value0 - 1);
-    //});
-    //goods_page_num
+    })();
 
-    $('.goods-page a').on('click', function () {
-        //
-        var obj = $(this);
-        if (obj.hasClass('prev')) {
-            target1.attr('value', target_value1 - 1);
-        } else if (obj.hasClass('next')) {
-            target1.attr('value', target_value1 + 1);
-        } else {
-            target1.attr('value', parseInt(obj.html()));
-        }
-    });
-
-    //$('.next1').on('click', function () {
-    //    target1.attr('value', target_value1 + 1);
-    //});
-    //$('.prev1').on('click', function () {
-    //    target1.attr('value', target_value1 - 1);
-    //});
+    $(function () {
+        FixTable("MyTable1", 1, 1050, 300);
+        FixTable("MyTable2", 1, 1050, 300);
+    })
 }
 
 /**

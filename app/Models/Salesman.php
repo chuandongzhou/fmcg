@@ -129,7 +129,6 @@ class Salesman extends Model implements AuthenticatableContract
             $result = $this->convertToFile($file, null, false);
             $file = $result ? $result['path'] : null;
             $file = config('path.upload_temp') . $file;
-            info($file);
         }
 
         try {

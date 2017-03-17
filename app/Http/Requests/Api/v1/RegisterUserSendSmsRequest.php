@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests\Api\v1;
 
-class RegisterUserSendSmsRequest extends Request{
+class RegisterUserSendSmsRequest extends Request
+{
     public function rules()
     {
         return [
@@ -12,6 +13,7 @@ class RegisterUserSendSmsRequest extends Request{
         ];
 
     }
+
     /**
      * 自定义验证
      *
@@ -21,7 +23,7 @@ class RegisterUserSendSmsRequest extends Request{
     public function validator($factory)
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
-            if(empty($this->input('geetest_challenge'))){
+            if (in_windows() && empty($this->input('geetest_challenge'))) {
                 $validator->errors()->add('backup_mobile', '请完成验证');
             }
 

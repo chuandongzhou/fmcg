@@ -22,8 +22,20 @@ return [
             'cash' => 1,  //现金
             'card' => 2   //刷卡
         ]
-
     ],
+
+    //支付渠道
+    'payment_channel' => [
+        'icon' => [
+            'width' => 100,
+            'height' => 35
+        ],
+        'type' => [
+            'pc' => 1,
+            'app' => 2
+        ]
+    ],
+
     //订单表
     'order' => [
         'goods' => [

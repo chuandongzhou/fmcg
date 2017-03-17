@@ -312,8 +312,8 @@
 
             /* 创建伸缩/展开侧边目录栏 */
             var control = $('<div>'),
-                    shrink = $('<span>'),
-                    stretch = $('<span>');
+                shrink = $('<span>'),
+                stretch = $('<span>');
             control.css({
                 position: 'fixed',
                 top: -1,
@@ -354,28 +354,28 @@
             });
 
             var menuList = $('body').children(':header'),
-                    menuObject = [],
-                    headerObject = {
-                        h1: 0,
-                        h2: 0,
-                        h3: 0,
-                        h4: 0,
-                        h5: 0,
-                        h6: 0
-                    },
-                    headerParentObj = {
-                        h1: null,
-                        h2: 'h1',
-                        h3: 'h2',
-                        h4: 'h3',
-                        h5: 'h4',
-                        h6: 'h5'
-                    },
-                    previousTagName;
+                menuObject = [],
+                headerObject = {
+                    h1: 0,
+                    h2: 0,
+                    h3: 0,
+                    h4: 0,
+                    h5: 0,
+                    h6: 0
+                },
+                headerParentObj = {
+                    h1: null,
+                    h2: 'h1',
+                    h3: 'h2',
+                    h4: 'h3',
+                    h5: 'h4',
+                    h6: 'h5'
+                },
+                previousTagName;
             /* 为菜单创建锚点 */
             menuList.each(function (index, element) {
                 var href = index ? $(element).html().split(' ')[0] : '0.',
-                        tagName = $(element)[0]['tagName'].toLowerCase();
+                    tagName = $(element)[0]['tagName'].toLowerCase();
                 menuObject[index] = {
                     id: href,
                     parentId: 0,
@@ -407,7 +407,7 @@
                 }
                 for (var i in childList) {
                     var ul = $('<ul>'),
-                            li = $('<li>');
+                        li = $('<li>');
                     ul.css({
                         paddingLeft: 20
                     });
@@ -475,7 +475,35 @@ orders              int             订单数
 </code></pre>
 
 <p><code>接口返回：</code></p>
-<h4>2.1.3 注册[post] (register)</h4>
+<h4>2.1.3 注册（获取验证码）[post] (reg-send-sms)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+user_name                   string      账号
+backup_mobile               string      密保手机
+</code></pre>
+
+<p><code>接口返回：</code></p>
+<h4>2.1.4 注册（创建帐户）[post] (register-user)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+user_name                   string      账号
+backup_mobile               string      密保手机
+code                        string      验证码
+</code></pre>
+
+<p><code>接口返回：</code>
+</p>
+<h4>2.1.5 注册（设置密码）[post] (set-password)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+user_name                   string      账号
+backup_mobile               string      密保手机
+password                    string      密码
+password_confirmation       string      确认密码
+</code></pre>
+
+<p><code>接口返回：</code></p>
+<h4>2.1.6 注册（填写商户信息）[post] (register)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>user_name                   string      账号
 password                    string      密码
@@ -519,6 +547,25 @@ y_lat                       float       纬度
 
 <p><code>成功返回:</code></p>
 <p><code>失败返回：</code></p>
+<h4>2.1.7 找回密码（获取验证码）[post] (send-sms)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>user_name                   string      账号
+backup_mobile               string      密保手机
+license_num                 string      营业执照注册号
+</code></pre>
+
+<p><code>接口返回：</code></p>
+<h4>2.1.8 找回密码（确认找回）[post] (backup)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>user_name                   string      账号
+backup_mobile               string      密保手机
+license_num                 string      营业执照注册号
+password                    string      新密码
+password_confirmation       string      新密码确认
+code                        string      手机验证码
+</code></pre>
+
+<p><code>接口返回：</code></p>
 <h3>2.2 商品模块 goods</h3>
 <h4>2.2.1 获取商品栏目[get] (goods)</h4>
 <p><code>请求参数</code></p>
@@ -1300,6 +1347,7 @@ num             int         商品数量
 <p><code>成功返回：</code></p>
 <pre><code>id                  int         订单ID号
 price               string      订单总金额
+display_fee         decimal     陈列费
 status_name         string      订单显示状态
 payment_type        string      支付方式
 is_cancel           int         订单是否被取消(1取消,0未取消)
@@ -1316,7 +1364,8 @@ trade_no            string      付款成功时交易流水号
 order_refund        array       退款详情
 delivery_man        array       送货人信息(仅发货后才有,否则为Null)
 shipping_address    array       收货信息
-goods               array       商品详细信息
+mortgageGoods       array       抵费商品详细信息
+orderGoods          array       订单商品详细信息 （格式同mortgageGoods）
 
 delivery_man 字段子集说明
 
@@ -1431,6 +1480,7 @@ pivot               array       该商品在本订单中的详细信息
 <p><code>成功返回：</code></p>
 <pre><code>id                      int         订单ID号
 price                   string      订单总金额
+display_fee             decimal     陈列费
 status_name             string      订单显示状态
 payment_type            string      支付方式(显示)
 pay_type                int         支付方式
@@ -1448,7 +1498,8 @@ can_confirm_collections bool        是否可确认收款(针对货到付款)
 trade_no                string      付款成功时交易流水号
 order_refund            array       退款详情
 shipping_address        array       收货信息
-goods                   array       商品详细信息
+mortgageGoods       array       抵费商品详细信息
+orderGoods          array       订单商品详细信息 （格式同mortgageGoods）
 orderChangeRecode       array       订单修改记录
 
 
@@ -1495,7 +1546,7 @@ created_at          timestamp   修改时间
 <h4>2.7.15 卖家批量发货[put] (batch-send)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>order_id                array       订单id
-delivery_man_id			array		配送员id数组
+delivery_man_id         array       配送员id数组
 </code></pre>
 
 <p><code>成功返回：</code></p>
@@ -1571,7 +1622,6 @@ min_money                       decimal             最低配送额
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-
 <h4>2.7.23 订单作废[put] (invalid/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
@@ -1602,7 +1652,8 @@ shops 字段说明
 id                  int         店铺id
 name                string      店铺名
 min_money           decimal     最低配送额
-logo_url           string       店铺图片
+logo_url            string      店铺图片
+user_type           int         店铺类型
 orders              int         店铺销量
 </code></pre>
 
@@ -1699,6 +1750,7 @@ x_lng               float       经度
 y_lat               float       纬度
 area_name           string      省名+市名+县名+街道名
 address             string      详细地址
+is_default          int         是否设置为默认（1是， 0或不传为否）
 </code></pre>
 
 <p><code>成功返回：</code></p>

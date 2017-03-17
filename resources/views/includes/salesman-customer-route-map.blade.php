@@ -25,11 +25,11 @@
                     <div class="form-group row">
                         <div class="col-sm-2 col-md-3">
                             <input type="checkbox" class="shop-point marker-display" checked/> 店铺所在位置<img
-                                    src="{{ asset('images/icon_shop.png') }}">
+                                    src="{{ asset('images/map-icon/icon_s_1.png') }}">
                         </div>
                         <div class="col-sm-2 col-md-4">
                             <input type="checkbox" class="salesman-point marker-display" checked/> 业务员提交拜访时所在位置<img
-                                    src="{{ asset('images/icon_pope.png') }}">
+                                    src="{{ asset('images/map-icon/icon_p_1.png') }}">
                         </div>
                     </div>
 
@@ -61,10 +61,8 @@
 
                     //mp.centerAndZoom(point, 15);
 
-                    var shopIcon = new BMap.Icon("{{ asset('images/icon_shop.png') }}", new BMap.Size(30, 60)),
-                        icon = new BMap.Icon("{{ asset('images/icon_pope.png') }}", new BMap.Size(30, 60)),
-                        shopMarkerArray = [],
-                        markerArray = [];
+                    var shopMarkerArray = [],
+		    markerArray = [];
 
 
                     for (var i = 0; i < mapData.length; i++) {
@@ -73,8 +71,12 @@
                         var shopPoint = new BMap.Point(mapData[i]['businessLng'], mapData[i]['businessLat']);
                         var salesmanPoint = new BMap.Point(mapData[i]['lng'], mapData[i]['lat']);
 
-                        /* shopPointArray.push(shopPoint);
-                         pointArray.push(point);*/
+                          /*  shopPointArray.push(shopPoint);
+                            pointArray.push(point);*/
+                            var ShopIconUrl='http://dingbaida.com/images/map-icon/icon_s_'+(i+1)+'.png';
+			    var IconUrl='http://dingbaida.com/images/map-icon/icon_p_'+(i+1)+'.png';
+                            var shopIcon = new BMap.Icon(ShopIconUrl, new BMap.Size(30, 60));
+                            var icon = new BMap.Icon(IconUrl, new BMap.Size(30, 60));
 
                         var shopMarker = new BMap.Marker(shopPoint, {icon: shopIcon});  // 创建标注
                         var marker = new BMap.Marker(salesmanPoint, {icon: icon});  // 创建标注

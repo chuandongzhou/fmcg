@@ -123,7 +123,7 @@ var Common = function () {
     this.loadingCount = 0;
     this.loadingTarget = undefined;
 
-}, common = new Common();
+};
 
 /**
  * 通用函数
@@ -181,7 +181,7 @@ Common.prototype = {
         return target;
     }
 };
-
+var common = new Common();
 /**
  * 空函数
  */
@@ -283,8 +283,8 @@ var commonJQueryExtendSetup = function () {
          * @returns {$.fn}
          */
         $.fn.formValidate = function (validates, state) {
-
             var self = this, firstControl = true;
+
             // 清空之前的表单错误信息
             this.find('[class*="has-"]').removeClass(function (index, css) {
                 return (css.match(/(^|\s)has-\S+/g) || []).join(' ');
@@ -297,7 +297,6 @@ var commonJQueryExtendSetup = function () {
             state = state || 'error';
 
             $.each(validates, function (name, messages) {
-
                 var control = self.find('[name="' + name + '"]');
                 if (firstControl) {
                     control.focus();
@@ -346,7 +345,7 @@ var commonAjaxSetup = function () {
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
             if (!self.data('no-loading') && !form.data('no-loading')) {
-                $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
+                common.loading('show');
             }
 
             self.button({
@@ -365,7 +364,6 @@ var commonAjaxSetup = function () {
                 , preventDefault = self.data('preventDefault') || form.data('preventDefault')
                 , doneThen = self.data('doneThen') || form.data('doneThen')
                 , doneUrl = self.data('doneUrl') || form.data('doneUrl');
-
             self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
             form.formValidate('reset');
 
@@ -387,7 +385,7 @@ var commonAjaxSetup = function () {
                     self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                $('body').find('.loading').remove();
+                common.loading('hide');
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)) {
@@ -436,7 +434,7 @@ var commonAjaxSetup = function () {
                             } else if (doneThen == 'referer') {
                                 site.redirectReferer();
                             } else {
-                                $('body').find('.loading').remove();
+                                common.loading('hide');
                                 self.button('reset');
                             }
                             return;
@@ -469,7 +467,7 @@ var successMeg = function (mes) {
     popup.animate({"opacity": "1", "top": 100 + "px"});
     setTimeout(function () {
         popup.animate({"opacity": "0", "top": "-150px"});
-        $('body').find('.loading').remove();
+        common.loading('hide');
     }, 3000);
 }
 
@@ -548,9 +546,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-    //, addButton = $('#add-address')
+        //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-    //, addLimit = 500   //最大地址限制
+        //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1214,16 +1212,14 @@ var goodsBatchUpload = function () {
         var fileName = $(this).val();
         var arr = fileName.split('\\');
         fileName = arr[arr.length - 1];
-        $(this).closest('span').siblings('span').remove().end().after('<span>&nbsp;&nbsp;&nbsp;' + fileName + '</span>');
-    });
-    $('#upload_file').fileupload({
+        $(this).closest('span').next('span').remove().end().after('<span>&nbsp;&nbsp;&nbsp;' + fileName + '</span>');
+    }).fileupload({
         dataType: 'json',
         add: function (e, data) {
             $(".save-btn").off('click').on('click', function () {
                 var obj = $('#upload_file');
                 obj.fileupload('disable');
-                var $this = $(this),
-                    cateLevel1 = $('select[name="cate_level_1"]').val(),
+                var cateLevel1 = $('select[name="cate_level_1"]').val(),
                     cateLevel2 = $('select[name="cate_level_2"]').val(),
                     cateLevel3 = $('select[name="cate_level_3"]').val() || 0,
                     shopIdControl = $('input[name="shop_id"]'),
@@ -1232,7 +1228,6 @@ var goodsBatchUpload = function () {
                     alert('请把分类选择完整');
                     return false;
                 }
-
                 obj.parent().addClass('disabled').siblings('.progress').show();
                 obj.parent().siblings('.fileinput-error').remove();
                 $(this).children('a').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
@@ -1240,7 +1235,7 @@ var goodsBatchUpload = function () {
                     'status': status,
                     'cate_level_1': cateLevel1,
                     'cate_level_2': cateLevel2,
-                    'cate_level_3': cateLevel3,
+                    'cate_level_3': cateLevel3
                 };
                 if (shopIdControl.length > 0)
                 {
@@ -1268,7 +1263,6 @@ var goodsBatchUpload = function () {
                 text = json['message'];
             }
             $(this).parent().after('<span class="fileinput-error"> ' + text + '</span>');
-            alert(text);
         },
         done: function (e, data) {
             $(this).parent().after('<span class="fileinput-error"> 上传成功</span>');
@@ -1304,6 +1298,176 @@ var visibleSelect = function () {
     })
 }
 
+/**
+ * 固定table宽度
+ * @param TableID
+ * @param FixColumnNumber
+ * @param width
+ * @param height
+ * @constructor
+ */
+var FixTable = function(TableID, FixColumnNumber, width, height) {
+    if ($("." + TableID + "_tableLayout").length != 0) {
+        $("." + TableID + "_tableLayout").before($("." + TableID));
+        $("." + TableID + "_tableLayout").empty();
+    }
+    else {
+        $("." + TableID).after("<div class='" + TableID + "_tableLayout tableLayout' style='overflow:hidden;position:relative;max-height:" + height + "px; width:" + width + "px;'></div>");
+    }
+
+    $('<div class="' + TableID + '_tableFix"></div>'
+        + '<div class="' + TableID + '_tableHead tableHead"></div>'
+        + '<div class="' + TableID + '_tableColumn tableColumn"></div>'
+        + '<div class="' + TableID + '_tableData tableData"></div>').appendTo("." + TableID + "_tableLayout");
+
+
+    var oldtable = $("." + TableID);
+
+    var tableFixClone = oldtable.clone(true);
+    tableFixClone.attr("class", TableID + "_tableFixClone");
+    $("." + TableID + "_tableFix").append(tableFixClone);
+    var tableHeadClone = oldtable.clone(true);
+    tableHeadClone.attr("class", TableID + "_tableHeadClone");
+    $("." + TableID + "_tableHead").append(tableHeadClone);
+    var tableColumnClone = oldtable.clone(true);
+    tableColumnClone.attr("class", TableID + "_tableColumnClone");
+    $("." + TableID + "_tableColumn").append(tableColumnClone);
+    $("." + TableID + "_tableData").append(oldtable);
+
+    $("." + TableID + "_tableLayout table").each(function () {
+        $(this).css("margin", "0");
+    });
+
+
+    var HeadHeight = $("." + TableID + "_tableHead thead").height();
+    HeadHeight += 2;
+    $("." + TableID + "_tableHead").css("height", HeadHeight);
+    $("." + TableID + "_tableFix").css("height", HeadHeight);
+
+
+    var ColumnsWidth = 0;
+    var ColumnsNumber = 0;
+    $("." + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
+        ColumnsWidth += $(this).outerWidth(true);
+        ColumnsNumber++;
+    });
+    ColumnsWidth += 2;
+    if ($.browser.msie) {
+        switch ($.browser.version) {
+            case "7.0":
+                if (ColumnsNumber >= 3) ColumnsWidth--;
+                break;
+            case "8.0":
+                if (ColumnsNumber >= 2) ColumnsWidth--;
+                break;
+        }
+    }
+    $("." + TableID + "_tableColumn").css("width", ColumnsWidth);
+    $("." + TableID + "_tableFix").css("width", ColumnsWidth);
+
+
+    $("." + TableID + "_tableData").scroll(function () {
+        $("." + TableID + "_tableHead").scrollLeft($("." + TableID + "_tableData").scrollLeft());
+        $("." + TableID + "_tableColumn").scrollTop($("." + TableID + "_tableData").scrollTop());
+    });
+
+    $("." + TableID + "_tableFix").css({
+        "overflow": "hidden",
+        "position": "relative",
+        "z-index": "50"
+    });
+    $("." + TableID + "_tableHead").css({
+        "overflow": "hidden",
+        "width": width - 17,
+        "position": "relative",
+        "z-index": "45"
+    });
+    $("." + TableID + "_tableColumn").css({
+        "overflow": "hidden",
+        "height": height - 17,
+        "position": "relative",
+        "z-index": "40"
+    });
+    $("." + TableID + "_tableData").css({
+        "overflow": "scroll",
+        "width": width,
+        "height": height,
+        "position": "absolute",
+        "z-index": "35",
+        "top":"0"
+    });
+
+    $("." + TableID + "_tableFix").offset($("." + TableID + "_tableLayout").offset());
+    $("." + TableID + "_tableHead").offset($("." + TableID + "_tableLayout").offset());
+    $("." + TableID + "_tableColumn").offset($("." + TableID + "_tableLayout").offset());
+    //$("." + TableID + "_tableData").offset($("." + TableID + "_tableLayout").offset());
+
+    if ($("." + TableID + "_tableHead").width() > $("." + TableID + "_tableFix table").width()) {
+        $("." + TableID + "_tableHead").css("width", $("." + TableID + "_tableFix table").width());
+        $("." + TableID + "_tableData").css("width", $("." + TableID + "_tableFix table").width() + 17);
+    }
+    //alert( $("." + TableID + "_tableFix table").height()+ 17);
+    if ($("." + TableID + "_tableColumn").height() > $("." + TableID + "_tableColumn table").height()) {
+        $("." + TableID + "_tableColumn").css("height", $("." + TableID + "_tableFix table").height());
+        $("." + TableID + "_tableData").css("height", $("." + TableID + "_tableFix table").height() + 17);
+    }
+}
+
+
+/**
+ * 分页
+ * @param $table         要分页的表
+ * @param pageSize       每页显示条数
+ * @param pagination     分页数据存放
+ */
+var tablePage = function ($table, pagination, pageSize) {
+    var sumRows = $table.find('tbody tr').length,//获取数据总行数
+        pageSize = pageSize || 5,
+        sumPages = Math.ceil(sumRows / pageSize),//得到总页数
+        currentPage = 0;//设置当前页默认值为
+
+    $table.bind('paging', function () {
+        if (currentPage <= 0) {
+            currentPage = 0;
+            pagination.find('.prev').addClass('disabled')
+        } else {
+            pagination.find('.prev').removeClass('disabled')
+        }
+        if (currentPage >= sumPages - 1) {
+            currentPage = sumPages - 1;
+            pagination.find('.next').addClass('disabled');
+        }
+        else {
+            pagination.find('.next').removeClass('disabled');
+        }
+        pagination.find('.page-' + (currentPage + 1)).addClass('active').siblings().removeClass('active');
+        $table.find('tbody tr').hide().slice(currentPage * pageSize, (currentPage + 1) * pageSize).show();//先将tbody中所有的行隐藏，再通过slice结合当前页数和页面显示的数目展现数据
+    });
+
+    if (sumPages > 1) {
+        //上一页
+        $('<li class="prev"><a href="javascript:"> « </a></li>').bind("click", function () {
+            currentPage = currentPage - 1;
+            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+        }).appendTo(pagination);
+
+        for (var pageIndex = 0; pageIndex < sumPages; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+            }).appendTo(pagination);
+        }
+
+        //下一页
+        $('<li class="next"><a href="javascript:"> » </a></li>').bind("click", function () {
+            currentPage = currentPage + 1;
+            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+        }).appendTo(pagination);
+
+        $table.trigger("paging");
+    }
+
+}
 
 /**
  * 浮点数加法

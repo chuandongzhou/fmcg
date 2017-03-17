@@ -24,6 +24,17 @@ return [
         ]
 
     ],
+    //支付渠道
+    'payment_channel' => [
+        'icon' => [
+            'width' => 100,
+            'height' => 35
+        ],
+        'type' => [
+            'pc' => 'PC',
+            'app' => 'APP'
+        ]
+    ],
     //订单表
     'order' => [
         'pay_status' => [//支付状态

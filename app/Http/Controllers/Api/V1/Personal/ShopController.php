@@ -60,10 +60,10 @@ class ShopController extends Controller
             });
             $receivedOrders = $receivedOrders->where('user_id', auth()->id())->get();
         } else {
-            $finishedOrders = $finishedOrders->OfSell(auth()->id())->get()->each(function ($order) {
+            $finishedOrders = $finishedOrders->OfSell(auth()->id())->useful()->get()->each(function ($order) {
                 $order->setAppends([]);
             });
-            $receivedOrders = $receivedOrders->OfSell(auth()->id())->get();
+            $receivedOrders = $receivedOrders->OfSell(auth()->id())->useful()->get();
         }
 
 

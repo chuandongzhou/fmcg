@@ -247,7 +247,7 @@ class Shop extends Model
      *
      * @return mixed
      */
-    public function ShopSignature()
+    public function shopSignature()
     {
         return $this->hasOne('App\Models\ShopSignature');
     }
@@ -280,6 +280,16 @@ class Shop extends Model
     public function salesmenCustomer()
     {
         return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman');
+    }
+
+    /**
+     * 对应客户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function salesmanCustomer()
+    {
+        return $this->hasOne(SalesmanCustomer::class);
     }
 
     /**

@@ -38,6 +38,16 @@ class SalesmanCustomerDisplayList extends Model
     }
 
     /**
+     * 获取商品名
+     *
+     * @return string
+     */
+    public function getMortgageGoodsNameAttribute()
+    {
+        return $this->mortgageGoods ? $this->mortgageGoods->goods_name : '现金';
+    }
+
+    /**
      * 格式化使用量
      *
      * @return int|mixed

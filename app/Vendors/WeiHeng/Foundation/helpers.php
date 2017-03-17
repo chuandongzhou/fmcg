@@ -139,6 +139,38 @@ if (!function_exists('salesman_avatar_url')) {
     }
 
 }
+
+if (!function_exists('payment_channel_icon_url')) {
+
+    /**
+     * 获取上传头像URL
+     *
+     * @param int $id
+     * @param bool $secure
+     * @return string
+     */
+    function payment_channel_icon_url($id = 0, $secure = null)
+    {
+        $iconPath = config('path.payment_channel_icon');
+        $relatePath = str_replace(public_path(), '', $iconPath);
+        $relatePath = str_replace('\\', '', $relatePath);
+
+
+        // 处理分割后的ID
+        $path = implode('/', divide_uid($id, ".jpg"));
+
+        // 处理缓存
+        $mtime = @filemtime($iconPath . $path);
+        if (false !== $mtime) {
+            return asset($relatePath . $path, $secure) . '?' . $mtime;
+        }
+
+        //TODO 返回默认图片
+        return '';
+    }
+
+}
+
 if (!function_exists('human_filesize')) {
 
     /**

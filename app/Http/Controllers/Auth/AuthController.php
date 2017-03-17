@@ -33,10 +33,9 @@ class AuthController extends Controller
     /**
      * 登录验证
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function login(Request $request)
+    public function login()
     {
         app('cookie')->queue('last_handle_time', 0, -2628000);
         return view('auth.login');
@@ -76,10 +75,9 @@ class AuthController extends Controller
     /**
      * 注册成功
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
-    public function regSuccess(Request $request)
+    public function regSuccess()
     {
         if (!session('shop.name')) {
             return $this->error('请先注册', 'auth/register');
@@ -96,7 +94,6 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        //app('cookie')->queue('last_handle_time', 0, -2628000);
         auth()->logout();
         return redirect('auth/login');
     }

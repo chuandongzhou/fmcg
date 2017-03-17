@@ -30,9 +30,8 @@ class OrderAutoReceive extends Command
         if ($orders->isEmpty()) {
             return false;
         }
-
-        foreach ($orders as $order) {
-            DB::transaction(function () use ($order) {
+        DB::transaction(function () use ($orders) {
+            foreach ($orders as $order) {
                 if ($order->fill(['status' => cons('order.status.finished'), 'finished_at' => Carbon::now()])->save()) {
                     //更新systemTradeInfo完成状态
                     $tradeModel = $order->systemTradeInfo;
@@ -50,8 +49,7 @@ class OrderAutoReceive extends Command
 
                     (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
                 }
-            });
         }
-
+        });
     }
 }

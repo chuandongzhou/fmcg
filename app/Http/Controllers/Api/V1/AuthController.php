@@ -14,6 +14,7 @@ use App\Http\Requests\Api\v1\RegisterUserRequest;
 use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
 use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
+use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -139,9 +140,7 @@ class AuthController extends Controller
         $data = $request->only('user_name', 'backup_mobile', 'type');
         //验证验证码
         $code = $request->input('code');
-        /*$codeService = new CodeService();
-        $res =  $codeService->validateCode('register', $code, $data['user_name']);*/
-        if (! app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
+        if (!app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
             return $this->error('短信验证码错误');
         }
         session(['user' => $data]);
@@ -151,19 +150,24 @@ class AuthController extends Controller
 
     /**
      * 设置密码
-     *App\Http\Requests\Api\v1\RegisterSetPasswordRequest $request
      *
+     * @param \App\Http\Requests\Api\v1\RegisterSetPasswordRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postSetPassword(RegisterSetPasswordRequest $request)
     {
+        $data = $request->only('user_name', 'backup_mobile', 'type');
+        if (in_windows() && array_diff_assoc($data, session('user'))) {
+            return $this->error('注册用户出现问题');
+        }
         session(['user' => $request->all()]);
         return $this->success('设置密码成功');
     }
 
     /**
      * 添加商户信息
-     *App\Http\Requests\Api\v1\RegisterUserShopRequest $request
+     *
+     * @param \App\Http\Requests\Api\v1\RegisterUserShopRequest $request
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -243,7 +247,8 @@ class AuthController extends Controller
             return $this->error('营业执照错误');
         }
 
-        return app('pushbox.sms')->sendCode('code', $data['backup_mobile']) ? $this->success('发送成功') : $this->error('发送短信过于频繁');
+        return app('pushbox.sms')->sendCode('code',
+            $data['backup_mobile']) ? $this->success('发送成功') : $this->error('发送短信过于频繁');
     }
 
     /**
@@ -278,8 +283,7 @@ class AuthController extends Controller
      */
     public function postRegSendSms(RegisterUserSendSmsRequest $request)
     {
-        $res = (new ValidateService)->validateGeetest($request);
-        if (!$res) {
+        if (in_windows() && !$res = (new ValidateService)->validateGeetest($request)) {
             return $this->invalidParam('backup_mobile', '请完成验证');
         }
         if (app('pushbox.sms')->sendCode('register', $request->input('backup_mobile'))) {
