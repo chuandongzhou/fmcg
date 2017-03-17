@@ -1,21 +1,16 @@
 /*!
- * JavaScript Cookie v2.1.3
+ * JavaScript Cookie v2.1.1
  * https://github.com/js-cookie/js-cookie
  *
  * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
  * Released under the MIT license
  */
 ;(function (factory) {
-	var registeredInModuleLoader = false;
 	if (typeof define === 'function' && define.amd) {
 		define(factory);
-		registeredInModuleLoader = true;
-	}
-	if (typeof exports === 'object') {
+	} else if (typeof exports === 'object') {
 		module.exports = factory();
-		registeredInModuleLoader = true;
-	}
-	if (!registeredInModuleLoader) {
+	} else {
 		var OldCookies = window.Cookies;
 		var api = window.Cookies = factory();
 		api.noConflict = function () {
@@ -76,9 +71,9 @@
 
 				return (document.cookie = [
 					key, '=', value,
-					attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-					attributes.path ? '; path=' + attributes.path : '',
-					attributes.domain ? '; domain=' + attributes.domain : '',
+					attributes.expires && '; expires=' + attributes.expires.toUTCString(), // use expires attribute, max-age is not supported by IE
+					attributes.path    && '; path=' + attributes.path,
+					attributes.domain  && '; domain=' + attributes.domain,
 					attributes.secure ? '; secure' : ''
 				].join(''));
 			}
@@ -98,6 +93,7 @@
 
 			for (; i < cookies.length; i++) {
 				var parts = cookies[i].split('=');
+				var name = parts[0].replace(rdecode, decodeURIComponent);
 				var cookie = parts.slice(1).join('=');
 
 				if (cookie.charAt(0) === '"') {
@@ -105,7 +101,6 @@
 				}
 
 				try {
-					var name = parts[0].replace(rdecode, decodeURIComponent);
 					cookie = converter.read ?
 						converter.read(cookie, name) : converter(cookie, name) ||
 						cookie.replace(rdecode, decodeURIComponent);
@@ -132,7 +127,7 @@
 
 		api.set = api;
 		api.get = function (key) {
-			return api.call(api, key);
+			return api(key);
 		};
 		api.getJSON = function () {
 			return api.apply({

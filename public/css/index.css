@@ -4200,6 +4200,10 @@ table .product-panel .promotions {
   margin-bottom: 20px;
 }
 
+.tableLayout .table-scroll tr td:first-of-type {
+  width: 125px !important;
+}
+
 .tableLayout thead tr td,
 .tableLayout thead tr th,
 .tableLayout thead .table-list-row .shopping-table-list table tr td,

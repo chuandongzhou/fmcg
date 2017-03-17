@@ -3640,6 +3640,13 @@ table {
 }
 .tableLayout{
     margin-bottom:20px;
+  .table-scroll{
+    tr{
+      td:first-of-type{
+        width:125px!important;
+      }
+    }
+  }
   thead{
     tr{
       td,th{

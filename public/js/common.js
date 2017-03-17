@@ -1349,6 +1349,7 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
     var ColumnsNumber = 0;
     $("." + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
         ColumnsWidth += $(this).outerWidth(true);
+        alert(ColumnsWidth);
         ColumnsNumber++;
     });
     ColumnsWidth += 2;
@@ -1362,6 +1363,7 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
                 break;
         }
     }
+   // alert(ColumnsWidth);
     $("." + TableID + "_tableColumn").css("width", ColumnsWidth);
     $("." + TableID + "_tableFix").css("width", ColumnsWidth);
 
