@@ -196,6 +196,21 @@
                                         @endif
                                     </tr>
                                 @endforeach
+                                <tr>
+
+                                    <td colspan="7" >
+                                        <div class="text-right">
+                                            订货总数 : {{ $goods_total_num }}
+                                            &nbsp;
+                                            &nbsp;
+                                            &nbsp;
+                                            &nbsp;
+                                            总金额 : {{ number_format($goods_total_amount, 2, '.', '')}}
+                                            &nbsp;
+                                            &nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>

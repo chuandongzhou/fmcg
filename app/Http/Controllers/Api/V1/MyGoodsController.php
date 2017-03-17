@@ -45,9 +45,12 @@ class MyGoodsController extends Controller
     {
 
         $result = DB::transaction(function () use ($request) {
+
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
+
             $attributes['user_type'] = auth()->user()->type;
+            
             $goods = auth()->user()->shop->goods()->create($attributes);
             $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
@@ -308,7 +311,9 @@ class MyGoodsController extends Controller
         }
         $results = Excel::selectSheetsByIndex(0)->load($filePath['info'], function ($reader) {
         })->skip(1)->toArray();
-        $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : null;
+
+        $shopId = isset($postAttr['shop_id']) && $postAttr['shop_id'] > 0 ? $postAttr['shop_id'] : 0;
+        
         if ($shopId) {
             $shop = Shop::with(['deliveryArea', 'user'])->find($shopId);
         } else {
@@ -317,24 +322,36 @@ class MyGoodsController extends Controller
         if (is_null($shop)) {
             return $this->setImportResult('店铺不存在');
         }
-
-        foreach ($results as $goods) {
-            if (is_null($goods[0])) {
-                break;
+        //dd($shop);
+        DB::beginTransaction();
+        global $error;
+        try{
+            foreach ($results as $key =>$goods) {
+                if (is_null($goods[0])) {
+                    break;
+                }
+                $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user_type);
+                if (!is_array($goodsAttr)){
+                    $error = $goodsAttr . '在第'. ($key + 2) . '行';
+                    throw new \Exception;
+                }
+                $goodsModel = $shop->goods()->create($goodsAttr['goods']);
+                $goodsModel->goodsPieces()->create($goodsAttr['pieces']);
+                if ($goodsModel->exists) {
+                    $this->saveWithoutImageOfBarCode($goodsModel);
+                    $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
+                    !is_null($attrs) && $this->updateAttrs($goodsModel, $attrs);
+                } else {
+                    $error = '文件格式不正确';
+                    throw new \Exception;
+                }
             }
-            $goodsAttr = $this->_getGoodsAttrForImport($goods, $postAttr, $shop->user_type);
-            $goodsModel = $shop->goods()->create($goodsAttr);
-            if ($goodsModel->exists) {
-                $this->saveWithoutImageOfBarCode($goodsModel);
-                $this->_copyShopDeliveryAreaForImport($goodsModel, $shop);
-                !is_null($attrs) && $this->updateAttrs($goodsModel, $attrs);
-            } else {
-                return $this->setImportResult('文件格式不正确');
-            }
+            DB::commit();
+            return $this->setImportResult('上传成功', true);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->setImportResult($error);
         }
-
-        return $this->setImportResult('上传成功', true);
-
     }
 
 
@@ -442,24 +459,55 @@ class MyGoodsController extends Controller
      */
     private function _getGoodsAttrForImport($goodsArr, $postAttr, $shopType)
     {
+        $length = count($goodsArr);
         $goods = [
-            'name' => $goodsArr[0],
-            'bar_code' => $goodsArr[1],
-            'price_retailer' => $goodsArr[2],
-            'price_retailer_pick_up' => isset($goodsArr[3]) && $goodsArr[3] ? $goodsArr[3] : $goodsArr[2],
-            'min_num_retailer' => $goodsArr[4],
-            'pieces_retailer' => $goodsArr[5],
-            'specification_retailer' => $goodsArr[6],
-            'user_type' => $shopType
+            'name' => $goodsArr['0'],  //商品名
+            'bar_code' => $goodsArr['1'], //条形码
+            'price_retailer' => $goodsArr['2'], //价格
+            'price_retailer_pick_up' => $goodsArr['3'] ?? $goodsArr['2'], //自提价
+            'pieces_retailer' => $goodsArr['4'] ?? 0, //单位编号
+            'min_num_retailer' => $goodsArr['5'] ?? 0, //最低购买数
+            'user_type' => $shopType   //用户类型
+
+        ];
+
+        $pieces = [
+            'pieces_level_1' => $goodsArr[6],
+            'pieces_level_2' => $goodsArr[7] ??  0,
+            'pieces_level_3' => $goodsArr[9] ??  0,
+            'system_1' => $goodsArr[8] ?? 0,
+            'system_2' => $goodsArr[10] ?? 0,
         ];
         if ($shopType == cons('user.type.supplier')) {
-            $goods['price_wholesaler'] = isset($goodsArr[7]) ? $goodsArr[7] : $goodsArr[2];
-            $goods['price_wholesaler_pick_up'] = isset($goodsArr[8]) && $goodsArr[8] ? $goodsArr[8] : $goods['price_wholesaler'];
-            $goods['min_num_wholesaler'] = isset($goodsArr[9]) ? $goodsArr[9] : $goodsArr[4];
-            $goods['pieces_wholesaler'] = isset($goodsArr[10]) ? $goodsArr[10] : $goodsArr[5];
-            $goods['specification_wholesaler'] = isset($goodsArr[11]) ? $goodsArr[11] : $goodsArr[6];
+            if ($length != 16) return '不符合供应商批量录入商品标准请核对后再试!';
+            $goods['price_wholesaler'] = $goodsArr['6'] ?? $goodsArr['2'];
+            $goods['price_wholesaler_pick_up'] = $goodsArr['7'] ?? $goods['price_wholesaler'];
+            $goods['pieces_wholesaler'] = $goodsArr[8] ?? $goodsArr[4];
+            $goods['min_num_wholesaler'] = $goodsArr[9] ?? $goodsArr[5];
+            $pieces = [
+                'pieces_level_1' => $goodsArr[10],
+                'pieces_level_2' => $goodsArr[11] ??  0,
+                'pieces_level_3' => $goodsArr[13] ??  0,
+                'system_1' => $goodsArr[12] ?? 0,
+                'system_2' => $goodsArr[14] ?? 0,
+            ];
+        }else{
+            if ($length != 12) return '不符合批发商批量录入商品标准请核对后再试!';
         }
-        return array_merge($goods, $postAttr);
+        if (!in_array($goods['pieces_retailer'],$pieces) || !in_array($goods['pieces_wholesaler'] ?? '',$pieces)){
+            return '单位编号不正确请检查!';
+        }
+        if(!empty($pieces['pieces_level_2']) && empty($pieces['system_1'])){
+            return '二级进制没有填!';
+        }
+        if(!empty($pieces['pieces_level_3']) && empty($pieces['system_2'])){
+            return '三级进制没有填!';
+        }
+        $goods['specification_retailer' ] = ($pieces['pieces_level_2'] ?? '') . '*' . end($goodsArr);
+        $pieces['specification'] = end($goodsArr);
+        $arr['goods'] = array_merge($goods, $postAttr);
+        $arr['pieces'] = $pieces;
+        return $arr;
     }
 
     /**

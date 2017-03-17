@@ -26,11 +26,11 @@ class RegisterRequest extends Request
             'address[address]' => 'max:60',
             'address[city_id]' => '',
             'area' => 'sometimes|required|max:200',
-            'license' => 'required',
             'license_num' => 'required|unique:shop|between:15,18',
             'business_license' => 'required',
             'agency_contract' => 'sometimes|required'
         ];
+
     }
 
     /**
@@ -49,6 +49,10 @@ class RegisterRequest extends Request
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
+                if(!$this->input('license') && $this->input('type') != cons('user.type.retailer')){
+                    $validator->errors()->add('license', '营业执照 不能为空');
+                }
+
             }
         });
     }

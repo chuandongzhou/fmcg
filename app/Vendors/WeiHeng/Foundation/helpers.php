@@ -531,3 +531,21 @@ if (!function_exists('parse_province')) {
         return str_replace(['省', '自治区', '壮族', '回族', '维吾尔族', '特别行政区'], '', $province);
     }
 }
+
+if (!function_exists('array_key_value')) {
+    /**
+     * 合并数组 $arrKey值为key $arrValue值为value
+     *
+     * @param $arrKey,$arrValue
+     * @return array
+     */
+    function array_key_value($arrKey,$arrValue)
+    {
+        $result = [];
+        foreach($arrKey as $key => $val) {
+            $result[$val] = is_array($arrValue) ? $arrValue[$key] : $arrValue;
+        }
+        return $result;
+    }
+}
+

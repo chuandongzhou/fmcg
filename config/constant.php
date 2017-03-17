@@ -80,7 +80,7 @@ return [
             'not_audit' => 0,       //未审核
             'pass' => 1,       //通过
             'not_pass' => 2,       //未通过
-        ]
+        ],
     ],
     //首页栏目
     'home_column' => [
@@ -166,6 +166,7 @@ return [
             'in' => 1,               //入帐
             'out' => 2,              //提现
         ],
+        
         'pay_type' => [
             'yeepay' => 1,              //易宝
             'yeepay_wap' => 2,          //pingxx_易宝
@@ -410,6 +411,7 @@ return [
     //后台配置
     'admin' => [
         'super_admin_name' => 'admin',
+        'phone' => '18780521651',
         'notification' => [
             'role-create' => 1,
             'admin-create' => 2,
@@ -473,5 +475,5 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
 ];

@@ -10,7 +10,8 @@ return [
             'audit_passed' => 'SMS_baichun_2943',
             'audit_not_passed' => 'SMS_baichun_2944',
             'withdraw' => 'SMS_baichun_2946',
-            'order' => 'SMS_baichun_3329'
+            'order' => 'SMS_baichun_3329',
+            'tip' => 'SMS_53060030'
         ],
 
     ],

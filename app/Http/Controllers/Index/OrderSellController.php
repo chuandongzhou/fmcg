@@ -119,6 +119,8 @@ class OrderSellController extends OrderController
         if (!$order) {
             return redirect('order-sell');
         }
+        foreach ($order->goods as $goods)
+            $order->goods_amount += $goods->pivot['num'];
 
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 

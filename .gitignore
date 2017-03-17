@@ -4,3 +4,7 @@ Homestead.yaml
 .env
 /.idea
 composer.lock
+.npmrc
+public/js/lib/jquery/blueimp-file-upload/LICENSE
+public/upload/qrcode/
+

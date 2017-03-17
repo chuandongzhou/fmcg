@@ -84,7 +84,7 @@ class SalesmanVisitOrderController extends Controller
         ) {
             return $this->error('订单不存在');
         }
-
+        //dd((new BusinessService)->getOrderData($salesmanVisitOrder));
         $viewName = $salesmanVisitOrder->type == cons('salesman.order.type.return_order') ? 'order-return-detail' : 'order-detail';
         return view('index.business.' . $viewName, (new BusinessService)->getOrderData($salesmanVisitOrder));
     }

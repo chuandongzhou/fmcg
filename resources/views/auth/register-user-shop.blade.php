@@ -80,8 +80,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label" for="license"><span class="red">*</span> 营业执照:</label>
-
+                                    <label class="col-sm-3 control-label" for="license">
+                                        @if($user['type'] != cons('user.type.retailer'))
+                                            <span class="red">*</span>
+                                        @endif
+                                            营业执照:</label>
                                     <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>

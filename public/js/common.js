@@ -283,8 +283,8 @@ var commonJQueryExtendSetup = function () {
          * @returns {$.fn}
          */
         $.fn.formValidate = function (validates, state) {
-            var self = this, firstControl = true;
 
+            var self = this, firstControl = true;
             // 清空之前的表单错误信息
             this.find('[class*="has-"]').removeClass(function (index, css) {
                 return (css.match(/(^|\s)has-\S+/g) || []).join(' ');
@@ -297,6 +297,7 @@ var commonJQueryExtendSetup = function () {
             state = state || 'error';
 
             $.each(validates, function (name, messages) {
+
                 var control = self.find('[name="' + name + '"]');
                 if (firstControl) {
                     control.focus();
@@ -1213,7 +1214,7 @@ var goodsBatchUpload = function () {
         var fileName = $(this).val();
         var arr = fileName.split('\\');
         fileName = arr[arr.length - 1];
-        $(this).closest('span').next('span').remove().end().after('<span>&nbsp;&nbsp;&nbsp;' + fileName + '</span>');
+        $(this).closest('span').siblings('span').remove().end().after('<span>&nbsp;&nbsp;&nbsp;' + fileName + '</span>');
     });
     $('#upload_file').fileupload({
         dataType: 'json',
@@ -1231,6 +1232,7 @@ var goodsBatchUpload = function () {
                     alert('请把分类选择完整');
                     return false;
                 }
+
                 obj.parent().addClass('disabled').siblings('.progress').show();
                 obj.parent().siblings('.fileinput-error').remove();
                 $(this).children('a').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
@@ -1240,7 +1242,13 @@ var goodsBatchUpload = function () {
                     'cate_level_2': cateLevel2,
                     'cate_level_3': cateLevel3,
                 };
-                if (shopIdControl.length && shopIdControl.val()) {
+                if (shopIdControl.length > 0)
+                {
+                    if(shopIdControl.val() == '' || shopIdControl.val() == null)
+                    {
+                        alert('请填写店铺ID!');
+                        return
+                    }
                     formData['shop_id'] = shopIdControl.val();
                 }
 

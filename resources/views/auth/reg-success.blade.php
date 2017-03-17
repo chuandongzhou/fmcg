@@ -23,13 +23,21 @@
                     注册成功
                 </div>
             </div>
+
             <div class="col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-2">
                 <div class="panel panel-auth register">
                     <div class="panel-body">
                         <div class="title">
                             <div>
-                                <span class="title-username">恭喜你注册成功</span>,您的账号<span
-                                        class="title-username">{{ $user_name }}</span>正在审核中,为了防止账号被盗请妥善保管好账号密码，后台审核通过后会以短信的方式通知您，请注意查收短信。
+                                <span class="title-username">恭喜你注册成功</span>,
+                                @if($user_type == 1)
+                                    您的账号<span class="title-username">{{ $user_name }}</span>
+                                    ,为了防止账号被盗请妥善保管好账号密码.
+                                    @else
+                                    您的账号<span class="title-username">{{ $user_name }}</span>
+                                    正在审核中,为了防止账号被盗请妥善保管好账号密码，
+                                    后台审核通过后会以短信的方式通知您，请注意查收短信。
+                                @endif
                             </div>
                             <div class="go-login">
                                 <span class="go-time" id="jumTo">3</span>秒后跳转至首页,<a

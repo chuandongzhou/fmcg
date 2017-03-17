@@ -106,6 +106,11 @@ class Top extends Adapter
         return $this;
     }
 
+    public function pushTip($phone)
+    {
+        return $this->push(new Message('tip',$phone));
+    }
+
     /**
      * 发送充值成功短信
      *

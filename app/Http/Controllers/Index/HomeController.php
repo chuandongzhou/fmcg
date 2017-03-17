@@ -17,6 +17,7 @@ class HomeController extends Controller
     public function index()
     {
         //广告
+        
         $indexAdvertConf = cons('advert.cache.index');
         $adverts = [];
         if (Cache::has($indexAdvertConf['name'])) {
@@ -44,7 +45,7 @@ class HomeController extends Controller
 
     public function test()
     {
-
+       
     }
 
 }

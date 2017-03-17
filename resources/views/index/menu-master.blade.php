@@ -137,11 +137,11 @@
                                     <span class="title">新增商品</span>
                                 </a>
                             </li>
-                            {{--<li class="nav-item  {{ path_active('my-goods/batch-create') }}">--}}
-                            {{--<a href="{{ url('my-goods/batch-create') }}" class="nav-link ">--}}
-                            {{--<span class="title">批量导入</span>--}}
-                            {{--</a>--}}
-                            {{--</li>--}}
+                            <li class="nav-item  {{ path_active('my-goods/batch-create') }}">
+                            <a href="{{ url('my-goods/batch-create') }}" class="nav-link ">
+                            <span class="title">批量导入</span>
+                            </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*']) !!} ">

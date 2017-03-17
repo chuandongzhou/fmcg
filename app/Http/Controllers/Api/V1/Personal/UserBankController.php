@@ -53,7 +53,7 @@ class UserBankController extends Controller
         if ($bankInfo['is_default'] == 1) {
             return $this->success('设置成功');
         }
-        // 设置些用户其它银行账号默认
+        // 设置用户其它银行账号默认
 
         $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
 
@@ -72,7 +72,17 @@ class UserBankController extends Controller
      */
     public function store(Requests\Api\v1\CreateUserBankRequest $request)
     {
-        if ($this->user->userBanks()->create($request->all())->exists) {
+        
+        //dd($this->user->userBanks());
+        $requestData = $request->all();
+        if($request->get('is_default',0) == 1){
+            $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
+        }else{
+            if(! $this->user->userBanks()->where('is_default', 1)->first()){
+                $requestData['is_default'] = 1;
+            }
+        }
+        if ($this->user->userBanks()->create($requestData)->exists) {
             return $this->success('添加账号成功');
         }
 

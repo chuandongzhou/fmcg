@@ -14,7 +14,6 @@ use App\Http\Requests\Api\v1\RegisterUserRequest;
 use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
 use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
-use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -98,18 +97,27 @@ class AuthController extends Controller
     public function postRegister(RegisterRequest $request)
     {
         $userInput = $request->only('user_name', 'password', 'backup_mobile', 'type');
+        //终端商不需要审核直接通过
+        if($userInput['type'] == cons('user.type.retailer'))
+            $userInput['audit_status'] = cons('user.audit_status.pass');
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店
             $shopInput = $request->except('username', 'password', 'backup_mobile', 'type');
+
             $shopModel = $user->shop();
 
             if ($user->type == cons('user.type.retailer')) {
                 unset($shopInput['area']);
             }
-
+            //return $this->error('注册用户时遇到问题');
             if ($shopModel->create($shopInput)->exists) {
                 session(['shop.name' => $shopInput['name']]);
+                $param = [
+                    'account' => $shopInput['user_name'],
+                    'name' => $shopInput['name'],
+                ];
+                app('pushbox.sms')->send('tip',cons('admin.phone'),$param);
                 return $this->success('注册成功');
             } else {
                 $user->delete();
@@ -174,7 +182,6 @@ class AuthController extends Controller
         }
 
         if ($shopModel->create($shopInput)->exists) {
-
             return $this->success('注册成功');
         } else {
             $user->delete();
