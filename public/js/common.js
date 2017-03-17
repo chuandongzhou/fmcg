@@ -1349,7 +1349,6 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
     var ColumnsNumber = 0;
     $("." + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
         ColumnsWidth += $(this).outerWidth(true);
-        alert(ColumnsWidth);
         ColumnsNumber++;
     });
     ColumnsWidth += 2;
