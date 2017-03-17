@@ -8,9 +8,6 @@
     <span class="second-level">订单统计</span>
 @stop
 
-
-
-
 @section('right')
     <div class="row my-goods order-report margin-clear">
         <div class="col-sm-12 content">
@@ -133,7 +130,7 @@
                             <td>{{ $item['contact'] }}</td>
                             <td>{{ $item['address'] }}</td>
                             <td>
-                                <a href="javascript:window.open ('{{ url('order/statistics-of-buy-user-detail?shop_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
+                                <a href="javascript:" onclick="window.open ('{{ url('order/statistics-of-buy-user-detail?shop_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
                             </td>
                         </tr>
                     @endforeach
@@ -142,7 +139,7 @@
             </div>
             <div class="col-sm-12  table-responsive tables">
                 <p class="title-table">商品总计</p>
-                <table class="table table-bordered table-goods-statistics">
+                <table class="MyTable3 table-scroll">
                     <thead>
                     <tr>
                         <td>商品名称</td>
@@ -167,14 +164,6 @@
                         @endforeach
                     @endforeach
                     </tbody>
-                    <tfoot>
-                    <td colspan="5" class="text-center">
-                        <div class="text-right">
-                            <ul class="pagination management-pagination">
-                            </ul>
-                        </div>
-                    </td>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -190,7 +179,6 @@
         $(function () {
             statisticsFunc();
             formSubmitByGet();
-            tablePage($('.table-goods-statistics'), $('.pagination'));
         })
 
     </script>

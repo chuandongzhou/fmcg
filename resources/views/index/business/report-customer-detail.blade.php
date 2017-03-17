@@ -71,14 +71,6 @@
                             @endforeach
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="10" class="text-center">
-                            <div class="text-right">
-                                <ul class="goods-pagination pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="col-sm-12  tables">
@@ -102,14 +94,6 @@
                             </tr>
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="4" class="text-center">
-                            <div class="text-right">
-                                <ul class="displays-pagination pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -118,11 +102,4 @@
     </body>
 @stop
 
-
-@section('js')
-    <script type="text/javascript">
-        tablePage($('.table-displays'), $('.displays-pagination'));
-        tablePage($('.table-goods-statistics'), $('.goods-pagination'));
-    </script>
-@stop
 
