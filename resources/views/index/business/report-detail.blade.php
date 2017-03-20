@@ -113,7 +113,7 @@
                                 <td>{{ $visit['returnOrderCount'] }}</td>
                                 <td>{{ $visit['returnOrderAmount'] }}</td>
                                 <td>
-                                    <a href="javascript:" onclick="window.open ('{{ url("business/report/2/customer-detail?start_date={$startDate}&end_date={$endDate}&customer_id={$visit['id']}") }}', 'newwindow', 'height=600, width=1000')">明细</a>
+                                    <a href="javascript:" onclick="window.open ('{{ url("business/report/{$salesman->id}/customer-detail?start_date={$startDate}&end_date={$endDate}&customer_id={$visit['id']}") }}', 'newwindow', 'height=600, width=1000')">明细</a>
                                 </td>
                             </tr>
                         @endforeach

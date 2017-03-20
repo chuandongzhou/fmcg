@@ -85,6 +85,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->resource('salesman-customer', 'SalesmanCustomerController');
             $router->get('report/{salesman_id}/export', 'ReportController@export');
             $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
+            $router->get('report/{salesman_id}/customer-detail/export', 'ReportController@exportCustomerDetail');
             $router->get('report/export', 'ReportController@exportIndex');
             $router->resource('report', 'ReportController');
             $router->get('display-info', 'DisplayInfoController@index');

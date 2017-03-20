@@ -1347,25 +1347,31 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
 
     var ColumnsWidth = 0;
     var ColumnsNumber = 0;
-    $("." + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
-        ColumnsWidth += $(this).outerWidth(true);
-        ColumnsNumber++;
-    });
-    ColumnsWidth += 2;
-    if ($.browser.msie) {
-        switch ($.browser.version) {
-            case "7.0":
-                if (ColumnsNumber >= 3) ColumnsWidth--;
-                break;
-            case "8.0":
-                if (ColumnsNumber >= 2) ColumnsWidth--;
-                break;
-        }
-    }
+    // $("." + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
+    //     ColumnsWidth += $(this).outerWidth(true);
+    //     ColumnsNumber++;
+    // });
+    // ColumnsWidth += 2;
+    // if ($.browser.msie) {
+    //     switch ($.browser.version) {
+    //         case "7.0":
+    //             if (ColumnsNumber >= 3) ColumnsWidth--;
+    //             break;
+    //         case "8.0":
+    //             if (ColumnsNumber >= 2) ColumnsWidth--;
+    //             break;
+    //     }
+    // }
    // alert(ColumnsWidth);
+    $("." + TableID + "_tableHead").css("min-width", width-17);
+    $("." + TableID + "_tableHead table").css("min-width", width-17);
+    $("." + TableID + "_tableData").css("min-width", width-1);
+    $("." + TableID + "_tableData table").css("min-width", width-17);
+    ColumnsWidth+=$("." + TableID + "_tableHead thead tr:first td:first").outerWidth();
     $("." + TableID + "_tableColumn").css("width", ColumnsWidth);
+    $("." + TableID + "_tableColumn table tbody tr td:first").css("min-width", ColumnsWidth);
     $("." + TableID + "_tableFix").css("width", ColumnsWidth);
-
+    $("." + TableID + "_tableFix table thead tr td:first").css("min-width", ColumnsWidth);
 
     $("." + TableID + "_tableData").scroll(function () {
         $("." + TableID + "_tableHead").scrollLeft($("." + TableID + "_tableData").scrollLeft());

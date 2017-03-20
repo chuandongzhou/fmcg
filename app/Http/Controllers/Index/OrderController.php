@@ -156,9 +156,9 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //买家名称
         $userShopName = array_get($data, 'user_shop_name');
         //支付方式
@@ -178,8 +178,6 @@ class OrderController extends Controller
                 'orderGoods.goods'
             ])
             ->get();
-
-        //dd($this->_orderGoodsStatistics($orders));
 
         $orderStatistics = $this->_groupOrderByTypeForStatistics($orders);
 
@@ -564,7 +562,7 @@ class OrderController extends Controller
             ])
             ->get();
 
-        //dd($this->_orderGoodsStatistics($orders));
+
 
         $orderStatistics = $this->_groupOrderByTypeForStatistics($orders, false);
 
@@ -751,7 +749,6 @@ class OrderController extends Controller
     {
 
         extract($this->_groupOrderByType($orders));
-
         return [
             'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
             'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
@@ -849,7 +846,6 @@ class OrderController extends Controller
         $shopNameType = $isSeller ? 'user_shop_name' : 'shop_name';
 
         $shopNames = $orders->pluck($shopNameType)->toBase()->unique();
-
         $nameStatistics = [];
         foreach ($shopNames as $shopName) {
             $nameStatistics[$shopName] = $this->_orderStatisticsByShopName($orders, $shopName, $shopNameType);
@@ -871,8 +867,8 @@ class OrderController extends Controller
             return $order->{$shopNameType} == $shopName;
         });
 
-        $firstOrder = $orders->first();
 
+        $firstOrder = $orders->first();
         if (empty($firstOrder)) {
             return [];
         }
@@ -893,6 +889,7 @@ class OrderController extends Controller
             'ownOrderCount' => $ownOrders->count(),
             'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
         ];
+
         if ($isSeller) {
             $shopDetails['user_salesman'] = $firstOrder->user_salesman;
         }

@@ -3677,6 +3677,7 @@ table {
       tr{
         td{
           background-color:$gray-plain;
+          white-space:nowrap;
         }
       }
     }
@@ -3696,6 +3697,7 @@ table {
         min-width:125px;
         padding:8px!important;
         border:1px solid #ddd;
+        white-space:nowrap;
       }
     }
   }
