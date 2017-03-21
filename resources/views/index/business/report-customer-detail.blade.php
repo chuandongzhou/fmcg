@@ -17,7 +17,6 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <td>订货单ID</td>
                             <td>拜访时间</td>
                             <td>提交地址</td>
                             <td>订货金额</td>
@@ -28,7 +27,6 @@
                         <tbody>
                         @foreach($visitLists as $visit)
                             <tr>
-                                <td>{{$visit['id']}}</td>
                                 <td>{{ $visit['time'] }}</td>
                                 <td>{{ $visit['commitAddress'] }}</td>
                                 <td>{{ $visit['orderAmount'] }}</td>
@@ -83,7 +81,6 @@
                     <table class="table table-bordered table-displays">
                         <thead>
                         <tr>
-                            <td>订货单ID</td>
                             <td>拜访时间</td>
                             <td>月份</td>
                             <td>名称</td>
@@ -93,7 +90,6 @@
                         <tbody>
                         @foreach($displays as $item)
                             <tr>
-                                <td>{{$item['id']}}</td>
                                 <td>{{ $item['time'] }}</td>
                                 <td>{{ $item['month'] }}</td>
                                 <td>{{ $item['name'] }}</td>

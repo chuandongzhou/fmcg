@@ -218,7 +218,6 @@ class ReportController extends Controller
 
         foreach ($displays as $display) {
             $data[] = [
-                'id'=>$display->salesman_visit_order_id,
                 'time' => $display->created_at,
                 'month' => $display->month,
                 'name' => $display->mortgage_goods_name,
@@ -321,7 +320,7 @@ class ReportController extends Controller
             foreach ($orderGoods as $item) {
                 $pieces = $item->pieces;
                 $data['pieces'][$pieces] ['amount'] = isset($data['pieces'][$pieces]['amount']) ? bcadd($data['pieces'][$pieces]['amount'],
-                    $item->total_price) : $item->amount;
+                    $item->amount) : $item->amount;
                 $data['pieces'][$pieces] ['num'] = isset($data['pieces'][$pieces]['num']) ? bcadd($data['pieces'][$pieces]['num'],
                     $item->num) : $item->num;
             }
@@ -361,7 +360,6 @@ class ReportController extends Controller
             })->first();
 
             $visitLists[] = [
-                'id'=>$visitOrder?$visitOrder->id:0,
                 'time' => $visit->created_at,
                 'commitAddress' => $visit->address,
                 'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
