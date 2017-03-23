@@ -561,8 +561,10 @@ var statisticsFunc = function () {
     })();
 
     $(function () {
-        FixTable("MyTable1", 1, 1050, 300);
-        FixTable("MyTable2", 1, 1050, 300);
+        var tableWidth = $(".table-scroll").parents("div").width();
+        FixTable("MyTable1", 1, tableWidth, 300);
+        FixTable("MyTable2", 1, tableWidth, 300);
+        FixTable("MyTable3", 1, tableWidth, 300);
     })
 }
 

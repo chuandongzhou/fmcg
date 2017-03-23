@@ -109,8 +109,8 @@
                                     <span class="title">订单列表</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->is('order/statistics') ? 'active' : '' }}">
-                                <a href="{{ url('order/statistics') }}" class="nav-link ">
+                            <li class="nav-item  {{ request()->is('order/statistics-of-buy') ? 'active' : '' }}">
+                                <a href="{{ url('order/statistics-of-buy') }}" class="nav-link ">
                                     <span class="title">订单统计</span>
                                 </a>
                             </li>

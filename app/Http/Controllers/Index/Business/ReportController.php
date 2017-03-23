@@ -77,7 +77,6 @@ class ReportController extends Controller
             'start_date' => $startDate,
             'end_date' => $dateEnd
         ])->with('order.orderGoods.goods')->get();
-
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -91,12 +90,12 @@ class ReportController extends Controller
      */
     public function customerDetail(Request $request, $salesmanId)
     {
+
         $shop = auth()->user()->shop;
         $salesman = $shop->salesmen()->find($salesmanId);
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
         }
-
         $carbon = new Carbon();
         $data = $request->all();
 
@@ -105,6 +104,7 @@ class ReportController extends Controller
         if (!$customerId) {
             return $this->error('客户不存在');
         }
+
         //开始时间
         $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
@@ -121,9 +121,15 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
+        $exportParam = [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'salesmanId' => $salesman->id,
+            'salesmanName' => $salesman->name,
+            'customer_id' => $customerId
+        ];
 
-
-        return view('index.business.report-customer-detail', $this->_getDetailData($visits));
+        return view('index.business.report-customer-detail', $this->_getDetailData($visits, $exportParam));
     }
 
     /**
@@ -180,7 +186,7 @@ class ReportController extends Controller
      * @param \Illuminate\Database\Eloquent\Collection $visits
      * @return array
      */
-    private function _getDetailData(Collection $visits)
+    private function _getDetailData(Collection $visits, $exportParam)
     {
         //详情拜访列表
         $visitLists = $this->_getVisitListForDetail($visits);
@@ -192,7 +198,9 @@ class ReportController extends Controller
 
         $displays = $this->_getDisplay($visits);
 
-        return compact('visitLists', 'salesGoods', 'displays');
+        $exportParam = $exportParam;
+
+        return compact('visitLists', 'salesGoods', 'displays', 'exportParam');
     }
 
     /**
@@ -204,7 +212,6 @@ class ReportController extends Controller
     private function _getDisplay(Collection $visits)
     {
         $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
-
         $displays = SalesmanCustomerDisplayList::whereIn('salesman_visit_order_id', $orderIds)->get();
 
         $data = [];
@@ -217,7 +224,6 @@ class ReportController extends Controller
                 'used' => $display->used
             ];
         }
-
         return $data;
 
     }
@@ -314,7 +320,7 @@ class ReportController extends Controller
             foreach ($orderGoods as $item) {
                 $pieces = $item->pieces;
                 $data['pieces'][$pieces] ['amount'] = isset($data['pieces'][$pieces]['amount']) ? bcadd($data['pieces'][$pieces]['amount'],
-                    $item->total_price) : $item->amount;
+                    $item->amount) : $item->amount;
                 $data['pieces'][$pieces] ['num'] = isset($data['pieces'][$pieces]['num']) ? bcadd($data['pieces'][$pieces]['num'],
                     $item->num) : $item->num;
             }
@@ -352,12 +358,13 @@ class ReportController extends Controller
             $returnOrder = $orders->filter(function ($order) use ($orderTypes) {
                 return $order->type == $orderTypes['return_order'];
             })->first();
+
             $visitLists[] = [
                 'time' => $visit->created_at,
                 'commitAddress' => $visit->address,
                 'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
                 'returnAmount' => $returnOrder ? $returnOrder->amount : 0,
-                'hasDisplay' => $visitOrder && $visitOrder->displayFee ? '有' : '无'
+                'hasDisplay' => ($visitOrder && count($visitOrder->displayList)!=0) ? '有' : '无'
             ];
         }
 
@@ -491,7 +498,6 @@ class ReportController extends Controller
                     '退货总单数',
                     '退货金额',
                 ];
-
                 $sheet->rows([$titles, $visitStatistics]);
 
                 //单元格居中
@@ -534,7 +540,6 @@ class ReportController extends Controller
                     '退货总金额'
                 ];
 
-
                 foreach ($visitList as $key => $item) {
                     array_forget($visitList[$key], [
                         'business_address_lng',
@@ -546,7 +551,6 @@ class ReportController extends Controller
                         'visitTime'
                     ]);
                 }
-
                 $data = array_merge([$titles], $visitList);
 
                 $sheet->rows($data);
@@ -585,7 +589,7 @@ class ReportController extends Controller
                 $data = [$titles];
 
 
-                foreach($ownOrders as $ownOrder) {
+                foreach ($ownOrders as $ownOrder) {
                     $data[] = [
                         $ownOrder->salesman_customer_id,
                         $ownOrder->customer_name,
@@ -607,6 +611,207 @@ class ReportController extends Controller
             });
         })->export('xls');
 
+    }
+
+    /**客户详情导出**/
+    public function exportCustomerDetail(Request $request, $salesmanId)
+    {
+        $shop = auth()->user()->shop;
+        $salesman = $shop->salesmen()->find($salesmanId);
+        if (is_null($salesman)) {
+            return $this->error('业务员不存在');
+        }
+        $carbon = new Carbon();
+        $data = $request->all();
+
+        //客户id
+        $customerId = array_get($data, 'customer_id');
+        if (!$customerId) {
+            return $this->error('客户不存在');
+        }
+        $customer = $shop->salesmenCustomer()->find($customerId);
+        if (is_null($customer)) {
+            return $this->error('客户不存在');
+        }
+        //开始时间
+        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
+
+        $dateEnd = (new Carbon($endDate))->endOfDay();
+
+        $visits = SalesmanVisit::ofTime($startDate, $dateEnd)->where([
+            'salesman_id' => $salesmanId,
+            'salesman_customer_id' => $customerId
+        ])->with([
+            'orders.orderGoods.goods',
+            'orders.displayList.mortgageGoods',
+            'goodsRecord.goods',
+            'salesmanCustomer.shippingAddress'
+        ])->get();
+
+        //详情拜访列表
+        $visitLists = $this->_getVisitListForDetail($visits);
+
+        //销售统计
+        $salesGoods = $this->_getSalesGoods($visits);
+
+        //陈列费
+        $displays = $this->_getDisplay($visits);
+        $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods,$displays) {
+            $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 10,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 15
+                ));
+
+                //标题
+                $titles = [
+                    '拜访时间',
+                    '提交地址',
+                    '订货金额',
+                    '退货金额',
+                    '陈列费'
+                ];
+
+
+                $data = array_merge([$titles], $visitLists);
+
+                $sheet->rows($data);
+
+                //单元格居中
+                $sheet->cells('A1:E1', function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('销售总计', function (LaravelExcelWorksheet $sheet) use ($salesGoods) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 10,
+                    'B' => 20,
+                    'C' => 10,
+                    'D' => 15,
+                    'E' => 40,
+                    'F' => 20,
+                    'G' => 20,
+                    'H' => 20,
+                    'I' => 20,
+                    'J' => 20,
+                ));
+
+                //标题
+                $titles = [
+                    '商品ID',
+                    '商品名称',
+                    '库存',
+                    '生产日期',
+                    '退货数量',
+                    '退货金额',
+                    '订货总数量',
+                    '订货总金额',
+                    '平均单价',
+                    '订货数量'
+                ];
+                //合并
+                $mergeArray = [];
+                $goods = [];
+                //dd($salesGoods);
+                foreach ($salesGoods as $item) {
+                    $start = count($goods)+2;
+                    $count = 0;
+                    $mergeArray[$start] = [$start, $start+count($item['pieces'])-1];
+                    foreach ($item['pieces'] as $piece=> $value) {
+                        $perice=($value['num'] ?number_format(bcdiv($value['amount'], $value['num'], 2), 2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece);
+                        if ($count == 0){
+                            $goods[] = [
+                                $item['id'],
+                                $item['name'],
+                                $item['stock'],
+                                $item['productionDate'],
+                                $item['returnCount'],
+                                $item['returnAmount'],
+                                $item['count'],
+                                $item['amount'],
+                                $perice,
+                                $value['num']
+                            ];
+                        } else {
+                            $goods[] = [
+                                '',
+                                '',
+                                '',
+                                '',
+                                '',
+                                '',
+                                '',
+                                '',
+                                $perice,
+                                $value['num']
+                            ];
+                        }
+                        $count++;
+                    }
+                }
+                $data = array_merge([$titles], $goods);
+                $sheet->rows($data);
+                $sheet->setMergeColumn(array(
+                    'columns' => array('A','B','C','D','E','F','G','H'),
+                    'rows' => $mergeArray
+                ));
+                //单元格居中
+                $sheet->cells('A1:J' . count($data), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('陈列费', function (LaravelExcelWorksheet $sheet) use ($displays) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 10,
+                    'B' => 20,
+                    'C' => 20,
+                    'D' => 10
+                ));
+
+                //标题
+                $titles = [
+                    '拜访时间',
+                    '月份',
+                    '名称',
+                    '数量/金额'
+                ];
+                $data = array_merge([$titles],$displays);
+
+                $sheet->rows($data);
+
+                //单元格居中
+                $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+        })->export('xls');
     }
 
     /**
@@ -667,4 +872,6 @@ class ReportController extends Controller
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
     }
+
+
 }

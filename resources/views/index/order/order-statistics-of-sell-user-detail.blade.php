@@ -78,8 +78,8 @@
                     <table class="MyTable2 table-scroll ">
                         <thead>
                         <tr>
-                            <td class="first-td text-right">订单号</td>
-                            <td class="2-1">订单类型</td>
+                            <td >订单号</td>
+                            <td >订单类型</td>
                             <td>订单金额</td>
                             <td>订单状态</td>
                             <td>支付方式</td>

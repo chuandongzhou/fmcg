@@ -9,6 +9,9 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
+
+                <a href="{{ url("business/report/{$exportParam['salesmanId']}/customer-detail/export?start_date={$exportParam['startDate']}&end_date={$exportParam['endDate']}&salesmanName={$exportParam['salesmanName']}&customer_id={$exportParam['customer_id']}")}}"
+                   class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">拜访记录</p>
                     <table class="table table-bordered">
@@ -54,31 +57,23 @@
                         <tbody>
                         @foreach($salesGoods as $item)
                             @foreach($item['pieces'] as $piece=> $value)
+                                @if($piece ==array_keys($item['pieces'])[0])
                                 <tr>
-                                    @if($value == head($item['pieces']))
-                                        <td rowspan="{{ $rowspan = count($item['pieces']) }}">{{ $item['id'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['name'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['stock'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['productionDate'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['returnCount'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['returnAmount'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['count'] }}</td>
-                                        <td rowspan="{{ $rowspan }}">{{ $item['amount'] }}</td>
-                                    @endif
+                                    <td rowspan="{{ $rowspan=count($item['pieces'])}}">{{ $item['id'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['name'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['stock'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['productionDate'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['returnCount'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['returnAmount'] }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $item['count'] }}</td>
+                                    <td rowspan="{{ $rowspan  }}">{{ $item['amount'] }}</td>
+                                @endif
                                     <td>{{ ( $value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2), 2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece) }}</td>
                                     <td>{{ $value['num'] }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="10" class="text-center">
-                            <div class="text-right">
-                                <ul class="goods-pagination pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="col-sm-12  tables">
@@ -102,14 +97,6 @@
                             </tr>
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <td colspan="4" class="text-center">
-                            <div class="text-right">
-                                <ul class="displays-pagination pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -118,11 +105,4 @@
     </body>
 @stop
 
-
-@section('js')
-    <script type="text/javascript">
-        tablePage($('.table-displays'), $('.displays-pagination'));
-        tablePage($('.table-goods-statistics'), $('.goods-pagination'));
-    </script>
-@stop
 

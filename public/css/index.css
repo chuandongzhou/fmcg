@@ -4200,6 +4200,10 @@ table .product-panel .promotions {
   margin-bottom: 20px;
 }
 
+.tableLayout .table-scroll tr td:first-of-type {
+  width: 125px !important;
+}
+
 .tableLayout thead tr td,
 .tableLayout thead tr th,
 .tableLayout thead .table-list-row .shopping-table-list table tr td,
@@ -4232,6 +4236,7 @@ table .product-panel .promotions {
 
 .tableLayout .tableColumn table tr td {
   background-color: #f2f2f2;
+  white-space: nowrap;
 }
 
 .tableLayout table thead td {
@@ -4247,6 +4252,7 @@ table .product-panel .promotions {
   min-width: 125px;
   padding: 8px !important;
   border: 1px solid #ddd;
+  white-space: nowrap;
 }
 
 /*======================================order-report end======================================*/

@@ -3640,6 +3640,13 @@ table {
 }
 .tableLayout{
     margin-bottom:20px;
+  .table-scroll{
+    tr{
+      td:first-of-type{
+        width:125px!important;
+      }
+    }
+  }
   thead{
     tr{
       td,th{
@@ -3670,6 +3677,7 @@ table {
       tr{
         td{
           background-color:$gray-plain;
+          white-space:nowrap;
         }
       }
     }
@@ -3689,6 +3697,7 @@ table {
         min-width:125px;
         padding:8px!important;
         border:1px solid #ddd;
+        white-space:nowrap;
       }
     }
   }
