@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Like extends Model
 {
-    protected $table = 'like';
+    protected $table = 'like_goods';
     public $timestamps = false;
     protected $fillable = [
         'user_id',
@@ -39,5 +39,10 @@ class Like extends Model
     public function likeable()
     {
         return $this->morphTo();
+    }
+
+    static public function getGoodsLikeAmountById($goods_id)
+    {
+       return self::where(['goods_id' => $goods_id]) -> count();
     }
 }

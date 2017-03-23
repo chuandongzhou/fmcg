@@ -74,7 +74,7 @@ class UserBankController extends Controller
     {
         
         //dd($this->user->userBanks());
-        $requestData = $request->all();
+        $requestData = $request->except('_method');
         if($request->get('is_default',0) == 1){
             $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
         }else{
@@ -82,8 +82,8 @@ class UserBankController extends Controller
                 $requestData['is_default'] = 1;
             }
         }
-        if ($this->user->userBanks()->create($requestData)->exists) {
-            return $this->success('添加账号成功');
+        if ($userBank = $this->user->userBanks()->create($requestData)) {
+            return $this->success(['bank_id' => $userBank->id]);
         }
 
         return $this->success('添加账号时出现问题');

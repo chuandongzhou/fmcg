@@ -28,9 +28,13 @@ class MyGoodsController extends Controller
         $shop = auth()->user()->shop;
 
         $result = GoodsService::getShopGoods($shop, $data);
-
+        $goods = $result['goods']->orderBy('id', 'DESC')->paginate()->toArray();
+        foreach ($goods['data'] as $key =>$value){
+            $goods['data'][$key]['like_amount'] =  Like::getGoodsLikeAmountById($value['id']);
+        }
+        //dd($goods);
         return $this->success([
-            'goods' => $result['goods']->orderBy('id', 'DESC')->paginate()->toArray(),
+            'goods' => $goods,
             'categories' => CategoryService::formatShopGoodsCate($shop)
         ]);
     }

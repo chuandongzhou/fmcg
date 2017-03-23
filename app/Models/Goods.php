@@ -55,7 +55,7 @@ class Goods extends Model
     protected $hidden = [
         'images',
         'created_at',
-        'updated_at',
+        
     ];
     protected $dates = ['deleted_at'];
 

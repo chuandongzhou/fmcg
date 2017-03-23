@@ -333,6 +333,7 @@
     is_out               int         是否缺货（1是 , 0不是）
     image_url           string      商品图片
     categories          array       商品的分类
+    like_amount         int         商品收藏数
 
     categories 字段子集说明
 
@@ -1125,6 +1126,18 @@
 `失败返回：`
 
 
+#### 2.7.10.1 买家待发货订单列表[get] (unsent)
+`请求参数：`
+
+	page                int         分页
+
+`成功返回：`
+
+	返回信息同上
+
+`失败返回：`
+
+
 #### 2.7.11 卖家待收款订单列表[get] (pending-collection)(仅针对货到付款订单)
 `请求参数：`
 
@@ -1333,6 +1346,35 @@
 `失败返回：`
 
 
+#### 2.7.24 卖家订单状态统计[待确认,待发货,待付款,待收款][get] (order-count-sell)
+`请求参数：`
+
+`成功返回：`
+
+    waitReceive                     int                     待付款
+
+    waitSend                        int                     待发货
+  
+    refund                          int                     待收款
+
+    waitConfirm                     int                     待确认
+
+`失败返回：`
+
+#### 2.7.24.1 买家订单状态统计[未确认,未发货,未付款,待收货][get] (order-count-buy)
+`请求参数：`
+
+`成功返回：`
+
+    waitReceive                     int                     未付款
+
+    waitSend                        int                     未发货
+
+    refund                          int                     待收货
+   
+    waitConfirm                     int                     未确认
+
+`失败返回：`
 
 
 ### 2.8 收藏 like
@@ -1759,6 +1801,7 @@
 	card_address		string			开户行所在地
 	
 `成功返回:`
+        bank_id        int      新增成功自增id
 
 `失败返回:`
 

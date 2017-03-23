@@ -132,9 +132,59 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->paginate();
-
+        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->nonSend()->paginate();
+        //dd($orders);
         return $this->success($this->_hiddenOrdersAttr($orders, false));
+    }
+
+    /**
+     * 获取待发货订单列表--买家操作
+     *
+     * @return mix
+     */
+    public function getUnsent()
+    {
+        $orders = Order::ofBuy(auth()->id())->useful()->with('user.shop','shop.user', 'goods', 'coupon')->nonSend()->paginate();
+       // dd($orders);
+        return $this->success($this->_hiddenOrdersAttr($orders, false));
+    }
+
+    /**
+     * 获取订单统计--买家操作
+     *
+     * @return mix
+     */
+    public function getOrderCountBuy()
+    {
+        $status = cons('order.status');
+        $payStatus = cons('order.pay_status');
+        $payType = cons('pay_type');
+        $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ' and status < ' . $status['finished'] . ' and ((status > ' . $status['non_send'] . '  and pay_type =' . $payType['cod'] . ') or (status >= ' . $status['non_send'] . '  and pay_type =' . $payType['online'] . ')),true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<'.$payStatus['refund'].')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if(status=' . $status['send'] . ',true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->ofBuy(auth()->id())->nonCancel()->first();
+        return [
+            'waitReceive' => $countData->waitReceive,
+            'waitSend' => $countData->waitSend,
+            'refund' => $countData->refund,
+            'waitConfirm' => $countData->waitConfirm,
+        ];
+    }
+
+    /**
+     * 获取订单统计--卖家操作
+     *
+     * @return mix
+     */
+    public function getOrderCountSell()
+    {
+        $status = cons('order.status');
+        $payStatus = cons('order.pay_status');
+        $payType = cons('pay_type');
+        $countData =  Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ',true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<'.$payStatus['payment_success'].')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if((pay_type=' . $payType['cod'] . ' and status=' . $status['send'] . ') or (pay_type=' . $payType['pick_up'] . ' and status=' . $status['non_send'] . '),true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->OfSell(auth()->id())->useful()->first();
+        return [
+            'waitReceive' => $countData->waitReceive,
+            'waitSend' => $countData->waitSend,
+            'refund' => $countData->refund,
+            'waitConfirm' => $countData->waitConfirm,
+        ];
     }
 
     /**
