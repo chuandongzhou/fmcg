@@ -150,7 +150,7 @@ return [
         'spreading_code' => '推广码',
         'license' => '营业执照',
         'license_num' => '营业执照编号',
-        'business_license' => '经营许可证',
+        'business_license' => '食品流通许可证',
         'agency_contract' => '代理合同',
         'old_password' => '原密码',
         'min_money' => '最低配送额',

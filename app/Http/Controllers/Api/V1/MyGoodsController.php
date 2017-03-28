@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
 use App\Models\Goods;
+use App\Models\Like;
 use App\Models\Shop;
 use App\Http\Requests;
 use App\Models\Images;
@@ -26,7 +27,6 @@ class MyGoodsController extends Controller
     {
         $data = $request->all();
         $shop = auth()->user()->shop;
-
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->orderBy('id', 'DESC')->paginate()->toArray();
         foreach ($goods['data'] as $key =>$value){

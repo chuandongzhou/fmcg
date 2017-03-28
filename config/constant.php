@@ -423,7 +423,7 @@ return [
     //后台配置
     'admin' => [
         'super_admin_name' => 'admin',
-        'phone' => '18780521651',
+        'phone' => '18780521651',  //管理员手机
         'notification' => [
             'role-create' => 1,
             'admin-create' => 2,
