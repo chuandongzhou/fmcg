@@ -76,7 +76,7 @@ class ReportController extends Controller
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
             'end_date' => $dateEnd
-        ])->with('order.orderGoods.goods')->get();
+        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -121,15 +121,9 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
-        $exportParam = [
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'salesmanId' => $salesman->id,
-            'salesmanName' => $salesman->name,
-            'customer_id' => $customerId
-        ];
 
-        return view('index.business.report-customer-detail', $this->_getDetailData($visits, $exportParam));
+
+        return view('index.business.report-customer-detail', array_merge(compact('salesmanId','customerId', 'startDate', 'endDate'),$this->_getDetailData($visits)));
     }
 
     /**
@@ -155,8 +149,10 @@ class ReportController extends Controller
 
         //自主订货单
         $ownOrders = $orders->filter(function ($order) use ($orderTypes) {
+
             return $order->type == $orderTypes['order'] && $order->salesman_visit_id == 0;
         });
+
 
         $customerIds = $visits->pluck('salesman_customer_id')->toBase()->unique();
 
@@ -167,7 +163,7 @@ class ReportController extends Controller
             'visitOrderCount' => $visitOrders->count(),
             'visitOrderAmount' => $visitOrders->sum('amount'),
             'ownOrderCount' => $ownOrders->count(),
-            'ownOrderAmount' => $ownOrders->sum('amount'),
+            'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
             'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
             'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'))
         ];
@@ -186,7 +182,7 @@ class ReportController extends Controller
      * @param \Illuminate\Database\Eloquent\Collection $visits
      * @return array
      */
-    private function _getDetailData(Collection $visits, $exportParam)
+    private function _getDetailData(Collection $visits)
     {
         //详情拜访列表
         $visitLists = $this->_getVisitListForDetail($visits);
@@ -198,9 +194,7 @@ class ReportController extends Controller
 
         $displays = $this->_getDisplay($visits);
 
-        $exportParam = $exportParam;
-
-        return compact('visitLists', 'salesGoods', 'displays', 'exportParam');
+        return compact('visitLists', 'salesGoods', 'displays');
     }
 
     /**
@@ -221,7 +215,7 @@ class ReportController extends Controller
                 'time' => $display->created_at,
                 'month' => $display->month,
                 'name' => $display->mortgage_goods_name,
-                'used' => $display->used
+                'used' => $display->mortgage_goods_id ? (int)$display->used . cons()->valueLang('goods.pieces', $display->mortgage_goods_pieces) : $display->used,
             ];
         }
         return $data;
@@ -364,7 +358,7 @@ class ReportController extends Controller
                 'commitAddress' => $visit->address,
                 'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
                 'returnAmount' => $returnOrder ? $returnOrder->amount : 0,
-                'hasDisplay' => ($visitOrder && count($visitOrder->displayList)!=0) ? '有' : '无'
+                'hasDisplay' => ($visitOrder && count($visitOrder->displayList) != 0) ? '有' : '无'
             ];
         }
 
@@ -461,7 +455,7 @@ class ReportController extends Controller
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
             'end_date' => $dateEnd
-        ])->with('order.orderGoods.goods')->get();
+        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
 
         extract($this->_getVisitData($visits, $visitOrders));
 
@@ -580,7 +574,7 @@ class ReportController extends Controller
                 $titles = [
                     '客户编号',
                     '客户名称',
-                    '下单时间',
+                    '同步时间',
                     '订单ID',
                     '订单状态',
                     '订单金额',
@@ -613,7 +607,13 @@ class ReportController extends Controller
 
     }
 
-    /**客户详情导出**/
+    /**
+     * 客户详情导出
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $salesmanId
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function exportCustomerDetail(Request $request, $salesmanId)
     {
         $shop = auth()->user()->shop;
@@ -659,7 +659,7 @@ class ReportController extends Controller
         //陈列费
         $displays = $this->_getDisplay($visits);
         $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';
-        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods,$displays) {
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods, $displays) {
             $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
 
                 // Set auto size for sheet
@@ -732,12 +732,13 @@ class ReportController extends Controller
                 $goods = [];
                 //dd($salesGoods);
                 foreach ($salesGoods as $item) {
-                    $start = count($goods)+2;
+                    $start = count($goods) + 2;
                     $count = 0;
-                    $mergeArray[$start] = [$start, $start+count($item['pieces'])-1];
-                    foreach ($item['pieces'] as $piece=> $value) {
-                        $perice=($value['num'] ?number_format(bcdiv($value['amount'], $value['num'], 2), 2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece);
-                        if ($count == 0){
+                    $mergeArray[$start] = [$start, $start + count($item['pieces']) - 1];
+                    foreach ($item['pieces'] as $piece => $value) {
+                        $perice = ($value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2),
+                                2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece);
+                        if ($count == 0) {
                             $goods[] = [
                                 $item['id'],
                                 $item['name'],
@@ -770,7 +771,7 @@ class ReportController extends Controller
                 $data = array_merge([$titles], $goods);
                 $sheet->rows($data);
                 $sheet->setMergeColumn(array(
-                    'columns' => array('A','B','C','D','E','F','G','H'),
+                    'columns' => array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'),
                     'rows' => $mergeArray
                 ));
                 //单元格居中
@@ -800,7 +801,7 @@ class ReportController extends Controller
                     '名称',
                     '数量/金额'
                 ];
-                $data = array_merge([$titles],$displays);
+                $data = array_merge([$titles], $displays);
 
                 $sheet->rows($data);
 

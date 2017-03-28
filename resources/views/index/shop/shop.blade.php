@@ -8,7 +8,7 @@
     @include('index.shop-search')
     <div class="container wholesalers-index index contents">
         <div class="row">
-            <div class="col-sm-12 ">
+            <div class="col-sm-12  padding-clear">
                 <div class="tab-title clearfix">
                     <p class="sequence">
                         @foreach(cons('sort.goods') as $key=>$sortName)

@@ -9,6 +9,7 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
+                <a href="{{ url('order/statistics-of-buy-user-detail-export') . '?' . request()->getQueryString() }}" class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">订单总计</p>
                     <table class="MyTable1 table-scroll">
@@ -103,7 +104,7 @@
                             <td>总进货量</td>
                             <td>总金额</td>
                             <td>平均单价</td>
-                            <td>出货数量</td>
+                            <td>进货数量</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -122,12 +123,12 @@
                         @endforeach
                         </tbody>
                         <tfoot>
-                        <td colspan="5" class="text-center">
-                            <div class="text-right">
-                                <ul class="pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
+                        {{--<td colspan="5" class="text-center">--}}
+                            {{--<div class="text-right">--}}
+                                {{--<ul class="pagination management-pagination">--}}
+                                {{--</ul>--}}
+                            {{--</div>--}}
+                        {{--</td>--}}
                         </tfoot>
                     </table>
                 </div>
@@ -148,12 +149,12 @@
                 jQuery.browser.msie = true;
                 jQuery.browser.version = RegExp.$1;
             }
-            var table_width = $(".table-scroll").parents("div").width();
-            FixTable("MyTable1", 1, 1050, 200);
-            FixTable("MyTable2", 1, 1050, 200);
-            FixTable("MyTable3", 1, 1050, 200);
+            var tableWidth = $(".table-scroll").parents("div").width();
+            FixTable("MyTable1", 1, tableWidth, 200);
+            FixTable("MyTable2", 1, tableWidth, 200);
+            FixTable("MyTable3", 1, tableWidth, 200);
         })();
-        tablePage($('.table-goods-statistics'), $('.pagination'));
+        //tablePage($('.table-goods-statistics'), $('.pagination'));
     </script>
 @stop
 

@@ -85,7 +85,7 @@ class BusinessService extends BaseService
             });
 
             $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
-            $salesman->orderFormSumAmount = $orderForms->sum('amount');
+            $salesman->orderFormSumAmount = $orderForms->sum('after_rebates_price');
             $salesman->visitOrderFormSumAmount = $visitOrderForms->sum('amount');
             $salesman->orderFormCount = $orderForms->count();
             $salesman->visitOrderFormCount = $visitOrderForms->count();

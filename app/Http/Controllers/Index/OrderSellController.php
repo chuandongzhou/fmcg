@@ -35,10 +35,6 @@ class OrderSellController extends OrderController
 
         $search = $request->all();
         $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
-        //$search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
-        //$search['status'] = isset($search['status']) ? trim($search['status']) : '';
-        //$search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        //$search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
 
         $orders = Order::OfSell(auth()->id())->useful()->WithExistGoods([
             'user.shop',

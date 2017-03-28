@@ -197,14 +197,57 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //买家名称
         $userId = array_get($data, 'user_id');
         //支付方式
         $payType = array_get($data, 'pay_type');
 
+
+        $orders = Order::ofSell(auth()->id(), $userId)
+            ->ofBuy($userId)
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+        extract($this->_groupOrderByType($orders));
+
+        return view('index.order.order-statistics-of-sell-user-detail', [
+            'orders' => $orders,
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
+            'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
+        ]);
+
+    }
+
+    /**
+     * 卖家统计导出详情
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function getStatisticsOfSellUserDetailExport(Request $request)
+    {
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
+        //买家名称
+        $userId = array_get($data, 'user_id');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
 
         $orders = Order::ofSell(auth()->id())
             ->ofBuy($userId)
@@ -220,16 +263,17 @@ class OrderController extends Controller
                 'orderGoods.goods'
             ])
             ->get();
-
         extract($this->_groupOrderByType($orders));
-
-        return view('index.order.order-statistics-of-sell-user-detail', [
+        $result = [
             'orders' => $orders,
             'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
             'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
             'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
-        ]);
+        ];
 
+        $shopName = $orders->first()->user_shop_name;
+        $name = $startTime . '-' . $endTime . $shopName . '销售统计';
+        $this->_statisticsUserDetailExport($result, $name);
     }
 
     /**
@@ -243,9 +287,9 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //买家名称
         $userShopName = array_get($data, 'user_shop_name');
         //支付方式
@@ -268,7 +312,6 @@ class OrderController extends Controller
             ])
             ->get();
 
-        //dd($this->_orderGoodsStatistics($orders));
 
         $orderStatistics = $this->_groupOrderByTypeForStatistics($orders);
 
@@ -276,113 +319,7 @@ class OrderController extends Controller
 
         Excel::create($excelName, function (LaravelExcelWriter $excel) use ($orderStatistics) {
             $excel->sheet('订单总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
-
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
-
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 15,
-                    'B' => 10,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 15,
-                    'F' => 10,
-                    'G' => 20,
-                    'H' => 20,
-                    'I' => 20,
-                    'J' => 20,
-                    'K' => 15,
-                    'L' => 15,
-                ));
-
-                //标题
-                $titles = [
-                    '',
-                    '订单数',
-                    '总金额',
-                    '实收金额',
-                    '手续费',
-                    '未收金额',
-                    '在线支付订单数',
-                    '在线支付金额',
-                    '货到付款订单数',
-                    '货到付款金额',
-                    '自提订单数',
-                    '自提订单金额'
-                ];
-
-                //自主订单
-                $ownOrders = $orderStatistics['ownOrdersStatistics'];
-                array_unshift($ownOrders, '自主订单');
-                //业务订单
-                $businessOrders = $orderStatistics['businessOrdersStatistics'];
-                array_unshift($businessOrders, '业务订单');
-
-                $total = ['合计'];
-
-                foreach ($ownOrders as $key => $value) {
-                    if ($key) {
-                        $total[] = $value + $businessOrders[$key];
-                    }
-                }
-                $sheet->rows([$titles, array_values($ownOrders), array_values($businessOrders), $total]);
-
-                //单元格居中
-                $sheet->cells('A1:L4', function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                //打印条件
-                /*$options = $this->_spliceOptions($search);
-
-                //订单信息统计
-                $orderInfo = $this->_spliceOrderContent($stat, isset($search['show_goods_name']));
-                $orderContent = $orderInfo['orderContent'];
-                $mergeArray = $orderInfo['mergeArray'];
-
-                //商品信息统计
-                $goodsContent = $this->_spliceGoodsContent($otherStat['goods']);
-
-                //订单汇总统计
-                $orderStat = $this->_spliceOrderStat($otherStat['stat']);
-
-
-                $out = array_merge($options, $orderContent, $goodsContent, $orderStat);
-
-                $sheet->rows($out);
-
-
-                //总行数
-                $rowCount = count($out);
-
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 10,
-                    'B' => 30,
-                    'C' => 15,
-                    'D' => 15,
-                    'E' => 15,
-                    'F' => 20,
-                    'G' => 10,
-                    'H' => 15,
-                    'I' => 50,
-                    'J' => 10,
-                    'K' => 10,
-                ));
-                //单元格合并
-                $sheet->setMergeColumn(array(
-                    'columns' => array('A', 'B', 'C', 'D', 'E', 'F', 'G'),
-                    'rows' => $mergeArray
-                ));
-
-                //单元格居中
-                $sheet->cells('A1:K' . $rowCount, function ($cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                    // manipulate the range of cells
-                });*/
+                $this->_exportOrder($sheet, $orderStatistics);
             });
             $excel->sheet('客户总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
                 // 设置宽度
@@ -418,7 +355,7 @@ class OrderController extends Controller
                         $item['targetFee'],
                         $item['notPaidAmount'],
                         $item['contact'],
-                        $item['address'],
+                        $item['address']->address_name,
                         $item['user_salesman']
                     ];
                 }
@@ -448,11 +385,11 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //卖家名称
-        $shopName = array_get($data, 'hop_name');
+        $shopName = array_get($data, 'shop_name');
         //支付方式
         $payType = array_get($data, 'pay_type');
 
@@ -491,9 +428,9 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //买家名称
         $shopId = array_get($data, 'shop_id');
         //支付方式
@@ -527,6 +464,52 @@ class OrderController extends Controller
     }
 
     /**
+     * 买家统计（按卖家名）
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function getStatisticsOfBuyUserDetailExport(Request $request)
+    {
+        $carbon = new Carbon();
+        $data = $request->all();
+        //开始时间
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
+        //结束时间
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
+        //买家名称
+        $shopId = array_get($data, 'shop_id');
+        //支付方式
+        $payType = array_get($data, 'pay_type');
+
+
+        $orders = Order::ofBuy(auth()->id())
+            ->where('shop_id', $shopId)
+            ->useful()
+            ->ofPayType($payType)
+            ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
+            ->with([
+                'coupon',
+                'salesmanVisitOrder.salesmanCustomer',
+                'systemTradeInfo',
+                'shop',
+                'user.shop',
+                'orderGoods.goods'
+            ])
+            ->get();
+        extract($this->_groupOrderByType($orders));
+        $result = [
+            'orders' => $orders,
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders, false),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders, false),
+            'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
+        ];
+
+        $shopName = $orders->first()->shop_name;
+        $name = $shopName.$startTime . '至' . $endTime  . '购买统计';
+        $this->_statisticsUserDetailExport($result, $name, false);
+    }
+
+    /**
      * 买家订单统计导出
      *
      * @param \Illuminate\Http\Request $request
@@ -537,9 +520,9 @@ class OrderController extends Controller
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
-        $startTime = array_get($data, 'start_time', $carbon->copy()->startOfMonth()->toDateString());
+        $startTime = array_get($data, 'start_at', $carbon->copy()->startOfMonth()->toDateString());
         //结束时间
-        $endTime = array_get($data, 'end_time', $carbon->copy()->toDateString());
+        $endTime = array_get($data, 'end_at', $carbon->copy()->toDateString());
         //卖家名称
         $shopName = array_get($data, 'hop_name');
         //支付方式
@@ -563,68 +546,13 @@ class OrderController extends Controller
             ->get();
 
 
-
         $orderStatistics = $this->_groupOrderByTypeForStatistics($orders, false);
 
         $excelName = $startTime . '-' . $endTime . ' ' . $user->shop_name . '订单（进货）统计';
 
         Excel::create($excelName, function (LaravelExcelWriter $excel) use ($orderStatistics) {
             $excel->sheet('订单总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
-
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
-
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 15,
-                    'B' => 10,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 15,
-                    'F' => 20,
-                    'G' => 20,
-                    'H' => 20,
-                    'I' => 20,
-                    'J' => 15,
-                    'K' => 15,
-                ));
-
-                //标题
-                $titles = [
-                    '',
-                    '订单数',
-                    '总金额',
-                    '已付金额',
-                    '未付金额',
-                    '在线支付订单数',
-                    '在线支付金额',
-                    '货到付款订单数',
-                    '货到付款金额',
-                    '自提订单数',
-                    '自提订单金额'
-                ];
-
-                //自主订单
-                $ownOrders = array_except($orderStatistics['ownOrdersStatistics'], 'targetFee');
-                array_unshift($ownOrders, '自主订单');
-                //业务订单
-                $businessOrders = array_except($orderStatistics['businessOrdersStatistics'], 'targetFee');
-                array_unshift($businessOrders, '业务订单');
-
-                $total = ['合计'];
-
-                foreach ($ownOrders as $key => $value) {
-                    if ($key) {
-                        $total[] = $value + $businessOrders[$key];
-                    }
-                }
-                $sheet->rows([$titles, array_values($ownOrders), array_values($businessOrders), $total]);
-
-                //单元格居中
-                $sheet->cells('A1:K4', function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
+                $this->_exportOrder($sheet, $orderStatistics, false);
 
             });
             $excel->sheet('店铺总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
@@ -668,10 +596,152 @@ class OrderController extends Controller
                 });
             });
             $excel->sheet('商品总计', function (LaravelExcelWorksheet $sheet) use ($orderStatistics) {
-               $this->_exportGoods($sheet, $orderStatistics);
+                $this->_exportGoods($sheet, $orderStatistics);
             });
         })->export('xls');
 
+    }
+
+    /**
+     * 订单统计详情导出
+     *
+     * @param $result
+     * @param string $name
+     * @param bool $isSeller
+     */
+    private function _statisticsUserDetailExport($result, $name = '', $isSeller = true)
+    {
+        Excel::create($name, function (LaravelExcelWriter $excel) use ($result, $isSeller) {
+            $excel->sheet('订单总计', function (LaravelExcelWorksheet $sheet) use ($result, $isSeller) {
+
+                $this->_exportOrder($sheet, $result, $isSeller);
+            });
+            $orders = $result['orders'];
+            $excel->sheet('订单列表', function (LaravelExcelWorksheet $sheet) use ($orders) {
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 15,
+                    'C' => 15,
+                    'D' => 15,
+                    'E' => 15,
+                    'F' => 20
+                ));
+                $titles = [
+                    '订单号',
+                    '订单类型',
+                    '订单金额',
+                    '订单状态',
+                    '支付方式',
+                    '下单时间',
+                ];
+                $orderLists = [];
+                foreach ($orders as $order) {
+                    $orderLists[] = [
+                        $order->id,
+                        $order->type_name,
+                        $order->after_rebates_price,
+                        $order->status_name,
+                        $order->pay_type_name,
+                        $order->created_at
+                    ];
+                }
+                $sheet->rows(array_merge([$titles], $orderLists));
+                //单元格居中
+                $sheet->cells('A1:F' . (count($orderLists) + 1), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+            });
+            $excel->sheet('商品总计', function (LaravelExcelWorksheet $sheet) use ($result, $isSeller) {
+                $this->_exportGoods($sheet, $result, $isSeller);
+            });
+        })->export('xls');
+
+    }
+
+    /**
+     * 导出订单总计
+     *
+     * @param \Maatwebsite\Excel\Classes\LaravelExcelWorksheet $sheet
+     * @param $orderStatistics
+     * @param bool $isSeller
+     */
+    private function _exportOrder(LaravelExcelWorksheet $sheet, $orderStatistics, $isSeller = true)
+    {
+
+        // Set auto size for sheet
+        $sheet->setAutoSize(true);
+
+        // 设置宽度
+        $sheet->setWidth(array(
+            'A' => 15,
+            'B' => 10,
+            'C' => 10,
+            'D' => 15,
+            'E' => 15,
+            'F' => 10,
+            'G' => 20,
+            'H' => 20,
+            'I' => 20,
+            'J' => 20,
+            'K' => 15,
+            'L' => 15,
+        ));
+
+        //标题
+        if ($isSeller) {
+            $titles = [
+                '',
+                '订单数',
+                '总金额',
+                '实收金额',
+                '手续费',
+                '未收金额',
+                '在线支付订单数',
+                '在线支付金额',
+                '货到付款订单数',
+                '货到付款金额',
+                '自提订单数',
+                '自提订单金额'
+            ];
+        } else {
+            $titles = [
+                '',
+                '订单数',
+                '总金额',
+                '已付金额',
+                '未付金额',
+                '在线支付订单数',
+                '在线支付金额',
+                '货到付款订单数',
+                '货到付款金额',
+                '自提订单数',
+                '自提订单金额'
+            ];
+        }
+
+        //自主订单
+        $ownOrders = $orderStatistics['ownOrdersStatistics'];
+        array_unshift($ownOrders, '自主订单');
+        //业务订单
+        $businessOrders = $orderStatistics['businessOrdersStatistics'];
+        array_unshift($businessOrders, '业务订单');
+
+        $total = ['合计'];
+
+        foreach ($ownOrders as $key => $value) {
+            if ($key) {
+                $total[] = $value + $businessOrders[$key];
+            }
+        }
+        $sheet->rows([$titles, array_values($ownOrders), array_values($businessOrders), $total]);
+
+        //单元格居中
+        $sheet->cells('A1:L4', function (CellWriter $cells) {
+            $cells->setAlignment('center');
+            $cells->setValignment('center');
+        });
     }
 
     /**
@@ -679,8 +749,10 @@ class OrderController extends Controller
      *
      * @param \Maatwebsite\Excel\Classes\LaravelExcelWorksheet $sheet
      * @param $orderStatistics
+     * @param bool $isSeller
      */
-    private function _exportGoods(LaravelExcelWorksheet $sheet, $orderStatistics){
+    private function _exportGoods(LaravelExcelWorksheet $sheet, $orderStatistics, $isSeller = true)
+    {
         // 设置宽度
         $sheet->setWidth(array(
             'A' => 60,
@@ -691,10 +763,10 @@ class OrderController extends Controller
         ));
         $titles = [
             '商品名称',
-            '总进货量',
+            $isSeller ? '总出货量' : '总进货量',
             '总金额',
             '平均单价',
-            '进货数量',
+            $isSeller ? '出货数量' : '进货数量',
         ];
         $goods = [];
         //合并
@@ -728,7 +800,7 @@ class OrderController extends Controller
         }
         $sheet->rows(array_merge([$titles], $goods));
         $sheet->setMergeColumn(array(
-            'columns' => array('A','B','C'),
+            'columns' => array('A', 'B', 'C'),
             'rows' => $mergeArray
         ));
         //单元格居中
@@ -750,8 +822,8 @@ class OrderController extends Controller
 
         extract($this->_groupOrderByType($orders));
         return [
-            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
-            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
+            'ownOrdersStatistics' => $this->_orderStatistics($ownOrders, $isSeller),
+            'businessOrdersStatistics' => $this->_orderStatistics($businessOrders, $isSeller),
             'orderStatisticsGroupName' => $this->_orderStatisticsGroupName($orders, $isSeller),
             'orderGoodsStatistics' => $this->_orderGoodsStatistics($orders)
         ];
@@ -786,9 +858,10 @@ class OrderController extends Controller
      * 订单统计
      *
      * @param $orders
+     * @param  bool $isSeller
      * @return array
      */
-    private function _orderStatistics(Collection $orders)
+    private function _orderStatistics(Collection $orders, $isSeller = true)
     {
         $orderConf = cons('order');
         $payTypes = cons('pay_type');
@@ -816,7 +889,7 @@ class OrderController extends Controller
             return $order->pay_type == $payTypes['pick_up'];
         });
 
-        return [
+        $result = [
             'count' => $orders->count(),
             'amount' => $orders->sum('after_rebates_price'),
             'actualAmount' => $paidOrders->sum('actual_amount'),
@@ -830,6 +903,8 @@ class OrderController extends Controller
             'pickUpAmount' => $pickUpOrders->sum('after_rebates_price'),
 
         ];
+
+        return $isSeller ? $result : array_except($result, 'targetFee');
 
     }
 

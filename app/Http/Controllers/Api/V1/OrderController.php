@@ -132,8 +132,8 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->nonSend()->paginate();
-        //dd($orders);
+        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon')->paginate();
+
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 

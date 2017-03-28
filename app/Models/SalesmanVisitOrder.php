@@ -181,7 +181,7 @@ class SalesmanVisitOrder extends Model
                 return $query->where('id', $customer);
             } else {
                 return $query = $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
-                    $query->where('name', 'like', '%'.$customer.'%');
+                    $query->where('name', 'like', '%' . $customer . '%');
                 });
             }
         } else {
@@ -266,7 +266,8 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/;
+        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/
+            ;
     }
 
     /**
@@ -318,5 +319,15 @@ class SalesmanVisitOrder extends Model
     public function getCustomerTypeAttribute()
     {
         return $this->salesmanCustomer ? $this->salesmanCustomer->type : 1;
+    }
+
+    /**
+     * 优惠后金额
+     *
+     * @return mixed
+     */
+    public function getAfterRebatesPriceAttribute()
+    {
+        return (!$this->salesman_visit_id) && $this->order ? $this->order->after_rebates_price : $this->amount;
     }
 }

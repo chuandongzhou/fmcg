@@ -9,6 +9,7 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
+                <a href="{{ url('order/statistics-of-sell-user-detail-export') . '?' . request()->getQueryString() }}" class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">订单总计</p>
                     <table class="MyTable1 table-scroll">
@@ -128,12 +129,12 @@
                         @endforeach
                         </tbody>
                         <tfoot>
-                        <td colspan="5" class="text-center">
-                            <div class="text-right">
-                                <ul class="pagination management-pagination">
-                                </ul>
-                            </div>
-                        </td>
+                        {{--<td colspan="5" class="text-center">--}}
+                            {{--<div class="text-right">--}}
+                                {{--<ul class="pagination management-pagination">--}}
+                                {{--</ul>--}}
+                            {{--</div>--}}
+                        {{--</td>--}}
                         </tfoot>
                     </table>
                 </div>
@@ -162,7 +163,7 @@
             FixTable("MyTable2", 1, 1050, 200);
             FixTable("MyTable3", 1, 1050, 200);
         })
-        tablePage($('.table-goods-statistics'), $('.pagination'));
+        //tablePage($('.table-goods-statistics'), $('.pagination'));
     </script>
 @stop
 

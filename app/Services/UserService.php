@@ -21,6 +21,7 @@ class UserService extends RedisService
     {
         $connectionRedis && parent::__construct();
     }
+
     /**
      * 获取用户余额
      *
@@ -32,8 +33,10 @@ class UserService extends RedisService
         $user = $user ?: (auth()->user() ?: (new User()));
 
         $balance = $user->balance;
-        $protectedBalance = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
+
+        $currentDayTrade = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
             cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
+        $protectedBalance = $currentDayTrade ?: 0;
         $availableBalance = bcsub($balance, $protectedBalance, 2);
 
         return [

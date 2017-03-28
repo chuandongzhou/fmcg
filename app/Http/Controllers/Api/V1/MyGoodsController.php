@@ -89,7 +89,7 @@ class MyGoodsController extends Controller
     }
 
     /**
-     *
+     *  获取商品详情
      *
      * @param $goods
      * @return \WeiHeng\Responses\Apiv1Response
@@ -171,8 +171,8 @@ class MyGoodsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $goods
-     * @return Response
+     * @param $goods
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function destroy($goods)
     {

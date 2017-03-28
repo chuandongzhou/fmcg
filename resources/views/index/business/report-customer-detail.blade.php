@@ -10,7 +10,7 @@
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
 
-                <a href="{{ url("business/report/{$exportParam['salesmanId']}/customer-detail/export?start_date={$exportParam['startDate']}&end_date={$exportParam['endDate']}&salesmanName={$exportParam['salesmanName']}&customer_id={$exportParam['customer_id']}")}}"
+                <a href="{{ url("business/report/{$salesmanId}/customer-detail/export?start_date={$startDate}&end_date={$endDate}&customer_id={$customerId}")}}"
                    class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">拜访记录</p>

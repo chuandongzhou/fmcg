@@ -23,7 +23,7 @@
                             <option value="{{ $type }}" {{ $type == $payType ? 'selected' : '' }}>{{ $name }}</option>
                         @endforeach
                     </select>
-                    <input type="text" class="enter" name="shop_name" placeholder="请输入卖家家名称"
+                    <input type="text" class="enter" name="shop_name" placeholder="请输入卖家名称"
                            value="{{ $shopName }}">
                     <button id="submitBtn" class="btn btn-blue-lighter search-by-get" type="submit">搜索</button>
                     <a id="export" href="{{ url('order/statistics-of-buy-export?' . http_build_query($data)) }}"
@@ -130,7 +130,7 @@
                             <td>{{ $item['contact'] }}</td>
                             <td>{{ $item['address'] }}</td>
                             <td>
-                                <a href="javascript:" onclick="window.open ('{{ url('order/statistics-of-buy-user-detail?shop_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
+                                <a href="javascript:" onclick="window.open ('{{ url('order/statistics-of-buy-user-detail?shop_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'shop_name')) }}', 'newwindow', 'height=600, width=1000')">明细</a>
                             </td>
                         </tr>
                     @endforeach

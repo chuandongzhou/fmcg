@@ -112,7 +112,7 @@ class File extends Model
      * @param string|\Symfony\Component\HttpFoundation\File\File $file
      * @param null|string $originalName
      * @param bool $saveToFileTable
-     * @return null|static
+     * @return array|null|static
      */
     public static function createWithFile($file, $originalName = null, $saveToFileTable = true)
     {

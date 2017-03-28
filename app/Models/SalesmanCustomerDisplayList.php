@@ -48,6 +48,16 @@ class SalesmanCustomerDisplayList extends Model
     }
 
     /**
+     * 抵费商品单位
+     *
+     * @return int
+     */
+    public function getMortgageGoodsPiecesAttribute()
+    {
+        return $this->mortgageGoods ? $this->mortgageGoods->pieces : 0;
+    }
+
+    /**
      * 格式化使用量
      *
      * @return int|mixed

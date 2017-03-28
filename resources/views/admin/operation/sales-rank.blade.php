@@ -63,7 +63,7 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>
-                                    <a class="commodity-name">{{ str_limit($goods[$item->goods_id]->name , 10) }}</a>
+                                    <a class="commodity-name" title="{{$goods[$item->goods_id]->name}}">{{ str_limit($goods[$item->goods_id]->name , 10) }}</a>
                                 </td>
                                 <td>{{ $goods[$item->goods_id]->category_name }}</td>
                                 <td>{{ $item->amount }}</td>

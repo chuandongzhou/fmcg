@@ -59,7 +59,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <table class="public-table MyTable1 table-scroll business-table">
+                    <table class="public-table MyTable1 table-scroll business-tables">
                         <thead>
                         <tr>
                             @if($isDay)
@@ -127,7 +127,7 @@
                         <tr>
                             <th>客户编号</th>
                             <th>客户名称</th>
-                            <th>下单时间</th>
+                            <th>同步时间</th>
                             <th>订单ID</th>
                             <th>订单状态</th>
                             <th>订单金额</th>
@@ -142,7 +142,7 @@
                                 <td>{{ $ownOrder->created_at }}</td>
                                 <td>{{ $ownOrder->order_id }}</td>
                                 <td>{{ $ownOrder->order_status_name }}</td>
-                                <td>{{ $ownOrder->amount }}</td>
+                                <td>{{ $ownOrder->after_rebates_price }}</td>
                                 <td><a href="{{ url('order-sell/detail?order_id=' . $ownOrder->order_id) }}"
                                        target="_blank">明细</a></td>
                             </tr>
@@ -173,7 +173,7 @@
         });
         var customerMapData = function () {
             var mapData = [];
-            $('.business-table  .map-data').each(function () {
+            $('.business-tables  .map-data').each(function () {
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');

@@ -106,7 +106,7 @@
                                 <div class="clearfix all-sort-panel">
                                     <div class="pull-left all-sort">
                                         @foreach($attr['child'] as $child)
-                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
+                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}" >{{ $child['name'] }}</a>
                                         @endforeach
                                     </div>
                                     <a class="more pull-right" href="#"><span>更多</span> <i
@@ -185,7 +185,7 @@
                                     <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
                                     <img class="store-img lazy" data-original="{{ $item->image_url }}">
                                     <a class="product-name ellipsis"
-                                       href="{{ url('goods/' . $item->id) }}"> {{ $item->name }}</a>
+                                       href="{{ url('goods/' . $item->id) }}" title="{{ $item->name }}"> {{ $item->name }}</a>
                                 </td>
                                 <td>
                                     <p>{{ $item->price_retailer}}元</p>

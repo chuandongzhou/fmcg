@@ -546,11 +546,13 @@ class Order extends Model
      *
      * @return string
      */
-    public function getUserSalesmanAttribute(){
+    public function getUserSalesmanAttribute()
+    {
 
-        if ($this->user_id > 0) {
+
+      /*  if ($this->user_id > 0) {
             return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
-        } elseif ($this->salesmanVisitOrder) {
+        } else*/if ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->salesman_name;
         }
         return '';
@@ -632,7 +634,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function getPayTypeNameAttribute(){
+    public function getPayTypeNameAttribute()
+    {
         return cons()->valueLang('pay_type', $this->pay_type);
     }
 
@@ -670,7 +673,7 @@ class Order extends Model
                 $query->whereHas('user.shop', function ($query) use ($shopName) {
                     $query->where('name', 'like', '%' . $shopName . '%');
                 })->orWhere(function ($query) use ($shopName) {
-                    $query->where('user_id', 0)->whereHas('salesmanVisitOrder.salesmanCustomer',
+                    $query->whereHas('salesmanVisitOrder.salesmanCustomer',
                         function ($query) use ($shopName) {
                             $query->where('name', 'like', '%' . $shopName . '%');
                         });
@@ -689,6 +692,7 @@ class Order extends Model
      */
     public function scopeOfShopName($query, $shopName)
     {
+
         if ($shopName) {
             return $query->whereHas('shop', function ($query) use ($shopName) {
 
@@ -871,7 +875,7 @@ class Order extends Model
                 if ($search['status'] == key(cons('order.pay_status'))) {
                     //查询未付款
                     $query->where([
-                        'pay_status' => cons('order.pay_status.non_payment'),
+                        'pay_status' => cons('order.pay_status.non_payment')
                     ]);
                 } elseif ($search['status'] == 'non_send') {//未发货
                     $query->where(function ($query) {

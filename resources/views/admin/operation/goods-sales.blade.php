@@ -59,7 +59,7 @@
                         <tr>
                             <td> {{ $goodsId = $item->goods_id }}</td>
                             <td>{{ $goods[$goodsId]->bar_code }}</td>
-                            <td><a class="commodity-name">{{ str_limit($goods[$goodsId]->name,20) }}</a></td>
+                            <td><a class="commodity-name" title="{{$goods[$goodsId]->name}}">{{ str_limit($goods[$goodsId]->name,20) }}</a></td>
                             <td>{{ $goods[$goodsId]->category_name }}</td>
                             <td>{{ $goods[$goodsId]->shop_name . '(' . cons()->valueLang('user.type', $goods[$goodsId]->user_type ) . ')' }}</td>
                             <td>{{ $item->count }}</td>

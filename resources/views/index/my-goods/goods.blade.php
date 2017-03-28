@@ -182,7 +182,6 @@
                 <div class="col-sm-12 text-left save">
                     <button class="btn btn-success btn-next" type="button"> 下一步</button>
                 </div>
-
             </div>
         </div>
         <div class="row goods-editor goods-editor-second hide">
@@ -528,10 +527,10 @@
             getCategory(site.api('categories'));
             //页面加载时获取所有分类
             getAllCategory(
-                    site.api('categories'),
-                    '{{ $goods->cate_level_1 }}',
-                    '{{ $goods->cate_level_2 }}',
-                    '{{ $goods->cate_level_3 }}'
+                site.api('categories'),
+                '{{ $goods->cate_level_1 }}',
+                '{{ $goods->cate_level_2 }}',
+                '{{ $goods->cate_level_3 }}'
             );
             {{--addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');--}}
             loadGoodsImages('{{ $goods->bar_code }}');
@@ -540,19 +539,25 @@
             getAttr();
             //一级单位变化时
             $('select[name="pieces_level_1"]').change(function () {
-                if ($('select[name="pieces_retailer"] .retailer_pieces_level_1').length) {
-                    $('.pieces_retailer').html() == $('select[name="pieces_retailer"] .retailer_pieces_level_1').text() && $('.pieces_retailer').html($('select[name="pieces_level_1"] option:selected').text());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_1').val($(this).val());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_1').text($('select[name="pieces_level_1"] option:selected').text());
+                var retailerPiecesLevel1 = $('select[name="pieces_retailer"] .retailer_pieces_level_1'),
+                    wholesalerPiecesLevel1 = $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1'),
+                    piecesRetailer = $('.pieces_retailer'),
+                    piecesWholesaler = $('.pieces_wholesaler'),
+                    piecesLevel1Select = $('select[name="pieces_level_1"] option:selected');
+
+                if (retailerPiecesLevel1.length) {
+                    piecesRetailer.html() == retailerPiecesLevel1.text() && piecesRetailer.html(piecesLevel1Select.text());
+                    retailerPiecesLevel1.val($(this).val());
+                    retailerPiecesLevel1.text(piecesLevel1Select.text());
                 } else {
-                    $('select[name="pieces_retailer"]').append('<option class="retailer_pieces_level_1" value="' + $(this).val() + '" >' + $('select[name="pieces_level_1"] option:selected').text() + '</option>');
+                    $('select[name="pieces_retailer"]').append('<option class="retailer_pieces_level_1" value="' + $(this).val() + '" >' + piecesLevel1Select.text() + '</option>');
                 }
-                if ($('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1').length) {
-                    $('.pieces_wholesaler').html() == $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1').text() && $('.pieces_wholesaler').html($('select[name="pieces_level_1"] option:selected').text());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1').val($(this).val());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1').text($('select[name="pieces_level_1"] option:selected').text());
+                if (wholesalerPiecesLevel1.length) {
+                    $('.pieces_wholesaler').html() == wholesalerPiecesLevel1.text() && piecesWholesaler.html(piecesLevel1Select.text());
+                    wholesalerPiecesLevel1.val($(this).val());
+                    wholesalerPiecesLevel1.text(piecesLevel1Select.text());
                 } else {
-                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_1" value="' + $(this).val() + '" >' + $('select[name="pieces_level_1"] option:selected').text() + '</option>');
+                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_1" value="' + $(this).val() + '" >' + piecesLevel1Select.text() + '</option>');
                 }
             });
 
@@ -560,8 +565,8 @@
             $('select[name="pieces_level_2"]').change(function () {
                 if ($(this).find("option:selected").val() == '') {
                     $('.system_1').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').text()==$('.pieces_retailer').html() && $('.pieces_retailer').html('');
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text()==$('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() == $('.pieces_retailer').html() && $('.pieces_retailer').html('');
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text() == $('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
                     $('select[name="pieces_retailer"] .retailer_pieces_level_2').length && $('select[name="pieces_retailer"] .retailer_pieces_level_2').remove();
                     $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').remove();
                     return false;
@@ -586,8 +591,8 @@
             $('select[name="pieces_level_3"]').change(function () {
                 if ($(this).find("option:selected").val() == '') {
                     $('.system_2').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').text()==$('.pieces_retailer').html() && $('.pieces_retailer').html('');
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text()==$('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
+                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').text() == $('.pieces_retailer').html() && $('.pieces_retailer').html('');
+                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text() == $('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
                     $('select[name="pieces_retailer"] .retailer_pieces_level_3').length && $('select[name="pieces_retailer"] .retailer_pieces_level_3').remove();
                     $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').remove();
                     return false;
@@ -629,7 +634,7 @@
             $('input[name="specification"]').change(function () {
                 $('.spec').html($(this).val());
                 var specification_retailer = $('input[name="specification_retailer"]').val(),
-                        specification_wholesaler = $('input[name="specification_wholesaler"]').val();
+                    specification_wholesaler = $('input[name="specification_wholesaler"]').val();
                 $('input[name="specification_retailer"]').val(specification_retailer.substring(0, (specification_retailer.indexOf('*')) + 1) + $(this).val());
                 $('input[name="specification_wholesaler"]').val(specification_wholesaler.substring(0, (specification_wholesaler.indexOf('*')) + 1) + $(this).val());
             });
