@@ -1,294 +1,294 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>retailerApi</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style type="text/css">
-/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
-/* Author: Nicolas Hery - http://nicolashery.com */
-/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
-/* Source: https://github.com/nicolahery/markdownpad-github */
+    <title>retailerApi</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style type="text/css">
+        /* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+        /* Author: Nicolas Hery - http://nicolashery.com */
+        /* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+        /* Source: https://github.com/nicolahery/markdownpad-github */
 
-/* RESET
-=============================================================================*/
+        /* RESET
+        =============================================================================*/
 
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
+        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
 
-/* BODY
-=============================================================================*/
+        /* BODY
+        =============================================================================*/
 
-body {
-  font-family: Helvetica, arial, freesans, clean, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #333;
-  background-color: #fff;
-  padding: 20px;
-  max-width: 960px;
-  margin: 0 auto;
-}
+        body {
+            font-family: Helvetica, arial, freesans, clean, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            padding: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
 
-body>*:first-child {
-  margin-top: 0 !important;
-}
+        body > *:first-child {
+            margin-top: 0 !important;
+        }
 
-body>*:last-child {
-  margin-bottom: 0 !important;
-}
+        body > *:last-child {
+            margin-bottom: 0 !important;
+        }
 
-/* BLOCKS
-=============================================================================*/
+        /* BLOCKS
+        =============================================================================*/
 
-p, blockquote, ul, ol, dl, table, pre {
-  margin: 15px 0;
-}
+        p, blockquote, ul, ol, dl, table, pre {
+            margin: 15px 0;
+        }
 
-/* HEADERS
-=============================================================================*/
+        /* HEADERS
+        =============================================================================*/
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 20px 0 10px;
-  padding: 0;
-  font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-}
+        h1, h2, h3, h4, h5, h6 {
+            margin: 20px 0 10px;
+            padding: 0;
+            font-weight: bold;
+            -webkit-font-smoothing: antialiased;
+        }
 
-h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
-  font-size: inherit;
-}
+        h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+            font-size: inherit;
+        }
 
-h1 {
-  font-size: 28px;
-  color: #000;
-}
+        h1 {
+            font-size: 28px;
+            color: #000;
+        }
 
-h2 {
-  font-size: 24px;
-  border-bottom: 1px solid #ccc;
-  color: #000;
-}
+        h2 {
+            font-size: 24px;
+            border-bottom: 1px solid #ccc;
+            color: #000;
+        }
 
-h3 {
-  font-size: 18px;
-}
+        h3 {
+            font-size: 18px;
+        }
 
-h4 {
-  font-size: 16px;
-}
+        h4 {
+            font-size: 16px;
+        }
 
-h5 {
-  font-size: 14px;
-}
+        h5 {
+            font-size: 14px;
+        }
 
-h6 {
-  color: #777;
-  font-size: 14px;
-}
+        h6 {
+            color: #777;
+            font-size: 14px;
+        }
 
-body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
-  margin-top: 0;
-  padding-top: 0;
-}
+        body > h2:first-child, body > h1:first-child, body > h1:first-child + h2, body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+            margin-top: 0;
+            padding-top: 0;
+        }
 
-a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
-  margin-top: 0;
-  padding-top: 0;
-}
+        a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+            margin-top: 0;
+            padding-top: 0;
+        }
 
-h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
-  margin-top: 10px;
-}
+        h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+            margin-top: 10px;
+        }
 
-/* LINKS
-=============================================================================*/
+        /* LINKS
+        =============================================================================*/
 
-a {
-  color: #4183C4;
-  text-decoration: none;
-}
+        a {
+            color: #4183C4;
+            text-decoration: none;
+        }
 
-a:hover {
-  text-decoration: underline;
-}
+        a:hover {
+            text-decoration: underline;
+        }
 
-/* LISTS
-=============================================================================*/
+        /* LISTS
+        =============================================================================*/
 
-ul, ol {
-  padding-left: 30px;
-}
+        ul, ol {
+            padding-left: 30px;
+        }
 
-ul li > :first-child, 
-ol li > :first-child, 
-ul li ul:first-of-type, 
-ol li ol:first-of-type, 
-ul li ol:first-of-type, 
-ol li ul:first-of-type {
-  margin-top: 0px;
-}
+        ul li > :first-child,
+        ol li > :first-child,
+        ul li ul:first-of-type,
+        ol li ol:first-of-type,
+        ul li ol:first-of-type,
+        ol li ul:first-of-type {
+            margin-top: 0px;
+        }
 
-ul ul, ul ol, ol ol, ol ul {
-  margin-bottom: 0;
-}
+        ul ul, ul ol, ol ol, ol ul {
+            margin-bottom: 0;
+        }
 
-dl {
-  padding: 0;
-}
+        dl {
+            padding: 0;
+        }
 
-dl dt {
-  font-size: 14px;
-  font-weight: bold;
-  font-style: italic;
-  padding: 0;
-  margin: 15px 0 5px;
-}
+        dl dt {
+            font-size: 14px;
+            font-weight: bold;
+            font-style: italic;
+            padding: 0;
+            margin: 15px 0 5px;
+        }
 
-dl dt:first-child {
-  padding: 0;
-}
+        dl dt:first-child {
+            padding: 0;
+        }
 
-dl dt>:first-child {
-  margin-top: 0px;
-}
+        dl dt > :first-child {
+            margin-top: 0px;
+        }
 
-dl dt>:last-child {
-  margin-bottom: 0px;
-}
+        dl dt > :last-child {
+            margin-bottom: 0px;
+        }
 
-dl dd {
-  margin: 0 0 15px;
-  padding: 0 15px;
-}
+        dl dd {
+            margin: 0 0 15px;
+            padding: 0 15px;
+        }
 
-dl dd>:first-child {
-  margin-top: 0px;
-}
+        dl dd > :first-child {
+            margin-top: 0px;
+        }
 
-dl dd>:last-child {
-  margin-bottom: 0px;
-}
+        dl dd > :last-child {
+            margin-bottom: 0px;
+        }
 
-/* CODE
-=============================================================================*/
+        /* CODE
+        =============================================================================*/
 
-pre, code, tt {
-  font-size: 12px;
-  font-family: Consolas, "Liberation Mono", Courier, monospace;
-}
+        pre, code, tt {
+            font-size: 12px;
+            font-family: Consolas, "Liberation Mono", Courier, monospace;
+        }
 
-code, tt {
-  margin: 0 0px;
-  padding: 0px 0px;
-  white-space: nowrap;
-  border: 1px solid #eaeaea;
-  background-color: #f8f8f8;
-  border-radius: 3px;
-}
+        code, tt {
+            margin: 0 0px;
+            padding: 0px 0px;
+            white-space: nowrap;
+            border: 1px solid #eaeaea;
+            background-color: #f8f8f8;
+            border-radius: 3px;
+        }
 
-pre>code {
-  margin: 0;
-  padding: 0;
-  white-space: pre;
-  border: none;
-  background: transparent;
-}
+        pre > code {
+            margin: 0;
+            padding: 0;
+            white-space: pre;
+            border: none;
+            background: transparent;
+        }
 
-pre {
-  background-color: #f8f8f8;
-  border: 1px solid #ccc;
-  font-size: 13px;
-  line-height: 19px;
-  overflow: auto;
-  padding: 6px 10px;
-  border-radius: 3px;
-}
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            line-height: 19px;
+            overflow: auto;
+            padding: 6px 10px;
+            border-radius: 3px;
+        }
 
-pre code, pre tt {
-  background-color: transparent;
-  border: none;
-}
+        pre code, pre tt {
+            background-color: transparent;
+            border: none;
+        }
 
-kbd {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background-color: #DDDDDD;
-    background-image: linear-gradient(#F1F1F1, #DDDDDD);
-    background-repeat: repeat-x;
-    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
-    border-image: none;
-    border-radius: 2px 2px 2px 2px;
-    border-style: solid;
-    border-width: 1px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    line-height: 10px;
-    padding: 1px 4px;
-}
+        kbd {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background-color: #DDDDDD;
+            background-image: linear-gradient(#F1F1F1, #DDDDDD);
+            background-repeat: repeat-x;
+            border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+            border-image: none;
+            border-radius: 2px 2px 2px 2px;
+            border-style: solid;
+            border-width: 1px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 10px;
+            padding: 1px 4px;
+        }
 
-/* QUOTES
-=============================================================================*/
+        /* QUOTES
+        =============================================================================*/
 
-blockquote {
-  border-left: 4px solid #DDD;
-  padding: 0 15px;
-  color: #777;
-}
+        blockquote {
+            border-left: 4px solid #DDD;
+            padding: 0 15px;
+            color: #777;
+        }
 
-blockquote>:first-child {
-  margin-top: 0px;
-}
+        blockquote > :first-child {
+            margin-top: 0px;
+        }
 
-blockquote>:last-child {
-  margin-bottom: 0px;
-}
+        blockquote > :last-child {
+            margin-bottom: 0px;
+        }
 
-/* HORIZONTAL RULES
-=============================================================================*/
+        /* HORIZONTAL RULES
+        =============================================================================*/
 
-hr {
-  clear: both;
-  margin: 15px 0;
-  height: 0px;
-  overflow: hidden;
-  border: none;
-  background: transparent;
-  border-bottom: 4px solid #ddd;
-  padding: 0;
-}
+        hr {
+            clear: both;
+            margin: 15px 0;
+            height: 0px;
+            overflow: hidden;
+            border: none;
+            background: transparent;
+            border-bottom: 4px solid #ddd;
+            padding: 0;
+        }
 
-/* TABLES
-=============================================================================*/
+        /* TABLES
+        =============================================================================*/
 
-table th {
-  font-weight: bold;
-}
+        table th {
+            font-weight: bold;
+        }
 
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 6px 13px;
-}
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 6px 13px;
+        }
 
-table tr {
-  border-top: 1px solid #ccc;
-  background-color: #fff;
-}
+        table tr {
+            border-top: 1px solid #ccc;
+            background-color: #fff;
+        }
 
-table tr:nth-child(2n) {
-  background-color: #f8f8f8;
-}
+        table tr:nth-child(2n) {
+            background-color: #f8f8f8;
+        }
 
-/* IMAGES
-=============================================================================*/
+        /* IMAGES
+        =============================================================================*/
 
-img {
-  max-width: 100%
-}
-</style>
+        img {
+            max-width: 100%
+        }
+    </style>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script>
         /* 此处为了生成文档目录方便把JS文件写这里了~ */
@@ -312,8 +312,8 @@ img {
 
             /* 创建伸缩/展开侧边目录栏 */
             var control = $('<div>'),
-                    shrink = $('<span>'),
-                    stretch = $('<span>');
+                shrink = $('<span>'),
+                stretch = $('<span>');
             control.css({
                 position: 'fixed',
                 top: -1,
@@ -354,28 +354,28 @@ img {
             });
 
             var menuList = $('body').children(':header'),
-                    menuObject = [],
-                    headerObject = {
-                        h1: 0,
-                        h2: 0,
-                        h3: 0,
-                        h4: 0,
-                        h5: 0,
-                        h6: 0
-                    },
-                    headerParentObj = {
-                        h1: null,
-                        h2: 'h1',
-                        h3: 'h2',
-                        h4: 'h3',
-                        h5: 'h4',
-                        h6: 'h5'
-                    },
-                    previousTagName;
+                menuObject = [],
+                headerObject = {
+                    h1: 0,
+                    h2: 0,
+                    h3: 0,
+                    h4: 0,
+                    h5: 0,
+                    h6: 0
+                },
+                headerParentObj = {
+                    h1: null,
+                    h2: 'h1',
+                    h3: 'h2',
+                    h4: 'h3',
+                    h5: 'h4',
+                    h6: 'h5'
+                },
+                previousTagName;
             /* 为菜单创建锚点 */
             menuList.each(function (index, element) {
                 var href = index ? $(element).html().split(' ')[0] : '0.',
-                        tagName = $(element)[0]['tagName'].toLowerCase();
+                    tagName = $(element)[0]['tagName'].toLowerCase();
                 menuObject[index] = {
                     id: href,
                     parentId: 0,
@@ -407,7 +407,7 @@ img {
                 }
                 for (var i in childList) {
                     var ul = $('<ul>'),
-                            li = $('<li>');
+                        li = $('<li>');
                     ul.css({
                         paddingLeft: 20
                     });
@@ -426,23 +426,23 @@ img {
 <h1>快销品平台零售商API</h1>
 <h2>1. API接口通信规定</h2>
 <ul>
-<li>接口采用 <strong>HTTP</strong>, <strong>POST</strong> 协议</li>
-<li>请求URL <strong>192.168.2.66/api/v1</strong></li>
-<li>
-请求返回数据格式
-所有数据返回都基于以下的 <strong>JSON</strong> 协议 
-<blockquote>
-<p>失败时返回 ：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot; ,errors: &quot;{account: [&quot;不是一个合法的账号&quot;]}&quot;}
-id:状态值
-message :返回具体内容
-error : 返回具体字段不合法</p>
-</blockquote>
-</li>
+    <li>接口采用 <strong>HTTP</strong>, <strong>POST</strong> 协议</li>
+    <li>请求URL <strong>192.168.2.66/api/v1</strong></li>
+    <li>
+        请求返回数据格式
+        所有数据返回都基于以下的 <strong>JSON</strong> 协议
+        <blockquote>
+            <p>失败时返回 ：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot; ,errors: &quot;{account: [&quot;不是一个合法的账号&quot;]}&quot;}
+                id:状态值
+                message :返回具体内容
+                error : 返回具体字段不合法</p>
+        </blockquote>
+    </li>
 </ul>
 <h2>2. 接口详细说明</h2>
 <h3>2.1 公共模块（免登录） auth</h3>
 <h4>2.1.1 登录[post] (login)</h4>
-<p><code>请求参数：</code>  
+<p><code>请求参数：</code>
 </p>
 <pre><code>account     string    账号
 password    string    密码
@@ -491,7 +491,7 @@ backup_mobile               string      密保手机
 code                        string      验证码
 </code></pre>
 
-<p><code>接口返回：</code>   
+<p><code>接口返回：</code>
 </p>
 <h4>2.1.5 注册（设置密码）[post] (set-password)</h4>
 <p><code>请求参数：</code></p>
@@ -502,7 +502,7 @@ password                    string      密码
 password_confirmation       string      确认密码
 </code></pre>
 
-<p><code>接口返回：</code> </p>
+<p><code>接口返回：</code></p>
 <h4>2.1.6 注册（填写商户信息）[post] (register)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>user_name                   string      账号
@@ -646,35 +646,37 @@ data     array    商品列表
 
 data字段子集说明
 
-id                  int         商品id
-name                string      商品名
-sales_volume        int         销售量
-price_retailer      decimal     价格（对于终端商）
-min_num_retailer    int         最低购买量 (对于终端商）
-pieces_retailer     int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
-specification_retailer  string  规格 （对于终端商）
-price_wholesaler    decimal     价格（对于批发商）
-min_num_wholesaler  int         最低购买量 (对于批发商）
-pieces_wholesaler   int         单位编号 （对于批发商）
-specification_wholesaler    string  规格 （对于批发商）
-pieces              string      单位名 （根据不同登录角色区分）
-shelf_life          string      保质期
-bar_code            string      商品条形码
-is_new              int         是否新品（1是 , 0不是）
-is_out              int         是否缺货
-is_change           int         是否可换货
-is_back             int         是否可退货
-is_expire           int         是否即期品
-is_promotion        int         是否促销产品
-promotion_info      string      促销信息
-introduce           string      商品图文详情
-shop_id             int         商品所属店铺id
-shop_name           string      商品所属店铺
-attrs               array       标签
-delivery_area       array       商品配送区域
-is_like             bool        是否已关注
-image_url           string      商品图片('第一张')
-images_url          array       商品全部图片
+id                          int         商品id
+name                        string      商品名
+sales_volume                int         销售量
+price_retailer              decimal     价格（对于终端商）
+price_retailer_pick_up      decimal     自提价格（对于终端商）
+min_num_retailer            int         最低购买量 (对于终端商）
+pieces_retailer             int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
+specification_retailer      string      规格 （对于终端商）
+price_wholesaler            decimal     价格（对于批发商）
+price_wholesaler_pick_up    decimal     自提价格（对于批发商）
+min_num_wholesaler          int         最低购买量 (对于批发商）
+pieces_wholesaler           int         单位编号 （对于批发商）
+specification_wholesaler    string      规格 （对于批发商）
+pieces                      string      单位名 （根据不同登录角色区分）
+shelf_life                  string      保质期
+bar_code                    string      商品条形码
+is_new                      int         是否新品（1是 , 0不是）
+is_out                      int         是否缺货
+is_change                   int         是否可换货
+is_back                     int         是否可退货
+is_expire                   int         是否即期品
+is_promotion                int         是否促销产品
+promotion_info              string      促销信息
+introduce                   string      商品图文详情
+shop_id                     int         商品所属店铺id
+shop_name                   string      商品所属店铺
+attrs                       array       标签
+delivery_area               array       商品配送区域
+is_like                     bool        是否已关注
+image_url                   string      商品图片('第一张')
+images_url                  array       商品全部图片
 
 attrs 子字段说明
 
@@ -813,32 +815,42 @@ path                string      路径
 <p><code>失败返回：</code></p>
 <h4>2.3.3 添加我的商品 [post] ()</h4>
 <p><code>请求参数：</code></p>
-<pre><code>name                        string      商品名
+<pre><code>cate_level_1                int         第一层分类
+cate_level_2                int         第二层分类
+cate_level_3                int         第三层分类
+bar_code                    string      商品条形码
+name                        string      商品名
+pieces_level_1              int         一级单位
+pieces_level_2              int         二级单位
+system_1                    int         一级与二级之间进制（有二级单位时必填）
+pieces_level_3              int         三级单位
+system_2                    int         二级三级之间进制（有三级单位时必填）
+specification               string      最小单位规格
+
 price_retailer              decimal     价格 （对于终端商）
 price_retailer_pick_up      decimal     自提价格（对于终端商）
 min_num_retailer            int         最低购买量 （对于终端商）
 pieces_retailer             int         单位编号 （对于终端商）
 specification_retailer      string      规格  （对于终端商）
 price_wholesaler            decimal     价格 （对于批发商  供应商时添加）
-price_wholesaler_pick_up     decimal    自提价格（对于批发商）
+price_wholesaler_pick_up     decimal    自提价格（对于批发商 供应商时添加）
 min_num_wholesaler          int         最低购买量 （对于批发商  供应商时添加）
 pieces_wholesaler           int         单位编号 （对于批发商  供应商时添加）
-specification_wholesaler    string 规格  （对于批发商 供应商时添加）
+specification_wholesaler    string      规格  （对于批发商 供应商时添加）
 shelf_life                  string      保质期
-bar_code            string      商品条形码
-is_new              int         是否新品（1是   0不是）
-is_out              int         是否缺货 （1是   0不是）
-is_change           int         是否可换货 （1是   0不是）
-is_back             int         是否可退货 （1是   0不是）
-is_expire           int         是否即将过期 （1是   0不是）
-is_promotion        int         是否促销    （1是   0不是）
-promotion_info      string      促销信息    （取当是促销时传入）
-cate_level_1        int         第一层分类
-cate_level_2        int         第二层分类
-cate_level_3        int         第三层分类
-attrs               array       标签数组 （数组下标为此标签父类id）
-area                array       商品配送区域数组
-introduce           string      商品图文介绍
+is_new                      int         是否新品（1是   0不是）
+is_out                      int         是否缺货 （1是   0不是）
+is_change                   int         是否可换货 （1是   0不是）
+is_back                     int         是否可退货 （1是   0不是）
+is_expire                   int         是否即将过期 （1是   0不是）
+is_promotion                int         是否促销    （1是   0不是）
+promotion_info              string      促销信息    （取当是促销时传入）
+cate_level_1                int         第一层分类
+cate_level_2                int         第二层分类
+cate_level_3                int         第三层分类
+attrs                       array       标签数组 （数组下标为此标签父类id）
+area                        array       商品配送区域数组
+introduce                   string      商品图文介绍
 
 area 字段子集介绍
 
@@ -854,48 +866,10 @@ address                 string          详细地址
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
 <h4>2.3.4 更新我的商品 [put] ({goods_id})</h4>
-<p><code>请求参数：</code></p>
-<pre><code>name                        string      商品名
-price_retailer              decimal     价格 （对于终端商）
-price_retailer_pick_up      decimal     自提价格（对于终端商）
-min_num_retailer            int         最低购买量 （对于终端商）
-pieces_retailer             int         单位编号 （对于终端商）
-specification_retailer      string      规格  （对于终端商）
-price_wholesaler            decimal     自提价格 （对于批发商  供应商时添加）
-price_retailer_pick_up      decimal     自提价格 （对于批发商  供应商时添加）
-min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
-pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
-specification_wholesaler    string 规格  （对于批发商 供应商时添加）
-shelf_life          string      保质期
-bar_code            string      商品条形码
-is_new              int         是否新品（1是   0不是）
-is_out              int         是否缺货 （1是   0不是）
-is_change           int         是否可换货 （1是   0不是）
-is_back             int         是否可退货 （1是   0不是）
-is_expire           int         是否即将过期 （1是   0不是）
-is_promotion        int         是否促销    （1是   0不是）
-promotion_info      string      促销信息    （取当是促销时传入）
-cate_level_1        int         第一层分类
-cate_level_2        int         第二层分类
-cate_level_3        int         第三层分类
-attrs               array       标签数组（数组下标为此标签父类id）
-area                array       商品配送区域数组
-introduce           string      商品图文介绍
-
-area 字段子集介绍
-
-id                      int             地址id
-province_id             int             省id
-city_id                 int             市id
-district_id             int             县id
-street_id               int             街道id
-area_name               string          省、市、县、街道名
-address                 string          详细地址
-</code></pre>
-
+<p><code>请求参数（同添加商品）：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.3.5  商品上下架 [put] (shelve)</h4>
+<h4>2.3.5 商品上下架 [put] (shelve)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>id                      int         商品id
 status                  int         上下架状态 {1 上架   0下架}
@@ -976,7 +950,7 @@ type                    int             店铺所属用户类型
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.4.3 店铺详情[get]   ({shop_id})</h4>
+<h4>2.4.3 店铺详情[get] ({shop_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <pre><code>id                  int         店铺id
@@ -988,7 +962,7 @@ min_money           decimal     最低配送额
 is_like             bool        是否已收藏
 </code></pre>
 
-<h4>2.4.4 店铺商品[get]   ({shop_id}/goods)</h4>
+<h4>2.4.4 店铺商品[get] ({shop_id}/goods)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>  province_id   int                 省id
   city_id       int                 市id
@@ -1016,7 +990,7 @@ is_out              int         是否缺货
 image_url           string      商品图片
 </code></pre>
 
-<h4>2.4.5 店铺扩展信息[get]   ({shop_id}/extend)</h4>
+<h4>2.4.5 店铺扩展信息[get] ({shop_id}/extend)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <pre><code>license_url             string          营业执照地址
@@ -1102,8 +1076,8 @@ address                 string              详细地址
 <h4>2.4.7 店铺分类[get] ({shop_id}/category)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<p>categories       array           店铺分类数组</p>
-<p>categories       子集介绍</p>
+<p>categories array 店铺分类数组</p>
+<p>categories 子集介绍</p>
 <pre><code>    id              int                 分类id
     pid             int                 分类父级id
     name            string              分类名
@@ -1115,8 +1089,8 @@ address                 string              详细地址
 <h4>2.4.8 店铺广告[get] ({shop_id}/adverts)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<p>adverts       array           店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）</p>
-<p>adverts       子集介绍</p>
+<p>adverts array 店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）</p>
+<p>adverts 子集介绍</p>
 <pre><code>    id              int                 广告id
     name            string              广告名
     image_url       string              广告图片地址
@@ -1811,11 +1785,11 @@ address             string      详细地址
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.9.6  删除收货地址 [delete] ({id})</h4>
+<h4>2.9.6 删除收货地址 [delete] ({id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h3>2.10  配送区域（personal/delivery-area）</h3>
+<h3>2.10 配送区域（personal/delivery-area）</h3>
 <h4>2.10.1 获取所有配送区域[get] (/)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
@@ -1860,7 +1834,7 @@ area字段子集介绍
 <p>`请求参数：</p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h3>2.11  修改密码（personal/password）</h3>
+<h3>2.11 修改密码（personal/password）</h3>
 <h4>2.11.1 修改密码[put]</h4>
 <p><code>请求参数：</code></p>
 <pre><code>old_password            string          原密码
@@ -1924,7 +1898,7 @@ end_time            string      结束时间(默认今天的24点)
 </code></pre>
 
 <p><code>成功返回:</code>
-	withdraws			array		提现记录</p>
+    withdraws array 提现记录</p>
 <pre><code>withdraws 字段子集说明
 
     data            array       提现记录
@@ -1959,7 +1933,7 @@ end_time            string      结束时间(默认今天的24点)
 </code></pre>
 
 <p><code>成功返回:</code>
-	dayBook			array		交易流水帐</p>
+    dayBook array 交易流水帐</p>
 <pre><code>dayBook 字段子集说明
 
     data            array       交易记录
@@ -1992,7 +1966,7 @@ bank_id             int         提现账号ID
 
 <p><code>成功返回:</code></p>
 <p><code>失败返回:</code></p>
-<h3>2.14 提现账号管理  [personal/bank]</h3>
+<h3>2.14 提现账号管理 [personal/bank]</h3>
 <h4>2.14.1 获取提现账号列表[get]</h4>
 <p><code>请求参数:</code></p>
 <p><code>成功返回:</code></p>
@@ -2018,7 +1992,7 @@ card_address        string          开户行所在地
 </code></pre>
 
 <p><code>成功返回:</code>
-        bank_id        int      新增成功自增id</p>
+    bank_id int 新增成功自增id</p>
 <p><code>失败返回:</code></p>
 <h4>2.14.3 修改提现账号[put] ({id})</h4>
 <p><code>请求参数:</code></p>
@@ -2031,12 +2005,12 @@ card_address        string          开户行所在地
 <p><code>请求参数:</code></p>
 <p><code>成功返回:</code></p>
 <p><code>失败返回:</code></p>
-<h3>2.15 设置默认提现账号  [personal/bank-default]</h3>
+<h3>2.15 设置默认提现账号 [personal/bank-default]</h3>
 <h4>2.15.1 设置默认提现账号[put] ({id})</h4>
 <p><code>请求参数:</code></p>
 <p><code>成功返回:</code></p>
 <p><code>失败返回:</code></p>
-<h3>2.16 获取银行信息  [personal/bank-info]</h3>
+<h3>2.16 获取银行信息 [personal/bank-info]</h3>
 <h4>2.16.1 获取银行信息[get]</h4>
 <p><code>请求参数:</code></p>
 <p><code>成功返回:</code></p>
@@ -2044,7 +2018,7 @@ card_address        string          开户行所在地
 </code></pre>
 
 <p><code>失败返回:</code></p>
-<h3>2.17 推送设备  [push]</h3>
+<h3>2.17 推送设备 [push]</h3>
 <h4>2.17.1 添加推送设备[post] (active-token)</h4>
 <p><code>请求参数:</code></p>
 <pre><code>token           string          token
@@ -2061,7 +2035,7 @@ type            int             设备类型(ios=&gt;1;android=&gt;2)
 
 <p><code>成功返回:</code></p>
 <p><code>失败返回:</code></p>
-<h3>2.18 支付  [pay]</h3>
+<h3>2.18 支付 [pay]</h3>
 <h4>2.18.1 获取charge对象[get] (charge/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <pre><code>type            string          订单号类型  （为all时是总订单号，不传或不是all为子订单）
@@ -2082,10 +2056,10 @@ channel         string          支付渠道     （yeepay_wap 为易宝 , alipa
 <p><code>失败返回：</code></p>
 <h4>2.18.3 退款[get] (refund/{order_id})</h4>
 <p><code>请求参数：</code>
-    reason         string           退款原因</p>
+    reason string 退款原因</p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h3>2.19 获取版本信息  [version]</h3>
+<h3>2.19 获取版本信息 [version]</h3>
 <h4>2.19.1 获取版本信息 [get]</h4>
 <p><code>请求参数：</code></p>
 <pre><code>type                int             移动端类型(1:ios; 2:android; 3司机; 4外勤)
@@ -2103,7 +2077,7 @@ record 字段说明
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h3>2.20 获取移动端广告  [advert]</h3>
+<h3>2.20 获取移动端广告 [advert]</h3>
 <h4>2.20.1 获取移动端广告 [get]</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
@@ -2117,7 +2091,7 @@ advert 字段说明
     image_url       string          广告图片地址
 </code></pre>
 
-<h3>2.21 优惠券模块  [coupon]</h3>
+<h3>2.21 优惠券模块 [coupon]</h3>
 <h4>2.21.1 获取我的优惠券 [get] (user-coupon)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>

@@ -159,10 +159,10 @@
                                     <div class="col-sm-4 example ">
                                         <div>例:</div>
                                         <div>一级单位:箱</div>
-                                        <div>二级单位:盒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进制:30盒=1箱</div>
-                                        <div>三级单位:袋 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进制:12袋=1盒
+                                        <div>二级单位:盒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  进制:30盒=1箱</div>
+                                        <div>三级单位:袋&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进制:12袋=1盒
                                         </div>
-                                        <div>最小规格单位:15g=1袋</div>
+                                        <div>最小单位规格:15g=1袋</div>
                                     </div>
                                     <div class="col-sm-8">
                                         <div class="form-group editor-item">

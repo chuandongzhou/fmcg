@@ -239,35 +239,37 @@
 
     data字段子集说明
 
-    id                  int         商品id
-    name                string      商品名
-    sales_volume        int         销售量
-    price_retailer      decimal     价格（对于终端商）
-    min_num_retailer    int         最低购买量 (对于终端商）
-    pieces_retailer     int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
-    specification_retailer  string  规格 （对于终端商）
-    price_wholesaler    decimal     价格（对于批发商）
-    min_num_wholesaler  int         最低购买量 (对于批发商）
-    pieces_wholesaler   int         单位编号 （对于批发商）
-    specification_wholesaler    string  规格 （对于批发商）
-    pieces              string      单位名 （根据不同登录角色区分）
-    shelf_life          string      保质期
-    bar_code            string      商品条形码
-    is_new              int         是否新品（1是 , 0不是）
-    is_out              int         是否缺货
-    is_change           int         是否可换货
-    is_back             int         是否可退货
-    is_expire           int         是否即期品
-    is_promotion        int         是否促销产品
-    promotion_info      string      促销信息
-    introduce           string      商品图文详情
-    shop_id             int         商品所属店铺id
-    shop_name           string      商品所属店铺
-    attrs               array       标签
-    delivery_area       array       商品配送区域
-    is_like             bool        是否已关注
-    image_url           string      商品图片('第一张')
-    images_url          array       商品全部图片
+    id                          int         商品id
+    name                        string      商品名
+    sales_volume                int         销售量
+    price_retailer              decimal     价格（对于终端商）
+    price_retailer_pick_up      decimal     自提价格（对于终端商）
+    min_num_retailer            int         最低购买量 (对于终端商）
+    pieces_retailer             int         单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包）
+    specification_retailer      string      规格 （对于终端商）
+    price_wholesaler            decimal     价格（对于批发商）
+    price_wholesaler_pick_up    decimal     自提价格（对于批发商）
+    min_num_wholesaler          int         最低购买量 (对于批发商）
+    pieces_wholesaler           int         单位编号 （对于批发商）
+    specification_wholesaler    string      规格 （对于批发商）
+    pieces                      string      单位名 （根据不同登录角色区分）
+    shelf_life                  string      保质期
+    bar_code                    string      商品条形码
+    is_new                      int         是否新品（1是 , 0不是）
+    is_out                      int         是否缺货
+    is_change                   int         是否可换货
+    is_back                     int         是否可退货
+    is_expire                   int         是否即期品
+    is_promotion                int         是否促销产品
+    promotion_info              string      促销信息
+    introduce                   string      商品图文详情
+    shop_id                     int         商品所属店铺id
+    shop_name                   string      商品所属店铺
+    attrs                       array       标签
+    delivery_area               array       商品配送区域
+    is_like                     bool        是否已关注
+    image_url                   string      商品图片('第一张')
+    images_url                  array       商品全部图片
 
     attrs 子字段说明
 
@@ -415,32 +417,42 @@
 #### 2.3.3 添加我的商品 [post] ()
 `请求参数：`
 
+    cate_level_1                int         第一层分类
+    cate_level_2                int         第二层分类
+    cate_level_3                int         第三层分类
+    bar_code                    string      商品条形码
     name                        string      商品名
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位
+    system_1                    int         一级与二级之间进制（有二级单位时必填）
+    pieces_level_3              int         三级单位
+    system_2                    int         二级三级之间进制（有三级单位时必填）
+    specification               string      最小单位规格
+    
     price_retailer              decimal     价格 （对于终端商）
     price_retailer_pick_up      decimal     自提价格（对于终端商）
     min_num_retailer            int         最低购买量 （对于终端商）
     pieces_retailer             int         单位编号 （对于终端商）
     specification_retailer      string      规格  （对于终端商）
     price_wholesaler            decimal     价格 （对于批发商  供应商时添加）
-    price_wholesaler_pick_up     decimal    自提价格（对于批发商）
+    price_wholesaler_pick_up     decimal    自提价格（对于批发商 供应商时添加）
     min_num_wholesaler          int         最低购买量 （对于批发商  供应商时添加）
     pieces_wholesaler           int         单位编号 （对于批发商  供应商时添加）
-    specification_wholesaler    string 规格  （对于批发商 供应商时添加）
+    specification_wholesaler    string      规格  （对于批发商 供应商时添加）
     shelf_life                  string      保质期
-    bar_code            string      商品条形码
-    is_new              int         是否新品（1是   0不是）
-    is_out              int         是否缺货 （1是   0不是）
-    is_change           int         是否可换货 （1是   0不是）
-    is_back             int         是否可退货 （1是   0不是）
-    is_expire           int         是否即将过期 （1是   0不是）
-    is_promotion        int         是否促销    （1是   0不是）
-    promotion_info      string      促销信息    （取当是促销时传入）
-    cate_level_1        int         第一层分类
-    cate_level_2        int         第二层分类
-    cate_level_3        int         第三层分类
-    attrs               array       标签数组 （数组下标为此标签父类id）
-    area                array       商品配送区域数组
-    introduce           string      商品图文介绍
+    is_new                      int         是否新品（1是   0不是）
+    is_out                      int         是否缺货 （1是   0不是）
+    is_change                   int         是否可换货 （1是   0不是）
+    is_back                     int         是否可退货 （1是   0不是）
+    is_expire                   int         是否即将过期 （1是   0不是）
+    is_promotion                int         是否促销    （1是   0不是）
+    promotion_info              string      促销信息    （取当是促销时传入）
+    cate_level_1                int         第一层分类
+    cate_level_2                int         第二层分类
+    cate_level_3                int         第三层分类
+    attrs                       array       标签数组 （数组下标为此标签父类id）
+    area                        array       商品配送区域数组
+    introduce                   string      商品图文介绍
 
     area 字段子集介绍
 
@@ -458,45 +470,9 @@
 `失败返回：`
 
 #### 2.3.4 更新我的商品 [put] ({goods_id})
-`请求参数：`
+`请求参数（同添加商品）：`
 
-    name                        string      商品名
-    price_retailer              decimal     价格 （对于终端商）
-    price_retailer_pick_up      decimal     自提价格（对于终端商）
-    min_num_retailer            int         最低购买量 （对于终端商）
-    pieces_retailer             int         单位编号 （对于终端商）
-    specification_retailer      string      规格  （对于终端商）
-    price_wholesaler            decimal     自提价格 （对于批发商  供应商时添加）
-    price_retailer_pick_up      decimal     自提价格 （对于批发商  供应商时添加）
-    min_num_wholesaler  int         最低购买量 （对于批发商  供应商时添加）
-    pieces_wholesaler   int         单位编号 （对于批发商  供应商时添加）
-    specification_wholesaler    string 规格  （对于批发商 供应商时添加）
-    shelf_life          string      保质期
-    bar_code            string      商品条形码
-    is_new              int         是否新品（1是   0不是）
-    is_out              int         是否缺货 （1是   0不是）
-    is_change           int         是否可换货 （1是   0不是）
-    is_back             int         是否可退货 （1是   0不是）
-    is_expire           int         是否即将过期 （1是   0不是）
-    is_promotion        int         是否促销    （1是   0不是）
-    promotion_info      string      促销信息    （取当是促销时传入）
-    cate_level_1        int         第一层分类
-    cate_level_2        int         第二层分类
-    cate_level_3        int         第三层分类
-    attrs               array       标签数组（数组下标为此标签父类id）
-    area                array       商品配送区域数组
-    introduce           string      商品图文介绍
-
-    area 字段子集介绍
-
-    id                      int             地址id
-    province_id             int             省id
-    city_id                 int             市id
-    district_id             int             县id
-    street_id               int             街道id
-    area_name               string          省、市、县、街道名
-    address                 string          详细地址
-
+  
 
 `成功返回：`
 

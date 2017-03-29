@@ -80,8 +80,6 @@ class MyGoodsController extends Controller
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
                 return true;
-
-
             }
         });
 
