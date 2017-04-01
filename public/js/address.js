@@ -4622,8 +4622,8 @@ function Address(provinceObj, cityObj, districtObj, streetObj) {
 
     this.setProvinceObject(provinceObj);
     this.setCityObject(cityObj);
-    this.setDistrictObject(districtObj);
-    this.setStreetObject(streetObj);
+    districtObj && this.setDistrictObject(districtObj);
+    streetObj && this.setStreetObject(streetObj);
 }
 
 Address.prototype = {
@@ -4666,7 +4666,7 @@ Address.prototype = {
 
         (val === undefined) && (val = obj.data('id'));
         return this.setObject('city', obj, val).on('change', '', function () {
-            that.updateDistrictSource();
+            that.district && that.updateDistrictSource();
         });
     },
 
@@ -4687,7 +4687,7 @@ Address.prototype = {
 
         (val === undefined) && (val = obj.data('id'));
         return this.setObject('district', obj, val).on('change', '', function () {
-            that.updateStreetSource();
+            that.street && that.updateStreetSource();
         });
     },
     setStreetObject: function (obj, val) {
@@ -4715,14 +4715,13 @@ Address.prototype = {
             city = addresses.filter('.address-city'),
             district = addresses.filter('.address-district'),
             street = addresses.filter('.address-street');
-
-        if (province.length && city.length && district.length && street.length) {
+        if (province.length && city.length/* && district.length && street.length*/) {
             var address = new Address(province, city, district, street);
 
             province.data('address', address);
             city.data('address', address);
-            district.data('address', address);
-            street.data('address', address);
+            district && district.data('address', address);
+            street && street.data('address', address);
         }
     });
 

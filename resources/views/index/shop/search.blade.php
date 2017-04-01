@@ -5,7 +5,7 @@
 @include('includes.jquery-lazeload')
 
 @section('container')
-    @include('index.shop-search')
+    @include('includes.shop-search')
     <div class="container dealer-index index search-page">
         <div class="row sort search-sort">
             @if (!empty(array_except($get , ['name', 'sort', 'page', 'city_id', 'district_id', 'street_id'])))

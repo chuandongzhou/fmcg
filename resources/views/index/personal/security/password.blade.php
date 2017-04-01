@@ -7,7 +7,6 @@
     <span class="second-level">修改密码</span>
 @stop
 @section('right')
-    @include('includes.success-meg')
     <div class="row margin-clear">
         <div class="col-sm-12 security-setting-wrap">
             <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/edit-password') }}"
@@ -39,20 +38,4 @@
         </div>
     </div>
     @parent
-@stop
-@section('js')
-    @parent
-    <script>
-        $(function () {
-            //重置密码成功提示
-            $('.submitBtn').on('done.hct.ajax', function (data, textStatus) {
-                $('#shippingAddressModal').modal('hide');
-                $(this).html(data.message || '操作成功');
-                $('.success-meg-content').html( data.message || '操作成功');
-                showSuccessMeg($('form').data('doneUrl'));
-                return false;
-            });
-
-        });
-    </script>
 @stop

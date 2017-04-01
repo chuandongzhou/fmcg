@@ -27,6 +27,7 @@ $router->group(['prefix' => 'admin/auth', 'namespace' => 'Admin'], function ($ro
 $router->controller('webhooks/pingxx', 'Index\Webhook\PingxxController');
 $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 $router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
+$router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
 
 /**
  * 前台
@@ -254,7 +255,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('bank-default/{bank}', 'UserBankController@bankDefault');//设置默认提现账号
             $router->get('bank-info', 'UserBankController@banks');  //所有银行信息
             $router->resource('bank', 'UserBankController',
-                ['only' => ['index', 'store', 'update', 'destroy']]);          //提现账号
+                ['only' => ['index', 'store', 'show', 'update', 'destroy']]);          //提现账号
             $router->resource('delivery-man', 'DeliveryManController',
                 ['only' => ['index', 'store', 'update', 'destroy']]);          //配送人员
             $router->put('shipping-address/default/{address}', 'ShippingAddressController@addressDefault');

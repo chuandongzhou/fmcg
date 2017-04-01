@@ -5,7 +5,7 @@
 @include('includes.jquery-lazeload')
 @include('includes.shop-advert-model')
 @section('container')
-    @include('index.shop-search')
+    @include('includes.shop-search')
     <div class="container wholesalers-index index contents">
         <div class="row">
             <div class="col-sm-12  padding-clear">

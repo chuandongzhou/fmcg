@@ -72,7 +72,8 @@
                                         <span>{{ $shop->sales_volume }}</span>
                                     </div>
                                     <div class="item-child">
-                                        <span class="prompt">共</span>{{ $shop->goods_count }}
+                                        <span class="prompt">共</span>
+                                        {{ $shop->goods_count }}
                                         <span class="prompt">件商品</span>
                                     </div>
                                     <div class="item-child">

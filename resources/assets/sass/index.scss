@@ -599,7 +599,6 @@ a {
             min-height: 140px;
             .triangle-left {
               position: absolute;
-              z-index: 99;
               left: 0;
               top: 0;
               @include square(0);

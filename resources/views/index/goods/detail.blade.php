@@ -4,7 +4,7 @@
     {{ $goods->name }}
 @stop
 @section('container')
-    @include('index.shop-search')
+    @include('includes.shop-search')
     <div class="container wholesalers-index goods-detail">
         <div class="row">
             <div class="col-sm-5 goods-detail-banner">
@@ -27,7 +27,6 @@
                         @foreach($goods->images_url as $key =>$image)
                             <li data-target="#myCarousel" data-slide-to="{{ $key }}"
                                 class="{{ $key == 0 ? 'active' : '' }}">
-
                             </li>
                         @endforeach
                     </ol>
@@ -55,12 +54,6 @@
                         <span class="title-name">退换货 : </span>{{ $goods->is_back ? '可退货' : '' }}  {{  $goods->is_change ? '可换货' : ($goods->is_back ? '' : '不可退 不可换')  }}
                     </li>
                 </ul>
-                {{--<div class="item">--}}
-                {{--<span class="prompt label-name">口味 : </span>--}}
-                {{--<button class="btn option active">麻辣<i class="fa fa-check"></i></button>--}}
-                {{--<button class="btn option">微辣<i class="fa fa-check"></i></button>--}}
-                {{--<button class="btn option">不辣<i class="fa fa-check"></i></button>--}}
-                {{--</div>--}}
                 <div class="item clearfix">
                     <span class="prompt label-name pull-left">数量 : </span>
                     <div class="pull-left num-wrap">

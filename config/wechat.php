@@ -9,4 +9,5 @@ return [
     'merchantNo' => 'CX0001089',
     'key' => 'c9efbc0d16f4480197e47d1171f4b703',
     'url' => 'http://api.shijihuitong.com/cxpayApi/offLine',
+    'agentPay' => 'http://api.shijihuitong.com/cxpayApi/agentPay'
 ];

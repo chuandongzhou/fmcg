@@ -35,12 +35,8 @@
                             <p class="clearfix">
                                 <span class="pull-left">{{ $bank['card_holder'] }}</span>
                                 <a class="pull-right edit update-modal operate" data-toggle="modal"
-                                   data-target="#bankModal" data-id="{{ $bank['id'] }}"
-                                   data-card-number="{{ $bank['card_number'] }}"
-                                   data-card-type="{{ $bank['card_type'] }}"
-                                   data-card-holder="{{ $bank['card_holder'] }}"
-                                   data-card-address="{{ $bank['card_address'] }}"><i
-                                            class="iconfont icon-xiugai"></i>编辑</a>
+                                   data-target="#bankModal" data-id="{{ $bank['id'] }}">
+                                 <i class="iconfont icon-xiugai"></i>编辑</a>
                             </p>
                             <p class="clearfix">
                                 <span class="pull-left">{{ $bank['card_address'] }}</span>

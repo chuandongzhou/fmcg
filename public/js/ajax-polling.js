@@ -2,7 +2,7 @@ $(function () {//间隔30s自动加载一次
         //前台轮询结果处理
         function getPushData() {//获取消息
             var targetUrl = site.api("order/order-polling");
-            if(!SITE.USER.id) {
+            if (!SITE.USER.id) {
                 return false;
             }
             $.ajax(
@@ -29,12 +29,17 @@ $(function () {//间隔30s自动加载一次
                             $("#myaudio")[0].play();
                         }
                     },
-                    error:function(){
-                       window.clearInterval(timer);
+                    error: function () {
+                        window.clearInterval(timer);
                     }
                 })
             ;
         }
+
+        //新消息提示框
+        $(".msg-channel .close-btn").click(function () {
+            $(this).closest('.msg-channel').animate({'bottom': '-160'});
+        })
 
         getPushData(); //首次立即加载
         var timer = window.setInterval(getPushData, 20000); //循环执行！！

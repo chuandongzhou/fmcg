@@ -5,10 +5,6 @@
 @include('includes.chat')
 @include('includes.notice')
 
-{{--@if(!request()->cookie('province_id'))--}}
-{{--@include('includes.first-load-model')--}}
-{{--@endif--}}
-
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
     <link href="{{ asset('css/shop-navigator.css') }}" rel="stylesheet">
@@ -130,7 +126,7 @@
 
 @section('body')
     @yield('container')
-    @if ( !is_null(auth()->id()))
+    @if ( auth()->check())
         @include('includes.navigator')
         <audio id="myaudio" src="{{ asset('images/notice.wav') }}" style="opacity:0;">
         </audio>
@@ -146,80 +142,7 @@
 @section('footer')
     <div class="footer">
         @yield('join-us')
-        <footer class="panel-footer footer">
-            <div class="container  text-muted">
-                <div class="row ">
-                    <div class="col-xs-6 pd-left-clear">
-                        <ul class="list-inline">
-                            <li><a href="{{ url('about') }}" class="icon about">关于我们</a></li>
-                            <li>
-                                <div class="contact-panel">
-                                    <a href="javascript:;" class="icon contact-information">联系方式</a>
-                                </div>
-                                <div class="contact-content content hidden">
-                                    <div>{{ cons('system.company_tel') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_mobile') }}</div>
-                                    <div>{{ cons('system.company_addr') }}</div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="feedback-panel">
-                                    <a class="feedback icon" href="javascript:;">意见反馈</a>
-                                </div>
-                                <div class="content hidden">
-                                    <form class="ajax-form" method="post" action="{{ url('api/v1/feedback') }}"
-                                          accept-charset="UTF-8" data-help-class="error-msg text-center"
-                                    >
-                                        <div>
-                                            <textarea placeholder="请填写您的反馈意见" name="content"></textarea>
-                                        </div>
-                                        <div>
-                                            <div class="input-group">
-                                            <span class="input-group-addon" id="feedback-contact"><i
-                                                        class="fa fa-envelope-o"></i></span>
-                                                <input type="text" class="form-control" placeholder="留个邮箱或者别的联系方式呗"
-                                                       aria-describedby="feedback-contact" name="contact">
-                                                <span class="input-group-btn">
-                                                <button class="btn btn-primary btn-submit" type="submit"
-                                                        data-done-then="none" data-done-text="反馈提交成功">提交
-                                                </button>
-                                            </span>
-                                            </div>
-                                            <!-- /input-group -->
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="qr-content-panel">
-                                    <a href="javascript:;" class="app-down icon">APP下载</a>
-                                </div>
-                                <div class="content hidden">
-                                    <div class="qr-panel">
-                                        <div class="dbd item">
-                                            <div class="qr-code dbd-qr-code"></div>
-                                            <div class="text text-center">订百达</div>
-                                        </div>
-                                        <div class="driver-helper item">
-                                            <div class="qr-code helper"></div>
-                                            <div class="text text-center">司机助手</div>
-                                        </div>
-                                        <div class="driver-helper item">
-                                            <div class="qr-code field"></div>
-                                            <div class="text text-center">外勤</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-xs-6">
-                        <p>
-                            Copyright &copy; {!! cons('system.company_name') . '&nbsp;&nbsp;&nbsp;&nbsp;' . cons('system.company_record') !!} </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <div id="allmap"></div>
+        @include('includes.footer')
     </div>
 @stop
 
@@ -234,60 +157,42 @@
 
 @section('js')
     <script type="text/javascript">
+
         //没有定位获取用户当前位置
         $(function () {
-                //意见反馈
-                $('.feedback-panel > a').popover({
-                    container: '.feedback-panel',
+            //意见反馈
+            $('.feedback-panel > a').popover({
+                container: '.feedback-panel',
+                placement: 'top',
+                html: true,
+                content: function () {
+                    return $(this).parent().siblings('.content').html();
+                }
+            })
+
+            //扫二维码下载app
+            tooltipFunc('#qr-content-panel > a', '#qr-content-panel');
+            //联系方式
+            tooltipFunc('.contact-panel > a', '.contact-panel');
+
+            //调用tooltip插件
+            function tooltipFunc(item, container) {
+                $(item).tooltip({
+                    container: container,
                     placement: 'top',
                     html: true,
-                    content: function () {
+                    title: function () {
                         return $(this).parent().siblings('.content').html();
                     }
                 })
+            }
 
-                //扫二维码下载app
-                tooltipFunc('#qr-content-panel > a', '#qr-content-panel');
-                //联系方式
-                tooltipFunc('.contact-panel > a', '.contact-panel');
+            //定位
+            if (!Cookies.get('province_id')) {
+                setAddressCookie();
+            }
 
-                //调用tooltip插件
-                function tooltipFunc(item, container) {
-                    $(item).tooltip({
-                        container: container,
-                        placement: 'top',
-                        html: true,
-                        title: function () {
-                            return $(this).parent().siblings('.content').html();
-                        }
-                    })
-                }
-
-            @if(!request()->cookie('province_id'))
-                var map = new BMap.Map("allmap");
-                var point = new BMap.Point(116.331398, 39.897445);
-                map.centerAndZoom(point, 12);
-
-                function myFun(result) {
-                    var cityName = result.name;
-                    map.setCenter(cityName);
-                    if (document.cookie.indexOf("province_id=") == -1) {
-                        $.ajax({
-                            url: site.api('address/city-detail'),
-                            method: 'get',
-                            data: {name: cityName}
-                        }).done(function (data, textStatus, jqXHR) {
-                            setCookie('province_id', data.province_id);
-                            setCookie('city_id', data.city_id);
-                            window.location.reload();
-                        });
-
-                    }
-                }
-                var myCity = new BMap.LocalCity();
-                myCity.get(myFun);
-            @endif
-
-            });
-        </script>
+        })
+        ;
+    </script>
 @stop

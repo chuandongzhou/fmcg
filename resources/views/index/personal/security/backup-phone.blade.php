@@ -7,7 +7,6 @@
     <span class="second-level">修改密保手机</span>
 @stop
 @section('right')
-    @include('includes.success-meg')
     <div class="row margin-clear">
         <div class="col-sm-12 security-setting-wrap">
             <form class="form-horizontal ajax-form" action="{{ url('api/v1/personal/edit-backup-phone') }}"

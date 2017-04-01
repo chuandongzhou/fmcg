@@ -37,13 +37,30 @@ class SystemWithdrawInfoController extends Controller
                 $query->where('user_name', $userName);
             });
         }
-        $withdraws = $query->whereBetween('created_at', [$data['started_at'], (new Carbon($data['end_at']))->endOfDay()])->orderBy('id',
+        $withdraws = $query->whereBetween('created_at',
+            [$data['started_at'], (new Carbon($data['end_at']))->endOfDay()])->orderBy('id',
             'DESC')->paginate();
 
         return view('admin.withdraw.index', [
             'withdraws' => $withdraws,
             'data' => $data
         ]);
+    }
+
+    public function postSend($withdrawId)
+    {
+        $withdraw = Withdraw::where('status', cons('withdraw.pass'))->find($withdrawId);
+
+        if (is_null($withdraw)) {
+            return $this->error('提现单号不存在');
+        }
+
+        $wechatPay = app('wechat.pay');
+
+        $result = $wechatPay->agentPay($wechatPay);
+
+        info($result);
+
     }
 
     /**
@@ -122,7 +139,7 @@ class SystemWithdrawInfoController extends Controller
             //启动通知
             $redisKey = 'push:withdraw:' . $item->user_id;
             $redisVal = '您的提现订单:' . $item->id . ',' . cons()->lang('push_msg.review_failed');
-            (new RedisService)->setRedis($redisKey, $redisVal ,cons('push_time.msg_life'));
+            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
 
             return $this->success('操作成功');
         }

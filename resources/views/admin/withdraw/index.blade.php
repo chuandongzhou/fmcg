@@ -98,6 +98,11 @@
                                    data-id='{{ $withdraw->id }}'>
                                     <i class="fa fa-edit"></i> 已打款
                                 </a>
+
+                                <a class="btn btn-default ajax" data-url="{{ url('admin/system-withdraw/send') }}"
+                                   data-method="post">
+                                    <i class="fa fa-money"></i> 打款
+                                </a>
                             @endif
                         </div>
                     </td>

@@ -157,6 +157,9 @@ return [
         'introduction' => '介绍',
         'bar_code' => '商品条形码',
         'promoteinfo' => '促销信息',
+        'bank_province' =>'银行开户省',
+        'bank_city' =>'银行开户市',
+        'bank_name' => '开户行名称',
         //后台
         'real_name' => '真实名字',
         'role_id' => '角色分组ID',
@@ -199,7 +202,8 @@ return [
         'price_wholesaler_pick_up' => '批发商自提价格',
         'pieces' => '单位',
         'geetest_challenge' =>'验证码',
-        'identification_code' => '识别码'
+        'identification_code' => '识别码',
+
     ],
 
 ];

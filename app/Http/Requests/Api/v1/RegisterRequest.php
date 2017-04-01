@@ -5,6 +5,7 @@
  * Date: 2015/10/19
  * Time: 15:02
  */
+
 namespace App\Http\Requests\Api\v1;
 
 
@@ -47,10 +48,9 @@ class RegisterRequest extends Request
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
-                if(!$this->input('license') && $this->input('type') != cons('user.type.retailer')){
+                if ($this->input('type') != cons('user.type.retailer') && !$this->hasFile('license')) {
                     $validator->errors()->add('license', '营业执照 不能为空');
                 }
-
             }
         });
     }

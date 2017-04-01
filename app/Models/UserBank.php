@@ -9,6 +9,9 @@ class UserBank extends Model
         'card_number',
         'card_type',
         'card_holder',
+        'bank_name',
+        'bank_province',
+        'bank_city',
         'card_address',
         'is_default',
         'user_id'

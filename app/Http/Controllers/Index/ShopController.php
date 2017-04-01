@@ -49,7 +49,7 @@ class ShopController extends Controller
         $data = array_merge($gets, array_except($addressData, 'address_name'));
         $shops = $shops->OfDeliveryArea(array_filter($data))->with([
             'goods' => function ($query) {
-                $query->active()->OfNew();
+                $query->active()->ofNew();
             }
         ]);
         if (isset($gets['name'])) {

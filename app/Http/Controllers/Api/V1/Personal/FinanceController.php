@@ -93,13 +93,15 @@ class FinanceController extends Controller
         //修改账户余额
         $user->balance = $user->balance - $amount;
         $user->save();
-
         //新建提现记录
         return Withdraw::create([
             'user_id' => $user->id,
             'user_bank_id' => $bankId,
             'amount' => $amount,
             'created_at' => Carbon::now(),
+            'bank_name' => $bank->bank_name,
+            'bank_province' => $bank->bank_province,
+            'bank_city' => $bank->bank_city,
             'card_holder' => $bank->card_holder,
             'card_number' => $bank->card_number,
             'card_type' => $bank->card_type,

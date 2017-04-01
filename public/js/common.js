@@ -313,7 +313,7 @@ var commonJQueryExtendSetup = function () {
                 $.each(messages, function (index, message) {
                     var html = helpBlock.html();
                     if (html && html.length > 0) {
-                        message = '， ' + message;
+                        message = ' ' + message;
                     }
 
                     helpBlock.append(message);

@@ -29,6 +29,17 @@ class UserBankController extends Controller
     }
 
     /**
+     * 获取银行详情
+     *
+     * @param \App\Models\UserBank $bank
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function show(UserBank $bank)
+    {
+        return $bank->user_id == auth()->id() ? $this->success(['bank' => $bank]) : $this->error('提现银行不存在');
+    }
+
+    /**
      * 获取银行信息
      *
      * @return \WeiHeng\Responses\Apiv1Response
@@ -72,21 +83,21 @@ class UserBankController extends Controller
      */
     public function store(Requests\Api\v1\CreateUserBankRequest $request)
     {
-        
-        //dd($this->user->userBanks());
         $requestData = $request->except('_method');
-        if($request->get('is_default',0) == 1){
-            $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
-        }else{
-            if(! $this->user->userBanks()->where('is_default', 1)->first()){
-                $requestData['is_default'] = 1;
+
+        if (!$this->user->userBanks()->count()) {
+            //没有时设置为默认
+            $requestData['is_default'] = 1;
+        } else {
+            if (array_get($requestData, 'is_default')) {
+                $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
             }
         }
         if ($userBank = $this->user->userBanks()->create($requestData)) {
             return $this->success(['bank_id' => $userBank->id]);
         }
 
-        return $this->success('添加账号时出现问题');
+        return $this->error('添加账号时出现问题');
     }
 
     /**

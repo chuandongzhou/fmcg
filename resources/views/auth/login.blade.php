@@ -27,8 +27,6 @@
                                 <input type="hidden" name="type" id="type" value="{{ cons('user.type.retailer')  }}"/>
                             </div>
                             <div class="col-xs-12 padding-clear item text-center">
-                                <span class="triangle-left"></span>
-
                                 <div class="enter-item form-group">
                                     <span class="icon icon-name"></span>
                                     <span class="line"></span>
@@ -39,6 +37,7 @@
                                     <span class="line"></span>
                                     <input type="password" class="password" placeholder="密码" name="password">
                                 </div>
+                                <span class="triangle-left"></span>
                                 <span class="triangle-right"></span>
                             </div>
 

@@ -64,18 +64,18 @@ class AddressService
     public function getAddressData()
     {
         $address = config('address.address');
-        $provinceKeys = array_keys($address);
         $provinceCookie = request()->cookie('province_id');
 
-        $provinceId = $provinceCookie && in_array($provinceCookie,
-            $provinceKeys) ? $provinceCookie : cons('address.default_province');
-        $provinceName = $address[$provinceId]['name'];
-
-        $cities = $address[$provinceId]['child'];
-        $cityKeys = array_keys($cities);
+        if ($provinceCookie && array_get($address, $provinceCookie) && false) {
+            $provinceId = $provinceCookie;
+        } else {
+            $provinceId = auth()->check() && auth()->user()->shop->shopAddress ? auth()->user()->shop->shopAddress->province_id : cons('address.default_province');
+        }
+        $provinceName = array_get($address, $provinceId . '.name');
+        $cities = array_get($address, $provinceId . '.child');
         $cityCookie = request()->cookie('city_id');
-        $cityId = $cityCookie && in_array($cityCookie, $cityKeys) ? $cityCookie : 0;
-        $cityName = $cityId ? $cities[$cityId]['name'] : '';
+        $cityId = $cityCookie && array_get($cities, $cityCookie) ? $cityCookie : key($cities);
+        $cityName = array_get($cities, $cityId . '.name', '');;
         return [
             'province_id' => $provinceId,
             'city_id' => $cityId,

@@ -6,7 +6,7 @@
 
 @section('header')
     @parent
-    @include('index.search')
+    @include('includes.search')
     <div class="container categories-wrap" id="categories-wrap">
         <div class="row">
             <div class="col-xs-2 categories-btn">

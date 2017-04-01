@@ -24,7 +24,7 @@ class ComposerServiceProvider extends ServiceProvider
             CategoryComposer::class => [
                 'index.index.index',
                 'index.index-master',
-                'index.shop-search',
+                'includes.shop-search',
                 'errors.404'
             ],
             UserComposer::class => [
@@ -32,18 +32,16 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.master',
                 'index.manage-master',
                 'index.index.index',
-                'index.search',
-                'index.shop-search',
+                'includes.search',
+                'includes.shop-search',
                 'index.menu-master',
                 'index.personal.tabs',
                 'index.help.master',
                 'index.shop.detail',
                 'includes.goods-list',
                 'index.goods.detail',
-                'index.shop-search',
                 'includes.quick-link',
                 'index.personal.security.security-index',
-                //'index.personal.tabs',
                 'index.help.master',
                 'errors.404'
             ],
@@ -54,15 +52,15 @@ class ComposerServiceProvider extends ServiceProvider
                 'admin.master'
             ],
             CartComposer::class => [
-                'index.search',
-                'index.shop-search',
+                'includes.search',
+                'includes.shop-search',
                 'index.master',
                 'includes.navigator',
                 'index.manage-master'
             ],
             KeywordsComposer::class => [
-                'index.search',
-                'index.shop-search',
+                'includes.search',
+                'includes.shop-search',
                 'index.master'
             ],
             ChatComposer::class => [

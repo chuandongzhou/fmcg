@@ -534,86 +534,8 @@
             );
             {{--addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');--}}
             loadGoodsImages('{{ $goods->bar_code }}');
-
             //获取标签
             getAttr();
-            //一级单位变化时
-            $('select[name="pieces_level_1"]').change(function () {
-                var retailerPiecesLevel1 = $('select[name="pieces_retailer"] .retailer_pieces_level_1'),
-                    wholesalerPiecesLevel1 = $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_1'),
-                    piecesRetailer = $('.pieces_retailer'),
-                    piecesWholesaler = $('.pieces_wholesaler'),
-                    piecesLevel1Select = $('select[name="pieces_level_1"] option:selected');
-
-                if (retailerPiecesLevel1.length) {
-                    piecesRetailer.html() == retailerPiecesLevel1.text() && piecesRetailer.html(piecesLevel1Select.text());
-                    retailerPiecesLevel1.val($(this).val());
-                    retailerPiecesLevel1.text(piecesLevel1Select.text());
-                } else {
-                    $('select[name="pieces_retailer"]').append('<option class="retailer_pieces_level_1" value="' + $(this).val() + '" >' + piecesLevel1Select.text() + '</option>');
-                }
-                if (wholesalerPiecesLevel1.length) {
-                    $('.pieces_wholesaler').html() == wholesalerPiecesLevel1.text() && piecesWholesaler.html(piecesLevel1Select.text());
-                    wholesalerPiecesLevel1.val($(this).val());
-                    wholesalerPiecesLevel1.text(piecesLevel1Select.text());
-                } else {
-                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_1" value="' + $(this).val() + '" >' + piecesLevel1Select.text() + '</option>');
-                }
-            });
-
-            //二级单位变化时
-            $('select[name="pieces_level_2"]').change(function () {
-                if ($(this).find("option:selected").val() == '') {
-                    $('.system_1').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() == $('.pieces_retailer').html() && $('.pieces_retailer').html('');
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text() == $('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').length && $('select[name="pieces_retailer"] .retailer_pieces_level_2').remove();
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').remove();
-                    return false;
-                }
-                $(this).find("option:selected").val() != '' && $('.system_1').html($(this).find("option:selected").text());
-                if ($('select[name="pieces_retailer"] .retailer_pieces_level_2').length) {
-                    $('.pieces_retailer').html() == $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() && $('.pieces_retailer').html($('select[name="pieces_level_2"] option:selected').text());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').val($(this).val());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_2').text($('select[name="pieces_level_2"] option:selected').text());
-                } else {
-                    $('select[name="pieces_retailer"]').append('<option class="retailer_pieces_level_2" value="' + $(this).val() + '" >' + $('select[name="pieces_level_2"] option:selected').text() + '</option>');
-                }
-                if ($('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').length) {
-                    $('.pieces_wholesaler').html() == $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text() && $('.pieces_wholesaler').html($('select[name="pieces_level_2"] option:selected').text());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').val($(this).val());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text($('select[name="pieces_level_2"] option:selected').text());
-                } else {
-                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_2" value="' + $(this).val() + '" >' + $('select[name="pieces_level_2"] option:selected').text() + '</option>');
-                }
-            });
-            //三级单位变化时
-            $('select[name="pieces_level_3"]').change(function () {
-                if ($(this).find("option:selected").val() == '') {
-                    $('.system_2').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').text() == $('.pieces_retailer').html() && $('.pieces_retailer').html('');
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text() == $('.pieces_wholesaler').html() && $('.pieces_wholesaler').html('');
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').length && $('select[name="pieces_retailer"] .retailer_pieces_level_3').remove();
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').length && $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').remove();
-                    return false;
-                }
-                $(this).find("option:selected").val() != '' && $('.system_2').html($(this).find("option:selected").text());
-                if ($('select[name="pieces_retailer"] .retailer_pieces_level_3').length) {
-                    $('.pieces_retailer').html() == $('select[name="pieces_retailer"] .retailer_pieces_level_2').text() && $('.pieces_retailer').html($('select[name="pieces_level_3"] option:selected').text());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').val($(this).val());
-                    $('select[name="pieces_retailer"] .retailer_pieces_level_3').text($('select[name="pieces_level_3"] option:selected').text());
-                } else {
-                    $('select[name="pieces_retailer"]').append('<option class="retailer_pieces_level_3" value="' + $(this).val() + '" >' + $('select[name="pieces_level_3"] option:selected').text() + '</option>');
-                }
-                if ($('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').length) {
-                    $('.pieces_wholesaler').html() == $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_2').text() && $('.pieces_wholesaler').html($('select[name="pieces_level_3"] option:selected').text());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').val($(this).val());
-                    $('select[name="pieces_wholesaler"] .wholesaler_pieces_level_3').text($('select[name="pieces_level_3"] option:selected').text());
-                } else {
-                    $('select[name="pieces_wholesaler"]').append('<option class="wholesaler_pieces_level_3" value="' + $(this).val() + '" >' + $('select[name="pieces_level_3"] option:selected').text() + '</option>');
-                }
-            });
-
 
             //下一步
             $(".btn-next").click(function () {
@@ -630,21 +552,8 @@
             });
 
 
-            //最小规格变化
-            $('input[name="specification"]').change(function () {
-                $('.spec').html($(this).val());
-                var specification_retailer = $('input[name="specification_retailer"]').val(),
-                    specification_wholesaler = $('input[name="specification_wholesaler"]').val();
-                $('input[name="specification_retailer"]').val(specification_retailer.substring(0, (specification_retailer.indexOf('*')) + 1) + $(this).val());
-                $('input[name="specification_wholesaler"]').val(specification_wholesaler.substring(0, (specification_wholesaler.indexOf('*')) + 1) + $(this).val());
-            });
             //终端商(批发商)选择单位变化时
             selectedChange();
-            //促销信息的显示与隐藏
-            $('input[name="is_promotion"]').change(function () {
-                var promotionInfo = $('input[name="promotion_info"]');
-                $(this).is(':checked') ? promotionInfo.prop('disabled', false).parents('.promotions-msg').removeClass('hide') : promotionInfo.prop('disabled', true).parents('.promotions-msg').addClass('hide');
-            });
 
         });
 

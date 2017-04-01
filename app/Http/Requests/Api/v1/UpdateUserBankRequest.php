@@ -17,7 +17,9 @@ class UpdateUserBankRequest extends UserRequest
             'card_number' => 'required|digits_between:16,19|unique:user_bank,card_number,' . $cardInfo->id,
             'card_type' => 'required',
             'card_holder' => 'required',
-            'card_address' => 'required'
+            'bank_province' => 'required|integer',
+            'bank_city' => 'required|integer',
+            'bank_name' => 'required'
         ];
     }
 }

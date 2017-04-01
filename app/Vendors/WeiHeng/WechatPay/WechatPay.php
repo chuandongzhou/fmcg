@@ -6,6 +6,7 @@ namespace WeiHeng\WechatPay;
 use App\Models\Order;
 use App\Models\SystemTradeInfo;
 use App\Models\WechatPayUrl;
+use App\Models\Withdraw;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 
@@ -71,6 +72,22 @@ class WechatPay
 
     }
 
+    /**
+     * 代付
+     *
+     * @param \App\Models\Withdraw $withdraw
+     * @return array
+     */
+    public function agentPay(Withdraw $withdraw)
+    {
+        $options = $this->getAgentOptions($withdraw);
+        $url = $this->config['agentPay'];
+        $client = new Client();
+        $res = $client->post($url, ['form_params' => $options]);
+        $content = $res->getBody()->getContents();
+        return $this->_formatResponse($content);
+    }
+
 
     /**
      * 获取退款参数
@@ -116,8 +133,32 @@ class WechatPay
             'curCode' => 'CNY',
             'orderTime' => str_replace(['-', ':', ' '], '', $order->created_at),
             'orderTimestamp' => Carbon::now()->format('YmdHis'),
-            'productName' => $order->shop_name,
-            'productDesc' => '订单号：' . $order->id . ' 金额：' . $order->price
+            'productName' => $order->shop_name . ' - 订单号：' . $order->id,
+            'productDesc' => ' 金额：' . $order->price
+        ];
+        $sign = $this->getSign($options);
+        return array_add($options, 'sign', $sign);
+    }
+
+    public function getAgentOptions(Withdraw $withdraw)
+    {
+        $options = [
+            'service' => 'payForAnotherOne',
+            'merchantNo' => $this->config['merchantNo'],
+            'orderNo' => $withdraw->id,
+            'version' => 'V1.0',
+            'accountProp' => 1,
+            'accountNo' => base64_encode($withdraw->card_number),
+            'accountName' => base64_encode($withdraw->card_holder),
+            'bankGenneralName' => cons()->valueLang('bank.type', $withdraw->card_type),
+            'bankName' => $withdraw->bank_name,
+            'bankCode' => cons()->key('bank.type', $withdraw->card_type),
+            'currency' => 'CNY',
+            'bankProvcince' => $withdraw->province,
+            'bankCity' => $withdraw->city,
+            'orderAmount' => bcmul($withdraw->amount, 100),
+            'orderTime' => Carbon::now()->format('YmdHis'),
+            'notifyUrl' => url('webhooks/wechat/success'),
         ];
         $sign = $this->getSign($options);
         return array_add($options, 'sign', $sign);
@@ -206,7 +247,6 @@ class WechatPay
 
         return array_add($response, 'sign', $this->getSign($response));
     }
-
 
     /**
      * 排序

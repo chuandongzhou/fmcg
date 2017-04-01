@@ -8,7 +8,6 @@
     <span class="second-level">订单打印模版</span>
 @stop
 @section('right')
-    @include('includes.success-meg')
     <div class="row print-templet margin-clear">
         <div class="col-sm-12 templet-title">
             <span class="prompt">已选订单打印默认模板:</span>
@@ -30,9 +29,10 @@
                                data-src="{{ asset('images/order-templetes/templete_' . $templeteId . '_s.png') }}">点击预览</a>
                         </div>
                         <div class="choice-item">
-                            <label><input data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}"
-                                          class="select-templet {{ $templeteId }}" type="radio"
-                                          name="templet" {{ $templeteId == $defaultTempleteId ? 'checked disabled="disabled"' : '' }} />{{ $templeteName }}
+                            <label>
+                                <input data-url="{{ url('api/v1/order/templete/' . $templeteId)  }}" data-method="post"
+                                       class="select-templet ajax" type="radio"
+                                       name="templet" {{ $templeteId == $defaultTempleteId ? 'checked' : '' }} />{{ $templeteName }}
                             </label>
                         </div>
                     </div>
@@ -40,43 +40,4 @@
             </div>
         </div>
     </div>
-@stop
-@section('js')
-    @parent
-    <script type="text/javascript">
-        $(function () {
-            $(".popup").css({"opacity": "0", "top": "-150px"});
-            //选择模板
-            $('.select-templet').change(function () {
-                $('body').append('<div class="loading"> <img src="'+site.url("images/new-loading.gif")+'" /> </div>');
-                var obj = $(this);
-                $('.select-templet').each(function () {
-                    $(this).prop('disabled', false);
-                });
-                obj.prop("disabled", true);
-                $.ajax({
-                    url: obj.data('url'),
-                    method: 'post'
-                }).done(function () {
-                    successMeg('模板修改成功');
-                }).fail(function () {
-                    $('body').find('.loading').remove();
-                    $('.success-meg-content').html('模板修改失败');
-                    $(".popup").css({"opacity": "1", "top": "20px"});
-                    setTimeout(function () {
-                        $(".popup").css({"opacity": "0", "top": "-150px"});
-                    }, 3000);
-                    $('.select-templet').each(function () {
-                        $(this).removeClass('checked').removeAttr('disabled');
-                    });
-                    $('.{{ $defaultTempleteId }}').addClass('checked').attr("disabled", true);
-                }).always(function () {
-                    setTimeout(function () {
-                        location.reload();
-                    }, 3000);
-
-                });
-            });
-        })
-    </script>
 @stop

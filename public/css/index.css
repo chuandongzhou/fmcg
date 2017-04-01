@@ -690,7 +690,6 @@ a:hover {
 
 .login-container .content-panel .login-content .login-right-content .login-wrap .item .triangle-left {
   position: absolute;
-  z-index: 99;
   left: 0;
   top: 0;
   width: 0;
