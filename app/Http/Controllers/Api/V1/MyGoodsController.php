@@ -488,6 +488,15 @@ class MyGoodsController extends Controller
                 'system_1' => $goodsArr[12] ?? 0,
                 'system_2' => $goodsArr[14] ?? 0,
             ];
+
+            if($goods['pieces_wholesaler'] == $pieces['pieces_level_1']){
+                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']){
+                $goods['specification_wholesaler'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']){
+                $goods['specification_wholesaler'] = end($goodsArr);
+            }
+
         } else {
             if ($length != 12) {
                 return '不符合批发商批量录入商品标准请核对后再试!';
@@ -502,7 +511,15 @@ class MyGoodsController extends Controller
         if (!empty($pieces['pieces_level_3']) && empty($pieces['system_2'])) {
             return '三级进制没有填!';
         }
-        $goods['specification_retailer'] = ($pieces['pieces_level_2'] ?? '') . '*' . end($goodsArr);
+
+        if($goods['pieces_retailer'] == $pieces['pieces_level_1']){
+            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']){
+            $goods['specification_retailer'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']){
+            $goods['specification_retailer'] =  end($goodsArr);
+        }
+
         $pieces['specification'] = end($goodsArr);
         $arr['goods'] = array_merge($goods, $postAttr);
         $arr['pieces'] = $pieces;

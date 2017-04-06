@@ -916,25 +916,25 @@ function validform() {
         }
         return true;
 
-    }, "二级单位必须");
+    }, "二级单位必须填写");
     $.validator.addMethod("system_1_check", function () {
         if (($('select[name="pieces_level_2"]').val() != '' || $('input[name="system_2"]').val() != '' || $('select[name="pieces_level_3"]').val() != '') && $('input[name="system_1"]').val() == '') {
             return false;
         }
         return true;
-    }, "一级单位进制必须");
+    }, "一级单位进制必须填写");
     $.validator.addMethod("pieces_level_3_check", function () {
         if ($('select[name="pieces_level_3"]').val() == '' && $('input[name="system_2"]').val() != '') {
             return false;
         }
         return true;
-    }, "三级单位必须");
+    }, "三级单位必须填写");
     $.validator.addMethod("system_2_check", function () {
         if ($('select[name="pieces_level_3"]').val() != '' && $('input[name="system_2"]').val() == '') {
             return false;
         }
         return true;
-    }, "二级单位进制必须");
+    }, "二级单位进制必须填写");
     $.validator.addMethod("pieces_level_2_same_check", function () {
         if ($('select[name="pieces_level_2"]').val() == $('select[name="pieces_level_1"]').val()) {
             return false;
@@ -1013,22 +1013,22 @@ function validform() {
                 maxlength: '至多18位',
             },
             cate_level_1: {
-                required: '一级分类必须',
+                required: '一级分类必须选择',
                 number: '必须是数字',
                 min: '一级分类必须大于0'
 
             },
             cate_level_2: {
-                required: '二级分类必须',
+                required: '二级分类必须选择',
                 number: '必须是数字',
                 min: '二级分类必须大于1'
 
             },
             pieces_level_1: {
-                required: '一级单位必须选择',
+                required: '一级单位必须选择选择',
             },
             specification: {
-                required: '最小单位规格必须',
+                required: '最小单位规格必须填写',
             }
         }
     });
