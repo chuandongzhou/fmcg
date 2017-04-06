@@ -48,7 +48,7 @@
                     count: 30,
                     success: function (data) {
                         data = data.data;
-                        var list = data.cnts, firstId = getToUid(list[0].uid) || 0, userList = [];
+                        var list = data.cnts, firstId = list.length ? getToUid(list[0].uid) : 0 , userList = [];
                         list.forEach(function (item) {
                             var lastMsg = '';
                             if (item.type == 2) {

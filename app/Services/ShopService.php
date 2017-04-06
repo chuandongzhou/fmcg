@@ -151,7 +151,7 @@ class ShopService extends RedisService
         foreach ($shops as $shop) {
             $delivery = $shop->deliveryArea()->where(array_filter($where))->first();
 
-            $minMoney = ($delivery && $delivery->min_money) ? $delivery->min_money : $shop->min_money;
+            $minMoney = ($delivery && $delivery->min_money) ? number_format($delivery->min_money, 2) : $shop->min_money;
 
             if ($validate) {
                 if ($shop->sum_price < $minMoney) {

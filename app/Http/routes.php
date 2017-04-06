@@ -116,6 +116,8 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->delete('admin/batch', 'AdminController@deleteBatch');//批量删除
     $router->get('admin/password', 'AdminController@getPassword');//获取修改密码表单
     $router->put('admin/password', 'AdminController@putPassword');//修改当前管理员密码
+    $router->get('admin/pay-password', 'AdminController@payPassword');//获取修改支付密码表单
+    $router->put('admin/pay-password', 'AdminController@putPayPassword');//修改支付密码
     $router->put('admin/switch', 'AdminController@putSwitch');//管理员状态切换
     $router->resource('admin', 'AdminController');          //管理员管理
     $router->resource('advert-index', 'AdvertIndexController'); // 首页广告
@@ -388,7 +390,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
             $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id',
                 '[0-9]+');
-            $router->any('pay-result', 'WechatPayController@payResult');
         });
 
         //支付渠道

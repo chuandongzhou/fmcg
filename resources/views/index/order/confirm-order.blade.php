@@ -50,25 +50,13 @@
                         <div class="item clearfix">
                             <div class="pull-left address-item option-panel">
                                 @if(!$shippingAddress->isEmpty())
-                                    <input class="shipping_address_inp" name="shipping_address_id" type="hidden"
-                                           value="{{  !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->id: $shippingAddress->where('is_default',1)[0]->id }}"/>
-                                    <div class="default-checked" id="default-checked">
-                                        <div class="content">
-                                            <span>{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->consigner:$shippingAddress->where('is_default',1)[0]->consigner }}</span>
-                                            <span class="tel-num">{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->phone:$shippingAddress->where('is_default',1)[0]->phone }}</span>
-                                            <div class="address">{{ !isset($shippingAddress->where('is_default',1)[0])? $shippingAddress[0]->address->address_name:$shippingAddress->where('is_default',1)[0]->address->address_name }}</div>
-                                        </div>
-                                        <i class="fa fa-angle-down"></i>
-                                    </div>
-                                    <div class="option-wrap">
+                                    <select class="form-control" name="shipping_address_id">
                                         @foreach($shippingAddress as $address)
-                                            <div class="option-item address-select" data-id="{{ $address->id }}">
-                                                <span> {{$address->consigner }}</span>
-                                                <span class="tel-num">{{ $address->phone }}</span>
-                                                <span class="address">{{ $address->address->address_name }}</span>
-                                            </div>
+                                            <option value="{{ $address->id }}">
+                                                {{$address->consigner .' '. $address->phone .' '. $address->address->address_name }}
+                                            </option>
                                         @endforeach
-                                    </div>
+                                    </select>
                                 @else
                                     <div>
                                         无收货地址，请添加
@@ -116,7 +104,7 @@
                     <div class="col-sm-12 table-responsive shopping-table-list delivery-option">
                         <h4 class="title">商品清单</h4>
                         @foreach($shops as $shop)
-                            <table class="table table-bordered shop-item">
+                            <table class="table table-bordered shop-item" data-id="{{ $shop->id }}">
                                 <tbody>
                                 <tr>
                                     <th colspan="3">{{ $shop->name }}
@@ -130,7 +118,7 @@
                                             {{ $cartGoods->goods->name }}
                                         </td>
                                         <td class="text-left unit-price">¥ <span
-                                                    class="goods-price-{{ $cartGoods->goods->id }} goods-price"
+                                                    class="goods-price-{{ $cartGoods->goods_id }} goods-price"
                                                     data-price="{{ $cartGoods->goods->price }}">{{ $cartGoods->goods->price }}</span>{{ '/'.$cartGoods->goods->pieces }}
                                         </td>
                                         <td class="text-left">x <span class="goods-num"
@@ -171,13 +159,12 @@
                                 @endif
                                 <tr>
                                     <td colspan="3">
-
                                         <div class="count-panel">
                                             <p class="count min-money">
-                                            <span class="prompt min-money-span {{ $shop->sum_price>=$shop->min_money?'':'red' }}"
-                                                  data-money="{{ $shop->min_money  }}">
-                                               ({{ $shop->sum_price>=$shop->min_money?'满足最低配送额¥'.$shop->min_money:'不满足最低配送额￥'.$shop->min_money }}
-                                                )
+                                            <span class="prompt min-money-span" data-money="{{ $shop->min_money  }}">
+                                                <span class="full">满足最低配送额</span>
+                                                <span class="not-full">不满足最低配送额</span>
+                                                ¥<span class="shop-min-money shop-min-money-{{ $shop->id }}"></span>
                                             </span>
                                                 <span class="name">合计 :&nbsp;</span>
                                                 <span class="red shop-sum-price"
@@ -195,13 +182,10 @@
                     <div class="col-sm-12 padding-clear ">
                         <div class="count-panel finally">
                             <p class="count">
-                             <span class="name">
-                                <b class="red">
-                                    {{ $shops->pluck('cart_goods')->collapse()->count() }}
-                                </b>件商品&nbsp;总商品金额 :&nbsp;
-                                 </span> <b class="sum-price red" data-sum-price="{{ $shops->sum('sum_price') }}">
-                                    ¥ {{ $shops->sum('sum_price') }}
-                                </b>
+                                <span class="name"><b
+                                            class="red">{{ $shops->pluck('cart_goods')->collapse()->count() }}</b>件商品&nbsp;总商品金额 :&nbsp;</span>
+                                <span class="red">¥ <b class="sum-price"
+                                                       data-sum-price="{{ $shops->sum('sum_price') }}">{{ number_format($shops->sum('sum_price'), 2) }}</b></span>
                             </p>
                             <p class="count">
                                 <span class="name">优惠券 :&nbsp;</span>
@@ -209,7 +193,8 @@
                             </p>
                             <p class="count">
                                 <span class="name">应付金额 :&nbsp;</span>
-                                <span class="red">¥ <b class="amount"></b></span></p>
+                                <span class="red">¥ <b class="amount"></b></span>
+                            </p>
                         </div>
                     </div>
                     <div class="col-sm-12 text-right padding-clear">
@@ -225,52 +210,16 @@
 @section('js')
     @parent
     <script type="text/javascript">
-        var deliveryWayList = $('.delivery-way-list'),
-            payTypeList = $('.pay-type-list'),
-            payWay = $('.pay-way'),
-            address = $('.address-select');
+        var address = $('.address-select'),
+            submitOrderControl = $('.submit-order');
 
-        //不是自提时，检查是否所有店铺都满足最低配送额
-        function checkeSubmitBtn() {
-            $('.min-money-span').each(function () {
-                if ($(this).hasClass('red')) {
-                    $('.submit-order').prop('disabled', true).removeClass('btn-primary').addClass('btn-cancel');
-                }
-            });
-        }
-        checkeSubmitBtn();
+        var Confirm = function () {
 
-        deliveryWayList.children('.check-item').on('click', function () {
-            var obj = $(this), deliveryItem = $(".delivery-item");
+            this.pickUp = false;
+        };
 
-            if (obj.hasClass('pick-up')) {
-                deliveryItem.hide();
-                deliveryItem.each(function () {
-                    var self = $(this);
-                    self.find('select,input').prop('disabled', true);
-                });
-                confirmFunc.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
-                $('.min-money-span').hide();
-                $('.submit-order').prop('disabled', false).removeClass('btn-cancel').addClass('btn-primary');
-            } else {
-                deliveryItem.show();
-                deliveryItem.each(function () {
-                    var self = $(this);
-                    self.find('select,input').prop('disabled', false);
-                });
-                confirmFunc.deliveryMode({{ cons('order.delivery_mode.delivery') }});
-                $('.min-money').show();
-                checkeSubmitBtn();
-            }
-            obj.addClass('active').siblings().removeClass("active");
-        });
-        payTypeList.find('.pay-type').on('click', function () {
-            var self = $(this);
-            self.find('input[name="pay_type"]').attr('checked', 'checked');
-            self.parent().siblings().find('input[name="pay_type"]').removeAttr('checked');
-            self.addClass("active").parents().siblings().children().removeClass("active");
-        });
-        var confirmFunc = {
+        Confirm.prototype = {
+            //优惠券选择
             discountAmount: function () {
                 var discountControl = $('select.coupon-control'),
                     sumDiscount = 0,
@@ -281,39 +230,27 @@
                     var obj = $(this),
                         discount = parseFloat(obj.children('option:selected').data('discount')),
                         shopSumPriceControl = obj.closest('table').find('.shop-sum-price'),
-                        shopMinMoneySpan = obj.closest('table').find('.min-money-span'),
                         shopSumPrice = parseFloat(shopSumPriceControl.data('price'));
-                    var ShopMinMoney = parseFloat(shopMinMoneySpan.data('money'));
                     if (discount) {
                         sumDiscount = sumDiscount.add(discount);
                         shopSumPriceControl.html((shopSumPrice.sub(discount)) + '(' + shopSumPrice + '-' + discount + ')');
-                        if (shopSumPrice.sub(discount) > ShopMinMoney) {
-                            shopMinMoneySpan.html('满足最低配送额¥' + ShopMinMoney);
-                        } else {
-                            shopMinMoneySpan.html('不满足最低配送额¥' + ShopMinMoney);
-                        }
                     } else {
                         shopSumPriceControl.html(shopSumPrice.toFixed(2));
-                        if (shopSumPrice.toFixed(2) > ShopMinMoney) {
-                            shopMinMoneySpan.html('满足最低配送额¥' + ShopMinMoney);
-                        } else {
-                            shopMinMoneySpan.html('不满足最低配送额¥' + ShopMinMoney);
-                        }
-
                     }
-
                 });
-
                 if (sumDiscount > 0) {
                     sumDiscountControl.html(sumDiscount.toFixed(2)).parents('.count').show();
 
                 } else {
                     sumDiscountControl.html(sumDiscount).parents('.count').hide();
                 }
-                amountControl.html(parseFloat(sumPriceControl.data('sumPrice')).sub(sumDiscount));
+                amountControl.html(parseFloat(parseFloat(sumPriceControl.data('sumPrice')).sub(sumDiscount)).toFixed(2));
+                this.overThanShopMinMoney();
             },
+            //店铺最低配送额
             shopMinMoney: function () {
-                var shopItem = $('.shop-item'), shopIds = [], shippingAddressId = $('select[name="shipping_address_id"]').val();
+                var that = this, shopItem = $('.shop-item'), shopIds = [],
+                    shippingAddressId = $('select[name="shipping_address_id"]').val();
                 shopItem.each(function () {
                     shopIds.push($(this).data('id'));
                 });
@@ -325,18 +262,20 @@
                     var shopMinMoney = data.shopMinMoney;
 
                     for (var i in shopMinMoney) {
-                        $('.shop-min-money-' + shopMinMoney[i]['shop_id']).html(shopMinMoney[i]['min_money']);
+                        var minMoney = shopMinMoney[i]['min_money'];
+                        $('.shop-min-money-' + shopMinMoney[i]['shop_id']).data('min-money', minMoney).html(minMoney);
                     }
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
 
 
                 }).always(function (data, textStatus, jqXHR) {
-
+                    that.overThanShopMinMoney();
                 });
             },
+            //提货方式
             deliveryMode: function (deliveryMode) {
-                var goodsItem = $('.goods-item'), goodsIds = [], deliveryMode = deliveryMode || 1;  //deliveryMode: 1送货 2自提
+                var that = this, goodsItem = $('.goods-item'), goodsIds = [], deliveryMode = deliveryMode || 1;  //deliveryMode: 1送货 2自提
                 goodsItem.each(function () {
                     goodsIds.push($(this).data('id'));
                 });
@@ -350,11 +289,11 @@
                     for (var i in goodsPrice) {
                         $('.goods-price-' + goodsPrice[i]['goods_id']).data('price', goodsPrice[i]['price']).html(goodsPrice[i]['price']);
                     }
-                    confirmFunc.formatShopSumPrice();
-                    confirmFunc.formatSumPrice();
-                    confirmFunc.formatCouponControl();
-                    confirmFunc.discountAmount();
-
+                    that.formatShopSumPrice();
+                    that.formatSumPrice();
+                    that.formatCouponControl();
+                    that.discountAmount();
+                    that.overThanShopMinMoney();
                 }).fail(function (jqXHR, textStatus, errorThrown) {
 
 
@@ -362,20 +301,41 @@
 
                 });
             },
+            //店铺总价格
             formatShopSumPrice: function () {
                 $('.shop-item').each(function () {
-                    var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'), goodsItem = obj.find('.goods-item');
+                    var obj = $(this), sumPrice = 0, sumPricePanel = obj.find('.shop-sum-price'),
+                        goodsItem = obj.find('.goods-item');
                     goodsItem.each(function () {
                         var self = $(this),
                             goodsPrice = parseFloat(self.find('.goods-price').data('price')),
                             goodsNum = self.find('.goods-num').data('num');
                         sumPrice = sumPrice.add(goodsPrice.mul(goodsNum));
                     });
-
-
                     sumPricePanel.data('price', sumPrice).html(sumPrice.toFixed(2));
                 })
             },
+            //是否超过最低配送额
+            overThanShopMinMoney: function () {
+                submitOrderControl.prop('disabled', false);
+                if (!this.pickUp) {
+                    $('.shop-item').each(function () {
+                        var obj = $(this),
+                            sumPricePanel = obj.find('.shop-sum-price'),
+                            sumPrice = parseFloat(sumPricePanel.data('price')),
+                            shopMinMoneyPanel = obj.find('.shop-min-money'),
+                            minMoney = parseFloat(shopMinMoneyPanel.data('minMoney')),
+                            minMoneySpan = obj.find('.min-money-span');
+                        if (minMoney > sumPrice) {
+                            submitOrderControl.prop('disabled', true);
+                            minMoneySpan.addClass('red').children('.not-full').removeClass('hide').siblings('.full').addClass('hide');
+                        } else {
+                            minMoneySpan.removeClass('red').children('.not-full').addClass('hide').siblings('.full').removeClass('hide');
+                        }
+                    })
+                }
+            },
+            //订单总价格
             formatSumPrice: function () {
                 var sumPricePanel = $('.sum-price'), sumPrice = 0;
                 $('.shop-item').each(function () {
@@ -383,8 +343,9 @@
                     sumPrice = sumPrice.add(parseFloat(shopSumPrice));
                 });
 
-                sumPricePanel.data('sum-price', sumPrice).html(sumPrice);
+                sumPricePanel.data('sum-price', sumPrice).html(sumPrice.toFixed(2));
             },
+            //格式化优惠券
             formatCouponControl: function () {
                 $('.shop-item').each(function () {
                     var obj = $(this),
@@ -408,41 +369,75 @@
                     }
 
                 });
+            },
+            //设置是否为自提
+            setPickUp: function (status) {
+                this.pickUp = status;
             }
         };
 
+        var confirms = new Confirm();
+
+
         $('select.coupon-control').on('change', function () {
-            confirmFunc.discountAmount();
+            confirms.discountAmount();
         });
 
         $('select[name="shipping_address_id"]').on('change', function () {
-            confirmFunc.shopMinMoney();
+            confirms.shopMinMoney();
         });
-        confirmFunc.discountAmount();
-        confirmFunc.shopMinMoney();
+        confirms.discountAmount();
+        confirms.shopMinMoney();
 
-        $(".default-checked").click(function (e) {
+        //配送方式选择
+        $('.delivery-way-list').children('.check-item').on('click', function () {
+            var obj = $(this), deliveryItem = $(".delivery-item");
+
+            if (obj.hasClass('pick-up')) {
+                confirms.setPickUp(true);
+                deliveryItem.hide();
+                deliveryItem.each(function () {
+                    var self = $(this);
+                    self.find('select,input').prop('disabled', true);
+                });
+                confirms.deliveryMode({{ cons('order.delivery_mode.pick_up') }});
+                $('.min-money-span').hide();
+                $('.submit-order').prop('disabled', false).removeClass('btn-cancel').addClass('btn-primary');
+            } else {
+                confirms.setPickUp(false);
+                deliveryItem.show();
+                deliveryItem.each(function () {
+                    var self = $(this);
+                    self.find('select,input').prop('disabled', false);
+                });
+                confirms.deliveryMode({{ cons('order.delivery_mode.delivery') }});
+                $('.min-money').show();
+                $('.min-money-span').show();
+            }
+            obj.addClass('active').siblings().removeClass("active");
+        });
+
+        $('.pay-type-list').find('.pay-type').on('click', function () {
+            var self = $(this);
+            self.find('input[name="pay_type"]').attr('checked', 'checked');
+            self.parent().siblings().find('input[name="pay_type"]').removeAttr('checked');
+            self.addClass("active").parents().siblings().children().removeClass("active");
+        });
+
+        $("div.default-checked").on('click', function (e) {
             $(this).siblings(".option-wrap").slideToggle();
         })
 
         $(".option-item").click(function () {
-            var checkedHtml = $(this).html(), self = $(this);
+            var self = $(this), checkedHtml = self.html(), optionWrap = self.parents(".option-wrap");
 
-            self.hasClass('address-select') && $('input[name="shipping_address_id"]').val(self.data('id'));
-            self.hasClass('pay_way_select') && $('input[name="pay_way"]').val(self.data('value'));
-            self.parents(".option-wrap").siblings(".default-checked").children(".content").html(checkedHtml);
-            self.parents(".option-wrap").slideUp();
+            $('input[name="pay_way"]').val(self.data('value'));
+            optionWrap.siblings(".default-checked").children(".content").html(checkedHtml);
+            optionWrap.slideUp();
         })
 
         $('.option-panel').click(function (e) {
             e.stopPropagation();
-        })
-
-        $(document).click(function (e) {
-            e = e || window.event;
-            if (e.target != $('.option-panel')[0]) {
-                $(".option-panel .option-wrap").slideUp();
-            }
         });
     </script>
 @stop

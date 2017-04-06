@@ -3639,13 +3639,6 @@ table {
 }
 .tableLayout{
     margin-bottom:20px;
-  .table-scroll{
-    tr{
-      td:first-of-type{
-        width:125px!important;
-      }
-    }
-  }
   thead{
     tr{
       td,th{
@@ -3659,18 +3652,18 @@ table {
     }
   }
   .tableHead{
-    min-width:1033px;
-    table{
       min-width:1033px;
+      table{
+        min-width:1033px;
+      }
     }
-  }
   .tableData{
-    min-width:1049px;
-    table{
-      min-width:1033px;
+      min-width:1049px;
+      table{
+        min-width:1033px;
 
+      }
     }
-  }
   .tableColumn{
     table{
       tr{
@@ -4891,7 +4884,7 @@ table {
       min-width: 50%;
       display: inline-block;
       line-height: 30px;
-      margin-right: 20px;
+      margin:13px 0 0 20px;
       cursor: pointer;
       position: relative;
       label {

@@ -19,7 +19,7 @@ class HomeController extends Controller
     public function index()
     {
         //广告
-        
+
         $indexAdvertConf = cons('advert.cache.index');
         $adverts = [];
         if (Cache::has($indexAdvertConf['name'])) {
@@ -47,7 +47,23 @@ class HomeController extends Controller
 
     public function test()
     {
-       dd( Carbon::now()->format('YmdHis'));
+      dd(app('wechat.pay')->verifySign(array (
+          'bankNumber' => 'NjIxNTU4NDQwMjAxMDgxMjMzNw==',
+          'bankCode' => 'ICBC',
+          'orderNo' => '12',
+          'dealMsg' => '交易成功',
+          'accountName' => '5p6X5pmT5Lic',
+          'fee' => '150.0',
+          'sign' => '8587394AF09AF16A044F0F465AC2F91B',
+          'bankName' => '工商银行',
+          'cxOrderNo' => '2017040100011796fe97759aa27a0c9',
+          'orderAmount' => '1000.0',
+          'orderTime' => '20170401065853',
+          'dealTime' => '20170401070003',
+          'dealCode' => '10000',
+          'currency' => 'CNY',
+          'merchantNo' => 'CX0001089',
+      )));
     }
 
 }

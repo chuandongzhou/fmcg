@@ -599,6 +599,7 @@ class OrderController extends Controller
     {
 
         $data = $request->all();
+
         $orderService = new OrderService;
 
         $result = $orderService->orderSubmitHandle($data);

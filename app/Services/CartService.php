@@ -62,7 +62,7 @@ class CartService extends BaseService
                 if ($cartGoods->shop_id == $shop->id) {
                     $shop->cart_goods = $shop->cart_goods ? $shop->cart_goods->push($cart) : collect([$cart]);
                     $cartGoodsPrice = $isDelivery ? $cartGoods->price : $cartGoods->pick_up_price;
-                    $sumPrice += $cartGoodsPrice * $cart->num;
+                    $sumPrice = bcadd($sumPrice, bcmul($cartGoodsPrice, $cart->num, 2), 2);
                 }
             }
             if ($sumPrice > 0) {

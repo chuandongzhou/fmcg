@@ -3,7 +3,7 @@
 
 @section('right-container')
     <form class="form-horizontal ajax-form" method="put"
-          action="{{ url('admin/admin/password') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+          action="{{ !isset($pay) ? url('admin/admin/password') : url('admin/admin/pay-password') }}" data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
 
         <div class="form-group">
             <label for="old-password" class="col-sm-2 control-label">旧密码:</label>

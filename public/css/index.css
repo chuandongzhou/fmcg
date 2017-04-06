@@ -4199,10 +4199,6 @@ table .product-panel .promotions {
   margin-bottom: 20px;
 }
 
-.tableLayout .table-scroll tr td:first-of-type {
-  width: 125px !important;
-}
-
 .tableLayout thead tr td,
 .tableLayout thead tr th,
 .tableLayout thead .table-list-row .shopping-table-list table tr td,
@@ -5642,7 +5638,7 @@ table .product-panel .promotions {
   min-width: 50%;
   display: inline-block;
   line-height: 30px;
-  margin-right: 20px;
+  margin: 13px 0 0 20px;
   cursor: pointer;
   position: relative;
 }

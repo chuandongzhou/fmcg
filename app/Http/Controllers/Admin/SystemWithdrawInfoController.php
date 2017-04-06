@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\PayPasswordRequest;
+use App\Models\PayPassword;
 use App\Models\User;
 use App\Models\Withdraw;
 use App\Services\RedisService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Hash;
 
 
 class SystemWithdrawInfoController extends Controller
 {
+    use ValidatesRequests ;
     /**
      * 获取提现信息
      *
@@ -47,8 +52,21 @@ class SystemWithdrawInfoController extends Controller
         ]);
     }
 
-    public function postSend($withdrawId)
+    /**
+     * 打款
+     *
+     * @param \App\Http\Requests\Admin\PayPasswordRequest $request
+     * @param $withdrawId
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function postSend(PayPasswordRequest $request, $withdrawId)
     {
+        $payPassword = $request->input('pay_password');
+
+        if (!Hash::check($payPassword, PayPassword::pluck('password'))) {
+            return $this->error('支付密码错误');
+        }
+
         $withdraw = Withdraw::where('status', cons('withdraw.pass'))->find($withdrawId);
 
         if (is_null($withdraw)) {
@@ -57,9 +75,20 @@ class SystemWithdrawInfoController extends Controller
 
         $wechatPay = app('wechat.pay');
 
-        $result = $wechatPay->agentPay($wechatPay);
+        $result = $wechatPay->agentPay($withdraw);
 
-        info($result);
+
+        if ($result['dealCode'] != 10000) {
+            return $this->error($result['dealMsg']);
+        }
+
+
+        if (!$wechatPay->verifySign($result)) {
+            return $this->error('请求出错，请重试');
+        }
+
+        return $this->success('打款成功');
+
 
     }
 
@@ -91,6 +120,7 @@ class SystemWithdrawInfoController extends Controller
     public function putPayment(Request $request)
     {
         $data = $request->all();
+
         $item = Withdraw::where('status', cons('withdraw.pass'))->find(intval($data['withdraw_id']));
 
         if ($item) {

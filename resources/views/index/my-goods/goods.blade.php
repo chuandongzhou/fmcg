@@ -472,7 +472,7 @@
                                             </div>
                                             @foreach($goods->deliveryArea as $area)
 
-                                                <div class="col-sm-10 show-map">{{ $area->address_name.'('.$area->min_money.')' }}
+                                                <div class="col-sm-10 show-map">{{ $area->address_name }}
                                                     <span class="fa fa-times pull-right close-icon"></span>
                                                     <input type="hidden" name="area[id][]" value="{{ $area->id }}"/>
                                                     <input type="hidden" name="area[province_id][]"

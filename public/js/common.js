@@ -381,15 +381,23 @@ var commonAjaxSetup = function () {
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
 
-                    self.html(data.message || '操作成功');
-                    self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
+                    if (data.status != false) {
+                        self.html(data.message || '操作成功');
+                        self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
+                    } else {
+                        self.html(data.content || '操作失败');
+                        self.hasClass('no-prompt') || successMeg(data.content || '操作失败');
+
+                        setTimeout(function () {
+                            self.button('reset');
+                        }, delay)
+                    }
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 common.loading('hide');
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)) {
-                    self.html('操作失败');
 
                     var json = jqXHR['responseJSON'];
                     if (json) {
@@ -422,7 +430,7 @@ var commonAjaxSetup = function () {
                 var params = [data, textStatus, jqXHR, self];
                 if (false !== self.triggerHandler('always.hct.ajax', params)
                     && false !== form.triggerHandler('always.hct.ajax', params)
-                    && !preventDefault) {
+                    && !preventDefault && false !== data.status) {
 
                     self.data('alwaysIntervalId', setTimeout(function () {
                         // 处理刷新事件
@@ -1237,10 +1245,8 @@ var goodsBatchUpload = function () {
                     'cate_level_2': cateLevel2,
                     'cate_level_3': cateLevel3
                 };
-                if (shopIdControl.length > 0)
-                {
-                    if(shopIdControl.val() == '' || shopIdControl.val() == null)
-                    {
+                if (shopIdControl.length > 0) {
+                    if (shopIdControl.val() == '' || shopIdControl.val() == null) {
                         alert('请填写店铺ID!');
                         return
                     }
@@ -1306,7 +1312,7 @@ var visibleSelect = function () {
  * @param height
  * @constructor
  */
-var FixTable = function(TableID, FixColumnNumber, width, height) {
+var FixTable = function (TableID, FixColumnNumber, width, height) {
     if ($("." + TableID + "_tableLayout").length != 0) {
         $("." + TableID + "_tableLayout").before($("." + TableID));
         $("." + TableID + "_tableLayout").empty();
@@ -1362,12 +1368,12 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
     //             break;
     //     }
     // }
-   // alert(ColumnsWidth);
-    $("." + TableID + "_tableHead").css("min-width", width-17);
-    $("." + TableID + "_tableHead table").css("min-width", width-17);
-    $("." + TableID + "_tableData").css("min-width", width-1);
-    $("." + TableID + "_tableData table").css("min-width", width-17);
-    ColumnsWidth+=$("." + TableID + "_tableHead thead tr:first td:first").outerWidth();
+    // alert(ColumnsWidth);
+    $("." + TableID + "_tableHead").css("min-width", width - 17);
+    $("." + TableID + "_tableHead table").css("min-width", width - 17);
+    $("." + TableID + "_tableData").css("min-width", width - 1);
+    $("." + TableID + "_tableData table").css("min-width", width - 17);
+    ColumnsWidth += $("." + TableID + "_tableHead thead tr:first td:first").outerWidth();
     $("." + TableID + "_tableColumn").css("width", ColumnsWidth);
     $("." + TableID + "_tableColumn table tbody tr td:first").css("min-width", ColumnsWidth);
     $("." + TableID + "_tableFix").css("width", ColumnsWidth);
@@ -1401,7 +1407,7 @@ var FixTable = function(TableID, FixColumnNumber, width, height) {
         "height": height,
         "position": "absolute",
         "z-index": "35",
-        "top":"0"
+        "top": "0"
     });
 
     $("." + TableID + "_tableFix").offset($("." + TableID + "_tableLayout").offset());

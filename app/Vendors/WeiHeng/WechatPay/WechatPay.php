@@ -125,7 +125,7 @@ class WechatPay
         $options = [
             'service' => 'getCodeUrl',
             'merchantNo' => $this->config['merchantNo'],
-            'bgUrl' => url('api/v1/wechat-pay/pay-result'),
+            'bgUrl' =>url('webhooks/wechat/pay-result'),
             'version' => 'V1.0',
             'payChannelCode' => 'CX_WX',
             'orderNo' => $order->id,
@@ -140,6 +140,12 @@ class WechatPay
         return array_add($options, 'sign', $sign);
     }
 
+    /**
+     * 获取代付
+     *
+     * @param \App\Models\Withdraw $withdraw
+     * @return array
+     */
     public function getAgentOptions(Withdraw $withdraw)
     {
         $options = [
@@ -154,11 +160,11 @@ class WechatPay
             'bankName' => $withdraw->bank_name,
             'bankCode' => cons()->key('bank.type', $withdraw->card_type),
             'currency' => 'CNY',
-            'bankProvcince' => $withdraw->province,
-            'bankCity' => $withdraw->city,
+            'bankProvcince' => $withdraw->bank_province,
+            'bankCity' => $withdraw->bank_city,
             'orderAmount' => bcmul($withdraw->amount, 100),
             'orderTime' => Carbon::now()->format('YmdHis'),
-            'notifyUrl' => url('webhooks/wechat/success'),
+            'notifyUrl' => 'http://dingbaida.com/webhooks/wechat/success'//url('webhooks/wechat/agent-result'),
         ];
         $sign = $this->getSign($options);
         return array_add($options, 'sign', $sign);
@@ -269,7 +275,7 @@ class WechatPay
      */
     private function _formatResponse($result)
     {
-        info((array)json_decode($result));
+        //info((array)json_decode($result));
         return (array)json_decode($result);
     }
 }

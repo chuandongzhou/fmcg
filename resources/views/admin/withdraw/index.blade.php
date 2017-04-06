@@ -59,7 +59,7 @@
             <th>银行名称</th>
             <th>开户行地址</th>
             <th>状态</th>
-            <th>交易单号</th>
+            <th width="5%">交易单号</th>
             <th>申请时间</th>
             <th>操作</th>
         </tr>
@@ -87,20 +87,19 @@
                                 >
                                     <i class="fa fa-edit"></i> 通过
                                 </a>
-                                <a class="rollback btn btn-danger" data-target="#rollback" data-toggle="modal"
+                                <a class="rollback btn btn-danger" data-target="#rollbackModal" data-toggle="modal"
                                    data-id='{{ $withdraw->id }}'>
                                     <i class="fa fa-reply"></i> 回退
                                 </a>
                             @endif
                             @if($withdraw->status == cons('withdraw.pass'))
                                 {{--打款需要交易号，回退需要回退原因--}}
-                                <a class="payment btn btn-success" data-target="#payment" data-toggle="modal"
+                                <a class="payment btn btn-success" data-target="#paymentModal" data-toggle="modal"
                                    data-id='{{ $withdraw->id }}'>
                                     <i class="fa fa-edit"></i> 已打款
                                 </a>
-
-                                <a class="btn btn-default ajax" data-url="{{ url('admin/system-withdraw/send') }}"
-                                   data-method="post">
+                                <a class="btn btn-default" data-target="#payPasswordModal" data-toggle="modal"
+                                   data-url="{{ url('admin/system-withdraw/send/' . $withdraw->id) }}">
                                     <i class="fa fa-money"></i> 打款
                                 </a>
                             @endif
@@ -118,50 +117,107 @@
 
     {!! $withdraws->appends($data)->render() !!}
 
-    <div class="modal fade in" id="rollback" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-         aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="rollbackModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <p class="modal-title">回退原因:</p>
-                </div>
-                <div class="modal-body">
-                    <div class="text-left">
-                        <textarea name="reason" cols="40" rows="5"></textarea>
+                <form class="form-horizontal ajax-form no-prompt"
+                      action="{{  url('admin/system-withdraw/failed') }}"
+                      data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                        <div class="modal-title forgot-modal-title" id="shippingAddressModalLabel">
+                            <span class="header-content">回退原因</span>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-body">
-                    <div class="text-right">
+                    <div class="modal-body">
+                        <div class="text-left">
+                            <textarea class="form-control" name="reason"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="withdraw_id"/>
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
-                                data-url="{{ url('admin/system-withdraw/failed') }}" data-method="put">确定
+                                data-method="put">确定
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-    <div class="modal fade in" id="payment" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-         aria-hidden="true" style="padding-right: 17px;">
+    <div class="modal fade in" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width:70%;margin:auto">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <p class="modal-title">交易单号:
-                        <input type="text" name="tradeNo"/>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <div class="text-right">
-                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消</button>
+                <form class="form-horizontal ajax-form no-prompt"
+                      action="{{ url('admin/system-withdraw/payment') }}"
+                      data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                        <div class="modal-title forgot-modal-title" id="shippingAddressModalLabel">
+                            <span class="header-content">打款单号</span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="trade"><span class="red">*</span>
+                                交易单号:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="trade_no" name="trade_no" placeholder="请输入交易单号"
+                                       value="" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="withdraw_id"/>
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消
+                        </button>
                         <button type="button" class="btn btn-primary btn-sm btn-add ajax" data-text="确定"
-                                data-url="{{ url('admin/system-withdraw/payment') }}" data-method="put">确定
+                                data-method="put">确定
                         </button>
                     </div>
-                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade in" id="payPasswordModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="width:70%;margin:auto">
+                <form class="form-horizontal ajax-form no-prompt"
+                      data-help-class="col-sm-push-2 col-sm-10" autocomplete="off">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                        <div class="modal-title forgot-modal-title" id="shippingAddressModalLabel">
+                            <span class="header-content">支付密码</span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label" for="pay-password"><span class="red">*</span>
+                                支付密码:</label>
+
+                            <div class="col-sm-10 col-md-6">
+                                <input class="form-control" id="pay-password" name="pay_password" placeholder="请输入支付密码"
+                                       value="" type="password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm btn-pay ajax" data-text="确定"
+                                data-method="post">确定
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -171,7 +227,26 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            withdrawOperateEvents();
+            //withdrawOperateEvents();
+            var paymentModal = $('#paymentModal'),
+                rollbackModal = $('#rollbackModal'),
+                payPasswordModal = $('#payPasswordModal'),
+                form = paymentModal.find('form'),
+                rollbackForm = rollbackModal.find('form'),
+                payPasswordBtn = payPasswordModal.find('.btn-pay');
+
+            paymentModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget), id = obj.data('id');
+                form.find('input[name="withdraw_id"]').val(id);
+            });
+            rollbackModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget), id = obj.data('id');
+                rollbackForm.find('input[name="withdraw_id"]').val(id);
+            });
+            payPasswordModal.on('shown.bs.modal', function (e) {
+                var obj = $(e.relatedTarget), url = obj.data('url');
+                payPasswordBtn.data('url', url);
+            });
             formSubmitByGet();
         });
     </script>

@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Http\Requests\Admin\UpdatePasswordRequest;
 use App\Models\Admin;
+use App\Models\PayPassword;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -124,6 +125,43 @@ class AdminController extends Controller
             return $this->error('修改密码时遇到错误');
         }
 
+
+        return $this->error('原密码错误');
+    }
+
+    /**
+     * 获取修改密码视图
+     *
+     * @return \Illuminate\View\View
+     */
+    public function payPassword()
+    {
+
+        return view('admin.admin.password', ['pay' => true]);
+    }
+
+    /**
+     * 修改支付密码
+     *
+     * @param \App\Http\Requests\Admin\UpdatePasswordRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function putPayPassword(UpdatePasswordRequest $request)
+    {
+        $password = PayPassword::first();
+        if (is_null($password)) {
+            return PayPassword::create(['password' => $request->input('password')]) ? $this->success('修改密码成功') : $this->error('修改码时出现问题');
+        }
+
+        //检查原密码是否正确
+        if (Hash::check($request->input('old_password'), $password->password)) {
+            //修改新密码
+            if ($password->fill(['password' => $request->input('password')])->save()) {
+                return $this->success('修改密码成功');
+            }
+
+            return $this->error('修改密码时遇到错误');
+        }
 
         return $this->error('原密码错误');
     }
