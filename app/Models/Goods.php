@@ -90,6 +90,16 @@ class Goods extends Model
     }
 
     /**
+     * 商品用户收藏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function goodsLike()
+    {
+        return $this->belongsToMany('App\Models\User', 'like_goods',  'goods_id','user_id');
+    }
+    
+    /**
      * 订单里的商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -579,5 +589,15 @@ class Goods extends Model
     public function getIsMortgageGoodsAttribute()
     {
         return !is_null($this->mortgageGoods);
+    }
+
+    /**
+     * 获得商品收藏次数
+     *
+     * @return mixed
+     */
+    public function getLikeAmountAttribute()
+    {
+        return $this->goodsLike->count();
     }
 }

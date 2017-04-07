@@ -28,9 +28,12 @@ class MyGoodsController extends Controller
         $data = $request->all();
         $shop = auth()->user()->shop;
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->orderBy('id', 'DESC')->paginate()->toArray();
+        $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
+        $goods->each(function ($goods){
+            $goods->setAppends(['like_amount'])->setHidden(['goods_like']);
+        });
         return $this->success([
-            'goods' => $goods,
+            'goods' => $goods->toArray(),
             'categories' => CategoryService::formatShopGoodsCate($shop)
         ]);
     }
@@ -99,7 +102,6 @@ class MyGoodsController extends Controller
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
-
         return $this->success(['goods' => $goods]);
     }
 
