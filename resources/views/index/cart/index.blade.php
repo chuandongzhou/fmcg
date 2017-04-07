@@ -78,8 +78,8 @@
                                                 <span class="span-checkbox  goods-checkbox">
                                                     <i class="fa fa-check"></i>
                                                 </span>
-                                                <input class="inp-checkbox" checked name="goods_id[]" rel='reason'
-                                                       value="{{ $cartGoods->goods_id }}" id="{{ $cartGoods->id }}"
+                                                <input class="inp-checkbox" checked name="id[]" rel='reason'
+                                                       value="{{ $cartGoods->id }}" id="{{ $cartGoods->id }}"
                                                        type="checkbox">
                                             </div>
                                             <img class="avatar" src="{{ $cartGoods->image }}">

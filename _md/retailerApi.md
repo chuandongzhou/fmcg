@@ -553,13 +553,6 @@
     x_lng               float       纬度
     y_lat               float       经度
     user                array       用户
-	three_goods			array		最新三个商品
-	sales_volume		int			店铺销量
-	goods_count			int			店铺商品数
-
-	three_goods  字段子集说明：
-
-	见商品详情
 
     shop_address 字段子集说明
 
@@ -589,8 +582,6 @@
     introduction        string      店铺介绍
     min_money           decimal     最低配送额
     is_like             bool        是否已收藏
-	sales_volume		int			店铺销量
-	goods_count			int			店铺商品数
 
 
 

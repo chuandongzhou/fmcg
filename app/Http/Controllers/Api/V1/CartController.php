@@ -108,11 +108,12 @@ class CartController extends Controller
      */
     public function deleteBatchDelete(Request $request)
     {
-        $goodsId = $request->input('goods_id');
-        if (is_null($goodsId)) {
+
+        $ids = $request->input('ids');
+        if (is_null($ids)) {
             return $this->error('请选择要删除的商品');
         }
-        if ($this->user->carts()->whereIn('goods_id', $goodsId)->delete()) {
+        if ($this->user->carts()->whereIn('id', $ids)->delete()) {
             return $this->success('删除成功');
         }
         return $this->error('删除失败');
