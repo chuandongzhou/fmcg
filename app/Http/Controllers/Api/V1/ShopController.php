@@ -48,6 +48,9 @@ class ShopController extends Controller
             'name', 'min_money', 'user_id', 'contact_person', 'contact_info', 'x_lng', 'y_lat')
             ->with('logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
+        $shops->each(function ($item) {
+            $item->setAppends(['goods_count', 'sales_volume', 'three_goods'])->setHidden(['goods']);
+        });
         return $this->success($shops->toArray());
     }
 
@@ -83,8 +86,9 @@ class ShopController extends Controller
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $shop->is_like = $isLike ? true : false;
+        $shop->setAppends(['goods_count', 'sales_volume'])->setHidden(['goods']);
         return $this->success([
-            'shop' => $shop
+            'shop' => $shop->toArray()
         ]);
     }
 
@@ -119,7 +123,9 @@ class ShopController extends Controller
         if (empty($shopIds)) {
             return [];
         }
-        $shops = Shop::with(['logo', 'user'])->whereIn('id', $shopIds)->get(['name', 'id', 'user_id'])->each(function ($shop) {
+        $shops = Shop::with(['logo', 'user'])->whereIn('id', $shopIds)->get(['name', 'id', 'user_id'])->each(function (
+            $shop
+        ) {
             $shop->setAppends(['logo_url']);
         });
         return $this->success(['shops' => $shops->keyBy('id')]);

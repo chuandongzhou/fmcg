@@ -444,6 +444,8 @@ class Goods extends Model
         $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userType >= $userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
         return $piece;
     }
+    
+    
 
     /**
      * 获取单位

@@ -662,7 +662,16 @@ class Shop extends Model
      */
     public function getGoodsCountAttribute()
     {
-        return $this->goods()->count();
+        return $this->goods->count();
+    }
+
+    /**
+     * 获取店家三个商品 按id desc
+     *
+     */
+    public function getThreeGoodsAttribute()
+    {
+        return $this->goods()->OfNew()->limit(3)->get();
     }
 
 
