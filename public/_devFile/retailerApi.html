@@ -933,13 +933,6 @@ shop_address        array       店铺地址
 x_lng               float       纬度
 y_lat               float       经度
 user                array       用户
-three_goods         array       最新三个商品
-sales_volume        int         店铺销量
-goods_count         int         店铺商品数
-
-three_goods  字段子集说明：
-
-见商品详情
 
 shop_address 字段子集说明
 
@@ -967,8 +960,6 @@ contact_info        string      联系方式
 introduction        string      店铺介绍
 min_money           decimal     最低配送额
 is_like             bool        是否已收藏
-sales_volume        int         店铺销量
-goods_count         int         店铺商品数
 </code></pre>
 
 <h4>2.4.4 店铺商品[get]   ({shop_id}/goods)</h4>
@@ -1174,6 +1165,13 @@ cart_goods          array       属于本商店的商品
 <p><code>失败返回</code></p>
 <h4>2.6.3 删除购物车[delete] (delete/{cartId})</h4>
 <p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回</code></p>
+<h4>2.6.4 批量删除购物车[delete] (batch-delete})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>ids          array          购物车id数组 (ids =&gt; ['1','2'])  
+</code></pre>
+
 <p><code>成功返回：</code></p>
 <p><code>失败返回</code></p>
 <h3>2.7 订单 order</h3>
