@@ -274,6 +274,22 @@ return [
             'success' => '成功'
         ],
     ],
+    //签约管理
+    'sign' => [
+        //续期金额
+        'expire_amount' => [
+            'a_month' => '1',
+            'two_months' => '2',
+            'three_months' => '3',
+            'four_months' => '4',
+            'five_months' => '5',
+            'six_months' => '6',
+            'seven_months' => '7',
+            'eight_months' => '8',
+            'nine_months' => '9',
+            'a_year' => '1年',
+        ]
+    ],
     'admin' => [
         'notification' => [
             'role-create' => '创建角色',

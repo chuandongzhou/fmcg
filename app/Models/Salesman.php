@@ -12,7 +12,6 @@ class Salesman extends Model implements AuthenticatableContract
     use SoftDeletes;
     use Authenticatable;
     protected $table = 'salesman';
-
     protected $fillable = [
         'account',
         'password',
@@ -34,6 +33,26 @@ class Salesman extends Model implements AuthenticatableContract
         'last_login_ip',
         'last_login_time'
     ];
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册创建事件
+        static::creating(function ($model) {
+            $signService = app('sign');
+            $signConfig = cons('sign');
+            if ($signService->workerCount >= $signConfig['max_worker']) {
+                if (auth()->user()->prestore < $signConfig['worker_excess_amount']) {
+                    $model->attributes['status'] = 0;
+                }
+                $signService->discountPrestore();
+            }
+        });
+    }
 
     /**
      * 模型启动事件

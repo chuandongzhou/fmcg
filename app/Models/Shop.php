@@ -6,6 +6,7 @@ use App\Services\AddressService;
 use App\Services\ImageUploadService;
 use App\Services\ShopService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shop extends Model
@@ -295,7 +296,7 @@ class Shop extends Model
     /**
      * 关联抵费商品
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function mortgageGoods()
     {
@@ -377,8 +378,9 @@ class Shop extends Model
     public function scopeOfUser($query, $myType, $shopType = 0)
     {
         return $query->whereHas('user', function ($q) use ($myType, $shopType) {
-            $q->where('type', '>', $myType)->active()->where('audit_status',
-                cons('user.audit_status.pass'));
+            $nowTime = Carbon::now();
+            $q->active()->where('type', '>', $myType)->where('deposit', '>', 0)->where('expire_at', '>',
+                $nowTime)->where('audit_status', cons('user.audit_status.pass'));
             if ($shopType) {
                 $q->where('type', $shopType);
             }
@@ -402,6 +404,7 @@ class Shop extends Model
             });
         }
     }
+
 
     /**
      * 设置logo

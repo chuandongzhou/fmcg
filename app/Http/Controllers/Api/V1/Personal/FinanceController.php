@@ -13,6 +13,13 @@ use App\Http\Controllers\Api\V1\Controller;
 
 class FinanceController extends Controller
 {
+    /**
+     * FinanceController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit:true');
+    }
 
     /**
      * 提现记录列表(含查询功能)

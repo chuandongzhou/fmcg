@@ -19,6 +19,7 @@ class OrderSellController extends OrderController
     public function __construct()
     {
         $this->middleware('retailer');
+        $this->middleware('deposit');
     }
 
     /**
@@ -47,7 +48,7 @@ class OrderSellController extends OrderController
         } else {
             $orders = $orders->ofSelectOptions($search);
         }
-        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
 
         return view('index.order.order-sell', [
             'order_status' => $orderStatus,
@@ -66,7 +67,7 @@ class OrderSellController extends OrderController
         $orders = Order::OfSell(auth()->id())->useful()->WithExistGoods([
             'user.shop',
         ])->nonSend();
-        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
         return view('index.order.order-sell', [
             'data' => $this->_getOrderNum($orders->count()),
             'orders' => $orders->paginate(),

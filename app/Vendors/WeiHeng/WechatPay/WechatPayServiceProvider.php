@@ -23,7 +23,7 @@ class WechatPayServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('wechat.pay', function ($app) {
-            return new WechatPay($app['config']['wechat']);
+            return new Sign($app['config']['wechat']);
         });
     }
 

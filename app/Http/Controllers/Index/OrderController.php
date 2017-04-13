@@ -505,7 +505,7 @@ class OrderController extends Controller
         ];
 
         $shopName = $orders->first()->shop_name;
-        $name = $shopName.$startTime . '至' . $endTime  . '购买统计';
+        $name = $shopName . $startTime . '至' . $endTime . '购买统计';
         $this->_statisticsUserDetailExport($result, $name, false);
     }
 
@@ -774,7 +774,7 @@ class OrderController extends Controller
         foreach ($orderStatistics['orderGoodsStatistics'] as $item) {
             $start = count($goods) + 2;
             foreach ($item['pieces'] as $piece => $value) {
-                if ($value == head($item['pieces'])) {
+                if ($piece == key($item['pieces'])) {
                     $mergeArray[$start] = [$start, $start];
                     $goods[] = [
                         $item['name'],

@@ -26,6 +26,10 @@ class GoodsImageService extends RedisService
         return $this->get($key);
     }
 
+    /**
+     * @param $goodsId
+     * @return mixed
+     */
     public function hasImage($goodsId)
     {
         $key = $this->key . $goodsId;
@@ -37,7 +41,7 @@ class GoodsImageService extends RedisService
      *
      * @param $goodsId
      * @param $url
-     * @return int
+     * @return bool
      */
     public function setImage($goodsId, $url)
     {

@@ -35,7 +35,7 @@ class ShopController extends Controller
         //供应商暂时与批发商一致
         $userType = $user->type <= $userTypes['wholesaler'] ? $user->type : $userTypes['wholesaler'];
 
-        $shops = Shop::OfUser($userType, $typeId)->with('logo', 'shopAddress');
+        $shops = Shop::ofUser($userType, $typeId)->with('logo', 'shopAddress');
 
         $shopSorts = cons('shop.sort');
 
@@ -99,18 +99,13 @@ class ShopController extends Controller
      * 店铺首页
      *
      * @param $shop
-     * @return \Illuminate\View\View
+     * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function detail($shop)
     {
         if (Gate::denies('validate-allow', $shop)) {
             return back()->withInput();
         }
-
-//        if ($shop->images->isEmpty()) {
-//            $advert = (new ShopService())->getAdvertFirstImage();
-//            $shop->images[0] = $advert->image;
-//        }
         $shop->adverts = $shop->shopHomeAdverts()->with('image')->active()->get();
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();

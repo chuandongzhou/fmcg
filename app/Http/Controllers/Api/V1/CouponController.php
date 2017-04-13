@@ -10,6 +10,13 @@ use App\Services\CouponService;
 class CouponController extends Controller
 {
     /**
+     * CouponController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit:true');
+    }
+    /**
      * 获取店铺可领优惠券
      *
      * @param $shop

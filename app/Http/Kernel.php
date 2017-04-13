@@ -34,6 +34,7 @@ class Kernel extends HttpKernel
         'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         'retailer' => \App\Http\Middleware\ForbidRetailer::class,
         'supplier' => \App\Http\Middleware\ForbidSupplier::class,
+        'deposit' => \App\Http\Middleware\VerifyDeposit::class
 
     ];
 }

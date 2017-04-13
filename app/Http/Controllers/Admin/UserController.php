@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use App\Services\ChatService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -22,19 +23,18 @@ class UserController extends Controller
         $types = cons('user.type');
         $type = (string)$request->input('type');
         $name = (string)$request->input('name');
+        $depositPay = $request->input('deposit_pay');
 
         $users = User::where('type', array_get($types, $type, head($types)))->where('audit_status',
-            cons('user.audit_status.pass'))->with('shop');
+            cons('user.audit_status.pass'))->ofName($name)->ofDepositPay($depositPay)->with('shop');
 
-        if ($name) {
-            $users = $users->where('user_name', 'Like', '%' . $name . '%');
-        }
 
         return view('admin.user.index', [
             'users' => $users->paginate(),
             'filter' => [
                 'type' => $type,
-                'name' => $name
+                'name' => $name,
+                'depositPay' => $depositPay
             ]
         ]);
     }
@@ -240,6 +240,44 @@ class UserController extends Controller
             return $this->success('操作成功');
         }
         return $this->error('操作失败');
+    }
+
+    /**
+     * 保证金缴纳
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deposit(User $user)
+    {
+        if ($user->deposit) {
+            return $this->error('该用户已缴纳，不能重新缴');
+        }
+        $signConf = cons('sign');
+
+        $expireAt = Carbon::now()->addMonth($signConf['free_month']);
+        return $user->fill([
+            'deposit' => $signConf['deposit'],
+            'expire_at' => $expireAt
+        ])->save() ? $this->success('缴纳成功') : $this->error('缴纳保证金时出现问题');
+    }
+
+    public function expire(Request $request)
+    {
+        $month = (int)$request->input('month');
+        $userId = $request->input('user_id');
+        if ($month <= 0) {
+            return $this->error('请正确输入月份');
+        }
+        $user = User::find($userId);
+
+        if (!$user->deposit) {
+            return $this->error('请先缴纳保证金');
+        }
+
+        $newExpireAt = $user->expire_at->addMonth($month);
+
+        return $user->fill(['expire_at' => $newExpireAt])->save() ? $this->success('续费成功') : $this->error('缴纳时出现问题');
     }
 
     /**

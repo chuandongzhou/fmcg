@@ -9,6 +9,17 @@ use App\Models\UserBank;
 
 class UserBankController extends Controller
 {
+
+    /**
+     * UserBankController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit:true');
+    }
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $userBanks = auth()->user()->userBanks()->get()->toArray(); //商店详情

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\OrderGoods;
@@ -19,6 +20,13 @@ use App\Services\OrderService;
 
 class DeliveryController extends Controller
 {
+    /**
+     * DeliveryManController constructor.
+     */
+    /*public function __construct()
+    {
+        $this->middleware('deposit', ['except' =>['login', 'logout']]);
+    }*/
 
     /**
      *
@@ -47,8 +55,8 @@ class DeliveryController extends Controller
         }
 
         $deliveryMan = DeliveryMan::where('user_name', $userName)->first();
-        if (!$deliveryMan) {
-            return $this->invalidParam('password', '账号不存在');
+        if (!$deliveryMan || !$deliveryMan->status) {
+            return $this->invalidParam('password', '账号不存在或不能使用');
         }
         $password = md5($password);
 

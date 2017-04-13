@@ -161,7 +161,6 @@ class ShopController extends Controller
         $adverts = $shop->adverts()->OfTime()->get()->each(function ($advert) {
             $advert->setAppends(['goods_id', 'image_url']);
         });
-//        $adverts = $shop->shopHomeAdverts()->active()->get();
         return $this->success(['adverts' => $adverts]);
     }
 

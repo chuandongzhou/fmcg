@@ -12,6 +12,13 @@ class DeliveryManController extends Controller
 {
 
     /**
+     * DeliveryManController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit');
+    }
+    /**
      * 获取配送人员信息
      *
      * @return \WeiHeng\Responses\Apiv1Response
@@ -31,7 +38,7 @@ class DeliveryManController extends Controller
      */
     public function store(Requests\Api\v1\CreateDeliveryManRequest $request)
     {
-        $attributes = $request->all();
+        $attributes = $request->only(['user_name', 'password', 'pos_sign', 'name', 'phone']);
         if (auth()->user()->shop->deliveryMans()->create(array_filter($attributes))->exists) {
             return $this->success('添加成功');
         }
@@ -48,7 +55,7 @@ class DeliveryManController extends Controller
      */
     public function update(Requests\Api\v1\UpdateDeliveryManRequest $request, $deliveryMan)
     {
-        if ($deliveryMan->fill($request->all())->save()) {
+        if ($deliveryMan->fill($request->only(['user_name', 'password', 'pos_sign', 'name', 'phone']))->save()) {
             return $this->success('保存成功');
         }
 

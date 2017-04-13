@@ -75,33 +75,34 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('delivery-report', 'DeliveryController@report');
         $router->controller('model', 'ModelController');  //模版管理
         $router->resource('coupon', 'CouponController'); // 优惠券
+        $router->controller('sign', 'SignController'); //签约管理
     });
 
     //业务管理
-    $router->group(['prefix' => 'business', 'namespace' => 'Business'],
-        function ($router) {
-            $router->get('salesman/target', 'SalesmanController@target');
-            $router->resource('salesman', 'SalesmanController');
-            $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
-            $router->resource('salesman-customer', 'SalesmanCustomerController');
-            $router->get('report/{salesman_id}/export', 'ReportController@export');
-            $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
-            $router->get('report/{salesman_id}/customer-detail/export', 'ReportController@exportCustomerDetail');
-            $router->get('report/export', 'ReportController@exportIndex');
-            $router->resource('report', 'ReportController');
-            $router->get('display-info', 'DisplayInfoController@index');
-            $router->get('display-info/export', 'DisplayInfoController@export');
+    $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'deposit'], function ($router) {
+        $router->get('salesman/target', 'SalesmanController@target');
+        $router->resource('salesman', 'SalesmanController');
+        $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+        $router->resource('salesman-customer', 'SalesmanCustomerController');
+        $router->get('report/{salesman_id}/export', 'ReportController@export');
+        $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
+        $router->get('report/{salesman_id}/customer-detail/export', 'ReportController@exportCustomerDetail');
+        $router->get('report/export', 'ReportController@exportIndex');
+        $router->resource('report', 'ReportController');
+        $router->get('display-info', 'DisplayInfoController@index');
+        $router->get('display-info/export', 'DisplayInfoController@export');
 
-            $router->resource('mortgage-goods', 'MortgageGoodsController');
-            $router->group(['prefix' => 'order'], function ($router) {
-                $router->get('export', 'SalesmanVisitOrderController@export');
-                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
-                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-                $router->get('browser-export/{salesman_visit_order}',
-                    'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
-                $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
-            });
+        $router->resource('mortgage-goods', 'MortgageGoodsController');
+        $router->group(['prefix' => 'order'], function ($router) {
+            $router->get('export', 'SalesmanVisitOrderController@export');
+            $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+            $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+            $router->get('browser-export/{salesman_visit_order}',
+                'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
+            $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
+    });
+
 
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
@@ -126,11 +127,17 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('advert-category', 'AdvertCategoryController'); // 商品分类广告
     $router->resource('advert-left-category', 'AdvertLeftCategoryController');//商品分类左侧广告
     $router->resource('role', 'RoleController');
-    $router->get('user/audit', 'UserController@audit');    //未审核账号列表
-    $router->put('user/audit/{user}', 'UserController@auditUpdate');    //审核账号
-    $router->put('user/multi_audit', 'UserController@multiAudit');    //批量审核
-    $router->delete('user/batch', 'UserController@deleteBatch');//批量删除用户
-    $router->put('user/switch', 'UserController@putSwitch');//批量修改用户
+    $router->group(['prefix' => 'user'], function ($router) {
+        $router->get('audit', 'UserController@audit');    //未审核账号列表
+        $router->put('audit/{user}', 'UserController@auditUpdate');     //审核账号
+        $router->put('multi_audit', 'UserController@multiAudit');       //批量审核
+        $router->delete('batch', 'UserController@deleteBatch');         //批量删除用户
+        $router->put('switch', 'UserController@putSwitch');             //批量修改用户
+        $router->post('{user}/deposit', 'UserController@deposit')->where('user', '[0-9]+');             //缴纳保证金
+        $router->post('expire', 'UserController@expire')->where('user', '[0-9]+');             //缴纳保证金
+    });
+
+
     $router->resource('user', 'UserController');            //用户管理
     $router->post('getCategory', 'CategoryController@getCategory');  //获取属性
     $router->resource('category', 'CategoryController');            //属性管理
@@ -180,7 +187,7 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
         $router->get('sales-rank-export', 'OperationDataController@salesRankExport');
         $router->get('goods-sales', 'OperationDataController@goodsSales');
         $router->get('goods-sales-export', 'OperationDataController@goodsSalesExport');
-        $router->get('goods-sales-map/{goods_id}', 'OperationDataController@goodsSalesMap')->where('goods_id',
+        $router->get('goods-sales-map/{goods_id}', 'OperationDataControWller@goodsSalesMap')->where('goods_id',
             '[0-9]+');;
     });
     $router->get('operation/notification', 'OperationController@notification');
@@ -265,6 +272,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->controller('finance', 'FinanceController');    //提现相关操作
             $router->controller('model', 'ModelController');  //模版管理
             $router->resource('coupon', 'CouponController'); // 优惠券
+            $router->controller('sign', 'SignController'); //签约管理
 
         });
         $router->controller('cart', 'CartController');

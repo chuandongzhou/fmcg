@@ -11,6 +11,7 @@ namespace App\Models;
 use App\Services\CategoryService;
 use App\Services\GoodsImageService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
@@ -176,6 +177,21 @@ class Goods extends Model
     public function mortgageGoods()
     {
         return $this->hasOne('App\Models\MortgageGoods');
+    }
+
+    /**
+     * search shop by User
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeShopUser($query)
+    {
+        return $query->whereHas('shop.user', function ($q) {
+            $nowTime = Carbon::now();
+            $q->active()->where('deposit', '>', 0)->where('expire_at', '>',
+                $nowTime)->where('audit_status', cons('user.audit_status.pass'));
+        });
     }
 
     /**
@@ -489,7 +505,7 @@ class Goods extends Model
     }
 
     /**
-     * 获取商品的单个图片地址，用于订单页面显示
+     * 获取商品的单个图片地址
      *
      * @return string
      */

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -19,6 +20,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string
      */
     protected $table = 'user';
+
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -38,9 +40,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'password',
         'backup_mobile',
         'type',
+        'deposit',
+        'prestore',
         'audit_status',
+        'expire_at',
         'last_login_at'
     ];
+
+    protected $dates = ['expire_at'];
 
     /**
      * 模型启动事件
@@ -58,6 +65,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $user->userBanks()->delete();
             $user->shippingAddress()->delete();
         });
+        /*
+                //创建事件
+                static::creating(function ($model) {
+                    //自动免费3个月
+                    $model->attributes['expire_at'] = Carbon::now()->addMonth(3);
+                });*/
     }
 
     /**
@@ -93,7 +106,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * 店铺
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function shop()
     {
@@ -147,7 +160,70 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function coupons()
     {
-        return $this->belongsToMany('App\Models\Coupon', 'user_coupon')->withPivot(['used_at', 'received_at'])->withTrashed();
+        return $this->belongsToMany('App\Models\Coupon', 'user_coupon')->withPivot([
+            'used_at',
+            'received_at'
+        ])->withTrashed();
+    }
+
+    /**
+     * 扣费记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deductions()
+    {
+        return $this->hasMany(DeductionRecord::class);
+    }
+
+    /**
+     * 预存记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function prestores()
+    {
+        return $this->hasMany(PrestoreRecord::class);
+    }
+
+    /**
+     * 续费记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function renews()
+    {
+        return $this->hasMany(RenewRecord::class);
+    }
+
+    /**
+     * 按名字检索
+     *
+     * @param $query
+     * @param $name
+     * @return mixed
+     */
+    public function scopeOfName($query, $name)
+    {
+        if ($name) {
+            return $query->where('user_name', 'Like', '%' . $name . '%');
+        }
+    }
+
+    /**
+     * 是否已缴纳保证金检索
+     *
+     * @param $query
+     * @param $depositPay
+     * @return mixed
+     */
+    public function scopeOfDepositPay($query, $depositPay)
+    {
+        if ($depositPay) {
+            return $query->where('deposit', '>', 0);
+        } elseif ($depositPay === '0') {
+            return $query->where('deposit', '=', 0);
+        }
     }
 
     /**
@@ -200,6 +276,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             return $shopName;
         }
         return $userService->setShopDetail($this, 'name');
+    }
+
+    /**
+     * 判断是否到期
+     *
+     * @return mixed
+     */
+    public function getIsExpireAttribute()
+    {
+        return $this->expire_at->isPast();
     }
 
 

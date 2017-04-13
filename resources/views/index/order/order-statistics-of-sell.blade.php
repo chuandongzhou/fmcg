@@ -28,7 +28,8 @@
                     <input type="text" class="enter" name="user_shop_name" placeholder="请输入买家名称"
                            value="{{ $userShopName }}">
                     <button id="submitBtn" class="btn btn-blue-lighter search-by-get" type="submit">搜索</button>
-                    <a id="export" href="{{ url('order/statistics-of-sell-export?' . http_build_query($data)) }}" class="btn export-btn">统计导出</a>
+                    <a id="export" href="{{ url('order/statistics-of-sell-export?' . http_build_query($data)) }}"
+                       class="btn export-btn">统计导出</a>
                 </div>
             </form>
 
@@ -138,7 +139,9 @@
                             <td>{{ $item['contact'] }}</td>
                             <td>{{ $item['address']->address_name }}</td>
                             <td>{{ $item['user_salesman'] }}</td>
-                            <td><a href="javascript:" onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a></td>
+                            <td><a href="javascript:"
+                                   onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -158,9 +161,9 @@
                     </thead>
                     <tbody>
                     @foreach($orderGoodsStatistics as $item)
-                        @foreach($item['pieces'] as $piece=> $value)
+                        @foreach($item['pieces'] as $piece => $value)
                             <tr>
-                                @if($value == head($item['pieces']))
+                                @if($value == head($item['pieces']) && $piece == key($item['pieces']))
                                     <td rowspan="{{ $rowspan = count($item['pieces']) }}">{{ $item['name'] }}</td>
                                     <td rowspan="{{ $rowspan }}">{{ $item['num'] }}</td>
                                     <td rowspan="{{ $rowspan }}">{{ number_format($item['amount'], 2) }}</td>

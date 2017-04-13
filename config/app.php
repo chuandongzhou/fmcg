@@ -144,6 +144,7 @@ return [
          */
         \WeiHeng\Constant\ConstantServiceProvider::class,
         \WeiHeng\WechatPay\WechatPayServiceProvider::class,
+        \WeiHeng\SignManage\SignManageServiceProvider::class,
         \WeiHeng\Admin\AdminServiceProvider::class,
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
         \WeiHeng\Salesman\SalesmanServiceProvider::class,

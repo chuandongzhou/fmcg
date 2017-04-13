@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Order;
 use App\Models\SalesmanVisitOrder;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -31,7 +32,9 @@ class AuthServiceProvider extends ServiceProvider
          * 要显示的商品
          */
         $gate->define('validate-goods', function ($user, $goods) {
-            return ($user->type < $goods->user_type&& $goods->status == cons('status.on')) ||  $user->id==$goods->shop->user_id ;
+            $goodsShopUser = $goods->shop->user;
+            $nowTime = Carbon::now();
+            return ($user->type < $goods->user_type && $goods->status == cons('status.on') && $goodsShopUser->deposit > 0 && $goodsShopUser->expire_at > $nowTime) || $user->id == $goods->shop->user_id;
         });
 
         /**
@@ -51,7 +54,9 @@ class AuthServiceProvider extends ServiceProvider
          * 验证是否有权限访问店铺
          */
         $gate->define('validate-allow', function ($user, $shop) {
-            return $user->type < $shop->user_type || $user->id==$shop->user_id;
+            $shopUser = $shop->user;
+            $nowTime = Carbon::now();
+            return ($user->type < $shop->user_type && $shopUser->deposit > 0 && $shopUser->expire_at > $nowTime) || $user->id == $shop->user_id;
         });
 
         /**
@@ -119,5 +124,6 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-shop-coupon', function ($user, $coupon) {
             return $coupon->shop_id == $user->shop_id;
         });
+
     }
 }

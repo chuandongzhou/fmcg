@@ -433,6 +433,31 @@ return [
         'company_ceo' => '马先生',
         'company_record' => '蜀ICP备15031748号-1'
     ],
+    //签约管理
+    'sign' => [
+        //工人超过数
+        'max_worker' => 4,
+        //超过后每个工人缴费金额
+        'worker_excess_amount' => 10,
+        //保证金
+        'deposit' => 1000,
+        //缴纳保证金后免费使用月份
+        'free_month' => 3,
+        //续期金额
+        'expire_amount' => [
+            'a_month' => 100,
+            'two_months' => 200,
+            'three_months' => 300,
+            'four_months' => 400,
+            'five_months' => 500,
+            'six_months' => 600,
+            'seven_months' => 700,
+            'eight_months' => 800,
+            'nine_months' => 900,
+            'a_year' => 1000,
+        ]
+    ],
+
     //后台配置
     'admin' => [
         'super_admin_name' => 'admin',

@@ -5,6 +5,7 @@
  * Date: 2015/9/17
  * Time: 14:22
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
@@ -57,6 +58,7 @@ class AuthController extends Controller
 
         $user = User::where('user_name', $account)->first();
 
+        //帐号密码
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
             if ($inWindows) {
                 $loginError = $request->cookie('login_error');
@@ -65,13 +67,20 @@ class AuthController extends Controller
             return $this->invalidParams(['password' => ['账号或密码错误'], 'loginError' => ($loginError + 1)]);
         }
 
+        //是否已锁定
         if ($user->status != cons('status.on')) {
             return $this->invalidParam('password', '账号已锁定');
         }
-
+        //帐号审核
         if ($user->audit_status != cons('user.audit_status.pass')) {
             return $this->invalidParam('password', '账户未审核或审核不通过');
         }
+
+        //使用期限是否过期
+        if ($user->expire_at->getTimestamp() && $user->expire_at->isPast()) {
+            return $this->invalidParam('password', '账户已到期，请续费');
+        }
+
         $user->setVisible(['id', 'user_name', 'type', 'audit_status', 'backup_mobile', 'shop']);
         if (!is_null($user->shop)) {
             $user->shop->address_name = $user->shop->address;
@@ -99,8 +108,9 @@ class AuthController extends Controller
     {
         $userInput = $request->only('user_name', 'password', 'backup_mobile', 'type');
         //终端商不需要审核直接通过
-        if($userInput['type'] == cons('user.type.retailer'))
+        if ($userInput['type'] == cons('user.type.retailer')) {
             $userInput['audit_status'] = cons('user.audit_status.pass');
+        }
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店
@@ -118,7 +128,7 @@ class AuthController extends Controller
                     'account' => $shopInput['user_name'],
                     'name' => $shopInput['name'],
                 ];
-                app('pushbox.sms')->send('tip',cons('admin.phone'),$param);
+                app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
                 return $this->success('注册成功');
             } else {
                 $user->delete();

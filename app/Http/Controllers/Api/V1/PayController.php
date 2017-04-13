@@ -57,8 +57,6 @@ class PayController extends Controller
         $orderNames = Shop::whereIn('id', $orderIds)->get()->implode('name', ',');
 
         //配置extra
-
-
         $charge = Charge::create(
             array(
                 'subject' => '成都订百达科技有限公司',

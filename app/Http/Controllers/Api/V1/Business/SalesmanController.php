@@ -24,7 +24,7 @@ class SalesmanController extends Controller
      */
     public function store(Requests\Api\v1\CreateSalesManRequest $request)
     {
-        $attributes = $request->all();
+        $attributes = $request->except('status');
         if (auth()->user()->shop->salesmen()->create($attributes)->exists) {
             return $this->success('添加业务员成功');
         }
@@ -186,6 +186,7 @@ class SalesmanController extends Controller
 
     /**
      * 解冻/冻结
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return \WeiHeng\Responses\Apiv1Response

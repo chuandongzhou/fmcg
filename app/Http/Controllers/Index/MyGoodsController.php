@@ -74,12 +74,18 @@ class MyGoodsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
     public function create()
     {
+        $user =  auth()->user();
+        //判断有没有交保证金
+     /*   if (!$user->deposit) {
+            return $this->error('添加商品前请先缴纳保证金', url('personal/sign/deduction'));
+        }*/
+
         //默认加入店铺配送地址
-        $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
+        $shop = $user->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea->each(function ($area) {
             $area->id = '';
         });
@@ -171,7 +177,6 @@ class MyGoodsController extends Controller
         }
         return $this->error('文件不存在');
     }
-
 
     /**
      * 格式化查询每件

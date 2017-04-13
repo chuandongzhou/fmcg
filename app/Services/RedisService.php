@@ -45,6 +45,7 @@ class RedisService
      * @param $key
      * @param $redisValue
      * @param $expire
+     * @return bool
      */
     public function setRedis($key, $redisValue, $expire = 0)
     {
@@ -55,6 +56,7 @@ class RedisService
         }
         $this->redis->set($redisKey, $redisValue);
         $expire && $this->redis->expire($redisKey, $expire);
+        return true;
     }
 
     /**

@@ -10,7 +10,13 @@ use App\Models\DeliveryMan;
 class DeliveryManController extends Controller
 {
 
-
+    /**
+     * DeliveryManController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit');
+    }
     /**
      * 配送人员列表
      *

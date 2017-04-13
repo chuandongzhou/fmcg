@@ -69,7 +69,7 @@ class GoodsService
         }
         // 省市
         if (isset($data['province_id'])) {
-            $goods->OfDeliveryArea(array_filter($data));
+            $goods->ofDeliveryArea(array_filter($data));
         }
         //排序
         if (isset($data['sort']) && in_array(strtolower($data['sort']), cons('goods.sort'))) {

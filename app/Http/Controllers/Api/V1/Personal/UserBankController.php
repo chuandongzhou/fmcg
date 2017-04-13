@@ -11,10 +11,13 @@ class UserBankController extends Controller
 {
     protected $user;
 
+    /**
+     * UserBankController constructor.
+     */
     public function __construct()
     {
         $this->user = auth()->user();
-
+        $this->middleware('deposit:true');
     }
 
     /**

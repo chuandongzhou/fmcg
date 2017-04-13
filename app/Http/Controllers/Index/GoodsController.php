@@ -35,9 +35,6 @@ class GoodsController extends Controller
         $couponNum = CouponService::shopCouponNum($shop_id);
         $hotGoods = Goods::where('shop_id', $shop_id)->active()->with('images.image')->ofCommonSort()->orderBy('id',
             'DESC')->take(5)->get();
-        /*  $coordinate = $goods->deliveryArea->each(function ($area) {
-              $area->coordinate;
-          });*/
         return view('index.goods.detail', [
             'goods' => $goods,
             'attrs' => $attrs,

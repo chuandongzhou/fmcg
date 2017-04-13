@@ -106,6 +106,46 @@ a:hover {
   vertical-align: middle;
 }
 
+.public-table th,
+.public-table .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table tr .public-table td {
+  background-color: #f1f1f1;
+  border: none !important;
+}
+
+.public-table tbody tr:nth-child(even) td {
+  background-color: #f1f1f1;
+}
+
+.public-table tbody tr td {
+  border: none !important;
+}
+
+.table-title-blue {
+  margin-bottom: 0 !important;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.table-title-blue thead {
+  margin-top: 0 !important;
+}
+
+.table-title-blue thead tr th,
+.table-title-blue thead .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table .table-title-blue thead tr td {
+  border: none !important;
+  text-align: center;
+  color: #000;
+  background-color: #e3fbe3;
+  line-height: 30px;
+}
+
+.table-title-blue tbody tr td {
+  border-left: none !important;
+  border-right: none !important;
+  line-height: 30px;
+}
+
 .padding-clear {
   padding: 0 !important;
 }
@@ -287,6 +327,28 @@ a:hover {
 .edit:hover,
 .edit:focus {
   color: #169bd5;
+}
+
+.gray {
+  color: #777777;
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.gray:hover,
+.gray:focus {
+  color: #777777;
+}
+
+.green {
+  color: #5cb85c;
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.green:hover,
+.green:focus {
+  color: #5cb85c;
 }
 
 .print {
@@ -793,7 +855,7 @@ a:hover {
 
 .login-container .content-panel .change-role-options .tabs-item {
   float: left;
-  width: 25%;
+  width: 20%;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -2942,7 +3004,7 @@ a:hover {
 .goods-editor {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
 }
 
 .goods-editor .audit-step-outs {
@@ -3697,7 +3759,7 @@ table .product-panel .promotions {
   padding: 20px;
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
 }
 
 .delivery-area-wrap table th,
@@ -6725,7 +6787,7 @@ table .product-panel .promotions {
 .temple-table .table-list-row .shopping-table-list table tr td,
 .table-list-row .shopping-table-list .temple-table table tr td {
   padding: 0 !important;
-  border: 1px solid black !important;
+  border: 1px solid #777777 !important;
 }
 
 .temple-table-y {
@@ -6747,7 +6809,7 @@ table .product-panel .promotions {
 .setup-template {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
 }
 
 .setup-template .item div {
@@ -7016,7 +7078,7 @@ table .product-panel .promotions {
 .coupon {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   padding: 30px 15px 0 15px;
 }
 
@@ -7052,7 +7114,7 @@ table .product-panel .promotions {
 .balance {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   padding: 30px 20px 0 20px;
 }
 
@@ -7090,7 +7152,7 @@ table .product-panel .promotions {
 .bank-list-wrap {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   margin-top: 20px !important;
   padding: 25px;
 }
@@ -7161,8 +7223,8 @@ table .product-panel .promotions {
 .delivery {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
-  padding: 20px;
+  margin: 0 5px 0 5px !important;
+  padding: 10px;
 }
 
 .delivery .control {
@@ -7183,7 +7245,6 @@ table .product-panel .promotions {
 
 .delivery .control-search .btn {
   border-radius: 4px !important;
-  padding: 0 15px;
 }
 
 .delivery .control-search .btn-default {
@@ -7203,7 +7264,7 @@ table .product-panel .promotions {
 }
 
 .delivery-statistics {
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
 }
 
 .delivery-statistics .operation {
@@ -7262,7 +7323,7 @@ table .product-panel .promotions {
 .salesman {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   padding: 25px;
 }
 
@@ -7393,7 +7454,7 @@ table .product-panel .promotions {
 .collection {
   background-color: #fff;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   padding: 25px;
 }
 
@@ -7558,3 +7619,402 @@ table .product-panel .promotions {
 }
 
 /*==============checkbox 公共按钮=================*/
+
+/*==============库存管理begin=================*/
+
+.inventory-name-input {
+  width: 300px;
+}
+
+.inventory-name-input .control {
+  width: 100%;
+}
+
+.details-item {
+  text-indent: 5px;
+  margin: 10px 0;
+}
+
+.details-item label {
+  font-weight: 600;
+}
+
+.details-item .content {
+  display: inline-block;
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.wareh-details .content {
+  width: 63%;
+}
+
+.warehousing-error-btn {
+  display: inline-block;
+  font-weight: 600;
+}
+
+.warehousing-error-btn .badge {
+  width: 40px;
+  height: 30px;
+  border-radius: 40px !important;
+  margin-left: 10px;
+  background-color: #fe462f;
+  line-height: 22px;
+}
+
+.title-list-wrap .item {
+  line-height: 40px;
+}
+
+.title-list-wrap label {
+  font-weight: 600;
+}
+
+.warehousing-table table tbody tr td {
+  vertical-align: middle;
+}
+
+.warehousing-table table tbody tr td:first-of-type {
+  text-align: left !important;
+}
+
+.warehousing-table table tbody tr td input,
+.warehousing-table table tbody tr td select {
+  outline: none;
+  border-radius: 3px !important;
+  height: 35px;
+  border: 1px solid #b4b4b4;
+}
+
+.warehousing-table table tbody tr td .add-col {
+  width: 35px;
+  height: 35px;
+  background-color: #fff;
+  color: #17C4BB;
+  border: 1px solid #17C4BB;
+  vertical-align: top;
+  border-radius: 4px !important;
+  outline: none;
+}
+
+.warehousing-table table tbody tr td .add-col:hover {
+  background-color: #17C4BB;
+  color: #fff;
+}
+
+.warehousing-table table tbody tr td .remove-col {
+  width: 35px;
+  height: 35px;
+  background-color: #fff;
+  color: #f00;
+  border: 1px solid #f00;
+  vertical-align: top;
+  border-radius: 4px !important;
+  outline: none;
+}
+
+.warehousing-table table tbody tr td .remove-col:hover {
+  background-color: #f00;
+  color: #fff;
+}
+
+.warehousing-table table tbody tr td .number {
+  width: 75px;
+}
+
+.warehousing-table table tbody tr td textarea {
+  height: 55px;
+}
+
+.warehousing-table .store-img {
+  width: 60px;
+  height: 60px;
+}
+
+.warehousing-table .product-name {
+  display: inline-block;
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #555555;
+}
+
+.warehousing-control-search {
+  margin-bottom: 20px;
+}
+
+.warehousing-control-search .control {
+  height: 40px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.warehousing-control-search .btn-default {
+  background-color: #fff;
+  color: #17C4BB;
+  border: 1px solid #17C4BB;
+}
+
+.warehousing-control-search .btn-default:hover {
+  background-color: #17C4BB;
+  color: #fff;
+}
+
+.warehousing-table-wrap {
+  height: 400px;
+}
+
+.wareh-operating {
+  margin-top: 20px;
+  padding-left: 25px;
+}
+
+.wareh-operating .btn-warning {
+  width: 100px;
+}
+
+.wareh-details-table .product-name {
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wareh-details-table table tbody tr td {
+  font-size: 12px !important;
+}
+
+.warh-error-modal .item + .item {
+  padding: 5px 15px;
+}
+
+.warh-error-modal .item label {
+  font-weight: 600;
+}
+
+.warh-error-modal .item .content {
+  display: inline-block;
+}
+
+.warh-error-modal .item .content.product-name {
+  width: 650px;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outhousing-product-name {
+  width: 400px !important;
+}
+
+.outh-details-wrap ul:before,
+.outh-details-wrap ul:after {
+  content: " ";
+  display: table;
+}
+
+.outh-details-wrap ul:after {
+  clear: both;
+}
+
+.outh-details-wrap ul li {
+  float: left;
+  height: 40px;
+  margin-left: 20px;
+}
+
+.outh-details-wrap ul li label {
+  font-weight: 600;
+}
+
+.outh-details-wrap ul li .content {
+  display: inline-block;
+}
+
+.good-ontheway .product-name {
+  width: 85% !important;
+}
+
+/*==============库存管理end=================*/
+
+/*==============资产管理begin=================*/
+
+.assets .btn {
+  padding: 8px 12px !important;
+}
+
+.modal-list-wrap {
+  padding-bottom: 15px;
+}
+
+.modal-list-wrap + .modal-list-wrap {
+  padding: 10px 0 !important;
+}
+
+.modal-list-wrap .item {
+  padding-top: 5px;
+}
+
+.modal-list-wrap .item.title {
+  padding: 15px;
+}
+
+.modal-list-wrap .item label {
+  color: #000;
+}
+
+.modal-list-wrap .item .content {
+  display: inline-block;
+  color: #777777;
+}
+
+.modal-list-wrap.bg-gray {
+  background-color: #f2f2f2;
+}
+
+/*==============资产管理end=================*/
+
+/*==============签约管理begin=================*/
+
+.signed-list-wrap {
+  margin-bottom: 30px;
+}
+
+.signed-list-wrap .item {
+  padding-right: 0;
+  padding-left: 5px;
+}
+
+.signed-list-wrap .item:last-of-type {
+  padding-right: 15px;
+}
+
+.signed-list-wrap .item:first-of-type {
+  padding-left: 15px;
+}
+
+.signed-list-wrap .item h4 {
+  font-size: 13px;
+  background-color: #f2f2f2;
+  text-align: center;
+  padding: 3px 0;
+}
+
+.signed-list-wrap .item .content {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.signed-list-wrap .item .content span,
+.signed-list-wrap .item .content .msg-channel .title .close-btn,
+.msg-channel .title .signed-list-wrap .item .content .close-btn {
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.signed-list-wrap .item .content span.money-baozheng,
+.signed-list-wrap .item .content .msg-channel .title .money-baozheng.close-btn,
+.msg-channel .title .signed-list-wrap .item .content .money-baozheng.close-btn {
+  color: #000;
+}
+
+.signed-list-wrap .item .content span.money-yucun,
+.signed-list-wrap .item .content .msg-channel .title .money-yucun.close-btn,
+.msg-channel .title .signed-list-wrap .item .content .money-yucun.close-btn {
+  color: #00cc66;
+}
+
+.signed-list-wrap .item .content button {
+  background-color: #fff;
+  color: #555555;
+  border: 1px solid #555555;
+  border-radius: 4px !important;
+  outline: none;
+  vertical-align: middle;
+}
+
+.signed-num {
+  color: #F25000;
+  font-size: 15px;
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
+
+.signed-submit {
+  background-color: #F25000;
+  color: #fff;
+  border: 1px solid #F25000;
+  border-radius: 4px !important;
+  outline: none;
+  padding: 2px 20px;
+}
+
+.signed-xuqi .item label {
+  display: inline-block;
+  width: 65px;
+}
+
+.signed-xuqi .item + .item {
+  margin-top: 15px;
+}
+
+.signed-xuqi .item.last {
+  padding-left: 65px;
+}
+
+.signed-xuqi ul {
+  display: inline-block;
+  height: 30px;
+  vertical-align: middle;
+}
+
+.signed-xuqi ul:before,
+.signed-xuqi ul:after {
+  content: " ";
+  display: table;
+}
+
+.signed-xuqi ul:after {
+  clear: both;
+}
+
+.signed-xuqi ul li {
+  float: left;
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border: 1px solid #b4b4b4;
+  cursor: pointer;
+}
+
+.signed-xuqi ul li + li {
+  margin-left: -1px;
+}
+
+.signed-xuqi ul li.active {
+  background-color: #17C4BB;
+  color: #fff;
+}
+
+/*==============签约管理end=================*/
+
+/*==============保证金begin=================*/
+
+.caption div,
+.caption p {
+  margin: 15px 0;
+}
+
+.caption p {
+  padding-left: 15px;
+}
+
+/*==============保证金end=================*/

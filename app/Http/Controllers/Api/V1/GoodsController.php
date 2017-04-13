@@ -40,7 +40,7 @@ class GoodsController extends Controller
         $addressData = (new AddressService)->getAddressData();
         $gets = array_merge($gets, array_except($addressData, 'address_name'));
 
-        $goods = Goods::active()->with('images.image')->select([
+        $goods = Goods::active()->shopUser()->with('images.image')->select([
             'id',
             'name',
             'sales_volume',

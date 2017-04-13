@@ -117,7 +117,7 @@
                         @foreach($orderGoodsStatistics as $item)
                             @foreach($item['pieces'] as $piece=> $value)
                                 <tr>
-                                    @if($value == head($item['pieces']))
+                                    @if($piece == key($item['pieces']))
                                         <td rowspan="{{ $rowspan = count($item['pieces']) }}">{{ $item['name'] }}</td>
                                         <td rowspan="{{ $rowspan }}">{{ $item['num'] }}</td>
                                         <td rowspan="{{ $rowspan }}">{{ number_format($item['amount'], 2) }}</td>

@@ -44,14 +44,21 @@ class MyGoodsController extends Controller
     public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
 
-        $result = DB::transaction(function () use ($request) {
+        $user = auth()->user();
+
+        //判断有无缴纳保证金
+        if (!$user->deposit) {
+            return $this->error('添加商品前请先缴纳保证金');
+        }
+
+        $result = DB::transaction(function () use ($user, $request) {
 
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
 
             $attributes['user_type'] = auth()->user()->type;
 
-            $goods = auth()->user()->shop->goods()->create($attributes);
+            $goods = $user->shop->goods()->create($attributes);
             $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
 
@@ -93,7 +100,7 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $goods->load(['images', 'deliveryArea']);
+        $goods->load(['images', 'deliveryArea', 'goodsPieces']);
         $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
 
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
@@ -489,11 +496,11 @@ class MyGoodsController extends Controller
                 'system_2' => $goodsArr[14] ?? 0,
             ];
 
-            if($goods['pieces_wholesaler'] == $pieces['pieces_level_1']){
-                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']){
+            if ($goods['pieces_wholesaler'] == $pieces['pieces_level_1']) {
+                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']) {
                 $goods['specification_wholesaler'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']){
+            } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']) {
                 $goods['specification_wholesaler'] = end($goodsArr);
             }
 
@@ -512,12 +519,12 @@ class MyGoodsController extends Controller
             return '三级进制没有填!';
         }
 
-        if($goods['pieces_retailer'] == $pieces['pieces_level_1']){
-            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']){
+        if ($goods['pieces_retailer'] == $pieces['pieces_level_1']) {
+            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+        } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']) {
             $goods['specification_retailer'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']){
-            $goods['specification_retailer'] =  end($goodsArr);
+        } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']) {
+            $goods['specification_retailer'] = end($goodsArr);
         }
 
         $pieces['specification'] = end($goodsArr);

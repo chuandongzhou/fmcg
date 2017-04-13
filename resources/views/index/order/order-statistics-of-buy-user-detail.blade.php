@@ -9,7 +9,8 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
-                <a href="{{ url('order/statistics-of-buy-user-detail-export') . '?' . request()->getQueryString() }}" class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
+                <a href="{{ url('order/statistics-of-buy-user-detail-export') . '?' . request()->getQueryString() }}"
+                   class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">订单总计</p>
                     <table class="MyTable1 table-scroll">
@@ -111,7 +112,7 @@
                         @foreach($orderGoodsStatistics as $item)
                             @foreach($item['pieces'] as $piece=> $value)
                                 <tr>
-                                    @if($value == head($item['pieces']))
+                                    @if($piece == key($item['pieces']))
                                         <td rowspan="{{ $rowspan = count($item['pieces']) }}">{{ $item['name'] }}</td>
                                         <td rowspan="{{ $rowspan }}">{{ $item['num'] }}</td>
                                         <td rowspan="{{ $rowspan }}">{{ number_format($item['amount'], 2) }}</td>
@@ -124,10 +125,10 @@
                         </tbody>
                         <tfoot>
                         {{--<td colspan="5" class="text-center">--}}
-                            {{--<div class="text-right">--}}
-                                {{--<ul class="pagination management-pagination">--}}
-                                {{--</ul>--}}
-                            {{--</div>--}}
+                        {{--<div class="text-right">--}}
+                        {{--<ul class="pagination management-pagination">--}}
+                        {{--</ul>--}}
+                        {{--</div>--}}
                         {{--</td>--}}
                         </tfoot>
                     </table>

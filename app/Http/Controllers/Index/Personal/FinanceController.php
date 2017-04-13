@@ -11,6 +11,14 @@ use Illuminate\Http\Request;
 
 class FinanceController extends Controller
 {
+
+    /**
+     * FinanceController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit:true');
+    }
     /**
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

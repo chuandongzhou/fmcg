@@ -1160,7 +1160,7 @@ function selectedChange() {
 
 }
 //购物车数据
-function cartData(){
+function cartData() {
     $('#header_notification_bar').hover(function () {
 
         var cartDetail = $('.cart-detail');
@@ -1190,6 +1190,72 @@ function cartData(){
 
         });
     });
+}
+
+//签约管理
+var signManage = function () {
+    var signModel = $('#signModal'), depositPay = $('.deposit-pay');
+    signModel.on('show.bs.modal', function (e) {
+        var parent = $(e.relatedTarget), type = parent.data('type');
+
+        signModel.find('.' + type).removeClass('hidden').siblings().addClass('hidden');
+    });
+
+    var monthPanel = $(".month li"), monthInput = $('input[name="month"]');
+    monthPanel.on('click', function () {
+        var self = $(this), cost = self.data('cost'), month = self.data('month'), pieces = self.data('pieces');
+
+        self.html(month + pieces).addClass("active").siblings().each(function () {
+            $(this).removeClass("active").html($(this).html().replace('个月', ''));
+        });
+        monthInput.val(month);
+        $(".xuqi-num").html("￥" + cost);
+    }).first().click();
+
+    depositPay.on('click', function () {
+        var self = $(this), url = site.api('personal/sign/deposit');
+        self.button({
+            loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+            doneText: '操作成功',
+            failText: '操作失败'
+        });
+
+        self.button('loading')
+
+        $.ajax({
+            url: url,
+            method: 'post'
+        }).done(function () {
+            site.redirect('personal/sign/deposit-pay');
+        }).fail(function (error) {
+            var json = error.responseJSON;
+            setTimeout(function () {
+                self.html(json['message']);
+            }, 0);
+        }).always(function () {
+            setTimeout(function () {
+                self.button('reset');
+            }, 3000);
+        });
+    })
+
+    $('form.prestore-pay').on('submit', function () {
+
+        var self = $(this),
+            submitBtn = self.find('.prestore-submit'),
+            cost = self.find('input[name="cost"]').val(),
+            pattern = /^\d+$/;
+
+        if (!cost || cost <= 0 || !pattern.test(cost)) {
+            submitBtn.html('请正确填写预存金额');
+
+            setTimeout(function () {
+                submitBtn.html('提交');
+            }, 3000)
+            return false;
+        }
+
+    })
 }
 
 $(function () {

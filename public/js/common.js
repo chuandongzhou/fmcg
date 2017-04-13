@@ -341,20 +341,18 @@ var commonAjaxSetup = function () {
     $(document.body)
     // 按钮提交
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
-            $(this).prop('disabled', true);
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
-            if (!self.data('no-loading') && !form.data('no-loading')) {
-                common.loading('show');
-            }
 
+
+            self.prop('disabled', true)
             self.button({
                 loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
                 doneText: '操作成功',
                 failText: '操作失败'
             });
 
-            if (typeof tinymce == 'object') {
+            if (typeof tinymce === 'object') {
                 tinyMCE.triggerSave();
             }
             var method = self.data('method') || form.attr('method')
@@ -363,7 +361,18 @@ var commonAjaxSetup = function () {
                 , delay = self.data('delay') || form.data('delay') || 3000
                 , preventDefault = self.data('preventDefault') || form.data('preventDefault')
                 , doneThen = self.data('doneThen') || form.data('doneThen')
-                , doneUrl = self.data('doneUrl') || form.data('doneUrl');
+                , doneUrl = self.data('doneUrl') || form.data('doneUrl')
+                , danger = self.data('danger') || form.data('danger')
+                , noLoading = self.data('no-loading') || form.data('no-loading');
+
+            if (danger && !confirm(danger)) {
+                self.prop('disabled', false);
+                return false;
+            }
+            if (!noLoading) {
+                common.loading('show');
+            }
+
             self.button('loading') && clearTimeout(self.data('alwaysIntervalId'));
             form.formValidate('reset');
 
@@ -385,6 +394,7 @@ var commonAjaxSetup = function () {
                         self.html(data.message || '操作成功');
                         self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
                     } else {
+                        common.loading('hide');
                         self.html(data.content || '操作失败');
                         self.hasClass('no-prompt') || successMeg(data.content || '操作失败');
 

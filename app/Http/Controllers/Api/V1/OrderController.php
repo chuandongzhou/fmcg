@@ -28,6 +28,13 @@ use DB;
 class OrderController extends Controller
 {
     /**
+     * 构造方法限制终端商访问销售功能
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit', ['only' => ['getWaitConfirmBySeller', 'getListOfSell', 'getNonSend', 'getOrderCountSell', 'getPendingCollection', 'getDetailOfSell', 'putBatchFinishOfSell', 'putChangeOrder']]);
+    }
+    /**
      * 买家查询订单列表
      *
      * @return \WeiHeng\Responses\Apiv1Response
@@ -152,7 +159,7 @@ class OrderController extends Controller
     /**
      * 获取订单统计--买家操作
      *
-     * @return mix
+     * @return array
      */
     public function getOrderCountBuy()
     {
@@ -171,7 +178,7 @@ class OrderController extends Controller
     /**
      * 获取订单统计--卖家操作
      *
-     * @return mix
+     * @return array
      */
     public function getOrderCountSell()
     {

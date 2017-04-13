@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index\Personal;
 
 use App\Http\Controllers\Index\Controller;
 
-use App\Http\Requests;
 
 class ShopController extends Controller
 {

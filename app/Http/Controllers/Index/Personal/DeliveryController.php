@@ -13,6 +13,14 @@ class DeliveryController extends Controller
 {
 
     /**
+     * DeliveryController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('deposit');
+    }
+
+    /**
      * 配送历史查询．
      *
      * @param \Illuminate\Http\Request $request
