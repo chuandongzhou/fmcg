@@ -66,6 +66,20 @@
                             <td>{{ $goods->promotion_info }}</td>
                         </tr>
                     @endforeach
+                    @foreach($order->gifts as $gift)
+                        <tr>
+                            <td>{{ $gift->bar_code }}</td>
+                            <td>{{ $gift->name }}</td>
+                            <td>
+                                {{ $gift->{'specification_' . $order->user_type_name} }}
+
+                            </td>
+                            <td>{{ cons()->valueLang('goods.pieces', $gift->pivot->pieces) }}</td>
+                            <td></td>
+                            <td>{{ $goods->pivot->num }}</td>
+                            <td></td>
+                            <td>赠品</td>
+                    @endforeach
                     <tr>
                         <td colspan="5">总计</td>
                         <td>{{ $order->allNum }}</td>
@@ -80,7 +94,6 @@
                             @endif
                         </td>
                     </tr>
-
                     @if(!$mortgageGoods->isEmpty() || $order->display_fee > 0)
                         <tr>
                             <td align="center" colspan="8">陈列费</td>

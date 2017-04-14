@@ -111,21 +111,21 @@ class OrderSellController extends OrderController
     {
         $order = Order::OfSell(auth()->id())->useful()->with('user.shop', 'shop.user', 'goods',
             'shippingAddress.address', 'systemTradeInfo',
-            'orderChangeRecode')->find(intval($request->input('order_id')));
+            'orderChangeRecode', 'gifts')->find(intval($request->input('order_id')));
         if (!$order) {
             return redirect('order-sell');
         }
-        foreach ($order->goods as $goods)
+        foreach ($order->goods as $goods) {
             $order->goods_amount += $goods->pivot['num'];
+        }
 
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 
         $goods = (new OrderService)->explodeOrderGoods($order);
 
-        $view = 'index.order.order-sell-detail';
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
 
-        return view($view, [
+        return view('index.order.order-sell-detail', [
             'order' => $order,
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
@@ -184,7 +184,7 @@ class OrderSellController extends OrderController
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
 
-        $order = Order::with('shippingAddress.address', 'shop', 'user')
+        $order = Order::with('shippingAddress.address', 'shop', 'user', 'gifts')
             ->OfSell(auth()->id())->useful()
             ->find($orderId);
         if (is_null($order)) {

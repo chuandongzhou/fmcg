@@ -36,7 +36,7 @@ class SalesmanVisitOrderController extends Controller
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
 
         $orders = (new BusinessService())->getOrders([$salesmenId], $data,
-            ['salesmanCustomer.businessAddress', 'salesman', 'order']);
+            ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts']);
         return $this->success([
             'orders' => $orders->toArray()
         ]);
@@ -254,6 +254,10 @@ class SalesmanVisitOrderController extends Controller
                 $query->select('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'goods_id');
             },
             'displayList.mortgageGoods',
+            'gifts' => function ($query) {
+                $query->select('bar_code', 'id', 'name');
+            },
+            'gifts.goodsPieces'
         ])->find($id);
 
         if (is_null($order)) {
@@ -315,6 +319,18 @@ class SalesmanVisitOrderController extends Controller
                     'num'    => 2
                 ]
             ],
+         "gifts" => [
+                [
+                    "id" => 324,
+                    "num" => 1,
+                    "pieces" => 1
+                ],
+                [
+                    "id" => 325,
+                    "num" => 1,
+                    "pieces" => 1
+                ]
+             ]
             "mortgage" => [
                 '2016-10' => [
                     [
@@ -390,6 +406,19 @@ class SalesmanVisitOrderController extends Controller
             if ($orderForm->exists) {
                 $orderForm->orderGoods()->saveMany($format['orderGoodsArr']);
 
+                //礼物
+                if ($gifts = array_get($attributes, 'gifts')) {
+                    $giftList = [];
+                    foreach ($gifts as $gift) {
+                        $giftList[$gift['id']] = [
+                            'num' => $gift['num'],
+                            'pieces' => $gift['pieces'],
+                        ];
+                    }
+
+                    $orderForm->gifts()->sync($giftList);
+                }
+
                 if (isset($validate) && $customer->display_type != cons('salesman.customer.display_type.no')) {
                     $orderForm->displayList()->saveMany($validate);
                 }
@@ -460,6 +489,58 @@ class SalesmanVisitOrderController extends Controller
     }
 
     /**
+     * 删除赠品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $giftId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function gift(Request $request, $giftId)
+    {
+        $order = $this->_validateOrder($request->input('order_id'));
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+
+        $order->gifts()->detach($giftId);
+        return $this->success('删除赠品成功');
+    }
+
+    /**
+     * 更新
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $giftId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function upGift(Request $request, $giftId)
+    {
+        $data = $request->all();
+        $order = $this->_validateOrder(array_get($data, 'order_id'));
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+
+        if (!($num = array_get($data, 'num')) || !intval($num) || $num <= 0) {
+            return $this->error('请正确填写数量');
+        }
+
+        $gift = $order->gifts()->with('goodsPieces')->find($giftId);
+
+        if (is_null($gift)) {
+            return $this->error('赠品不存在');
+        }
+        $pieces = $request->input('pieces');
+        $piecesList = $gift->pieces_list;
+        $pieces = $piecesList->contains($pieces) ? $pieces : head($piecesList);
+
+        return $gift->pivot->fill([
+            'num' => $num,
+            'pieces' => $pieces
+        ])->save() ? $this->success('修改成功') : $this->error('修改失败');
+    }
+
+    /**
      * 获取抵费商品剩余
      *
      * @param \Illuminate\Http\Request $request
@@ -499,6 +580,9 @@ class SalesmanVisitOrderController extends Controller
      */
     private function _validateOrder($orderId)
     {
+        if (!$orderId) {
+            return false;
+        }
         $order = SalesmanVisitOrder::find($orderId);
         if (is_null($order) || $order->status == cons('salesman.order.status.passed')) {
             return false;
@@ -595,10 +679,23 @@ class SalesmanVisitOrderController extends Controller
                     }
 
                     if (!empty($orderGoods)) {
-                        //保存订单商品
+                        //保存抵费商品
                         if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
                             return ['error' => '同步时出现错误，请重试'];
                         }
+                    }
+
+                    //礼物
+                    if ($gifts = $salesmanVisitOrder->gifts) {
+                        $giftList = [];
+                        foreach ($gifts as $gift) {
+                            $giftList[$gift->id] = [
+                                'num' => $gift->pivot->num,
+                                'pieces' => $gift->pivot->pieces
+                            ];
+                        }
+
+                        $orderTemp->gifts()->sync($giftList);
                     }
 
                 } else {

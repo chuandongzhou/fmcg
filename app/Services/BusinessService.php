@@ -25,26 +25,29 @@ class BusinessService extends BaseService
      * 获取订单详情
      *
      * @param $salesmanVisitOrder
+     * @param $load
      * @return array
      */
-    public function getOrderData(SalesmanVisitOrder $salesmanVisitOrder)
-    {
+    public function getOrderData(
+        SalesmanVisitOrder $salesmanVisitOrder,
+        $load = ['mortgageGoods.goods', 'orderGoods.goods']
+    ) {
         $orderTypeConf = cons('salesman.order');
         $data = [
             'order' => $salesmanVisitOrder
         ];
 
-        $salesmanVisitOrder->load(['mortgageGoods.goods', 'orderGoods.goods']);
+        $salesmanVisitOrder->load($load);
 
         if ($salesmanVisitOrder->type == $orderTypeConf['type']['order']) {
             $data['displayFee'] = $salesmanVisitOrder->displayFees;
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
         }
         $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
-        $data['goods_total_num'] = 0 ;
-        $data['goods_total_amount'] = 0 ;
-        if (count($data['orderGoods']) > 0){
-            foreach ($data['orderGoods'] as $goods){
+        $data['goods_total_num'] = 0;
+        $data['goods_total_amount'] = 0;
+        if (count($data['orderGoods']) > 0) {
+            foreach ($data['orderGoods'] as $goods) {
                 $data['goods_total_num'] += $goods['num'];
                 $data['goods_total_amount'] += $goods['amount'];
             }
@@ -185,6 +188,21 @@ class BusinessService extends BaseService
                     $order->amount, 2) : $order->amount;
 
 
+                //赠品
+                if (!is_null($gifts = $order->gifts)) {
+                    foreach ($gifts as $item) {
+
+                        $visitData[$customerId]['gifts'][] = [
+                            'name' => $item->name,
+                            'num' => $item->pivot->num,
+                            'pieces' => $item->pivot->pieces
+                        ];
+                    }
+
+                }
+
+
+                //陈列费
                 if (!is_null($order->displayList)) {
                     foreach ($order->displayList as $item) {
                         if ($item->mortgage_goods_id == 0) {

@@ -302,7 +302,6 @@ class Shop extends Model
         return $this->hasMany('App\Models\MortgageGoods');
     }
 
-
     /**
      * 关联优惠券
      *

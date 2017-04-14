@@ -118,13 +118,7 @@ class GoodsService
      */
     static function getShopGoods($shop, $data = [], $with = [])
     {
-        $goods = $shop->goods()->with($with);
-        /**
-         * 状态
-         */
-        if (isset($data['status'])) {
-            $goods->ofStatus($data['status']);
-        }
+        $goods = $shop->goods()->with($with)->ofStatus(array_get($data, 'status'))->ofGift(array_get($data, 'is_gift'));
         $attrs = [];
         if (isset($data['category_id'])) {
             //分类最高位为层级 后面为categoryId

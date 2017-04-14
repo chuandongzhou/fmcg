@@ -192,6 +192,16 @@ class Order extends Model
     }
 
     /**
+     * 关联赠口
+     *
+     * @return $this
+     */
+    public function gifts()
+    {
+        return $this->belongsToMany(Goods::class, 'order_gift')->withTrashed()->withPivot('num', 'pieces');
+    }
+
+    /**
      * 支付形式
      *
      * @return mixed

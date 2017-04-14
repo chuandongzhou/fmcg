@@ -198,16 +198,11 @@
                                 @endforeach
                                 <tr>
 
-                                    <td colspan="7" >
+                                    <td colspan="7">
                                         <div class="text-right">
                                             订货总数 : {{ $goods_total_num }}
-                                            &nbsp;
-                                            &nbsp;
-                                            &nbsp;
-                                            &nbsp;
+
                                             总金额 : {{ number_format($goods_total_amount, 2, '.', '')}}
-                                            &nbsp;
-                                            &nbsp;
                                         </div>
                                     </td>
                                 </tr>
@@ -317,6 +312,45 @@
                             </div>
                         </div>
                     @endif
+                    @if (!$order->gifts->isEmpty())
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">赠品</h3>
+                            </div>
+                            <div class="panel-container table-responsive">
+                                <table class="table table-bordered table-center table-th-color">
+                                    <thead>
+                                    <th width="10%">商品编号</th>
+                                    <th>商品名</th>
+                                    <th>数量</th>
+                                    <th>编辑</th>
+                                    </thead>
+                                    @foreach($order->gifts as $gift)
+                                        <tr>
+                                            <td>{{ $gift->id }}</td>
+                                            <td>{{ $gift->name }}</td>
+                                            <td>
+                                                {{ $gift->pivot->num . cons()->valueLang('goods.pieces', $gift->pivot->pieces) }}
+                                            </td>
+                                            <td>
+                                                <a href="javascript:" class="btn" data-id="{{ $gift->id }}"
+                                                   data-order-id="{{ $order->id }}" data-num="{{ $gift->pivot->num }}"
+                                                   data-pieces="{{ $gift->pivot->pieces }}"
+                                                   data-toggle="modal"
+                                                   data-target="#giftModal">
+                                                    <i class="iconfont icon-xiugai"></i>编辑
+                                                </a>
+                                                <a class="red delete-no-form" data-method="delete"
+                                                   data-url="{{ url('api/v1/business/order/gift/' . $gift->id) }}"
+                                                   data-data='{"order_id":{{ $order->id }}}'><i
+                                                            class="iconfont icon-shanchu"></i>删除</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -337,22 +371,23 @@
                 if (self.hasClass('money') || self.hasClass('commodity-num')) {
                     content.next('.enter-num-panel').append('<div class="prompt"><div>剩余陈列:<span class="surplus"><i class="fa fa-spinner fa-pulse"></i></span></div><div>未审核陈列:<span class="non-confirm"><i class="fa fa-spinner fa-pulse"></i></span></div></div>');
                     var url = self.hasClass('commodity-num') ? site.api('business/order/mortgage-goods-surplus') : site.api('business/order/display-fee-surplus'),
-                            data = self.hasClass('commodity-num') ? {
-                                id: content.siblings('.enter-num-panel').children('.edit-text').data('id'),
-                                month: content.next('.enter-num-panel').find('input').data('month'),
-                                order_id: '{{ $order->id }}'
-                            } : {
-                                customer_id: '{{ $order->salesmanCustomer->id }}',
-                                month: self.parent().prev().prev().html(),
-                                order_id: '{{ $order->id }}'
-                            };
+                        data = self.hasClass('commodity-num') ? {
+                            id: content.siblings('.enter-num-panel').children('.edit-text').data('id'),
+                            month: content.next('.enter-num-panel').find('input').data('month'),
+                            order_id: '{{ $order->id }}'
+                        } : {
+                            customer_id: '{{ $order->salesmanCustomer->id }}',
+                            month: self.parent().prev().prev().html(),
+                            order_id: '{{ $order->id }}'
+                        };
 
                     $.ajax({
                         url: url,
                         method: 'get',
                         data: data
                     }).done(function (data) {
-                        var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥' + data.surplus, nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥' + data.nonConfirm;
+                        var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥' + data.surplus,
+                            nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥' + data.nonConfirm;
                         var messageContainer = content.next('.enter-num-panel').find('.prompt');
                         messageContainer.find('.surplus').html(surplus);
                         messageContainer.find('.non-confirm').html(nonConfirm);
@@ -366,13 +401,13 @@
 
                 var url = self.data('url');
                 var oldValueControl = content,
-                        isParse = self.data('parse'),
-                        oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
-                        newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
-                        newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
-                        name = newValueControl.data('name'),
-                        id = newValueControl.data('id'),
-                        data = {};
+                    isParse = self.data('parse'),
+                    oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
+                    newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
+                    newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
+                    name = newValueControl.data('name'),
+                    id = newValueControl.data('id'),
+                    data = {};
                 if (oldValue != newValue) {
                     if (isParse && newValue < 0) {
                         alert('请正确填写陈列费');

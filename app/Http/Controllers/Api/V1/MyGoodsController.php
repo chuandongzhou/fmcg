@@ -235,6 +235,32 @@ class MyGoodsController extends Controller
     }
 
     /**
+     * 设置为赠品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function gift(Request $request)
+    {
+        $goodsId = $request->input('id');
+        $goods = Goods::find($goodsId);
+
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $status = intval($request->input('status'));
+        $goods->is_gift = $status;
+        if ($goods->save()) {
+            if ($status) {
+                return $this->success('操作成功');
+            } else {
+                return $this->success(null);
+            }
+        }
+        return $this->error('操作失败');
+    }
+
+    /**
      * 商品批量上下架
      *
      * @param \Illuminate\Http\Request $request
@@ -491,11 +517,11 @@ class MyGoodsController extends Controller
                 'system_2' => $goodsArr[14] ?? 0,
             ];
 
-            if($goods['pieces_wholesaler'] == $pieces['pieces_level_1']){
-                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']){
+            if ($goods['pieces_wholesaler'] == $pieces['pieces_level_1']) {
+                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']) {
                 $goods['specification_wholesaler'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-            }elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']){
+            } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']) {
                 $goods['specification_wholesaler'] = end($goodsArr);
             }
 
@@ -514,12 +540,12 @@ class MyGoodsController extends Controller
             return '三级进制没有填!';
         }
 
-        if($goods['pieces_retailer'] == $pieces['pieces_level_1']){
-            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*'. ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']){
+        if ($goods['pieces_retailer'] == $pieces['pieces_level_1']) {
+            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+        } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']) {
             $goods['specification_retailer'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
-        }elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']){
-            $goods['specification_retailer'] =  end($goodsArr);
+        } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']) {
+            $goods['specification_retailer'] = end($goodsArr);
         }
 
         $pieces['specification'] = end($goodsArr);

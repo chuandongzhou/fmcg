@@ -84,9 +84,20 @@ class SalesmanVisitOrderController extends Controller
         ) {
             return $this->error('订单不存在');
         }
-        //dd((new BusinessService)->getOrderData($salesmanVisitOrder));
-        $viewName = $salesmanVisitOrder->type == cons('salesman.order.type.return_order') ? 'order-return-detail' : 'order-detail';
-        return view('index.business.' . $viewName, (new BusinessService)->getOrderData($salesmanVisitOrder));
+        $isOrderForm = $salesmanVisitOrder->type == cons('salesman.order.type.order');
+        if ($isOrderForm) {
+            $viewName = 'order-detail';
+            $load = ['mortgageGoods.goods', 'orderGoods.goods', 'gifts.goodsPieces' =>function($query){
+                $query->select('goods_id', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3');
+            }];
+        } else {
+            $viewName = 'order-return-detail';
+            $load = ['mortgageGoods.goods', 'orderGoods.goods'];
+        }
+
+        // $viewName = $isOrderForm ? 'order-return-detail' : 'order-detail';
+
+        return view('index.business.' . $viewName, (new BusinessService)->getOrderData($salesmanVisitOrder, $load));
     }
 
     /**

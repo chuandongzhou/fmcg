@@ -234,6 +234,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->post('categories/all', 'CategoryController@getAllCategory');         //获取所有标签
         $router->group(['prefix' => 'my-goods'], function ($router) {
             $router->put('shelve', 'MyGoodsController@shelve');                //商品上下架
+            $router->put('gift', 'MyGoodsController@gift');                //商品上下架
             $router->post('{my_goods}/mortgage', 'MyGoodsController@mortgage');                //商品上下架
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
@@ -354,6 +355,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->delete('goods-delete/{goods_id}',
                         'SalesmanVisitOrderController@goodsDelete')->where('goods_id', '[0-9]+');
                     $router->delete('mortgage-goods-delete', 'SalesmanVisitOrderController@mortgageGoodsDelete');
+                    $router->delete('gift/{id}', 'SalesmanVisitOrderController@gift')->where('id', '[0-9]+');
+                    $router->put('gift/{id}', 'SalesmanVisitOrderController@upGift')->where('id', '[0-9]+');
                     $router->post('update-all/{salesman_order_id}', 'SalesmanVisitOrderController@updateAll');
                     $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
                     $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
@@ -380,6 +383,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->delete('{mortgage_goods}', 'MortgageGoodsController@destroy'); //移除
                 });
 
+                $router->get('gift', 'GiftController@index');
                 $router->group(['prefix' => 'goods'], function ($router) {
                     $router->get('categories', 'GoodsController@category'); //启/禁用
                     $router->get('/', 'GoodsController@goods'); //启/禁用
