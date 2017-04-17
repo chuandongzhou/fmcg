@@ -22,7 +22,7 @@
                                             <select class="control select-category">
                                                 <option value="{{ url('my-goods') }}">全部分类</option>
                                                 @foreach($category as $key => $item)
-                                                    <option value="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"  {{ $category['selected']['id']==$item['id']?'selected':'' }}>
+                                                    <option value="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}" {{ $category['selected']['id']==$item['id']?'selected':'' }}>
                                                         {{ $item['name'] }}
                                                     </option>
                                                 @endforeach
@@ -106,7 +106,7 @@
                                 <div class="clearfix all-sort-panel">
                                     <div class="pull-left all-sort">
                                         @foreach($attr['child'] as $child)
-                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}" >{{ $child['name'] }}</a>
+                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
                                         @endforeach
                                     </div>
                                     <a class="more pull-right" href="#"><span>更多</span> <i
@@ -127,12 +127,19 @@
                     </div>
                     <div class="item control-status">
                         <select class="status control" name="status">
-                            <option value="">请选择</option>
+                            <option value="">请选择上下架</option>
                             @foreach(cons()->valueLang('goods.status') as $status => $statusName)
                                 <option value="{{ $status }}" {{ isset($get['status']) && $get['status'] == $status ? 'selected' : '' }}>
                                     已{{ $statusName }}
                                 </option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="item control-status">
+                        <select class="control" name="is_gift">
+                            <option value="">请选择赠品情况</option>
+                            <option value="1" {{ array_get($get, 'is_gift') == 1 ? 'selected' : '' }}>是</option>
+                            <option value="0" {{ array_get($get, 'is_gift') === '0' ? 'selected' : '' }}>否</option>
                         </select>
                     </div>
                     <div class="item control-delivery">
@@ -148,7 +155,7 @@
                         <select class="address-street hidden useless-control control" name="street_id"
                                 data-id="{{ $get['street_id'] or  0}}">
                         </select>
-                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' , 'name', 'page', 'status']) as $key=>$val)
+                        @foreach(array_except($get , ['province_id' , 'city_id' ,'district_id', 'street_id' ,'is_gift', 'name', 'page', 'status']) as $key=>$val)
                             <input type="hidden" name="{{ $key }}" value="{{ $val }}"/>
                         @endforeach
                     </div>
@@ -185,7 +192,8 @@
                                     <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
                                     <img class="store-img lazy" data-original="{{ $item->image_url }}">
                                     <a class="product-name ellipsis"
-                                       href="{{ url('goods/' . $item->id) }}" title="{{ $item->name }}"> {{ $item->name }}</a>
+                                       href="{{ url('goods/' . $item->id) }}"
+                                       title="{{ $item->name }}"> {{ $item->name }}</a>
                                 </td>
                                 <td>
                                     <p>{{ $item->price_retailer}}元</p>
@@ -199,9 +207,7 @@
                                         <p>{{ $item->min_num_wholesaler }} (批)</p>
                                     @endif
                                 </td>
-                                <td>
-                                    {{ isset($goodsCateName[$item->id]) ? implode('/',$goodsCateName[$item->id]) : '' }}
-                                </td>
+                                <td>{{ isset($goodsCateName[$item->id]) ? implode('/',$goodsCateName[$item->id]) : '' }}</td>
                                 <td>{{ $item->updated_at }}</td>
                                 <td>
                                     已<span class="status-name">{{ cons()->valueLang('goods.status' ,$item->status) }}</span>
@@ -212,6 +218,16 @@
                                            data-url="{{ url('api/v1/my-goods/' . $item->id . '/mortgage') }}"
                                            class="no-form mortgage color-blue" title="设为抵费商品">抵费</a>
                                     @endif
+
+                                    <a href="javascript:" data-method="put"
+                                       data-url="{{ url('api/v1/my-goods/gift')}}"
+                                       data-status="{{ $item->is_gift }}"
+                                       data-data='{ "id": "{{ $item->id }}" }'
+                                       data-on='设为赠品'
+                                       data-off='取消赠品'
+                                       class="ajax-no-form color-blue">
+                                        {{ $item->is_gift ? '取消赠品' : '设为赠品' }}
+                                    </a>
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="edit">编辑</a>
                                     <a href="javascript:" data-method="put"
                                        data-url="{{ url('api/v1/my-goods/shelve')}}"
@@ -219,10 +235,12 @@
                                        data-data='{ "id": "{{ $item->id }}" }'
                                        data-on='上架'
                                        data-off='下架'
+                                       data-change-status="true"
                                        class="ajax-no-form orange ">
                                         {{ cons()->valueLang('goods.status' , !$item->status) }}
                                     </a>
-                                    <a class="red delete-no-form {{ $item->status ? 'hidden' : '' }} delete" data-method="delete"
+                                    <a class="red delete-no-form {{ $item->status ? 'hidden' : '' }} delete"
+                                       data-method="delete"
                                        data-url="{{ url('api/v1/my-goods/' . $item->id) }}" href="javascript:">删除</a>
                                 </td>
                             </tr>

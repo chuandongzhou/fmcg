@@ -87,6 +87,18 @@ class SalesmanVisitController extends Controller
                 '2016-10' => 100,
                 '2016-11' => 100,
             ],
+            "gifts" => [
+                [
+                    "id" => 324,
+                    "num" => 1,
+                    "pieces" => 1
+                ],
+                [
+                    "id" => 325,
+                    "num" => 1,
+                    "pieces" => 1
+                ]
+             ]
             "mortgage" => [
                 '2016-10' => [
                     [
@@ -173,8 +185,22 @@ class SalesmanVisitController extends Controller
                             $orderGoods['type'] = $orderConf['goods']['type']['order'];
                             $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
                         }
+                        //订单商品
                         $orderForm->orderGoods()->saveMany($orderGoodsArr);
+                        //礼物
+                        if ($gifts = array_get($data, 'gifts')) {
+                            $giftList = [];
+                            foreach ($gifts as $gift) {
+                                $giftList[$gift['id']] = [
+                                    'num' => $gift['num'],
+                                    'pieces' => $gift['pieces'],
+                                ];
+                            }
 
+                            $orderForm->gifts()->sync($giftList);
+                        }
+
+                        //陈列费
                         if (isset($validate) && $customer->display_type != cons('salesman.customer.display_type.no')) {
                             $this->_addDisplayList($validate, $orderForm);
                         }
@@ -224,6 +250,7 @@ class SalesmanVisitController extends Controller
         $visit->load([
             'orders.orderGoods',
             'orders.mortgageGoods',
+            'orders.gifts',
             'goodsRecord',
             'salesmanCustomer.shippingAddress',
             'orders.orderGoods.goods'

@@ -28,9 +28,12 @@ class MyGoodsController extends Controller
         $data = $request->all();
         $shop = auth()->user()->shop;
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->orderBy('id', 'DESC')->paginate()->toArray();
+        $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
+        $goods->each(function ($goods){
+            $goods->setAppends(['like_amount'])->setHidden(['goods_like']);
+        });
         return $this->success([
-            'goods' => $goods,
+            'goods' => $goods->toArray(),
             'categories' => CategoryService::formatShopGoodsCate($shop)
         ]);
     }
@@ -106,7 +109,6 @@ class MyGoodsController extends Controller
         $attrs = (new AttrService())->getAttrByGoods($goods, true);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
-
         return $this->success(['goods' => $goods]);
     }
 
@@ -237,6 +239,32 @@ class MyGoodsController extends Controller
         ];
 
         return $goods->mortgageGoods()->create($attributes)->exists ? $this->success('设置成功') : $this->error('设置失败，请重试');
+    }
+
+    /**
+     * 设置为赠品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function gift(Request $request)
+    {
+        $goodsId = $request->input('id');
+        $goods = Goods::find($goodsId);
+
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $status = intval($request->input('status'));
+        $goods->is_gift = $status;
+        if ($goods->save()) {
+            if ($status) {
+                return $this->success('操作成功');
+            } else {
+                return $this->success(null);
+            }
+        }
+        return $this->error('操作失败');
     }
 
     /**

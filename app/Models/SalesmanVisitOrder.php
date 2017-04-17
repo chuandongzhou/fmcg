@@ -43,6 +43,7 @@ class SalesmanVisitOrder extends Model
         static::deleted(function ($model) {
             $model->orderGoods()->delete();
             $model->mortgageGoods()->detach();
+            $model->gifts()->detach();
             $model->displayList()->delete();
         });
     }
@@ -77,6 +78,18 @@ class SalesmanVisitOrder extends Model
         return $this->belongsToMany('App\Models\MortgageGoods',
             'salesman_customer_display_list')->withTrashed()->withPivot('used', 'month', 'salesman_customer_id');
     }
+
+
+    /**
+     * 关联赠口
+     *
+     * @return $this
+     */
+    public function gifts()
+    {
+        return $this->belongsToMany(Goods::class, 'salesman_visit_order_gift')->withTrashed()->withPivot('num', 'pieces');
+    }
+
 
     /**
      * 陈列操作记录

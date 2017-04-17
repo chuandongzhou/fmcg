@@ -364,6 +364,37 @@
                     </div>
                 @endif
 
+                @if (!$order->gifts->isEmpty())
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">赠品</h3>
+                            </div>
+                            <div class="panel-container table-responsive">
+                                <table class="table table-bordered table-center table-th-color">
+                                    <thead>
+                                    <th>商品编号</th>
+                                    <th>商品名称</th>
+                                    <th>商品数量</th>
+                                    </thead>
+                                    @foreach($order->gifts as $gift)
+                                        <tr>
+                                            <td>{{ $gift->id }}</td>
+                                            <td>
+                                                <div class="product-panel">
+                                                    <a class="product-name"
+                                                       href="{{ url('goods/'. $gift->id) }}">{{ $gift->name }}</a>
+                                                </div>
+                                            </td>
+                                            <td>{{ '╳ '.$gift->pivot->num.cons()->valueLang('goods.pieces', $gift->pivot->pieces) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">

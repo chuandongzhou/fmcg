@@ -449,6 +449,12 @@
     pieces                  string          单位
     month                   string          月份
 
+     gifts字段子集说明
+
+        id                  int             商品id
+        num                 int             个数
+        pieces              int             单位
+
  `失败返回：`
 
  
@@ -462,6 +468,7 @@
     goods                   array           拜访商品列表
     order_remark            string          订单备注
     display_remark          string          陈列费备注
+    gifts                   array           赠品
     display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
     mortgage                array           抵费商品（当客户display_type 为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
 
@@ -484,6 +491,11 @@
         num                 string          退货数量
         pieces              int             单位id
 
+    gifts字段子集说明
+
+        id                  int             商品id
+        num                 int             个数
+        pieces              int             单位
 
 `成功返回：`
 	
@@ -557,6 +569,7 @@
 `成功返回：`
 
     orders             array                订货单数据
+    gifts              array                订单赠品
 
     orders字段子集说明（包含分页信息）
 
@@ -605,6 +618,7 @@
     mortgage                 array           抵费商品 [月份=>商品信息]
     displayFee               array           订单陈列费 [月份 => 费用]
     order                    array           平台订单详情 （含送货人信息）
+    gifts                   array             赠品
     
     order_goods字段子集说明
     
@@ -638,22 +652,35 @@
         pieces                  string          单位
         month                   string          月份
 
+    gifts字段子集说明
+
+        id                  int             商品id
+        num                 int             个数
+        pieces              int             单位
+
 
 #### 2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})
 `请求参数：`
 
     goods                   array           订单商品列表
-    display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
+    display_fee             array           陈列费用 （当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
     mortgage                array           抵费商品 （当客户display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
     order_remark            string          订单备注
     display_remark          string          陈列费备注
+    gifts                   array           赠品
 
     goods子集详情
 
     id                      int             商品id
     pieces                  int             商品单位
     price                   decimal         商品单价
-    num                     int             商品购买数量
+    num                     int
+
+     gifts字段子集说明
+
+        id                  int             商品id
+        num                 int             个数
+        pieces              int             单位
 
 `成功返回：`
 
@@ -671,7 +698,6 @@
 
 ### 2.7 平台商品 goods
 #### 2.7.1 获取所有平台商品[get] (/)
-
 `请求参数：`
 
       name        	string              商品名
@@ -715,3 +741,16 @@
         icon_url        string              分类icon图片
         child           array               分类子级（格式同categories）
 
+### 2.8 赠品 gift
+#### 2.8.1 获取平台所有赠品[get] (/)
+`请求参数：`
+
+`成功返回：`
+
+   gifts       array           赠品列表
+
+   gifts子集介绍
+
+        id                  int                 赠品id
+        name                string              赠品名
+        pieces              array               赠品所有单位

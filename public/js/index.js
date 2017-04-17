@@ -394,7 +394,7 @@ function myGoodsFunc() {
     table.width($(".goods-table-panel .goods-table table").width());
 
 
-    $('.mortgage').button({
+    $('.mortgage, .gift').button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
         mortgagedText: '设置成功'
     });
@@ -402,16 +402,11 @@ function myGoodsFunc() {
     /**
      * 抵费商品
      */
-    $(document).on('click', '.mortgage', function () {
+    $(document).on('click', '.mortgage, .gift', function () {
         $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method');
-        // 判断登录
-        if (!site.isLogin()) {
-            site.redirect('auth/login');
-            return;
-        }
 
         self.button('loading');
         $.ajax({
@@ -434,7 +429,7 @@ function myGoodsFunc() {
         });
     });
 
-    ajaxNoForm(true);
+    ajaxNoForm();
     deleteNoForm();
 }
 
@@ -452,7 +447,7 @@ var deleteNoForm = function () {
         if (!confirm('真的要删除吗？')) {
             return false;
         }
-        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
+        common.loading('show');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method'),
@@ -473,7 +468,7 @@ var deleteNoForm = function () {
             method: method,
             data: data
         }).done(function (data, textStatus, jqXHR) {
-            alert('删除成功');
+            successMeg('删除成功');
             self.parents('tr').slideUp(function () {
                 self.remove();
             })
@@ -485,7 +480,7 @@ var deleteNoForm = function () {
                 self.button('reset');
             }
         }).always(function () {
-            $('body').find('.loading').remove();
+            common.loading('hide');
         });
     });
 };
@@ -493,23 +488,33 @@ var deleteNoForm = function () {
 /**
  * 无form异步提交
  */
-var ajaxNoForm = function (changeStatus) {
-    var
-        ajaxNoForm = $('.ajax-no-form'),
-        onText = ajaxNoForm.data('on'),
-        offText = ajaxNoForm.data('off');
+var ajaxNoForm = function () {
+    var ajaxNoForm = $('.ajax-no-form');
+
+    /*
+     var setButton = function (onText, offText) {
+     ajaxNoForm.button({
+     loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+     onText: onText,
+     offText: offText
+     });
+     }*/
 
 
-    ajaxNoForm.button({
-        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
-        onText: onText,
-        offText: offText
-    });
     $(document).on('click', '.ajax-no-form', function () {
         var self = $(this),
             status = self.data('status'),
             url = self.data('url'),
-            data = {status: status ? 0 : 1};
+            data = {status: status ? 0 : 1},
+            onText = self.data('on'),
+            offText = self.data('off'),
+            changeStatus = self.data('changeStatus');
+        self.button({
+            loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+            onText: onText,
+            offText: offText
+        });
+
         // 序列化表单
         $.each(self.data('data') || {}, function (name, value) {
             data[name] = value
@@ -532,7 +537,7 @@ var ajaxNoForm = function (changeStatus) {
                 changeStatus ? statusName.html(offText.stripTags().trim()) : '';
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.button(status ? 'up' : 'down');
+            self.button(status ? 'off' : 'on');
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');
             } else {

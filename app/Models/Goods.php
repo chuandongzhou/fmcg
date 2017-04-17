@@ -5,6 +5,7 @@
  * Date: 2015/8/6
  * Time: 16:29
  */
+
 namespace App\Models;
 
 
@@ -43,6 +44,7 @@ class Goods extends Model
         'is_back',
         'is_expire',
         'is_promotion',
+        'is_gift',
         'promotion_info',
         'introduce',
         'shop_id',
@@ -51,12 +53,12 @@ class Goods extends Model
         'user_type'
     ];
 
-    public $appends = ['image_url', 'pieces', 'price'];
+    public $appends = ['image_url'];
 
     protected $hidden = [
         'images',
         'created_at',
-        
+
     ];
     protected $dates = ['deleted_at'];
 
@@ -74,10 +76,6 @@ class Goods extends Model
             //$model->images()->detach();         //商品图片
         });
 
-//        static::creating(function ($model) {
-//            $model->user_type = auth()->user()->type;
-//
-//        });
     }
 
     /**
@@ -88,6 +86,16 @@ class Goods extends Model
     public function shop()
     {
         return $this->belongsTo('App\Models\Shop');
+    }
+
+    /**
+     * 商品用户收藏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function goodsLike()
+    {
+        return $this->belongsToMany('App\Models\User', 'like_goods',  'goods_id','user_id');
     }
 
     /**
@@ -335,7 +343,24 @@ class Goods extends Model
      */
     public function scopeOfStatus($query, $status)
     {
-        return $query->where('status', $status);
+        if (!is_null($status)) {
+            return $query->where('status', $status);
+        }
+    }
+
+    /**
+     * 是否
+     *
+     * @param $query
+     * @param $gift
+     * @return mixed
+     */
+    public function scopeOfGift($query, $gift)
+    {
+        if (!is_null($gift)) {
+
+            return $query->where('is_gift', $gift);
+        }
     }
 
     /**
@@ -456,7 +481,7 @@ class Goods extends Model
         $retailerPieces = $this->pieces_retailer;
         $wholesalerPieces = $this->pieces_wholesaler;
 
-        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
+        $userType = auth()->check() ? auth()->user()->type : cons('user.type.retailer');
         $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userType >= $userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
         return $piece;
     }
@@ -593,5 +618,15 @@ class Goods extends Model
     public function getIsMortgageGoodsAttribute()
     {
         return !is_null($this->mortgageGoods);
+    }
+
+    /**
+     * 获得商品收藏次数
+     *
+     * @return mixed
+     */
+    public function getLikeAmountAttribute()
+    {
+        return $this->goodsLike->count();
     }
 }
