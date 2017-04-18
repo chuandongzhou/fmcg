@@ -1129,38 +1129,54 @@ function selectedChange() {
         $(this).is(':checked') ? promotionInfo.prop('disabled', false).parents('.promotions-msg').removeClass('hide') : promotionInfo.prop('disabled', true).parents('.promotions-msg').addClass('hide');
     });
 
+    //
     $('select[name="pieces_retailer"]').change(function () {
-
+        //1级单位
+        system_1 = $('input[name = "system_1"]').val();
+        //2级单位
+        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
+        //最小规格单位
+        specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
         $('.pieces_retailer').html(html);
         var value = $(this).find("option:selected").val();
+        pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-
-            $('input[name="specification_retailer"]').val($('input[name="specification"]').val());
-
+            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = specification
 
         }
+
+        $('input[name="specification_retailer"]').val(pieces)
+        $('div.spec_retailer').html(pieces)
     });
 
     $('select[name="pieces_wholesaler"]').change(function () {
+        //1级单位
+        system_1 = $('input[name = "system_1"]').val();
+        //2级单位
+        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
+        //最小规格单位
+        specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
         $('.pieces_wholesaler').html(html);
         var value = $(this).find("option:selected").val();
+        pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="specification"]').val());
+            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
-
+            pieces = specification
         }
+        $('input[name="specification_wholesaler"]').val(pieces);
+        $('div.spec_wholesaler').html(pieces)
     });
 
 }

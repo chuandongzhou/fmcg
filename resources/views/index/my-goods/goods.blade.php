@@ -101,7 +101,7 @@
                             </div>
                             <div class="panel-container">
                                 <div class="row margin-clear">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-8 system">
                                         <div class="form-group editor-item">
                                             <label class="control-label col-sm-2">一级单位 :</label>
                                             <div class="col-sm-3">
@@ -267,14 +267,14 @@
                                     </div>
                                     <label class="control-label col-sm-2">规格 :</label>
 
-                                    <div class="col-sm-3  spec">{{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}</div>
+                                    <div class="col-sm-3 spec spec_retailer">{{ $goods->specification_retailer ?? '' }}</div>
                                     <input type="hidden" name="specification_retailer"
                                            value="{{ $goods->specification_retailer }}"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @if(auth()->user()->type == cons('user.type.supplier'))
+                    @if(auth()->user()->type == cons('user.type.supplier') or auth()->user()->type == cons('user.type.maker'))
                         <div class="col-sm-12 ">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -348,8 +348,8 @@
                                         </div>
                                         <label class="control-label col-sm-2">规格 :</label>
 
-                                        <div class="col-sm-3  spec">
-                                            {{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}
+                                        <div class="col-sm-3 spec spec_wholesaler">
+                                            {{ $goods->specification_wholesaler ?? '' }}
 
                                         </div>
                                         <input type="hidden" name="specification_wholesaler"

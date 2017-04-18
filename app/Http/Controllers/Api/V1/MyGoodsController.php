@@ -29,7 +29,7 @@ class MyGoodsController extends Controller
         $shop = auth()->user()->shop;
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
-        $goods->each(function ($goods){
+        $goods->each(function ($goods) {
             $goods->setAppends(['like_amount'])->setHidden(['goods_like']);
         });
         return $this->success([
@@ -485,7 +485,7 @@ class MyGoodsController extends Controller
      * @param $goodsArr
      * @param $postAttr
      * @param $shopType
-     * @return array
+     * @return array|string
      */
     private function _getGoodsAttrForImport($goodsArr, $postAttr, $shopType)
     {
@@ -503,10 +503,10 @@ class MyGoodsController extends Controller
 
         $pieces = [
             'pieces_level_1' => $goodsArr[6],
-            'pieces_level_2' => $goodsArr[7] ??  0,
-            'pieces_level_3' => $goodsArr[9] ??  0,
-            'system_1' => $goodsArr[8] ?? 0,
-            'system_2' => $goodsArr[10] ?? 0,
+            'pieces_level_2' => $goodsArr[7] ??  null,
+            'pieces_level_3' => $goodsArr[9] ??  null,
+            'system_1' => $goodsArr[8] ?? null,
+            'system_2' => $goodsArr[10] ?? null,
         ];
         if ($shopType == cons('user.type.supplier')) {
             if ($length != 16) {
@@ -518,16 +518,16 @@ class MyGoodsController extends Controller
             $goods['min_num_wholesaler'] = $goodsArr[9] ?? $goodsArr[5];
             $pieces = [
                 'pieces_level_1' => $goodsArr[10],
-                'pieces_level_2' => $goodsArr[11] ??  0,
-                'pieces_level_3' => $goodsArr[13] ??  0,
-                'system_1' => $goodsArr[12] ?? 0,
-                'system_2' => $goodsArr[14] ?? 0,
+                'pieces_level_2' => $goodsArr[11] ??  null,
+                'pieces_level_3' => $goodsArr[13] ??  null,
+                'system_1' => $goodsArr[12] ?? null,
+                'system_2' => $goodsArr[14] ?? null,
             ];
 
             if ($goods['pieces_wholesaler'] == $pieces['pieces_level_1']) {
-                $goods['specification_wholesaler'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+                $goods['specification_wholesaler'] = $pieces['system_1'] . '*' . ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
             } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']) {
-                $goods['specification_wholesaler'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+                $goods['specification_wholesaler'] = ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
             } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']) {
                 $goods['specification_wholesaler'] = end($goodsArr);
             }
@@ -548,9 +548,9 @@ class MyGoodsController extends Controller
         }
 
         if ($goods['pieces_retailer'] == $pieces['pieces_level_1']) {
-            $goods['specification_retailer'] = $pieces['pieces_level_1'] . '*' . ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            $goods['specification_retailer'] = $pieces['system_1'] . '*' . ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
         } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']) {
-            $goods['specification_retailer'] = ($pieces['pieces_level_2'] > 0 ? $pieces['pieces_level_2'] . '*' : '') . end($goodsArr);
+            $goods['specification_retailer'] = ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
         } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']) {
             $goods['specification_retailer'] = end($goodsArr);
         }
