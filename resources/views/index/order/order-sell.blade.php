@@ -108,7 +108,7 @@
                                     </td>
                                     <td width="10%" class="bordered text-center">{{ '╳ '.$goods['pivot']['num'] }}</td>
                                     @if(0 == $key )
-                                        <td rowspan="{{ count($order['goods'])}}"
+                                        <td rowspan="{{ count($order['orderGoods']->where('type',0))}}"
                                             class="pay-detail text-center bordered"
                                             width="15%">
                                             <p>{{ $order['status_name'] }}</p>
@@ -117,7 +117,7 @@
 
                                             <p><span class="red">¥{{ $order['after_rebates_price'] }}</span></p>
                                         </td>
-                                        <td rowspan="{{ count($order['goods'])}}" class="operating text-center bordered"
+                                        <td rowspan="{{ count($order['orderGoods']->where('type',0))}}" class="operating text-center bordered"
                                             width="15%">
                                             <p><a href="{{ url('order-sell/detail?order_id='.$order['id']) }}"
                                                   class="btn btn-blue">查看</a></p>

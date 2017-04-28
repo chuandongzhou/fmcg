@@ -30,7 +30,7 @@ class MyGoodsController extends Controller
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
         $goods->each(function ($goods){
-            $goods->setAppends(['like_amount'])->setHidden(['goods_like']);
+            $goods->setAppends(['like_amount','image_url'])->setHidden(['goods_like']);
         });
         return $this->success([
             'goods' => $goods->toArray(),
@@ -96,10 +96,9 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $goods->load(['images', 'deliveryArea']);
+        $goods->load(['images', 'deliveryArea', 'goodsPieces']);
         $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
-
-        $attrs = (new AttrService())->getAttrByGoods($goods, true);
+        $attrs = (new AttrService())->getAttrByGoods($goods, false);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         return $this->success(['goods' => $goods]);
@@ -117,7 +116,6 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-
         $result = DB::transaction(function () use ($request, $goods) {
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');

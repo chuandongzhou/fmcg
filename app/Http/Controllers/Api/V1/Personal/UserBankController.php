@@ -86,13 +86,13 @@ class UserBankController extends Controller
         $requestData = $request->except('_method');
 
         if (!$this->user->userBanks()->count()) {
-            //没有时设置为默认
+
             $requestData['is_default'] = 1;
-        } else {
-            if (array_get($requestData, 'is_default')) {
-                $this->user->userBanks()->where('is_default', 1)->update(['is_default' => 0]);
-            }
         }
+        if (array_get($requestData, 'is_default')) {
+            $this->user->userBanks()->update(['is_default' => 0]);
+        }
+
         if ($userBank = $this->user->userBanks()->create($requestData)) {
             return $this->success(['bank_id' => $userBank->id]);
         }

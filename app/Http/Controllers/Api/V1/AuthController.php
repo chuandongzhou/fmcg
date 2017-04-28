@@ -58,10 +58,8 @@ class AuthController extends Controller
         $user = User::where('user_name', $account)->first();
 
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
-            if ($inWindows) {
-                $loginError = $request->cookie('login_error');
-                $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
-            }
+            $loginError = $request->cookie('login_error');
+            $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
             return $this->invalidParams(['password' => ['账号或密码错误'], 'loginError' => ($loginError + 1)]);
         }
 
@@ -101,6 +99,7 @@ class AuthController extends Controller
         //终端商不需要审核直接通过
         if($userInput['type'] == cons('user.type.retailer'))
             $userInput['audit_status'] = cons('user.audit_status.pass');
+       // dd();
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店

@@ -671,7 +671,7 @@ class Shop extends Model
      */
     public function getThreeGoodsAttribute()
     {
-        return $this->goods()->OfNew()->limit(3)->get();
+        return $this->goods()->active()->OfNew()->limit(3)->get();
     }
 
 

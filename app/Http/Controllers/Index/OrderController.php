@@ -25,12 +25,11 @@ class OrderController extends Controller
     public function postConfirmOrder(Request $request)
     {
         $orderGoodsNum = $request->input('num');
-        $goodsId = $request->input('goods_id');
-
+        $goodsId = $request->input('ids');
         $orderGoodsNum = array_where($orderGoodsNum, function ($key, $value) use ($goodsId) {
             return in_array($key, (array)$goodsId);
         });
-
+        
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
         }

@@ -38,7 +38,7 @@ class OrderSellController extends OrderController
 
         $orders = Order::OfSell(auth()->id())->useful()->WithExistGoods([
             'user.shop',
-            'shippingAddress.address'
+            'shippingAddress.address',
         ]);
         if (is_numeric($search['search_content'])) {
             $orders = $orders->where('id', $search['search_content']);
@@ -115,18 +115,19 @@ class OrderSellController extends OrderController
         if (!$order) {
             return redirect('order-sell');
         }
-        foreach ($order->goods as $goods)
-            $order->goods_amount += $goods->pivot['num'];
 
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 
         $goods = (new OrderService)->explodeOrderGoods($order);
-
+        $goods['orderGoods']->each(function ($goods)use (&$goods_quantity){
+            $goods_quantity += $goods->pivot->num;
+        });
         $view = 'index.order.order-sell-detail';
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
 
         return view($view, [
             'order' => $order,
+            'goods_quantity' => $goods_quantity,
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
             'delivery_man' => $deliveryMan,

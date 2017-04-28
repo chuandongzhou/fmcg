@@ -86,6 +86,7 @@ class ShopController extends Controller
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $shop->is_like = $isLike ? true : false;
+        $shop->load(['deliveryArea','shopAddress']);
         $shop->setAppends(['goods_count', 'sales_volume'])->setHidden(['goods']);
         return $this->success([
             'shop' => $shop->toArray()

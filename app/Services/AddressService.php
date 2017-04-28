@@ -66,7 +66,7 @@ class AddressService
         $address = config('address.address');
         $provinceCookie = request()->cookie('province_id');
 
-        if ($provinceCookie && array_get($address, $provinceCookie) && false) {
+        if ($provinceCookie && array_get($address, $provinceCookie)) {
             $provinceId = $provinceCookie;
         } else {
             $provinceId = auth()->check() && auth()->user()->shop->shopAddress ? auth()->user()->shop->shopAddress->province_id : cons('address.default_province');

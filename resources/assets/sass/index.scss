@@ -6,6 +6,8 @@ html {
   min-height: 100%;
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
   -ms-overflow-style: scrollbar;
+//  background: url("../images/login-bg.jpg") bottom repeat;
+  min-width: 1200px;
 }
 
 body {
@@ -92,7 +94,51 @@ a {
     }
   }
 }
+.public-table {
+  thead {
+    td,th {
+      background-color: #f1f1f1;
+    }
+  }
+  tbody{
+    tr:nth-child(even){
+      td {
+        background-color: #f1f1f1;
+      }
+    }
+    tr{
+      td{
+        vertical-align:middle;
+      }
+    }
+  }
 
+}
+.table-title-blue {
+  margin-bottom: 0 !important;
+  border: 1px solid $gray-plain-light !important;
+  thead {
+    margin-top: 0 !important;
+    tr {
+      th {
+        border: none !important;
+        text-align: center;
+        color: $gray-base;
+        background-color: #e3fbe3;
+        line-height:30px;
+      }
+    }
+  }
+  tbody{
+    tr{
+      td{
+        border-left: none !important;
+        border-right: none !important;
+        line-height:30px;
+      }
+    }
+  }
+}
 @mixin dash-bord {
   border-top: 1px dashed $gray-lighter;
   border-bottom: 1px dashed $gray-lighter;
@@ -139,7 +185,10 @@ a {
 .prompt {
   color: $gray-light;
 }
-
+.company {
+  line-height: 35px;
+  width:75px;
+}
 .black{
   color:$gray-dark;
   @include btn-hover-color($gray-dark);
@@ -265,6 +314,19 @@ a {
 
 .edit {
   @include btn-hover-color(#169bd5);
+  display: inline-block;
+  padding: 0 5px;
+}
+.gray{
+  @include btn-hover-color($gray-light);
+  display: inline-block;
+  padding: 0 5px;
+  .iconfont{
+    vertical-align: middle;
+  }
+}
+.green{
+  @include btn-hover-color($brand-success);
   display: inline-block;
   padding: 0 5px;
 }
@@ -686,7 +748,7 @@ a {
       margin-top: 45px;
       .tabs-item {
         float: left;
-        width: 25%;
+        width: 20%;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
@@ -979,7 +1041,7 @@ a {
 @mixin background {
   background-color: $body-bg;
   min-height: 800px;
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
 }
 
 .drop-newmsg {
@@ -5807,7 +5869,7 @@ table {
     }
     td, th {
       padding: 0 !important;
-      border: 1px solid black !important;
+      border: 1px solid $gray-light !important;
     }
   }
 }
@@ -6199,7 +6261,7 @@ table {
 
 .delivery {
   @include background;
-  padding: 20px;
+  padding: 10px;
   .control {
     height: 40px;
     margin-right: 10px;
@@ -6214,7 +6276,7 @@ table {
     margin-bottom: 20px;
     .btn {
       border-radius: 4px !important;
-      padding: 0 15px;
+//      padding: 0 15px;
     }
     .btn-default {
       background-color: $body-bg;
@@ -6241,7 +6303,7 @@ table {
 }
 
 .delivery-statistics {
-  margin: 0 25px 0 25px !important;
+  margin: 0 5px 0 5px !important;
   .operation {
     .btn {
       padding: 8px 15px;
@@ -6325,10 +6387,6 @@ table {
       height: 40px;
       border-radius: 4px !important;
       border: 1px solid $gray-lighter;
-    }
-    .company {
-      line-height: 35px;
-      width:75px;
     }
     .display-goods {
       div {
@@ -6527,3 +6585,484 @@ table {
   }
 }
 /*==============checkbox 公共按钮=================*/
+/*==============库存管理begin=================*/
+.inventory-name-input{
+  width:300px;
+  .control{
+    width:100%;
+  }
+}
+.details-item{
+  text-indent:5px;
+  margin:10px 0;
+  label{
+    font-weight: 600;
+  }
+  .content{
+    display: inline-block;
+    width:80%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    vertical-align: top;
+  }
+}
+.wareh-details{
+  .content{
+    width:63%;
+  }
+}
+.warehousing-error-btn{
+  display: inline-block;
+  font-weight: 600;
+  .badge{
+    @include size(40px,30px);
+    border-radius: 40px !important;
+    margin-left:10px;
+    background-color: $brand-danger;
+    line-height:22px;
+  }
+}
+.title-list-wrap{
+  .item{
+    line-height: 40px;
+  }
+  label{
+    font-weight: 600;
+  }
+}
+.warehousing-table{
+  table{
+    tbody {
+      tr {
+        td {
+          vertical-align: middle;
+          &:first-of-type{
+            text-align: left!important;
+          }
+          input,select{
+            outline: none;
+            border-radius:3px !important;
+            height:35px;
+            border:1px solid $gray-lighter;
+          }
+          .add-col{
+           @include square(35px);
+            background-color: $body-bg;
+            color: $backstage-blue;
+            border: 1px solid $backstage-blue;
+            vertical-align:top;
+            border-radius:4px!important;
+            outline:none;
+            &:hover {
+              background-color: $backstage-blue;
+              color: $body-bg;
+            }
+          }
+          .remove-col{
+            @include square(35px);
+            background-color: $body-bg;
+            color: $red;
+            border: 1px solid $red;
+            vertical-align:top;
+            border-radius:4px!important;
+            outline:none;
+            &:hover {
+              background-color: $red;
+              color: $body-bg;
+            }
+          }
+          .number{
+            width:75px;
+          }
+          textarea{
+            height:55px;
+          }
+        }
+      }
+    }
+  }
+  .store-img{
+    @include square(60px);
+  }
+  .product-name {
+    display: inline-block;
+    width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: $gray
+  }
+}
+.warehousing-control-search {
+  margin-bottom: 20px;
+
+  .control {
+    height: 30px;
+    margin-right: 10px;
+    line-height: 14px !important;
+    vertical-align: middle;
+    &[type="text"] {
+      width: 230px;
+      border-radius:4px!important;
+      border:1px solid $gray-lighter;
+      outline:none;
+    }
+  }
+  .btn-default {
+    background-color: $body-bg;
+    color: $backstage-blue;
+    border: 1px solid $backstage-blue;
+    &:hover {
+      background-color: $backstage-blue;
+      color: $body-bg;
+    }
+  }
+}
+.warehousing-table-wrap{
+  height:400px;
+}
+.wareh-operating{
+  margin-top: 20px;
+  padding-left: 25px;
+  .btn-warning{
+    width:100px;
+  }
+}
+.wareh-details-table{
+  .product-name{
+    width:200px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  table{
+    tbody{
+      tr{
+        td{
+          font-size:12px!important;
+        }
+      }
+    }
+  }
+}
+.warh-error-modal{
+  .item {
+    & + .item {
+      padding: 5px 15px;
+    }
+    label {
+      font-weight: 600;
+    }
+    .content {
+      display: inline-block;
+      &.product-name {
+        width: 650px;
+        vertical-align: top;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+.outhousing-product-name{
+  width: 400px !important;
+}
+.outh-details-wrap{
+  ul{
+    @include clearfix;
+    li{
+      float: left;
+      height:40px;
+      margin-left: 20px;
+      label{
+        font-weight: 600;
+      }
+      .content{
+        display: inline-block;
+      }
+    }
+  }
+}
+.good-ontheway{
+  .product-name{
+    width:85%!important;
+  }
+}
+/*==============库存管理end=================*/
+/*==============资产管理begin=================*/
+.assets{
+  .btn{
+    padding:8px 12px!important;
+  }
+}
+.modal-list-wrap{
+  padding-bottom: 15px;
+  & + .modal-list-wrap {
+    padding:10px 0!important;
+  }
+  .item {
+    padding-top:5px;
+    &.title{
+      padding:0 0 10px 15px;
+      color:$gray-light;
+    }
+    label {
+      color: $gray-base;
+    }
+    .content {
+      display: inline-block;
+      color:$gray-light;
+    }
+  }
+  &.bg-gray{
+    background-color:$gray-plain ;
+  }
+}
+.assets-modal-wrap{
+  .control-label{
+    color:$gray-base!important;
+  }
+  .prompt{
+    height:35px;
+    line-height:35px;
+  }
+}
+.operating-panel{
+  label{
+    display: inline-block;
+    margin-right:10px;
+  }
+}
+/*==============资产管理end=================*/
+/*==============促销管理begin=================*/
+.fan{
+  display: inline-block;
+  @include square(39px);
+  color:$body-bg;
+  background-color:$red;
+  font-size: 25px;
+  border-radius:50%!important;
+  text-align: center;
+  line-height: 50px;
+}
+.select-wrap{
+  .option-panel{
+    display: none;
+    &.active{
+      display: block;
+    }
+    .num{
+      width:75px;
+    }
+    select,input{
+      outline: none;
+    }
+    .select-commodity{
+      margin:20px 0 10px 0;
+      .btn{
+        padding:5px 10px!important;
+        margin-left: 10px;
+      }
+    }
+    table{
+      tr{
+        th,td{
+          font-size: 13px;
+        }
+      }
+    }
+    .prompt{
+      color:$gray-base;
+      margin-top: 80px;
+    }
+    .item{
+      padding:15px;
+      vertical-align: middle;
+      ul{
+        @include clearfix;
+        li{
+          float: left;
+          height:60px;
+          padding: 0 10px;
+          label{
+            display: inline-block;
+            height:60px;
+            line-height: 60px;
+          }
+          textarea{
+            height:60px;
+          }
+        }
+      }
+    }
+    .item-panel{
+      margin-top:60px;
+      .fan{
+        vertical-align: middle;
+        margin:0 15px;
+      }
+      .money{
+        @include size(90px,40px);
+        border:1px solid $gray-lighter;
+        border-radius:4px!important;
+      }
+      &.other{
+        margin:20px 0;
+      }
+    }
+  }
+}
+.promotion-submit{
+  width:100px!important;
+}
+.promotion-msg-wrap{
+  .item-text{
+    margin-top:20px;
+  }
+}
+/*==============促销管理end=================*/
+/*==============月对账单begin=================*/
+.statement-item{
+  .list-wrap{
+    margin-top: 20px;
+    .item-col{
+      margin-bottom:10px;
+      color:$gray-base;
+    }
+  }
+}
+.statement-table-wrap{
+  .panel-default{
+    border:1px solid #ddd!important;
+  }
+  table{
+    thead{
+      th,td{
+        background-color: #ffeeee!important;
+      }
+    }
+    tbody{
+      td{
+        vertical-align: middle;
+      }
+    }
+    tfoot{
+      .money-item{
+        display: inline-block;
+        margin-right:20px;
+      }
+      .text-right{
+        text-align:right!important;
+      }
+    }
+  }
+}
+.bottom-note{
+  margin-top: 30px;
+}
+/*==============月对账单end=================*/
+/*==============签约管理begin=================*/
+.signed-list-wrap{
+  margin-bottom: 30px;
+  .item{
+    padding-right: 0;
+    padding-left:5px;
+    &:last-of-type{
+      padding-right: 15px;
+    }
+    &:first-of-type{
+      padding-left: 15px;
+    }
+    h4{
+      font-size: 13px;
+      background-color: $gray-plain;
+      text-align: center;
+      padding:3px 0;
+    }
+    .content{
+      text-align: center;
+      padding:20px 0;
+      span{
+        font-size: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        &.money-baozheng{
+          color:$gray-base;
+        }
+        &.money-yucun{
+          color:#00cc66;
+        }
+      }
+      button{
+        background-color: $body-bg;
+        color:$gray;
+        border:1px solid $gray;
+        border-radius:4px!important;
+        outline:none;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+.signed-num{
+  color:$theme-orange;
+  font-size: 15px;
+  display: inline-block;
+  margin:0 10px 0 10px;
+}
+.signed-submit{
+  background-color:$theme-orange;
+  color:$body-bg;
+  border:1px solid $theme-orange;
+  border-radius:4px !important;
+  outline: none;
+  padding:2px 20px;
+}
+.signed-xuqi{
+  .item{
+    label{
+      display: inline-block;
+      width:65px;
+    }
+    & + .item{
+      margin-top: 15px;
+    }
+    &.last {
+      padding-left:65px;
+    }
+  }
+  ul{
+    @include clearfix;
+    display: inline-block;
+    height:30px;
+    vertical-align: middle;
+    li{
+      float: left;
+      @include size(60px,30px);
+      text-align: center;
+      line-height: 30px;
+      border:1px solid $gray-lighter;
+      cursor:pointer;
+      & + li{
+        margin-left:-1px;
+      }
+      &.active{
+        background-color: $backstage-blue;
+        color:$body-bg;
+      }
+    }
+  }
+}
+/*==============签约管理end=================*/
+/*==============保证金begin=================*/
+.caption{
+  div,p{
+    margin:15px 0;
+  }
+  p{
+    padding-left:15px;
+  }
+}
+/*==============保证金end=================*/

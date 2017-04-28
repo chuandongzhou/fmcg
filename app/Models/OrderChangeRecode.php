@@ -28,4 +28,17 @@ class OrderChangeRecode extends Model
     {
         return $this->belongsTo('App\Models\Order');
     }
+
+    /**
+     * 获取修改人名
+     *
+     * @return mixed
+     */
+    public function getNameAttribute()
+    {
+        $order = $this->order;
+
+        return $order->shop->user_id == $this->user_id ? $order->shop_name : $order->deliveryMan()->find($this->user_id)->pluck('name');
+    }
+
 }

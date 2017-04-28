@@ -47,9 +47,10 @@ class ShippingAddressController extends Controller
         if (Gate::denies('validate-user', $addressInfo)) {
             return $this->error('设置失败，请重试');
         }
-        auth()->user()->shippingAddress()->where('is_default', 1)->update(['is_default' => 0]);
 
-        if ($addressInfo->fill(['is_default' => 1])->save()) {
+        auth()->user()->shippingAddress()->where('id','<>',$addressInfo->id)->update(['is_default' => 0]);
+
+        if ($addressInfo->update(['is_default' => 1])) {
             return $this->success('设置成功');
         }
         return $this->error('设置失败，请重试');
@@ -65,6 +66,7 @@ class ShippingAddressController extends Controller
     {
         $addressAttr = ['province_id', 'city_id', 'district_id', 'street_id', 'area_name', 'address'];
         $address = $request->except($addressAttr);
+
         $shippingAddress = auth()->user()->shippingAddress()->create($address);
         if ($shippingAddress->exists) {
             $shippingAddress->is_default == 1 && $this->addressDefault($shippingAddress);
