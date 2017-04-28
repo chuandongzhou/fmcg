@@ -1,6 +1,7 @@
 @extends('index.menu-master')
 @section('subtitle', '个人中心-配送人员')
 @include('includes.delivery-man')
+@include('includes.renew')
 @section('top-title')
     <a href="{{ url('personal/info') }}">个人中心</a> >
     <span class="second-level"> 配送人员</span>
@@ -24,6 +25,7 @@
                         <th>联系方式</th>
                         <th>POS机登录名</th>
                         <th>POS机编号</th>
+                        <th>过期时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -43,6 +45,9 @@
                                 {{ $man->pos_sign }}
                             </td>
                             <td>
+                                {{ $man->expire }}
+                            </td>
+                            <td>
 
                                 <div role="group" class="btn-group btn-group-xs">
                                     <a data-toggle="modal"
@@ -52,6 +57,10 @@
                                        class="edit update-modal">
                                         <i class="iconfont icon-xiugai"></i> 编辑
                                     </a>
+                                    @if(!$man->expire_at)
+                                        <a data-target="#expireModal" data-toggle="modal" data-type="expire">
+                                            <i class="iconfont icon-chaopiao"></i>续费</a>
+                                    @endif
                                     <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
                                        data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                        type="button">

@@ -49,7 +49,6 @@ class AuthController extends Controller
             if (!$res) {
                 return $this->invalidParam('password', '请完成验证');
             }
-
         }
         if (!$account || !$password) {
             return $this->invalidParam('password', '账号或密码不能为空');
@@ -60,10 +59,10 @@ class AuthController extends Controller
 
         //帐号密码
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
-            if ($inWindows) {
-                $loginError = $request->cookie('login_error');
-                $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
-            }
+
+            $loginError = $request->cookie('login_error');
+            $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
+
             return $this->invalidParams(['password' => ['账号或密码错误'], 'loginError' => ($loginError + 1)]);
         }
 
@@ -94,7 +93,6 @@ class AuthController extends Controller
             return $this->success(['user' => $user]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
-
     }
 
     /**
@@ -183,7 +181,6 @@ class AuthController extends Controller
      */
     public function postUserShop(RegisterUserShopRequest $request)
     {
-
         if (empty($request->input('user_name'))) {
             return $this->error('注册用户时遇到问题');
         }

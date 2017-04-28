@@ -41,7 +41,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'backup_mobile',
         'type',
         'deposit',
-        'prestore',
         'audit_status',
         'expire_at',
         'last_login_at'
@@ -167,26 +166,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * 扣费记录
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function deductions()
-    {
-        return $this->hasMany(DeductionRecord::class);
-    }
-
-    /**
-     * 预存记录
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function prestores()
-    {
-        return $this->hasMany(PrestoreRecord::class);
-    }
-
-    /**
      * 续费记录
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -276,6 +255,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             return $shopName;
         }
         return $userService->setShopDetail($this, 'name');
+    }
+
+    /**
+     * 获取model名
+     *
+     * @return string
+     */
+    public function getModelNameAttribute()
+    {
+        return '账户' . $this->attributes['user_name'];
     }
 
     /**

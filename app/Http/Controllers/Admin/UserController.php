@@ -262,6 +262,12 @@ class UserController extends Controller
         ])->save() ? $this->success('缴纳成功') : $this->error('缴纳保证金时出现问题');
     }
 
+    /**
+     * 续费
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\WeiHeng\Responses\AdminResponse
+     */
     public function expire(Request $request)
     {
         $month = (int)$request->input('month');

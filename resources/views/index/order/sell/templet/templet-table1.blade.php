@@ -12,7 +12,7 @@
     <div class="container temple-table">
         <div class="row">
             <div class="col-xs-12 text-center">
-                <h2 class="title">{{ $order->shop->name }} 送货单</h2>
+                <h2 class="title">{{ $order->shop_name }} 送货单</h2>
                 <div class="contact-information prompt">
                     联系电话：{{ $order->shop->contact_info }}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $order->shop->contact_person }}

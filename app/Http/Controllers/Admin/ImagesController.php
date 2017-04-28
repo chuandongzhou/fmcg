@@ -39,7 +39,7 @@ class ImagesController extends Controller
      */
     public function check()
     {
-        $goodsImages = Images::with('image', 'goods')->where('status', 0)->orderBy('created_at','desc')->paginate(30);
+        $goodsImages = Images::with('image', 'goods')->where('status', 0)->orderBy('created_at', 'desc')->paginate(30);
         return view('admin.images.check', [
             'goodsImages' => $goodsImages
         ]);
@@ -81,12 +81,19 @@ class ImagesController extends Controller
      */
     public function store(Request $request)
     {
-
         $images = $request->input('images');
 
-        info($images);
-        $images = (new ImageUploadService($images))->formatImagePost();
+        if (empty($images)) {
+            return $this->error('请正确上传图片');
+        }
 
+        foreach (array_get($images, 'name') as $barcode) {
+            if (!is_numeric($barcode)) {
+                return $this->error('条形码必须为数字');
+            }
+        }
+
+        $images = (new ImageUploadService($images))->formatImagePost();
 
         foreach ($images as $item) {
             $image = Images::create(['bar_code' => $item['name'], 'status' => 1]);

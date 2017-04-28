@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -12,8 +13,20 @@ class DeliveryMan extends Model implements AuthenticatableContract
     use Authenticatable;
 
     protected $table = 'delivery_man';
-    protected $fillable = ['user_name', 'password', 'pos_sign', 'name', 'phone', 'shop_id', 'status', 'last_login_at'];
+    protected $fillable = [
+        'user_name',
+        'password',
+        'pos_sign',
+        'name',
+        'phone',
+        'shop_id',
+        'status',
+        'last_login_at',
+        'expire_at'
+    ];
     protected $hidden = ['password', 'created_at', 'updated_at', 'deleted_at', 'last_login_at'];
+
+    protected $dates = ['expire_at'];
 
 
     /**
@@ -28,10 +41,7 @@ class DeliveryMan extends Model implements AuthenticatableContract
             $signService = app('sign');
             $signConfig = cons('sign');
             if ($signService->workerCount() >= $signConfig['max_worker']) {
-                if (auth()->user()->prestore < $signConfig['worker_excess_amount']) {
-                    $model->attributes['status'] = 0;
-                }
-                $signService->discountPrestore();
+                $model->attributes['expire_at'] = Carbon::now();
             }
         });
     }
@@ -47,6 +57,15 @@ class DeliveryMan extends Model implements AuthenticatableContract
     }
 
     /**
+     * 订单
+     *
+     */
+    public function orders()
+    {
+        return $this->belongsToMany('App\Models\Order', 'order_delivery_man');
+    }
+
+    /**
      * 密码加密
      *
      * @param $password
@@ -59,11 +78,24 @@ class DeliveryMan extends Model implements AuthenticatableContract
     }
 
     /**
-     * 订单
+     * 获取实际过期时间
      *
+     * @return mixed
      */
-    public function orders()
+    public function getExpireAttribute()
     {
-        return $this->belongsToMany('App\Models\Order', 'order_delivery_man');
+        return is_null($this->expire_at) ? $this->shop->user->expire_at : $this->expire_at;
     }
+
+    /**
+     * 获取model名
+     *
+     * @return string
+     */
+    public function getModelNameAttribute()
+    {
+        return '司机' . $this->attributes['name'];
+    }
+
+
 }

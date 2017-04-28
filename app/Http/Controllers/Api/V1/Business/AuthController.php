@@ -34,8 +34,13 @@ class AuthController extends Controller
             return $this->invalidParam('password', '账号或密码错误');
         }
 
+        //检测账号是否锁定
         if ($salesman->status != cons('status.on')) {
             return $this->invalidParam('password', '账号已锁定');
+        }
+        //检测账号是否过期
+        if ($salesman->expire->isPast()) {
+            return $this->invalidParam('password', '账号已过期');
         }
 
 

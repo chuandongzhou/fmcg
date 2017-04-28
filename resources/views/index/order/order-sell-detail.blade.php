@@ -250,7 +250,7 @@
                                         <tr>
                                             <td>{{ $orderChangeRecode->created_at }}</td>
                                             <td>
-                                                <b>{{ $orderChangeRecode->user_id == auth()->id() ? $order->shop->name : $order->deliveryMan()->find($orderChangeRecode->user_id)->pluck('name') }}</b>
+                                                <b>{{ $orderChangeRecode->changed_user_name }}</b>
                                             </td>
                                             <td>{{ $orderChangeRecode->content }}</td>
                                         </tr>

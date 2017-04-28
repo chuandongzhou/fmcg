@@ -58,6 +58,12 @@ class DeliveryController extends Controller
         if (!$deliveryMan || !$deliveryMan->status) {
             return $this->invalidParam('password', '账号不存在或不能使用');
         }
+
+        //检测账号是否过期
+        if ($deliveryMan->expire->isPast()) {
+            return $this->invalidParam('password', '账号已过期');
+        }
+
         $password = md5($password);
 
         if ($password != $deliveryMan->password) {

@@ -628,9 +628,8 @@ class SalesmanVisitOrderController extends Controller
                     'status' => $orderConf['status']['non_send'],
                     'display_fee' => !empty($salesmanVisitOrder->displayFees()->sum('used')) ? $salesmanVisitOrder->displayFees()->sum('used') : '0.00',
                     'numbers' => (new OrderService())->getNumbers($shopId),
-                    // 'finished_at' => Carbon::now(),
                     'shipping_address_id' => $shippingAddressService->copySalesmanCustomerShippingAddressToSnapshot($salesmanVisitOrder->SalesmanCustomer),
-                    'remark' => '订单备注:' . $salesmanVisitOrder->order_remark . ($salesmanVisitOrder->display_remark ? '; 陈列费备注:' . $salesmanVisitOrder->display_remark : '')
+                    'remark' => ($salesmanVisitOrder->order_remark ? '订单备注:' . $salesmanVisitOrder->order_remark . ';' : '') . ($salesmanVisitOrder->display_remark ? '陈列费备注:' . $salesmanVisitOrder->display_remark : '')
                 ];
 
                 if (!$orderData['shipping_address_id']) {
@@ -785,7 +784,7 @@ class SalesmanVisitOrderController extends Controller
                 //商品原总金额
                 $goodsOldAmount = $orderGoods->amount;
 
-                if ($orderGoods->type == $goodsTypes['order']) {
+                if ($orderGoods->type == $goodsTypes['order'])   {
                     //订单
                     $attributes['price'] = $request->input('price');
                     $attributes['num'] = $request->input('num');

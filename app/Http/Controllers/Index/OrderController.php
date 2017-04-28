@@ -20,7 +20,7 @@ class OrderController extends Controller
      * 确认订单消息
      *
      * @param \Illuminate\Http\Request $request
-     * @return $this|\Illuminate\View\View
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function postConfirmOrder(Request $request)
     {
@@ -89,8 +89,7 @@ class OrderController extends Controller
             return redirect('cart')->with('message', $orderService->getError());
         }
 
-        //$query = '?order_id=' . $result['order_id'] . ($result['type'] ? '&type=all' : '');
-        $redirectUrl = url('order/finish-order' /*. $query*/);
+        $redirectUrl = url('order/finish-order');
 
         return redirect($redirectUrl);
     }

@@ -51,6 +51,57 @@ class Model extends Eloquent
     }
 
     /**
+     * 缓存数据的来源
+     *
+     * @return array
+     */
+    protected static function cacheSource()
+    {
+        return static::all()->toArray();
+    }
+
+    /**
+     * 获取缓存的数据
+     *
+     * @param int $minutes 到期时间
+     * @return array
+     */
+    public static function cache($minutes = 1440)
+    {
+        $cacheName = 'models:' . (new static)->getTable();
+
+        // 直接返回缓存内容
+        if (!is_null($value = Cache::get($cacheName))) {
+            return $value;
+        }
+
+        // 找不到内容，进行缓存
+        $value = static::cacheSource();
+        if ($minutes) {
+            Cache::put($cacheName, $value, intval($minutes));
+        } else {
+            Cache::forever($cacheName, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * 清空当前模型缓存
+     *
+     * @return mixed
+     */
+    public static function cacheForget()
+    {
+        $table = (new static)->getTable();
+        $cacheName = 'models:' . $table;
+
+        Cache::tags($table)->flush();
+
+        return Cache::forget($cacheName);
+    }
+
+    /**
      * 模型关联一个文件
      *
      * @param \App\Models\File $file

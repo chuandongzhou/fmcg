@@ -48,7 +48,8 @@ class OrderSellController extends OrderController
         } else {
             $orders = $orders->ofSelectOptions($search);
         }
-        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name',
+            'id');
 
         return view('index.order.order-sell', [
             'order_status' => $orderStatus,
@@ -67,7 +68,8 @@ class OrderSellController extends OrderController
         $orders = Order::OfSell(auth()->id())->useful()->WithExistGoods([
             'user.shop',
         ])->nonSend();
-        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name',
+            'id');
         return view('index.order.order-sell', [
             'data' => $this->_getOrderNum($orders->count()),
             'orders' => $orders->paginate(),
@@ -142,18 +144,21 @@ class OrderSellController extends OrderController
      */
     public function getTemplete()
     {
-        $shopId = auth()->user()->shop_id;
+        $shop = auth()->user()->shop;
 
-        $defaultTempleteId = app('order.download')->getTemplete($shopId);
+        $defaultTempleteId = app('order.download')->getTemplete($shop->id);
 
-        return view('index.order.sell.templete', ['defaultTempleteId' => $defaultTempleteId]);
+        $tempHeaders = $shop->orderTempletes;
+
+        return view('index.order.sell.templete',
+            ['defaultTempleteId' => $defaultTempleteId, 'tempHeaders' => $tempHeaders]);
     }
 
     /**
      * 导出订单word文档,只有卖家可以导出
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response|void
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function getExport(Request $request)
     {
@@ -162,7 +167,6 @@ class OrderSellController extends OrderController
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
 
-        $status = cons('order.status');
         $result = Order::with('shippingAddress.address', 'goods', 'shop')
             ->OfSell(auth()->id())->useful()
             ->whereIn('id', $orderIds)->get();
@@ -181,6 +185,7 @@ class OrderSellController extends OrderController
     public function getBrowserExport(Request $request)
     {
         $orderId = $request->input('order_id');
+        $templeteId = $request->input('templete_id', 0);
         if (empty($orderId)) {
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
@@ -202,6 +207,11 @@ class OrderSellController extends OrderController
         $shopId = $order->shop_id;
         $modelId = app('order.download')->getTemplete($shopId);
         (new OrderDownloadService())->addDownloadCount($order);
+
+        if ($templete = $order->shop->orderTempletes()->find($templeteId)) {
+            $order->shop = $templete;
+        }
+
 
         return view('index.order.sell.templet.templet-table' . $modelId,
             [

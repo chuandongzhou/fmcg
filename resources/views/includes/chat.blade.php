@@ -137,16 +137,21 @@
                     userListPanel.append(userHtml);
                     chatListPanel.append(usersHtml);
                     getUnreadMsgCount(sdk);
-                    WKIT.switchTouid({
-                        touid: firstId,
-                        toAvatar: firstLogoUrl
-                    });
+
                     @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
+                         WKIT.switchTouid({
+                            touid: firstId,
+                            toAvatar: firstLogoUrl
+                        });
                         var id = parseInt({!!  request()->input('uid') !!});
                         userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#646464');
                         setReadState(sdk, id + "");
                      @elseif(request()->is('personal/chat'))
-                             userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#646464');
+                          WKIT.switchTouid({
+                             touid: firstId,
+                             toAvatar: firstLogoUrl
+                         });
+                        userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#646464');
                         setReadState(sdk, firstId);
                     @endif
 

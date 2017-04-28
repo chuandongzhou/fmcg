@@ -30,7 +30,7 @@ class MyGoodsController extends Controller
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
         $goods->each(function ($goods) {
-            $goods->setAppends(['like_amount'])->setHidden(['goods_like']);
+            $goods->setAppends(['like_amount', 'image_url'])->setHidden(['goods_like']);
         });
         return $this->success([
             'goods' => $goods->toArray(),

@@ -33,8 +33,9 @@ $router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
  * 前台
  *
  */
+$router->get('/test', 'Index\HomeController@test');              //商家管理首页
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
-    $router->get('/test', 'HomeController@test');              //商家管理首页
+
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->get('about', 'HomeController@about');         //关于我们
 
@@ -405,7 +406,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
 
         //支付渠道
-
         $router->get('payment-channel', 'PaymentChannelController@index');
+
+        //订单模板
+        $router->put('templete/default/{templeteId}', 'TempleteController@default')->where('templeteId', '[0-9]+'); ;
+        $router->resource('templete', 'TempleteController');
     });
 });

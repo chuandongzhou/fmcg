@@ -1,5 +1,5 @@
 @extends('index.menu-master')
-@section('subtitle', '个人中心-配送人员')
+@section('subtitle', '个人中心-配送区域')
 
 @section('top-title')
     <a href="{{ url('personal/delivery-area') }}">个人中心</a> ><span class="second-level"> 配送区域</span>

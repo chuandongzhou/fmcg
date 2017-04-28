@@ -80,9 +80,9 @@ class MyGoodsController extends Controller
     {
         $user =  auth()->user();
         //判断有没有交保证金
-     /*   if (!$user->deposit) {
-            return $this->error('添加商品前请先缴纳保证金', url('personal/sign/deduction'));
-        }*/
+       if (!$user->deposit) {
+            return $this->error('添加商品前请先缴纳保证金', url('personal/sign'));
+        }
 
         //默认加入店铺配送地址
         $shop = $user->shop()->with(['deliveryArea'])->first();

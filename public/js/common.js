@@ -389,19 +389,8 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
-
-                    if (data.status != false) {
-                        self.html(data.message || '操作成功');
-                        self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
-                    } else {
-                        common.loading('hide');
-                        self.html(data.content || '操作失败');
-                        self.hasClass('no-prompt') || successMeg(data.content || '操作失败');
-
-                        setTimeout(function () {
-                            self.button('reset');
-                        }, delay)
-                    }
+                    self.html(data.message || '操作成功');
+                    self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 common.loading('hide');
@@ -440,7 +429,7 @@ var commonAjaxSetup = function () {
                 var params = [data, textStatus, jqXHR, self];
                 if (false !== self.triggerHandler('always.hct.ajax', params)
                     && false !== form.triggerHandler('always.hct.ajax', params)
-                    && !preventDefault && false !== data.status) {
+                    && !preventDefault) {
 
                     self.data('alwaysIntervalId', setTimeout(function () {
                         // 处理刷新事件

@@ -12,7 +12,7 @@
 
 @section('right')
     <form class="form-horizontal ajax-form" method="{{ $goods->id ? 'put' : 'post' }}"
-          action="{{ url('api/v1/my-goods/'.$goods->id) }}" data-done-url="{{ url('my-goods') }}"
+          action="{{ url('api/v1/my-goods/'.$goods->id) }}"
           data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
           autocomplete="off">
         <div class="row goods-editor goods-editor-first">

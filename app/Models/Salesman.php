@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -19,6 +20,7 @@ class Salesman extends Model implements AuthenticatableContract
         'name',
         'avatar',
         'contact_information',
+        'expire_at',
         'last_login_ip',
         'last_login_time',
         'status'
@@ -34,6 +36,8 @@ class Salesman extends Model implements AuthenticatableContract
         'last_login_time'
     ];
 
+    protected $dates = ['expire_at'];
+
     /**
      * 模型启动事件
      */
@@ -45,11 +49,8 @@ class Salesman extends Model implements AuthenticatableContract
         static::creating(function ($model) {
             $signService = app('sign');
             $signConfig = cons('sign');
-            if ($signService->workerCount >= $signConfig['max_worker']) {
-                if (auth()->user()->prestore < $signConfig['worker_excess_amount']) {
-                    $model->attributes['status'] = 0;
-                }
-                $signService->discountPrestore();
+            if ($signService->workerCount() >= $signConfig['max_worker']) {
+                $model->attributes['expire_at'] = Carbon::now();
             }
         });
     }
@@ -233,6 +234,26 @@ class Salesman extends Model implements AuthenticatableContract
     public function getShopAddressAttribute()
     {
         return $this->shop()->first()->address;
+    }
+
+    /**
+     * 获取实际过期时间
+     *
+     * @return mixed
+     */
+    public function getExpireAttribute()
+    {
+        return is_null($this->expire_at) ? $this->shop->user->expire_at : $this->expire_at;
+    }
+
+    /**
+     * 获取model名
+     *
+     * @return string
+     */
+    public function getModelNameAttribute()
+    {
+        return '业务员' . $this->attributes['name'];
     }
 
     /**

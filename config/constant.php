@@ -443,19 +443,33 @@ return [
         'deposit' => 1000,
         //缴纳保证金后免费使用月份
         'free_month' => 3,
-        //续期金额
+        //账号续期金额
         'expire_amount' => [
-            'a_month' => 100,
-            'two_months' => 200,
-            'three_months' => 300,
-            'four_months' => 400,
-            'five_months' => 500,
-            'six_months' => 600,
-            'seven_months' => 700,
-            'eight_months' => 800,
-            'nine_months' => 900,
             'a_year' => 1000,
+            'two_years' => 2000,
+            'three_years' => 3000,
+            /* 'four_months' => 400,
+             'five_months' => 500,
+             'six_months' => 600,
+             'seven_months' => 700,
+             'eight_months' => 800,
+             'nine_months' => 900,
+             'a_year' => 1000,*/
+        ],
+        //业务员司机续期金额
+        'worker_expire_amount' => [
+            'a_month' => 10,
+            'two_months' => 20,
+            'three_months' => 30,
+            'four_months' => 40,
+            'five_months' => 50,
+            'six_months' => 60,
+            'seven_months' => 70,
+            'eight_months' => 80,
+            'nine_months' => 90,
+            'a_year' => 100,
         ]
+
     ],
 
     //后台配置

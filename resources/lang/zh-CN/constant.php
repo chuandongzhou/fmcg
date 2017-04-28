@@ -182,19 +182,19 @@ return [
             'BOB' => '北京银行',
             'ABC' => '中国农业银行',
             'PSBC' => '中国邮政储蓄银行',
-            'GZCB'=>'广州银行',
-            'JSB'=>'江苏银行',
-            'SRCB'=>'上海农村商业银行',
-            'CBHB'=>'渤海银行',
-            'BJRCB'=>'北京农商银行',
-            'NJCB'=>'南京银行',
-            'BEA'=>'东亚银行',
-            'NBCB'=>'宁波银行',
-            'HZB'=>'杭州银行',
-            'HSB'=>'徽商银行',
-            'CZB'=>'浙商银行',
-            'DLB'=>'大连银行',
-            'UPOP'=>'银联在线支付'
+            'GZCB' => '广州银行',
+            'JSB' => '江苏银行',
+            'SRCB' => '上海农村商业银行',
+            'CBHB' => '渤海银行',
+            'BJRCB' => '北京农商银行',
+            'NJCB' => '南京银行',
+            'BEA' => '东亚银行',
+            'NBCB' => '宁波银行',
+            'HZB' => '杭州银行',
+            'HSB' => '徽商银行',
+            'CZB' => '浙商银行',
+            'DLB' => '大连银行',
+            'UPOP' => '银联在线支付'
         ]
     ],
     // 收藏
@@ -276,18 +276,31 @@ return [
     ],
     //签约管理
     'sign' => [
-        //续期金额
+        //账户续期金额
         'expire_amount' => [
+            'a_year' => '1年',
+            'two_years' => '2年',
+            'three_years' => '3年',
+            /* 'four_months' => '4',
+             'five_months' => '5',
+             'six_months' => '6',
+             'seven_months' => '7',
+             'eight_months' => '8',
+             'nine_months' => '9',
+             'a_year' => '1年',*/
+        ],
+        //续期金额
+        'worker_expire_amount' => [
             'a_month' => '1',
             'two_months' => '2',
             'three_months' => '3',
-            'four_months' => '4',
-            'five_months' => '5',
-            'six_months' => '6',
-            'seven_months' => '7',
-            'eight_months' => '8',
-            'nine_months' => '9',
-            'a_year' => '1年',
+             'four_months' => '4',
+             'five_months' => '5',
+             'six_months' => '6',
+             'seven_months' => '7',
+             'eight_months' => '8',
+             'nine_months' => '9',
+             'a_year' => '1年',
         ]
     ],
     'admin' => [

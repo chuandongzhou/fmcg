@@ -5,7 +5,7 @@
     <span class="second-level"> 业务员管理</span>
 @stop
 @include('includes.salesman')
-@include('includes.cropper')
+@include('includes.renew')
 
 @section('right')
     <form action="{{ url('business/salesman') }}" method="get">
@@ -15,7 +15,7 @@
                    data-toggle="modal" data-id="0">
                     <i class="fa fa-plus"></i>添加业务员
                 </a>
-                    <span class="item control-item">
+                <span class="item control-item">
                         <input class="control" type="text" name="name" value="{{ $name }}" placeholder="账号、名称">
                         <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
                     </span>
@@ -28,6 +28,7 @@
                         <th>名称</th>
                         <th>账号</th>
                         <th>联系方式</th>
+                        <th>过期时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -47,6 +48,9 @@
                                 {{ $man->contact_information }}
                             </td>
                             <td>
+                                {{ $man->expire  }}
+                            </td>
+                            <td>
                                 <div role="group" class="btn-group btn-group-xs">
                                     <a class="edit" href="javascript:void(0)" type="button"
                                        data-target="#salesmanModal" data-toggle="modal" data-id="{{ $man->id }}">
@@ -55,13 +59,21 @@
                                     <a class="color-blue" href="{{ url('business/report/' . $man->id) }}">
                                         <i class="iconfont icon-jingzhibaogao"></i> 报告&nbsp;</a>
                                     @if($man->status==cons('status.off'))
-                                        <a class="ajax gray-light" data-url="{{ url('api/v1/business/salesman/lock') }}"  data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }' data-method="post" type="button">
+                                        <a class="ajax gray-light" data-url="{{ url('api/v1/business/salesman/lock') }}"
+                                           data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
+                                           data-method="post" type="button">
                                             <i class="iconfont icon-dongjietubiao"></i> 解冻&nbsp;
                                         </a>
                                     @else
-                                        <a class="black ajax" data-url="{{ url('api/v1/business/salesman/lock') }}" data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }' data-method="post" type="button">
+                                        <a class="black ajax" data-url="{{ url('api/v1/business/salesman/lock') }}"
+                                           data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
+                                           data-method="post" type="button">
                                             <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
                                         </a>
+                                    @endif
+                                    @if(!$man->expire_at)
+                                        <a data-target="#expireModal" data-toggle="modal" data-type="expire">
+                                            <i class="iconfont icon-chaopiao"></i>续费</a>
                                     @endif
 
                                     <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}" data-method="delete"
@@ -86,6 +98,7 @@
     </form>
     @parent
 @stop
+
 @section('js')
     @parent
     <script type="text/javascript">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
 use App\Services\GoodsService;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -17,7 +18,6 @@ class HomeController extends Controller
     public function index()
     {
         //广告
-
         $indexAdvertConf = cons('advert.cache.index');
         $adverts = [];
         if (Cache::has($indexAdvertConf['name'])) {
@@ -43,9 +43,9 @@ class HomeController extends Controller
         return view('index.index.about');
     }
 
-    public function test()
+    public function test(Guard $auth)
     {
-        //dd(auth()->user()->is_expire);
+       return view('index.index.test');
     }
 
 }

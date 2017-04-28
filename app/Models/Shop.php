@@ -314,6 +314,17 @@ class Shop extends Model
     }
 
     /**
+     * 关联订单模板
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderTempletes()
+    {
+
+        return $this->hasMany(OrderTemplete::class);
+    }
+
+    /**
      * 获取热门商家
      *
      * @param $query

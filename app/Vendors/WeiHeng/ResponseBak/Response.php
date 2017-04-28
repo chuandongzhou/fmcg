@@ -1,6 +1,6 @@
 <?php
 
-namespace WeiHeng\Responses;
+namespace WeiHeng\ResponseBak;
 
 class Response
 {

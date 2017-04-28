@@ -3,6 +3,8 @@
 @include('includes.order-refund')
 @include('includes.shipping-address-map')
 @include('includes.order-select-delivery_man')
+@include('includes.select-templete')
+
 
 @section('subtitle', '订单列表')
 
@@ -145,13 +147,14 @@
                                                 @endif
                                                 @if($order['can_export'])
                                                     <p>
-                                                        <a class="btn btn-blue-lighter" target="_blank"
-                                                           href="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
+                                                        <a class="btn btn-blue-lighter btn-print"
+                                                           data-id="{{ $order->id }}" target="_blank"
+                                                           href="javascript:"
+                                                           data-url="{{ url('order-sell/browser-export?order_id='.$order['id']) }}">打印</a>
                                                     </p>
                                                     <p>
                                                         <a class="btn btn-blue-lighter"
                                                            href="{{ url('order-sell/export?order_id='.$order['id']) }}">下载</a>
-
 
                                                     <div class="prompt">
                                                         （{{ $order->download_count ? '已下载打印' . $order->download_count . '次'  :'未下载' }}
@@ -232,7 +235,6 @@
                 var obj = $(this), url = obj.data('url');
                 $('.modal-footer').find('button[type="submit"]').attr('data-url', url).attr('data-data', '{"is_seller" : true}');
             });
-
         })
     </script>
 @stop

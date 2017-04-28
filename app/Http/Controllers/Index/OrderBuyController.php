@@ -101,7 +101,8 @@ class OrderBuyController extends OrderController
         ])->nonArrived();
         return view('index.order.order-buy', [
             'data' => $this->_getOrderNum(-1, $orders->count()),
-            'orders' => $orders->paginate()
+            'orders' => $orders->paginate(),
+            'userBalance' => $this->userBalance['availableBalance']
         ]);
     }
 
