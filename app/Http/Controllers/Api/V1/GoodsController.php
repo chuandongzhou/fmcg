@@ -22,8 +22,7 @@ class GoodsController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getGoods()
-    {
+    public function getGoods(){
         return $this->success(['goodsColumns' => GoodsService::getNewGoodsColumn()]);
     }
 
@@ -73,6 +72,7 @@ class GoodsController extends Controller
     public function postDetail($goodsId)
     {
         $goods = Goods::active()->with(['images.image', 'deliveryArea'])->find($goodsId);
+        
         $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');

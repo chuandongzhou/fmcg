@@ -420,7 +420,7 @@ img {
             createMenuFunc(menuObject, 0, directoryHtml);
 
         });
-    </script>
+    </script></head>
 </head>
 <body>
 <h1>快销品平台零售商API</h1>
@@ -790,6 +790,7 @@ delivery_area       array       商品配送区域
 is_like             bool        是否已关注
 image_url           string      商品图片('第一张')
 images_url          array       商品全部图片
+goodsPieces         array       商品规格单位
 
 attrs 子字段说明
 
@@ -810,6 +811,15 @@ images_url 子字段说明
 id                  int         图片id
 name                string      图片名
 path                string      路径
+
+goodsPieces子字段说明
+
+pieces_level_1              int         一级单位
+pieces_level_2              int         二级单位
+system_1                    int         一级与二级之间进制（有二级单位时必填）
+pieces_level_3              int         三级单位
+system_2                    int         二级三级之间进制（有三级单位时必填）
+specification               string      最小单位规格
 </code></pre>
 
 <p><code>失败返回：</code></p>
@@ -861,6 +871,10 @@ district_id             int             县id
 street_id               int             街道id
 area_name               string          省、市、县、街道名
 address                 string          详细地址
+
+attrs 字段子集介绍
+
+attr_pid =&gt; attr_id
 </code></pre>
 
 <p><code>成功返回：</code></p>
@@ -1167,13 +1181,6 @@ cart_goods          array       属于本商店的商品
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回</code></p>
-<h4>2.6.4 批量删除购物车[delete] (batch-delete})</h4>
-<p><code>请求参数：</code></p>
-<pre><code>ids          array          购物车id数组 (ids =&gt; ['1','2'])  
-</code></pre>
-
-<p><code>成功返回：</code></p>
-<p><code>失败返回</code></p>
 <h3>2.7 订单 order</h3>
 <h4>2.7.1 确认订单[post] (confirm-order)</h4>
 <p><code>请求参数：</code></p>
@@ -1399,8 +1406,9 @@ can_cancel                  bool        是否可取消(是true,否false)
 can_confirm                 bool        是否可确认订单(是true,否false)
 can_send                    bool        是否可发货
 can_confirm_collections     bool        是否可确认收款(针对货到付款)
-user                array       买家信息
-goods               array       商品信息
+user                        array       买家信息
+mortgageGoods               array       抵费商品信息
+orderGoods                  array       订单商品信息
 user_shop_name              string      买家店铺名
 
 user 字段子集说明

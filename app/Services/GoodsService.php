@@ -119,6 +119,9 @@ class GoodsService
     static function getShopGoods($shop, $data = [], $with = [])
     {
         $goods = $shop->goods()->with($with)->ofStatus(array_get($data, 'status'))->ofGift(array_get($data, 'is_gift'));
+        if (isset($data['ids'])) {
+            $goods->whereNotIn('id', $data['ids']);
+        }
         $attrs = [];
         if (isset($data['category_id'])) {
             //分类最高位为层级 后面为categoryId
@@ -129,6 +132,10 @@ class GoodsService
         // 标签
         if (isset($data['attr']) && !empty($data['attr'])) {
             $goods->OfAttr($data['attr']);
+        }
+        // 名称or条形码
+        if (isset($data['nameOrCode']) && !empty($data['nameOrCode'])) {
+            $goods->OfNameOrCode($data['nameOrCode']);
         }
 
         // 名称
@@ -406,4 +413,31 @@ class GoodsService
 
     }
 
+    /**
+     *
+     * 获得商品单位等级进制
+     *
+     * @param $goodsId
+     * @param $piecesValue
+     * @return int
+     */
+    static public function getPiecesSystem($goodsId, $piecesValue = '')
+    {
+        $goods = Goods::with('goodsPieces')->find($goodsId);
+        $pieces = $goods->goodsPieces->toArray();
+            $level = array_search($piecesValue, $pieces);
+            switch (substr($level, -1)) {
+                case 2 :
+                    $system = $pieces['system_2'] == null ? 1 : $pieces['system_2'];
+                    break;
+                case 1 :
+                    $system  = (($pieces['system_1'] == null ? 1 : $pieces['system_1']) * ($pieces['system_2'] == null ? 1 : $pieces['system_2']));
+                    break;
+                default :
+                    $system = 1;
+                    break;
+            }
+        return $system;
+    }
+    
 }

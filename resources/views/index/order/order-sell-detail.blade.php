@@ -313,9 +313,7 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
-                                        商品总数 : <span class="red"
-                                                     style="margin-right: 100px;">{{$order->goods_amount}}</span> 总额 :
-                                        <span class="red">¥{{ $order->price }}</span>
+                                        商品总数 : <span class="red" style="margin-right: 100px;">{{$goods_quantity ?? 0}}</span>    总额 : <span class="red">¥{{ $order->price }}</span>
                                     </td>
                                 </tr>
                             </table>

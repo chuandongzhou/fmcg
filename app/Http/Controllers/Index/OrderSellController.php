@@ -118,18 +118,19 @@ class OrderSellController extends OrderController
         if (!$order) {
             return redirect('order-sell');
         }
-        foreach ($order->goods as $goods) {
-            $order->goods_amount += $goods->pivot['num'];
-        }
 
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 
         $goods = (new OrderService)->explodeOrderGoods($order);
-
+        $goods['orderGoods']->each(function ($goods)use (&$goods_quantity){
+            $goods_quantity += $goods->pivot->num;
+        });
+        $view = 'index.order.order-sell-detail';
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
 
         return view('index.order.order-sell-detail', [
             'order' => $order,
+            'goods_quantity' => $goods_quantity,
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
             'delivery_man' => $deliveryMan,

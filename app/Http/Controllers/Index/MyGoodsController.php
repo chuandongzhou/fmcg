@@ -154,6 +154,7 @@ class MyGoodsController extends Controller
         $goods->shopDeliveryArea = $shopDelivery;
 
         $attrResults = $attrService->format($attrResults);
+
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => $attrResults,

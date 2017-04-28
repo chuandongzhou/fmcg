@@ -18,6 +18,7 @@ use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
 use App\Models\ConfirmOrderDetail;
 use App\Services\CartService;
+use App\Services\InventoryService;
 use App\Services\OrderService;
 use App\Services\RedisService;
 use App\Services\ShopService;
@@ -100,8 +101,8 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods',
-            'coupon')->WaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon',
+            'shop.user')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -139,8 +140,8 @@ class OrderController extends Controller
      */
     public function getListOfSell()
     {
-        $orders = Order::OfSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon')->orderBy('id',
-            'desc')->paginate();
+        $orders = Order::OfSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon',
+            'shop.user')->orderBy('id','desc')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -152,7 +153,7 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon')->paginate();
+        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon', 'shop.user')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -215,8 +216,8 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell(auth()->id())->getPayment()->nonCancel()->with('user.shop', 'goods',
-            'coupon')->paginate();
+        $orders = Order::ofSell(auth()->id())->getPayment()->nonCancel()->with('user.shop', 'goods', 'coupon',
+            'shop.user')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -231,7 +232,6 @@ class OrderController extends Controller
     {
         $orderId = $request->input('order_id');
         $order = Order::OfSell(auth()->id())->useful()->find($orderId);
-
         if (is_null($order)) {
             return $this->error('订单不存在');
         }
@@ -245,7 +245,7 @@ class OrderController extends Controller
 
         $goods = (new OrderService())->explodeOrderGoods($order);
 
-        $order->addHidden(['order_change_recode']);
+        $order->addHidden(['order_change_recode']);;
 
         return $this->success([
             'order' => $order,
@@ -481,19 +481,13 @@ class OrderController extends Controller
         $orderIds = (array)$request->input('order_id');
         $deliveryManIds = array_unique((array)$request->input('delivery_man_id'));
 
-
-        //判断送货人员是否是该店铺的
-        /* if (!DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->find($deliveryManId)) {
-             return $this->error('操作失败');
-         }*/
         $deliveryMans = auth()->user()->shop->deliveryMans()->whereIn('id', $deliveryManIds)->count();
 
         if (count($deliveryManIds) != $deliveryMans) {
             return $this->error('配送人员错误');
         }
 
-
-        $orders = Order::OfSell(auth()->id())->useful()->whereIn('id', $orderIds)->get();
+        $orders = Order::OfSell(auth()->id())->with('orderGoods')->useful()->whereIn('id', $orderIds)->get();
 
         if ($orders->isEmpty()) {
             return $this->error('订单不能为空');
@@ -501,6 +495,8 @@ class OrderController extends Controller
 
         //通知买家订单已发货
         $failIds = [];
+        //商品库存服务
+        //$inventoryService = new InventoryService();
         foreach ($orders as $order) {
             if (!$order->can_send || $order->shop_id != auth()->user()->shop->id) {
                 if (count($orders) == 1) {
@@ -509,7 +505,35 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
-
+            //商品出库
+           
+            /*foreach ($order->orderGoods as $goodsInfo) {
+                $data = [
+                    'inventory_number' => $inventoryService->getInventoryNumber(),
+                    'inventory_type' => cons('inventory.inventory_type.system'),
+                    'action_type' => cons('inventory.action_type.out'),
+                    'goods' => [
+                        $goodsInfo->goods_id => [
+                            'order_number' => [
+                                $goodsInfo->order_id
+                            ],
+                            'quantity' => [
+                                $goodsInfo->num
+                            ],
+                            'cost' => [
+                                $goodsInfo->price
+                            ],
+                            'pieces' => [
+                                $goodsInfo->pieces
+                            ],
+                            'remark' => [
+                                '系统自动出库'
+                            ],
+                        ]
+                    ]
+                ];
+                $inventoryService->inventoryOut($data);
+            }*/
             if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
                 $redisKey = 'push:user:' . $order->user_id;
                 $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
@@ -925,7 +949,6 @@ class OrderController extends Controller
             $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
         }
-
         $order->setAppends([
             'status_name',
             'payment_type',

@@ -6,6 +6,8 @@ html {
   min-height: 100%;
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
   -ms-overflow-style: scrollbar;
+//  background: url("../images/login-bg.jpg") bottom repeat;
+  min-width: 1200px;
 }
 
 body {
@@ -93,9 +95,10 @@ a {
   }
 }
 .public-table {
-  th{
-    background-color: #f1f1f1;
-    border: none !important;
+  thead {
+    td,th {
+      background-color: #f1f1f1;
+    }
   }
   tbody{
     tr:nth-child(even){
@@ -105,7 +108,7 @@ a {
     }
     tr{
       td{
-        border:none!important;
+        vertical-align:middle;
       }
     }
   }
@@ -182,7 +185,10 @@ a {
 .prompt {
   color: $gray-light;
 }
-
+.company {
+  line-height: 35px;
+  width:75px;
+}
 .black{
   color:$gray-dark;
   @include btn-hover-color($gray-dark);
@@ -315,6 +321,9 @@ a {
   @include btn-hover-color($gray-light);
   display: inline-block;
   padding: 0 5px;
+  .iconfont{
+    vertical-align: middle;
+  }
 }
 .green{
   @include btn-hover-color($brand-success);
@@ -6379,10 +6388,6 @@ table {
       border-radius: 4px !important;
       border: 1px solid $gray-lighter;
     }
-    .company {
-      line-height: 35px;
-      width:75px;
-    }
     .display-goods {
       div {
         height: 40px;
@@ -6691,10 +6696,18 @@ table {
 }
 .warehousing-control-search {
   margin-bottom: 20px;
+
   .control {
-    height: 40px;
+    height: 30px;
     margin-right: 10px;
-    vertical-align:middle;
+    line-height: 14px !important;
+    vertical-align: middle;
+    &[type="text"] {
+      width: 230px;
+      border-radius:4px!important;
+      border:1px solid $gray-lighter;
+      outline:none;
+    }
   }
   .btn-default {
     background-color: $body-bg;
@@ -6792,7 +6805,8 @@ table {
   .item {
     padding-top:5px;
     &.title{
-      padding:15px;
+      padding:0 0 10px 15px;
+      color:$gray-light;
     }
     label {
       color: $gray-base;
@@ -6806,7 +6820,149 @@ table {
     background-color:$gray-plain ;
   }
 }
+.assets-modal-wrap{
+  .control-label{
+    color:$gray-base!important;
+  }
+  .prompt{
+    height:35px;
+    line-height:35px;
+  }
+}
+.operating-panel{
+  label{
+    display: inline-block;
+    margin-right:10px;
+  }
+}
 /*==============资产管理end=================*/
+/*==============促销管理begin=================*/
+.fan{
+  display: inline-block;
+  @include square(39px);
+  color:$body-bg;
+  background-color:$red;
+  font-size: 25px;
+  border-radius:50%!important;
+  text-align: center;
+  line-height: 50px;
+}
+.select-wrap{
+  .option-panel{
+    display: none;
+    &.active{
+      display: block;
+    }
+    .num{
+      width:75px;
+    }
+    select,input{
+      outline: none;
+    }
+    .select-commodity{
+      margin:20px 0 10px 0;
+      .btn{
+        padding:5px 10px!important;
+        margin-left: 10px;
+      }
+    }
+    table{
+      tr{
+        th,td{
+          font-size: 13px;
+        }
+      }
+    }
+    .prompt{
+      color:$gray-base;
+      margin-top: 80px;
+    }
+    .item{
+      padding:15px;
+      vertical-align: middle;
+      ul{
+        @include clearfix;
+        li{
+          float: left;
+          height:60px;
+          padding: 0 10px;
+          label{
+            display: inline-block;
+            height:60px;
+            line-height: 60px;
+          }
+          textarea{
+            height:60px;
+          }
+        }
+      }
+    }
+    .item-panel{
+      margin-top:60px;
+      .fan{
+        vertical-align: middle;
+        margin:0 15px;
+      }
+      .money{
+        @include size(90px,40px);
+        border:1px solid $gray-lighter;
+        border-radius:4px!important;
+      }
+      &.other{
+        margin:20px 0;
+      }
+    }
+  }
+}
+.promotion-submit{
+  width:100px!important;
+}
+.promotion-msg-wrap{
+  .item-text{
+    margin-top:20px;
+  }
+}
+/*==============促销管理end=================*/
+/*==============月对账单begin=================*/
+.statement-item{
+  .list-wrap{
+    margin-top: 20px;
+    .item-col{
+      margin-bottom:10px;
+      color:$gray-base;
+    }
+  }
+}
+.statement-table-wrap{
+  .panel-default{
+    border:1px solid #ddd!important;
+  }
+  table{
+    thead{
+      th,td{
+        background-color: #ffeeee!important;
+      }
+    }
+    tbody{
+      td{
+        vertical-align: middle;
+      }
+    }
+    tfoot{
+      .money-item{
+        display: inline-block;
+        margin-right:20px;
+      }
+      .text-right{
+        text-align:right!important;
+      }
+    }
+  }
+}
+.bottom-note{
+  margin-top: 30px;
+}
+/*==============月对账单end=================*/
 /*==============签约管理begin=================*/
 .signed-list-wrap{
   margin-bottom: 30px;

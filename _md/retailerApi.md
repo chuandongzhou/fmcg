@@ -390,6 +390,7 @@
     is_like             bool        是否已关注
     image_url           string      商品图片('第一张')
     images_url          array       商品全部图片
+    goodsPieces         array       商品规格单位
 
     attrs 子字段说明
 
@@ -410,6 +411,15 @@
     id                  int         图片id
     name                string      图片名
     path                string      路径
+
+    goodsPieces子字段说明
+
+    pieces_level_1              int         一级单位
+    pieces_level_2              int         二级单位
+    system_1                    int         一级与二级之间进制（有二级单位时必填）
+    pieces_level_3              int         三级单位
+    system_2                    int         二级三级之间进制（有三级单位时必填）
+    specification               string      最小单位规格
 
 `失败返回：`
 
@@ -463,6 +473,10 @@
     street_id               int             街道id
     area_name               string          省、市、县、街道名
     address                 string          详细地址
+
+    attrs 字段子集介绍
+
+    attr_pid => attr_id
 
 
 `成功返回：`
@@ -582,7 +596,19 @@
     introduction        string      店铺介绍
     min_money           decimal     最低配送额
     is_like             bool        是否已收藏
+    goods_count         int         商品总数
+    sales_volume        int         销售总量
+    delivery_area       array       店铺配送区域
 
+    delivery_area 字段说明
+
+    id                      int             地址id
+    province_id             int             省id
+    city_id                 int             市id
+    district_id             int             县id
+    street_id               int             街道id
+    area_name               string          省、市、县、街道名
+    address                 string          详细地址
 
 
 #### 2.4.4 店铺商品[get]   ({shop_id}/goods)
@@ -1061,8 +1087,9 @@
 	can_confirm					bool		是否可确认订单(是true,否false)
 	can_send					bool		是否可发货
 	can_confirm_collections 	bool		是否可确认收款(针对货到付款)
-	user                array       买家信息
-    goods    			array		商品信息
+	user                        array       买家信息
+    mortgageGoods    			array		抵费商品信息
+    orderGoods    			    array		订单商品信息
     user_shop_name              string      买家店铺名
 
 	user 字段子集说明

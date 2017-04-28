@@ -110,10 +110,15 @@ class CartController extends Controller
     {
 
         $ids = $request->input('ids');
+
         if (is_null($ids)) {
             return $this->error('请选择要删除的商品');
         }
-        if ($this->user->carts()->whereIn('id', $ids)->delete()) {
+        $field = 'id';
+        if ($request->input('type') == 'pc'){
+            $field = 'goods_id';
+        }
+        if ($this->user->carts()->whereIn($field,$ids)->delete()) {
             return $this->success('删除成功');
         }
         return $this->error('删除失败');
