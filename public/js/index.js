@@ -1129,12 +1129,11 @@ function selectedChange() {
         $(this).is(':checked') ? promotionInfo.prop('disabled', false).parents('.promotions-msg').removeClass('hide') : promotionInfo.prop('disabled', true).parents('.promotions-msg').addClass('hide');
     });
 
-    //
     $('select[name="pieces_retailer"]').change(function () {
         //1级单位
-        system_1 = $('input[name = "system_1"]').val();
+        system_1 =  $('input[name = "system_1"]').val();
         //2级单位
-        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
+        system_2 =  $('div.system').find($('input[name = "system_2"]')).val();
         //最小规格单位
         specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
@@ -1151,7 +1150,7 @@ function selectedChange() {
 
         }
 
-        $('input[name="specification_retailer"]').val(pieces)
+        $('input[name="specification_retailer"]').val(pieces);
         $('div.spec_retailer').html(pieces)
     });
 
