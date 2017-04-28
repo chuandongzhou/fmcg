@@ -71,7 +71,7 @@
                                             <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
                                         </a>
                                     @endif
-                                    @if(!$man->expire_at)
+                                    @if($man->expire_at)
                                         <a data-target="#expireModal" data-toggle="modal" data-type="expire">
                                             <i class="iconfont icon-chaopiao"></i>续费</a>
                                     @endif

@@ -78,11 +78,11 @@ class MyGoodsController extends Controller
      */
     public function create()
     {
-        $user =  auth()->user();
+        $user = auth()->user();
         //判断有没有交保证金
-       if (!$user->deposit) {
-            return $this->error('添加商品前请先缴纳保证金', url('personal/sign'));
-        }
+        /*if (!$user->deposit) {
+             return $this->error('添加商品前请先缴纳保证金', url('personal/sign'));
+         }*/
 
         //默认加入店铺配送地址
         $shop = $user->shop()->with(['deliveryArea'])->first();
@@ -148,7 +148,6 @@ class MyGoodsController extends Controller
         $attrService = new AttrService();
         $attrResults = $attrService->getAttrsByCategoryId($goods->category_id);
 
-        //$attrResults = Attr::active()->select(['attr_id', 'pid', 'name'])->where('category_id', $goods->category_id)->get()->toArray();
         //店铺配送地址
         $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea;

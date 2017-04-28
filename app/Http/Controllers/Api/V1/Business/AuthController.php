@@ -39,10 +39,9 @@ class AuthController extends Controller
             return $this->invalidParam('password', '账号已锁定');
         }
         //检测账号是否过期
-        if ($salesman->expire->isPast()) {
+        if ($salesman->is_expire) {
             return $this->invalidParam('password', '账号已过期');
         }
-
 
         $nowTime = Carbon::now();
 

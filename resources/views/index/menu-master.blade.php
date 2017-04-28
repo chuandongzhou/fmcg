@@ -70,7 +70,7 @@
                 @endif
 
                 @if($user->type != cons('user.type.retailer'))
-                    @if( $user->deposit && !$user->is_expire )
+                    @if( true || $user->deposit && !$user->is_expire )
                         <li class="nav-item  {!!  request()->is('order-sell*') || request()->is('order/statistics-of-sell') ? 'active' : '' !!}">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="fa fa-edit "></i>
@@ -146,7 +146,7 @@
                             </li>
                         </ul>
                     </li>
-                    @if($user->deposit)
+                    @if( true || $user->deposit)
                         <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*']) !!} ">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="fa fa-money "></i>
@@ -170,15 +170,15 @@
                                         <span class="title">提现账号</span>
                                     </a>
                                 </li>
-                                <li class="nav-item  {{ path_active(['personal/sign*']) }}">
-                                    <a href="{{ url('personal/sign/renew') }}" class="nav-link ">
-                                        <span class="title">签约管理</span>
-                                    </a>
-                                </li>
+                                {{--<li class="nav-item  {{ path_active(['personal/sign*']) }}">--}}
+                                    {{--<a href="{{ url('personal/sign/renew') }}" class="nav-link ">--}}
+                                        {{--<span class="title">签约管理</span>--}}
+                                    {{--</a>--}}
+                                {{--</li>--}}
                             </ul>
                         </li>
                     @endif
-                    @if($user->deposit && !$user->is_expire)
+                    @if( true || $user->deposit && !$user->is_expire)
                         <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="fa fa-shopping-basket"></i>

@@ -50,9 +50,9 @@ class MyGoodsController extends Controller
         $user = auth()->user();
 
         //判断有无缴纳保证金
-        if (!$user->deposit) {
+       /* if (!$user->deposit) {
             return $this->error('添加商品前请先缴纳保证金');
-        }
+        }*/
 
         $result = DB::transaction(function () use ($user, $request) {
 

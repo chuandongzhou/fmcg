@@ -57,7 +57,7 @@
                                        class="edit update-modal">
                                         <i class="iconfont icon-xiugai"></i> 编辑
                                     </a>
-                                    @if(!$man->expire_at)
+                                    @if($man->expire_at)
                                         <a data-target="#expireModal" data-toggle="modal" data-type="expire">
                                             <i class="iconfont icon-chaopiao"></i>续费</a>
                                     @endif

@@ -41,7 +41,7 @@ class Salesman extends Model implements AuthenticatableContract
     /**
      * 模型启动事件
      */
-    public static function boot()
+   /* public static function boot()
     {
         parent::boot();
 
@@ -53,7 +53,7 @@ class Salesman extends Model implements AuthenticatableContract
                 $model->attributes['expire_at'] = Carbon::now();
             }
         });
-    }
+    }*/
 
     /**
      * 模型启动事件
@@ -244,6 +244,16 @@ class Salesman extends Model implements AuthenticatableContract
     public function getExpireAttribute()
     {
         return is_null($this->expire_at) ? $this->shop->user->expire_at : $this->expire_at;
+    }
+
+    /**
+     * 是否过期
+     *
+     * @return mixed
+     */
+    public function getIsExpireAttribute()
+    {
+        return true || $this->expire->isPast();
     }
 
     /**

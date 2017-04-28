@@ -76,7 +76,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('delivery-report', 'DeliveryController@report');
         $router->controller('model', 'ModelController');  //模版管理
         $router->resource('coupon', 'CouponController'); // 优惠券
-        $router->controller('sign', 'SignController'); //签约管理
+        //$router->controller('sign', 'SignController'); //签约管理
     });
 
     //业务管理
@@ -274,7 +274,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->controller('finance', 'FinanceController');    //提现相关操作
             $router->controller('model', 'ModelController');  //模版管理
             $router->resource('coupon', 'CouponController'); // 优惠券
-            $router->controller('sign', 'SignController'); //签约管理
+            //$router->controller('sign', 'SignController'); //签约管理
 
         });
         $router->controller('cart', 'CartController');

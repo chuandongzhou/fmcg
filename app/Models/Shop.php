@@ -389,8 +389,8 @@ class Shop extends Model
     {
         return $query->whereHas('user', function ($q) use ($myType, $shopType) {
             $nowTime = Carbon::now();
-            $q->active()->where('type', '>', $myType)->where('deposit', '>', 0)->where('expire_at', '>',
-                $nowTime)->where('audit_status', cons('user.audit_status.pass'));
+            $q->active()->where('type', '>', $myType)/*->where('deposit', '>', 0)->where('expire_at', '>',
+                $nowTime)*/->where('audit_status', cons('user.audit_status.pass'));
             if ($shopType) {
                 $q->where('type', $shopType);
             }

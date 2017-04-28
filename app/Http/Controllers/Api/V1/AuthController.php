@@ -76,7 +76,7 @@ class AuthController extends Controller
         }
 
         //使用期限是否过期
-        if ($user->expire_at->getTimestamp() && $user->expire_at->isPast()) {
+        if ($user->is_expire) {
             return $this->invalidParam('password', '账户已到期，请续费');
         }
 

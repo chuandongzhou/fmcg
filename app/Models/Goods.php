@@ -195,11 +195,11 @@ class Goods extends Model
      */
     public function scopeShopUser($query)
     {
-        return $query->whereHas('shop.user', function ($q) {
+        /*return $query->whereHas('shop.user', function ($q) {
             $nowTime = Carbon::now();
             $q->active()->where('deposit', '>', 0)->where('expire_at', '>',
                 $nowTime)->where('audit_status', cons('user.audit_status.pass'));
-        });
+        });*/
     }
 
     /**
