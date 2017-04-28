@@ -102,6 +102,11 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
                 $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
             });
         });
+    $router->group(['prefix' => 'inventory'], function ($router) {
+        //$router->get('in-create/{goods_id?}', 'InventoryController@create'); // 入库
+        $router->controller('/', 'InventoryController'); // 库存管理
+    });
+
 
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
@@ -395,5 +400,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //支付渠道
 
         $router->get('payment-channel', 'PaymentChannelController@index');
+
+        //库存
+        $router->group(['prefix' => 'inventory'], function ($router) {
+            $router->controller('/', 'InventoryController');
+        });
     });
 });

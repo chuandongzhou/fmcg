@@ -125,7 +125,7 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            //submitBtn = $('input.btn-primary'),
+        //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
@@ -394,7 +394,7 @@ function myGoodsFunc() {
     table.width($(".goods-table-panel .goods-table table").width());
 
 
-    $('.mortgage').button({
+    $('.mortgage, .gift').button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
         mortgagedText: '设置成功'
     });
@@ -402,16 +402,11 @@ function myGoodsFunc() {
     /**
      * 抵费商品
      */
-    $(document).on('click', '.mortgage', function () {
+    $(document).on('click', '.mortgage, .gift', function () {
         $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method');
-        // 判断登录
-        if (!site.isLogin()) {
-            site.redirect('auth/login');
-            return;
-        }
 
         self.button('loading');
         $.ajax({
@@ -434,7 +429,7 @@ function myGoodsFunc() {
         });
     });
 
-    ajaxNoForm(true);
+    ajaxNoForm();
     deleteNoForm();
 }
 
@@ -452,7 +447,7 @@ var deleteNoForm = function () {
         if (!confirm('真的要删除吗？')) {
             return false;
         }
-        $('body').append('<div class="loading"> <img src="' + site.url("images/new-loading.gif") + '" /> </div>');
+        common.loading('show');
         var self = $(this),
             url = self.data('url'),
             method = self.data('method'),
@@ -473,7 +468,7 @@ var deleteNoForm = function () {
             method: method,
             data: data
         }).done(function (data, textStatus, jqXHR) {
-            alert('删除成功');
+            successMeg('删除成功');
             self.parents('tr').slideUp(function () {
                 self.remove();
             })
@@ -485,7 +480,7 @@ var deleteNoForm = function () {
                 self.button('reset');
             }
         }).always(function () {
-            $('body').find('.loading').remove();
+            common.loading('hide');
         });
     });
 };
@@ -493,23 +488,33 @@ var deleteNoForm = function () {
 /**
  * 无form异步提交
  */
-var ajaxNoForm = function (changeStatus) {
-    var
-        ajaxNoForm = $('.ajax-no-form'),
-        onText = ajaxNoForm.data('on'),
-        offText = ajaxNoForm.data('off');
+var ajaxNoForm = function () {
+    var ajaxNoForm = $('.ajax-no-form');
+
+    /*
+     var setButton = function (onText, offText) {
+     ajaxNoForm.button({
+     loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+     onText: onText,
+     offText: offText
+     });
+     }*/
 
 
-    ajaxNoForm.button({
-        loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
-        onText: onText,
-        offText: offText
-    });
     $(document).on('click', '.ajax-no-form', function () {
         var self = $(this),
             status = self.data('status'),
             url = self.data('url'),
-            data = {status: status ? 0 : 1};
+            data = {status: status ? 0 : 1},
+            onText = self.data('on'),
+            offText = self.data('off'),
+            changeStatus = self.data('changeStatus');
+        self.button({
+            loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+            onText: onText,
+            offText: offText
+        });
+
         // 序列化表单
         $.each(self.data('data') || {}, function (name, value) {
             data[name] = value
@@ -532,7 +537,7 @@ var ajaxNoForm = function (changeStatus) {
                 changeStatus ? statusName.html(offText.stripTags().trim()) : '';
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.button(status ? 'up' : 'down');
+            self.button(status ? 'off' : 'on');
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');
             } else {
@@ -1125,42 +1130,57 @@ function selectedChange() {
     });
 
     $('select[name="pieces_retailer"]').change(function () {
-
+        //1级单位
+        system_1 =  $('input[name = "system_1"]').val();
+        //2级单位
+        system_2 =  $('div.system').find($('input[name = "system_2"]')).val();
+        //最小规格单位
+        specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
         $('.pieces_retailer').html(html);
         var value = $(this).find("option:selected").val();
+        pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-
-            $('input[name="specification_retailer"]').val($('input[name="specification"]').val());
-
+            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_retailer"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = specification
 
         }
+
+        $('input[name="specification_retailer"]').val(pieces);
+        $('div.spec_retailer').html(pieces)
     });
 
     $('select[name="pieces_wholesaler"]').change(function () {
+        //1级单位
+        system_1 = $('input[name = "system_1"]').val();
+        //2级单位
+        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
+        //最小规格单位
+        specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
         $('.pieces_wholesaler').html(html);
         var value = $(this).find("option:selected").val();
+        pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="specification"]').val());
+            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() + '*' + $('input[name="specification"]').val());
+            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
-            $('input[name="specification_wholesaler"]').val($('input[name="system_1"]').val() * $('input[name="system_2"]').val() + '*' + $('input[name="specification"]').val());
-
+            pieces = specification
         }
+        $('input[name="specification_wholesaler"]').val(pieces);
+        $('div.spec_wholesaler').html(pieces)
     });
 
 }
 //购物车数据
-function cartData(){
+function cartData() {
     $('#header_notification_bar').hover(function () {
 
         var cartDetail = $('.cart-detail');
@@ -1190,6 +1210,54 @@ function cartData(){
 
         });
     });
+}
+
+//签约管理
+var signManage = function () {
+    /*var signModel = $('#signModal'), depositPay = $('.deposit-pay');
+     signModel.on('show.bs.modal', function (e) {
+     var parent = $(e.relatedTarget), type = parent.data('type');
+
+     signModel.find('.' + type).removeClass('hidden').siblings().addClass('hidden');
+     });
+     */
+    var monthPanel = $(".month li"), monthInput = $('input[name="month"]');
+    monthPanel.on('click', function () {
+        var self = $(this), cost = self.data('cost'), month = self.data('month'), pieces = self.data('pieces');
+
+        self.html(month + pieces).addClass("active").siblings().each(function () {
+            $(this).removeClass("active").html($(this).html().replace('个月', ''));
+        });
+        monthInput.val(month);
+        $(".xuqi-num").html("￥" + cost);
+    }).first().click();
+
+    /*depositPay.on('click', function () {
+     var self = $(this), url = site.api('personal/sign/deposit');
+     self.button({
+     loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+     doneText: '操作成功',
+     failText: '操作失败'
+     });
+
+     self.button('loading')
+
+     $.ajax({
+     url: url,
+     method: 'post'
+     }).done(function () {
+     site.redirect('personal/sign/deposit-pay');
+     }).fail(function (error) {
+     var json = error.responseJSON;
+     setTimeout(function () {
+     self.html(json['message']);
+     }, 0);
+     }).always(function () {
+     setTimeout(function () {
+     self.button('reset');
+     }, 3000);
+     });
+     });*/
 }
 
 $(function () {

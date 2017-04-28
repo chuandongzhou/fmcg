@@ -1,0 +1,256 @@
+<?php
+namespace App\Services;
+
+use App\Models\Goods;
+use App\Models\Inventory;
+use Illuminate\Support\Facades\DB;
+use Mockery\CountValidator\Exception;
+
+class InventoryService
+{
+
+    protected $inventory;
+
+    public function __construct()
+    {
+        $this->inventory = new Inventory();
+    }
+
+    /**
+     *
+     * 获取不重复的入库单号
+     *
+     * @return string
+     */
+    public function getInventoryNumber()
+    {
+        $inventory_number = date('YmdHis') . rand(100, 999);
+        if ($this->inventory->where('inventory_number', $inventory_number)->first()) {
+            return $this->getInventoryNumber();
+        } else {
+            return $inventory_number;
+        }
+    }
+
+    /**
+     *
+     * 入库操作
+     *
+     * @param $data
+     */
+    public function inventoryIn($data)
+    {
+        $info['inventory_number'] = $data['inventory_number'];
+        $info['inventory_type'] = $data['inventory_type'];
+        $info['action_type'] = $data['action_type'];
+        $info['user_id'] = auth()->user()->id;
+        $info['shop_id'] = auth()->user()->shop->id;
+
+        try {
+            DB::beginTransaction();
+            foreach ($data['goods'] as $key => $value) {
+                foreach ($this->_formatData($key, $value, 'in') as $v) {
+                    $this->inventory->create(array_merge($info, $v));
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            info($e->getMessage());
+            return false;
+        }
+
+    }
+
+    public function inventoryOut($data)
+    {
+        try {
+            $info['inventory_number'] = $data['inventory_number'];
+            $info['inventory_type'] = $data['inventory_type'];
+            $info['action_type'] = $data['action_type'];
+            $info['user_id'] = auth()->user()->id;
+            $info['shop_id'] = auth()->user()->shop->id;
+
+            DB::beginTransaction();
+
+            foreach ($data['goods'] as $goods_id => $value) {
+                //得到该商品的库存
+                $goods = Goods::find($goods_id);
+                //出库数量
+                $quantity = $value['quantity'][0] * GoodsService::getPiecesSystem($goods_id, $value['pieces'][0]);
+                if ($goods->total_inventory < $quantity) {
+                    return '商品 ' . $goods->name . ' 库存数量不足';
+                }
+                foreach ($this->_formatData($goods_id, $value, false) as $v) {
+                    $data = array_merge($info, $v);
+                };
+                //递归出库
+                $this->goodsOutByGoodsId($goods_id, $quantity, $data);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            info($e->getMessage().$e->getFile().$e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * 递归出库
+     *
+     * @param $goods_id
+     * @param $quantity
+     * @return bool
+     */
+    private function goodsOutByGoodsId($goods_id, $quantity, $data)
+    {
+        //取出生产日期最前的库存记录
+        $inventory = $this->getFirstData($goods_id);
+        $data['production_date'] = $inventory->production_date;
+        //判断库存记录是否足够本次出库
+        //够
+        if ($inventory->surplus >= $quantity) {
+            //减掉出库的数量
+            $inventory->surplus -= $quantity;
+            //保存
+            $inventory->save();
+            //增加一条出库记录
+            $data['quantity'] = $quantity;
+            $this->inventory->create($data);
+            return true;
+        } else {
+            //不够
+            //减掉本条库存剩余数量拿到差值
+            $quantity -= $inventory->surplus;
+            $data['quantity'] = $inventory->surplus;
+            $inventory->surplus = 0;
+            $inventory->save();
+            //增加一条出库记录
+
+            $this->inventory->create($data);
+            //递归继续出库
+            $this->goodsOutByGoodsId($goods_id, $quantity, $data);
+        }
+    }
+
+    /**
+     *取出一条生产日期最前的入库商品记录
+     *
+     * @param $goods_id
+     * @return mixed
+     */
+    private function getFirstData($goods_id)
+    {
+        return $this->inventory->OfIn()->where('surplus', '>', 0)->where('goods_id',
+            $goods_id)->orderBy('production_date',
+            'asc')->first();
+    }
+
+
+    /**
+     * 格式化数据
+     *
+     * @param $goodsId
+     * @param $detail
+     * @param bool $in
+     * @return array
+     */
+    private function _formatData($goodsId, $detail, $in = true)
+    {
+        $formatted = [];
+        foreach ($detail['quantity'] as $key => $value) {
+            $formatted[$key]['goods_id'] = $goodsId;
+            if ($in) {
+                $formatted[$key]['production_date'] = $detail['production_date'][$key];
+            }else{
+                $formatted[$key]['order_number'] = $detail['order_number'][$key] ?? 0;
+            }
+            $formatted[$key]['cost'] = $detail['cost'][$key];
+            $formatted[$key]['pieces'] = $detail['pieces'][$key];
+            $formatted[$key]['quantity'] = $detail['quantity'][$key] * GoodsService::getPiecesSystem($goodsId,
+                    $detail['pieces'][$key]);  // 默认转为最小单位计数
+            $formatted[$key]['surplus'] = $formatted[$key]['quantity'] ?? 0;
+            $formatted[$key]['remark'] = $detail['remark'][$key];
+
+        }
+        return $formatted;
+    }
+
+    /**
+     * 库存搜索
+     *
+     * @param $inventory
+     * @param array $data
+     * @param array $with
+     * @return mixed
+     */
+    static public function search($inventory, array $data, array $with = [])
+    {
+        return $inventory->with($with)->HasShop()->where(function ($query) use ($data) {
+
+            if (!empty($data['start_at']) && isset($data['start_at'])) {
+                $query->where('created_at', '>=', $data['start_at']);
+            }
+            if (!empty($data['end_at']) && isset($data['end_at'])) {
+                $query->where('created_at', '<=', $data['end_at']);
+            }
+            if (!empty($data['inventory_type']) && isset($data['inventory_type'])) {
+                $query->where('inventory_type', $data['inventory_type']);
+            }
+            if (!empty($data['action_type']) && isset($data['action_type'])) {
+                $query->where('action_type', $data['action_type']);
+            }
+            if (empty($data['end_at']) && !isset($data['end_at']) && empty($data['start_at']) && !isset($data['start_at'])) {
+                $query->OfNowMonth();
+            }
+            if (!empty($data['number']) && isset($data['number'])) {
+                $query->OfNumber($data['number']);
+            }
+        });
+    }
+
+    /**
+     * 转换出入库数量
+     *
+     * @param $goods 商品模型
+     * @param $total 总数量
+     * @return int|string
+     */
+    static public function calculateQuantity($goods, $total)
+    {
+        $result = '';
+        if (!($goods instanceof Goods)){
+            $goods = Goods::find($goods);
+        }
+        if (isset($goods->goodsPieces->pieces_level_1)) {
+            $lv1 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_1);
+            $lv2 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_2);
+            $lv3 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_3);
+            if ($total % $lv1 === 0) {
+                $result = $total / $lv1 . cons()->valueLang('goods.pieces',
+                        $goods->goodsPieces->pieces_level_1);
+            } else {
+                if (floor($total / $lv1) > 0) {
+                    $result = floor($total / $lv1) . cons()->valueLang('goods.pieces',
+                            $goods->goodsPieces->pieces_level_1);
+                }
+                if (($total % $lv1) % $lv2 === 0) {
+                    $result .= ($total % $lv1) / $lv2 . cons()->valueLang('goods.pieces',
+                            $goods->goodsPieces->pieces_level_2);
+                } else {
+                    if (floor(($total % $lv1) / $lv2) > 0) {
+                        $result .= floor(($total % $lv1) / $lv2) . cons()->valueLang('goods.pieces',
+                                $goods->goodsPieces->pieces_level_2);
+                    }
+                    $result .= floor(($total % $lv1) % $lv2 / $lv3) . cons()->valueLang('goods.pieces',
+                            $goods->goodsPieces->pieces_level_3);
+                }
+            }
+
+        }
+        return $result;
+    }
+
+}

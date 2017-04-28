@@ -64,7 +64,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-6 col-xs-offset-3 change-role-options">
+            <div class="col-xs-8 col-xs-offset-2 change-role-options">
+                <a class="tabs-item">
+                    <div class="item-icon">
+                        <img src="{{ asset('images/guide-icons-5.png')  }}">
+                    </div>
+                    <span class="item-name" data-type="{{ cons('user.type.maker') }}">厂家平台</span>
+                </a>
                 <a class="tabs-item">
                     <div class="item-icon">
                         <img src="{{ asset('images/guide-icons-1.png')  }}">

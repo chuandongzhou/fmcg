@@ -35,6 +35,18 @@ return [
             'app' => 2
         ]
     ],
+    
+    //出入库类型
+    'inventory' => [
+        'inventory_type' => [
+            'system' => 1,  // 系统
+            'manual' => 2,  // 手动
+        ],
+        'action_type' => [
+            'in' => 1,  //  入库
+            'out' => 2  // 出库
+        ]
+    ],
 
     //订单表
     'order' => [
@@ -83,9 +95,10 @@ return [
     //用户类别
     'user' => [
         'type' => [
-            'retailer' => 1,       //零售商
+            'retailer' => 1,          //零售商
             'wholesaler' => 2,       //批发商
-            'supplier' => 3,       //供应商
+            'supplier' => 3,        //供应商
+            'maker' => 4,           //厂商
         ],
         //审核状态
         'audit_status' => [

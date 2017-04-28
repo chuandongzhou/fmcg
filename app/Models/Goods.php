@@ -10,6 +10,8 @@ namespace App\Models;
 
 use App\Services\CategoryService;
 use App\Services\GoodsImageService;
+use App\Services\GoodsService;
+use App\Services\InventoryService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
@@ -87,6 +89,12 @@ class Goods extends Model
     public function shop()
     {
         return $this->belongsTo('App\Models\Shop');
+    }
+
+
+    public function inventory()
+    {
+        return $this->hasMany('App\Models\Inventory');
     }
 
     /**
@@ -302,6 +310,21 @@ class Goods extends Model
     }
 
     /**
+     * 以名称或条形码检索
+     *
+     * @param $query
+     * @param $nameOrCode
+     * @return mixed
+     */
+    public function scopeOfNameOrCode($query, $nameOrCode)
+    {
+        return $query->where(function ($query) use ($nameOrCode) {
+            $query->where('name', 'LIKE', '%' . $nameOrCode . '%');
+            $query->orWhere('bar_code', 'LIKE', '%' . $nameOrCode . '%');
+        });
+    }
+
+    /**
      *  按标签查询
      *
      * @param $query
@@ -454,8 +477,7 @@ class Goods extends Model
         $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userType >= $userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
         return $piece;
     }
-    
-    
+
 
     /**
      * 获取单位
@@ -599,5 +621,26 @@ class Goods extends Model
     public function getLikeAmountAttribute()
     {
         return $this->goodsLike->count();
+    }
+
+    /**
+     * 获得转换后的商品库存剩余数量
+     *
+     * @return mixed
+     */
+    public function getSurplusInventoryAttribute()
+    {
+        $total = $this->getTotalInventoryAttribute();
+        return InventoryService::calculateQuantity($this,$total);
+    }
+
+    /**
+     * 获取商品剩余库存
+     *
+     * @return mixed
+     */
+    public function getTotalInventoryAttribute()
+    {
+        return $this->inventory()->OfIn()->sum('surplus');
     }
 }

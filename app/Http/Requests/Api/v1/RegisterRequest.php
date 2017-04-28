@@ -17,7 +17,7 @@ class RegisterRequest extends Request
         return [
             'user_name' => 'required|alpha_num|between:4,16|unique:user',
             'password' => 'required|between:6,18|alpha_num|confirmed',
-            'type' => 'required|in:1,2,3',
+            'type' => 'required|in:1,2,3,4',
             'logo' => 'sometimes|required',
             'name' => 'required|unique:shop',
             'contact_person' => 'required',
@@ -48,8 +48,10 @@ class RegisterRequest extends Request
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
-                if ($this->input('type') != cons('user.type.retailer') && !$this->hasFile('license')) {
-                    $validator->errors()->add('license', '营业执照 不能为空');
+                if ($this->input('type') != cons('user.type.retailer')){
+                    if (!$this->input('license')){
+                        $validator->errors()->add('license', '营业执照 不能为空');
+                    }
                 }
             }
         });
