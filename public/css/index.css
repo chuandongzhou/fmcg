@@ -5,6 +5,7 @@ html {
   min-height: 100%;
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
   -ms-overflow-style: scrollbar;
+  min-width: 1200px;
 }
 
 body {
@@ -106,11 +107,11 @@ a:hover {
   vertical-align: middle;
 }
 
-.public-table th,
-.public-table .table-list-row .shopping-table-list table tr td,
-.table-list-row .shopping-table-list table tr .public-table td {
+.public-table thead td,
+.public-table thead th,
+.public-table thead .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list table tr .public-table thead td {
   background-color: #f1f1f1;
-  border: none !important;
 }
 
 .public-table tbody tr:nth-child(even) td {
@@ -118,7 +119,7 @@ a:hover {
 }
 
 .public-table tbody tr td {
-  border: none !important;
+  vertical-align: middle;
 }
 
 .table-title-blue {
@@ -172,6 +173,11 @@ a:hover {
 
 .prompt {
   color: #777777;
+}
+
+.company {
+  line-height: 35px;
+  width: 75px;
 }
 
 .black {
@@ -338,6 +344,10 @@ a:hover {
 .gray:hover,
 .gray:focus {
   color: #777777;
+}
+
+.gray .iconfont {
+  vertical-align: middle;
 }
 
 .green {
@@ -7354,11 +7364,6 @@ table .product-panel .promotions {
   border: 1px solid #b4b4b4;
 }
 
-.salesman .create .company {
-  line-height: 35px;
-  width: 75px;
-}
-
 .salesman .create .display-goods div {
   height: 40px;
   padding: 6px 12px;
@@ -7749,9 +7754,17 @@ table .product-panel .promotions {
 }
 
 .warehousing-control-search .control {
-  height: 40px;
+  height: 30px;
   margin-right: 10px;
+  line-height: 14px !important;
   vertical-align: middle;
+}
+
+.warehousing-control-search .control[type="text"] {
+  width: 230px;
+  border-radius: 4px !important;
+  border: 1px solid #b4b4b4;
+  outline: none;
 }
 
 .warehousing-control-search .btn-default {
@@ -7862,7 +7875,8 @@ table .product-panel .promotions {
 }
 
 .modal-list-wrap .item.title {
-  padding: 15px;
+  padding: 0 0 10px 15px;
+  color: #777777;
 }
 
 .modal-list-wrap .item label {
@@ -7878,7 +7892,177 @@ table .product-panel .promotions {
   background-color: #f2f2f2;
 }
 
+.assets-modal-wrap .control-label {
+  color: #000 !important;
+}
+
+.assets-modal-wrap .prompt {
+  height: 35px;
+  line-height: 35px;
+}
+
+.operating-panel label {
+  display: inline-block;
+  margin-right: 10px;
+}
+
 /*==============资产管理end=================*/
+
+/*==============促销管理begin=================*/
+
+.fan {
+  display: inline-block;
+  width: 39px;
+  height: 39px;
+  color: #fff;
+  background-color: #f00;
+  font-size: 25px;
+  border-radius: 50% !important;
+  text-align: center;
+  line-height: 50px;
+}
+
+.select-wrap .option-panel {
+  display: none;
+}
+
+.select-wrap .option-panel.active {
+  display: block;
+}
+
+.select-wrap .option-panel .num {
+  width: 75px;
+}
+
+.select-wrap .option-panel select,
+.select-wrap .option-panel input {
+  outline: none;
+}
+
+.select-wrap .option-panel .select-commodity {
+  margin: 20px 0 10px 0;
+}
+
+.select-wrap .option-panel .select-commodity .btn {
+  padding: 5px 10px !important;
+  margin-left: 10px;
+}
+
+.select-wrap .option-panel table tr th,
+.select-wrap .option-panel .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list .select-wrap .option-panel table tr td,
+.select-wrap .option-panel table tr td {
+  font-size: 13px;
+}
+
+.select-wrap .option-panel .prompt {
+  color: #000;
+  margin-top: 80px;
+}
+
+.select-wrap .option-panel .item {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.select-wrap .option-panel .item ul:before,
+.select-wrap .option-panel .item ul:after {
+  content: " ";
+  display: table;
+}
+
+.select-wrap .option-panel .item ul:after {
+  clear: both;
+}
+
+.select-wrap .option-panel .item ul li {
+  float: left;
+  height: 60px;
+  padding: 0 10px;
+}
+
+.select-wrap .option-panel .item ul li label {
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+}
+
+.select-wrap .option-panel .item ul li textarea {
+  height: 60px;
+}
+
+.select-wrap .option-panel .item-panel {
+  margin-top: 60px;
+}
+
+.select-wrap .option-panel .item-panel .fan {
+  vertical-align: middle;
+  margin: 0 15px;
+}
+
+.select-wrap .option-panel .item-panel .money {
+  width: 90px;
+  height: 40px;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px !important;
+}
+
+.select-wrap .option-panel .item-panel.other {
+  margin: 20px 0;
+}
+
+.promotion-submit {
+  width: 100px !important;
+}
+
+.promotion-msg-wrap .item-text {
+  margin-top: 20px;
+}
+
+/*==============促销管理end=================*/
+
+/*==============月对账单begin=================*/
+
+.statement-item .list-wrap {
+  margin-top: 20px;
+}
+
+.statement-item .list-wrap .item-col {
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.statement-table-wrap .panel-default {
+  border: 1px solid #ddd !important;
+}
+
+.statement-table-wrap table thead th,
+.statement-table-wrap .table-list-row .shopping-table-list table thead tr td,
+.table-list-row .shopping-table-list .statement-table-wrap table thead tr td,
+.statement-table-wrap .table-list-row .shopping-table-list table tr thead td,
+.table-list-row .shopping-table-list .statement-table-wrap table tr thead td,
+.statement-table-wrap table thead td {
+  background-color: #ffeeee !important;
+}
+
+.statement-table-wrap table tbody td {
+  vertical-align: middle;
+}
+
+.statement-table-wrap table tfoot .money-item {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.statement-table-wrap table tfoot .text-right {
+  text-align: right !important;
+}
+
+.bottom-note {
+  margin-top: 30px;
+}
+
+/*==============月对账单end=================*/
 
 /*==============签约管理begin=================*/
 

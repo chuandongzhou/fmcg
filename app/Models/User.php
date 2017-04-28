@@ -274,7 +274,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function getIsExpireAttribute()
     {
-        return $this->expire_at->isPast();
+        return false && $this->expire_at->isPast();
     }
 
 

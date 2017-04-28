@@ -94,7 +94,7 @@ class DeliveryMan extends Model implements AuthenticatableContract
      */
     public function getIsExpireAttribute()
     {
-        return true || $this->expire->isPast();
+        return false && $this->expire->isPast();
     }
 
     /**
