@@ -23,7 +23,7 @@ class NodeComposer
     public function compose(View $view)
     {
         $admin = admin_auth()->user();
-        $nodes = $admin->name == cons('admin.super_admin_name') ? Node::all() : $admin->role->nodes;
+        $nodes = $admin->name == cons('admin.super_admin_name') ? Node::orderBy('sort','asc')->get() : $admin->role->nodes;
         $view->with('nodes', CategoryService::unlimitForLayer($nodes));
     }
 
