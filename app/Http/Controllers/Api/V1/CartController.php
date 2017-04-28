@@ -115,10 +115,10 @@ class CartController extends Controller
             return $this->error('请选择要删除的商品');
         }
         $field = 'id';
-        if ($request->input('type') == 'pc'){
+        if ($request->input('type') == 'pc') {
             $field = 'goods_id';
         }
-        if ($this->user->carts()->whereIn($field,$ids)->delete()) {
+        if ($this->user->carts()->whereIn($field, $ids)->delete()) {
             return $this->success('删除成功');
         }
         return $this->error('删除失败');
