@@ -71,7 +71,7 @@
                             <td>
                                 {{cons()->valueLang('inventory.inventory_type',$list->inventory_type).cons()->valueLang('inventory.action_type',$list->action_type)}}
                             </td>
-                            <td>{{$list->user->user_name ?? ''}}</td>
+                            <td>{{$list->user->user_name ?? '系统'}}</td>
                             <td>{{$list->created_at ?? ''}}</td>
                             <td>
                                 <a class="color-blue"

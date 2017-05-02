@@ -16,14 +16,16 @@
                     <label>出库单号：</label>
                     <div class="content prompt">{{$inventory['0']->inventory_number ?? ''}}</div>
                 </li>
-                <li>
-                    <label>售货单号：</label>
-                    <div class="content prompt">{{$inventory['0']->order_number > 0 ? $inventory['0']->order_number : '---'}}</div>
-                </li>
-                <li>
-                    <label>买家名称：</label>
-                    <div class="content prompt">{{$inventory['0']->buyer_name ?? '---'}}</div>
-                </li>
+                @if($inventory['0']->inventory_type == cons('inventory.inventory_type.system'))
+                    <li>
+                        <label>售货单号：</label>
+                        <div class="content prompt">{{$inventory['0']->order_number > 0 ? $inventory['0']->order_number : '---'}}</div>
+                    </li>
+                    <li>
+                        <label>买家名称：</label>
+                        <div class="content prompt">{{$inventory['0']->buyer_name ?? '---'}}</div>
+                    </li>
+                @endif
                 <li>
                     <label>总计盈利： </label>
                     <div class="content prompt"> @if($total_profit > 0)+@endif {{$total_profit}}</div>
@@ -66,7 +68,7 @@
                         <td>{{$item->cost}} 元/{{cons()->valueLang('goods.pieces',$item->pieces)}}</td>
                         <td> @if($item->profit > 0) + {{$item->profit}}@else <span class="red">{{$item->profit}}</span> @endif</td>
                         <td>{{cons()->valueLang('inventory.inventory_type',$item->inventory_type).cons()->valueLang('inventory.action_type',$item->action_type)}}</td>
-                        <td>{{$item->user->user_name}}</td>
+                        <td>{{$item->user->user_name ?? '系统'}}</td>
                         <td>{{$item->created_at}}</td>
                     </tr>
                 @endforeach

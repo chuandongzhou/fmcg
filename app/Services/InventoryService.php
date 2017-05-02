@@ -3,6 +3,8 @@ namespace App\Services;
 
 use App\Models\Goods;
 use App\Models\Inventory;
+use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Mockery\CountValidator\Exception;
 
@@ -43,34 +45,87 @@ class InventoryService
         $info['inventory_number'] = $data['inventory_number'];
         $info['inventory_type'] = $data['inventory_type'];
         $info['action_type'] = $data['action_type'];
-        $info['user_id'] = auth()->user()->id;
-        $info['shop_id'] = auth()->user()->shop->id;
-
-        try {
-            DB::beginTransaction();
-            foreach ($data['goods'] as $key => $value) {
-                foreach ($this->_formatData($key, $value, 'in') as $v) {
-                    $this->inventory->create(array_merge($info, $v));
-                }
+        $info['user_id'] = $data['user_id'] ?? auth()->user()->id;
+        $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop->id;
+        DB::beginTransaction();
+        foreach ($data['goods'] as $key => $value) {
+            foreach ($this->_formatData($key, $value, 'in') as $v) {
+                $this->inventory->create(array_merge($info, $v));
             }
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            info($e->getMessage());
-            return false;
         }
+        DB::commit();
+        return true;
 
     }
 
+    /**
+     * 系统自动入库
+     *
+     * @param $goodsInfo //所有订单商品
+     * @return bool|string
+     */
+    public function autoInventoryIn($goodsInfo)
+    {
+        try {
+            $inventoryModel = new Inventory();
+            foreach ($goodsInfo as $orderGoods) {
+                //买家的商店
+                $buyerShop = User::find($orderGoods->order->user_id)->shop;
+                //买家商品库的同款商品
+                $buyerGoodsId = 0;
+                foreach ($buyerShop->goods as $ShopGoods) {
+                    if ($orderGoods->goods->bar_code == $ShopGoods->bar_code) {
+                        $buyerGoodsId = $ShopGoods->id;
+                        break;
+                    }
+                }
+                if ($buyerGoodsId <= 0) {
+                    $orderGoods->inventory_state = cons('inventory.inventory_state.abnormal');
+                    $orderGoods->save();
+                } else {
+                    //拿到该商品的出库记录
+                    $outRecord = $inventoryModel->where('goods_id', $orderGoods->goods_id)->where('order_number',
+                        $orderGoods->order_id)->OfOut()->get();
+                    foreach ($outRecord as $record) {
+                        $data['inventory_number'] = $this->getInventoryNumber();
+                        $data['user_id'] = 0;
+                        $data['goods_id'] = $buyerGoodsId;
+                        $data['shop_id'] = $buyerShop->id;
+                        $data['inventory_type'] = cons('inventory.inventory_type.system');
+                        $data['action_type'] = cons('inventory.action_type.in');
+                        $data['order_number'] = $record->order_number;
+                        $data['production_date'] = $record->production_date;
+                        $data['pieces'] = $record->pieces;
+                        $data['cost'] = $record->cost;
+                        $data['quantity'] = $record->quantity;
+                        $data['surplus'] = $record->quantity;
+                        $data['remark'] = '系统自动入库';
+                        $inventoryModel->create($data);
+                    }
+                }
+
+            }
+            return true;
+        } catch (\Exception $e) {
+            info($e->getMessage() . $e->getFile() . $e->getLine());
+            return false;
+        }
+    }
+
+    /**
+     * 出库
+     *
+     * @param $data
+     * @return bool|string
+     */
     public function inventoryOut($data)
     {
         try {
             $info['inventory_number'] = $data['inventory_number'];
             $info['inventory_type'] = $data['inventory_type'];
             $info['action_type'] = $data['action_type'];
-            $info['user_id'] = auth()->user()->id;
-            $info['shop_id'] = auth()->user()->shop->id;
+            $info['user_id'] = $data['user_id'] ?? auth()->user()->id;
+            $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop->id;
 
             DB::beginTransaction();
 
@@ -80,7 +135,7 @@ class InventoryService
                 //出库数量
                 $quantity = $value['quantity'][0] * GoodsService::getPiecesSystem($goods_id, $value['pieces'][0]);
                 if ($goods->total_inventory < $quantity) {
-                    return '商品 ' . $goods->name . ' 库存数量不足';
+                    return $goods->name . ' 库存不足';
                 }
                 foreach ($this->_formatData($goods_id, $value, false) as $v) {
                     $data = array_merge($info, $v);
@@ -92,8 +147,46 @@ class InventoryService
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            info($e->getMessage().$e->getFile().$e->getLine());
+            info($e->getMessage() . $e->getFile() . $e->getLine());
             return false;
+        }
+    }
+
+    /**
+     * 系统自动出库
+     *
+     * @param $goodsInfo
+     * @return bool|string
+     */
+    public function autoInventoryOut($goodsInfo)
+    {
+        foreach ($goodsInfo as $goods) {
+            $data = [
+                'inventory_number' => $this->getInventoryNumber(),
+                'inventory_type' => cons('inventory.inventory_type.system'),
+                'action_type' => cons('inventory.action_type.out'),
+                'user_id' => 0,
+                'goods' => [
+                    $goods->goods_id => [
+                        'order_number' => [
+                            $goods->order_id
+                        ],
+                        'quantity' => [
+                            $goods->num
+                        ],
+                        'cost' => [
+                            $goods->price
+                        ],
+                        'pieces' => [
+                            $goods->pieces
+                        ],
+                        'remark' => [
+                            '系统自动出库!'
+                        ],
+                    ]
+                ]
+            ];
+            return $this->inventoryOut($data);
         }
     }
 
@@ -164,7 +257,7 @@ class InventoryService
             $formatted[$key]['goods_id'] = $goodsId;
             if ($in) {
                 $formatted[$key]['production_date'] = $detail['production_date'][$key];
-            }else{
+            } else {
                 $formatted[$key]['order_number'] = $detail['order_number'][$key] ?? 0;
             }
             $formatted[$key]['cost'] = $detail['cost'][$key];
@@ -188,8 +281,7 @@ class InventoryService
      */
     static public function search($inventory, array $data, array $with = [])
     {
-        return $inventory->with($with)->HasShop()->where(function ($query) use ($data) {
-
+        return $inventory->with($with)->VerifyShop()->where(function ($query) use ($data) {
             if (!empty($data['start_at']) && isset($data['start_at'])) {
                 $query->where('created_at', '>=', $data['start_at']);
             }
@@ -221,7 +313,7 @@ class InventoryService
     static public function calculateQuantity($goods, $total)
     {
         $result = '';
-        if (!($goods instanceof Goods)){
+        if (!($goods instanceof Goods)) {
             $goods = Goods::find($goods);
         }
         if (isset($goods->goodsPieces->pieces_level_1)) {

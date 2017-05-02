@@ -35,7 +35,7 @@ return [
             'app' => 2
         ]
     ],
-    
+
     //出入库类型
     'inventory' => [
         'inventory_type' => [
@@ -45,6 +45,11 @@ return [
         'action_type' => [
             'in' => 1,  //  入库
             'out' => 2  // 出库
+        ],
+        'inventory_state' => [
+            'normal' => 0,   //正常
+            'abnormal' => 1, //异常
+            'disposed' => 2, //已处理
         ]
     ],
 

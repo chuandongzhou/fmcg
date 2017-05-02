@@ -557,4 +557,33 @@ class OrderService extends BaseService
         return $shops->count() > 1 ? Order::max('pid') + 1 : 0;
     }
 
+    /**
+     * 获得在途订单Ids
+     * @return array ids
+     */
+    static public function getInTransitOrderIds()
+    {
+        $orders = Order::OfSell(auth()->user()->id)->with('goods','orderGoods')->NonArrived()->get(['id']);
+        $orderIds = [];
+        foreach ($orders as $key => $order) {
+            $orderIds[] = $order->id;
+        }
+        return $orderIds;
+    }
+
+    /**
+     * 获取用户订单Ids
+     * @return array
+     */
+    static public function getUserOrderIds()
+    {
+        $orders = Order::OfSell(auth()->user()->id)->with('goods','orderGoods')->get(['id']);
+        $orderIds = [];
+        foreach ($orders as $key => $order) {
+            $orderIds[] = $order->id;
+        }
+        return $orderIds;
+    }
+
+
 }

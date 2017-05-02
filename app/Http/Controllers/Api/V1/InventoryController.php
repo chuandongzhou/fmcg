@@ -20,7 +20,7 @@ class InventoryController extends Controller
 {
     /**
      * 入库操作
-     * @param \App\Http\Requests\Api\v1\SaveInventoryRequest $request
+     * @param \App\Http\Requests\Api\v1\InventoryRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postInSave(Requests\Api\v1\InventoryRequest $request)
@@ -39,7 +39,7 @@ class InventoryController extends Controller
         if ($result === true) {
             return $this->success('成功出库');
         };
-        return $this->error($result == false ? '出库失败!!' : $result);
+        return $this->error(is_string($result) ? $result : '出库失败!');
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use App\Services\GoodsService;
+
 class OrderGoods extends Model
 {
     protected $table = 'order_goods';
@@ -77,5 +79,10 @@ class OrderGoods extends Model
     public function getImageAttribute()
     {
         return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
+    }
+
+    public function getQuantityAttribute()
+    {
+      return $this->num * GoodsService::getPiecesSystem($this->goods_id,$this->pieces);
     }
 }

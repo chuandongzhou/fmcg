@@ -122,7 +122,7 @@ class OrderController extends Controller
     public function getListOfSell()
     {
         $orders = Order::OfSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon',
-            'shop.user')->orderBy('id','desc')->paginate();
+            'shop.user')->orderBy('id', 'desc')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -430,6 +430,8 @@ class OrderController extends Controller
 
         $failIds = []; //失败订单id
         $nowTime = Carbon::now();
+        //商品库存服务
+        $inventoryService = new InventoryService();
         foreach ($orders as $order) {
             if (!$order->can_confirm_collections) {
                 if (count($orders) == 1) {
@@ -438,6 +440,16 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
+            if($order->pay_type == cons('pay_type.pick_up')){
+                //卖家商品出库
+                $outResult = $inventoryService->autoInventoryOut($order->orderGoods);
+                if(is_string($outResult)){
+                    return $this->error($outResult);
+                };
+                //买家入库
+                $inventoryService->autoInventoryIn($order->orderGoods);
+            }
+            
             if (!$order->fill([
                 'pay_status' => cons('order.pay_status.payment_success'),
                 'paid_at' => $nowTime,
@@ -486,35 +498,13 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
-            //商品出库
-           
-            /*foreach ($order->orderGoods as $goodsInfo) {
-                $data = [
-                    'inventory_number' => $inventoryService->getInventoryNumber(),
-                    'inventory_type' => cons('inventory.inventory_type.system'),
-                    'action_type' => cons('inventory.action_type.out'),
-                    'goods' => [
-                        $goodsInfo->goods_id => [
-                            'order_number' => [
-                                $goodsInfo->order_id
-                            ],
-                            'quantity' => [
-                                $goodsInfo->num
-                            ],
-                            'cost' => [
-                                $goodsInfo->price
-                            ],
-                            'pieces' => [
-                                $goodsInfo->pieces
-                            ],
-                            'remark' => [
-                                '系统自动出库'
-                            ],
-                        ]
-                    ]
-                ];
-                $inventoryService->inventoryOut($data);
-            }*/
+            //卖家出库
+            $result = $inventoryService->autoInventoryOut($order->orderGoods);
+            if(is_string($result)){
+                return $this->error($result);
+            };
+            //买家入库
+            $inventoryService->autoInventoryIn($order->orderGoods);
             if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
                 $redisKey = 'push:user:' . $order->user_id;
                 $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');

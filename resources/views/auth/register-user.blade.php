@@ -40,7 +40,7 @@
                                             <option value="1">终端商</option>
                                             <option value="2">批发商</option>
                                             <option value="3">供应商</option>
-                                            <option value="4">厂  商</option>
+                                            <option value="4">厂&nbsp;&nbsp;&nbsp;商</option>
                                         </select>
                                     </div>
                                 </div>

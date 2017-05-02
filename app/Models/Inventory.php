@@ -67,7 +67,7 @@ class Inventory extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeHasShop($query)
+    public function scopeVerifyShop($query)
     {
         return $query->where('shop_id', auth()->user()->shop->id);
     }
@@ -188,6 +188,17 @@ class Inventory extends Model
     {
         if ($this->order_number > 0) {
             return $this->order->user->shop_name;
+        }
+    }
+
+    /**
+     * 获取卖家名
+     * @return mixed
+     */
+    public function getSellerNameAttribute()
+    {
+        if ($this->order_number > 0) {
+            return $this->order->shop_name;
         }
     }
 

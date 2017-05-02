@@ -99,7 +99,7 @@ class AuthController extends Controller
         //终端商不需要审核直接通过
         if($userInput['type'] == cons('user.type.retailer'))
             $userInput['audit_status'] = cons('user.audit_status.pass');
-       // dd();
+      
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店

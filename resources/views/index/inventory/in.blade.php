@@ -39,10 +39,10 @@
                     @foreach($lists as $list)
                         <tr>
                             <td>{{$list->inventory_number ?? ''}}</td>
-                            <td>{{$list->order_number ?? '---'}}</td>
-                            <td>{{$list->buyer_name ?? '---'}}</td>
+                            <td>{{$list->order_number > 0 ? $list->order_number : '---'}}</td>
+                            <td>{{$list->seller_name ?? '---'}}</td>
                             <td>{{cons()->valueLang('inventory.inventory_type',$list->inventory_type).cons()->valueLang('inventory.action_type',$list->action_type)}}</td>
-                            <td>{{$list->user->user_name}}</td>
+                            <td>{{$list->user->user_name ?? '系统'}}</td>
                             <td>{{$list->created_at}}</td>
                             <td><a class="edit" href="{{url('inventory/in-detail')}}/{{$list->inventory_number}}">查看</a>
                             </td>

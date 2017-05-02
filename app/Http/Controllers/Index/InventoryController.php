@@ -13,6 +13,7 @@ use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 
 class InventoryController extends Controller
@@ -68,8 +69,7 @@ class InventoryController extends Controller
         $data = $request->only('start_at', 'end_at', 'number');
         $inventory = Inventory::with(['user'])->OfIn()->groupBy('inventory_number')->orderBy('created_at', 'desc');
         $result = InventoryService::search($inventory, $data);
-        //$inv_error = OrderGoods::
-        //dd($inv_error->with('orderGoods'));
+
         return view('index.inventory.in', [
             'lists' => $result->paginate(),
             'data' => $data
@@ -187,7 +187,7 @@ class InventoryController extends Controller
             'total_profit' => sprintf("%10.2f", $inventory->sum('profit')),
         ]);
     }
-    
+
 
     /**
      * 商品出入库明细
@@ -208,7 +208,8 @@ class InventoryController extends Controller
                 if (empty($data['end_at']) && !isset($data['end_at']) && empty($data['start_at']) && isset($data['start_at'])) {
                     $query->OfNowMonth();
                 }
-                $query->orderBy('created_at', 'desc')->paginate();
+
+                $query->VerifyShop()->orderBy('created_at', 'desc')->paginate();
             }
         ])->find($goodsId);
         return view('index.inventory.goods-inventory-detail', [
@@ -225,18 +226,16 @@ class InventoryController extends Controller
     {
         $orderIds = OrderService::getInTransitOrderIds();
         $inTransitGoods = [];
-        if ($orderIds){
+        if ($orderIds) {
             $data = OrderGoods::whereIn('order_id', $orderIds)->with(['goods']);
             $_inTransitGoods = $data->get()->groupBy('goods_id');
             $inTransitGoods = $data->groupBy('goods_id')->paginate();
-
             foreach ($inTransitGoods as $value) {
                 $goods = Goods::find($value->goods_id);
                 $value->count = InventoryService::calculateQuantity($goods,
                     $_inTransitGoods[$value->goods_id]->sum('quantity'));
             }
         }
-
         return view('index.inventory.in-transit-goods', [
             'inTransitGoods' => $inTransitGoods,
         ]);
@@ -249,13 +248,14 @@ class InventoryController extends Controller
      */
     public function getInTransitGoodsDetail($goodsId = 0)
     {
-        if ($goodsId <= 0){
+        if ($goodsId <= 0) {
             return redirect()->to(url('inventory/in-transit-goods'));
         }
-        $orderIds = OrderService::getInTransitOrders();
-        $goodsOutDetail = Inventory::with('goods')->OfOut()->where('goods_id',$goodsId)->whereIn('order_number',$orderIds)->paginate();
-        $inTransitTotal = InventoryService::calculateQuantity($goodsId,$goodsOutDetail->sum('quantity'));
-        return view('index.inventory.in-transit-goods-detail',[
+        $orderIds = OrderService::getInTransitOrderIds();
+        $goodsOutDetail = Inventory::with('goods')->OfOut()->where('goods_id', $goodsId)->whereIn('order_number',
+            $orderIds)->paginate();
+        $inTransitTotal = InventoryService::calculateQuantity($goodsId, $goodsOutDetail->sum('quantity'));
+        return view('index.inventory.in-transit-goods-detail', [
             'goodsOutDetail' => $goodsOutDetail,
             'inTransitTotal' => $inTransitTotal
         ]);

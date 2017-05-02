@@ -14,14 +14,16 @@
             <label>入库单号：</label>
             <div class="content">{{$inventory['0']->inventory_number ?? ''}}</div>
         </div>
+        @if($inventory['0']->inventory_type == cons('inventory.inventory_type.system'))
         <div class="col-sm-3 details-item wareh-details">
             <label>进货单号：</label>
             <div class="content">{{$inventory['0']->order_number > 0 ? $inventory['0']->order_number : '---'}}</div>
         </div>
         <div class="col-sm-3 details-item wareh-details">
             <label>卖家名称：</label>
-            <div class="content">{{$inventory['0']->buyer_name ?? '---'}}</div>
+            <div class="content">{{$inventory['0']->seller_name ?? '---'}}</div>
         </div>
+        @endif
         <div class="col-sm-12 table-responsive wareh-details-table">
             <table class="table-bordered table table-center public-table">
                 <thead>
@@ -51,7 +53,7 @@
                             <td>{{$list->transformation_quantity}}</td>
                             <td>{{$list->cost}} 元/{{cons()->valueLang('goods.pieces',$list->pieces)}}</td>
                             <td>{{cons()->valueLang('inventory.inventory_type',$list->inventory_type).cons()->valueLang('inventory.action_type',$list->action_type)}}</td>
-                            <td>{{$list->user->user_name}}</td>
+                            <td>{{$list->user->user_name ?? '系统'}}</td>
                             <td>{{$list->created_at}}</td>
                             <td>
                                 <a class="iconfont icon-tixing" title=""
