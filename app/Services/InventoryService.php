@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Goods;
 use App\Models\Inventory;
+use App\Models\OrderGoods;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -67,29 +68,28 @@ class InventoryService
     public function autoInventoryIn($goodsInfo)
     {
         try {
-            $inventoryModel = new Inventory();
             foreach ($goodsInfo as $orderGoods) {
                 //买家的商店
                 $buyerShop = User::find($orderGoods->order->user_id)->shop;
                 //买家商品库的同款商品
-                $buyerGoodsId = 0;
-                foreach ($buyerShop->goods as $ShopGoods) {
-                    if ($orderGoods->goods->bar_code == $ShopGoods->bar_code) {
-                        $buyerGoodsId = $ShopGoods->id;
-                        break;
-                    }
-                }
-                if ($buyerGoodsId <= 0) {
+                $buyerGoods = $buyerShop->goods->where('bar_code',$orderGoods->goods->bar_code)->first();
+                //查无此商品则标记为入库异常
+                if (empty($buyerGoods)) {
                     $orderGoods->inventory_state = cons('inventory.inventory_state.abnormal');
                     $orderGoods->save();
                 } else {
+                    //如果是处理异常则标记为已处理
+                    if($orderGoods->inventory_state == cons('inventory.inventory_state.abnormal')){
+                        $orderGoods->inventory_state = cons('inventory.inventory_state.disposed');
+                        $orderGoods->save();
+                    }
                     //拿到该商品的出库记录
-                    $outRecord = $inventoryModel->where('goods_id', $orderGoods->goods_id)->where('order_number',
+                    $outRecord = $this->inventory->where('goods_id', $orderGoods->goods_id)->where('order_number',
                         $orderGoods->order_id)->OfOut()->get();
                     foreach ($outRecord as $record) {
                         $data['inventory_number'] = $this->getInventoryNumber();
                         $data['user_id'] = 0;
-                        $data['goods_id'] = $buyerGoodsId;
+                        $data['goods_id'] = $buyerGoods->id;
                         $data['shop_id'] = $buyerShop->id;
                         $data['inventory_type'] = cons('inventory.inventory_type.system');
                         $data['action_type'] = cons('inventory.action_type.in');
@@ -100,10 +100,9 @@ class InventoryService
                         $data['quantity'] = $record->quantity;
                         $data['surplus'] = $record->quantity;
                         $data['remark'] = '系统自动入库';
-                        $inventoryModel->create($data);
+                        $this->inventory->create($data);
                     }
                 }
-
             }
             return true;
         } catch (\Exception $e) {
@@ -343,6 +342,19 @@ class InventoryService
 
         }
         return $result;
+    }
+
+    /**
+     * 获取入库异常商品
+     * @return mixed
+     */
+    public function getInError()
+    {
+        $orderIds = [];
+        auth()->user()->orders->each(function ($order) use(&$orderIds){
+            $orderIds[] = $order->id;
+        });
+        return OrderGoods::where('inventory_state',cons('inventory.inventory_state.abnormal'))->whereIn('order_id',$orderIds);
     }
 
 }

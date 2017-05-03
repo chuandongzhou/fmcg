@@ -76,8 +76,9 @@ class MyGoodsController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $abnormalInfo = $request->only('goods_id','order_id');
         //默认加入店铺配送地址
         $shop = auth()->user()->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea->each(function ($area) {
@@ -86,6 +87,13 @@ class MyGoodsController extends Controller
         $goods = new Goods;
         //店铺配送地址
         $goods->shopDeliveryArea = $shopDelivery;
+        if (!empty($abnormalInfo['goods_id'])){
+            $buyerGoods = Goods::find($abnormalInfo['goods_id']);
+            $goods->bar_code = $buyerGoods->bar_code;
+            $goods->name = $buyerGoods->name;
+            $goods->goodsPieces = $buyerGoods->goodsPieces;
+            $goods->abnormalInfo = $abnormalInfo;
+        }
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => [],

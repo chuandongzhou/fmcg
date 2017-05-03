@@ -6,6 +6,8 @@ use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
 use App\Models\Goods;
 use App\Models\Like;
+use App\Models\Order;
+use App\Models\OrderGoods;
 use App\Models\Shop;
 use App\Http\Requests;
 use App\Models\Images;
@@ -15,6 +17,7 @@ use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\ImageUploadService;
 use App\Services\ImportService;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
@@ -50,7 +53,7 @@ class MyGoodsController extends Controller
         $result = DB::transaction(function () use ($request) {
 
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-                'system_2', 'specification');
+                'system_2', 'specification','abnormalOrderId','abnormalGoodsId');
 
             $attributes['user_type'] = auth()->user()->type;
 
@@ -78,6 +81,18 @@ class MyGoodsController extends Controller
                 isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
+                $abnormalOrderId = $request->input('abnormalOrderId');
+                $abnormalGoodsId = $request->input('abnormalGoodsId');
+                if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)){
+                    //获取异常记录
+                    $abnormal = OrderGoods::where('goods_id',$abnormalGoodsId)
+                        ->where('order_id',$abnormalOrderId)
+                        ->where('inventory_state',cons('inventory.inventory_state.abnormal'))
+                        ->get();
+                    //自动入库
+                    dd($abnormal);
+                    (new InventoryService())->autoInventoryIn($abnormal);
+                }
                 return true;
             }
         });

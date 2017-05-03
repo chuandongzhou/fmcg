@@ -18,7 +18,7 @@
                        value="{{$data['number'] ?? ''}}">
                 <button type="button" class=" btn btn-blue-lighter search control search-by-get">搜索</button>
                 <a href="{{ url('inventory/in-create') }}" class="btn btn-default control">我要入库</a>
-                <div class="warehousing-error-btn red">入库异常<a href="{{ url('inventory/in-error') }}" class="badge badge-danger">9</a></div>
+                <div class="warehousing-error-btn red">入库异常<a href="{{ url('inventory/in-error') }}" class="badge badge-danger">{{$errorCount ?? 0}}</a></div>
             </form>
         </div>
         <div class="col-sm-12 table-responsive table-wrap">

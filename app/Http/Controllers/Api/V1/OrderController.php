@@ -380,6 +380,7 @@ class OrderController extends Controller
         }
 
         $failIds = [];
+        //商品库存服务
         foreach ($orders as $order) {
             if (!$order->can_confirm_arrived || $order->user_id != auth()->id()) {
                 if ($orders->count() == 1) {
@@ -388,6 +389,12 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
+
+            if ($order->pay_type == cons('pay_type.online')) {
+                //在线支付确认收货买家入库
+                (new InventoryService())->autoInventoryIn($order->orderGoods);
+            }
+
             if (($tradeModel = $order->systemTradeInfo) && $order->fill([
                     'status' => cons('order.status.finished'),
                     'finished_at' => Carbon::now()
@@ -440,16 +447,19 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
-            if($order->pay_type == cons('pay_type.pick_up')){
-                //卖家商品出库
+
+            if ($order->pay_type == cons('pay_type.pick_up')) {
+                //自提订单收款时卖家出库
                 $outResult = $inventoryService->autoInventoryOut($order->orderGoods);
-                if(is_string($outResult)){
+                if (is_string($outResult)) {
                     return $this->error($outResult);
                 };
-                //买家入库
+            }
+            if ($order->pay_type == cons('pay_type.pick_up') || $order->pay_type == cons('pay_type.cod')) {
+                //自提订单和货到付款订单收款时买家入库
                 $inventoryService->autoInventoryIn($order->orderGoods);
             }
-            
+
             if (!$order->fill([
                 'pay_status' => cons('order.pay_status.payment_success'),
                 'paid_at' => $nowTime,
@@ -500,11 +510,9 @@ class OrderController extends Controller
             }
             //卖家出库
             $result = $inventoryService->autoInventoryOut($order->orderGoods);
-            if(is_string($result)){
+            if (is_string($result)) {
                 return $this->error($result);
             };
-            //买家入库
-            $inventoryService->autoInventoryIn($order->orderGoods);
             if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
                 $redisKey = 'push:user:' . $order->user_id;
                 $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');

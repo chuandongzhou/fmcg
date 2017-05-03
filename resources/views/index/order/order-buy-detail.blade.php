@@ -171,8 +171,8 @@
                                     <th>收货地址</th>
                                     </thead>
                                     <tr>
-                                        <td>{{   $order->shippingAddress->consigner }}</td>
-                                        <td>{{ $order->shippingAddress->phone }}</td>
+                                        <td>{{   $order->shippingAddress->consigner ?? ''}}</td>
+                                        <td>{{ $order->shippingAddress->phone ?? ''}}</td>
                                         <td>
                                             <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
                                             <p class="prop-item">
@@ -181,8 +181,8 @@
                                                    data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
                                                    data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
                                                    data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
-                                                   data-consigner="{{ $order->shippingAddress->consigner }}"
-                                                   data-phone= {{ $order->shippingAddress->phone }}>
+                                                   data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
+                                                   data-phone= {{ $order->shippingAddress->phone ?? ''}}>
                                                     <i class="iconfont icon-chakanditu"></i> 查看地图
                                                 </a>
                                             </p>

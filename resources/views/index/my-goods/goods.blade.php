@@ -32,6 +32,10 @@
             </div>
             <div class="col-sm-12 ">
                 <input name="goods_id" type="hidden" value="{{ $goods->id }}"/>
+                @if(isset($goods->abnormalInfo))
+                    <input name="abnormalGoodsId" type="hidden" value="{{$goods->abnormalInfo['goods_id']}}"/>
+                    <input name="abnormalOrderId" type="hidden" value="{{$goods->abnormalInfo['order_id']}}"/>
+                @endif
                 <div class="row editor-panel content-wrap">
                     <div class="col-sm-12 editor-wrap">
                         <div class="form-group editor-item">
@@ -274,7 +278,7 @@
                             </div>
                         </div>
                     </div>
-                    @if(auth()->user()->type == cons('user.type.supplier'))
+                    @if(auth()->user()->type == cons('user.type.supplier') ||auth()->user()->type == cons('user.type.maker'))
                         <div class="col-sm-12 ">
                             <div class="panel panel-default">
                                 <div class="panel-heading">

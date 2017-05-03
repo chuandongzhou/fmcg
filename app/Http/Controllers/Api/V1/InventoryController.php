@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Goods;
+use App\Models\Inventory;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\InventoryService;
@@ -20,6 +22,7 @@ class InventoryController extends Controller
 {
     /**
      * 入库操作
+     *
      * @param \App\Http\Requests\Api\v1\InventoryRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -44,6 +47,7 @@ class InventoryController extends Controller
 
     /**
      * 搜索店铺内商品
+     *
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -63,5 +67,24 @@ class InventoryController extends Controller
                 $item->goodsPieces->pieces_level_3);
         });
         return $this->success(['goods' => $goods->toArray()]);
+    }
+
+    /**
+     * 获取商品入库错误
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function postGoodsInError(Request $request)
+    {
+        $condition = $request->only('goods_id', 'order_number');
+        $inventory = Inventory::with(['goods'])
+            ->where($condition)
+            ->OfOut()
+            ->get();
+        $inventory->each(function ($item) {
+            $item->setAppends(['transformation_quantity']);
+        });
+        return $this->success(['inventory' => $inventory->toArray()]);
     }
 }

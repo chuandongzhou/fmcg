@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Services\InventoryService;
 use App\Services\RedisService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -43,6 +44,8 @@ class OrderAutoReceive extends Command
                     $shopOwner = $order->shop->user;
                     $shopOwner->balance += $tradeModel->amount;
                     $shopOwner->save();
+                    //买家入库
+                    (new InventoryService())->autoInventoryIn($order->orderGoods);
                     //通知卖家
                     $redisKey = 'push:seller:' . $shopOwner->id;
                     $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');
