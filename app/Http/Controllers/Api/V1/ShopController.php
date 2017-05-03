@@ -86,7 +86,7 @@ class ShopController extends Controller
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $shop->is_like = $isLike ? true : false;
-        $shop->load(['deliveryArea','shopAddress']);
+        $shop->load(['deliveryArea', 'shopAddress']);
         $shop->setAppends(['goods_count', 'sales_volume'])->setHidden(['goods']);
         return $this->success([
             'shop' => $shop->toArray()
@@ -144,11 +144,10 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return $this->success(
                 [
-                    'shop' => [],
+                    'shop' => new Shop,
                     'goods' => [],
-                    'isLike' => []
+                    'isLike' => false
                 ]);
-
         }
         $data = $request->all();
         $result = GoodsService::getShopGoods($shop, $data);
@@ -164,7 +163,6 @@ class ShopController extends Controller
      */
     public function adverts($shop)
     {
-
         $adverts = $shop->adverts()->OfTime()->get()->each(function ($advert) {
             $advert->setAppends(['goods_id', 'image_url']);
         });

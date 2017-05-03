@@ -56,7 +56,8 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-allow', function ($user, $shop) {
             $shopUser = $shop->user;
             $nowTime = Carbon::now();
-            return ($user->type < $shop->user_type && $shopUser->deposit > 0 && $shopUser->expire_at > $nowTime) || $user->id == $shop->user_id;
+//            return ($user->type < $shop->user_type && $shopUser->deposit > 0 && $shopUser->expire_at > $nowTime) || $user->id == $shop->user_id;
+            return $user->type < $shop->user_type  || $user->id == $shop->user_id;
         });
 
         /**
