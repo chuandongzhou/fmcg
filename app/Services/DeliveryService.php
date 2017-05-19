@@ -225,18 +225,19 @@ class DeliveryService
      * 网页端配送数据统计
      *
      * @param $search
-     * @param $is_pc
+     * @param $user
      * @return array
      */
 
-    public function deliveryStatistical($search)
+    public function deliveryStatistical($search, $user = null)
     {
 
+        $user = $user ? $user : auth()->user();
         $search['start_at'] = !empty($search['start_at']) ? (new Carbon($search['start_at']))->startOfDay() : '';
         $search['end_at'] = !empty($search['end_at']) ? (new Carbon($search['end_at']))->endOfDay() : '';
         $search['delivery_man_id'] = !empty($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
 
-        $delivery = Order::ofSell(auth()->id())->useful()->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->ofOrderGoods()->with('systemTradeInfo',
+        $delivery = Order::ofSell($user->shop_id)->useful()->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->ofOrderGoods()->with('systemTradeInfo',
             'deliveryMan')->orderBy('delivery_finished_at', 'asc')->get();
         $deliveryNum = array();
         foreach ($delivery as $order) {

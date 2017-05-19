@@ -25,7 +25,7 @@ class OrderAutoReceive extends Command
             'pay_type' => cons('pay_type.online'),
             'status' => cons('order.status.send'),
             'pay_status' => cons('order.pay_status.payment_success'),
-        ])->where('send_at', '<=', Carbon::now()->subDays(3))->nonCancel()->get();
+        ])->where('send_at', '<=', Carbon::now()->subDays(3))->useful()->get();
 
         if ($orders->isEmpty()) {
             return false;

@@ -1,5 +1,5 @@
 @extends('master')
-@include('includes.chat')
+@include('includes.chat', ['shopId' => auth()->user() ? auth()->user()->shop_id : 0])
 @section('title')@yield('subtitle') | 订百达@stop
 
 @section('css')
@@ -29,17 +29,17 @@
     <![endif]-->
     <div class="page-header navbar navbar-fixed-top">
         <div class="page-header-inner ">
-            <div class="page-logo">
-                <a href="{{ url('/') }}">
-                    <span class="link-index logo-default">订百达首页</span>
-                </a>
-                <div class="menu-toggler sidebar-toggler">
-                    <!-- 折叠菜单按钮 -->
+            @if(auth()->check())
+                <div class="page-logo">
+                    <a href="{{ url('/') }}">
+                        <span class="link-index logo-default">订百达首页</span>
+                    </a>
+                    <div class="menu-toggler sidebar-toggler">
+                        <!-- 折叠菜单按钮 -->
+                    </div>
                 </div>
-
-            </div>
-
-            <!-- BEGIN 响应式菜单切换 -->
+        @endif
+        <!-- BEGIN 响应式菜单切换 -->
             <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
                data-target=".navbar-collapse"> </a>
 
@@ -54,9 +54,8 @@
                                 <i class="fa fa-question-circle" title="帮助中心"></i> &nbsp;
                             </a>
                         </li>
-
                         <!--购物车-->
-                        @if($user->type!=cons('user.type.supplier'))
+                        @if(auth()->check() && $user->type!=cons('user.type.supplier'))
                             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                                 <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
                                    data-hover="dropdown" data-close-others="true">
@@ -148,7 +147,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @stop
 

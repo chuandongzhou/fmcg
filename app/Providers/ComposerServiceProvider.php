@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\ChildNodeComposer;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\CategoryComposer;
 use App\Http\ViewComposers\UserComposer;
@@ -33,13 +34,13 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.manage-master',
                 'index.index.index',
                 'includes.search',
+                'includes.menu',
                 'includes.shop-search',
                 'index.menu-master',
                 'index.personal.tabs',
                 'index.help.master',
                 'index.shop.detail',
                 'includes.goods-list',
-                'index.goods.detail',
                 'includes.quick-link',
                 'index.personal.security.security-index',
                 'index.help.master',
@@ -50,6 +51,9 @@ class ComposerServiceProvider extends ServiceProvider
             ],
             NodeComposer::class => [
                 'admin.master'
+            ],
+            ChildNodeComposer::class => [
+                'includes.child-menu'
             ],
             CartComposer::class => [
                 'includes.search',
@@ -65,7 +69,8 @@ class ComposerServiceProvider extends ServiceProvider
             ],
             ChatComposer::class => [
                 'includes.chat',
-                'index.personal.chat-kit'
+                'index.personal.chat-kit',
+                'child-user.chat.kit'
             ]
         ]);
     }

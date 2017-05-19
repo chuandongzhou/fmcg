@@ -131,7 +131,7 @@ class PosController extends Controller
 
             $order = Order::where('delivery_man_id', $deliveryId)->where('pay_type',
                 cons('pay_type.cod'))->with('deliveryMan', 'shippingAddress.address',
-                'systemTradeInfo')->NonCancel()->find($orderId);
+                'systemTradeInfo')->useful()->find($orderId);
             if (!$order) {
                 $array['SessionBody'] = [
                     'OrderStatus' => $orderStatusArr['no_order'],

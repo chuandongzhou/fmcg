@@ -15,11 +15,6 @@ class ShopController extends Controller
     public function index()
     {
         $shop = auth()->user()->shop;
-       /* $coordinate = $shop->deliveryArea->each(function ($area) {
-            $area->coordinate;
-        });*/
         return view('index.personal.shop', ['shop' => $shop/*, 'coordinates' => $coordinate->toJson()*/]);
     }
-
-
 }

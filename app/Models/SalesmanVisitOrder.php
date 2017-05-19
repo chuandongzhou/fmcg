@@ -87,7 +87,8 @@ class SalesmanVisitOrder extends Model
      */
     public function gifts()
     {
-        return $this->belongsToMany(Goods::class, 'salesman_visit_order_gift')->withTrashed()->withPivot('num', 'pieces');
+        return $this->belongsToMany(Goods::class, 'salesman_visit_order_gift')->withTrashed()->withPivot('num',
+            'pieces');
     }
 
 
@@ -174,22 +175,20 @@ class SalesmanVisitOrder extends Model
      */
     public function scopeOfData($query, $data)
     {
-        if (isset($data['start_date']) && ($startDate = $data['start_date'])) {
+        if ($startDate = array_get($data, 'start_date')) {
             $query = $query->where('created_at', '>=', $startDate);
         }
 
-        if (isset($data['end_date']) && ($endDate = $data['end_date'])) {
+        if ($endDate = array_get($data, 'end_date')) {
             $date = $endDate instanceof Carbon ? $endDate : (new Carbon($endDate))->endOfDay();
             $query = $query->where('created_at', '<', $date);
         }
-
 
         $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']), function ($item) {
             return !is_null($item);
         });
         $query = $query->where($filter);
-        if (isset($data['customer']) && !empty($data['customer'])) {
-            $customer = $data['customer'];
+        if ($customer = array_get($data, 'customer')) {
             if (is_numeric($customer)) {
                 return $query->where('id', $customer);
             } else {

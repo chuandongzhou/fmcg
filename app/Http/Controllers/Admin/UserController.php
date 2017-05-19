@@ -283,7 +283,7 @@ class UserController extends Controller
 
         $newExpireAt = $user->expire_at->addMonth($month);
 
-        return $user->fill(['expire_at' => $newExpireAt])->save() ? $this->success('续费成功') : $this->error('缴纳时出现问题');
+        return $user->fill(['expire_at' => $newExpireAt])->save() ? $this->success('续费成功') : $this->error('续费时出现问题');
     }
 
     /**

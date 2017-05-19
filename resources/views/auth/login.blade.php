@@ -57,8 +57,12 @@
                             </div>
 
                             <div class="col-xs-12 text-right forget-pwd">
-                                <a href="javascript:" data-toggle="modal" data-target="#backupModal">忘记密码 ?</a>
-
+                                <div class="col-sm-6 text-left">
+                                    <a href="{{ url('child-user/auth/login') }}" target="_blank">子帐号登录</a>
+                                </div>
+                                <div class="text-right col-sm-6">
+                                    <a href="javascript:" data-toggle="modal" data-target="#backupModal">忘记密码 ?</a>
+                                </div>
                             </div>
                         </form>
                     </div>

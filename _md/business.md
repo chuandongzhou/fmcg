@@ -561,6 +561,7 @@
 #### 2.6.1 获取所有订货单[get] (order-forms)
 `请求参数：`
 
+    customer            string/int          客户名称/单号
     status              int                 状态   （0未审核  1已通过）
     start_date          date                开始时间
     end_date            date                结束时间
@@ -590,6 +591,7 @@
 #### 2.6.2 获取所有退货单[get] (return-orders)
 `请求参数：`
 
+    customer            string/int          客户名称/单号
     status              int                 状态   （0未审核  1已通过）
     start_date          date                开始时间
     end_date            date                结束时间

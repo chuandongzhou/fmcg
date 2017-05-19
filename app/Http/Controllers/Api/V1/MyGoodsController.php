@@ -29,8 +29,8 @@ class MyGoodsController extends Controller
         $shop = auth()->user()->shop;
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
-        $goods->each(function ($goods){
-            $goods->setAppends(['like_amount','image_url'])->setHidden(['goods_like']);
+        $goods->each(function ($goods) {
+            $goods->setAppends(['like_amount', 'image_url'])->setHidden(['goods_like']);
         });
         return $this->success([
             'goods' => $goods->toArray(),
@@ -50,9 +50,9 @@ class MyGoodsController extends Controller
         $user = auth()->user();
 
         //判断有无缴纳保证金
-       /* if (!$user->deposit) {
-            return $this->error('添加商品前请先缴纳保证金');
-        }*/
+        /* if (!$user->deposit) {
+             return $this->error('添加商品前请先缴纳保证金');
+         }*/
 
         $result = DB::transaction(function () use ($user, $request) {
 
@@ -82,7 +82,7 @@ class MyGoodsController extends Controller
                 }
 
                 // 更新标签
-                isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+                $this->updateAttrs($goods, array_get($attributes, 'attrs', []));
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
                 return true;
@@ -105,7 +105,7 @@ class MyGoodsController extends Controller
         }
         $goods->load(['images', 'deliveryArea', 'goodsPieces']);
         $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
-        $attrs = (new AttrService())->getAttrByGoods($goods, false);
+        $attrs = (new AttrService())->getAttrByGoods($goods);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         return $this->success(['goods' => $goods]);
@@ -123,10 +123,10 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
+
         $result = DB::transaction(function () use ($request, $goods) {
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
-
             //是否退换货补充
             $attributes['is_back'] = isset($attributes['is_back']) ? $attributes['is_back'] : 0;
             $attributes['is_change'] = isset($attributes['is_change']) ? $attributes['is_change'] : 0;
@@ -138,7 +138,6 @@ class MyGoodsController extends Controller
                 $attributes['is_promotion'] = 0;
                 $attributes['promotion_info'] = '';
             }
-
             if ($goods->fill($attributes)->save()) {
                 $goods->goodsPieces && $goods->goodsPieces->delete();
                 //更新商品单位
@@ -159,7 +158,7 @@ class MyGoodsController extends Controller
                 }
 
                 // 更新标签
-                isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
+                $this->updateAttrs($goods, array_get($attributes, 'attrs', []));
 
                 $this->saveWithoutImageOfBarCode($goods);
                 return true;
@@ -301,7 +300,7 @@ class MyGoodsController extends Controller
         if (!$barCode) {
             return $this->error('暂无商品图片');
         }
-        $goodsImage = Images::with('image')->where('bar_code', $barCode)->paginate()->toArray();
+        $goodsImage = Images::active()->with('image')->where('bar_code', $barCode)->paginate()->toArray();
 
         return $this->success(['goodsImage' => $goodsImage]);
     }
@@ -432,9 +431,7 @@ class MyGoodsController extends Controller
         //配送区域添加
         $areaArr = (new AddressService($area))->formatAddressPost();
         //删除原有配送区域信息
-        $model->deliveryArea->each(function ($address) {
-            $address->delete();
-        });
+        $model->deliveryArea()->delete();
         if (!empty($areaArr)) {
             $areas = [];
             foreach ($areaArr as $data) {
@@ -572,7 +569,7 @@ class MyGoodsController extends Controller
 
         $attrArr = [];
         foreach ($attrs as $pid => $id) {
-            $attrArr[$id] = ['attr_pid' => $pid];
+            $id && ($attrArr[$id] = ['attr_pid' => $pid]);
         }
         if (!empty($attrArr)) {
             $model->attr()->sync($attrArr);

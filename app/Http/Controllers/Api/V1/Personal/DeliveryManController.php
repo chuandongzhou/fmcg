@@ -55,7 +55,7 @@ class DeliveryManController extends Controller
      */
     public function update(Requests\Api\v1\UpdateDeliveryManRequest $request, $deliveryMan)
     {
-        if ($deliveryMan->fill($request->only(['user_name', 'password', 'pos_sign', 'name', 'phone']))->save()) {
+        if ($deliveryMan->fill($request->only(['password', 'pos_sign', 'name', 'phone']))->save()) {
             return $this->success('保存成功');
         }
 

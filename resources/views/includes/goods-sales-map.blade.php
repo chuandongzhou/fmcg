@@ -61,7 +61,6 @@
                     begin_day: beginDay,
                     end_day: endDay
                 }, function (data) {
-                    data = data.content;
                     var legend = ['金额'], goods = data.goods;
                     //console.log(goods);
                     goodsIdPanel.html(goods.id);

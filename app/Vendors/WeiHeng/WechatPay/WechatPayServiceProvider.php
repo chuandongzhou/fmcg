@@ -2,7 +2,6 @@
 
 namespace WeiHeng\WechatPay;
 
-use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Support\ServiceProvider;
 
 class WechatPayServiceProvider extends ServiceProvider
@@ -23,7 +22,7 @@ class WechatPayServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('wechat.pay', function ($app) {
-            return new Sign($app['config']['wechat']);
+            return new WechatPay($app['config']['wechat']);
         });
     }
 

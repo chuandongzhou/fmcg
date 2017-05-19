@@ -162,7 +162,7 @@ class OrderController extends Controller
         //支付方式
         $payType = array_get($data, 'pay_type');
 
-        $orders = Order::ofSell(auth()->id())
+        $orders = Order::ofSell(auth()->user()->shop_id)
             ->useful()
             ->ofPayType($payType)
             ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
@@ -247,7 +247,7 @@ class OrderController extends Controller
         //支付方式
         $payType = array_get($data, 'pay_type');
 
-        $orders = Order::ofSell(auth()->id())
+        $orders = Order::ofSell(auth()->user()->shop_id)
             ->ofBuy($userId)
             ->useful()
             ->ofPayType($payType)
@@ -295,7 +295,7 @@ class OrderController extends Controller
 
         $user = auth()->user();
 
-        $orders = Order::ofSell(auth()->id())
+        $orders = Order::ofSell(auth()->user()->shop_id)
             ->useful()
             ->ofPayType($payType)
             ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())

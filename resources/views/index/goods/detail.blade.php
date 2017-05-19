@@ -73,15 +73,15 @@
                             <a href="javascript:void(0)" class="btn shopping-btn disabled" disabled="">缺货</a>
                         @else
                             <a href="javascript:void(0)"
-                               data-url="{{  $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$goods->id) }}"
-                               class="btn shopping-btn join-cart {{ $user->id==$shop->user_id?'disabled':'' }}">加入购物车</a>
+                               data-url="{{  $isMyGoods?'':url('api/v1/cart/add/'.$goods->id) }}"
+                               class="btn shopping-btn join-cart {{ $isMyGoods?'disabled':'' }}">加入购物车</a>
                         @endif
-                        <a class="btn shopping-btn {{ $user->id==$shop->user_id?'disabled':'' }}"
+                        <a class="btn shopping-btn {{ $isMyGoods?'disabled':'' }}"
                            href="{{ url('cart') }}">去购物车结算</a>
                     </div>
-                    <div class="pull-right collect-item {{ $user->id==$shop->user_id?'':'btn-like' }} like-goods"
+                    <div class="pull-right collect-item {{ $isMyGoods?'':'btn-like' }} like-goods"
                          data-type="goods" data-method="post"
-                         data-id="{{ $goods->id }}" style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}">
+                         data-id="{{ $goods->id }}" style="cursor:{{ $isMyGoods?'auto':'pointer' }}">
                         @if(is_null($isGoodsLike))
                             <i class="fa fa-star-o"></i> 收藏本商品
                         @else
@@ -101,7 +101,7 @@
                     <li><span class="prompt">店家地址 : </span>{{ $shop->address }}</li>
                 </ul>
                 <div class="operate">
-                    @if($user->id==$shop->user_id)
+                    @if($isMyGoods)
                         <a href="javascript:" class="contact list-name" style="cursor:text"><span
                                     class="fa fa-commenting-o"></span> 联系客服</a>
                     @else
@@ -110,8 +110,8 @@
                            class="contact list-name"><span class=" iconfont icon-kefu"></span> 联系客服</a>
                     @endif
 
-                    <a style="cursor:{{ $user->id==$shop->user_id?'auto':'pointer' }}"
-                       class="{{ $user->id==$shop->user_id?'':'btn-like' }} list-name like-shops" data-type="shops"
+                    <a style="cursor:{{ $isMyGoods?'auto':'pointer' }}"
+                       class="{{ $isMyGoods?'':'btn-like' }} list-name like-shops" data-type="shops"
                        data-method="post" data-id="{{ $shop->id }}">
                         @if(is_null($isLike))
                             <i class="fa fa-star-o"></i> 收藏本店

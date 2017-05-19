@@ -49,7 +49,7 @@
                                         <span class="prompt">用户账号:</span>
                                     </label>
                                     <div class="col-xs-8 col-md-6">
-                                        <input class="form-control" placeholder="请输入用户账号" type="text" name="user_name">
+                                        <input class="form-control" placeholder="账号由4至16个数字或字母组成" type="text" name="user_name">
                                     </div>
                                 </div>
                                 <div class="form-group">

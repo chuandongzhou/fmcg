@@ -2,14 +2,13 @@
 
 @section('title')@yield('subtitle') | 订百达 - 订货首选@stop
 
-@include('includes.chat')
+@include('includes.chat', ['shopId' => auth()->user() ? auth()->user()->shop_id : 0])
 @include('includes.notice')
 
 @section('css')
     <link href="{{ asset('css/index.css?v=1.0.0') }}" rel="stylesheet">
     <link href="{{ asset('css/shop-navigator.css') }}" rel="stylesheet">
     @stop
-
 @section('header')
     <!--[if lt IE 9]>
     <div class="ie-warning alert alert-warning alert-dismissable fade in">

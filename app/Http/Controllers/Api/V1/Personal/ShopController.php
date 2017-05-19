@@ -38,7 +38,9 @@ class ShopController extends Controller
 
     /**
      * 首页店铺数据
+     *
      * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function orderData(Request $request)
     {
@@ -47,23 +49,24 @@ class ShopController extends Controller
         //本月已完成订单
         $finishedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(finished_at,'%Y-%m-%d') as day,status,pay_status,pay_type,is_cancel"))
             ->whereBetween('finished_at', [$month_start, $month_end])
-            ->where('status', cons('order.status.finished'))->nonCancel()->groupBy('day');
+            ->where('status', cons('order.status.finished'))->useful()->groupBy('day');
 
         //本月付款订单
         $receivedOrders = Order::select(DB::raw("count(1) as count,DATE_FORMAT(paid_at,'%Y-%m-%d') as receivedday,status,pay_status,pay_type,is_cancel"))
             ->whereBetween('paid_at', [$month_start, $month_end])
-            ->where('pay_status', cons('order.pay_status.payment_success'))->nonCancel()->groupBy('receivedday');
+            ->where('pay_status', cons('order.pay_status.payment_success'))->useful()->groupBy('receivedday');
         //判断是否是终端商
         if (auth()->user()->type == cons('user.type.retailer')) {
-            $finishedOrders = $finishedOrders->where('user_id', auth()->id())->get()->each(function ($order) {
+            $finishedOrders = $finishedOrders->ofbuy(auth()->id())->get()->each(function ($order) {
                 $order->setAppends([]);
             });
-            $receivedOrders = $receivedOrders->where('user_id', auth()->id())->get();
+            $receivedOrders = $receivedOrders->ofbuy(auth()->id())->get();
         } else {
-            $finishedOrders = $finishedOrders->OfSell(auth()->id())->useful()->get()->each(function ($order) {
+            $shopId = auth()->user()->shop_id;
+            $finishedOrders = $finishedOrders->ofSell($shopId)->useful()->get()->each(function ($order) {
                 $order->setAppends([]);
             });
-            $receivedOrders = $receivedOrders->OfSell(auth()->id())->useful()->get();
+            $receivedOrders = $receivedOrders->ofSell($shopId)->useful()->useful()->get();
         }
 
 

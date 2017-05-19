@@ -63,7 +63,7 @@ Site.prototype = {
      * @param {boolean} [force]
      */
     refresh: function (force) {
-        window.location.reload(force);
+        window.top.location.reload(force);
     },
 
     /**
@@ -343,8 +343,6 @@ var commonAjaxSetup = function () {
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
-
-
             self.prop('disabled', true)
             self.button({
                 loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
@@ -389,6 +387,7 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
+
                     self.html(data.message || '操作成功');
                     self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
                 }

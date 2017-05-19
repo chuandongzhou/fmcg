@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Services\UserService;
-use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -173,6 +172,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function renews()
     {
         return $this->hasMany(RenewRecord::class);
+    }
+
+    /**
+     * 关联子账户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function childUser()
+    {
+        return $this->hasMany(ChildUser::class);
     }
 
     /**

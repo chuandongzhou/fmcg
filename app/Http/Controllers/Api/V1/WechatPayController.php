@@ -5,6 +5,7 @@
  * Date: 2015/9/10
  * Time: 16:46
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
@@ -55,11 +56,45 @@ class WechatPayController extends Controller
             return $this->error('请求出错，请重试');
         }
 
-
         return $wechatPay->created($result, $orderId) ? $this->success([
             'code_url' => $result['codeUrl'],
             'created_at' => (string)Carbon::now()
         ]) : $this->error('创建二维码时出现问题');
+    }
+
+
+    /**
+     * 获取续费二维码地址
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function renewQrCode(Request $request)
+    {
+        $type = $request->input('type', 'user');
+        $month = $request->input('month');
+
+        if ($type == 'user') {
+            $id = auth()->id();
+            $months = cons()->valueLang('sign.expire_amount');
+        } else {
+            $id = $request->input('id');
+            $months = cons()->valueLang('sign.worker_expire_amount');
+        }
+
+        if (!($cost = array_search($month, $months))) {
+            return $this->error('选择的时间不正确');
+        }
+
+        $wechatPay = app('wechat.pay');
+
+        $result = $wechatPay->userExpireQrCode($id, $cost, $type);
+
+        if ($result['dealCode'] != 10000) {
+            return $this->error($result['dealMsg']);
+        }
+
+        return $this->success(['code_url' => $result['codeUrl'], 'created_at' => (string)Carbon::now()]);
     }
 
     /**

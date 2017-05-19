@@ -946,6 +946,7 @@
 	can_cancel			bool		是否可取消(是true,否false)
 	can_payment			bool		是否可在线支付
 	can_confirm_arrived bool		是否可确认收货(针对在线支付)
+	type                int         订单类型（0自主订单， 1业务订单）
 	shop                array       店铺信息
     goods    			array		商品信息
 
@@ -1054,10 +1055,15 @@
     street              int         街道id
     address				string		详细地址
 
-	order_refund 字段子集说明（有退款时返回）
+	refund_reason 字段子集说明（有退款时返回）
 
     reason              string      退款原因
-    created_at          timestamp   申请退款时间
+    time                timestamp   申请退款时间
+    
+    invalid_reason 字段子集说明（作废时返回）
+    
+    reason              string      退款原因
+    time                timestamp   申请退款时间
 
 `失败返回`
 
@@ -1065,13 +1071,18 @@
 #### 2.7.9 卖家获取订单列表[get] (list-of-sell)(不显示已取消订单)
 `请求参数：`
 
-    page               		 int         分页
+    status                  string         订单状态 （见返回的status列表）
+    start_at                timestamp       开始时间
+    end_at                  timestamp       结束时间
+    search_content          string/int      订单号或买家店铺名
+    page               		int            分页
 
 `成功返回：`
 
-	data               		 array       订单信息
+	orders               		 array       订单信息
+	status               		 array       订单筛选状态列表
 
-	data 字段子集说明
+	orders 字段子集说明
 	
 	id						 	int			订单ID号
 	price              		 	string      订单总金额
@@ -1216,10 +1227,15 @@
     street              int         街道id
     address				string		详细地址
 
-    order_refund 字段子集说明（有退款时返回）
-
+    refund_reason 字段子集说明（有退款时返回）
+    
     reason              string      退款原因
-    created_at          timestamp   申请退款时间
+    time                timestamp   申请退款时间
+    
+    invalid_reason 字段子集说明（作废时返回）
+    
+    reason              string      退款原因
+    time                timestamp   申请退款时间
 
     orderChangeRecode 字段子集说明
 
@@ -1341,8 +1357,10 @@
 
 `失败返回：`
 
-#### 2.7.23 订单作废[put] (invalid/{order_id})
+#### 2.7.23 订单作废[post] (invalid/{order_id})
 `请求参数：`
+
+    reason                          string                  作废原因
 
 `成功返回：`
 
@@ -1893,7 +1911,9 @@
 
 #### 2.18.3 退款[get] (refund/{order_id})
 `请求参数：`
+
     reason         string           退款原因
+    is_seller      string           卖家退款 （退款为卖家是传入，固定值true）
 
 `成功返回：`
 

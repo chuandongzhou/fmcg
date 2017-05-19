@@ -10,7 +10,7 @@
                         <span>商品修改</span>
                     </div>
                 </div>
-                <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/order/change') }}" method="post"
+                <form class="form-horizontal ajax-form" action="{{ $url }}" method="post"
                       data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id"/>
@@ -68,7 +68,7 @@
                         <span>赠品修改</span>
                     </div>
                 </div>
-                <form class="form-horizontal ajax-form" action="{{ url('api/v1/business/order/gift') }}" method="put"
+                <form class="form-horizontal ajax-form" action="{{ $giftUrl }}" method="put"
                       data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                     <div class="modal-body ">
                         <div class="form-group row">
@@ -143,7 +143,7 @@
                     pieces = parent.data('pieces'),
                     numPanel = obj.find('input[name="num"]');
                 obj.find('input[name="order_id"]').val(orderId);
-                url = site.api('business/order/gift/') + id;
+                url = '{{ $giftUrl }}/' + id;
                 obj.find('.btn-submit').data('url', url);
                 numPanel.val(parent.data('num'));
 

@@ -9,7 +9,11 @@
 namespace App\Http\Controllers\Index\Webhook;
 
 use App\Http\Controllers\Index\Controller;
+use App\Models\DeliveryMan;
 use App\Models\Order;
+use App\Models\RenewRecord;
+use App\Models\Salesman;
+use App\Models\User;
 use App\Models\Withdraw;
 use App\Services\PayService;
 use App\Services\RedisService;
@@ -82,6 +86,65 @@ class WechatController extends Controller
 
         return $result === true ? 'SUCCESS' : 'FAIL';
 
+    }
+
+    /**
+     * 账户续费回调
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
+    public function anyRenewResult(Request $request)
+    {
+        $data = $request->all();
+
+        //info($data);
+       /* $data = array(
+            'orderNo' => '1494231082414510',
+            'dealMsg' => '支付成功',
+            'fee' => '1',
+            'sign' => 'E5A01AFC4A522293ECF4DB899107592E',
+            'version' => 'V1.0',
+            'productName' => '成都订百达科技有限公司',
+            'cxOrderNo' => '861493719579500544',
+            'orderAmount' => '100',
+            'orderTime' => '20170508161123',
+            'dealTime' => '20170508161150',
+            'payChannelCode' => 'ICBC',
+            'dealCode' => '10000',
+            'curCode' => 'CNY',
+            'ext2' => 'user',
+            'merchantNo' => 'CX0001133',
+            'ext1' => '10',
+        );*/
+        $wechatPay = app('wechat.pay');
+        $key = config('wechat.bankPayKey');
+        if (!$wechatPay->verifySign($data, $key)) {
+            //info('微信支付回调错误：' . $request->server('ip'));
+            return 'FAIL';
+        }
+        if (RenewRecord::where('order_no', $data['orderNo'])->pluck('id')) {
+            return 'SUCCESS';
+        }
+        $id = array_get($data, 'ext1');
+        $bankType = array_get($data, 'ext2'); //（user 为登录帐号， delivery  司机，  salesman  业务员）
+        $cost = array_get($data, 'orderAmount');
+        $fee = array_get($data, 'fee', 0);
+        $orderNo = array_get($data, 'orderNo');   //随机订单号
+
+        $cost = bcdiv($cost, 100, 2);  //单位为分
+        $fee = bcdiv($fee, 100, 2);  //单位为分
+        if ($bankType == 'user') {
+            $model = $user = User::find($id);
+        } elseif ($bankType == 'delivery') {
+            $model = DeliveryMan::with('shop.user')->find($id);
+            $user = $model->shop->user;
+        } else {
+            $model = Salesman::with('shop.user')->find($id);
+            $user = $model->shop->user;
+        }
+
+        return app('sign')->renew($model, $orderNo, $cost, $fee, $user) ? 'SUCCESS' : 'FAIL';
     }
 
     /**

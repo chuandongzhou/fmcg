@@ -4,12 +4,12 @@
 @section('subtitle' , '用户管理')
 
 @section('right-container')
-    <div id="container">
-        <table id="category" class="table">
+    <div id="container" class="col-sm-8">
+        <table id="category" class="">
             @foreach( $categories as $id => $category )
                 <tr data-tt-id="{{ $id  }}" data-tt-parent-id="{{  $categories->data('pid')  }}">
                     <td>{{  $category  }}</td>
-                    <td class=" btn-group-xs">
+                    <td class="btn-group-xs" align="right">
                         <a class="btn btn-primary" href="{{ url('admin/category/' . $id . '/edit') }}">
                             <i class="fa fa-edit"></i> 编辑
                         </a>

@@ -120,7 +120,7 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return redirect(url('my-goods'));
         }
-        $attrs = (new AttrService())->getAttrByGoods($goods, true);
+        $attrs = (new AttrService())->getAttrByGoods($goods);
         /* $coordinate = $goods->deliveryArea->each(function ($area) {
              $area->coordinate;
          });*/

@@ -422,6 +422,7 @@
         });
     </script>
 </head>
+</head>
 <body>
 <h1>快销品平台零售商API</h1>
 <h2>1. API接口通信规定</h2>
@@ -930,7 +931,8 @@ created_at                  timestamp           下单时间
 <h3>2.6 订单模块order</h3>
 <h4>2.6.1 获取所有订货单[get] (order-forms)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>status              int                 状态   （0未审核  1已通过）
+<pre><code>customer            string/int          客户名称/单号
+status              int                 状态   （0未审核  1已通过）
 start_date          date                开始时间
 end_date            date                结束时间
 page                int                 分页
@@ -957,7 +959,8 @@ display_remark          string          陈列费备注
 <p><code>失败返回：</code></p>
 <h4>2.6.2 获取所有退货单[get] (return-orders)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>status              int                 状态   （0未审核  1已通过）
+<pre><code>customer            string/int          客户名称/单号
+status              int                 状态   （0未审核  1已通过）
 start_date          date                开始时间
 end_date            date                结束时间
 page                int                 分页

@@ -23,7 +23,7 @@ class OrderAutoCancel extends Command
         $orders = Order::where([
             'pay_type' => cons('pay_type.online'),
             'pay_status' => cons('order.pay_status.non_payment'),
-        ])->nonCancel()->where('created_at', '<=', Carbon::now()->subDay())->get();
+        ])->useful()->where('created_at', '<=', Carbon::now()->subDay())->get();
 
         if ($orders->isEmpty()) {
             return false;

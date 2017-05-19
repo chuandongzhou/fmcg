@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
          * 要显示的商品
          */
         $gate->define('validate-goods', function ($user, $goods) {
-            $goodsShopUser = $goods->shop->user;
-            $nowTime = Carbon::now();
+            /*$goodsShopUser = $goods->shop->user;
+            $nowTime = Carbon::now();*/
             return ($user->type < $goods->user_type && $goods->status == cons('status.on')/* && $goodsShopUser->deposit > 0 && $goodsShopUser->expire_at > $nowTime*/) || $user->id == $goods->shop->user_id;
         });
 
@@ -50,6 +50,7 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-shop', function ($user, $shop) {
             return $user->shop_id == $shop->id;
         });
+
         /**
          * 验证是否有权限访问店铺
          */
@@ -95,7 +96,6 @@ class AuthServiceProvider extends ServiceProvider
          * 判断业务订单权限
          */
         $gate->define('validate-salesman-order', function ($user, $order) {
-
             $shopSalesmenIds = $user->shop->salesmen->pluck('id')->toBase();
             if ($order instanceof SalesmanVisitOrder) {
                 return $shopSalesmenIds->contains($order->salesman_id);
@@ -126,5 +126,9 @@ class AuthServiceProvider extends ServiceProvider
             return $coupon->shop_id == $user->shop_id;
         });
 
+        //验证子账号
+        $gate->define('child-user', function ($user, $childUser) {
+            return $childUser->user_id == $user->id;
+        });
     }
 }

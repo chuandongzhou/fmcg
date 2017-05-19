@@ -11,7 +11,8 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            var userListPanel = $('.user-list-panel ul'), totalMsg = $('.total-message-count'), chatListPanel = $('.page-quick-sidebar-chat-users');
+            var userListPanel = $('.user-list-panel ul'), totalMsg = $('.total-message-count'),
+                chatListPanel = $('.page-quick-sidebar-chat-users');
             //获取未读消息数
             var getUnreadMsgCount = function (sdk) {
                 sdk.Base.getUnreadMsgCount({
@@ -48,7 +49,7 @@
                     count: 30,
                     success: function (data) {
                         data = data.data;
-                        var list = data.cnts, firstId = list.length ? getToUid(list[0].uid) : 0 , userList = [];
+                        var list = data.cnts, firstId = list.length ? getToUid(list[0].uid) : 0, userList = [];
                         list.forEach(function (item) {
                             var lastMsg = '';
                             if (item.type == 2) {
@@ -95,44 +96,44 @@
                 $.get(site.api('shop/get-shops-by-ids'), {data: keys}, function (shops) {
                     var shops = shops.shops;
                     for (var i in shops) {
-                        @if(!empty(request()->input('uid')) && request()->is('personal/chat'))
-                            var uid = parseInt({!!  request()->input('uid') !!});
-                            if(uid == i){
-                                firstLogoUrl = shops[i].logo_url;
-                                firstId = {!!  request()->input('uid') !!}+'';
-                            }
-                         @else
-                            if (!firstLogoUrl) {
-                                firstLogoUrl = shops[i].logo_url;
-                            }
-                         @endif
+                                @if(!empty(request()->input('uid')) && request()->is('personal/chat'))
+                        var uid = parseInt({!!  request()->input('uid') !!});
+                        if (uid == i) {
+                            firstLogoUrl = shops[i].logo_url;
+                            firstId = {!!  request()->input('uid') !!}+'';
+                        }
+                        @else
+                        if (!firstLogoUrl) {
+                            firstLogoUrl = shops[i].logo_url;
+                        }
+                        @endif
 
-                        userHtml += '<li class="user-msg" data-touid="' + i + '">' +
-                                '   <img class="avatar" src=" ' + shops[i].logo_url + ' "> ' +
-                                '   <div class="user-item"> ' +
-                                '       <span class="user-name">' + shops[i].name + '</span> ' +
+                            userHtml += '<li class="user-msg" data-touid="' + i + '">' +
+                            '   <img class="avatar" src=" ' + shops[i].logo_url + ' "> ' +
+                            '   <div class="user-item"> ' +
+                            '       <span class="user-name">' + shops[i].name + '</span> ' +
 //                                '       <span class="pull-right last-msg-time prompt">' + userList[i][0] + '</span> ' +
-                                '   </div> ' +
-                                '   <div class="user-item"> ' +
-                                 '       <span class=" last-msg-time prompt">' + userList[i][0] + '</span> ' +
-                                '       <span class="pull-right badge hide">0</span> ' +
-                                '   </div> ' +
-                                '</li>';
+                            '   </div> ' +
+                            '   <div class="user-item"> ' +
+                            '       <span class=" last-msg-time prompt">' + userList[i][0] + '</span> ' +
+                            '       <span class="pull-right badge hide">0</span> ' +
+                            '   </div> ' +
+                            '</li>';
                         usersHtml += '<a href="/personal/chat?uid=' + i + '">' +
-                                '<ul class="media-list list-items user-msg" data-touid="' + i + '">' +
-                                ' <li class="media">' +
-                                '<div class="media-status">' +
-                                ' <span class="badge badge-success pull-right badge hide">0</span>' +
-                                '</div>' +
-                                ' <img class="media-object" src="' + shops[i].logo_url + '" alt="...">' +
-                                '<div class="media-body">' +
-                                '<h4 class="media-heading">' + shops[i].name + '</h4>' +
-                                '<div class="media-heading-sub">' + userList[i][1] + '</div>' +
-                                '<div class="media-heading-small">' + userList[i][0] + '</div>' +
-                                '</div>' +
-                                ' </li>' +
-                                ' </ul>' +
-                                '</a>';
+                            '<ul class="media-list list-items user-msg" data-touid="' + i + '">' +
+                            ' <li class="media">' +
+                            '<div class="media-status">' +
+                            ' <span class="badge badge-success pull-right badge hide">0</span>' +
+                            '</div>' +
+                            ' <img class="media-object" src="' + shops[i].logo_url + '" alt="...">' +
+                            '<div class="media-body">' +
+                            '<h4 class="media-heading">' + shops[i].name + '</h4>' +
+                            '<div class="media-heading-sub">' + userList[i][1] + '</div>' +
+                            '<div class="media-heading-small">' + userList[i][0] + '</div>' +
+                            '</div>' +
+                            ' </li>' +
+                            ' </ul>' +
+                            '</a>';
                     }
                     userListPanel.append(userHtml);
                     chatListPanel.append(usersHtml);
@@ -140,19 +141,19 @@
 
                     @if(request()->is('personal/chat') && !empty(request()->input('uid')) )
                          WKIT.switchTouid({
-                            touid: firstId,
-                            toAvatar: firstLogoUrl
-                        });
-                        var id = parseInt({!!  request()->input('uid') !!});
-                        userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#646464');
-                        setReadState(sdk, id + "");
-                     @elseif(request()->is('personal/chat'))
-                          WKIT.switchTouid({
-                             touid: firstId,
-                             toAvatar: firstLogoUrl
-                         });
-                        userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#646464');
-                        setReadState(sdk, firstId);
+                        touid: firstId,
+                        toAvatar: firstLogoUrl
+                    });
+                    var id = parseInt({!!  request()->input('uid') !!});
+                    userListPanel.find('.user-msg[data-touid="' + id + '"]').prop('disabled', true).css('background-color', '#646464');
+                    setReadState(sdk, id + "");
+                    @elseif(request()->is('personal/chat'))
+WKIT.switchTouid({
+                        touid: firstId,
+                        toAvatar: firstLogoUrl
+                    });
+                    userListPanel.find('.user-msg[data-touid="' + firstId + '"]').prop('disabled', true).css('background-color', '#646464');
+                    setReadState(sdk, firstId);
                     @endif
 
                 }, 'json')
@@ -181,7 +182,9 @@
             };
             //消息条数加1
             var addMessageNum = function (sdk, touid) {
-                var userMsg = userListPanel.find('.user-msg[data-touid="' + touid + '"]'), badgeItem = userMsg.find('.badge'), unreadMsg = chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge');
+                var userMsg = userListPanel.find('.user-msg[data-touid="' + touid + '"]'),
+                    badgeItem = userMsg.find('.badge'),
+                    unreadMsg = chatListPanel.find('.user-msg[data-touid="' + touid + '"]').find('.badge');
 
                 if (!userMsg.prop('disabled')) {
                     badgeItem.removeClass('hide').html(parseInt(badgeItem.html()) + 1);
@@ -207,12 +210,12 @@
             var getToUid = function (toUid) {
                 return toUid.substring(8);
             };
-            @if(request()->is('personal/chat'))
+            @if(request()->is('personal/chat') || request()->is('child-user/chat'))
                 WKIT.init({
                 container: document.getElementById('msgWrap'),
                 width: 700,
                 height: 500,
-                uid: '{{ $chatConf['shop_id'] }}',
+                uid: '{{ $shopId }}',
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
                 touid: '0',
@@ -236,21 +239,21 @@
             if (!SITE.USER.id) {
                 return false;
             }
-            if(typeof WSDK == 'undefined'){
-                return ;
+            if (typeof WSDK == 'undefined') {
+                return;
             }
             var sdk = new WSDK(), Event = sdk.Event;
-                sdk.Base.login({
-                uid: '{{ $chatConf['shop_id'] }}',
+            sdk.Base.login({
+                uid: '{{ $shopId }}',
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
                 timeout: 5000,
                 success: function (data) {
                     //获取联系人列表
-                   @if(request()->is('personal/*', 'order*', 'my-goods*', 'business*', 'like*'))
+                    @if(request()->is('personal/*', 'order*', 'my-goods*', 'business*', 'like*', 'child-user*'))
                         allRecentContact(sdk, Event);
-                   @endif
-//                    getUnreadMsgCount(sdk, true);
+                    @endif
+                    //                    getUnreadMsgCount(sdk, true);
 
                     Event.on('CHAT.MSG_RECEIVED', function (data) {
                         totalMsg.html(parseInt(totalMsg.html()) + 1);

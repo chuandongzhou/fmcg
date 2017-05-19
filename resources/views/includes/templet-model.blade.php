@@ -20,9 +20,9 @@
             var templeteModal = $('#templetModal');
             templeteModal.on('show.bs.modal', function (e) {
                 var parent = $(e.relatedTarget),
-                    src = parent.prev('img').length?parent.prev('img').attr('src'):parent.data('src'),
+                    src = parent.prev('img').length ? parent.prev('img').attr('src') : parent.data('src'),
                     templeteImg = templeteModal.find('.templet-img');
-                parent.data('width')?$('.modal-dialog').css('width',parent.data('width')):'';
+                parent.data('width') ? $('.modal-dialog').css('width', parent.data('width')) : '';
                 templeteImg.attr('src', src);
             });
         });

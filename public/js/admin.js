@@ -75,7 +75,6 @@ var userData = function () {
         begin_day: beginDay.val(),
         end_day: endDay.val()
     }, function (data) {
-        data = data.content;
         var legend = ['供应商', '批发商', '终端商'];
         echartsSet(obj, '用户注册数量统计', legend, data.created_at, [
             {
@@ -129,7 +128,6 @@ var financial = function () {
         begin_day: beginDay.val(),
         end_day: endDay.val()
     }, function (data) {
-        data = data.content;
         var legend = ['批发商', '终端商'];
         echartsSet(obj, '下单金额统计', legend, data.dates, [
             {

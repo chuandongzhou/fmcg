@@ -51,9 +51,8 @@
                     mortgageGoodsList =$('.mortgage-goods-list'),
                     addBtn = $('.add-btn');
             mortgageGoodsModal.on('shown.bs.modal', function (e) {
-                var getUrl = site.api('business/mortgage-goods');
                 $.ajax({
-                    url: getUrl,
+                    url: '{{ $url }}',
                     method: 'get'
                 }).done(function (data, textStatus, jqXHR) {
                     var mortgageGoodsIds = new Array();

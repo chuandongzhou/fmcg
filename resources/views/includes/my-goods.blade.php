@@ -33,17 +33,15 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            var allGoodsId = "{{ $goodsId }}";
+            var allGoodsId = "{{ $goodsId }}", goodsId = [], url = '{{ $getGoodsUrl }}';
             //推荐商品ID
 
             if (allGoodsId) {
-                var goodsId = allGoodsId.split(",");
-            } else {
-                var goodsId = new Array();
+                goodsId = allGoodsId.split(",");
             }
+
             //首次加载店铺商品
             $('.my-goods').click(function () {
-
                 getGoods(1);
             });
             //分页查询
@@ -60,11 +58,11 @@
                 var obj = $(this);
 
                 if (obj.is(':checked')) {
-                    goodsId.push(obj.data('id')+'');
+                    goodsId.push(obj.data('id') + '');
 
                     $('.checked-goods-num').html(goodsId.length);
                 } else {
-                    console.log(obj.data('id')+'==='+$.inArray(obj.data('id') + '', goodsId));
+                    console.log(obj.data('id') + '===' + $.inArray(obj.data('id') + '', goodsId));
                     if ($.inArray(obj.data('id') + '', goodsId) != -1) {
                         goodsId.splice($.inArray(obj.data('id') + '', goodsId), 1);
                     }
@@ -86,7 +84,7 @@
                 $('.goods-submit').prop('disabled', true);
                 $('.goods-submit').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
                 $.ajax({
-                    url: site.api('personal/model/recommend-goods'),
+                    url: '{{ $setAdvertUrl }}',
                     method: 'post',
                     data: {goodsId: goodsId}
                 }).done(function (data) {
@@ -104,17 +102,17 @@
             // 获取商品分页内容
             function getGoods(currentPage) {
                 var oldHtml = $('.goods-list').html();
-                $('.page ul li').prop('disabled',true);
+                $('.page ul li').prop('disabled', true);
                 $('.goods-list').html('<div class="loading-img" style="text-align:center;" ><img src="' + "{{ asset('images/loading.gif') }}" + '"/></div>');
                 $.ajax({
-                    url: site.api('personal/model/goods-page?currentPage=' + currentPage),
+                    url: url + '?currentPage=' + currentPage,
                     method: 'get'
                 }).done(function (data) {
                     var allPage = parseInt(data.allPage),
-                            currentPage = parseInt(data.currentPage),
-                            html = "",
-                            allGoods = data.goods,
-                            pageHtml = '';
+                        currentPage = parseInt(data.currentPage),
+                        html = "",
+                        allGoods = data.goods,
+                        pageHtml = '';
                     if (allGoods.length == 0) {
                         $('.close').click();
                         alert('您的店铺还未添加商品');
@@ -146,28 +144,28 @@
                                 }
                             }
                             pageHtml += '<li class="disabled"  ><span>...</span></li>' +
-                                    '<li data-page="' + ( allPage - 1) + '" ><a>' + (allPage - 1) + '</a></li>' +
-                                    '<li data-page="' + allPage + '" ><a>' + allPage + '</a></li>';
+                                '<li data-page="' + ( allPage - 1) + '" ><a>' + (allPage - 1) + '</a></li>' +
+                                '<li data-page="' + allPage + '" ><a>' + allPage + '</a></li>';
 
                         } else if (currentPage >= 7 && currentPage <= (allPage - 5)) {
                             pageHtml += '<li data-page="1"><a>1</a></li>' +
-                                    '<li data-page="2"><a>2</a></li>' +
-                                    '<li class="disabled"  ><span>...</span></li>' +
-                                    '<li data-page="' + ( currentPage - 3) + '" ><a>' + (currentPage - 3) + '</a></li>' +
-                                    '<li data-page="' + ( currentPage - 2) + '" ><a>' + (currentPage - 2) + '</a></li>' +
-                                    '<li data-page="' + ( currentPage - 1) + '" ><a>' + (currentPage - 1) + '</a></li>' +
-                                    '<li data-page="' + currentPage + '" class="active" ><span>' + currentPage + '</span></li>' +
-                                    '<li data-page="' + ( currentPage + 1) + '" ><a>' + (currentPage + 1) + '</a></li>' +
-                                    '<li data-page="' + ( currentPage + 2) + '" ><a>' + (currentPage + 2) + '</a></li>' +
-                                    '<li data-page="' + ( currentPage + 3) + '" ><a>' + (currentPage + 3) + '</a></li>' +
-                                    '<li class="disabled"  ><span>...</span></li>' +
-                                    '<li data-page="' + ( allPage - 1) + '" ><a>' + (allPage - 1) + '</a></li>' +
-                                    '<li data-page="' + allPage + '" ><a>' + allPage + '</a></li>';
+                                '<li data-page="2"><a>2</a></li>' +
+                                '<li class="disabled"  ><span>...</span></li>' +
+                                '<li data-page="' + ( currentPage - 3) + '" ><a>' + (currentPage - 3) + '</a></li>' +
+                                '<li data-page="' + ( currentPage - 2) + '" ><a>' + (currentPage - 2) + '</a></li>' +
+                                '<li data-page="' + ( currentPage - 1) + '" ><a>' + (currentPage - 1) + '</a></li>' +
+                                '<li data-page="' + currentPage + '" class="active" ><span>' + currentPage + '</span></li>' +
+                                '<li data-page="' + ( currentPage + 1) + '" ><a>' + (currentPage + 1) + '</a></li>' +
+                                '<li data-page="' + ( currentPage + 2) + '" ><a>' + (currentPage + 2) + '</a></li>' +
+                                '<li data-page="' + ( currentPage + 3) + '" ><a>' + (currentPage + 3) + '</a></li>' +
+                                '<li class="disabled"  ><span>...</span></li>' +
+                                '<li data-page="' + ( allPage - 1) + '" ><a>' + (allPage - 1) + '</a></li>' +
+                                '<li data-page="' + allPage + '" ><a>' + allPage + '</a></li>';
                         } else {
                             pageHtml += '<li data-page="1"><a>1</a></li>' +
-                                    '<li data-page="2"><a>2</a></li>' +
-                                    '<li class="disabled"  ><span>...</span></li>';
-                            for (var i = 8; i >=0; i--) {
+                                '<li data-page="2"><a>2</a></li>' +
+                                '<li class="disabled"  ><span>...</span></li>';
+                            for (var i = 8; i >= 0; i--) {
                                 if ((allPage - i) == currentPage) {
                                     pageHtml += '<li data-page="' + (allPage - i) + '" class="active" ><span>' + (allPage - i) + '</span></li>';
                                 } else {
@@ -195,18 +193,18 @@
                         }
 
                         html += '<div class="img-wrap">' +
-                                '<img class="commodity-img lazy" src="' + allGoods[i]['image_url'] + '">' +
-                                '</div>' +
-                                '<div class="content-panel">' +
-                                '<a href="#">' +
-                                '<p class="commodity-name">' + allGoods[i]['name'] + '</p>' +
+                            '<img class="commodity-img lazy" src="' + allGoods[i]['image_url'] + '">' +
+                            '</div>' +
+                            '<div class="content-panel">' +
+                            '<a href="#">' +
+                            '<p class="commodity-name">' + allGoods[i].name + '</p>' +
 
-                                '<p class="sell-panel">' +
-                                '<b class="money red">¥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
-                                '</p>' +
-                                '</a>' +
-                                '</div>' +
-                                '</div>';
+                            '<p class="sell-panel">' +
+                            '<b class="money red">¥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
+                            '</p>' +
+                            '</a>' +
+                            '</div>' +
+                            '</div>';
 
 
                     }
@@ -217,7 +215,7 @@
                     if (!$('.goods-list').children('.img-wrap').length) {
                         $('.close').click();
                     }
-                    $('.page ul li').prop('disabled',false);
+                    $('.page ul li').prop('disabled', false);
                     $('.goods-list').html(oldHtml);
                     alert('获取失败');
 

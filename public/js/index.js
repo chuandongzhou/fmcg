@@ -452,11 +452,6 @@ var deleteNoForm = function () {
             url = self.data('url'),
             method = self.data('method'),
             data = [];
-        // 判断登录
-        if (!site.isLogin()) {
-            site.redirect('auth/login');
-            return;
-        }
 
         self.button('loading');
 
@@ -808,7 +803,6 @@ function menuFunc() {
 
 
     //top secondary-menu end
-
     $('.categories-wrap .categories .menu-wrap li').mouseenter(function () {
         $(this).addClass('hover-effect').siblings().removeClass('hover-effect');
         var titleIndex = $(this).index();
@@ -817,7 +811,8 @@ function menuFunc() {
                 $('.categories-wrap .menu-down-wrap .menu-down-layer:eq(' + $(this).index() + ')').css('display', 'block').siblings().css('display', 'none');
             }
         })
-    })
+    });
+
     var bannerHeight = $(".banner-slide .carousel-inner").height();
     $('#categories-wrap .menu-down-wrap .menu-down-layer').css('height', bannerHeight + "px");
 
@@ -834,7 +829,7 @@ function menuFunc() {
     }, function () {
         $(this).children('.select-list').css('display', 'none')
         $(this).children('.selected').children('.fa').removeClass('fa-angle-up').addClass('fa-angle-down');
-    })
+    });
 
     $('.dealer-header .select-list li a').click(function () {
         var obj = $(this), type = obj.data('type');
@@ -909,6 +904,14 @@ function setAddress(province, city, district, street) {
 }
 //添加(编辑)商品验证
 function validform() {
+
+    var piecesLevel1 = $('select[name="pieces_level_1"]'),
+        piecesLevel2 = $('select[name="pieces_level_2"]'),
+        system1 = $('input[name="system_1"]'),
+        system2 = $('input[name="system_2"]'),
+        piecesLevel3 = $('select[name="pieces_level_3"]'),
+        reg = new RegExp(/^[1-9]+[\d]*$/);
+
     $.validator.addMethod("images_check", function (value) {
         if (value != '' && !jQuery.isArray(value)) {
             return false;
@@ -916,38 +919,38 @@ function validform() {
         return true;
     }, "必须是一个数组");
     $.validator.addMethod("pieces_level_2_check", function () {
-        if ($('select[name="pieces_level_2"]').val() == '' && $('input[name="system_1"]').val() != '') {
+        if (system1.val() != '' && piecesLevel2.val() == '') {
             return false;
         }
         return true;
 
-    }, "二级单位必须填写");
+    }, "二级单位必须选择");
     $.validator.addMethod("system_1_check", function () {
-        if (($('select[name="pieces_level_2"]').val() != '' || $('input[name="system_2"]').val() != '' || $('select[name="pieces_level_3"]').val() != '') && $('input[name="system_1"]').val() == '') {
+        if ((system2.val() != '' || piecesLevel3.val() != '') && !reg.test(system1.val())) {
             return false;
         }
         return true;
-    }, "一级单位进制必须填写");
+    }, "一级单位进制不合法");
     $.validator.addMethod("pieces_level_3_check", function () {
-        if ($('select[name="pieces_level_3"]').val() == '' && $('input[name="system_2"]').val() != '') {
+        if (piecesLevel3.val() == '' && system2.val() != '') {
             return false;
         }
         return true;
     }, "三级单位必须填写");
     $.validator.addMethod("system_2_check", function () {
-        if ($('select[name="pieces_level_3"]').val() != '' && $('input[name="system_2"]').val() == '') {
+        if (piecesLevel3.val() != '' && !reg.test(system2.val())) {
             return false;
         }
         return true;
-    }, "二级单位进制必须填写");
+    }, "二级单位进制不合法");
     $.validator.addMethod("pieces_level_2_same_check", function () {
-        if ($('select[name="pieces_level_2"]').val() == $('select[name="pieces_level_1"]').val()) {
+        if (piecesLevel2.val() == piecesLevel1.val()) {
             return false;
         }
         return true;
     }, "二级单位不能与一级单位相同");
     $.validator.addMethod("pieces_level_3_same_check", function () {
-        if ($('select[name="pieces_level_3"]').val() == $('select[name="pieces_level_2"]').val() || $('select[name="pieces_level_3"]').val() == $('select[name="pieces_level_1"]').val()) {
+        if (piecesLevel3.val() == piecesLevel2.val() || piecesLevel3.val() == piecesLevel1.val()) {
             return false;
         }
         return true;
@@ -971,7 +974,7 @@ function validform() {
                 required: true,
                 digits: true,
                 minlength: 7,
-                maxlength: 18,
+                maxlength: 18
             },
             cate_level_1: {
                 required: true,
@@ -1131,9 +1134,9 @@ function selectedChange() {
 
     $('select[name="pieces_retailer"]').change(function () {
         //1级单位
-        system_1 =  $('input[name = "system_1"]').val();
+        system_1 = $('input[name = "system_1"]').val();
         //2级单位
-        system_2 =  $('div.system').find($('input[name = "system_2"]')).val();
+        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
         //最小规格单位
         specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
@@ -1141,9 +1144,9 @@ function selectedChange() {
         var value = $(this).find("option:selected").val();
         pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
+            pieces = specification + (system_2 > 0 ? '*' + system_2 : '') + (system_1 > 0 ? '*' + system_1 : '')
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
+            pieces = specification + (system_2 > 0 ? '*' + system_2 : '')
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
             pieces = specification
@@ -1166,10 +1169,10 @@ function selectedChange() {
         var value = $(this).find("option:selected").val();
         pieces = '';
         if (value == $('select[name="pieces_level_1"]').val()) {
-            pieces = (system_1 > 0 ? system_1 + '*' : '') + (system_2 > 0 ? system_2 + '*' : '') + specification
+            pieces = specification + (system_2 > 0 ? '*' + system_2 : '') + (system_1 > 0 ? '*' + system_1 : '')
 
         } else if (value == $('select[name="pieces_level_2"]').val()) {
-            pieces = (system_2 > 0 ? system_2 + '*' : '') + specification
+            pieces = specification + (system_2 > 0 ? '*' + system_2 : '')
 
         } else if (value == $('select[name="pieces_level_3"]').val()) {
             pieces = specification
@@ -1214,13 +1217,23 @@ function cartData() {
 
 //签约管理
 var signManage = function () {
-    /*var signModel = $('#signModal'), depositPay = $('.deposit-pay');
-     signModel.on('show.bs.modal', function (e) {
-     var parent = $(e.relatedTarget), type = parent.data('type');
+    var expireModal = $('#expireModal'), signModal = $('#signModal');
+    expireModal.on('show.bs.modal', function (e) {
+        var parent = $(e.relatedTarget), type = parent.data('type'), id = parent.data('id');
+        expireModal.find('input[name="type"]').val(type);
+        expireModal.find('input[name="id"]').val(id);
+    }).on('hide.bs.modal', function (e) {
+        expireModal.find('.prompt').addClass('hide');
+        expireModal.find('.qr-code').remove();
+        expireModal.find('button[type="submit"]').prop('disabled', false).show();
+    });
 
-     signModel.find('.' + type).removeClass('hidden').siblings().addClass('hidden');
-     });
-     */
+    signModal.on('hide.bs.modal', function (e) {
+        signModal.find('.prompt').addClass('hide');
+        signModal.find('.qr-code').remove();
+        signModal.find('button[type="submit"]').prop('disabled', false).show();
+    });
+
     var monthPanel = $(".month li"), monthInput = $('input[name="month"]');
     monthPanel.on('click', function () {
         var self = $(this), cost = self.data('cost'), month = self.data('month'), pieces = self.data('pieces');
@@ -1231,6 +1244,18 @@ var signManage = function () {
         monthInput.val(month);
         $(".xuqi-num").html("￥" + cost);
     }).first().click();
+
+    $('.renew-form').on('done.hct.ajax', function (data, textStatus, jqXHR, self) {
+        common.loading('hide');
+        var qrcode = $('.qr-code-wrap .qr-code');
+        if (!qrcode.length) {
+            qrcode = $('<div class="qr-code" style="width: 256px; height: 256px; margin: 0 auto"></div>').appendTo('.qr-code-wrap');
+            // qrcode = $('.qr-code-wrap .qr-code');
+        }
+        qrcode.qrcode(textStatus.code_url);
+        $('button[type="submit"]').prop('disabled', true).hide();
+        $('.prompt').removeClass('hide');
+    })
 
     /*depositPay.on('click', function () {
      var self = $(this), url = site.api('personal/sign/deposit');

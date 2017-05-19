@@ -96,7 +96,7 @@ class GoodsService
             //手机端有搜索名字时才返回
             $categories = isset($data['name']) ? $categories : new \stdClass();
         }
-        $goods->OfCommonSort();
+        $goods->hasPrice()->OfCommonSort();
         return [
             'attrs' => $attrs,
             'categories' => isset($data['category_id']) ? $resultCategories : array_where($categories,
@@ -118,7 +118,8 @@ class GoodsService
      */
     static function getShopGoods($shop, $data = [], $with = [])
     {
-        $goods = $shop->goods()->with($with)->ofStatus(array_get($data, 'status'))->ofGift(array_get($data, 'is_gift'));
+        $goods = $shop->goods()->with($with)->ofStatus(array_get($data, 'status'))->ofGift(array_get($data,
+            'is_gift'));
         if (isset($data['ids'])) {
             $goods->whereNotIn('id', $data['ids']);
         }
@@ -425,19 +426,46 @@ class GoodsService
     {
         $goods = Goods::with('goodsPieces')->find($goodsId);
         $pieces = $goods->goodsPieces->toArray();
-            $level = array_search($piecesValue, $pieces);
-            switch (substr($level, -1)) {
-                case 2 :
-                    $system = $pieces['system_2'] == null ? 1 : $pieces['system_2'];
-                    break;
-                case 1 :
-                    $system  = (($pieces['system_1'] == null ? 1 : $pieces['system_1']) * ($pieces['system_2'] == null ? 1 : $pieces['system_2']));
-                    break;
-                default :
-                    $system = 1;
-                    break;
-            }
+        $level = array_search($piecesValue, $pieces);
+        switch (substr($level, -1)) {
+            case 2 :
+                $system = $pieces['system_2'] == null ? 1 : $pieces['system_2'];
+                break;
+            case 1 :
+                $system = (($pieces['system_1'] == null ? 1 : $pieces['system_1']) * ($pieces['system_2'] == null ? 1 : $pieces['system_2']));
+                break;
+            default :
+                $system = 1;
+                break;
+        }
         return $system;
     }
-    
+
+    /**
+     *
+     * 返回规格字符串
+     * @param $goodsId
+     * @param string $piecesValue
+     * @return int
+     */
+    static public function getPiecesSystem2($goodsId, $piecesValue = '')
+    {
+        $goods = Goods::with('goodsPieces')->find($goodsId);
+        $pieces = $goods->goodsPieces->toArray();
+      //  dd( $pieces);
+       // $level = array_search($piecesValue, $pieces);
+        if($piecesValue==$pieces['pieces_level_1']) {
+            $system =$goods->goodsPieces->specification.( $pieces['system_2'] == null ? '' : '*'.$pieces['system_2']).( $pieces['system_1'] == null ? '' : '*'.$pieces['system_1']);
+        }else if($piecesValue==$pieces['pieces_level_2'])
+        {
+            $system =$goods->goodsPieces->specification.( $pieces['system_2'] == null ? '' : '*'.$pieces['system_2']);
+        }else if($piecesValue==$pieces['pieces_level_3'])
+        {
+            $system = $goods->goodsPieces->specification;
+        }else{
+                $system = $goods->goodsPieces->specification;
+        }
+        return $system;
+    }
+
 }

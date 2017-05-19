@@ -54,9 +54,9 @@ class UserService extends RedisService
      */
     public function getUserTypeName($user = null)
     {
-        $user = $user ?: (auth()->user() ?: (new User()));
+        $user = $user ?: auth()->user();
         $userTypes = array_flip(cons('user.type'));
-        return array_get($userTypes, $user->type, head($userTypes));
+        return array_get($userTypes, object_get($user, 'type', cons('user.type.retailer')));
     }
 
 

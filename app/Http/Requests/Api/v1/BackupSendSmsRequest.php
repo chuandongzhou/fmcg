@@ -14,8 +14,7 @@ class BackupSendSmsRequest extends Request
     {
         return [
             'user_name' => 'required|alpha_num|between:4,16|exists:user',
-            'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/',
-            'license_num' => 'required|between:15,18'
+            'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/'
         ];
     }
 }

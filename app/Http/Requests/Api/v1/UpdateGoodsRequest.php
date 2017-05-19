@@ -21,12 +21,12 @@ class UpdateGoodsRequest extends UserRequest
             'bar_code' => 'required|digits_between:7,18',
             'cate_level_1' => 'required|numeric|min:0',
             'cate_level_2' => 'required|numeric|min:1',
-           /* 'is_new' => 'required|boolean',
-            'is_out' => 'required|boolean',
-            'is_change' => 'sometimes|required',
-            'is_back' => 'sometimes|required',
-            'is_expire' => 'required|boolean',
-            'is_promotion' => 'required|boolean',*/
+            /* 'is_new' => 'required|boolean',
+             'is_out' => 'required|boolean',
+             'is_change' => 'sometimes|required',
+             'is_back' => 'sometimes|required',
+             'is_expire' => 'required|boolean',
+             'is_promotion' => 'required|boolean',*/
             'promotion_info' => 'sometimes|required_if:is_promotion,1',
             'min_num_retailer' => 'required|numeric|min:0',
             'min_num_wholesaler' => 'sometimes|required|numeric|min:0',
@@ -34,6 +34,7 @@ class UpdateGoodsRequest extends UserRequest
             'area' => 'sometimes|array'
         ];
     }
+
     /**
      * 自定义验证
      *
@@ -43,30 +44,36 @@ class UpdateGoodsRequest extends UserRequest
     public function validator($factory)
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
-            if(!is_numeric($this->input('pieces_retailer'))){
+
+            $system1 = $this->input('system_1');
+            $system2 = $this->input('system_2');
+            $piecesLevel2 = $this->input('pieces_level_2');
+            $piecesLevel3 = $this->input('pieces_level_3');
+
+            if (!is_numeric($this->input('pieces_retailer'))) {
                 $validator->errors()->add('pieces_retailer', '终端商单位 不能为空');
             }
-            if(!empty($this->input('price_wholesaler')) && !is_numeric($this->input('pieces_wholesaler'))){
+            if (!empty($this->input('price_wholesaler')) && !is_numeric($this->input('pieces_wholesaler'))) {
                 $validator->errors()->add('pieces_wholesaler', '批发商单位 不能为空');
             }
-            if ($this->input('pieces_level_2')!='' && $this->input('system_1')=='') {
+            if ($piecesLevel2 != '' && (!is_numeric($system1) || $system1 <= 0)) {
 
-                $validator->errors()->add('system_1', '二级单位进制 不能为空');
+                $validator->errors()->add('system_1', '一级单位进制 不合法');
             }
-            if($this->input('system_1') !='' && $this->input('pieces_level_2')=='') {
+            if ($system1 != '' && $piecesLevel2 == '') {
 
                 $validator->errors()->add('system_1', '二级单位 不能为空');
             }
-            if ($this->input('pieces_level_3') !='' && $this->input('system_2')=='') {
+            if ($piecesLevel3 != '' && (!is_numeric($system2) || $system2 <= 0)) {
 
-                $validator->errors()->add('system_2', '三级单位进制 不能为空');
+                $validator->errors()->add('system_2', '二级单位进制 不合法');
             }
-            if ($this->input('system_2') !='' && $this->input('pieces_level_3')=='') {
+            if ($system2 != '' && $piecesLevel3 == '') {
 
                 $validator->errors()->add('system_2', '三级单位 不能为空');
             }
 
-            if ($this->input('pieces_level_3') !='' && $this->input('pieces_level_2')=='') {
+            if ($piecesLevel3 != '' && $piecesLevel2 == '') {
 
                 $validator->errors()->add('pieces_level_2', '二级单位 不能为空');
             }

@@ -49,7 +49,7 @@ class Order extends Model
         //'can_change_price'
     ];
 
-    protected $hidden = [];
+    protected $hidden = ['orderReason'];
 
     /**
      * 模型启动事件
@@ -63,7 +63,7 @@ class Order extends Model
             // 删除所有关联文件
             $model->orderGoods()->delete();
             $model->orderChangeRecode()->delete();
-            $model->orderRefund()->delete();
+            $model->orderReason()->delete();
             $model->shippingAddress()->delete();
         });
     }
@@ -103,15 +103,15 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function orderRefund()
+    public function orderReason()
     {
-        return $this->hasOne('App\Models\OrderRefund');
+        return $this->hasMany('App\Models\OrderReason');
     }
 
     /**
      * 收货人信息
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function shippingAddress()
     {
@@ -310,8 +310,19 @@ class Order extends Model
      */
     public function getRefundReasonAttribute()
     {
-        $refund = $this->orderRefund;
-        return $refund ? $refund->reason : '';
+        $reason = $this->orderReason->where('type', 0)->first();
+        return $reason ? ['time' => (string)$reason->created_at, 'reason' => $reason->reason] : [];
+    }
+
+    /**
+     * 获取作废原因
+     *
+     * @return string
+     */
+    public function getInvalidReasonAttribute()
+    {
+        $reason = $this->orderReason->where('type', 1)->first();
+        return $reason ? ['time' => (string)$reason->created_at, 'reason' => $reason->reason] : [];
     }
 
     /**
@@ -443,7 +454,7 @@ class Order extends Model
     public function getCanChangePriceAttribute()
     {
         $orderConf = cons('order');
-        return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'] && is_null($this->wechatPayUrl);
+        return $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment'] && $this->attributes['status'] != $orderConf['status']['invalid'] && is_null($this->wechatPayUrl);
     }
 
     /**
@@ -560,9 +571,10 @@ class Order extends Model
     {
 
 
-      /*  if ($this->user_id > 0) {
-            return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
-        } else*/if ($this->salesmanVisitOrder) {
+        /*  if ($this->user_id > 0) {
+              return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
+          } else*/
+        if ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->salesman_name;
         }
         return '';
@@ -678,7 +690,7 @@ class Order extends Model
      */
     public function scopeOfUserShopName($query, $shopName)
     {
-        if ($shopName) {
+        if ($shopName && !is_numeric($shopName)) {
             return $query->where(function ($query) use ($shopName) {
                 $query->whereHas('user.shop', function ($query) use ($shopName) {
                     $query->where('name', 'like', '%' . $shopName . '%');
@@ -721,7 +733,6 @@ class Order extends Model
     public function scopeOfBuy($query, $userId)
     {
         return $query->where('user_id', $userId)
-            ->where('is_cancel', cons('order.is_cancel.off'))
             ->orderBy('id', 'desc');
     }
 
@@ -729,14 +740,12 @@ class Order extends Model
      * 销售订单条件
      *
      * @param $query
-     * @param $userId
+     * @param $shopId
      * @return mixed
      */
-    public function scopeOfSell($query, $userId)
+    public function scopeOfSell($query, $shopId)
     {
-        return $query->whereHas('shop', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        });
+        return $query->where('shop_id', $shopId);
     }
 
 //    /**
@@ -769,14 +778,25 @@ class Order extends Model
     }
 
     /**
-     * 未取消条件
+     * 有效订单
      *
      * @param $query
      * @return mixed
      */
-    public function scopeNonCancel($query)
+    public function scopeUseful($query)
     {
-        return $query->where('is_cancel', cons('order.is_cancel.off'));
+        return $query->where('is_cancel', 0);
+    }
+
+    /**
+     * 未作废
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeNoInvalid($query)
+    {
+        return $query->where('status', '<>', cons('order.status.invalid'));
     }
 
     /**
@@ -811,7 +831,7 @@ class Order extends Model
      */
     public function scopeWaitConfirm($query)
     {
-        return $query->where('status', cons('order.status.non_confirm'))->NonCancel();
+        return $query->where('status', cons('order.status.non_confirm'))->useful();
     }
 
     /**
@@ -848,7 +868,7 @@ class Order extends Model
                 $query->where('pay_type', cons('pay_type.cod'))->where('pay_status', '<=',
                     cons('order.pay_status.payment_success'));
             });
-        })->where('status', cons('order.status.non_send'))->nonCancel();
+        })->where('status', cons('order.status.non_send'))->useful();
     }
 
     /**
@@ -881,13 +901,14 @@ class Order extends Model
             if (!is_null(array_get($search, 'type'))) {
                 $query->where('type', $search['type']);
             }
-            if (array_get($search, 'status')) {
-                if ($search['status'] == key(cons('order.pay_status'))) {
+            if (($status = array_get($search, 'status')) !== null) {
+                if (in_array($status, array_keys(cons('order.pay_status')))) {
                     //查询未付款
                     $query->where([
-                        'pay_status' => cons('order.pay_status.non_payment')
+                        'pay_status' => cons('order.pay_status.' . $status),
+                        'status' => cons('order.status.non_send')
                     ]);
-                } elseif ($search['status'] == 'non_send') {//未发货
+                } elseif ($status == 'non_send') {//未发货
                     $query->where(function ($query) {
                         $query->where([
                             'pay_type' => cons('pay_type.online'),
@@ -895,20 +916,23 @@ class Order extends Model
                         ])->orWhere(function ($query) {
                             $query->where('pay_type', cons('pay_type.cod'))->where('pay_status', '<=',
                                 cons('order.pay_status.payment_success'));
-                        });;
+                        });
                     })->where('status', cons('order.status.non_send'));
+                } elseif ($status == 'wait_receive') {//待收款
+                    $query->getPayment();
                 } else {
-                    $query->where('status', cons('order.status.' . $search['status']));
+                    $query->where('status', cons('order.status.' . $status));
                 }
             }
+            $timeField = array_get($search, 'status') == 'finished' ? 'finished_at' : 'created_at';
             if (array_get($search, 'start_at')) {
-                $query->where('created_at', '>=', $search['start_at']);
+                $query->where($timeField, '>=', $search['start_at']);
             }
             if (array_get($search, 'end_at')) {
                 $endAt = (new Carbon($search['end_at']))->endOfDay();
-                $query->where('created_at', '<=', $endAt);
+                $query->where($timeField, '<=', $endAt);
             }
-        })->nonCancel();
+        });
     }
 
     /**
@@ -1001,16 +1025,6 @@ class Order extends Model
         ]);
     }
 
-    /**
-     * 有效订单
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeUseful($query)
-    {
-        return $query->where('is_cancel', 0)->where('status', '<>', cons('order.status.invalid'));
-    }
 
     /**
      * 按创建时间

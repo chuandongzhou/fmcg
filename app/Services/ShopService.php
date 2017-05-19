@@ -189,7 +189,7 @@ class ShopService extends RedisService
      * @param $field
      * @return int|string
      */
-    public function getUserDetail($shopId, $field)
+    public function     getUserDetail($shopId, $field)
     {
         $key = $this->getKey($this->subName . ':' . $shopId);
 

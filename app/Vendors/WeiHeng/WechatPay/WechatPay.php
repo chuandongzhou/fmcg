@@ -81,7 +81,54 @@ class WechatPay
     public function agentPay(Withdraw $withdraw)
     {
         $options = $this->getAgentOptions($withdraw);
-        $url = $this->config['agentPay'];
+        $url = $this->config['agentPayUrl'];
+        $client = new Client();
+        $res = $client->post($url, ['form_params' => $options]);
+        $content = $res->getBody()->getContents();
+        return $this->_formatResponse($content);
+    }
+
+
+    /**
+     * 帐户续费
+     *
+     * @param $id
+     * @param $cost
+     * @param $payChannelCode
+     * @param string $backPayType
+     * @return bool|string
+     */
+    public function userExpire($id, $cost, $payChannelCode, $backPayType = 'user')
+    {
+        $type = array_get($this->config['backPayType'], $backPayType);
+
+        if (!$type) {
+            return false;
+        }
+
+        $options = $this->getRenewOptions($id, $cost, $payChannelCode, $backPayType);
+
+        return $this->buildRequestForm($options, 'post', $this->config['bankPayUrl']);
+    }
+
+    /**
+     * 帐户续费微信二维码
+     *
+     * @param $id
+     * @param $cost
+     * @param string $backPayType
+     * @return bool|string
+     */
+    public function userExpireQrCode($id, $cost, $backPayType = 'user')
+    {
+        $type = array_get($this->config['backPayType'], $backPayType);
+
+        if (!$type) {
+            return false;
+        }
+
+        $options = $this->getRenewQrCodeOptions($id, $cost, $backPayType);
+        $url = $this->config['url'];
         $client = new Client();
         $res = $client->post($url, ['form_params' => $options]);
         $content = $res->getBody()->getContents();
@@ -125,7 +172,7 @@ class WechatPay
         $options = [
             'service' => 'getCodeUrl',
             'merchantNo' => $this->config['merchantNo'],
-            'bgUrl' =>url('webhooks/wechat/pay-result'),
+            'bgUrl' => url('webhooks/wechat/pay-result'),
             'version' => 'V1.0',
             'payChannelCode' => 'CX_WX',
             'orderNo' => $order->id,
@@ -141,7 +188,7 @@ class WechatPay
     }
 
     /**
-     * 获取代付
+     * 获取代付参数
      *
      * @param \App\Models\Withdraw $withdraw
      * @return array
@@ -164,9 +211,77 @@ class WechatPay
             'bankCity' => $withdraw->bank_city,
             'orderAmount' => bcmul($withdraw->amount, 100),
             'orderTime' => Carbon::now()->format('YmdHis'),
-            'notifyUrl' => 'http://dingbaida.com/webhooks/wechat/success'//url('webhooks/wechat/agent-result'),
+            'notifyUrl' => url('webhooks/wechat/agent-result'),
         ];
         $sign = $this->getSign($options);
+        return array_add($options, 'sign', $sign);
+    }
+
+    /**
+     * 续费参数
+     *
+     * @param $id
+     * @param $cost
+     * @param $payChannelCode
+     * @param string $bankPayType
+     * @return array
+     */
+    public function getRenewOptions($id, $cost, $payChannelCode, $bankPayType = 'user')
+    {
+        if ($bankPayType == 'user') {
+            $pageUrl = url('personal/sign/renew');
+        } elseif ($bankPayType == 'delivery') {
+            $pageUrl = url('personal/delivery-man');
+        } else {
+            $pageUrl = url('business/salesman');
+        }
+
+        $options = [
+            'service' => 'bankPay',
+            'merchantNo' => $this->config['bankPayMerchantNo'],
+            'pageUrl' => $pageUrl,
+            'bgUrl' => 'http://dingbaida.com/webhooks/wechat/renew-result',//url('webhooks/wechat/renew-result'),
+            'version' => 'V1.0',
+            'payChannelCode' => $payChannelCode,
+            'payChannelType' => 1,                  // 暂时只支持银行卡
+            'orderNo' => $this->_getRenewOrderId($id),
+            'orderAmount' => bcmul($cost, 100),
+            'curCode' => 'CNY',
+            'productName' => '成都订百达科技有限公司',
+            'orderTime' => Carbon::now()->format('YmdHis'),
+            'ext1' => $id,                  // 扩展字段1  用作用户id
+            'ext2' => $bankPayType,         // 扩展字段2  用作用户类型  （user 为登录帐号， delivery  司机，  salesman  业务员）
+        ];
+        $sign = $this->getSign($options, $this->config['bankPayKey']);
+        return array_add($options, 'sign', $sign);
+    }
+
+    /**
+     * 续费二维码参数
+     *
+     * @param $id
+     * @param $cost
+     * @param string $bankPayType
+     * @return array
+     */
+    public function getRenewQrCodeOptions($id, $cost, $bankPayType = 'user')
+    {
+        $options = [
+            'service' => 'getCodeUrl',
+            'merchantNo' => $this->config['bankPayMerchantNo'],
+            'bgUrl' => 'http://dingbaida.com/webhooks/wechat/renew-result',//url('webhooks/wechat/renew-result'),
+            'version' => 'V1.0',
+            'payChannelCode' => 'CX_WX',
+            'orderNo' => $this->_getRenewOrderId($id),
+            'orderAmount' => bcmul($cost, 100),
+            'curCode' => 'CNY',
+            'productName' => '成都订百达科技有限公司',
+            'orderTime' => Carbon::now()->format('YmdHis'),
+            'ext1' => $id,                  // 扩展字段1  用作用户id
+            'ext2' => $bankPayType,         // 扩展字段2  用作用户类型  （user 为登录帐号， delivery  司机，  salesman  业务员）
+        ];
+        info($options);
+        $sign = $this->getSign($options, $this->config['bankPayKey']);
         return array_add($options, 'sign', $sign);
     }
 
@@ -174,27 +289,31 @@ class WechatPay
      * 获取sign
      *
      * @param array $options
+     * @param string $key
      * @return string
      */
-    public function getSign($options = [])
+    public function getSign($options = [], $key = null)
     {
+        $key = $key ?: $this->config['key'];
+
         $options = $this->paraFilter($options);
         $options = $this->argSort($options);
         $queryString = $this->buildQueryString($options);
-        return strtoupper(md5($queryString . $this->config['key']));
+        return strtoupper(md5($queryString . $key));
     }
 
     /**
      * 验证sign
      *
      * @param array $options
+     * @param string $key
      * @return bool
      */
-    public function verifySign($options = [])
+    public function verifySign($options = [], $key = null)
     {
-        return isset($options['sign']) && strtoupper($options['sign']) === $this->getSign($options);
+        $key = $key ?: $this->config['key'];
+        return isset($options['sign']) && strtoupper($options['sign']) === $this->getSign($options, $key);
     }
-
 
     /**
      * 创建字符串
@@ -268,6 +387,31 @@ class WechatPay
     }
 
     /**
+     * 建立请求
+     *
+     * @param $param
+     * @param $method
+     * @param $buttonName
+     * @param $action
+     * @return string
+     */
+    public function buildRequestForm($param, $method, $action, $buttonName = '确认')
+    {
+
+        $sHtml = "<form id='bankSubmit' name='bankSubmit' action='" . $action . "' method='" . $method . "'>";
+        while (list ($key, $val) = each($param)) {
+            $sHtml .= "<input type='hidden' name='" . $key . "' value='" . $val . "'/>";
+        }
+
+        //submit按钮控件请不要含有name属性
+        $sHtml = $sHtml . "<input type='submit'  value='" . $buttonName . "' style='display:none;'></form>";
+
+        $sHtml = $sHtml . "<script>document.forms['bankSubmit'].submit();</script>";
+
+        return $sHtml;
+    }
+
+    /**
      * 格式化
      *
      * @param $result
@@ -275,7 +419,18 @@ class WechatPay
      */
     private function _formatResponse($result)
     {
-        //info((array)json_decode($result));
+        info((array)json_decode($result));
         return (array)json_decode($result);
+    }
+
+    /**
+     * 获取订单id
+     *
+     * @param $id
+     * @return string
+     */
+    private function _getRenewOrderId($id)
+    {
+        return Carbon::now()->timestamp . random_int(0, 10000) . $id;
     }
 }

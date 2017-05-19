@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use WeiHeng\Responses\Apiv1Response;
 
 class VerifyDeposit
 {
@@ -34,14 +35,14 @@ class VerifyDeposit
      */
     public function handle($request, Closure $next, $validateExpire = '')
     {
-        /*$userType = $this->auth->user()->type;
+       /* $user = $this->auth->user();
+        $userType = $user->type;
         $userTypes = cons('user.type');
-        $user = $this->auth->user();
         if (in_array($userType, [$userTypes['wholesaler'], $userTypes['supplier']])) {
-            $condition = $validateExpire ? !$user->deposit : !$user->deposit || $user->is_expire;
+            $condition = $validateExpire == 'true' ? !$user->deposit : !$user->deposit || $user->is_expire;
             if ($condition) {
                 if ($request->ajax()) {
-                    return response('Unauthorized.', 401);
+                    return new Apiv1Response('forbidden', ['message' => '没有权限']);
                 } else {
                     abort(404);
                 }

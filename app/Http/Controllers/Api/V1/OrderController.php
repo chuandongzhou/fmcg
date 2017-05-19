@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\UpdateOrderRequest;
-use App\Models\DeliveryMan;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\OrderGoods;
@@ -54,7 +53,16 @@ class OrderController extends Controller
      */
     public function getListOfBuy()
     {
-        $orders = Order::OfBuy(auth()->id())->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
+        $orders = Order::OfBuy(auth()->id())->useful()->with([
+            'orderReason',
+            'shop.user',
+            'user',
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -101,7 +109,7 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon',
+        $orders = Order::ofSell(auth()->user()->shop_id)->useful()->with('user.shop', 'goods', 'coupon',
             'shop.user')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -138,12 +146,43 @@ class OrderController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getListOfSell()
+    public function getListOfSell(Request $request)
     {
-        $orders = Order::OfSell(auth()->id())->useful()->with('user.shop', 'goods', 'coupon',
-            'shop.user')->orderBy('id','desc')->paginate();
+        //订单状态
+        $orderStatus = cons()->lang('order.status');
+        $payStatus = array_only(cons()->lang('order.pay_status'), ['refund', 'refund_success']);
 
-        return $this->success($this->_hiddenOrdersAttr($orders, false));
+        $status = array_merge(['wait_receive' => '未收款'], $payStatus, $orderStatus);
+
+        $search = $request->all();
+
+        $orders = Order::ofSell(auth()->user()->shop_id)->useful()->with([
+            'orderReason',
+            'user.shop',
+            'shippingAddress.address',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ]);
+        if (is_numeric($searchContent = array_get($search, 'search_content'))) {
+            $orders = $orders->where('id', $searchContent);
+        } elseif($searchContent){
+            $orders = $orders->ofSelectOptions($search)->ofUserShopName($searchContent);
+        }else {
+            $orders = $orders->ofSelectOptions($search);
+        }
+
+        //已作废 、已发货、已完成、退款成功按操作时间倒序
+        if (array_get($search, 'status') == 'send') {
+            $orders->orderBy('send_at', 'DESC');
+        } else {
+            $orders->orderBy('updated_at', 'DESC');
+        }
+
+        $orders = $orders->paginate();
+
+        return $this->success(['orders' => $this->_hiddenOrdersAttr($orders, false)->toArray(), 'status' => $status]);
     }
 
     /**
@@ -153,7 +192,15 @@ class OrderController extends Controller
      */
     public function getNonSend()
     {
-        $orders = Order::ofSell(auth()->id())->nonSend()->with('user.shop', 'goods', 'coupon', 'shop.user')->paginate();
+        $orders = Order::ofSell(auth()->user()->shop_id)->nonSend()->with([
+            'user.shop',
+            'coupon',
+            'shop.user',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
@@ -161,13 +208,19 @@ class OrderController extends Controller
     /**
      * 获取待发货订单列表--买家操作
      *
-     * @return mix
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getUnsent()
     {
-        $orders = Order::ofBuy(auth()->id())->useful()->with('user.shop', 'shop.user', 'goods',
-            'coupon')->nonSend()->paginate();
-        // dd($orders);
+        $orders = Order::ofBuy(auth()->id())->useful()->with([
+            'user.shop',
+            'shop.user',
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->nonSend()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -181,7 +234,7 @@ class OrderController extends Controller
         $status = cons('order.status');
         $payStatus = cons('order.pay_status');
         $payType = cons('pay_type');
-        $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ' and status < ' . $status['finished'] . ' and ((status > ' . $status['non_send'] . '  and pay_type =' . $payType['cod'] . ') or (status >= ' . $status['non_send'] . '  and pay_type =' . $payType['online'] . ')),true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<' . $payStatus['refund'] . ')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if(status=' . $status['send'] . ',true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->ofBuy(auth()->id())->nonCancel()->first();
+        $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ' and status < ' . $status['finished'] . ' and ((status > ' . $status['non_send'] . '  and pay_type =' . $payType['cod'] . ') or (status >= ' . $status['non_send'] . '  and pay_type =' . $payType['online'] . ')),true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<' . $payStatus['refund'] . ')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if(status=' . $status['send'] . ',true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->ofBuy(auth()->id())->useful()->first();
         return [
             'waitReceive' => $countData->waitReceive,
             'waitSend' => $countData->waitSend,
@@ -200,7 +253,7 @@ class OrderController extends Controller
         $status = cons('order.status');
         $payStatus = cons('order.pay_status');
         $payType = cons('pay_type');
-        $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ',true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<' . $payStatus['payment_success'] . ')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if((pay_type=' . $payType['cod'] . ' and status=' . $status['send'] . ') or (pay_type=' . $payType['pick_up'] . ' and status=' . $status['non_send'] . '),true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->OfSell(auth()->id())->useful()->first();
+        $countData = Order::select(DB::raw('count(if(pay_status=' . $payStatus['non_payment'] . ',true,null)) AS waitReceive,count(if(((pay_type=' . $payType['online'] . ' and pay_status=' . $payStatus['payment_success'] . ') or (pay_type=' . $payType['cod'] . ' and pay_status<' . $payStatus['payment_success'] . ')) and status=' . $status['non_send'] . ',true,null)) as waitSend,count(if((pay_type=' . $payType['cod'] . ' and status=' . $status['send'] . ') or (pay_type=' . $payType['pick_up'] . ' and status=' . $status['non_send'] . '),true,null)) as refund,count(if(status=' . $status['non_confirm'] . ',true,null)) as waitConfirm'))->ofSell(auth()->user()->shop_id)->useful()->first();
         return [
             'waitReceive' => $countData->waitReceive,
             'waitSend' => $countData->waitSend,
@@ -216,7 +269,7 @@ class OrderController extends Controller
      */
     public function getPendingCollection()
     {
-        $orders = Order::ofSell(auth()->id())->getPayment()->nonCancel()->with('user.shop', 'goods', 'coupon',
+        $orders = Order::ofSell(auth()->user()->shop_id)->getPayment()->useful()->with('user.shop', 'goods', 'coupon',
             'shop.user')->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders, false));
@@ -231,7 +284,7 @@ class OrderController extends Controller
     public function getDetailOfSell(Request $request)
     {
         $orderId = $request->input('order_id');
-        $order = Order::OfSell(auth()->id())->useful()->find($orderId);
+        $order = Order::ofSell(auth()->user()->shop_id)->useful()->find($orderId);
         if (is_null($order)) {
             return $this->error('订单不存在');
         }
@@ -268,7 +321,7 @@ class OrderController extends Controller
             return $this->error('请选择需要取消的订单');
         }
 
-        $orders = Order::with('shop.user', 'user')->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::with('shop.user', 'user')->whereIn('id', $orderIds)->useful()->get();
 
         $failOrderIds = [];
         foreach ($orders as $order) {
@@ -364,10 +417,10 @@ class OrderController extends Controller
      * @param $orderId
      * @return string|\WeiHeng\Responses\Apiv1Response
      */
-    public function putInvalid($orderId)
+    public function postInvalid(Request $request, $orderId)
     {
         $order = Order::find($orderId);
-
+        $reason = $request->input('reason');
         if (!$order) {
             return $this->error('订单不存在');
         }
@@ -375,6 +428,7 @@ class OrderController extends Controller
             return $this->error('订单不能作废');
         }
         if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
+            $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
             // 返回优惠券
             (new OrderService())->backCoupon($order);
             return $this->success('订单作废成功');
@@ -392,7 +446,7 @@ class OrderController extends Controller
     public function putBatchFinishOfBuy(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where('user_id', auth()->id())->whereIn('id', $orderIds)->nonCancel()->get();
+        $orders = Order::where('user_id', auth()->id())->whereIn('id', $orderIds)->useful()->get();
 
         if ($orders->isEmpty()) {
             return $this->error('请选择订单');
@@ -442,7 +496,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::OfSell(auth()->id())->useful()->whereIn('id', $orderIds)->get();
+        $orders = Order::ofSell(auth()->user()->shop_id)->useful()->whereIn('id', $orderIds)->get();
         if ($orders->isEmpty()) {
             return $this->error('确认收款失败');
         }
@@ -487,7 +541,7 @@ class OrderController extends Controller
             return $this->error('配送人员错误');
         }
 
-        $orders = Order::OfSell(auth()->id())->with('orderGoods')->useful()->whereIn('id', $orderIds)->get();
+        $orders = Order::ofSell(auth()->user()->shop_id)->with('orderGoods')->useful()->whereIn('id', $orderIds)->get();
 
         if ($orders->isEmpty()) {
             return $this->error('订单不能为空');
@@ -506,7 +560,7 @@ class OrderController extends Controller
                 continue;
             }
             //商品出库
-           
+
             /*foreach ($order->orderGoods as $goodsInfo) {
                 $data = [
                     'inventory_number' => $inventoryService->getInventoryNumber(),
@@ -561,19 +615,27 @@ class OrderController extends Controller
         }
 
         //当日新增订单数,完成订单数,所有累计订单数,累计完成订单数;7日对应
-        $today = Carbon::today();
-        $builder = Order::OfSell(auth()->id())->useful();
+        $today = Carbon::now();
+        $aWeekAgo = $today->copy()->subDay(6)->startOfDay();
+        $builder = Order::ofSell(auth()->user()->shop_id)->useful();
 
-        for ($i = 6; $i >= 0; --$i) {
-            $start = $today->copy()->addDay(-$i);
-            $end = $start->copy()->endOfDay();
-            $time = [$start, $end];
+        $new =  with(clone $builder)->whereBetween('created_at', [$aWeekAgo, $today])->get();
+        $finish = with(clone $builder)->whereBetween('finished_at', [$aWeekAgo, $today])->get();
+
+        $dates = list_in_days($aWeekAgo, $today);
+
+        foreach ($dates as $day) {
             $statistics['sevenDay'][] = [
-                'new' => with(clone $builder)->whereBetween('created_at', $time)->count(),
-                'finish' => with(clone $builder)->whereBetween('finished_at', $time)->count()
+                'new' => $new->filter(function ($order) use ($day) {
+                        return $order->created_at->format('Y-m-d') == $day;
+                    })->count(),
+                'finish' =>$finish->filter(function ($order) use ($day) {
+                    return (new Carbon($order->finished_at))->format('Y-m-d') == $day;
+                })->count(),
             ];
         }
-        $statistics['today'] = $statistics['sevenDay'][6];
+
+        $statistics['today'] = end($statistics['sevenDay']);
         $statistics['all'] = [
             'count' => $builder->count(),
             'finish' => $builder->where('status', cons('order.status.finished'))->count()
@@ -662,7 +724,7 @@ class OrderController extends Controller
     public function putChangeOrder(UpdateOrderRequest $request)
     {
         //判断该订单是否存在
-        $order = Order::OfSell(auth()->id())->useful()->find(intval($request->input('order_id')));
+        $order = Order::ofSell(auth()->user()->shop_id)->useful()->find(intval($request->input('order_id')));
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }
@@ -918,7 +980,7 @@ class OrderController extends Controller
         if ($order->pay_type == $payType['pick_up']) {
             $order->load(['goods.images', 'shop.shopAddress']);
         } else {
-            $order->load(['goods', 'deliveryMan', 'shippingAddress.address', 'orderRefund']);
+            $order->load(['goods', 'deliveryMan', 'shippingAddress.address', 'orderReason']);
         }
         return $order;
     }
@@ -961,7 +1023,9 @@ class OrderController extends Controller
             'can_payment',
             'can_confirm_arrived',
             'after_rebates_price',
-            'user_shop_name'
+            'user_shop_name',
+            'refund_reason',
+            'invalid_reason'
         ]);
         $buyer && $order->shop && $order->shop->setAppends([]);
 

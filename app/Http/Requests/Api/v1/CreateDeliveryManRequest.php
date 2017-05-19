@@ -15,9 +15,9 @@ class CreateDeliveryManRequest extends UserRequest
         return [
             'name' => 'required|max:30',
             'phone' => 'required|numeric|digits_between:7,14',
-            'user_name' => 'digits:6|unique:delivery_man',
-            'password' => 'required_with:user_name|digits_between:6,18|confirmed',
-            'pos_sign' => 'required_with:user_name|min:6',
+            'user_name' => 'required|digits:6|unique:delivery_man',
+            'password' => 'required|digits_between:6,18|confirmed',
+            'pos_sign' => 'min:6',
         ];
     }
 }

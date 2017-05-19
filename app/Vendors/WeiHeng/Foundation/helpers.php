@@ -312,6 +312,18 @@ if (!function_exists('salesman_auth')) {
         return app('salesman.auth');
     }
 }
+
+if (!function_exists('child_auth')) {
+    /**
+     * Get the available child auth instance.
+     *
+     * @return \Weiheng\ChildUser\Guard
+     */
+    function child_auth()
+    {
+        return app('child.auth');
+    }
+}
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml
@@ -504,6 +516,7 @@ if (!function_exists('list_in_days')) {
      */
     function list_in_days(\Carbon\Carbon $start, \Carbon\Carbon $end)
     {
+        $start = $start->endOfDay();
         $lists = [$start->format('Y-m-d')];
 
         while ($start->lt($end)) {

@@ -8,7 +8,7 @@
         }
     </style>
 @stop
-@section('right')
+@section('body')
     <div class="modal fade" id="shippingAddressMapModal" tabindex="-1" role="dialog"
          aria-labelledby="shippingAddressMapModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">

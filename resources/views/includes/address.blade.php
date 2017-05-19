@@ -4,8 +4,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form class="form-horizontal ajax-form address-form" action=""
-                      method="" data-help-class="col-sm-push-2 col-sm-10"
-                      data-done-url="{{ url('personal/delivery-area') }}" data-no-loading="true" autocomplete="off">
+                      method="" data-help-class="col-sm-push-2 col-sm-10" data-no-loading="true" autocomplete="off">
                     <div class="modal-header choice-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                         <div class="modal-title forgot-modal-title" id="addressModalLabel">
@@ -96,14 +95,15 @@
                         provinceId = obj.data('province-id') || '',
                         cityId = obj.data('city-id') || '',
                         districtId = obj.data('district-id') || '',
-                        areaName = obj.data('area-name') || '';
+                        areaName = obj.data('area-name') || '',
+                        url = obj.data('url') || '';
                 province.data('id', provinceId);
                 city.data('id', cityId);
                 district.data('id', districtId);
                 $('input[name="min_money"]').val(minMoney);
                 $('input[name="area_name"]').val(areaName);
                 $('input[name="address"]').val(address);
-                form.attr('action', site.api(obj.hasClass('personal-add') ? 'personal/delivery-area' : 'personal/delivery-area/' + id));
+                form.attr('action', url);
                 form.attr('method', obj.hasClass('personal-add') ? 'post' : 'put');
 
                 setAddress(province, city, district, street);

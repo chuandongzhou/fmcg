@@ -41,17 +41,17 @@
             redirectUrl = null;
         $('.btn-print').on('click', function () {
             var that = $(this);
-            redirectUrl = that.data('url');
+            redirectUrl = that.data('url'),
+            templeteUrl = that.data('templeteUrl');
             if (!templetesPanel.children('option').length) {
                 common.loading('show');
-                $.get(site.api('templete'), '', function (data) {
+                $.get(templeteUrl || site.api('templete'), '', function (data) {
                     var tempHeaders = data.tempHeaders, options = '';
                     if (!tempHeaders.length) {
                         common.loading('hide');
-                        window.location.href = redirectUrl;
+                        window.open(redirectUrl);
                         return false;
                     }
-
                     for (var i in tempHeaders) {
                         var detail = tempHeaders[i].name + ' ' + tempHeaders[i].contact_person + ' ' + tempHeaders[i].contact_info
                         isSelect = tempHeaders[i].is_default ? 'selected' : '';
@@ -67,7 +67,7 @@
         })
         modal.find('.btn-submit').on('click', function () {
             var templeteId = templetesPanel.val();
-            window.location.href = redirectUrl + '&templete_id=' + templeteId;
+            window.open(redirectUrl + '&templete_id=' + templeteId);
         })
     </script>
 @stop

@@ -10,7 +10,7 @@ abstract class UserRequest extends Request
 
     public function authorize()
     {
-        return auth()->check() || admin_auth()->check();
+        return auth()->check() || admin_auth()->check() || child_auth()->check();
     }
 
     /**

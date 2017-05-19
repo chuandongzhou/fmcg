@@ -115,7 +115,7 @@ class BusinessService extends BaseService
     public function getOrders($salesmenId, $data = [], $with = ['salesmanCustomer.businessAddress', 'salesman'])
     {
 
-        if (isset($data['salesman_id']) && ($salesmanId = $data['salesman_id'])) {
+        if ($salesmanId = array_get($data, 'salesman_id')) {
             $exists = $salesmenId->toBase()->contains($salesmanId);
             if ($exists) {
                 $orders = SalesmanVisitOrder::OfData($data)->with($with)->orderBy('id', 'desc')->paginate();

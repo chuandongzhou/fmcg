@@ -15,7 +15,8 @@ use Hash;
 
 class SystemWithdrawInfoController extends Controller
 {
-    use ValidatesRequests ;
+    use ValidatesRequests;
+
     /**
      * 获取提现信息
      *
@@ -25,11 +26,11 @@ class SystemWithdrawInfoController extends Controller
     public function getIndex(Request $request)
     {
         $data = $request->all();
-        $withdrawId = isset($data['withdraw_id']) && $data['withdraw_id'] != '' ? intval($data['withdraw_id']) : '';
-        $tradeNo = isset($data['trade_no']) && $data['trade_no'] != '' ? trim($data['trade_no']) : '';
-        $userName = isset($data['user_name']) && $data['user_name'] != '' ? trim($data['user_name']) : '';
-        $data['started_at'] = isset($data['started_at']) && $data['started_at'] != '' ? $data['started_at'] : (string)Carbon::now()->startOfMonth();
-        $data['end_at'] = isset($data['end_at']) && $data['end_at'] != '' ? $data['end_at'] : (string)Carbon::now();
+        $withdrawId = array_get($data, 'withdraw_id');
+        $tradeNo = array_get($data, 'trade_no');
+        $userName = array_get($data, 'user_name');
+        $data['started_at'] = array_get($data, 'started_at', (string)Carbon::now()->startOfMonth());
+        $data['end_at'] = array_get($data, 'end_at', (string)Carbon::now());
         $query = Withdraw::with('userBanks', 'user');
         if ($withdrawId) {
             $query->where('id', $withdrawId);

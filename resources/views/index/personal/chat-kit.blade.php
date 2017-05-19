@@ -24,7 +24,7 @@
         window.onload = function () {
             WKIT.init({
                 container: '{{ $fullScreen }}' ? null : document.getElementById('J_demo'),
-                uid: '{{ $chatConf['shop_id'] }}',
+                uid: '{{ $thisShopId }}',
                 appkey: '{{ $chatConf['key'] }}',
                 credential: '{{ $chatConf['pwd'] }}',
                 touid: '{{ $remoteUid }}',

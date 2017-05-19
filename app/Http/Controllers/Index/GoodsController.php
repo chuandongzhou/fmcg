@@ -24,16 +24,17 @@ class GoodsController extends Controller
      */
     public function detail($goods)
     {
+        $user = auth()->user();
         if (Gate::denies('validate-goods', $goods)) {
             return redirect(url('search'));
         }
-        $attrs = (new AttrService())->getAttrByGoods($goods, true);
-        $goods->load('images.image')->load('deliveryArea');
-        $isGoodsLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
-        $shop_id = $goods->shop->id;
-        $isLike  = auth()->user()->likeShops()->where('shop_id', $shop_id)->pluck('id');
-        $couponNum = CouponService::shopCouponNum($shop_id);
-        $hotGoods = Goods::where('shop_id', $shop_id)->active()->with('images.image')->ofCommonSort()->orderBy('id',
+        $attrs = (new AttrService())->getAttrByGoods($goods);
+        $goods->load('deliveryArea');
+        $isGoodsLike = $user->likeGoods()->where('id', $goods->id)->pluck('id');
+        $shopId = $goods->shop->id;
+        $isLike  =$user->likeShops()->where('shop_id', $shopId)->pluck('id');
+        $couponNum = CouponService::shopCouponNum($shopId);
+        $hotGoods = Goods::where('shop_id', $shopId)->active()->ofCommonSort()->orderBy('id',
             'DESC')->take(5)->get();
         return view('index.goods.detail', [
             'goods' => $goods,
@@ -43,8 +44,8 @@ class GoodsController extends Controller
             'couponNum' => $couponNum,
             'hotGoods' => $hotGoods,
             'shop' => $goods->shop,
-            'isGoodsLike' => $isGoodsLike
-            /*   'coordinates' => $coordinate->toJson()*/
+            'isGoodsLike' => $isGoodsLike,
+            'isMyGoods' => $shopId == $user->shop_id
         ]);
     }
 }

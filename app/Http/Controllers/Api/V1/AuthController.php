@@ -146,6 +146,7 @@ class AuthController extends Controller
     public function postRegisterUser(RegisterUserRequest $request)
     {
         $data = $request->only('user_name', 'backup_mobile', 'type');
+
         //验证验证码
         $code = $request->input('code');
         if (!app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
@@ -213,9 +214,6 @@ class AuthController extends Controller
         if (!$user || $user->backup_mobile != $data['backup_mobile']) {
             return $this->error('用户不存在或密保手机不正确');
         }
-        if ($user->shop->license_num != $data['license_num']) {
-            return $this->error('营业执照编号不正确');
-        }
         //验证验证码
         $code = $request->input('code');
         /*$codeService = new CodeService();
@@ -249,9 +247,6 @@ class AuthController extends Controller
         }
         if (!$user || $user->backup_mobile != $data['backup_mobile']) {
             return $this->error('密保手机错误');
-        }
-        if ($user->shop->license_num != $data['license_num']) {
-            return $this->error('营业执照错误');
         }
 
         return app('pushbox.sms')->sendCode('code',

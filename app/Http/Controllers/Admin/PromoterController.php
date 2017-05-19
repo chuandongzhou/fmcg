@@ -225,8 +225,6 @@ class PromoterController extends Controller
 
         $name = $startDay . '至' . $endDay . '推广统计.docx';
         $phpWord->save($name, 'Word2007', true);
-
-
     }
 
     /**
@@ -249,7 +247,6 @@ class PromoterController extends Controller
             $supplierUserActiveCount = 0;
             $wholesalerUserActiveCount = 0;
             $retailerUserActiveCount = 0;
-
             foreach ($promoter->shops as $shop) {
                 if ($shop->created_at >= $startDay && $shop->created_at <= $endDay) {
                     if ($shop->user_type == $userType['retailer']) {
@@ -283,7 +280,7 @@ class PromoterController extends Controller
             $userIds = $promoter->shops->pluck('user_id');
 
             //下单
-            $submitOrders = Order::NonCancel()->whereIn('user_id', $userIds)->whereBetween('created_at',
+            $submitOrders = Order::useful()->whereIn('user_id', $userIds)->whereBetween('created_at',
                 [$startDay, $endDay])->get();
 
             //下单用户数

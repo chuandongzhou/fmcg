@@ -14,7 +14,9 @@ use Illuminate\Http\Request;
 class SignController extends Controller
 {
 
-    public function getIndex(){
+    public function getIndex()
+    {
+
         return view('index.personal.sign');
     }
 
@@ -23,11 +25,6 @@ class SignController extends Controller
     {
         $renews = auth()->user()->renews()->paginate();
         return view('index.personal.sign-renew', compact('renews'));
-    }
-
-    public function getDepositPay()
-    {
-        dd('缴纳成功！');
     }
 
     public function postPrestorePay(Request $request)
@@ -43,15 +40,39 @@ class SignController extends Controller
         dd('缴纳成功！');
     }
 
+    /**
+     * 帐户续费处理
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\WeiHeng\Responses\IndexResponse
+     */
     public function postExpirePay(Request $request)
     {
-        $months = cons()->valueLang('sign.expire_amount');
+        $type = $request->input('type', 'user');
         $month = $request->input('month');
+        $banks = cons()->lang('bank.type');
+        $bankType = $request->input('bank_type', head($banks));
+        if (!in_array($type, ['user', 'delivery', 'salesman']) || !array_get($banks, $bankType)) {
+            return $this->error('支付失败，请重试');
+        }
+
+        if ($type == 'user') {
+            $id = auth()->id();
+            $months = cons()->valueLang('sign.expire_amount');
+        } else {
+            $id = $request->input('id');
+            $months = cons()->valueLang('sign.worker_expire_amount');
+        }
 
         if (!($cost = array_search($month, $months))) {
             return $this->error('选择的时间不正确');
         }
 
-        dd('续期成功');
+        return app('wechat.pay')->userExpire($id, $cost, $bankType, $type);
+    }
+
+    public function getRenewSuccess()
+    {
+        dd('续费成功');
     }
 }

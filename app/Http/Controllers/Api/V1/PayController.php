@@ -99,6 +99,7 @@ class PayController extends Controller
      */
     public function refund(Request $request, $orderId)
     {
+
         $reason = $request->input('reason', 'no reason');
 
         $refundBySeller = $request->input('is_seller');
@@ -126,7 +127,7 @@ class PayController extends Controller
 
             if ($tradeInfo->pay_type == $payTypes['yeepay']) {
                 if ($this->_refundByYeepay($tradeInfo, $reason)) {
-                    $order->orderRefund()->create(['reason' => $reason]);
+                    $order->orderReason()->create(['reason' => $reason]);
                     // 更新订单状态
                     $order->fill([
                         'pay_status' => cons('order.pay_status.refund_success'),
@@ -140,7 +141,7 @@ class PayController extends Controller
             } elseif (in_array($tradeInfo->pay_type, [$payTypes['alipay'], $payTypes['alipay_pc']])) {
                 $result = $this->_refundByAlipay($tradeInfo, $reason);
                 if ($result) {
-                    $order->orderRefund()->create(['reason' => $reason]);
+                    $order->orderReason()->create(['reason' => $reason]);
                     //通知 卖家/买 已退款
                     $this->_setRefundNotice($order, $refundBySeller);
                 } else {
@@ -150,7 +151,7 @@ class PayController extends Controller
                 $result = $this->_refundByPingxx($tradeInfo, $reason);
 
                 if ($result) {
-                    $order->orderRefund()->create(['reason' => $reason]);
+                    $order->orderReason()->create(['reason' => $reason]);
                     //通知 卖家/买 已退款
                     $this->_setRefundNotice($order, $refundBySeller);
                 } else {
@@ -160,7 +161,7 @@ class PayController extends Controller
                 $result = $this->_refundByBalance($tradeInfo);
 
                 if ($result) {
-                    $order->orderRefund()->create(['reason' => $reason]);
+                    $order->orderReason()->create(['reason' => $reason]);
                     //通知 卖家/买 已退款
                     $this->_setRefundNotice($order, $refundBySeller);
                 } else {
@@ -170,7 +171,7 @@ class PayController extends Controller
                 $result = $this->_refundByWechatPay($tradeInfo, $reason);
 
                 if ($result) {
-                    $order->orderRefund()->create(['reason' => $reason]);
+                    $order->orderReason()->create(['reason' => $reason]);
                     //通知 卖家/买 已退款
                     $this->_setRefundNotice($order, $refundBySeller);
                 } else {

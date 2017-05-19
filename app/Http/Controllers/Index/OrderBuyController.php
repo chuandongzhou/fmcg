@@ -37,26 +37,26 @@ class OrderBuyController extends OrderController
 
         //订单状态
         $orderStatus = cons()->lang('order.status');
-        $payStatus = array_slice(cons()->lang('order.pay_status'), 0, 1, true);
+        $payStatus = array_only(cons()->lang('order.pay_status'), ['non_payment', 'refund', 'refund_success']);
 
         $orderStatus = array_merge($payStatus, $orderStatus);
 
         $search = $request->all();
 
-        $search['search_content'] = isset($search['search_content']) ? trim($search['search_content']) : '';
-        $search['pay_type'] = isset($search['pay_type']) ? $search['pay_type'] : '';
-        $search['status'] = isset($search['status']) ? trim($search['status']) : '';
-        $search['start_at'] = isset($search['start_at']) ? $search['start_at'] : '';
-        $search['end_at'] = isset($search['end_at']) ? $search['end_at'] : '';
-        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+        $orders = Order::ofBuy(auth()->id())->useful()->with([
             'shop.user',
             'user',
-            'coupon'
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
         ]);
-        if (is_numeric($search['search_content'])) {
-            $orders = $orders->where('id', $search['search_content']);
-        } elseif ($search['search_content']) {
-            $orders = $orders->ofSelectOptions($search)->ofShopName($search['search_content']);
+
+        if (is_numeric($searchContent = array_get($search, 'search_content'))) {
+            $orders = $orders->where('id', $searchContent);
+        } elseif ($searchContent) {
+            $orders = $orders->ofSelectOptions($search)->ofShopName($searchContent);
         } else {
             $orders = $orders->ofSelectOptions($search);
         }
@@ -76,10 +76,14 @@ class OrderBuyController extends OrderController
      */
     public function getWaitPay()
     {
-        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+        $orders = Order::ofBuy(auth()->id())->with([
             'shop.user',
             'user',
-            'coupon'
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
         ])->nonPayment();
 
         return view('index.order.order-buy', [
@@ -94,10 +98,14 @@ class OrderBuyController extends OrderController
      */
     public function getWaitReceive()
     {
-        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+        $orders = Order::ofBuy(auth()->id())->with([
             'shop.user',
             'user',
-            'coupon'
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
         ])->nonArrived();
         return view('index.order.order-buy', [
             'data' => $this->_getOrderNum(-1, $orders->count()),
@@ -111,10 +119,14 @@ class OrderBuyController extends OrderController
      */
     public function getWaitConfirm()
     {
-        $orders = Order::ofBuy(auth()->id())->WithExistGoods([
+        $orders = Order::ofBuy(auth()->id())->with([
             'shop.user',
             'user',
-            'coupon'
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
         ])->waitConfirm();
         return view('index.order.order-buy', [
             'data' => $this->_getOrderNum(-1, -1, $orders->count()),
@@ -148,7 +160,7 @@ class OrderBuyController extends OrderController
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
             'userBalance' => $this->userBalance['availableBalance'],
-             'delivery_man' => $deliveryMan
+            'delivery_man' => $deliveryMan
         ]);
     }
 

@@ -52,10 +52,9 @@ class AttrService
      * 根据商品查出标签
      *
      * @param $goods
-     * @param bool $default
      * @return array
      */
-    public function getAttrByGoods($goods, $default = false)
+    public function getAttrByGoods($goods)
     {
         $attrGoods = [];
         if (is_numeric($goods)) {
@@ -65,16 +64,9 @@ class AttrService
                 return [];
             }
         }
-        $attrDefault = cons('attr.default');
         foreach ($goods->attr as $key => $attr) {
             $pivot = $attr->pivot->toArray();
-            if ($default) {
-                if (in_array($pivot['attr_pid'], $attrDefault)) {
-                    $attrGoods[] = $pivot;
-                }
-            } else {
-                $attrGoods[] = $pivot;
-            }
+            $attrGoods[] = $pivot;
 
         }
         $attrIds = array_merge(array_pluck($attrGoods, 'attr_id'), array_pluck($attrGoods, 'attr_pid'));

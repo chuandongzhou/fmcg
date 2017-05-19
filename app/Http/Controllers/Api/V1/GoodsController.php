@@ -77,7 +77,7 @@ class GoodsController extends Controller
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-        $attrs = (new AttrService())->getAttrByGoods($goods, true);
+        $attrs = (new AttrService())->getAttrByGoods($goods);
         $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
         $goods->shop_name = $goods->shop()->pluck('name');
         is_null($goods->specification_retailer) && ($goods->specification_retailer = '');

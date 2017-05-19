@@ -32,7 +32,7 @@ class SalesmanVisitOrderController extends Controller
     {
         $salesmenId = salesman_auth()->id();
 
-        $data = $request->only(['status', 'start_date', 'end_date']);
+        $data = $request->only(['status', 'start_date', 'end_date', 'customer']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
 
         $orders = (new BusinessService())->getOrders([$salesmenId], $data,
@@ -52,7 +52,7 @@ class SalesmanVisitOrderController extends Controller
     {
         $salesmenId = salesman_auth()->id();
 
-        $data = $request->only(['status', 'start_date', 'end_date']);
+        $data = $request->only(['status', 'start_date', 'end_date', 'customer']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
 
         $orders = (new BusinessService())->getOrders([$salesmenId], $data);

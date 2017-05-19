@@ -21,14 +21,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="license_num">
-                                <span class="prompt">营业执照注册号:</span></label>
-
-                            <div class="col-sm-8">
-                                <input class="form-control" name="license_num" placeholder="请输入营业执照注册号" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-3 control-label" for="backup_mobile">
                                 <span class="prompt">密保手机:</span></label>
 

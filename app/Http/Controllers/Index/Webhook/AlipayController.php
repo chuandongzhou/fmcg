@@ -134,7 +134,7 @@ class AlipayController extends Controller
                             'refund_at' => Carbon::now()
                         ])->save()
                         ) {
-                            $order->orderRefund()->increment('refunded_amount',
+                            $order->orderReason()->increment('refunded_amount',
                                 $refundDatas[$order->systemTradeInfo->trade_no]);
                         }
                     }

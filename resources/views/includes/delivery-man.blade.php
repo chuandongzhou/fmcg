@@ -87,21 +87,22 @@
     <script type="text/javascript">
         $(function () {
             var deliveryModal = $('#deliveryModal'),
-                    form = deliveryModal.find('form');
+                form = deliveryModal.find('form');
             deliveryModal.on('shown.bs.modal', function (e) {
                 var obj = $(e.relatedTarget);
                 $('#deliveryModal span').html(obj.hasClass('add') ? '添加配送人员' : '编辑配送人员');
                 $('.btn-add').html('提交');
                 var id = obj.data('id') || '',
-                        name = obj.data('name') || '',
-                        phone = obj.data('phone') || '',
-                        userName = obj.data('user-name') || '',
-                        posSign = obj.data('pos-sign') || '';
+                    name = obj.data('name') || '',
+                    phone = obj.data('phone') || '',
+                    userName = obj.data('user-name') || '',
+                    posSign = obj.data('pos-sign') || '',
+                    url = obj.data('url');
                 $('input[name="name"]').val(name);
                 $('input[name="phone"]').val(phone);
-                $('input[name="user_name"]').val(userName);
+                userName && $('input[name="user_name"]').val(userName).prop('disabled', true);
                 $('input[name="pos_sign"]').val(posSign);
-                form.attr('action', site.api(obj.hasClass('add') ?'personal/delivery-man':'personal/delivery-man/' + id));
+                form.attr('action', url);
                 form.attr('method', obj.hasClass('add') ? 'post' : 'put');
 
             }).on('hide.bs.modal', function (e) {

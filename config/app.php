@@ -147,6 +147,8 @@ return [
         \WeiHeng\SignManage\SignManageServiceProvider::class,
         \WeiHeng\Admin\AdminServiceProvider::class,
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
+        \WeiHeng\ChildUser\ChildUserServiceProvider::class,
+        \WeiHeng\ChildUser\ChildAuthServiceProvider::class,
         \WeiHeng\Salesman\SalesmanServiceProvider::class,
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
         \WeiHeng\OrderDownload\OrderDownloadServiceProvider::class,

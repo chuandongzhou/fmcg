@@ -34,7 +34,7 @@
                                 </div>
                             @endforeach
                             <div class="pull-right search-count">
-                                共找到<span class="count">"{{ $goodsCount }}"</span>个相关商品
+                                共找到<span class="count">"{{ $goods->total() }}"</span>个相关商品
                             </div>
                         </div>
                     @endif

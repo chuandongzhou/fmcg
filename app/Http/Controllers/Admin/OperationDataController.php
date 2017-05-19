@@ -735,7 +735,6 @@ class OperationDataController extends Controller
             ->get();
         $result = $this->_formatOrders($orders, $beginDay, $endDay);
         return $this->success($result);
-
     }
 
     /**

@@ -72,21 +72,16 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
-
-
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
 
         $goods = $shop->goods()->active();
 
         if (in_array($sort, cons('goods.sort'))) {
-
             $goods = $sort == 'price' ? $goods->{'Of' . ucfirst($sort)}($shop->user_id) : $goods->{'Of' . ucfirst($sort)}();
-
         } else {
             $goods = $goods->OfCommonSort()->orderBy('id', 'DESC');
         }
         $goods = $goods->paginate();
-//        dd($goods);
         return view('index.shop.shop', [
             'shop' => $shop,
             'goods' => $goods,
@@ -117,7 +112,6 @@ class ShopController extends Controller
                 'isLike' => $isLike,
                 'hotGoods' => $hotGoods,
                 'recommendGoods' => $recommendGoods
-                /*, 'coordinates' => $coordinate*/
             ]);
     }
 
@@ -135,10 +129,8 @@ class ShopController extends Controller
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getShopGoods($shop, $data);
-        $goodsCount = $result['goods']->active()->count();
-        $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate();
+        $goods = $result['goods']->active()->hasPrice()->orderBy('id', 'DESC')->paginate();
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
-
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
         $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
         $shop->load('goods');
@@ -154,7 +146,6 @@ class ShopController extends Controller
                 'isLike' => $isLike,
                 'get' => $gets,
                 'data' => $data,
-                'goodsCount' => $goodsCount
             ]);
     }
 

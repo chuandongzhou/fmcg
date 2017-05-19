@@ -21,9 +21,27 @@ class CartController extends Controller
     {
         $user = auth()->user();
         $myCarts = $user->carts();
-        $carts = $myCarts->whereHas('goods', function ($query) use ($user) {
-            $query->whereNotNull('id')->where('user_type', '>', $user->type);
-        })->with('goods.images.image')->get();
+        $carts = $myCarts->with(['goods' => function ($query) {
+            $query->select([
+                'id',
+                'bar_code',
+                'name',
+                'price_retailer',
+                'price_retailer_pick_up',
+                'pieces_retailer',
+                'min_num_retailer',
+                'specification_retailer',
+                'price_wholesaler',
+                'price_wholesaler_pick_up',
+                'pieces_wholesaler',
+                'min_num_wholesaler',
+                'specification_wholesaler',
+                'shop_id',
+                'status',
+                'user_type'
+            ]);
+        }, 'goods.shop.user'])->get();
+
         (new CartService)->set($carts->count());
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零

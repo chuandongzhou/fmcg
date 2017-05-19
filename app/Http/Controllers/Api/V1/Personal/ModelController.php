@@ -203,14 +203,16 @@ class ModelController extends Controller
         $currentPage = $request->input('currentPage') ? $request->input('currentPage') : 1;
         $pageNum = cons('shop.home_page_per_num');
         $skip = ($currentPage - 1) * $pageNum;
-        $shop_id = auth()->user()->shop()->get()->toArray()[0]['id'];
+        $shop_id = auth()->user()->shop_id;
 
         $count = Goods::where('shop_id', $shop_id)->active()->count();
         $allPage = ceil($count / $pageNum);
         if ($currentPage > $allPage) {
             $currentPage = $allPage;
         }
-        $goods = Goods::where('shop_id', $shop_id)->active()->skip($skip)->take($pageNum)->get();
+        $goods = Goods::where('shop_id', $shop_id)->active()->skip($skip)->take($pageNum)->get()->each(function($item) {
+            $item->setAppends(['pieces', 'image_url', 'price']);
+        });;
         return $this->success(['goods' => $goods, 'allPage' => $allPage, 'currentPage' => $currentPage]);
 
     }

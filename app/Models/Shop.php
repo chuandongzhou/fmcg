@@ -325,6 +325,16 @@ class Shop extends Model
     }
 
     /**
+     * 关联子账户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function childUser()
+    {
+        return $this->hasMany(ChildUser::class);
+    }
+
+    /**
      * 获取热门商家
      *
      * @param $query
@@ -570,7 +580,7 @@ class Shop extends Model
     {
         $logo = $this->logo;
         $userType = array_flip(cons('user.type'));
-        return $logo ? $logo->url : asset('images/' . $userType[$this->user->type] . '.jpg');
+        return $logo ? $logo->url : asset('images/' . $userType[$this->user_type] . '.jpg');
     }
 
     /**
@@ -678,14 +688,6 @@ class Shop extends Model
         return $this->goods->count();
     }
 
-    /**
-     * 获取店家三个商品 按id desc
-     *
-     */
-    public function getThreeGoodsAttribute()
-    {
-        return $this->goods()->active()->OfNew()->limit(3)->get();
-    }
 
 
     /**

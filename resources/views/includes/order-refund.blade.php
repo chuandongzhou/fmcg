@@ -45,11 +45,15 @@
     @parent
     <script type="text/javascript">
         $(function () {
-            var payModal = $('#refund');
+            var payModal = $('#refund'), submitBtn = payModal.find('button[type="submit"]');
             payModal.on('show.bs.modal', function (e) {
                 var payParent = $(e.relatedTarget),
-                        url = payParent.data('url');
-                payModal.find('button[type="submit"]').data('url', url);
+                        url = payParent.data('url'),
+                        seller = payParent.data('seller');
+                submitBtn.data('url', url);
+                if (seller) {
+                    submitBtn.attr('data-data', '{"is_seller" : true}');
+                }
             });
         })
     </script>

@@ -35,17 +35,23 @@ class Sign
      * 续费
      *
      * @param \App\Models\Model $model
+     * @param int|string $orderNo
      * @param int|string $cost
+     * @param int|string $fee
      * @param User $user
      * @return bool
      */
-    public function renew(Model $model, $cost, User $user = null)
+    public function renew(Model $model, $orderNo, $cost, $fee = 0, User $user = null)
     {
         //添加续费记录
 
         $costConf = $model instanceof User ? cons()->valueLang('sign.expire_amount') : cons()->valueLang('sign.worker_expire_amount');
 
         $renewTypeName = array_get($costConf, $cost);
+
+        if (!$renewTypeName) {
+            return false;
+        }
 
         $user = $user ?: auth()->user();
 
@@ -63,7 +69,9 @@ class Sign
         $user->renews()->create([
                 'renew_type' => $renewTypeName,
                 'cost' => $cost,
+                'fee' => $fee,
                 'detail' => $model->model_name . '缴费' . $renewTypeName . '成功',
+                'order_no' => $orderNo,
                 'old_expire_at' => $model->expire_at
             ]
         );

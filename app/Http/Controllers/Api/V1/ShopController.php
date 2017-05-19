@@ -49,7 +49,8 @@ class ShopController extends Controller
             ->with('logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
         $shops->each(function ($item) {
-            $item->setAppends(['goods_count', 'sales_volume', 'three_goods'])->setHidden(['goods']);
+            $item->three_goods = $item->goods()->active()->ofNew()->limit(3)->get();
+            $item->setAppends(['goods_count', 'sales_volume', 'logo_url'])->setHidden(['goods']);
         });
         return $this->success($shops->toArray());
     }
@@ -78,16 +79,16 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return $this->success(
                 [
-                    'shop' => [],
+                    'shop' => new Shop(),
                     'goods' => [],
-                    'isLike' => []
+                    'isLike' =>false
                 ]);
         }
 
         $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $shop->is_like = $isLike ? true : false;
         $shop->load(['deliveryArea', 'shopAddress']);
-        $shop->setAppends(['goods_count', 'sales_volume'])->setHidden(['goods']);
+        $shop->setAppends(['goods_count', 'sales_volume', 'logo_url'])->setHidden(['goods']);
         return $this->success([
             'shop' => $shop->toArray()
         ]);
@@ -151,7 +152,7 @@ class ShopController extends Controller
         }
         $data = $request->all();
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->active()->orderBy('id', 'DESC')->paginate()->toArray();
+        $goods = $result['goods']->active()->hasPrice()->orderBy('id', 'DESC')->paginate()->toArray();
         return $this->success(['goods' => $goods]);
     }
 

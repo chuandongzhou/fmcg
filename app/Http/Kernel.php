@@ -32,9 +32,11 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
+        'child.guest' => \App\Http\Middleware\RedirectIfChildUserAuthenticated::class,
         'retailer' => \App\Http\Middleware\ForbidRetailer::class,
         'supplier' => \App\Http\Middleware\ForbidSupplier::class,
-        'deposit' => \App\Http\Middleware\VerifyDeposit::class
+        'deposit' => \App\Http\Middleware\VerifyDeposit::class,
+        'child.auth' =>  \App\Http\Middleware\ChildUserAuthenticate::class,
 
     ];
 }

@@ -89,7 +89,7 @@ class Goods extends Model
     {
         return $this->belongsTo('App\Models\Shop');
     }
-    
+
     public function inventory()
     {
         return $this->hasMany('App\Models\Inventory');
@@ -209,6 +209,14 @@ class Goods extends Model
         });*/
     }
 
+    public function scopeHasPrice($query, $shopUserId = 0)
+    {
+        $typeName = (new UserService())->getUserTypeName();
+        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shopUserId ? 'retailer' : $typeName));
+
+        return $query->where('price_' . $typeName, '>', 0);
+    }
+
     /**
      * 查询热销产品
      *
@@ -245,11 +253,23 @@ class Goods extends Model
      *
      * @param $query
      */
-    public function scopeOfPrice($query, $shop_user_id = 0)
+    public function scopeOfPrice($query, $shopUserId = 0)
     {
         $typeName = (new UserService())->getUserTypeName();
-        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shop_user_id ? 'retailer' : $typeName));
+        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shopUserId ? 'retailer' : $typeName));
         return $query->orderBy('price_' . $typeName, 'asc');
+    }
+
+    /**
+     * 价格由高到低
+     *
+     * @param $query
+     */
+    public function scopeOfPriceDesc($query, $shopUserId = 0)
+    {
+        $typeName = (new UserService())->getUserTypeName();
+        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shopUserId ? 'retailer' : $typeName));
+        return $query->orderBy('price_' . $typeName, 'desc');
     }
 
     /**
@@ -324,7 +344,7 @@ class Goods extends Model
 
     /**
      * 以名称或条形码检索
-     * 
+     *
      * @param $query
      * @param $nameOrCode
      * @return mixed
@@ -351,7 +371,7 @@ class Goods extends Model
             return $item->num == count($attr);
         });
         $goodsIds = array_pluck($goodsAttr, 'goods_id');
-        
+
         return $query->whereIn('id', $goodsIds);
     }
 
@@ -538,6 +558,18 @@ class Goods extends Model
     }
 
     /**
+     * 根据不同角色获取规格
+     *
+     * @return mixed
+     */
+    public function getSpecificationForChildAttribute()
+    {
+        $userType = child_auth()->user()->type;
+        $specification = $userType == $this->user_type ? $this->specification_retailer : ($userType == cons('user.type.wholesaler') ? $this->specification_wholesaler : $this->specification_retailer);
+        return $specification;
+    }
+
+    /**
      * 根据不同角色获取最低购买数
      *
      * @return mixed
@@ -652,19 +684,19 @@ class Goods extends Model
     }
 
     /**
-     * 获得转换后的商品库存剩余数量 
+     * 获得转换后的商品库存剩余数量
      *
      * @return mixed
      */
     public function getSurplusInventoryAttribute()
     {
         $total = $this->getTotalInventoryAttribute();
-        return InventoryService::calculateQuantity($this,$total);
+        return InventoryService::calculateQuantity($this, $total);
     }
 
     /**
      * 获取商品剩余库存
-     * 
+     *
      * @return mixed
      */
     public function getTotalInventoryAttribute()

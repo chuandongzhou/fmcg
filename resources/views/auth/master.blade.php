@@ -33,7 +33,6 @@
 @stop
 @section('footer')
     @include('includes.footer', ['class' => 'register-footer'])
-
 @stop
 
 @section('js')

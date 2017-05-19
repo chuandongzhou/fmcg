@@ -15,6 +15,12 @@ use Illuminate\Session\Store as Session;
 class SecurityController extends Controller
 {
 
+    /**
+     * 移动端修改密码
+     *
+     * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function password(UpdatePasswordRequest $request)
     {
         $attributes = $request->all();
@@ -146,6 +152,7 @@ class SecurityController extends Controller
      * 修改密码
      *
      * @param \App\Http\Requests\Api\v1\UpdatePasswordRequest $request
+     * @param \Illuminate\Session\Store $session
      * @return \WeiHeng\Responses\Apiv1Response
      */
 

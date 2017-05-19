@@ -86,6 +86,7 @@ return [
             'retailer' => 1,       //零售商
             'wholesaler' => 2,       //批发商
             'supplier' => 3,       //供应商
+            'maker' => 4,       //厂家
         ],
         //审核状态
         'audit_status' => [
@@ -152,12 +153,12 @@ return [
     // 店铺
     'shop' => [
         'file_type' => [
-            'logo' => 1,         //logo
-            'license' => 2,         //营业执照
-            'images' => 3,          //店铺图片
-            'business_license' => 4, //经营许可证
-            'agency_contract' => 5, //代理合同
-            'signature' => 6, //店招
+            'logo' => 1,                //logo
+            'license' => 2,             //营业执照
+            'images' => 3,              //店铺图片
+            'business_license' => 4,    //经营许可证
+            'agency_contract' => 5,     //代理合同
+            'signature' => 6,           //店招
         ],
         'address_type' => [
             'shop_address' => 1,        //店铺地址
@@ -169,8 +170,8 @@ return [
             'price',
         ],
         'home_page_per_num' => 15,
-        'page_per_num' => 10,  //店铺每页显示数量
-        'qrcode_size' => 60   //二维码尺寸
+        'page_per_num' => 10,           //店铺每页显示数量
+        'qrcode_size' => 60             //二维码尺寸
     ],
     // 交易相关
     'trade' => [
@@ -226,6 +227,7 @@ return [
         'sort' => [
             'name',
             'price',
+            'price_desc',
             'new',
             'not_on'
         ],
@@ -269,33 +271,33 @@ return [
             'CMB' => 2,//招商银行
             'CCB' => 3,//中国建设银行
             'BCOM' => 4,//中国交通银行
-            'CIB' => 5,//兴业银行
             'CMBC' => 6,//中国民生银行
             'CEB' => 7,//中国光大银行
             'BOC' => 8,//中国银行
             'PAB' => 9,//平安银行
             'CITIC' => 10,//中信银行
-            'SDB' => 11,//深圳发展银行
             'GDB' => 12,//广发银行
-            'SHB' => 13,//上海银行
-            'SPDB' => 14,//浦发银行
-            'HXB' => 15,//华夏银行
             'BOB' => 16,//北京银行
             'ABC' => 17,//中国农业银行
             'PSBC' => 18,//中国邮政储蓄银行
+            /*'NJCB' => 24,//南京银行
+            'BEA' => 25,//东亚银行
+            'SPDB' => 14,//浦发银行
+            'NBCB' => 26,//宁波银行
+            'CIB' => 5,//兴业银行
+            'SDB' => 11,//深圳发展银行
+            'SHB' => 13,//上海银行
+            'HXB' => 15,//华夏银行
             'GZCB' => 19,//广州银行
             'JSB' => 20,//江苏银行
             'SRCB' => 21,//上海农村商业银行
             'CBHB' => 22,//渤海银行
             'BJRCB' => 23,//北京农商银行
-            'NJCB' => 24,//南京银行
-            'BEA' => 25,//东亚银行
-            'NBCB' => 26,//宁波银行
             'HZB' => 27,//杭州银行
             'HSB' => 28,//徽商银行
             'CZB' => 29,//浙商银行
             'DLB' => 30,//大连银行
-            'UPOP' => 31,//银联在线支付
+            'UPOP' => 31,//银联在线支付*/
         ]
     ],
     //收藏
@@ -445,9 +447,12 @@ return [
         'free_month' => 3,
         //账号续期金额
         'expire_amount' => [
-            'a_year' => 1000,
+        /*    'a_year' => 1000,
             'two_years' => 2000,
-            'three_years' => 3000,
+            'three_years' => 3000,*/
+            'a_year' => 1,
+            'two_years' => 2,
+            'three_years' => 3,
             /* 'four_months' => 400,
              'five_months' => 500,
              'six_months' => 600,
@@ -458,7 +463,18 @@ return [
         ],
         //业务员司机续期金额
         'worker_expire_amount' => [
-            'a_month' => 10,
+            'a_month' => 1,
+            'two_months' => 2,
+            'three_months' => 3,
+            'four_months' => 4,
+            'five_months' => 5,
+            'six_months' => 6,
+            'seven_months' => 7,
+            'eight_months' => 8,
+            'nine_months' => 9,
+            'a_year' => 10,
+
+           /* 'a_month' => 10,
             'two_months' => 20,
             'three_months' => 30,
             'four_months' => 40,
@@ -467,7 +483,7 @@ return [
             'seven_months' => 70,
             'eight_months' => 80,
             'nine_months' => 90,
-            'a_year' => 100,
+            'a_year' => 100,*/
         ]
 
     ],
