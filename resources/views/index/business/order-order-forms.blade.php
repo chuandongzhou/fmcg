@@ -74,7 +74,7 @@
 
                                 <a class="color-blue"
                                    href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">
-                                    <i class="iconfont icon-iconmingchengpaixu65"></i>查看
+                                    <i class="iconfont icon-chakan"></i>查看
                                 </a>
                                 @if($order->status == cons('salesman.order.status.not_pass'))
                                     <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"

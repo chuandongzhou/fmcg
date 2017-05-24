@@ -75,11 +75,11 @@ class InventoryService
                 $buyerGoods = $buyerShop->goods->where('bar_code',$orderGoods->goods->bar_code)->first();
                 //查无此商品则标记为入库异常
                 if (empty($buyerGoods)) {
-                    $orderGoods->inventory_state = cons('inventory.inventory_state.abnormal');
+                    $orderGoods->inventory_state = cons('inventory.inventory_state.in-abnormal');
                     $orderGoods->save();
                 } else {
                     //如果是处理异常则标记为已处理
-                    if($orderGoods->inventory_state == cons('inventory.inventory_state.abnormal')){
+                    if($orderGoods->inventory_state == cons('inventory.inventory_state.in-abnormal')){
                         $orderGoods->inventory_state = cons('inventory.inventory_state.disposed');
                         $orderGoods->save();
                     }
@@ -100,7 +100,9 @@ class InventoryService
                         $data['quantity'] = $record->quantity;
                         $data['surplus'] = $record->quantity;
                         $data['remark'] = '系统自动入库';
-                        $this->inventory->create($data);
+                        if (!$this->inventory->create($data)){
+                            $orderGoods->update(['inventory_sate',cons('inventory.inventory_state.in-abnormal')]);
+                        }
                     }
                 }
             }
@@ -123,8 +125,8 @@ class InventoryService
             $info['inventory_number'] = $data['inventory_number'];
             $info['inventory_type'] = $data['inventory_type'];
             $info['action_type'] = $data['action_type'];
-            $info['user_id'] = $data['user_id'] ?? auth()->user()->id;
-            $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop->id;
+            $info['user_id'] = $data['user_id'] ?? auth()->id();
+            $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop_id;
 
             DB::beginTransaction();
 
@@ -185,7 +187,12 @@ class InventoryService
                     ]
                 ]
             ];
-            return $this->inventoryOut($data);
+            $result = $this->inventoryOut($data);
+            if($result != true){
+                $goods->inventory_state = cons('inventory.inventory_state.out-abnormal');
+                $goods->save();
+                return $result;
+            }
         }
     }
 
@@ -345,7 +352,7 @@ class InventoryService
     }
 
     /**
-     * 获取入库异常商品
+     * 获取入库异常
      * @return mixed
      */
     public function getInError()
@@ -354,7 +361,19 @@ class InventoryService
         auth()->user()->orders->each(function ($order) use(&$orderIds){
             $orderIds[] = $order->id;
         });
-        return OrderGoods::where('inventory_state',cons('inventory.inventory_state.abnormal'))->whereIn('order_id',$orderIds);
+        return OrderGoods::where('inventory_state',cons('inventory.inventory_state.in-abnormal'))->whereIn('order_id',$orderIds);
+    }
+    /**
+     * 获取出库异常
+     * @return mixed
+     */
+    public function getOutError()
+    {
+        $orderIds = [];
+        auth()->user()->orders->each(function ($order) use(&$orderIds){
+            $orderIds[] = $order->id;
+        });
+        return OrderGoods::where('inventory_state',cons('inventory.inventory_state.out-abnormal'))->whereIn('order_id',$orderIds);
     }
 
 }

@@ -349,68 +349,197 @@
         <div class="page-content">
             <!--页面中间内容开始-->
             <div class="row">
-                <div class="col-sm-12 path-title">库存管理 -><span class="second-level">入库异常</span> </div>
+                <div class="col-sm-12 path-title">财务管理 -><span class="second-level">月对账单 ->月对账单详情</span> </div>
             </div>
             <div class="row delivery">
-                <div class="col-sm-12 control-search">
-                    <a type="button" class="btn btn-default control" href="javascript:history.back()">返回</a>
+                <div class="col-sm-12 control-search assets">
+                    <form action="" method="get" autocomplete="off">
+                        <input class="enter control"   type="text" value="2016-12">
+                        <button type="button" class=" btn btn-blue-lighter  control ">查询</button>
+                        <button type="button" class=" btn btn-border-blue  control ">打印</button>
+                    </form>
                 </div>
-                <div class="col-sm-12 table-responsive wareh-details-table">
-                    <table class="table-bordered table table-center public-table">
-                        <thead>
-                        <tr>
-                            <th>商品名称</th>
-                            <th>商品条形码</th>
-                            <th>进货单号</th>
-                            <th>日期</th>
-                            <th>
-                                <a class="iconfont icon-tixing" title=""
-                                   data-container="body" data-toggle="popover" data-placement="bottom"
-                                   data-content="我的商品库里没有与此匹配的商品请新先新增商品后再手动入库">
-                                </a>
-                                操作
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div class="product-name" title="测试商品000002测试商品000002测试商品000002测试商品000002">测试商品000002测试商品000002测试商品000002测试商品000002</div>
-                            </td>
-                            <td>20170217111356023</td>
-                            <td>5632</td>
-                            <td>2015-11-24  19:56:42</td>
-                            <td>
-                                <a class="edit">新增商品</a>
-                                <a class="color-blue"  data-target="#myModal" data-toggle="modal">查看</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-name" title="测试商品000002测试商品000002测试商品000002测试商品000002">测试商品000002测试商品000002测试商品000002测试商品000002</div>
-                            </td>
-                            <td>20170217111356023</td>
-                            <td>5632</td>
-                            <td>2015-11-24  19:56:42</td>
-
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-name" title="测试商品000002测试商品000002测试商品000002测试商品000002">测试商品000002测试商品000002测试商品000002测试商品000002</div>
-                            </td>
-                            <td>20170217111356023</td>
-                            <td>5632</td>
-                            <td>2015-11-24  19:56:42</td>
-                            <td>
-                            <td>
-
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="col-sm-12 statement-item">
+                    <h3 class="text-center title">商户名称——月对账单</h3>
+                    <div class="row list-wrap">
+                        <div class="col-sm-5 item-col">
+                            <label>客户名称 : </label>
+                             珊珊批发部
+                        </div>
+                        <div class="col-sm-7 item-col">
+                            <label>对账时间 : </label>
+                            2016-12-01 — 2016-12-31
+                        </div>
+                        <div class="col-sm-12 item-col">
+                            <label>客户地址 : </label>
+                            四川省成都市青羊区草市街街道125号
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-12 text-right">
-                    <ul class="pagination management-pagination"><li class="disabled"><span>«</span></li> <li class="active"><span>1</span></li><li><a href="http://192.168.2.66/order-sell?page=2">2</a></li><li><a href="http://192.168.2.66/order-sell?page=3">3</a></li> <li><a href="http://192.168.2.66/order-sell?page=2" rel="next">»</a></li></ul>
+                <div class="col-sm-12 statement-table-wrap">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">促销对账单</h3>
+                        </div>
+                        <div class="panel-container table-responsive padding-clear">
+                            <table class="table table-bordered table-center ">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>促销名称</th>
+                                    <th colspan="2">返利项</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td rowspan="3">2016-12-12   10:23:56</td>
+                                    <td rowspan="3">12月导购经销商买送</td>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                <tr>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                <tr>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">陈列费对账单</h3>
+                        </div>
+                        <div class="panel-container table-responsive padding-clear">
+                            <table class="table table-bordered table-center ">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>订单编号</th>
+                                    <th colspan="2">陈列实发项</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td rowspan="3">2016-12-12   10:23:56</td>
+                                    <td rowspan="3">001</td>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                <tr>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                <tr>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随身</td>
+                                    <td>10个</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">订单对账单</h3>
+                        </div>
+                        <div class="panel-container table-responsive padding-clear">
+                            <table class="table table-bordered table-center ">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>订单编号</th>
+                                    <th>商品名称</th>
+                                    <th>数量</th>
+                                    <th>金额</th>
+                                    <th>优惠券</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td rowspan="2">2016-12-01 16:57:02</td>
+                                    <td rowspan="2">3527</td>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随1</td>
+                                    <td>10 箱</td>
+                                    <td>3256.00</td>
+                                    <td rowspan="2">100.00</td>
+                                </tr>
+                                <tr>
+                                    <td>德芙巧丝轻柔夹心威化巧克力202.5g*4盒奥地利进口零食春季出游随1</td>
+                                    <td>10 箱</td>
+                                    <td>3256.00</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="6" class="text-right">
+                                        <div class="money-item"><label>总计金额：</label>  1890.00</div>
+                                        <div class="money-item"><label>优惠总额：</label>100.00</div>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">收支明细</h3>
+                        </div>
+                        <div class="panel-container table-responsive padding-clear">
+                            <table class="table table-bordered table-center ">
+                                <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>支付平台</th>
+                                    <th>交易号</th>
+                                    <th>手续费</th>
+                                    <th>收支金额</th>
+                                    <th>账户余额</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>2016-12-12   10:23:56</td>
+                                    <td>平台余额支付</td>
+                                    <td>012233001556138</td>
+                                    <td>0</td>
+                                    <td>¥570.00</td>
+                                    <td>¥1570.00</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="6" class="text-right">
+                                        <div class="money-item"><label>总计支出金额：</label>  1890.00</div>
+                                        <div class="money-item"><label>总计收入总额：</label>100.00</div>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 statement-item">
+                    <div class="row list-wrap">
+                        <div class="col-sm-5 item-col">
+                            <label>公司盖章 : </label>
+                        </div>
+                        <div class="col-sm-7 item-col">
+                            <label>客户签字盖章 : </label>
+                            2016-12-01 — 2016-12-31
+                        </div>
+                        <div class="col-sm-5 item-col">
+                            <label>日期 : </label>
+                        </div>
+                        <div class="col-sm-5 item-col">
+                            <label>日期 : </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 bottom-note">
+                    如果贵方对对账单中数据有疑问，请提供贵明细，以便我们尽快核对您的账目
                 </div>
             </div>
         </div>
@@ -920,7 +1049,6 @@
         </div>
     </div>
 </footer>
-
 <!--[if lt IE 9]>
 <script src="../../js/plugins/respond.min.js"></script>
 <script src="../../material-js/plugins/excanvas.min.js"></script>
@@ -938,10 +1066,6 @@
 <script src="../../material-js/layout.min.js" type="text/javascript"></script>
 <script src="../../material-js/quick-sidebar.min.js" type="text/javascript"></script>
 <script src="../../js/base.js"></script>
-<script>
-    $(function () {
-        $("[data-toggle='popover']").popover();
-    })
-</script>
+
 </body>
 </html>

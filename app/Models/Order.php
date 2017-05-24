@@ -473,6 +473,14 @@ class Order extends Model
     }
 
     /**
+     * 优惠了多少
+     * @return mixed
+     */
+    public function getHowMuchDiscountAttribute()
+    {
+        return $this->price - $this->getAfterRebatesPriceAttribute();
+    }
+    /**
      * 获取买家名
      *
      * @return string

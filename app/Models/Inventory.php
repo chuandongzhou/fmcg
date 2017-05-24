@@ -103,8 +103,8 @@ class Inventory extends Model
     public function scopeOfNumber($query, $number)
     {
         return $query->where(function ($query) use ($number) {
-            $query->where('inventory_number', 'LIKE', '%' . $number . '%');
-            // ->orWhere('order_number', 'LIKE', '%' . $number . '%');
+            $query->where('inventory_number', 'LIKE', '%' . $number . '%')
+             ->orWhere('order_number', 'LIKE', '%' . $number . '%');
         });
     }
 

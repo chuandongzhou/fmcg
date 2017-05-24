@@ -71,7 +71,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-xs-2 control-label" for="license_num"><span class="red">*</span>
+                                    <label class="col-xs-2 control-label" for="license_num">
+                                        @if($user['type'] != cons('user.type.retailer'))
+                                            <span class="red">*</span>
+                                        @endif
                                         <span class="prompt">营业执照注册号:</span></label>
 
                                     <div class="col-xs-9 col-md-4">

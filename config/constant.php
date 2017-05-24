@@ -48,8 +48,32 @@ return [
         ],
         'inventory_state' => [
             'normal' => 0,   //正常
-            'abnormal' => 1, //异常
-            'disposed' => 2, //已处理
+            'in-abnormal' => 1, //入库异常
+            'out-abnormal' => 2, //入库异常
+            'disposed' => 3, //出库异常
+        ]
+    ],
+    //资产状态
+    'asset' => [
+        'status' => [
+            'on' => 1, //启用
+            'off' => 0 //禁用
+        ]
+    ],
+
+    //资产申请使用状态
+    'asset_apply' => [
+        'status' => [
+            'not_audit' => 0, //未审核
+            'approved' => 1, //审核通过
+        ]
+    ],
+    //资产申请日志动作区分
+    'asset_apply_log' => [
+        'action' => [
+            'apply' => 0,   //申请
+            'review' => 1,  //审核
+            'use' => 2      //使用
         ]
     ],
 
@@ -519,4 +543,22 @@ return [
             ]
         ]
     ],
+    //促销
+    'promo' => [
+        'type' => [
+            'custom' => 1,  //自定义
+            'money-money' => 2, //前返钱
+            'money-goods' => 3, //钱返商品
+            'goods-money' => 4, //商品返钱
+            'goods-goods' => 5, //商品返商品
+        ],
+        'content_type' => [
+            'condition' => 0,   //条件
+            'rebate' => 1,      //返利
+        ],
+        'review_status' => [
+            'non-review' => 0,  //未审核
+            'pass' => 1,        //通过
+        ]
+    ]
 ];

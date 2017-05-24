@@ -1,11 +1,16 @@
-@extends('index.menu-master')
+@extends('index.manage-master')
 @include('includes.timepicker')
 @section('subtitle', '商品出入库明细')
-@section('top-title')
-    <a href="{{ url('inventory') }}">库存管理</a> >
-    <span class="second-level">商品出入库明细</span>
-@stop
-@section('right')
+@section('container')
+    @include('includes.menu')
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-sm-12 path-title">
+                    <a href="{{ url('inventory') }}">库存管理</a> >
+                    <span class="second-level">商品出入库明细</span>
+                </div>
+            </div>
     <div class="row delivery">
         <div class="col-sm-12 control-search">
             <form action="" method="get" autocomplete="off">
@@ -56,6 +61,7 @@
         </div>
 
     </div>
+            </div></div>
 @stop
 @section('js')
     @parent

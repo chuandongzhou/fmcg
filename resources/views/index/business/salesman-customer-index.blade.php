@@ -78,7 +78,10 @@
                                        href="{{ url('business/salesman-customer/' . $customer->id . '/edit') }}">
                                         <i class="iconfont icon-xiugai"></i> 编辑
                                     </a><a class="edit" href="{{ url('business/salesman-customer/' . $customer->id) }}">
-                                        <i class="iconfont icon-iconmingchengpaixu65"></i> 明细
+                                        <i class="iconfont icon-mingxi"></i> 明细
+                                    </a>
+                                    <a class="edit" href="{{ url('business/salesman-customer/' . $customer->id . '/bill') }}">
+                                        <i class="iconfont icon-duizhangdan"></i> 对账单
                                     </a>
 
                                     <input type="hidden" class="map-data"

@@ -53,7 +53,7 @@
                             <td>{{ $man->returnOrderCount }}</td>
                             <td><b class="red">{{ $man->returnOrderSumAmount }}</b></td>
                             <td>
-                                <a href="{{ url('business/report/' . $man->id . "?start_date={$startDate}&end_date={$endDate}") }}" class="edit"><i class="iconfont icon-iconmingchengpaixu65"></i>明细</a>
+                                <a href="{{ url('business/report/' . $man->id . "?start_date={$startDate}&end_date={$endDate}") }}" class="edit"><i class="iconfont icon-chakan"></i>明细</a>
                             </td>
                         </tr>
                     @endforeach

@@ -1,10 +1,15 @@
-@extends('index.menu-master')
+@extends('index.manage-master')
 @section('subtitle', '在途商品')
-@section('top-title')
-    <a href="{{ url('inventory') }}">库存管理</a> >
-    <span class="second-level">在途商品</span>
-@stop
-@section('right')
+@section('container')
+    @include('includes.menu')
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-sm-12 path-title">
+                    <a href="{{ url('inventory') }}">库存管理</a> >
+                    <span class="second-level">在途商品</span>
+                </div>
+            </div>
     <div class="row goods-tables margin-clear">
         <div class="col-sm-12  goods-table-panel">
             <div class="goods-table">
@@ -25,7 +30,7 @@
                                     <img class="store-img lazy"
                                          data-original="{{$item->goods->image_url}}"
                                          src="{{$item->goods->image_url}}">
-                                    <a class="product-name" href="http://192.168.2.65/my-goods/324">
+                                    <a class="product-name" href="{{url('my-goods/'.$item->goods->id)}}">
                                         {{$item->goods->name}}</a>
                                 </td>
                                 <td>
@@ -33,7 +38,7 @@
                                 </td>
                                 <td>{{$item->count}}</td>
                                 <td class="operating text-center">
-                                    <a href="{{url('inventory/in-transit-goods-detail/'.$item->goods->id)}}" class="color-blue"><i class="iconfont icon-iconmingchengpaixu65"></i>
+                                    <a href="{{url('inventory/in-transit-goods-detail/'.$item->goods->id)}}" class="color-blue"><i class="iconfont icon-chakan"></i>
                                         查看</a>
                                 </td>
                             </tr>
@@ -47,6 +52,7 @@
             {!! $inTransitGoods->render() !!}
         </div>
     </div>
+            </div></div>
 @stop
 @section('js')
     @parent

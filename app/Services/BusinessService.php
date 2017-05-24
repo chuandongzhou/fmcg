@@ -41,10 +41,10 @@ class BusinessService extends BaseService
             $data['mortgageGoods'] = $this->getOrderMortgageGoods([$salesmanVisitOrder]);
         }
         $data['orderGoods'] = $salesmanVisitOrder->orderGoods;
-        $data['goods_total_num'] = 0 ;
-        $data['goods_total_amount'] = 0 ;
-        if (count($data['orderGoods']) > 0){
-            foreach ($data['orderGoods'] as $goods){
+        $data['goods_total_num'] = 0;
+        $data['goods_total_amount'] = 0;
+        if (count($data['orderGoods']) > 0) {
+            foreach ($data['orderGoods'] as $goods) {
                 $data['goods_total_num'] += $goods['num'];
                 $data['goods_total_amount'] += $goods['amount'];
             }

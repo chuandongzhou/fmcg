@@ -3344,7 +3344,7 @@ table {
     font-weight: 600;
   }
   .panel-container {
-    padding: 5px 40px 25px 40px;
+    padding: 10px 40px 25px 40px;
     .prompt {
       font-size: 12px;
     }
@@ -4561,12 +4561,15 @@ table {
             text-align: center;
             font-size: 13px;
             padding: 20px 0;
+            p{
+              margin:10px 0!important;
+            }
             &:first-of-type {
               text-align: left !important;
             }
             .product-name {
               display: inline-block;
-              width: 90px;
+              width: 90px !important;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
@@ -6015,7 +6018,7 @@ table {
             left: 0;
             color: $body-bg;
             @include square(100%);
-            line-height: 55px;
+            line-height: 140px;
             text-align: center;
             background: rgba(000, 000, 000, 0.3) !important;
           }
@@ -6402,6 +6405,9 @@ table {
         }
       }
     }
+  }
+  .disabled{
+    background-color:$body-bg;
   }
 }
 
@@ -6918,6 +6924,11 @@ table {
   width:100px!important;
 }
 .promotion-msg-wrap{
+  textarea{
+    height:60px;
+    width:80%;
+    vertical-align: middle;
+  }
   .item-text{
     margin-top:20px;
   }

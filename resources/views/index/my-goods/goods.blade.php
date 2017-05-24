@@ -271,7 +271,7 @@
                                     </div>
                                     <label class="control-label col-sm-2">规格 :</label>
 
-                                    <div class="col-sm-3  spec">{{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}</div>
+                                    <div class="col-sm-3  spec_retailer">{{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}</div>
                                     <input type="hidden" name="specification_retailer"
                                            value="{{ $goods->specification_retailer }}"/>
                                 </div>
@@ -352,7 +352,7 @@
                                         </div>
                                         <label class="control-label col-sm-2">规格 :</label>
 
-                                        <div class="col-sm-3  spec">
+                                        <div class="col-sm-3  spec_wholesaler">
                                             {{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}
 
                                         </div>

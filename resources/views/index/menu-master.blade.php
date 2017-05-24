@@ -45,40 +45,100 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item  {!!  request()->is('inventory','inventory/*') ? 'active' : '' !!}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="iconfont icon-kucun"></i>
+                        <span class="title">库存管理</span>
+                        <span class="{!!  request()->is( 'inventory','inventory/*')  ? 'selected' : '' !!}"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+
+                        <li class="nav-item {{ path_active(['inventory']) }} ">
+                            <a href="{{ url('inventory') }}" class="nav-link ">
+                                <span class="title">库存管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ request()->is('inventory/in')? 'active' : '' }}">
+                            <a href="{{ url('inventory/in') }}" class="nav-link ">
+                                <span class="title">入库</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active( 'inventory/out') }}">
+                            <a href="{{ url('inventory/out') }}" class="nav-link ">
+                                <span class="title">出库</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active( 'inventory/in-transit-goods') }}">
+                            <a href="{{ url('inventory/in-transit-goods') }}" class="nav-link ">
+                                <span class="title">在途商品</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ request()->is('inventory/detail')? 'active' : '' }}">
+                            <a href="{{ url('inventory/detail-list') }}" class="nav-link ">
+                                <span class="title">出入库明细</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @if($user->type == cons('user.type.maker'))
 
-                    <li class="nav-item  {!!  request()->is('inventory','inventory/*') ? 'active' : '' !!}">
+                    <li class="nav-item  {!!  request()->is('asset','asset/*') ? 'active' : '' !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
-                            <i class="fa fa-edit "></i>
-                            <span class="title">库存管理</span>
-                            <span class="{!!  request()->is( 'inventory','inventory/*')  ? 'selected' : '' !!}"></span>
+                            <i class="iconfont icon-zichan"></i>
+                            <span class="title">资产管理</span>
+                            <span class="{!!  request()->is( 'asset','asset/*')  ? 'selected' : '' !!}"></span>
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('asset/unused') }}" class="nav-link ">
+                                    <span class="title">未使用</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('asset/used') }}" class="nav-link ">
+                                    <span class="title">已使用</span>
+                                </a>
+                            </li>
 
-                            <li class="nav-item {{ path_active(['inventory']) }} ">
-                                <a href="{{ url('inventory') }}" class="nav-link ">
-                                    <span class="title">库存管理</span>
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('asset/apply') }}" class="nav-link ">
+                                    <span class="title">资产申请审核</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->is('inventory/in')? 'active' : '' }}">
-                                <a href="{{ url('inventory/in') }}" class="nav-link ">
-                                    <span class="title">入库</span>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item  {!!  request()->is('promo','promo/*') ? 'active' : '' !!}">
+                        <a href="javascript:;" class="nav-link nav-toggle">
+                            <i class="iconfont icon-zichan"></i>
+                            <span class="title">促销管理</span>
+                            <span class="{!!  request()->is( 'promo','promo/*')  ? 'selected' : '' !!}"></span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item {{ path_active(['promo']) }} ">
+                                <a href="{{ url('promo/setting') }}" class="nav-link ">
+                                    <span class="title">促销设置</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ path_active( 'inventory/out') }}">
-                                <a href="{{ url('inventory/out') }}" class="nav-link ">
-                                    <span class="title">出库</span>
+
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('promo/add') }}" class="nav-link ">
+                                    <span class="title">促销添加</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ path_active( 'inventory/out') }}">
-                                <a href="{{ url('inventory/in-transit-goods') }}" class="nav-link ">
-                                    <span class="title">在途商品</span>
+
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('promo/goods') }}" class="nav-link ">
+                                    <span class="title">促销商品</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ request()->is('inventory/detail')? 'active' : '' }}">
-                                <a href="{{ url('inventory/detail-list') }}" class="nav-link ">
-                                    <span class="title">出入库明细</span>
+
+                            <li class="nav-item {{ path_active(['asset']) }} ">
+                                <a href="{{ url('promo/apply-log') }}" class="nav-link ">
+                                    <span class="title">促销申请记录</span>
                                 </a>
                             </li>
                         </ul>
@@ -235,31 +295,36 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*']) !!} ">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-money "></i>
-                                <span class="title">财务管理</span>
-                                <span class="{!! request()->is('personal/coupon*','personal/finance/*','personal/bank*')?'selected':'' !!}"></span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item start {{ path_active(['personal/coupon']) }}">
-                                    <a href="{{ url('personal/coupon') }}" class="nav-link ">
-                                        <span class="title">优惠券</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item  {{ path_active(['personal/finance/balance','personal/finance/withdraw']) }}">
-                                    <a href="{{ url('personal/finance/balance') }}" class="nav-link ">
-                                        <span class="title">账户余额</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item  {{ path_active(['personal/bank/*','personal/bank']) }}">
-                                    <a href="{{ url('personal/bank') }}" class="nav-link ">
-                                        <span class="title">提现账号</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*','personal/bill/*']) !!} ">
+                                <a href="javascript:;" class="nav-link nav-toggle">
+                                    <i class="fa fa-money "></i>
+                                    <span class="title">财务管理</span>
+                                    <span class="{!! request()->is('personal/coupon*','personal/finance/*','personal/bank*','personal/bill/*')?'selected':'' !!}"></span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item start {{ path_active(['personal/coupon']) }}">
+                                        <a href="{{ url('personal/coupon') }}" class="nav-link ">
+                                            <span class="title">优惠券</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item  {{ path_active(['personal/finance/balance','personal/finance/withdraw']) }}">
+                                        <a href="{{ url('personal/finance/balance') }}" class="nav-link ">
+                                            <span class="title">账户余额</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item  {{ path_active(['personal/bank/*','personal/bank']) }}">
+                                        <a href="{{ url('personal/bank') }}" class="nav-link ">
+                                            <span class="title">提现账号</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item  {{ path_active(['personal/bill/*','personal/bill']) }}">
+                                        <a href="{{ url('personal/bill') }}" class="nav-link ">
+                                            <span class="title">月对账单</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="fa fa-shopping-basket"></i>

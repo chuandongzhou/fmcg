@@ -151,7 +151,7 @@ class SalesmanVisitOrder extends Model
     {
         return $query->where('status', 0);
     }
-
+    
     /**
      * 订单过滤
      *

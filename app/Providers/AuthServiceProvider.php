@@ -119,5 +119,37 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-shop-coupon', function ($user, $coupon) {
             return $coupon->shop_id == $user->shop_id;
         });
+        /**
+         * 验证店铺资产
+         */
+        $gate->define('validate-shop-asset', function ($user, $asset) {
+            return $asset->shop_id == $user->shop_id;
+        });
+
+        /**
+         * 验证店铺资产审核权限
+         */
+        $gate->define('validate-shop-assetApply', function ($user, $asset_apply) {
+            foreach ($user->shop->asset as $asset){
+                if ($asset_apply->asset_id = $asset->id){
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        /**
+         * 验证店铺促销活动
+         */
+        $gate->define('validate-shop-promo', function ($user, $promo) {
+            return $user->shop_id == $promo->shop_id;
+        });
+        
+        /**
+         * 验证店铺促销审核权限
+         */
+        $gate->define('validate-shop-promoApply', function ($user, $promoApply) {
+            return $user->shop_id == $promoApply->promo->shop_id;
+        });
     }
 }

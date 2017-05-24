@@ -1,51 +1,71 @@
-@extends('index.menu-master')
-@section('subtitle', '入库异常')
-@section('top-title')
-    <a href="{{ url('inventory') }}">库存管理</a> >
-    <span class="second-level">出库异常</span>
-@stop
-@section('right')
-    <div class="row delivery">
-        <div class="col-sm-12 control-search">
-            <form action="" method="get" autocomplete="off">
-                <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text" value="">至
-                <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text" value="">
-                <input class="enter control" placeholder="出库单号/售货单号" type="text" value="">
-                <button type="button" class=" btn btn-blue-lighter search control search-by-get">搜索</button>
-            </form>
-        </div>
-        <div class="col-sm-12 table-responsive table-wrap">
-            <table class="table-bordered table table-center table-title-blue">
-                <thead>
-                <tr>
-                    <th>出库单号</th>
-                    <th>售货单号</th>
-                    <th>买家名称</th>
-                    <th>类型</th>
-                    <th>出库人</th>
-                    <th>出库时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>20170217111356023</td>
-                    <td>5632</td>
-                    <td>冬雨批发部</td>
-                    <td>系统入库</td>
-                    <td>系统</td>
-                    <td>2016-10-14   10:08:42</td>
-                    <td><a class="color-blue"><i class="iconfont icon-iconmingchengpaixu65"></i>查看</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+@extends('index.manage-master')
+@section('subtitle', '出库异常')
 
+@section('container')
+    @include('includes.menu')
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-sm-12 path-title">
+                    <a href="{{ url('inventory') }}">库存管理</a> >
+                    <span class="second-level">出库异常</span>
+                </div>
+            </div>
+            <div class="row delivery">
+                <div class="col-sm-12 control-search">
+                    <a type="button" class="btn btn-default control" href="javascript:history.back()">返回</a>
+                </div>
+                <div class="col-sm-12 table-responsive wareh-details-table">
+                    <table class="table-bordered table table-center public-table">
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>商品条形码</th>
+                            <th>进货单号</th>
+                            <th>日期</th>
+                            <th>
+                                <a class="iconfont icon-tixing" title=""
+                                   data-container="body" data-toggle="popover" data-placement="bottom"
+                                   data-content="系统自动出库出现异常,请手动出库">
+                                </a>
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(isset($errorLists))
+                            @foreach($errorLists as $list)
+                                <tr>
+                                    <td>
+                                        <div class="product-name" title="{{$list->goods->name ?? ''}}">
+                                            {{$list->goods->name ?? ''}}
+                                        </div>
+                                    </td>
+                                    <td>{{$list->goods->bar_code ?? ''}}</td>
+                                    <td>{{$list->order_id ?? ''}}</td>
+                                    <td>{{$list->updated_at}}</td>
+                                    <td>
+                                        <a class="color-blue viewDetail"
+                                           href="{{url('inventory/out-create/'.$list->goods->id)}}">我要出库</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-12 text-right">
+                    {!! $errorLists->render() !!}
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
-
+        $(function () {
+            $("[data-toggle='popover']").popover();
+        })
     </script>
 @stop

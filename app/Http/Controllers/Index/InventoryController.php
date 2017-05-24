@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Goods;
 use App\Models\Inventory;
-use App\Models\Order;
 use App\Models\OrderGoods;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
@@ -13,7 +12,7 @@ use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\Auth;
+
 
 
 class InventoryController extends Controller
@@ -115,10 +114,11 @@ class InventoryController extends Controller
         $data = $request->only('start_at', 'end_at', 'number');
         $inventory = Inventory::with(['user'])->OfOut()->groupBy('inventory_number')->orderBy('created_at', 'desc');
         $result = $this->inventoryService->search($inventory, $data);
-
+        $errorCount = $this->inventoryService->getOutError();
         return view('index.inventory.out', [
             'lists' => $result->paginate(),
-            'data' => $data
+            'data' => $data,
+            'errorCount' => $errorCount->count()
         ]);
     }
 
@@ -269,19 +269,30 @@ class InventoryController extends Controller
             'inTransitTotal' => $inTransitTotal
         ]);
     }
-    
+
+    /**
+     * 入库错误列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getInError()
     {
         $inError = $this->inventoryService->getInError();
         return view('index.inventory.in-error',[
-            'errorLists' => $inError->paginate()
+            'errorLists' => $inError->paginate(),
+            'shopGoods' => auth()->user()->shop->goods
         ]);
     }
 
+    /**
+     * 出库错误列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getOutError()
     {
-
-        return view('index.inventory.out-error');
+        $outError = $this->inventoryService->getOutError();
+        return view('index.inventory.out-error',[
+            'errorLists' => $outError->paginate()
+        ]);
     }
 
 }

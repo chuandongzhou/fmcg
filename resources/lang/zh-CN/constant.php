@@ -356,4 +356,41 @@ return [
             'out' => '出库',
         ]
     ],
+    //资产表
+    'asset' => [
+        'status' => [
+            'on' =>  '已启用',
+            'off' => '已禁用'
+        ],
+    ],
+    //资产申请使用表
+    'asset_apply' => [
+        'status' => [
+            'not_audit' => '未审核',
+            'approved' => '通过',
+            'delete' => '删除'
+        ],
+    ],
+    //资产申请日志动作区分
+    'asset_apply_log' => [
+        'action' => [
+            'apply' => '提交申请',
+            'review' =>'审核处理',
+            'use' => '登记开始使用时间'
+        ]
+    ],
+    'promo' => [
+        'type' => [
+            'custom' => '自定义',
+            'money-money' => '下单总金额达到返利',
+            'money-goods' => '下单总金额达到返商品',
+            'goods-money' => '下单商品总量达到返利',
+            'goods-goods' => '下单商品总量达到返商品',
+        ],
+        'review_status' => [
+            'pass' => '通过',
+            'non-review' => '未审核'
+        ]
+    ]
+
 ];

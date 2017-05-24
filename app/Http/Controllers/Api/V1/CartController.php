@@ -110,7 +110,6 @@ class CartController extends Controller
     {
 
         $ids = $request->input('ids');
-
         if (is_null($ids)) {
             return $this->error('请选择要删除的商品');
         }

@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Index\Business;
 use App\Models\Goods;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
+use App\Models\SystemTradeInfo;
+use App\Services\BillService;
 use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
 use Gate;
 use PhpOffice\PhpWord\PhpWord;
+use Zend\Validator\File\Sha1;
 
 class SalesmanCustomerController extends Controller
 {
@@ -143,6 +146,32 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
+     * 客户对账单
+     *
+     * @param $salesmanCustomer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function bill(Request $request, $customer)
+    {
+        if ($customer && Gate::denies('validate-customer', $customer)) {
+            return $this->error('客户不存在');
+        }
+        $billService= new BillService();
+        $data = $request->all();
+        $timeFormat = $billService->timeHandler(array_get($data, 'time'));
+        $bill = $billService->getBillDetailOfSeller($customer, $timeFormat);
+        if (array_get($data, 'act')) {
+            return $billService->billExportOfSeller($bill);
+        }
+        return view('index.business.customer-bill',
+            [
+                'data' => $data,
+                'bill' => $bill
+            ]);
+    }
+
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -204,12 +233,11 @@ class SalesmanCustomerController extends Controller
 
         $orderConf = cons('salesman.order');
 
-        $allOrders->each(function($order){
-            $order->orderGoods->each(function($goods)use($order){
-                $goods->visit_created_at = $order->salesmanVisit?$order->salesmanVisit->created_at:$goods->created_at;
+        $allOrders->each(function ($order) {
+            $order->orderGoods->each(function ($goods) use ($order) {
+                $goods->visit_created_at = $order->salesmanVisit ? $order->salesmanVisit->created_at : $goods->created_at;
 
             });
-
         });
 
         //订单
@@ -275,7 +303,7 @@ class SalesmanCustomerController extends Controller
 
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
-                    'time' => isset($goodsList[$orderGoodsType['order']])?$goodsList[$orderGoodsType['order']]->visit_created_at:head($goodsList)['created_at'],
+                    'time' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->visit_created_at : head($goodsList)['created_at'],
                     'stock' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,
@@ -369,7 +397,6 @@ class SalesmanCustomerController extends Controller
             $table->addCell(null, $cellRowContinue);
             $table->addCell(9000, $gridSpan4)->addText('现金', null, $cellAlignCenter);
 
-
             $table->addRow();
             $table->addCell(null, $cellRowContinue);
             $table->addCell(2000)->addText('月份', null, $cellAlignCenter);
@@ -457,11 +484,8 @@ class SalesmanCustomerController extends Controller
             }
         }
 
-
         $name = $result['customer']->name . $result['beginTime'] . ' 至 ' . $result['endTime'] . '销售明细.docx';
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
     }
-
-
 }

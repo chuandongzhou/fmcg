@@ -176,6 +176,7 @@ class AuthController extends Controller
         if (empty($request->input('user_name'))) {
             return $this->error('注册用户时遇到问题');
         }
+        
         $user = User::where('user_name', $request->input('user_name'))->first();
         $shopInput = $request->except('username');
         $shopModel = $user->shop();

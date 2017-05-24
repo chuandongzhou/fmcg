@@ -33,6 +33,7 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.manage-master',
                 'index.index.index',
                 'includes.search',
+                'includes.menu',
                 'includes.shop-search',
                 'index.menu-master',
                 'index.personal.tabs',

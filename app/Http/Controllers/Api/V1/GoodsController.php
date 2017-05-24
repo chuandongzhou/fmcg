@@ -35,10 +35,8 @@ class GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
-
         $addressData = (new AddressService)->getAddressData();
         $gets = array_merge($gets, array_except($addressData, 'address_name'));
-
         $goods = Goods::active()->with('images.image')->select([
             'id',
             'name',

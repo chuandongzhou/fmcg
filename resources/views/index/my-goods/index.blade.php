@@ -22,7 +22,7 @@
                                             <select class="control select-category">
                                                 <option value="{{ url('my-goods') }}">全部分类</option>
                                                 @foreach($category as $key => $item)
-                                                    <option value="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}"  {{ $category['selected']['id']==$item['id']?'selected':'' }}>
+                                                    <option value="{{ url('my-goods?category_id=' . $item['level'].$item['id'] . (isset($get['name']) ? '&name=' . $get['name'] : '' )) }}" {{ $category['selected']['id']==$item['id']?'selected':'' }}>
                                                         {{ $item['name'] }}
                                                     </option>
                                                 @endforeach
@@ -106,7 +106,7 @@
                                 <div class="clearfix all-sort-panel">
                                     <div class="pull-left all-sort">
                                         @foreach($attr['child'] as $child)
-                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}" >{{ $child['name'] }}</a>
+                                            <a href="{{ url('my-goods?attr_' . $attr['attr_id'] . '=' . $child['attr_id']  . '&' . http_build_query($get)) }}">{{ $child['name'] }}</a>
                                         @endforeach
                                     </div>
                                     <a class="more pull-right" href="#"><span>更多</span> <i
@@ -185,17 +185,18 @@
                                     <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
                                     <img class="store-img lazy" data-original="{{ $item->image_url }}">
                                     <a class="product-name ellipsis"
-                                       href="{{ url('goods/' . $item->id) }}" title="{{ $item->name }}"> {{ $item->name }}</a>
+                                       href="{{ url('goods/' . $item->id) }}"
+                                       title="{{ $item->name }}"> {{ $item->name }}</a>
                                 </td>
                                 <td>
                                     <p>{{ $item->price_retailer}}元</p>
-                                    @if(auth()->user()->type == cons('user.type.supplier' || auth()->user()->type == cons('user.type.maker')))
+                                    @if(auth()->user()->type == cons('user.type.supplier') || auth()->user()->type == cons('user.type.maker'))
                                         <p>{{ $item->price_wholesaler }}元 (批)</p>
                                     @endif
                                 </td>
                                 <td>
                                     <p> {{ $item->min_num }}</p>
-                                    @if(auth()->user()->type == cons('user.type.supplier' ||  auth()->user()->type == cons('user.type.maker')))
+                                    @if(auth()->user()->type == cons('user.type.supplier') ||  auth()->user()->type == cons('user.type.maker'))
                                         <p>{{ $item->min_num_wholesaler }} (批)</p>
                                     @endif
                                 </td>
@@ -207,10 +208,16 @@
                                     已<span class="status-name">{{ cons()->valueLang('goods.status' ,$item->status) }}</span>
                                 </td>
                                 <td class="operating text-center">
+
                                     @if(!$item->is_mortgage_goods)
                                         <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
                                            data-url="{{ url('api/v1/my-goods/' . $item->id . '/mortgage') }}"
                                            class="no-form mortgage color-blue" title="设为抵费商品">抵费</a>
+                                    @endif
+                                    @if(!$item->is_promo_goods)
+                                        <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
+                                           data-url="{{ url('api/v1/my-goods/' . $item->id . '/promo') }}"
+                                           class="no-form mortgage color-blue" title="设为促销商品">设为促销品</a>
                                     @endif
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="edit">编辑</a>
                                     <a href="javascript:" data-method="put"
@@ -222,7 +229,8 @@
                                        class="ajax-no-form orange ">
                                         {{ cons()->valueLang('goods.status' , !$item->status) }}
                                     </a>
-                                    <a class="red delete-no-form {{ $item->status ? 'hidden' : '' }} delete" data-method="delete"
+                                    <a class="red delete-no-form {{ $item->status ? 'hidden' : '' }} delete"
+                                       data-method="delete"
                                        data-url="{{ url('api/v1/my-goods/' . $item->id) }}" href="javascript:">删除</a>
                                 </td>
                             </tr>

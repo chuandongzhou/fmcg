@@ -81,6 +81,7 @@ class MyGoodsController extends Controller
                 isset($attributes['attrs']) && $this->updateAttrs($goods, $attributes['attrs']);
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
+                
                 $abnormalOrderId = $request->input('abnormalOrderId');
                 $abnormalGoodsId = $request->input('abnormalGoodsId');
                 if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)){
@@ -90,7 +91,6 @@ class MyGoodsController extends Controller
                         ->where('inventory_state',cons('inventory.inventory_state.abnormal'))
                         ->get();
                     //自动入库
-                    dd($abnormal);
                     (new InventoryService())->autoInventoryIn($abnormal);
                 }
                 return true;
@@ -219,6 +219,30 @@ class MyGoodsController extends Controller
             }
         }
         return $this->error('商品' . $statusVal . '失败');
+    }
+
+    /**
+     * 设置为促销商品
+     *
+     * @param \App\Models\Goods $goods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function promo(Goods $goods)
+    {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $shopId = auth()->user()->shop_id;
+
+        if ($promoGoods = $goods->promoGoods()->withTrashed()->where('shop_id', $shopId)->first()) {
+            return $promoGoods->fill(['deleted_at' => null])->save() ? $this->success('设置成功') : $this->error('设置失败，请重试');
+        }
+        
+        $attributes = [
+            'shop_id' => $shopId
+        ];
+
+        return $goods->promoGoods()->create($attributes)->exists ? $this->success('设置成功') : $this->error('设置失败，请重试');
     }
 
     /**

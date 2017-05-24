@@ -195,6 +195,16 @@ class Goods extends Model
     {
         return $this->hasOne('App\Models\MortgageGoods');
     }
+    
+    /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function promoGoods()
+    {
+        return $this->hasOne('App\Models\PromoGoods');
+    }
 
     /**
      * 查询热销产品
@@ -611,6 +621,16 @@ class Goods extends Model
     public function getIsMortgageGoodsAttribute()
     {
         return !is_null($this->mortgageGoods);
+    }
+    
+    /**
+     * 是否是抵费商品
+     *
+     * @return bool
+     */
+    public function getIsPromoGoodsAttribute()
+    {
+        return !is_null($this->promoGoods);
     }
 
     /**

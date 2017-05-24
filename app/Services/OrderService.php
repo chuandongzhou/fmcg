@@ -558,32 +558,17 @@ class OrderService extends BaseService
     }
 
     /**
-     * 获得在途订单Ids
+     * 获得在途订单Ids----<已发货-未收货>
      * @return array ids
      */
     static public function getInTransitOrderIds()
     {
-        $orders = Order::OfSell(auth()->user()->id)->with('goods','orderGoods')->NonArrived()->get(['id']);
+        $orders = Order::OfSell(auth()->user()->id)->NonArrived()->get(['id']);
         $orderIds = [];
         foreach ($orders as $key => $order) {
             $orderIds[] = $order->id;
         }
         return $orderIds;
     }
-
-    /**
-     * 获取用户订单Ids
-     * @return array
-     */
-    static public function getUserOrderIds()
-    {
-        $orders = Order::OfSell(auth()->user()->id)->with('goods','orderGoods')->get(['id']);
-        $orderIds = [];
-        foreach ($orders as $key => $order) {
-            $orderIds[] = $order->id;
-        }
-        return $orderIds;
-    }
-
-
+    
 }
