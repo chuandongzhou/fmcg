@@ -51,7 +51,9 @@
                         for (var shop in detailShops) {
                             html += '<li class="cart_item">' +
                                     '<a href="/shop/' + detailShops[shop].id + '"><div class="store-name">' + detailShops[shop].name + '</div></a>';
+
                             cartPrices = cartPrices.add(detailShops[shop].sum_price);
+
                             for (var goods in detailShops[shop].cart_goods) {
                                 cartNum++;
                                 var detailGoods = detailShops[shop].cart_goods[goods];

@@ -66,7 +66,7 @@ class CartService extends BaseService
                 }
             }
             if ($sumPrice > 0) {
-                $shop->sum_price = $sumPrice;
+                $shop->sum_price = (float)$sumPrice;
                 $withCoupon && ($shop->coupons = $this->getUsefulCoupon($shop->id, $sumPrice));
 
             } else {

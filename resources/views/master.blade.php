@@ -17,29 +17,29 @@
     @yield('css')
 
     <!--[if lt IE 9]>
-        <script src="{{ asset('js/html5shiv.min.js') }}"></script>
-        <script src="{{ asset('js/respond.min.js') }}"></script>
-        <script src="{{ asset('js/selectivizr.js') }}"></script>
-        <![endif]-->
-        <script>
-            var SITE = {
-                USER: {!! $user or '{}' !!},
-                ROOT: '{{ url('/') }}',
-                API_ROOT: '{{ route('api.v1.root') }}'
-            };
-        </script>
-        <script src="{{ asset('js/jquery.min.js') }}"></script>
-        <script src="{{ asset('js/lib/jquery/placeholder/jquery.placeholder.min.js') }}"></script>
-        <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
-        <!--[if lt IE 10]>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('[placeholder]').removeAttr("placeholder");
-            })
-        </script>
-        <![endif]-->
-    </head>
-    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+    <script src="{{ asset('js/html5shiv.min.js') }}"></script>
+    <script src="{{ asset('js/respond.min.js') }}"></script>
+    <script src="{{ asset('js/selectivizr.js') }}"></script>
+    <![endif]-->
+    <script>
+        var SITE = {
+            USER: {!! $user or '{}' !!},
+            ROOT: '{{ url('/') }}',
+            API_ROOT: '{{ route('api.v1.root') }}'
+        };
+    </script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/lib/jquery/placeholder/jquery.placeholder.min.js') }}"></script>
+    <!-- 对于IE 10 以下版本placeholder的兼容性调整 -->
+    <!--[if lt IE 10]>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[placeholder]').removeAttr("placeholder");
+        })
+    </script>
+    <![endif]-->
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
 
 @yield('header')
 @yield('body')

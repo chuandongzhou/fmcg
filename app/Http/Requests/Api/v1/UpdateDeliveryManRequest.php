@@ -12,7 +12,6 @@ class UpdateDeliveryManRequest extends UserRequest
      */
     public function rules()
     {
-        $deliveryMan = $this->route('delivery_man');
         return [
             'name' => 'required|max:30',
             'phone' => 'required|numeric|digits_between:7,14',

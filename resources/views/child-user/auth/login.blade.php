@@ -11,6 +11,7 @@
     <style>
         html, body {
             background-color: #f1f1f1;
+            margin-bottom: 0 !important;
         }
     </style>
 @stop
@@ -33,7 +34,8 @@
                 <div class="col-xs-5 login-right-content">
                     <div class="row login-wrap">
                         <form class="ajax-form" method="post" action="{{ url('api/v1/child-user/auth/login') }}"
-                              accept-charset="UTF-8" data-help-class="error-msg text-center" data-done-url="{{ url('child-user/info') }}"
+                              accept-charset="UTF-8" data-help-class="error-msg text-center"
+                              data-done-url="{{ url('child-user/info') }}"
                         >
                             <div class="col-xs-12 padding-clear">
                                 <span class="role-title"></span>
@@ -54,9 +56,6 @@
                             </div>
 
                             <div class="col-xs-12 btn-item text-center">
-                                {{--<button type="button" class="register-btn btn btn-primary" data-toggle="modal"--}}
-                                        {{--data-target="#myModal-agreement">注册--}}
-                                {{--</button>--}}
                                 <button type="submit"
                                         class="login-btn btn btn-warning no-prompt geetest-btn">登录
                                 </button>

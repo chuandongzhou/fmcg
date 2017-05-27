@@ -121,4 +121,14 @@ class SalesmanVisit extends Model
         return $this->salesmanCustomer ? $this->salesmanCustomer->name : '';
     }
 
+    /**
+     * 获取业务员名
+     *
+     * @return string
+     */
+    public function getSalesmanNameAttribute()
+    {
+        return $this->salesman ? $this->salesman->name : '';
+    }
+
 }

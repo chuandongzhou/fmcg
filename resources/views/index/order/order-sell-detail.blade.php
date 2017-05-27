@@ -98,7 +98,7 @@
                                                     <a class="iconfont icon-tixing pull-right" title=""
                                                        data-container="body" data-toggle="popover"
                                                        data-placement="bottom"
-                                                       data-content="退款原因:（{{ $order->refund_reason['reason'] }}）">
+                                                       data-content="退款原因:（{{ $order->refund_reason['reason']  or '' }}）">
                                                     </a>
                                                 @endif
                                                 @if($order['status'] == cons('order.status.invalid'))
@@ -461,7 +461,7 @@
                                             @if($order->pay_status == cons('order.pay_status.refund')  || $order->pay_status == cons('order.pay_status.refund_success'))
                                                 <tr>
                                                     <td>申请退款</td>
-                                                    <td>{{ $order->refund_reason['time'] }}</td>
+                                                    <td>{{ $order->refund_reason['time']  or '' }}</td>
                                                     <td>{{ $order->user_shop_name }}</td>
                                                 </tr>
                                             @endif

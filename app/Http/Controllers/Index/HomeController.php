@@ -45,7 +45,7 @@ class HomeController extends Controller
 
     public function test(Guard $auth)
     {
-
+        return view('index.index.test');
     }
 
 }

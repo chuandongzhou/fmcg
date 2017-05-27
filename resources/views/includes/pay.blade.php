@@ -13,7 +13,7 @@
                 <div class="modal-body text-center">
                     <div class="operating  pay-way text-left">
                         <div class=" title">
-                            <div class="item"><span class="prompt">订单号</span><b class="order-id"> </b></div>
+                            <div class="item"><span class="prompt">订单号 :</span><b class="order-id"> </b></div>
                             <div class="item"><span class="prompt">应付金额 :</span><b class="red order-price"> </b>
                             </div>
                         </div>

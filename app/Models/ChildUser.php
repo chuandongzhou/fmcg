@@ -68,7 +68,7 @@ class ChildUser extends Model implements AuthenticatableContract
     public function setPasswordAttribute($password)
     {
         if ($password) {
-            $this->attributes['password'] = md5($password);
+            $this->attributes['password'] = bcrypt($password);
         }
     }
 

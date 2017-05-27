@@ -86,17 +86,15 @@
                         </div>
                     </div>
                     <div class="col-sm-6 padding-clear item-wrap">
-                        @for($i=0;$i<4;$i++)
-                            @if(isset($shop->goods[$i]))
-                                <div class=" product-item ">
-                                    <a href="{{ url('goods/' .$shop->goods[$i]->id) }}" target="_blank">
-                                        <img class="commodity-img lazy"
-                                             data-original="{{ $shop->goods[$i]->image_url }}">
-                                        <span class="commodity-name">{{ $shop->goods[$i]->name }}</span>
-                                    </a>
-                                </div>
-                            @endif
-                        @endfor
+                        @foreach($shop->goods as $item)
+                            <div class=" product-item ">
+                                <a href="{{ url('goods/' .$item->id) }}" target="_blank">
+                                    <img class="commodity-img lazy"
+                                         data-original="{{ $item->image_url }}">
+                                    <span class="commodity-name">{{ $item->name }}</span>
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             @endforeach
@@ -119,7 +117,7 @@
     <script type="text/javascript">
         $('select[name="district_id"]').change(function () {
             var districtControl = $(this),
-                    address = districtControl.val() ? '{!! empty(array_except($get ,  ['province_id' ,'city_id' ,'district_id' ])) ? '?' : '&' !!}district_id=' + districtControl.val() : '';
+                address = districtControl.val() ? '{!! empty(array_except($get ,  ['province_id' ,'city_id' ,'district_id' ])) ? '?' : '&' !!}district_id=' + districtControl.val() : '';
             var url = '{!! url('shop'  . (empty(array_except($get , ['province_id' ,'city_id' ,'district_id' ])) ? '' :  '?' . http_build_query(array_except($get ,  ['province_id' ,'city_id' ,'district_id' ])))) !!}' + address;
             location.href = url;
         })

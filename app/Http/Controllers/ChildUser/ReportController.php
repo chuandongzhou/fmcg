@@ -460,149 +460,190 @@ class ReportController extends Controller
 
         $excelName = $startDate . '-' . $endDate . ' ' . $salesman->name . '业务报表';
 
-        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitStatistics, $visitList, $ownOrders) {
-            $excel->sheet('总计', function (LaravelExcelWorksheet $sheet) use ($visitStatistics) {
+        $isDay = $startDate == $endDate;
+        if ($isDay) {
+            $forget = ['business_address_lng', 'business_address_lat', 'lng', 'lat', 'visit_id'];
+        } else {
+            $forget = [
+                'business_address_lng',
+                'business_address_lat',
+                'lng',
+                'lat',
+                'visit_id',
+                'commitAddress',
+                'visitTime'
+            ];
+        }
+        foreach ($visitList as $key => $item) {
+            array_forget($visitList[$key], $forget);
+        }
+        Excel::create($excelName,
+            function (LaravelExcelWriter $excel) use ($visitStatistics, $visitList, $ownOrders, $isDay) {
+                $excel->sheet('总计', function (LaravelExcelWorksheet $sheet) use ($visitStatistics) {
 
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
 
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 15,
-                    'B' => 10,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 15,
-                    'F' => 20,
-                    'G' => 20,
-                    'H' => 20,
-                    'I' => 20,
-                ));
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 15,
+                        'B' => 10,
+                        'C' => 10,
+                        'D' => 15,
+                        'E' => 15,
+                        'F' => 20,
+                        'G' => 20,
+                        'H' => 20,
+                        'I' => 20,
+                    ));
 
-                //标题
-                $titles = [
-                    '拜访客户数',
-                    '总订货单数',
-                    '总订货金额',
-                    '拜访订货单数',
-                    '拜访订货金额',
-                    '自主订货单数',
-                    '自主订货金额',
-                    '退货总单数',
-                    '退货金额',
-                ];
-                $sheet->rows([$titles, $visitStatistics]);
-
-                //单元格居中
-                $sheet->cells('A1:I2', function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-            });
-            $excel->sheet('拜访总计', function (LaravelExcelWorksheet $sheet) use ($visitList) {
-
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
-
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 10,
-                    'B' => 20,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 40,
-                    'F' => 20,
-                    'G' => 20,
-                    'H' => 20,
-                    'I' => 20,
-                    'J' => 20,
-                ));
-
-                //标题
-                $titles = [
-                    '客户编号',
-                    '店铺名称',
-                    '联系人',
-                    '联系电话',
-                    '营业地址',
-                    '拜访次数',
-                    '订货单数',
-                    '订货总金额',
-                    '退货单数',
-                    '退货总金额'
-                ];
-
-                foreach ($visitList as $key => $item) {
-                    array_forget($visitList[$key], [
-                        'business_address_lng',
-                        'business_address_lat',
-                        'lng',
-                        'lat',
-                        'visit_id',
-                        'commitAddress',
-                        'visitTime'
-                    ]);
-                }
-                $data = array_merge([$titles], $visitList);
-
-                $sheet->rows($data);
-
-                //单元格居中
-                $sheet->cells('A1:J' . count($data), function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-            });
-            $excel->sheet('自主订单', function (LaravelExcelWorksheet $sheet) use ($ownOrders) {
-
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
-
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 10,
-                    'B' => 20,
-                    'C' => 20,
-                    'D' => 10,
-                    'E' => 20,
-                    'F' => 10,
-                ));
-                //标题
-                $titles = [
-                    '客户编号',
-                    '客户名称',
-                    '同步时间',
-                    '订单ID',
-                    '订单状态',
-                    '订单金额',
-                ];
-
-                $data = [$titles];
-
-
-                foreach ($ownOrders as $ownOrder) {
-                    $data[] = [
-                        $ownOrder->salesman_customer_id,
-                        $ownOrder->customer_name,
-                        $ownOrder->created_at,
-                        $ownOrder->order_id,
-                        $ownOrder->order_status_name,
-                        $ownOrder->amount
+                    //标题
+                    $titles = [
+                        '拜访客户数',
+                        '总订货单数',
+                        '总订货金额',
+                        '拜访订货单数',
+                        '拜访订货金额',
+                        '自主订货单数',
+                        '自主订货金额',
+                        '退货总单数',
+                        '退货金额',
                     ];
-                }
+                    $sheet->rows([$titles, $visitStatistics]);
 
-                $sheet->rows($data);
+                    //单元格居中
+                    $sheet->cells('A1:I2', function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
 
-                //单元格居中
-                $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
                 });
 
-            });
-        })->export('xls');
+                $excel->sheet('拜访总计', function (LaravelExcelWorksheet $sheet) use ($visitList, $isDay) {
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
+                    if ($isDay) {
+                        // 设置宽度
+                        $sheet->setWidth(array(
+                            'A' => 10,
+                            'B' => 20,
+                            'C' => 10,
+                            'D' => 15,
+                            'E' => 40,
+                            'F' => 40,
+                            'G' => 20,
+                            'H' => 20,
+                            'I' => 20,
+                            'J' => 20,
+                            'K' => 20,
+                            'L' => 20
+                        ));
+
+                        //标题
+                        $titles = [
+                            '客户编号',
+                            '店铺名称',
+                            '联系人',
+                            '联系电话',
+                            '营业地址',
+                            '提交地址',
+                            '拜访时间',
+                            '拜访次数',
+                            '订货单数',
+                            '订货总金额',
+                            '退货单数',
+                            '退货总金额'
+                        ];
+                    } else {
+                        // 设置宽度
+                        $sheet->setWidth(array(
+                            'A' => 10,
+                            'B' => 20,
+                            'C' => 10,
+                            'D' => 15,
+                            'E' => 40,
+                            'F' => 20,
+                            'G' => 20,
+                            'H' => 20,
+                            'I' => 20,
+                            'J' => 20,
+                        ));
+
+                        //标题
+                        $titles = [
+                            '客户编号',
+                            '店铺名称',
+                            '联系人',
+                            '联系电话',
+                            '营业地址',
+                            '拜访次数',
+                            '订货单数',
+                            '订货总金额',
+                            '退货单数',
+                            '退货总金额'
+                        ];
+                    }
+
+                    $data = array_merge([$titles], $visitList);
+
+                    $sheet->rows($data);
+
+                    //单元格居中
+                    $sheet->cells('A1:L' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                });
+
+                $excel->sheet('自主订单', function (LaravelExcelWorksheet $sheet) use ($ownOrders) {
+
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
+
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 10,
+                        'B' => 20,
+                        'C' => 20,
+                        'D' => 10,
+                        'E' => 20,
+                        'F' => 10,
+                    ));
+                    //标题
+                    $titles = [
+                        '客户编号',
+                        '客户名称',
+                        '同步时间',
+                        '订单ID',
+                        '订单状态',
+                        '订单金额',
+                    ];
+
+                    $data = [$titles];
+
+
+                    foreach ($ownOrders as $ownOrder) {
+                        $data[] = [
+                            $ownOrder->salesman_customer_id,
+                            $ownOrder->customer_name,
+                            $ownOrder->created_at,
+                            $ownOrder->order_id,
+                            $ownOrder->order_status_name,
+                            $ownOrder->amount
+                        ];
+                    }
+
+                    $sheet->rows($data);
+
+                    //单元格居中
+                    $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                });
+            })->export('xls');
 
     }
 
@@ -828,50 +869,183 @@ class ReportController extends Controller
 
         $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp);
 
-        $phpWord = new PhpWord();
+        //客户列表
 
-        $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
+        //拜访记录
+        $visits = SalesmanVisit::whereIn('salesman_id', $salesmenOrderData->pluck('id'))->ofTime($startDate,
+            $endDateTemp)->with([
+            'orders.orderGoods.goods',
+            'orders.displayList.mortgageGoods',
+            'goodsRecord.goods',
+            'salesmanCustomer.address',
+            'salesmanCustomer.salesman'
+        ])->get();
 
+        $customerIds = $visits->pluck('salesman_customer_id')->toBase()->unique();
 
-        $cellAlignCenter = ['align' => 'center'];
-        $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
-        $cellRowContinue = array('vMerge' => 'continue');
-
-        $phpWord->setDefaultFontName('仿宋');
-        $phpWord->setDefaultFontSize(10);
-        $phpWord->addTableStyle('table', $styleTable);
-
-        $phpWord->addParagraphStyle('Normal', [
-            'spaceBefore' => 0,
-            'spaceAfter' => 0,
-            'lineHeight' => 1.2,  // 行间距
-        ]);
-
-        $section = $phpWord->addSection();
-        foreach ($salesmenOrderData as $man) {
-            $table = $section->addTable('table');
-            $table->addRow();
-            $table->addCell(2000, $cellRowSpan)->addText($man->name, null, $cellAlignCenter);
-            $table->addCell(1500)->addText('拜访客户数', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('订货单数(拜访+自主)', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('订货总金额(拜访+自主)', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('退货单数', null, $cellAlignCenter);
-            $table->addCell(1500)->addText('退货总金额', null, $cellAlignCenter);
-
-            $table->addRow();
-            $table->addCell(2000, $cellRowContinue);
-            $table->addCell(1500)->addText($man->visitCustomerCount, null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->orderFormCount . '(' . $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount,
-                    $man->visitOrderFormCount) . ')', null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->orderFormSumAmount . '(' . $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) . ')',
-                null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->returnOrderCount, null, $cellAlignCenter);
-            $table->addCell(1500)->addText($man->returnOrderSumAmount, null, $cellAlignCenter);
+        $visitList = [];
+        foreach ($customerIds as $customerId) {
+            $visitList[] = $this->_getVisitList($visits, $customerId);
         }
-        $name = $startDate . '至' . $endDate . '业务报表.docx';
-        $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
+        $excelName = $startDate . '至' . $endDate . '业务报表';
+
+        $isDay = $startDate == $endDate;
+        if ($isDay) {
+            $forget = ['business_address_lng', 'business_address_lat', 'lng', 'lat', 'visit_id'];
+        } else {
+            $forget = [
+                'business_address_lng',
+                'business_address_lat',
+                'lng',
+                'lat',
+                'visit_id',
+                'commitAddress',
+                'visitTime'
+            ];
+        }
+
+        //业务员
+        $salesmanCustomer = $visits->pluck('salesmanCustomer')->toBase()->unique()->keyBy('id')->toArray();
+
+        foreach ($visitList as $key => $item) {
+            $visitList[$key][key($item)] = $salesmanCustomer[$item['id']]['salesman']['name'];
+            array_forget($visitList[$key], $forget);
+        }
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($salesmenOrderData, $visitList, $isDay) {
+            $excel->sheet('业务报表', function (LaravelExcelWorksheet $sheet) use ($salesmenOrderData) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+
+                // 设置宽度
+                $sheet->setWidth(array(
+                    'A' => 15,
+                    'B' => 15,
+                    'C' => 20,
+                    'D' => 25,
+                    'E' => 15,
+                    'F' => 15,
+                    'G' => 15,
+                    'H' => 15,
+                    'I' => 15,
+                ));
+
+                //标题
+                $titles = [
+                    '业务员',
+                    '拜访客户数',
+                    '订货单数(拜访+自主)',
+                    '订货总金额(拜访+自主)',
+                    '已配送单数',
+                    '已完成金额',
+                    '未完成金额',
+                    '退货单数',
+                    '退货总金额'
+                ];
+                $sheet->appendRow($titles);
+                foreach ($salesmenOrderData as $man) {
+                    $sheet->appendRow([
+                        $man->name,
+                        $man->visitCustomerCount,
+                        $man->orderFormCount . '(' . $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount,
+                            $man->visitOrderFormCount) . ')',
+                        $man->orderFormSumAmount . '(' . $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) . ')',
+                        $man->deliveryFinishCount,
+                        $man->finishedAmount,
+                        $man->notFinishedAmount,
+                        $man->returnOrderCount,
+                        $man->returnOrderSumAmount
+                    ]);
+                }
+
+                //单元格居中
+                $sheet->cells('A1:I' . (count($salesmenOrderData) + 1), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+            });
+            $excel->sheet('客户', function (LaravelExcelWorksheet $sheet) use ($visitList, $isDay) {
+                if (!empty($visitList)) {
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
+                    if ($isDay) {
+                        // 设置宽度
+                        $sheet->setWidth(array(
+                            'A' => 10,
+                            'B' => 20,
+                            'C' => 10,
+                            'D' => 15,
+                            'E' => 40,
+                            'F' => 40,
+                            'G' => 20,
+                            'H' => 20,
+                            'I' => 20,
+                            'J' => 20,
+                            'K' => 20,
+                            'L' => 20
+                        ));
+
+                        //标题
+                        $titles = [
+                            '业务员',
+                            '店铺名称',
+                            '联系人',
+                            '联系电话',
+                            '营业地址',
+                            '提交地址',
+                            '拜访时间',
+                            '拜访次数',
+                            '订货单数',
+                            '订货总金额',
+                            '退货单数',
+                            '退货总金额'
+                        ];
+                    } else {
+                        // 设置宽度
+                        $sheet->setWidth(array(
+                            'A' => 10,
+                            'B' => 20,
+                            'C' => 10,
+                            'D' => 15,
+                            'E' => 40,
+                            'F' => 20,
+                            'G' => 20,
+                            'H' => 20,
+                            'I' => 20,
+                            'J' => 20,
+                        ));
+
+                        //标题
+                        $titles = [
+                            '业务员',
+                            '店铺名称',
+                            '联系人',
+                            '联系电话',
+                            '营业地址',
+                            '拜访次数',
+                            '订货单数',
+                            '订货总金额',
+                            '退货单数',
+                            '退货总金额'
+                        ];
+                    }
+
+                    $data = array_merge([$titles], $visitList);
+
+                    $sheet->rows($data);
+
+                    //单元格居中
+                    $sheet->cells('A1:L' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+                }
+            });
+        })->export('xls');
     }
+
 
 
 }

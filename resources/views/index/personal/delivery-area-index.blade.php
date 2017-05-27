@@ -16,7 +16,7 @@
                     <div class="col-sm-12 table-responsive">
                         <div class="delivery-area-wrap">
                             <a class="personal-add update-modal " data-target="#addressModal"
-                               data-toggle="modal" data-url="{{ url('personal/delivery-area') }}"
+                               data-toggle="modal" data-url="{{ url('api/v1/personal/delivery-area') }}"
                             ><label><span class="fa fa-plus"></span></label>添加配送区域
                             </a>
                             <table class="table table-bordered table-center">

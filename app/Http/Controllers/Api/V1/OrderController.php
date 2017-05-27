@@ -109,8 +109,8 @@ class OrderController extends Controller
      */
     public function getWaitConfirmBySeller()
     {
-        $orders = Order::ofSell(auth()->user()->shop_id)->useful()->with('user.shop', 'goods', 'coupon',
-            'shop.user')->WaitConfirm()->paginate();
+        $orders = Order::ofSell(auth()->user()->shop_id)->with('user.shop', 'goods', 'coupon',
+            'shop.user', 'orderReason')->WaitConfirm()->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders, false));
     }
 
@@ -142,8 +142,9 @@ class OrderController extends Controller
 
 
     /**
-     * 卖家查询订单列表
+     *  卖家查询订单列表
      *
+     * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getListOfSell(Request $request)
@@ -291,7 +292,7 @@ class OrderController extends Controller
 
         $order = $this->_hiddenOrderAttr($this->_orderLoadData($order), false);
 
-        $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
+        $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each( function ($recode) use ($order) {
             $recode->setAppends(['name']);
         });
         $order->trade_no = $this->_getTradeNoByOrder($order);

@@ -80,7 +80,7 @@ class Coupon extends Model
     {
         return $query->where('shop_id', $shopId)->where('full', '<=', $sumPrice)->where(function ($query) {
             $nowDate = (new Carbon())->toDateString();
-            $query->where('start_at', '<=', $nowDate)->where('end_at', '>', $nowDate);
+            $query->where('start_at', '<=', $nowDate)->where('end_at', '>=', $nowDate);
         });
     }
 

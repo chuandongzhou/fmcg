@@ -45,8 +45,7 @@ class SalesmanCustomer extends Model
 
         // 注册删除事件
         static::deleted(function ($model) {
-            $model->businessAddress()->delete();
-            $model->shippingAddress()->delete();
+            $model->address()->delete();
         });
     }
 
@@ -71,14 +70,22 @@ class SalesmanCustomer extends Model
     }
 
     /**
+     * 地址
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function address(){
+        return $this->morphOne('App\Models\AddressData', 'addressable');
+    }
+
+    /**
      * 营业地址
      *
      * @return mixed
      */
     public function businessAddress()
     {
-        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
-            cons('salesman.customer.address_type.business'));
+        return $this->address()->where('type', cons('salesman.customer.address_type.business'));
     }
 
 
@@ -89,8 +96,7 @@ class SalesmanCustomer extends Model
      */
     public function shippingAddress()
     {
-        return $this->morphOne('App\Models\AddressData', 'addressable')->where('type',
-            cons('salesman.customer.address_type.shipping'));
+        return  $this->address()->where('type', cons('salesman.customer.address_type.shipping'));
     }
 
     /**

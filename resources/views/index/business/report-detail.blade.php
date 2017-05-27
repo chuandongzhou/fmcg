@@ -128,7 +128,7 @@
                         </div>
                         <div class="panel-container">
                             <p class="title-table">自主订单</p>
-                            <table class="table table-bordered table-center public-table">
+                            <table class="table business-table table-bordered table-center public-table">
                                 <thead>
                                 <tr>
                                     <th>客户编号</th>
@@ -155,6 +155,11 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="text-right">
+                            <ul class="pagination">
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -193,5 +198,6 @@
             });
             return mapData;
         };
+        tablePage($('.business-table'), $('.pagination'));
     </script>
 @stop

@@ -685,10 +685,8 @@ class Shop extends Model
      */
     public function getGoodsCountAttribute()
     {
-        return $this->goods->count();
+        return $this->goods()->active()->count();
     }
-
-
 
     /**
      * 获取userName

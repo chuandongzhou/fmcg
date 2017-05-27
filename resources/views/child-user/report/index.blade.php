@@ -43,6 +43,9 @@
                                 <th>拜访客户数</th>
                                 <th>订货单数(拜访+自主)</th>
                                 <th>订货总金额(拜访+自主)</th>
+                                <th>已配送单数</th>
+                                <th>已完成金额</th>
+                                <th>未完成金额</th>
                                 <th>退货单数</th>
                                 <th>退货总金额</th>
                                 <th>操作</th>
@@ -63,6 +66,9 @@
                                         ({{ $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) }}
                                         )
                                     </td>
+                                    <th>{{ $man->deliveryFinishCount }}</th>
+                                    <th>{{ $man->finishedAmount }}</th>
+                                    <th>{{ $man->notFinishedAmount }}</th>
                                     <td>{{ $man->returnOrderCount }}</td>
                                     <td><b class="red">{{ $man->returnOrderSumAmount }}</b></td>
                                     <td>

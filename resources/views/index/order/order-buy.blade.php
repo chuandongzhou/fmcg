@@ -22,7 +22,7 @@
                             <select name="pay_type" class="ajax-select control">
                                 <option value="">全部方式</option>
                                 @foreach($pay_type as $key => $value)
-                                    <option value="{{ $key }}" {{ $key==array_get($search ,'pay_type') ? 'selected' : ''}}>{{ $value }}</option>
+                                    <option value="{{ $key }}" {{ $key == array_get($search ,'pay_type') ? 'selected' : ''}}>{{ $value }}</option>
                                 @endforeach
                             </select>
 

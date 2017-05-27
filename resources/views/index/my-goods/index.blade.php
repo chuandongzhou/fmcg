@@ -203,14 +203,14 @@
                                                title="{{ $item->name }}"> {{ $item->name }}</a>
                                         </td>
                                         <td>
-                                            <p>{{ $item->price_retailer}}元</p>
-                                            @if(auth()->user()->type == cons('user.type.supplier' || auth()->user()->type == cons('user.type.maker')))
-                                                <p>{{ $item->price_wholesaler }}元 (批)</p>
+                                            <p>{{ $item->price_retailer}}元 / {{ cons()->valueLang('goods.pieces' , $item->pieces_retailer) }}</p>
+                                            @if(auth()->user()->type == cons('user.type.supplier') || auth()->user()->type == cons('user.type.maker'))
+                                                <p>{{ $item->price_wholesaler }}元 / {{ cons()->valueLang('goods.pieces' , $item->pieces_wholesaler) }} (批)</p>
                                             @endif
                                         </td>
                                         <td>
                                             <p> {{ $item->min_num }}</p>
-                                            @if(auth()->user()->type == cons('user.type.supplier' ||  auth()->user()->type == cons('user.type.maker')))
+                                            @if(auth()->user()->type == cons('user.type.supplier') ||  auth()->user()->type == cons('user.type.maker'))
                                                 <p>{{ $item->min_num_wholesaler }} (批)</p>
                                             @endif
                                         </td>

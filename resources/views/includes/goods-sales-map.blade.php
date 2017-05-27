@@ -62,7 +62,6 @@
                     end_day: endDay
                 }, function (data) {
                     var legend = ['金额'], goods = data.goods;
-                    //console.log(goods);
                     goodsIdPanel.html(goods.id);
                     barcodePanel.html(goods.bar_code);
                     goodsNamePanel.html(goods.name);

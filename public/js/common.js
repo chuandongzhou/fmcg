@@ -1433,7 +1433,7 @@ var FixTable = function (TableID, FixColumnNumber, width, height) {
  */
 var tablePage = function ($table, pagination, pageSize) {
     var sumRows = $table.find('tbody tr').length,//获取数据总行数
-        pageSize = pageSize || 5,
+        pageSize = pageSize || 15,
         sumPages = Math.ceil(sumRows / pageSize),//得到总页数
         currentPage = 0;//设置当前页默认值为
 
@@ -1455,29 +1455,122 @@ var tablePage = function ($table, pagination, pageSize) {
         $table.find('tbody tr').hide().slice(currentPage * pageSize, (currentPage + 1) * pageSize).show();//先将tbody中所有的行隐藏，再通过slice结合当前页数和页面显示的数目展现数据
     });
 
-    if (sumPages > 1) {
-        //上一页
-        $('<li class="prev"><a href="javascript:"> « </a></li>').bind("click", function () {
-            currentPage = currentPage - 1;
-            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
-        }).appendTo(pagination);
 
+    //页面
+    var getPageHtml = function () {
+        pagination.html('');
+        if (sumPages > 1) {
+            //上一页
+            $('<li class="prev"><a href="javascript:"> « </a></li>').bind("click", function () {
+                currentPage = currentPage - 1;
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml();
+            }).appendTo(pagination);
+
+            if (sumPages <= 10) {
+                getAllHtml();
+            } else {
+                if (currentPage > 5 && (currentPage < sumPages - 5)) {
+                    getPreDoubleHtml();
+                    getOmitHtml();
+                    getMiddleHtml();
+                    getOmitHtml();
+                    getEndDoubleHtml()
+                }
+                else if (currentPage >= sumPages - 5) {
+                    getPreDoubleHtml();
+                    getOmitHtml();
+                    getEndHtml()
+                } else if (currentPage <= 5) {
+                    getPreHtml()
+                    getOmitHtml();
+                    getEndDoubleHtml();
+                }
+            }
+
+            //下一页
+            $('<li class="next"><a href="javascript:"> » </a></li>').bind("click", function () {
+                currentPage = currentPage + 1;
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml()
+            }).appendTo(pagination);
+
+            $table.trigger("paging");
+        }
+    }
+
+    //所有页码
+    var getAllHtml = function () {
         for (var pageIndex = 0; pageIndex < sumPages; pageIndex++) {
             $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
                 currentPage = event.data["newPage"];
+                getPageHtml();
                 $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
             }).appendTo(pagination);
         }
-
-        //下一页
-        $('<li class="next"><a href="javascript:"> » </a></li>').bind("click", function () {
-            currentPage = currentPage + 1;
-            $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
-        }).appendTo(pagination);
-
-        $table.trigger("paging");
     }
 
+    //前2页码
+    var getPreDoubleHtml = function () {
+        for (var pageIndex = 0; pageIndex < 2; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml()
+            }).appendTo(pagination);
+        }
+    };
+
+    //中5页面
+    var getMiddleHtml = function () {
+        for (var pageIndex = currentPage - 3; pageIndex < currentPage + 3; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml()
+            }).appendTo(pagination);
+        }
+    };
+
+    //后2页码
+    var getEndDoubleHtml = function () {
+        for (var pageIndex = sumPages - 2; pageIndex < sumPages; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                getPageHtml()
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+            }).appendTo(pagination);
+        }
+    };
+
+    //省略
+    var getOmitHtml = function () {
+        $('<li class="page-omit"><a href="javascript:">...</a></li>').appendTo(pagination);
+    }
+
+    //前8
+    var getPreHtml = function () {
+        for (var pageIndex = 0; pageIndex < 9; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml()
+            }).appendTo(pagination);
+        }
+    }
+
+    //后8
+    var getEndHtml = function () {
+        for (var pageIndex = sumPages - 8; pageIndex < sumPages; pageIndex++) {
+            $('<li class="page-' + (pageIndex + 1) + '"><a href="javascript:">' + (pageIndex + 1) + '</a></li>').bind("click", {"newPage": pageIndex}, function (event) {
+                currentPage = event.data["newPage"];
+                $table.trigger("paging");//为每一个要显示的页数上添加触发分页函数
+                getPageHtml()
+            }).appendTo(pagination);
+        }
+    }
+
+    getPageHtml();
 }
 
 /**
@@ -1578,6 +1671,11 @@ var accDiv = function (arg1, arg2) {
     }
 }
 
+/**
+ * 去除标签
+ * @param str
+ * @param allow
+ */
 var stripTags = function (str, allow) {
     // making sure the allow arg is a string containing only tags in lowercase (<a><b><c>)
     allow = (((allow || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');

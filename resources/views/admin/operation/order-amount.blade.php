@@ -16,10 +16,14 @@
             {{--@endforeach--}}
             {{--</select>--}}
             <input type="text" class="enter-control" name="name" placeholder="请输入购买商名称" value="{{ $name }}">
-            <a href="{{ url('admin/operation-data/order-amount?t=today') }}" class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
-            <a href="{{ url('admin/operation-data/order-amount?t=yesterday') }}" class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
-            <a href="{{ url('admin/operation-data/order-amount?t=week') }}" class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
-            <a href="{{ url('admin/operation-data/order-amount?t=month') }}" class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
+            <a href="{{ url('admin/operation-data/order-amount?t=today') }}"
+               class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
+            <a href="{{ url('admin/operation-data/order-amount?t=yesterday') }}"
+               class="time-format {{ array_get($data, 't') == 'yesterday' ? 'active' : '' }}">昨天</a>
+            <a href="{{ url('admin/operation-data/order-amount?t=week') }}"
+               class="time-format {{ array_get($data, 't') == 'week' ? 'active' : '' }}">本周</a>
+            <a href="{{ url('admin/operation-data/order-amount?t=month') }}"
+               class="time-format {{ array_get($data, 't') == 'month' ? 'active' : '' }}">本月</a>
             <input type="text" name="begin_day" class="enter-control date datetimepicker" data-format="YYYY-MM-DD"
                    value="{{ $beginDay }}">
             <label class="control-label">-</label>
@@ -86,13 +90,15 @@
                     <th>下单笔数</th>
                     <th>
                         下单总金额(元)
-                        <a class="iconfont icon-tixing " data-container="body" data-toggle="popover" data-placement="bottom" data-content="包括陈列费金额和优惠券金额  下单总金额 = 在线支付金额 + 线下支付金额"></a>
+                        <a class="iconfont icon-tixing " data-container="body" data-toggle="popover"
+                           data-placement="bottom" data-content="包括陈列费金额和优惠券金额  下单总金额 = 在线支付金额 + 线下支付金额"></a>
                     </th>
                     <th>在线支付金额(元)</th>
                     <th>线下支付金额(元)</th>
                     <th>
                         需支付金额(元)
-                        <a class="iconfont icon-tixing " data-container="body" data-toggle="popover" data-placement="bottom" data-content="不包括陈列费金额和优惠券金额  需支付金额 = 已完成支付金额 + 未完成支付金额"></a>
+                        <a class="iconfont icon-tixing " data-container="body" data-toggle="popover"
+                           data-placement="bottom" data-content="不包括陈列费金额和优惠券金额  需支付金额 = 已完成支付金额 + 未完成支付金额"></a>
                     </th>
                     <th>已完成支付金额(元)</th>
                     <th>未完成支付金额(元)</th>
@@ -101,7 +107,7 @@
                 <tbody>
                 @foreach($shopGroup as $shopName => $shop)
                     <tr>
-                        <td>{{ $shopName }}（{{ cons()->lang('user.type')[$shop['type']] }}）</td>
+                        <td>{{ $shopName }}（{{ array_get(cons()->lang('user.type'), $shop['type']) }}）</td>
                         <td>{{ array_get($shop, 'orderCount', 0) }}</td>
                         <td>{{ number_format($orderAmount = array_get($shop, 'orderAmount', 0), 2) }}</td>
                         <td>{{ number_format($onlinePay = array_get($shop, 'onLinePay', 0), 2) }}</td>

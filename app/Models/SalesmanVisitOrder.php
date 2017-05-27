@@ -175,32 +175,32 @@ class SalesmanVisitOrder extends Model
      */
     public function scopeOfData($query, $data)
     {
-        if ($startDate = array_get($data, 'start_date')) {
-            $query = $query->where('created_at', '>=', $startDate);
-        }
-
-        if ($endDate = array_get($data, 'end_date')) {
-            $date = $endDate instanceof Carbon ? $endDate : (new Carbon($endDate))->endOfDay();
-            $query = $query->where('created_at', '<', $date);
-        }
-
-        $filter = array_filter(array_only($data, ['salesman_id', 'status', 'type']), function ($item) {
+        $filter = array_filter(array_only($data, ['salesman_id', 'type']), function ($item) {
             return !is_null($item);
         });
-        $query = $query->where($filter);
+        $query->where($filter);
         if ($customer = array_get($data, 'customer')) {
             if (is_numeric($customer)) {
                 return $query->where('id', $customer);
             } else {
-                return $query = $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
+               $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
                     $query->where('name', 'like', '%' . $customer . '%');
                 });
             }
-        } else {
-            return $query;
+        }
+        if (!is_null($status = array_get($data, 'status'))) {
+            $query->where('status', $status);
         }
 
+        if ($startDate = array_get($data, 'start_date')) {
+            $query->where('created_at', '>=', $startDate);
+        }
 
+        if ($endDate = array_get($data, 'end_date')) {
+            $date = $endDate instanceof Carbon ? $endDate : (new Carbon($endDate))->endOfDay();
+            $query->where('created_at', '<', $date);
+        }
+        return $query;
     }
 
     /**

@@ -34,7 +34,7 @@ class RedirectIfChildUserAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            $indexNode = $this->auth->first_node;
+            $indexNode = $this->auth->user()->first_node;
             return redirect(url($indexNode->url));
         }
 

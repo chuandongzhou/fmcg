@@ -156,7 +156,6 @@
 
 @section('js')
     <script type="text/javascript">
-
         //没有定位获取用户当前位置
         $(function () {
             //意见反馈

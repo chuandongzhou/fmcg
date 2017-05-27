@@ -46,7 +46,9 @@ class CartController extends Controller
                     'status',
                     'user_type'
                 ]);
-            }, 'goods.shop.user'])->get();
+            }, 'goods.shop.user'])->get()->each(function($item){
+                $item->goods->setAppends(['image_url', 'price']);
+        });
 
         if (!$carts->isEmpty()) {
             // 将所有状态更新为零
