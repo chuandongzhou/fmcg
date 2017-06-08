@@ -189,9 +189,9 @@
                                        title="{{ $item->name }}"> {{ $item->name }}</a>
                                 </td>
                                 <td>
-                                    <p>{{ $item->price_retailer}}元</p>
+                                    <p>{{ $item->price_retailer}}元 / {{cons()->valueLang('goods.pieces',$item->pieces_retailer)}}</p>
                                     @if(auth()->user()->type == cons('user.type.supplier') || auth()->user()->type == cons('user.type.maker'))
-                                        <p>{{ $item->price_wholesaler }}元 (批)</p>
+                                        <p>{{ $item->price_wholesaler }}元 (批) / {{cons()->valueLang('goods.pieces',$item->pieces_wholesaler)}}</p>
                                     @endif
                                 </td>
                                 <td>
@@ -216,8 +216,9 @@
                                     @endif
                                     @if(!$item->is_promo_goods)
                                         <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
+                                           data-no-loading="1"
                                            data-url="{{ url('api/v1/my-goods/' . $item->id . '/promo') }}"
-                                           class="no-form mortgage color-blue" title="设为促销商品">设为促销品</a>
+                                           class="no-form ajax no-prompt color-blue" title="设为促销商品">设为促销品</a>
                                     @endif
                                     <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="edit">编辑</a>
                                     <a href="javascript:" data-method="put"

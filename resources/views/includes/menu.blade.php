@@ -108,7 +108,7 @@
                 </li>
                 <li class="nav-item  {!!  request()->is('promo','promo/*') ? 'active' : '' !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="iconfont icon-zichan"></i>
+                        <i class="iconfont icon-cuxiaoguanli"></i>
                         <span class="title">促销管理</span>
                         <span class="{!!  request()->is( 'promo','promo/*')  ? 'selected' : '' !!}"></span>
                         <span class="arrow"></span>
@@ -191,6 +191,38 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item  {!! path_active(['business/*']) !!}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="icon-wallet"></i>
+                        <span class="title">业务管理</span>
+                        <span class="{!! request()->is('business/*') ? 'selected' : '' !!}"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item  {{ path_active(['business/salesman']) }}">
+                            <a href="{{ url('business/salesman') }}" class="nav-link ">
+                                <span class="title">业务员管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ path_active(['business/salesman-customer*']) }}">
+                            <a href="{{ url('business/salesman-customer') }}" class="nav-link ">
+                                <span class="title">客户管理</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item {{ path_active(['business/report*']) }}">
+                            <a href="{{ url('business/report') }}" class="nav-link ">
+                                <span class="title">业务报表</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active('business/salesman/target') }}">
+                            <a href="{{ url('business/salesman/target') }}" class="nav-link ">
+                                <span class="title">业务员目标管理</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
             @else
                 @if($user->type == cons('user.type.wholesaler'))
@@ -314,11 +346,13 @@
                                     <span class="title">提现账号</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ path_active(['personal/bill/*','personal/bill']) }}">
-                                <a href="{{ url('personal/bill') }}" class="nav-link ">
-                                    <span class="title">月对账单</span>
-                                </a>
-                            </li>
+                            @if(in_array($user->type,[cons('user.type.retailer'),cons('user.type.wholesaler')]))
+                                <li class="nav-item  {{ path_active(['personal/bill/*','personal/bill']) }}">
+                                    <a href="{{ url('personal/bill') }}" class="nav-link ">
+                                        <span class="title">月对账单</span>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">

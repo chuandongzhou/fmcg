@@ -16,6 +16,23 @@ class Promo extends Model
         'status',
     ];
 
+
+    /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            $model->apply()->delete();
+            $model->condition()->delete();
+            $model->rebate()->delete();
+            $model->rebate()->delete();
+        });
+    }
+
     /**
      * 申请记录
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -1,6 +1,5 @@
 @extends('index.manage-master')
 @section('subtitle', '资产管理')
-@include('includes.asset-modal')
 @include('includes.timepicker')
 @section('container')
     @include('includes.menu')
@@ -14,7 +13,7 @@
             </div>
             <div class="row delivery">
                 <div class="col-sm-12 control-search assets">
-                    <form action="" method="get" autocomplete="off">
+                    <form action="{{url('asset/unused')}}" method="get" autocomplete="off">
                         <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text"
                                value="{{$data['start_at'] ?? ''}}">至
                         <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text"
@@ -59,7 +58,12 @@
                                     <td>{{$asset->quantity ?? ''}}{{$asset->unit ?? ''}}</td>
                                     <td>{{$asset->created_at ?? ''}}</td>
                                     <td>{{$asset->condition ?? ''}}</td>
-                                    <td>{{$asset->remark ?? ''}}</td>
+                                    <td><a href="javascript:"
+                                           class="gray status"
+                                           data-data='{"status":"{{cons('status.on')}}"}'
+                                           data-url='asset/status-change/{{$asset->id}}'
+                                           data-method='put'
+                                        >test</a> <a href="" class="hidden"><i class="iconfont  icon-xiugai"></i>修改</a></a> {{$asset->remark ?? ''}}</td>
                                     <td class="on {{$asset->status == cons('asset.status.off')? 'hidden' :''}}">
                                         已启用
                                     </td>
@@ -101,18 +105,47 @@
             </div>
         </div>
     </div>
+    @include('includes.asset-modal')
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
+        $('.status').on('click', function () {
+            var obj = $(this),
+                    url = obj.data('url'),
+                    _method = obj.data('method') || 'post',
+                    data = obj.data('data');
+            $(obj).button({
+                loadingText: '<i class="fa fa-spinner fa-pulse"></i>'
+            });
+            $(obj).button('loading');
+
+            $.ajax({
+                url: site.api(url),
+                method: _method,
+                dataType: 'json',
+                data: {'name':1}
+
+            }).done(function (data) {
+                var tr = $(obj).parents('tr');
+                if(data.status != false){
+                    $(obj).html(data.message || '操作成功')
+                    tr.find('.hide').removeClass('hidden hide');
+
+                }else{
+                    $(obj).html(data.message || '操作失败')
+                }
+            });
+        });
+
         asset = {
             statusChange: function (id, obj) {
                 var html = $(obj).html();
                 $(obj).button({
-                    loadingText: '<i class="fa fa-spinner fa-pulse"></i>',
+                    loadingText: '<i class="fa fa-spinner fa-pulse"></i>'
                 });
                 $(obj).button('loading');
-                $.post(site.api('asset/status-change'), {'_method': 'put', 'id': id}, function (data) {
+                $.post(site.api('asset/status-change/'+id), {'_method': 'put'}, function (data) {
                     var _class = $(obj).parents('td').hasClass('on');
                     var tr = $(obj).parents('tr');
                     $(obj).html(html);

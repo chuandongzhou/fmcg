@@ -1,6 +1,6 @@
 @extends('index.manage-master')
 @section('subtitle', request()->is('promo/*/edit') ? '促销编辑' : (request()->is('promo/*/view') ? '促销查看' : '促销添加'))
-@include('includes.promo-add-goods-modal')
+
 @include('includes.timepicker')
 @section('container')
     @include('includes.menu')
@@ -352,13 +352,14 @@
             </div>
         </div>
     </div>
+    @include('includes.promo-add-goods-modal')
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
         @if(request()->is('promo/*/view'))
         $('div.row').find('a.btn').attr('data-toggle','');
-        $('div.row').find('input,textarea,select,button,a').attr('disabled', true).addClass('disabled');
+        $('div.row').find('input,textarea,select,button,a').attr('disabled', true).addClass('disable');
         @endif
         $("#opt-control").change(function () {
             optionClass = $(this).find("option:selected").prop('class');

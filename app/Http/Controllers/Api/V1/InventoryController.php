@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Goods;
 use App\Models\Inventory;
-use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
@@ -20,6 +18,11 @@ use App\Http\Requests;
  */
 class InventoryController extends Controller
 {
+    protected $inventoryService;
+    public function __construct()
+    {
+        $this->inventoryService = new InventoryService();
+    }
     /**
      * 入库操作
      *
@@ -29,7 +32,7 @@ class InventoryController extends Controller
     public function postInSave(Requests\Api\v1\InventoryRequest $request)
     {
         $data = $request->all();
-        if ((new InventoryService())->inventoryIn($data)) {
+        if ($this->inventoryService->in($data)) {
             return $this->success('成功入库!');
         };
         return $this->error('入库失败!');
@@ -38,11 +41,10 @@ class InventoryController extends Controller
     public function postOutSave(Requests\Api\v1\InventoryRequest $request)
     {
         $data = $request->all();
-        $result = (new InventoryService())->inventoryOut($data);
-        if ($result === true) {
+        if ($this->inventoryService->out($data)) {
             return $this->success('成功出库');
         };
-        return $this->error(is_string($result) ? $result : '出库失败!');
+        return $this->error($this->inventoryService->getError());
     }
 
     /**

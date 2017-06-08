@@ -88,10 +88,10 @@ class MyGoodsController extends Controller
                     //获取异常记录
                     $abnormal = OrderGoods::where('goods_id',$abnormalGoodsId)
                         ->where('order_id',$abnormalOrderId)
-                        ->where('inventory_state',cons('inventory.inventory_state.abnormal'))
+                        ->where('inventory_state',cons('inventory.inventory_state.in-abnormal'))
                         ->get();
-                    //自动入库
-                    (new InventoryService())->autoInventoryIn($abnormal);
+                    //
+                    (new InventoryService())->autoIn($abnormal);
                 }
                 return true;
             }

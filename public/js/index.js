@@ -1130,10 +1130,11 @@ function selectedChange() {
     });
 
     $('select[name="pieces_retailer"]').change(function () {
+
         //1级单位
-        system_1 =  $('input[name = "system_1"]').val();
+        system_1 =  $('input[name = "system_1"]').val()
         //2级单位
-        system_2 =  $('div.system').find($('input[name = "system_2"]')).val();
+        system_2 =  $('div.goodsPieces').find($('input[name = "system_2"]')).val();
         //最小规格单位
         specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();
@@ -1158,7 +1159,7 @@ function selectedChange() {
         //1级单位
         system_1 = $('input[name = "system_1"]').val();
         //2级单位
-        system_2 = $('div.system').find($('input[name = "system_2"]')).val();
+        system_2 = $('div.goodsPieces').find($('input[name = "system_2"]')).val();
         //最小规格单位
         specification = $('input[name="specification"]').val();
         var html = $(this).find("option:selected").text() == "请选择" ? '' : $(this).find("option:selected").text();

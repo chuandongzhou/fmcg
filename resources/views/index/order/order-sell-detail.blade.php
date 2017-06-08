@@ -191,19 +191,19 @@
                                             </p>
                                         @endif
                                     </td>
-                                    <td>{{   $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->consigner:$order->user->shop->contact_person }}</td>
-                                    <td>{{ $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->phone:$order->user->shop->contact_info }}</td>
-                                    @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                    <td>{{   $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->consigner ?? '':$order->user->shop->contact_person ?? ''}}</td>
+                                    <td>{{ $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->phone ?? '': $order->user->shop->contact_info ?? '' }}</td>
+                                    @if( $order->pay_type != cons('pay_type.pick_up'))
                                         <td>
-                                            <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
+                                            <p> {{ $order->shippingAddress->address->address_name ?? '' }}</p>
                                             <p class="prop-item">
                                                 <a href="javascript:" data-target="#shippingAddressMapModal"
                                                    data-toggle="modal"
                                                    data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
                                                    data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
                                                    data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
-                                                   data-consigner="{{ $order->shippingAddress->consigner }}"
-                                                   data-phone= {{ $order->shippingAddress->phone }}>
+                                                   data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
+                                                   data-phone= {{ $order->shippingAddress->phone ?? ''}}>
                                                     <i class="iconfont icon-chakanditu"></i> 查看地图
                                                 </a>
                                             </p>
@@ -313,7 +313,7 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
-                                        商品总数 : <span class="red" style="margin-right: 100px;">{{$goods_quantity ?? 0}}</span>    总额 : <span class="red">¥{{ $order->price }}</span>
+                                        商品总数 : <span class="red" style="margin-right: 100px;">{{$order->orderGoods->sum('num') ?? 0}}</span>    总额 : <span class="red">¥{{$order->orderGoods->sum('total_price')}}</span>
                                     </td>
                                 </tr>
                             </table>

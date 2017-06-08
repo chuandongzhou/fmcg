@@ -6,6 +6,7 @@
             <div class="modal-content templet-content" style="margin:auto">
                 <div class="modal-body text-center" style="padding:0;">
                     <img style="width:100%" class="templet-img" src="">
+
                 </div>
             </div>
         </div>

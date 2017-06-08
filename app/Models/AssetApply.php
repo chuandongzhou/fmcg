@@ -73,13 +73,4 @@ class AssetApply extends Model
         return $log->created_at;
     }
 
-    /**
-     * 获取申请时间
-     * @return mixed
-     */
-    public function getApplyDateAttribute()
-    {
-        $log = $this->log()->where('action',cons('asset_apply_log.action.apply'))->first();
-        return $log->created_at ?? '';
-    }
 }

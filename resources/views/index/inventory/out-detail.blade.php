@@ -34,7 +34,7 @@
                         @endif
                         <li>
                             <label>总计盈利： </label>
-                            <div class="content prompt"> @if($total_profit > 0)+@endif {{$total_profit}}</div>
+                            <div class="content @if($total_profit < 0) red @endif prompt"> @if($total_profit > 0)+ @endif {{$total_profit}}</div>
                         </li>
                         <li>
                             <label>备注 </label>

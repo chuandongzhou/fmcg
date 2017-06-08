@@ -38,7 +38,6 @@
                                 <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
                             @endforeach
                         </select>
-
                     </div>
                 </div>
 
@@ -206,17 +205,18 @@
                         ></div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">陈列费:</label>
-                    <div class="col-sm-6 col-md-4">
-                        <select name="display_type" class="form-control visible-select">
-                            @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
-                                <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
+                @if(auth()->user()->shop->type != cons('user.type.maker'))
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">陈列费:</label>
+                        <div class="col-sm-6 col-md-4">
+                            <select name="display_type" class="form-control visible-select">
+                                @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
+                                    <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <div class="form-group visible-item visible-item-1 visible-item-2 {{ $salesmanCustomer->display_type ? '' : 'hidden' }}">
                     <label class="col-sm-2 control-label" for="display_fee">有效时间:</label>
                     <div class="col-sm-4 col-md-3">

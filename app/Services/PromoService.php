@@ -23,7 +23,12 @@ class PromoService extends BaseService
         return $promo;
     }
 
-
+    /**
+     * 申请记录搜索
+     * @param $applyLog
+     * @param $data
+     * @return mixed
+     */
     public function applyLogSearch($applyLog,$data)
     {
         if($start_at = array_get($data,'start_at')){
@@ -81,10 +86,10 @@ class PromoService extends BaseService
 
     /**
      * 添加内容 条件/返利
-     * @param $promo
-     * @param $type
-     * @param $condition
-     * @param $rebate
+     * @param $promo //促销实例
+     * @param $type //参加促销类型
+     * @param $condition //条件
+     * @param $rebate    //返利
      */
     public function addContent($promo,$type,$condition,$rebate)
     {
@@ -130,7 +135,7 @@ class PromoService extends BaseService
                     $_data['goods_id'] = $rebate['goods_id'][$key];
                     $_data['quantity'] = $rebate['quantity'][$key];
                     $_data['unit'] = $rebate['unit'][$key];
-                    $promo->condition()->create($_data);
+                    $promo->rebate()->create($_data);
                 }
                 break;
         }

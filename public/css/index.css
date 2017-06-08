@@ -5304,7 +5304,7 @@ table .product-panel .promotions {
 
 .goods-tables .commodity-class .control {
   height: 35px;
-  padding: 0 10px;
+  width: 100px;
   outline: none;
 }
 
@@ -7383,7 +7383,7 @@ table .product-panel .promotions {
   margin-right: 10px;
 }
 
-.salesman .disabled {
+.salesman .disable {
   background-color: #fff;
 }
 
@@ -7741,6 +7741,7 @@ table .product-panel .promotions {
 
 .warehousing-table table tbody tr td textarea {
   height: 55px;
+  margin-bottom: 10px;
 }
 
 .warehousing-table .store-img {
@@ -7796,7 +7797,7 @@ table .product-panel .promotions {
 }
 
 .wareh-operating .btn-warning {
-  width: 100px;
+  min-width: 100px;
 }
 
 .wareh-details-table .product-name {

@@ -118,7 +118,7 @@ class PayService extends BaseService
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
                     //买家入库
-                    $inventoryService->autoInventoryIn($order->orderGoods);
+                    $inventoryService->autoIn($order->orderGoods);
 
                     //pos机支付成功更新用户余额
                     $shopOwner = $order->shop->user;

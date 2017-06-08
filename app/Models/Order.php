@@ -313,8 +313,8 @@ class Order extends Model
     {
         $orderConf = cons('order');
         return $this->attributes['status'] == $orderConf['status']['non_confirm']
-            && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
-            && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']/* && ($this->attributes['user_id'] == auth()->id() || $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id'))*/
+        && $this->attributes['pay_status'] == $orderConf['pay_status']['non_payment']
+        && $this->attributes['is_cancel'] == $orderConf['is_cancel']['off']/* && ($this->attributes['user_id'] == auth()->id() || $this->attributes['shop_id'] == auth()->user()->shop()->pluck('id'))*/
             ;
     }
 
@@ -326,7 +326,7 @@ class Order extends Model
     public function getCanConfirmAttribute()
     {
         return $this->attributes['status'] == cons('order.status.non_confirm')
-            && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
+        && $this->attributes['is_cancel'] == cons('order.is_cancel.off');
     }
 
     /**
@@ -360,7 +360,7 @@ class Order extends Model
     public function getCanRefundAttribute()
     {
         return $this->attributes['pay_status'] == cons('order.pay_status.payment_success')
-            && $this->attributes['status'] == cons('order.status.non_send');
+        && $this->attributes['status'] == cons('order.status.non_send');
     }
 
     /**
@@ -376,7 +376,7 @@ class Order extends Model
         $statusConf = cons('order.status');
 
         return ($payType == $payTypeConf['cod'] && $status == $statusConf['send'])
-            || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
+        || ($payType == $payTypeConf['pick_up'] && ($status > $statusConf['non_confirm'] && $status < $statusConf['finished']));
     }
 
     /**
@@ -420,8 +420,8 @@ class Order extends Model
     public function getCanConfirmArrivedAttribute()
     {
         return $this->attributes['pay_type'] == cons('pay_type.online')
-            && $this->attributes['status'] == cons('order.status.send')
-            && $this->attributes['pay_status'] == cons('order.pay_status.payment_success');
+        && $this->attributes['status'] == cons('order.status.send')
+        && $this->attributes['pay_status'] == cons('order.pay_status.payment_success');
     }
 
 
@@ -474,12 +474,14 @@ class Order extends Model
 
     /**
      * 优惠了多少
+     *
      * @return mixed
      */
     public function getHowMuchDiscountAttribute()
     {
         return $this->price - $this->getAfterRebatesPriceAttribute();
     }
+
     /**
      * 获取买家名
      *
@@ -558,9 +560,10 @@ class Order extends Model
     {
 
 
-      /*  if ($this->user_id > 0) {
-            return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
-        } else*/if ($this->salesmanVisitOrder) {
+        /*  if ($this->user_id > 0) {
+              return $this->user && $this->user->shop && $this->user->shop->salesmanCustomer ? $this->user->shop->salesmanCustomer->salesman_name : '';
+          } else*/
+        if ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->salesman_name;
         }
         return '';

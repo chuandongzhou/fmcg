@@ -20,6 +20,18 @@ class Asset extends Model
     protected $hidden = [];
 
     /**
+     * 模型启动事件
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // 注册删除事件
+        static::deleted(function ($model) {
+            $model->assetReview()->delete();
+        });
+    }
+    /**
      * 所属店铺
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

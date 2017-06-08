@@ -21,7 +21,8 @@ class Inventory extends Model
         'cost',
         'quantity',
         'surplus',
-        'remark'
+        'remark',
+        'in_id'
     ];
 
     protected $appends = [];
@@ -104,7 +105,7 @@ class Inventory extends Model
     {
         return $query->where(function ($query) use ($number) {
             $query->where('inventory_number', 'LIKE', '%' . $number . '%')
-             ->orWhere('order_number', 'LIKE', '%' . $number . '%');
+                ->orWhere('order_number', 'LIKE', '%' . $number . '%');
         });
     }
 
@@ -138,9 +139,13 @@ class Inventory extends Model
      */
     public function getInCostAttribute()
     {
-        $inv = $this->where('production_date', $this->production_date)->OfIn()->first(['cost']);
+        $where = [
+            'id' => $this->in_id,
+        ];
+        $inv = $this->where($where)->OfIn()->first(['cost']);
         return $inv->cost ?? 0;
     }
+
 
     /**
      * 获得入库实际成本
@@ -149,7 +154,7 @@ class Inventory extends Model
      */
     private function getInActualCost()
     {
-        $inv = $this->where('production_date', $this->production_date)->OfIn()->first(['cost', 'pieces', 'goods_id']);
+        $inv = $this->where('id' , $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
         //进制
         $system = GoodsService::getPiecesSystem($inv->goods_id, $inv->pieces);
         return ($inv->cost / $system) ?? 0;
@@ -164,7 +169,10 @@ class Inventory extends Model
      */
     public function getInPiecesAttribute()
     {
-        $cost = $this->where('production_date', $this->production_date)->OfIn()->first(['pieces']);
+        $where = [
+            'id' => $this->in_id,
+        ];
+        $cost = $this->where($where)->OfIn()->first(['pieces']);
         return $cost->pieces ?? 0;
     }
 
@@ -182,6 +190,7 @@ class Inventory extends Model
 
     /**
      * 获取买家名
+     *
      * @return mixed
      */
     public function getBuyerNameAttribute()
@@ -193,6 +202,7 @@ class Inventory extends Model
 
     /**
      * 获取卖家名
+     *
      * @return mixed
      */
     public function getSellerNameAttribute()
@@ -204,6 +214,7 @@ class Inventory extends Model
 
     /**
      * 获取配送人员名
+     *
      * @return mixed
      */
     public function getDeliveryNameAttribute()
@@ -211,10 +222,10 @@ class Inventory extends Model
         if ($this->order_number > 0) {
             $deliveryMans = $this->order->deliveryMan;
             $name = [];
-            foreach ($deliveryMans as $deliveryMan){
-               $name[] = $deliveryMan->name;
+            foreach ($deliveryMans as $deliveryMan) {
+                $name[] = $deliveryMan->name;
             }
-            return implode(',',$name);
+            return implode(',', $name);
         }
     }
 }

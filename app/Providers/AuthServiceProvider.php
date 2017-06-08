@@ -130,12 +130,7 @@ class AuthServiceProvider extends ServiceProvider
          * 验证店铺资产审核权限
          */
         $gate->define('validate-shop-assetApply', function ($user, $asset_apply) {
-            foreach ($user->shop->asset as $asset){
-                if ($asset_apply->asset_id = $asset->id){
-                    return true;
-                }
-            }
-            return false;
+            return $asset_apply->asset->shop_id == $user->shop_id;
         });
 
         /**

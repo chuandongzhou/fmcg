@@ -104,7 +104,7 @@
                                 </h3>
                             </div>
                             <div class="panel-container">
-                                <div class="row margin-clear">
+                                <div class="row margin-clear goodsPieces">
                                     <div class="col-sm-8">
                                         <div class="form-group editor-item">
                                             <label class="control-label col-sm-2">一级单位 :</label>
@@ -271,7 +271,7 @@
                                     </div>
                                     <label class="control-label col-sm-2">规格 :</label>
 
-                                    <div class="col-sm-3  spec_retailer">{{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}</div>
+                                    <div class="col-sm-3 spec spec_retailer">{{ $goods->specification_retailer }}</div>
                                     <input type="hidden" name="specification_retailer"
                                            value="{{ $goods->specification_retailer }}"/>
                                 </div>
@@ -352,9 +352,8 @@
                                         </div>
                                         <label class="control-label col-sm-2">规格 :</label>
 
-                                        <div class="col-sm-3  spec_wholesaler">
-                                            {{ $goods->goodsPieces?$goods->goodsPieces->specification:'' }}
-
+                                        <div class="col-sm-3 spec spec_wholesaler">
+                                            {{ $goods->specification_wholesaler }}
                                         </div>
                                         <input type="hidden" name="specification_wholesaler"
                                                value="{{ $goods->specification_wholesaler }}"/>

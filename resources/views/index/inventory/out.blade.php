@@ -52,7 +52,7 @@
                                     <td>{{$list->user->user_name ?? '系统'}}</td>
                                     <td>{{$list->created_at}}</td>
                                     <td><a class="edit"
-                                           href="{{url('inventory/out-detail')}}/{{$list->inventory_number}}">查看</a>
+                                           href="{{url('inventory/out-detail/'.$list->inventory_number)}}">查看</a>
                                     </td>
                                 </tr>
                             @endforeach

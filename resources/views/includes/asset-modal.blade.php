@@ -193,7 +193,7 @@
                         client_shopaddress_address_name = obj.data('client_shopaddress_address_name') || '',
                         use_date = obj.data('use_date') || '',
                         salesman_name = obj.data('salesman_name') || '',
-                        apply_date = obj.data('apply_date') || '',
+                        created_at = obj.data('created_at') || '',
                         pass_date = obj.data('pass_date') || '',
                         apply_remark = obj.data('apply_remark') || '';
                 viewModal.find('div[name = asset_name]').html(asset_name)
@@ -206,7 +206,7 @@
                 viewModal.find('div[name = client_shopaddress]').html(client_shopaddress_address_name);
                 viewModal.find('div[name = use_date]').html(use_date)
                 viewModal.find('div[name = salesman_name]').html(salesman_name)
-                viewModal.find('div[name = apply_date]').html(apply_date)
+                viewModal.find('div[name = apply_date]').html(created_at)
                 viewModal.find('div[name = pass_date]').html(pass_date)
                 viewModal.find('div[name = apply_remark]').html(apply_remark)
             });

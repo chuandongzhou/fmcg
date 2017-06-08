@@ -51,18 +51,27 @@
                                                 </td>
                                                 <td>已{{cons()->valueLang('status',$goods->status)}}</td>
                                                 <td>
-                                                    <a data-data='{"status":"{{cons('status.on')}}"}' data-method="post"
-                                                       data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
-                                                       class="gray ajax @if($goods->status) hidden @endif"><i
-                                                                class="iconfont icon-qiyong"></i>启用</a>
-                                                    <a data-data='{"status":"{{cons('status.off')}}"}'
-                                                       data-method="post"
-                                                       data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
-                                                       class="gray ajax @if(!$goods->status) hidden @endif"><i
-                                                                class="iconfont icon-jinyong"></i><span
-                                                                class="red">禁用</span></a>
+                                                    @if(!$goods->status)
+                                                        <a data-data='{"status":"{{cons('status.on')}}"}'
+                                                           data-method="post"
+                                                           data-no-loading="1"
+                                                           data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
+                                                           class="gray ajax no-prompt"><i
+                                                                    class="iconfont icon-qiyong"></i>启用</a>
+                                                        @else
+                                                        <a data-data='{"status":"{{cons('status.off')}}"}'
+                                                           data-method="post"
+                                                           data-no-loading="1"
+                                                           data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
+                                                           class="gray ajax no-prompt"><i
+                                                                    class="iconfont icon-jinyong"></i><span
+                                                                    class="red">禁用</span></a>
+                                                    @endif
+
                                                     <a data-url="{{url('api/v1/promo/goods/'.$goods->id.'/destroy')}}"
-                                                       data-method="post" class="red delete-no-form">
+                                                       data-method="post"
+                                                       data-no-loading="1"
+                                                       class="red  ajax no-prompt">
                                                         <i class="fa fa-trash-o"></i> 删除
                                                     </a>
                                                 </td>
@@ -71,22 +80,27 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-12 form-group remove-panel">
-                                    <label><input type="checkbox" class="parent"> 全选</label>
-                                    <a class="btn btn-red ajax" data-method="put"
-                                       data-url="{{url('api/v1/promo/goods/batch-destroy')}}" type="button">
-                                        批量删除
-                                    </a>
-                                    <a class="btn btn-blue ajax" data-data='{"status":"{{cons('status.on')}}"}'
-                                       data-method="put" data-url="{{url('api/v1/promo/goods/batch-status')}}"
-                                       type="button">
+                                <div class="col-sm-12 form-group">
+                                    <label><input type="checkbox" onclick="onCheckChange(this,'.child')" class="parent">
+                                        全选</label>
+                                    <button class="btn btn-red ajax no-prompt"
+                                            data-no-loading="1"
+                                            data-url="{{ url('api/v1/promo/goods/batch-destroy') }}"
+                                            data-method="put">批量删除
+                                    </button>
+                                    <button class="btn btn-blue ajax no-prompt"
+                                            data-no-loading="1"
+                                            data-url="{{url('api/v1/promo/goods/batch-status')}}"
+                                            data-data='{"status":"{{cons('status.on')}}"}'
+                                            data-method="put">
                                         批量启用
-                                    </a>
-                                    <a class="btn btn-cancel ajax" data-data='{"status":"{{cons('status.off')}}"}'
-                                       data-method="put" data-url="{{url('api/v1/promo/goods/batch-status')}}"
-                                       type="button">
-                                        批量禁用
-                                    </a>
+                                    </button>
+                                    <button class="btn btn-cancel ajax no-prompt"
+                                            data-no-loading="1"
+                                            data-url="{{url('api/v1/promo/goods/batch-status')}}"
+                                            data-data='{"status":"{{cons('status.off')}}"}'
+                                            data-method="put">批量禁用
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -96,11 +110,6 @@
         </div>
     </div>
 @stop
-@section('js-lib')
-    @parent
-@stop
 @section('js')
-    <script>
-        deleteNoForm();
-    </script>
+
 @stop

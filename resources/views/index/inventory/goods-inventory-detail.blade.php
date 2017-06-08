@@ -14,8 +14,8 @@
     <div class="row delivery">
         <div class="col-sm-12 control-search">
             <form action="" method="get" autocomplete="off">
-                <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text" value="">至
-                <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text" value="">
+                <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text" value="{{$data['start_at']}}">至
+                <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text" value="{{$data['end_at']}}">
                 <button type="button" class=" btn btn-blue-lighter search control search-by-get">搜索</button>
                 <button onclick="javascript:history.back()" type="button" class="btn btn-default control">返回</button>
             </form>

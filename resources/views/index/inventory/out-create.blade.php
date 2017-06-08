@@ -1,6 +1,6 @@
 @extends('index.manage-master')
 @include('includes.timepicker')
-@include('includes.inventory-goods-list-modal')
+
 @section('subtitle', '出库信息填写')
 
 @section('container')
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <form class="form-horizontal ajax-form" method="post"
-                  action="{{ url('api/v1/inventory/out-save'/*.$goods->id*/) }}" data-done-url="{{ url('inventory') }}"
+                  action="{{ url('api/v1/inventory/out-save'/*.$goods->id*/) }}" data-done-url="{{ url('inventory/out') }}"
                   data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
                   autocomplete="off">
                 <div class="row delivery">
@@ -22,11 +22,11 @@
                         <div class="row title-list-wrap">
                             <div class="col-sm-3 item">
                                 <label>出库单号 :</label>
-                                {{session('inv')['inventory_number']}}
+                                {{$inventory['inventory_number']}}
                             </div>
                             <div class="col-sm-3 item">
                                 <label>出库类型 :</label>
-                                {{session('inv')['type'] == cons('inventory.inventory_type.system')?'系统出库':'手动出库'}}
+                                {{$inventory['type'] == cons('inventory.inventory_type.system')?'系统出库':'手动出库'}}
                             </div>
                             <div class="col-sm-6 control-search item">
                                 <button type="button" class=" btn btn-blue-lighter control " data-target="#myModal"
@@ -47,7 +47,7 @@
                             </tr>
                             </thead>
                             <input type="hidden" name="inventory_number"
-                                   value="{{session('inv')['inventory_number'] ?? ''}}">
+                                   value="{{$inventory['inventory_number'] ?? ''}}">
                             <input type="hidden" name="inventory_type"
                                    value="{{cons('inventory.inventory_type.manual')}}">
                             <input type="hidden" name="action_type" value="{{cons('inventory.action_type.out')}}">
@@ -78,11 +78,12 @@
                                                             value="{{ $goods->goodsPieces->pieces_level_3 }}">{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_3) }}</option>
                                                 @endif
                                             </select>
+                                            <span name='pieces'></span>
                                         </p>
                                     </td>
                                     <td>
                                         <p class="new-col">
-                                            <input class="number cost" name="goods[{{$goods->id}}][cost][]" type="text">
+                                            <input class="number cost" name="goods[{{$goods->id}}][cost][]" type="text"><span name="cost"></span>
                                         </p>
                                     </td>
                                     <td>
@@ -90,12 +91,14 @@
                                             <input class="number inventory" name="goods[{{$goods->id}}][quantity][]"
                                                    type="text"
                                                    placeholder="">
+                                            <span name="quantity"></span>
                                         </p>
                                     </td>
                                     <td>
                                         <p class="margin-clear new-col">
                                     <textarea name="goods[{{$goods->id}}][remark][]" rows="4" cols="20">
                                     </textarea>
+                                            <span name="remark"></span>
                                         </p>
                                     </td>
                                 </tr>
@@ -146,7 +149,7 @@
             </form>
         </div>
     </div>
-
+    @include('includes.inventory-goods-list-modal')
 @stop
 @section('js')
     @parent

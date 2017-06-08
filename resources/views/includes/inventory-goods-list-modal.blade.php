@@ -103,7 +103,6 @@
             }
 
             chooseSubmit = function () {
-
                 tbody.find($(".child:checked")).each(function () {
 
                     var img_url = $(this).next().next($('input[name=image_url]')).data('image_url');
@@ -124,7 +123,7 @@
                     tr.find('img').attr('src', img_url);
                     tr.find('a').attr('href', goods_detail_url);
                     tr.find('a').html(goods_name);
-                    tr.find('.datetimepicker').attr('name', name_prefix + '[production_date][]').each(makeDate());
+                    tr.find('.datetimepicker').attr('name', name_prefix + '[production_date][0]').each(makeDate());
                     option = '<option>请选择</option>';
                     if (pieces_level_1 != null) {
                         option += '<option value=' + pieces_level_1 + '>' + pieces_level_1_lang + '</option>';
@@ -135,12 +134,12 @@
                     if (pieces_level_3 != null) {
                         option += '<option value=' + pieces_level_3 + '>' + pieces_level_3_lang + '</option>';
                     }
-                    tr.find('select').attr('name', name_prefix + '[pieces][]').html(option);
-                    tr.find('input.cost').attr('name', name_prefix + '[cost][]');
-                    tr.find('input.inventory').attr('name', name_prefix + '[quantity][]');
-                    tr.find('textarea').attr('name', name_prefix + '[remark][]');
+                    tr.find('select').attr('name', name_prefix + '[pieces][0]').html(option);
+                    tr.find('input.cost').attr('name', name_prefix + '[cost][0]');
+                    tr.find('input.inventory').attr('name', name_prefix + '[quantity][0]');
+                    tr.find('textarea').attr('name', name_prefix + '[remark][0]');
                     choosedGoodsList.append(tr);
-                    $(this).parents('tr').remove()
+                    $(this).parents('tr').remove();
                 });
             }
 

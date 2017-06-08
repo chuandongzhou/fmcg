@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Goods;
+use App\Models\Salesman;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SystemTradeInfo;
@@ -36,13 +37,12 @@ class SalesmanCustomerController extends Controller
     {
         $salesmanId = $request->input('salesman_id');
         $name = $request->input('name');
-
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
-
         $customers = SalesmanCustomer::whereIn('salesman_id',
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
+            ->ExceptSelf()
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
 
@@ -58,7 +58,7 @@ class SalesmanCustomerController extends Controller
      */
     public function create()
     {
-        $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
+        $salesmen = $this->shop->salesmen()->lists('name','id');
         return view('index.business.salesman-customer',
             ['salesmen' => $salesmen, 'salesmanCustomer' => new SalesmanCustomer]);
     }
@@ -139,7 +139,7 @@ class SalesmanCustomerController extends Controller
      */
     public function edit($salesmanCustomer)
     {
-        $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
+        $salesmen = Salesman::assign()->active()->lists('name', 'id');
 
         return view('index.business.salesman-customer',
             ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer]);

@@ -72,7 +72,7 @@ class Goods extends Model
             $model->deliveryArea()->delete();   //配送区域
             $model->carts()->delete();           //购物车
             $model->attr()->detach();           //商品标签
-            //$model->images()->detach();         //商品图片
+            PromoGoods::where('goods_id',$model->id)->delete();//促销商品
         });
 
 //        static::creating(function ($model) {
@@ -655,7 +655,7 @@ class Goods extends Model
     }
 
     /**
-     * 获取商品剩余库存
+     * 获取商品剩余库存数量
      *
      * @return mixed
      */

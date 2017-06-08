@@ -234,6 +234,7 @@ class Salesman extends Model implements AuthenticatableContract
         }
         return $query;
     }
+    
 
     /**
      * 按参数检索

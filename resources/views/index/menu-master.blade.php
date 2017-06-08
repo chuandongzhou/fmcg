@@ -318,11 +318,13 @@
                                             <span class="title">提现账号</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item  {{ path_active(['personal/bill/*','personal/bill']) }}">
-                                        <a href="{{ url('personal/bill') }}" class="nav-link ">
-                                            <span class="title">月对账单</span>
-                                        </a>
-                                    </li>
+                                    @if(in_array($user->type,[cons('user.type.retailer'),cons('user.type.wholesaler')]))
+                                        <li class="nav-item  {{ path_active(['personal/bill/*','personal/bill']) }}">
+                                            <a href="{{ url('personal/bill') }}" class="nav-link ">
+                                                <span class="title">月对账单</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </li>
                         <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">

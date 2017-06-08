@@ -44,10 +44,9 @@ class AssetController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function putStatusChange(Request $request)
+    public function putStatusChange($asset)
     {
-        $id = $request->input('id');
-        $asset = Asset::find($id);
+        $asset = Asset::find($asset);
         if (Gate::denies('validate-shop-asset', $asset)) {
             return $this->forbidden('权限不足');
         }

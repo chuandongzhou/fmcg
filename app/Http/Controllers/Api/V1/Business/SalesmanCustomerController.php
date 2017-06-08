@@ -21,7 +21,7 @@ class SalesmanCustomerController extends Controller
      */
     public function index()
     {
-        $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress',
+        $customers = salesman_auth()->user()->customers()->ExceptSelf()->with('businessAddress', 'shippingAddress',
             'shop.user', 'mortgageGoods')->get()->each(function ($customer) {
             $customer->shop && $customer->shop->setAppends([]);
             $customer->setAppends(['account']);
@@ -41,6 +41,7 @@ class SalesmanCustomerController extends Controller
     {
         $attributes = $request->all();
         $salesman = isset($attributes['salesman_id']) ? auth()->user()->shop->salesmen()->active()->find($attributes['salesman_id']) : salesman_auth()->user();
+
         if (is_null($salesman)) {
             return $this->error('添加客户失败，请重试');
         }
@@ -50,11 +51,9 @@ class SalesmanCustomerController extends Controller
         ) {
             return $this->error('抵费商品不能为空');
         }
-
-
         $attributes['number'] = $this->_getCustomerNumber($salesman);
         $attributes['letter'] = $this->_getLetter($attributes['name']);
-
+        $attributes['type'] =  $salesman->shop->user_type == cons('user.type.maker') ? cons('user.type.supplier') : $attributes['type'];
         if (array_get($attributes, 'account')) {
             $shop = $salesman->shop;
 
@@ -64,9 +63,21 @@ class SalesmanCustomerController extends Controller
         } else {
             $attributes['shop_id'] = null;
         }
-
+        $shop_id = array_get($attributes,'shop_id',null);
+        if($salesman->shop->user_type == cons('user.type.maker')){
+            if($salesman->shop_id != $salesman->maker_id){
+                return $this->invalidParam('salesman_id', '该业务员已指派');
+            }
+            if(!$shop_id){
+                return $this->invalidParam('salesman_id', '未绑定账号客户无法指派业务员');
+            }
+        }
         $salesmanCustomer = $salesman->customers()->create(array_except($attributes, 'account'));
         if ($salesmanCustomer->exists) {
+            if($salesman->shop->user_type == cons('user.type.maker')){
+                $salesman->shop_id = $shop_id;
+                $salesman->save();
+            }
             return $this->success('添加客户成功');
         }
         return $this->error('添加客户时出现问题');
@@ -390,13 +401,12 @@ class SalesmanCustomerController extends Controller
     private function _validateAccount($shop, $attributes, $customer = null)
     {
         $user = User::where('user_name', $attributes['account'])->first();
+
         if (is_null($user) || array_get($attributes, 'type', cons('user.type.retailer')) != $user->type) {
             return false;
         }
         $shopId = $user->shop_id;
-
         $existsCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $shopId)->first();
-
         if ($existsCustomer) {
             if ($customer && $customer->id == $existsCustomer->id) {
                 return $shopId;

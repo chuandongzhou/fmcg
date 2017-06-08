@@ -116,14 +116,15 @@
                                             {{$item->bar_code}}
                                         </td>
                                         <td>
-                                            <p>{{ $item->price_retailer}}元</p>
-
-                                            <p>{{ $item->price_wholesaler }}元 (批)</p>
+                                            <p>{{ $item->price_retailer}}元 / {{cons()->valueLang('goods.pieces',$item->pieces_retailer)}}</p>
+                                            @if(auth()->user()->type == cons('user.type.supplier') || auth()->user()->type == cons('user.type.maker'))
+                                                <p>{{ $item->price_wholesaler }}元 (批) / {{cons()->valueLang('goods.pieces',$item->pieces_wholesaler)}}</p>
+                                            @endif
                                         </td>
                                         <td>
                                             {{$item->surplus_inventory}}
                                         </td>
-                                        <td>{{ isset($cate[$item->id]) ? implode('/',$cate[$item->id]) : '' }} {{--食品生鲜/休闲食品/膨化食品--}}</td>
+                                        <td>{{ isset($goodsCate[$item->id]) ? implode('/',$goodsCate[$item->id]) : '' }}</td>
                                         <td class="operating text-center">
                                             <a href="{{url('inventory/out-create'). '/' .$item->id}}"
                                                class="edit">出库</a>

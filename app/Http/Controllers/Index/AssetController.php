@@ -7,6 +7,7 @@ use App\Services\AssetService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * 资产管理
@@ -82,8 +83,10 @@ class AssetController extends Controller
 
     public function getApplyDetail($applyId = 0)
     {
-        if (!$applyId) return '';
         $assetApply = AssetApply::with(['asset', 'client'])->find($applyId);
+        if (is_null($assetApply) || Gate::denies('validate-shop-assetApply',$assetApply)){
+            return view('errors.404');
+        };
         return view('index.asset.apply-detail', [
             'assetApply' => $assetApply
         ]);

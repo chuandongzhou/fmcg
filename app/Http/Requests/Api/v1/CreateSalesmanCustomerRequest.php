@@ -48,9 +48,9 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
                 if($businessAddress['city_id'] && !$businessAddress['district_id'] && !empty($this->lowerLevelAddress($businessAddress['city_id']))){
                     $validator->errors()->add('business_address[district_id]', '区/县 不能为空');
                 }
-                if($businessAddress['district_id'] && !$businessAddress['street_id'] && !empty($this->lowerLevelAddress($businessAddress['district_id']))){
+                /*if($businessAddress['district_id'] && !$businessAddress['street_id'] && !empty($this->lowerLevelAddress($businessAddress['district_id']))){
                     $validator->errors()->add('business_address[street_id]', '街道 不能为空');
-                }
+                }*/
             }
             if ($shippingAddress = $this->input('shipping_address')) {
                 if (!$shippingAddress['address']) {
@@ -65,9 +65,9 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
                 if($shippingAddress['city_id'] && !$shippingAddress['district_id'] && !empty($this->lowerLevelAddress($shippingAddress['city_id']))){
                     $validator->errors()->add('shipping_address[district_id]', '区/县 不能为空');
                 }
-                if($shippingAddress['district_id'] && !$shippingAddress['street_id'] && !empty($this->lowerLevelAddress($shippingAddress['district_id']))){
+                /*if($shippingAddress['district_id'] && !$shippingAddress['street_id'] && !empty($this->lowerLevelAddress($shippingAddress['district_id']))){
                     $validator->errors()->add('shipping_address[street_id]', '街道 不能为空');
-                }
+                }*/
             }
             if ($displayType = $this->input('display_type')) {
                 $month = $this->only('display_start_month', 'display_end_month');

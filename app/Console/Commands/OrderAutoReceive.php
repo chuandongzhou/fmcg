@@ -45,7 +45,7 @@ class OrderAutoReceive extends Command
                     $shopOwner->balance += $tradeModel->amount;
                     $shopOwner->save();
                     //买家入库
-                    (new InventoryService())->autoInventoryIn($order->orderGoods);
+                    (new InventoryService())->autoIn($order->orderGoods);
                     //通知卖家
                     $redisKey = 'push:seller:' . $shopOwner->id;
                     $redisVal = '您的订单:' . $order->id . ',' . cons()->lang('push_msg.finished');

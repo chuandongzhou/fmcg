@@ -28,6 +28,7 @@ class CreateInventoryTable extends Migration
             $table->unsignedInteger('quantity')->default(0)->comment('出入库数量');
             $table->unsignedInteger('surplus')->default(0)->comment('剩余数量');
             $table->string('remark')->default('')->comment('备注');
+            $table->string('in_id')->default(null)->comment('具体用那条记录出的库');
             $table->timestamps();
         });
     }

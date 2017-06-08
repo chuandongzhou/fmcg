@@ -95,6 +95,7 @@ class OrderController extends Controller
      */
     public function getDetailOfBuy(Request $request)
     {
+
         $order = Order::where('user_id', auth()->id())->find($request->input('order_id'));
 
         if (is_null($order)) {
@@ -392,7 +393,7 @@ class OrderController extends Controller
 
             if ($order->pay_type == cons('pay_type.online')) {
                 //在线支付确认收货买家入库
-                (new InventoryService())->autoInventoryIn($order->orderGoods);
+                (new InventoryService())->autoIn($order->orderGoods);
             }
 
             if (($tradeModel = $order->systemTradeInfo) && $order->fill([
@@ -450,14 +451,14 @@ class OrderController extends Controller
 
             if ($order->pay_type == cons('pay_type.pick_up')) {
                 //自提订单收款时卖家出库
-                $outResult = $inventoryService->autoInventoryOut($order->orderGoods);
-                if (is_string($outResult)) {
-                    return $this->error($outResult);
+                $outResult = $inventoryService->autoOut($order->orderGoods);
+                if (!$outResult) {
+                    return $this->error($inventoryService->getError());
                 };
             }
             if ($order->pay_type == cons('pay_type.pick_up') || $order->pay_type == cons('pay_type.cod')) {
                 //自提订单和货到付款订单收款时买家入库
-                $inventoryService->autoInventoryIn($order->orderGoods);
+                $inventoryService->autoIn($order->orderGoods);
             }
 
             if (!$order->fill([
@@ -509,9 +510,9 @@ class OrderController extends Controller
                 continue;
             }
             //卖家出库
-            $result = $inventoryService->autoInventoryOut($order->orderGoods);
-            if (is_string($result)) {
-                return $this->error($result);
+            $result = $inventoryService->autoOut($order->orderGoods);
+            if ($result == false) {
+                return $this->error($inventoryService->getError());
             };
             if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
                 $redisKey = 'push:user:' . $order->user_id;
@@ -779,6 +780,12 @@ class OrderController extends Controller
         $order = $orderGoods->order;
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
+            
+            if ($order->status == cons('order.status.send')) {
+                $inventoryService = new InventoryService();
+                //清除出库记录
+                $inventoryService->clearOut($orderGoods);
+            }
             $orderGoods->delete();
             if ($order->orderGoods()->where('type', cons('order.goods.type.order_goods'))->count() == 0) {
                 //订单商品删完了标记为作废

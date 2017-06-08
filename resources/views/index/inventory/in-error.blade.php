@@ -1,6 +1,5 @@
 @extends('index.manage-master')
 @section('subtitle', '入库异常')
-@include('includes.in-error-detail')
 @section('container')
     @include('includes.menu')
     <div class="page-content-wrapper">
@@ -47,13 +46,13 @@
                                     <td>
                                         @if($shopGoods->where('bar_code',$list->goods->bar_code)->first())
                                             <a class="gray">已增商品</a>
-                                            <a class="green">我要入库</a>
+                                            <a href="{{url('inventory/in-create/'.$list->goods_id.'?order_id='.$list->order_id)}}" class="green">我要入库</a>
                                         @else
-                                            <a href="{{url('my-goods/create/')}}?goods_id={{$list->goods->id}}&order_id={{$list->order_id}}"
+                                            <a href="{{url('my-goods/create/')}}?goods_id={{$list->goods->id ?? ''}}&order_id={{$list->order_id}}"
                                                class="edit">新增商品</a>
                                         @endif
 
-                                        <a class="color-blue viewDetail" data-goods_id="{{$list->goods->id}}"
+                                        <a class="color-blue viewDetail" data-goods_id="{{$list->goods->id ?? ''}}"
                                            data-order_number="{{$list->order_id}}" data-target="#myModal"
                                            data-toggle="modal">查看</a>
                                     </td>
@@ -69,6 +68,7 @@
             </div>
         </div>
     </div>
+    @include('includes.in-error-detail')
 @stop
 @section('js')
     @parent

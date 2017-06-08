@@ -1,6 +1,5 @@
 @extends('index.manage-master')
 @section('subtitle', '资产管理')
-@include('includes.asset-modal')
 @include('includes.timepicker')
 @section('container')
     @include('includes.menu')
@@ -68,7 +67,7 @@
                                            data-client_shopAddress_address_name="{{$use->client->shopAddress->address_name}}"
                                            data-use_date="{{$use->use_date}}"
                                            data-salesman_name="{{$use->salesman->name}}"
-                                           data-apply_date="{{$use->apply_date}}"
+                                           data-created_at="{{$use->created_at}}"
                                            data-pass_date="{{$use->pass_date}}"
                                            data-apply_remark="{{$use->apply_remark}}"
                                         >
@@ -87,6 +86,7 @@
             </div>
         </div>
     </div>
+    @include('includes.asset-modal')
 @stop
 @section('js')
     @parent

@@ -67,7 +67,9 @@ class Shop extends Model
             $model->shopRecommendGoods()->delete();
             $model->shopHomeAdverts()->delete();
             $model->ShopSignature()->delete();
-            $model->promoGoods()->delete();
+            $model->promo()->delete();
+            $model->asset()->delete();
+            Inventory::where('shop_id',$model->id)->delete();
         });
         static::updated(function ($model) {
             (new UserService(true))->setShopDetail($model->user);
@@ -270,6 +272,9 @@ class Shop extends Model
      */
     public function salesmen()
     {
+        if($this->user_type == cons('user.type.maker')){
+            return $this->hasMany('App\Models\Salesman','maker_id');
+        }
         return $this->hasMany('App\Models\Salesman');
     }
 
@@ -290,6 +295,9 @@ class Shop extends Model
      */
     public function salesmanCustomer()
     {
+        if($this->user_type != cons('user.type.maker')){
+            return $this->hasOne(SalesmanCustomer::class)->where('salesmanCustomer.shop_id','<>',$this->id);
+        }
         return $this->hasOne(SalesmanCustomer::class);
     }
 
@@ -356,6 +364,15 @@ class Shop extends Model
     public function promoApply()
     {
         return $this->hasManyThrough('App\Models\PromoApply','App\Models\Promo');
+    }
+
+    /**
+     * 店铺库存
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inventory()
+    {
+        return $this->hasMany('App\Models\Inventory'); 
     }
     
     
@@ -603,7 +620,7 @@ class Shop extends Model
     {
         $logo = $this->logo;
         $userType = array_flip(cons('user.type'));
-        return $logo ? $logo->url : asset('images/' . $userType[$this->user->type] . '.jpg');
+        return $logo ? $logo->url : asset('images/' . $userType[$this->user->type ?? 1] ?? ''. '.jpg');
     }
 
     /**

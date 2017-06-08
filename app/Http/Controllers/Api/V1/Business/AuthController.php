@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Business;
 
 use App\Models\Salesman;
+use App\Models\SalesmanCustomer;
 use App\Services\BusinessService;
 use App\Services\SalesmanTargetService;
 use Carbon\Carbon;
@@ -29,7 +30,6 @@ class AuthController extends Controller
         }
 
         $salesman = Salesman::where('account', $account)->with('shop.shopAddress')->first();
-
         if (!$salesman || !Hash::check($password, $salesman->password)) {
             return $this->invalidParam('password', '账号或密码错误');
         }
@@ -44,6 +44,9 @@ class AuthController extends Controller
         $salesman->setAppends(['shop_type', 'avatar_url']);
 
         if ($salesman->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
+            if($salesman->maker_id == $salesman->shop_id){
+                return $this->invalidParam('password', '尚未绑定商家无法登录');
+            }
             salesman_auth()->login($salesman, true);
 
             return $this->success(['salesman' => $salesman]);

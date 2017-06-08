@@ -50,7 +50,7 @@ return [
             'normal' => 0,   //正常
             'in-abnormal' => 1, //入库异常
             'out-abnormal' => 2, //入库异常
-            'disposed' => 3, //出库异常
+            'disposed' => 3, //已处理
         ]
     ],
     //资产状态

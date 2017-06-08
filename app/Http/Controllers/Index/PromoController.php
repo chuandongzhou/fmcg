@@ -44,7 +44,7 @@ class PromoController extends Controller
     public function edit($promo)
     {
         if (Gate::denies('validate-shop-promo', $promo)) {
-            return $this->error('没有权限!');
+            return view('errors.404');
         }
         return view('index.promo.add',[
             'promo' => $promo
@@ -59,7 +59,7 @@ class PromoController extends Controller
     public function view($promo)
     {
         if (Gate::denies('validate-shop-promo', $promo)) {
-            return $this->error('没有权限!');
+            return view('errors.404');
         }
         return view('index.promo.add',[
             'promo' => $promo
@@ -97,13 +97,16 @@ class PromoController extends Controller
         $promoApply = $this->promoService->applyLogSearch($promoApply,$data);
         return view('index.promo.apply-log',[
             'promoApply' => $promoApply->paginate(),
-            'salesmans' => $this->shop->salesmen,
+            'salesmans' => $this->shop->salesmen ?? [],
             'data' => $data,
         ]);
     }
 
     public function applyLogDetail($apply)
     {
+        if (Gate::denies('validate-shop-promoApply', $apply)) {
+            return view('errors.404');
+        }
         return view('index.promo.log-detail',[
             'apply' => $apply,
         ]);

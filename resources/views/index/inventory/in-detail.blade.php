@@ -49,11 +49,11 @@
                             @foreach($inventory as $list)
                                 <tr>
                                     <td>
-                                        <div class="product-name" title="{{$list->goods->name}}">
-                                            {{$list->goods->name}}
+                                        <div class="product-name" title="{{$list->goods->name ?? ''}}">
+                                            {{$list->goods->name ?? ''}}
                                         </div>
                                     </td>
-                                    <td>{{$list->goods->bar_code}}</td>
+                                    <td>{{$list->goods->bar_code ?? ''}}</td>
                                     <td>{{$list->production_date}}</td>
                                     <td>{{$list->transformation_quantity}}</td>
                                     <td>{{$list->cost}} 元/{{cons()->valueLang('goods.pieces',$list->pieces)}}</td>
