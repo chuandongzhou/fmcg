@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderGoods;
 use Carbon\Carbon;
@@ -148,7 +149,7 @@ class OrderService extends BaseService
         foreach ($orders as $order) {
             $data = [
                 'order_id' => $order->id,
-                'order_amount' => $order->price ,
+                'order_amount' => $order->price,
                 'pay_type' => cons()->valueLang('pay_type', $order->pay_type)
             ];
             app('pushbox.sms')->queue('order', $order->shop->user_backup_mobile, $data);
@@ -195,7 +196,7 @@ class OrderService extends BaseService
         //判断待修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($attributes['pivot_id']));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
-            $this->setError( '订单不存在');
+            $this->setError('订单不存在');
             return false;
         }
         $num = $attributes['num'];
@@ -211,15 +212,23 @@ class OrderService extends BaseService
             //增加修改记录
             $oldNum = $orderGoods->num;
             $oldPrice = $orderGoods->price;
-
             $newOrderPrice = bcadd(bcsub($order->price, $oldTotalPrice, 2), $newTotalPrice, 2);
-
             if ($order->display_fee >= $newOrderPrice) {
                 //订单陈列费不能大于订单价格
-                $this->setError( '订单陈列费不能大于订单价格');
+                $this->setError('订单陈列费不能大于订单价格');
                 return false;
             }
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
+
+            if ($order->status == cons('order.status.send')) {
+                $inventoryService = new InventoryService();
+                if ($inventoryService->clearOut($orderGoods)) {
+                    if (!$inventoryService->autoOut([$orderGoods],$order->id)) {
+                        return false;
+                    }
+                };
+            }
+
             // 价格不同才更新
             $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $newOrderPrice])->save();
 
@@ -262,8 +271,7 @@ class OrderService extends BaseService
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
             $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.price_changed');
-            (new RedisService)->setRedis($redisKey, $redisVal,  cons('push_time.msg_life'));
-
+            (new RedisService)->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
             return true;
         });
         return $flag;
@@ -351,7 +359,6 @@ class OrderService extends BaseService
         $number = $day . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT);
         return $number;
     }
-
 
     /**
      * 订单提交失败时删除已成功的订单
@@ -553,6 +560,17 @@ class OrderService extends BaseService
     private function _getOrderPid($shops)
     {
         return $shops->count() > 1 ? Order::max('pid') + 1 : 0;
+    }
+
+    /**
+     * 获得在途订单Ids----<已发货-未收货>
+     *
+     * @return array ids
+     */
+    static public function getInTransitOrderIds()
+    {
+        $orders = auth()->user()->shop->orders()->NonArrived()->get(['id']);
+        return $orders->pluck('id');
     }
 
 }

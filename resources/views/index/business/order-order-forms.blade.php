@@ -76,20 +76,19 @@
                                     <td>{{ $order->order_status_name }}</td>
                                     <td>
 
-                                        <a class="color-blue"
-                                           href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">
-                                            <i class="iconfont icon-iconmingchengpaixu65"></i>查看
-                                        </a>
-                                        @if($order->status == cons('salesman.order.status.not_pass'))
-                                            <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                                               data-method="put" data-data='{"status" : "1"}'
-                                               class=" ajax">
-                                                <i class="iconfont  icon-tongguo"></i>通过
-                                            </a>
-                                            <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                                               data-method="delete"
-                                               class="red ajax" type="button"><i class="iconfont icon-shanchu"></i> 删除
-                                            </a>
+                                <a class="color-blue"
+                                   href="{{ $order->order_id ?  url('order-sell/detail?order_id=' . $order->order_id)  :url('business/order/' . $order->id) }}">
+                                    <i class="iconfont icon-chakan"></i>查看
+                                </a>
+                                @if($order->status == cons('salesman.order.status.not_pass'))
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                       data-method="put" data-data='{"status" : "1"}'
+                                       class=" ajax">
+                                        <i class="iconfont  icon-tongguo"></i>通过
+                                    </a>
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}" data-method="delete"
+                                       class="red ajax" type="button"><i class="iconfont icon-shanchu"></i> 删除
+                                    </a>
 
                                         @else
                                             <a class=""

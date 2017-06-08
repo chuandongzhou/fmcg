@@ -25,7 +25,11 @@ class SalesmanController extends Controller
     public function store(Requests\Api\v1\CreateSalesManRequest $request)
     {
         $attributes = $request->except('status');
-        if (auth()->user()->shop->salesmen()->create($attributes)->exists) {
+        $user = auth()->user();
+        if($user->type == cons('user.type.maker')){
+            $attributes['shop_id'] = $user->shop_id;
+        }
+        if ($user->shop->salesmen()->create($attributes)->exists) {
             return $this->success('添加业务员成功');
         }
         return $this->error('添加业务员是出现错误');

@@ -594,3 +594,25 @@ if (!function_exists('array_key_value')) {
     }
 }
 
+if (!function_exists('month_first_last')){
+    /**
+     *
+     * 获取当月初，月尾
+     *
+     * @param bool $date
+     * @return array
+     */
+    function month_first_last($date = false){
+
+        if (!$date){
+            $date = date('Y-m-d');
+        }
+        $firstDay = date('Y-m-01 00:00:00', strtotime($date));
+        $lastDay = date('Y-m-d 23:59:59', strtotime("$firstDay +1 month -1 day"));
+        return [
+            'first' => $firstDay,
+            'last' =>  $lastDay
+        ];
+    }
+}
+

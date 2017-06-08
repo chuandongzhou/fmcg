@@ -106,6 +106,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('info', 'InfoController@index');          //商家信息
         $router->controller('security', 'SecurityController');          //安全设置
         $router->resource('bank', 'UserBankController', ['only' => ['edit', 'index', 'create']]);          //提现账号
+        $router->resource('bill', 'BillController'/*, ['only' => ['edit', 'index', 'create']]*/);          //月对账单
         $router->resource('delivery-man', 'DeliveryManController', ['only' => ['edit', 'index', 'create']]); //配送人员
         $router->controller('finance', 'FinanceController'); //账户余额
         $router->get('customer/{user_type}', 'CustomerController@index'); // 客户列表
@@ -125,6 +126,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('salesman/target', 'SalesmanController@target');
         $router->resource('salesman', 'SalesmanController');
         $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+        $router->get('salesman-customer/{salesman_customer}/bill', 'SalesmanCustomerController@bill');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
         $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
@@ -144,6 +146,35 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
     });
+            $router->resource('mortgage-goods', 'MortgageGoodsController');
+            $router->group(['prefix' => 'order'], function ($router) {
+                $router->get('export', 'SalesmanVisitOrderController@export');
+                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+                $router->get('browser-export/{salesman_visit_order}',
+                    'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
+                $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
+            });
+        });
+    // 库存管理
+    $router->group(['prefix' => 'inventory'], function ($router) {
+        //$router->get('in-create/{goods_id?}', 'InventoryController@create'); // 入库
+        $router->controller('/', 'InventoryController'); 
+    });
+
+    //资产管理
+    $router->group(['prefix' => 'asset'], function ($router) {
+        $router->controller('/', 'AssetController');
+    });
+
+    //促销管理
+    $router->group(['prefix' => 'promo'], function ($router) {
+        $router->get('apply-log/{promo_apply}/detail', 'PromoController@applyLogDetail');
+        $router->get('{promo}/edit', 'PromoController@edit');
+        $router->get('{promo}/view', 'PromoController@view');
+        $router->controller('/', 'PromoController');
+    });
+    
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
 
@@ -335,6 +366,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('shelve', 'MyGoodsController@shelve');                //商品上下架
             $router->put('gift', 'MyGoodsController@gift');                //商品上下架
             $router->post('{my_goods}/mortgage', 'MyGoodsController@mortgage');                //商品上下架
+            $router->post('{my_goods}/promo', 'MyGoodsController@promo');                //设置促销商品
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
             $router->post('import', 'MyGoodsController@import');
@@ -497,6 +529,35 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
         //支付渠道
         $router->get('payment-channel', 'PaymentChannelController@index');
+        //库存
+        $router->group(['prefix' => 'inventory'], function ($router) {
+            $router->controller('/', 'InventoryController');
+        });
+        //资产管理
+        $router->group(['prefix' => 'asset'], function ($router) {
+            $router->group(['prefix' => 'apply'], function ($router){
+                $router->put('review/{asset_apply}', 'AssetController@review');
+                $router->put('delete/{asset_apply}', 'AssetController@delete');
+                $router->put('modify/{asset_apply}', 'AssetController@modify');
+                $router->put('use-date/{asset_apply}', 'AssetController@useDate');
+            });
+            $router->controller('/', 'AssetController');
+        });
+
+        //促销管理
+        $router->group(['prefix' => 'promo'], function ($router) {
+            $router->put('apply/pass/{promo_apply}', 'PromoController@applyPass');
+            $router->put('apply/edit/{promo_apply}', 'PromoController@applyEdit');
+            $router->put('apply/delete/{promo_apply}', 'PromoController@applyDelete');
+            $router->put('status/{promo}', 'PromoController@status');
+            $router->post('edit/{promo}', 'PromoController@edit');
+            $router->post('get-goods', 'PromoController@getGoods');
+            $router->post('add', 'PromoController@add');
+            $router->post('goods/{promo_goods}/status', 'PromoController@goodsStatus');
+            $router->post('goods/{promo_goods}/destroy', 'PromoController@goodsDestroy');
+            $router->put('goods/batch-destroy', 'PromoController@goodsBatchDestroy');
+            $router->put('goods/batch-status', 'PromoController@goodsBatchStatus');
+        });
         //订单模板
         $router->put('templete/default/{templeteId}', 'TempleteController@default')->where('templeteId', '[0-9]+');;
         $router->resource('templete', 'TempleteController');

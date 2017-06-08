@@ -37,16 +37,15 @@
                             <label class="col-sm-2 control-label" for="salesman_id"><span
                                         class="red">*</span>业务员:</label>
 
-                            <div class="col-sm-10 col-md-6">
-                                <select class="form-control" id="salesman_id" name="salesman_id">
-                                    <option value="">请选择业务员</option>
-                                    @foreach($salesmen as $key=>$salesman)
-                                        <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                        </div>
+                    <div class="col-sm-10 col-md-6">
+                        <select class="form-control" id="salesman_id" name="salesman_id">
+                            <option value="">请选择业务员</option>
+                            @foreach($salesmen as $key=>$salesman)
+                                <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
                         @if(($userType = auth()->user()->type) == cons('user.type.supplier'))
                             <div class="form-group row">

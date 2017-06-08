@@ -203,7 +203,11 @@ return [
         'pieces' => '单位',
         'geetest_challenge' => '验证码',
         'identification_code' => '识别码',
-        'pay_password' => '支付密码'
+        'pay_password' => '支付密码',
+        'quantity' => '数量',
+        'unit' => '单位',
+        'use_date' => '使用时间',
+        'remark' => '备注',
     ],
 
 ];

@@ -39,6 +39,10 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\Coupon' => 'coupon',
         'App\Models\PaymentChannel' => 'payment-channel',
         'App\Models\ChildUser' => 'child-user',
+        'App\Models\AssetApply' => 'asset-apply',
+        'App\Models\PromoGoods' => 'promo-goods',
+        'App\Models\Promo' => 'promo',
+        'App\Models\PromoApply' => 'promo-apply',
     ];
 
     /**

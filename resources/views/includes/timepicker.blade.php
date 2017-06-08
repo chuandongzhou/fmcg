@@ -11,7 +11,10 @@
     <script src="{{ asset('js/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
-            $('.datetimepicker').each(function (i, obj) {
+            $('.datetimepicker').each(makeDate());
+        });
+        function makeDate() {
+            return function (i, obj) {
                 var obj = $(obj), format = obj.data('format') || 'YYYY-MM-DD HH:mm:ss', minDate = obj.data('min-date'), maxDate = obj.data('max-date');
                 if (minDate || maxDate) {
                     var date = new Date(), minDateContent, maxDateContent;
@@ -54,7 +57,7 @@
                         vertical: 'bottom'
                     }
                 });
-            });
-        });
+            }
+        }
     </script>
 @stop

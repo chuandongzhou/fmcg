@@ -377,7 +377,7 @@ var commonAjaxSetup = function () {
 
             // 序列化表单
             $.each(self.data('data') || {}, function (name, value) {
-                data.push({name: name, value: value});
+                data.push({name: name, value: value})
             });
             $.ajax({
                 url: url,
@@ -1209,9 +1209,8 @@ var formSubmitByGet = function (exceptName) {
                 query.push(o.name + '=' + o.value);
             }
         });
-
         var povit = action.indexOf('?') >= 0 ? '&' : '?', queryString = query.length ? povit + query.join('&') : '';
-        window.location.href = action + queryString;
+        window.location.href = (queryString) ? action + queryString : window.location.pathname;
         return false;
     })
 }

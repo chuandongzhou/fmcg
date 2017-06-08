@@ -6,6 +6,8 @@ use App\Models\AddressData;
 use App\Models\BarcodeWithoutImages;
 use App\Models\Goods;
 use App\Models\Like;
+use App\Models\Order;
+use App\Models\OrderGoods;
 use App\Models\Shop;
 use App\Http\Requests;
 use App\Models\Images;
@@ -15,6 +17,7 @@ use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\ImageUploadService;
 use App\Services\ImportService;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
@@ -57,7 +60,7 @@ class MyGoodsController extends Controller
         $result = DB::transaction(function () use ($user, $request) {
 
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-                'system_2', 'specification');
+                'system_2', 'specification','abnormalOrderId','abnormalGoodsId');
 
             $attributes['user_type'] = auth()->user()->type;
 
@@ -85,6 +88,18 @@ class MyGoodsController extends Controller
                 $this->updateAttrs($goods, array_get($attributes, 'attrs', []));
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
+                
+                $abnormalOrderId = $request->input('abnormalOrderId');
+                $abnormalGoodsId = $request->input('abnormalGoodsId');
+                if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)){
+                    //获取异常记录
+                    $abnormal = OrderGoods::where('goods_id',$abnormalGoodsId)
+                        ->where('order_id',$abnormalOrderId)
+                        ->where('inventory_state',cons('inventory.inventory_state.in-abnormal'))
+                        ->get();
+                    //
+                    (new InventoryService())->autoIn($abnormal);
+                }
                 return true;
             }
         });
@@ -105,7 +120,7 @@ class MyGoodsController extends Controller
         }
         $goods->load(['images', 'deliveryArea', 'goodsPieces']);
         $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
-        $attrs = (new AttrService())->getAttrByGoods($goods);
+        $attrs = (new AttrService())->getAttrByGoods($goods, false);
         $goods->shop_name = $goods->shop()->pluck('name');
         $goods->attrs = $attrs;
         return $this->success(['goods' => $goods]);
@@ -123,7 +138,6 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
-
         $result = DB::transaction(function () use ($request, $goods) {
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
@@ -210,6 +224,30 @@ class MyGoodsController extends Controller
             }
         }
         return $this->error('商品' . $statusVal . '失败');
+    }
+
+    /**
+     * 设置为促销商品
+     *
+     * @param \App\Models\Goods $goods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function promo(Goods $goods)
+    {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('权限不足');
+        }
+        $shopId = auth()->user()->shop_id;
+
+        if ($promoGoods = $goods->promoGoods()->withTrashed()->where('shop_id', $shopId)->first()) {
+            return $promoGoods->fill(['deleted_at' => null])->save() ? $this->success('设置成功') : $this->error('设置失败，请重试');
+        }
+        
+        $attributes = [
+            'shop_id' => $shopId
+        ];
+
+        return $goods->promoGoods()->create($attributes)->exists ? $this->success('设置成功') : $this->error('设置失败，请重试');
     }
 
     /**

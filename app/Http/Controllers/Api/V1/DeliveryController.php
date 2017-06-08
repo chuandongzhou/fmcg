@@ -200,7 +200,6 @@ class DeliveryController extends Controller
         ]);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url', 'pieces']);
-
         });
         return $this->success($order);
 

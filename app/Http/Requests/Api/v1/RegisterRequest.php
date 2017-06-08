@@ -17,7 +17,7 @@ class RegisterRequest extends Request
         return [
             'user_name' => 'required|alpha_num|between:4,16|unique:user',
             'password' => 'required|between:6,18|alpha_num|confirmed',
-            'type' => 'required|in:1,2,3',
+            'type' => 'required|in:1,2,3,4',
             'logo' => 'sometimes|required',
             'name' => 'required|unique:shop',
             'contact_person' => 'required',
@@ -25,8 +25,6 @@ class RegisterRequest extends Request
             'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/|unique:user',
             'spreading_code' => 'alpha_num|max:20',
             'area' => 'sometimes|required|max:200',
-            'license_num' => 'required|unique:shop|between:15,18',
-            'business_license' => 'required',
             'agency_contract' => 'sometimes|required'
         ];
 
@@ -45,11 +43,25 @@ class RegisterRequest extends Request
                 if (!$address['address']) {
                     $validator->errors()->add('address[address]', '详细地址 不能为空');
                 }
+                if (mb_strlen($address['address'], 'utf-8') > 30) {
+                    $validator->errors()->add('address[address]', '详细地址 不超过30字');
+                }
                 if (!$address['city_id']) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
-                if ($this->input('type') != cons('user.type.retailer') && !$this->hasFile('license')) {
-                    $validator->errors()->add('license', '营业执照 不能为空');
+                if ($address['city_id'] && !$address['district_id'] && !empty($this->lowerLevelAddress($address['city_id']))) {
+                    $validator->errors()->add('address[district_id]', '区/县 不能为空');
+                }
+                if ($address['district_id'] && !$address['street_id'] && !empty($this->lowerLevelAddress($address['district_id']))) {
+                    $validator->errors()->add('address[street_id]', '街道 不能为空');
+                }
+                if ($this->input('type') != cons('user.type.retailer')){
+                    if (!empty($this->input('license'))){
+                        $validator->errors()->add('license', '营业执照 不能为空');
+                    }
+                    if (!$this->input('license_num')){
+                        $validator->errors()->add('license_num', '营业执照编号 不能为空');
+                    }
                 }
             }
         });

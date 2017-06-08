@@ -300,7 +300,7 @@ class OrderController extends Controller
 
         $goods = (new OrderService())->explodeOrderGoods($order);
 
-        $order->addHidden(['order_change_recode']);;
+        $order->addHidden(['order_change_recode']);
 
         return $this->success([
             'order' => $order,
@@ -456,6 +456,7 @@ class OrderController extends Controller
         }
 
         $failIds = [];
+        //商品库存服务
         foreach ($orders as $order) {
             if (!$order->can_confirm_arrived || $order->user_id != auth()->id()) {
                 if ($orders->count() == 1) {
@@ -464,6 +465,12 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
+
+            if ($order->pay_type == cons('pay_type.online')) {
+                //在线支付确认收货买家入库
+                (new InventoryService())->autoIn($order->orderGoods);
+            }
+
             if (($tradeModel = $order->systemTradeInfo) && $order->fill([
                     'status' => cons('order.status.finished'),
                     'finished_at' => Carbon::now()
@@ -508,6 +515,8 @@ class OrderController extends Controller
 
         $failIds = []; //失败订单id
         $nowTime = Carbon::now();
+        //商品库存服务
+        $inventoryService = new InventoryService();
         foreach ($orders as $order) {
             //更新商品销量
             GoodsService::addGoodsSalesVolume($order);
@@ -518,6 +527,19 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
+
+            if ($order->pay_type == cons('pay_type.pick_up')) {
+                //自提订单收款时卖家出库
+                $outResult = $inventoryService->autoOut($order->orderGoods);
+                if (!$outResult) {
+                    return $this->error($inventoryService->getError());
+                };
+            }
+            if ($order->pay_type == cons('pay_type.pick_up') || $order->pay_type == cons('pay_type.cod')) {
+                //自提订单和货到付款订单收款时买家入库
+                $inventoryService->autoIn($order->orderGoods);
+            }
+
             if (!$order->fill([
                 'pay_status' => cons('order.pay_status.payment_success'),
                 'paid_at' => $nowTime,
@@ -557,7 +579,7 @@ class OrderController extends Controller
         //通知买家订单已发货
         $failIds = [];
         //商品库存服务
-        //$inventoryService = new InventoryService();
+        $inventoryService = new InventoryService();
         foreach ($orders as $order) {
             if (!$order->can_send || $order->shop_id != auth()->user()->shop->id) {
                 if (count($orders) == 1) {
@@ -566,35 +588,11 @@ class OrderController extends Controller
                 $failIds[] = $order->id;
                 continue;
             }
-            //商品出库
-
-            /*foreach ($order->orderGoods as $goodsInfo) {
-                $data = [
-                    'inventory_number' => $inventoryService->getInventoryNumber(),
-                    'inventory_type' => cons('inventory.inventory_type.system'),
-                    'action_type' => cons('inventory.action_type.out'),
-                    'goods' => [
-                        $goodsInfo->goods_id => [
-                            'order_number' => [
-                                $goodsInfo->order_id
-                            ],
-                            'quantity' => [
-                                $goodsInfo->num
-                            ],
-                            'cost' => [
-                                $goodsInfo->price
-                            ],
-                            'pieces' => [
-                                $goodsInfo->pieces
-                            ],
-                            'remark' => [
-                                '系统自动出库'
-                            ],
-                        ]
-                    ]
-                ];
-                $inventoryService->inventoryOut($data);
-            }*/
+            //卖家出库
+            $result = $inventoryService->autoOut($order->orderGoods);
+            if ($result == false) {
+                return $this->error($inventoryService->getError());
+            };
             if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
                 $redisKey = 'push:user:' . $order->user_id;
                 $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
@@ -869,6 +867,12 @@ class OrderController extends Controller
         $order = $orderGoods->order;
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
+            
+            if ($order->status == cons('order.status.send')) {
+                $inventoryService = new InventoryService();
+                //清除出库记录
+                $inventoryService->clearOut($orderGoods);
+            }
             $orderGoods->delete();
             if ($order->orderGoods()->where('type', cons('order.goods.type.order_goods'))->count() == 0) {
                 //订单商品删完了标记为作废
@@ -899,7 +903,6 @@ class OrderController extends Controller
 
         return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
     }
-
 
     /**
      * 根据订单获取交易流水号

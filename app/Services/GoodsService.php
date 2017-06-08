@@ -7,6 +7,7 @@ use App\Models\Goods;
 use App\Models\GoodsColumn;
 use App\Models\Order;
 use Cache;
+use Mockery\CountValidator\Exception;
 
 /**
  * Created by PhpStorm.
@@ -119,8 +120,13 @@ class GoodsService
      */
     static function getShopGoods($shop, $data = [], $with = [])
     {
-        $goods = $shop->goods()->with($with)->ofStatus(array_get($data, 'status'))->ofGift(array_get($data,
-            'is_gift'));
+        $goods = $shop->goods()->with($with);
+        /**
+         * 状态
+         */
+        if (isset($data['status'])) {
+            $goods->ofStatus($data['status']);
+        }
         if (isset($data['ids'])) {
             $goods->whereNotIn('id', $data['ids']);
         }

@@ -76,14 +76,14 @@ class MyGoodsController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = auth()->user();
         //判断有没有交保证金
         /*if (!$user->deposit) {
              return $this->error('添加商品前请先缴纳保证金', url('personal/sign'));
          }*/
-
+        $abnormalInfo = $request->only('goods_id','order_id');
         //默认加入店铺配送地址
         $shop = $user->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea->each(function ($area) {
@@ -92,6 +92,13 @@ class MyGoodsController extends Controller
         $goods = new Goods;
         //店铺配送地址
         $goods->shopDeliveryArea = $shopDelivery;
+        if (!empty($abnormalInfo['goods_id'])){
+            $buyerGoods = Goods::find($abnormalInfo['goods_id']);
+            $goods->bar_code = $buyerGoods->bar_code;
+            $goods->name = $buyerGoods->name;
+            $goods->goodsPieces = $buyerGoods->goodsPieces;
+            $goods->abnormalInfo = $abnormalInfo;
+        }
         return view('index.my-goods.goods', [
             'goods' => $goods,
             'attrs' => [],

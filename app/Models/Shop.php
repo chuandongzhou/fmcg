@@ -68,6 +68,9 @@ class Shop extends Model
             $model->shopRecommendGoods()->delete();
             $model->shopHomeAdverts()->delete();
             $model->ShopSignature()->delete();
+            $model->promo()->delete();
+            $model->asset()->delete();
+            Inventory::where('shop_id',$model->id)->delete();
         });
         static::updated(function ($model) {
             (new UserService(true))->setShopDetail($model->user);
@@ -270,6 +273,9 @@ class Shop extends Model
      */
     public function salesmen()
     {
+        if($this->user_type == cons('user.type.maker')){
+            return $this->hasMany('App\Models\Salesman','maker_id');
+        }
         return $this->hasMany('App\Models\Salesman');
     }
 
@@ -290,6 +296,9 @@ class Shop extends Model
      */
     public function salesmanCustomer()
     {
+        if($this->user_type != cons('user.type.maker')){
+            return $this->hasOne(SalesmanCustomer::class)->where('salesmanCustomer.shop_id','<>',$this->id);
+        }
         return $this->hasOne(SalesmanCustomer::class);
     }
 
@@ -334,6 +343,61 @@ class Shop extends Model
         return $this->hasMany(ChildUser::class);
     }
 
+    /**
+     * 店铺资产
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function asset()
+    {
+        return $this->hasMany('App\Models\Asset');
+    }
+
+    /**
+     * 店铺资产申请使用与审核
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assetApply()
+    {
+        return $this->hasManyThrough('App\Models\AssetApply','App\Models\Asset');
+    }
+
+    /**
+     * 店铺促销活动
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function promo()
+    {
+        return $this->hasMany('App\Models\Promo');
+    }
+
+    /**
+     * 店铺参与促销商品
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function promoGoods()
+    {
+        return $this->hasMany('App\Models\PromoGoods');
+    }
+
+    /**
+     * 店铺促销活动申请使用与审核
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function promoApply()
+    {
+        return $this->hasManyThrough('App\Models\PromoApply','App\Models\Promo');
+    }
+
+    /**
+     * 店铺库存
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inventory()
+    {
+        return $this->hasMany('App\Models\Inventory'); 
+    }
+    
+    
     /**
      * 获取热门商家
      *

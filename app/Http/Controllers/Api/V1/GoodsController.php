@@ -5,7 +5,6 @@
  * Date: 2015/9/18
  * Time: 11:35
  */
-
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\GoodsColumn;
@@ -23,8 +22,7 @@ class GoodsController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getGoods()
-    {
+    public function getGoods(){
         return $this->success(['goodsColumns' => GoodsService::getNewGoodsColumn()]);
     }
 

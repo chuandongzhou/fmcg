@@ -76,51 +76,48 @@
                                     <td>{{ cons()->valueLang('salesman.order.status' , $order->status) }}</td>
                                     <td>
 
-                                        <a class=" color-blue" href="{{ url('business/order/' . $order->id) }}">
-                                            <i class="iconfont icon-iconmingchengpaixu65"></i>查看
-                                        </a>
-                                        @if($order->status == cons('salesman.order.status.not_pass'))
-                                            <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                                               data-method="put" data-data='{"status" : "1"}'
-                                               class=" ajax">
-                                                <i class="iconfont  icon-tongguo"></i>通过
-                                            </a>
-                                            <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
-                                               data-method="delete"
-                                               class="red ajax" type="button"><i
-                                                        class="iconfont icon-shanchu"></i>删除</a>
-                                        @else
-                                            <a class="orange" target="_blank"
-                                               href="{{ url('business/order/browser-export/' . $order->id) }}">
-                                                <i class="iconfont  icon-dayin"></i>打印</a>
-                                            {{--@if($order->can_sync)--}}
-                                            {{--<button class="btn btn-warning ajax"--}}
-                                            {{--data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"--}}
-                                            {{--data-method="post">--}}
-                                            {{--同步--}}
-                                            {{--</button>--}}
-                                            {{--@endif--}}
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                        <div class="business-operating">
-                            <label><input type="checkbox" class="parent">全选</label>
-                            <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"
-                                    class="btn btn-primary batch ajax" type="button">
-                                <i class="fa fa-check"></i> 批量通过
-                            </button>
-                        </div>
-                        <div class="text-right">
-                            {!! $orders->appends($data)->render() !!}
-                        </div>
-                    </div>
+                                <a class=" color-blue" href="{{ url('business/order/' . $order->id) }}">
+                                    <i class="iconfont icon-chakan"></i>查看
+                                </a>
+                                @if($order->status == cons('salesman.order.status.not_pass'))
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}"
+                                       data-method="put" data-data='{"status" : "1"}'
+                                       class=" ajax">
+                                        <i class="iconfont  icon-tongguo"></i>通过
+                                    </a>
+                                    <a data-url="{{ url('api/v1/business/order/' . $order->id) }}" data-method="delete"
+                                       class="red ajax" type="button"><i class="iconfont icon-shanchu"></i>删除</a>
+                                @else
+                                    <a class="orange" target="_blank"
+                                       href="{{ url('business/order/browser-export/' . $order->id) }}">
+                                        <i class="iconfont  icon-dayin"></i>打印</a>
+                                    {{--@if($order->can_sync)--}}
+                                    {{--<button class="btn btn-warning ajax"--}}
+                                    {{--data-url="{{ url('api/v1/business/order/' . $order->id . '/sync') }}"--}}
+                                    {{--data-method="post">--}}
+                                    {{--同步--}}
+                                    {{--</button>--}}
+                                    {{--@endif--}}
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                <div class="business-operating">
+                    <label><input type="checkbox" class="parent">全选</label>
+                    <button data-url="{{ url('api/v1/business/order/batch-pass') }}" data-method="put"
+                            class="btn btn-primary batch ajax" type="button">
+                        <i class="fa fa-check"></i> 批量通过
+                    </button>
                 </div>
-            </form>
+                <div class="text-right">
+                    {!! $orders->appends($data)->render() !!}
+                </div>
+            </div>
         </div>
-    </div>
+    </form>
+    @parent
 @stop
 
 @section('js')

@@ -75,7 +75,7 @@ class Goods extends Model
             $model->deliveryArea()->delete();   //配送区域
             $model->carts()->delete();           //购物车
             $model->attr()->detach();           //商品标签
-            //$model->images()->detach();         //商品图片
+            PromoGoods::where('goods_id',$model->id)->delete();//促销商品
         });
 
     }
@@ -192,6 +192,16 @@ class Goods extends Model
     public function mortgageGoods()
     {
         return $this->hasOne('App\Models\MortgageGoods');
+    }
+    
+    /**
+     * 关联抵费商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function promoGoods()
+    {
+        return $this->hasOne('App\Models\PromoGoods');
     }
 
     /**
@@ -686,6 +696,16 @@ class Goods extends Model
     public function getIsMortgageGoodsAttribute()
     {
         return !is_null($this->mortgageGoods);
+    }
+    
+    /**
+     * 是否是抵费商品
+     *
+     * @return bool
+     */
+    public function getIsPromoGoodsAttribute()
+    {
+        return !is_null($this->promoGoods);
     }
 
     /**

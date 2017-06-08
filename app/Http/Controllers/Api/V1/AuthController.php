@@ -5,7 +5,6 @@
  * Date: 2015/9/17
  * Time: 14:22
  */
-
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
@@ -59,10 +58,10 @@ class AuthController extends Controller
 
         //帐号密码
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
-
-            $loginError = $request->cookie('login_error');
-            $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
-
+            if ($inWindows) {
+                $loginError = $request->cookie('login_error');
+                $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);
+            }
             return $this->invalidParams(['password' => ['账号或密码错误'], 'loginError' => ($loginError + 1)]);
         }
 
@@ -146,7 +145,6 @@ class AuthController extends Controller
     public function postRegisterUser(RegisterUserRequest $request)
     {
         $data = $request->only('user_name', 'backup_mobile', 'type');
-
         //验证验证码
         $code = $request->input('code');
         if (!app('pushbox.sms')->verifyCode('register', $data['backup_mobile'], $code)) {
@@ -217,7 +215,7 @@ class AuthController extends Controller
         //验证验证码
         $code = $request->input('code');
         if (!app('pushbox.sms')->verifyCode('code', $data['backup_mobile'], $code)) {
-            //return $this->error('短信验证码错误');
+            return $this->error('短信验证码错误');
         }
 
         if ($user->fill(['password' => $data['password']])->save()) {
@@ -234,7 +232,6 @@ class AuthController extends Controller
      */
     public function postSendSms(BackupSendSmsRequest $request)
     {
-        return $this->success('发送成功');
         $data = $request->all();
         $user = User::with('shop')->where('user_name', $data['user_name'])->first();
         if ($user->status != cons('status.on')) {
@@ -284,7 +281,6 @@ class AuthController extends Controller
      */
     public function postRegSendSms(RegisterUserSendSmsRequest $request)
     {
-        //return $this->error('发送成功');
         if (in_windows() && !$res = (new ValidateService)->validateGeetest($request)) {
             return $this->invalidParam('backup_mobile', '请完成验证');
         }

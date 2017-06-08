@@ -69,7 +69,8 @@ class PayService extends BaseService
             $tradeConf = cons('trade');
 
             $payType = array_get($tradeConf['pay_type'], $payType, head($tradeConf['pay_type']));
-
+            //商品库存服务
+            $inventoryService = new InventoryService();
             foreach ($orders as $order) {
                 $orderAttr = [
                     'pay_status' => $orderConf['pay_status']['payment_success'],
@@ -92,7 +93,9 @@ class PayService extends BaseService
                         'paid_at' => $nowTimestamp
                     ]
                 );
-
+                
+                
+                
                 //增加系统交易信息
                 $systemTradeInfoAttr = [
                     'type' => $tradeConf['type']['in'],
@@ -114,6 +117,8 @@ class PayService extends BaseService
                 if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
+                    //买家入库
+                    $inventoryService->autoIn($order->orderGoods);
 
                     //pos机支付成功更新用户余额
                     $shopOwner = $order->shop->user;
