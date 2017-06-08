@@ -81,15 +81,18 @@ class ShopService extends RedisService
      *
      * @param int $uid
      * @param $size
+     * @param $isMobile
      * @return string
      */
-    public function qrcode($uid = 0, $size = null)
+    public function qrcode($uid = 0, $size = null, $isMobile = false)
     {
         $qrcodePath = config('path.upload_qrcode');
         $relatePath = str_replace(public_path(), '', $qrcodePath);
         $qrcodeSize = is_null($size) ? cons('shop.qrcode_size') : $size;
+
+        $fileNamePrefix = $isMobile ? 'mobile_'  : '';
         // 处理分割后的ID
-        $path = implode('/', divide_uid($uid, "/{$qrcodeSize}.png"));
+        $path = implode('/', divide_uid($uid, "/{$fileNamePrefix}{$qrcodeSize}.png"));
 
         if (!is_file($qrcodePath . $path)) {
             @mkdir(dirname($qrcodePath . $path), 0777, true);
@@ -189,7 +192,7 @@ class ShopService extends RedisService
      * @param $field
      * @return int|string
      */
-    public function     getUserDetail($shopId, $field)
+    public function getUserDetail($shopId, $field)
     {
         $key = $this->getKey($this->subName . ':' . $shopId);
 

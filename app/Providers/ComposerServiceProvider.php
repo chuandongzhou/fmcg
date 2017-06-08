@@ -26,6 +26,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'index.index.index',
                 'index.index-master',
                 'includes.shop-search',
+                'mobile.category.index',
+                'mobile.index.index',
                 'errors.404'
             ],
             UserComposer::class => [
@@ -47,7 +49,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'errors.404'
             ],
             ProvinceComposer::class => [
-                'index.master'
+                'index.master',
+                'mobile.index.index'
             ],
             NodeComposer::class => [
                 'admin.master'
@@ -60,12 +63,16 @@ class ComposerServiceProvider extends ServiceProvider
                 'includes.shop-search',
                 'index.master',
                 'includes.navigator',
-                'index.manage-master'
+                'index.manage-master',
+                'mobile.includes.footer',
+                'mobile.goods.detail'
             ],
             KeywordsComposer::class => [
                 'includes.search',
                 'includes.shop-search',
-                'index.master'
+                'index.master',
+                'mobile.search.index',
+                'mobile.search.shop-goods'
             ],
             ChatComposer::class => [
                 'includes.chat',

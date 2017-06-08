@@ -48,9 +48,9 @@ class OrderSellController extends OrderController
         ]);
         if (is_numeric($searchContent = array_get($search, 'search_content'))) {
             $orders = $orders->where('id', $searchContent);
-        } elseif($searchContent){
+        } elseif ($searchContent) {
             $orders = $orders->ofSelectOptions($search)->ofUserShopName($searchContent);
-        }else {
+        } else {
             $orders = $orders->ofSelectOptions($search);
         }
 
@@ -217,7 +217,7 @@ class OrderSellController extends OrderController
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
 
-        $order = Order::with('shippingAddress.address', 'shop', 'user', 'gifts')
+        $order = Order::with('shippingAddress.address', 'shop', 'user', 'gifts', 'goods.goodsPieces')
             ->ofSell(auth()->user()->shop_id)->useful()
             ->find($orderId);
         if (is_null($order)) {
@@ -228,7 +228,7 @@ class OrderSellController extends OrderController
         $GoodsServer = new GoodsService();
         foreach ($order->goods as $item) {
             if ((cons('user.type.' . $order->user_type_name) == 1 && $item->pivot->pieces != $item->pieces_retailer) || (cons('user.type.' . $order->user_type_name) == 2 && $item->pivot->pieces != $item->pieces_wholesaler)) {
-                $item->{'specification_' . $order->user_type_name} = $GoodsServer->getPiecesSystem2($item->id,
+                $item->{'specification_' . $order->user_type_name} = $GoodsServer->getPiecesSystem2($item,
                     $item->pivot->pieces);
             }
         }

@@ -663,6 +663,21 @@ class Goods extends Model
         return $this->shop ? $this->shop->name : '- -';
     }
 
+
+    /**
+     * 获取是否收藏
+     *
+     * @return bool
+     */
+    public function getIsLikeAttribute()
+    {
+        if (auth()->check()) {
+            return auth()->user()->likeGoods()->where('goods_id', $this->id)->pluck('id') ? true : false;
+        }
+
+        return false;
+    }
+
     /**
      * 是否是抵费商品
      *

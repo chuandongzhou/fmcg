@@ -48,6 +48,7 @@ class AuthController extends Controller
     {
         return view('auth.register-user');
     }
+
     /**
      *
      */
@@ -84,7 +85,7 @@ class AuthController extends Controller
         }
         $user = session('user');
         session()->forget('user');
-        return view('auth.reg-success', ['user_name' => $user['user_name'],'user_type'=>$user['type']]);
+        return view('auth.reg-success', ['user_name' => $user['user_name'], 'user_type' => $user['type']]);
     }
 
     /**

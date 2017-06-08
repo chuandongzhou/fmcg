@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\GoodsColumn;
+use App\Models\Order;
 use Cache;
 
 /**
@@ -375,16 +376,16 @@ class GoodsService
     /**
      * 增加商品销量
      *
-     * @param $orderGoodsNum
+     * @param \App\Models\Order $order
      * @return bool
      */
-    static function addGoodsSalesVolume($orderGoodsNum)
+    static function addGoodsSalesVolume(Order $order)
     {
-        if (empty($orderGoodsNum)) {
+        if (is_null($order)) {
             return false;
         }
-        foreach ($orderGoodsNum as $goodsId => $goodsNum) {
-            Goods::where('id', $goodsId)->increment('sales_volume', $goodsNum);
+        foreach ($order->goods as $goods) {
+            $goods->increment('sales_volume', $goods->pivot->num);
         }
         return true;
     }
@@ -442,28 +443,24 @@ class GoodsService
     }
 
     /**
-     *
      * 返回规格字符串
-     * @param $goodsId
+     *
+     * @param \App\Models\Goods $goods
      * @param string $piecesValue
-     * @return int
+     * @return string
      */
-    static public function getPiecesSystem2($goodsId, $piecesValue = '')
+    static public function getPiecesSystem2(Goods $goods, $piecesValue = '')
     {
-        $goods = Goods::with('goodsPieces')->find($goodsId);
         $pieces = $goods->goodsPieces->toArray();
-      //  dd( $pieces);
-       // $level = array_search($piecesValue, $pieces);
-        if($piecesValue==$pieces['pieces_level_1']) {
-            $system =$goods->goodsPieces->specification.( $pieces['system_2'] == null ? '' : '*'.$pieces['system_2']).( $pieces['system_1'] == null ? '' : '*'.$pieces['system_1']);
-        }else if($piecesValue==$pieces['pieces_level_2'])
-        {
-            $system =$goods->goodsPieces->specification.( $pieces['system_2'] == null ? '' : '*'.$pieces['system_2']);
-        }else if($piecesValue==$pieces['pieces_level_3'])
-        {
+
+        if ($piecesValue == $pieces['pieces_level_1']) {
+            $system = $goods->goodsPieces->specification . ($pieces['system_2'] == null ? '' : '*' . $pieces['system_2']) . ($pieces['system_1'] == null ? '' : '*' . $pieces['system_1']);
+        } else if ($piecesValue == $pieces['pieces_level_2']) {
+            $system = $goods->goodsPieces->specification . ($pieces['system_2'] == null ? '' : '*' . $pieces['system_2']);
+        } else if ($piecesValue == $pieces['pieces_level_3']) {
             $system = $goods->goodsPieces->specification;
-        }else{
-                $system = $goods->goodsPieces->specification;
+        } else {
+            $system = $goods->goodsPieces->specification;
         }
         return $system;
     }

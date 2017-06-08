@@ -17,7 +17,7 @@ class Authenticate
     /**
      * Create a new filter instance.
      *
-     * @param  Guard  $auth
+     * @param  Guard $auth
      */
     public function __construct(Guard $auth)
     {
@@ -27,13 +27,13 @@ class Authenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest() && !$request->is('/') && !$request->is('about')) {
+        if ($this->auth->guest() && !($request->is('/') && in_windows()) && !$request->is('about')) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {

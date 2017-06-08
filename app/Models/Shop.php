@@ -400,7 +400,8 @@ class Shop extends Model
         return $query->whereHas('user', function ($q) use ($myType, $shopType) {
             $nowTime = Carbon::now();
             $q->active()->where('type', '>', $myType)/*->where('deposit', '>', 0)->where('expire_at', '>',
-                $nowTime)*/->where('audit_status', cons('user.audit_status.pass'));
+                $nowTime)*/
+            ->where('audit_status', cons('user.audit_status.pass'));
             if ($shopType) {
                 $q->where('type', $shopType);
             }
@@ -593,6 +594,20 @@ class Shop extends Model
         $license = $this->license;
 
         return $license ? $license->url : '';
+    }
+
+    /**
+     * 获取是否收藏
+     *
+     * @return bool
+     */
+    public function getIsLikeAttribute()
+    {
+        if (auth()->check()) {
+            return auth()->user()->likeShops()->where('shop_id', $this->id)->pluck('id') ? true : false;
+        }
+
+        return false;
     }
 
     /**

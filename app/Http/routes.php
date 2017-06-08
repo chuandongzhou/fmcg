@@ -1,17 +1,5 @@
 <?php
 
-/**
- * 登录注册
- */
-$router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
-    $router->get('login', 'AuthController@login');
-    $router->get('register', 'AuthController@register');
-    $router->get('register-set-password', 'AuthController@setPassword');
-    $router->get('register-add-shop', 'AuthController@addShop');
-    $router->get('reg-success', 'AuthController@regSuccess');
-    $router->get('logout', 'AuthController@logout');
-    $router->get('geetest', 'AuthController@getGeetest');
-});
 
 /**
  * 后台登录
@@ -35,11 +23,59 @@ $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 $router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
 $router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
 
+
+/**
+ * 登录注册
+ */
+$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'],
+    function ($router) {
+        $router->get('login', 'AuthController@login');
+        $router->get('register-account', 'AuthController@registerAccount');
+        $router->get('register-password', 'AuthController@registerPassword');
+        $router->get('register-shop', 'AuthController@registerShop');
+        $router->get('register-success', 'AuthController@registerSuccess');
+        $router->get('logout', 'AuthController@logout');
+        $router->get('forget-password', 'AuthController@forgetPassword');
+    });
+
+
+$router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
+    $router->get('/', 'HomeController@index');
+    $router->get('category', 'CategoryController@index');
+    $router->get('search', 'SearchController@index');
+    $router->get('search/{shop}/shop-goods', 'SearchController@shopGoods')->where('shop', '[0-9]+');
+    $router->get('goods/{goods}', 'GoodsController@detail');
+    $router->get('goods', 'GoodsController@index');
+    $router->group(['prefix' => 'shop'], function ($router) {
+        $router->get('/', 'ShopController@index');
+        $router->get('/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');
+        $router->get('/{shop}/coupons', 'ShopController@coupons')->where('shop', '[0-9]+');
+        $router->get('/{shop}/delivery-area', 'ShopController@deliveryArea')->where('shop', '[0-9]+');
+        $router->get('/{shop}/qr-code', 'ShopController@qrCode')->where('shop', '[0-9]+');
+        $router->get('/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');
+    });
+    $router->get('cart', 'CartController@index');
+});
+
+/**
+ * 前台登录注册
+ */
+$router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
+    $router->get('login', 'AuthController@login');
+    $router->get('register', 'AuthController@register');
+    $router->get('register-set-password', 'AuthController@setPassword');
+    $router->get('register-add-shop', 'AuthController@addShop');
+    $router->get('reg-success', 'AuthController@regSuccess');
+    $router->get('logout', 'AuthController@logout');
+    $router->get('geetest', 'AuthController@getGeetest');
+});
+
+
 /**
  * 前台
  *
  */
-$router->get('/test', 'Index\HomeController@test');              //商家管理首页
+$router->get('/test', 'Index\HomeController@test');
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
 
     $router->get('/', 'HomeController@index');              //商家管理首页
@@ -110,6 +146,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     });
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
+
 
 //子帐号
 $router->group(['prefix' => 'child-user', 'namespace' => 'ChildUser', 'middleware' => 'child.auth'],
@@ -380,7 +417,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //业务管理
         $router->post('business/auth/login', 'Business\AuthController@login');
         $router->get('business/auth/logout', 'Business\AuthController@logout');
-        $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'salesman.auth'], function ($router) {
+        $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'salesman.auth'],
+            function ($router) {
                 $router->group(['prefix' => 'salesman'], function ($router) {
                     $router->get('home-data', 'SalesmanController@homeData');
                     $router->get('export-target', 'SalesmanController@exportTarget');
@@ -484,7 +522,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->resource('my-goods', 'MyGoodsController');
                 $router->controller('order', 'OrderController');
                 //订单模板
-                $router->put('templete/default/{templeteId}', 'TempleteController@default')->where('templeteId', '[0-9]+');;
+                $router->put('templete/default/{templeteId}', 'TempleteController@default')->where('templeteId',
+                    '[0-9]+');;
                 $router->resource('templete', 'TempleteController');
                 $router->resource('coupon', 'CouponController'); // 优惠券
                 $router->controller('model', 'ModelController');  //模版管理
@@ -521,7 +560,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->post('{salesman_visit_order}/sync', 'SalesmanVisitOrderController@sync');
                     $router->post('batch-sync', 'SalesmanVisitOrderController@batchSync');
                     $router->put('batch-pass', 'SalesmanVisitOrderController@batchPass');
-                        $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
+                    $router->put('change', 'SalesmanVisitOrderController@updateOrderGoods');
                     $router->put('update-order-display-fee', 'SalesmanVisitOrderController@updateOrderDisplayFee');
                     $router->put('{salesman_visit_order}', 'SalesmanVisitOrderController@update');
                     $router->get('order-detail/{order_id}', 'SalesmanVisitOrderController@orderDetail');

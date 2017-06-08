@@ -31,7 +31,7 @@
                     <span class="cart_num">{{ $cartNum }}</span></a>
             </li>
             <li id="coupon-panel">
-                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="iconfont icon-tubiao12 view"></i></a>
+                <a href="javascript:;" class="history_list pop-show-link hover_link"><i class="iconfont icon-zichan view"></i></a>
 
                 <div class="mp_tooltip">我的资产<i class="icon_arrow_right_black"></i>
                 </div>

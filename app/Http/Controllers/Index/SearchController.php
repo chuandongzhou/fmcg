@@ -29,7 +29,6 @@ class SearchController extends Controller
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getGoodsBySearch($data, $goods);
 
-        $goodsCount = $goods->count();
         return view('index.search.index',
             [
                 'goods' => $goods->orderBy('id', 'asc')->paginate(),
@@ -41,7 +40,6 @@ class SearchController extends Controller
                 'keywords' => $this->_getKeywordsBySearch($result['categories'],
                     isset($data['name']) ? $data['name'] : null),
                 'data' => $data,
-                'goodsCount' => $goodsCount
             ]);
 
     }

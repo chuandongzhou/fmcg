@@ -79,7 +79,21 @@ class AddressService
         return [
             'province_id' => $provinceId,
             'city_id' => $cityId,
+            'city_name' => $cityName,
             'address_name' => $provinceName . $cityName
         ];
+    }
+
+    public function getAddressForJs($array)
+    {
+        $address = $array ?: $this->array;
+        $newArray = [];
+        foreach ($address as $item) {
+            if ($item['child']) {
+                //$item['child'] = arr
+            }
+            $newArray[] = value($item);
+
+        }
     }
 }

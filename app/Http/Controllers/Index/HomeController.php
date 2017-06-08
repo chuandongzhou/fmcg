@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Advert;
+use App\Models\Order;
+use App\Models\Shop;
 use App\Services\GoodsService;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -43,9 +46,35 @@ class HomeController extends Controller
         return view('index.index.about');
     }
 
-    public function test(Guard $auth)
+    public function test(Request $request)
     {
-        return view('index.index.test');
+        $shopId = $request->input('shop_id');
+        $shop = Shop::find($shopId);
+        if (is_null($shop)) {
+            dd('店铺不存在');
+        }
+        $shopType = $shop->user_type;
+
+        $goods = $shop->goods()->with('goodsPieces')->paginate(100);
+
+        foreach ($goods as $item) {
+            $tag = false;
+            if ($item->specification_retailer != ($specificationRetailer = GoodsService::getPiecesSystem2($item, $item->pieces_retailer))){
+                $item->specification_retailer = $specificationRetailer;
+                $tag = true;
+            }
+
+            if ($shopType == 3) {
+                if ($item->specification_wholesaler != ($specificationWholesaler = GoodsService::getPiecesSystem2($item, $item->pieces_wholesaler))){
+                    $item->specification_wholesaler = $specificationWholesaler;
+                    $tag = true;
+                }
+            }
+            if ($tag) {
+                $item->save();
+            }
+        }
+        return view('index.index.test', compact('goods'));
     }
 
 }

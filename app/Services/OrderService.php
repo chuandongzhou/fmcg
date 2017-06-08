@@ -119,8 +119,6 @@ class OrderService extends BaseService
                 $result = $this->_submitOrderByPickUp($data, $shops);
             }
             if ($result) {
-                // 增加商品销量
-                //GoodsService::addGoodsSalesVolume($orderGoodsNum);
                 // 删除购物车
                 $goodsNum = $user->carts()->where('status', 1)->delete();
                 //减少购物车数量

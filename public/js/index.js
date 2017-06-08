@@ -664,54 +664,8 @@ function printFun() {
     window.print();
     setTimeout("window.close();", 0);
 }
-/**
- * 定位
- */
-function setAddressCookie() {
-    function myFun(result) {
-        var cityName = result.name;
-        $.ajax({
-            url: site.api('address/city-detail'),
-            method: 'get',
-            data: {name: cityName}
-        }).done(function (data, textStatus, jqXHR) {
-            setCookie('province_id', data.province_id);
-            setCookie('city_id', data.city_id);
-            window.location.reload();
-        });
-    }
 
-    var myCity = new BMap.LocalCity();
-    myCity.get(myFun);
-}
 
-/**
- * 方便的多次重复调用函数
- * @param {object} [options]
- * @param {number} [options.count] 总共重复的次数
- * @param {number} [options.delay] 重复间隔
- * @param {function} [options.tick] 重复时候的回调函数
- * @param {function} [options.done] 完成时的回调函数
- */
-function timeIntervalFunc(options) {
-    var count = options.count || 60, i = count, delay = options.delay || 1000,
-        doneCallback = options.done || function () {
-            },
-        tickCallback = options.tick || function () {
-            };
-
-    var timer = setInterval(function () {
-        // 继续
-        if (--i > 0) {
-            tickCallback(i);
-            return;
-        }
-
-        // 完成
-        doneCallback();
-        clearInterval(timer);
-    }, delay);
-}
 
 
 //店铺广告radio选择

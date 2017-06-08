@@ -169,7 +169,6 @@
                     </div>
                 </div>
                 <div class="col-sm-12 address-wrap location box ">
-
                     <div class="row">
                         <div class="col-sm-5">
                             <table class="table margin-clear ">
@@ -177,7 +176,6 @@
                                     <th>商品配送区域</th>
                                 </tr>
                                 @foreach($goods->deliveryArea as $area)
-
                                     <tr>
                                         <td>{{ $area->address_name }}</td>
                                     </tr>

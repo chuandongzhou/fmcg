@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="item address-panel">
                                     <span class="prompt">店家地址 : </span>
-                                    <span class="address">{{ $shop->address }}</span>
+                                    <span>{{ $shop->address }}</span>
                                 </div>
                                 <div class="store-presentation item">
                                     <span class="prompt">店家介绍 : </span>

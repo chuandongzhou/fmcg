@@ -113,7 +113,7 @@
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
                                         <span data-name="business_license"
-                                              class="btn btn-primary btn-sm fileinput-button" name="business_license">
+                                              class="btn btn-primary btn-sm fileinput-button">
                                             请选择图片文件
                                             <input type="file" accept="image/*"
                                                    data-url="{{ url('api/v1/file/upload-temp') }}"

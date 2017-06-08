@@ -72,12 +72,10 @@
                                 @if($hotGoodsDetail->is_out)
                                     <a href="javascript:void(0)" class="btn btn-primary disabled join-cart" disabled="">缺货</a>
                                 @else
-
                                     <a href="javascript:void(0)"
                                        data-url="{{ $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$hotGoodsDetail->id) }}"
                                        class="btn btn-primary join-cart {{ $user->id==$shop->user_id?'disabled':'' }}"
                                        data-group="group{{ $hotGoodsDetail->id }} ">加入购物车</a>
-
 
                                 @endif
                                 <div class="sales prompt">累积销量：{{ $hotGoodsDetail->sales_volume }}</div>

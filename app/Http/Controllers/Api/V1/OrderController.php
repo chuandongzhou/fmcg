@@ -17,6 +17,7 @@ use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
 use App\Models\ConfirmOrderDetail;
 use App\Services\CartService;
+use App\Services\GoodsService;
 use App\Services\InventoryService;
 use App\Services\OrderService;
 use App\Services\RedisService;
@@ -168,9 +169,9 @@ class OrderController extends Controller
         ]);
         if (is_numeric($searchContent = array_get($search, 'search_content'))) {
             $orders = $orders->where('id', $searchContent);
-        } elseif($searchContent){
+        } elseif ($searchContent) {
             $orders = $orders->ofSelectOptions($search)->ofUserShopName($searchContent);
-        }else {
+        } else {
             $orders = $orders->ofSelectOptions($search);
         }
 
@@ -292,7 +293,7 @@ class OrderController extends Controller
 
         $order = $this->_hiddenOrderAttr($this->_orderLoadData($order), false);
 
-        $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each( function ($recode) use ($order) {
+        $order->orderChangeRecode = $order->orderChangeRecode->reverse()->each(function ($recode) use ($order) {
             $recode->setAppends(['name']);
         });
         $order->trade_no = $this->_getTradeNoByOrder($order);
@@ -447,7 +448,8 @@ class OrderController extends Controller
     public function putBatchFinishOfBuy(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::where('user_id', auth()->id())->whereIn('id', $orderIds)->useful()->get();
+        $orders = Order::where('user_id', auth()->id())->with('systemTradeInfo', 'goods')->whereIn('id',
+            $orderIds)->useful()->get();
 
         if ($orders->isEmpty()) {
             return $this->error('请选择订单');
@@ -467,6 +469,8 @@ class OrderController extends Controller
                     'finished_at' => Carbon::now()
                 ])->save()
             ) {
+                //更新商品销量
+                GoodsService::addGoodsSalesVolume($order);
                 //更新systemTradeInfo完成状态
                 $tradeModel->fill([
                     'is_finished' => cons('trade.is_finished.yes'),
@@ -497,7 +501,7 @@ class OrderController extends Controller
     public function putBatchFinishOfSell(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-        $orders = Order::ofSell(auth()->user()->shop_id)->useful()->whereIn('id', $orderIds)->get();
+        $orders = Order::ofSell(auth()->user()->shop_id)->with('goods')->useful()->whereIn('id', $orderIds)->get();
         if ($orders->isEmpty()) {
             return $this->error('确认收款失败');
         }
@@ -505,6 +509,8 @@ class OrderController extends Controller
         $failIds = []; //失败订单id
         $nowTime = Carbon::now();
         foreach ($orders as $order) {
+            //更新商品销量
+            GoodsService::addGoodsSalesVolume($order);
             if (!$order->can_confirm_collections) {
                 if (count($orders) == 1) {
                     return $this->error('确认收款失败');
@@ -620,7 +626,7 @@ class OrderController extends Controller
         $aWeekAgo = $today->copy()->subDay(6)->startOfDay();
         $builder = Order::ofSell(auth()->user()->shop_id)->useful();
 
-        $new =  with(clone $builder)->whereBetween('created_at', [$aWeekAgo, $today])->get();
+        $new = with(clone $builder)->whereBetween('created_at', [$aWeekAgo, $today])->get();
         $finish = with(clone $builder)->whereBetween('finished_at', [$aWeekAgo, $today])->get();
 
         $dates = list_in_days($aWeekAgo, $today);
@@ -628,9 +634,9 @@ class OrderController extends Controller
         foreach ($dates as $day) {
             $statistics['sevenDay'][] = [
                 'new' => $new->filter(function ($order) use ($day) {
-                        return $order->created_at->format('Y-m-d') == $day;
-                    })->count(),
-                'finish' =>$finish->filter(function ($order) use ($day) {
+                    return $order->created_at->format('Y-m-d') == $day;
+                })->count(),
+                'finish' => $finish->filter(function ($order) use ($day) {
                     return (new Carbon($order->finished_at))->format('Y-m-d') == $day;
                 })->count(),
             ];

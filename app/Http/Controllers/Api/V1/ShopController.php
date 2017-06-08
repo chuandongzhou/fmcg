@@ -35,6 +35,7 @@ class ShopController extends Controller
      */
     public function allShops(Request $request)
     {
+
         $xLng = $request->input('x_lng', 0);  //经度
         $yLat = $request->input('y_lat', 0);  //纬度
 
@@ -75,7 +76,6 @@ class ShopController extends Controller
      */
     public function detail($shop)
     {
-
         if (Gate::denies('validate-allow', $shop)) {
             return $this->success(
                 [
@@ -148,7 +148,7 @@ class ShopController extends Controller
         }
         $data = $request->all();
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->active()->hasPrice()->orderBy('id', 'DESC')->paginate()->toArray();
+        $goods = $result['goods']->active()->hasPrice()->ofCommonSort()->paginate()->toArray();
         return $this->success(['goods' => $goods]);
     }
 

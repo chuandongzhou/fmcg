@@ -1537,6 +1537,9 @@ a {
     }
     .address-panel {
       position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
       .address {
         position: absolute;
         top: 0;
@@ -3344,7 +3347,7 @@ table {
     font-weight: 600;
   }
   .panel-container {
-    padding: 5px 40px 25px 40px;
+    padding: 10px 40px 25px 40px;
     .prompt {
       font-size: 12px;
     }
@@ -4561,12 +4564,15 @@ table {
             text-align: center;
             font-size: 13px;
             padding: 20px 0;
+            p{
+              margin:10px 0!important;
+            }
             &:first-of-type {
               text-align: left !important;
             }
             .product-name {
               display: inline-block;
-              width: 90px;
+              width: 90px !important;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
@@ -4592,7 +4598,7 @@ table {
     margin-bottom: 10px;
     .control {
       height: 35px;
-      padding: 0 10px;
+      width:100px;
       outline: none;
     }
   }
@@ -6015,7 +6021,7 @@ table {
             left: 0;
             color: $body-bg;
             @include square(100%);
-            line-height: 55px;
+            line-height: 140px;
             text-align: center;
             background: rgba(000, 000, 000, 0.3) !important;
           }
@@ -6403,6 +6409,9 @@ table {
       }
     }
   }
+  .disable{
+    background-color:$body-bg;
+  }
 }
 
 .salesman-table-wrap {
@@ -6677,6 +6686,7 @@ table {
           }
           textarea{
             height:55px;
+            margin-bottom:10px;
           }
         }
       }
@@ -6726,7 +6736,7 @@ table {
   margin-top: 20px;
   padding-left: 25px;
   .btn-warning{
-    width:100px;
+    min-width:100px;
   }
 }
 .wareh-details-table{
@@ -6845,7 +6855,7 @@ table {
   font-size: 25px;
   border-radius:50%!important;
   text-align: center;
-  line-height: 50px;
+  line-height: 39px;
 }
 .select-wrap{
   .option-panel{
@@ -6918,6 +6928,11 @@ table {
   width:100px!important;
 }
 .promotion-msg-wrap{
+  textarea{
+    height:60px;
+    width:80%;
+    vertical-align: middle;
+  }
   .item-text{
     margin-top:20px;
   }

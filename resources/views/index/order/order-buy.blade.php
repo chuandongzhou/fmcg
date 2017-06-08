@@ -199,7 +199,6 @@
                         @endforeach
                     </div>
                     <div class="col-sm-12 text-right">
-
                         @if(\Request::is('order-buy'))
                             {!! $orders->appends($search)->render() !!}
                         @else

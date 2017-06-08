@@ -16,6 +16,7 @@ class CouponController extends Controller
     {
         $this->middleware('deposit:true');
     }
+
     /**
      * 获取店铺可领优惠券
      *
@@ -29,7 +30,7 @@ class CouponController extends Controller
         if (!$shop || $shop->user_type <= $user->type) {
             return $this->error('店铺不存在');
         }
-        $coupons = $shop->coupons->filter(function ($coupon) {
+        $coupons = $shop->coupons()->with('shop')->get()->filter(function ($coupon) {
             $coupon->shop->setAppends([]);
             return $coupon->can_receive;
         });

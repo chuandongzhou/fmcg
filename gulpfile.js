@@ -34,6 +34,11 @@ elixir(function (mix) {
                 paths.bootstrap + 'stylesheets/'
             ]
         })
+        .sass('mobile.scss', 'public/css/mobile.css', {
+            includePaths: [
+                paths.bootstrap + 'stylesheets/'
+            ]
+        })
 
         .sass('admin.scss', 'public/css/admin.css')
 

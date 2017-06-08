@@ -5,6 +5,7 @@
  * Date: 2015/9/18
  * Time: 11:35
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\GoodsColumn;
@@ -22,7 +23,8 @@ class GoodsController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getGoods(){
+    public function getGoods()
+    {
         return $this->success(['goodsColumns' => GoodsService::getNewGoodsColumn()]);
     }
 
@@ -35,11 +37,10 @@ class GoodsController extends Controller
     public function postSearch(Request $request)
     {
         $gets = $request->all();
-
         $addressData = (new AddressService)->getAddressData();
         $gets = array_merge($gets, array_except($addressData, 'address_name'));
 
-        $goods = Goods::active()->shopUser()->with('images.image')->select([
+        $goods = Goods::active()->shopUser()->select([
             'id',
             'name',
             'sales_volume',
@@ -72,11 +73,11 @@ class GoodsController extends Controller
     public function postDetail($goodsId)
     {
         $goods = Goods::active()->with(['images.image', 'deliveryArea'])->find($goodsId);
-        
-        $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
+
         if (Gate::denies('validate-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
+        $goods->setAppends(['images_url', 'image_url', 'pieces', 'price']);
         $attrs = (new AttrService())->getAttrByGoods($goods);
         $isLike = auth()->user()->likeGoods()->where('id', $goods->id)->pluck('id');
         $goods->shop_name = $goods->shop()->pluck('name');

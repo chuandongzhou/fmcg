@@ -208,9 +208,11 @@ function setCookie(name, value) {
  * @param {string} [defaultValue]
  */
 function apiv1FirstError(json, defaultValue) {
+
     if ($.isPlainObject(json)) {
         var errors = json['errors'], message = json['message'];
         if ($.isPlainObject(errors)) {
+
             var firstValue = errors[Object.keys(errors)[0]];
             if ($.isArray(firstValue) && firstValue.length > 0) {
                 return firstValue[0];
@@ -343,7 +345,6 @@ var commonAjaxSetup = function () {
         .on('click', '.ajax, form.ajax-form [type="submit"]', function () {
             var self = $(this)
                 , form = self.hasClass('no-form') ? $([]) : self.closest('form');
-            self.prop('disabled', true)
             self.button({
                 loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
                 doneText: '操作成功',
@@ -387,7 +388,6 @@ var commonAjaxSetup = function () {
                 if (false !== self.triggerHandler('done.hct.ajax', params)
                     && false !== form.triggerHandler('done.hct.ajax', params)
                     && !preventDefault) {
-
                     self.html(data.message || '操作成功');
                     self.hasClass('no-prompt') || successMeg(self.data('doneText') || data.message || '操作成功');
                 }
@@ -407,11 +407,7 @@ var commonAjaxSetup = function () {
                             }, 0);
                         }
                     }
-                    if (preventDefault) {
-                        setTimeout(function () {
-                            self.button('reset');
-                        }, delay)
-                    }
+
                 }
 
             }).always(function (data, textStatus, jqXHR) {
@@ -1169,6 +1165,33 @@ var initMap = function () {
     return baiduMap;
 };
 
+/**
+ * 方便的多次重复调用函数
+ * @param {object} [options]
+ * @param {number} [options.count] 总共重复的次数
+ * @param {number} [options.delay] 重复间隔
+ * @param {function} [options.tick] 重复时候的回调函数
+ * @param {function} [options.done] 完成时的回调函数
+ */
+function timeIntervalFunc(options) {
+    var count = options.count || 60, i = count, delay = options.delay || 1000,
+        doneCallback = options.done || function () {
+            },
+        tickCallback = options.tick || function () {
+            };
+
+    var timer = setInterval(function () {
+        // 继续
+        if (--i > 0) {
+            tickCallback(i);
+            return;
+        }
+
+        // 完成
+        doneCallback();
+        clearInterval(timer);
+    }, delay);
+}
 
 /**
  * get提交form处理
@@ -1285,6 +1308,27 @@ var goodsBatchUpload = function () {
                 .children('.progress-bar').css('width', text).html(text);
         }
     });
+}
+
+/**
+ * 定位
+ */
+var setAddressCookie = function () {
+    function myFun(result) {
+        var cityName = result.name;
+        $.ajax({
+            url: site.api('address/city-detail'),
+            method: 'get',
+            data: {name: cityName}
+        }).done(function (data, textStatus, jqXHR) {
+            setCookie('province_id', data.province_id);
+            setCookie('city_id', data.city_id);
+            window.location.reload();
+        });
+    }
+
+    var myCity = new BMap.LocalCity();
+    myCity.get(myFun);
 }
 
 /**

@@ -1776,6 +1776,9 @@ a:hover {
 
 .list-penal .content-panel .address-panel {
   position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .list-penal .content-panel .address-panel .address,
@@ -3886,7 +3889,7 @@ table .product-panel .promotions {
 }
 
 .order-detail .panel-container {
-  padding: 5px 40px 25px 40px;
+  padding: 10px 40px 25px 40px;
 }
 
 .order-detail .panel-container .prompt {
@@ -5266,13 +5269,17 @@ table .product-panel .promotions {
   padding: 20px 0;
 }
 
+.goods-tables .goods-table-panel .goods-table table tr td p {
+  margin: 10px 0 !important;
+}
+
 .goods-tables .goods-table-panel .goods-table table tr td:first-of-type {
   text-align: left !important;
 }
 
 .goods-tables .goods-table-panel .goods-table table tr td .product-name {
   display: inline-block;
-  width: 90px;
+  width: 90px !important;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -5300,7 +5307,7 @@ table .product-panel .promotions {
 
 .goods-tables .commodity-class .control {
   height: 35px;
-  padding: 0 10px;
+  width: 100px;
   outline: none;
 }
 
@@ -6971,7 +6978,7 @@ table .product-panel .promotions {
   color: #fff;
   width: 100%;
   height: 100%;
-  line-height: 55px;
+  line-height: 140px;
   text-align: center;
   background: rgba(0, 0, 0, 0.3) !important;
 }
@@ -7379,6 +7386,10 @@ table .product-panel .promotions {
   margin-right: 10px;
 }
 
+.salesman .disable {
+  background-color: #fff;
+}
+
 .salesman-table-wrap {
   width: 800px;
   height: 450px;
@@ -7733,6 +7744,7 @@ table .product-panel .promotions {
 
 .warehousing-table table tbody tr td textarea {
   height: 55px;
+  margin-bottom: 10px;
 }
 
 .warehousing-table .store-img {
@@ -7788,7 +7800,7 @@ table .product-panel .promotions {
 }
 
 .wareh-operating .btn-warning {
-  width: 100px;
+  min-width: 100px;
 }
 
 .wareh-details-table .product-name {
@@ -7919,7 +7931,7 @@ table .product-panel .promotions {
   font-size: 25px;
   border-radius: 50% !important;
   text-align: center;
-  line-height: 50px;
+  line-height: 39px;
 }
 
 .select-wrap .option-panel {
@@ -8013,6 +8025,12 @@ table .product-panel .promotions {
 
 .promotion-submit {
   width: 100px !important;
+}
+
+.promotion-msg-wrap textarea {
+  height: 60px;
+  width: 80%;
+  vertical-align: middle;
 }
 
 .promotion-msg-wrap .item-text {
