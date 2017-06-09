@@ -196,7 +196,7 @@ class Inventory extends Model
     public function getBuyerNameAttribute()
     {
         if ($this->order_number > 0) {
-            return $this->order->user->shop_name;
+            return $this->order->user_shop_name;
         }
     }
 
