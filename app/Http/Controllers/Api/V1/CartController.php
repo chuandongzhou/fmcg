@@ -69,7 +69,7 @@ class CartController extends Controller
      */
     public function postAdd(Request $request, $goodsId)
     {
-        $goodsInfo = Goods::active()->shopUser()->where('user_type', '>', $this->user->type)->find($goodsId);
+        $goodsInfo = Goods::active()->shopUser()->ofSearchType($this->user->type)->find($goodsId);
         if (is_null($goodsInfo)) {
             return $this->error('商品不存在');
         }
@@ -154,7 +154,7 @@ class CartController extends Controller
         $user = $this->user;
         $myCarts = $user->carts();
         $carts = $myCarts->whereHas('goods', function ($query) use ($user) {
-            $query->whereNotNull('id')->where('user_type', '>', $user->type);
+            $query->whereNotNull('id')->ofSearchType($user->type);
         })->with('goods')->get();
 
         return $this->success(['carts' => $carts]);

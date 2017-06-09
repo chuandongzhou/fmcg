@@ -146,23 +146,22 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
     });
-            $router->resource('mortgage-goods', 'MortgageGoodsController');
-            $router->group(['prefix' => 'order'], function ($router) {
-                $router->get('export', 'SalesmanVisitOrderController@export');
-                $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
-                $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
-                $router->get('browser-export/{salesman_visit_order}',
-                    'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
-                $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
-            });
-        });
+    $router->resource('mortgage-goods', 'MortgageGoodsController');
+    $router->group(['prefix' => 'order'], function ($router) {
+        $router->get('export', 'SalesmanVisitOrderController@export');
+        $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
+        $router->get('return-orders', 'SalesmanVisitOrderController@returnOrders');
+        $router->get('browser-export/{salesman_visit_order}',
+            'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
+        $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
+    });
     // 库存管理
     $router->group(['prefix' => 'inventory'], function ($router) {
         //$router->get('in-create/{goods_id?}', 'InventoryController@create'); // 入库
-        $router->controller('/', 'InventoryController'); 
+        $router->controller('/', 'InventoryController');
     });
 
-    //资产管理
+//资产管理
     $router->group(['prefix' => 'asset'], function ($router) {
         $router->controller('/', 'AssetController');
     });
@@ -174,7 +173,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('{promo}/view', 'PromoController@view');
         $router->controller('/', 'PromoController');
     });
-    
+
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
 
@@ -535,7 +534,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
         //资产管理
         $router->group(['prefix' => 'asset'], function ($router) {
-            $router->group(['prefix' => 'apply'], function ($router){
+            $router->group(['prefix' => 'apply'], function ($router) {
                 $router->put('review/{asset_apply}', 'AssetController@review');
                 $router->put('delete/{asset_apply}', 'AssetController@delete');
                 $router->put('modify/{asset_apply}', 'AssetController@modify');

@@ -3,6 +3,7 @@
     <div class="page-sidebar navbar-collapse collapse">
         <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
             data-auto-scroll="true" data-slide-speed="200">
+            {{--个人中心--}}
             <li class="nav-item start {!! path_active(['personal/shop','personal/security/*','personal/delivery-area*','personal/shipping-address*','personal/info', 'personal/child-user']) !!}">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="fa fa-smile-o"></i>
@@ -51,6 +52,7 @@
             </li>
 
             @if($user->type == cons('user.type.wholesaler'))
+                {{-- 进货管理 --}}
                 <li class="nav-item {!! request()->is('order-buy', 'order/statistics-of-buy') ? 'active' : '' !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-file-text-o "></i>
@@ -73,8 +75,9 @@
                 </li>
             @endif
 
-            @if($user->type != cons('user.type.retailer'))
+            @if($user->type > cons('user.type.retailer') && $user->type < cons('user.type.maker'))
                 @if( true || $user->deposit && !$user->is_expire )
+                    {{-- 订单管理 卖家 --}}
                     <li class="nav-item  {!!  request()->is('order-sell*') || request()->is('order/statistics-of-sell') ? 'active' : '' !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-edit "></i>
@@ -102,6 +105,7 @@
                     </li>
                 @endif
             @else
+                {{-- 订单管理 买家 --}}
                 <li class="nav-item {!! path_active(['order-buy', 'order-buy/*', 'order/statistics']) !!}  ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-edit "></i>
@@ -123,33 +127,9 @@
                     </ul>
                 </li>
             @endif
-            @if($user->type == cons('user.type.maker'))
-                <li class="nav-item  {!!  request()->is('asset','asset/*') ? 'active' : '' !!}">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="iconfont icon-zichan"></i>
-                        <span class="title">资产管理</span>
-                        <span class="{!!  request()->is( 'asset','asset/*')  ? 'selected' : '' !!}"></span>
-                        <span class="arrow"></span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item {{ path_active(['asset']) }} ">
-                            <a href="{{ url('asset/unused') }}" class="nav-link ">
-                                <span class="title">未使用</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ path_active(['asset']) }} ">
-                            <a href="{{ url('asset/used') }}" class="nav-link ">
-                                <span class="title">已使用</span>
-                            </a>
-                        </li>
 
-                        <li class="nav-item {{ path_active(['asset']) }} ">
-                            <a href="{{ url('asset/apply') }}" class="nav-link ">
-                                <span class="title">资产申请审核</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            {{-- 库存管理 --}}
+            @if($user->type > cons('user.type.retailer'))
                 <li class="nav-item  {!!  request()->is('inventory','inventory/*') ? 'active' : '' !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="iconfont icon-kucun"></i>
@@ -186,6 +166,39 @@
                         </li>
                     </ul>
                 </li>
+            @endif
+
+
+            @if($user->type == cons('user.type.maker'))
+                {{-- 资产管理 --}}
+                <li class="nav-item  {!!  request()->is('asset','asset/*') ? 'active' : '' !!}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="iconfont icon-zichan"></i>
+                        <span class="title">资产管理</span>
+                        <span class="{!!  request()->is( 'asset','asset/*')  ? 'selected' : '' !!}"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item {{ path_active(['asset']) }} ">
+                            <a href="{{ url('asset/unused') }}" class="nav-link ">
+                                <span class="title">未使用</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ path_active(['asset']) }} ">
+                            <a href="{{ url('asset/used') }}" class="nav-link ">
+                                <span class="title">已使用</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item {{ path_active(['asset']) }} ">
+                            <a href="{{ url('asset/apply') }}" class="nav-link ">
+                                <span class="title">资产申请审核</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {{-- 促销管理 --}}
                 <li class="nav-item  {!!  request()->is('promo','promo/*') ? 'active' : '' !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="iconfont icon-cuxiaoguanli"></i>
@@ -220,7 +233,42 @@
                     </ul>
                 </li>
 
-            @if($user->type != cons('user.type.retailer'))
+                {{-- 业务管理 --}}
+                <li class="nav-item  {!! path_active(['business/*']) !!}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="icon-wallet"></i>
+                        <span class="title">业务管理</span>
+                        <span class="{!! request()->is('business/*') ? 'selected' : '' !!}"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item  {{ path_active(['business/salesman']) }}">
+                            <a href="{{ url('business/salesman') }}" class="nav-link ">
+                                <span class="title">业务员管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ path_active(['business/salesman-customer*']) }}">
+                            <a href="{{ url('business/salesman-customer') }}" class="nav-link ">
+                                <span class="title">客户管理</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item {{ path_active(['business/report*']) }}">
+                            <a href="{{ url('business/report') }}" class="nav-link ">
+                                <span class="title">业务报表</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active('business/salesman/target') }}">
+                            <a href="{{ url('business/salesman/target') }}" class="nav-link ">
+                                <span class="title">业务员目标管理</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
+            @if($user->type > cons('user.type.retailer') && $user->type < cons('user.type.maker'))
+                {{-- 商品管理 --}}
                 <li class="nav-item start  {!! path_active(['my-goods','my-goods/*']) !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-shopping-basket"></i>
@@ -247,11 +295,12 @@
                     </ul>
                 </li>
                 @if( true || $user->deposit)
-                    <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*']) !!} ">
+                    {{-- 财务管理 --}}
+                    <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*','personal/bill*']) !!} ">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-money "></i>
                             <span class="title">财务管理</span>
-                            <span class="{!! request()->is('personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*')?'selected':'' !!}"></span>
+                            <span class="{!! request()->is('personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*','personal/bill*')?'selected':'' !!}"></span>
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
@@ -275,10 +324,19 @@
                                     <span class="title">签约管理</span>
                                 </a>
                             </li>
+                            @if($user->type < cons('user.type.supplier'))
+                                <li class="nav-item  {{ path_active(['personal/bill*']) }}">
+                                    <a href="{{ url('personal/bill') }}" class="nav-link ">
+                                        <span class="title">对账单</span>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
+
                 @if( true || $user->deposit && !$user->is_expire)
+                    {{-- 配送管理 --}}
                     <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="fa fa-shopping-basket"></i>
@@ -299,6 +357,7 @@
                             </li>
                         </ul>
                     </li>
+                    {{-- 业务管理 --}}
                     <li class="nav-item  {!! path_active(['business/*']) !!}">
                         <a href="javascript:;" class="nav-link nav-toggle">
                             <i class="icon-wallet"></i>
@@ -334,11 +393,6 @@
                                     <span class="title">退货单</span>
                                 </a>
                             </li>
-                            <li class="nav-item  {{ path_active('business/salesman/target') }}">
-                                <a href="{{ url('business/salesman/target') }}" class="nav-link ">
-                                    <span class="title">业务员目标管理</span>
-                                </a>
-                            </li>
                             <li class="nav-item {{ path_active(['business/mortgage-goods*']) }}">
                                 <a href="{{ url('business/mortgage-goods') }}" class="nav-link ">
                                     <span class="title">抵陈列费商品</span>
@@ -349,34 +403,42 @@
                                     <span class="title">陈列费发放情况</span>
                                 </a>
                             </li>
+
+                            <li class="nav-item  {{ path_active('business/salesman/target') }}">
+                                <a href="{{ url('business/salesman/target') }}" class="nav-link ">
+                                    <span class="title">业务员目标管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
             @endif
 
-                @if($user->type != cons('user.type.supplier'))
-                    <li class="nav-item start {!!  path_active('like/*') !!} ">
-                        <a href="javascript:;" class="nav-link nav-toggle">
-                            <i class="fa fa-star-o"></i>
-                            <span class="title">我的收藏</span>
-                            <span class="{!!request()->is('like/*')?'selected':'' !!}"></span>
-                            <span class="arrow open"></span>
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="nav-item start  {{ path_active(['like/shops','like/shops/*']) }}">
-                                <a href="{{ url('like/shops') }}" class="nav-link ">
-                                    <span class="title">店铺收藏</span>
-                                </a>
-                            </li>
-                            <li class="nav-item start  {{ path_active(['like/goods','like/goods/*']) }}">
-                                <a href="{{ url('like/goods') }}" class="nav-link ">
-                                    <span class="title">商品收藏</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-
+            @if($user->type < cons('user.type.supplier'))
+                {{-- 我的收藏 --}}
+                <li class="nav-item start {!!  path_active('like/*') !!} ">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-star-o"></i>
+                        <span class="title">我的收藏</span>
+                        <span class="{!!request()->is('like/*')?'selected':'' !!}"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start  {{ path_active(['like/shops','like/shops/*']) }}">
+                            <a href="{{ url('like/shops') }}" class="nav-link ">
+                                <span class="title">店铺收藏</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start  {{ path_active(['like/goods','like/goods/*']) }}">
+                            <a href="{{ url('like/goods') }}" class="nav-link ">
+                                <span class="title">商品收藏</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+            @if($user->type <= cons('user.type.supplier'))
+                {{-- 消息列表 --}}
                 <li class="nav-item {!! path_active(['personal/chat*']) !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-commenting-o "></i>
@@ -392,8 +454,9 @@
                         </li>
                     </ul>
                 </li>
-
-            @if($user->type != cons('user.type.retailer'))
+            @endif
+            @if($user->type > cons('user.type.retailer') && $user->type < cons('user.type.maker'))
+                {{-- 模板管理 --}}
                 <li class="nav-item {!! path_active('personal/model/*') !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="icon-layers"></i>
@@ -414,6 +477,7 @@
                         </li>
                     </ul>
                 </li>
+                {{-- 客户列表 --}}
                 <li class="nav-item {!! path_active('personal/customer/*') !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-users "></i>

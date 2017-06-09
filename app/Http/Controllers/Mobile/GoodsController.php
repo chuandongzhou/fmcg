@@ -25,7 +25,7 @@ class GoodsController extends Controller
         $type = auth()->user()->type;
         $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
-        $goods = Goods::active()->shopUser()->with('shop')->where('user_type', '>', $type);
+        $goods = Goods::active()->shopUser()->with('shop')->ofSearchType($type);
 
         $addressData = (new AddressService)->getAddressData();
         $address = array_except($addressData, 'address_name');

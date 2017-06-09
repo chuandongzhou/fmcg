@@ -29,7 +29,7 @@ class RegisterUserShopRequest extends Request
         ];
     }
 
-    /**
+    /** 
      * 自定义验证
      *
      * @param \Illuminate\Contracts\Validation\Factory $factory

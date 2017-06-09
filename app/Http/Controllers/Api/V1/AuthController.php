@@ -58,6 +58,7 @@ class AuthController extends Controller
 
         //帐号密码
         if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
+            $loginError = 0;
             if ($inWindows) {
                 $loginError = $request->cookie('login_error');
                 $cookie->queue('login_error', $loginError ? $loginError + 1 : 1, 1);

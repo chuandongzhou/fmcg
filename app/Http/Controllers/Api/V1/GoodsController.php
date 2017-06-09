@@ -52,7 +52,7 @@ class GoodsController extends Controller
             'is_out',
             'cate_level_1',
             'cate_level_2'
-        ])->where('user_type', '>', auth()->user()->type);
+        ])->ofSearchType(auth()->user()->type);
 
         $result = GoodsService::getGoodsBySearch($gets, $goods, false);
 

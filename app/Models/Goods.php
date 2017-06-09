@@ -11,10 +11,9 @@ namespace App\Models;
 
 use App\Services\CategoryService;
 use App\Services\GoodsImageService;
-use App\Services\GoodsService;
 use App\Services\InventoryService;
 use App\Services\UserService;
-use Carbon\Carbon;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
@@ -75,7 +74,7 @@ class Goods extends Model
             $model->deliveryArea()->delete();   //配送区域
             $model->carts()->delete();           //购物车
             $model->attr()->detach();           //商品标签
-            PromoGoods::where('goods_id',$model->id)->delete();//促销商品
+            PromoGoods::where('goods_id', $model->id)->delete();//促销商品
         });
 
     }
@@ -193,7 +192,7 @@ class Goods extends Model
     {
         return $this->hasOne('App\Models\MortgageGoods');
     }
-    
+
     /**
      * 关联抵费商品
      *
@@ -219,10 +218,17 @@ class Goods extends Model
         });*/
     }
 
+    /**
+     * 搜索价格大于零
+     *
+     * @param $query
+     * @param int $shopUserId
+     * @return mixed
+     */
     public function scopeHasPrice($query, $shopUserId = 0)
     {
         $typeName = (new UserService())->getUserTypeName();
-        $typeName = ($typeName == 'supplier' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shopUserId ? 'retailer' : $typeName));
+        $typeName = ($typeName == 'supplier' || $typeName == 'maker' ? 'wholesaler' : ($typeName == 'wholesaler' && auth()->id() == $shopUserId ? 'retailer' : $typeName));
 
         return $query->where('price_' . $typeName, '>', 0);
     }
@@ -453,6 +459,19 @@ class Goods extends Model
     {
         if ($userType) {
             $query->where('user_type', $userType);
+        }
+    }
+
+    /**
+     * 可购买的商品
+     *
+     * @param $query
+     * @param int $type
+     */
+    public function scopeOfSearchType($query, $type = 2)
+    {
+        if ($type) {
+            $query->whereBetween('user_type', [$type + 1, cons('user.type.supplier')]);
         }
     }
 
@@ -697,7 +716,7 @@ class Goods extends Model
     {
         return !is_null($this->mortgageGoods);
     }
-    
+
     /**
      * 是否是抵费商品
      *

@@ -189,7 +189,7 @@ class CartService extends BaseService
         $user = auth()->user();
         $myCarts = $user->carts();
         $carts['detail'] = $myCarts->whereHas('goods', function ($query) use ($user) {
-            $query->whereNotNull('id')->where('user_type', '>', $user->type);
+            $query->whereNotNull('id')->ofSearchType($user->type);
         })->with('goods.images.image')->get();
         $carts['count'] = count($carts['detail']);
 

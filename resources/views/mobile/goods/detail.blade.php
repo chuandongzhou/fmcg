@@ -97,7 +97,7 @@
                 <a class="red"><i class="iconfont icon-jia1"></i><span>{{ $goods->min_num }}</span></a>
             </div>
             <div class="col-xs-4 join-cart pd-clear">
-                <button type="button" class="btn btn-primary add-cart" >加入购物车</button>
+                <button type="button" class="btn btn-primary add-cart">加入购物车</button>
             </div>
         </div>
     </div>
@@ -123,9 +123,12 @@
                         var cartNumInput = $('.layui-m-layerchild').find('.num'),
                             minNum = parseInt(cartNumInput.data('min-num'));
                         cartNum = parseInt(cartNumInput.val()),
-                        cartNum = cartNum >= minNum ? cartNum : minNum;
+                            cartNum = cartNum >= minNum ? cartNum : minNum;
                         $('.add-shopping-num span').html(cartNum);
                         layer.close(index)
+                    },
+                    success: function () {
+                        $(".enter-num").val($('.add-shopping-num span').html())
                     }
                 });
                 $(".popover-panel").parent().addClass("pd-clear");

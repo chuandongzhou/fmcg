@@ -73,6 +73,7 @@ class InventoryService extends BaseService
      */
     public function autoIn($goodsInfo)
     {
+        $inventory_number = $this->getInventoryNumber();
         foreach ($goodsInfo as $orderGoods) {
             //买家的商店
             $buyerShop = User::find($orderGoods->order->user_id)->shop;
@@ -98,9 +99,10 @@ class InventoryService extends BaseService
                 $orderGoods->save();
             }
             $outRecord = $this->_checkRepeated($outRecord);
+
             foreach ($outRecord as $record) {
                 $result = $this->inventory->create([
-                    'inventory_number' => $this->getInventoryNumber(),
+                    'inventory_number' => $inventory_number,
                     'user_id' => 0,
                     'goods_id' => $buyerGoods->id,
                     'shop_id' => $buyerShop->id,

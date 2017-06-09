@@ -262,7 +262,7 @@ class GoodsService
                 $categoryGoods = collect([]);
                 if (!is_null($columnId)) {
                     $columnGoods = Goods::active()->whereIn('id', $columnId)
-                        ->where('user_type', '>', $type)
+                        ->ofSearchType($type)
                         ->where('is_out', 0)
                         ->with('images.image')
                         ->orderBy('is_promotion', 'desc')
@@ -279,7 +279,7 @@ class GoodsService
                 if ($columnGoodsCount < $displayCount) {
                     $categoryGoods = Goods::active()
                         ->where('cate_level_1', $category['id'])
-                        ->where('user_type', '>', $type)
+                        ->ofSearchType($type)
                         ->where('is_out', 0)
                         ->whereNotIn('id', (array)$columnId)
                         ->OfDeliveryArea(array_filter($data))
@@ -349,7 +349,7 @@ class GoodsService
             $displayCount = $homeColumnGoodsConf['count']; //显示条数
             foreach ($goodsColumns as $goodsColumn) {
                 $goods = Goods::active()->whereIn('id', $goodsColumn->id_list)
-                    ->where('user_type', '>', $type)
+                    ->ofSearchType($type)
                     ->OfDeliveryArea($data)
                     ->with('images.image')
                     ->select($goodsFields)
@@ -361,7 +361,7 @@ class GoodsService
                 if ($columnGoodsCount < $displayCount) {
                     $columnGoodsIds = $goods->pluck('id')->toArray();
                     $goodsBySort = Goods::active()->whereNotIn('id', $columnGoodsIds)
-                        ->where('user_type', '>', $type)
+                        ->ofSearchType($type)
                         ->{'Of' . ucfirst(camel_case($goodsColumn->sort))}()
                         ->with('images.image')
                         ->OfDeliveryArea($data)

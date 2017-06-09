@@ -55,11 +55,11 @@ class RegisterRequest extends Request
                 if ($address['district_id'] && !$address['street_id'] && !empty($this->lowerLevelAddress($address['district_id']))) {
                     $validator->errors()->add('address[street_id]', '街道 不能为空');
                 }
-                if ($this->input('type') != cons('user.type.retailer')){
-                    if (!empty($this->input('license'))){
+                if ($this->input('type') != cons('user.type.retailer')) {
+                    if (!$this->input('license') && !$this->hasFile('license')) {
                         $validator->errors()->add('license', '营业执照 不能为空');
                     }
-                    if (!$this->input('license_num')){
+                    if (!$this->input('license_num')) {
                         $validator->errors()->add('license_num', '营业执照编号 不能为空');
                     }
                 }

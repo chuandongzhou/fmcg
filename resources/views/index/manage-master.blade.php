@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <!--购物车-->
-                        @if(auth()->check() && $user->type!=cons('user.type.supplier'))
+                        @if(auth()->check() && $user->type < cons('user.type.supplier'))
                             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                                 <a href="{{ url('cart') }}" class="dropdown-toggle" data-toggle="dropdown"
                                    data-hover="dropdown" data-close-others="true">
