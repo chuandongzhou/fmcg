@@ -957,6 +957,12 @@ class Order extends Model
             cons('order.pay_status.payment_success'));
     }
 
+    public function scopeOfRefund($query)
+    {
+        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status','<',
+            cons('order.pay_status.refund'));
+    }
+
     /**
      * 货到付款,已发货或已完成的订单条件
      *

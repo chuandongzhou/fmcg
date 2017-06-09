@@ -234,7 +234,7 @@ class BillService
         $start_at = array_get($time, 'start_at')->toDateTimeString();
         $end_at = array_get($time, 'end_at')->toDateTimeString();
 
-        $allOrders = auth()->user()->orders()->where('shop_id', $shop->id)->where('created_at', '>=',
+        $allOrders = auth()->user()->orders()->Useful()->NoInvalid()->OfRefund()->where('shop_id', $shop->id)->where('created_at', '>=',
             $start_at)->where('created_at', '<=', $end_at)->get();
         $businessOrders = $allOrders->pluck('salesmanVisitOrder')->filter(function ($item) {
             return !is_null($item);

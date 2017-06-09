@@ -87,7 +87,7 @@ class OrderGoods extends Model
      */
     public function getQuantityAttribute()
     {
-      return $this->num * GoodsService::getPiecesSystem($this->goods_id,$this->pieces);
+      return $this->num * GoodsService::getPiecesSystem($this->goods,$this->pieces);
     }
     
 }

@@ -429,9 +429,8 @@ class GoodsService
      * @param $piecesValue
      * @return int
      */
-    static public function getPiecesSystem($goodsId, $piecesValue = '')
+    static public function getPiecesSystem($goods, $piecesValue = '')
     {
-        $goods = Goods::with('goodsPieces')->find($goodsId);
         $pieces = $goods->goodsPieces->toArray();
         $level = array_search($piecesValue, $pieces);
         switch (substr($level, -1)) {

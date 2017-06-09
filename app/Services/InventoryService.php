@@ -4,10 +4,8 @@ namespace App\Services;
 use App\Models\Goods;
 use App\Models\Inventory;
 use App\Models\OrderGoods;
-use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Mockery\CountValidator\Exception;
 
 class InventoryService extends BaseService
 {
@@ -75,6 +73,9 @@ class InventoryService extends BaseService
     {
         $inventory_number = $this->getInventoryNumber();
         foreach ($goodsInfo as $orderGoods) {
+            if($orderGoods->type == 1 ){
+                continue;
+            }
             //买家的商店
             $buyerShop = User::find($orderGoods->order->user_id)->shop;
             //买家商品库的同款商品
@@ -141,12 +142,11 @@ class InventoryService extends BaseService
             $info['shop_id'] = $data['shop_id'] ?? (auth()->user()->shop_id ?? delivery_auth()->user()->shop->id);
 
             DB::beginTransaction();
-
             foreach ($data['goods'] as $goods_id => $value) {
                 //得到该商品的库存
                 $goods = Goods::find($goods_id);
                 //需要出库的数量
-                $quantity = $value['quantity'][0] * GoodsService::getPiecesSystem($goods_id, $value['pieces'][0]);
+                $quantity = $value['quantity'][0] * GoodsService::getPiecesSystem($goods, $value['pieces'][0]);
                 if ($goods->total_inventory < $quantity) {
                     $this->setError($goods->name . ' 库存不足');
                     return false;
@@ -187,6 +187,9 @@ class InventoryService extends BaseService
                 'user_id' => 0,
             ];
             foreach ($goodsInfo as $goods) {
+                if($goods->type){
+                    continue;
+                }
                 $outGoods = [
                     'goods' => [
                         $goods->goods_id => [
@@ -291,7 +294,8 @@ class InventoryService extends BaseService
             }
             $formatted[$key]['cost'] = $detail['cost'][$key];
             $formatted[$key]['pieces'] = $detail['pieces'][$key];
-            $formatted[$key]['quantity'] = $detail['quantity'][$key] * GoodsService::getPiecesSystem($goodsId,
+            $goods = Goods::find($goodsId);
+            $formatted[$key]['quantity'] = $detail['quantity'][$key] * GoodsService::getPiecesSystem($goods,
                     $detail['pieces'][$key]);  // 默认转为最小单位计数
             $formatted[$key]['surplus'] = $in ? $formatted[$key]['quantity'] : '0';
             $formatted[$key]['remark'] = $detail['remark'][$key];
@@ -351,27 +355,28 @@ class InventoryService extends BaseService
             $goods = Goods::find($goods);
         }
         if (isset($goods->goodsPieces->pieces_level_1)) {
-            $lv1 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_1);
-            $lv2 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_2);
-            $lv3 = GoodsService::getPiecesSystem($goods->id, $goods->goodsPieces->pieces_level_3);
+            $goodsPieces = $goods->goodsPieces->toArray();
+            $lv1 = GoodsService::getPiecesSystem($goods, $goodsPieces['pieces_level_1']);
+            $lv2 = GoodsService::getPiecesSystem($goods, $goodsPieces['pieces_level_2']);
+            $lv3 = GoodsService::getPiecesSystem($goods, $goodsPieces['pieces_level_3']);
             if ($total % $lv1 === 0) {
                 $result = $total / $lv1 . cons()->valueLang('goods.pieces',
-                        $goods->goodsPieces->pieces_level_1);
+                        $goodsPieces['pieces_level_1']);
             } else {
                 if (floor($total / $lv1) > 0) {
                     $result = floor($total / $lv1) . cons()->valueLang('goods.pieces',
-                            $goods->goodsPieces->pieces_level_1);
+                            $goodsPieces['pieces_level_1']);
                 }
                 if (($total % $lv1) % $lv2 === 0) {
                     $result .= ($total % $lv1) / $lv2 . cons()->valueLang('goods.pieces',
-                            $goods->goodsPieces->pieces_level_2);
+                            $goodsPieces['pieces_level_2']);
                 } else {
                     if (floor(($total % $lv1) / $lv2) > 0) {
                         $result .= floor(($total % $lv1) / $lv2) . cons()->valueLang('goods.pieces',
-                                $goods->goodsPieces->pieces_level_2);
+                                $goodsPieces['pieces_level_2']);
                     }
                     $result .= floor(($total % $lv1) % $lv2 / $lv3) . cons()->valueLang('goods.pieces',
-                            $goods->goodsPieces->pieces_level_3);
+                            $goodsPieces['pieces_level_3']);
                 }
             }
 

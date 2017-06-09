@@ -156,7 +156,7 @@ class Inventory extends Model
     {
         $inv = $this->where('id' , $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
         //进制
-        $system = GoodsService::getPiecesSystem($inv->goods_id, $inv->pieces);
+        $system = GoodsService::getPiecesSystem($inv->goods, $inv->pieces);
         return ($inv->cost / $system) ?? 0;
 
     }
@@ -183,7 +183,7 @@ class Inventory extends Model
      */
     public function getProfitAttribute()
     {
-        $system = GoodsService::getPiecesSystem($this->goods_id, $this->pieces);
+        $system = GoodsService::getPiecesSystem($this->goods, $this->pieces);
         return sprintf("%.2f",
             substr(sprintf("%.4f", $this->quantity * (($this->cost / $system) - $this->getInActualCost())), 0, -2));
     }
