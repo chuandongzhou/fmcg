@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Goods;
-use App\Models\Inventory;
 use App\Models\OrderGoods;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
@@ -32,11 +31,6 @@ class InventoryController extends Controller
      */
     public function getIndex(Request $request)
     {
-
-        /*$outRecord = Inventory::where('goods_id', 70)->where('order_number',
-            365)->OfOut()->get();
-        $outRecord = $this->inventoryService->_checkRepeated($outRecord);
-        dd($outRecord);*/
 
         $data = $request->only('nameOrCode', 'category_id');
 
@@ -106,7 +100,8 @@ class InventoryController extends Controller
             $sellerGoods = Goods::find($goods_id);
             //查询商品库得到对应商品
             $goods = $shopGoodsModel->where('bar_code', $sellerGoods->bar_code)->first();
-            $outRecord = $sellerGoods->inventory()->OfOut()->where('order_number', $order_id)->get();
+            $outRecord = $this->inventoryService->_checkRepeated($sellerGoods->inventory()->OfOut()->where('order_number',
+                $order_id)->get());
         } else {
             $goods = $shopGoodsModel->find($goods_id);
         }

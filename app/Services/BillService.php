@@ -209,7 +209,7 @@ class BillService
         $section->addText('');
         $section->addText('如果贵方对对账单中数据有疑问，请提供贵明细，以便我们尽快核对您的账目');
         $section->addText('');
-        $name = isset($bill['customer']) ? $bill['customer']->name : $bill['shop']->name . $bill['time']['start_at']->toDateString() . ' 至 ' . $bill['time']['end_at']->toDateString() . '对账单.docx';
+        $name = (isset($bill['customer']) ? $bill['customer']->name : $bill['shop']->name ). $bill['time']['start_at']->toDateString() . ' 至 ' . $bill['time']['end_at']->toDateString() . '对账单.docx';
         return $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 

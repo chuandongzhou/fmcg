@@ -139,7 +139,7 @@ class SalesmanCustomerController extends Controller
      */
     public function edit($salesmanCustomer)
     {
-        $salesmen = Salesman::assign()->active()->lists('name', 'id');
+        $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 
         return view('index.business.salesman-customer',
             ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer]);

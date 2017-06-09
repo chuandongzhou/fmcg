@@ -78,9 +78,13 @@ class InventoryService extends BaseService
             $buyerShop = User::find($orderGoods->order->user_id)->shop;
             //买家商品库的同款商品
             $buyerGoods = $buyerShop->goods->where('bar_code', $orderGoods->goods->bar_code)->first();
-            //查无此商品或单位不匹配则标记为入库异常
+
+            //拿到该商品的出库记录
+            $outRecord = $this->inventory->where('goods_id', $orderGoods->goods_id)->where('order_number',
+                $orderGoods->order_id)->OfOut()->get();
+            //查无此商品或单位不匹配或者出库记录为空则标记为入库异常
             $except = ['id', 'goods_id'];
-            if (empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(), $except),
+            if ($outRecord->isEmpty() || empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(), $except),
                     array_except($orderGoods->goods->goodsPieces->toArray(), $except))
             ) {
                 $orderGoods->inventory_state = cons('inventory.inventory_state.in-abnormal');
@@ -93,9 +97,6 @@ class InventoryService extends BaseService
                 $orderGoods->inventory_state = cons('inventory.inventory_state.disposed');
                 $orderGoods->save();
             }
-            //拿到该商品的出库记录
-            $outRecord = $this->inventory->where('goods_id', $orderGoods->goods_id)->where('order_number',
-                $orderGoods->order_id)->OfOut()->get();
             $outRecord = $this->_checkRepeated($outRecord);
             foreach ($outRecord as $record) {
                 $result = $this->inventory->create([
@@ -453,7 +454,7 @@ class InventoryService extends BaseService
      * @param $record
      * @return mixed
      */
-    private function _checkRepeated($record)
+    public function _checkRepeated($record)
     {
         $tmpArr = $res = $result = array();
         foreach ($record as $key => $value) {
