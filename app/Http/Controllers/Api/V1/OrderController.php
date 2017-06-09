@@ -426,6 +426,11 @@ class OrderController extends Controller
         if (!$order) {
             return $this->error('订单不存在');
         }
+
+        if (!$reason) {
+            return $this->error('作废原因不能为空');
+        }
+
         if (!$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能作废');
         }
