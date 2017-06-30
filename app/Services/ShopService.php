@@ -156,11 +156,14 @@ class ShopService extends RedisService
 
             $minMoney = ($delivery && $delivery->min_money) ? number_format($delivery->min_money, 2) : $shop->min_money;
 
+            info($delivery);
+
             if ($validate) {
                 if ($shop->sum_price < $minMoney) {
                     return false;
                 }
             }
+
             $shopMinMoneys[] = [
                 'shop_id' => $shop->id,
                 'min_money' => $minMoney

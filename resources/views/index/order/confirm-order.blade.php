@@ -214,7 +214,6 @@
             submitOrderControl = $('.submit-order');
 
         var Confirm = function () {
-
             this.pickUp = false;
         };
 

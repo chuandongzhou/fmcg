@@ -108,7 +108,6 @@ $(document.body)
             var params = [data, textStatus, jqXHR, self];
             if (false !== self.triggerHandler('done.hct.ajax', params)
                 && false !== form.triggerHandler('done.hct.ajax', params) && !preventDefault) {
-
                 noPrompt || showMassage(self.data('doneText') || data.message || '操作成功');
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -208,12 +207,14 @@ var numChange = function () {
 
 
         if (descNum.length && num.length && incNum.length) {
-            descNum.on('click','', function () {
+            descNum.on('click', '', function () {
+                if ($(this).hasClass('disabled')) {
+                    return false;
+                }
                 num.val(parseInt(num.val()) - 1);
                 changeDescButton();
             });
             incNum.on('click', '', function () {
-                alert('33');
                 var buyNum = parseInt(num.val());
                 if (buyNum < 20000) {
                     num.val(parseInt(num.val()) + 1);
@@ -222,25 +223,27 @@ var numChange = function () {
             });
 
             num.on('keyup', '', function () {
-                var obj = $(this), buyNum = parseInt(obj.val());
+                var obj = $(this), buyNum = parseInt(obj.val()) || minNum;
                 if (buyNum > 20000) {
                     obj.val(20000);
                 } else if (buyNum < minNum) {
                     obj.val(minNum);
-                    ;
                 } else {
                     changeDescButton();
                 }
+                obj.val(buyNum);
             });
 
             var changeDescButton = function () {
                 if (num.val() <= minNum) {
-                    descNum.prop('disabled', true);
+                    descNum.addClass('disabled');
                 } else {
-                    descNum.prop('disabled', false);
+                    descNum.removeClass('disabled');
                 }
             };
+            changeDescButton();
         }
+
     });
 };
 
@@ -274,7 +277,7 @@ var roleSelect = function () {
  * @param {string} module         模块
  * @returns {undefined}
  */
-var likeFunc = function() {
+var likeFunc = function () {
     $('.btn-like').button({
         loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中',
         likedText: '<i class="fa fa-star"></i> 已收藏',
@@ -396,16 +399,32 @@ var addressSelect = function (json, trigger, target, callback, force) {
  * 设置街道
  * @param districtId
  * @param addressStreet
+ * @param streetInput
+ * @param areaNameInput
+ * @param xLngInput
+ * @param yLatInput
  */
-var setStreetArea = function (districtId, addressStreet) {
+var setStreetArea = function (districtId, addressStreet, streetInput, areaNameInput, xLngInput, yLatInput) {
+    if (!districtId) {
+        return false;
+    }
     $.post(site.api('address/street'), {pid: districtId}, function (data) {
         var street = [];
         for (var i in data) {
             street.push({id: i, name: data[i]});
         }
         addressSelect(street, '#txt_street', addressStreet, function (scroller, streetName, streetId) {
-            $('input[name="address[street_id]"]').val(streetId[0]);
-            $('input[name="address[area_name]"]').val($('#address-area').html() + streetName);
+            var areaName = $('#address-area').html() + streetName;
+            streetInput.val(streetId[0]);
+            areaNameInput.val(areaName);
+            if (xLngInput) {
+                var myGeo = new BMap.Geocoder();
+                myGeo.getPoint(areaName, function (point) {
+                    xLngInput.val(point.lng);
+                    yLatInput.val(point.lat);
+                });
+            }
+
             addressStreet.html(streetName);
         });
     }, 'json')

@@ -16,8 +16,6 @@ class AddressService
     public function __construct($array = [])
     {
         $this->array = $array;
-
-        return $this;
     }
 
     /**
@@ -82,18 +80,5 @@ class AddressService
             'city_name' => $cityName,
             'address_name' => $provinceName . $cityName
         ];
-    }
-
-    public function getAddressForJs($array)
-    {
-        $address = $array ?: $this->array;
-        $newArray = [];
-        foreach ($address as $item) {
-            if ($item['child']) {
-                //$item['child'] = arr
-            }
-            $newArray[] = value($item);
-
-        }
     }
 }

@@ -45,7 +45,7 @@ class CartService extends BaseService
             'min_money',
             'user_id'
         ])->with('user')->get()->each(function ($shop) {
-            $shop->setAppends([]);
+            $shop->setAppends(['user_type']);
         });
         $userLikeGoodsIds = auth()->user()->likeGoods()->get()->pluck('id')->all();
         foreach ($shops as $key => $shop) {

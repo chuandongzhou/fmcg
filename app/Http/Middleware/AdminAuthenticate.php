@@ -41,7 +41,7 @@ class AdminAuthenticate
             }
         }else {
             $admin = admin_auth()->user();
-            if ($request->method() == 'GET' && $admin->name != cons('admin.super_admin_name')) {
+            if (!$request->ajax() && $admin->name != cons('admin.super_admin_name')) {
                 $nodeUrls = $admin->node_urls;
                 if (empty($nodeUrls) || !call_user_func_array('\Request::is', $nodeUrls)) {
                     return  redirect()->guest('admin');

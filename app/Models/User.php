@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -284,6 +285,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getIsExpireAttribute()
     {
         return false && $this->expire_at->isPast();
+    }
+
+    /**
+     * 获取用户可用余额
+     *
+     * @return string
+     */
+    public function getAvailableBalanceAttribute()
+    {
+        $user = auth()->user();
+
+        $balance = $user->balance;
+
+        $currentDayTrade = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
+            cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
+        $protectedBalance = $currentDayTrade ?: 0;
+        $availableBalance = bcsub($balance, $protectedBalance, 2);
+
+        return $availableBalance;
     }
 
 

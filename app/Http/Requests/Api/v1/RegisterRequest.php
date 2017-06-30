@@ -40,19 +40,25 @@ class RegisterRequest extends Request
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
             if ($address = $this->input('address')) {
-                if (!$address['address']) {
+
+                $addressDetail = array_get($address, 'address');
+                $cityId = array_get($address, 'city_id');
+                $districtId = array_get($address, 'district_id');
+                $streetId = array_get($address, 'street_id');
+
+                if (!$addressDetail) {
                     $validator->errors()->add('address[address]', '详细地址 不能为空');
                 }
-                if (mb_strlen($address['address'], 'utf-8') > 30) {
+                if (mb_strlen($addressDetail, 'utf-8') > 30) {
                     $validator->errors()->add('address[address]', '详细地址 不超过30字');
                 }
-                if (!$address['city_id']) {
+                if (!$cityId) {
                     $validator->errors()->add('address[city_id]', '市 不能为空');
                 }
-                if ($address['city_id'] && !$address['district_id'] && !empty($this->lowerLevelAddress($address['city_id']))) {
+                if ($cityId && !$districtId && !empty($this->lowerLevelAddress($cityId))) {
                     $validator->errors()->add('address[district_id]', '区/县 不能为空');
                 }
-                if ($address['district_id'] && !$address['street_id'] && !empty($this->lowerLevelAddress($address['district_id']))) {
+                if ($districtId && !$streetId && !empty($this->lowerLevelAddress($districtId))) {
                     $validator->errors()->add('address[street_id]', '街道 不能为空');
                 }
                 if ($this->input('type') != cons('user.type.retailer')) {

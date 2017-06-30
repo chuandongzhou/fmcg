@@ -26,7 +26,7 @@ class KeywordsComposer
         $keywords = Cache::get($cacheKey);
         if (!is_null($keywords)) {
             arsort($keywords);
-            $keywords = $keywords = array_slice($keywords, 0, $cacheConf['num'], true);
+            $keywords = array_slice($keywords, 0, $cacheConf['num'], true);
         }
         $view->with('keywords', $keywords);
     }

@@ -11,7 +11,7 @@
                 <span class="badge">{{ $cartNum }}</span>
             </i>购物车
         </a>
-        <a class="bottom-menu-item btn" href="javascript:">
+        <a class="bottom-menu-item btn {{ request()->is('mine') ? 'on' : '' }}" href="{{ url('mine') }}">
             <i class="iconfont icon-wode"></i>我的
         </a>
     </div>

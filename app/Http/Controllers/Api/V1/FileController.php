@@ -41,14 +41,27 @@ class FileController extends Controller
 
             return $this->error('内部错误');
         }
+        $fileFullPath = $tempPath .$path . $name;
+        //图片压缩处理
+        try {
+            $image = \Image::make($fileFullPath);
+        } catch (\Exception $e) {
+            return $this->error('找不到裁剪图片');
+        }
+
+        $newName = $this->getFormatName() . '.' . $ext;
+        $image->resize($image->width(), $image->height());
+        $image->save($tempPath .$path . $newName);
+
+        @unlink($fileFullPath);
 
         return $this->created([
-            'path' => $path . $name,
+            'path' => $path . $newName,
             'org_name' => $file->getClientOriginalName(),
-            'name' => $name,
+            'name' => $newName,
             'ext' => $ext,
-            'size' => $target->getSize(),
-            'url' => upload_url($path . $name, 'temp')
+            'size' => $image->filesize(),
+            'url' => upload_url($path . $newName, 'temp')
         ], ['Content-Type' => 'text/html']);
     }
 

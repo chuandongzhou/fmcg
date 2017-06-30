@@ -7,7 +7,6 @@
  */
 namespace App\Http\Controllers\ChildUser;
 
-use App\Http\Requests\Api\v1\LoginRequest;
 
 class AuthController extends Controller
 {

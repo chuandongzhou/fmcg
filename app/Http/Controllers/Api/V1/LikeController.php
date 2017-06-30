@@ -100,7 +100,7 @@ class LikeController extends Controller
     public function postGoods(Request $request)
     {
         $data = $request->all();
-        $goods = auth()->user()->likeGoods()->with('images.image');
+        $goods = auth()->user()->likeGoods();
 
         if (isset($data['name'])) {
             $goods->where('name', 'like', '%' . $data['name'] . '%');

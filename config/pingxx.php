@@ -13,7 +13,7 @@ return [
     'channels' => [
         'yeepay_wap',               //易宝
         'alipay',                   //支付宝app
-        'alipay_wap'          //支付宝app(网页）
+        'alipay_wap'                //支付宝app(网页）
     ],
     //支付成功同步回调地址
     'success_url' => [

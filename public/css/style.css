@@ -11185,6 +11185,10 @@ button.close {
   content: "\e612";
 }
 
+.icon-daishouhuo:before {
+  content: "\e606";
+}
+
 .icon-daifahuo:before {
   content: "\e604";
 }
@@ -11475,10 +11479,6 @@ button.close {
 
 .icon-xiajia :before {
   content: "\e641";
-}
-
-.icon-daishouhuo :before {
-  content: "\e606";
 }
 
 .icon-quyu :before {

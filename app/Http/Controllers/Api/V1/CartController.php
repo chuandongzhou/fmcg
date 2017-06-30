@@ -27,8 +27,9 @@ class CartController extends Controller
     public function getIndex()
     {
         $myCarts = $this->user->carts();
-        $carts = $myCarts->with(['goods' => function ($query) {
-            $query->select([
+        $carts = $myCarts->with([
+            'goods' => function ($query) {
+                $query->select([
                     'id',
                     'bar_code',
                     'name',
@@ -46,8 +47,10 @@ class CartController extends Controller
                     'status',
                     'user_type'
                 ]);
-            }, 'goods.shop.user'])->get()->each(function($item){
-                $item->goods->setAppends(['image_url', 'price']);
+            },
+            'goods.shop.user'
+        ])->get()->each(function ($item) {
+            $item->goods->setAppends(['image_url', 'price']);
         });
 
         if (!$carts->isEmpty()) {
@@ -135,10 +138,11 @@ class CartController extends Controller
             return $this->error('请选择要删除的商品');
         }
         $field = 'id';
-        if ($request->input('type') == 'pc'){
+        if ($request->input('type') == 'pc') {
             $field = 'goods_id';
         }
-        if ($this->user->carts()->whereIn($field,$ids)->delete()) {
+        if ($count = $this->user->carts()->whereIn($field, $ids)->delete()) {
+            (new CartService)->decrement($count);
             return $this->success('删除成功');
         }
         return $this->error('删除失败');

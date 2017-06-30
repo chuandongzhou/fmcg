@@ -127,7 +127,7 @@ function cartFunc() {
             cartSumPrice = 0,
             //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
-        cartShops.find('.parent-checkbox:checked').length == cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
+        cartShops.find('.parent-checkbox:checked').length === cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
             var obj = $(this),
                 shopSumPriceSpan = obj.find('.shop-sum-price'),
@@ -248,7 +248,7 @@ function cartFunc() {
         var tableNode = obj.closest('tbody'),
             goodsCheckboxCount = tableNode.find('.goods-checkbox').length,
             goodsCheckedCount = tableNode.find('input[type="checkbox"]:checked').length;
-        if (goodsCheckboxCount == goodsCheckedCount) {
+        if (goodsCheckboxCount === goodsCheckedCount) {
             parentCheckbox.children('.fa').addClass('fa-check').end().next('input').prop('checked', true);
         } else {
             parentCheckbox.children('.fa').removeClass('fa-check').end().next('input').prop('checked', false);
@@ -315,7 +315,6 @@ var numChange = function () {
                     obj.val(20000);
                 } else if (buyNum < minNum) {
                     obj.val(minNum);
-                    ;
                 } else {
                     changeDescButton();
                 }

@@ -259,6 +259,24 @@ body,
   color: #F25000;
 }
 
+.popover-panel .address-wrap {
+  padding-bottom: 45px;
+  overflow-y: scroll;
+}
+
+.popover-panel .address-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 5px;
+  background-color: #fff;
+}
+
+.popover-panel .address-footer a {
+  color: #fff !important;
+}
+
 .popover-panel .add-num {
   padding: 20px;
 }
@@ -279,6 +297,32 @@ body,
   vertical-align: middle;
   font-size: 2.5rem;
   color: #777777;
+}
+
+.popover-panel .address-list-item {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 5px 15px;
+}
+
+.popover-panel .address-list-item .set-item .btn {
+  padding: 2px 4px;
+}
+
+.popover-panel .address-list-item .set-item .iconfont,
+.popover-panel .address-list-item .set-item .nav-bottom .bottom-menu-item .fa,
+.nav-bottom .bottom-menu-item .popover-panel .address-list-item .set-item .fa {
+  font-size: 2.2rem;
+  color: #777777;
+  display: inline-block;
+  margin-left: 30px;
+}
+
+.popover-panel .address-list-item .check {
+  display: none;
+}
+
+.popover-panel .address-list-item.active .check {
+  display: inline-block;
 }
 
 .popover-error {
@@ -449,6 +493,10 @@ body,
 
 .m60 {
   margin-top: 45px !important;
+}
+
+.m90 {
+  margin-top: 91px !important;
 }
 
 .m185 {
@@ -891,7 +939,7 @@ body,
 
 .menu-list-wrap .list-item .icon {
   display: inline-block;
-  background: url("/images/mobile-images/menu_icons.png") top center no-repeat;
+  background: url("../../images/mobile-images/menu_icons.png") top center no-repeat;
   background-size: 75%;
   width: 60px;
   height: 60px;
@@ -1627,44 +1675,52 @@ body,
 .shopping-ideas {
   margin-top: 10px;
   background-color: #fff;
-  height: 40px;
+  height: 45px;
   line-height: 40px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .shopping-ideas .prompt {
-  font-size: 1.8rem;
+  font-size: 1.7rem;
 }
 
-.shopping-ideas .item-btn a {
+@media (max-width: 320px) {
+  .shopping-ideas .prompt {
+    font-size: 1.5rem;
+  }
+}
+
+.shopping-ideas .item-btn label {
   position: relative;
   height: 30px;
   width: 100%;
   border: 1px solid #e0e0e0;
   background-color: #fff;
   border-radius: 4px !important;
+  padding: 6px 2px !important;
 }
 
-.shopping-ideas .item-btn a .fa {
+.shopping-ideas .item-btn label .fa {
   position: absolute;
   right: 1px;
   bottom: 1px;
   display: none;
 }
 
-.shopping-ideas .item-btn a .triangle {
+.shopping-ideas .item-btn label .triangle {
   display: none;
 }
 
-.shopping-ideas .item-btn a.active {
+.shopping-ideas .item-btn label.active {
   border: 1px solid #F25000;
 }
 
-.shopping-ideas .item-btn a.active .fa {
+.shopping-ideas .item-btn label.active .fa {
   color: #fff;
   display: inline-block;
 }
 
-.shopping-ideas .item-btn a.active .triangle {
+.shopping-ideas .item-btn label.active .triangle {
   position: absolute;
   display: inline-block;
   width: 0;
@@ -1673,6 +1729,58 @@ body,
   right: 0;
   border-bottom: 25px solid #F25000;
   border-left: 25px solid transparent;
+}
+
+.delivery-wrap {
+  background-color: #fff;
+}
+
+.delivery-wrap .item {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 0;
+}
+
+.delivery-wrap .item .left-panel {
+  padding-left: 12px;
+}
+
+.delivery-wrap .item .left-panel .delivery-info .name-info {
+  font-size: 1.7rem;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.delivery-wrap .item .left-panel .address {
+  width: 100%;
+  font-size: 1.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 5px;
+}
+
+.delivery-wrap .item.shopping-ideas {
+  margin-top: 0;
+}
+
+.delivery-wrap .right-icon {
+  line-height: 50px;
+}
+
+.delivery-wrap .right-icon .iconfont,
+.delivery-wrap .right-icon .nav-bottom .bottom-menu-item .fa,
+.nav-bottom .bottom-menu-item .delivery-wrap .right-icon .fa {
+  color: #b4b4b4;
+}
+
+.delivery-wrap .prompt {
+  font-size: 1.7rem;
+}
+
+@media (max-width: 320px) {
+  .delivery-wrap .prompt {
+    font-size: 1.5rem;
+  }
 }
 
 .confirm-order-fixed {
@@ -1706,6 +1814,18 @@ body,
 
 .coupon-panel li + li {
   border-top: 1px solid #d2d2d2;
+}
+
+.coupon-panel li .pay-btn {
+  border: none;
+  background-color: #fff;
+  color: #000;
+  font-size: 1.7rem;
+  outline: none;
+}
+
+.pay-panel {
+  padding: 10px 0 10px 0;
 }
 
 .order-success-wrap .content .iconfont,
@@ -1764,6 +1884,7 @@ body,
 .mine-top-name .shop-name-panel .shop-info {
   padding-top: 5px;
   margin-left: 10px;
+  width: 78%;
 }
 
 .mine-top-name .shop-name-panel .shop-info .shop-name {
@@ -1774,6 +1895,10 @@ body,
 .mine-top-name .shop-name-panel .shop-info .shop-address {
   color: #f7ba91;
   margin-top: 3px;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .mine-top-name .set-up-icon {
@@ -1945,6 +2070,10 @@ body,
 
 .all-orders-list .list-item .item .item-col {
   padding: 3px 0;
+}
+
+.all-orders-list .list-item .item.order-title-panel {
+  color: #999999;
 }
 
 .all-orders-list .list-item .commodity-img {
@@ -2207,6 +2336,12 @@ body,
 
 .collection-commodity-container .shop-list-item .commodity-name {
   margin: 10px 0 0 10px;
+  width: 79%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /*======================================我的收藏 结束========================================*/
@@ -2508,7 +2643,8 @@ label {
 
 .zoomOut {
   animation-name: zoomOut;
-  display: none\0  !important;
+  display: none \0
+  !important;
 }
 
 .animated {
@@ -2701,3 +2837,47 @@ label {
 }
 
 /*======================================遮罩层 结束======================================*/
+
+/*======================================支付 开始======================================*/
+
+.pay-wrap .item {
+  border-top: 1px solid #f2f2f2;
+  padding: 10px;
+}
+
+.pay-wrap .pay-type-warp .prompt {
+  padding: 15px 0;
+  color: #000;
+}
+
+.pay-wrap .pay-type-warp .pay-type-item {
+  padding: 10px 5px;
+}
+
+.pay-wrap .pay-type-warp .pay-type-item input {
+  margin-right: 10px;
+}
+
+.pay-wrap .pay-type-warp .pay-type-item img {
+  width: 110px;
+}
+
+.pay-footer {
+  bottom: 10px;
+  height: 100px;
+}
+
+.pay-footer .prompt {
+  font-size: 1.3rem;
+}
+
+.pay-footer .submit {
+  width: 90%;
+  margin: auto;
+  border-radius: 4px !important;
+  border: 1px solid #F25000;
+  background-color: #F25000;
+  color: #fff;
+}
+
+/*======================================支付 结束======================================*/

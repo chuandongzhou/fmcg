@@ -203,8 +203,7 @@ class OrderController extends Controller
         //支付方式
         $payType = array_get($data, 'pay_type');
 
-
-        $orders = Order::ofSell(auth()->id(), $userId)
+        $orders = Order::ofSell(auth()->user()->shop_id)
             ->ofBuy($userId)
             ->useful()
             ->ofPayType($payType)

@@ -40,4 +40,14 @@ class ShippingAddress extends Model
     {
         return $this->morphOne('App\Models\AddressData', 'addressable');
     }
+
+    /**
+     * 获取详细地址
+     *
+     * @return string
+     */
+    public function getAddressNameAttribute()
+    {
+        return is_null($this->address) ? '' : $this->address->address_name;
+    }
 }

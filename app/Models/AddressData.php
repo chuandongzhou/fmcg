@@ -22,7 +22,6 @@ class AddressData extends Model
         'extra_common_param'
     ];
     protected $hidden = [
-        'type',
         'addressable_type',
         'addressable_id',
         'created_at',
@@ -76,7 +75,7 @@ class AddressData extends Model
      */
     public function getMinMoneyAttribute()
     {
-        return is_null($this->extra_common_param) ? 0 : $this->extra_common_param;
+        return is_null($this->extra_common_param) || !$this->extra_common_param  ? 0 : $this->extra_common_param;
     }
 
     /**

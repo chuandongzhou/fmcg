@@ -15,7 +15,7 @@
             {{--<option value="{{ $type }}">{{ $value }}</option>--}}
             {{--@endforeach--}}
             {{--</select>--}}
-            <input type="text" class="enter-control" name="name" placeholder="请输入购买商名称" value="{{ $name }}">
+            <input type="text" class="enter-control" name="name" placeholder="请输入进货 商名称" value="{{ $name }}">
             <a href="{{ url('admin/operation-data/order-amount?t=today') }}"
                class="time-format {{ array_get($data, 't') == 'today' ? 'active' : '' }}">今天</a>
             <a href="{{ url('admin/operation-data/order-amount?t=yesterday') }}"
@@ -86,7 +86,7 @@
             <table class="table money-table table-bordered shop-group">
                 <thead>
                 <tr>
-                    <th>购买商名称</th>
+                    <th>进货商名称</th>
                     <th>下单笔数</th>
                     <th>
                         下单总金额(元)
