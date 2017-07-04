@@ -1,5 +1,7 @@
 @extends('mobile.master')
 
+@section('subtitle', '登录')
+
 @section('body')
     <div class="container">
         <div class="row">
