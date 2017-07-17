@@ -49,7 +49,6 @@ class MyGoodsController extends Controller
      */
     public function store(Requests\Api\v1\CreateGoodsRequest $request)
     {
-
         $user = auth()->user();
 
         //判断有无缴纳保证金

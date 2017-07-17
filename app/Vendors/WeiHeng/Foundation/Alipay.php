@@ -264,7 +264,6 @@ function getAlipayConfig($type = 'pay', $config = [])
     $config = empty($config) ? config('alipay') : $config;
     $alipayConf = array_merge(array_except($config, ['pay', 'refund']), $config[$type]);
 
-
     $alipayConf['notify_url'] = url($alipayConf['notify_url']);
     isset($alipayConf['return_url']) && $alipayConf['return_url'] = url($alipayConf['return_url']);
     return $alipayConf;

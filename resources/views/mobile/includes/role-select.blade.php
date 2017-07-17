@@ -15,12 +15,12 @@
                     <i class="iconfont icon-jiantouyoujiantou"></i>
                 </a>
             </li>
-            <li>
-                <a href="javascript:;" data-type="{{ cons('user.type.supplier') }}">
-                    <img src="{{ asset('images/mobile-images/role_3.png') }}">我是供应商
-                    <i class="iconfont icon-jiantouyoujiantou"></i>
-                </a>
-            </li>
+            {{--<li>--}}
+                {{--<a href="javascript:;" data-type="{{ cons('user.type.supplier') }}">--}}
+                    {{--<img src="{{ asset('images/mobile-images/role_3.png') }}">我是供应商--}}
+                    {{--<i class="iconfont icon-jiantouyoujiantou"></i>--}}
+                {{--</a>--}}
+            {{--</li>--}}
         </ul>
     </div>
 </div>

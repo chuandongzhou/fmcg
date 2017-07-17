@@ -5,6 +5,7 @@
  * Date: 2015/9/28
  * Time: 10:05
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
@@ -44,7 +45,7 @@ class PayController extends Controller
         $channels = $this->pingxxConfig['channels'];
         $channel = $request->input('channel');
         $channel = in_array($channel, $channels) ? $channel : head($channel);
-        $orders = Order::where($field, $orderId)->get();
+        $orders = auth()->user()->orders()->useful()->noInvalid()->where($field, $orderId)->with('coupon')->get();
         if ($orders->isEmpty()) {
             return $this->error('获取失败，请重试');
         }
@@ -79,7 +80,7 @@ class PayController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param $orderId
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function balancepay(Request $request, $orderId)
     {
@@ -441,6 +442,7 @@ class PayController extends Controller
     private function _getExtra($channel, $request)
     {
         $extra = [];
+        $inWeb = $request->input('web');
         switch ($channel) {
             case  'yeepay_wap':
                 $extra = array(
@@ -450,7 +452,7 @@ class PayController extends Controller
                     'terminal_type' => 3,
                     'terminal_id' => auth()->id() . '',
                     'user_ua' => $request->server('HTTP_USER_AGENT'),
-                    'result_url' => url($this->pingxxConfig['success_url'][$channel])
+                    'result_url' => $inWeb ? url('order') : url($this->pingxxConfig['success_url'][$channel])
                 );
                 break;
             case  'alipay' :
@@ -458,8 +460,8 @@ class PayController extends Controller
                 break;
             case 'alipay_wap' :
                 $extra = array(
-                    'success_url' => url($this->pingxxConfig['success_url'][$channel]),
-                    'cancel_url' => url($this->pingxxConfig['cancel_url'][$channel])
+                    'success_url' => $inWeb ? url('order') : url($this->pingxxConfig['success_url'][$channel]),
+                    'cancel_url' => $inWeb ? url('order') : url($this->pingxxConfig['cancel_url'][$channel])
                 );
                 break;
         }

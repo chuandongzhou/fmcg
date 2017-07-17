@@ -39,6 +39,9 @@ $router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mo
     });
 
 
+/**
+ * 移动端
+ */
 $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');
     $router->get('category', 'CategoryController@index');
@@ -46,6 +49,7 @@ $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' 
     $router->get('search/{shop}/shop-goods', 'SearchController@shopGoods')->where('shop', '[0-9]+');
     $router->get('goods/{goods}', 'GoodsController@detail');
     $router->get('goods', 'GoodsController@index');
+    //店铺
     $router->group(['prefix' => 'shop'], function ($router) {
         $router->get('/', 'ShopController@index');
         $router->get('/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');
@@ -55,6 +59,31 @@ $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' 
         $router->get('/{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');
     });
     $router->get('cart', 'CartController@index');
+    $router->get('mine', 'MineController@index');
+
+    //订单
+    $router->group(['prefix' => 'order'], function ($router) {
+        $router->get('/', 'OrderController@index');
+        $router->get('un-sent', 'OrderController@unSent');
+        $router->get('non-payment', 'OrderController@nonPayment');
+        $router->get('wait-confirm', 'OrderController@waitConfirm');
+        $router->get('non-arrived', 'OrderController@nonArrived');
+        $router->get('{order}', 'OrderController@detail')->where('order', '[0-9]+');
+        $router->get('confirm-order', 'OrderController@confirmOrder');
+        $router->get('success-order', 'OrderController@successOrder');
+    });
+    //支付
+    $router->group(['prefix' => 'pay'], function ($router) {
+        $router->get('{orderId}', 'PayController@index')->where('orderId', '[0-9]+');
+        $router->get('yeepay/{orderId}', 'PayController@yeepay')->where('orderId', '[0-9]+');
+        $router->get('alipay/{orderId}', 'PayController@alipay')->where('orderId', '[0-9]+');
+        $router->get('balancepay/{orderId}', 'PayController@balancepay')->where('orderId', '[0-9]+');
+    });
+
+    $router->get('coupon', 'CouponController@index');
+    $router->resource('shipping-address', 'ShippingAddressController');
+    $router->get('like/goods', 'LikeController@goods');
+    $router->get('like/shops', 'LikeController@shops');
 });
 
 /**

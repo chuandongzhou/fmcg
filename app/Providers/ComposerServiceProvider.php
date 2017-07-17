@@ -65,7 +65,8 @@ class ComposerServiceProvider extends ServiceProvider
                 'includes.navigator',
                 'index.manage-master',
                 'mobile.includes.footer',
-                'mobile.goods.detail'
+                'mobile.goods.detail',
+                'mobile.cart.index'
             ],
             KeywordsComposer::class => [
                 'includes.search',

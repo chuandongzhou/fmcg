@@ -8,7 +8,7 @@
     <div class="fixed-header fixed-item commodity-details-nav">
         <div class="row margin-clear">
             <div class="col-xs-2 text-right">
-                <a class="iconfont icon-fanhui2 go-back"></a>
+                <a class="iconfont icon-fanhui2 go-back" onclick="window.history.back()"></a>
             </div>
             <div class="col-xs-10 text-right nav-shopping-cart">
                 <a class="iconfont icon-gouwuche" href="{{ url('cart') }}"><span class="badge">{{ $cartNum }}</span></a>
@@ -97,7 +97,7 @@
                 <a class="red"><i class="iconfont icon-jia1"></i><span>{{ $goods->min_num }}</span></a>
             </div>
             <div class="col-xs-4 join-cart pd-clear">
-                <button type="button" class="btn btn-primary add-cart">加入购物车</button>
+                <button type="button" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}" class="btn btn-primary add-cart">加入购物车</button>
             </div>
         </div>
     </div>
@@ -133,6 +133,39 @@
                 });
                 $(".popover-panel").parent().addClass("pd-clear");
 
+            });
+
+            //加入购物车
+            $('.add-cart').on('click', function () {
+                var obj = $(this), url = obj.data('url');
+                obj.button({
+                    loadingText: '<i class="fa fa-spinner fa-pulse"></i> 操作中...',
+                    doneText: '操作成功',
+                    failText: '操作失败'
+                });
+                obj.button('loading');
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {num: cartNum}
+                }).done(function () {
+                    obj.button('done');
+                    showMassage('加入成功')
+                }).fail(function (jqXHR) {
+                    obj.button('fail');
+                    var json = jqXHR['responseJSON'];
+                    if (json) {
+                        setTimeout(function () {
+                            showMassage(json['message']);
+                        }, 0);
+                    }
+                }).always(function () {
+                    setTimeout(function () {
+                        obj.button('reset');
+                    }, 2000);
+                });
+
+                return false;
             });
             likeFunc();
         })

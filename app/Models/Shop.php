@@ -70,7 +70,7 @@ class Shop extends Model
             $model->ShopSignature()->delete();
             $model->promo()->delete();
             $model->asset()->delete();
-            Inventory::where('shop_id',$model->id)->delete();
+            Inventory::where('shop_id', $model->id)->delete();
         });
         static::updated(function ($model) {
             (new UserService(true))->setShopDetail($model->user);
@@ -273,8 +273,8 @@ class Shop extends Model
      */
     public function salesmen()
     {
-        if($this->user_type == cons('user.type.maker')){
-            return $this->hasMany('App\Models\Salesman','maker_id');
+        if ($this->user_type == cons('user.type.maker')) {
+            return $this->hasMany('App\Models\Salesman', 'maker_id');
         }
         return $this->hasMany('App\Models\Salesman');
     }
@@ -296,8 +296,8 @@ class Shop extends Model
      */
     public function salesmanCustomer()
     {
-        if($this->user_type != cons('user.type.maker')){
-            return $this->hasOne(SalesmanCustomer::class)->where('salesmanCustomer.shop_id','<>',$this->id);
+        if ($this->user_type != cons('user.type.maker')) {
+            return $this->hasOne(SalesmanCustomer::class)->where('salesmanCustomer.shop_id', '<>', $this->id);
         }
         return $this->hasOne(SalesmanCustomer::class);
     }
@@ -345,6 +345,7 @@ class Shop extends Model
 
     /**
      * 店铺资产
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function asset()
@@ -354,15 +355,17 @@ class Shop extends Model
 
     /**
      * 店铺资产申请使用与审核
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function assetApply()
     {
-        return $this->hasManyThrough('App\Models\AssetApply','App\Models\Asset');
+        return $this->hasManyThrough('App\Models\AssetApply', 'App\Models\Asset');
     }
 
     /**
      * 店铺促销活动
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function promo()
@@ -372,6 +375,7 @@ class Shop extends Model
 
     /**
      * 店铺参与促销商品
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function promoGoods()
@@ -381,23 +385,25 @@ class Shop extends Model
 
     /**
      * 店铺促销活动申请使用与审核
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function promoApply()
     {
-        return $this->hasManyThrough('App\Models\PromoApply','App\Models\Promo');
+        return $this->hasManyThrough('App\Models\PromoApply', 'App\Models\Promo');
     }
 
     /**
      * 店铺库存
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function inventory()
     {
-        return $this->hasMany('App\Models\Inventory'); 
+        return $this->hasMany('App\Models\Inventory');
     }
-    
-    
+
+
     /**
      * 获取热门商家
      *
@@ -463,7 +469,7 @@ class Shop extends Model
     {
         return $query->whereHas('user', function ($q) use ($myType, $shopType) {
             $nowTime = Carbon::now();
-            $q->active()->where('type', '>', $myType)/*->where('deposit', '>', 0)->where('expire_at', '>',
+            $q->active()->where('type', '>', $myType)->where('type', '<', cons('user.type.maker'))/*->where('deposit', '>', 0)->where('expire_at', '>',
                 $nowTime)*/
             ->where('audit_status', cons('user.audit_status.pass'));
             if ($shopType) {

@@ -66,12 +66,11 @@
                                                        data-status="{{ $goods->status }}"
                                                        data-on='<i class="fa  fa-check"></i> 启用'
                                                        data-off='<i class="fa  fa-minus-circle"></i> 禁用'
+                                                       data-change-status="true"
                                                        class="no-form  ajax-no-form">
-
                                                         <i class="fa {{ $goods->status ? 'fa-minus-circle' : 'fa-check' }}"></i>
                                                         {{ cons()->valueLang('status' , !$goods->status) }}
                                                     </a>
-
                                                     <a data-url="{{ url('api/v1/business/mortgage-goods/'. $goods->id) }}"
                                                        data-method="delete" class="red delete-no-form">
                                                         <i class="fa fa-trash-o"></i> 删除
@@ -105,14 +104,10 @@
                                 </a>
                             </span>
                                 </div>
-
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
             </form>
         </div>
     </div>

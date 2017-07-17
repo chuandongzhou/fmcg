@@ -75,7 +75,15 @@ class OrderController extends Controller
      */
     public function getNonPayment()
     {
-        $orders = Order::ofBuy(auth()->id())->nonPayment()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonPayment()->with([
+            'shop.user',
+            'user',
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -87,7 +95,15 @@ class OrderController extends Controller
      */
     public function getNonArrived()
     {
-        $orders = Order::ofBuy(auth()->id())->nonArrived()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
+        $orders = Order::ofBuy(auth()->id())->nonArrived()->with([
+            'shop.user',
+            'user',
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->paginate();
 
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
@@ -99,7 +115,15 @@ class OrderController extends Controller
      */
     public function getWaitConfirmByUser()
     {
-        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->with(['shop.user', 'user', 'coupon', 'goods'])->paginate();
+        $orders = Order::ofBuy(auth()->id())->WaitConfirm()->with([
+            'shop.user',
+            'user',
+            'coupon',
+            'goods' => function ($query) {
+                $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
+                    cons('order.goods.type.order_goods'));
+            }
+        ])->paginate();
         return $this->success($this->_hiddenOrdersAttr($orders));
     }
 
@@ -680,7 +704,7 @@ class OrderController extends Controller
      * 确认订单消息
      *
      * @param \Illuminate\Http\Request $request
-     * @return $this|\Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postConfirmOrder(Request $request)
     {
@@ -715,9 +739,7 @@ class OrderController extends Controller
      */
     public function postSubmitOrder(Request $request)
     {
-
         $data = $request->all();
-
         $orderService = new OrderService;
 
         $result = $orderService->orderSubmitHandle($data);
@@ -872,7 +894,7 @@ class OrderController extends Controller
         $order = $orderGoods->order;
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
-            
+
             if ($order->status == cons('order.status.send')) {
                 $inventoryService = new InventoryService();
                 //清除出库记录

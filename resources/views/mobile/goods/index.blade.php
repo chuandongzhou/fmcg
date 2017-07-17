@@ -43,9 +43,9 @@
                             </a>
                         </div>
                     @endforeach
-                        <div class="col-xs-12 text-center  loading-image hidden">
-                            <i class="fa fa-spinner fa-pulse"></i>
-                        </div>
+                    <div class="col-xs-12 text-center  loading-image hidden">
+                        <i class="fa fa-spinner fa-pulse"></i>
+                    </div>
                 </div>
 
             </div>

@@ -62,8 +62,8 @@ return [
         ],
         //订单打印模块
         'templete' => [
-            'first' => '296mm*209mm模板一',
-            'second' => '296mm*209mm模板二',
+            'first' => '219mm*140mm模板一',
+            'second' => '219mm*140mm模板二',
             'third' => '209mm*296mm模板一',
             'fourth' => '209mm*296mm模板二'
         ],

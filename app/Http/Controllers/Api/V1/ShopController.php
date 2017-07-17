@@ -5,6 +5,7 @@
  * Date: 2015/9/18
  * Time: 11:35
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 
@@ -50,7 +51,9 @@ class ShopController extends Controller
             ->with('logo', 'shopAddress', 'user')
             ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('distance')->paginate();
         $shops->each(function ($item) {
-            $item->three_goods = $item->goods()->active()->ofNew()->limit(3)->get();
+            $recommendGoods = $item->recommendGoods()->limit(3)->get();
+            $recommendGoodsCount = $recommendGoods->count();
+            $item->three_goods = $recommendGoodsCount == 0 ? $item->goods()->active()->ofNew()->limit(3)->get() : $recommendGoods;
             $item->setAppends(['goods_count', 'sales_volume', 'logo_url'])->setHidden(['goods']);
         });
         return $this->success($shops->toArray());
@@ -81,7 +84,7 @@ class ShopController extends Controller
                 [
                     'shop' => new Shop(),
                     'goods' => [],
-                    'isLike' =>false
+                    'isLike' => false
                 ]);
         }
 

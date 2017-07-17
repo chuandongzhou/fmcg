@@ -120,7 +120,7 @@ class GoodsService
      */
     static function getShopGoods($shop, $data = [], $with = [])
     {
-        $goods = $shop->goods()->with($with);
+        $goods = $shop->goods()->ofGift(array_get($data, 'is_gift'))->with($with);
         /**
          * 状态
          */

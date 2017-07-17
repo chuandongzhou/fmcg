@@ -126,7 +126,7 @@
                                                     </a>
                                                 @endif
                                             </td>
-                                            <td width="15%">{{ empty($order['remark'])?'--':$order['remark'] }}</td>
+                                            <td width="15%">{{ empty($order['remark']) ? '--' : $order['remark'] }}</td>
                                             <td class="operate">
                                                 @if(!$order['is_cancel'])
                                                     @if($order->pay_type==cons('pay_type.pick_up'))
@@ -167,90 +167,90 @@
                                             </td>
                                         </tr>
 
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                @if( $order->pay_type!=cons('pay_type.pick_up'))
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">收货人信息</h3>
-                            </div>
-                            <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center table-th-color">
-                                    <thead>
-                                    <th>联系人</th>
-                                    <th>联系电话</th>
-                                    <th>收货地址</th>
-                                    </thead>
-                                    <tr>
-                                        <td>{{   $order->shippingAddress->consigner ?? ''}}</td>
-                                        <td>{{ $order->shippingAddress->phone ?? ''}}</td>
-                                        <td>
-                                            <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
-                                            <p class="prop-item">
-                                                <a href="javascript:" data-target="#shippingAddressMapModal"
-                                                   data-toggle="modal"
-                                                   data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
-                                                   data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
-                                                   data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
-                                                   data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
-                                                   data-phone= {{ $order->shippingAddress->phone ?? ''}}>
-                                                    <i class="iconfont icon-chakanditu"></i> 查看地图
-                                                </a>
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @else
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">商家信息</h3>
+                        @if( $order->pay_type!=cons('pay_type.pick_up'))
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">收货人信息</h3>
+                                    </div>
+                                    <div class="panel-container table-responsive">
+                                        <table class="table table-bordered table-center table-th-color">
+                                            <thead>
+                                            <th>联系人</th>
+                                            <th>联系电话</th>
+                                            <th>收货地址</th>
+                                            </thead>
+                                            <tr>
+                                                <td>{{  $order->shippingAddress->consigner ?? ''}}</td>
+                                                <td>{{ $order->shippingAddress->phone ?? ''}}</td>
+                                                <td>
+                                                    <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
+                                                    <p class="prop-item">
+                                                        <a href="javascript:" data-target="#shippingAddressMapModal"
+                                                           data-toggle="modal"
+                                                           data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
+                                                           data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
+                                                           data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
+                                                           data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
+                                                           data-phone= {{ $order->shippingAddress->phone ?? ''}}>
+                                                            <i class="iconfont icon-chakanditu"></i> 查看地图
+                                                        </a>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center table-th-color">
-                                    <thead>
-                                    <th>商家名称</th>
-                                    <th>联系人</th>
-                                    <th>联系电话</th>
-                                    <th>店铺地址</th>
-                                    </thead>
-                                    <tr>
-                                        <td>
-                                            <p>{{ $order['shop']['name'] }}</p>
-                                            <p class="prop-item">
-                                                <a href="javascript:"
-                                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
-                                            </p>
-                                        </td>
-                                        <td>{{ $order['shop']['contact_person'] }}</td>
-                                        <td>{{ $order['shop']['contact_info'] }}</td>
-                                        <td>
-                                            <p> {{  $order->shop ? $order->shop->address : ''  }}</p>
-                                            <p class="prop-item">
-                                                <a href="javascript:" data-target="#shippingAddressMapModal"
-                                                   data-toggle="modal"
-                                                   data-name="pick_up"
-                                                   data-x-lng="{{ $order->shop ?  $order->shop->x_lng : 0  }}"
-                                                   data-y-lat="{{ $order->shop ?  $order->shop->y_lat : 0}}"
-                                                   data-address="{{ $order->shop ? $order->shop->address : '' }}"
-                                                   data-consigner="{{ $order->shop ? $order->shop->contact_person : ''  }}"
-                                                   data-phone= {{  $order->shop ? $order->shop->contact_info : '' }}>
-                                                    <i class="iconfont icon-chakanditu"></i> 查看地图
-                                                </a>
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </table>
+                        @else
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">商家信息</h3>
+                                    </div>
+                                    <div class="panel-container table-responsive">
+                                        <table class="table table-bordered table-center table-th-color">
+                                            <thead>
+                                            <th>商家名称</th>
+                                            <th>联系人</th>
+                                            <th>联系电话</th>
+                                            <th>店铺地址</th>
+                                            </thead>
+                                            <tr>
+                                                <td>
+                                                    <p>{{ $order['shop']['name'] }}</p>
+                                                    <p class="prop-item">
+                                                        <a href="javascript:"
+                                                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order['shop']['id']) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                                           class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
+                                                    </p>
+                                                </td>
+                                                <td>{{ $order['shop']['contact_person'] }}</td>
+                                                <td>{{ $order['shop']['contact_info'] }}</td>
+                                                <td>
+                                                    <p> {{  $order->shop ? $order->shop->address : ''  }}</p>
+                                                    <p class="prop-item">
+                                                        <a href="javascript:" data-target="#shippingAddressMapModal"
+                                                           data-toggle="modal"
+                                                           data-name="pick_up"
+                                                           data-x-lng="{{ $order->shop ?  $order->shop->x_lng : 0  }}"
+                                                           data-y-lat="{{ $order->shop ?  $order->shop->y_lat : 0}}"
+                                                           data-address="{{ $order->shop ? $order->shop->address : '' }}"
+                                                           data-consigner="{{ $order->shop ? $order->shop->contact_person : ''  }}"
+                                                           data-phone= {{  $order->shop ? $order->shop->contact_info : '' }}>
+                                                            <i class="iconfont icon-chakanditu"></i> 查看地图
+                                                        </a>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
                         @endif
                         @if($order->pay_type!=cons('pay_type.pick_up') && (int)$order['send_at'])

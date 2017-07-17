@@ -55,7 +55,7 @@
                         <span class="control-label">所在地</span>
                         <div class="address pull-right">
                             <a id="txt_area">
-                                <span id="address-area" data-id="220000,220400,220422"></span>
+                                <span id="address-area"></span>
                                 <i class="iconfont icon-jiantouyoujiantou right-arrow pull-right"></i>
                             </a>
                         </div>
@@ -64,7 +64,7 @@
                         <span class="control-label">街道</span>
                         <div class="address pull-right">
                             <a id="txt_street">
-                                <span id="address-street" data-level="1" data-id="220422101"></span>
+                                <span id="address-street" data-level="1"></span>
                                 <i class="iconfont icon-jiantouyoujiantou right-arrow pull-right"></i>
                             </a>
                         </div>
@@ -131,22 +131,26 @@
             var json = formatAddress(addressData)
                 , addressArea = $('#address-area')
                 , addressStreet = $('#address-street')
-                , addressName = '';
+                , addressName = ''
+                , provinceInput = $('input[name="address[province_id]"]')
+                , cityInput = $('input[name="address[city_id]"]')
+                , districtInput = $('input[name="address[district_id]"]')
+                , streetInput = $('input[name="address[street_id]"]')
+                , areaNameInput = $('input[name="address[area_name]"]');
             addressSelect(json, '#txt_area', addressArea, function (scroller, text, value) {
                 addressStreet.html('');
                 $('#txt_street').unbind('click');
                 addressName = text.join('');
                 addressArea.html(addressName);
-                $('input[name="address[province_id]"]').val(value[0]);
-                $('input[name="address[city_id]"]').val(value[1]);
-                $('input[name="address[district_id]"]').val(value[2]);
-                $('input[name="address[street_id]"]').val(0);
-                $('input[name="address[area_name]"]').val(addressName);
+                provinceInput.val(value[0]);
+                cityInput.val(value[1]);
+                districtInput.val(value[2]);
+                streetInput.val(0);
+                areaNameInput.val(addressName);
                 if (value[2]) {
-                    setStreetArea(value[2], addressStreet);
+                    setStreetArea(value[2], addressStreet, streetInput, areaNameInput);
                 }
             });
-            setStreetArea(220422, addressStreet);
             imageUpload();
 
             /* $('input[type="file"]').change(function () {

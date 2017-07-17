@@ -88,7 +88,7 @@ class DeliveryController extends Controller
      */
     public function orders()
     {
-        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->useful()->with('user.shop',
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->useful()->noInvalid()->with('user.shop',
             'shippingAddress.address', 'coupon')->get();
 
         $orders->each(function ($order) {

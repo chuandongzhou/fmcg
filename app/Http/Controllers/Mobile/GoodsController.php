@@ -70,6 +70,12 @@ class GoodsController extends Controller
         return view('mobile.goods.index', compact('name', 'goods', 'cateName'));
     }
 
+    /**
+     * 商品详情
+     *
+     * @param $goods
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\WeiHeng\Responses\IndexResponse
+     */
     public function detail($goods)
     {
         if (Gate::denies('validate-goods', $goods)) {

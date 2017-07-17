@@ -1,5 +1,7 @@
 @extends('mobile.master')
 
+@section('subtitle', '登录')
+
 @section('body')
     <div class="container">
         <div class="row">
@@ -10,7 +12,7 @@
             </div>
         </div>
         <div class="row enter-wrap login-content">
-            <form class="mobile-ajax-form" action="{{ url('api/v1/auth/login') }}" data-no-prompt="true" data-done-url="{{ url('/') }}" method="post">
+            <form class="mobile-ajax-form" action="{{ url('api/v1/auth/login') }}" data-done-text="登录成功" data-done-url="{{ url('/') }}" method="post">
                 <div class="col-xs-12 ">
                     <div class="enter-item">
                         <div class="icon-panel role-panel">

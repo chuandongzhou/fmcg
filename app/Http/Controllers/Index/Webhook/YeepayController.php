@@ -51,7 +51,7 @@ class YeepayController extends Controller
 
                 if ($r9_BType == "1") {
                     //TODO:跳转至交易成功
-                    return redirect(url('order-buy'));
+                    return redirect(url(in_windows() ? 'order-buy' : 'order'));
                 } elseif ($r9_BType == "2") {
                     //如果需要应答机制则必须回写流,以success开头,大小写不敏感.;
                     $field = $r8_MP == 'all' ? 'pid' : 'id';
