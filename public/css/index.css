@@ -120,6 +120,7 @@ a:hover {
 
 .public-table tbody tr td {
   vertical-align: middle;
+  word-wrap: break-word;
 }
 
 .table-title-blue {
@@ -6515,6 +6516,29 @@ table .product-panel .promotions {
   color: #4cb9fe;
 }
 
+.table-scroll table tr td,
+.table-scroll table tr th,
+.table-scroll .table-list-row .shopping-table-list table tr td,
+.table-list-row .shopping-table-list .table-scroll table tr td {
+  padding: 15px 5px;
+}
+
+.table-scroll table tr .title {
+  background-color: #ffffe6;
+}
+
+.table-scroll table tr .title-blue {
+  background-color: #e2f8f7;
+}
+
+.table-scroll table tr .title-gray {
+  background-color: #f2f2f2;
+}
+
+.table-scroll table tr .text-right {
+  text-align: right !important;
+}
+
 .business-table tr th,
 .business-table .table-list-row .shopping-table-list table tr td,
 .table-list-row .shopping-table-list table .business-table tr td,
@@ -6805,6 +6829,18 @@ table .product-panel .promotions {
 .table-list-row .shopping-table-list .temple-table table tr td {
   padding: 0 !important;
   border: 1px solid #777777 !important;
+}
+
+.temple-table .item {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row;
+  flex-flow: row;
+}
+
+.temple-table .item .column {
+  -ms-flex: 1;
+  flex: 1;
 }
 
 .temple-table-y {
@@ -7390,6 +7426,10 @@ table .product-panel .promotions {
   background-color: #fff;
 }
 
+.white-bg {
+  background-color: #fff !important;
+}
+
 .salesman-table-wrap {
   width: 800px;
   height: 450px;
@@ -7862,8 +7902,8 @@ table .product-panel .promotions {
   display: inline-block;
 }
 
-.good-ontheway .product-name {
-  width: 85% !important;
+#good-ontheway .product-name {
+  width: 400px !important;
 }
 
 /*==============库存管理end=================*/
@@ -8220,3 +8260,19 @@ table .product-panel .promotions {
 }
 
 /*==============保证金end=================*/
+
+.stock-warning {
+  display: inline-block;
+  width: 50px;
+  vertical-align: bottom !important;
+}
+
+.warning-edit-icon {
+  visibility: hidden !important;
+  color: #169bd5;
+  cursor: pointer;
+}
+
+.goods-table table tr:hover .warning-edit-icon {
+  visibility: inherit !important;
+}
