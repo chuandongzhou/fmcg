@@ -10,15 +10,12 @@
     @parent
     <div class="container-fluid">
         <div class="row mine-top-name">
-            <div class="col-xs-11 shop-name-panel pd-right-clear">
+            <div class="col-xs-12 shop-name-panel clearfix">
                 <img src="{{ $shop->logo_url }}" class="shop-img pull-left" />
                 <div class="pull-left shop-info">
                     <div class="shop-name">{{ $shop->name }}</div>
                     <div class="shop-address">{{ $shop->address }}</div>
                 </div>
-            </div>
-            <div class="col-xs-1 set-up-icon">
-                <a class="iconfont icon-shezhi"></a>
             </div>
         </div>
         <div class="row white-bg">
@@ -59,8 +56,8 @@
                 </a>
             </div>
         </div>
-        <div class="row mine-list-wrap white-bg">
-            <div class="col-xs-12">
+        <div class="row mine-list-wrap ">
+            <div class="col-xs-12 white-bg">
                 <a class="list-item" href="{{ url('coupon') }}">
                     <i class="iconfont icon-yhq left-icon"></i>
                     <span>我的优惠券</span>
@@ -76,6 +73,9 @@
                     <span>我的收藏</span>
                     <i class="iconfont icon-jiantouyoujiantou pull-right"></i>
                 </a>
+            </div>
+            <div class="col-xs-12 sign-out">
+                <a href="{{ url('auth/logout') }}" class="btn btn-primary">退出登录</a>
             </div>
         </div>
     </div>

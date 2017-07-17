@@ -88,10 +88,10 @@
 @stop
 @section('footer')
     <div class="fixed-footer fixed-item nav-bottom pd-clear">
-        <div class="row">
+        <div class="row commodity-footer">
             <a class="bottom-menu-item col-xs-4 btn" href="{{ url('shop/' . $goods->shop_id) }}">
                 <i class="iconfont icon-shangpu"></i>
-                <div class="item-name">进入商铺</div>
+                进入商铺
             </a>
             <div class="col-xs-4 add-shopping-num pd-clear">
                 <a class="red"><i class="iconfont icon-jia1"></i><span>{{ $goods->min_num }}</span></a>

@@ -7,7 +7,7 @@
 @section('header')
     <div class="fixed-header fixed-item">
         <div class="row nav-top">
-            <div class="col-xs-2 menu-sort">
+            <div class="col-xs-2 menu-sort pd-clear">
                 <a href="{{ url('category') }}">
                     <i class="iconfont icon-fenlei"></i>
                     <span>分类</span>
@@ -56,12 +56,14 @@
         <div class="row">
             <div class="col-xs-12 menu-list-wrap">
                 @foreach($categories as $key => $category)
-                    <div class="list-item">
-                        <i class="icon jiushui"></i>
-                        <div class="item-name">
-                            <a href="{{ url('category?cate=' . $category['id']) }}">{{ $category['name'] }}</a>
+                    <a href="{{ url('category?cate=' . $category['id']) }}">
+                        <div class="list-item">
+                            <i class="icon jiushui"></i>
+                            <div class="item-name">
+                                {{ $category['name'] }}
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>

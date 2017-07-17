@@ -13,7 +13,7 @@
 @stop
 
 @section('body')
-    <div class="fixed-header fixed-item">
+    <div class="fixed-header fixed-item  reg-fixed-item">
         注册
     </div>
     <div class="container reg-container">
@@ -39,7 +39,7 @@
 
         </div>
     </div>
-    <div class="fixed-footer fixed-item">
-        <button onclick="window.location.href='{{ url('auth/login') }}'">去登录</button>
+    <div class="fixed-footer fixed-item  reg-fixed-item">
+        <button onclick="window.location.href='{{ url('auth/login') }}'" class="prev-next">去登录</button>
     </div>
 @stop

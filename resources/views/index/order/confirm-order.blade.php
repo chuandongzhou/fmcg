@@ -416,10 +416,9 @@
             obj.addClass('active').siblings().removeClass("active");
         });
 
-        $('.pay-type-list').find('.pay-type').on('click', function () {
+        $('.pay-type-list  .pay-type').on('click', function () {
             var self = $(this);
-            self.find('input[name="pay_type"]').attr('checked', 'checked');
-            self.parent().siblings().find('input[name="pay_type"]').removeAttr('checked');
+            self.find('input[name="pay_type"]').prop('checked', true);
             self.addClass("active").parents().siblings().children().removeClass("active");
         });
 

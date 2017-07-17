@@ -1806,6 +1806,7 @@ jQuery(function () {
 
     // 通用杂项方法设置
     commonMethodSetup();
+
 });
 
 if (!window.console) {

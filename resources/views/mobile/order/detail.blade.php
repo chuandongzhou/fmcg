@@ -7,7 +7,7 @@
 @section('header')
     <div class="fixed-header fixed-item white-bg orders-details-header">
         <div class="row nav-top">
-            <div class="col-xs-12 color-black">订单详情</div>
+            <div class="col-xs-12">订单详情</div>
         </div>
     </div>
 @stop
@@ -42,9 +42,8 @@
         <div class="row all-orders-list">
             <div class="col-xs-12 list-item">
                 <div class="item">
-                    <a class="pull-left shop-name">{{ $order->user_shop_name }} <i
+                    <a class="pull-left shop-name">{{ $order->shop_name }} <i
                                 class="iconfont icon-jiantouyoujiantou"></i></a>
-                    {{--<div class="pull-right"><i class="iconfont icon-kefu"></i> 联系卖家</div>--}}
                 </div>
             </div>
             <div class="col-xs-12 list-item">

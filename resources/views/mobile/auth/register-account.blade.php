@@ -4,7 +4,7 @@
 
 @section('body')
     @parent
-    <div class="fixed-header fixed-item">
+    <div class="fixed-header fixed-item reg-fixed-item">
         注册
     </div>
     <form class="mobile-ajax-form" action="{{ url('api/v1/auth/register-user') }}" method="post"
@@ -20,13 +20,11 @@
             </div>
             <div class="row enter-wrap">
                 <div class="col-xs-12 ">
-
-                    <div class="enter-item">
+                    <div class="enter-item role-enter">
                         <div class="icon-panel role-panel">
                             <a href="javascript:;" class="select-role">
                                 <img class="active" src="{{ asset('images/mobile-images/role_1.png') }}">
                                 <img src="{{ asset('images/mobile-images/role_2.png') }}">
-                                <img src="{{ asset('images/mobile-images/role_3.png') }}">
                             </a>
                             <span class="triangle">
                                 <input type="hidden" name="type" value="{{ cons('user.type.retailer') }}">
@@ -53,8 +51,8 @@
                 </div>
             </div>
         </div>
-        <div class="fixed-footer fixed-item">
-            <button type="submit"> 下一步</button>
+        <div class="fixed-footer fixed-item  reg-fixed-item">
+            <button type="submit" class="prev-next"> 下一步</button>
         </div>
     </form>
     @include('mobile.includes.role-select')

@@ -22,10 +22,11 @@ class ShopController extends Controller
         $type = auth()->check() ? auth()->user()->type : cons('user.type.retailer');
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
+        $name = $request->input('name');
 
         $shops = Shop::select('id', 'name', 'min_money', 'user_id', 'contact_person', 'contact_info')
             ->with('logo', 'shopAddress', 'user')
-            ->OfUser($type)->OfDeliveryArea($data)->OfName($request->input('name'))->orderBy('id')->paginate();
+            ->OfUser($type)->OfDeliveryArea($data)->OfName($name)->orderBy('id')->paginate();
         $shops->each(function ($item) {
             $item->three_goods = $item->goods()->active()->ofNew()->limit(3)->get();
             $item->setAppends(['goods_count', 'sales_volume', 'logo_url', 'user_type'])->setHidden(['goods']);
@@ -36,7 +37,7 @@ class ShopController extends Controller
 
             return $this->success(compact('shops'));
         }
-        return view('mobile.shop.index', compact('shops'));
+        return view('mobile.shop.index', compact('shops', 'name'));
     }
 
     /**

@@ -11,14 +11,25 @@
         <div class="row sort-wrap">
             <div class="col-xs-12 pd-clear product-wrap">
                 @foreach($goods as $item)
+
                     <div class="product-col">
-                        <img class="product-img lazy" data-original="{{ $item->image_url }}">
-                        <span class="@if($item->is_out)prompt lack @elseif($item->is_promotion)prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
+                        <a href="{{ url('goods/' . $item->id) }}">
+                            <img class="product-img lazy" data-original="{{ $item->image_url }}">
+                            <span class="@if($item->is_out)prompt lack @elseif($item->is_promotion)prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
+                        </a>
                         <div class="product-info">
                             <div class="product-name">{{ $item->name }}</div>
-                            <div class="product-price red">¥{{ $item->price . '/' . $item->pieces }}</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-left product-price red">¥{{ $item->price . '/' . $item->pieces }}</div>
+                            <a href="javascript:" class="join-cart pull-right mobile-ajax" data-method="post"
+                               data-url="{{ url('api/v1/cart/add/' . $item->id) }}" data-done-then="none">
+                                <i class="iconfont icon-gouwuche"></i>
+                            </a>
                         </div>
                     </div>
+
+
                 @endforeach
                 <div class="col-xs-12 text-center  loading-image hidden">
                     <i class="fa fa-spinner fa-pulse"></i>

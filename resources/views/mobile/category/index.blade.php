@@ -5,11 +5,8 @@
 @section('body')
     @parent
     <div class="fixed-header fixed-item sort-top-nav">
-        <div class="row nav-top">
-            <div class="col-xs-2">
-                <a class="iconfont icon-fanhui2 go-back" href="javascript:window.history.back()"></a>
-            </div>
-            <div class="col-xs-10 color-black pd-left-clear">
+        <div class="row nav-top white-bg">
+            <div class="col-xs-12 color-black">
                 分类
             </div>
         </div>

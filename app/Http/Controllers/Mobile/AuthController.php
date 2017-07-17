@@ -49,6 +49,7 @@ class AuthController extends Controller
     public function registerShop()
     {
         $user = session('user');
+
         if (empty($user) || !array_get($user, 'password')) {
             return redirect(url('auth/register-account'));
         }

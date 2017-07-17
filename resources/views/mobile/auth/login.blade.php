@@ -19,7 +19,6 @@
                             <a href="javascript:;" class="select-role">
                                 <img class="active" src="{{ asset('images/mobile-images/role_1.png') }}">
                                 <img src="{{ asset('images/mobile-images/role_2.png') }}">
-                                <img src="{{ asset('images/mobile-images/role_3.png') }}">
                             </a>
                             <span class="triangle">
                                 <input type="hidden" name="type" value="{{ cons('user.type.retailer') }}"/>

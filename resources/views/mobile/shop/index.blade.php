@@ -8,10 +8,12 @@
     <div class="fixed-header fixed-item">
         <div class="row nav-top margin-clear">
             <div class="col-xs-12 search-item">
-                <div class="panel">
-                    <i class="iconfont icon-search"></i>
-                    <input type="text" class="search" placeholder="查找商铺"/>
-                </div>
+                <form action="{{ url('shop') }}" method="get">
+                    <div class="panel">
+                        <i class="iconfont icon-search"></i>
+                        <input type="text" class="search" name="name" value="{{ $name }}" placeholder="查找商铺"/>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

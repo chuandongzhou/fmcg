@@ -2,7 +2,7 @@
 
 @section('body')
     @parent
-    <div class="fixed-header fixed-item">
+    <div class="fixed-header fixed-item reg-fixed-item">
         忘记密码
     </div>
     <form class="mobile-ajax-form" action="{{ url('api/v1/auth/backup') }}" method="post" data-done-then="none"
@@ -40,8 +40,8 @@
             </div>
 
         </div>
-        <div class="fixed-footer fixed-item">
-            <button type="submit">完成</button>
+        <div class="fixed-footer fixed-item  reg-fixed-item">
+            <button type="submit" class="prev-next">完成</button>
         </div>
     </form>
     <!--找回密码 弹出层-->

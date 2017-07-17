@@ -3,8 +3,8 @@
 @section('subtitle', '收货地址')
 
 @section('header')
-    <div class="fixed-header fixed-item white-bg orders-details-header">
-        <div class="row nav-top">
+    <div class="fixed-header fixed-item orders-details-header">
+        <div class="row nav-top white-bg">
             <div class="col-xs-12 color-black">收货地址</div>
         </div>
     </div>

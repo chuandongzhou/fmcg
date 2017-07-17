@@ -3,8 +3,8 @@
 @section('subtitle', '我的优惠券')
 
 @section('header')
-    <div class="fixed-header fixed-item white-bg orders-details-header">
-        <div class="row nav-top">
+    <div class="fixed-header fixed-item orders-details-header">
+        <div class="row nav-top  white-bg">
             <div class="col-xs-12 color-black">我的优惠券</div>
         </div>
     </div>
@@ -20,7 +20,7 @@
                         <div class="price">¥<b>{{ $coupon->discount }}</b></div>
                         <div class="condition">满{{ $coupon->full }}使用</div>
                     </div>
-                    <div class="pull-right shop-panel">
+                    <div class="shop-panel">
                         <div class="shop-name">{{ $coupon->shop  ? $coupon->shop->name : '' }}</div>
                         <div class="date">
                             <span>{{ $coupon->end_at }} 前有效</span>

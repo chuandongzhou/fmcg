@@ -76,7 +76,7 @@ class CartController extends Controller
         if (is_null($goodsInfo)) {
             return $this->error('商品不存在');
         }
-        $buyNum = intval($request->input('num'));
+        $buyNum = intval($request->input('num', $goodsInfo->min_num));
         if ($goodsInfo->min_num > $buyNum) {
             return $this->error('不能小于购买量');
         }

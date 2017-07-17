@@ -37,3 +37,10 @@
         </div>
     </div>
 @stop
+
+@section('js')
+    @parent
+    <script type="text/javascript">
+        likeFunc();
+    </script>
+@stop

@@ -1,10 +1,7 @@
 /**
  * Created by Colin on 2017/5/31.
  */
-
-
 var Common = function () {
-
     this.loadingCount = 0;
     this.loadingTarget = undefined;
     this.data = [];
