@@ -586,7 +586,7 @@ return [
                 'passed' => 1
             ],
             'type' => [
-                'order' => 0,
+                'order' => 0, 
                 'return_order' => 1
             ],
             'goods' => [

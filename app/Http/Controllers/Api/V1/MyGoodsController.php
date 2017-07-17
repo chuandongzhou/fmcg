@@ -59,7 +59,7 @@ class MyGoodsController extends Controller
         $result = DB::transaction(function () use ($user, $request) {
 
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-                'system_2', 'specification','abnormalOrderId','abnormalGoodsId');
+                'system_2', 'specification', 'abnormalOrderId', 'abnormalGoodsId');
 
             $attributes['user_type'] = auth()->user()->type;
 
@@ -87,14 +87,14 @@ class MyGoodsController extends Controller
                 $this->updateAttrs($goods, array_get($attributes, 'attrs', []));
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
-                
+
                 $abnormalOrderId = $request->input('abnormalOrderId');
                 $abnormalGoodsId = $request->input('abnormalGoodsId');
-                if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)){
+                if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)) {
                     //获取异常记录
-                    $abnormal = OrderGoods::where('goods_id',$abnormalGoodsId)
-                        ->where('order_id',$abnormalOrderId)
-                        ->where('inventory_state',cons('inventory.inventory_state.in-abnormal'))
+                    $abnormal = OrderGoods::where('goods_id', $abnormalGoodsId)
+                        ->where('order_id', $abnormalOrderId)
+                        ->where('inventory_state', cons('inventory.inventory_state.in-abnormal'))
                         ->get();
                     //
                     (new InventoryService())->autoIn($abnormal);
@@ -199,6 +199,24 @@ class MyGoodsController extends Controller
     }
 
     /**
+     * 库存预警值设置
+     * @param \Illuminate\Http\Request $request
+     * @param $goods
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function setWarning(Request $request, $goods)
+    {
+        if (Gate::denies('validate-my-goods', $goods)) {
+            return $this->forbidden('没有权限');
+        }
+        $requestData = $request->only('warning_value', 'warning_piece');
+        if ($goods->fill($requestData)->save()) {
+            return $this->success('保存成功');
+        }
+        return $this->error('保存失败');
+    }
+
+    /**
      * 商品上下架
      *
      * @param \Illuminate\Http\Request $request
@@ -241,7 +259,7 @@ class MyGoodsController extends Controller
         if ($promoGoods = $goods->promoGoods()->withTrashed()->where('shop_id', $shopId)->first()) {
             return $promoGoods->fill(['deleted_at' => null])->save() ? $this->success('设置成功') : $this->error('设置失败，请重试');
         }
-        
+
         $attributes = [
             'shop_id' => $shopId
         ];
@@ -557,9 +575,9 @@ class MyGoodsController extends Controller
             ];
 
             if ($goods['pieces_wholesaler'] == $pieces['pieces_level_1']) {
-                $goods['specification_wholesaler'] = $pieces['system_1'] . '*' . ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
+                $goods['specification_wholesaler'] = end($goodsArr) . ($pieces['system_2'] > 0 ? '*' . $pieces['system_2'] : '') . '*' . $pieces['system_1'];
             } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_2']) {
-                $goods['specification_wholesaler'] = ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
+                $goods['specification_wholesaler'] = end($goodsArr) . ($pieces['system_2'] > 0 ? '*' . $pieces['system_2'] : '');
             } elseif ($goods['pieces_wholesaler'] == $pieces['pieces_level_3']) {
                 $goods['specification_wholesaler'] = end($goodsArr);
             }
@@ -580,13 +598,12 @@ class MyGoodsController extends Controller
         }
 
         if ($goods['pieces_retailer'] == $pieces['pieces_level_1']) {
-            $goods['specification_retailer'] = $pieces['system_1'] . '*' . ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
+            $goods['specification_retailer'] = end($goodsArr) . ($pieces['system_2'] > 0 ? '*' . $pieces['system_2'] : '') . '*' . $pieces['system_1'];
         } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_2']) {
-            $goods['specification_retailer'] = ($pieces['system_2'] > 0 ? $pieces['system_2'] . '*' : '') . end($goodsArr);
+            $goods['specification_retailer'] = end($goodsArr) . ($pieces['system_2'] > 0 ? '*' . $pieces['system_2'] : '');
         } elseif ($goods['pieces_retailer'] == $pieces['pieces_level_3']) {
             $goods['specification_retailer'] = end($goodsArr);
         }
-
         $pieces['specification'] = end($goodsArr);
         $arr['goods'] = array_merge($goods, $postAttr);
         $arr['pieces'] = $pieces;

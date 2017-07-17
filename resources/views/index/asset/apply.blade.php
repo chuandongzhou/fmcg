@@ -1,6 +1,5 @@
 @extends('index.manage-master')
 @section('subtitle', '资产管理')
-@include('includes.asset-modal')
 @include('includes.timepicker')
 @section('container')
     @include('includes.menu')
@@ -14,10 +13,10 @@
             </div>
             <div class="row delivery">
                 <div class="col-sm-12 control-search assets">
-                    <form action="" method="get" autocomplete="off">
-                        <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text"
+                    <form action="{{url('asset/apply')}}" method="get" autocomplete="off">
+                        <input class="enter control datetimepicker" name="start_at" data-format="YYYY-MM-DD" placeholder="开始时间" type="text"
                                value="{{$data['start_at'] ?? ''}}">至
-                        <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text"
+                        <input class="enter control datetimepicker" name="end_at" data-format="YYYY-MM-DD" placeholder="结束时间" type="text"
                                value="{{$data['end_at'] ?? ''}}">
                         <input class="enter control" placeholder="资产编号/资产名称" value="{{$data['asset'] ?? ''}}"
                                name="asset"
@@ -43,7 +42,7 @@
                     <table class="table-bordered table table-center public-table">
                         <thead>
                         <tr>
-                            <th>资产编号</th>
+                            <th>申请编号</th>
                             <th>资产名称</th>
                             <th>申请时间</th>
                             <th>客户名称</th>
@@ -56,7 +55,7 @@
                         @if(isset($assetApply))
                             @foreach($assetApply as $apply)
                                 <tr>
-                                    <td>{{$apply->asset->id ?? ''}}</td>
+                                    <td>{{$apply->id ?? ''}}</td>
                                     <td>{{$apply->asset->name ?? ''}}</td>
                                     <td>{{$apply->created_at}}</td>
                                     <td>{{$apply->client->name ?? ''}}</td>
@@ -89,12 +88,13 @@
                 </div>
                 <div class="col-sm-12 text-right">
                     @if(isset($assetApply))
-                        {!! $assetApply->render() !!}
+                        {!! $assetApply->appends($data)->render() !!}
                     @endif
                 </div>
             </div>
         </div>
     </div>
+    @include('includes.asset-modal')
 @stop
 @section('js')
     @parent

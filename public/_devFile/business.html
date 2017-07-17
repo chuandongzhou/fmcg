@@ -1,439 +1,438 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>business</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <style type="text/css">
-        /* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
-        /* Author: Nicolas Hery - http://nicolashery.com */
-        /* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
-        /* Source: https://github.com/nicolahery/markdownpad-github */
+<title>business</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
 
-        /* RESET
-        =============================================================================*/
+/* RESET
+=============================================================================*/
 
-        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-            margin: 0;
-            padding: 0;
-            border: 0;
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script>
+    /* 此处为了生成文档目录方便把JS文件写这里了~ */
+    $(function () {
+      var body = $('body');
+
+      /* 创建侧边目录栏 */
+      var directoryHtml = $('<div>');
+      directoryHtml.css({
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        width: 300,
+        backgroundColor: '#FFF',
+        borderRight: '1px solid #CCC',
+        overflow: 'auto',
+        display: 'block'
+      });
+      body.prepend(directoryHtml);
+
+      /* 创建伸缩/展开侧边目录栏 */
+      var control = $('<div>'),
+              shrink = $('<span>'),
+              stretch = $('<span>');
+      control.css({
+        position: 'fixed',
+        top: -1,
+        left: 300,
+        padding: '6px 12px',
+        backgroundColor: '#FFF',
+        border: '1px solid #CCC',
+        cursor: 'pointer'
+      });
+      shrink.css({
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        color: '#000',
+        borderTop: '8px solid transparent',
+        borderBottom: '8px solid transparent',
+        borderRight: '10px solid'
+      });
+      stretch.css({
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        color: '#000',
+        borderTop: '8px solid transparent',
+        borderBottom: '8px solid transparent',
+        borderLeft: '10px solid'
+      });
+      control.prepend(shrink).data('shrink', false);
+      body.prepend(control).css('padding-left', 340);
+      control.click(function () {
+        if ($(this).data('shrink')) {
+          directoryHtml.show();
+          control.css('left', 300).html(shrink).data('shrink', false);
+          body.css('padding-left', 340);
+        } else {
+          directoryHtml.hide();
+          control.css('left', -1).html(stretch).data('shrink', true);
+          body.css('padding-left', 0);
         }
+      });
 
-        /* BODY
-        =============================================================================*/
-
-        body {
-            font-family: Helvetica, arial, freesans, clean, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
-            padding: 20px;
-            max-width: 960px;
-            margin: 0 auto;
+      var menuList = $('body').children(':header'),
+              menuObject = [],
+              headerObject = {
+                h1: 0,
+                h2: 0,
+                h3: 0,
+                h4: 0,
+                h5: 0,
+                h6: 0
+              },
+              headerParentObj = {
+                h1: null,
+                h2: 'h1',
+                h3: 'h2',
+                h4: 'h3',
+                h5: 'h4',
+                h6: 'h5'
+              },
+              previousTagName;
+      /* 为菜单创建锚点 */
+      menuList.each(function (index, element) {
+        var href = index ? $(element).html().split(' ')[0] : '0.',
+                tagName = $(element)[0]['tagName'].toLowerCase();
+        menuObject[index] = {
+          id: href,
+          parentId: 0,
+          name: $(element).html(),
+          href: '#' + href
+        };
+        if (tagName === previousTagName) {
+          menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
+        } else if (headerParentObj[tagName] === previousTagName) {
+          menuObject[index]['parentId'] = headerObject[previousTagName];
+        } else {
+          menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
         }
+        headerObject[tagName] = href;
+        previousTagName = tagName;
+        $(element).prepend('<a id="' + href + '"></a>');
 
-        body > *:first-child {
-            margin-top: 0 !important;
+      });
+      /* 创建目录列表 */
+      var createMenuFunc = function (menuObject, parentId, directoryHtml) {
+        if (menuObject.length === 0) {
+          return;
         }
-
-        body > *:last-child {
-            margin-bottom: 0 !important;
+        var childList = [];
+        for (var i in menuObject) {
+          if (menuObject[i]['parentId'] === parentId) {
+            childList.push(menuObject[i]);
+          }
         }
-
-        /* BLOCKS
-        =============================================================================*/
-
-        p, blockquote, ul, ol, dl, table, pre {
-            margin: 15px 0;
+        for (var i in childList) {
+          var ul = $('<ul>'),
+                  li = $('<li>');
+          ul.css({
+            paddingLeft: 20
+          });
+          li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
+          ul.append(li);
+          directoryHtml.append(ul);
+          createMenuFunc(menuObject, childList[i]['id'], li);
         }
+      };
+      createMenuFunc(menuObject, 0, directoryHtml);
 
-        /* HEADERS
-        =============================================================================*/
-
-        h1, h2, h3, h4, h5, h6 {
-            margin: 20px 0 10px;
-            padding: 0;
-            font-weight: bold;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
-            font-size: inherit;
-        }
-
-        h1 {
-            font-size: 28px;
-            color: #000;
-        }
-
-        h2 {
-            font-size: 24px;
-            border-bottom: 1px solid #ccc;
-            color: #000;
-        }
-
-        h3 {
-            font-size: 18px;
-        }
-
-        h4 {
-            font-size: 16px;
-        }
-
-        h5 {
-            font-size: 14px;
-        }
-
-        h6 {
-            color: #777;
-            font-size: 14px;
-        }
-
-        body > h2:first-child, body > h1:first-child, body > h1:first-child + h2, body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
-            margin-top: 0;
-            padding-top: 0;
-        }
-
-        a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
-            margin-top: 0;
-            padding-top: 0;
-        }
-
-        h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
-            margin-top: 10px;
-        }
-
-        /* LINKS
-        =============================================================================*/
-
-        a {
-            color: #4183C4;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* LISTS
-        =============================================================================*/
-
-        ul, ol {
-            padding-left: 30px;
-        }
-
-        ul li > :first-child,
-        ol li > :first-child,
-        ul li ul:first-of-type,
-        ol li ol:first-of-type,
-        ul li ol:first-of-type,
-        ol li ul:first-of-type {
-            margin-top: 0px;
-        }
-
-        ul ul, ul ol, ol ol, ol ul {
-            margin-bottom: 0;
-        }
-
-        dl {
-            padding: 0;
-        }
-
-        dl dt {
-            font-size: 14px;
-            font-weight: bold;
-            font-style: italic;
-            padding: 0;
-            margin: 15px 0 5px;
-        }
-
-        dl dt:first-child {
-            padding: 0;
-        }
-
-        dl dt > :first-child {
-            margin-top: 0px;
-        }
-
-        dl dt > :last-child {
-            margin-bottom: 0px;
-        }
-
-        dl dd {
-            margin: 0 0 15px;
-            padding: 0 15px;
-        }
-
-        dl dd > :first-child {
-            margin-top: 0px;
-        }
-
-        dl dd > :last-child {
-            margin-bottom: 0px;
-        }
-
-        /* CODE
-        =============================================================================*/
-
-        pre, code, tt {
-            font-size: 12px;
-            font-family: Consolas, "Liberation Mono", Courier, monospace;
-        }
-
-        code, tt {
-            margin: 0 0px;
-            padding: 0px 0px;
-            white-space: nowrap;
-            border: 1px solid #eaeaea;
-            background-color: #f8f8f8;
-            border-radius: 3px;
-        }
-
-        pre > code {
-            margin: 0;
-            padding: 0;
-            white-space: pre;
-            border: none;
-            background: transparent;
-        }
-
-        pre {
-            background-color: #f8f8f8;
-            border: 1px solid #ccc;
-            font-size: 13px;
-            line-height: 19px;
-            overflow: auto;
-            padding: 6px 10px;
-            border-radius: 3px;
-        }
-
-        pre code, pre tt {
-            background-color: transparent;
-            border: none;
-        }
-
-        kbd {
-            -moz-border-bottom-colors: none;
-            -moz-border-left-colors: none;
-            -moz-border-right-colors: none;
-            -moz-border-top-colors: none;
-            background-color: #DDDDDD;
-            background-image: linear-gradient(#F1F1F1, #DDDDDD);
-            background-repeat: repeat-x;
-            border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
-            border-image: none;
-            border-radius: 2px 2px 2px 2px;
-            border-style: solid;
-            border-width: 1px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            line-height: 10px;
-            padding: 1px 4px;
-        }
-
-        /* QUOTES
-        =============================================================================*/
-
-        blockquote {
-            border-left: 4px solid #DDD;
-            padding: 0 15px;
-            color: #777;
-        }
-
-        blockquote > :first-child {
-            margin-top: 0px;
-        }
-
-        blockquote > :last-child {
-            margin-bottom: 0px;
-        }
-
-        /* HORIZONTAL RULES
-        =============================================================================*/
-
-        hr {
-            clear: both;
-            margin: 15px 0;
-            height: 0px;
-            overflow: hidden;
-            border: none;
-            background: transparent;
-            border-bottom: 4px solid #ddd;
-            padding: 0;
-        }
-
-        /* TABLES
-        =============================================================================*/
-
-        table th {
-            font-weight: bold;
-        }
-
-        table th, table td {
-            border: 1px solid #ccc;
-            padding: 6px 13px;
-        }
-
-        table tr {
-            border-top: 1px solid #ccc;
-            background-color: #fff;
-        }
-
-        table tr:nth-child(2n) {
-            background-color: #f8f8f8;
-        }
-
-        /* IMAGES
-        =============================================================================*/
-
-        img {
-            max-width: 100%
-        }
-    </style>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script>
-        /* 此处为了生成文档目录方便把JS文件写这里了~ */
-        $(function () {
-            var body = $('body');
-
-            /* 创建侧边目录栏 */
-            var directoryHtml = $('<div>');
-            directoryHtml.css({
-                position: 'fixed',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: 300,
-                backgroundColor: '#FFF',
-                borderRight: '1px solid #CCC',
-                overflow: 'auto',
-                display: 'block'
-            });
-            body.prepend(directoryHtml);
-
-            /* 创建伸缩/展开侧边目录栏 */
-            var control = $('<div>'),
-                shrink = $('<span>'),
-                stretch = $('<span>');
-            control.css({
-                position: 'fixed',
-                top: -1,
-                left: 300,
-                padding: '6px 12px',
-                backgroundColor: '#FFF',
-                border: '1px solid #CCC',
-                cursor: 'pointer'
-            });
-            shrink.css({
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                color: '#000',
-                borderTop: '8px solid transparent',
-                borderBottom: '8px solid transparent',
-                borderRight: '10px solid'
-            });
-            stretch.css({
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                color: '#000',
-                borderTop: '8px solid transparent',
-                borderBottom: '8px solid transparent',
-                borderLeft: '10px solid'
-            });
-            control.prepend(shrink).data('shrink', false);
-            body.prepend(control).css('padding-left', 340);
-            control.click(function () {
-                if ($(this).data('shrink')) {
-                    directoryHtml.show();
-                    control.css('left', 300).html(shrink).data('shrink', false);
-                    body.css('padding-left', 340);
-                } else {
-                    directoryHtml.hide();
-                    control.css('left', -1).html(stretch).data('shrink', true);
-                    body.css('padding-left', 0);
-                }
-            });
-
-            var menuList = $('body').children(':header'),
-                menuObject = [],
-                headerObject = {
-                    h1: 0,
-                    h2: 0,
-                    h3: 0,
-                    h4: 0,
-                    h5: 0,
-                    h6: 0
-                },
-                headerParentObj = {
-                    h1: null,
-                    h2: 'h1',
-                    h3: 'h2',
-                    h4: 'h3',
-                    h5: 'h4',
-                    h6: 'h5'
-                },
-                previousTagName;
-            /* 为菜单创建锚点 */
-            menuList.each(function (index, element) {
-                var href = index ? $(element).html().split(' ')[0] : '0.',
-                    tagName = $(element)[0]['tagName'].toLowerCase();
-                menuObject[index] = {
-                    id: href,
-                    parentId: 0,
-                    name: $(element).html(),
-                    href: '#' + href
-                };
-                if (tagName === previousTagName) {
-                    menuObject[index]['parentId'] = headerObject[headerParentObj[previousTagName]];
-                } else if (headerParentObj[tagName] === previousTagName) {
-                    menuObject[index]['parentId'] = headerObject[previousTagName];
-                } else {
-                    menuObject[index]['parentId'] = headerObject[headerParentObj[tagName]] ? headerObject[headerParentObj[tagName]] : 0;
-                }
-                headerObject[tagName] = href;
-                previousTagName = tagName;
-                $(element).prepend('<a id="' + href + '"></a>');
-
-            });
-            /* 创建目录列表 */
-            var createMenuFunc = function (menuObject, parentId, directoryHtml) {
-                if (menuObject.length === 0) {
-                    return;
-                }
-                var childList = [];
-                for (var i in menuObject) {
-                    if (menuObject[i]['parentId'] === parentId) {
-                        childList.push(menuObject[i]);
-                    }
-                }
-                for (var i in childList) {
-                    var ul = $('<ul>'),
-                        li = $('<li>');
-                    ul.css({
-                        paddingLeft: 20
-                    });
-                    li.append('<a style="white-space:nowrap" href="' + childList[i]['href'] + '">' + childList[i]['name'] + '</a>');
-                    ul.append(li);
-                    directoryHtml.append(ul);
-                    createMenuFunc(menuObject, childList[i]['id'], li);
-                }
-            };
-            createMenuFunc(menuObject, 0, directoryHtml);
-
-        });
-    </script>
-</head>
+    });
+  </script>
 </head>
 <body>
 <h1>快销品平台零售商API</h1>
 <h2>1. API接口通信规定</h2>
 <p>-接口采用<strong>HTTP</strong>,<strong>POST</strong>协议
-    -请求URL <strong>192.168.2.66/api/v1/business/</strong>
-    -请求返回数据格式
-    所有数据返回都基于以下的<strong>json</strong>协议
-    &gt;失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
-    id:状态值
-    message:返回具体内容
-    error:返回具体字段不合法</p>
+-请求URL <strong>192.168.2.66/api/v1/business/</strong>
+-请求返回数据格式
+	所有数据返回都基于以下的<strong>json</strong>协议
+	&gt;失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
+	id:状态值
+	message:返回具体内容
+	error:返回具体字段不合法</p>
 <h2>2. 接口详细说明</h2>
 <h3>2.1 公共模块auth</h3>
 <h4>2.1.1 登陆[post] (login)</h4>
@@ -443,14 +442,18 @@ password    string       密码
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<p>salesman array 当前登录业务员</p>
-<p>salesman字段子集说明</p>
-<pre><code>  id                    int             业务员id
+<pre><code>salesman               array           当前登录业务员
+
+salesman字段子集说明
+
+  id                    int             业务员id
   account               string          账号
+  maker_id              int             厂家ID(不是则为null)
   shop_id               int             业务员所属店铺id
   name                  string          业务员名
   contact_information   string          联系方式
   avatar_url            string          头像
+  is_maker              int             是否厂家业务员(0:不是,1:是)
   shop_type             int             所属店铺类型id (1终端 2批发 3供应)
 </code></pre>
 
@@ -729,7 +732,7 @@ num                     int            抵费商品数量
 </code></pre>
 
 <p><code>成功返回：</code>
-    data array 所有购买信息</p>
+	data                 array            所有购买信息</p>
 <pre><code>data字段子集说明
 goods_id             int              商品ID
 price                decimal          商品价格
@@ -806,7 +809,10 @@ contact                 string          联系人
 contact_information     string          联系方式
 statistics              array           订单商品
 mortgage                array           抵费商品 [月份=&gt;商品信息]
+gifts                   array           赠品
+promo                   array           促销活动信息
 display_fee             array           订单陈列费 [月份 =&gt; 费用]
+photo_url               array           所有拜访图片url
 
 statistics字段子集说明
 
@@ -830,13 +836,17 @@ num                     int             数量
 pieces                  string          单位
 month                   string          月份
 
- gifts字段子集说明
+gifts字段子集说明
 
-    id                  int             商品id
-    num                 int             个数
-    pieces              int             单位
+id                      int             商品id
+num                     int             个数
+pieces                  int             单位
+
+promo字段子集说明
+同2.10.1
 </code></pre>
 
+<p><a href="#2.10.1">2.10.1</a></p>
 <p><code>失败返回：</code></p>
 <h4>2.5.3 添加拜访 [post] (/)</h4>
 <p><code>请求参数：</code></p>
@@ -847,6 +857,7 @@ address                 string          地址
 goods                   array           拜访商品列表
 order_remark            string          订单备注
 display_remark          string          陈列费备注
+apply_promo_id          int             促销申请ID
 gifts                   array           赠品
 display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=&gt; 100, '2016-11' =&gt; 100]）
 mortgage                array           抵费商品（当客户display_type 为2时传入，月份=&gt;['id'=&gt;抵费商品id, 'num'=&gt;商品数量] 格式。 如['2016-10'=&gt;['id' =&gt; 5, 'num'=&gt;100]]）
@@ -878,13 +889,20 @@ gifts字段子集说明
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<p><code>失败返回：</code></p>
-<h4>2.5.4 判断是否可以添加拜访 [get] (can-add/{customer_id})</h4>
+<p><code>失败返回：</code> </p>
+<h4>2.5.4 添加拜访图片 [post] (visit/{visit_id}/add-photos)</h4>
+<pre><code>photos                  array           图片数组
+</code></pre>
+
+<p><img src="../img/photosTemplate.png" /></p>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<h4>2.5.5 判断是否可以添加拜访 [get] (can-add/{customer_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code>
-    visit array 该字段为空表示可以添加</p>
+	visit               array            该字段为空表示可以添加</p>
 <p><code>失败返回：</code></p>
-<h4>2.5.5 根据月份获取客户剩余陈列商品 [get] (surplus-mortgage-goods)</h4>
+<h4>2.5.6 根据月份获取客户剩余陈列商品 [get] (surplus-mortgage-goods)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>customer_id         int                 客户id
 month               string              月份（'2016-10'）
@@ -909,7 +927,7 @@ mortgageGoods       array                 陈列费列表
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.5.6 根据月份获取剩余陈列费 [get] (surplus-display-fee)</h4>
+<h4>2.5.7 根据月份获取剩余陈列费 [get] (surplus-display-fee)</h4>
 <p><code>请求参数：</code></p>
 <pre><code> customer_id         int                 客户id
  month               string              月份（'2016-10'）
@@ -986,7 +1004,8 @@ order_goods              array           订货单商品列表
 mortgage                 array           抵费商品 [月份=&gt;商品信息]
 displayFee               array           订单陈列费 [月份 =&gt; 费用]
 order                    array           平台订单详情 （含送货人信息）
-gifts                   array             赠品
+gifts                    array           赠品
+promo                    array           促销活动
 
 order_goods字段子集说明
 
@@ -1025,6 +1044,9 @@ gifts字段子集说明
     id                  int             商品id
     num                 int             个数
     pieces              int             单位
+
+promo 字段子集说明
+同2.10.1
 </code></pre>
 
 <h4>2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})</h4>
@@ -1033,6 +1055,7 @@ gifts字段子集说明
 display_fee             array           陈列费用 （当客户display_type 为1时入 ,如 ['2016-10'=&gt; 100, '2016-11' =&gt; 100]）
 mortgage                array           抵费商品 （当客户display_type为2时传入，月份=&gt;['id'=&gt;抵费商品id, 'num'=&gt;商品数量] 格式。 如['2016-10'=&gt;['id' =&gt; 5, 'num'=&gt;100]]）
 order_remark            string          订单备注
+apply_promo_id          int             促销活动ID
 display_remark          string          陈列费备注
 gifts                   array           赠品
 
@@ -1088,9 +1111,11 @@ pieces_level_3              int         三级单位（为null时未设置）
 <h4>2.7.2 店铺分类[get] (categories)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<p>categories array 店铺分类数组</p>
-<p>categories 子集介绍</p>
-<pre><code>    id              int                 分类id
+<pre><code>categories       array           店铺分类数组
+
+categories       子集介绍
+
+    id              int                 分类id
     pid             int                 分类父级id
     name            string              分类名
     level           int                 分类层级
@@ -1102,13 +1127,179 @@ pieces_level_3              int         三级单位（为null时未设置）
 <h4>2.8.1 获取平台所有赠品[get] (/)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<p>gifts array 赠品列表</p>
-<p>gifts子集介绍</p>
-<pre><code>    id                  int                 赠品id
+<pre><code>  gifts       array           赠品列表
+
+  gifts子集介绍
+
+    id                  int                 赠品id
     name                string              赠品名
     pieces              array               赠品所有单位
 </code></pre>
 
+<h3>2.9 资产 asset</h3>
+<h4>2.9.1 获取店铺所有资产[get] (/)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>assets               array                厂家资产列表
+assets子集介绍
+id                  int                 资产id
+name                string              资产名称
+quantity            int                 资产数量
+unit                string              资产单位
+condition           string              申请条件
+remark              string              资产备注
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.9.2 申请资产[post] (/apply)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>asset_id            int                 资产ID
+client_id           int                 客户ID
+quantity            int                 申请数量
+apply_remark        string              申请备注
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.9.3 资产申请列表 [get] (/apply)</h4>
+<p><code>请求参数:</code></p>
+<pre><code> start_at               date                开始时间
+ end_at                 date                结束时间
+ condition              string              客户名称
+ asset                  string/int          资产名称或ID
+ status                 int 0/1             审核状态 0：未审核，1：通过
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<pre><code>applyLists              array               资产申请列表
+
+applyLists子集介绍
+
+id                      int                 资产申请ID
+asset_id                int                 资产编号
+client_id               int                 客户ID
+quantity                int                 申请数量
+salesman_id             int                 业务员ID
+use_date                date                开始使用时间
+apply_remark            string              申请备注
+status                  int                 审核状态(0:未审核,1:审核通过)
+created_at              date                申请日期
+pass_date               date                通过时间
+client                  array               客户信息
+asset                   array               资产信息
+salesman                array               业务员信息
+
+client 子集介绍
+同2.3.1
+asset子集介绍
+同2.9.1
+salesman子集介绍
+同2.1.1
+</code></pre>
+
+<p><code>失败返回:</code></p>
+<h4>2.9.4 添加使用时间 [put] (/use-date/{apply_id})</h4>
+<p><code>请求参数:</code></p>
+<pre><code> date                   date                开始使用时间
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.9.5  删除申请 [delete] (/apply/{apply_id})</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h3>2.10  促销 promo</h3>
+<h4>2.10.1 获取促销活动列表 [get] (/)</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<pre><code>promos                  array               促销活动列表
+
+promos 子集介绍
+
+id                      int                 促销活动ID（编号）
+name                    string              促销名称
+type                    int                 促销类型（1:自定义,2:钱返钱,3：钱返商品,4:商品返钱,5:商品返商品）
+start_at                date                开始时间
+end_at                  date                结束时间
+remark                  string              促销备注
+condition               array               促销申请条件
+rebate                  array               促销活动返利
+
+condition 子集介绍
+
+goods_id                int                 条件商品ID
+quantity                int                 条件商品数量
+unit                    int                 条件商品单位代码
+goods_name              string              条件商品名称
+goods_pirces            string              条件商品单位名称
+money                   int                 条件金额
+custom                  strint              自定义条件   
+
+rebate  子集介绍
+
+goods_id                int                 返利商品ID
+quantity                int                 返利商品数量
+unit                    int                 返利商品单位代码
+goods_name              string              返利商品名称
+goods_pirces            string              返利商品单位名称
+money                   int                 返利金额
+custom                  strint              自定义返利           
+</code></pre>
+
+<p><code>失败返回:</code></p>
+<h4>2.10.2  业务员获取促销申请列表 [get] (/apply)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>start_at                date                开始时间
+end_at                  date                结束时间
+client_name             string              客户名称
+status                  int                 审核状态(0:未审核,1:通过)
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<pre><code>id                      int                 申请ID
+pass_date               date                通过时间
+status                  int                 审核状态(0:未审核,1:通过)
+apply_remark            string              申请备注
+created_at              date                申请时间
+client                  array               客户信息
+promo                   array               促销信息
+
+client 子集介绍
+同2.3.1
+promo  子集介绍
+同2.10.1
+</code></pre>
+
+<p><code>失败返回:</code></p>
+<h4>2.10.3  申请促销 [post] (/apply)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>promo_id                int                 促销ID
+client_id               int                 客户ID
+apply_remark            string              申请备注
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
+<h4>2.10.4  获取审核通过的促销活动 [get] (/apply/pass)</h4>
+<p><code>请求参数:</code></p>
+<pre><code>client_id               int                 客户ID
+</code></pre>
+
+<p><code>成功返回:</code></p>
+<pre><code>promos                  array               审核通过的活动列表
+
+promos 子集介绍
+同 2.10.1
+增加 
+apply_id                int                 申请ID
+</code></pre>
+
+<p><code>失败返回:</code></p>
+<h4>2.10.5  删除申请 [delete] (/apply/{apply_id})</h4>
+<p><code>请求参数:</code></p>
+<p><code>成功返回:</code></p>
+<p><code>失败返回:</code></p>
 
 </body>
 </html>

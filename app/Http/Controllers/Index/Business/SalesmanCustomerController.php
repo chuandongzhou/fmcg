@@ -37,18 +37,26 @@ class SalesmanCustomerController extends Controller
     {
         $salesmanId = $request->input('salesman_id');
         $name = $request->input('name');
+        $type = $request->input('type',null);
+
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
         $customers = SalesmanCustomer::whereIn('salesman_id',
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
-            ->ExceptSelf()
+            ->where(function ($query)use($type){
+                if($type == 'supplier'){
+                    $query->where('type',cons('user.type.supplier'));
+                }
+                if(is_null($type)){
+                    $query->where('type','<>',cons('user.type.supplier'));
+                }
+            })
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
-
-//        $customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
+        //$customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
-            ['salesmen' => $salesmen, 'customers' => $customers, 'data' => $request->all()]);
+            ['salesmen' => $salesmen, 'customers' => $customers, 'type' => $type, 'data' => $request->all()]);
     }
 
     /**
@@ -56,11 +64,11 @@ class SalesmanCustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $salesmen = $this->shop->salesmen()->lists('name','id');
+        $salesmen = $this->shop->salesmen()->lists('name', 'id');
         return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => new SalesmanCustomer]);
+            ['salesmen' => $salesmen, 'salesmanCustomer' => new SalesmanCustomer,'type' => $request->input('type',null)]);
     }
 
     /**
@@ -87,7 +95,6 @@ class SalesmanCustomerController extends Controller
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
-
         $data = $request->all();
         $beginTime = isset($data['begin_time']) ? new Carbon($data['begin_time']) : (new Carbon())->startOfMonth();
         $endTime = isset($data['end_time']) ? (new Carbon($data['end_time']))->endOfDay() : Carbon::now();
@@ -115,7 +122,6 @@ class SalesmanCustomerController extends Controller
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
-
         $data = $request->all();
         $beginTime = isset($data['begin_time']) ? new Carbon($data['begin_time']) : (new Carbon())->startOfMonth();
         $endTime = isset($data['end_time']) ? (new Carbon($data['end_time']))->endOfDay() : Carbon::now();
@@ -137,12 +143,12 @@ class SalesmanCustomerController extends Controller
      * @param $salesmanCustomer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($salesmanCustomer)
+    public function edit($salesmanCustomer,Request $request)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 
         return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer]);
+            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer ,'type' => $request->input('type',null)]);
     }
 
     /**
@@ -156,17 +162,19 @@ class SalesmanCustomerController extends Controller
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
-        $billService= new BillService();
+        $billService = new BillService();
         $data = $request->all();
         $timeFormat = $billService->timeHandler(array_get($data, 'time'));
         $bill = $billService->getBillDetailOfSeller($customer, $timeFormat);
-        if (array_get($data, 'act')) {
+        $action = array_get($data, 'act');
+        if ($action === 'export') {
             return $billService->billExportOfSeller($bill);
         }
-        return view('index.business.customer-bill',
+        return view($action === 'print' ? 'index.business.bill-print-template' : 'index.business.customer-bill',
             [
                 'data' => $data,
-                'bill' => $bill
+                'bill' => $bill,
+                'action' => $action === 'print' ? 'print' : null
             ]);
     }
 

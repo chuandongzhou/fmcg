@@ -185,7 +185,7 @@
                                             <th>收货地址</th>
                                             </thead>
                                             <tr>
-                                                <td>{{  $order->shippingAddress->consigner ?? ''}}</td>
+                                                <td>{{   $order->shippingAddress->consigner ?? ''}}</td>
                                                 <td>{{ $order->shippingAddress->phone ?? ''}}</td>
                                                 <td>
                                                     <p> {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}</p>
@@ -404,6 +404,35 @@
                                                 </tr>
                                             @endforeach
                                         </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($order->promo)
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">促销活动</h3>
+                                </div>
+
+                                <div class="panel-container table-responsive">
+                                    <div class="row">
+                                        <p class="col-sm-12 item-text other">
+                                            促销名称 : <span class="prompt">{{$order->promo->name}}</span>
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 item-text other">
+                                            有效日期 : <span
+                                                    class="prompt">{{$order->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->promo->end_at}}</span>
+                                        </div>
+                                    </div>
+                                    @include('includes.promo-content-view',['promo' => $order->promo])
+                                    <div class="row">
+                                        <div class="col-sm-12 item-text other">
+
+                                            促销备注 : <span class="prompt">{{$order->promo->remark}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

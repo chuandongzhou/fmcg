@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\AssetApply;
+use App\Models\Salesman;
 use App\Services\AssetService;
 use Illuminate\Http\Request;
 
@@ -20,11 +21,10 @@ class AssetController extends Controller
     protected $shop;
     protected $assetService;
 
-
-    public function __construct()
+    public function __construct(AssetService $assetService)
     {
         $this->shop = auth()->user()->shop;
-        $this->assetService = new AssetService();
+        $this->assetService = $assetService;
     }
 
     /**
@@ -34,17 +34,13 @@ class AssetController extends Controller
      */
     public function getUnused(Request $request)
     {
-        $data = $request->only('start_at', 'end_at', 'name');
+        $data = $request->only('start_at', 'end_at', 'asset');
         $assets = $this->shop->asset();
-        $assetName = [];
-        $this->assetService->getShopAsset()->each(function ($asset) use (&$assetName) {
-            $assetName[] = $asset->name;
-        });
         $result = $this->assetService->getDataByCondition($assets, $data);
         return view('index.asset.unused', [
             'assets' => $result->paginate(),
             'data' => $data,
-            'assetName' => $assetName
+            'assetNames' => $this->_getAssetName()
         ]);
     }
 
@@ -55,22 +51,25 @@ class AssetController extends Controller
      */
     public function getUsed(Request $request)
     {
-        $data = $request->only('use_start_at','use_end_at','name','condition');
-        $assetApply = $this->shop->assetApply()->where('asset_apply.status','>',0)->where(function ($query){
-            $query->whereNotNull('use_date');
-        });
-        $assets = $this->assetService->getShopAsset();
+        $data = $request->only('use_start_at', 'use_end_at', 'asset', 'condition');
+        $assetApply = $this->shop->assetApply()->where('asset_apply.status', '>', 0)->whereNotNull('use_date');
         $result = $this->assetService->getDataByCondition($assetApply, $data);
         return view('index.asset.used', [
-           'used' => $result->paginate(),
-           'assets' => $assets,
-           'data' => $data,
+            'used' => $result->paginate(),
+            'assetNames' => $this->_getAssetName(),
+            'data' => $data,
         ]);
     }
-    
+
+    /**
+     * 申请列表
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getApply(Request $request)
     {
-        $data = $request->only('start_at','end_at','asset','salesmen','status');
+        $data = $request->only('start_at', 'end_at', 'asset', 'salesmen', 'status');
         $salesmens = $this->shop->salesmen;
         $assetApply = $this->shop->assetApply();
         $result = $this->assetService->getDataByCondition($assetApply, $data);
@@ -81,14 +80,30 @@ class AssetController extends Controller
         ]);
     }
 
+    /**
+     * 申请详情
+     *
+     * @param int $applyId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getApplyDetail($applyId = 0)
     {
         $assetApply = AssetApply::with(['asset', 'client'])->find($applyId);
-        if (is_null($assetApply) || Gate::denies('validate-shop-assetApply',$assetApply)){
+        if (is_null($assetApply) || Gate::denies('validate-shop-assetApply', $assetApply)) {
             return view('errors.404');
         };
         return view('index.asset.apply-detail', [
             'assetApply' => $assetApply
         ]);
+    }
+
+    /**
+     * 获取所有资产名
+     *
+     * @return array
+     */
+    public function _getAssetName():array
+    {
+        return $this->shop->asset()->get(['id', 'name'])->toArray();
     }
 }

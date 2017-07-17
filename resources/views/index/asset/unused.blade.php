@@ -14,22 +14,18 @@
             <div class="row delivery">
                 <div class="col-sm-12 control-search assets">
                     <form action="{{url('asset/unused')}}" method="get" autocomplete="off">
-                        <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text"
+                        <input class="enter control datetimepicker" name="start_at" data-format="YYYY-MM-DD"
+                               placeholder="开始时间" type="text"
                                value="{{$data['start_at'] ?? ''}}">至
-                        <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text"
+                        <input class="enter control datetimepicker" name="end_at" data-format="YYYY-MM-DD"
+                               placeholder="结束时间" type="text"
                                value="{{$data['end_at'] ?? ''}}">
-                        <select name="name" class="control">
-                            <option value="">请选择资产名称型号</option>
-                            @if(isset($assetName))
-                                @foreach($assetName as $name)
-                                    @if($data['name'] == $name)
-                                        <option selected value="{{$name}}">{{$name}}</option>
-                                    @else
-                                        <option value="{{$name}}">{{$name}}</option>
-                                    @endif
-
-                                @endforeach
-                            @endif
+                        <select name="asset" class="control">
+                            <option value>请选择资产名称型号</option>
+                            @foreach($assetNames as $asset)
+                                <option @if($data['asset'] == $asset['name']) selected
+                                        @endif  value="{{$asset['name']}}">{{$asset['name']}}</option>
+                            @endforeach
                         </select>
                         <button type="button" class="btn btn-blue-lighter search-by-get control">查询</button>
                         <button type="button" data-target="#add-modify" data-toggle="modal"
@@ -41,6 +37,7 @@
                     <table class="table-bordered table table-center public-table">
                         <thead>
                         <tr>
+                            <th>资产编号</th>
                             <th>资产名称</th>
                             <th>数量</th>
                             <th>添加时间</th>
@@ -54,16 +51,17 @@
                         @if(isset($assets))
                             @foreach($assets as $asset)
                                 <tr>
+                                    <td>{{$asset->id ?? ''}}</td>
                                     <td>{{$asset->name ?? ''}}</td>
                                     <td>{{$asset->quantity ?? ''}}{{$asset->unit ?? ''}}</td>
                                     <td>{{$asset->created_at ?? ''}}</td>
-                                    <td>{{$asset->condition ?? ''}}</td>
-                                    <td><a href="javascript:"
+                                    <td width="20%">{{$asset->condition ?? ''}}</td>
+                                    <td width="20%">{{--<a href="javascript:"
                                            class="gray status"
                                            data-data='{"status":"{{cons('status.on')}}"}'
                                            data-url='asset/status-change/{{$asset->id}}'
                                            data-method='put'
-                                        >test</a> <a href="" class="hidden"><i class="iconfont  icon-xiugai"></i>修改</a></a> {{$asset->remark ?? ''}}</td>
+                                        >test</a> <a href="" class="hidden"><i class="iconfont  icon-xiugai"></i>修改</a></a>--}} {{$asset->remark ?? ''}}</td>
                                     <td class="on {{$asset->status == cons('asset.status.off')? 'hidden' :''}}">
                                         已启用
                                     </td>
@@ -99,7 +97,7 @@
                 </div>
                 <div class="col-sm-12 text-right">
                     @if($assets)
-                        {!! $assets->render() !!}
+                        {!! $assets->appends($data)->render() !!}
                     @endif
                 </div>
             </div>
@@ -124,15 +122,15 @@
                 url: site.api(url),
                 method: _method,
                 dataType: 'json',
-                data: {'name':1}
+                data: {'name': 1}
 
             }).done(function (data) {
                 var tr = $(obj).parents('tr');
-                if(data.status != false){
+                if (data.status != false) {
                     $(obj).html(data.message || '操作成功')
                     tr.find('.hide').removeClass('hidden hide');
 
-                }else{
+                } else {
                     $(obj).html(data.message || '操作失败')
                 }
             });
@@ -145,7 +143,7 @@
                     loadingText: '<i class="fa fa-spinner fa-pulse"></i>'
                 });
                 $(obj).button('loading');
-                $.post(site.api('asset/status-change/'+id), {'_method': 'put'}, function (data) {
+                $.post(site.api('asset/status-change/' + id), {'_method': 'put'}, function (data) {
                     var _class = $(obj).parents('td').hasClass('on');
                     var tr = $(obj).parents('tr');
                     $(obj).html(html);

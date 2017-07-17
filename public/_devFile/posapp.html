@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 <title>posapp</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -310,10 +310,9 @@ img {
 password    string       密码
 </code></pre>
 
-<p><code>成功返回：</code>
-	id           int         配送人员id</p>
-<pre><code>user_name    string      登录名
-
+<p><code>成功返回：</code></p>
+<pre><code>id           int         配送人员id
+user_name    string      登录名
 password     string      密码
 pos_sign     string      pos机编号
 name         string      司机名称
@@ -322,6 +321,9 @@ name         string      司机名称
 <p><code>失败返回：</code></p>
 <h4>2.2.2 分配的订单信息[get] (orders)</h4>
 <p><code>请求参数：</code></p>
+<pre><code>id_name               int/string    订单号/买家店铺名
+</code></pre>
+
 <p><code>成功返回：</code></p>
 <pre><code>id                    int            订单号
 price                 float          订单金额
@@ -430,25 +432,26 @@ pieces         int          陈列商品单位
 <p><code>失败返回：</code></p>
 <h4>2.2.5 订单历史记录[get] (history-orders)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>start_at        date        开始时间
-end_at          date        结束时间
+<pre><code>start_at               date             开始时间
+end_at                 date             结束时间
+id_name               int/string        订单号/买家店铺名
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<pre><code> historyOrder         array            历史订单详情
+<pre><code> historyOrder          array            历史订单详情
 
 order字段说明
 
-date              string              日期
+date                   string              日期
 
-data            array               订单详情
+data                   array               订单详情
 
 data字段说明
 
-id                   int              订单号
+id                    int              订单号
 delivery_finished_at  string          订单完成时间
 user_shop_name        string          收货店家名称
-pay_status           int              支付状态（0，未支付；1，已支付）
+pay_status            int              支付状态（0，未支付；1，已支付）
 </code></pre>
 
 <p><code>失败返回：</code></p>

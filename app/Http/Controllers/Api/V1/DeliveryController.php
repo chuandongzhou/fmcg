@@ -82,14 +82,20 @@ class DeliveryController extends Controller
     }
 
     /**
-     * 所有已分配订单信息
+     * 所有已分配订单信息 // 未配送订单
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function orders()
+    public function orders(DeliveryRequest $request)
     {
-        $orders = Order::ofDeliveryMan(delivery_auth()->id())->whereNull('delivery_finished_at')->useful()->noInvalid()->with('user.shop',
-            'shippingAddress.address', 'coupon')->get();
+        $idName = $request->input('id_name', null);
+        $orders = Order::ofDeliveryMan(delivery_auth()->id())
+            ->ofOrderIdName($idName)
+            ->whereNull('delivery_finished_at')
+            ->useful()
+            ->noInvalid()
+            ->with('user.shop', 'shippingAddress.address', 'coupon')
+            ->get();
 
         $orders->each(function ($order) {
 
@@ -110,16 +116,16 @@ class DeliveryController extends Controller
                 'user_shop_name',
                 'after_rebates_price'
             ]);
+
             // $order->user&&$order->user->setHidden([]);
         });
-
         return $this->success($orders);
 
 
     }
 
     /**
-     *配送历史
+     * 配送历史
      *
      * @param \App\Http\Requests\Api\v1\DeliveryRequest $request
      * @return \WeiHeng\Responses\Apiv1Response
@@ -128,9 +134,10 @@ class DeliveryController extends Controller
     {
         $start_at = (new Carbon($request->input('start_at')))->startOfDay();
         $end_at = (new Carbon($request->input('end_at')))->endOfDay();
-
+        $idName = $request->input('id_name', null);
         $orders = Order::ofDeliveryMan(delivery_auth()->id())
             ->whereNotNull('delivery_finished_at')
+            ->ofOrderIdName($idName)
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
             ->with('user.shop', 'shippingAddress.address')->orderBy('delivery_finished_at', 'DESC')->get();
 
@@ -178,10 +185,11 @@ class DeliveryController extends Controller
     {
         $order = Order::ofDeliveryMan(delivery_auth()->id())->with('user.shop',
             'shippingAddress.address',
-            'goods.images.image')->find($request->input('order_id'));
+            'goods.images.image','applyPromo.promo', 'gifts')->find($request->input('order_id'));
         $goods = (new OrderService)->explodeOrderGoods($order);
         $order->orderGoods = $goods['orderGoods'];
         $order->mortgageGoods = $goods['mortgageGoods'];
+        $order->promo = is_null($order->applyPromo) ? 0 : $order->applyPromo->promo->load(['condition', 'rebate']);
         $order->is_pay = $order->pay_status == 1 ? 1 : 0;
         $order->setAppends([
             'status_name',
@@ -201,6 +209,7 @@ class DeliveryController extends Controller
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url', 'pieces']);
         });
+        $order->addHidden(['applyPromo']);
         return $this->success($order);
 
     }

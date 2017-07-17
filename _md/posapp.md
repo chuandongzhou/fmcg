@@ -18,10 +18,9 @@
 	password    string       密码
 
 `成功返回：`
+
 	id           int         配送人员id
-
 	user_name    string      登录名
-
 	password     string      密码
 	pos_sign     string      pos机编号
 	name         string      司机名称
@@ -31,6 +30,8 @@
 
 #### 2.2.2 分配的订单信息[get] (orders)
 `请求参数：`
+
+	id_name				  int/string	订单号/买家店铺名
 
 `成功返回：`
 
@@ -88,6 +89,8 @@
 	mortgageGoods           array           陈列费商品
 	display_fee             decimal         陈列费
 	paid_at                 string          订单支付时间
+    promo					array			促销活动
+	gifts					array			赠送商品
 	
 	user字段说明
 	shop            		array       收货店家
@@ -95,6 +98,43 @@
 
 	shop字段说明
 	name            		string      收货店家名
+
+	promos 子集介绍
+	
+	id						int					促销活动ID（编号）
+	name					string				促销名称
+	type					int					促销类型（1:自定义,2:钱返钱,3：钱返商品,4:商品返钱,5:商品返商品）
+	start_at				date				开始时间
+	end_at					date				结束时间
+	remark					string				促销备注
+	condition				array				促销申请条件
+	rebate					array				促销活动返利
+
+	condition 子集介绍
+
+	goods_id				int					条件商品ID
+	quantity				int					条件商品数量
+	unit					int					条件商品单位代码
+	goods_name				string				条件商品名称
+	goods_pirces			string				条件商品单位名称
+	money					int					条件金额
+	custom					strint				自定义条件	
+
+	rebate	子集介绍
+	
+	goods_id				int					返利商品ID
+	quantity				int					返利商品数量
+	unit					int					返利商品单位代码
+	goods_name				string				返利商品名称
+	goods_pirces			string				返利商品单位名称
+	money					int					返利金额
+	custom					strint				自定义返利
+	
+	gifts字段子集说明
+
+    id             		    int         	    商品id
+    num              	    int         	    个数
+    pieces           	    int         	    单位
 	
 	shippingAddress字段说明
 	consigner       		string       收货人姓名
@@ -145,25 +185,26 @@
 ####2.2.5 订单历史记录[get] (history-orders)
 `请求参数：`
 
-	start_at        date        开始时间
-	end_at          date        结束时间
+	start_at        	   date        		开始时间
+	end_at          	   date        		结束时间
+	id_name				  int/string		订单号/买家店铺名
 
 `成功返回：`
 
-	 historyOrder         array            历史订单详情
+	 historyOrder          array            历史订单详情
 	 
 	order字段说明
 
-	date              string              日期
+	date                   string              日期
 
-	data 			array               订单详情
+	data 			       array               订单详情
 	
 	data字段说明
           
-	id                   int              订单号
+	id                    int              订单号
 	delivery_finished_at  string          订单完成时间
 	user_shop_name        string          收货店家名称
-	pay_status           int              支付状态（0，未支付；1，已支付）
+	pay_status            int              支付状态（0，未支付；1，已支付）
    
 
 `失败返回：`

@@ -6,7 +6,7 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-sm-12 path-title">
-                    <a href="{{ url('asset/setting') }}">促销管理</a> >
+                    <a href="{{ url('promo/setting') }}">促销管理</a> >
                     <span class="second-level">促销商品</span>
                 </div>
             </div>
@@ -41,37 +41,30 @@
                                                 </td>
                                                 <td>
                                                     {{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_1)}}
-                                                    /
                                                     @if($goods->goods->goodsPieces->pieces_level_2)
-                                                        {{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_2)}}
+                                                        /{{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_2)}}
                                                     @endif
                                                     @if($goods->goods->goodsPieces->pieces_level_3)
                                                         / {{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_3)}}
                                                     @endif
                                                 </td>
-                                                <td>已{{cons()->valueLang('status',$goods->status)}}</td>
+                                                <td class="status-show" data-on="已启用" data-off="已禁用">
+                                                    已{{cons()->valueLang('status',$goods->status)}}</td>
                                                 <td>
-                                                    @if(!$goods->status)
-                                                        <a data-data='{"status":"{{cons('status.on')}}"}'
-                                                           data-method="post"
-                                                           data-no-loading="1"
-                                                           data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
-                                                           class="gray ajax no-prompt"><i
-                                                                    class="iconfont icon-qiyong"></i>启用</a>
-                                                        @else
-                                                        <a data-data='{"status":"{{cons('status.off')}}"}'
-                                                           data-method="post"
-                                                           data-no-loading="1"
-                                                           data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
-                                                           class="gray ajax no-prompt"><i
-                                                                    class="iconfont icon-jinyong"></i><span
-                                                                    class="red">禁用</span></a>
-                                                    @endif
+                                                    <a data-method="put"
+                                                       data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
+                                                       class="@if($goods->status == cons('status.on')) hidden @endif status  green no-prompt"><i
+                                                                class="iconfont icon-qiyong"></i>启用</a>
 
+                                                    <a data-method="put"
+                                                       data-url="{{url('api/v1/promo/goods/'.$goods->id.'/status')}}"
+                                                       class="gray @if($goods->status == cons('status.off')) hidden @endif status on no-prompt"><i
+                                                                class="iconfont icon-jinyong"></i>
+                                                        禁用</a>
                                                     <a data-url="{{url('api/v1/promo/goods/'.$goods->id.'/destroy')}}"
                                                        data-method="post"
                                                        data-no-loading="1"
-                                                       class="red  ajax no-prompt">
+                                                       class="red ajax no-prompt">
                                                         <i class="fa fa-trash-o"></i> 删除
                                                     </a>
                                                 </td>
@@ -102,8 +95,12 @@
                                             data-method="put">批量禁用
                                     </button>
                                 </div>
+                                <div class="col-sm-12 text-right">
+                                    {!! $promoGoods->render() !!}
+                                </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -111,5 +108,32 @@
     </div>
 @stop
 @section('js')
+    <script>
+        $('.status').click(function () {
+            var obj = $(this),
+                    html = obj.html(),
+                    url = obj.data('url'),
+                    method = obj.data('method');
+            $(obj).button({
+                loadingText: '<i class="fa fa-spinner fa-pulse"></i>'
+            });
+            $(obj).button('loading');
 
+            $.post(url, {'_method': method}, function (data) {
+
+                var _class = $(this).hasClass('on');
+
+                var tr = $(this).parents('tr');
+                //$(this).html(html);
+                if (_class) {
+                    tr.find('td.on').addClass('hidden');
+                    tr.find('td.off').removeClass('hidden').button('on');
+                } else {
+                    tr.find('td.off').addClass('hidden');
+                    tr.find('td.on').removeClass('hidden').button('off');
+                }
+
+            });
+        })
+    </script>
 @stop

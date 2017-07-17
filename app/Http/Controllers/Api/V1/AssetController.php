@@ -17,12 +17,10 @@ class AssetController extends Controller
     protected $user;
     protected $assetService;
 
-    public function __construct()
+    public function __construct(AssetService $assetService)
     {
-        $this->user = auth()->user();
-        $this->assetService = new AssetService();
+        $this->assetService = $assetService;
     }
-
     /**
      * 添加资产
      *
@@ -32,11 +30,12 @@ class AssetController extends Controller
     public function postAdd(Requests\Api\v1\CreateAssetRequest $request)
     {
         $data = $request->all();
-        if ($this->user->shop->asset()->create($data)) {
+        if (auth()->user()->shop->asset()->create($data)) {
             return $this->success('添加成功');
         }
         return $this->error('添加失败');
     }
+
 
     /**
      * 资产状态切换
@@ -89,11 +88,11 @@ class AssetController extends Controller
         if (Gate::denies('validate-shop-assetApply', $assetApply)) {
             return $this->forbidden('权限不足');
         }
-        if ($assetApply->status > 0) {
+        if ($assetApply->status) {
             return $this->success('已审核');
         }
-        if ($assetApply->asset->quantity < 1) {
-            return $this->error('资产已用完');
+        if ($assetApply->asset->quantity < $assetApply->quantity) {
+            return $this->error('资产不足');
         }
         if ($assetApply->update($request->only('status'))) {
             $assetApply->asset->quantity -= $assetApply->quantity;
@@ -134,6 +133,10 @@ class AssetController extends Controller
             return $this->forbidden('权限不足');
         }
         $data = array_filter($request->only('quantity', 'apply_remark', 'use_date'));
+        $quantity = array_get($data, 'quantity');
+        if($quantity && $quantity > $assetApply->asset->quantity){
+            return $this->error('数量不足');
+        }
         if ($assetApply->update($data)) {
             if (array_get($data, 'use_date')) {
                 $this->assetService->createLog($assetApply, 'use');

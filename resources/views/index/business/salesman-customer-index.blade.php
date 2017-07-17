@@ -1,7 +1,6 @@
 @extends('index.manage-master')
 @include('includes.salesman-customer-map')
-@section('subtitle', '业务管理-客户管理')
-
+@section('subtitle', '业务管理-'.(empty($data['type']) ? '客户' : '供应商').'管理')
 
 @section('container')
     @include('includes.menu')
@@ -10,15 +9,17 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <span class="second-level">客户管理</span>
+                    <span class="second-level">{{empty($data['type']) ? '客户' : '供应商'}}管理</span>
                 </div>
             </div>
             <div class="row salesman">
-                <form class="form-horizontal" method="get" action="{{ url('business/salesman-customer') }}"
+                <form class="form-horizontal" method="get"
+                      action="{{ url('business/salesman-customer') . (empty($data['type']) ? '' : '?type=supplier')}}"
                       autocomplete="off">
                     <div class="col-sm-12 form-group salesman-controls">
-                        <a class="btn btn-blue-lighter" href="{{ url('business/salesman-customer/create') }}"><i
-                                    class="fa fa-plus"></i>新增客户</a>
+                        <a class="btn btn-blue-lighter"
+                           href="{{ url('business/salesman-customer/create') . (empty($data['type']) ? '' : '?type=supplier')}}"><i
+                                    class="fa fa-plus"></i>新增{{empty($data['type']) ? '客户' : '供应商'}}</a>
                         <select name="salesman_id" class="ajax-select control">
                             <option value="">全部业务员</option>
                             @foreach($salesmen as $salesman)
@@ -26,12 +27,13 @@
                             @endforeach
                         </select>
                         <input class="control" type="text" name="name"
-                               value="{{ isset($data['name'])?$data['name']:'' }}" placeholder="客户名称">
+                               value="{{ isset($data['name'])?$data['name']:'' }}"
+                               placeholder="{{empty($data['type']) ? '客户' : '供应商'}}名称">
                         <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
                         <a class="btn btn-border-blue customer-map" href="javascript:"
                            data-target="#customerAddressMapModal"
                            data-toggle="modal">
-                            <i class="fa fa-map-marker"></i> 客户分布图
+                            <i class="fa fa-map-marker"></i> {{empty($data['type']) ? '客户' : '供应商'}}分布图
                         </a>
                     </div>
                     <div class="col-sm-12 table-responsive padding-clear">
@@ -39,7 +41,7 @@
                             <thead>
                             <tr>
                                 <th>编号</th>
-                                <th>客户名称</th>
+                                <th>{{empty($data['type']) ? '客户' : '供应商'}}名称</th>
                                 <th>平台账号</th>
                                 <th>联系人</th>
                                 <th>联系方式</th>
@@ -82,16 +84,24 @@
                                     </td>
                                     <td>
                                         <div role="group" class="btn-group btn-group-xs">
-                                            <a class=" edit"
-                                               href="{{ url('business/salesman-customer/' . $customer->id . '/edit') }}">
-                                                <i class="iconfont icon-xiugai"></i> 编辑
-                                            </a><a class="edit"
-                                                   href="{{ url('business/salesman-customer/' . $customer->id) }}">
-                                                <i class="iconfont icon-iconmingchengpaixu65"></i> 明细
-                                            </a>
-                                            <a class="edit" href="{{ url('business/salesman-customer/' . $customer->id . '/bill') }}">
-                                                <i class="iconfont icon-duizhangdan"></i> 对账单
-                                            </a>
+                                            @if(auth()->user()->type == cons('user.type.maker') && empty($data['type']))
+                                                @else
+                                                <a class=" edit"
+                                                   href="{{ url('business/salesman-customer/' . $customer->id . '/edit')  . (empty($data['type']) ? '' : '?type=supplier')}}">
+                                                    <i class="iconfont icon-xiugai"></i> 编辑
+                                                </a>
+                                            @endif
+                                            <a class="edit"
+                                               href="{{ url('business/salesman-customer/' . $customer->id) }}">
+                                                <i class="iconfont icon-iconmingchengpaixu65"></i> 明细</a>
+                                            @if(auth()->user()->type == cons('user.type.maker') && empty($data['type']))
+                                                @else
+                                                <a class="edit"
+                                                   href="{{ url('business/salesman-customer/' . $customer->id . '/bill') }}">
+                                                    <i class="iconfont icon-duizhangdan"></i> 对账单
+                                                </a>
+                                            @endif
+
                                             <input type="hidden" class="map-data"
                                                    data-lng="{{ $customer->business_address_lng }}"
                                                    data-lat="{{ $customer->business_address_lat }}"
@@ -124,7 +134,7 @@
                 var obj = $(this), data = [];
                 data['lng'] = obj.data('lng');
                 data['lat'] = obj.data('lat');
-                data['number'] = '客户 ' + obj.data('number');
+                data['number'] = obj.data('number');
                 data['name'] = obj.data('name');
                 data['href'] = site.url('business/salesman-customer/' + obj.data('id'));
                 mapData.push(data);

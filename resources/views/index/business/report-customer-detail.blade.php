@@ -22,6 +22,7 @@
                             <td>订货金额</td>
                             <td>退货金额</td>
                             <td>陈列费</td>
+                            <td>拜访照片</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -32,6 +33,15 @@
                                 <td>{{ $visit['orderAmount'] }}</td>
                                 <td>{{ $visit['returnAmount'] }}</td>
                                 <td>{{ $visit['hasDisplay'] }}</td>
+                                <td>
+                                    @foreach($visit['photos'] as $photo)
+                                        <a class="templet-modal" href="javascript:;" data-src="{{ $photo }}"
+                                           data-target="#templetModal" data-toggle="modal"><img width="50px"
+                                                                                                height="50px"
+                                                                                                src="{{$photo}}"
+                                                                                                alt="拜访照片"></a>
+                                    @endforeach
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -58,21 +68,21 @@
                         @foreach($salesGoods as $item)
                             @foreach($item['pieces'] as $piece=> $value)
                                 @if($piece ==array_keys($item['pieces'])[0])
-                                <tr>
-                                    <td rowspan="{{ $rowspan=count($item['pieces'])}}">{{ $item['id'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['name'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['stock'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['productionDate'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['returnCount'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['returnAmount'] }}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item['count'] }}</td>
-                                    <td rowspan="{{ $rowspan  }}">{{ $item['amount'] }}</td>
-                                @endif
-                                    <td>{{ ( $value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2), 2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece) }}</td>
-                                    <td>{{ $value['num'] }}</td>
-                                </tr>
-                            @endforeach
-                        @endforeach
+                                    <tr>
+                                        <td rowspan="{{ $rowspan=count($item['pieces'])}}">{{ $item['id'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['name'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['stock'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['productionDate'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['returnCount'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['returnAmount'] }}</td>
+                                        <td rowspan="{{ $rowspan }}">{{ $item['count'] }}</td>
+                                        <td rowspan="{{ $rowspan  }}">{{ $item['amount'] }}</td>
+                                        @endif
+                                        <td>{{ ( $value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2), 2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece) }}</td>
+                                        <td>{{ $value['num'] }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -102,6 +112,7 @@
             </div>
         </div>
     </div>
+    @include('includes.templet-model')
     </body>
 @stop
 

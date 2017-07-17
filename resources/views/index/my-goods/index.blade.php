@@ -226,6 +226,12 @@
                                                    class="no-form mortgage color-blue" title="设为抵费商品">抵费</a>
                                             @endif
 
+                                            @if(!$item->is_promo_goods && $item->shop_user_type == cons('user.type.maker'))
+                                                <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
+                                                   data-url="{{ url('api/v1/my-goods/' . $item->id . '/promo') }}"
+                                                   class="no-form mortgage color-blue" title="设为促销商品">设为促销</a>
+                                            @endif
+
                                             <a href="javascript:" data-method="put"
                                                data-url="{{ url('api/v1/my-goods/gift')}}"
                                                data-status="{{ $item->is_gift }}"

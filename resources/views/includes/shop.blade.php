@@ -157,7 +157,7 @@
             addressSelectChange(true, baiduMap);
             //选择文件显示图片预览层
             $('.fileinput-button').click(function(){
-                $(this).siblings('.preview').children('a').removeClass('hidden');
+                $(this).siblings('.preview').children('a').removeClass('hi   dden');
             });
 
 

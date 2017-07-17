@@ -18,16 +18,18 @@
 
 `成功返回：`
 
-  salesman               array           当前登录业务员
+    salesman               array           当前登录业务员
 
-  salesman字段子集说明
+    salesman字段子集说明
 
       id                    int             业务员id
       account               string          账号
+	  maker_id				int				厂家ID(不是则为null)
       shop_id               int             业务员所属店铺id
       name                  string          业务员名
       contact_information   string          联系方式
       avatar_url            string          头像
+	  is_maker				int				是否厂家业务员(0:不是,1:是)
       shop_type             int             所属店铺类型id (1终端 2批发 3供应)
 
 `失败返回：`
@@ -425,7 +427,10 @@
     contact_information     string          联系方式
     statistics              array           订单商品
     mortgage                array           抵费商品 [月份=>商品信息]
+	gifts					array			赠品
+	promo					array			促销活动信息
     display_fee             array           订单陈列费 [月份 => 费用]
+	photos					array			所有拜访图片url
     
     statistics字段子集说明
     
@@ -449,11 +454,16 @@
     pieces                  string          单位
     month                   string          月份
 
-     gifts字段子集说明
+    gifts字段子集说明
 
-        id                  int             商品id
-        num                 int             个数
-        pieces              int             单位
+    id                	    int             商品id
+    num              	    int             个数
+    pieces           	    int             单位
+
+    promo字段子集说明
+	同2.10.1
+<a href="#2.10.1">2.10.1</a>
+
 
  `失败返回：`
 
@@ -468,6 +478,7 @@
     goods                   array           拜访商品列表
     order_remark            string          订单备注
     display_remark          string          陈列费备注
+	apply_promo_id			int				促销申请ID
     gifts                   array           赠品
     display_fee             array           陈列费用（当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
     mortgage                array           抵费商品（当客户display_type 为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
@@ -500,8 +511,15 @@
 `成功返回：`
 	
 `失败返回：` 
+#### 2.5.4 添加拜访图片 [post] (visit/{visit_id}/add-photos)
+	photos					array			图片数组
+![](../img/photosTemplate.png)
 
-#### 2.5.4 判断是否可以添加拜访 [get] (can-add/{customer_id})
+`请求参数：`
+
+`成功返回：`
+
+#### 2.5.5 判断是否可以添加拜访 [get] (can-add/{customer_id})
 `请求参数：`
 
 `成功返回：`
@@ -509,7 +527,7 @@
 	
 `失败返回：`
 
-#### 2.5.5 根据月份获取客户剩余陈列商品 [get] (surplus-mortgage-goods)
+#### 2.5.6 根据月份获取客户剩余陈列商品 [get] (surplus-mortgage-goods)
 `请求参数：`
 
     customer_id         int                 客户id
@@ -536,7 +554,7 @@
 `失败返回：`
 
 
-#### 2.5.6 根据月份获取剩余陈列费 [get] (surplus-display-fee)
+#### 2.5.7 根据月份获取剩余陈列费 [get] (surplus-display-fee)
 `请求参数：`
 
      customer_id         int                 客户id
@@ -620,7 +638,8 @@
     mortgage                 array           抵费商品 [月份=>商品信息]
     displayFee               array           订单陈列费 [月份 => 费用]
     order                    array           平台订单详情 （含送货人信息）
-    gifts                   array             赠品
+    gifts                    array           赠品
+	promo                    array           促销活动
     
     order_goods字段子集说明
     
@@ -660,6 +679,9 @@
         num                 int             个数
         pieces              int             单位
 
+ 	promo 字段子集说明
+	同2.10.1
+
 
 #### 2.6.4 订单修改全部（删除后重新增加）[post] (update-all/{order_id})
 `请求参数：`
@@ -668,6 +690,7 @@
     display_fee             array           陈列费用 （当客户display_type 为1时入 ,如 ['2016-10'=> 100, '2016-11' => 100]）
     mortgage                array           抵费商品 （当客户display_type为2时传入，月份=>['id'=>抵费商品id, 'num'=>商品数量] 格式。 如['2016-10'=>['id' => 5, 'num'=>100]]）
     order_remark            string          订单备注
+	apply_promo_id			int				促销活动ID
     display_remark          string          陈列费备注
     gifts                   array           赠品
 
@@ -732,9 +755,9 @@
 
 `成功返回：`
 
-   categories       array           店铺分类数组
+    categories       array           店铺分类数组
 
-   categories       子集介绍
+    categories       子集介绍
 
         id              int                 分类id
         pid             int                 分类父级id
@@ -749,10 +772,195 @@
 
 `成功返回：`
 
-   gifts       array           赠品列表
+      gifts       array           赠品列表
 
-   gifts子集介绍
+      gifts子集介绍
 
         id                  int                 赠品id
         name                string              赠品名
         pieces              array               赠品所有单位
+
+### 2.9 资产 asset
+####2.9.1 获取店铺所有资产[get] (/)
+`请求参数：`
+
+`成功返回：`
+
+    assets               array                厂家资产列表
+    assets子集介绍
+    id                  int                 资产id
+    name                string              资产名称
+    quantity            int                 资产数量
+    unit                string              资产单位
+    condition           string              申请条件
+    remark              string              资产备注
+  `失败返回：`
+####2.9.2 申请资产[post] (/apply)
+`请求参数：`
+
+    asset_id            int                 资产ID
+    client_id           int                 客户ID
+    quantity            int                 申请数量
+    apply_remark        string              申请备注
+`成功返回：`
+
+`失败返回：`
+
+####2.9.3 资产申请列表 [get] (/apply)
+`请求参数:`
+
+	 start_at				date				开始时间
+	 end_at					date				结束时间
+	 condition				string				客户名称
+	 asset					string/int			资产名称或ID
+	 status					int	0/1				审核状态 0：未审核，1：通过
+	 
+
+`成功返回:`
+
+	applyLists          	array				资产申请列表
+
+	applyLists子集介绍
+
+	id						int					资产申请ID
+	asset_id				int					资产编号
+	client_id				int					客户ID
+	quantity				int					申请数量
+	salesman_id				int					业务员ID
+	use_date				date				开始使用时间
+	apply_remark			string				申请备注
+	status					int					审核状态(0:未审核,1:审核通过)
+	created_at				date				申请日期
+	pass_date				date				通过时间
+	client					array				客户信息
+	asset					array				资产信息
+	salesman				array				业务员信息
+
+	client 子集介绍
+	同2.3.1
+	asset子集介绍
+	同2.9.1
+	salesman子集介绍
+	同2.1.1
+
+
+`失败返回:`
+
+#### 2.9.4 添加使用时间 [put] (/use-date/{apply_id})
+`请求参数:`
+
+	 date                   date				开始使用时间
+`成功返回:`
+
+`失败返回:`
+
+
+#### 2.9.5  删除申请 [delete] (/apply/{apply_id})
+`请求参数:`
+
+`成功返回:`
+
+	
+`失败返回:`
+
+### 2.10  促销 promo
+
+#### 2.10.1 获取促销活动列表 [get] (/)
+`请求参数:`
+
+`成功返回:`
+
+	promos					array				促销活动列表
+
+	promos 子集介绍
+	
+	id						int					促销活动ID（编号）
+	name					string				促销名称
+	type					int					促销类型（1:自定义,2:钱返钱,3：钱返商品,4:商品返钱,5:商品返商品）
+	start_at				date				开始时间
+	end_at					date				结束时间
+	remark					string				促销备注
+	condition				array				促销申请条件
+	rebate					array				促销活动返利
+
+	condition 子集介绍
+
+	goods_id				int					条件商品ID
+	quantity				int					条件商品数量
+	unit					int					条件商品单位代码
+	goods_name				string				条件商品名称
+	goods_pirces			string				条件商品单位名称
+	money					int					条件金额
+	custom					strint				自定义条件	
+
+	rebate	子集介绍
+	
+	goods_id				int					返利商品ID
+	quantity				int					返利商品数量
+	unit					int					返利商品单位代码
+	goods_name				string				返利商品名称
+	goods_pirces			string				返利商品单位名称
+	money					int					返利金额
+	custom					strint				自定义返利			
+						
+	
+`失败返回:`
+
+#### 2.10.2  业务员获取促销申请列表 [get] (/apply)
+`请求参数:`
+	
+	start_at				date				开始时间
+	end_at					date				结束时间
+	client_name				string				客户名称
+	status					int					审核状态(0:未审核,1:通过)
+
+`成功返回:`
+
+	id						int					申请ID
+	pass_date				date				通过时间
+	status					int					审核状态(0:未审核,1:通过)
+	apply_remark			string				申请备注
+	created_at 				date				申请时间
+	client					array				客户信息
+	promo					array				促销信息
+	
+	client 子集介绍
+	同2.3.1
+	promo  子集介绍
+	同2.10.1
+	
+`失败返回:`
+
+#### 2.10.3  申请促销 [post] (/apply)
+`请求参数:`
+	
+	promo_id				int					促销ID
+	client_id				int					客户ID
+	apply_remark			string				申请备注
+
+`成功返回:`
+
+	
+`失败返回:`
+#### 2.10.4  获取审核通过的促销活动 [get] (/apply/pass)
+`请求参数:`
+
+	client_id				int					客户ID
+
+`成功返回:`
+
+	promos					array				审核通过的活动列表
+
+	promos 子集介绍
+	同 2.10.1
+	增加 
+    apply_id		    	int					申请ID
+	
+`失败返回:`
+
+#### 2.10.5  删除申请 [delete] (/apply/{apply_id})
+`请求参数:`
+
+`成功返回:`
+	
+`失败返回:`

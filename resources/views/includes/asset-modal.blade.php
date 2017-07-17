@@ -14,7 +14,7 @@
                         <div class="form-group">
 
                             <label class="col-xs-2 control-label"><span class="red">*</span> 资产名称:</label>
-                            <div class="col-xs-7 col-md-6">
+                            <div class="col-xs-7 col-md-5">
                                 <input name="id" class="form-control" type="hidden">
                                 <input name="name" class="form-control" type="text">
                             </div>
@@ -37,20 +37,20 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">申请条件:</label>
                             <div class="col-xs-7 col-md-6">
-                                <textarea name="condition" class="form-control"></textarea>
+                                <textarea name="condition" maxlength="100" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-xs-2 control-label">资产备注:</label>
                             <div class="col-xs-7 col-md-6">
-                                <textarea name="remark" class="form-control"></textarea>
+                                <textarea name="remark" maxlength="100" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-8 col-md-6 col-xs-offset-2 operating-panel">
                                 <label><input type="radio" name="status" value="0"/>禁用</label>
                                 <label><input type="radio" checked name="status" value="1"/>启用</label>
-                                <p class="hidden">(温馨提示:资产禁用后才能修改)</p>
+                                <p class="tip hidden">(温馨提示:资产禁用后才能修改)</p>
                             </div>
 
                         </div>
@@ -150,17 +150,16 @@
                     form = $('form.add-modify');
             add_modify.on('shown.bs.modal', function (parent) {
                 var obj = $(parent.relatedTarget);
+                form.find('input,textarea').removeClass('white-bg');
                 action = '添加资产';
                 if (obj.hasClass('view')) {
                     action = '查看资产';
-                    form.find('input').prop('disabled', true);
-                    form.find('textarea').prop('disabled', true);
-                    $('p.hidden').removeClass('hidden');
+                    form.find('input,textarea').prop('disabled', true).addClass('white-bg');
+                    $('p.tip').removeClass('hidden');
                     form.find('.btn-submit').addClass('hidden');
                 } else {
-                    form.find('input').removeAttr("disabled");
-                    form.find('textarea').removeAttr("disabled");
-                    $('p').addClass('hidden');
+                    form.find('input,textarea').removeAttr("disabled");
+                    $('p.tip').addClass('hidden');
                     form.find('.btn-submit').removeClass('hidden');
                     if (obj.hasClass('edit')) {
                         action = '修改资产';
@@ -178,6 +177,9 @@
                 form.find('textarea[name = condition]').val(data.data('condition'));
                 form.find('textarea[name = remark]').val(data.data('remark'));
                 form.find('input[name = status]:eq(' + data.data('status') + ')').prop('checked', true);
+            }).on('hidden.bs.modal', function () {
+                $('input').css('border-color','#ccc');
+                $('p.ajax-error').remove();
             });
 
             var viewModal = $('#view');

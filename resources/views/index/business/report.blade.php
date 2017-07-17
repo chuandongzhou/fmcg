@@ -1,11 +1,9 @@
 @extends('index.manage-master')
-@section('subtitle', '业务管理-业务员目标')
+@section('subtitle', '业务管理-业务报表')
 @section('top-title')
     <a href="{{ url('business/salesman') }}">业务管理</a> >
     <span class="second-level"> 业务报表</span>
 @stop
-
-
 @include('includes.timepicker')
 
 @section('container')

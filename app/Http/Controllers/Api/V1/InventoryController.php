@@ -53,13 +53,19 @@ class InventoryController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function postGetGoods(Request $request)
+    public function getGoodsList(Request $request)
     {
-        $conditions = $request->only('nameOrCode', 'ids');
+        $conditions = $request->only('nameOrCode', 'ids','page');
         $shop = auth()->user()->shop;
-        $result = (new GoodsService())->getShopGoods($shop, $conditions, ['goodsPieces']);
-        $goods = $result['goods']->orderBy('updated_at', 'DESC')->paginate();
-
+        $goods = $shop->goods()->with('goodsPieces')->where(function($query) use ($conditions) {
+            // 名称or条形码
+            if ($nameOrCode = (array_get($conditions,'nameOrCode'))) {
+                $query->OfNameOrCode($nameOrCode);
+            }
+            if (isset($conditions['ids'])) {
+                $query->whereNotIn('id', $conditions['ids']);
+            }
+        })->orderBy('updated_at', 'DESC')->paginate();
         $goods->each(function ($item) {
             $item->goodsPieces->pieces_level_1_lang = cons()->valueLang('goods.pieces',
                 $item->goodsPieces->pieces_level_1);
@@ -68,7 +74,9 @@ class InventoryController extends Controller
             $item->goodsPieces->pieces_level_3_lang = cons()->valueLang('goods.pieces',
                 $item->goodsPieces->pieces_level_3);
         });
-        return $this->success(['goods' => $goods->toArray()]);
+        return $this->success([
+            'goods' => $goods->toArray(),
+        ]);
     }
 
     /**

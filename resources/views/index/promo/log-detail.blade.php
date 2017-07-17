@@ -16,7 +16,8 @@
                     <a class="go-back btn btn-border-blue" href="javascript:history.back()"><i
                                 class="iconfont icon-fanhui"></i> 返回</a>
                     @if($apply->status < cons('promo.review_status.pass'))
-                        <a class="btn btn-blue-lighter"> 通过</a>
+                        <a data-method="put" data-url="{{url('api/v1/promo/apply/pass/'.$apply->id)}}"
+                           class="btn btn-blue-lighter ajax"> 通过 </a>
                     @endif
                 </div>
                 <div class="col-sm-12">
@@ -45,13 +46,22 @@
                                                                 class="iconfont icon-xiugai"></i> 编辑</a>
                                                 @endif
                                             </td>
+                                            @if($apply->pass_date)
+                                                <td>
+                                                    通过时间
+                                                </td>
+                                            @endif
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td>{{$apply->id}}</td>
-                                            <td>{{$apply->promo->name ?? ''}}</td>
-                                            <td>{{$apply->promo->start_at ?? ''}} 至 {{$apply->promo->end_at}}</td>
+                                            <td width="19%">{{$apply->promo->name ?? ''}}</td>
+                                            <td>
+                                                <div>{{$apply->promo->start_at ?? ''}}</div>
+                                                至
+                                                <div>{{$apply->promo->end_at}}</div>
+                                            </td>
                                             <td>{{$apply->salesman->name ?? ''}}</td>
                                             <td>{{$apply->created_at}}</td>
                                             <td width="20%">
@@ -62,6 +72,11 @@
                                                       data-name="apply_remark">{{ $apply->apply_remark ?? '' }}</textarea>
                                                 </div>
                                             </td>
+                                            @if($apply->pass_date)
+                                                <td>
+                                                    {{$apply->pass_date ?? ''}}
+                                                </td>
+                                            @endif
                                         </tr>
                                         </tbody>
                                     </table>
@@ -84,18 +99,18 @@
                                         <tbody>
                                         <tr>
                                             <td>{{$apply->client->name ?? ''}}</td>
-                                            <td>{{$apply->client->contact_person ?? ''}}</td>
-                                            <td>{{$apply->client->contact_info ?? ''}}</td>
+                                            <td>{{$apply->client->contact ?? ''}}</td>
+                                            <td>{{$apply->client->contact_information ?? ''}}</td>
                                             <td>
-                                                <p>{{$apply->client->shopAddress->area_name ?? ''}}</p>
+                                                <p>{{$apply->client->business_address_name ?? ''}}</p>
                                                 <p class="prop-item">
                                                     <a href="javascript:" data-target="#shopAddressMapModal"
                                                        data-toggle="modal"
-                                                       data-x-lng="{{ isset($apply->client->shopAddress)? $apply->client->x_lng : 0 }}"
-                                                       data-y-lat="{{ isset($apply->client->shopAddress)? $apply->client->y_lat : 0 }}"
-                                                       data-address="{{ isset($apply->client->shopAddress) ? $apply->client->shopAddress->address_name : '' }}"
-                                                       data-contact_person="{{ $apply->client->contact_person }}"
-                                                       data-phone= {{$apply->client->contact_info ?? ''}}>
+                                                       data-x-lng="{{ isset($apply->client->business_address_name)? $apply->client->business_address_lng : 0 }}"
+                                                       data-y-lat="{{ isset($apply->client->business_address_name)? $apply->client->business_address_lat : 0 }}"
+                                                       data-address="{{ isset($apply->client->business_address_name) ? $apply->client->business_address_name : '' }}"
+                                                       data-contact_person="{{ $apply->client->contact }}"
+                                                       data-phone= {{$apply->client->contact_information ?? ''}}>
                                                         <i class="iconfont icon-chakanditu"></i> 查看地图
                                                     </a>
                                                 </p>
@@ -112,15 +127,10 @@
                                 <div class="panel-container table-responsive promotion-msg-wrap">
                                     @if($apply->promo->type == cons('promo.type.custom'))
                                         <div class="row custom">
-                                            <div class="col-sm-5 ">
-                                                {{$apply->promo->condition[0]->custom}}
-                                            </div>
-                                            <div class="col-sm-2 item-text  padding-clear">
-                                                <span class="fan">返</span>
-                                            </div>
-                                            <div class="col-sm-5  ">
-                                             <textarea name="rebate[custom]" placeholder="填写内容" rows="5"
-                                                       cols="30">{{$apply->promo->rebate[0]->custom}}</textarea>
+                                            <div class="col-sm-12 item-text other">
+                                                <span>{{$apply->promo->condition[0]->custom ?? ''}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <span class="fan">返</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span>{{$apply->promo->rebate[0]->custom ?? ''}}</span>
                                             </div>
                                         </div>
                                     @elseif($apply->promo->type == cons('promo.type.goods-goods'))
@@ -152,7 +162,7 @@
                                                 </table>
                                             </div>
                                             <div class="col-sm-2 padding-clear item-txt prompt">
-                                                任意下单总量达到 <span class="fan">返</span>
+                                                下单总量达到&nbsp;&nbsp;&nbsp;&nbsp;<span class="fan">返</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </div>
                                             <div class="col-sm-5">
                                                 <div>
@@ -212,16 +222,15 @@
                                                 </table>
                                             </div>
                                             <div class="col-sm-6 item-text">
-                                                任意下单总量达到<span class="fan">返</span>
-                                                ￥
-                                                <span>{{$apply->promo->rebate[0]->money}}</span>
+                                                下单总量达到&nbsp;&nbsp;&nbsp;&nbsp;<span class="fan">返</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                ￥<span>{{$apply->promo->rebate[0]->money}}</span>
                                             </div>
                                         </div>
                                     @elseif($apply->promo->type == cons('promo.type.money-goods'))
                                         <div class="row  money-goods">
                                             <div class="col-sm-5 item-text">
-                                                任意下单总量达到 ￥ <span>{{$apply->promo->condition[0]->money}}</span>
-                                                <span class="fan pull-right">返</span>
+                                                下单总量达到 ￥ <span>{{$apply->promo->condition[0]->money}}</span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fan pull-right">返</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </div>
                                             <div class="col-sm-7">
                                                 <table class="table table-bordered table-center public-table">
@@ -253,12 +262,17 @@
                                     @elseif($apply->promo->type == cons('promo.type.money-money'))
                                         <div class="row money-money">
                                             <div class="col-sm-12 item-text other">
-                                                任意下单总量达到 ￥ <span>{{$apply->promo->condition[0]->money}}</span>
-                                                <span class="fan">返</span>
+                                                下单总量达到 ￥ <span>{{$apply->promo->condition[0]->money}}</span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fan">返</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                 ￥ <span>{{$apply->promo->rebate[0]->money}}</span>
                                             </div>
                                         </div>
                                     @endif
+                                    <div class="row">
+                                        <div class="col-sm-12 item-text other">
+                                            <b class="gray">促销备注 :</b> {{$apply->promo->remark ?? ''}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +305,7 @@
                     data[name] = newValue;
                     self.html('<i class="fa fa-spinner fa-pulse"></i> 操作中');
                     $.ajax({
-                        url: site.api('promo/apply/modify/' + assetId),
+                        url: site.api('promo/apply/edit/' + assetId),
                         method: 'put',
                         data: data
                     }).done(function (data, textStatus, jqXHR) {

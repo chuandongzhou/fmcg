@@ -12,13 +12,14 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/order/return-orders') }}">退r货单</a> >
+                    <a href="{{ url('business/order/return-orders') }}">退货单</a> >
                     <span class="second-level">退货单详情</span>
                 </div>
             </div>
 
             <div class="row order-detail business-detail">
                 <div class="col-sm-12 go-history">
+
                     <a class="btn go-back btn-border-blue" href="javascript:history.go(-1)">返回</a>
                     @if($order->can_pass)
                         <button

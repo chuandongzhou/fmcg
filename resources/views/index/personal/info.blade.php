@@ -83,7 +83,7 @@
                                                 <i class="icon iconfont icon-dizhi"></i>
                                                 <li class="address-panel-item">
                                                     <span class="panel-name">店家地址</span>
-                                                    <span>{{ $shop->address }}</span>
+                                                    <span class="content">{{ $shop->address }}</span>
                                                 </li>
                                             </ul>
                                         </div>

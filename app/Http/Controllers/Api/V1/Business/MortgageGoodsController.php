@@ -22,7 +22,7 @@ class MortgageGoodsController extends Controller
     {
         $shop = salesman_auth()->user() ? salesman_auth()->user()->shop : auth()->user()->shop;
 
-        $mortgageGoods = $shop->mortgageGoods()->active()->get()->each(function($mortgage){
+        $mortgageGoods = $shop->mortgageGoods()->active()->get()->each(function ($mortgage) {
             $mortgage->setAppends(['pieces_name']);
         });
         return $this->success(compact('mortgageGoods'));

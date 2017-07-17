@@ -170,19 +170,19 @@ class SalesmanController extends Controller
 
         //本月已完成订单金额
         $thisMonthCompleted = $salesman->orderForms()->whereBetween('created_at',
-            [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount');
+            [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount') ?? 0;
 
         //未处理订货单数
-        $untreatedOrderForms = $salesman->orderForms()->OfUntreated()->count();
+        $untreatedOrderForms = $salesman->orderForms()->OfUntreated()->count() ?? 0;
         //未处理退货单数
-        $untreatedReturnOrders = $salesman->returnOrders()->OfUntreated()->count();
+        $untreatedReturnOrders = $salesman->returnOrders()->OfUntreated()->count() ?? 0;
 
         // 今日拜访数
         $todayVisitCount = $salesman->visits()->whereBetween('created_at',
             [
                 Carbon::today(),
                 (new Carbon())->endOfDay()
-            ])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count();
+            ])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count() ?? 0;
 
         return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
             'todayVisitCount');

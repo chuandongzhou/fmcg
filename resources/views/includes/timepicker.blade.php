@@ -34,7 +34,6 @@
                     maxDateContent = new Date(year + '-' + month + '-' + day);
                 }
 
-
                 obj.datetimepicker({
                     icons: {
                         time: "fa fa-clock-o",

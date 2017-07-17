@@ -1,7 +1,5 @@
 @extends('index.manage-master')
 @section('subtitle', '资产管理')
-@include('includes.shop-address-map-modal')
-@include('includes.asset-modal')
 @section('container')
     @include('includes.menu')
     <div class="page-content-wrapper">
@@ -38,7 +36,7 @@
                                     <table class="table table-bordered table-center public-table ">
                                         <thead>
                                         <tr>
-                                            <td>资产编号</td>
+                                            <td>申请编号</td>
                                             <td>资产名称</td>
                                             <td>申请条件</td>
                                             <td>业务员</td>
@@ -65,9 +63,9 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td>{{$assetApply->asset->id ?? ''}}</td>
+                                            <td>{{$assetApply->id ?? ''}}</td>
                                             <td>{{$assetApply->asset->name ?? ''}}</td>
-                                            <td>{{$assetApply->asset->condition ?? ''}}</td>
+                                            <td width="20%">{{$assetApply->asset->condition ?? ''}}</td>
                                             <td>{{$assetApply->salesman->name ?? ''}}</td>
                                             <td width="20%">
                                                 {{$assetApply->asset->remark ?? ''}}
@@ -102,7 +100,7 @@
                                 <div class="panel-heading">
                                     <h3 class="panel-title">客户信息</h3>
                                 </div>
-                                <div class="panel-container table-responsive">
+                                <div class="panel-container">
                                     <table class="table table-bordered table-center public-table">
                                         <thead>
                                         <tr>
@@ -112,7 +110,7 @@
                                             <th>营业地址</th>
                                             <th>
                                                 开始使用时间
-                                                @if(is_null($assetApply->use_date))
+                                                @if(!$assetApply->status >= cons('asset_apply.status.approved'))
                                                     <a class="edit display-use-date"
                                                        onclick="editText('display-use-date')"><i
                                                                 class="iconfont icon-xiugai use-date"></i> 编辑</a>
@@ -123,18 +121,18 @@
                                         <tbody>
                                         <tr>
                                             <td>{{$assetApply->client->name ?? ''}}</td>
-                                            <td>{{$assetApply->client->contact_person ?? ''}}</td>
-                                            <td>{{$assetApply->client->contact_info ?? ''}}</td>
+                                            <td>{{$assetApply->client->contact ?? ''}}</td>
+                                            <td>{{$assetApply->client->contact_information ?? ''}}</td>
                                             <td>
-                                                <p>{{$assetApply->client->shopAddress->area_name ?? ''}}</p>
+                                                <p>{{$assetApply->client->business_address_name}}</p>
                                                 <p class="prop-item">
                                                     <a href="javascript:" data-target="#shopAddressMapModal"
                                                        data-toggle="modal"
-                                                       data-x-lng="{{ isset($assetApply->client->shopAddress)? $assetApply->client->x_lng : 0 }}"
-                                                       data-y-lat="{{ isset($assetApply->client->shopAddress)? $assetApply->client->y_lat : 0 }}"
-                                                       data-address="{{ isset($assetApply->client->shopAddress) ? $assetApply->client->shopAddress->address_name : '' }}"
-                                                       data-contact_person="{{ $assetApply->client->contact_person }}"
-                                                       data-phone= {{$assetApply->client->contact_info ?? ''}}>
+                                                       data-x-lng="{{ isset($assetApply->client)? $assetApply->client->business_address_lng : 0 }}"
+                                                       data-y-lat="{{ isset($assetApply->client)? $assetApply->client->business_address_lat : 0 }}"
+                                                       data-address="{{ isset($assetApply->client) ? $assetApply->client->business_address_name : '' }}"
+                                                       data-contact_person="{{ $assetApply->client->contact}}"
+                                                       data-phone= {{$assetApply->client->contact_information ?? ''}}>
                                                         <i class="iconfont icon-chakanditu"></i> 查看地图
                                                     </a>
                                                 </p>
@@ -142,9 +140,11 @@
                                             <td width="20%">
                                                 <div id="display-use-date">{{$assetApply->use_date ?? '---'}}</div>
                                                 <div class="enter-num-panel ">
-                                            <textarea placeholder="2000-10-10" class="edit-text" autofocus
-                                                      maxlength="50" data-id="{{$assetApply->id}}"
-                                                      data-name="use_date">{{ $assetApply->use_date ?? '' }}</textarea>
+                                                    <input data-format="YYYY-MM-DD" placeholder="2000-10-10"
+                                                           class="edit-text datetimepicker" autofocus
+                                                           maxlength="50" data-id="{{$assetApply->id}}"
+                                                           data-name="use_date"
+                                                           value="{{ $assetApply->use_date ?? '' }}">
                                                 </div>
                                             </td>
                                         </tr>
@@ -186,6 +186,9 @@
             </div>
         </div>
     </div>
+    @include('includes.shop-address-map-modal')
+    @include('includes.asset-modal')
+    @include('includes.timepicker')
 @stop
 @section('js')
     <script type="text/javascript">

@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 statement-table-wrap">
-                    <div class="panel panel-default">
+                    {{--<div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title text-center">促销对账单</h3>
                         </div>
@@ -74,7 +74,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div>--}}
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title text-center">陈列费对账单</h3>
@@ -97,7 +97,7 @@
                                                 @if($mortgageGoods == $order->mortgageGoods->first())
                                                     <td rowspan="{{$order->mortgageGoods->count()}}">{{$order->created_at}}
                                                     </td>
-                                                    <td rowspan="{{$order->mortgageGoods->count()}}">{{$order->id}}</td>
+                                                    <td rowspan="{{$order->mortgageGoods->count()}}">{{$order->order_id}}</td>
                                                 @endif
                                                 <td>{{$mortgageGoods->pivot->month ?? ''}}</td>
                                                 <td>{{$mortgageGoods->goods_name ?? ''}}</td>
@@ -109,7 +109,7 @@
                                             <tr>
                                                 @if($displayFees == $order->displayFees->first())
                                                     <td rowspan="{{$order->displayFees->count()}}">{{$order->created_at}}</td>
-                                                    <td rowspan="{{$order->displayFees ->count()}}">{{$order->id}}</td>
+                                                    <td rowspan="{{$order->displayFees ->count()}}">{{$order->order_id}}</td>
                                                 @endif
                                                 <td>{{$displayFees->month ?? ''}}</td>
                                                 <td>现金</td>
@@ -140,18 +140,18 @@
                                 </thead>
                                 <tbody>
                                 @foreach($bill['allOrders'] as $order)
-                                    @if($order->orderGoods->count())
-                                        @foreach($order->orderGoods as $orderGoods)
+                                    @if($order->orderGoods->where('type',0)->count())
+                                        @foreach($order->orderGoods->where('type',0) as $orderGoods)
                                             <tr>
-                                                @if($orderGoods == $order->orderGoods->first())
-                                                    <td rowspan="{{$order->orderGoods->count()}}">{{$order->created_at}}</td>
-                                                    <td rowspan="{{$order->orderGoods->count()}}">{{$order->id}}</td>
+                                                @if($orderGoods == $order->orderGoods->where('type',0)->first())
+                                                    <td rowspan="{{$order->orderGoods->where('type',0)->count()}}">{{$order->created_at}}</td>
+                                                    <td rowspan="{{$order->orderGoods->where('type',0)->count()}}">{{$order->id}}</td>
                                                 @endif
                                                 <td>{{$orderGoods->goods->name ?? ''}}</td>
                                                 <td>{{$orderGoods->num ?? ''}} {{$orderGoods->pivot->pieces_name ?? ''}}</td>
                                                 <td>{{$orderGoods->total_price ?? ''}}</td>
                                                 @if($orderGoods == $order->orderGoods->first())
-                                                    <td rowspan="{{$order->orderGoods->count()}}">{{$order->how_much_discount}}</td>
+                                                    <td rowspan="{{$order->orderGoods->where('type',0)->count()}}">{{$order->how_much_discount}}</td>
                                                 @endif
                                             </tr>
                                         @endforeach

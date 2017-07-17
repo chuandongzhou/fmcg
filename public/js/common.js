@@ -350,7 +350,6 @@ var commonAjaxSetup = function () {
                 doneText: '操作成功',
                 failText: '操作失败'
             });
-
             if (typeof tinymce === 'object') {
                 tinyMCE.triggerSave();
             }
@@ -548,9 +547,9 @@ var commonUploadSetup = function () {
  */
 var addAddFunc = function () {
     var container = $('.address-list')
-        //, addButton = $('#add-address')
+    //, addButton = $('#add-address')
         , btnAdd = $('.btn-add')
-        //, addLimit = 500   //最大地址限制
+    //, addLimit = 500   //最大地址限制
         , province = $('.add-province')
         , city = $('.add-city')
         , district = $('.add-district')
@@ -1202,15 +1201,14 @@ var formSubmitByGet = function (exceptName) {
 
     $('.search-by-get').on('click', function () {
         var obj = $(this), form = obj.closest('form'), query = new Array(), action = form.attr('action');
-
-
+        
         $.each(form.serializeArray(), function (i, o) {
             if (o.value && $.inArray(o.name, exceptName) == -1) {
                 query.push(o.name + '=' + o.value);
             }
         });
         var povit = action.indexOf('?') >= 0 ? '&' : '?', queryString = query.length ? povit + query.join('&') : '';
-        window.location.href = (queryString) ? action + queryString : window.location.pathname;
+        window.location.href = (queryString) ? action + queryString : action;
         return false;
     })
 }
@@ -1224,7 +1222,11 @@ var onCheckChange = function (parent_selectors, target_selectors) {
     var parents = $(parent_selectors);
     var targets = $(target_selectors);
     parents.change(function () {
-        targets.prop('checked', $(this).prop('checked'));
+        targets.each(function () {
+            if (!$(this).prop('disabled')) {
+                $(this).prop('checked', parents.prop('checked'));
+            }
+        })
     });
 
     targets.change(function () {

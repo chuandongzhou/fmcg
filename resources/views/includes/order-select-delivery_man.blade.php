@@ -56,7 +56,7 @@
             sendModal.on('shown.bs.modal', function (e) {
                 cropperParent = $(e.relatedTarget);
                 if (cropperParent.hasClass('send-goods')) {
-                    btnSend.attr('data-data', '{"order_id" : "' + cropperParent.data('id') + '"}');
+                    btnSend.before('<input type="hidden" name="order_id" value="' + cropperParent.data('id') + '">');
                 } else if (cropperParent.hasClass('batch-send')) {
                     cropperParent.closest('form').find('input.order_id').each(function () {
                         var target = $(this);
@@ -82,9 +82,10 @@
 
 
             }).on('hidden.bs.modal', function () {
-                btnSend.removeAttr('data-data');
+                /*btnSend.removeAttr('data-data');*/
+                $(this).find($('input[name *= order_id]')).remove();
                 $('.delivery-info-clone').remove();
-//                addDelivery.unbind('click');
+                //addDelivery.unbind('click');
             });
         });
     </script>

@@ -182,64 +182,64 @@
                                             </td>
                                         </tr>
 
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up') ? '提货人信息' : '收货人信息' }}</h3>
-                        </div>
-                        <div class="panel-container table-responsive">
-                            <table class="table table-bordered table-center table-th-color">
-                                <thead>
-                                <th>{{ cons()->lang('user.type')[$order->user_type_name] }}名称</th>
-                                <th>联系人</th>
-                                <th>联系电话</th>
-                                @if( $order->pay_type!=cons('pay_type.pick_up'))
-                                    <th>收货地址</th>
-                                @endif
-                                </thead>
-                                <tr>
-                                    <td><p>{{ $order->user_shop_name }}</p>
-                                        @if ($order->user && $order->user->shop_id)
-                                            <p class="prop-item">
-                                                <a href="javascript:"
-                                                   onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
-                                                   class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
-                                            </p>
-                                        @endif
-                                    </td>
-                                    <td>{{   $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->consigner ?? '':$order->user->shop->contact_person ?? ''}}</td>
-                                    <td>{{ $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->phone ?? '': $order->user->shop->contact_info ?? '' }}</td>
-                                    @if( $order->pay_type != cons('pay_type.pick_up'))
-                                        <td>
-                                            <p> {{ $order->shippingAddress->address->address_name ?? '' }}</p>
-                                            <p class="prop-item">
-                                                <a href="javascript:" data-target="#shippingAddressMapModal"
-                                                   data-toggle="modal"
-                                                   data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
-                                                   data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
-                                                   data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
-                                                   data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
-                                                   data-phone= {{ $order->shippingAddress->phone ?? ''}}>
-                                                    <i class="iconfont icon-chakanditu"></i> 查看地图
-                                                </a>
-                                            </p>
-                                        </td>
-                                    @endif
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                @if($order->pay_type!=cons('pay_type.pick_up') && (int)$order['send_at'])
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">配送人信息</h3>
+                                    </table>
+                                </div>
                             </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{{  $order->pay_type==cons('pay_type.pick_up') ? '提货人信息' : '收货人信息' }}</h3>
+                                </div>
+                                <div class="panel-container table-responsive">
+                                    <table class="table table-bordered table-center table-th-color">
+                                        <thead>
+                                        <th>{{ cons()->lang('user.type')[$order->user_type_name] }}名称</th>
+                                        <th>联系人</th>
+                                        <th>联系电话</th>
+                                        @if( $order->pay_type!=cons('pay_type.pick_up'))
+                                            <th>收货地址</th>
+                                        @endif
+                                        </thead>
+                                        <tr>
+                                            <td><p>{{ $order->user_shop_name }}</p>
+                                                @if ($order->user && $order->user->shop_id)
+                                                    <p class="prop-item">
+                                                        <a href="javascript:"
+                                                           onclick="window.open('{{ url('personal/chat/kit?remote_uid=' .$order->user->shop_id) }}&fullscreen', 'webcall',  'toolbar=no,title=no,status=no,scrollbars=0,resizable=0,menubar＝0,location=0,width=700,height=500');"
+                                                           class="contact"><span class="iconfont icon-kefu"></span> 联系客户</a>
+                                                    </p>
+                                                @endif
+                                            </td>
+                                            <td>{{   $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->consigner ?? '':$order->user->shop->contact_person ?? ''}}</td>
+                                            <td>{{ $order->pay_type!=cons('pay_type.pick_up')?$order->shippingAddress->phone ?? '': $order->user->shop->contact_info ?? '' }}</td>
+                                            @if( $order->pay_type != cons('pay_type.pick_up'))
+                                                <td>
+                                                    <p> {{ $order->shippingAddress->address->address_name ?? '' }}</p>
+                                                    <p class="prop-item">
+                                                        <a href="javascript:" data-target="#shippingAddressMapModal"
+                                                           data-toggle="modal"
+                                                           data-x-lng="{{ isset($order->shippingAddress)? $order->shippingAddress->x_lng : 0 }}"
+                                                           data-y-lat="{{ isset($order->shippingAddress)? $order->shippingAddress->y_lat : 0 }}"
+                                                           data-address="{{ isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}"
+                                                           data-consigner="{{ $order->shippingAddress->consigner ?? ''}}"
+                                                           data-phone= {{ $order->shippingAddress->phone ?? ''}}>
+                                                            <i class="iconfont icon-chakanditu"></i> 查看地图
+                                                        </a>
+                                                    </p>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @if($order->pay_type!=cons('pay_type.pick_up') && (int)$order['send_at'])
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">配送人信息</h3>
+                                    </div>
 
                                     <div class="panel-container">
                                         @foreach($order->deliveryMan as $deliveryMan)
@@ -288,91 +288,94 @@
                                 <div class="panel-container table-responsive">
                                     <table class="table table-bordered table-center table-th-color">
 
-                                <thead>
-                                <th>商品编号</th>
-                                <th>商品图片</th>
-                                <th>商品名称</th>
-                                <th>商品价格</th>
-                                <th>商品数量</th>
-                                <th>金额</th>
-                                @if($order->can_change_price)
-                                    <th>操作</th>
-                                @endif
-                                </thead>
-                                @foreach($orderGoods as $goods)
-                                    <tr>
-                                        <td>{{ $goods['id'] }}</td>
-                                        <td>
-                                            <img class="store-img" src={{ $goods['image_url'] }}>
-                                        </td>
-                                        <td width="30%">
-                                            <div class="product-panel">
-                                                <a class="product-name"
-                                                   href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
-                                                {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
-                                            </div>
-                                        </td>
-                                        <td>{{ '¥'.$goods['pivot']['price'] }}
-                                            /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
-                                        <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
-                                        <td>{{ '¥'.$goods['pivot']['total_price'] }}</td>
+                                        <thead>
+                                        <th>商品编号</th>
+                                        <th>商品图片</th>
+                                        <th>商品名称</th>
+                                        <th>商品价格</th>
+                                        <th>商品数量</th>
+                                        <th>金额</th>
                                         @if($order->can_change_price)
-                                            <td><a class="edit change-price" href="javascript:void(0)"
-                                                   data-target="#changePrice"
-                                                   data-toggle="modal" data-id="{{ $order['id'] }}"
-                                                   data-price="{{ $goods->pivot->price }}" ,
-                                                   data-num="{{ $goods->pivot->num }}"
-                                                   data-pivot="{{  $goods['pivot']['id'] }}"><i
-                                                            class="iconfont icon-xiugai"></i>修改</a>
-                                                <a class="ajax red"
-                                                   data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
-                                                   data-method="delete"><i class="iconfont icon-shanchu"></i>删除</a>
-                                            </td>
+                                            <th>操作</th>
                                         @endif
-                                    </tr>
-                                @endforeach
-                                <tr>
-                                    <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
-                                        商品总数 : <span class="red" style="margin-right: 100px;">{{$order->orderGoods->sum('num') ?? 0}}</span>    总额 : <span class="red">¥{{$order->orderGoods->sum('total_price')}}</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                @if ($order->pay_type==cons('pay_type.cod') && !$mortgageGoods->isEmpty())
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">抵费商品</h3>
-                            </div>
-                            <div class="panel-container table-responsive">
-                                <table class="table table-bordered table-center table-th-color">
-                                    <thead>
-                                    <th>商品编号</th>
-                                    <th>商品图片</th>
-                                    <th>商品名称</th>
-                                    <th>商品数量</th>
-                                    </thead>
-                                    @foreach($mortgageGoods as $goods)
+                                        </thead>
+                                        @foreach($orderGoods as $goods)
+                                            <tr>
+                                                <td>{{ $goods['id'] }}</td>
+                                                <td>
+                                                    <img class="store-img" src={{ $goods['image_url'] }}>
+                                                </td>
+                                                <td width="30%">
+                                                    <div class="product-panel">
+                                                        <a class="product-name"
+                                                           href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                        {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                                    </div>
+                                                </td>
+                                                <td>{{ '¥'.$goods['pivot']['price'] }}
+                                                    /{{ cons()->valueLang('goods.pieces', $goods->pivot->pieces)  }}</td>
+                                                <td>{{ '╳ '.$goods['pivot']['num'] }}</td>
+                                                <td>{{ '¥'.$goods['pivot']['total_price'] }}</td>
+                                                @if($order->can_change_price)
+                                                    <td><a class="edit change-price" href="javascript:void(0)"
+                                                           data-target="#changePrice"
+                                                           data-toggle="modal" data-id="{{ $order['id'] }}"
+                                                           data-price="{{ $goods->pivot->price }}" ,
+                                                           data-num="{{ $goods->pivot->num }}"
+                                                           data-pivot="{{  $goods['pivot']['id'] }}"><i
+                                                                    class="iconfont icon-xiugai"></i>修改</a>
+                                                        <a class="ajax red"
+                                                           data-url="{{ url('api/v1/order/goods-delete/' . $goods->pivot->id) }}"
+                                                           data-method="delete"><i class="iconfont icon-shanchu"></i>删除</a>
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
                                         <tr>
-                                            <td>{{ $goods['id'] }}</td>
-                                            <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
-                                            <td>
-                                                <div class="product-panel">
-                                                    <a class="product-name"
-                                                       href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
-                                                    {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
-                                                </div>
+                                            <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
+                                                商品总数 : <span class="red"
+                                                             style="margin-right: 100px;">{{$order->orderGoods->sum('num') ?? 0}}</span>
+                                                总额 : <span
+                                                        class="red">¥{{$order->orderGoods->sum('total_price')}}</span>
                                             </td>
-                                            <td>{{ '╳ '.$goods['pivot']['num'].cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
                                         </tr>
-                                    @endforeach
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endif
+                        @if ($order->pay_type==cons('pay_type.cod') && !$mortgageGoods->isEmpty())
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">抵费商品</h3>
+                                    </div>
+                                    <div class="panel-container table-responsive">
+                                        <table class="table table-bordered table-center table-th-color">
+                                            <thead>
+                                            <th>商品编号</th>
+                                            <th>商品图片</th>
+                                            <th>商品名称</th>
+                                            <th>商品数量</th>
+                                            </thead>
+                                            @foreach($mortgageGoods as $goods)
+                                                <tr>
+                                                    <td>{{ $goods['id'] }}</td>
+                                                    <td><img class="store-img" src={{ $goods['image_url'] }} /></td>
+                                                    <td>
+                                                        <div class="product-panel">
+                                                            <a class="product-name"
+                                                               href="{{ url('goods/'. $goods['id']) }}">{{ $goods->name }}</a>
+                                                            {!! $goods->is_promotion ? '<p class="promotions">(<span class="ellipsis"> ' . $goods->promotion_info . '</span>)</p>' : '' !!}
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ '╳ '.$goods['pivot']['num'].cons()->valueLang('goods.pieces', $goods['pivot']['pieces']) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
                         @if (!$order->gifts->isEmpty())
                             <div class="col-sm-12">
@@ -400,6 +403,37 @@
                                                 </tr>
                                             @endforeach
                                         </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if (isset($order->applyPromo->promo))
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">促销活动</h3>
+                                    </div>
+
+                                    <div class="panel-container table-responsive">
+                                        <div class="row">
+                                            <p class="col-sm-12 item-text other">
+                                                促销名称 : <span class="prompt">{{$order->applyPromo->promo->name}}</span>
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
+                                                有效日期 : <span
+                                                        class="prompt">{{$order->applyPromo->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->applyPromo->promo->end_at}}</span>
+                                            </div>
+                                        </div>
+                                        @include('includes.promo-content-view',['promo' => $order->applyPromo->promo])
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
+
+                                                促销备注 : <span class="prompt">{{$order->applyPromo->promo->remark}}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

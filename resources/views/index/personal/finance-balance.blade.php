@@ -1,6 +1,6 @@
 @extends('index.manage-master')
 @include('includes.timepicker')
-@section('subtitle', '个人中心-商家信息')
+@section('subtitle', '财务管理-账户余额')
 
 @section('container')
     @include('includes.menu')

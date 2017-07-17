@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\DeleteMortgageGoodsRequest;
 use App\Http\Requests\Api\v1\UpdateSalesmanVisitOrderGoodsRequest;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\PromoApply;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\SalesmanCustomer;
@@ -15,12 +16,14 @@ use App\Models\ConfirmOrderDetail;
 use App\Services\BusinessService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
 
 class SalesmanVisitOrderController extends Controller
 {
+    private $errMsg = null;
 
     /**
      * get orderForms by salesmanId
@@ -34,7 +37,6 @@ class SalesmanVisitOrderController extends Controller
 
         $data = $request->only(['status', 'start_date', 'end_date', 'customer']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
-
         $orders = (new BusinessService())->getOrders([$salesmenId], $data,
             ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts']);
         return $this->success([
@@ -158,7 +160,6 @@ class SalesmanVisitOrderController extends Controller
                 }
             }
 
-
             $result = $this->_updateOrderGoods($salesmanVisitOrder, $request, $orderGoods);
         }
 
@@ -190,6 +191,7 @@ class SalesmanVisitOrderController extends Controller
         if ($result == 'success' && SalesmanVisitOrder::whereIn('id',
                 $orderIds)->update(['status' => cons('salesman.order.status.passed')])
         ) {
+
             $this->_updateDisplay($orders);
             return $this->success('操作成功');
         }
@@ -257,9 +259,8 @@ class SalesmanVisitOrderController extends Controller
             'gifts' => function ($query) {
                 $query->select('bar_code', 'id', 'name');
             },
-            'gifts.goodsPieces'
+            'gifts.goodsPieces',
         ])->find($id);
-
         if (is_null($order)) {
             return $this->error('订单不存在');
         }
@@ -294,7 +295,10 @@ class SalesmanVisitOrderController extends Controller
                 if (isset($mortgage)) {
                     $order->mortgage = $mortgage;
                 }
-
+            }
+            if (isset($order->applyPromo)) {
+                $order->setHidden(['applyPromo']);
+                $order->promo = $order->applyPromo->promo->load(['condition', 'rebate']);
             }
         }
 
@@ -310,63 +314,13 @@ class SalesmanVisitOrderController extends Controller
      */
     public function updateAll(Request $request, $orderId)
     {
-        /*$attributes = [
-            'goods' => [
-                [
-                    'id' => 324,
-                    'pieces' => 11,
-                    'price'  => 169,
-                    'num'    => 2
-                ]
-            ],
-         "gifts" => [
-                [
-                    "id" => 324,
-                    "num" => 1,
-                    "pieces" => 1
-                ],
-                [
-                    "id" => 325,
-                    "num" => 1,
-                    "pieces" => 1
-                ]
-             ]
-            "mortgage" => [
-                '2016-10' => [
-                    [
-                        "id" => 324,
-                        "num" => 1
-                    ],
-                    [
-                        "id" => 325,
-                        "num" => 1
-                    ]
-                ],
-                '2016-11' => [
-                    [
-                        "id" => 324,
-                        "num" => 1
-                    ],
-                    [
-                        "id" => 325,
-                        "num" => 1
-                    ]
-                ]
-
-            ],
-             'display_fee' => [
-                '2016-10' => 100,
-                '2016-11' => 100,
-            ],
-            'order_remark'=>'测试用',
-            'display_remark'=>'测试用'
-        ];*/
-        $order = $this->_validateOrder($orderId);
-        if (!$order) {
-            return $this->error('订单不存在');
-        }
-        $attributes = $request->all();
-        $result = DB::transaction(function () use ($attributes, $order) {
+        try {
+            DB::beginTransaction();
+            $order = $this->_validateOrder($orderId);
+            if (!$order) {
+                return $this->error('订单不存在');
+            }
+            $attributes = $request->all();
             $customer = $order->salesmanCustomer;
             $businessService = new BusinessService();
 
@@ -394,12 +348,27 @@ class SalesmanVisitOrderController extends Controller
             $orderConf = cons('salesman.order');
             $attributes['id'] = $order->id;
             $attributes['salesman_id'] = $order->salesman_id;
+            $attributes['shop_id'] = $order->shop_id;
             $attributes['salesman_visit_id'] = $order->salesman_visit_id;
             $attributes['salesman_customer_id'] = $order->salesman_customer_id;
             $attributes['type'] = $orderConf['type']['order'];
             $attributes['created_at'] = $order->created_at;
-
+            $oldApplyPromoId = $order->apply_promo_id ?? null;
             $order->delete();
+
+            $apply_promo_id = array_get($attributes, 'apply_promo_id', null);
+            if (!is_null($apply_promo_id)) {
+                $salesmanApplyPromo = PromoApply::find($attributes['apply_promo_id']);
+                if (!$salesmanApplyPromo) {
+                    $this->errMsg = '促销活动错误!';
+                    throw new  \Exception();
+                }
+                if ($oldApplyPromoId != $apply_promo_id && !is_null($salesmanApplyPromo->order)) {
+                    $this->errMsg = '促销活动已在其他订单使用!';
+                    throw new  \Exception();
+                }
+                $attributes['apply_promo_id'] = $salesmanApplyPromo->id;
+            }
 
             $orderForm = SalesmanVisitOrder::create($attributes);
 
@@ -415,7 +384,6 @@ class SalesmanVisitOrderController extends Controller
                             'pieces' => $gift['pieces'],
                         ];
                     }
-
                     $orderForm->gifts()->sync($giftList);
                 }
 
@@ -423,11 +391,12 @@ class SalesmanVisitOrderController extends Controller
                     $orderForm->displayList()->saveMany($validate);
                 }
             }
-
-            return 'success';
-        });
-
-        return $result == 'success' ? $this->success('更新订单成功') : $this->error(is_string($result) ? $result : '更新订单时出现问题');
+            DB::commit();
+            return $this->success('更新订单成功');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->error($this->errMsg ?? '更新订单时出现问题');
+        }
     }
 
     /**
@@ -625,6 +594,7 @@ class SalesmanVisitOrderController extends Controller
                     'pay_type' => $syncConf['pay_type'],
                     'pay_way' => $syncConf['pay_way'],
                     'type' => '1',
+                    'apply_promo_id' => $salesmanVisitOrder->apply_promo_id ?? '',
                     'status' => $orderConf['status']['non_send'],
                     'display_fee' => !empty($salesmanVisitOrder->displayFees()->sum('used')) ? $salesmanVisitOrder->displayFees()->sum('used') : '0.00',
                     'numbers' => (new OrderService())->getNumbers($shopId),
@@ -677,11 +647,16 @@ class SalesmanVisitOrderController extends Controller
                         ]);
                     }
 
+
                     if (!empty($orderGoods)) {
                         //保存抵费商品
                         if (!$orderTemp->orderGoods()->saveMany($orderGoods)) {
                             return ['error' => '同步时出现错误，请重试'];
                         }
+                    }
+                    //促销活动添加使用时间
+                    if ($salesmanVisitOrder->apply_promo_id) {
+                        $this->_usePromo($salesmanVisitOrder);
                     }
 
                     //礼物
@@ -711,6 +686,16 @@ class SalesmanVisitOrderController extends Controller
 
         return $result;
 
+    }
+
+    /**
+     * 促销活动添加使用时间
+     *
+     * @param $salesmanVisitOrders
+     */
+    public function _usePromo($salesmanVisitOrder)
+    {
+        return $salesmanVisitOrder->applyPromo->update(['use_date' => Carbon::now()]);
     }
 
     /**
@@ -784,7 +769,7 @@ class SalesmanVisitOrderController extends Controller
                 //商品原总金额
                 $goodsOldAmount = $orderGoods->amount;
 
-                if ($orderGoods->type == $goodsTypes['order'])   {
+                if ($orderGoods->type == $goodsTypes['order']) {
                     //订单
                     $attributes['price'] = $request->input('price');
                     $attributes['num'] = $request->input('num');

@@ -7,17 +7,17 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-sm-12 path-title">
-                    <a href="{{ url('asset/setting') }}">促销管理</a> >
+                    <a href="{{ url('promo/setting') }}">促销管理</a> >
                     <span class="second-level">促销设置</span>
                 </div>
             </div>
             <div class="row delivery">
                 <div class="col-sm-12 control-search assets">
-                    <form action="" method="get" autocomplete="off">
-                        <input class="enter control datetimepicker" name="start_at"
+                    <form action="{{url('promo/setting')}}" method="get" autocomplete="off">
+                        <input class="enter control datetimepicker" data-format="YYYY-MM-DD" name="start_at"
                                placeholder="开始时间" type="text"
                                value="{{$data['start_at'] ?? ''}}">至
-                        <input class="enter control datetimepicker" name="end_at"
+                        <input class="enter control datetimepicker" data-format="YYYY-MM-DD" name="end_at"
                                placeholder="结束时间" type="text"
                                value="{{$data['end_at'] ?? ''}}">
                         <input name="number_name" class="enter control" placeholder="促销名称/编号" type="text" value="{{$data['number_name'] ?? ''}}">
@@ -41,31 +41,31 @@
                         @foreach($promos as $promo)
                             <tr>
                                 <td>{{$promo->id}}</td>
-                                <td>{{$promo->name}}</td>
+                                <td width="19%">{{$promo->name}}</td>
                                 <td>{{$promo->updated_at}}</td>
-                                <td>{{$promo->start_at}} 至 {{$promo->end_at}}</td>
+                                <td><div>{{$promo->start_at}}</div> 至 <div>{{$promo->end_at}}</div></td>
                                 <td width="30%">
                                     @if($promo->type == cons('promo.type.custom'))
                                         {{$promo->condition[0]->custom ?? ''}}
                                         送
                                         {{$promo->rebate[0]->custom ?? ''}}
                                     @elseif($promo->type == cons('promo.type.money-money'))
-                                        任意下单总量达到
+                                        下单总量达到
                                         ￥{{$promo->condition[0]->money ?? ''}}
                                         送
                                         ￥{{$promo->rebate[0]->money ?? ''}}
                                     @elseif($promo->type == cons('promo.type.money-goods'))
-                                        任意下单总量达到
+                                        下单总量达到
                                         ￥{{$promo->condition[0]->money ?? ''}}
                                         送
                                         商品 {{$promo->rebate[0]->goods->name . (count($promo->rebate) > 1 ? '...' : '')}}
                                     @elseif($promo->type == cons('promo.type.goods-money'))
                                         {{$promo->condition[0]->goods->name . (count($promo->condition) > 1 ? '...' : '')}}
-                                        任意下单总量达到 送
+                                        下单总量达到 送
                                         ￥{{$promo->rebate[0]->money ?? ''}}
                                     @elseif($promo->type == cons('promo.type.goods-goods'))
                                         {{$promo->condition[0]->goods->name . (count($promo->condition) > 1 ? '...' : '')}}
-                                        任意下单总量达到
+                                        下单总量达到
                                         送
                                         {{$promo->rebate[0]->goods->name . (count($promo->rebate) > 1 ? '...' : '')}}
                                     @endif
@@ -95,7 +95,7 @@
                     </table>
                 </div>
                 <div class="col-sm-12 text-right">
-                    {!! $promos->render() !!}
+                    {!! $promos->appends($data)->render() !!}
                 </div>
             </div>
         </div>

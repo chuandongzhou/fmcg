@@ -13,7 +13,7 @@
             <div class="row goods-tables margin-clear">
                 <div class="col-sm-12  goods-table-panel">
                     <div class="goods-table">
-                        <table class="table table-width table-title table-center good-ontheway">
+                        <table class="table table-width table-title table-center" id="good-ontheway">
                             <thead>
                             <tr>
                                 <th>商品名称</th>

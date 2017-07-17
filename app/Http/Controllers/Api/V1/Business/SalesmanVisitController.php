@@ -39,19 +39,19 @@ class SalesmanVisitController extends Controller
 
         $visits = SalesmanCustomer::ofName($name)->with([
             'orders' => function ($query) use ($startDate, $endDate, $salesman) {
-                $query->where('salesman_id', $salesman->id)->whereBetween('created_at',
+                $query->where('salesman_id', $salesman->id)->where('shop_id',
+                    $salesman->shop_id)->whereBetween('created_at',
                     [$startDate, $endDate])->with('order');
             },
             'visits' => function ($q) use ($startDate, $endDate, $salesman) {
-                $q->where('salesman_id', $salesman->id)->whereBetween('created_at', [$startDate, $endDate]);
+                $q->where('salesman_id', $salesman->id)->where('shop_id',
+                    $salesman->shop_id)->whereBetween('created_at', [$startDate, $endDate]);
             },
-            'businessAddress'
+            'businessAddress',
         ])->get();
-
         $visit = $visits->reject(function ($v) {
             return count($v->orders) == 0 && count($v->visits) == 0;
         })->values();
-
         return $this->success(compact('visit'));
     }
 
@@ -63,73 +63,6 @@ class SalesmanVisitController extends Controller
      */
     public function store(Request $request)
     {
-        /*$data = [
-            'salesman_customer_id' => 2,
-            'goods' => [
-                [
-                    'id' => 324,
-                    'pieces' => 11,
-                    'stock' => '3件',
-                    'production_date' => '2015-06-09',
-                    'order_form' => [
-                        'price' => '169',
-                        'num' => 2,
-                        'pieces' => 1
-                    ],
-                    'return_order' => [
-                        'amount' => 160,
-                        'num' => 2,
-                        'pieces' => 1
-                    ]
-                ]
-            ],
-            'display_fee' => [
-                '2016-10' => 100,
-                '2016-11' => 100,
-            ],
-            "gifts" => [
-                [
-                    "id" => 324,
-                    "num" => 1,
-                    "pieces" => 1
-                ],
-                [
-                    "id" => 325,
-                    "num" => 1,
-                    "pieces" => 1
-                ]
-             ]
-            "mortgage" => [
-                '2016-10' => [
-                    [
-                        "id" => 324,
-                        "num" => 1
-                    ],
-                    [
-                        "id" => 325,
-                        "num" => 1
-                    ]
-                ],
-                '2016-11' => [
-                    [
-                        "id" => 324,
-                        "num" => 1
-                    ],
-                    [
-                        "id" => 325,
-                        "num" => 1
-                    ]
-                ]
-
-            ],
-            'order_remark' => '',
-            'display_remark' => '',
-            'x_lng' => '',
-            'y_lat' => '',
-            'address' => ''
-        ];
-        dd($data);*/
-
         $data = $request->all();
         $salesman = salesman_auth()->user();
 
@@ -138,16 +71,17 @@ class SalesmanVisitController extends Controller
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
-
-        $result = DB::transaction(function () use ($salesman, $data, $customer) {
+        $visit = $salesman->visits()->create([
+                'salesman_customer_id' => $data['salesman_customer_id'],
+                'x_lng' => isset($data['x_lng']) ? $data['x_lng'] : '',
+                'y_lat' => isset($data['y_lat']) ? $data['y_lat'] : '',
+                'address' => isset($data['address']) ? $data['address'] : '',
+                'shop_id' => $salesman->shop_id,
+            ]
+        );
+        $result = DB::transaction(function () use ($salesman, $data, $customer, $visit) {
             $result = $this->_formatData($data);
-            $visit = $salesman->visits()->create([
-                    'salesman_customer_id' => $data['salesman_customer_id'],
-                    'x_lng' => isset($data['x_lng']) ? $data['x_lng'] : '',
-                    'y_lat' => isset($data['y_lat']) ? $data['y_lat'] : '',
-                    'address' => isset($data['address']) ? $data['address'] : ''
-                ]
-            );
+
             $orderConf = cons('salesman.order');
             $businessService = new BusinessService();
 
@@ -158,7 +92,6 @@ class SalesmanVisitController extends Controller
                         //验证陈列费
                         $validate = $businessService->validateDisplayFee($data['display_fee'], $orderForms['amount'],
                             $customer);
-
                         if (!$validate) {
                             $visit->delete();
                             return $businessService->getError();
@@ -177,6 +110,19 @@ class SalesmanVisitController extends Controller
                     $orderForms['order_remark'] = isset($data['order_remark']) ? $data['order_remark'] : '';
                     $orderForms['display_remark'] = isset($data['display_remark']) ? $data['display_remark'] : '';
                     $orderForms['type'] = $orderConf['type']['order'];
+                    $orderForms['shop_id'] = $salesman->shop_id;
+                    //促销活动
+                    $apply_promo_id = array_get($data, 'apply_promo_id', null);
+                    if (!is_null($apply_promo_id)) {
+                        $salesmanApplyPromo = $salesman->applyPromo()->find($data['apply_promo_id']);
+                        if (!$salesmanApplyPromo || !empty($salesmanApplyPromo->use_date)) {
+                            return '促销活动无效!';
+                        }
+                        if (!is_null($salesmanApplyPromo->order)) {
+                            return '促销活动已在其他订单使用!';
+                        }
+                        $orderForms['apply_promo_id'] = $salesmanApplyPromo->id;
+                    }
                     $orderForm = $salesman->orders()->create($orderForms);
                     if ($orderForm->exists) {
                         $orderGoodsArr = [];
@@ -204,13 +150,16 @@ class SalesmanVisitController extends Controller
                         if (isset($validate) && $customer->display_type != cons('salesman.customer.display_type.no')) {
                             $this->_addDisplayList($validate, $orderForm);
                         }
+
+
                     }
                 }
                 if (isset($result['order']['return_order'])) {
                     $result['order']['return_order']['salesman_visit_id'] = $visit->id;
                     $result['order']['return_order']['type'] = $orderConf['type']['return_order'];
                     $result['order']['return_order']['salesman_customer_id'] = $data['salesman_customer_id'];
-                    //info($result['order']['return_order']);
+                    $result['order']['return_order']['shop_id'] = $salesman->shop_id;
+
                     $returnOrder = $salesman->orders()->create($result['order']['return_order']);
                     if ($returnOrder->exists) {
                         $orderGoodsArr = [];
@@ -230,10 +179,39 @@ class SalesmanVisitController extends Controller
                     }
                     $visit->goodsRecord()->saveMany($goodsRecodeArr);
                 }
+                return 'success';
             }
-            return 'success';
         });
-        return $result === 'success' ? $this->success('拜访记录添加成功') : $this->error(is_string($result) ? $result : '添加拜访记录时出现错误');
+        if ($result === 'success') {
+            return $this->success(['id' => $visit->id]);
+        } else {
+            $visit->delete();
+            return $this->error(is_string($result) ? $result : '添加拜访记录时出现错误');
+        }
+    }
+
+    /**
+     * 添加拜访照片
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $visit
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function addPhotos(Request $request, $visit)
+    {
+        try {
+            // return $this->error('不让你成功!');
+            if (!$visit || $visit->salesman_id != salesman_auth()->id()) {
+                return $this->error('拜访信息出错!');
+            }
+            if (!$visit) {
+                return $this->error('没有拜访记录!');
+            }
+            $visit->update($request->only('photos'));
+            return $this->success();
+        } catch (\Exception $e) {
+            return $this->error('图片上传失败!');
+        }
     }
 
     /**
@@ -253,7 +231,9 @@ class SalesmanVisitController extends Controller
             'orders.gifts',
             'goodsRecord',
             'salesmanCustomer.shippingAddress',
-            'orders.orderGoods.goods'
+            'orders.orderGoods.goods',
+            'orders.applyPromo.promo',
+            'photos'
         ]);
         $visitData = head((new BusinessService())->formatVisit([$visit], true)['visitData']);
         $visitData['mortgage'] = isset($visitData['mortgage']) ? $visitData['mortgage'] : [];

@@ -53,10 +53,8 @@
                             </thead>
                             <input type="hidden" name="inventory_number"
                                    value="{{$inventory['inventory_number'] ?? ''}}">
-                            @if(!is_null($outRecord))
-                                <input type="hidden" name="order_number" value="{{$outRecord[0]->order_number}}">
-                                <input type="hidden" name="goods_id" value="{{$outRecord[0]->goods_id}}">
-                            @endif
+                                <input type="hidden" name="order_number" value="{{$orderId ?? ''}}">
+                                <input type="hidden" name="goods_id" value="{{$goodsId ?? ''}}">
                             <input type="hidden" name="inventory_type"
                                    value="{{cons('inventory.inventory_type.manual')}}">
                             <input type="hidden" name="action_type" value="{{cons('inventory.action_type.in')}}">

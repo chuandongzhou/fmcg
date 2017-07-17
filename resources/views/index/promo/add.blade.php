@@ -14,13 +14,15 @@
             </div>
             <div class="row salesman">
                 <div class="col-sm-12 create">
-                    <form method="post" action="{{request()->is('promo/*/edit') ? url('api/v1/promo/edit/'.$promo->id) : (request()->is('promo/*/view') ? '' : url('api/v1/promo/add'))}}" class="form-horizontal ajax-form"
+                    <form method="post"
+                          action="{{request()->is('promo/*/edit') ? url('api/v1/promo/edit/'.$promo->id) : (request()->is('promo/*/view') ? '' : url('api/v1/promo/add'))}}"
+                          class="form-horizontal ajax-form"
                           data-help-class="col-sm-push-2 col-sm-10 " data-done-url="{{url('promo/setting')}}"
                           autocomplete="off">
                         <div class="form-group row">
                             <label class="col-sm-2 control-label"> 促销名称 :</label>
 
-                            <div class="col-sm-5 ">
+                            <div class="col-sm-7 ">
                                 <input name="name" {{request()->is('promo/*/view')?'disable':''}} class="form-control"
                                        placeholder="活动名称" type="text"
                                        value="{{$promo ->name ?? ''}}">
@@ -29,12 +31,12 @@
                         <div class="form-group row">
                             <label class="col-sm-2 control-label"> 有效时间 :</label>
 
-                            <div class="col-sm-2  pd-right-clear">
+                            <div class="col-sm-3  pd-right-clear">
                                 <input name="start_at" class="form-control datetimepicker" placeholder="开始时间"
                                        type="text" value="{{$promo->start_at ?? ''}}">
                             </div>
                             <div class="col-sm-1 company padding-clear text-center">至</div>
-                            <div class="col-sm-2 pd-left-clear">
+                            <div class="col-sm-3 pd-left-clear">
                                 <input name="end_at" class="form-control datetimepicker" placeholder="结束时间" type="text"
                                        value="{{$promo->end_at ?? ''}}">
                             </div>
@@ -60,16 +62,12 @@
                                             <li><label>设置条件 :</label></li>
                                             <li>
                                                 <textarea name="condition[custom]" placeholder="填写内容" rows="5"
-                                                          cols="30">
-                                                    @if(isset($promo) && $promo->type == cons('promo.type.custom')) {{$promo->condition[0]->custom}} @endif
-                                                </textarea>
+                                                          cols="30">@if(isset($promo) && $promo->type == cons('promo.type.custom')){{$promo->condition[0]->custom}}@endif</textarea>
                                             </li>
                                             <li><span class="fan">返</span></li>
                                             <li>
                                                 <textarea name="rebate[custom]" placeholder="填写内容" rows="5"
-                                                          cols="30">
-                                                    @if(isset($promo) && $promo->type == cons('promo.type.custom')) {{$promo->rebate[0]->custom}} @endif
-                                                </textarea>
+                                                          cols="30">@if(isset($promo) && $promo->type == cons('promo.type.custom')){{$promo->rebate[0]->custom}}@endif</textarea>
                                             </li>
                                         </ul>
                                     </div>
@@ -87,6 +85,9 @@
                                                     <th>商品名称</th>
                                                     <th>单位</th>
                                                     <th>数量</th>
+                                                    @if(!request()->is('promo/*/view'))
+                                                        <th>操作</th>
+                                                    @endif
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -121,6 +122,12 @@
                                                                 <input type="hidden" name="condition[goods_id][]"
                                                                        value='{{$condition->goods_id}}'/>
                                                             </td>
+                                                            @if(!request()->is('promo/*/view'))
+                                                                <td>
+                                                                    <i onclick="deleteChoose(this)"
+                                                                       class="iconfont red icon-shanchu2"></i>
+                                                                </td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -129,7 +136,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-2 padding-clear prompt">
-                                        任意下单总量达到<span class="fan">返</span>
+                                        下单总量达到<span class="fan">返</span>
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="select-commodity">本次参与促销商品
@@ -143,6 +150,9 @@
                                                     <th>商品名称</th>
                                                     <th>单位</th>
                                                     <th>数量</th>
+                                                    @if(!request()->is('promo/*/view'))
+                                                        <th>操作</th>
+                                                    @endif
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -177,6 +187,12 @@
                                                                 <input type="hidden" name="rebate[goods_id][]"
                                                                        value='{{$rebate->goods_id}}'/>
                                                             </td>
+                                                            @if(!request()->is('promo/*/view'))
+                                                                <td>
+                                                                    <i onclick="deleteChoose(this)"
+                                                                       class="iconfont red icon-shanchu2"></i>
+                                                                </td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -198,6 +214,9 @@
                                                     <th>商品名称</th>
                                                     <th>单位</th>
                                                     <th>数量</th>
+                                                    @if(!request()->is('promo/*/view'))
+                                                        <th>操作</th>
+                                                    @endif
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -232,6 +251,12 @@
                                                                 <input type="hidden" name="condition[goods_id][]"
                                                                        value='{{$condition->goods_id}}'/>
                                                             </td>
+                                                            @if(!request()->is('promo/*/view'))
+                                                                <td>
+                                                                    <i onclick="deleteChoose(this)"
+                                                                       class="iconfont red icon-shanchu2"></i>
+                                                                </td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -240,16 +265,16 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6 item-panel">
-                                        任意下单总量达到<span class="fan">返</span>
+                                        下单总量达到<span class="fan">返</span>
                                         ￥<input type="text" name="rebate[money]" class="money"
-                                                value="@if(isset($promo) && $promo->type == cons('promo.type.goods-money')) {{$promo->rebate[0]->money}} @endif"/>
+                                                value="@if(isset($promo) && $promo->type == cons('promo.type.goods-money')){{$promo->rebate[0]->money}}@endif"/>
                                     </div>
                                 </div>
                                 <!--下单总金额达到返商品-->
                                 <div class="row option-panel @if(isset($promo) && $promo->type == cons('promo.type.money-goods')) active @endif money-goods">
                                     <div class="col-sm-5 item-panel">
-                                        任意下单总量达到 ￥ <input type="text" name="condition[money]" class="money"
-                                                          value="@if(isset($promo) && $promo->type == cons('promo.type.money-goods')) {{$promo->condition[0]->money}} @endif"/>
+                                        下单总量达到 ￥ <input type="text" name="condition[money]" class="money"
+                                                        value="@if(isset($promo) && $promo->type == cons('promo.type.money-goods')){{$promo->condition[0]->money}}@endif"/>
                                         <span class="fan pull-right">返</span>
                                     </div>
 
@@ -265,6 +290,9 @@
                                                     <th>商品名称</th>
                                                     <th>单位</th>
                                                     <th>数量</th>
+                                                    @if(!request()->is('promo/*/view'))
+                                                        <th>操作</th>
+                                                    @endif
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -299,6 +327,12 @@
                                                                 <input type="hidden" name="rebate[goods_id][]"
                                                                        value='{{$rebate->goods_id}}'/>
                                                             </td>
+                                                            @if(!request()->is('promo/*/view'))
+                                                                <td>
+                                                                    <i onclick="deleteChoose(this)"
+                                                                       class="iconfont red icon-shanchu2"></i>
+                                                                </td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -310,32 +344,31 @@
                                 <!--下单总金额达到返利-->
                                 <div class="row option-panel @if(isset($promo) && $promo->type == cons('promo.type.money-money')) active @endif money-money">
                                     <div class="col-sm-12 item-panel other">
-                                        任意下单总量达到 ￥ <input type="text" name="condition[money]" class="money"
-                                                          value="@if(isset($promo) && $promo->type == cons('promo.type.money-money')) {{$promo->condition[0]->money}} @endif"/>
+                                        下单总量达到 ￥ <input type="text" name="condition[money]" class="money"
+                                                        value="@if(isset($promo) && $promo->type == cons('promo.type.money-money')){{$promo->condition[0]->money}}@endif"/>
                                         <span class="fan">返</span>
                                         ￥ <input type="text" name="rebate[money]" class="money"
-                                                 value="@if(isset($promo) && $promo->type == cons('promo.type.money-money')) {{$promo->rebate[0]->money}} @endif"/>
+                                                 value="@if(isset($promo) && $promo->type == cons('promo.type.money-money')){{$promo->rebate[0]->money}}@endif"/>
                                     </div>
 
                                 </div>
                                 <input type="hidden" name="error">
                             </div>
-
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-2 control-label"> 促销备注 :</label>
-                            <div class="col-sm-5 ">
+                            <div class="col-sm-7 ">
                                 <input name="remark" class="form-control" type="text" value="{{$promo->remark ?? ''}}">
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-10 col-sm-offset-2 operating-panel">
 
-                                <label><input @if(request()->is('promo/*/view')) disabled @endif  @if(isset($promo) && $promo->status == cons('status.on')) checked
+                                <label><input @if(isset($promo) && $promo->status == cons('status.on')) checked
                                               @endif name="status" type="radio"
                                               value="{{cons('status.on')}}"/>启用</label>
-                                <label><input @if(request()->is('promo/*/view')) disabled @endif  @if(isset($promo) && $promo->status == cons('status.off')) checked
+                                <label><input @if(isset($promo) && $promo->status == cons('status.off')) checked
                                               @endif name="status" type="radio"
                                               value="{{cons('status.off')}}"/>禁用</label>
                             </div>
@@ -343,7 +376,8 @@
 
                         <div class="form-group @if(request()->is('promo/*/view')) hidden @endif row">
                             <div class="col-sm-10 col-sm-offset-2">
-                                <button type="submit" class="btn btn-blue-lighter promotion-submit">提交</button>
+                                <button type="submit"
+                                        class="btn btn-blue-lighter promotion-submit">{{request()->is('promo/*/edit') ? '提交' : '保存'}}</button>
                             </div>
                         </div>
 
@@ -358,8 +392,11 @@
     @parent
     <script type="text/javascript">
         @if(request()->is('promo/*/view'))
-        $('div.row').find('a.btn').attr('data-toggle','');
-        $('div.row').find('input,textarea,select,button,a').attr('disabled', true).addClass('disable');
+        $('div.row').find('a.btn').attr('data-toggle', '');
+        $('div.row').find('input,textarea,select,button,a').attr('disabled', true).addClass('white-bg');
+        @elseif(request()->is('promo/*/edit'))
+                optionClass = $('#opt-control').find("option:selected").prop('class');
+        $("." + optionClass).siblings().find('input,textarea,select').attr('disabled', true);
         @endif
         $("#opt-control").change(function () {
             optionClass = $(this).find("option:selected").prop('class');

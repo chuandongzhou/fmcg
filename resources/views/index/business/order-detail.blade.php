@@ -356,6 +356,33 @@
                                     </div>
                                 </div>
                             @endif
+                            @if (isset($order->applyPromo->promo))
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">促销活动</h3>
+                                    </div>
+
+                                    <div class="panel-container table-responsive">
+                                        <div class="row">
+                                            <p class="col-sm-12 item-text other">
+                                                促销名称 : <span class="prompt">{{$order->applyPromo->promo->name}}</span>
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
+                                                有效日期 : <span class="prompt">{{$order->applyPromo->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->applyPromo->promo->end_at}}</span>
+                                            </div>
+                                        </div>
+                                        @include('includes.promo-content-view',['promo' => $order->applyPromo->promo])
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
+
+                                                促销备注 : <span class="prompt">{{$order->applyPromo->promo->remark}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -377,15 +404,15 @@
                 if (self.hasClass('money') || self.hasClass('commodity-num')) {
                     content.next('.enter-num-panel').append('<div class="prompt"><div>剩余陈列:<span class="surplus"><i class="fa fa-spinner fa-pulse"></i></span></div><div>未审核陈列:<span class="non-confirm"><i class="fa fa-spinner fa-pulse"></i></span></div></div>');
                     var url = self.hasClass('commodity-num') ? site.api('business/order/mortgage-goods-surplus') : site.api('business/order/display-fee-surplus'),
-                        data = self.hasClass('commodity-num') ? {
-                            id: content.siblings('.enter-num-panel').children('.edit-text').data('id'),
-                            month: content.next('.enter-num-panel').find('input').data('month'),
-                            order_id: '{{ $order->id }}'
-                        } : {
-                            customer_id: '{{ $order->salesmanCustomer->id }}',
-                            month: self.parent().prev().prev().html(),
-                            order_id: '{{ $order->id }}'
-                        };
+                            data = self.hasClass('commodity-num') ? {
+                                id: content.siblings('.enter-num-panel').children('.edit-text').data('id'),
+                                month: content.next('.enter-num-panel').find('input').data('month'),
+                                order_id: '{{ $order->id }}'
+                            } : {
+                                customer_id: '{{ $order->salesmanCustomer->id }}',
+                                month: self.parent().prev().prev().html(),
+                                order_id: '{{ $order->id }}'
+                            };
 
                     $.ajax({
                         url: url,
@@ -393,7 +420,7 @@
                         data: data
                     }).done(function (data) {
                         var surplus = self.hasClass('commodity-num') ? parseInt(data.surplus) + content.next().next('.goods-pieces').html() : '￥' + data.surplus,
-                            nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥' + data.nonConfirm;
+                                nonConfirm = self.hasClass('commodity-num') ? parseInt(data.nonConfirm) + content.next().next('.goods-pieces').html() : '￥' + data.nonConfirm;
                         var messageContainer = content.next('.enter-num-panel').find('.prompt');
                         messageContainer.find('.surplus').html(surplus);
                         messageContainer.find('.non-confirm').html(nonConfirm);
@@ -407,13 +434,13 @@
 
                 var url = self.data('url');
                 var oldValueControl = content,
-                    isParse = self.data('parse'),
-                    oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
-                    newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
-                    newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
-                    name = newValueControl.data('name'),
-                    id = newValueControl.data('id'),
-                    data = {};
+                        isParse = self.data('parse'),
+                        oldValue = isParse ? parseFloat(oldValueControl.html()) : oldValueControl.html(),
+                        newValueControl = content.siblings('.enter-num-panel').children('.edit-text'),
+                        newValue = isParse ? parseFloat(newValueControl.val()) : newValueControl.val(),
+                        name = newValueControl.data('name'),
+                        id = newValueControl.data('id'),
+                        data = {};
                 if (oldValue != newValue) {
                     if (isParse && newValue < 0) {
                         alert('请正确填写陈列费');

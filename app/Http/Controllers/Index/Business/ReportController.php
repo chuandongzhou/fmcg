@@ -33,7 +33,6 @@ class ReportController extends Controller
         $endDateTemp = (new Carbon($endDate))->addDay()->toDateString();
 
         $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp);
-
         return view('index.business.report', [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -77,7 +76,6 @@ class ReportController extends Controller
             'start_date' => $startDate,
             'end_date' => $dateEnd
         ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
-
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -166,7 +164,7 @@ class ReportController extends Controller
             'ownOrderCount' => $ownOrders->count(),
             'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
             'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
-            'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'))
+            'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'), 2)
         ];
 
         $visitList = [];
@@ -336,7 +334,7 @@ class ReportController extends Controller
      * @param \Illuminate\Database\Eloquent\Collection $visits
      * @return array
      */
-    private function _getVisitListForDetail(Collection $visits)
+    private function _getVisitListForDetail(Collection $visits, $photos = true)
     {
         //拜访列表
         $visitLists = [];
@@ -354,16 +352,17 @@ class ReportController extends Controller
             $returnOrder = $orders->filter(function ($order) use ($orderTypes) {
                 return $order->type == $orderTypes['return_order'];
             })->first();
-
-            $visitLists[] = [
+            $visitList = [
                 'time' => $visit->created_at,
                 'commitAddress' => $visit->address,
                 'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
                 'returnAmount' => $returnOrder ? $returnOrder->amount : 0,
-                'hasDisplay' => ($visitOrder && count($visitOrder->displayList) != 0) ? '有' : '无'
+                'hasDisplay' => ($visitOrder && count($visitOrder->displayList) != 0) ? '有' : '无',
             ];
-        }
+            $photos ? $visitList['photos'] = $visit->photos_url : false;
+            $visitLists[] = $visitList;
 
+        }
         return $visitLists;
     }
 
@@ -436,7 +435,6 @@ class ReportController extends Controller
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
         }
-
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
@@ -694,8 +692,10 @@ class ReportController extends Controller
         ])->get();
 
         //详情拜访列表
-        $visitLists = $this->_getVisitListForDetail($visits);
+        $visitLists = [];
+        foreach ($this->_getVisitListForDetail($visits) AS $key => $value) {
 
+        }
         //销售统计
         $salesGoods = $this->_getSalesGoods($visits);
 
@@ -704,7 +704,6 @@ class ReportController extends Controller
         $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';
         Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods, $displays) {
             $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
-
                 // Set auto size for sheet
                 $sheet->setAutoSize(true);
 
@@ -725,8 +724,6 @@ class ReportController extends Controller
                     '退货金额',
                     '陈列费'
                 ];
-
-
                 $data = array_merge([$titles], $visitLists);
 
                 $sheet->rows($data);

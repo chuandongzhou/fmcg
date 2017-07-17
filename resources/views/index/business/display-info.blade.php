@@ -1,23 +1,21 @@
-@extends('child-user.manage-master')
+@extends('index.manage-master')
 
 @section('subtitle', '业务管理-陈列费发放情况')
-
 @include('includes.timepicker')
-
 @section('container')
-    @include('includes.child-menu')
+    @include('includes.menu')
     <div class="page-content-wrapper">
         <div class="page-content">
             <div class="row">
                 <div class="col-sm-12 path-title">
-                    <a href="{{ url('child-user/salesman') }}">业务管理</a> >
+                    <a href="{{ url('business/salesman') }}">业务管理</a> >
                     <span class="second-level">陈列费发放情况</span>
                 </div>
             </div>
 
             <div class="row salesman sales-details-panel">
                 <div class="col-sm-12 form-group salesman-controls">
-                    <form action="{{ url('child-user/display-info') }}" method="get">
+                    <form action="{{ url('business/display-info') }}" method="get">
                         <input class="control datetimepicker" data-format="YYYY-MM" type="text" name="month"
                                value="{{ $month }}">
                         <select class="control" name="salesman_id">
@@ -29,7 +27,7 @@
                         <input class="control" type="text" name="name" value="{{ $name }}" placeholder="请输入客户名称">
                         <button type="submit" class="btn btn-blue-lighter search-by-get">查询</button>
                         <a class="btn btn-border-blue"
-                           href="{{ url("child-user/display-info/export?month={$month}&name={$name}") }}">导出</a>
+                           href="{{ url("business/display-info/export?month={$month}&name={$name}") }}">导出</a>
                     </form>
                 </div>
                 <div class="col-sm-12">

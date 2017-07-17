@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\PromoGoods;
 use App\Services\PromoService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -27,12 +28,11 @@ class PromoController extends Controller
      */
     public function getGoods(Request $request)
     {
-        $condition = $request->input('condition');
-        $ids = $request->input('ids');
+        $data = $request->only('condition', 'page');
         $goods = auth()->user()->shop->promoGoods()->with([
             'goods',
             'goods.goodsPieces'
-        ])->OfNameBarCode($condition)->OfNotIds($ids)->active()->paginate();
+        ])->OfNameBarCode($data['condition'])->active()->paginate();
         $goods->each(function ($item) {
             $item->goods->goodsPieces->pieces_level_1_lang = cons()->valueLang('goods.pieces',
                 $item->goods->goodsPieces->pieces_level_1);
@@ -42,7 +42,7 @@ class PromoController extends Controller
                 $item->goods->goodsPieces->pieces_level_3);
         });
         return $this->success([
-            'promoGoods' => $goods->toArray()
+            'goods' => $goods->toArray(),
         ]);
     }
 
@@ -62,6 +62,7 @@ class PromoController extends Controller
             return $this->success('添加成功!');
         } catch (\Exception $e) {
             DB::rollback();
+            info($e->getMessage());
             return $this->error('添加出现问题!');
         }
     }
@@ -122,11 +123,11 @@ class PromoController extends Controller
      * @param \App\Models\PromoGoods $goods
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function goodsStatus(Request $request, PromoGoods $goods)
+    public function goodsStatus(PromoGoods $goods)
     {
-        $status = $request->input('status');
-        return $goods->update(['status' => $status]) ? $this->success(cons()->valueLang('status',
-                $status) . '成功') : $this->error(cons()->valueLang('status', $status) . '失败');
+        $goods->status = $goods->status == cons('status.off') ? cons('status.on') : cons('status.off');
+        return $goods->save() ? $this->success(cons()->valueLang('status',
+                $goods->status) . '成功') : $this->error(cons()->valueLang('status', $goods->status) . '失败');
     }
 
     /**
@@ -164,6 +165,7 @@ class PromoController extends Controller
 
     /**
      * 通过申请
+     *
      * @param $apply
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -173,12 +175,14 @@ class PromoController extends Controller
             return $this->error('没有权限!');
         }
         return $apply->fill([
-            'status' => cons('promo.review_status.pass')
+            'status' => cons('promo.review_status.pass'),
+            'pass_date' => Carbon::now(),
         ])->save() ? $this->success('通过成功') : $this->error('通过失败');
     }
 
     /**
      * 删除/拒绝申请
+     *
      * @param $apply
      * @return \WeiHeng\Responses\Apiv1Response
      */
@@ -192,16 +196,17 @@ class PromoController extends Controller
 
     /**
      * 促销申请编辑
+     *
      * @param \Illuminate\Http\Request $request
      * @param $apply
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function applyEdit(Request $request,$apply)
+    public function applyEdit(Request $request, $apply)
     {
         if (Gate::denies('validate-shop-promoApply', $apply)) {
             return $this->error('没有权限!');
         }
         $data = $request->only('apply_remark');
-       return $apply->fill($data)->save() ? $this->success('保存成功') : $this->error('保存失败');
+        return $apply->fill($data)->save() ? $this->success('保存成功') : $this->error('保存失败');
     }
 }

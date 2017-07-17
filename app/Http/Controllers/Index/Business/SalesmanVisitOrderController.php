@@ -22,9 +22,7 @@ class SalesmanVisitOrderController extends Controller
     {
 
         $shop = auth()->user()->shop;
-
         $salesmen = $shop->salesmen;
-
         $salesmenId = $salesmen->pluck('id');
         $data = $request->all();
         $filter = array_merge($data, ['type' => cons('salesman.order.type.order')]);
@@ -51,7 +49,6 @@ class SalesmanVisitOrderController extends Controller
         $filter = array_merge($data, ['type' => cons('salesman.order.type.return_order')]);
 
         $orders = (new BusinessService())->getOrders($salesmenId, $filter);
-
         return view('index.business.order-return-orders',
             ['orders' => $orders, 'salesmen' => $salesmen, 'data' => $data]);
     }
@@ -87,16 +84,19 @@ class SalesmanVisitOrderController extends Controller
         $isOrderForm = $salesmanVisitOrder->type == cons('salesman.order.type.order');
         if ($isOrderForm) {
             $viewName = 'order-detail';
-            $load = ['mortgageGoods.goods', 'orderGoods.goods', 'gifts.goodsPieces' =>function($query){
-                $query->select('goods_id', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3');
-            }];
+            $load = [
+                'mortgageGoods.goods',
+                'applyPromo',
+                'orderGoods.goods',
+                'gifts.goodsPieces' => function ($query) {
+                    $query->select('goods_id', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3');
+                }
+            ];
         } else {
             $viewName = 'order-return-detail';
             $load = ['mortgageGoods.goods', 'orderGoods.goods'];
         }
-
         // $viewName = $isOrderForm ? 'order-return-detail' : 'order-detail';
-
         return view('index.business.' . $viewName, (new BusinessService)->getOrderData($salesmanVisitOrder, $load));
     }
 

@@ -665,8 +665,6 @@ function printFun() {
 }
 
 
-
-
 //店铺广告radio选择
 function radioCheck() {
     $('.goodsIdRadio').click(function () {
