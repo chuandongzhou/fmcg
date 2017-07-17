@@ -45,9 +45,9 @@ class InventoryController extends Controller
             }
         });
         if ($data['warning']) {
-            $goods = Goods::whereIn('id', $ids)->orderBy('updated_at', 'DESC')->paginate();
+            $goods = Goods::whereIn('id', $ids)->orderBy('created_at', 'DESC')->paginate();
         } else {
-            $goods = $result['goods']->orderBy('updated_at', 'DESC')->paginate();
+            $goods = $result['goods']->orderBy('created_at', 'DESC')->paginate();
         }
 
         $goodsCate = [];
@@ -67,6 +67,7 @@ class InventoryController extends Controller
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
         $categories = CategoryService::formatShopGoodsCate($this->shop, $cateId);
         $searched = $result['searched'];
+
         return view('index.inventory.manage', compact(
             'countNeedWarning',
             'goods',

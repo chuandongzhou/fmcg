@@ -152,15 +152,15 @@
                                             <span class="stock-warning @if($item->need_warning) red @endif warning_value undisable">{{$item->warning_value ?? 0}}</span>
                                             <span class="undisable @if($item->need_warning) red @endif warning_piece">{{cons()->valueLang('goods.pieces',$item->warning_piece ?? 0)}}</span>
                                             <select name="warning_piece" class="modify hidden">
-                                                @if($item->goodsPieces->pieces_level_1)
+                                                @if(!is_null($item->goodsPieces->pieces_level_1))
                                                     <option @if ($item->warning_piece == $item->goodsPieces->pieces_level_1) selected
                                                             @endif value="{{$item->goodsPieces->pieces_level_1}}">{{cons()->valueLang('goods.pieces',$item->goodsPieces->pieces_level_1)}}</option>
                                                 @endif
-                                                @if($item->goodsPieces->pieces_level_2)
+                                                @if(!is_null($item->goodsPieces->pieces_level_2))
                                                     <option @if ($item->warning_piece == $item->goodsPieces->pieces_level_2) selected
                                                             @endif value="{{$item->goodsPieces->pieces_level_2}}">{{cons()->valueLang('goods.pieces',$item->goodsPieces->pieces_level_2)}}</option>
                                                 @endif
-                                                @if($item->goodsPieces->pieces_level_3)
+                                                @if(!is_null($item->goodsPieces->pieces_level_3))
                                                     <option @if ($item->warning_piece == $item->goodsPieces->pieces_level_3) selected
                                                             @endif value="{{$item->goodsPieces->pieces_level_3}}">{{cons()->valueLang('goods.pieces',$item->goodsPieces->pieces_level_3)}}</option>
                                                 @endif
@@ -228,7 +228,7 @@
                     war_value = input.val(),
                     id = self.data('id'),
                     war_piece = $(select).find("option:selected").val();
-
+            self.parents('td').html('<i class="fa fa-spinner fa-pulse"></i>');
             $data = {'warning_value': war_value, 'warning_piece': war_piece};
             $.ajax({
                 url: 'api/v1/my-goods/' + id + '/warning',
