@@ -1,6 +1,12 @@
 <?php
 
 return [
+    //访问终端
+    'ter_types' => [
+        'web' => 1,
+        'ios' => 2,
+        'android' => 3
+    ],
     // 通用状态
     'status' => [
         'off' => 0,
@@ -488,9 +494,9 @@ return [
         'free_month' => 3,
         //账号续期金额
         'expire_amount' => [
-        /*    'a_year' => 1000,
-            'two_years' => 2000,
-            'three_years' => 3000,*/
+            /*    'a_year' => 1000,
+                'two_years' => 2000,
+                'three_years' => 3000,*/
             'a_year' => 1,
             'two_years' => 2,
             'three_years' => 3,
@@ -515,16 +521,16 @@ return [
             'nine_months' => 9,
             'a_year' => 10,
 
-           /* 'a_month' => 10,
-            'two_months' => 20,
-            'three_months' => 30,
-            'four_months' => 40,
-            'five_months' => 50,
-            'six_months' => 60,
-            'seven_months' => 70,
-            'eight_months' => 80,
-            'nine_months' => 90,
-            'a_year' => 100,*/
+            /* 'a_month' => 10,
+             'two_months' => 20,
+             'three_months' => 30,
+             'four_months' => 40,
+             'five_months' => 50,
+             'six_months' => 60,
+             'seven_months' => 70,
+             'eight_months' => 80,
+             'nine_months' => 90,
+             'a_year' => 100,*/
         ]
 
     ],

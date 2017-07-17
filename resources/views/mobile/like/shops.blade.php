@@ -24,7 +24,7 @@
                 <a href="{{ url('shop/' . $shop->id) }}">
                     <div class="col-xs-12 clearfix shop-list-item">
                         <img src="{{ $shop->logo_url }}" class="pull-left"/>
-                        <div class="pull-left opera-panel">
+                        <div class="opera-panel">
                             <div class="shop-name">
                                 <b>{{ $shop->name }}</b>
                                 <span class="prompt">（{{ cons()->valueLang('user.type', $shop->user_type) }}）</span>

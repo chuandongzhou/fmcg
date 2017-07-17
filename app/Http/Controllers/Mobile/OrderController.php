@@ -132,6 +132,12 @@ class OrderController extends Controller
         return view('mobile.order.index', compact('orders', 'pageName'));
     }
 
+    /**
+     * 订单详情
+     *
+     * @param $orderId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|\WeiHeng\Responses\IndexResponse
+     */
     public function detail($orderId)
     {
         $order = Order::where('user_id', auth()->id())->find($orderId);

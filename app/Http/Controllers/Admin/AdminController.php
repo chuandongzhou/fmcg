@@ -102,7 +102,6 @@ class AdminController extends Controller
      */
     public function getPassword()
     {
-
         return view('admin.admin.password');
     }
 
@@ -124,7 +123,6 @@ class AdminController extends Controller
 
             return $this->error('修改密码时遇到错误');
         }
-
 
         return $this->error('原密码错误');
     }

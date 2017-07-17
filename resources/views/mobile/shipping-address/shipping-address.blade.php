@@ -3,8 +3,8 @@
 @section('subtitle', '收货地址')
 
 @section('header')
-    <div class="fixed-header fixed-item white-bg orders-details-header">
-        <div class="row nav-top">
+    <div class="fixed-header fixed-item  orders-details-header">
+        <div class="row nav-top white-bg">
             <div class="col-xs-12 color-black">{{ $shippingAddress->id ? '编辑' : '新增' }}地址</div>
         </div>
     </div>
@@ -55,8 +55,8 @@
                 <div class="col-xs-12 set-panel clearfix">
                     <div class="pull-left prompt">设为默认地址</div>
                     <div class="pull-right">
-                        <input type="checkbox" id="checkbox_c1" name="is_default" value="1" class="chk_3"><label
-                                for="checkbox_c1"></label>
+                        <input type="checkbox" id="checkbox_c1" {{ $shippingAddress->is_default ? 'checked' : '' }} name="is_default" value="1" class="chk_3">
+                        <label for="checkbox_c1"></label>
                     </div>
                 </div>
                 <div class="hidden">

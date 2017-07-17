@@ -758,7 +758,7 @@ class Shop extends Model
      */
     public function getSalesVolumeAttribute()
     {
-        $num = $this->goods()->sum('sales_volume');
+        $num = $this->goods()->sum('sales_volume') ?: 0;
         $res = $num < 10000 ? $num : (floor($num / 100) / 100) . '万';
         return $res;
     }

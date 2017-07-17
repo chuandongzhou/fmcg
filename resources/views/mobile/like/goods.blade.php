@@ -26,7 +26,7 @@
                 <a href="{{ url('goods/' . $item->id) }}">
                     <div class="col-xs-12 clearfix shop-list-item">
                         <img data-original="{{ $item->image_url }}" class="pull-left lazy"/>
-                        <div class="pull-left commodity-name">
+                        <div class="commodity-name">
                             {{ $item->name }}
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             goodsHtml += '<a href="' + site.url('goods/' + item.id) + '">' +
                                 '    <div class="col-xs-12 clearfix shop-list-item">' +
                                 '       <img src="' + item.image_url + '" class="pull-left"/>' +
-                                '       <div class="pull-left commodity-name">' +
+                                '       <div class="commodity-name">' +
                                 item.name +
                                 '       </div>' +
                                 '   </div>' +

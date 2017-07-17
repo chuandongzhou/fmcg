@@ -1,6 +1,6 @@
 @extends('mobile.master')
 
-@section('subtitle', '店铺')
+@section('subtitle', '购物车')
 
 @include('includes.jquery-lazeload')
 
@@ -30,9 +30,13 @@
                             <input type="checkbox" id="shop{{ $shop->id }}" class="check shop-check" checked>
                             <label for="shop{{ $shop->id }}"></label>
                         </div>
-                        <div class="item pull-left">
-                            <i class="iconfont icon-shangpu"></i>{{ $shop->name }}<span
-                                    class="small">({{ cons()->valueLang('user.type', $shop->user_type) }})</span>
+                        <div class="item pull-left shop-name">
+                            <div>
+                                <a href="{{ url('shop/' . $shop->id) }}">
+                                    <i class="iconfont icon-shangpu"></i>{{ $shop->name }}
+                                </a>
+                            </div>
+                            <span class="small">({{ cons()->valueLang('user.type', $shop->user_type) }})</span>
                         </div>
                         <div class="item pull-right small">
                             最低配送额 ： ¥{{ $shop->min_money }}
@@ -67,7 +71,7 @@
                                         <div class="enter-num">
                                             <input class="text-center num" type="text"
                                                    name="num[{{ $cart->goods_id }}]"
-                                                   value="{{ $cart->goods->min_num }}"
+                                                   value="{{ $cart->num }}"
                                                    data-min-num="{{ $cart->goods->min_num }}"
                                                    data-price="{{ $cart->goods->price }}"
                                                    data-group="group{{ $cart->goods_id }}"/>

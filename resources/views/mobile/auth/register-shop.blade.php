@@ -6,7 +6,7 @@
 
 @section('body')
     @parent
-    <div class="fixed-header fixed-item">
+    <div class="fixed-header fixed-item  reg-fixed-item">
         注册
     </div>
     <form class="mobile-ajax-form" action="{{  url('api/v1/auth/register') }}" method="post"
@@ -40,6 +40,20 @@
                             <input type="text" name="license_num" placeholder="20位数字以内"/>
                         </div>
                     </div>
+
+                    @if($user['type'] == cons('user.type.wholesaler'))
+                        <div class="item">
+                            <span class="control-label">营业执照</span>
+                            <div class="update-img pull-right image-upload">
+                                <a href="javascript:;">
+                                    <input type="file" data-url="{{ url('api/v1/file/upload-temp') }}" name="file"
+                                           accept="images/*" data-name="license">
+                                </a>
+                                <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="item">
                         <span class="control-label">食品流通许可证</span>
 
@@ -51,6 +65,7 @@
                             <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
                         </div>
                     </div>
+
                     <div class="item">
                         <span class="control-label">所在地</span>
                         <div class="address pull-right">
@@ -81,6 +96,7 @@
                     非必填项
                 </div>
                 <div class="col-xs-12 enter-panel last-panel">
+                    @if($user['type'] == cons('user.type.retailer'))
                     <div class="item">
                         <span class="control-label">营业执照</span>
                         <div class="update-img pull-right image-upload">
@@ -91,6 +107,7 @@
                             <i class="iconfont icon-jiantouyoujiantou right-arrow"></i>
                         </div>
                     </div>
+                    @endif
                     <div class="item">
                         <span class="control-label">推广码</span>
                         <input type="text" name="spreading_code" class="promotion-code pull-right"/>
@@ -112,8 +129,8 @@
                 </div>
             </div>
         </div>
-        <div class="fixed-footer fixed-item">
-            <button type="submit"> 下一步</button>
+        <div class="fixed-footer fixed-item reg-fixed-item">
+            <button type="submit" class="prev-next"> 下一步</button>
         </div>
     </form>
 @stop

@@ -740,6 +740,7 @@ class OrderController extends Controller
     public function postSubmitOrder(Request $request)
     {
         $data = $request->all();
+
         $orderService = new OrderService;
 
         $result = $orderService->orderSubmitHandle($data);

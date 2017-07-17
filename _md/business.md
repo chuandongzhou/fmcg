@@ -1,8 +1,9 @@
 #快销品平台零售商API
 ##1. API接口通信规定
--接口采用**HTTP**,**POST**协议
--请求URL **192.168.2.66/api/v1/business/**
--请求返回数据格式
+- 接口采用**HTTP**,**POST**协议
+- 请求URL **192.168.2.66/api/v1/business/**
+- 附加请求参数 **ter_type**: **web端传1**, **ios端传2**, **android端传3**
+- 请求返回数据格式
 	所有数据返回都基于以下的**json**协议
 	>失败时返回：{"id":'success',"message":"String|Array",'errors':"{account:["不是一个合法的账号"]}"}
 	id:状态值

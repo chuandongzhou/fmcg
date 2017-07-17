@@ -4,7 +4,7 @@
 
 @section('body')
     @parent
-    <div class="fixed-header fixed-item">
+    <div class="fixed-header fixed-item reg-fixed-item">
         注册
     </div>
     <form class="mobile-ajax-form" action="{{ url('api/v1/auth/set-password') }}" method="post"
@@ -35,8 +35,8 @@
                 </div>
             </div>
         </div>
-        <div class="fixed-footer fixed-item">
-            <button type="submit"> 下一步</button>
+        <div class="fixed-footer fixed-item reg-fixed-item">
+            <button type="submit" class="prev-next"> 下一步</button>
         </div>
     </form>
 @stop

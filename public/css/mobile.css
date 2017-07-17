@@ -13,6 +13,17 @@ body {
   position: relative;
 }
 
+@media screen and (max-width: 320px) {
+  html,
+  body {
+    font-size: 11px;
+  }
+
+  .login-content .enter-item input {
+    width: 83%;
+  }
+}
+
 * {
   list-style: none;
   text-decoration: none;
@@ -92,7 +103,7 @@ body,
 
 .enter-wrap .enter-item input {
   vertical-align: middle;
-  margin: 13px 0;
+  margin: 14px 0;
   border: none;
   outline: none;
   width: 100%;
@@ -173,6 +184,11 @@ body,
 
 .login-content .enter-item input {
   width: 85%;
+  font-size: 1.3rem;
+}
+
+.role-enter input {
+  width: 83% !important;
 }
 
 .popover-wrap {
@@ -349,7 +365,7 @@ body,
   background-color: #F25000;
   text-align: center;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.8rem;
   z-index: 99;
   margin: auto;
 }
@@ -424,12 +440,32 @@ body,
   outline: none;
 }
 
+.reg-fixed-item {
+  background-color: #F25000;
+  text-align: center;
+  color: #fff;
+  height: 45px;
+  line-height: 45px;
+}
+
+.reg-fixed-item .prev-next {
+  background-color: #F25000;
+  color: #fff;
+  outline: none;
+  border: none;
+}
+
+.reg-fixed-item .prev-next:hover,
+.reg-fixed-item .prev-next:focus {
+  outline: none;
+}
+
 .fixed-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 99;
 }
 
 .fixed-footer {
@@ -562,7 +598,7 @@ body,
 }
 
 .reg-container .enter-wrap {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
 }
 
 .reg-container .enter-wrap .last-panel {
@@ -790,12 +826,10 @@ body,
 }
 
 .nav-bottom .bottom-menu-item {
-  float: left;
-  width: 25%;
   color: #777777;
 }
 
-.nav-bottom .bottom-menu-item.on .item-name {
+.nav-bottom .bottom-menu-item.on {
   color: #F25000 !important;
 }
 
@@ -831,7 +865,6 @@ body,
   color: #fff;
   font-weight: normal !important;
   position: absolute;
-  left: 55px;
 }
 
 .nav-bottom .bottom-menu-item .iconfont.icon-shangpu,
@@ -939,7 +972,7 @@ body,
 
 .menu-list-wrap .list-item .icon {
   display: inline-block;
-  background: url("../../images/mobile-images/menu_icons.png") top center no-repeat;
+  background: url("/images/mobile-images/menu_icons.png") top center no-repeat;
   background-size: 75%;
   width: 60px;
   height: 60px;
@@ -1019,6 +1052,23 @@ body,
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sort-wrap .product-wrap .product-col .product-price {
+  line-height: 28px;
+}
+
+.sort-wrap .product-wrap .product-col .join-cart {
+  background-color: #F25000;
+  padding: 3px 6px;
+  display: block;
+  border-radius: 50%;
+}
+
+.sort-wrap .product-wrap .product-col .join-cart .iconfont,
+.sort-wrap .product-wrap .product-col .join-cart .nav-bottom .bottom-menu-item .fa,
+.nav-bottom .bottom-menu-item .sort-wrap .product-wrap .product-col .join-cart .fa {
+  color: #fff;
 }
 
 .sort-wrap .product-wrap .product-col .prompt {
@@ -1607,6 +1657,12 @@ body,
   text-align: center;
 }
 
+@media (max-width: 320px) {
+  .cart-commodity .row-panel .commodity-panel .new .enter-panel .enter-num {
+    margin: 5px 5px 0 5px;
+  }
+}
+
 .cart-commodity .row-panel .commodity-panel .new .remove {
   display: inline-block;
   width: 50px;
@@ -1619,8 +1675,47 @@ body,
   color: #f00;
 }
 
+@media (max-width: 320px) {
+  .cart-commodity .row-panel .commodity-panel {
+    width: 70%;
+  }
+}
+
 .cart-commodity .shop-name-panel {
   padding-top: 15px;
+}
+
+.cart-commodity .shop-name-panel:before,
+.cart-commodity .shop-name-panel:after {
+  content: " ";
+  display: table;
+}
+
+.cart-commodity .shop-name-panel:after {
+  clear: both;
+}
+
+.cart-commodity .shop-name-panel .shop-name {
+  max-width: 60%;
+}
+
+.cart-commodity .shop-name-panel .shop-name > div {
+  display: inline-block;
+  max-width: 75%;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 320px) {
+  .cart-commodity .shop-name-panel .shop-name {
+    max-width: 53%;
+  }
+
+  .cart-commodity .shop-name-panel .shop-name > div {
+    max-width: 60%;
+  }
 }
 
 .cart-commodity .commodity-wrap .item {
@@ -1682,12 +1777,6 @@ body,
 
 .shopping-ideas .prompt {
   font-size: 1.7rem;
-}
-
-@media (max-width: 320px) {
-  .shopping-ideas .prompt {
-    font-size: 1.5rem;
-  }
 }
 
 .shopping-ideas .item-btn label {
@@ -1778,8 +1867,24 @@ body,
 }
 
 @media (max-width: 320px) {
+  .shopping-ideas .prompt {
+    font-size: 1.4rem;
+  }
+
+  .delivery-wrap .name-info {
+    font-size: 1.4rem !important;
+  }
+
   .delivery-wrap .prompt {
-    font-size: 1.5rem;
+    font-size: 1.4rem !important;
+  }
+
+  .delivery-wrap .address {
+    font-size: 1.3rem !important;
+  }
+
+  .confirm-order .coupon span {
+    font-size: 1.3rem !important;
   }
 }
 
@@ -1825,7 +1930,12 @@ body,
 }
 
 .pay-panel {
-  padding: 10px 0 10px 0;
+  margin: 0 !important;
+}
+
+.pay-panel li {
+  height: 30px;
+  line-height: 30px;
 }
 
 .order-success-wrap .content .iconfont,
@@ -1884,7 +1994,7 @@ body,
 .mine-top-name .shop-name-panel .shop-info {
   padding-top: 5px;
   margin-left: 10px;
-  width: 78%;
+  width: 75%;
 }
 
 .mine-top-name .shop-name-panel .shop-info .shop-name {
@@ -2018,6 +2128,18 @@ body,
   border: none;
 }
 
+.mine-list-wrap .sign-out {
+  margin-top: 20px;
+}
+
+.mine-list-wrap .sign-out .btn {
+  padding: 0 !important;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 10px;
+}
+
 /*======================================我的 结束========================================*/
 
 /*======================================所有订单 开始========================================*/
@@ -2100,6 +2222,10 @@ body,
   border-radius: 4px !important;
 }
 
+.all-orders-list .delivery-person {
+  display: block;
+}
+
 .all-orders-list .other-item .bordered {
   border-bottom: none;
 }
@@ -2175,11 +2301,12 @@ body,
 .coupon-list-wrap .shop-panel {
   text-align: right;
   border: none;
+  margin-left: 130px;
+  padding-top: 10px;
 }
 
 .coupon-list-wrap .shop-panel .shop-name {
   color: #000;
-  margin-top: 10px;
   font-size: 1.5rem;
 }
 
@@ -2198,6 +2325,33 @@ body,
   color: #F25000;
   padding: 4px 8px !important;
   margin-left: 10px;
+}
+
+@media screen and (max-width: 320px) {
+  .coupon-list-wrap .shop-panel {
+    padding-top: 15px;
+  }
+
+  .coupon-list-wrap .shop-panel .shop-name {
+    font-size: 1.3rem;
+  }
+
+  .coupon-list-wrap .shop-panel .date {
+    margin-top: 10px;
+  }
+
+  .coupon-list-wrap .shop-panel .date span {
+    color: #777777;
+  }
+
+  .coupon-list-wrap .shop-panel .date .btn {
+    border: 1px solid #F25000;
+    background-color: #fff;
+    border-radius: 15px !important;
+    color: #F25000;
+    padding: 2px 4px !important;
+    margin-left: 10px;
+  }
 }
 
 /*======================================我的优惠券 结束========================================*/
@@ -2253,7 +2407,7 @@ body,
 }
 
 .set-panel .prompt {
-  font-size: 2rem;
+  font-size: 1.2rem;
 }
 
 /*======================================收货地址 结束========================================*/
@@ -2300,7 +2454,7 @@ body,
 }
 
 .collection-container .shop-list-item .opera-panel {
-  margin-left: 10px;
+  margin-left: 70px;
 }
 
 .collection-container .shop-list-item .opera-panel .shop-name {
@@ -2336,7 +2490,7 @@ body,
 
 .collection-commodity-container .shop-list-item .commodity-name {
   margin: 10px 0 0 10px;
-  width: 79%;
+  margin-left: 70px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -2385,6 +2539,7 @@ body,
 
 .commodity-details-item .item {
   padding: 5px 15px;
+  font-size: 1.2rem;
 }
 
 .shop-entrance {
@@ -2509,7 +2664,7 @@ label {
   margin-right: 30px;
   transition: all 0.1s ease-in;
   width: 40px;
-  height: 15px;
+  height: 11px;
   box-sizing: content-box;
   -webkit-box-sizing: content-box;
 }
@@ -2532,10 +2687,10 @@ label {
   background: white;
   top: 1px;
   left: 1px;
-  z-index: 999999;
-  width: 31px;
+  z-index: 99;
+  width: 28px;
   transition: all 0.1s ease-in;
-  height: 31px;
+  height: 28px;
   border-radius: 100px;
   box-shadow: 0 3px 1px rgba(0, 0, 0, 0.05), 0 0px 1px rgba(0, 0, 0, 0.3);
 }
@@ -2560,7 +2715,7 @@ label {
 .chk_3:checked + label:before {
   content: ' ';
   position: absolute;
-  left: 26px;
+  left: 30px;
   border-radius: 100px;
 }
 
@@ -2643,8 +2798,7 @@ label {
 
 .zoomOut {
   animation-name: zoomOut;
-  display: none \0
-  !important;
+  display: none\0  !important;
 }
 
 .animated {

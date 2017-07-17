@@ -8,16 +8,13 @@
     @parent
     <div class="fixed-header fixed-item white-bg search-nav">
         <div class="row nav-top white-bg">
-            <div class="col-xs-2">
-                <a class="iconfont icon-fanhui2 go-back" href="javascript:window.history.back()"></a>
-            </div>
             @if($cateName)
-                <div class="col-xs-10 color-black pd-left-clear">
+                <div class="col-xs-12 color-black pd-left-clear">
                     {{ $cateName }}
                 </div>
             @else
                 <form action="{{ url('goods') }}" method="get">
-                    <div class="col-xs-7 pd-clear search-item white-bg">
+                    <div class="col-xs-9 search-item white-bg">
                         <input type="text" class="search" name="name" value="{{ $name }}" placeholder="查找商品"/>
                     </div>
                     <div class="col-xs-3 pd-clear">
@@ -33,7 +30,7 @@
                 <div class="col-xs-12 pd-clear product-wrap goods-list">
                     @foreach($goods as $item)
                         <div class="product-col">
-                            <a href="{{ url('goods/' . $item->goods) }}">
+                            <a href="{{ url('goods/' . $item->id) }}">
                                 <img class="product-img lazy" data-original="{{ $item->image_url }}">
                                 <span class="@if($item->is_out)prompt lack @elseif($item->is_promotion)prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
                                 <div class="product-info">

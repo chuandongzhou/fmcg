@@ -9,10 +9,7 @@
 @section('header')
     <div class="fixed-header fixed-item shopping-nav">
         <div class="row nav-top margin-clear">
-            <div class="col-xs-2 edit-btn pd-clear">
-                <a class="iconfont icon-fanhui2 go-back"></a>
-            </div>
-            <div class="col-xs-10  pd-right-clear">
+            <div class="col-xs-12  pd-right-clear">
                 确认订单
             </div>
         </div>
@@ -53,7 +50,7 @@
                         <div class="col-xs-1 right-icon">
                             <i class="iconfont icon-jiantouyoujiantou"></i>
                         </div>
-                        <input type="hidden"  name="shipping_address_id" value="{{ $defaultAddress->id }}">
+                        <input type="hidden" name="shipping_address_id" value="{{ $defaultAddress->id }}">
                     </div>
                     <div class="row item shopping-ideas pd-clear">
                         <div class="col-xs-3 pd-right-clear prompt text-left">支付方式</div>
@@ -82,9 +79,11 @@
             @foreach($shops as $shop)
                 <div class="row cart-commodity confirm-order shop-{{ $shop->id }}" data-id="{{ $shop->id }}">
                     <div class="col-xs-12 shop-name-panel row-panel">
-                        <div class="item pull-left">
-                            <i class="iconfont icon-shangpu"></i>{{ $shop->name }}<span
-                                    class="small">({{ cons()->valueLang('user.type', $shop->user_type) }})</span>
+                        <div class="item pull-left shop-name">
+                            <div>
+                                <i class="iconfont icon-shangpu"></i>{{ $shop->name }}
+                            </div>
+                            <span class="small">({{ cons()->valueLang('user.type', $shop->user_type) }})</span>
                         </div>
                         <div class="item pull-right small min-money-panel">
                             最低配送额 ¥<span class="shop-min-money"
