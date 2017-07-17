@@ -27,7 +27,7 @@ $router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
 /**
  * 登录注册
  */
-$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'],
+$router->group(['prefix' => 'auth', 'domain' => 'm.dingbaida.com', 'namespace' => 'Mobile'],
     function ($router) {
         $router->get('login', 'AuthController@login');
         $router->get('register-account', 'AuthController@registerAccount');
@@ -42,7 +42,7 @@ $router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mo
 /**
  * 移动端
  */
-$router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
+$router->group(['domain' => 'm.dingbaida.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');
     $router->get('category', 'CategoryController@index');
     $router->get('search', 'SearchController@index');

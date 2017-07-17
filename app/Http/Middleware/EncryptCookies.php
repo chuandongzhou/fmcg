@@ -34,10 +34,10 @@ class EncryptCookies extends BaseEncrypter
         $inWindows = in_windows();
         $terTypes = cons('ter_types');
         if (!$request->ajax() && $request->input('ter_type', head($terTypes)) === head($terTypes)) {
-            $mobileUrl = 'http://m.fmcg.com';
+            $mobileUrl = 'http://m.dingbaida.com';
             if ($inWindows && !$request->is('child-user/*', 'admin/*', 'upload/file/*')) {
                 if (false !== strpos($request->root(), $mobileUrl)) {
-                    return redirect('http://fmcg.com');
+                    return redirect('http://dingbaida.com');
                 }
                 if (!$request->is('auth/*')) {
                     $cookieJar = app('cookie');
