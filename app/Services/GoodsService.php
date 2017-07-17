@@ -127,9 +127,6 @@ class GoodsService
         if (isset($data['status'])) {
             $goods->ofStatus($data['status']);
         }
-        if (isset($data['ids'])) {
-            $goods->whereNotIn('id', $data['ids']);
-        }
         $attrs = [];
         if (isset($data['category_id'])) {
             //分类最高位为层级 后面为categoryId
@@ -141,11 +138,10 @@ class GoodsService
         if (isset($data['attr']) && !empty($data['attr'])) {
             $goods->OfAttr($data['attr']);
         }
-        // 名称or条形码
+        //名字或者二维码
         if (isset($data['nameOrCode']) && !empty($data['nameOrCode'])) {
-            $goods->OfNameOrCode($data['nameOrCode']);
+            $goods->ofNameOrCode($data['nameOrCode']);
         }
-
         // 名称
         if (isset($data['name']) && $data['name']) {
             $goods->where('name', 'like', '%' . $data['name'] . '%')->get();

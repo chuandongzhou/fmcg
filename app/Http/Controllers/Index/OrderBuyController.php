@@ -147,12 +147,18 @@ class OrderBuyController extends OrderController
             return $this->error('订单不存在');
         }
         $goods = (new OrderService())->explodeOrderGoods($order);
-
-        return view('index.order.order-buy-detail', [
+//        $viewName = str_replace('_', '-', array_search($order->pay_type, cons('pay_type')));
+//
+//        //拼接需要调用的模板名字
+//        $view = 'index.order.buy.detail-' . $viewName;
+        $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop()->pluck('id'))->lists('name', 'id');
+        $view = 'index.order.order-buy-detail';
+        return view($view, [
             'order' => $order,
             'mortgageGoods' => $goods['mortgageGoods'],
             'orderGoods' => $goods['orderGoods'],
-            'userBalance' => $this->userBalance['availableBalance']
+            'userBalance' => $this->userBalance['availableBalance'],
+            'delivery_man' => $deliveryMan
         ]);
     }
 

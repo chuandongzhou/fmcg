@@ -21,43 +21,51 @@ class AssetService
      */
     public function getDataByCondition($model, $data)
     {
-        $prefix = ($model->first() instanceof AssetApply) ? 'asset_apply.' : '';
+        $instance = $model->get();
+        $prefix = ($instance->first() instanceof AssetApply) ? 'asset_apply.' : '';
+        $model->orderBy('created_at', 'DESC');
         return $model->where(function ($query) use ($data, $prefix) {
-            if ($start = array_get($data, 'start_at')) {
-                $query->where($prefix . 'created_at', '>=', $start);
+            if ($start_at = array_get($data, 'start_at')) {
+                $query->where($prefix . 'created_at', '>=', $start_at . ' 00:00:00');
             }
             if ($end_at = array_get($data, 'end_at')) {
-                $query->where($prefix . 'created_at', '<=', $end_at);
+                $query->where($prefix . 'created_at', '<=', $end_at . ' 23:59:59');
             }
-
             if ($use_start_at = array_get($data, 'use_start_at')) {
-                $query->where('use_date', '>=', $use_start_at);
-
+                $query->where('use_date', '>=', $use_start_at . ' 00:00:00');
             }
             if ($use_end_at = array_get($data, 'use_end_at')) {
-                $query->where('use_date', '<=', $use_end_at);
+                $query->where('use_date', '<=', $use_end_at . ' 23:59:59');
             }
-            if ($name = array_get($data, 'name')) {
-                if (!empty($prefix)) {
-                    $query->whereHas('asset', function ($query) use ($name) {
-                        $query->where('name', 'LIKE', '%' . $name . '%');
+
+            //资产编号或者名称
+            if ($asset = array_get($data, 'asset')) {
+                if (empty($prefix)) {
+                    $query->where(function ($query) use ($asset) {
+                        $is_id = is_numeric($asset);
+                        if ($is_id) {
+                            $query->where('id', $asset);
+                        } else {
+                            $query->where('name', 'like', '%' . $asset . '%');
+                        }
                     });
                 } else {
-                    $query->where('name', 'LIKE', '%' . $name . '%');
+                    $query->whereHas('asset',function ($query) use ($asset) {
+                        $is_id = is_numeric($asset);
+                        if ($is_id) {
+                            $query->where('id', $asset);
+                        } else {
+                            $query->where('name', 'like', '%' . $asset . '%');
+                        }
+                    });
                 }
 
             }
-            if ($asset = array_get($data, 'asset')) {
-                $query->where(function ($query) use ($asset) {
-                    $query->whereHas('asset', function ($query) use ($asset) {
-                        $field = is_numeric($asset) ? 'asset.id' : 'asset.name';
-                        $query->where($field, 'like', '%' . $asset . '%');
-                    });
-                });
-            }
+            //业务员
             if (isset($data['salesmen'])) {
                 $query->where($prefix . 'salesman_id', $data['salesmen']);
             }
+            //审核状态
             if (isset($data['status'])) {
                 $query->where($prefix . 'status', $data['status']);
             }
@@ -65,28 +73,15 @@ class AssetService
                 $query->where(function ($query) use ($condition) {
                     $query->whereHas('asset', function ($query) use ($condition) {
                         $query->where('asset.id', $condition);
-                    });
-                })->orWhere(function ($query) use ($condition) {
-                    $query->whereHas('salesman', function ($query) use ($condition) {
+                    })->orWhereHas('salesman', function ($query) use ($condition) {
                         $query->where('salesman.name', 'LIKE', '%' . $condition . '%');
-                    });
-                })->orWhere(function ($query) use ($condition) {
-                    $query->whereHas('client', function ($query) use ($condition) {
-                        $query->where('shop.name', 'LIKE', '%' . $condition . '%');
+                    })->orWhereHas('client', function ($query) use ($condition) {
+                        $query->where('salesman_customer.name', 'LIKE', '%' . $condition . '%');
                     });
                 });
+
             }
         });
-    }
-
-    /**
-     * 获取店铺资产
-     *
-     * @return mixed
-     */
-    public function getShopAsset()
-    {
-        return auth()->user()->shop->asset()->get();
     }
 
     /**
@@ -98,8 +93,8 @@ class AssetService
     {
         $log = [
             'action' => cons('asset_apply_log.action.' . $action),
-            'opera_type' => auth()->user()->shop ? Shop::class : Salesman::class,
-            'operator' => auth()->user()->shop ? auth()->user()->shop->id : auth()->user()->id
+            'opera_type' => auth()->user() ? Shop::class : Salesman::class,
+            'operator' => auth()->user() ? auth()->user()->shop->id : salesman_auth()->user()->id
         ];
         $model->log()->create($log);
 

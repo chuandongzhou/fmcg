@@ -53,17 +53,14 @@ class OrderSellController extends OrderController
         } else {
             $orders = $orders->ofSelectOptions($search);
         }
-
         //已作废 、已发货、已完成、退款成功按操作时间倒序
         if (array_get($search, 'status') == 'send') {
             $orders->orderBy('send_at', 'DESC');
         } else {
-            $orders->orderBy('updated_at', 'DESC');
+            $orders->orderBy('updated_at', 'DESC')->orderBy('id', 'DESC');
         }
-
         $deliveryMan = DeliveryMan::active()->where('shop_id', auth()->user()->shop_id)->lists('name',
             'id');
-
         return view('index.order.order-sell', [
             'order_status' => $orderStatus,
             'data' => $this->_getOrderNum(),
@@ -141,11 +138,10 @@ class OrderSellController extends OrderController
     {
         $order = Order::ofSell(auth()->user()->shop_id)->useful()->with('user.shop', 'shop.user', 'goods',
             'shippingAddress.address', 'systemTradeInfo',
-            'orderChangeRecode', 'gifts')->find(intval($request->input('order_id')));
+            'orderChangeRecode', 'gifts', 'applyPromo')->find(intval($request->input('order_id')));
         if (!$order) {
             return redirect('order-sell');
         }
-
         $diffTime = Carbon::now()->diffInSeconds($order->updated_at);
 
         $goods = (new OrderService)->explodeOrderGoods($order);
@@ -153,7 +149,6 @@ class OrderSellController extends OrderController
             $goods_quantity += $goods->pivot->num;
         });
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
-
         return view('index.order.order-sell-detail', [
             'order' => $order,
             'goods_quantity' => $goods_quantity,
@@ -238,14 +233,13 @@ class OrderSellController extends OrderController
         }
         $order->allNum = $allNum;
         $shopId = $order->shop_id;
+
         $modelId = app('order.download')->getTemplete($shopId);
         (new OrderDownloadService())->addDownloadCount($order);
 
         if ($templete = $order->shop->orderTempletes()->find($templeteId)) {
             $order->shop = $templete;
         }
-
-
         return view('index.order.sell.templet.templet-table' . $modelId,
             [
                 'order' => $order,
@@ -274,10 +268,6 @@ class OrderSellController extends OrderController
             'waitConfirm' => $waitConfirm >= 0 ? $waitConfirm : Order::OfSell($shopId)->waitConfirm()->useful()->count(),
             //待确认
         ];
-
-
         return $data;
     }
-
-
 }

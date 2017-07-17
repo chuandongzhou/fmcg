@@ -45,17 +45,23 @@ class BillService
         //获取时间范围内的业务订单
         $businessOrders = $customer->orders()->with('orderGoods', 'displayFees', 'mortgageGoods')->where('created_at',
             '>=', $start_at)->where('created_at', '<=', $end_at)->get();
-
-        //全部订单
-        $allOrders = auth()->user()->shop->orders()->where('user_id', $customer->shop_id)->where('created_at', '>=',
-            $start_at)->where('created_at', '<=', $end_at)->get();
+        //判断客户是否有线上店铺
+        if ($customer->shop_id) {
+            //全部订单
+            $allOrders = auth()->user()->shop->orders()->Useful()->NoInvalid()->NonRefund()->where('user_id',
+                $customer->shop_id)->where('created_at', '>=',
+                $start_at)->where('created_at', '<=', $end_at)->get();
+        } else {
+            $allOrders = $customer->orders()->with('orderGoods')->where('created_at',
+                '>=', $start_at)->where('created_at', '<=', $end_at)->get();
+           // dd($allOrders);
+        }
 
         //收支明细
         $paymentDetails = $this->getPaymentDetails($allOrders->pluck('id'), $start_at, $end_at);
 
         return compact('businessOrders', 'allOrders', 'paymentDetails', 'time', 'customer');
     }
-
 
     /**
      * 导出对账单  卖家
@@ -86,11 +92,11 @@ class BillService
         ]);
 
         $section = $phpWord->addSection();
-        if(isset($bill['customer'])){
+        if (isset($bill['customer'])) {
             $section->addText($bill['customer']->name . ' — 月对账单', ['size' => '18'], ['align' => 'center']);
             $section->addText('客户名称 : ' . $bill['customer']->name);
             $section->addText('客户地址 : ' . $bill['customer']->business_address_name);
-        }else{
+        } else {
             $section->addText($bill['shop']->name . ' — 月对账单', ['size' => '18'], ['align' => 'center']);
             $section->addText('商户名称 : ' . $bill['shop']->name);
             $section->addText('商户地址 : ' . $bill['shop']->shopAddress->area_name);
@@ -209,7 +215,7 @@ class BillService
         $section->addText('');
         $section->addText('如果贵方对对账单中数据有疑问，请提供贵明细，以便我们尽快核对您的账目');
         $section->addText('');
-        $name = (isset($bill['customer']) ? $bill['customer']->name : $bill['shop']->name ). $bill['time']['start_at']->toDateString() . ' 至 ' . $bill['time']['end_at']->toDateString() . '对账单.docx';
+        $name = (isset($bill['customer']) ? $bill['customer']->name : $bill['shop']->name) . $bill['time']['start_at']->toDateString() . ' 至 ' . $bill['time']['end_at']->toDateString() . '对账单.docx';
         return $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
@@ -234,14 +240,15 @@ class BillService
         $start_at = array_get($time, 'start_at')->toDateTimeString();
         $end_at = array_get($time, 'end_at')->toDateTimeString();
 
-        $allOrders = auth()->user()->orders()->Useful()->NoInvalid()->OfRefund()->where('shop_id', $shop->id)->where('created_at', '>=',
+        $allOrders = auth()->user()->orders()->Useful()->NoInvalid()->NonRefund()->where('shop_id',
+            $shop->id)->where('created_at', '>=',
             $start_at)->where('created_at', '<=', $end_at)->get();
         $businessOrders = $allOrders->pluck('salesmanVisitOrder')->filter(function ($item) {
             return !is_null($item);
         });
         $paymentDetails = $this->getPaymentDetails($allOrders->pluck('id'), $start_at, $end_at);
 
-        return compact('allOrders','businessOrders','paymentDetails','time','shop');
+        return compact('allOrders', 'businessOrders', 'paymentDetails', 'time', 'shop');
 
     }
 
@@ -249,7 +256,7 @@ class BillService
     public function getPaymentDetails($ordersId, $start_at, $end_at)
     {
         return SystemTradeInfo::select('trade_no', 'pay_type', 'type', 'amount', 'target_fee',
-            'finished_at')->where('account', auth()->user()->user_name)->where('success_at', '>=',
+            'finished_at')->where('success_at', '>=',
             $start_at)->where('success_at', '<=', $end_at)->where('is_finished',
             cons('trade.is_finished.yes'))->whereIn('order_id', $ordersId)->orderBy('finished_at')->get();
     }

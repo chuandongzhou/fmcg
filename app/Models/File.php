@@ -128,8 +128,9 @@ class File extends Model
         $userId = admin_auth()->id();
         if (!$isAdmin = boolval($userId)) {
             $userId = auth()->id();
+        } else if (!boolval($userId)) {
+            $userId = salesman_auth()->id();
         }
-
         $uploadFilePath = $saveToFileTable ? config('path.upload_file') : config('path.upload_temp');
 
         // 根据当前日期生成目录
@@ -163,7 +164,6 @@ class File extends Model
             'user_id' => intval($userId),
             'ip' => \Request::getClientIp(),
         ];
-
         return $saveToFileTable ? static::create($attributes) : $attributes;
     }
 

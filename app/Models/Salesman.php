@@ -40,19 +40,19 @@ class Salesman extends Model implements AuthenticatableContract
     /**
      * 模型启动事件
      */
-   /* public static function boot()
-    {
-        parent::boot();
+    /* public static function boot()
+     {
+         parent::boot();
 
-        // 注册创建事件
-        static::creating(function ($model) {
-            $signService = app('sign');
-            $signConfig = cons('sign');
-            if ($signService->workerCount() >= $signConfig['max_worker']) {
-                $model->attributes['expire_at'] = Carbon::now();
-            }
-        });
-    }*/
+         // 注册创建事件
+         static::creating(function ($model) {
+             $signService = app('sign');
+             $signConfig = cons('sign');
+             if ($signService->workerCount() >= $signConfig['max_worker']) {
+                 $model->attributes['expire_at'] = Carbon::now();
+             }
+         });
+     }*/
 
     /**
      * 模型启动事件
@@ -85,6 +85,36 @@ class Salesman extends Model implements AuthenticatableContract
     }
 
     /**
+     * 关联厂家店铺
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function maker()
+    {
+        return $this->belongsTo('App\Models\Shop', 'maker_id');
+    }
+
+    /**
+     * 申请资产
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function applyAsset()
+    {
+        return $this->hasMany(AssetApply::class);
+    }
+
+    /**
+     * 申请活动
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function applyPromo()
+    {
+        return $this->hasMany(PromoApply::class);
+    }
+
+    /**
      * 关联客户
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -101,7 +131,12 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function visits()
     {
-        return $this->hasMany('App\Models\SalesmanVisit');
+        $user = auth()->user();
+        return $this->hasMany('App\Models\SalesmanVisit')->where(function ($query) use ($user) {
+            if ($user && $user->type != cons('user.type.maker')) {
+                $query->where('shop_id', $this->shop_id);
+            }
+        });;
     }
 
     /**
@@ -121,7 +156,14 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function orderForms()
     {
-        return $this->orders()->where('type', cons('salesman.order.type.order'));
+        $user = auth()->user();
+        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where(function ($query) use (
+            $user
+        ) {
+            if ($user && $user->type != cons('user.type.maker')) {
+                $query->where('shop_id', $this->shop_id);
+            }
+        });
     }
 
     /**
@@ -131,7 +173,14 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function returnOrders()
     {
-        return $this->orders()->where('type', cons('salesman.order.type.return_order'));
+        $user = auth()->user();
+        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where(function ($query) use (
+            $user
+        ) {
+            if ($user && $user->type != cons('user.type.maker')) {
+                $query->where('shop_id', $this->shop_id);
+            }
+        });
     }
 
     /**
@@ -236,6 +285,19 @@ class Salesman extends Model implements AuthenticatableContract
     }
 
     /**
+     * 是否厂家业务员
+     *
+     * @return int
+     */
+    public function getIsMakerAttribute()
+    {
+        if (is_null($this->maker_id)) {
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
      * 获取实际过期时间
      *
      * @return mixed
@@ -283,7 +345,7 @@ class Salesman extends Model implements AuthenticatableContract
         }
         return $query;
     }
-    
+
 
     /**
      * 按参数检索

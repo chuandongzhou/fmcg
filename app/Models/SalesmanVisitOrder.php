@@ -16,6 +16,8 @@ class SalesmanVisitOrder extends Model
         'status',
         'type',
         'order_remark',
+        'shop_id',
+        'apply_promo_id',
         'display_remark',
         'salesman_id',
         'salesman_visit_id',
@@ -81,7 +83,7 @@ class SalesmanVisitOrder extends Model
 
 
     /**
-     * 关联赠口
+     * 关联赠品
      *
      * @return $this
      */
@@ -91,6 +93,15 @@ class SalesmanVisitOrder extends Model
             'pieces');
     }
 
+    /**
+     * 关联促销活动申请
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function applyPromo()
+    {
+        return $this->belongsTo(PromoApply::class,'apply_promo_id','id');
+    }
 
     /**
      * 陈列操作记录
@@ -165,7 +176,13 @@ class SalesmanVisitOrder extends Model
     {
         return $query->where('status', 0);
     }
-    
+
+
+    public function scopeCheckShop($query, $shop_id)
+    {
+        return $query->where('shop_id', $shop_id);
+    }
+
     /**
      * 订单过滤
      *
@@ -183,7 +200,7 @@ class SalesmanVisitOrder extends Model
             if (is_numeric($customer)) {
                 return $query->where('id', $customer);
             } else {
-               $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
+                $query->whereHas('salesmanCustomer', function ($query) use ($customer) {
                     $query->where('name', 'like', '%' . $customer . '%');
                 });
             }
@@ -212,6 +229,7 @@ class SalesmanVisitOrder extends Model
     {
         return $this->salesmanCustomer ? $this->salesmanCustomer->name : '';
     }
+    
 
     /**
      * 获取联系人
@@ -341,5 +359,15 @@ class SalesmanVisitOrder extends Model
     public function getAfterRebatesPriceAttribute()
     {
         return (!$this->salesman_visit_id) && $this->order ? $this->order->after_rebates_price : $this->amount;
+    }
+
+    /**
+     * 优惠了多少
+     *
+     * @return mixed
+     */
+    public function getHowMuchDiscountAttribute()
+    {
+        return $this->amount - $this->getAfterRebatesPriceAttribute();
     }
 }

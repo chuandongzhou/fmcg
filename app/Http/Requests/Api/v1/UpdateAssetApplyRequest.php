@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\v1;
 
 
-use Carbon\Carbon;
 
 class UpdateAssetApplyRequest extends Request
 {
@@ -16,7 +15,7 @@ class UpdateAssetApplyRequest extends Request
     {
         //$now = Carbon::now();
         return [
-            'quantity' => 'sometimes|required|numeric|min:1000',
+            'quantity' => 'sometimes|required|numeric|max:1000',
             'apply_remark' => 'sometimes|max:50',
             'use_date' => 'sometimes|date'//|after:'. $now,
         ];

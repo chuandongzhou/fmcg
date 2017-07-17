@@ -89,7 +89,7 @@ class AuthServiceProvider extends ServiceProvider
          * 判断客户权限
          */
         $gate->define('validate-customer', function ($user, $customer) {
-            return $user->shop_id == $customer->salesman->shop_id;
+            return ($user->shop_id == $customer->salesman->shop_id || $user->shop_id == $customer->salesman->maker->id);
         });
 
         /**
@@ -156,6 +156,20 @@ class AuthServiceProvider extends ServiceProvider
          */
         $gate->define('validate-shop-promoApply', function ($user, $promoApply) {
             return $user->shop_id == $promoApply->promo->shop_id;
+        });
+
+        /**
+         * 验证业务员资产申请删除权限
+         */
+        $gate->define('validate-salesman-assetApply', function ($salesman,$assetApply){
+            return $salesman->id == $assetApply->salesman_id;
+        });
+        
+        /**
+         * 验证业务员促销申请删除权限
+         */
+        $gate->define('validate-salesman-promoApply', function ($salesman,$promoApply){
+            return $salesman->id == $promoApply->salesman_id;
         });
     }
 }

@@ -183,10 +183,6 @@ class SalesmanCustomer extends Model
      */
     public function scopeExceptSelf($query)
     {
-        $shopType = auth()->user() ? auth()->user()->type : salesman_auth()->user()->shop->user_type;
-        if($shopType == cons('user.type.maker')){
-            return $query->where('type',cons('user.type.supplier'));
-        }
         return $query->where('type','<>',cons('user.type.supplier'));
     }
     /**

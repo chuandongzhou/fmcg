@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -42,7 +43,7 @@ class AssetApply extends Model
      */
     public function client()
     {
-        return $this->belongsTo('App\Models\shop','client_id');
+        return $this->belongsTo('App\Models\SalesmanCustomer','client_id');
     }
 
     /**
@@ -60,7 +61,7 @@ class AssetApply extends Model
      */
     public function salesman()
     {
-        return $this->belongsTo('App\Models\Salesman');
+        return $this->belongsTo('App\Models\Salesman','salesman_id');
     }
 
     /**
@@ -70,7 +71,7 @@ class AssetApply extends Model
     public function getPassDateAttribute()
     {
         $log = $this->log()->where('action',cons('asset_apply_log.action.review'))->first();
-        return $log->created_at;
+        return $log ? (new Carbon($log->created_at))->format('Y-m-d H:i:s') : null;
     }
 
 }

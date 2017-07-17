@@ -86,7 +86,7 @@ class CreatePromoRequest extends Request
         if (empty($money['money'])) {
             return $validator->errors()->add('condition[money]', ($isRebate ? '返利' : '条件') . '金额 不能为空');
         }
-        if (!is_numeric($money['money'])) {
+        if (!is_numeric(trim($money['money']))) {
             return $validator->errors()->add('condition[money]', ($isRebate ? '返利' : '条件') . '金额 请输入数字');
         }
     }

@@ -154,10 +154,13 @@ class Inventory extends Model
      */
     private function getInActualCost()
     {
-        $inv = $this->where('id' , $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
+        $inv = $this->where('id', $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
         //进制
-        $system = GoodsService::getPiecesSystem($inv->goods, $inv->pieces);
-        return ($inv->cost / $system) ?? 0;
+        if ($inv){
+            $system = GoodsService::getPiecesSystem($inv->goods, $inv->pieces);
+            return ($inv->cost / $system) ?? 0;
+        }
+
 
     }
 
@@ -174,6 +177,22 @@ class Inventory extends Model
         ];
         $cost = $this->where($where)->OfIn()->first(['pieces']);
         return $cost->pieces ?? 0;
+    }
+
+    /*
+     * 获取商品名
+     */
+    public function getGoodsNameAttribute()
+    {
+        return $this->goods->name;
+    }
+    
+    /*
+     * 获取商品条形码
+     */
+    public function getGoodsBarcodeAttribute()
+    {
+        return $this->goods->bar_code;
     }
 
     /**

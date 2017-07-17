@@ -6,6 +6,10 @@ use App\Models\Inventory;
 use App\Models\OrderGoods;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class InventoryService extends BaseService
 {
@@ -73,7 +77,7 @@ class InventoryService extends BaseService
     {
         $inventory_number = $this->getInventoryNumber();
         foreach ($goodsInfo as $orderGoods) {
-            if($orderGoods->type == 1 ){
+            if ($orderGoods->type == 1 || $orderGoods->order->user_id < 1) {
                 continue;
             }
             //买家的商店
@@ -86,7 +90,8 @@ class InventoryService extends BaseService
                 $orderGoods->order_id)->OfOut()->get();
             //查无此商品或单位不匹配或者出库记录为空则标记为入库异常
             $except = ['id', 'goods_id'];
-            if ($outRecord->isEmpty() || empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(), $except),
+            if ($outRecord->isEmpty() || empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(),
+                    $except),
                     array_except($orderGoods->goods->goodsPieces->toArray(), $except))
             ) {
                 $orderGoods->inventory_state = cons('inventory.inventory_state.in-abnormal');
@@ -187,9 +192,9 @@ class InventoryService extends BaseService
                 'user_id' => 0,
             ];
             foreach ($goodsInfo as $goods) {
-                if($goods->type){
+                if ($goods->type) {
                     continue;
-                }
+                };
                 $outGoods = [
                     'goods' => [
                         $goods->goods_id => [
@@ -335,8 +340,10 @@ class InventoryService extends BaseService
             if (!empty($data['action_type']) && isset($data['action_type'])) {
                 $query->where('action_type', $data['action_type']);
             }
-            if (!empty($data['number']) && isset($data['number'])) {
-                $query->OfNumber($data['number']);
+            if (($goods = array_get($data, 'goods')) && !is_null($goods)) {
+                $query->whereHas('goods', function ($query) use ($goods) {
+                    $query->where(is_numeric($goods) ? 'bar_code' : 'name', 'LIKE', '%' . $goods . '%');
+                });
             }
         });
     }
@@ -426,7 +433,7 @@ class InventoryService extends BaseService
             $orderGoods->order_id)->OfOut()->get();
         if ($outRecord) {
             foreach ($outRecord as $record) {
-                $inRecord = $this->inventory->where('id',$record->in_id)->OfIn()->first();
+                $inRecord = $this->inventory->where('id', $record->in_id)->OfIn()->first();
                 $inRecord->surplus += $record->quantity;
                 $inRecord->save();
                 $record->delete();
@@ -458,6 +465,7 @@ class InventoryService extends BaseService
 
     /**
      * 检查是否有重复的生产日期
+     *
      * @param $record
      * @return mixed
      */
@@ -476,5 +484,111 @@ class InventoryService extends BaseService
             unset($record[$k]);
         }
         return $record;
+    }
+
+    /**
+     * 记录导出
+     *
+     * @param $inventory
+     * @param $excelName
+     */
+    public function export($records, $excelName, $action)
+    {
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($records, $action) {
+            $excel->sheet('库存记录', function (LaravelExcelWorksheet $sheet) use ($records, $action) {
+
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+                //标题
+                $titles = [
+                    '商品名称',
+                    '商品条形码',
+                    '生产日期',
+                ];
+                switch ($action) {
+                    case 'in' :
+                        $sheet->setWidth(array(
+                            'A' => 50,
+                            'B' => 20,
+                            'C' => 20,
+                            'D' => 10,
+                            'E' => 10,
+                            'F' => 10,
+                            'G' => 10,
+                            'H' => 12,
+                            'I' => 10,
+                            'J' => 20,
+                            'K' => 16,
+                        ));
+                        $titles[] = '入库数量';
+                        $titles[] = '入库单价';
+                        $titles[] = '入库类型';
+                        $titles[] = '入库人';
+                        $titles[] = '进货单号';
+                        $titles[] = '供货商家';
+                        $titles[] = '入库时间';
+                        break;
+                    case 'out' :
+                        $sheet->setWidth(array(
+                            'A' => 50,
+                            'B' => 20,
+                            'C' => 20,
+                            'D' => 10,
+                            'E' => 10,
+                            'F' => 10,
+                            'G' => 5,
+                            'H' => 12,
+                            'I' => 8,
+                            'J' => 10,
+                            'K' => 16,
+                            'L' => 20,
+                            'M' => 20,
+                        ));
+                        $titles[] = '出库数量';
+                        $titles[] = '成本单价';
+                        $titles[] = '出库单价';
+                        $titles[] = '盈利';
+                        $titles[] = '出库类型';
+                        $titles[] = '出库人';
+                        $titles[] = '出货单号';
+                        $titles[] = '进货商家';
+                        $titles[] = '出库时间';
+                        break;
+                    case 'detail-list' :
+                        $sheet->setWidth(array(
+                            'A' => 50,
+                            'B' => 20,
+                            'C' => 20,
+                            'D' => 10,
+                            'E' => 10,
+                            'F' => 10,
+                            'G' => 10,
+                            'H' => 10,
+                            'I' => 8,
+                            'J' => 10,
+                            'K' => 16,
+                            'L' => 20,
+                            'M' => 30,
+                        ));
+                        $titles[] = '出入库类型';
+                        $titles[] = '出库数量';
+                        $titles[] = '出库数量';
+                        $titles[] = '成本单价';
+                        $titles[] = '出库单价';
+                        $titles[] = '出入库人';
+                        $titles[] = '近出货单号';
+                        $titles[] = '供进货商家';
+                        $titles[] = '出入库时间';
+                }
+                $titles[] = '备注';
+                $data = array_merge([$titles], $records);
+                $sheet->rows($data);
+                //单元格居中
+                $sheet->cells('A1:E1', function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+            });
+        })->export('xls');
     }
 }

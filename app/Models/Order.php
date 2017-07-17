@@ -22,6 +22,7 @@ class Order extends Model
         'display_fee',
         'user_id',
         'shop_id',
+        'apply_promo_id',
         'download_count',
         'type',
         'paid_at',
@@ -86,6 +87,16 @@ class Order extends Model
     public function orderGoods()
     {
         return $this->hasMany('App\Models\OrderGoods');
+    }
+
+    /**
+     * 该订单下所有商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function applyPromo()
+    {
+        return $this->belongsTo(PromoApply::class);
     }
 
     /**
@@ -957,10 +968,22 @@ class Order extends Model
             cons('order.pay_status.payment_success'));
     }
 
+    /**
+     * 线上支付 未退款
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeOfRefund($query)
     {
-        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status','<',
+        return $query->where('pay_type', cons('pay_type.online'))->where('pay_status', '<',
             cons('order.pay_status.refund'));
+    }
+
+    //未退款
+    public function scopeNonRefund($query)
+    {
+        return $query->where('pay_status', '<', cons('order.pay_status.refund'));
     }
 
     /**
@@ -1074,6 +1097,27 @@ class Order extends Model
         $payTypes = cons('pay_type');
         if ($payType && in_array($payType, $payTypes)) {
             return $query->where('pay_type', $payType);
+        }
+    }
+
+    /**
+     * 订单id查询
+     *
+     * @param $query
+     * @param $orderID
+     * @return mixed
+     */
+    public function scopeOfOrderIdName($query, $idName)
+    {
+        if (!is_null($idName)) {
+            $isID = is_numeric($idName) ? true : false;
+            if ($isID) {
+                return $query->where('id', $idName);
+            } else {
+                return $query->whereHas('user.shop', function ($query) use ($idName) {
+                    $query->where('name', 'like', '%' . $idName . '%');
+                });
+            };
         }
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
+
 class Promo extends Model
 {
     protected $table = 'promo';
@@ -15,8 +17,7 @@ class Promo extends Model
         'remark',
         'status',
     ];
-
-
+    
     /**
      * 模型启动事件
      */
@@ -27,14 +28,12 @@ class Promo extends Model
         // 注册删除事件
         static::deleted(function ($model) {
             $model->apply()->delete();
-            $model->condition()->delete();
-            $model->rebate()->delete();
-            $model->rebate()->delete();
         });
     }
 
     /**
      * 申请记录
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function apply()
@@ -43,38 +42,55 @@ class Promo extends Model
     }
 
     /**
-     * 条件
+     * 促销内容
+     *
+     * @return mixed
+     */
+    public function promoContent()
+    {
+        return $this->hasMany('App\Models\PromoContent');
+    }
+
+    /**
+     * 以编号或名称检索
+     *
+     * @param $query
+     * @param $numberName
+     * @return mixed
+     */
+    public function scopeOfNumberName($query, $numberName)
+    {
+        $field = is_numeric($numberName) ? 'id' : 'name';
+        return $query->where($field, 'LIKE', '%' . $numberName . '%');
+    }
+
+    public function scopeActive($query)
+    {
+        $now = Carbon::now();
+        $query->where('start_at', '<=', $now)->where('end_at', '>=', $now);
+    }
+
+    /**
+     * 促销条件
      *
      * @return mixed
      */
     public function condition()
     {
-        return $this->hasMany('App\Models\PromoContent')->where(function ($query) {
+        return $this->promoContent()->where(function ($query) {
             $query->where('type', cons('promo.content_type.condition'));
         });
     }
 
     /**
-     * 返利
+     * 促销返利
      *
      * @return mixed
      */
     public function rebate()
     {
-        return $this->hasMany('App\Models\PromoContent')->where(function ($query) {
+        return $this->promoContent()->where(function ($query) {
             $query->where('type', cons('promo.content_type.rebate'));
         });
-    }
-
-    /**
-     * 以编号或名称检索
-     * @param $query
-     * @param $numberName
-     * @return mixed
-     */
-    public function scopeOfNumberName($query,$numberName)
-    {
-        $field = is_numeric($numberName) ? 'id' : 'name';
-        return $query->where($field, 'LIKE', '%' . $numberName . '%');
     }
 }

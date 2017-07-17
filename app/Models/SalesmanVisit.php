@@ -3,6 +3,9 @@
 namespace App\Models;
 
 
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
+
 class SalesmanVisit extends Model
 {
     protected $table = 'salesman_visit';
@@ -11,6 +14,8 @@ class SalesmanVisit extends Model
         'salesman_customer_id',
         'x_lng',
         'y_lat',
+        'shop_id',
+        'photos',
         'address'
     ];
 
@@ -57,6 +62,14 @@ class SalesmanVisit extends Model
     }
 
     /**
+     * 关联拜访照片
+     */
+    public function photos()
+    {
+        return $this->morphMany('App\Models\File', 'fileable');
+    }
+
+    /**
      * 按拜访时间查询
      *
      * @param $query
@@ -86,6 +99,21 @@ class SalesmanVisit extends Model
     public function scopeOfSort($query, $field = 'id', $sort = 'DESC')
     {
         return $query->orderBy($field, $sort);
+    }
+
+    /**
+     * 设置拍照图片
+     *
+     * @param $files
+     * @return bool
+     */
+    public function setPhotosAttribute($files)
+    {
+        if (!empty($files)) {
+            return $this->associateFiles($files, 'photos', '0', false);
+        }
+        return true;
+
     }
 
     /**
@@ -122,6 +150,19 @@ class SalesmanVisit extends Model
     }
 
     /**
+     * 获取拍照图片
+     * @return array
+     */
+    public function getPhotosUrlAttribute()
+    {
+        $photos = [];
+        foreach ($this->photos as $value) {
+            $photos[] = $value->url;
+        }
+        return $photos;
+    }
+
+    /**
      * 获取业务员名
      *
      * @return string
@@ -130,5 +171,6 @@ class SalesmanVisit extends Model
     {
         return $this->salesman ? $this->salesman->name : '';
     }
+
 
 }

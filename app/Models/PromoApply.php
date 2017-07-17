@@ -14,6 +14,8 @@ class PromoApply extends Model
         'client_id',
         'status',
         'salesman_id',
+        'use_date',
+        'pass_date',
         'apply_remark',
         'deleted_at',
     ];
@@ -27,6 +29,11 @@ class PromoApply extends Model
     {
         return $this->belongsTo('App\Models\Promo');
     }
+    
+    public function order()
+    {
+        return $this->hasOne(SalesmanVisitOrder::class,'apply_promo_id');
+    }
 
     /**
      * 客户信息
@@ -35,7 +42,7 @@ class PromoApply extends Model
      */
     public function client()
     {
-        return $this->belongsTo('App\Models\Shop');
+        return $this->belongsTo('App\Models\SalesmanCustomer','client_id');
     }
 
     /**
@@ -68,7 +75,25 @@ class PromoApply extends Model
 
 
     }
+    
+    //通过且没被使用条件
+    public function scopePass($query)
+    {
+        $query->where('status',cons('promo.review_status.pass'))->whereNull('use_date');
+    }
+    
+    //指定客户
+    public function scopeClient($query,$client_id)
+    {
+        $query->where('client_id',$client_id);
+    }
 
+    /**
+     * 以销售人员名称搜索
+     * @param $query
+     * @param $salesman
+     * @return mixed
+     */
     public function scopeOfSalesman($query, $salesman)
     {
         return $query->whereHas('salesman', function ($query) use ($salesman) {

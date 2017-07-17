@@ -11,6 +11,7 @@ namespace App\Models;
 
 use App\Services\CategoryService;
 use App\Services\GoodsImageService;
+use App\Services\GoodsService;
 use App\Services\InventoryService;
 use App\Services\UserService;
 
@@ -48,6 +49,8 @@ class Goods extends Model
         'is_gift',
         'promotion_info',
         'introduce',
+        'warning_value',
+        'warning_piece',
         'shop_id',
         'images',
         'status',
@@ -194,7 +197,7 @@ class Goods extends Model
     }
 
     /**
-     * 关联抵费商品
+     * 关联促销商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -406,7 +409,7 @@ class Goods extends Model
     }
 
     /**
-     * 是否
+     * 是否赠品
      *
      * @param $query
      * @param $gift
@@ -692,6 +695,16 @@ class Goods extends Model
         return $this->shop ? $this->shop->name : '- -';
     }
 
+    /**
+     * 获取商品所属店铺用户类型
+     *
+     * @return string
+     */
+    public function getShopUserTypeAttribute()
+    {
+        return $this->shop ? $this->shop->user_type : '0';
+    }
+
 
     /**
      * 获取是否收藏
@@ -718,7 +731,7 @@ class Goods extends Model
     }
 
     /**
-     * 是否是抵费商品
+     * 是否是促销商品
      *
      * @return bool
      */
@@ -755,6 +768,19 @@ class Goods extends Model
      */
     public function getTotalInventoryAttribute()
     {
-        return $this->inventory()->OfIn()->sum('surplus');
+        return $this->inventory()->OfIn()->sum('surplus') ?? 0;
+    }
+
+    /**
+     * 库存预警
+     *
+     * @return bool
+     */
+    public function getNeedWarningAttribute()
+    {
+        $warning = $this->warning_value * GoodsService::getPiecesSystem($this,
+                $this->warning_piece);
+        $surplus = $this->getTotalInventoryAttribute();
+        return intval($surplus) < intval($warning);
     }
 }

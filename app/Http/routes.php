@@ -186,7 +186,9 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     });
     // 库存管理
     $router->group(['prefix' => 'inventory'], function ($router) {
-        //$router->get('in-create/{goods_id?}', 'InventoryController@create'); // 入库
+        $router->get('in-export', 'InventoryController@inExport'); // 入库记录导出
+        $router->get('out-export', 'InventoryController@outExport'); // 出库记录导出
+        $router->get('detail-list-export', 'InventoryController@detailListExport'); // 出入库记录导出
         $router->controller('/', 'InventoryController');
     });
 
@@ -395,6 +397,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('gift', 'MyGoodsController@gift');                //商品上下架
             $router->post('{my_goods}/mortgage', 'MyGoodsController@mortgage');                //商品上下架
             $router->post('{my_goods}/promo', 'MyGoodsController@promo');                //设置促销商品
+            $router->put('{my_goods}/warning', 'MyGoodsController@setWarning');                //设置促销商品
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
             $router->post('import', 'MyGoodsController@import');
@@ -507,6 +510,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->get('visit/surplus-display-fee', 'SalesmanVisitController@surplusDisplayFee');//获取月份陈列费剩余情况
                 $router->get('visit/surplus-mortgage-goods',
                     'SalesmanVisitController@surplusMortgageGoods');//获取月份陈列商品剩余情况
+                $router->post('visit/{visit}/add-photos','SalesmanVisitController@addPhotos');
                 $router->resource('visit', 'SalesmanVisitController');
 
                 $router->group(['prefix' => 'order'], function ($router) {
@@ -547,7 +551,20 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('categories', 'GoodsController@category'); //启/禁用
                     $router->get('/', 'GoodsController@goods'); //启/禁用
                 });
-
+                $router->group(['prefix' => 'asset'], function ($router) {
+                    $router->get('/', 'AssetController@index'); // 获取资产列表
+                    $router->get('/apply', 'AssetController@applyList'); // 资产申请列表
+                    $router->post('/apply', 'AssetController@applyCreate'); // 资产申请
+                    $router->put('/use-date/{asset_apply}', 'AssetController@addUseDate'); // 添加使用时间
+                    $router->delete('/apply/{asset_apply}', 'AssetController@applyDelete'); // 删除申请
+                });
+                $router->group(['prefix' => 'promo'], function ($router) {
+                    $router->get('/', 'PromoController@index'); // 获取活动列表
+                    $router->get('/apply', 'PromoController@applyList'); // 业务员申请促销活动列表
+                    $router->post('/apply', 'PromoController@applyCreate'); // 申请促销活动
+                    $router->delete('/apply/{promo_apply}', 'PromoController@applyDelete'); // 删除申请
+                    $router->get('/apply/pass', 'PromoController@applyPass'); // 通过申请列表
+                });
             });
         $router->group(['prefix' => 'wechat-pay'], function ($router) {
             $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
@@ -579,9 +596,9 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('apply/delete/{promo_apply}', 'PromoController@applyDelete');
             $router->put('status/{promo}', 'PromoController@status');
             $router->post('edit/{promo}', 'PromoController@edit');
-            $router->post('get-goods', 'PromoController@getGoods');
+            $router->get('goods', 'PromoController@getGoods');
             $router->post('add', 'PromoController@add');
-            $router->post('goods/{promo_goods}/status', 'PromoController@goodsStatus');
+            $router->put('goods/{promo_goods}/status', 'PromoController@goodsStatus');
             $router->post('goods/{promo_goods}/destroy', 'PromoController@goodsDestroy');
             $router->put('goods/batch-destroy', 'PromoController@goodsBatchDestroy');
             $router->put('goods/batch-status', 'PromoController@goodsBatchStatus');

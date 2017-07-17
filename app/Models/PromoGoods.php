@@ -40,6 +40,7 @@ class PromoGoods extends Model
                 $query->where($field, 'LIKE', '%' . $condition . '%');
             });
         }
+        return $query;
     }
     
     /**

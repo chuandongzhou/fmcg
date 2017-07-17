@@ -140,22 +140,21 @@ class BusinessService extends BaseService
      */
     public function getOrders($salesmenId, $data = [], $with = ['salesmanCustomer.businessAddress', 'salesman'])
     {
-
+        $shop_id = auth()->user()->shop_id ?? salesman_auth()->user()->shop_id;
         if ($salesmanId = array_get($data, 'salesman_id')) {
             $exists = $salesmenId->toBase()->contains($salesmanId);
             if ($exists) {
-                $orders = SalesmanVisitOrder::OfData($data)->with($with)->orderBy('id', 'desc')->paginate();
+                $orders = SalesmanVisitOrder::CheckShop($shop_id)->OfData($data)->with($with)->orderBy('id',
+                    'desc')->paginate();
             } else {
-                $orders = SalesmanVisitOrder::whereIn('salesman_id')->OfData(array_except($data,
+                $orders = SalesmanVisitOrder::CheckShop($shop_id)->whereIn('salesman_id',
+                    $salesmenId)->OfData(array_except($data,
                     'salesman_id'))->with($with)->orderBy('id', 'desc')->paginate();
             }
-
         } else {
-            $orders = SalesmanVisitOrder::whereIn('salesman_id',
+            $orders = SalesmanVisitOrder::CheckShop($shop_id)->whereIn('salesman_id',
                 $salesmenId)->OfData($data)->with($with)->orderBy('updated_at', 'desc')->paginate();
         }
-
-
         return $orders;
     }
 
@@ -193,6 +192,7 @@ class BusinessService extends BaseService
             $visitData[$customerId]['shipping_address_name'] = $customer->shipping_address_name;
             $visitData[$customerId]['business_address_name'] = $customer->business_address_name;
             $visitData[$customerId]['visit_count'] = isset($visitData[$customerId]['visit_count']) ? $visitData[$customerId]['visit_count'] + 1 : 1;
+            $visitData[$customerId]['photos'] = $visit->photos_url ?? [];
 
 
             //订单货单
@@ -204,7 +204,6 @@ class BusinessService extends BaseService
             $returnOrderForm = $visit->orders->filter(function ($item) use ($orderConf) {
                 return !is_null($item) && $item->type == $orderConf['type']['return_order'];
             });
-
             if ($orderForm->count()) {
                 $order = $orderForm->first();
                 //拜访订货单数
@@ -227,6 +226,15 @@ class BusinessService extends BaseService
 
                 }
 
+                //促销活动
+                if (!is_null($promo = $order->applyPromo)) {
+                    $visitData[$customerId]['promo']['condition'] = $order->applyPromo->promo->condition;
+                    $visitData[$customerId]['promo']['rebate'] = $order->applyPromo->promo->rebate;
+                    $visitData[$customerId]['promo']['type'] = $order->applyPromo->promo->type;
+                    $visitData[$customerId]['promo']['name'] = $order->applyPromo->promo->name;
+                    $visitData[$customerId]['promo']['start_at'] = $order->applyPromo->promo->start_at;
+                    $visitData[$customerId]['promo']['end_at'] = $order->applyPromo->promo->end_at;
+                }
 
                 //陈列费
                 if (!is_null($order->displayList)) {

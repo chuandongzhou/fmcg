@@ -329,7 +329,6 @@ class Shop extends Model
      */
     public function orderTempletes()
     {
-
         return $this->hasMany(OrderTemplete::class);
     }
 
