@@ -728,19 +728,23 @@ class ReportController extends Controller
 
         $dateEnd = (new Carbon($endDate))->endOfDay();
 
-        $visits = SalesmanVisit::ofTime($startDate, $dateEnd)->where([
-            'salesman_id' => $salesmanId,
-            'salesman_customer_id' => $customerId
-        ])->with([
+        //拜访记录
+        $visits = $salesman->visits()->ofTime($startDate, $dateEnd)->where('salesman_customer_id', $customerId)->with([
             'orders.orderGoods.goods',
             'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
-        //详情拜访列表
-        $visitLists = [];
-        foreach ($this->_getVisitListForDetail($visits) AS $key => $value) {
-
+        $visitsLists = $this->_getVisitListForDetail($visits);
+        $visitsList = [];
+        foreach ($visitsLists as $visit) {
+            $visitsList[] = [
+                $visit['time'],
+                $visit['commitAddress'],
+                $visit['orderAmount'],
+                $visit['returnAmount'],
+                $visit['hasDisplay'],
+            ];
         }
         //销售统计
         $salesGoods = $this->_getSalesGoods($visits);
@@ -751,20 +755,19 @@ class ReportController extends Controller
         $gifts = $this->_getGifts($visits);
         //促销
         $promos = $this->_getPromos($visits);
-        $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';
-        // dd($promos);
+        $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';;
         Excel::create($excelName,
-            function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods, $displays, $gifts, $promos) {
-                $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
+            function (LaravelExcelWriter $excel) use ($visitsList, $salesGoods, $displays, $gifts, $promos) {
+                $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitsList) {
                     // Set auto size for sheet
                     $sheet->setAutoSize(true);
 
                     // 设置宽度
                     $sheet->setWidth(array(
                         'A' => 15,
-                        'B' => 10,
+                        'B' => 30,
                         'C' => 10,
-                        'D' => 15,
+                        'D' => 10,
                         'E' => 15
                     ));
 
@@ -776,7 +779,7 @@ class ReportController extends Controller
                         '退货金额',
                         '陈列费'
                     ];
-                    $data = array_merge([$titles], $visitLists);
+                    $data = array_merge([$titles], $visitsList);
 
                     $sheet->rows($data);
 

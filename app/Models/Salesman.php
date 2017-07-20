@@ -156,14 +156,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function orderForms()
     {
-        $user = auth()->user();
-        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where(function ($query) use (
-            $user
-        ) {
-            if ($user && $user->type != cons('user.type.maker')) {
-                $query->where('shop_id', $this->shop_id);
-            }
-        });
+        return $this->orders()->where('type', cons('salesman.order.type.order'))->where('shop_id', $this->shop_id);
     }
 
     /**
@@ -173,14 +166,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function returnOrders()
     {
-        $user = auth()->user();
-        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where(function ($query) use (
-            $user
-        ) {
-            if ($user && $user->type != cons('user.type.maker')) {
-                $query->where('shop_id', $this->shop_id);
-            }
-        });
+        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where('shop_id', $this->shop_id);
     }
 
     /**

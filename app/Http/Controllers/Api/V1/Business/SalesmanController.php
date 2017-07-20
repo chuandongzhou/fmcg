@@ -26,7 +26,7 @@ class SalesmanController extends Controller
     {
         $attributes = $request->except('status');
         $user = auth()->user();
-        if($user->type == cons('user.type.maker')){
+        if ($user->type == cons('user.type.maker')) {
             $attributes['shop_id'] = $user->shop_id;
         }
         if ($user->shop->salesmen()->create($attributes)->exists) {
@@ -170,7 +170,7 @@ class SalesmanController extends Controller
 
         //本月已完成订单金额
         $thisMonthCompleted = $salesman->orderForms()->whereBetween('created_at',
-            [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount') ?? 0;
+                [(new Carbon($thisDate))->startOfMonth(), (new Carbon($thisDate))->endOfMonth()])->sum('amount') ?? 0;
 
         //未处理订货单数
         $untreatedOrderForms = $salesman->orderForms()->OfUntreated()->count() ?? 0;
@@ -179,11 +179,10 @@ class SalesmanController extends Controller
 
         // 今日拜访数
         $todayVisitCount = $salesman->visits()->whereBetween('created_at',
-            [
-                Carbon::today(),
-                (new Carbon())->endOfDay()
-            ])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count() ?? 0;
-
+                [
+                    Carbon::today(),
+                    (new Carbon())->endOfDay()
+                ])->select('salesman_customer_id')->groupBy('salesman_customer_id')->get()->count() ?? 0;
         return compact('target', 'thisMonthCompleted', 'untreatedOrderForms', 'untreatedReturnOrders',
             'todayVisitCount');
     }

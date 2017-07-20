@@ -287,7 +287,7 @@ class Shop extends Model
     public function salesmenCustomer()
     {
         if ($this->user_type != cons('user.type.maker')) {
-            return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman')->where('salesman_customer.shop_id', '<>', $this->id);
+            return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
         }
         return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman','maker_id');
     }
@@ -299,6 +299,7 @@ class Shop extends Model
      */
     public function salesmanCustomer()
     {
+
         if ($this->user_type != cons('user.type.maker')) {
             return $this->hasOne(SalesmanCustomer::class)->where('salesmanCustomer.shop_id', '<>', $this->id);
         }
