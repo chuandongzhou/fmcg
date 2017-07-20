@@ -31,7 +31,8 @@ class EncryptCookies extends BaseEncrypter
         $request = $this->_decrypt($request);
         // 是否在浏览器
         $inWindows = in_windows();
-        if ($inWindows && !$request->ajax() && !$request->is('auth/*','child-user/*', 'admin/*', 'upload/file/*')) {
+        $isApp = $request->is('api/v1/*') && !$request->ajax();
+        if ($inWindows && !$request->ajax() && !$isApp && !$request->is('auth/*','child-user/*', 'admin/*', 'upload/file/*')) {
 
             $cookieJar = app('cookie');
             $nowTimestamp = Carbon::now()->timestamp;
