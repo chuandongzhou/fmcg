@@ -21,7 +21,7 @@ class RedirectForDifferentClient
         if ($request->input('ter_type', head($terTypes)) === head($terTypes)) {
             $mobileUrl = 'http://m.dingbaida.com';
 
-            if ($inWindows && !$request->is('child-user/*', 'admin/*', 'upload/file/*') && false !== strpos($request->root(), $mobileUrl)) {
+            if ($inWindows && false !== strpos($request->root(), $mobileUrl)) {
                     return redirect('http://dingbaida.com');
             } else if (!$inWindows && false === strpos($request->root(), $mobileUrl)) {
                 return redirect($mobileUrl);
