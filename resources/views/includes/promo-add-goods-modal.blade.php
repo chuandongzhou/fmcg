@@ -222,7 +222,7 @@
                 html += '<input type="text" name="' + prefix + '[quantity][]" class= "num" placeholder="输入数量"/>';
                 html += '<input type="hidden" disabled name="ids" value=' + self.val() + ' />';
                 html += '<input type="hidden" name="' + prefix + '[goods_id][]" value=' + self.val() + ' />';
-                html += '</td><td><i onclick="deleteChoose(this)" class="iconfont red icon-shanchu"></i></td></tr>';
+                html += '</td><td><i onclick="deleteChoose(this)" class="iconfont red icon-shanchu2"></i></td></tr>';
                 table.append(html);
                 $(this).parents('tr').remove()
             });

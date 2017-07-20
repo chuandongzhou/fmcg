@@ -288,6 +288,17 @@ class Order extends Model
     }
 
     /**
+     * 获取参加的促销活动
+     * @return mixed
+     */
+    public function getPromoAttribute()
+    {
+        if($this->applyPromo){
+            return $this->applyPromo->promo->load(['condition','rebate']);
+        }
+    }
+
+    /**
      * 进度条显示
      *
      * @return mixed

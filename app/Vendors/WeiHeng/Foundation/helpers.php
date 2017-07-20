@@ -426,8 +426,8 @@ if (!function_exists('in_windows')) {
     function in_windows()
     {
         $request = app('request');
-        $userAgent = strtolower($request->server('HTTP_USER_AGENT'));
-        return false !== strpos($userAgent, 'windows nt');
+        return !preg_match('/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i',
+            $request->server('HTTP_USER_AGENT'));
     }
 }
 if (!function_exists('obfuscate_string')) {
@@ -581,38 +581,16 @@ if (!function_exists('array_key_value')) {
     /**
      * 合并数组 $arrKey值为key $arrValue值为value
      *
-     * @param $arrKey,$arrValue
+     * @param $arrKey ,$arrValue
      * @return array
      */
-    function array_key_value($arrKey,$arrValue)
+    function array_key_value($arrKey, $arrValue)
     {
         $result = [];
-        foreach($arrKey as $key => $val) {
+        foreach ($arrKey as $key => $val) {
             $result[$val] = is_array($arrValue) ? $arrValue[$key] : $arrValue;
         }
         return $result;
-    }
-}
-
-if (!function_exists('month_first_last')){
-    /**
-     *
-     * 获取当月初，月尾
-     *
-     * @param bool $date
-     * @return array
-     */
-    function month_first_last($date = false){
-
-        if (!$date){
-            $date = date('Y-m-d');
-        }
-        $firstDay = date('Y-m-01 00:00:00', strtotime($date));
-        $lastDay = date('Y-m-d 23:59:59', strtotime("$firstDay +1 month -1 day"));
-        return [
-            'first' => $firstDay,
-            'last' =>  $lastDay
-        ];
     }
 }
 

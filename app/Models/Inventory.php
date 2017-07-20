@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\GoodsService;
 use App\Services\InventoryService;
+use Carbon\Carbon;
 
 class Inventory extends Model
 {
@@ -117,8 +118,8 @@ class Inventory extends Model
      */
     public function scopeOfNowMonth($query)
     {
-        return $query->where('created_at', '>=', month_first_last()['first'])
-            ->where('created_at', '<=', month_first_last()['last']);
+        return $query->where('created_at', '>=', (new Carbon)->startOfMonth()->toDateTimeString())
+            ->where('created_at', '<=', (new Carbon)->endOfDay()->toDateTimeString());
     }
 
     /**
@@ -156,7 +157,7 @@ class Inventory extends Model
     {
         $inv = $this->where('id', $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
         //进制
-        if ($inv){
+        if ($inv) {
             $system = GoodsService::getPiecesSystem($inv->goods, $inv->pieces);
             return ($inv->cost / $system) ?? 0;
         }
@@ -186,7 +187,7 @@ class Inventory extends Model
     {
         return $this->goods->name;
     }
-    
+
     /*
      * 获取商品条形码
      */

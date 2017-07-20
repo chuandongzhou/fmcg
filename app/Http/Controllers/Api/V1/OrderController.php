@@ -409,6 +409,7 @@ class OrderController extends Controller
                     'goods_id' => $goods->goods_id,
                     'shop_id' => $shopId
                 ])->first();
+
                 if (empty($confirmOrderDetail)) {
                     ConfirmOrderDetail::create([
                         'goods_id' => $goods->goods_id,
@@ -959,7 +960,6 @@ class OrderController extends Controller
 
         $shop = $order->shop;
         $userShopId = $order->user->shop_id;
-
         $salesmanCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $userShopId)->first();
 
 
@@ -973,7 +973,8 @@ class OrderController extends Controller
             'order_id' => $order->id,
             'salesman_id' => $salesmanCustomer->salesman_id,
             'order_remark' => $order->remark,
-            'status' => cons('salesman.order.status.passed')
+            'status' => cons('salesman.order.status.passed'),
+            'shop_id' => $shop->id
         ];
 
         $result = DB::transaction(function () use ($orderData, $order) {
@@ -1018,7 +1019,7 @@ class OrderController extends Controller
         if ($order->pay_type == $payType['pick_up']) {
             $order->load(['goods.images', 'shop.shopAddress']);
         } else {
-            $order->load(['goods', 'deliveryMan', 'shippingAddress.address', 'orderReason']);
+            $order->load(['goods','gifts', 'deliveryMan', 'shippingAddress.address', 'orderReason']);
         }
         return $order;
     }
@@ -1049,6 +1050,9 @@ class OrderController extends Controller
             $order->user->setVisible(['id', 'shop', 'type']);
             $order->user->shop->setVisible(['name'])->setAppends([]);
         }
+        $order->addHidden([
+            'applyPromo'
+        ]);
         $order->setAppends([
             'status_name',
             'payment_type',
@@ -1063,7 +1067,8 @@ class OrderController extends Controller
             'after_rebates_price',
             'user_shop_name',
             'refund_reason',
-            'invalid_reason'
+            'invalid_reason',
+            'promo'
         ]);
         $buyer && $order->shop && $order->shop->setAppends([]);
 

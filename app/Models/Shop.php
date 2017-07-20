@@ -286,7 +286,10 @@ class Shop extends Model
      */
     public function salesmenCustomer()
     {
-        return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman');
+        if ($this->user_type != cons('user.type.maker')) {
+            return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman')->where('salesman_customer.shop_id', '<>', $this->id);
+        }
+        return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman','maker_id');
     }
 
     /**

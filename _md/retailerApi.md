@@ -1022,6 +1022,7 @@
 	payment_type		string      支付方式
 	is_cancel			int			订单是否被取消(1取消,0未取消)
 	remark				string		订单备注信息
+	apply_promo_id		int			促销活动申请ID
 	created_at			string		创建时间
 	paid_at				string		支付时间
 	send_at				string		发货时间
@@ -1036,6 +1037,8 @@
 	shipping_address    array       收货信息
     mortgageGoods    	array		抵费商品详细信息
     orderGoods    	    array		订单商品详细信息 （格式同mortgageGoods）
+	gifts				array		赠品
+	promo				array		参加的促销活动
 
 	delivery_man 字段子集说明
 
@@ -1089,6 +1092,7 @@
 	price              		 	string      订单总金额
 	after_rebates_price         decimal     订单优惠后金额
 	status_name					string		订单显示状态
+	apply_promo_id				int			促销活动申请ID
 	payment_type				string      支付方式(如:在线支付;货到付款)
 	pay_way                     string      付款方式 （1为现金  2为刷卡）
 	pay_type					int			支付方式(1:在线支付;2:货到付款)
@@ -1103,6 +1107,8 @@
     mortgageGoods    			array		抵费商品信息
     orderGoods    			    array		订单商品信息
     user_shop_name              string      买家店铺名
+	gifts						array		赠品
+	promo						array		参加的促销活动
 
 	user 字段子集说明
 		
@@ -1115,13 +1121,13 @@
 	
 	goods 字段子集说明
 	
-	id  				int 		商品ID
-	name                string 		商品名称
-	introduce			string		商品描述信息
-	image_url			string		商品图片地址
-	pivot				array		该商品在本订单中的详细信息
+		id  				int 		商品ID
+		name                string 		商品名称
+		introduce			string		商品描述信息
+		image_url			string		商品图片地址
+		pivot				array		该商品在本订单中的详细信息
 
-		pivot 字段子集说明
+	pivot 字段子集说明
 
 		price			string		商品价格
 		num				int			商品数量

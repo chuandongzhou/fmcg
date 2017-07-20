@@ -16,9 +16,9 @@
                 <div class="col-sm-12 control-search">
                     <form action="" method="get" autocomplete="off">
                         <input class="enter control datetimepicker" name="start_at" placeholder="开始时间" type="text"
-                               value="{{$data['start_at'] ?? month_first_last()['first']}}">至
+                               value="{{$data['start_at'] }}">至
                         <input class="enter control datetimepicker" name="end_at" placeholder="结束时间" type="text"
-                               value="{{$data['end_at'] ?? month_first_last()['last']}}">
+                               value="{{$data['end_at']}}">
                         <input class="enter control" name="goods" placeholder="商品名称/条形码" type="text"
                                value="{{$data['goods'] ?? ''}}">
                         <button type="button" class=" btn btn-blue-lighter search control search-by-get">搜索</button>

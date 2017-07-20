@@ -1,4 +1,4 @@
-<div class="panel-container table-responsive promotion-msg-wrap">
+<div class="panel-container {{--table-responsive--}} {{--promotion-msg-wrap--}}">
     @if($promo->type == cons('promo.type.custom'))
         <div class="row custom">
             <div class="col-sm-12 item-text other">
@@ -14,8 +14,8 @@
                     <thead>
                     <tr>
                         <th>商品名称</th>
-                        <th>单位</th>
                         <th>数量</th>
+                        <th>单位</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,8 +44,8 @@
                         <thead>
                         <tr>
                             <th>商品名称</th>
-                            <th>单位</th>
                             <th>数量</th>
+                            <th>单位</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -74,8 +74,8 @@
                     <thead>
                     <tr>
                         <th>商品名称</th>
-                        <th>单位</th>
                         <th>数量</th>
+                        <th>单位</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -111,8 +111,8 @@
                     <thead>
                     <tr>
                         <th>商品名称</th>
-                        <th>单位</th>
                         <th>数量</th>
+                        <th>单位</th>
                     </tr>
                     </thead>
                     <tbody>

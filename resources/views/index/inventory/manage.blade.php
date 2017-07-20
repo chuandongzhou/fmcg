@@ -96,7 +96,7 @@
                             </div>
                             <div class="item warehousing-error-btn">
                                 <span class="red">预警商品数</span><a href="{{url('inventory?warning=1')}}"
-                                                               class="badge badge-danger">{{$countNeedWarning}}</a>
+                                                                 class="badge badge-danger">{{$countNeedWarning}}</a>
                             </div>
 
                         </div>

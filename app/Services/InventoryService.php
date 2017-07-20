@@ -318,22 +318,15 @@ class InventoryService extends BaseService
      */
     static public function search($inventory, array $data, array $with = [], $OfNowMonth = false)
     {
-        return $inventory->with($with)->where(function ($query) use ($data, $OfNowMonth) {
+        return $inventory->with($with)->where(function ($query) use ($data) {
 
             $start_at = array_get($data, 'start_at');
             $end_at = array_get($data, 'end_at');
+            
+            $query->where('created_at', '>=', $start_at);
 
-            if (empty($start_at) && empty($end_at) && $OfNowMonth) {
-                $query->OfNowMonth();
-            } else {
-                if (!empty($start_at) && isset($start_at)) {
-                    $query->where('created_at', '>=', $start_at);
-                }
-                if (!empty($end_at) && isset($end_at)) {
-                    $query->where('created_at', '<=', $end_at);
-                }
-            }
-
+            $query->where('created_at', '<=', $end_at);
+           
             if (!empty($data['inventory_type']) && isset($data['inventory_type'])) {
                 $query->where('inventory_type', $data['inventory_type']);
             }

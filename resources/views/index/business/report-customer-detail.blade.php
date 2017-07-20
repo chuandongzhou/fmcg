@@ -109,6 +109,54 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="col-sm-12  tables">
+                    <p class="title-table">赠品</p>
+                    <table class="table table-bordered table-displays">
+                        <thead>
+                        <tr>
+                            <td>拜访时间</td>
+                            <td>商品名称</td>
+                            <td>商品数量</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($gifts as $gift)
+                            <tr>
+                                <td>{{ $gift['time'] }}</td>
+                                <td>{{ $gift['goods_name'] }}</td>
+                                <td>{{ $gift['num']}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-sm-12  tables">
+                    <p class="title-table">促销活动</p>
+                    @foreach($promos as $promo)
+                        <div class="panel-container bordered-bottom">
+                            <div class="row">
+                                <p class="col-sm-12 item-text other">
+                                    促销名称 : <span class="prompt">{{$promo->name}}</span>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 item-text other">
+                                    拜访时间 : <span class="prompt">{{$promo->time}}</span>
+                                </div>
+                            </div>
+                            @include('includes.promo-content-view',['promo' => $promo])
+                            <div class="row">
+                                <div class="col-sm-12 item-text other">
+
+                                    促销备注 : <span class="prompt">{{$promo->remark}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
             </div>
         </div>
     </div>

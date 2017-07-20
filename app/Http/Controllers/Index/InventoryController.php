@@ -8,6 +8,7 @@ use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Services\InventoryService;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -32,7 +33,6 @@ class InventoryController extends Controller
      */
     public function getIndex(Request $request)
     {
-
         $data = $request->only('nameOrCode', 'category_id', 'status', 'warning');
 
         $result = GoodsService::getShopGoods($this->shop, $data);
@@ -67,7 +67,6 @@ class InventoryController extends Controller
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
         $categories = CategoryService::formatShopGoodsCate($this->shop, $cateId);
         $searched = $result['searched'];
-
         return view('index.inventory.manage', compact(
             'countNeedWarning',
             'goods',
@@ -86,6 +85,8 @@ class InventoryController extends Controller
     public function getIn(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'goods');
+        $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
+        $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
         $inventory = $this->shop->inventory()->OfIn()->orderBy('created_at', 'desc');
         $result = $this->inventoryService->search($inventory, $data, ['user'], true);
         $inError = $this->inventoryService->getInError();
@@ -139,8 +140,10 @@ class InventoryController extends Controller
     public function getOut(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'goods');
+        $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
+        $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
         $inventory = $this->shop->inventory()->OfOut()->orderBy('created_at', 'desc');
-        $result = $this->inventoryService->search($inventory, $data, ['user'], true);
+        $result = $this->inventoryService->search($inventory, $data, ['user']);
         $errorCount = $this->inventoryService->getOutError();
         $countProfit = $result->get()->sum('profit');
         return view('index.inventory.out', [
@@ -178,9 +181,10 @@ class InventoryController extends Controller
     public function getDetailList(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'goods', 'inventory_type', 'action_type');
+        $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
+        $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
         $inventory = $this->shop->inventory()->orderBy('created_at', 'desc');
         $lists = $this->inventoryService->search($inventory, $data, ['user'], true);
-        //dd($lists->paginate());
         return view('index.inventory.detail-list', [
             'lists' => $lists->paginate(),
             'data' => $data
@@ -241,17 +245,10 @@ class InventoryController extends Controller
     {
 
         $data = $request->only('start_at', 'end_at');
-        $lists = $this->shop->inventory()->where(function ($query) use ($data) {
-            if (!empty($data['start_at']) && isset($data['start_at'])) {
-                $query->where('created_at', '>=', $data['start_at']);
-            }
-            if (!empty($data['end_at']) && isset($data['end_at'])) {
-                $query->where('created_at', '<=', $data['end_at']);
-            }
-            if (empty($data['end_at']) && !isset($data['end_at']) && empty($data['start_at']) && !isset($data['start_at'])) {
-                $query->OfNowMonth();
-            }
-        })->where('goods_id', $goodsId)->orderBy('created_at', 'desc')->paginate();
+        $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
+        $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
+        $lists = $this->shop->inventory()->where('created_at', '>=', $data['start_at'])->where('created_at', '<=',
+            $data['end_at'])->where('goods_id', $goodsId)->orderBy('created_at', 'desc')->paginate();
         $goods = Goods::find($goodsId);
         return view('index.inventory.goods-inventory-detail', [
             'goods' => $goods,

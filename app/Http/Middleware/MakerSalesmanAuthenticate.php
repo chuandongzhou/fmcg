@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use WeiHeng\Responses\Apiv1Response;
 use WeiHeng\Salesman\Guard;
 
 class MakerSalesmanAuthenticate
@@ -15,9 +16,9 @@ class MakerSalesmanAuthenticate
     protected $auth;
 
     /**
-     * Create a new filter instance.
+     * MakerSalesmanAuthenticate constructor.
      *
-     * @param \WeiHeng\ChildUser\Guard $auth
+     * @param \WeiHeng\Salesman\Guard $auth
      */
     public function __construct(Guard $auth)
     {
@@ -25,16 +26,15 @@ class MakerSalesmanAuthenticate
     }
 
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @return mixed
+     * handle
+     * @param $request
+     * @param \Closure $next
+     * @return static
      */
     public function handle($request, Closure $next)
     {
         if (is_null($this->auth->user()->maker)) {
-            return $this->error('身份错误!');
+            return Apiv1Response::create('forbidden', []);
         }
         return $next($request);
     }

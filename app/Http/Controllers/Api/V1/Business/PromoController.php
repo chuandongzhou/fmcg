@@ -82,7 +82,7 @@ class PromoController extends Controller
                 $item->promo->addHidden(['created_at', 'updated_at', 'status', 'deleted_at']);
                 $item->promo->apply_id = $item->id;
                 $item->promo->is_use = is_null($item->order) ? 0 : 1;
-                $promos->push($item->promo);
+                $promos->push($item->promo->toArray());
             }
         });
         $promos->toArray();

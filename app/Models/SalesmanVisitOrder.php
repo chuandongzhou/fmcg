@@ -100,7 +100,7 @@ class SalesmanVisitOrder extends Model
      */
     public function applyPromo()
     {
-        return $this->belongsTo(PromoApply::class,'apply_promo_id','id');
+        return $this->belongsTo(PromoApply::class, 'apply_promo_id', 'id');
     }
 
     /**
@@ -229,7 +229,7 @@ class SalesmanVisitOrder extends Model
     {
         return $this->salesmanCustomer ? $this->salesmanCustomer->name : '';
     }
-    
+
 
     /**
      * 获取联系人
@@ -369,5 +369,17 @@ class SalesmanVisitOrder extends Model
     public function getHowMuchDiscountAttribute()
     {
         return $this->amount - $this->getAfterRebatesPriceAttribute();
+    }
+
+    /**
+     * 获取参加的促销活动
+     *
+     * @return mixed
+     */
+    public function getPromoAttribute()
+    {
+        if ($this->applyPromo) {
+            return $this->applyPromo->promo->load(['condition', 'rebate']);
+        }
     }
 }

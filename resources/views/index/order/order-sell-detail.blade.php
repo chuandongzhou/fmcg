@@ -334,7 +334,7 @@
                                         <tr>
                                             <td colspan="{{ $order->can_change_price ? 7 : 6 }}" class="pay-item">
                                                 商品总数 : <span class="red"
-                                                             style="margin-right: 100px;">{{$order->orderGoods->sum('num') ?? 0}}</span>
+                                                             style="margin-right: 100px;">{{$goods_quantity}}</span>
                                                 总额 : <span
                                                         class="red">¥{{$order->orderGoods->sum('total_price')}}</span>
                                             </td>

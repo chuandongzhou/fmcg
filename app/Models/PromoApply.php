@@ -29,10 +29,15 @@ class PromoApply extends Model
     {
         return $this->belongsTo('App\Models\Promo');
     }
-    
+
+    /**
+     *关联订单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function order()
     {
-        return $this->hasOne(SalesmanVisitOrder::class,'apply_promo_id');
+        return $this->hasOne(SalesmanVisitOrder::class, 'apply_promo_id');
     }
 
     /**
@@ -42,7 +47,7 @@ class PromoApply extends Model
      */
     public function client()
     {
-        return $this->belongsTo('App\Models\SalesmanCustomer','client_id');
+        return $this->belongsTo('App\Models\SalesmanCustomer', 'client_id');
     }
 
     /**
@@ -75,21 +80,22 @@ class PromoApply extends Model
 
 
     }
-    
+
     //通过且没被使用条件
     public function scopePass($query)
     {
-        $query->where('status',cons('promo.review_status.pass'))->whereNull('use_date');
+        $query->where('status', cons('promo.review_status.pass'))->whereNull('use_date');
     }
-    
+
     //指定客户
-    public function scopeClient($query,$client_id)
+    public function scopeClient($query, $client_id)
     {
-        $query->where('client_id',$client_id);
+        $query->where('client_id', $client_id);
     }
 
     /**
      * 以销售人员名称搜索
+     *
      * @param $query
      * @param $salesman
      * @return mixed

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Index\Business;
 use App\Models\SalesmanCustomerDisplayList;
 use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
+use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
 use Carbon\Carbon;
@@ -117,7 +118,7 @@ class ReportController extends Controller
             'orders.orderGoods.goods',
             'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
-            'salesmanCustomer.shippingAddress'
+            'salesmanCustomer.shippingAddress',
         ])->get();
 
 
@@ -193,7 +194,52 @@ class ReportController extends Controller
 
         $displays = $this->_getDisplay($visits);
 
-        return compact('visitLists', 'salesGoods', 'displays');
+        //赠品
+        $gifts = $this->_getGifts($visits);
+
+        //促销
+        $promos = $this->_getPromos($visits);
+
+        return compact('visitLists', 'salesGoods', 'displays', 'gifts', 'promos');
+    }
+
+    public function _getGifts($visits)
+    {
+        $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
+        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->get();
+        $data = [];
+        foreach ($orders as $order) {
+            if (!$order->gifts->isEmpty()) {
+                foreach ($order->gifts as $goods) {
+                    $data[] = [
+                        'time' => $order->created_at,
+                        'goods_name' => $goods->name,
+                        'num' => $goods->pivot->num . cons()->valueLang('goods.pieces', $goods->pivot->pieces)
+                    ];
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取促销
+     *
+     * @param $visits
+     * @return array
+     */
+    public function _getPromos($visits)
+    {
+        $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
+        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->get();
+        $data = [];
+        foreach ($orders as $order) {
+            if (!is_null($order->promo)) {
+                $order->promo->time = $order->created_at;
+                $data[] = $order->promo;
+            }
+        }
+        return $data;
     }
 
     /**
@@ -648,6 +694,7 @@ class ReportController extends Controller
 
     }
 
+
     /**
      * 客户详情导出
      *
@@ -657,6 +704,7 @@ class ReportController extends Controller
      */
     public function exportCustomerDetail(Request $request, $salesmanId)
     {
+
         $shop = auth()->user()->shop;
         $salesman = $shop->salesmen()->find($salesmanId);
         if (is_null($salesman)) {
@@ -664,14 +712,13 @@ class ReportController extends Controller
         }
         $carbon = new Carbon();
         $data = $request->all();
-
         //客户id
         $customerId = array_get($data, 'customer_id');
         if (!$customerId) {
             return $this->error('客户不存在');
         }
         $customer = $shop->salesmenCustomer()->find($customerId);
-        if (is_null($customer)) {
+        if (!$customer) {
             return $this->error('客户不存在');
         }
         //开始时间
@@ -690,7 +737,6 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
-
         //详情拜访列表
         $visitLists = [];
         foreach ($this->_getVisitListForDetail($visits) AS $key => $value) {
@@ -701,158 +747,275 @@ class ReportController extends Controller
 
         //陈列费
         $displays = $this->_getDisplay($visits);
+        //赠品
+        $gifts = $this->_getGifts($visits);
+        //促销
+        $promos = $this->_getPromos($visits);
         $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';
-        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods, $displays) {
-            $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
+        // dd($promos);
+        Excel::create($excelName,
+            function (LaravelExcelWriter $excel) use ($visitLists, $salesGoods, $displays, $gifts, $promos) {
+                $excel->sheet('拜访记录', function (LaravelExcelWorksheet $sheet) use ($visitLists) {
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
 
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 15,
-                    'B' => 10,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 15
-                ));
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 15,
+                        'B' => 10,
+                        'C' => 10,
+                        'D' => 15,
+                        'E' => 15
+                    ));
 
-                //标题
-                $titles = [
-                    '拜访时间',
-                    '提交地址',
-                    '订货金额',
-                    '退货金额',
-                    '陈列费'
-                ];
-                $data = array_merge([$titles], $visitLists);
+                    //标题
+                    $titles = [
+                        '拜访时间',
+                        '提交地址',
+                        '订货金额',
+                        '退货金额',
+                        '陈列费'
+                    ];
+                    $data = array_merge([$titles], $visitLists);
 
-                $sheet->rows($data);
+                    $sheet->rows($data);
 
-                //单元格居中
-                $sheet->cells('A1:E1', function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
+                    //单元格居中
+                    $sheet->cells('A1:E1', function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
                 });
+                $excel->sheet('销售总计', function (LaravelExcelWorksheet $sheet) use ($salesGoods) {
 
-            });
-            $excel->sheet('销售总计', function (LaravelExcelWorksheet $sheet) use ($salesGoods) {
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
 
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 10,
+                        'B' => 20,
+                        'C' => 10,
+                        'D' => 15,
+                        'E' => 40,
+                        'F' => 20,
+                        'G' => 20,
+                        'H' => 20,
+                        'I' => 20,
+                        'J' => 20,
+                    ));
 
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 10,
-                    'B' => 20,
-                    'C' => 10,
-                    'D' => 15,
-                    'E' => 40,
-                    'F' => 20,
-                    'G' => 20,
-                    'H' => 20,
-                    'I' => 20,
-                    'J' => 20,
-                ));
-
-                //标题
-                $titles = [
-                    '商品ID',
-                    '商品名称',
-                    '库存',
-                    '生产日期',
-                    '退货数量',
-                    '退货金额',
-                    '订货总数量',
-                    '订货总金额',
-                    '平均单价',
-                    '订货数量'
-                ];
-                //合并
-                $mergeArray = [];
-                $goods = [];
-                //dd($salesGoods);
-                foreach ($salesGoods as $item) {
-                    $start = count($goods) + 2;
-                    $count = 0;
-                    $mergeArray[$start] = [$start, $start + count($item['pieces']) - 1];
-                    foreach ($item['pieces'] as $piece => $value) {
-                        $perice = ($value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2),
-                                2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece);
-                        if ($count == 0) {
-                            $goods[] = [
-                                $item['id'],
-                                $item['name'],
-                                $item['stock'],
-                                $item['productionDate'],
-                                $item['returnCount'],
-                                $item['returnAmount'],
-                                $item['count'],
-                                $item['amount'],
-                                $perice,
-                                $value['num']
-                            ];
-                        } else {
-                            $goods[] = [
-                                '',
-                                '',
-                                '',
-                                '',
-                                '',
-                                '',
-                                '',
-                                '',
-                                $perice,
-                                $value['num']
-                            ];
+                    //标题
+                    $titles = [
+                        '商品ID',
+                        '商品名称',
+                        '库存',
+                        '生产日期',
+                        '退货数量',
+                        '退货金额',
+                        '订货总数量',
+                        '订货总金额',
+                        '平均单价',
+                        '订货数量'
+                    ];
+                    //合并
+                    $mergeArray = [];
+                    $goods = [];
+                    //dd($salesGoods);
+                    foreach ($salesGoods as $item) {
+                        $start = count($goods) + 2;
+                        $count = 0;
+                        $mergeArray[$start] = [$start, $start + count($item['pieces']) - 1];
+                        foreach ($item['pieces'] as $piece => $value) {
+                            $perice = ($value['num'] ? number_format(bcdiv($value['amount'], $value['num'], 2),
+                                    2) : 0) . '/' . cons()->valueLang('goods.pieces', $piece);
+                            if ($count == 0) {
+                                $goods[] = [
+                                    $item['id'],
+                                    $item['name'],
+                                    $item['stock'],
+                                    $item['productionDate'],
+                                    $item['returnCount'],
+                                    $item['returnAmount'],
+                                    $item['count'],
+                                    $item['amount'],
+                                    $perice,
+                                    $value['num']
+                                ];
+                            } else {
+                                $goods[] = [
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    $perice,
+                                    $value['num']
+                                ];
+                            }
+                            $count++;
                         }
-                        $count++;
                     }
-                }
-                $data = array_merge([$titles], $goods);
-                $sheet->rows($data);
-                $sheet->setMergeColumn(array(
-                    'columns' => array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'),
-                    'rows' => $mergeArray
-                ));
-                //单元格居中
-                $sheet->cells('A1:J' . count($data), function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
+                    $data = array_merge([$titles], $goods);
+                    $sheet->rows($data);
+                    $sheet->setMergeColumn(array(
+                        'columns' => array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'),
+                        'rows' => $mergeArray
+                    ));
+                    //单元格居中
+                    $sheet->cells('A1:J' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                });
+                $excel->sheet('陈列费', function (LaravelExcelWorksheet $sheet) use ($displays) {
+
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
+
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 10,
+                        'B' => 20,
+                        'C' => 20,
+                        'D' => 10
+                    ));
+
+                    //标题
+                    $titles = [
+                        '拜访时间',
+                        '月份',
+                        '名称',
+                        '数量/金额'
+                    ];
+                    $data = array_merge([$titles], $displays);
+
+                    $sheet->rows($data);
+
+                    //单元格居中
+                    $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                });
+                $excel->sheet('赠品', function (LaravelExcelWorksheet $sheet) use ($gifts) {
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
+
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 20,
+                        'B' => 70,
+                        'C' => 10
+                    ));
+
+                    //标题
+                    $titles = [
+                        '拜访时间',
+                        '名称',
+                        '数量',
+                    ];
+                    $data = array_merge([$titles], $gifts);
+
+                    $sheet->rows($data);
+
+                    //单元格居中
+                    $sheet->cells('A1:C' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
                 });
 
-            });
-            $excel->sheet('陈列费', function (LaravelExcelWorksheet $sheet) use ($displays) {
+                $excel->sheet('促销活动', function (LaravelExcelWorksheet $sheet) use ($promos) {
 
-                // Set auto size for sheet
-                $sheet->setAutoSize(true);
+                    // Set auto size for sheet
+                    $sheet->setAutoSize(true);
 
-                // 设置宽度
-                $sheet->setWidth(array(
-                    'A' => 10,
-                    'B' => 20,
-                    'C' => 20,
-                    'D' => 10
-                ));
+                    // 设置宽度
+                    $sheet->setWidth(array(
+                        'A' => 30,
+                        'B' => 30,
+                        'C' => 50,
+                        'D' => 70,
+                        'E' => 30,
+                    ));
+                    /* $sheet->mergeCells('C1:E1', true);
+                     $sheet->mergeCells('F1:H1');*/
+                    //标题
+                    $titles = [
+                        '拜访时间',
+                        '促销活动名称',
+                        '有效时间',
+                        '返利结果',
+                        '备注',
+                    ];
+                    //合并
+                    $goods = [];
+                    foreach ($promos as $item) {
+                        $start = count($goods) + 2;
+                        $count = 0;
+                        $mergeArray[] = [$start, $start + count($item['rebate']) - 1];
+                        $record = [
+                            $item['time'],
+                            $item['name'],
+                            $item['start_at'] . '-' . $item['end_at'],
+                        ];
+                        foreach ($item['rebate'] as $rebate) {
+                            if ($count == 0) {
+                                switch ($item['type']) {
+                                    case cons('promo.type.custom'):
+                                        $record[] = $rebate['custom'];
+                                        break;
+                                    case cons('promo.type.money-money'):
+                                        $record[] = $rebate['money'];
+                                        break;
+                                    case cons('promo.type.money-goods'):
+                                        $record[] = $rebate->goods->name . 'x' . $rebate->quantity . cons()->valueLang('goods.pieces',
+                                                $rebate->unit);
+                                        break;
+                                    case cons('promo.type.goods-money'):
+                                        $record[] = $rebate['money'];
+                                        break;
+                                    case cons('promo.type.goods-goods'):
+                                        $record[] = $rebate->goods->name . 'x' . $rebate->quantity . cons()->valueLang('goods.pieces',
+                                                $rebate->unit);
+                                        break;
+                                }
+                                $record[] = $item->remark;
+                            } else {
+                                $record = [
+                                    '',
+                                    '',
+                                    '',
+                                    $record[] = $rebate->goods->name . 'x' . $rebate->quantity . cons()->valueLang('goods.pieces',
+                                            $rebate->unit),
+                                    ''
+                                ];
+                            }
+                            $count++;
+                            $goods[] = $record;
+                        }
+                    }
+                    $data = array_merge([$titles], $goods);
+                    $sheet->rows($data);
 
-                //标题
-                $titles = [
-                    '拜访时间',
-                    '月份',
-                    '名称',
-                    '数量/金额'
-                ];
-                $data = array_merge([$titles], $displays);
-
-                $sheet->rows($data);
-
-                //单元格居中
-                $sheet->cells('A1:F' . count($data), function (CellWriter $cells) {
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
+                    $sheet->setMergeColumn(array(
+                        'columns' => array('A', 'B', 'C', 'E'),
+                        'rows' => $mergeArray
+                    ));
+                    //单元格居中
+                    $sheet->cells('A1:E' . count($data), function (CellWriter $cells) {
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
                 });
-
-            });
-        })->export('xls');
+            })->export('xls');
     }
 
     /**

@@ -29,7 +29,6 @@ class EncryptCookies extends BaseEncrypter
     public function handle($request, Closure $next)
     {
         $request = $this->_decrypt($request);
-
         // 是否在浏览器
         $inWindows = in_windows();
         $terTypes = cons('ter_types');

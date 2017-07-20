@@ -377,7 +377,6 @@
                                 </div>
                             </div>
                         @endif
-
                         @if (!$order->gifts->isEmpty())
                             <div class="col-sm-12">
                                 <div class="panel panel-default">
@@ -409,29 +408,31 @@
                             </div>
                         @endif
 
-                        @if ($order->promo)
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">促销活动</h3>
-                                </div>
-
-                                <div class="panel-container table-responsive">
-                                    <div class="row">
-                                        <p class="col-sm-12 item-text other">
-                                            促销名称 : <span class="prompt">{{$order->promo->name}}</span>
-                                        </p>
+                        @if (isset($order->applyPromo->promo))
+                            <div class="col-sm-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">促销活动</h3>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12 item-text other">
-                                            有效日期 : <span
-                                                    class="prompt">{{$order->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->promo->end_at}}</span>
+
+                                    <div class="panel-container table-responsive">
+                                        <div class="row">
+                                            <p class="col-sm-12 item-text other">
+                                                促销名称 : <span class="prompt">{{$order->applyPromo->promo->name}}</span>
+                                            </p>
                                         </div>
-                                    </div>
-                                    @include('includes.promo-content-view',['promo' => $order->promo])
-                                    <div class="row">
-                                        <div class="col-sm-12 item-text other">
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
+                                                有效日期 : <span
+                                                        class="prompt">{{$order->applyPromo->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->applyPromo->promo->end_at}}</span>
+                                            </div>
+                                        </div>
+                                        @include('includes.promo-content-view',['promo' => $order->applyPromo->promo])
+                                        <div class="row">
+                                            <div class="col-sm-12 item-text other">
 
-                                            促销备注 : <span class="prompt">{{$order->promo->remark}}</span>
+                                                促销备注 : <span class="prompt">{{$order->applyPromo->promo->remark}}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
