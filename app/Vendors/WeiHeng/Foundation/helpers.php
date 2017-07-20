@@ -426,8 +426,7 @@ if (!function_exists('in_windows')) {
     function in_windows()
     {
         $request = app('request');
-        return !preg_match('/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i',
-            $request->server('HTTP_USER_AGENT'));
+        return !preg_match('/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i', $request->server('HTTP_USER_AGENT'));
     }
 }
 if (!function_exists('obfuscate_string')) {

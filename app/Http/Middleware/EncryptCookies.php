@@ -31,32 +31,20 @@ class EncryptCookies extends BaseEncrypter
         $request = $this->_decrypt($request);
         // 是否在浏览器
         $inWindows = in_windows();
-        $terTypes = cons('ter_types');
-        if (!$request->ajax() && $request->input('ter_type', head($terTypes)) === head($terTypes)) {
-            $mobileUrl = 'http://m.dingbaida.com';
-            if ($inWindows && !$request->is('child-user/*', 'admin/*', 'upload/file/*')) {
-                if (false !== strpos($request->root(), $mobileUrl)) {
-                    return redirect('http://dingbaida.com');
-                }
-                if (!$request->is('auth/*')) {
-                    $cookieJar = app('cookie');
-                    $nowTimestamp = Carbon::now()->timestamp;
-                    $expire = Carbon::now()->addDays(30)->diffInMinutes();
-                    if ($lastHandleTime = $request->cookie('last_handle_time')) {
-                        $diffInMinutes = Carbon::now()->diffInMinutes(Carbon::createFromTimestamp($lastHandleTime));
-                        if ($diffInMinutes >= 60) {
-                            //超出30分钟未操作退出登录
-                            return redirect(url('auth/logout'));
-                        }
+        if ($inWindows && !$request->ajax() && !$request->is('auth/*','child-user/*', 'admin/*', 'upload/file/*')) {
 
-                    }
-                    $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
+            $cookieJar = app('cookie');
+            $nowTimestamp = Carbon::now()->timestamp;
+            $expire = Carbon::now()->addDays(30)->diffInMinutes();
+            if ($lastHandleTime = $request->cookie('last_handle_time')) {
+                $diffInMinutes = Carbon::now()->diffInMinutes(Carbon::createFromTimestamp($lastHandleTime));
+                if ($diffInMinutes >= 60) {
+                    //超出30分钟未操作退出登录
+                    return redirect(url('auth/logout'));
                 }
-            } else if (!$inWindows) {
-                if (false === strpos($request->root(), $mobileUrl)) {
-                    return redirect($mobileUrl);
-                }
+
             }
+            $cookieJar->queue('last_handle_time', $nowTimestamp, $expire);
         }
 
         $response = $next($request);

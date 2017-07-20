@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v1\Business;
 use App\Services\PromoService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Api\V1\Controller;
