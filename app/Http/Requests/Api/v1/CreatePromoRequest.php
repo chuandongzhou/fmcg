@@ -71,7 +71,7 @@ class CreatePromoRequest extends Request
             return $validator->errors()->add('error', ($isRebate ? '返利' : '条件') . '商品 不能为空');
         } else {
             foreach ($products['goods_id'] as $key => $value) {
-                if (!isset($products['unit'][$key]) || empty($products['unit'][$key])) {
+                if (strlen(trim($products['unit'][$key])) == 0) {
                     return $validator->errors()->add('error', ($isRebate ? '返利' : '条件') . '商品单位 不能为空');
                 }
                 if (!isset($products['quantity'][$key]) || empty($products['quantity'][$key])) {
@@ -83,7 +83,7 @@ class CreatePromoRequest extends Request
 
     private function checkMoney($validator, $money, $isRebate)
     {
-        if (empty($money['money'])) {
+        if (empty($money['money']) && $money['money'] != 0) {
             return $validator->errors()->add('condition[money]', ($isRebate ? '返利' : '条件') . '金额 不能为空');
         }
         if (!is_numeric(trim($money['money']))) {

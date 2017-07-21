@@ -113,13 +113,14 @@ class ReportController extends Controller
 
         $visits = SalesmanVisit::ofTime($startDate, $dateEnd)->where([
             'salesman_id' => $salesmanId,
-            'salesman_customer_id' => $customerId
+            'salesman_customer_id' => $customerId,
         ])->with([
             'orders.orderGoods.goods',
             'orders.displayList.mortgageGoods',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
+
 
 
         return view('index.business.report-customer-detail',
@@ -139,7 +140,7 @@ class ReportController extends Controller
         $orderTypes = cons('salesman.order.type');
         //订货单
         $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
-            return $order->type == $orderTypes['order'] && $order->salesman_visit_id > 0;
+            return ($order->type == $orderTypes['order'] && $order->salesman_visit_id >  0 && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true));
         });
 
         //退货单
@@ -184,6 +185,9 @@ class ReportController extends Controller
      */
     private function _getDetailData(Collection $visits)
     {
+        $visits = $visits->filter(function ($visit){
+            return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
+        });
         //详情拜访列表
         $visitLists = $this->_getVisitListForDetail($visits);
 
@@ -278,7 +282,6 @@ class ReportController extends Controller
     {
         //拜访id列表
         $visitIds = $visits->pluck('id');
-
         //商品记录
         $goodsRecords = SalesmanVisitGoodsRecord::whereIn('salesman_visit_id', $visitIds)->get();
 
@@ -328,7 +331,7 @@ class ReportController extends Controller
         $config = cons('salesman.order.goods.type');
         //所有商品
         $salesGoods = $salesGoods->filter(function ($item) use ($goodsId) {
-            return $item->goods_id == $goodsId;
+            return $item->goods_id == $goodsId  && (isset($item->order) ? $item->order->status < cons('order.status.invalid') : true);
         });
 
         //订货商品
@@ -391,7 +394,7 @@ class ReportController extends Controller
             $orderTypes = cons('salesman.order.type');
             //订货单
             $visitOrder = $orders->filter(function ($order) use ($orderTypes) {
-                return $order->type == $orderTypes['order'];
+                return $order->type == $orderTypes['order'] && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true);
             })->first();
 
             //退货单
@@ -437,7 +440,7 @@ class ReportController extends Controller
         $orderTypes = cons('salesman.order.type');
         //订货单
         $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
-            return $order->type == $orderTypes['order'];
+            return $order->type == $orderTypes['order'] && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true);
         });
 
         //退货单
@@ -735,6 +738,10 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
+
+        $visits = $visits->filter(function ($visit){
+            return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
+        });
         $visitsLists = $this->_getVisitListForDetail($visits);
         $visitsList = [];
         foreach ($visitsLists as $visit) {
@@ -755,6 +762,7 @@ class ReportController extends Controller
         $gifts = $this->_getGifts($visits);
         //促销
         $promos = $this->_getPromos($visits);
+
         $excelName = $startDate . '-' . $endDate . ' ' . $customer->name . '(' . $salesman->name . ')业务报表';;
         Excel::create($excelName,
             function (LaravelExcelWriter $excel) use ($visitsList, $salesGoods, $displays, $gifts, $promos) {
@@ -960,6 +968,7 @@ class ReportController extends Controller
                     ];
                     //合并
                     $goods = [];
+                    $mergeArray = [];
                     foreach ($promos as $item) {
                         $start = count($goods) + 2;
                         $count = 0;

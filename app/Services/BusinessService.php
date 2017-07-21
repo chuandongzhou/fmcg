@@ -73,9 +73,8 @@ class BusinessService extends BaseService
         ) {
             //所有订单
             $orders = $salesman->orders->filter(function ($order) use ($startDate, $endDate) {
-                return $order->created_at >= $startDate && $order->created_at <= $endDate;
+                return ($order->created_at >= $startDate && $order->created_at <= $endDate && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true));
             });
-
             //所有平台订货
             $orderForms = $orders->filter(function ($order) {
                 return $order->type == cons('salesman.order.type.order');
@@ -97,6 +96,7 @@ class BusinessService extends BaseService
             $salesman->orderFormSumAmount = $orderForms->sum('after_rebates_price');
             //业务订单总金额
             $salesman->visitOrderFormSumAmount = $visitOrderForms->sum('amount');
+
             //平台订货单数
             $salesman->orderFormCount = $orderForms->count();
             //业务订货单数
@@ -126,7 +126,6 @@ class BusinessService extends BaseService
             //退货单数
             $salesman->returnOrderCount = $returnOrders->count();
         });
-
         return $salesmen;
     }
 

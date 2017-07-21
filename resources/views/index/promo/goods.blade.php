@@ -41,10 +41,10 @@
                                                 </td>
                                                 <td>
                                                     {{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_1)}}
-                                                    @if($goods->goods->goodsPieces->pieces_level_2)
+                                                    @if(strlen($goods->goods->goodsPieces->pieces_level_2) > 0)
                                                         /{{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_2)}}
                                                     @endif
-                                                    @if($goods->goods->goodsPieces->pieces_level_3)
+                                                    @if(strlen($goods->goods->goodsPieces->pieces_level_3) > 0)
                                                         / {{cons()->valueLang('goods.pieces',$goods->goods->goodsPieces->pieces_level_3)}}
                                                     @endif
                                                 </td>
