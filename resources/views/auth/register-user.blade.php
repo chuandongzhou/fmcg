@@ -50,7 +50,8 @@
                                         <span class="prompt">用户账号:</span>
                                     </label>
                                     <div class="col-xs-8 col-md-6">
-                                        <input class="form-control" placeholder="账号由4至16个数字或字母组成" type="text" name="user_name">
+                                        <input class="form-control" placeholder="账号由4至16个数字或字母组成" type="text"
+                                               name="user_name">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -122,9 +123,7 @@
                         $this.next('button').html(i + ' 秒后重试');
                     },
                     done: function () {
-                        $this.prop('disabled', false);
-                        $this.next('button').prop('disabled', false).removeClass('btn-default').addClass('btn-success');
-                        $this.next('button').html('重新获取');
+                        $this.prop('disabled', false).attr('type', 'button').next('button').prop('disabled', false).removeClass('btn-default').addClass('btn-success').html('重新获取');
                     },
                     count: 60
                 })
@@ -133,7 +132,7 @@
                 var json = textStatus['responseJSON'];
                 $this.next('button').html(typeof(json) != 'undefined' ? json['message'] : '获取失败').prop('disabled', true);
                 setTimeout(function () {
-                    $this.next('button').html('重新获取').prop('disabled', false);
+                    $this.prop('disabled', false).attr('type', 'button').next('button').html('重新获取').prop('disabled', false);
                 }, 2000);
             });
 

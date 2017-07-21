@@ -55,7 +55,7 @@
 
             <div class="col-sm-4">
                 <span data-name="image" class="btn btn-primary btn-sm fileinput-button">
-                                请选择图片文件
+                                请选择图片文件({{ $size }})
                                 <input type="file" accept="image/*" data-url="{{ url('api/v1/file/upload-temp') }}"
                                        name="file">
                             </span>

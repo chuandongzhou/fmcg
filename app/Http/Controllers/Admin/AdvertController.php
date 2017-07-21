@@ -18,6 +18,11 @@ abstract class AdvertController extends Controller
      */
     protected $type = 'index';
 
+    protected $size = [
+        'index' => '1920 * 450',
+        'app' => '640 * 250',
+    ];
+
     /**
      * 获取广告列表
      *
@@ -51,6 +56,7 @@ abstract class AdvertController extends Controller
         return view('admin.advert.advert', [
             'type' => $this->type,
             'advert' => new Advert,
+            'size' => array_get($this->size, $this->type, '- -'),
             'categories' => isset($categories) ? $categories : []
         ]);
     }
