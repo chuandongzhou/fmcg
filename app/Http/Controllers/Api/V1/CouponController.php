@@ -30,7 +30,7 @@ class CouponController extends Controller
             return $this->error('店铺不存在');
         }
 
-        $coupons = Coupon::ofCanReceive($shop->id)->get();
+        $coupons = Coupon::ofCanReceive($shop->id)->with('shop')->get();
 
         return $this->success(['coupons' => $coupons->values()]);
     }
