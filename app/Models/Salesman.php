@@ -134,7 +134,7 @@ class Salesman extends Model implements AuthenticatableContract
         $user = auth()->user();
         return $this->hasMany('App\Models\SalesmanVisit')->where(function ($query) use ($user) {
             if ($user && $user->type != cons('user.type.maker')) {
-                $query->where('shop_id', $this->shop->id);
+                $query->where('shop_id', $user->shop->id);
             }
         });
     }

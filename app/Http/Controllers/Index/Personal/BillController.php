@@ -11,14 +11,13 @@ use App\Http\Controllers\Index\Controller;
 
 class BillController extends Controller
 {
-    /*
-     * 对账单服务
-     */
     protected $billService;
-    public function __construct()
+
+    public function __construct(BillService $billService)
     {
-        $this->billService = new BillService();
+        $this->billService = $billService;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +26,8 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $name = $request->input('name');
-        $shops = $this->billService->getBillListsOfBuyer($name)->paginate();
-        return view('index.personal.bill-index',[
+        $shops = $this->billService->getShop($name)->paginate();
+        return view('index.personal.bill-index', [
             'shops' => $shops,
             'data' => $name
         ]);
@@ -38,22 +37,25 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         $time = $request->input('time');
+
         $shop = Shop::find($id);
-        $timeArray = $this->billService->timeHandler($time);
-        $bill =  $this->billService->getBillDetailOfBuyer($shop,$timeArray);
-        if($request->input('act')){
-            return $this->billService->billExportOfSeller($bill);
+
+        $timeInterval = $this->billService->timeHandler($time);
+
+        $result = $this->billService->buyer($shop, $timeInterval);
+        if ($request->input('act')) {
+            return $this->billService->exportSeller($result,$shop,$timeInterval);
         }
-        return view('index.personal.bill-detail',[
-            'bill' => $bill,
+        return view('index.personal.bill-detail', [
+            'timeInterval' => $timeInterval,
             'shop' => $shop,
-            'time' => $time
+            'bill' => $result,
         ]);
     }
 

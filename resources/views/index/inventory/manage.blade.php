@@ -133,11 +133,18 @@
                                             {{$item->bar_code}}
                                         </td>
                                         <td>
-                                            <p>{{ $item->price_retailer}}元
-                                                / {{cons()->valueLang('goods.pieces',$item->pieces_retailer)}}</p>
+                                            @if(auth()->user()->type != cons('user.type.maker'))
+                                                <p>{{ $item->price_retailer}}元
+                                                    / {{cons()->valueLang('goods.pieces',$item->pieces_retailer)}}</p>
+                                            @endif
+
                                             @if(auth()->user()->type == cons('user.type.supplier') || auth()->user()->type == cons('user.type.maker'))
-                                                <p>{{ $item->price_wholesaler }}元 (批)
-                                                    / {{cons()->valueLang('goods.pieces',$item->pieces_wholesaler)}}</p>
+                                                <p>{{ $item->price_wholesaler }}元
+                                                    / {{ cons()->valueLang('goods.pieces' , $item->pieces_wholesaler) }}
+                                                    @if(auth()->user()->type != cons('user.type.maker'))
+                                                        (批)
+                                                    @endif
+                                                </p>
                                             @endif
                                         </td>
                                         <td>

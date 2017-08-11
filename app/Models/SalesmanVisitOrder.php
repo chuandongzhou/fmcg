@@ -71,6 +71,17 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
+     * 关联促销商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    /* public function promoGoods()
+     {
+         return $this->belongsToMany('App\Models\Goods',
+             'salesman_visit_order_promo_goods','salesman_visit_order_id')->withTrashed()->withPivot('quantity', 'piece');
+     }*/
+
+    /**
      * 关联抵费商品
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -177,10 +188,78 @@ class SalesmanVisitOrder extends Model
         return $query->where('status', 0);
     }
 
+    /**
+     * 已处理订单
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOfTreated($query)
+    {
+        return $query->where('status', 1);
+    }
 
+    /**
+     * 退货单
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeReturnOrder($query)
+    {
+        return $query->where('type', cons('salesman.order.type.return_order'));
+    }
+
+    /**
+     * 验证店铺
+     *
+     * @param $query
+     * @param $shop_id
+     * @return mixed
+     */
     public function scopeCheckShop($query, $shop_id)
     {
         return $query->where('shop_id', $shop_id);
+    }
+
+    /**
+     * 平台订单创建时间区间
+     *
+     * @param $query
+     * @param $time
+     * @return mixed
+     */
+    public function scopeOfCreateTime($query, $start, $end)
+    {
+        $query->where('created_at', ">=", $start)->where('created_at', '<=', $end);
+    }
+
+    /**
+     * 平台订单创建时间区间
+     *
+     * @param $query
+     * @param $time
+     * @return mixed
+     */
+    public function scopeOfOwnOrderCreateTime($query, $start, $end)
+    {
+        return $query->whereHas('order', function ($query) use ($start, $end) {
+            $query->ofCreatedAt($start, $end);
+        });
+    }
+
+    /**
+     * 平台订单未作废
+     *
+     * @param $query
+     * @param $time
+     * @return mixed
+     */
+    public function scopeOfOwnOrderNotCancelled($query)
+    {
+        return $query->whereHas('order', function ($query) {
+            $query->where('status', '<', cons('order.status.invalid'));
+        });
     }
 
     /**
@@ -380,6 +459,18 @@ class SalesmanVisitOrder extends Model
     {
         if ($this->applyPromo) {
             return $this->applyPromo->promo->load(['condition', 'rebate']);
+        }
+    }
+
+    /**
+     * 陈列费总额
+     *
+     * @return mixed
+     */
+    public function getDisplayFeeAmountAttribute()
+    {
+        if ($this->displayFees) {
+            return $this->displayFees->sum('used');
         }
     }
 }

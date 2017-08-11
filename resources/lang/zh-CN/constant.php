@@ -354,12 +354,18 @@ return [
         'action_type' => [
             'in' => '入库',
             'out' => '出库',
+        ],
+        'source' => [
+            'order' => '订单',
+            'mortgage' => '抵费',
+            'promo' => '促销',
+            'gift' => '赠品',
         ]
     ],
     //资产表
     'asset' => [
         'status' => [
-            'on' =>  '已启用',
+            'on' => '已启用',
             'off' => '已禁用'
         ],
     ],
@@ -375,7 +381,7 @@ return [
     'asset_apply_log' => [
         'action' => [
             'apply' => '提交申请',
-            'review' =>'审核处理',
+            'review' => '审核处理',
             'use' => '登记开始使用时间'
         ]
     ],

@@ -51,7 +51,9 @@
                         @if(isset($lists))
                             @foreach($lists as $list)
                                 <tr>
-                                    <td>{{$list->goods_name ?? ''}}</td>
+                                    <td>{{$list->goods_name ?? ''}}
+                                        {{$list->source > 0 ? '('.cons()->valueLang('inventory.source',$list->source).')' : ''}}
+                                    </td>
                                     <td>{{$list->goods_barcode}}</td>
                                     <td>{{$list->production_date ?? '---'}}</td>
                                     <td>{{$list->transformation_quantity?? ''}}</td>

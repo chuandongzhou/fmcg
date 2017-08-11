@@ -392,14 +392,14 @@
                                             </thead>
                                             @foreach($order->gifts as $gift)
                                                 <tr>
-                                                    <td>{{ $gift->id }}</td>
+                                                    <td>{{ $gift->goods_id }}</td>
                                                     <td>
                                                         <div class="product-panel">
                                                             <a class="product-name"
-                                                               href="{{ url('goods/'. $gift->id) }}">{{ $gift->name }}</a>
+                                                               href="{{ url('goods/'. $gift->goods_id) }}">{{ $gift->goods->name }}</a>
                                                         </div>
                                                     </td>
-                                                    <td>{{ '╳ '.$gift->pivot->num.cons()->valueLang('goods.pieces', $gift->pivot->pieces) }}</td>
+                                                    <td>{{ '╳ '.$gift->num.cons()->valueLang('goods.pieces', $gift->pieces) }}</td>
                                                 </tr>
                                             @endforeach
                                         </table>

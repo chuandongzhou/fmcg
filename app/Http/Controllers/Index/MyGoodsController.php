@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Index;
 
 use App\Models\Attr;
 use App\Models\Goods;
+use App\Models\OrderGoods;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
 use App\Http\Requests;
@@ -35,7 +36,7 @@ class MyGoodsController extends Controller
         $data = $this->_formatGet($gets);
         $shop = auth()->user()->shop;
 
-        $result = GoodsService::getShopGoods($shop, $data, ['mortgageGoods']);
+        $result = GoodsService::getShopGoods($shop, $data, ['mortgageGoods','promoGoods','images','shop']);
         $myGoods = $result['goods']->orderBy('updated_at', 'DESC')->paginate();
 
         $cateName = [];
@@ -83,7 +84,7 @@ class MyGoodsController extends Controller
         /*if (!$user->deposit) {
              return $this->error('添加商品前请先缴纳保证金', url('personal/sign'));
          }*/
-        $abnormalInfo = $request->only('goods_id','order_id');
+        $orderGoodsId = $request->input('orderGoods');
         //默认加入店铺配送地址
         $shop = $user->shop()->with(['deliveryArea'])->first();
         $shopDelivery = $shop->deliveryArea->each(function ($area) {
@@ -92,12 +93,12 @@ class MyGoodsController extends Controller
         $goods = new Goods;
         //店铺配送地址
         $goods->shopDeliveryArea = $shopDelivery;
-        if (!empty($abnormalInfo['goods_id'])){
-            $buyerGoods = Goods::find($abnormalInfo['goods_id']);
-            $goods->bar_code = $buyerGoods->bar_code;
-            $goods->name = $buyerGoods->name;
-            $goods->goodsPieces = $buyerGoods->goodsPieces;
-            $goods->abnormalInfo = $abnormalInfo;
+        if (!empty($orderGoodsId)) {
+            $orderGoods = OrderGoods::with('goods')->find($orderGoodsId);
+            $goods->bar_code = $orderGoods->goods->bar_code;
+            $goods->name = $orderGoods->goods->name;
+            $goods->goodsPieces = $orderGoods->goods->goodsPieces;
+            $goods->orderGoodsId = $orderGoodsId;
         }
         return view('index.my-goods.goods', [
             'goods' => $goods,

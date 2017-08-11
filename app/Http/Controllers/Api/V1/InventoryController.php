@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Inventory;
-use App\Services\GoodsService;
+use App\Models\OrderGoods;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
 
@@ -19,10 +19,12 @@ use App\Http\Requests;
 class InventoryController extends Controller
 {
     protected $inventoryService;
+
     public function __construct()
     {
         $this->inventoryService = new InventoryService();
     }
+
     /**
      * 入库操作
      *
@@ -55,11 +57,11 @@ class InventoryController extends Controller
      */
     public function getGoodsList(Request $request)
     {
-        $conditions = $request->only('nameOrCode', 'ids','page');
+        $conditions = $request->only('nameOrCode', 'ids', 'page');
         $shop = auth()->user()->shop;
-        $goods = $shop->goods()->with('goodsPieces')->where(function($query) use ($conditions) {
+        $goods = $shop->goods()->with('goodsPieces')->where(function ($query) use ($conditions) {
             // 名称or条形码
-            if ($nameOrCode = (array_get($conditions,'nameOrCode'))) {
+            if ($nameOrCode = (array_get($conditions, 'nameOrCode'))) {
                 $query->OfNameOrCode($nameOrCode);
             }
             if (isset($conditions['ids'])) {
@@ -87,9 +89,15 @@ class InventoryController extends Controller
      */
     public function postGoodsInError(Request $request)
     {
-        $condition = $request->only('goods_id', 'order_number');
+        $orderGoodsId = $request->input('orderGoods');
+        $orderGoods = OrderGoods::find($orderGoodsId);
+        $where = [
+            'source' => $this->inventoryService->_getSource($orderGoods->type),
+            'goods_id' => $orderGoods->goods_id,
+            'order_number' => $orderGoods->order_id
+        ];
         $inventory = Inventory::with(['goods'])
-            ->where($condition)
+            ->where($where)
             ->OfOut()
             ->get();
         $inventory->each(function ($item) {

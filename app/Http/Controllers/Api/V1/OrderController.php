@@ -58,6 +58,7 @@ class OrderController extends Controller
             'orderReason',
             'shop.user',
             'user',
+            'applyPromo',
             'coupon',
             'goods' => function ($query) {
                 $query->select(['goods.id', 'goods.name', 'goods.bar_code'])->wherePivot('type',
@@ -498,7 +499,7 @@ class OrderController extends Controller
 
             if ($order->pay_type == cons('pay_type.online')) {
                 //在线支付确认收货买家入库
-                (new InventoryService())->autoIn($order->orderGoods);
+                (new InventoryService())->autoIn($order);
             }
 
             if (($tradeModel = $order->systemTradeInfo) && $order->fill([
@@ -560,14 +561,14 @@ class OrderController extends Controller
 
             if ($order->pay_type == cons('pay_type.pick_up')) {
                 //自提订单收款时卖家出库
-                $outResult = $inventoryService->autoOut($order->orderGoods);
+                $outResult = $inventoryService->autoOut($order);
                 if (!$outResult) {
                     return $this->error($inventoryService->getError());
                 };
             }
             if ($order->pay_type == cons('pay_type.pick_up') || $order->pay_type == cons('pay_type.cod')) {
                 //自提订单和货到付款订单收款时买家入库
-                $inventoryService->autoIn($order->orderGoods);
+                $inventoryService->autoIn($order);
             }
 
             if (!$order->fill([
@@ -619,7 +620,7 @@ class OrderController extends Controller
                 continue;
             }
             //卖家出库
-            $result = $inventoryService->autoOut($order->orderGoods);
+            $result = $inventoryService->autoOut($order);
             if ($result == false) {
                 return $this->error($inventoryService->getError());
             };
@@ -976,9 +977,7 @@ class OrderController extends Controller
             'status' => cons('salesman.order.status.passed'),
             'shop_id' => $shop->id
         ];
-
         $result = DB::transaction(function () use ($orderData, $order) {
-
             $orderTemp = SalesmanVisitOrder::create($orderData);
 
             if ($orderTemp->exists) {
@@ -1019,7 +1018,7 @@ class OrderController extends Controller
         if ($order->pay_type == $payType['pick_up']) {
             $order->load(['goods.images', 'shop.shopAddress']);
         } else {
-            $order->load(['goods','gifts', 'deliveryMan', 'shippingAddress.address', 'orderReason']);
+            $order->load(['goods', 'gifts', 'deliveryMan', 'shippingAddress.address', 'orderReason']);
         }
         return $order;
     }

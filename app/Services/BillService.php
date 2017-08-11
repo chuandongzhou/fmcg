@@ -7,8 +7,10 @@
  */
 namespace App\Services;
 
+use App\Models\Salesman;
+use App\Models\SalesmanCustomer;
+use App\Models\SalesmanVisitOrder;
 use App\Models\Shop;
-use App\Models\SystemTradeInfo;
 use Carbon\Carbon;
 use PhpOffice\PhpWord\PhpWord;
 
@@ -31,45 +33,55 @@ class BillService
     }
 
     /**
-     * 获取对账单详情  卖家
      *
-     * @param $customer
-     * @param array $time
-     * @return array
+     * 卖家对账
+     *
+     * @param $customer /客户
+     * @param array $time 时间区间
+     * @return array    订货单/退货单
      */
-    public function getBillDetailOfSeller($customer, array $time)
+    public function seller($customer, array $time)
     {
-        $start_at = array_get($time, 'start_at')->toDateTimeString();
-        $end_at = array_get($time, 'end_at')->toDateTimeString();
+        //客户与商家发生的订单
+        $orders = $customer->orders()->where('shop_id', auth()->user()->shop_id)->get();
 
-        //获取时间范围内的业务订单
-        $businessOrders = $customer->orders()->with('orderGoods', 'displayFees', 'mortgageGoods')->where('created_at',
-            '>=', $start_at)->where('created_at', '<=', $end_at)->get();
-        //判断客户是否有线上店铺
-        if ($customer->shop_id) {
-            //全部订单
-            $allOrders = auth()->user()->shop->orders()->Useful()->NoInvalid()->NonRefund()->where('user_id',
-                $customer->shop_id)->where('created_at', '>=',
-                $start_at)->where('created_at', '<=', $end_at)->get();
-        } else {
-            $allOrders = $customer->orders()->with('orderGoods')->where('created_at',
-                '>=', $start_at)->where('created_at', '<=', $end_at)->get();
-           // dd($allOrders);
-        }
+        $start_at = $time['start_at']->toDateTimeString();
+        $end_at = $time['end_at']->toDateTimeString();
+        //订货单
+        $orderForm = $orders->filter(function ($item) use ($start_at, $end_at) {
+            $order = $item->order;
+            return $item->type == cons('salesman.order.type.order') && !empty($order) && $order->status < cons('order.status.invalid') && $order->created_at >= $start_at && $order->created_at <= $end_at && $order->pay_status < cons('order.pay_status.refund');
+        });
 
-        //收支明细
-        $paymentDetails = $this->getPaymentDetails($allOrders->pluck('id'), $start_at, $end_at);
+        $orderReturn = $orders->filter(function ($item) use ($start_at, $end_at) {
+            return $item->type == cons('salesman.order.type.return_order') && $item->status && $item->created_at >= $start_at && $item->created_at <= $end_at;
+        });
 
-        return compact('businessOrders', 'allOrders', 'paymentDetails', 'time', 'customer');
+        $finished = $orderForm->filter(function ($order) {
+            $order = $order->order;
+            return !is_null($order) && $order->pay_status == cons('order.pay_status.payment_success');
+        });
+
+        $finishedAmount = bcsub($finished->sum('after_rebates_price'), $finished->sum('display_fee_amount'), 2);
+        //未收金额
+        $notFinished = $orderForm->filter(function ($order) {
+            $order = $order->order;
+            return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->pay_status < cons('order.pay_status.payment_success'));
+        });
+        $notFinishedAmount = bcsub($notFinished->sum('after_rebates_price'), $notFinished->sum('display_fee_amount'),
+            2);
+
+        return compact('orderForm', 'orderReturn', 'finishedAmount', 'notFinishedAmount');
     }
 
     /**
-     * 导出对账单  卖家
+     * 导出对账单
      *
      * @param $bill
      */
-    public function billExportOfSeller($bill)
+    public function exportSeller($bill, $store, $time)
     {
+
         $phpWord = new PhpWord();
 
         $tableBolder = array('borderSize' => 1, 'borderColor' => '999999', 'cantSplit' => true);
@@ -78,7 +90,7 @@ class BillService
         $cellVAlignCenter = ['valign' => 'center'];
         $titleSize = ['size' => 14];
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
-        $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
+        $gridSpan5 = ['gridSpan' => 5, 'valign' => 'center'];
         $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
 
@@ -90,19 +102,65 @@ class BillService
             'spaceAfter' => 0,
             'lineHeight' => 1.2,  // 行间距
         ]);
-
         $section = $phpWord->addSection();
-        if (isset($bill['customer'])) {
-            $section->addText($bill['customer']->name . ' — 月对账单', ['size' => '18'], ['align' => 'center']);
-            $section->addText('客户名称 : ' . $bill['customer']->name);
-            $section->addText('客户地址 : ' . $bill['customer']->business_address_name);
+        $section->addText($store->name . ' — 月对账单', ['size' => '18'], ['align' => 'center']);
+        if ($store instanceof Shop) {
+            $section->addText('商户名称 : ' . $store->name);
+            $section->addText('商户地址 : ' . $store->shopAddress->area_name);
         } else {
-            $section->addText($bill['shop']->name . ' — 月对账单', ['size' => '18'], ['align' => 'center']);
-            $section->addText('商户名称 : ' . $bill['shop']->name);
-            $section->addText('商户地址 : ' . $bill['shop']->shopAddress->area_name);
+            $section->addText('客户名称 : ' . $store->name);
+            $section->addText('客户地址 : ' . $store->business_address_name);
         }
 
-        $section->addText('对账时间 : ' . $bill['time']['start_at']->toDateString() . ' - ' . $bill['time']['end_at']->toDateString());
+        $section->addText('对账时间 : ' . $time['start_at']->toDateString() . ' - ' . $time['end_at']->toDateString());
+        $table = $section->addTable($tableBolder);
+        $table->addRow();
+        $table->addCell(2250)->addText('总计金额', null, $cellAlignCenter);
+        $table->addCell(2250)->addText('优惠卷金额', null, $cellAlignCenter);
+        $table->addCell(2250)->addText('已支付金额', null, $cellAlignCenter);
+        $table->addCell(2250)->addText('未支付金额', null, $cellAlignCenter);
+        $table->addRow();
+        $table->addCell(2250)->addText(sprintf("%.2f",
+            $bill['orderForm']->sum('after_rebates_price') - $bill['orderForm']->sum('display_fee_amount')), null,
+            $cellAlignCenter);
+        $table->addCell(2250)->addText(sprintf("%.2f",
+            $bill['orderForm']->sum('how_much_discount')), null, $cellAlignCenter);
+        $table->addCell(2250)->addText($bill['finishedAmount'], null, $cellAlignCenter);
+        $table->addCell(2250)->addText($bill['notFinishedAmount'], null, $cellAlignCenter);
+        $section->addText('订单对账单', $titleSize, $cellAlignCenter);
+
+        $table = $section->addTable($tableBolder);
+        $table->addRow();
+        $table->addCell(1400)->addText('时间', null, $cellAlignCenter);
+        $table->addCell(1400)->addText('订单编号', null, $cellAlignCenter);
+        $table->addCell(2000)->addText('商品名称', null, $cellAlignCenter);
+        $table->addCell(1400)->addText('数量', null, $cellAlignCenter);
+        $table->addCell(1400)->addText('金额', null, $cellAlignCenter);
+        $table->addCell(1400)->addText('优惠卷', null, $cellAlignCenter);
+
+        foreach ($bill['orderForm'] as $order) {
+            if ($order->orderGoods->count()) {
+                $table->addRow();
+                $table->addCell(1400, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1400, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                foreach ($order->orderGoods as $orderGoods) {
+                    $table->addRow();
+                    $table->addCell(1400, $cellRowContinue);
+                    $table->addCell(1400, $cellRowContinue);
+                    $table->addCell(2000, $cellVAlignCenter)->addText($orderGoods->goods->name, null, $cellAlignCenter);
+                    $table->addCell(1400, $cellVAlignCenter)->addText($orderGoods->num . $orderGoods->pieces_name, null,
+                        $cellAlignCenter);
+                    $table->addCell(1400, $cellVAlignCenter)->addText($orderGoods->amount, null, $cellAlignCenter);
+                    if ($order->orderGoods->first() == $orderGoods) {
+                        $table->addCell(1400, $cellRowSpan)->addText($order->how_much_discount, null, $cellAlignCenter);
+                    } else {
+                        $table->addCell(1400, $cellRowContinue);
+                    }
+                }
+            }
+        }
+        $section->addText('');
 
         $section->addText('陈列费对账单', $titleSize, $cellAlignCenter);
         $table = $section->addTable($tableBolder);
@@ -112,12 +170,13 @@ class BillService
         $table->addCell(3000)->addText('月份', null, $cellAlignCenter);
         $table->addCell(3000, $gridSpan2)->addText('陈列实发项', null, $cellAlignCenter);
 
-        foreach ($bill['businessOrders'] as $businessOrder) {
-            if ($businessOrder->mortgageGoods->count()) {
+        foreach ($bill['orderForm'] as $order) {
+            if ($order->mortgageGoods->count()) {
                 $table->addRow();
-                $table->addCell(1800, $cellRowSpan)->addText($businessOrder->created_at, null, $cellAlignCenter);
-                $table->addCell(1700, $cellRowSpan)->addText($businessOrder->id, null, $cellAlignCenter);
-                foreach ($businessOrder->mortgageGoods as $mortgageGoods) {
+                $table->addCell(1800, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1700, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                foreach ($order->mortgageGoods as $mortgageGoods) {
                     $table->addRow();
                     $table->addCell(1800, $cellRowContinue);
                     $table->addCell(1700, $cellRowContinue);
@@ -130,11 +189,12 @@ class BillService
                         $cellVAlignCenter)->addText(intval($mortgageGoods->pivot->used) . $mortgageGoods->pieces_name,
                         null, $cellAlignCenter);
                 }
-            } elseif ($businessOrder->displayFees->count()) {
+            } elseif ($order->displayFees->count()) {
                 $table->addRow();
-                $table->addCell(1800, $cellRowSpan)->addText($businessOrder->created_at, null, $cellAlignCenter);
-                $table->addCell(1700, $cellRowSpan)->addText($businessOrder->id, null, $cellAlignCenter);
-                foreach ($businessOrder->displayFees as $displayFees) {
+                $table->addCell(1800, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1700, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                foreach ($order->displayFees as $displayFees) {
                     $table->addRow();
                     $table->addCell(1800, $cellRowContinue);
                     $table->addCell(1700, $cellRowContinue);
@@ -149,64 +209,108 @@ class BillService
         }
         $section->addText('');
 
-        $section->addText('订单对账单', $titleSize, $cellAlignCenter);
+        $section->addText('赠品对账单', $titleSize, $cellAlignCenter);
         $table = $section->addTable($tableBolder);
         $table->addRow();
         $table->addCell(1400)->addText('时间', null, $cellAlignCenter);
-        $table->addCell(1400)->addText('订单编号', null, $cellAlignCenter);
-        $table->addCell(2000)->addText('商品名称', null, $cellAlignCenter);
-        $table->addCell(1400)->addText('数量', null, $cellAlignCenter);
-        $table->addCell(1400)->addText('金额', null, $cellAlignCenter);
-        $table->addCell(1400)->addText('优惠卷', null, $cellAlignCenter);
+        $table->addCell(1600)->addText('订单编号', null, $cellAlignCenter);
+        $table->addCell(3000, $gridSpan2)->addText('赠品内容', null, $cellAlignCenter);
+        foreach ($bill['orderForm'] as $order) {
+            if ($order->gifts->count()) {
+                $table->addRow();
+                $table->addCell(1800, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1700, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                foreach ($order->gifts as $gifts) {
+                    $table->addRow();
+                    $table->addCell(1800, $cellRowContinue);
+                    $table->addCell(1700, $cellRowContinue);
+                    $table->addCell(3700, $cellVAlignCenter)->addText($gifts->name ?? '', null,
+                        $cellAlignCenter);
+                    $table->addCell(1800,
+                        $cellVAlignCenter)->addText($gifts->pivot->num . cons()->valueLang('goods.pieces',
+                            $gifts->pivot->pieces), null,
+                        $cellAlignCenter);
+                }
+            }
+        }
+        $section->addText('');
 
-        foreach ($bill['allOrders'] as $order) {
+        $section->addText('促销对账单', $titleSize, $cellAlignCenter);
+        $table = $section->addTable($tableBolder);
+        $table->addRow();
+        $table->addCell(1400)->addText('时间', null, $cellAlignCenter);
+        $table->addCell(1600)->addText('订单编号', null, $cellAlignCenter);
+        $table->addCell(3000)->addText('促销名称', null, $cellAlignCenter);
+        $table->addCell(3000, $gridSpan2)->addText('返利内容', null, $cellAlignCenter);
+        foreach ($bill['orderForm'] as $order) {
+            if ($order->promo) {
+                $table->addRow();
+                $table->addCell(1900, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1200, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                $table->addCell(1200, $cellRowSpan)->addText($order->promo->name, null, $cellAlignCenter);
+                if (in_array($order->promo->type, [cons('promo.type.goods-goods'), cons('promo.type.money-goods')])) {
+                    foreach ($order->promo->rebate as $rebate) {
+                        $table->addRow();
+                        $table->addCell(1900, $cellRowContinue);
+                        $table->addCell(1200, $cellRowContinue);
+                        $table->addCell(1200, $cellRowContinue);
+                        $table->addCell(3500, $cellVAlignCenter)->addText($rebate->goods->name ?? '', null,
+                            $cellAlignCenter);
+                        $table->addCell(1200,
+                            $cellVAlignCenter)->addText($rebate->quantity . cons()->valueLang('goods.pieces',
+                                $rebate->unit), null,
+                            $cellAlignCenter);
+                    }
+                } else {
+                    $text = '(' . ($order->promo->type == cons('promo.type.custom') ? '自定义' : '现金') . ')';
+                    $text .= in_array($order->promo->type, [
+                        cons('promo.type.goods-money'),
+                        cons('promo.type.money-money')
+                    ]) ? $order->promo->rebate[0]->money . '元' : $order->promo->rebate[0]->custom;
+                    $table->addCell(4700, $gridSpan2)->addText($text, null,
+                        $cellAlignCenter);
+                }
+            }
+        }
+        $section->addText('');
+
+        $section->addText('退货对账单', $titleSize, $cellAlignCenter);
+        $table = $section->addTable($tableBolder);
+        $table->addRow();
+        $table->addCell(1800)->addText('时间', null, $cellAlignCenter);
+        $table->addCell(1800)->addText('订单编号', null, $cellAlignCenter);
+        $table->addCell(1800)->addText('商品名称', null, $cellAlignCenter);
+        $table->addCell(1800)->addText('数量', null, $cellAlignCenter);
+        $table->addCell(1800)->addText('金额', null, $cellAlignCenter);
+        foreach ($bill['orderReturn'] as $order) {
+
             if ($order->orderGoods->count()) {
                 $table->addRow();
-                $table->addCell(1400, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
-                $table->addCell(1400, $cellRowSpan)->addText($order->id, null, $cellAlignCenter);
+                $table->addCell(2000, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1200, $cellRowSpan)->addText($order->id, null,
+                    $cellAlignCenter);
                 foreach ($order->orderGoods as $orderGoods) {
                     $table->addRow();
-                    $table->addCell(1400, $cellRowContinue);
-                    $table->addCell(1400, $cellRowContinue);
-                    $table->addCell(2000, $cellVAlignCenter)->addText($orderGoods->goods->name, null, $cellAlignCenter);
-                    $table->addCell(1400, $cellVAlignCenter)->addText($orderGoods->num, null, $cellAlignCenter);
-                    $table->addCell(1400, $cellVAlignCenter)->addText($orderGoods->total_price, null, $cellAlignCenter);
-                    if ($order->orderGoods->first() == $orderGoods) {
-                        $table->addCell(1400, $cellRowSpan)->addText($order->how_much_discount, null, $cellAlignCenter);
-                    } else {
-                        $table->addCell(1400, $cellRowContinue);
-                    }
+                    $table->addCell(2000, $cellRowContinue);
+                    $table->addCell(1200, $cellRowContinue);
+                    $table->addCell(3500, $cellVAlignCenter)->addText($orderGoods->goods->name ?? '', null,
+                        $cellAlignCenter);
+                    $table->addCell(1200, $cellVAlignCenter)->addText($orderGoods->num . $orderGoods->pieces_name, null,
+                        $cellAlignCenter);
+                    $table->addCell(1100,
+                        $cellVAlignCenter)->addText($orderGoods->amount, null,
+                        $cellAlignCenter);
                 }
             }
         }
         $table->addRow(0);
-        $table->addCell(9000, $gridSpan6)->addText('总计金额：' . sprintf("%.2f",
-                $bill['allOrders']->sum('price')) . ' 优惠总额：' . sprintf("%.2f",
-                $bill['allOrders']->sum('how_much_discount')), null, ['align' => 'right']);
+        $table->addCell(9000, $gridSpan5)->addText('总计金额：' . sprintf("%.2f",
+                $bill['orderReturn']->sum('amount')), null, ['align' => 'right']);
 
         $section->addText('');
-        $section->addText('收支明细', $titleSize, $cellAlignCenter);
-        $table = $section->addTable($tableBolder);
-        $table->addRow();
-        $table->addCell(2200)->addText('时间', null, $cellAlignCenter);
-        $table->addCell(1700)->addText('支付平台', null, $cellAlignCenter);
-        $table->addCell(1700)->addText('交易号', null, $cellAlignCenter);
-        $table->addCell(1700)->addText('手续费', null, $cellAlignCenter);
-        $table->addCell(1700)->addText('收支金额', null, $cellAlignCenter);
 
-        foreach ($bill['paymentDetails'] as $paymentDetail) {
-            $table->addRow(0);
-            $table->addCell(2200, $cellVAlignCenter)->addText($paymentDetail->finished_at, null, $cellAlignCenter);
-            $table->addCell(1700, $cellVAlignCenter)->addText(cons()->valueLang('trade.pay_type', $paymentDetail->type),
-                null, $cellAlignCenter);
-            $table->addCell(1700, $cellVAlignCenter)->addText($paymentDetail->trade_no, null, $cellAlignCenter);
-            $table->addCell(1700, $cellVAlignCenter)->addText($paymentDetail->target_fee ?? '0', null,
-                $cellAlignCenter);
-            $table->addCell(1700, $cellVAlignCenter)->addText('¥' . $paymentDetail->amount, null, $cellAlignCenter);
-        }
-        $table->addRow(0);
-        $table->addCell(9000, $gridSpan6)->addText('总计收支金额：' . number_format($bill['paymentDetails']->sum('amount'), 2),
-            null, ['align' => 'right']);
         $section->addText('');
         $section->addText('');
         $section->addText('     公司盖章:                                                    客户签字盖章:');
@@ -215,7 +319,8 @@ class BillService
         $section->addText('');
         $section->addText('如果贵方对对账单中数据有疑问，请提供贵明细，以便我们尽快核对您的账目');
         $section->addText('');
-        $name = (isset($bill['customer']) ? $bill['customer']->name : $bill['shop']->name) . $bill['time']['start_at']->toDateString() . ' 至 ' . $bill['time']['end_at']->toDateString() . '对账单.docx';
+
+        $name = $store->name . $time['start_at']->toDateString() . ' 至 ' . $time['end_at']->toDateString() . '对账单.docx';
         return $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
     }
 
@@ -225,39 +330,68 @@ class BillService
      * @param $data
      * @return mixed
      */
-    public function getBillListsOfBuyer($name)
+    public function getShop($name)
     {
-        $orders = auth()->user()->orders()->groupBy('shop_id')->select(['shop_id'])->get();
-        return Shop::whereIn('id', $orders->pluck('shop_id'))->where(function ($query) use ($name) {
+        $user = auth()->user();
+
+        $salesmanCustomer = SalesmanCustomer::where('shop_id', $user->shop_id)->select(['salesman_id'])->get();
+
+        $salesman = Salesman::whereIn('id', $salesmanCustomer->pluck('salesman_id')->toArray())->get();
+
+        return Shop::whereIn('id',
+            $salesman->pluck($user->type == cons('user.type.supplier') ? 'maker_id' : 'shop_id'))->where(function (
+            $query
+        ) use ($name) {
             if ($name) {
                 $query->OfName($name);
             }
         });
     }
 
-    public function getBillDetailOfBuyer($shop, $time)
+    /**
+     *
+     * 买家对账
+     *
+     * @param $shop /对账店铺
+     * @param $time /时间区间
+     * @return array
+     */
+    public function buyer($shop, $time)
     {
-        $start_at = array_get($time, 'start_at')->toDateTimeString();
-        $end_at = array_get($time, 'end_at')->toDateTimeString();
+        $salesmen = $shop->salesmen->pluck('id');
+        //拿到作为与之对账商家的客户身份
+        $customer = SalesmanCustomer::whereIn('salesman_id', $salesmen)->where('shop_id',
+            auth()->user()->shop_id)->first();
+        //拿到该商家名下订单
+        $orders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->where('shop_id', $shop->id)->get();
 
-        $allOrders = auth()->user()->orders()->Useful()->NoInvalid()->NonRefund()->where('shop_id',
-            $shop->id)->where('created_at', '>=',
-            $start_at)->where('created_at', '<=', $end_at)->get();
-        $businessOrders = $allOrders->pluck('salesmanVisitOrder')->filter(function ($item) {
-            return !is_null($item);
+        $start_at = $time['start_at']->toDateTimeString();
+        $end_at = $time['end_at']->toDateTimeString();
+        //订货单
+        $orderForm = $orders->filter(function ($item) use ($start_at, $end_at) {
+            $order = $item->order;
+            return $item->type == cons('salesman.order.type.order') && !empty($order) && $order->status < cons('order.status.invalid') && $order->created_at >= $start_at && $order->created_at <= $end_at && $order->pay_status < cons('order.pay_status.refund');
         });
-        $paymentDetails = $this->getPaymentDetails($allOrders->pluck('id'), $start_at, $end_at);
 
-        return compact('allOrders', 'businessOrders', 'paymentDetails', 'time', 'shop');
+        $orderReturn = $orders->filter(function ($item) use ($start_at, $end_at) {
+            return $item->type == cons('salesman.order.type.return_order') && $item->status && $item->created_at >= $start_at && $item->created_at <= $end_at;
+        });
+
+        $finished = $orderForm->filter(function ($order) {
+            $order = $order->order;
+            return !is_null($order) && $order->pay_status == cons('order.pay_status.payment_success');
+        });
+
+        $finishedAmount = bcsub($finished->sum('after_rebates_price'), $finished->sum('display_fee_amount'), 2);
+        //未收金额
+        $notFinished = $orderForm->filter(function ($order) {
+            $order = $order->order;
+            return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->pay_status < cons('order.pay_status.payment_success'));
+        });
+        $notFinishedAmount = bcsub($notFinished->sum('after_rebates_price'), $notFinished->sum('display_fee_amount'),
+            2);
+        return compact('orderForm', 'orderReturn', 'finishedAmount', 'notFinishedAmount');
 
     }
 
-
-    public function getPaymentDetails($ordersId, $start_at, $end_at)
-    {
-        return SystemTradeInfo::select('trade_no', 'pay_type', 'type', 'amount', 'target_fee',
-            'finished_at')->where('success_at', '>=',
-            $start_at)->where('success_at', '<=', $end_at)->where('is_finished',
-            cons('trade.is_finished.yes'))->whereIn('order_id', $ordersId)->orderBy('finished_at')->get();
-    }
 }

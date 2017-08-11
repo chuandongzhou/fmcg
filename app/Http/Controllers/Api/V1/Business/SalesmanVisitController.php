@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1\Business;
 
 use App\Models\SalesmanCustomer;
-use App\Models\SalesmanCustomerDisplayList;
 use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
 use App\Models\SalesmanVisitOrder;
@@ -12,7 +11,7 @@ use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Controller;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SalesmanVisitController extends Controller
 {
@@ -129,8 +128,22 @@ class SalesmanVisitController extends Controller
                         foreach ($orderForms['goods'] as $orderGoods) {
                             $orderGoods['salesman_visit_id'] = $visit->id;
                             $orderGoods['type'] = $orderConf['goods']['type']['order'];
+
                             $orderGoodsArr[] = new SalesmanVisitOrderGoods($orderGoods);
                         }
+                        /*$promo = $orderForm->applyPromo->promo ?? false;
+                        if ($promo && in_array($promo->type,
+                                [cons('promo.type.money-goods'), cons('promo.type.goods-goods')])
+                        ) {
+                            $orderPromoGoods = [];
+                            foreach ($promo->rebate as $promoGoods) {
+                                $orderPromoGoods[$promoGoods->goods_id] = [
+                                    'quantity' => $promoGoods->quantity,
+                                    'piece' => $promoGoods->unit
+                                ];
+                            }
+                            $orderForm->promoGoods()->sync($orderPromoGoods);
+                        }*/
                         //订单商品
                         $orderForm->orderGoods()->saveMany($orderGoodsArr);
                         //礼物
@@ -142,7 +155,6 @@ class SalesmanVisitController extends Controller
                                     'pieces' => $gift['pieces'],
                                 ];
                             }
-
                             $orderForm->gifts()->sync($giftList);
                         }
 

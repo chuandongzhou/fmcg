@@ -49,14 +49,11 @@ class InventoryService extends BaseService
         $info['inventory_type'] = $data['inventory_type'];
         $info['action_type'] = $data['action_type'];
         $info['user_id'] = $data['user_id'] ?? auth()->id();
-        $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop->id;
+        $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop_id;
         DB::beginTransaction();
-        $order_id = array_get($data, 'order_number');
-        $goods_id = array_get($data, 'goods_id');
-        if ($order_id && $goods_id) { //同时存在为异常处理入库
-            $info['order_number'] = $order_id;
-            OrderGoods::where('goods_id', $goods_id)->where('order_id',
-                $order_id)->update(['inventory_state' => cons('inventory_state.disposed')]);
+        $orderGoods = array_get($data, 'orderGoods');
+        if ($orderGoods) { //存在为异常处理入库
+            OrderGoods::where('id', $orderGoods)->update(['inventory_state' => cons('inventory_state.disposed')]);
         }
         foreach ($data['goods'] as $key => $value) {
             foreach ($this->_formatData($key, $value) as $v) {
@@ -70,65 +67,87 @@ class InventoryService extends BaseService
     /**
      * 系统自动入库
      *
-     * @param $goodsInfo //订单商品
+     * @param $order //订单
      * @return bool|string
      */
-    public function autoIn($goodsInfo)
+    public function autoIn($order)
     {
+        if ($order->user_id < 1 || $order->user->type == cons('user.type.retailer')) {
+            return true;
+        }
         $inventory_number = $this->getInventoryNumber();
-        foreach ($goodsInfo as $orderGoods) {
-            if ($orderGoods->type == 1 || $orderGoods->order->user_id < 1) {
+        foreach ($order->orderGoods as $orderGoods) {
+            if ($this->orderGoodsIn($orderGoods, $inventory_number)) {
                 continue;
-            }
-            //买家的商店
-            $buyerShop = User::find($orderGoods->order->user_id)->shop;
-            //买家商品库的同款商品
-            $buyerGoods = $buyerShop->goods->where('bar_code', $orderGoods->goods->bar_code)->first();
-
-            //拿到该商品的出库记录
-            $outRecord = $this->inventory->where('goods_id', $orderGoods->goods_id)->where('order_number',
-                $orderGoods->order_id)->OfOut()->get();
-            //查无此商品或单位不匹配或者出库记录为空则标记为入库异常
-            $except = ['id', 'goods_id'];
-            if ($outRecord->isEmpty() || empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(),
-                    $except),
-                    array_except($orderGoods->goods->goodsPieces->toArray(), $except))
-            ) {
-                $orderGoods->inventory_state = cons('inventory.inventory_state.in-abnormal');
-                $orderGoods->save();
-                continue;
-            }
-
-            //如果是处理异常则标记为已处理
-            if ($orderGoods->inventory_state == cons('inventory.inventory_state.in-abnormal')) {
-                $orderGoods->inventory_state = cons('inventory.inventory_state.disposed');
-                $orderGoods->save();
-            }
-            $outRecord = $this->_checkRepeated($outRecord);
-
-            foreach ($outRecord as $record) {
-                $result = $this->inventory->create([
-                    'inventory_number' => $inventory_number,
-                    'user_id' => 0,
-                    'goods_id' => $buyerGoods->id,
-                    'shop_id' => $buyerShop->id,
-                    'inventory_type' => cons('inventory.inventory_type.system'),
-                    'action_type' => cons('inventory.action_type.in'),
-                    'order_number' => $record->order_number,
-                    'production_date' => $record->production_date,
-                    'pieces' => $record->pieces,
-                    'cost' => $record->cost,
-                    'quantity' => $record->quantity,
-                    'surplus' => $record->quantity,
-                    'remark' => '系统自动入库!',
-                ]);
-                if (!$result) {
-                    $orderGoods->update(['inventory_sate', cons('inventory.inventory_state.in-abnormal')]);
-                    throw new \Exception('未知的错误!');
-                }
             }
         }
         return true;
+    }
+
+    /**
+     *处理入库异常
+     *
+     * @param $orderGoods
+     */
+    public function inException(OrderGoods $orderGoods)
+    {
+        return $this->orderGoodsIn($orderGoods, $this->getInventoryNumber());
+    }
+
+    public function orderGoodsIn($orderGoods, $inventory_number)
+    {
+        //买家的商店
+        $buyerShop = User::find($orderGoods->order->user_id)->shop;
+        //买家商品库的同款商品
+        $buyerGoods = $buyerShop->goods->where('bar_code', $orderGoods->goods->bar_code)->first();
+        $source = $this->_getSource($orderGoods->type); //商品来源 (订单/抵费/促销/赠品)
+        $where = [
+            'source' => $source,
+            'goods_id' => $orderGoods->goods_id,
+            'order_number' => $orderGoods->order_id
+        ];
+        //拿到该商品的出库记录
+        $outRecord = $this->inventory->where($where)->OfOut()->get();
+        //查无此商品或单位不匹配或者出库记录为空则标记为入库异常
+        $except = ['id', 'goods_id'];
+        if ($outRecord->isEmpty() || empty($buyerGoods) || !$this->_checkPieces(array_except($buyerGoods->goodsPieces->toArray(),
+                $except),
+                array_except($orderGoods->goods->goodsPieces->toArray(), $except))
+        ) {
+            $orderGoods->inventory_state = cons('inventory.inventory_state.in-abnormal');
+            $orderGoods->save();
+            return false;
+        }
+
+        //如果是处理异常则标记为已处理
+        if ($orderGoods->inventory_state == cons('inventory.inventory_state.in-abnormal')) {
+            $orderGoods->inventory_state = cons('inventory.inventory_state.disposed');
+            $orderGoods->save();
+        }
+        $outRecord = $this->_checkRepeated($outRecord);
+
+        foreach ($outRecord as $record) {
+            $result = $this->inventory->create([
+                'inventory_number' => $inventory_number,
+                'user_id' => 0,
+                'source' => $record->source,
+                'goods_id' => $buyerGoods->id,
+                'shop_id' => $buyerShop->id,
+                'inventory_type' => cons('inventory.inventory_type.system'),
+                'action_type' => cons('inventory.action_type.in'),
+                'order_number' => $record->order_number,
+                'production_date' => $record->production_date,
+                'pieces' => $record->pieces,
+                'cost' => $record->cost,
+                'quantity' => $record->quantity,
+                'surplus' => $record->quantity,
+                'remark' => '系统自动入库!',
+            ]);
+            if (!$result) {
+                $orderGoods->update(['inventory_sate', cons('inventory.inventory_state.in-abnormal')]);
+                throw new \Exception('未知的错误!');
+            }
+        }
     }
 
     /**
@@ -154,6 +173,7 @@ class InventoryService extends BaseService
                 $quantity = $value['quantity'][0] * GoodsService::getPiecesSystem($goods, $value['pieces'][0]);
                 if ($goods->total_inventory < $quantity) {
                     $this->setError($goods->name . ' 库存不足');
+                    //info($goods);
                     return false;
                 }
                 foreach ($this->_formatData($goods_id, $value, false) as $v) {
@@ -178,26 +198,24 @@ class InventoryService extends BaseService
      * @param $goodsInfo
      * @return bool|string
      */
-    public function autoOut($goodsInfo, $order_id = '')
+    public function autoOut($order)
     {
-        $result = DB::transaction(function () use ($goodsInfo, $order_id) {
-            $inventory = '';
-            if ($order_id) {
-                $inventory = $this->inventory->where('order_number', $order_id)->OfOut()->first();
-            }
+        $result = DB::transaction(function () use ($order) {
+            $inventory = $this->inventory->where('order_number', $order->id)->OfOut()->first();
             $data = [
                 'inventory_number' => $inventory->inventory_number ?? $this->getInventoryNumber(),
                 'inventory_type' => cons('inventory.inventory_type.system'),  //系统
                 'action_type' => cons('inventory.action_type.out'),           //出库
                 'user_id' => 0,
             ];
-            foreach ($goodsInfo as $goods) {
-                if ($goods->type) {
-                    continue;
-                };
+            foreach ($order->orderGoods as $goods) {
+                $source = $this->_getSource($goods->type);
                 $outGoods = [
                     'goods' => [
                         $goods->goods_id => [
+                            'source' => [
+                                $source
+                            ],
                             'order_number' => [
                                 $goods->order_id
                             ],
@@ -304,6 +322,7 @@ class InventoryService extends BaseService
                     $detail['pieces'][$key]);  // 默认转为最小单位计数
             $formatted[$key]['surplus'] = $in ? $formatted[$key]['quantity'] : '0';
             $formatted[$key]['remark'] = $detail['remark'][$key];
+            $formatted[$key]['source'] = $detail['source'][$key] ?? 0;
         }
         return $formatted;
     }
@@ -316,17 +335,24 @@ class InventoryService extends BaseService
      * @param array $with
      * @return mixed
      */
-    static public function search($inventory, array $data, array $with = [], $OfNowMonth = false)
-    {
+    static public function search(
+        $inventory,
+        array $data,
+        array $with = [
+            'user',
+            'order',
+            'parent',
+            'goods.goodsPieces'
+        ]
+    ) {
         return $inventory->with($with)->where(function ($query) use ($data) {
-
             $start_at = array_get($data, 'start_at');
             $end_at = array_get($data, 'end_at');
-            
+
             $query->where('created_at', '>=', $start_at);
 
             $query->where('created_at', '<=', $end_at);
-           
+
             if (!empty($data['inventory_type']) && isset($data['inventory_type'])) {
                 $query->where('inventory_type', $data['inventory_type']);
             }
@@ -583,5 +609,27 @@ class InventoryService extends BaseService
                 });
             });
         })->export('xls');
+    }
+
+    public function _getSource($type)
+    {
+        switch ($type) {
+            case 0 :
+                $source = cons('inventory.source.order');  //订单商品
+                break;
+            case 1 :
+                $source = cons('inventory.source.mortgage'); // 促销商品
+                break;
+            case 2 :
+                $source = cons('inventory.source.gift');   //赠品商品
+                break;
+            case 3 :
+                $source = cons('inventory.source.promo');   //陈列商品
+                break;
+            default :
+                $source = 0;
+                break;
+        }
+        return $source;
     }
 }

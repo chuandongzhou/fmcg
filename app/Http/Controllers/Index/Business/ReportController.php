@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\CellWriter;
@@ -55,7 +56,6 @@ class ReportController extends Controller
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
         }
-
         $carbon = new Carbon();
         $data = $request->all();
         //开始时间
@@ -72,11 +72,11 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress'
         ])->get();
-
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
-            'end_date' => $dateEnd
-        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
+            'end_date' => $dateEnd,
+        ])->with(['order.orderGoods.goods', 'salesmanCustomer', 'order.coupon',])->get();
+
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -117,12 +117,10 @@ class ReportController extends Controller
         ])->with([
             'orders.orderGoods.goods',
             'orders.displayList.mortgageGoods',
+            'orders.applyPromo.promo.promoContent',
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
-
-
-
         return view('index.business.report-customer-detail',
             array_merge(compact('salesmanId', 'customerId', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }
@@ -136,39 +134,50 @@ class ReportController extends Controller
      */
     private function _getVisitData(Collection $visits, Collection $orders)
     {
-
+        $user = auth()->user();
         $orderTypes = cons('salesman.order.type');
+        $userType = cons('user.type');
         //订货单
         $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
-            return ($order->type == $orderTypes['order'] && $order->salesman_visit_id >  0 && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true));
+            return ($order->type == $orderTypes['order'] && $order->salesman_visit_id > 0);
         });
-
         //退货单
         $returnOrders = $orders->filter(function ($order) use ($orderTypes) {
             return $order->type == $orderTypes['return_order'];
         });
-
         //自主订货单
-        $ownOrders = $orders->filter(function ($order) use ($orderTypes) {
-
-            return $order->type == $orderTypes['order'] && $order->salesman_visit_id == 0;
+        $ownOrders = $orders->filter(function ($order) use ($orderTypes, $user, $userType) {
+            $customerIdentity = true;
+            if ($user->type == $userType['maker']) {
+                $customerIdentity = ($order->salesmanCustomer->type == $userType['supplier']);
+            }
+            return $customerIdentity && $order->type == $orderTypes['order'] && $order->salesman_visit_id == 0 && $order->order && $order->order->user_id != $user->id;
         });
-
 
         $customerIds = $visits->pluck('salesman_customer_id')->toBase()->unique();
 
+        $ownOrder = $ownOrders->filter(function ($order) {
+            return (isset($order->order) ? ($order->order->status < cons('order.status.invalid') && $order->order->pay_status < cons('order.pay_status.refund')) : true);
+        });
+
+        $visitOrderAmount = $visitOrders->filter(function ($order) {
+            return (isset($order->order) ? ($order->order->status < cons('order.status.invalid') && $order->order->pay_status < cons('order.pay_status.refund')) : true);
+        })->sum('amount');
         $visitStatistics = [
             'customerCount' => $customerIds->count(),
             'returnOrderCount' => $returnOrders->count(),
             'returnOrderAmount' => $returnOrders->sum('amount'),
             'visitOrderCount' => $visitOrders->count(),
-            'visitOrderAmount' => $visitOrders->sum('amount'),
+            'visitOrderAmount' => $visitOrderAmount,
             'ownOrderCount' => $ownOrders->count(),
-            'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
+            'ownOrderAmount' => $ownOrder->sum('amount'),
             'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
-            'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'), 2)
+            'totalAmount' => bcadd($visitOrderAmount, $ownOrder->sum('amount'), 2),
+            'ownOrderDisplayFeeAmount' => $ownOrder->sum('displayFeeAmount'),
+            'visitOrderDisplayFeeAmount' => $visitOrders->sum('displayFeeAmount'),
+            'ownOrderCouponAmount' => $ownOrder->sum('how_much_discount'),
+            'visitOrderCouponAmount' => $visitOrders->sum('how_much_discount'),
         ];
-
         $visitList = [];
         foreach ($customerIds as $customerId) {
             $visitList[] = $this->_getVisitList($visits, $customerId);
@@ -185,12 +194,13 @@ class ReportController extends Controller
      */
     private function _getDetailData(Collection $visits)
     {
-        $visits = $visits->filter(function ($visit){
-            return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
-        });
         //详情拜访列表
+
         $visitLists = $this->_getVisitListForDetail($visits);
 
+        $visits = $visits->filter(function ($visit) {
+            return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
+        });
         //销售统计
         $salesGoods = $this->_getSalesGoods($visits);
 
@@ -207,6 +217,12 @@ class ReportController extends Controller
         return compact('visitLists', 'salesGoods', 'displays', 'gifts', 'promos');
     }
 
+    /**
+     * 获取赠品
+     *
+     * @param $visits
+     * @return array
+     */
     public function _getGifts($visits)
     {
         $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
@@ -234,8 +250,9 @@ class ReportController extends Controller
      */
     public function _getPromos($visits)
     {
+
         $orderIds = $visits->pluck('orders')->collapse()->pluck('id');
-        $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->get();
+        $orders = SalesmanVisitOrder::with('applyPromo.promo.promoContent')->whereIn('id', $orderIds)->get();
         $data = [];
         foreach ($orders as $order) {
             if (!is_null($order->promo)) {
@@ -331,7 +348,7 @@ class ReportController extends Controller
         $config = cons('salesman.order.goods.type');
         //所有商品
         $salesGoods = $salesGoods->filter(function ($item) use ($goodsId) {
-            return $item->goods_id == $goodsId  && (isset($item->order) ? $item->order->status < cons('order.status.invalid') : true);
+            return $item->goods_id == $goodsId && (isset($item->order) ? $item->order->status < cons('order.status.invalid') : true);
         });
 
         //订货商品
@@ -394,9 +411,8 @@ class ReportController extends Controller
             $orderTypes = cons('salesman.order.type');
             //订货单
             $visitOrder = $orders->filter(function ($order) use ($orderTypes) {
-                return $order->type == $orderTypes['order'] && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true);
+                return $order->type == $orderTypes['order'];
             })->first();
-
             //退货单
             $returnOrder = $orders->filter(function ($order) use ($orderTypes) {
                 return $order->type == $orderTypes['return_order'];
@@ -404,8 +420,8 @@ class ReportController extends Controller
             $visitList = [
                 'time' => $visit->created_at,
                 'commitAddress' => $visit->address,
-                'orderAmount' => $visitOrder ? $visitOrder->amount : 0,
-                'returnAmount' => $returnOrder ? $returnOrder->amount : 0,
+                'orderAmount' => ($visitOrder ? $visitOrder->amount . ($visitOrder->order ? ($visitOrder->order->status < cons('order.status.invalid') ? '' : '(订单已作废)') : '') : 0),
+                'returnAmount' => ($returnOrder ? $returnOrder->amount : 0),
                 'hasDisplay' => ($visitOrder && count($visitOrder->displayList) != 0) ? '有' : '无',
             ];
             $photos ? $visitList['photos'] = $visit->photos_url : false;
@@ -503,11 +519,10 @@ class ReportController extends Controller
 
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
-            'end_date' => $dateEnd
-        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
+            'end_date' => $dateEnd,
+        ])->with(['order.orderGoods.goods', 'salesmanCustomer', 'order.coupon',])->get();
 
         extract($this->_getVisitData($visits, $visitOrders));
-
         $excelName = $startDate . '-' . $endDate . ' ' . $salesman->name . '业务报表';
 
         $isDay = $startDate == $endDate;
@@ -529,6 +544,8 @@ class ReportController extends Controller
         }
         Excel::create($excelName,
             function (LaravelExcelWriter $excel) use ($visitStatistics, $visitList, $ownOrders, $isDay) {
+
+
                 $excel->sheet('总计', function (LaravelExcelWorksheet $sheet) use ($visitStatistics) {
 
                     // Set auto size for sheet
@@ -545,29 +562,41 @@ class ReportController extends Controller
                         'G' => 20,
                         'H' => 20,
                         'I' => 20,
+                        'J' => 20,
                     ));
 
                     //标题
                     $titles = [
                         '拜访客户数',
                         '总订货单数',
-                        '总订货金额',
+                        '退货金额',
                         '拜访订货单数',
                         '拜访订货金额',
                         '自主订货单数',
                         '自主订货金额',
                         '退货总单数',
-                        '退货金额',
+                        '总订货金额',
+                        '总应付金额',
                     ];
+                    $visitStatistics['amountPayable'] = bcsub($visitStatistics['totalAmount'],
+                        ($visitStatistics['ownOrderDisplayFeeAmount'] + $visitStatistics['visitOrderDisplayFeeAmount'] + $visitStatistics['ownOrderCouponAmount'] + $visitStatistics['visitOrderCouponAmount']),
+                        2);
+                    unset(
+                        $visitStatistics['ownOrderDisplayFeeAmount'],
+                        $visitStatistics['visitOrderDisplayFeeAmount'],
+                        $visitStatistics['ownOrderCouponAmount'],
+                        $visitStatistics['visitOrderCouponAmount']
+                    );
                     $sheet->rows([$titles, $visitStatistics]);
 
                     //单元格居中
-                    $sheet->cells('A1:I2', function (CellWriter $cells) {
+                    $sheet->cells('A1:J2', function (CellWriter $cells) {
                         $cells->setAlignment('center');
                         $cells->setValignment('center');
                     });
 
                 });
+
 
                 $excel->sheet('拜访总计', function (LaravelExcelWorksheet $sheet) use ($visitList, $isDay) {
                     // Set auto size for sheet
@@ -739,7 +768,7 @@ class ReportController extends Controller
             'salesmanCustomer.shippingAddress'
         ])->get();
 
-        $visits = $visits->filter(function ($visit){
+        $visits = $visits->filter(function ($visit) {
             return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
         });
         $visitsLists = $this->_getVisitListForDetail($visits);

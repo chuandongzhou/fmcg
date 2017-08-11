@@ -198,6 +198,27 @@
                     </ul>
                 </li>
 
+                <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-shopping-basket"></i>
+                        <span class="title">配送管理</span>
+                        <span class="{!! request()->is('personal/delivery*','personal/delivery-man*')?'selected':''  !!}"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start {{ path_active(['personal/delivery-man','personal/delivery-man/*']) }}">
+                            <a href="{{ url('personal/delivery-man') }}" class="nav-link ">
+                                <span class="title">配送人员</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery','personal/delivery-statistical']) }}">
+                            <a href="{{ url('personal/delivery') }}" class="nav-link ">
+                                <span class="title">配送历史</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- 促销管理 --}}
                 <li class="nav-item  {!!  request()->is('promo','promo/*') ? 'active' : '' !!}">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -228,6 +249,36 @@
                         <li class="nav-item {{ path_active(['asset']) }} ">
                             <a href="{{ url('promo/apply-log') }}" class="nav-link ">
                                 <span class="title">促销申请记录</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item {!!  path_active(['personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*','personal/bill*']) !!} ">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-money "></i>
+                        <span class="title">财务管理</span>
+                        <span class="{!! request()->is('personal/coupon*','personal/finance/*','personal/bank*', 'personal/sign*','personal/bill*')?'selected':'' !!}"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start {{ path_active(['personal/coupon']) }}">
+                            <a href="{{ url('personal/coupon') }}" class="nav-link ">
+                                <span class="title">优惠券</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active(['personal/finance/balance','personal/finance/withdraw']) }}">
+                            <a href="{{ url('personal/finance/balance') }}" class="nav-link ">
+                                <span class="title">账户余额</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active(['personal/bank/*','personal/bank']) }}">
+                            <a href="{{ url('personal/bank') }}" class="nav-link ">
+                                <span class="title">提现账号</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  {{ path_active(['personal/sign*']) }}">
+                            <a href="{{ url('personal/sign/renew') }}" class="nav-link ">
+                                <span class="title">签约管理</span>
                             </a>
                         </li>
                     </ul>
@@ -330,7 +381,7 @@
                                         <span class="title">签约管理</span>
                                     </a>
                                 </li>
-                                @if($user->type < cons('user.type.supplier'))
+                                @if($user->type < cons('user.type.maker'))
                                     <li class="nav-item  {{ path_active(['personal/bill*']) }}">
                                         <a href="{{ url('personal/bill') }}" class="nav-link ">
                                             <span class="title">对账单</span>

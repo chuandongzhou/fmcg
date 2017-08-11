@@ -223,7 +223,7 @@ class OrderService extends BaseService
             if ($order->status == cons('order.status.send')) {
                 $inventoryService = new InventoryService();
                 if ($inventoryService->clearOut($orderGoods)) {
-                    if (!$inventoryService->autoOut([$orderGoods],$order->id)) {
+                    if (!$inventoryService->autoOut($order)) {
                         return false;
                     }
                 };
@@ -328,13 +328,13 @@ class OrderService extends BaseService
         $orderGoods = collect();
         //陈列费商品
         $mortgageGoods = collect();
-
         foreach ($order->goods as $item) {
             if ($item->pivot->type == cons('order.goods.type.mortgage_goods')) {
                 $mortgageGoods->push($item);
                 continue;
+            } else if ($item->pivot->type == cons('order.goods.type.order_goods')) {
+                $orderGoods->push($item);
             }
-            $orderGoods->push($item);
         }
         $order->addHidden(['goods']);
         return compact('orderGoods', 'mortgageGoods');

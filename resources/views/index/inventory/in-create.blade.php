@@ -53,8 +53,7 @@
                             </thead>
                             <input type="hidden" name="inventory_number"
                                    value="{{$inventory['inventory_number'] ?? ''}}">
-                                <input type="hidden" name="order_number" value="{{$orderId ?? ''}}">
-                                <input type="hidden" name="goods_id" value="{{$goodsId ?? ''}}">
+                            <input type="hidden" name="orderGoods" value="{{$orderGoods ?? ''}}">
                             <input type="hidden" name="inventory_type"
                                    value="{{cons('inventory.inventory_type.manual')}}">
                             <input type="hidden" name="action_type" value="{{cons('inventory.action_type.in')}}">
@@ -75,7 +74,7 @@
                                             <p>
                                                 <input class="datetimepicker" type="text"
                                                        name="goods[{{$goods->id}}][production_date][0]"
-                                                       placeholder="2016-12-25  12:35:55">
+                                                       placeholder="">
                                                 <button onclick="inventory.addCol(this)" class="add-col">+</button>
                                             </p>
                                         @else
@@ -83,19 +82,20 @@
                                                 <p>
                                                     <input onfocus="this.blur()" type="text"
                                                            name="goods[{{$goods->id}}][production_date][{{$key}}]"
-                                                           placeholder="2016-12-25  12:35:55"
+                                                           placeholder=""
                                                            value="{{$record->production_date}}">
                                                 </p>
                                                 <p style="color: #bcb8c0">
                                                     (数量: {{$record->transformation_quantity }}
-                                                    成本: {{$record->cost}} / {{cons()->valueLang('goods.pieces',$record->pieces)}})
+                                                    成本: {{$record->cost}}
+                                                    / {{cons()->valueLang('goods.pieces',$record->pieces)}})
 
                                                 </p>
                                             @endforeach
                                         @endif
                                         <p class="new-col hidden">
                                             <input class="production_date" type="text"
-                                                   placeholder="2016-12-25  12:35:55">
+                                                   placeholder="">
                                             <button onclick="inventory.delCol(this)" class="remove-col">-</button>
                                         </p>
 
@@ -249,7 +249,7 @@
                                 </td>
                                 <td>
                                     <p class="margin-clear new-col">
-                                    <textarea class="remark" rows="4" cols="20"></textarea>
+                                        <textarea class="remark" rows="4" cols="20"></textarea>
                                     </p>
                                 </td>
                             </tr>

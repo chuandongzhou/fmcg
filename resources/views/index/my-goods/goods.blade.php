@@ -21,6 +21,7 @@
                   action="{{ url('api/v1/my-goods/'.$goods->id) }}"
                   data-help-class="col-sm-push-1 col-sm-10" data-done-then="referer"
                   autocomplete="off">
+                <input type="hidden" name="orderGoods" value="{{$goods->orderGoodsId ?? false}}">
                 <div class="row goods-editor goods-editor-first">
                     <div class="col-sm-12">
                         <div class="row audit-step-outs">
@@ -210,83 +211,90 @@
                     <div class="col-sm-12 ">
 
                         <div class="row editor-panel content-wrap">
-                            <div class="col-sm-12 ">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title"><b>终端商购买价格</b></h3>
-                                    </div>
-                                    <div class="panel-container">
-                                        <div class="form-group editor-item">
-                                            <label class="control-label col-sm-2"><span class="red">*</span> 单位 :
-                                            </label>
+                            @if(auth()->user()->type != cons('user.type.maker'))
 
-                                            <div class="col-sm-2">
-                                                <select class="form-control" name="pieces_retailer">
-                                                    <option value="请选择">请选择</option>
-                                                    @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
-                                                        <option class="retailer_pieces_level_1"
-                                                                value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
-                                                    @endif
-                                                    @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_2))
-                                                        <option class="retailer_pieces_level_2"
-                                                                value="{{ $goods->goodsPieces->pieces_level_2 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_2==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_2) }}</option>
-                                                    @endif
-                                                    @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_3))
-                                                        <option class="retailer_pieces_level_3"
-                                                                value="{{ $goods->goodsPieces->pieces_level_3 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_3==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_3) }}</option>
-                                                    @endif
-
-                                                </select>
-                                            </div>
+                                <div class="col-sm-12 ">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title"><b>终端商购买价格</b></h3>
                                         </div>
-                                        <div class="form-group editor-item">
-                                            <label class="control-label col-sm-2"><span class="red">*</span> 价格
-                                                :</label>
+                                        <div class="panel-container">
+                                            <div class="form-group editor-item">
+                                                <label class="control-label col-sm-2"><span class="red">*</span> 单位 :
+                                                </label>
 
-                                            <div class="col-sm-3">
-                                                <input name="price_retailer" value="{{ $goods->price_retailer }}"
-                                                       type="text"
-                                                       class="form-control" placeholder="请输入价格"/>
-                                            </div>
-                                            <div class="col-sm-1 pieces padding-clear">元/
-                                                <span class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
-                                            </div>
-                                            <label class="control-label col-sm-2"><span class="red">*</span> 自提价
-                                                :</label>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control" name="pieces_retailer">
+                                                        <option value="请选择">请选择</option>
+                                                        @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_1))
+                                                            <option class="retailer_pieces_level_1"
+                                                                    value="{{ $goods->goodsPieces->pieces_level_1 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_1==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_1) }}</option>
+                                                        @endif
+                                                        @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_2))
+                                                            <option class="retailer_pieces_level_2"
+                                                                    value="{{ $goods->goodsPieces->pieces_level_2 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_2==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_2) }}</option>
+                                                        @endif
+                                                        @if($goods->goodsPieces && is_numeric($goods->goodsPieces->pieces_level_3))
+                                                            <option class="retailer_pieces_level_3"
+                                                                    value="{{ $goods->goodsPieces->pieces_level_3 }}" {{ $goods->goodsPieces && $goods->goodsPieces->pieces_level_3==$goods->pieces_retailer ? 'selected' : '' }}>{{ cons()->valueLang('goods.pieces',$goods->goodsPieces->pieces_level_3) }}</option>
+                                                        @endif
 
-                                            <div class="col-sm-3">
-                                                <input type="text" name="price_retailer_pick_up"
-                                                       value="{{ $goods->price_retailer_pick_up }}" class="form-control"
-                                                       placeholder="请输自提价"/>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-1 pieces padding-clear">元/<span
-                                                        class="pieces_retailer">{{is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group editor-item">
-                                            <label class="control-label col-sm-2"><span class="red">*</span> 最低购买数
-                                                :</label>
+                                            <div class="form-group editor-item">
+                                                <label class="control-label col-sm-2"><span class="red">*</span> 价格
+                                                    :</label>
 
-                                            <div class="col-sm-3">
-                                                <input type="text" value="{{ $goods->min_num_retailer }}"
-                                                       name="min_num_retailer" class="form-control" placeholder="如 3 "/>
-                                            </div>
-                                            <div class="col-sm-1 pieces padding-clear"><span
-                                                        class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
-                                            </div>
-                                            <label class="control-label col-sm-2">规格 :</label>
+                                                <div class="col-sm-3">
+                                                    <input name="price_retailer" value="{{ $goods->price_retailer }}"
+                                                           type="text"
+                                                           class="form-control" placeholder="请输入价格"/>
+                                                </div>
+                                                <div class="col-sm-1 pieces padding-clear">元/
+                                                    <span class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                </div>
+                                                <label class="control-label col-sm-2"><span class="red">*</span> 自提价
+                                                    :</label>
 
-                                            <div class="col-sm-3 spec spec_retailer">{{ $goods->specification_retailer ?? '' }}</div>
-                                            <input type="hidden" name="specification_retailer" value="{{ $goods->specification_retailer }}"/>
+                                                <div class="col-sm-3">
+                                                    <input type="text" name="price_retailer_pick_up"
+                                                           value="{{ $goods->price_retailer_pick_up }}"
+                                                           class="form-control"
+                                                           placeholder="请输自提价"/>
+                                                </div>
+                                                <div class="col-sm-1 pieces padding-clear">元/<span
+                                                            class="pieces_retailer">{{is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group editor-item">
+                                                <label class="control-label col-sm-2"><span class="red">*</span> 最低购买数
+                                                    :</label>
+
+                                                <div class="col-sm-3">
+                                                    <input type="text" value="{{ $goods->min_num_retailer }}"
+                                                           name="min_num_retailer" class="form-control"
+                                                           placeholder="如 3 "/>
+                                                </div>
+                                                <div class="col-sm-1 pieces padding-clear"><span
+                                                            class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                </div>
+                                                <label class="control-label col-sm-2">规格 :</label>
+
+                                                <div class="col-sm-3 spec spec_retailer">{{ $goods->specification_retailer ?? '' }}</div>
+                                                <input type="hidden" name="specification_retailer"
+                                                       value="{{ $goods->specification_retailer }}"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                             @if(auth()->user()->type == cons('user.type.supplier') or auth()->user()->type == cons('user.type.maker'))
                                 <div class="col-sm-12 ">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><b>批发商购买价格</b></h3>
+                                            <h3 class="panel-title">
+                                                <b>{{auth()->user()->type == cons('user.type.maker')?'供应商':'批发商'}}购买价格</b></h3>
                                         </div>
                                         <div class="panel-container">
                                             <div class="form-group editor-item">
@@ -542,10 +550,10 @@
             getCategory(site.api('categories'));
             //页面加载时获取所有分类
             getAllCategory(
-                site.api('categories'),
-                '{{ $goods->cate_level_1 }}',
-                '{{ $goods->cate_level_2 }}',
-                '{{ $goods->cate_level_3 }}'
+                    site.api('categories'),
+                    '{{ $goods->cate_level_1 }}',
+                    '{{ $goods->cate_level_2 }}',
+                    '{{ $goods->cate_level_3 }}'
             );
             {{--addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');--}}
             loadGoodsImages('{{ $goods->bar_code }}');

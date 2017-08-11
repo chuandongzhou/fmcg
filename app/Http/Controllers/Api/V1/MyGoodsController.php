@@ -59,11 +59,9 @@ class MyGoodsController extends Controller
         $result = DB::transaction(function () use ($user, $request) {
 
             $attributes = $request->except('images', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
-                'system_2', 'specification', 'abnormalOrderId', 'abnormalGoodsId');
-
+                'system_2', 'specification');
             $attributes['user_type'] = auth()->user()->type;
 
-            $goods = $user->shop->goods()->create($attributes);
             $piecesAttributes = $request->only('pieces_level_1', 'pieces_level_2', 'pieces_level_3', 'system_1',
                 'system_2', 'specification');
 
@@ -71,6 +69,8 @@ class MyGoodsController extends Controller
                 ['pieces_level_3', 'system_2']) : $piecesAttributes;
             $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
                 ['pieces_level_2', 'system_1']) : $piecesAttributes;
+            $attributes['warning_piece'] = isset($piecesAttributes['pieces_level_2']) ? $piecesAttributes['pieces_level_2'] : $piecesAttributes['pieces_level_1'];
+            $goods = $user->shop->goods()->create($attributes);
             if ($goods->exists) {
                 $goods->goodsPieces()->create($piecesAttributes);
 
@@ -87,17 +87,12 @@ class MyGoodsController extends Controller
                 $this->updateAttrs($goods, array_get($attributes, 'attrs', []));
                 //保存没有图片的条形码
                 $this->saveWithoutImageOfBarCode($goods);
-
-                $abnormalOrderId = $request->input('abnormalOrderId');
-                $abnormalGoodsId = $request->input('abnormalGoodsId');
-                if (!empty($abnormalOrderId) && !empty($abnormalGoodsId)) {
+                $orderGoodsId = $request->input('orderGoods');
+                if ($orderGoodsId) {
                     //获取异常记录
-                    $abnormal = OrderGoods::where('goods_id', $abnormalGoodsId)
-                        ->where('order_id', $abnormalOrderId)
-                        ->where('inventory_state', cons('inventory.inventory_state.in-abnormal'))
-                        ->get();
-                    //
-                    (new InventoryService())->autoIn($abnormal);
+                    $orderGoods = OrderGoods::find($orderGoodsId);
+                    //处理入库异常
+                    (new InventoryService())->inException($orderGoods);
                 }
                 return true;
             }
@@ -200,6 +195,7 @@ class MyGoodsController extends Controller
 
     /**
      * 库存预警值设置
+     *
      * @param \Illuminate\Http\Request $request
      * @param $goods
      * @return \WeiHeng\Responses\Apiv1Response

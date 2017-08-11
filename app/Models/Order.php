@@ -209,7 +209,9 @@ class Order extends Model
      */
     public function gifts()
     {
-        return $this->belongsToMany(Goods::class, 'order_gift')->withTrashed()->withPivot('num', 'pieces');
+        return $this->belongsToMany(Goods::class, 'order_goods', 'order_id', 'goods_id')
+            ->withPivot('id', 'price', 'num', 'total_price', 'pieces', 'type')
+            ->where('type', cons('order.goods.type.gift_goods'));
     }
 
     /**
@@ -289,12 +291,13 @@ class Order extends Model
 
     /**
      * 获取参加的促销活动
+     *
      * @return mixed
      */
     public function getPromoAttribute()
     {
-        if($this->applyPromo){
-            return $this->applyPromo->promo->load(['condition','rebate']);
+        if ($this->applyPromo) {
+            return $this->applyPromo->promo->load(['condition', 'rebate']);
         }
     }
 
@@ -1088,10 +1091,10 @@ class Order extends Model
     {
         return $query->where(function ($query) use ($startTime, $endTime) {
             if ($startTime) {
-                $query->where('created_at', '>', $startTime);
+                $query->where('created_at', '>=', $startTime);
             }
             if ($endTime) {
-                $query->where('created_at', '<', $endTime);
+                $query->where('created_at', '<=', $endTime);
             }
         });
     }

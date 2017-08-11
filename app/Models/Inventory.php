@@ -10,20 +10,21 @@ class Inventory extends Model
 {
     protected $table = 'inventory';
     protected $fillable = [
-        'inventory_number',
-        'user_id',
-        'goods_id',
-        'shop_id',
-        'order_number',
-        'inventory_type',
-        'action_type',
-        'production_date',
-        'pieces',
-        'cost',
-        'quantity',
-        'surplus',
-        'remark',
-        'in_id'
+        'inventory_number',  //库存编号
+        'user_id',           //操作人
+        'source',            //库存来源(订单,赠品,促销,陈列...)
+        'goods_id',          //商品
+        'shop_id',           //所属店铺
+        'order_number',      //订单
+        'inventory_type',    //库存类型(系统\手动)
+        'action_type',       //动作 (出库\入库)
+        'production_date',   //商品生产日期
+        'pieces',            //规格单位
+        'cost',              //入库成本/出库价格
+        'quantity',          //记录本次操作数量
+        'surplus',           //剩余库存
+        'remark',            //备注
+        'in_id'              //入库ID(具体是用那条记录出的库便于计算成本)
     ];
 
     protected $appends = [];
@@ -39,6 +40,16 @@ class Inventory extends Model
     public function goods()
     {
         return $this->belongsTo('App\Models\Goods');
+    }
+
+    /**
+     * 起源
+     *
+     * @return mixed
+     */
+    public function parent()
+    {
+        return $this->hasOne(Inventory::class, 'id', 'in_id')->where('action_type', cons('inventory.action_type.in'));
     }
 
     /**
@@ -71,7 +82,7 @@ class Inventory extends Model
      */
     public function scopeVerifyShop($query)
     {
-        return $query->where('shop_id', auth()->user()->shop->id);
+        return $query->where('shop_id', auth()->user()->shop_id);
     }
 
     /**
@@ -130,7 +141,6 @@ class Inventory extends Model
     public function getTransformationQuantityAttribute()
     {
         return InventoryService::calculateQuantity($this->goods, $this->quantity);
-
     }
 
     /**
@@ -140,11 +150,7 @@ class Inventory extends Model
      */
     public function getInCostAttribute()
     {
-        $where = [
-            'id' => $this->in_id,
-        ];
-        $inv = $this->where($where)->OfIn()->first(['cost']);
-        return $inv->cost ?? 0;
+        return $this->parent->cost ?? 0;
     }
 
 
@@ -155,14 +161,12 @@ class Inventory extends Model
      */
     private function getInActualCost()
     {
-        $inv = $this->where('id', $this->in_id)->OfIn()->first(['cost', 'pieces', 'goods_id']);
+        $inv = $this->parent;
         //进制
         if ($inv) {
             $system = GoodsService::getPiecesSystem($inv->goods, $inv->pieces);
             return ($inv->cost / $system) ?? 0;
         }
-
-
     }
 
 
@@ -173,11 +177,7 @@ class Inventory extends Model
      */
     public function getInPiecesAttribute()
     {
-        $where = [
-            'id' => $this->in_id,
-        ];
-        $cost = $this->where($where)->OfIn()->first(['pieces']);
-        return $cost->pieces ?? 0;
+        return $this->parent->pieces ?? 0;
     }
 
     /*
@@ -204,8 +204,7 @@ class Inventory extends Model
     public function getProfitAttribute()
     {
         $system = GoodsService::getPiecesSystem($this->goods, $this->pieces);
-        return sprintf("%.2f",
-            substr(sprintf("%.4f", $this->quantity * (($this->cost / $system) - $this->getInActualCost())), 0, -2));
+        return sprintf("%.2f", $this->quantity * (($this->cost / $system) - $this->getInActualCost()));
     }
 
     /**
@@ -215,7 +214,7 @@ class Inventory extends Model
      */
     public function getBuyerNameAttribute()
     {
-        if ($this->order_number > 0) {
+        if ($this->order_number) {
             return $this->order->user_shop_name;
         }
     }
@@ -227,7 +226,7 @@ class Inventory extends Model
      */
     public function getSellerNameAttribute()
     {
-        if ($this->order_number > 0) {
+        if ($this->order_number) {
             return $this->order->shop_name;
         }
     }
@@ -239,12 +238,11 @@ class Inventory extends Model
      */
     public function getDeliveryNameAttribute()
     {
-        if ($this->order_number > 0) {
-            $deliveryMans = $this->order->deliveryMan;
+        if ($this->order_number) {
             $name = [];
-            foreach ($deliveryMans as $deliveryMan) {
+            $this->order->deliveryMan->each(function ($deliveryMan) use (&$name) {
                 $name[] = $deliveryMan->name;
-            }
+            });
             return implode(',', $name);
         }
     }

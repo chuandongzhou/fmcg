@@ -374,7 +374,6 @@ class SalesmanVisitOrderController extends Controller
 
             if ($orderForm->exists) {
                 $orderForm->orderGoods()->saveMany($format['orderGoodsArr']);
-
                 //礼物
                 if ($gifts = array_get($attributes, 'gifts')) {
                     $giftList = [];
@@ -646,7 +645,34 @@ class SalesmanVisitOrderController extends Controller
                             'total_price' => 0,
                         ]);
                     }
-
+                    //促销活动添加使用时间
+                    if ($salesmanVisitOrder->apply_promo_id) {
+                        $this->_usePromo($salesmanVisitOrder);
+                    }
+                    /*foreach ($salesmanVisitOrder->promoGoods as $goods) {
+                        // 添加促销商品
+                        $orderGoods[] = new OrderGoods([
+                            'type' => cons('order.goods.type.promo_goods'),
+                            'goods_id' => $goods->id,
+                            'price' => 0,
+                            'num' => $goods->pivot->quantity,
+                            'pieces' => $goods->pivot->piece,
+                            'total_price' => 0,
+                        ]);
+                    }*/
+                    //礼物
+                    if ($gifts = $salesmanVisitOrder->gifts) {
+                        foreach ($gifts as $gift) {
+                            $orderGoods[] = new OrderGoods([
+                                'type' => cons('order.goods.type.gift_goods'),
+                                'goods_id' => $gift->id,
+                                'price' => 0,
+                                'num' => $gift->pivot->num,
+                                'pieces' => $gift->pivot->pieces,
+                                'total_price' => 0,
+                            ]);
+                        }
+                    }
 
                     if (!empty($orderGoods)) {
                         //保存抵费商品
@@ -654,24 +680,7 @@ class SalesmanVisitOrderController extends Controller
                             return ['error' => '同步时出现错误，请重试'];
                         }
                     }
-                    //促销活动添加使用时间
-                    if ($salesmanVisitOrder->apply_promo_id) {
-                        $this->_usePromo($salesmanVisitOrder);
-                    }
-
-                    //礼物
-                    if ($gifts = $salesmanVisitOrder->gifts) {
-                        $giftList = [];
-                        foreach ($gifts as $gift) {
-                            $giftList[$gift->id] = [
-                                'num' => $gift->pivot->num,
-                                'pieces' => $gift->pivot->pieces
-                            ];
-                        }
-
-                        $orderTemp->gifts()->sync($giftList);
-                    }
-
+                    
                 } else {
                     return ['error' => '同步时出现错误，请重试'];
                 }

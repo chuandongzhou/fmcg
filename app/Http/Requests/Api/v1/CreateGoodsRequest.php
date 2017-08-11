@@ -5,6 +5,12 @@ namespace App\Http\Requests\Api\v1;
 
 class CreateGoodsRequest extends UserRequest
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -12,11 +18,13 @@ class CreateGoodsRequest extends UserRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required',
+        $retailer = [
             'price_retailer' => 'required|numeric|min:0',
             'price_retailer_pick_up' => 'numeric|min:0',
             'min_num_retailer' => 'required|numeric|min:0',
+        ];
+        $rules = [
+            'name' => 'required',
             'price_wholesaler' => 'sometimes|required|numeric|min:0',
             'price_wholesaler_pick_up' => 'numeric|min:0',
             'min_num_wholesaler' => 'sometimes|required|numeric|min:0',
@@ -35,6 +43,10 @@ class CreateGoodsRequest extends UserRequest
             'pieces_level_1' => 'required',
             'specification' => 'required'
         ];
+        if ($this->user()->type != cons('user.type.maker')) {
+            return array_merge($rules, $retailer);
+        }
+        return $rules;
     }
 
     /**
@@ -46,11 +58,14 @@ class CreateGoodsRequest extends UserRequest
     public function validator($factory)
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
-            if (!is_numeric($this->input('pieces_retailer'))) {
-                $validator->errors()->add('pieces_retailer', '终端商单位 不能为空');
+            if ($this->user()->type != cons('user.type.maker')) {
+                if (!is_numeric($this->input('pieces_retailer'))) {
+                    $validator->errors()->add('pieces_retailer', '终端商单位 不能为空');
+                }
             }
             if (!empty($this->input('price_wholesaler')) && !is_numeric($this->input('pieces_wholesaler'))) {
-                $validator->errors()->add('pieces_wholesaler', '批发商单位 不能为空');
+                $validator->errors()->add('pieces_wholesaler',
+                    ($this->user()->type == cons('user.type.maker') ? '供应商' : '批发商') . '单位 不能为空');
             }
             if ($this->input('pieces_level_2') != '' && $this->input('system_1') == '') {
 

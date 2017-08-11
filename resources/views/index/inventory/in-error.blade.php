@@ -37,6 +37,7 @@
                                 <tr>
                                     <td>
                                         <div class="product-name" title="{{$list->goods->name ?? ''}}">
+                                            {{$list->type > 0 ? '('.cons()->valueLang('inventory.source',$list->type).')' : ''}}
                                             {{$list->goods->name ?? ''}}
                                         </div>
                                     </td>
@@ -46,14 +47,15 @@
                                     <td>
                                         @if($shopGoods->where('bar_code',$list->goods->bar_code)->first())
                                             <a class="gray">已增商品</a>
-                                            <a href="{{url('inventory/in-create/'.$list->goods_id.'?order_id='.$list->order_id)}}" class="green">我要入库</a>
+                                            <a href="{{url('inventory/in-create?orderGoods='.$list->id)}}"
+                                               class="green">我要入库</a>
                                         @else
-                                            <a href="{{url('my-goods/create/')}}?goods_id={{$list->goods->id ?? ''}}&order_id={{$list->order_id}}"
+                                            <a href="{{url('my-goods/create/')}}?orderGoods={{$list->id ?? ''}}"
                                                class="edit">新增商品</a>
                                         @endif
 
-                                        <a class="color-blue viewDetail" data-goods_id="{{$list->goods->id ?? ''}}"
-                                           data-order_number="{{$list->order_id}}" data-target="#myModal"
+                                        <a class="color-blue viewDetail" data-order_goods="{{$list->id}}"
+                                           data-target="#myModal"
                                            data-toggle="modal">查看</a>
                                     </td>
                                 </tr>

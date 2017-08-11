@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index;
 
 use App\Models\Goods;
+use App\Models\Inventory;
 use App\Models\OrderGoods;
 use App\Services\CategoryService;
 use App\Services\GoodsService;
@@ -35,7 +36,7 @@ class InventoryController extends Controller
     {
         $data = $request->only('nameOrCode', 'category_id', 'status', 'warning');
 
-        $result = GoodsService::getShopGoods($this->shop, $data);
+        $result = GoodsService::getShopGoods($this->shop, $data, ['inventory', 'goodsPieces']);
         $ids = [];
         $countNeedWarning = 0;
         $result['goods']->get()->each(function ($item) use (&$countNeedWarning, &$ids) {
@@ -88,7 +89,7 @@ class InventoryController extends Controller
         $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
         $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
         $inventory = $this->shop->inventory()->OfIn()->orderBy('created_at', 'desc');
-        $result = $this->inventoryService->search($inventory, $data, ['user'], true);
+        $result = $this->inventoryService->search($inventory, $data);
         $inError = $this->inventoryService->getInError();
         return view('index.inventory.in', [
             'lists' => $result->paginate(),
@@ -110,15 +111,19 @@ class InventoryController extends Controller
             'type' => cons('inventory.inventory_type.manual'),
         ];
         $outRecord = null;
-        $order_id = $request->input('order_id');
+        $orderGoodsId = $request->input('orderGoods');
         //订单ID存在为处理异常
-        if ($order_id) {
+        if ($orderGoodsId) {
             //拿到卖家商品信息
-            $sellerGoods = Goods::find($goods_id);
+            $orderGoods = OrderGoods::with('goods')->find($orderGoodsId);
             //查询商品库得到对应商品
-            $goods = $shopGoodsModel->where('bar_code', $sellerGoods->bar_code)->first();
+            $goods = $shopGoodsModel->where('bar_code', $orderGoods->goods->bar_code)->first();
             //拿到出库记录
-            $outRecord = $sellerGoods->inventory()->OfOut()->where('order_number', $order_id)->get();
+            $outRecord = Inventory::OfOut()->where([
+                'source' => $this->inventoryService->_getSource($orderGoods->type),
+                'order_number' => $orderGoods->order_id,
+                'goods_id' => $orderGoods->goods_id
+            ])->get();
             $outRecord = $outRecord->isEmpty() ? null : $this->inventoryService->_checkRepeated($outRecord);
         } else {
             $goods = $shopGoodsModel->find($goods_id);
@@ -127,8 +132,7 @@ class InventoryController extends Controller
             'inventory' => $data,
             'goods' => $goods,
             'outRecord' => $outRecord,
-            'orderId' => $order_id,
-            'goodsId' => $goods_id
+            'orderGoods' => $orderGoodsId
         ]);
     }
 
@@ -143,14 +147,12 @@ class InventoryController extends Controller
         $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
         $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
         $inventory = $this->shop->inventory()->OfOut()->orderBy('created_at', 'desc');
-        $result = $this->inventoryService->search($inventory, $data, ['user']);
-        $errorCount = $this->inventoryService->getOutError();
-        $countProfit = $result->get()->sum('profit');
+        $result = $this->inventoryService->search($inventory, $data);
         return view('index.inventory.out', [
             'lists' => $result->paginate(),
-            'countProfit' => $countProfit,
+            'countProfit' => $result->get()->sum('profit'),
             'data' => $data,
-            'errorCount' => $errorCount->count()
+            'errorCount' => $this->inventoryService->getOutError()->count()
         ]);
     }
 
@@ -181,10 +183,20 @@ class InventoryController extends Controller
     public function getDetailList(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'goods', 'inventory_type', 'action_type');
+
         $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
+
         $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
+
         $inventory = $this->shop->inventory()->orderBy('created_at', 'desc');
-        $lists = $this->inventoryService->search($inventory, $data, ['user'], true);
+
+        $lists = $this->inventoryService->search($inventory, $data, ['user'], true)->with([
+            'user',
+            'order',
+            'parent',
+            'goods.goodsPieces'
+        ]);
+
         return view('index.inventory.detail-list', [
             'lists' => $lists->paginate(),
             'data' => $data

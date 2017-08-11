@@ -42,7 +42,7 @@ return [
         ]
     ],
 
-    //出入库类型
+    //库存
     'inventory' => [
         'inventory_type' => [
             'system' => 1,  // 系统
@@ -57,6 +57,15 @@ return [
             'in-abnormal' => 1, //入库异常
             'out-abnormal' => 2, //入库异常
             'disposed' => 3, //已处理
+        ],
+        //来源
+        'source' => [
+            'order' => 0,  //订单
+            'mortgage' => 1,//陈列
+            'gift' => 2,   //赠品
+            'promo' => 3,  //促销
+
+
         ]
     ],
     //资产状态
@@ -87,14 +96,16 @@ return [
     'order' => [
         'goods' => [
             'type' => [
-                'order_goods' => 0,
-                'mortgage_goods' => 1
+                'order_goods' => 0,     //订单商品
+                'mortgage_goods' => 1,  //抵费商品
+                'gift_goods' => 2,      //赠品
+                'promo_goods' => 3,     //促销商品(暂未使用)
             ]
         ],
         'pay_status' => [//支付状态
             'non_payment' => 0,        //未支付
             'payment_success' => 1,     //已支付
-            'payment_failed' => 2,
+            'payment_failed' => 2,      //支付失败
             'refund' => 3,              //退款中
             'refund_success' => 4,      //已退款
         ],
@@ -592,7 +603,7 @@ return [
                 'passed' => 1
             ],
             'type' => [
-                'order' => 0, 
+                'order' => 0,
                 'return_order' => 1
             ],
             'goods' => [

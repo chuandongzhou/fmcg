@@ -57,14 +57,10 @@
 
             modal.click(function () {
                 var obj = $(this),
-                        goods_id = obj.data('goods_id'),
-                        order_number = obj.data('order_number');
+                        orderGoods = obj.data('order_goods');
                 error_modal.find('tbody.out-detail').html('');
-                $.post(site.api('inventory/goods-in-error'), {
-                    'goods_id': goods_id,
-                    'order_number': order_number
-                }, function (data) {
-                    error_modal.find('span.order_number').html(order_number);
+                $.post(site.api('inventory/goods-in-error'), {'orderGoods': orderGoods}, function (data) {
+                    error_modal.find('span.order_number').html(obj.parents('tr').find('td:eq(2)').html());
                     error_modal.find('span.date').html(obj.parents('tr').find('td:eq(3)').html());
                     error_modal.find('div.product-name').html(obj.parents('tr').find('td:eq(0)').html());
                     error_modal.find('div.bar_code').html(obj.parents('tr').find('td:eq(1)').html());
