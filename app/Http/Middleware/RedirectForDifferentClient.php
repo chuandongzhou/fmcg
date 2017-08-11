@@ -11,6 +11,7 @@ class RedirectForDifferentClient
         'api/v1/version',
         'upload/file/*'
     ];
+
     /**
      * Handle an incoming request.
      *
@@ -25,9 +26,9 @@ class RedirectForDifferentClient
 
         $inWindows = in_windows();
         if (!$isApp) {
-            $mobileUrl = 'http://m.dingbaida.com';
+            $mobileUrl = 'http://m.fmcg.com';
             if ($inWindows && false !== strpos($request->root(), $mobileUrl)) {
-                    return redirect('http://dingbaida.com');
+                return redirect('http://fmcg.com');
             } else if (!$inWindows && false === strpos($request->root(), $mobileUrl)) {
                 return redirect($mobileUrl);
             }

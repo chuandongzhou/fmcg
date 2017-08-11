@@ -31,7 +31,7 @@ class MyGoodsController extends Controller
         $data = $request->all();
         $shop = auth()->user()->shop;
         $result = GoodsService::getShopGoods($shop, $data);
-        $goods = $result['goods']->orderBy('id', 'DESC')->paginate();
+        $goods = $result['goods']->with('goodsLike')->orderBy('id', 'DESC')->paginate();
         $goods->each(function ($goods) {
             $goods->setAppends(['like_amount', 'image_url'])->setHidden(['goods_like']);
         });

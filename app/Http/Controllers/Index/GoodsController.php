@@ -11,7 +11,6 @@ use App\Services\AttrService;
 use App\Services\GoodsService;
 use Gate;
 use App\Models\Goods;
-use App\Services\CouponService;
 
 class GoodsController extends Controller
 {
@@ -31,9 +30,8 @@ class GoodsController extends Controller
         $attrs = (new AttrService())->getAttrByGoods($goods);
         $goods->load('deliveryArea');
         $isGoodsLike = $user->likeGoods()->where('id', $goods->id)->pluck('id');
-        $shopId = $goods->shop->id;
+        $shopId = $goods->shop_id;
         $isLike  =$user->likeShops()->where('shop_id', $shopId)->pluck('id');
-        $couponNum = CouponService::shopCouponNum($shopId);
         $hotGoods = Goods::where('shop_id', $shopId)->active()->ofCommonSort()->orderBy('id',
             'DESC')->take(5)->get();
         return view('index.goods.detail', [
@@ -41,7 +39,6 @@ class GoodsController extends Controller
             'attrs' => $attrs,
             'isLike' => $isLike,
             'categoriesName' => GoodsService::getGoodsCate($goods),
-            'couponNum' => $couponNum,
             'hotGoods' => $hotGoods,
             'shop' => $goods->shop,
             'isGoodsLike' => $isGoodsLike,

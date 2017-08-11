@@ -300,6 +300,17 @@ class SalesmanVisitOrder extends Model
     }
 
     /**
+     * 有效订单
+     *
+     * @param $query
+     */
+    public function scopeUseFull($query)
+    {
+        return $query->whereHas('order', function ($query) {
+            $query->useful()->noInvalid();
+        });
+    }
+    /**
      * 获取客户名
      *
      * @return string
@@ -437,7 +448,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getAfterRebatesPriceAttribute()
     {
-        return (!$this->salesman_visit_id) && $this->order ? $this->order->after_rebates_price : $this->amount;
+        return $this->order_id && $this->order ? $this->order->after_rebates_price : $this->amount;
     }
 
     /**

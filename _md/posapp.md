@@ -251,6 +251,8 @@
 		name        	string           		 配送人员姓名
 		num         	int             		 配送单数
 		price       	decimal         		 配送总金额
+		discount        decimal                  总优惠金额
+		display_fee     decimal                  总陈列现金
 		detail      	array            		 配送金额组成
 		
 		detail字段说明

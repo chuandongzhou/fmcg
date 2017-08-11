@@ -470,14 +470,25 @@ class Shop extends Model
      */
     public function scopeOfUser($query, $myType, $shopType = 0)
     {
-        return $query->whereHas('user', function ($q) use ($myType, $shopType) {
-            $nowTime = Carbon::now();
-            $q->active()->where('type', '>', $myType)->where('type', '<', cons('user.type.maker'))/*->where('deposit', '>', 0)->where('expire_at', '>',
-                $nowTime)*/
-            ->where('audit_status', cons('user.audit_status.pass'));
-            if ($shopType) {
-                $q->where('type', $shopType);
+
+        return $query->whereHas('user', function ($query) use ($myType, $shopType) {
+
+            $query->active()->where('audit_status', cons('user.audit_status.pass'));
+
+            /*$nowTime = Carbon::now();*/
+            /*->where('deposit', '>', 0)->where('expire_at', '>',$nowTime)*/
+
+
+            if ($myType == ($supplierType = cons('user.type.supplier'))) {
+                $query->where('type', cons('user.type.maker'));
+            } else {
+                if ($shopType && $shopType > $myType && $shopType <= $supplierType) {
+                    $query->where('type', $shopType);
+                } else {
+                    $query->whereBetween('type', [$myType + 1, $supplierType]);
+                }
             }
+
         });
     }
 

@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
-use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\CellWriter;
@@ -58,10 +57,12 @@ class ReportController extends Controller
         }
         $carbon = new Carbon();
         $data = $request->all();
+
+        $date = $carbon->copy()->toDateString();
         //开始时间
-        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        $startDate = array_get($data, 'start_date', $date);
         //结束时间
-        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
+        $endDate = array_get($data, 'end_date', $date);
 
         $dateEnd = (new Carbon($endDate))->endOfDay();
 
@@ -121,6 +122,8 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
+
+
         return view('index.business.report-customer-detail',
             array_merge(compact('salesmanId', 'customerId', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }

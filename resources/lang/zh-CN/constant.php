@@ -71,8 +71,8 @@ return [
     //用户类别
     'user' => [
         'type' => [
-            'wholesaler' => '批发商',
             'retailer' => '终端商',
+            'wholesaler' => '批发商',
             'supplier' => '供应商',
             'maker' => '厂家',
         ],

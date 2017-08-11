@@ -1169,6 +1169,13 @@ a {
       }
     }
   }
+  @media (max-width:320px){
+    .coupon-item{
+      .price{
+        font-size: 2.0rem;
+      }
+    }
+  }
 }
 
 .shop-code{

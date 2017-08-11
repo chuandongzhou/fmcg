@@ -30,8 +30,8 @@ class DeliveryController extends Controller
     {
         $user = child_auth()->user();
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) && !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
-        $search['end_at'] = isset($search['end_at']) && !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['start_at'] = array_get($search, 'start_at');;
+        $search['end_at'] = array_get($search, 'end_at');
         $search['delivery_man_id'] = array_get($search, 'delivery_man_id');
         $delivery = Order::where('shop_id',
             $user->shop_id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',

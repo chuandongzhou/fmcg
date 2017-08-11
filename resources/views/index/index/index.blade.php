@@ -14,10 +14,16 @@
             </div>
             <div class="col-xs-10 nav-name ">
                 <a href="{{ url('/') }}">首页</a>
-                @if((isset($user) && $user->type == cons('user.type.retailer')) || is_null($user))
+
+                @if(is_null($user) || $user->type == cons('user.type.retailer'))
                     <a href="{{ url('shop?type=wholesaler') }}">批发商</a>
                 @endif
-                <a href="{{ url('shop?type=supplier') }}">供应商</a>
+                @if(is_null($user) || $user->type <= cons('user.type.wholesaler'))
+                    <a href="{{ url('shop?type=supplier') }}">供应商</a>
+                @endif
+                @if(!is_null($user) && $user->type == cons('user.type.supplier'))
+                    <a href="{{ url('shop?type=maker') }}">厂家</a>
+                @endif
             </div>
         </div>
         <div class="row categories-menu-item">

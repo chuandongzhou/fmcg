@@ -55,16 +55,46 @@
         </div>
         <div class="row">
             <div class="col-xs-12 menu-list-wrap">
-                @foreach($categories as $key => $category)
-                    <a href="{{ url('category?cate=' . $category['id']) }}">
-                        <div class="list-item">
-                            <i class="icon jiushui"></i>
-                            <div class="item-name">
-                                {{ $category['name'] }}
-                            </div>
+                <a href="{{ url('category?cate=10000') }}">
+                    <div class="list-item">
+                        <i class="icon jiushui"></i>
+                        <div class="item-name">
+                            酒水饮料
                         </div>
-                    </a>
-                @endforeach
+                    </div>
+                </a>
+                <a href="{{ url('category?cate=20000') }}">
+                    <div class="list-item">
+                        <i class="icon shiping"></i>
+                        <div class="item-name">
+                            食品生鲜
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ url('category?cate=30000') }}">
+                    <div class="list-item">
+                        <i class="icon chuwei"></i>
+                        <div class="item-name">
+                            厨卫清洁
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ url('category?cate=40000') }}">
+                    <div class="list-item">
+                        <i class="icon jiaju"></i>
+                        <div class="item-name">
+                            家居家纺
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ url('category?cate=50000') }}">
+                    <div class="list-item">
+                        <i class="icon meirong"></i>
+                        <div class="item-name">
+                            美容护理
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
         @foreach($goodsColumns as $index=>$column)

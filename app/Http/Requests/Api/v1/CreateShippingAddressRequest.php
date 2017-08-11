@@ -10,7 +10,7 @@ class CreateShippingAddressRequest extends UserRequest
 
     public function authorize()
     {
-        return auth()->user()->type <= cons('user.type.wholesaler');
+        return auth()->user()->type <= cons('user.type.supplier');
     }
 
     /**

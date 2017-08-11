@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Coupon;
 use Carbon\Carbon;
 use Gate;
-use App\Services\CouponService;
 
 class CouponController extends Controller
 {
@@ -30,10 +29,8 @@ class CouponController extends Controller
         if (!$shop || $shop->user_type <= $user->type) {
             return $this->error('店铺不存在');
         }
-        $coupons = $shop->coupons()->with('shop')->get()->filter(function ($coupon) {
-            $coupon->shop->setAppends([]);
-            return $coupon->can_receive;
-        });
+
+        $coupons = Coupon::ofCanReceive($shop->id)->get();
 
         return $this->success(['coupons' => $coupons->values()]);
     }
@@ -50,7 +47,7 @@ class CouponController extends Controller
         if (!$shop || $shop->user_type <= $user->type) {
             return $this->error('店铺不存在');
         }
-        $couponNum = CouponService::shopCouponNum($shop->id);
+        $couponNum = Coupon::ofCanReceive($shop->id)->count();
         return $this->success(['couponNum' => $couponNum]);
     }
 

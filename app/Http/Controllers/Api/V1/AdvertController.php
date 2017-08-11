@@ -17,13 +17,15 @@ class AdvertController extends Controller
     public function index()
     {
         //广告
-        $indexAdvertConf = cons('advert.cache.index');
+        $indexAdvertConf = cons('advert.cache.app');
         $adverts = [];
         if (Cache::has($indexAdvertConf['name'])) {
             $adverts = Cache::get($indexAdvertConf['name']);
         } else {
-            $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->get();
-            Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
+            $adverts = Advert::with('image')->where('type', cons('advert.type.app'))->ofTime()->get();
+            if ($adverts->count()) {
+                Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
+            }
         }
         return $this->success(['advert' => $adverts]);
     }

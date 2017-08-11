@@ -280,7 +280,6 @@ class WechatPay
             'ext1' => $id,                  // 扩展字段1  用作用户id
             'ext2' => $bankPayType,         // 扩展字段2  用作用户类型  （user 为登录帐号， delivery  司机，  salesman  业务员）
         ];
-        info($options);
         $sign = $this->getSign($options, $this->config['bankPayKey']);
         return array_add($options, 'sign', $sign);
     }
@@ -419,7 +418,6 @@ class WechatPay
      */
     private function _formatResponse($result)
     {
-        info((array)json_decode($result));
         return (array)json_decode($result);
     }
 

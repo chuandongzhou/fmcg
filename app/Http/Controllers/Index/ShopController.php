@@ -31,11 +31,12 @@ class ShopController extends Controller
         $gets = $request->all();
         $type = isset($gets['type']) ? $gets['type'] : 'supplier';
         $userTypes = cons('user.type');
-        $typeId = array_get($userTypes, $type, last($userTypes));
-        //供应商暂时与批发商一致
-        $userType = $user->type <= $userTypes['wholesaler'] ? $user->type : $userTypes['wholesaler'];
+        $shopTypeId = array_get($userTypes, $type);
 
-        $shops = Shop::ofUser($userType, $typeId)->with('logo', 'shopAddress');
+        //供应商暂时与批发商一致
+        //$userType = $user->type <= $userTypes['wholesaler'] ? $user->type : $userTypes['wholesaler'];
+
+        $shops = Shop::ofUser($user->type, $shopTypeId)->with('logo', 'shopAddress')->ofName(array_get($gets, 'name'));
 
         $shopSorts = cons('shop.sort');
 
@@ -52,9 +53,6 @@ class ShopController extends Controller
                 $query->active()->ofNew()->take(4);
             }
         ]);
-        if (isset($gets['name'])) {
-            $shops = $shops->where('name', 'like', '%' . $gets['name'] . '%');
-        }
         return view('index.shop.index',
             ['shops' => $shops->paginate(8), 'sort' => $sort, 'get' => $data, 'type' => $type]);
     }
@@ -79,7 +77,7 @@ class ShopController extends Controller
         if (in_array($sort, cons('goods.sort'))) {
             $goods = $sort == 'price' ? $goods->{'Of' . ucfirst($sort)}($shop->user_id) : $goods->{'Of' . ucfirst($sort)}();
         } else {
-            $goods = $goods->OfCommonSort()->orderBy('id', 'DESC');
+            $goods = $goods->ofCommonSort()->orderBy('id', 'DESC');
         }
         $goods = $goods->paginate();
         return view('index.shop.shop', [

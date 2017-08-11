@@ -45,6 +45,7 @@
                                     <th>最后拜访时间</th>
                                     <th>订货总订单数</th>
                                     <th>订货总金额</th>
+                                    <th>应付总金额</th>
                                     <th>退货总订单数</th>
                                     <th>退货总金额</th>
                                 </tr>
@@ -52,10 +53,11 @@
                                 <tbody>
                                 <tr>
                                     <td>{{ $customer->salesman->name }}</td>
-                                    <td>{{ $visits->count()   }}</td>
+                                    <td>{{ $visits->count() }}</td>
                                     <td>{{ $visits->max('created_at') }}</td>
                                     <td>{{ $orders->count() }}</td>
                                     <td class="red">{{ $orders->sum('amount') }}</td>
+                                    <td class="red">{{ $orders->sum('after_rebates_price') }}</td>
                                     <td>{{ $returnOrders->count() }}</td>
                                     <td class="red">{{ $returnOrders->sum('amount') }}</td>
                                 </tr>

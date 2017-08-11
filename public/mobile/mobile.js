@@ -160,7 +160,7 @@ $(document.body)
         return false;
     })
     // 表单提交
-    .on('submit', 'form.ajax-form', function (e) {
+    .on('submit', 'form.mobile-ajax-form', function (e) {
         e.preventDefault();
         return false;
     });

@@ -29,7 +29,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type < cons('user.type.supplier'))
+                    @if ($user->type < cons('user.type.maker'))
                         <li class="nav-item start {{ path_active(['personal/shipping-address*']) }}">
                             <a href="{{ url('personal/shipping-address') }}" class="nav-link ">
                                 <span class="title">收货地址</span>
@@ -51,7 +51,7 @@
                 </ul>
             </li>
 
-            @if($user->type == cons('user.type.wholesaler')  && $user->type < cons('user.type.maker'))
+            @if($user->type >= cons('user.type.wholesaler')  && $user->type < cons('user.type.maker'))
                 {{-- 进货管理 --}}
                 <li class="nav-item {!! request()->is('order-buy', 'order/statistics-of-buy') ? 'active' : '' !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -376,11 +376,11 @@
                                         <span class="title">提现账号</span>
                                     </a>
                                 </li>
-                                <li class="nav-item  {{ path_active(['personal/sign*']) }}">
+                                {{--<li class="nav-item  {{ path_active(['personal/sign*']) }}">
                                     <a href="{{ url('personal/sign/renew') }}" class="nav-link ">
                                         <span class="title">签约管理</span>
                                     </a>
-                                </li>
+                                </li>--}}
                                 @if($user->type < cons('user.type.maker'))
                                     <li class="nav-item  {{ path_active(['personal/bill*']) }}">
                                         <a href="{{ url('personal/bill') }}" class="nav-link ">
@@ -407,8 +407,8 @@
                                         <span class="title">配送人员</span>
                                     </a>
                                 </li>
-                                <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery','personal/delivery-statistical']) }}">
-                                    <a href="{{ url('personal/delivery') }}" class="nav-link ">
+                                <li class="nav-item start {{ path_active(['personal/delivery*','personal/delivery/statistical']) }}">
+                                    <a href="{{ url('personal/delivery/history') }}" class="nav-link ">
                                         <span class="title">配送历史</span>
                                     </a>
                                 </li>
@@ -472,7 +472,7 @@
                 @endif
             @endif
 
-            @if($user->type < cons('user.type.supplier'))
+            @if($user->type < cons('user.type.maker'))
                 {{-- 我的收藏 --}}
                 <li class="nav-item start {!!  path_active('like/*') !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
