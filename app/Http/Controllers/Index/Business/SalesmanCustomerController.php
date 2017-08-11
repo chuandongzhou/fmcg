@@ -37,19 +37,19 @@ class SalesmanCustomerController extends Controller
     {
         $salesmanId = $request->input('salesman_id');
         $name = $request->input('name');
-        $type = $request->input('type',null);
+        $type = $request->input('type', null);
 
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
         $customers = SalesmanCustomer::whereIn('salesman_id',
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
-            ->where(function ($query)use($type){
-                if($type == 'supplier'){
-                    $query->where('type',cons('user.type.supplier'));
+            ->where(function ($query) use ($type) {
+                if ($type == 'supplier') {
+                    $query->where('type', cons('user.type.supplier'));
                 }
-                if(is_null($type)){
-                    $query->where('type','<>',cons('user.type.supplier'));
+                if (is_null($type)) {
+                    $query->where('type', '<>', cons('user.type.supplier'));
                 }
             })
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
@@ -68,7 +68,11 @@ class SalesmanCustomerController extends Controller
     {
         $salesmen = $this->shop->salesmen()->lists('name', 'id');
         return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => new SalesmanCustomer,'type' => $request->input('type',null)]);
+            [
+                'salesmen' => $salesmen,
+                'salesmanCustomer' => new SalesmanCustomer,
+                'type' => $request->input('type', null)
+            ]);
     }
 
     /**
@@ -143,12 +147,16 @@ class SalesmanCustomerController extends Controller
      * @param $salesmanCustomer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($salesmanCustomer,Request $request)
+    public function edit($salesmanCustomer, Request $request)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 
         return view('index.business.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer ,'type' => $request->input('type',null)]);
+            [
+                'salesmen' => $salesmen,
+                'salesmanCustomer' => $salesmanCustomer,
+                'type' => $request->input('type', null)
+            ]);
     }
 
     /**
@@ -164,16 +172,22 @@ class SalesmanCustomerController extends Controller
         }
         $billService = new BillService();
         $data = $request->all();
-        $timeFormat = $billService->timeHandler(array_get($data, 'time'));
-        $bill = $billService->getBillDetailOfSeller($customer, $timeFormat);
+        $timeInterval = $billService->timeHandler(array_get($data, 'time'));
+
+        $result = $billService->seller($customer, $timeInterval);
+
         $action = array_get($data, 'act');
+
         if ($action === 'export') {
-            return $billService->billExportOfSeller($bill);
+            return $billService->exportSeller($result, $customer, $timeInterval);
         }
+
         return view($action === 'print' ? 'index.business.bill-print-template' : 'index.business.customer-bill',
             [
                 'data' => $data,
-                'bill' => $bill,
+                'timeInterval' => $timeInterval,
+                'customer' => $customer,
+                'bill' => $result,
                 'action' => $action === 'print' ? 'print' : null
             ]);
     }
@@ -217,8 +231,7 @@ class SalesmanCustomerController extends Controller
         $visits = $customer->visits()->OfTime($beginTime, $endTime)->with([
             'goodsRecord'
         ])->get();
-
-
+        
         //拜访商品记录
         $goodsRecodeData = [];
         $goodsRecord = $visits->pluck('goodsRecord')->collapse();
@@ -237,7 +250,7 @@ class SalesmanCustomerController extends Controller
         $allOrders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->ofData([
             'start_date' => $beginTime,
             'end_date' => $endTime
-        ])->with('orderGoods', 'mortgageGoods')->get();
+        ])->with('orderGoods', 'gifts', 'mortgageGoods')->get();
 
         $orderConf = cons('salesman.order');
 
@@ -245,6 +258,10 @@ class SalesmanCustomerController extends Controller
             $order->orderGoods->each(function ($goods) use ($order) {
                 $goods->visit_created_at = $order->salesmanVisit ? $order->salesmanVisit->created_at : $goods->created_at;
 
+            });
+            $order->gifts->each(function ($gifts) use ($order) {
+                $gifts->order_id = $order->order_id;
+                $gifts->order_created_at = $order->created_at;
             });
         });
 
@@ -261,6 +278,8 @@ class SalesmanCustomerController extends Controller
         // 所有的订单商品
         $orderGoods = $allOrders->pluck('orderGoods')->collapse();
 
+        //所有赠品
+        $gifts = $orders->pluck('gifts')->collapse();
 
         $goodsIds = array_merge(array_keys($goodsRecodeData), $orderGoods->pluck('goods_id')->all());
 
@@ -323,6 +342,30 @@ class SalesmanCustomerController extends Controller
                 ];
             }
         }
+        $giftList = $giftsExist = [];
+        foreach ($gifts as $gift) {
+            if (!in_array($gift->id, $giftsExist)) {
+                $giftList[$gift->id] = [
+                    'name' => $gift->name,
+                    'describe' => [
+                        [
+                            'order_id' => $gift->order_id,
+                            'time' => $gift->order_created_at,
+                            'num' => $gift->pivot->num,
+                            'pieces' => $gift->pivot->pieces,
+                        ]
+                    ]
+                ];
+            } else {
+                $giftList[$gift->id]['describe'][] = [
+                    'order_id' => $gift->order_id,
+                    'time' => $gift->order_created_at,
+                    'num' => $gift->pivot->num,
+                    'pieces' => $gift->pivot->pieces,
+                ];
+            }
+            $giftsExist[] = $gift->id;
+        }
         return [
             'visits' => $visits,
             'orders' => $orders,
@@ -330,7 +373,8 @@ class SalesmanCustomerController extends Controller
             'returnOrders' => $returnOrders,
             'mortgageGoods' => $mortgageGoods,
             'displayFees' => $displayFees,
-            'salesListsData' => $salesListsData
+            'salesListsData' => $salesListsData,
+            'gifts' => collect($giftList)
         ];
     }
 

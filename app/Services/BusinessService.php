@@ -66,17 +66,30 @@ class BusinessService extends BaseService
     public function getSalesmanOrders($shop, $startDate, $endDate)
     {
         $salesmen = $shop instanceof Shop ? $shop->salesmen() : $shop;
-
-        $salesmen = $salesmen->with(['orders.order', 'visits'])->get()->each(function ($salesman) use (
+        $user = auth()->user();
+        $salesmen = $salesmen->with([
+            'orders.order',
+            'orders.salesmanCustomer',
+            'visits.salesmanCustomer'
+        ])->get()->each(function ($salesman) use (
             $startDate,
+            $user,
             $endDate
         ) {
             //所有订单
-            $orders = $salesman->orders->filter(function ($order) use ($startDate, $endDate) {
-                return ($order->created_at >= $startDate && $order->created_at <= $endDate && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true));
+            $orders = $salesman->orders->filter(function ($order) use (
+                $salesman,
+                $startDate,
+                $endDate,
+                $user
+            ) {
+
+                return  $order->salesmanCustomer->shop_id != $user->shop->id && ($order->created_at >= $startDate && $order->created_at <= $endDate && ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true));
             });
+
             //所有平台订货
             $orderForms = $orders->filter(function ($order) {
+
                 return $order->type == cons('salesman.order.type.order');
             });
 
@@ -86,8 +99,12 @@ class BusinessService extends BaseService
             });
 
             //所有拜访
-            $visits = $salesman->visits->filter(function ($visit) use ($startDate, $endDate) {
-                return $visit->created_at >= $startDate && $visit->created_at <= $endDate;
+            $visits = $salesman->visits->filter(function ($visit) use (
+                $startDate,
+                $endDate,
+                $user
+            ) {
+                return $visit->salesmanCustomer->shop_id != $user->shop->id && $visit->created_at >= $startDate && $visit->created_at <= $endDate;
             });
 
             //拜访客户数

@@ -17,7 +17,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table-bordered table text-center">
+                <table class="table-bordered table table-middle text-center">
                     <tr>
                         <td colspan="2" class="text-left">录单日期 ：{{ $order->created_at->toDateString() }}</td>
                         <td colspan="3" class="text-left">平台订单号 ： {{ $order->id }}</td>
@@ -34,8 +34,8 @@
                         <th>商品条码</th>
                         <th width="200px">商品名称</th>
                         <th width="80px">商品规格</th>
-                        <th>单位</th>
                         <th>单价</th>
+                        <th>单位</th>
                         <th>数量</th>
                         <th>金额</th>
                         <th>促销信息</th>
@@ -63,11 +63,12 @@
                                 {{ $gift->{'specification_' . $order->user_type_name} }}
 
                             </td>
+                            <td>{{$gift->pivot->price}}</td>
                             <td>{{ cons()->valueLang('goods.pieces', $gift->pivot->pieces) }}</td>
-                            <td></td>
-                            <td>{{ $goods->pivot->num }}</td>
-                            <td></td>
+                            <td>{{ $gift->pivot->num }}</td>
+                            <td>{{ $gift->pivot->total_price }}</td>
                             <td>赠品</td>
+                        </tr>
                     @endforeach
                     <tr>
                         <td colspan="5">总计</td>
@@ -110,6 +111,38 @@
                                 @if($mortgageGoods->isEmpty())
                                     <td colspan="3">{{ $order->remarkGroup['display'] }}</td>
                                 @endif
+                            </tr>
+                        @endif
+                    @endif
+                    @if($order->promo)
+                        <tr>
+                            <td align="center" colspan="8">促销活动</td>
+                        </tr>
+                        @if(in_array($order->promo->type,[cons('promo.type.goods-goods'),cons('promo.type.money-goods')]))
+                            @foreach($order->promo->rebate as $rebate)
+                                <tr>
+                                    @if($rebate == $order->promo->rebate->first())
+                                        <td colspan="3"
+                                            rowspan="{{$order->promo->rebate->count()}}">{{$order->promo->name}}</td>
+                                    @endif
+                                    <td colspan="2">{{$rebate->goods->name ?? ''}}</td>
+                                    <td colspan="3">{{$rebate->quantity . cons()->valueLang('goods.pieces',$rebate->unit)}}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="4">{{$order->promo->name}}</td>
+                                <td colspan="6">
+                                                    <span>
+                                                        {{'('.($order->promo->type == cons('promo.type.custom') ? '自定义' : '现金').')'}}
+                                                    </span>
+                                    @if(in_array($order->promo->type,[cons('promo.type.goods-money'),cons('promo.type.money-money')]))
+                                        {{$order->promo->rebate[0]->money}} 元
+                                    @else
+                                        {{$order->promo->rebate[0]->custom ?? ''}}
+                                    @endif
+                                </td>
+                                <td></td>
                             </tr>
                         @endif
                     @endif

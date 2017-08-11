@@ -53,7 +53,7 @@
                                     <td>{{$inventory->inventory_number ?? ''}}</td>
                                     <td>{{$inventory->order_number > 0 ? $inventory->order_number : '---'}}</td>
                                     <td>{{cons()->valueLang('inventory.inventory_type',$inventory->inventory_type).cons()->valueLang('inventory.action_type',$inventory->action_type)}}</td>
-                                    <td>{{$inventory->action_type == cons('inventory.action_type.in') ? '+' : '-'}} {{$inventory->transformation_quantity}}</td>
+                                    <td>{{$inventory->action_type == cons('inventory.action_type.in') ? '+' : '-'}} {{$inventory->transformation_quantity}}{{$inventory->source > 0 ? '('.cons()->valueLang('inventory.source',$inventory->source).')' : ''}}</td>
                                     <td>{{$inventory->user->user_name ?? '系统'}}</td>
                                     <td>{{$inventory->created_at}}</td>
                                 </tr>

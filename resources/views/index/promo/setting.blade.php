@@ -20,7 +20,8 @@
                         <input class="enter control datetimepicker" data-format="YYYY-MM-DD" name="end_at"
                                placeholder="结束时间" type="text"
                                value="{{$data['end_at'] ?? ''}}">
-                        <input name="number_name" class="enter control" placeholder="促销名称/编号" type="text" value="{{$data['number_name'] ?? ''}}">
+                        <input name="number_name" class="enter control" placeholder="促销名称/编号" type="text"
+                               value="{{$data['number_name'] ?? ''}}">
                         <button type="button" class=" btn btn-blue-lighter search-by-get control ">查询</button>
                         <a href="{{url('promo/add')}}" class=" btn btn-blue-lighter  control ">添加促销</a>
                     </form>
@@ -34,6 +35,7 @@
                             <th>添加/修改时间</th>
                             <th>有效时间</th>
                             <th>促销内容</th>
+                            <th>参与数量</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -43,7 +45,11 @@
                                 <td>{{$promo->id}}</td>
                                 <td width="19%">{{$promo->name}}</td>
                                 <td>{{$promo->updated_at}}</td>
-                                <td><div>{{$promo->start_at}}</div> 至 <div>{{$promo->end_at}}</div></td>
+                                <td>
+                                    <div>{{$promo->start_at}}</div>
+                                    至
+                                    <div>{{$promo->end_at}}</div>
+                                </td>
                                 <td width="30%">
                                     @if($promo->type == cons('promo.type.custom'))
                                         {{$promo->condition[0]->custom ?? ''}}
@@ -70,6 +76,8 @@
                                         {{$promo->rebate[0]->goods->name . (count($promo->rebate) > 1 ? '...' : '')}}
                                     @endif
                                 </td>
+                                <td><a href="{{url('promo/'.$promo->id.'/partake')}}" class="color-blue"> {{$promo->partake->count()}} <i
+                                                class="iconfont icon-chakan"></i></a></td>
                                 <td>
                                     @if(strtotime($promo->end_at) > time())
                                         @if($promo->status == cons('status.off'))

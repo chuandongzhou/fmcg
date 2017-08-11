@@ -28,7 +28,7 @@ class InventoryRequest extends Request
     public function validator($factory)
     {
         return $this->defaultValidator($factory)->after(function ($validator) {
-            try{
+            try {
                 $action = $this->input('action_type');
                 foreach ($this->only('goods') as $info) {
                     foreach ($info as $goods_id => $v) {
@@ -51,7 +51,7 @@ class InventoryRequest extends Request
                             }
                         }
                         foreach ($v['cost'] as $key => $value) {
-                            if (empty($value)) {
+                            if ($value == '' || $value == null) {
                                 $validator->errors()->add('goods[' . $goods_id . '][cost][' . $key . ']',
                                     ($action == cons('inventory.action_type.in') ? '成本' : '出库') . '价 不能为空');
                             } elseif (!is_numeric($value)) {
@@ -75,9 +75,9 @@ class InventoryRequest extends Request
                         }
                     }
                 }
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 info($e->getMessage());
-                return new ApiResponse('not_acceptable','入库错误!');
+                return new ApiResponse('not_acceptable', '入库错误!');
             }
 
         });

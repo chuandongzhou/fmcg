@@ -17,7 +17,7 @@ class OrderGoods extends Model
         'pieces',
         'order_id',
     ];
-
+    protected $appends = ['pieces_name','goods_name','image'];
     /**
      * 模型启动事件
      */

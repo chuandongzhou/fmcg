@@ -202,6 +202,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('apply-log/{promo_apply}/detail', 'PromoController@applyLogDetail');
         $router->get('{promo}/edit', 'PromoController@edit');
         $router->get('{promo}/view', 'PromoController@view');
+        $router->get('{promo}/partake', 'PromoController@partake');
         $router->controller('/', 'PromoController');
     });
 
@@ -510,7 +511,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->get('visit/surplus-display-fee', 'SalesmanVisitController@surplusDisplayFee');//获取月份陈列费剩余情况
                 $router->get('visit/surplus-mortgage-goods',
                     'SalesmanVisitController@surplusMortgageGoods');//获取月份陈列商品剩余情况
-                $router->post('visit/{visit}/add-photos','SalesmanVisitController@addPhotos');
+                $router->post('visit/{visit}/add-photos', 'SalesmanVisitController@addPhotos');
                 $router->resource('visit', 'SalesmanVisitController');
 
                 $router->group(['prefix' => 'order'], function ($router) {
@@ -592,6 +593,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //促销管理
         $router->group(['prefix' => 'promo'], function ($router) {
             $router->put('apply/pass/{promo_apply}', 'PromoController@applyPass');
+            $router->post('apply/{promo_apply}/partake-order', 'PromoController@partakeOrderDetail');//参与促销活动订单详情
             $router->put('apply/edit/{promo_apply}', 'PromoController@applyEdit');
             $router->put('apply/delete/{promo_apply}', 'PromoController@applyDelete');
             $router->put('status/{promo}', 'PromoController@status');

@@ -157,6 +157,35 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                            <table class="table table-bordered table-center">
+                                <thead>
+                                <tr>
+                                    <th colspan="10" class=" title">赠品统计</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>商品ID</th>
+                                    <th>商品名称</th>
+                                    <th>订单ID</th>
+                                    <th>下单时间</th>
+                                    <th>数量</th>
+                                </tr>
+                                @foreach($gifts as $goods_id => $gift)
+                                    @foreach($gift['describe'] as $key => $describe)
+                                        <tr>
+                                            @if($key == 0)
+                                                <td rowspan="{{count($gift['describe'])}}">{{$goods_id}}</td>
+                                                <td rowspan="{{count($gift['describe'])}}">{{$gift['name']}}</td>
+                                            @endif
+                                            <td>{{$describe['order_id']}}</td>
+                                            <td>{{$describe['time']}}</td>
+                                            <td>{{$describe['num'] . cons()->valueLang('goods.pieces',$describe['pieces'])}}</td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

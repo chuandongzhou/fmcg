@@ -52,7 +52,12 @@ class AssetController extends Controller
     public function getUsed(Request $request)
     {
         $data = $request->only('use_start_at', 'use_end_at', 'asset', 'condition');
-        $assetApply = $this->shop->assetApply()->where('asset_apply.status', '>', 0)->whereNotNull('use_date');
+        $assetApply = $this->shop->assetApply()->with([
+            'client.businessAddress',
+            'log',
+            'salesman',
+            'asset'
+        ])->where('asset_apply.status', '>', 0)->whereNotNull('use_date');
         $result = $this->assetService->getDataByCondition($assetApply, $data);
         return view('index.asset.used', [
             'used' => $result->paginate(),
@@ -71,7 +76,7 @@ class AssetController extends Controller
     {
         $data = $request->only('start_at', 'end_at', 'asset', 'salesmen', 'status');
         $salesmens = $this->shop->salesmen;
-        $assetApply = $this->shop->assetApply();
+        $assetApply = $this->shop->assetApply()->with(['salesman', 'client', 'asset']);
         $result = $this->assetService->getDataByCondition($assetApply, $data);
         return view('index.asset.apply', [
             'assetApply' => $result->paginate(),

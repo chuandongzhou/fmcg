@@ -3317,7 +3317,7 @@ table .product-panel .promotions {
 
 .notice-bar li.active a {
   border: 1px solid #17C4BB;
-  color: #17C4BB;
+  color: #17C4BB !important;
   border-bottom-color: #fff;
 }
 
@@ -3331,7 +3331,7 @@ table .product-panel .promotions {
   display: block;
   float: left;
   font-weight: bold;
-  width: 100px;
+  min-width: 100px;
   height: 40px;
   line-height: 40px;
   text-align: center;
@@ -6442,6 +6442,10 @@ table .product-panel .promotions {
   background-color: #fff !important;
 }
 
+.modal .panel-default {
+  border: 1px solid #fff !important;
+}
+
 /*==============home end=================*/
 
 /*==============sales-details begin=================*/
@@ -7704,6 +7708,10 @@ table .product-panel .promotions {
   vertical-align: top;
 }
 
+.promotion .details-item .content {
+  width: 65%;
+}
+
 .wareh-details .content {
   width: 63%;
 }
@@ -8094,6 +8102,10 @@ table .product-panel .promotions {
   border: 1px solid #ddd !important;
 }
 
+.statement-table-wrap .tab-pane {
+  padding: 0 30px;
+}
+
 .statement-table-wrap table thead th,
 .statement-table-wrap .table-list-row .shopping-table-list table thead tr td,
 .table-list-row .shopping-table-list .statement-table-wrap table thead tr td,
@@ -8278,6 +8290,6 @@ table .product-panel .promotions {
 }
 
 .bordered-bottom {
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   margin-bottom: 15px;
 }

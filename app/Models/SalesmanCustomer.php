@@ -177,15 +177,6 @@ class SalesmanCustomer extends Model
     }
 
     /**
-     * 剔除自己
-     * @param $query
-     * @return mixed
-     */
-    public function scopeExceptSelf($query)
-    {
-        return $query->where('type','<>',cons('user.type.supplier'));
-    }
-    /**
      * 按业务员搜索
      *
      * @param $query
@@ -330,6 +321,7 @@ class SalesmanCustomer extends Model
     {
         return $this->shop_id && $this->shop ? $this->shop->user_name : '';
     }
+    
 
     /**
      * 获取客户类型名

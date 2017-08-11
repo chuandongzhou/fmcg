@@ -7,7 +7,6 @@ use Cache;
 
 class Model extends Eloquent
 {
-
     /**
      * 模型启动事件
      */

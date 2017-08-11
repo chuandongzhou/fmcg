@@ -17,6 +17,9 @@ class SalesmanVisitOrderGoods extends Model
         'salesman_visit_id'
     ];
 
+    protected $appends = ['pieces_name','goods_name','goods_image'];
+    
+
     /**
      * 商品表
      *
@@ -66,5 +69,15 @@ class SalesmanVisitOrderGoods extends Model
     public function getGoodsImageAttribute()
     {
         return $this->goods ? $this->goods->image_url : asset('images/goods_default.png');
+    }
+
+    /**
+     * 获取单位名
+     *
+     * @return string
+     */
+    public function getPiecesNameAttribute()
+    {
+        return cons()->valueLang('goods.pieces', $this->pieces);
     }
 }

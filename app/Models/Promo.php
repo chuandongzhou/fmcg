@@ -17,7 +17,7 @@ class Promo extends Model
         'remark',
         'status',
     ];
-    
+
     /**
      * 模型启动事件
      */
@@ -91,6 +91,18 @@ class Promo extends Model
     {
         return $this->promoContent()->where(function ($query) {
             $query->where('type', cons('promo.content_type.rebate'));
+        });
+    }
+
+    /**
+     * 获取参与数量
+     *
+     * @return mixed
+     */
+    public function getPartakeAttribute()
+    {
+        return $this->apply->filter(function ($apply) {
+            return !is_null($apply->order) && !is_null($apply->order->order);
         });
     }
 }

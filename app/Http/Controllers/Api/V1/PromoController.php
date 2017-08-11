@@ -209,4 +209,15 @@ class PromoController extends Controller
         $data = $request->only('apply_remark');
         return $apply->fill($data)->save() ? $this->success('保存成功') : $this->error('保存失败');
     }
+
+
+    public function partakeOrderDetail($apply)
+    {
+        if($apply){
+            $apply->load(['client.shippingAddress','order.orderGoods.goods'])->client->setAppends(['shipping_address_name']);
+            $apply->orderGoodsCount = $apply->order->orderGoods->sum('num');
+            $apply->orderGoodsPriceCount = $apply->order->orderGoods->sum('amount');
+            return $this->success($apply);
+        }
+    }
 }

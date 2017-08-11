@@ -109,6 +109,7 @@ a {
     tr{
       td{
         vertical-align:middle;
+        word-wrap:break-word;
       }
     }
   }
@@ -2846,7 +2847,7 @@ table {
     &.active {
       a {
         border: 1px solid $backstage-blue;
-        color: $backstage-blue;
+        color: $backstage-blue !important;
         border-bottom-color: $body-bg;
         &:hover, &:focus {
           border: 1px solid $backstage-blue;
@@ -2859,7 +2860,8 @@ table {
     display: block;
     float: left;
     font-weight: bold;
-    @include size(100px, 40px);
+    min-width:100px;
+    height:40px;
     line-height: 40px;
     text-align: center;
     margin: 0 0 -1px -1px;
@@ -5570,6 +5572,11 @@ table {
     background-color: $body-bg !important;
   }
 }
+.modal{
+  .panel-default {
+    border: 1px solid $body-bg !important;
+  }
+}
 
 /*==============home end=================*/
 /*==============sales-details begin=================*/
@@ -5625,7 +5632,27 @@ table {
      }
    }
 }
-
+.table-scroll{
+  table {
+    tr {
+      td, th {
+        padding: 15px 5px;
+      }
+      .title {
+        background-color: #ffffe6;
+      }
+      .title-blue {
+        background-color: #e2f8f7;
+      }
+      .title-gray{
+        background-color:$gray-plain;
+      }
+      .text-right {
+        text-align: right !important;
+      }
+    }
+  }
+}
 .business-table {
   tr {
     th,td{
@@ -5876,6 +5903,13 @@ table {
     td, th {
       padding: 0 !important;
       border: 1px solid $gray-light !important;
+    }
+  }
+  .item{
+    display: flex;
+    flex-flow: row;
+    .column{
+      flex: 1;
     }
   }
 }
@@ -6413,7 +6447,9 @@ table {
     background-color:$body-bg;
   }
 }
-
+.white-bg{
+  background-color:$body-bg!important;
+}
 .salesman-table-wrap {
   @include size(800px, 450px);
   overflow-y: auto;
@@ -6616,6 +6652,13 @@ table {
     vertical-align: top;
   }
 }
+.promotion{
+  .details-item{
+    .content{
+      width:65%;
+    }
+  }
+}
 .wareh-details{
   .content{
     width:63%;
@@ -6795,9 +6838,10 @@ table {
     }
   }
 }
-.good-ontheway{
+
+#good-ontheway{
   .product-name{
-    width:85%!important;
+    width:400px !important;
   }
 }
 /*==============库存管理end=================*/
@@ -6952,6 +6996,9 @@ table {
   .panel-default{
     border:1px solid #ddd!important;
   }
+  .tab-pane{
+    padding:0 30px;
+  }
   table{
     thead{
       th,td{
@@ -7081,3 +7128,22 @@ table {
   }
 }
 /*==============保证金end=================*/
+.stock-warning {
+  display: inline-block;
+  width: 50px;
+  vertical-align: bottom !important;
+}
+
+.warning-edit-icon {
+  visibility: hidden !important;
+  color: #169bd5;
+  cursor: pointer;
+}
+
+.goods-table table tr:hover .warning-edit-icon {
+  visibility: inherit !important;
+}
+.bordered-bottom{
+  border:1px solid $gray-plain-light;
+  margin-bottom:15px;
+}

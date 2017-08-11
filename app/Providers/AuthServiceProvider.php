@@ -89,7 +89,7 @@ class AuthServiceProvider extends ServiceProvider
          * 判断客户权限
          */
         $gate->define('validate-customer', function ($user, $customer) {
-            return ($user->shop_id == $customer->salesman->shop_id || $user->shop_id == $customer->salesman->maker->id);
+            return ($user->shop_id == $customer->salesman->shop_id || $user->shop_id == $customer->salesman->maker_id);
         });
 
         /**

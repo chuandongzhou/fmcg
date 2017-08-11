@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Models\Promo;
-use App\Models\PromoGoods;
 use App\Services\PromoService;
 use Illuminate\Http\Request;
 
@@ -108,6 +106,12 @@ class PromoController extends Controller
         ]);
     }
 
+    /**
+     * 申请详情
+     *
+     * @param $apply
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function applyLogDetail($apply)
     {
         if (Gate::denies('validate-shop-promoApply', $apply)) {
@@ -116,5 +120,18 @@ class PromoController extends Controller
         return view('index.promo.log-detail', [
             'apply' => $apply,
         ]);
+    }
+
+    /**
+     * 促销参与情况
+     * @param $promo
+     * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function partake($promo)
+    {
+        if (Gate::denies('validate-shop-promo', $promo)) {
+            return view('errors.404');
+        }
+        return view('index.promo.partake')->with(['promo' => $promo->load(['apply.client','apply.salesman','apply.order.order'])]);
     }
 }

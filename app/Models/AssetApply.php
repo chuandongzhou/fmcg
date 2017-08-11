@@ -30,6 +30,7 @@ class AssetApply extends Model
 
     /**
      * 所属资产
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function asset()
@@ -39,15 +40,17 @@ class AssetApply extends Model
 
     /**
      * 客户
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function client()
     {
-        return $this->belongsTo('App\Models\SalesmanCustomer','client_id');
+        return $this->belongsTo('App\Models\SalesmanCustomer', 'client_id');
     }
 
     /**
      * 操作日志
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function log()
@@ -57,21 +60,25 @@ class AssetApply extends Model
 
     /**
      * 业务员
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function salesman()
     {
-        return $this->belongsTo('App\Models\Salesman','salesman_id');
+        return $this->belongsTo('App\Models\Salesman', 'salesman_id');
     }
 
     /**
      * 获取通过时间
+     *
      * @return mixed
      */
     public function getPassDateAttribute()
     {
-        $log = $this->log()->where('action',cons('asset_apply_log.action.review'))->first();
-        return $log ? (new Carbon($log->created_at))->format('Y-m-d H:i:s') : null;
+        $log = $this->log->filter(function ($log) {
+            return $log->action == cons('asset_apply_log.action.review');
+        })->first();
+        return $log->created_at ?? null;
     }
 
 }

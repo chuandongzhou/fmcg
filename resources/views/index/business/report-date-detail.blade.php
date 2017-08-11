@@ -26,7 +26,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 <b>{{ $salesman->name }} - 业务报表</b>
-                                <span>{{ $startDate }} 至 {{ $endDate }}</span>
+                                <span>{{ $startDate }} 至 {{ $endDate}}</span>
                             </h3>
                         </div>
                         <div class="panel-container">

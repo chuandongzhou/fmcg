@@ -106,4 +106,24 @@ class PromoApply extends Model
             $query->where('name', 'LIKE', '%' . $salesman . '%');
         });
     }
+
+    /**
+     * 获取客户名
+     *
+     * @return mixed
+     */
+    public function getClientNameAttribute()
+    {
+        return $this->client->name;
+    }
+
+    /**
+     * 获取业务员名
+     *
+     * @return mixed
+     */
+    public function getSalesmanNameAttribute()
+    {
+        return $this->salesman->name;
+    }
 }

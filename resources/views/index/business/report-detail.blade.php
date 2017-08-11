@@ -126,6 +126,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        {{--@if(auth()->user()->type < cons('user.type.maker'))--}}
                         <div class="panel-container">
                             <p class="title-table">自主订单</p>
                             <table class="table business-table table-bordered table-center public-table">
@@ -156,6 +157,8 @@
                                 </tbody>
                             </table>
                         </div>
+                        {{--@endif--}}
+
 
                         <div class="text-right">
                             <ul class="pagination">

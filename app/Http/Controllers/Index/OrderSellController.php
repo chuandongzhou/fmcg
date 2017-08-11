@@ -149,6 +149,7 @@ class OrderSellController extends OrderController
             $goods_quantity += $goods->pivot->num;
         });
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
+
         return view('index.order.order-sell-detail', [
             'order' => $order,
             'goods_quantity' => $goods_quantity,
@@ -212,7 +213,8 @@ class OrderSellController extends OrderController
             return $this->error('请选择要导出的订单', null, ['export_error' => '请选择要导出的订单']);
         }
 
-        $order = Order::with('shippingAddress.address', 'shop', 'user', 'gifts', 'goods.goodsPieces')
+        $order = Order::with('shippingAddress.address', 'applyPromo.promo', 'shop', 'user', 'gifts',
+            'goods.goodsPieces')
             ->ofSell(auth()->user()->shop_id)->useful()
             ->find($orderId);
         if (is_null($order)) {
@@ -227,11 +229,11 @@ class OrderSellController extends OrderController
                     $item->pivot->pieces);
             }
         }
-        $allNum = 0;
+        $orderGoodsNum = $giftGoodsNum = 0;
         foreach ($orderGoods['orderGoods'] as $goods) {
-            $allNum += $goods->pivot->num;
+            $orderGoodsNum += $goods->pivot->num;
         }
-        $order->allNum = $allNum;
+        $order->allNum = $orderGoodsNum + $order->gifts->sum('pivot.num') ?? 0;
         $shopId = $order->shop_id;
 
         $modelId = app('order.download')->getTemplete($shopId);

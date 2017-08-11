@@ -768,7 +768,7 @@ class Goods extends Model
      */
     public function getTotalInventoryAttribute()
     {
-        return $this->inventory()->OfIn()->sum('surplus') ?? 0;
+        return $this->inventory->where('action_type', cons('inventory.action_type.in'))->sum('surplus') ?? 0;
     }
 
     /**

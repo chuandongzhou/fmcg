@@ -20,7 +20,6 @@ class SalesmanVisitOrderController extends Controller
      */
     public function orderForms(Request $request)
     {
-
         $shop = auth()->user()->shop;
         $salesmen = $shop->salesmen;
         $salesmenId = $salesmen->pluck('id');
@@ -125,6 +124,7 @@ class SalesmanVisitOrderController extends Controller
         $cellAlignRight = array('align' => 'right');
         $cellAlignCenter = array('align' => 'center');
         $gridSpan7 = ['gridSpan' => 7];
+        $gridSpan2 = ['gridSpan' => 2];
         $gridSpan3 = ['gridSpan' => 3];
         $gridSpan4 = ['gridSpan' => 4];
         $cellRowSpan = array('vMerge' => 'restart', 'valign' => 'center');
@@ -197,13 +197,14 @@ class SalesmanVisitOrderController extends Controller
                 $table->addCell(1300)->addText($orderGood->amount, null, $cellAlignCenter);
                 $table->addCell(null, $cellRowContinue);
             }
-
             if ($order->type == cons('salesman.order.type.order')) {
-                $table->addRow(16);
-                $table->addCell(9000, $gridSpan7)->addText('陈列费 :');
+                if($order->display_fee_amount){
+                    $table->addRow(16);
+                    $table->addCell(9000, $gridSpan7)->addText('陈列费 :');
 
-                $table->addRow(16);
-                $table->addCell(9000, $gridSpan7)->addText('现金 :' . $order->display_fee);
+                    $table->addRow(16);
+                    $table->addCell(9000, $gridSpan7)->addText('现金 :' . sprintf('%.2f',$order->display_fee_amount));
+                }
 
                 if (!$data['mortgageGoods']->isEmpty()) {
                     $table->addRow(16);
@@ -223,6 +224,61 @@ class SalesmanVisitOrderController extends Controller
 
                 }
             }
+
+            $table->addRow(16);
+            $table->addCell(1300, $cellRowSpan)->addText('赠品', null, $cellAlignCenter);
+            $table->addCell(1300, $gridSpan4)->addText('名称', null, $cellAlignCenter);
+            $table->addCell(1300)->addText('单位', null, $cellAlignCenter);
+            $table->addCell(1300)->addText('数量', null, $cellAlignCenter);
+
+            foreach ($order->gifts as $gift) {
+                $table->addRow(16);
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(1300, $gridSpan4)->addText($gift->name, null, $cellAlignCenter);
+                $table->addCell(1300)->addText(cons()->valueLang('goods.pieces',
+                    $gift->pivot->pieces), null, $cellAlignCenter);
+                $table->addCell(1300)->addText($gift->pivot->num, null, $cellAlignCenter);
+            }
+
+            if ($order->promo) {
+                $table->addRow(16);
+                $table->addCell(1300, $cellRowSpan)->addText('促销活动', null, $cellAlignCenter);
+                $table->addCell(1300, $gridSpan4)->addText('促销名称', null, $cellAlignCenter);
+                $table->addCell(3000, $gridSpan2)->addText('返利内容', null, $cellAlignCenter);
+                if (in_array($order->promo->type, [cons('promo.type.goods-goods'), cons('promo.type.money-goods')])) {
+                    foreach ($order->promo->rebate as $rebate) {
+                        $table->addRow();
+                        $table->addCell(null, $cellRowContinue);
+                        if ($rebate == $order->promo->rebate->first()) {
+                            $table->addCell(3500,
+                                array_merge($cellRowSpan, $gridSpan4))->addText($order->promo->name ?? '', null,
+                                $cellAlignCenter);
+                        } else {
+                            $table->addCell(null, array_merge($cellRowContinue, $gridSpan4));
+                        }
+                        $table->addCell(3500, $cellAlignCenter)->addText($rebate->goods->name ?? '', null,
+                            $cellAlignCenter);
+                        $table->addCell(3500,
+                            $cellAlignCenter)->addText($rebate->quantity . cons()->valueLang('goods.pieces',
+                                $rebate->unit), null,
+                            $cellAlignCenter);
+                    }
+                } else {
+                    $table->addRow();
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(3500, array_merge($cellAlignCenter, $gridSpan4))->addText($order->promo->name ?? '',
+                        null,
+                        $cellAlignCenter);
+                    $text = '(' . ($order->promo->type == cons('promo.type.custom') ? '自定义' : '现金') . ')';
+                    $text .= in_array($order->promo->type, [
+                        cons('promo.type.goods-money'),
+                        cons('promo.type.money-money')
+                    ]) ? $order->promo->rebate[0]->money . '元' : $order->promo->rebate[0]->custom;
+                    $table->addCell(4700, $gridSpan2)->addText($text, null,
+                        $cellAlignCenter);
+                }
+            }
+
 
         }
         $name = date('Ymd') . strtotime('now') . '.docx';
