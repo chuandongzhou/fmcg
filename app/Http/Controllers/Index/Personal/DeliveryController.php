@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Index\Personal;
 
 use App\Http\Controllers\Index\Controller;
@@ -26,11 +27,11 @@ class DeliveryController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function historyDelivery(Request $request)
+    public function history(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = isset($search['start_at']) && !empty($search['start_at']) ? (new Carbon($request->input('start_at')))->startOfDay() : '';
-        $search['end_at'] = isset($search['end_at']) && !empty($search['end_at']) ? (new Carbon($request->input('end_at')))->endOfDay() : '';
+        $search['start_at'] = array_get($search, 'start_at');;
+        $search['end_at'] = array_get($search, 'end_at');
         $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
         $delivery = Order::where('shop_id',
             auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',
@@ -38,7 +39,7 @@ class DeliveryController extends Controller
             'DESC')->paginate();
 
         $deliveryMen = auth()->user()->shop->deliveryMans;
-        return view('index.personal.delivery',
+        return view('index.personal.delivery-history',
             ['deliveryMen' => $deliveryMen, 'deliveries' => $delivery, 'search' => $request->all()]);
     }
 
@@ -48,7 +49,7 @@ class DeliveryController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function statisticalDelivery(Request $request)
+    public function statistical(Request $request)
     {
         $search = $request->all();
         $data = (new DeliveryService())->deliveryStatistical($search);
@@ -72,8 +73,10 @@ class DeliveryController extends Controller
         $cellAlignCenter = ['align' => 'center'];
         $cellRowSpan = ['vMerge' => 'restart', 'valign' => 'center'];
         $cellRowContinue = array('vMerge' => 'continue');
-        $gridSpan6 = ['gridSpan' => 6, 'valign' => 'center'];
+        $gridSpan8 = ['gridSpan' => 8, 'valign' => 'center'];
         $gridSpan2 = ['gridSpan' => 2, 'valign' => 'center'];
+        $gridSpan3 = ['gridSpan' => 3, 'valign' => 'center'];
+        $gridSpan4 = ['gridSpan' => 4, 'valign' => 'center'];
         $gridSpan1 = ['gridSpan' => 1, 'valign' => 'center'];
         $phpWord->setDefaultFontName('仿宋');
         $phpWord->setDefaultFontSize(10);
@@ -85,7 +88,7 @@ class DeliveryController extends Controller
             'lineHeight' => 1.2,  // 行间距
         ]);
 
-        $section = $phpWord->addSection();
+        $section = $phpWord->addSection(['orientation' => 'landscape']);
         $table = $section->addTable('table');
         foreach ($data['deliveryMan'] as $name => $deliveryMan) {
 
@@ -93,7 +96,8 @@ class DeliveryController extends Controller
             $table->addCell(2000, $cellRowSpan)->addText('配送人员', null, $cellAlignCenter);
             $table->addCell(1500)->addText($name, null, $cellAlignCenter);
             $table->addCell(1500)->addText('时间', null, $cellAlignCenter);
-            $table->addCell(1500)->addText($search['start_at'] . '至' . $search['end_at'], null, $cellAlignCenter);
+            $table->addCell(1500, $gridSpan3)->addText(array_get($search, 'start_at',
+                    $deliveryMan['first_time']) . '至' . array_get($search, 'end_at', '今'), null, $cellAlignCenter);
             $table->addCell(1500)->addText('配送单数', null, $cellAlignCenter);
             $table->addCell(1500)->addText($deliveryMan['orderNum'], null, $cellAlignCenter);
 
@@ -104,6 +108,8 @@ class DeliveryController extends Controller
             $table->addCell(1500)->addText('易宝', null, $cellAlignCenter);
             $table->addCell(1500)->addText('支付宝', null, $cellAlignCenter);
             $table->addCell(1500)->addText('平台余额', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('优惠券', null, $cellAlignCenter);
+            $table->addCell(1500)->addText('陈列现金', null, $cellAlignCenter);
 
             $table->addRow();
             $table->addCell(1500)->addText($deliveryMan['totalPrice'], null, $cellAlignCenter);
@@ -119,15 +125,17 @@ class DeliveryController extends Controller
             $table->addCell(1500)->addText(array_key_exists(cons('trade.pay_type.balancepay'),
                 $deliveryMan['price']) ? $deliveryMan['price'][cons('trade.pay_type.balancepay')] : '0.00', null,
                 $cellAlignCenter);
+            $table->addCell(1500)->addText(array_get($deliveryMan, 'discount', '0.00'), null, $cellAlignCenter);
+            $table->addCell(1500)->addText($deliveryMan['display_fee'], null, $cellAlignCenter);
         }
         $table->addRow();
-        $table->addCell(9000, $gridSpan6)->addText('商品列表', null, $cellAlignCenter);
+        $table->addCell(9000, $gridSpan8)->addText('商品列表', null, $cellAlignCenter);
 
         foreach ($data['goods'] as $deliveryNum => $allgoods) {
             $table->addRow();
-            $table->addCell(9000, $gridSpan6)->addText($deliveryNum . '人', null, $cellAlignCenter);
+            $table->addCell(9000, $gridSpan8)->addText($deliveryNum . '人', null, $cellAlignCenter);
             $table->addRow();
-            $table->addCell(3000, $gridSpan2)->addText('商品名称', null, $cellAlignCenter);
+            $table->addCell(3000, $gridSpan4)->addText('商品名称', null, $cellAlignCenter);
             $table->addCell(3000, $gridSpan2)->addText('购买角色', null, $cellAlignCenter);
             $table->addCell(1500, $gridSpan1)->addText('商品数量', null, $cellAlignCenter);
             $table->addCell(1500, $gridSpan1)->addText('金额', null, $cellAlignCenter);
@@ -137,10 +145,10 @@ class DeliveryController extends Controller
                     foreach ($detail as $goodsPieces => $goodsDetail) {
                         $table->addRow();
                         if (array_keys($goods)[0] == $userType && array_keys($detail)[0] == $goodsPieces) {
-                            $table->addCell(3000, array_merge($gridSpan2, $cellRowSpan))->addText($goodsName, null,
+                            $table->addCell(3000, array_merge($gridSpan4, $cellRowSpan))->addText($goodsName, null,
                                 $cellAlignCenter);
                         } else {
-                            $table->addCell(null, array_merge($gridSpan2, $cellRowContinue));
+                            $table->addCell(null, array_merge($gridSpan4, $cellRowContinue));
                         }
                         if (array_keys($detail)[0] == $goodsPieces) {
                             $table->addCell(3000,

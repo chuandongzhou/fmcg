@@ -196,16 +196,24 @@ class SalesmanCustomerController extends Controller
              return !is_null($item);
          });*/
 
-        $allOrders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->ofData([
+        $allOrders = SalesmanVisitOrder::active()->where('salesman_customer_id', $customer->id)->ofData([
             'start_date' => $beginTime,
             'end_date' => $endTime
-        ])->with('orderGoods', 'mortgageGoods')->get();
+        ])->with('orderGoods', 'mortgageGoods', 'order.coupon')->get()->filter(function ($item) {
+            $order = $item->order;
+            if (!is_null($order)) {
+                return $order->is_cancel == 0
+                    && $order->pay_status < cons('order.pay_status.payment_failed')
+                    && $order->status != cons('order.status.invalid');
+            }
+            return true;
+        });
 
         $orderConf = cons('salesman.order');
 
-        $allOrders->each(function($order){
-            $order->orderGoods->each(function($goods)use($order){
-                $goods->visit_created_at = $order->salesmanVisit?$order->salesmanVisit->created_at:$goods->created_at;
+        $allOrders->each(function ($order) {
+            $order->orderGoods->each(function ($goods) use ($order) {
+                $goods->visit_created_at = $order->salesmanVisit ? $order->salesmanVisit->created_at : $goods->created_at;
 
             });
 
@@ -274,7 +282,7 @@ class SalesmanCustomerController extends Controller
 
             foreach ($goodsVisits as $visitId => $goodsList) {
                 $salesListsData[$goodsId]['visit'][$visitId] = [
-                    'time' => isset($goodsList[$orderGoodsType['order']])?$goodsList[$orderGoodsType['order']]->visit_created_at:head($goodsList)['created_at'],
+                    'time' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->visit_created_at : head($goodsList)['created_at'],
                     'stock' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->stock : 0,
                     'production_date' => isset($goodsRecodeData[$goodsId]) && isset($goodsRecodeData[$goodsId][$visitId]) ? $goodsRecodeData[$goodsId][$visitId]->production_date : 0,
                     'order_num' => isset($goodsList[$orderGoodsType['order']]) ? $goodsList[$orderGoodsType['order']]->num : 0,

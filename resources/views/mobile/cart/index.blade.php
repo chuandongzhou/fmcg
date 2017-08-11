@@ -83,7 +83,7 @@
                                     <div class="pull-right remove">
                                         <a class="red mobile-ajax goods-delete"
                                            data-url="{{ url('api/v1/cart/delete/'.$cart->id ) }}"
-                                           data-method="delete" data-danger="是否从购物车移除该商品？" data-no-prompt="true"
+                                           data-method="delete" data-no-prompt="true"
                                            data-done-then="none">删除</a>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
                 </button>
                 <button class="batch-delete submit hidden mobile-ajax" data-data='{"type": "pc"}'
                         data-url="{{ url('api/v1/cart/batch-delete') }}"
-                        data-method="delete" data-done-then="none">删除
+                        data-method="delete" data-done-then="none" type="button">删除
                 </button>
             </div>
         </div>

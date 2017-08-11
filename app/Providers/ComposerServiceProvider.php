@@ -33,6 +33,7 @@ class ComposerServiceProvider extends ServiceProvider
             UserComposer::class => [
                 'master',
                 'index.master',
+                'index.index-master',
                 'index.manage-master',
                 'index.index.index',
                 'includes.search',

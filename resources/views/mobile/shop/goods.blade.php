@@ -29,7 +29,7 @@
                 <div class="col-xs-12 pd-clear product-wrap goods-list">
                     @foreach($goods as $item)
                         <div class="product-col">
-                            <a href="{{ url('goods/' . $item->goods) }}">
+                            <a href="{{ url('goods/' . $item->id) }}">
                                 <img class="product-img lazy" data-original="{{ $item->image_url }}">
                                 <span class="@if($item->is_out)prompt lack @elseif($item->is_promotion)prompt promotions @elseif($item->is_new)prompt new-listing @endif"></span>
                                 <div class="product-info">

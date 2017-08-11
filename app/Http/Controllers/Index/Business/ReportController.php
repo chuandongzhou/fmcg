@@ -58,10 +58,12 @@ class ReportController extends Controller
 
         $carbon = new Carbon();
         $data = $request->all();
+
+        $date = $carbon->copy()->toDateString();
         //开始时间
-        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        $startDate = array_get($data, 'start_date', $date);
         //结束时间
-        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
+        $endDate = array_get($data, 'end_date', $date);
 
         $dateEnd = (new Carbon($endDate))->endOfDay();
 
@@ -76,7 +78,9 @@ class ReportController extends Controller
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
             'end_date' => $dateEnd
-        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
+        ])->with(['order.orderGoods.goods', 'order.coupon'])->get()->filter(function ($order) {
+            return isset($order->order) ? $order->order->is_cancel == 0 && $order->order->pay_status < cons('order.pay_status.payment_failed') && $order->order->status != cons('order.status.invalid') : true;
+        });
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -122,7 +126,6 @@ class ReportController extends Controller
         ])->get();
 
 
-
         return view('index.business.report-customer-detail',
             array_merge(compact('salesmanId', 'customerId', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }
@@ -140,7 +143,8 @@ class ReportController extends Controller
         $orderTypes = cons('salesman.order.type');
         //订货单
         $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
-            return ($order->type == $orderTypes['order'] && $order->salesman_visit_id >  0 && (isset($order->order) ? $order->order->status < cons('order.status.invalid') : true));
+            return $order->type == $orderTypes['order']
+                && $order->salesman_visit_id > 0;
         });
 
         //退货单
@@ -162,11 +166,11 @@ class ReportController extends Controller
             'returnOrderCount' => $returnOrders->count(),
             'returnOrderAmount' => $returnOrders->sum('amount'),
             'visitOrderCount' => $visitOrders->count(),
-            'visitOrderAmount' => $visitOrders->sum('amount'),
+            'visitOrderAmount' => $visitOrders->sum('after_rebates_price'),
             'ownOrderCount' => $ownOrders->count(),
             'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
             'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
-            'totalAmount' => bcadd($visitOrders->sum('amount'), $ownOrders->sum('amount'), 2)
+            'totalAmount' => bcadd($visitOrders->sum('after_rebates_price'), $ownOrders->sum('after_rebates_price'), 2)
         ];
 
         $visitList = [];
@@ -185,7 +189,7 @@ class ReportController extends Controller
      */
     private function _getDetailData(Collection $visits)
     {
-        $visits = $visits->filter(function ($visit){
+        $visits = $visits->filter(function ($visit) {
             return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
         });
         //详情拜访列表
@@ -331,7 +335,7 @@ class ReportController extends Controller
         $config = cons('salesman.order.goods.type');
         //所有商品
         $salesGoods = $salesGoods->filter(function ($item) use ($goodsId) {
-            return $item->goods_id == $goodsId  && (isset($item->order) ? $item->order->status < cons('order.status.invalid') : true);
+            return $item->goods_id == $goodsId && (isset($item->order) ? $item->order->status < cons('order.status.invalid') : true);
         });
 
         //订货商品
@@ -739,7 +743,7 @@ class ReportController extends Controller
             'salesmanCustomer.shippingAddress'
         ])->get();
 
-        $visits = $visits->filter(function ($visit){
+        $visits = $visits->filter(function ($visit) {
             return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
         });
         $visitsLists = $this->_getVisitListForDetail($visits);

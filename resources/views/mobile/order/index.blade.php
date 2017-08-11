@@ -23,7 +23,7 @@
                     <div class="col-xs-12 list-item">
                         <div class="item order-title-panel">
                             <div class="pull-left">订货单 <span
-                                        class="color-black">{{ $order->id }}{{ $order->type? '(自主)' : '' }}</span></div>
+                                        class="color-black">{{ $order->id }}</span></div>
                             <div class="pull-right">{{ $order->created_at }}</div>
                         </div>
                     </div>

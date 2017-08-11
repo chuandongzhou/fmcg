@@ -116,6 +116,7 @@ abstract class AdvertController extends Controller
         return view('admin.advert.advert', [
             'type' => $this->type,
             'advert' => $advert,
+            'size' => array_get($this->size, $this->type, '- -'),
             'categories' => isset($categories) ? $categories : []
         ]);
 

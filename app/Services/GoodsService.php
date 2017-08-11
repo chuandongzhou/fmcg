@@ -189,7 +189,7 @@ class GoodsService
         $type = is_null($user) ? $userTypes['retailer'] : $user->type;
 
         //供应商暂时与批发商一致
-        $type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
+        //$type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
 
         $addressData = (new AddressService)->getAddressData();
         $data = array_except($addressData, 'address_name');
@@ -260,9 +260,7 @@ class GoodsService
                     $columnGoods = Goods::active()->whereIn('id', $columnId)
                         ->ofSearchType($type)
                         ->where('is_out', 0)
-                        ->with('images.image')
-                        ->orderBy('is_promotion', 'desc')
-                        ->orderBy('is_new', 'desc')
+                        ->ofCommonSort()
                         ->latest()
                         ->select($goodsFields)
                         ->take($displayCount)
@@ -279,9 +277,7 @@ class GoodsService
                         ->where('is_out', 0)
                         ->whereNotIn('id', (array)$columnId)
                         ->OfDeliveryArea(array_filter($data))
-                        ->with('images.image')
-                        ->orderBy('is_promotion', 'desc')
-                        ->orderBy('is_new', 'desc')
+                        ->ofCommonSort()
                         ->latest()
                         ->select($goodsFields)
                         ->take($displayCount - $columnGoodsCount)
@@ -310,7 +306,7 @@ class GoodsService
         $type = is_null($user) ? $userTypes['retailer'] : $user->type;
 
         //供应商暂时与批发商一致
-        $type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
+        //$type = $type <= $userTypes['wholesaler'] ? $type : $userTypes['wholesaler'];
 
         $columnTypes = cons('home_column.type');
 

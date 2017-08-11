@@ -8,7 +8,8 @@
         }
     </style>
 @stop
-@section('right')
+@section('body')
+    @parent
     <div class="modal fade" id="customerAddressMapModal" tabindex="-1" role="dialog"
          aria-labelledby="customerAddressMapModalLabel"
          aria-hidden="true">
@@ -40,7 +41,6 @@
             </div>
         </div>
     </div>
-    @parent
 @stop
 @section('js')
     @parent
@@ -62,7 +62,7 @@
                     //mp.centerAndZoom(point, 15);
 
                     var shopMarkerArray = [],
-		    markerArray = [];
+                        markerArray = [];
 
 
                     for (var i = 0; i < mapData.length; i++) {
@@ -71,12 +71,12 @@
                         var shopPoint = new BMap.Point(mapData[i]['businessLng'], mapData[i]['businessLat']);
                         var salesmanPoint = new BMap.Point(mapData[i]['lng'], mapData[i]['lat']);
 
-                          /*  shopPointArray.push(shopPoint);
-                            pointArray.push(point);*/
-                            var ShopIconUrl='http://dingbaida.com/images/map-icon/icon_s_'+(i+1)+'.png';
-			    var IconUrl='http://dingbaida.com/images/map-icon/icon_p_'+(i+1)+'.png';
-                            var shopIcon = new BMap.Icon(ShopIconUrl, new BMap.Size(30, 60));
-                            var icon = new BMap.Icon(IconUrl, new BMap.Size(30, 60));
+                        /*  shopPointArray.push(shopPoint);
+                         pointArray.push(point);*/
+                        var ShopIconUrl = 'http://dingbaida.com/images/map-icon/icon_s_' + (i + 1) + '.png';
+                        var IconUrl = 'http://dingbaida.com/images/map-icon/icon_p_' + (i + 1) + '.png';
+                        var shopIcon = new BMap.Icon(ShopIconUrl, new BMap.Size(30, 60));
+                        var icon = new BMap.Icon(IconUrl, new BMap.Size(30, 60));
 
                         var shopMarker = new BMap.Marker(shopPoint, {icon: shopIcon});  // 创建标注
                         var marker = new BMap.Marker(salesmanPoint, {icon: icon});  // 创建标注

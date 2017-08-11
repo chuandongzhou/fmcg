@@ -34,7 +34,14 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-goods', function ($user, $goods) {
             /*$goodsShopUser = $goods->shop->user;
             $nowTime = Carbon::now();*/
-            return ($user->type < $goods->user_type && $goods->status == cons('status.on')/* && $goodsShopUser->deposit > 0 && $goodsShopUser->expire_at > $nowTime*/) || $user->id == $goods->shop->user_id;
+            $userTypes = cons('user.type');
+            if ($user->type == $userTypes['supplier']) {
+                $allow = $goods->user_type == $userTypes['maker'];
+            } else {
+                $allow = $goods->user_type > $user->type && $goods->user_type < $userTypes['maker'];
+            }
+
+            return $user->id == $goods->shop->user_id || ($allow && $goods->status == cons('status.on')/* && $goodsShopUser->deposit > 0 && $goodsShopUser->expire_at > $nowTime*/);
         });
 
         /**
@@ -55,10 +62,16 @@ class AuthServiceProvider extends ServiceProvider
          * 验证是否有权限访问店铺
          */
         $gate->define('validate-allow', function ($user, $shop) {
-            $shopUser = $shop->user;
-            $nowTime = Carbon::now();
-//            return ($user->type < $shop->user_type && $shopUser->deposit > 0 && $shopUser->expire_at > $nowTime) || $user->id == $shop->user_id;
-            return $user->type < $shop->user_type || $user->id == $shop->user_id;
+            //$shopUser = $shop->user;
+            //$nowTime = Carbon::now();
+            //return ($user->type < $shop->user_type && $shopUser->deposit > 0 && $shopUser->expire_at > $nowTime) || $user->id == $shop->user_id;
+            $userTypes = cons('user.type');
+            if ($user->type == $userTypes['supplier']) {
+                $allow = $shop->user_type == $userTypes['maker'];
+            } else {
+                $allow = $shop->user_type > $user->type && $shop->user_type < $userTypes['maker'];
+            }
+            return $user->id == $shop->user_id || $allow;
         });
 
         /**
@@ -161,14 +174,14 @@ class AuthServiceProvider extends ServiceProvider
         /**
          * 验证业务员资产申请删除权限
          */
-        $gate->define('validate-salesman-assetApply', function ($salesman,$assetApply){
+        $gate->define('validate-salesman-assetApply', function ($salesman, $assetApply) {
             return $salesman->id == $assetApply->salesman_id;
         });
-        
+
         /**
          * 验证业务员促销申请删除权限
          */
-        $gate->define('validate-salesman-promoApply', function ($salesman,$promoApply){
+        $gate->define('validate-salesman-promoApply', function ($salesman, $promoApply) {
             return $salesman->id == $promoApply->salesman_id;
         });
     }

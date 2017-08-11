@@ -30,7 +30,6 @@
                 if (maxDate && typeof maxDate != 'boolean') {
                     maxDateContent = new Date(maxDate);
                 } else if (maxDate && typeof maxDate == 'boolean') {
-                    console.log(year + '-' + month + '-' + day);
                     maxDateContent = new Date(year + '-' + month + '-' + day);
                 }
 

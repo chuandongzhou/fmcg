@@ -474,7 +474,11 @@ class Goods extends Model
     public function scopeOfSearchType($query, $type = 2)
     {
         if ($type) {
-            $query->whereBetween('user_type', [$type + 1, cons('user.type.supplier')]);
+            if ($type == cons('user.type.supplier')) {
+                $query->where('user_type', cons('user.type.maker'));
+            } else {
+                $query->whereBetween('user_type', [$type + 1, cons('user.type.supplier')]);
+            }
         }
     }
 
@@ -515,7 +519,7 @@ class Goods extends Model
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
-        return $userType == $this->user_type && $userType != cons('user.type.supplier') ? $this->price_retailer : ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier') ? $this->price_wholesaler : $this->price_retailer);
+        return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->price_wholesaler : $this->price_retailer;
     }
 
     /**
@@ -528,7 +532,7 @@ class Goods extends Model
         $user = auth()->user();
         $userType = $user ? $user->type : cons('user.type.retailer');
 
-        return $userType == $this->user_type ? $this->price_retailer_pick_up : ($userType == cons('user.type.wholesaler') ? $this->price_wholesaler_pick_up : $this->price_retailer_pick_up);
+        return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->price_wholesaler_pick_up : $this->price_retailer_pick_up;
     }
 
     /**
@@ -549,14 +553,10 @@ class Goods extends Model
      */
     public function getPiecesIdAttribute()
     {
-        $userTypes = cons('user.type');
-
         $retailerPieces = $this->pieces_retailer;
         $wholesalerPieces = $this->pieces_wholesaler;
-
         $userType = auth()->check() ? auth()->user()->type : cons('user.type.retailer');
-        $piece = $userType == $this->user_type ? ($userType == $userTypes['wholesaler'] ? $retailerPieces : $wholesalerPieces) : ($userType >= $userTypes['wholesaler'] ? $wholesalerPieces : $retailerPieces);
-        return $piece;
+        return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $wholesalerPieces : $retailerPieces;
     }
 
     /**
@@ -585,8 +585,7 @@ class Goods extends Model
     public function getSpecificationAttribute()
     {
         $userType = auth()->user()->type;
-        $specification = $userType == $this->user_type ? $this->specification_retailer : ($userType == cons('user.type.wholesaler') ? $this->specification_wholesaler : $this->specification_retailer);
-        return $specification;
+        return  $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->specification_wholesaler : $this->specification_retailer;
     }
 
     /**
@@ -597,7 +596,7 @@ class Goods extends Model
     public function getSpecificationForChildAttribute()
     {
         $userType = child_auth()->user()->type;
-        $specification = $userType == $this->user_type ? $this->specification_retailer : ($userType == cons('user.type.wholesaler') ? $this->specification_wholesaler : $this->specification_retailer);
+        $specification = $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->specification_wholesaler : $this->specification_retailer;
         return $specification;
     }
 
@@ -610,7 +609,7 @@ class Goods extends Model
     {
         $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
 
-        return $userType == $this->user_type ? $this->min_num_retailer : ($userType == cons('user.type.wholesaler') ? $this->min_num_wholesaler : $this->min_num_retailer);
+        return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->min_num_wholesaler : $this->min_num_retailer;
 
     }
 

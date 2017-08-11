@@ -17,21 +17,25 @@
 
             <div class="row delivery">
                 <div class="col-sm-12 control-search">
-                    <form action="" method="get" autocomplete="off">
+                    <form action="{{ url('personal/delivery/history') }}" method="get" autocomplete="off">
                         <input class="enter control datetimepicker" name="start_at"
                                placeholder="开始时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
-                               value="{{ $search['start_at'] or '' }}">至
+                               value="{{ array_get($search, 'start_at') }}">至
                         <input class="enter control datetimepicker" name="end_at"
                                placeholder="结束时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
-                               value="{{ $search['end_at'] or '' }}">
+                               value="{{ array_get($search, 'end_at') }}">
                         <select name="delivery_man_id" class="control ajax-select">
                             <option value="">所有配送人员</option>
                             @foreach($deliveryMen as $man)
-                                <option value="{{ $man->id  }}"{{ isset($search['delivery_man_id'])&&$man->id==$search['delivery_man_id'] ? 'selected' : ''}}>{{ $man->name }}</option>
+                                <option value="{{ $man->id  }}"{{ $man->id == array_get($search, 'delivery_man_id') ? 'selected' : ''}}>{{ $man->name }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class=" btn btn-blue-lighter search control search-by-get">搜索</button>
-                        <button type="button" class="btn btn-default control statistical">汇总统计</button>
+                        <button type="submit" data-url="{{ url('personal/delivery/history') }}"
+                                class=" btn btn-blue-lighter search control search-by-get">搜索
+                        </button>
+                        <button type="submit" data-url="{{ url('personal/delivery/statistical') }}"
+                                class="btn btn-default control statistical  search-by-get">汇总统计
+                        </button>
                     </form>
                 </div>
                 <div class="col-sm-12 table-responsive table-wrap">
@@ -92,17 +96,10 @@
 @section('js')
     @parent
     <script type="text/javascript">
+        $('form').find('button[type="submit"]').on('click', function () {
+            $(this).closest('form').attr('action', $(this).data('url'));
+        });
         formSubmitByGet();
-        $('.statistical').click(function () {
-            checksubmit(site.url('personal/delivery-statistical'));
-        });
-        $('.search-by-get').click(function () {
-            checksubmit(site.url('personal/delivery'));
-        });
-        function checksubmit(url) {
-            $("form").attr('action', url);
-            $('form').submit();
-        }
     </script>
 @stop
 

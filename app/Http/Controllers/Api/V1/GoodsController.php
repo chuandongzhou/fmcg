@@ -5,12 +5,15 @@
  * Date: 2015/9/18
  * Time: 11:35
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\GoodsColumn;
+use App\Models\OrderGoods;
 use App\Services\AddressService;
 use App\Services\AttrService;
 use Gate;
+use DB;
 use App\Models\Goods;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
@@ -22,7 +25,8 @@ class GoodsController extends Controller
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getGoods(){
+    public function getGoods()
+    {
         return $this->success(['goodsColumns' => GoodsService::getNewGoodsColumn()]);
     }
 
@@ -85,6 +89,52 @@ class GoodsController extends Controller
         $goods->is_like = !is_null($isLike);
 
         return $this->success(['goods' => $goods]);
+    }
+
+    /**
+     * 常购商品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getAlwaysBuy(Request $request)
+    {
+        $ordersId = auth()->user()->orders()->useful()->noInvalid()->get()->pluck('id');
+
+        $name = $request->input('name');
+
+
+        if ($request->input('sort') === 'num') {
+            // 按多到少
+            $goodsId = OrderGoods::whereIn('order_id',
+                $ordersId)->groupBy('goods_id')->select(DB::raw('sum(num) amount, goods_id'))->orderBy('amount',
+                'DESC')->get()->pluck('goods_id');
+        } else {
+            $goodsId = OrderGoods::whereIn('order_id', $ordersId)->orderBy('id', 'DESC')->get()->pluck('goods_id');
+
+            $goodsId = $goodsId->toBase()->unique();
+        }
+        $referenceIdsStr = implode(',', $goodsId->all());
+
+        $goods = Goods::active()->whereIn('id', $goodsId)
+            ->ofGoodsName($name)
+            ->orderByRaw("FIELD(id, $referenceIdsStr)")
+            ->select([
+                'id',
+                'bar_code',
+                'name',
+                'price_retailer',
+                'price_wholesaler',
+                'pieces_retailer',
+                'pieces_wholesaler',
+                'min_num_retailer',
+                'min_num_wholesaler'
+            ])->paginate();
+
+        $goods->each(function ($item) {
+            $item->setAppends(['image_url']);
+        });
+        return $this->success(['goods' => $goods->toArray()]);
     }
 
     /**

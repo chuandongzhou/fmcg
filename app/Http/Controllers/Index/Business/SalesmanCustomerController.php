@@ -99,6 +99,7 @@ class SalesmanCustomerController extends Controller
         if ($customer && Gate::denies('validate-customer', $customer)) {
             return $this->error('客户不存在');
         }
+
         $data = $request->all();
         $beginTime = isset($data['begin_time']) ? new Carbon($data['begin_time']) : (new Carbon())->startOfMonth();
         $endTime = isset($data['end_time']) ? (new Carbon($data['end_time']))->endOfDay() : Carbon::now();
@@ -231,7 +232,7 @@ class SalesmanCustomerController extends Controller
         $visits = $customer->visits()->OfTime($beginTime, $endTime)->with([
             'goodsRecord'
         ])->get();
-        
+
         //拜访商品记录
         $goodsRecodeData = [];
         $goodsRecord = $visits->pluck('goodsRecord')->collapse();
@@ -247,10 +248,19 @@ class SalesmanCustomerController extends Controller
              return !is_null($item);
          });*/
 
-        $allOrders = SalesmanVisitOrder::where('salesman_customer_id', $customer->id)->ofData([
+        $allOrders = SalesmanVisitOrder::active()->where('salesman_customer_id', $customer->id)->ofData([
             'start_date' => $beginTime,
             'end_date' => $endTime
-        ])->with('orderGoods', 'gifts', 'mortgageGoods')->get();
+        ])->with('orderGoods', 'mortgageGoods', 'order.coupon')->get()->filter(function ($item) {
+            $order = $item->order;
+            if (!is_null($order)) {
+                return $order->is_cancel == 0
+                    && $order->pay_status < cons('order.pay_status.payment_failed')
+                    && $order->status != cons('order.status.invalid');
+            }
+            return true;
+        });
+
 
         $orderConf = cons('salesman.order');
 

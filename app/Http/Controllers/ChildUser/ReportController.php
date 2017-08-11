@@ -57,10 +57,12 @@ class ReportController extends Controller
 
         $carbon = new Carbon();
         $data = $request->all();
+
+        $date = $carbon->copy()->toDateString();
         //开始时间
-        $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
+        $startDate = array_get($data, 'start_date', $date);
         //结束时间
-        $endDate = array_get($data, 'end_date', $carbon->copy()->toDateString());
+        $endDate = array_get($data, 'end_date', $date);
 
         $dateEnd = (new Carbon($endDate))->endOfDay();
 
@@ -75,7 +77,9 @@ class ReportController extends Controller
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
             'end_date' => $dateEnd
-        ])->with(['order.orderGoods.goods', 'order.coupon'])->get();
+        ])->with(['order.orderGoods.goods', 'order.coupon'])->get()->filter(function ($order) {
+            return isset($order->order) ? $order->order->is_cancel == 0 && $order->order->pay_status < cons('order.pay_status.payment_failed') && $order->order->status != cons('order.status.invalid') : true;
+        });
         return view('child-user.report.detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }

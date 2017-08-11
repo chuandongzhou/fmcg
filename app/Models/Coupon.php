@@ -20,8 +20,6 @@ class Coupon extends Model
         'end_at'
     ];
 
-    // protected $dates = ['start_at', 'end_at', 'deleted_at'];
-
     protected $appends = ['diff_time'];
 
     /**
@@ -82,6 +80,26 @@ class Coupon extends Model
             $nowDate = (new Carbon())->toDateString();
             $query->where('start_at', '<=', $nowDate)->where('end_at', '>=', $nowDate);
         });
+    }
+
+    /**
+     * 查询可领取优惠券
+     *
+     * @param $query
+     * @param $shopId
+     * @return mixed
+     */
+    public function scopeOfCanReceive($query, $shopId)
+    {
+        $user = auth()->user();
+        $nowDate = (new Carbon)->toDateString();
+        return $query->where('shop_id', $shopId)
+            ->where('stock', '>', 0)
+            ->where('start_at', '<=', $nowDate)
+            ->where('end_at', '>=', $nowDate)
+            ->whereNotIn('id', function ($query) use ($user) {
+                $query->from('user_coupon')->where('user_id', $user->id)->select('coupon_id');
+            });
     }
 
     /**

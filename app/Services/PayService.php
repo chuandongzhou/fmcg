@@ -84,7 +84,7 @@ class PayService extends BaseService
                 $order->fill($orderAttr)->save();
                 $fee = ($order->after_rebates_price / $amount) * $orderFee;
                 $fee = sprintf("%.2f", $fee);
-                // 增加易宝支付log
+               /* // 增加易宝支付log
                 DB::table('yeepay_log')->insert(
                     [
                         'order_id' => $order->id,
@@ -92,7 +92,7 @@ class PayService extends BaseService
                         'amount' => $order->after_rebates_price - $fee,
                         'paid_at' => $nowTimestamp
                     ]
-                );
+                );*/
                 
                 
                 

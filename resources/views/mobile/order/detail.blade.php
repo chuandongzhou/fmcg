@@ -27,22 +27,34 @@
                 </div>
             </div>
             <div class="col-xs-12 receiver">
-                <div class="clearfix">
-                    <div class="pull-left prompt">收货信息</div>
-                    <div class="pull-right">
-                        <span class="name">{{  $order->shippingAddress->consigner ?? ''}}</span>
-                        <span class="num">{{ $order->shippingAddress->phone ?? ''}} </span>
+                @if($order->pay_type == cons('pay_type.pick_up'))
+                    <div class="clearfix">
+                        <div class="pull-left prompt">提货信息</div>
+                        <div class="pull-right">
+                            <span class="name">{{  $order->shop_contact ?? ''}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="address">
-                    {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
-                </div>
+                    <div class="address">
+                        {{  $order->shop_address }}
+                    </div>
+                @else
+                    <div class="clearfix">
+                        <div class="pull-left prompt">收货信息</div>
+                        <div class="pull-right">
+                            <span class="name">{{  $order->shippingAddress->consigner ?? ''}}</span>
+                            <span class="num">{{ $order->shippingAddress->phone ?? ''}} </span>
+                        </div>
+                    </div>
+                    <div class="address">
+                        {{  isset($order->shippingAddress->address) ? $order->shippingAddress->address->address_name : '' }}
+                    </div>
+                @endif
             </div>
         </div>
         <div class="row all-orders-list">
             <div class="col-xs-12 list-item">
                 <div class="item">
-                    <a class="pull-left shop-name">{{ $order->shop_name }} <i
+                    <a href="{{ url('shop/' . $order->shop_id) }}" class="pull-left shop-name">{{ $order->shop_name }} <i
                                 class="iconfont icon-jiantouyoujiantou"></i></a>
                 </div>
             </div>
@@ -123,7 +135,11 @@
                 <ul>
                     <li class="clearfix">
                         <span class="pull-left prompt">送货人</span>
-                        <span class="pull-right">李泽-18098786543</span>
+                        <span class="pull-right">
+                            @foreach($order->deliveryMan as $deliveryMan)
+                                <span class="delivery-person">{{ $deliveryMan->name }}-{{ $deliveryMan->phone }}</span>
+                            @endforeach
+                        </span>
                     </li>
                     <li class="clearfix">
                         <span class="pull-left prompt">创建时间</span>

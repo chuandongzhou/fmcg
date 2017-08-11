@@ -88,7 +88,9 @@ return [
         'goods' => [
             'type' => [
                 'order_goods' => 0,
-                'mortgage_goods' => 1
+                'mortgage_goods' => 1,
+                'gift_goods' => 2,
+                'promo_goods' => 3,
             ]
         ],
         'pay_status' => [//支付状态
@@ -235,7 +237,8 @@ return [
             'alipay' => 5,              //支付宝app
             //'alipay_wap' => 6,           //支付宝（app网页）
             'balancepay' => 7,               //余额支付,
-            'wechat_pay' => 8           //微信支付
+            'wechat_pay' => 8,           //微信支付
+            'union_pay' => 9           //银联
         ],
         'pay_status' => [
             'success' => 1,         //成功

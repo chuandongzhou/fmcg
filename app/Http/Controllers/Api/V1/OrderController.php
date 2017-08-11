@@ -725,7 +725,7 @@ class OrderController extends Controller
             return $this->error($cartService->getError());
         }
 
-        if ($confirmedGoods->update(['status' => 1])) {
+        if (false !== $confirmedGoods->update(['status' => 1])) {
             return $this->success('确认成功');
         } else {
             return $this->error('确认订单失败');

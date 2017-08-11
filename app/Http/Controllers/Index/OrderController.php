@@ -164,6 +164,8 @@ class OrderController extends Controller
 
         $orders = Order::ofSell(auth()->user()->shop_id)
             ->useful()
+            ->noInvalid()
+            ->nonRefund()
             ->ofPayType($payType)
             ->ofCreatedAt($startTime, (new Carbon($endTime))->endOfDay())
             ->ofUserShopName($userShopName)

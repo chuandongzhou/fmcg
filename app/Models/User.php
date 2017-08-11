@@ -143,6 +143,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function orderGoods()
+    {
+        return $this->hasManyThrough('App\Models\OrderGoods', 'App\Models\Order');
+    }
+
+    /**
      * 提现
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

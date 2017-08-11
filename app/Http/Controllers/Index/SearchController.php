@@ -21,7 +21,7 @@ class SearchController extends Controller
 
         //供应商暂时与批发商一致
         $type = auth()->user()->type;
-        $type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
+        //$type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
         $goods = Goods::active()->shopUser()->with('shop')->ofSearchType($type);
 

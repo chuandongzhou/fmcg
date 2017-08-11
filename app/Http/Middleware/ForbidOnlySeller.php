@@ -3,9 +3,27 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Auth\Guard;
 
-class ForbidSupplier
+class ForbidOnlySeller
 {
+
+    /**
+     * The Guard implementation.
+     *
+     * @var Guard
+     */
+    protected $auth;
+
+    /**
+     * Create a new filter instance.
+     *
+     * @param  Guard $auth
+     */
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
     /**
      * Handle an incoming request.
      *
@@ -15,7 +33,7 @@ class ForbidSupplier
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->type > cons('user.type.wholesaler')) {
+        if ($this->auth->user()->type > cons('user.type.supplier')) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {

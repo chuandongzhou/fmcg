@@ -15,8 +15,7 @@
 
             <div class="row delivery-statistics">
                 <div class="col-sm-12 operation">
-                    <a href="{{  url('personal/delivery?'.  http_build_query(array_except($search , ['num']))) }}"
-                       class="btn btn-border-blue"><i class="iconfont icon-fanhui"></i>返回</a>
+                    <a href="javascript:" onclick="window.history.back()" class="btn btn-border-blue"><i class="iconfont icon-fanhui"></i>返回</a>
                     <a href="{{ url('personal/delivery-report?'.  http_build_query($search)) }}"
                        class="btn btn-border-blue">下载打印</a>
                 </div>
@@ -38,14 +37,16 @@
                                     <th>易宝</th>
                                     <th>支付宝</th>
                                     <th>平台余额</th>
+                                    <th>优惠券</th>
+                                    <th>陈列现金</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($data['deliveryMan'] as $key => $deliveryMan)
                                     <tr>
                                         <td>{{ $key }}</td>
-                                        <td> {{  !empty($search['start_at'])?$search['start_at']: $deliveryMan['first_time'] }}
-                                            至{{  !empty($search['end_at'])?$search['end_at']:'今' }}</td>
+                                        <td> {{ array_get($search, 'start_at', $deliveryMan['first_time'] ) }}
+                                            至 {{ array_get($search, 'end_at', '今' ) }}</td>
                                         <td>{{ $deliveryMan['orderNum'] }}</td>
                                         <td>{{ $deliveryMan['totalPrice'] }}</td>
                                         <td>{{ array_key_exists(0,$deliveryMan['price'])?$deliveryMan['price'][0]:'0.00' }}</td>
@@ -53,6 +54,8 @@
                                         <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.yeepay')],$deliveryMan['price'][cons('trade.pay_type.yeepay_wap')],2) }}</td>
                                         <td>{{ @bcadd($deliveryMan['price'][cons('trade.pay_type.alipay_pc')],$deliveryMan['price'][cons('trade.pay_type.alipay')],2) }}</td>
                                         <td>{{ array_key_exists(cons('trade.pay_type.balancepay'),$deliveryMan['price'])?$deliveryMan['price'][cons('trade.pay_type.balancepay')]:'0.00' }}</td>
+                                        <td>-{{ $deliveryMan['discount'] or '0.00' }}</td>
+                                        <td>-{{ $deliveryMan['display_fee'] or '0.00' }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -68,11 +71,11 @@
                             @if(!empty($search['delivery_man_id']) &&  !empty($deliveryNum))
                                 <div class="text-center control-panel">
                                     <select class="control num">
-                                        <option value="{{ url('personal/delivery-statistical?'.  http_build_query(array_except($search , ['num']))) }}">
+                                        <option value="{{ url('personal/delivery/statistical?'.  http_build_query(array_except($search , ['num']))) }}">
                                             全部
                                         </option>
                                         @foreach($deliveryNum as $num)
-                                            <option {{ !empty($search['num'])&&$num==$search['num']?'selected':'' }} value="{{ url('personal/delivery-statistical?'.  http_build_query(array_except($search , ['num'])).'&num='.$num) }}"> {{ $num.'人配送' }}</option>
+                                            <option {{ !empty($search['num'])&&$num==$search['num']?'selected':'' }} value="{{ url('personal/delivery/statistical?'.  http_build_query(array_except($search , ['num'])).'&num='.$num) }}"> {{ $num.'人配送' }}</option>
                                         @endforeach
                                     </select>
                                     <button class="btn control btn-border-blue search-by-num">汇总统计</button>

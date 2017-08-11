@@ -22,12 +22,13 @@ $router->controller('webhooks/pingxx', 'Index\Webhook\PingxxController');
 $router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
 $router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
 $router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
+$router->controller('webhooks/union-pay', 'Index\Webhook\UnionPayController');
 
 
 /**
  * 登录注册
  */
-$router->group(['prefix' => 'auth', 'domain' => 'm.dingbaida.com', 'namespace' => 'Mobile'],
+$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'],
     function ($router) {
         $router->get('login', 'AuthController@login');
         $router->get('register-account', 'AuthController@registerAccount');
@@ -42,7 +43,7 @@ $router->group(['prefix' => 'auth', 'domain' => 'm.dingbaida.com', 'namespace' =
 /**
  * 移动端
  */
-$router->group(['domain' => 'm.dingbaida.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
+$router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');
     $router->get('category', 'CategoryController@index');
     $router->get('search', 'SearchController@index');
@@ -142,8 +143,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->controller('chat', 'ChatController'); // 消息列表
         $router->resource('shipping-address', 'ShippingAddressController',
             ['only' => ['edit', 'index', 'create']]);          //提现账号
-        $router->get('delivery', 'DeliveryController@historyDelivery');
-        $router->get('delivery-statistical', 'DeliveryController@statisticalDelivery');//配送统计
+        $router->get('delivery/history', 'DeliveryController@history');
+        $router->get('delivery/statistical', 'DeliveryController@statistical');//配送统计
         $router->get('delivery-report', 'DeliveryController@report');
         $router->controller('model', 'ModelController');  //模版管理
         $router->resource('coupon', 'CouponController'); // 优惠券

@@ -348,7 +348,7 @@
             });
 
             //选择收货地址
-            $('body').on('click', '.address-wrap .address-list-item', function () {
+            $('body').on('touchstart', '.address-wrap .address-list-item', function () {
                 var obj = $(this)
                     , deliveryWrap = $('.delivery-wrap')
                     , addressName = obj.find('.contact-address').html()

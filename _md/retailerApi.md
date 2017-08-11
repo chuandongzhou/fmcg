@@ -300,6 +300,30 @@
 `成功返回：`
 
     'pieces'                    array           商品单位数组
+    
+#### 2.2.5 获取常购商品[get] (always-buy)    
+`请求参数:`
+
+    sort            string          排序（传num为购买数量，不传或传其它均为最近购买）
+    name            string          商品名
+
+`成功返回：`
+
+    goods    array   商品信息
+
+    goods字段子集说明
+    
+    id                  int         商品id
+    name                string      商品名
+    price_retailer      decimal     价格（对于终端商）
+    price_wholesaler    decimal     价格（对于批发商）
+    pieces_retailer     int         单位（对于终端商）
+    pieces_wholesaler   int         单位（对于批发商）
+    image_url           string      图片地址
+    price               decimal     最终价格
+    pieces_id           int         最终单位
+    
+`失败返回：`    
 
 ### 2.3 我的商品 my-goods
 
