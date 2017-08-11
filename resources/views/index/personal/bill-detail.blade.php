@@ -54,8 +54,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{sprintf("%.2f",$bill['orderForm']->sum('after_rebates_price') - $bill['orderForm']->sum('display_fee_amount'))}}</td>
-                            <td>{{sprintf("%.2f",$bill['orderForm']->sum('how_much_discount'))}}</td>
+                            <td>{{$bill['orderForm']->sum('after_rebates_price')}}</td>
+                            <td>{{sprintf("%.2f",$bill['orderForm']->sum('how_much_discount')-$bill['orderForm']->sum('display_fee_amount'))}}</td>
                             <td>{{$bill['finishedAmount']}}</td>
                             <td>{{$bill['notFinishedAmount']}}</td>
                         </tr>
@@ -97,7 +97,7 @@
                                                 <td>{{$orderGoods->num ?? ''}} {{$orderGoods->pieces_name ?? ''}}</td>
                                                 <td>{{$orderGoods->amount ?? ''}}</td>
                                                 @if($orderGoods == $order->orderGoods->first())
-                                                    <td rowspan="{{$order->orderGoods->where('type',0)->count()}}">{{$order->how_much_discount}}</td>
+                                                    <td rowspan="{{$order->orderGoods->where('type',0)->count()}}">{{bcsub($order->how_much_discount,$order->display_fee_amount,2)}}</td>
                                                 @endif
                                             </tr>
                                         @endforeach

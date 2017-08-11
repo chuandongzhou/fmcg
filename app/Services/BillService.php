@@ -52,7 +52,6 @@ class BillService
             $order = $item->order;
             return $item->type == cons('salesman.order.type.order') && !empty($order) && $order->status < cons('order.status.invalid') && $order->created_at >= $start_at && $order->created_at <= $end_at && $order->pay_status < cons('order.pay_status.refund');
         });
-
         $orderReturn = $orders->filter(function ($item) use ($start_at, $end_at) {
             return $item->type == cons('salesman.order.type.return_order') && $item->status && $item->created_at >= $start_at && $item->created_at <= $end_at;
         });
@@ -62,14 +61,13 @@ class BillService
             return !is_null($order) && $order->pay_status == cons('order.pay_status.payment_success');
         });
 
-        $finishedAmount = bcsub($finished->sum('after_rebates_price'), $finished->sum('display_fee_amount'), 2);
+        $finishedAmount = $finished->sum('after_rebates_price');
         //未收金额
         $notFinished = $orderForm->filter(function ($order) {
             $order = $order->order;
             return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->pay_status < cons('order.pay_status.payment_success'));
         });
-        $notFinishedAmount = bcsub($notFinished->sum('after_rebates_price'), $notFinished->sum('display_fee_amount'),
-            2);
+        $notFinishedAmount = $notFinished->sum('after_rebates_price');
 
         return compact('orderForm', 'orderReturn', 'finishedAmount', 'notFinishedAmount');
     }
@@ -79,7 +77,7 @@ class BillService
      *
      * @param $bill
      */
-    public function exportSeller($bill, $store, $time)
+    public function export($bill, $store, $time)
     {
 
         $phpWord = new PhpWord();
@@ -121,10 +119,10 @@ class BillService
         $table->addCell(2250)->addText('未支付金额', null, $cellAlignCenter);
         $table->addRow();
         $table->addCell(2250)->addText(sprintf("%.2f",
-            $bill['orderForm']->sum('after_rebates_price') - $bill['orderForm']->sum('display_fee_amount')), null,
+            $bill['orderForm']->sum('after_rebates_price')), null,
             $cellAlignCenter);
         $table->addCell(2250)->addText(sprintf("%.2f",
-            $bill['orderForm']->sum('how_much_discount')), null, $cellAlignCenter);
+            $bill['orderForm']->sum('how_much_discount')-$bill['orderForm']->sum('display_fee_amount')), null, $cellAlignCenter);
         $table->addCell(2250)->addText($bill['finishedAmount'], null, $cellAlignCenter);
         $table->addCell(2250)->addText($bill['notFinishedAmount'], null, $cellAlignCenter);
         $section->addText('订单对账单', $titleSize, $cellAlignCenter);
@@ -153,7 +151,7 @@ class BillService
                         $cellAlignCenter);
                     $table->addCell(1400, $cellVAlignCenter)->addText($orderGoods->amount, null, $cellAlignCenter);
                     if ($order->orderGoods->first() == $orderGoods) {
-                        $table->addCell(1400, $cellRowSpan)->addText($order->how_much_discount, null, $cellAlignCenter);
+                        $table->addCell(1400, $cellRowSpan)->addText(bcsub($order->how_much_discount,$order->display_fee_amount,2), null, $cellAlignCenter);
                     } else {
                         $table->addCell(1400, $cellRowContinue);
                     }
@@ -372,7 +370,6 @@ class BillService
             $order = $item->order;
             return $item->type == cons('salesman.order.type.order') && !empty($order) && $order->status < cons('order.status.invalid') && $order->created_at >= $start_at && $order->created_at <= $end_at && $order->pay_status < cons('order.pay_status.refund');
         });
-
         $orderReturn = $orders->filter(function ($item) use ($start_at, $end_at) {
             return $item->type == cons('salesman.order.type.return_order') && $item->status && $item->created_at >= $start_at && $item->created_at <= $end_at;
         });
@@ -382,14 +379,13 @@ class BillService
             return !is_null($order) && $order->pay_status == cons('order.pay_status.payment_success');
         });
 
-        $finishedAmount = bcsub($finished->sum('after_rebates_price'), $finished->sum('display_fee_amount'), 2);
+        $finishedAmount = $finished->sum('after_rebates_price');
         //未收金额
         $notFinished = $orderForm->filter(function ($order) {
             $order = $order->order;
             return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->pay_status < cons('order.pay_status.payment_success'));
         });
-        $notFinishedAmount = bcsub($notFinished->sum('after_rebates_price'), $notFinished->sum('display_fee_amount'),
-            2);
+        $notFinishedAmount = $notFinished->sum('after_rebates_price');
         return compact('orderForm', 'orderReturn', 'finishedAmount', 'notFinishedAmount');
 
     }

@@ -529,6 +529,18 @@ class Order extends Model
     }
 
     /**
+     * 陈列费总额
+     *
+     * @return mixed
+     */
+    public function getDisplayFeeAmountAttribute()
+    {
+        if ($this->displayFees) {
+            return $this->displayFees->sum('used');
+        }
+    }
+
+    /**
      * 获取买家名
      *
      * @return string

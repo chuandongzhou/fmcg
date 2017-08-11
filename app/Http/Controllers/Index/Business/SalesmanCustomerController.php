@@ -180,7 +180,7 @@ class SalesmanCustomerController extends Controller
         $action = array_get($data, 'act');
 
         if ($action === 'export') {
-            return $billService->exportSeller($result, $customer, $timeInterval);
+            return $billService->export($result, $customer, $timeInterval);
         }
 
         return view($action === 'print' ? 'index.business.bill-print-template' : 'index.business.customer-bill',

@@ -50,7 +50,7 @@ class BillController extends Controller
 
         $result = $this->billService->buyer($shop, $timeInterval);
         if ($request->input('act')) {
-            return $this->billService->exportSeller($result,$shop,$timeInterval);
+            return $this->billService->export($result,$shop,$timeInterval);
         }
         return view('index.personal.bill-detail', [
             'timeInterval' => $timeInterval,
