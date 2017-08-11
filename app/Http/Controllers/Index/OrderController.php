@@ -29,7 +29,7 @@ class OrderController extends Controller
         $orderGoodsNum = array_where($orderGoodsNum, function ($key, $value) use ($goodsId) {
             return in_array($key, (array)$goodsId);
         });
-        
+
         if (empty($orderGoodsNum)) {
             return redirect()->back()->withInput();
         }
@@ -862,6 +862,9 @@ class OrderController extends Controller
     {
         $orderConf = cons('order');
         $payTypes = cons('pay_type');
+        $orders = $orders->filter(function ($order) {
+            return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+        });
         //已支付订单
         $paidOrders = $orders->filter(function ($order) use ($orderConf) {
             return $order->pay_status == $orderConf['pay_status']['payment_success'];
@@ -949,7 +952,6 @@ class OrderController extends Controller
 
         $orderStatistics = $this->_orderStatistics($orders);
         extract($this->_groupOrderByType($orders));
-
         $shopDetails = [
             'id' => $isSeller ? $firstOrder->user_id : $firstOrder->shop_id,
             'shopName' => $shopName,
@@ -957,9 +959,13 @@ class OrderController extends Controller
             'address' => $isSeller ? $firstOrder->user_shop_address : $firstOrder->shop_address,
             'orderCount' => $orders->count(),
             'businessOrderCount' => $businessOrders->count(),
-            'businessOrderAmount' => $businessOrders->sum('after_rebates_price'),
+            'businessOrderAmount' => $businessOrders->filter(function ($order){
+                return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            })->sum('after_rebates_price'),
             'ownOrderCount' => $ownOrders->count(),
-            'ownOrderAmount' => $ownOrders->sum('after_rebates_price'),
+            'ownOrderAmount' => $ownOrders->filter(function ($order){
+                return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            })->sum('after_rebates_price'),
         ];
 
         if ($isSeller) {
@@ -976,7 +982,9 @@ class OrderController extends Controller
      */
     private function _orderGoodsStatistics(Collection $orders)
     {
-
+        $orders = $orders->filter(function ($order) {
+            return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+        });
         $orderGoods = $orders->pluck('orderGoods')->collapse();
 
         $goodsStatistics = [];

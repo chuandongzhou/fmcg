@@ -123,8 +123,9 @@
                             </thead>
                             <tbody>
                             @foreach($orderStatisticsGroupName as $item)
+                                @if($item)
                                 <tr>
-                                    <td>{{ $item['shopName'] }}</td>
+                                    <td>{{ $item['shopName']}}</td>
                                     <td>{{ $item['orderCount'] }}
                                         <p class="margin-clear prompt">
                                             ({{ $item['businessOrderCount'] }}+{{ $item['ownOrderCount'] }})
@@ -146,6 +147,7 @@
                                            onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                             </tbody>
                         </table>

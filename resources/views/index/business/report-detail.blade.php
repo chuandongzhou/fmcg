@@ -48,6 +48,7 @@
                                     <th>自主订货金额</th>
                                     <th>总订货单数</th>
                                     <th>总订货金额</th>
+                                    <th>总应付金额</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -61,6 +62,9 @@
                                     <td class="red">{{ $visitStatistics['ownOrderAmount'] }}</td>
                                     <td>{{ $visitStatistics['totalCount'] }}</td>
                                     <td class="red">{{ $visitStatistics['totalAmount'] }}</td>
+                                    <td class="red">{{ bcsub($visitStatistics['totalAmount'],$visitStatistics['ownOrderDisplayFeeAmount'] + $visitStatistics['visitOrderDisplayFeeAmount'] + $visitStatistics['ownOrderCouponAmount'] + $visitStatistics['visitOrderCouponAmount'],2)}}
+                                        </br> 优惠券:{{bcadd($visitStatistics['ownOrderCouponAmount'] ,$visitStatistics['visitOrderCouponAmount'],2)}}
+                                        </br>陈列费:{{bcadd($visitStatistics['ownOrderDisplayFeeAmount'] ,$visitStatistics['visitOrderDisplayFeeAmount'],2)}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -149,7 +153,7 @@
                                         <td>{{ $ownOrder->created_at }}</td>
                                         <td>{{ $ownOrder->order_id }}</td>
                                         <td>{{ $ownOrder->order_status_name }}</td>
-                                        <td>{{ $ownOrder->after_rebates_price }}</td>
+                                        <td>{{ $ownOrder->amount }}</td>
                                         <td><a href="{{ url('order-sell/detail?order_id=' . $ownOrder->order_id) }}"
                                                target="_blank">明细</a></td>
                                     </tr>

@@ -84,12 +84,11 @@ class BusinessService extends BaseService
                 $user
             ) {
 
-                return  $order->salesmanCustomer->shop_id != $user->shop->id && ($order->created_at >= $startDate && $order->created_at <= $endDate && ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true));
+                return  $order->salesmanCustomer->shop_id != $user->shop->id && ($order->created_at >= $startDate && $order->created_at <= $endDate);
             });
 
             //所有平台订货
             $orderForms = $orders->filter(function ($order) {
-
                 return $order->type == cons('salesman.order.type.order');
             });
 
@@ -110,9 +109,13 @@ class BusinessService extends BaseService
             //拜访客户数
             $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
             //订货总金额
-            $salesman->orderFormSumAmount = $orderForms->sum('after_rebates_price');
+            $salesman->orderFormSumAmount = $orderForms->filter(function ($order){
+                return ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true);
+            })->sum('amount');
             //业务订单总金额
-            $salesman->visitOrderFormSumAmount = $visitOrderForms->sum('amount');
+            $salesman->visitOrderFormSumAmount = $visitOrderForms->filter(function ($order){
+                return ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true);
+            })->sum('amount');
 
             //平台订货单数
             $salesman->orderFormCount = $orderForms->count();
@@ -124,6 +127,7 @@ class BusinessService extends BaseService
                 return !is_null($order) && !is_null($order->delivery_finished_at);
             })->count();
             //已收金额
+
             $salesman->finishedAmount = $orders->filter(function ($order) use ($startDate, $endDate) {
                 $order = $order->order;
                 return !is_null($order) && $order->status == cons('order.status.finished');
@@ -131,7 +135,7 @@ class BusinessService extends BaseService
             //未收金额
             $salesman->notFinishedAmount = $orders->filter(function ($order) use ($startDate, $endDate) {
                 $order = $order->order;
-                return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->status < cons('order.status.finished'));
+                return !is_null($order) && ($order->status > cons('order.status.non_confirm') && $order->status < cons('order.status.finished') && $order->pay_status < cons('order.pay_status.refund'));
             })->sum('amount');
 
             //退货单
