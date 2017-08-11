@@ -76,8 +76,7 @@ class ReportController extends Controller
         $visitOrders = $salesman->orders()->ofData([
             'start_date' => $startDate,
             'end_date' => $dateEnd,
-        ])->with(['order.orderGoods.goods', 'salesmanCustomer', 'order.coupon',])->get();
-
+        ])->with(['order.orderGoods.goods', 'salesmanCustomer', 'order.coupon'])->get();
         return view('index.business.report-detail',
             array_merge($this->_getVisitData($visits, $visitOrders), compact('startDate', 'endDate', 'salesman')));
     }
@@ -122,8 +121,6 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
-
-
         return view('index.business.report-customer-detail',
             array_merge(compact('salesmanId', 'customerId', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }
@@ -165,21 +162,19 @@ class ReportController extends Controller
 
         $visitOrderAmount = $visitOrders->filter(function ($order) {
             return (isset($order->order) ? ($order->order->status < cons('order.status.invalid') && $order->order->pay_status < cons('order.pay_status.refund')) : true);
-        })->sum('amount');
+        });
         $visitStatistics = [
             'customerCount' => $customerIds->count(),
             'returnOrderCount' => $returnOrders->count(),
             'returnOrderAmount' => $returnOrders->sum('amount'),
             'visitOrderCount' => $visitOrders->count(),
-            'visitOrderAmount' => $visitOrderAmount,
+            'visitOrderAmount' => $visitOrderAmount->sum('amount'),
             'ownOrderCount' => $ownOrders->count(),
             'ownOrderAmount' => $ownOrder->sum('amount'),
             'totalCount' => bcadd($visitOrders->count(), $ownOrders->count()),
-            'totalAmount' => bcadd($visitOrderAmount, $ownOrder->sum('amount'), 2),
-            'ownOrderDisplayFeeAmount' => $ownOrder->sum('displayFeeAmount'),
-            'visitOrderDisplayFeeAmount' => $visitOrders->sum('displayFeeAmount'),
-            'ownOrderCouponAmount' => $ownOrder->sum('how_much_discount'),
-            'visitOrderCouponAmount' => $visitOrders->sum('how_much_discount'),
+            'totalAmount' => bcadd($visitOrderAmount->sum('amount'), $ownOrder->sum('amount'), 2),
+            'ownOrderDiscountAmount' => $ownOrder->sum('how_much_discount'),
+            'visitOrderDiscountAmount' => $visitOrderAmount->sum('how_much_discount'),
         ];
         $visitList = [];
         foreach ($customerIds as $customerId) {
@@ -585,10 +580,8 @@ class ReportController extends Controller
                         ($visitStatistics['ownOrderDisplayFeeAmount'] + $visitStatistics['visitOrderDisplayFeeAmount'] + $visitStatistics['ownOrderCouponAmount'] + $visitStatistics['visitOrderCouponAmount']),
                         2);
                     unset(
-                        $visitStatistics['ownOrderDisplayFeeAmount'],
-                        $visitStatistics['visitOrderDisplayFeeAmount'],
-                        $visitStatistics['ownOrderCouponAmount'],
-                        $visitStatistics['visitOrderCouponAmount']
+                        $visitStatistics['visitOrderDiscountAmount'],
+                        $visitStatistics['ownOrderDiscountAmount']
                     );
                     $sheet->rows([$titles, $visitStatistics]);
 

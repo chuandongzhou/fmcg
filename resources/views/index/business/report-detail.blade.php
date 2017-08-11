@@ -62,9 +62,7 @@
                                     <td class="red">{{ $visitStatistics['ownOrderAmount'] }}</td>
                                     <td>{{ $visitStatistics['totalCount'] }}</td>
                                     <td class="red">{{ $visitStatistics['totalAmount'] }}</td>
-                                    <td class="red">{{ bcsub($visitStatistics['totalAmount'],$visitStatistics['ownOrderDisplayFeeAmount'] + $visitStatistics['visitOrderDisplayFeeAmount'] + $visitStatistics['ownOrderCouponAmount'] + $visitStatistics['visitOrderCouponAmount'],2)}}
-                                        </br> 优惠券:{{bcadd($visitStatistics['ownOrderCouponAmount'] ,$visitStatistics['visitOrderCouponAmount'],2)}}
-                                        </br>陈列费:{{bcadd($visitStatistics['ownOrderDisplayFeeAmount'] ,$visitStatistics['visitOrderDisplayFeeAmount'],2)}}</td>
+                                    <td class="red">{{ bcsub($visitStatistics['totalAmount'],$visitStatistics['ownOrderDiscountAmount'] + $visitStatistics['visitOrderDiscountAmount'],2)}}</td>
                                 </tr>
                                 </tbody>
                             </table>
