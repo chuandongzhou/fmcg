@@ -50,13 +50,18 @@ class SalesmanCustomerController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
         return view('child-user.salesman-customer.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => new SalesmanCustomer]);
+            [
+                'salesmen' => $salesmen,
+                'salesmanCustomer' => new SalesmanCustomer,
+                'type' => $request->input('type', null)
+            ]);
     }
 
     /**
@@ -130,15 +135,20 @@ class SalesmanCustomerController extends Controller
     /**
      * 客户编辑
      *
+     * @param \Illuminate\Http\Request $request
      * @param $salesmanCustomer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($salesmanCustomer)
+    public function edit(Request $request, $salesmanCustomer)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 
         return view('child-user.salesman-customer.salesman-customer',
-            ['salesmen' => $salesmen, 'salesmanCustomer' => $salesmanCustomer]);
+            [
+                'salesmen' => $salesmen,
+                'salesmanCustomer' => $salesmanCustomer,
+                'type' => $request->input('type', null)
+            ]);
     }
 
     /**

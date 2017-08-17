@@ -1,5 +1,9 @@
 <?php
 
+$user = auth()->user();
+
+$businessTypeName = (!is_null($user) && $user->type == cons('user.type.maker') ? '供应商' : '批发商');
+
 return [
 
     /*
@@ -113,8 +117,8 @@ return [
         'code' => '验证码',
         'price_retailer' => '终端商价格',
         'min_num_retailer' => '终端商最低购买数',
-        'price_wholesaler' => (auth()->user()->type == cons('user.type.maker') ? '供应商' : '批发商') . '价格',
-        'min_num_wholesaler' => (auth()->user()->type == cons('user.type.maker') ? '供应商' : '批发商') . '最低购买数',
+        'price_wholesaler' => $businessTypeName . '价格',
+        'min_num_wholesaler' => $businessTypeName . '最低购买数',
         'cate_level_1' => '一级分类',
         'cate_level_2' => '二级分类',
         'cate_level_3' => '三级分类',
@@ -199,7 +203,7 @@ return [
         'full' => '最低订单金额',
         'discount' => '优惠金额',
         'price_retailer_pick_up' => '终端商自提价格',
-        'price_wholesaler_pick_up' => (auth()->user()->type == cons('user.type.maker') ? '供应商' : '批发商') . '自提价格',
+        'price_wholesaler_pick_up' => $businessTypeName . '自提价格',
         'pieces' => '单位',
         'geetest_challenge' => '验证码',
         'identification_code' => '识别码',

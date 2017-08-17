@@ -145,10 +145,11 @@ class SalesmanCustomerController extends Controller
     /**
      * 客户编辑
      *
+     * @param \Illuminate\Http\Request $request
      * @param $salesmanCustomer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($salesmanCustomer, Request $request)
+    public function edit(Request $request, $salesmanCustomer)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
 

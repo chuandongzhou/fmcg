@@ -13,7 +13,7 @@
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('child-user/salesman') }}">业务管理</a> >
                     <a href="{{ url('child-user/salesman-customer') }}"> 客户管理</a> >
-                    <span class="second-level">客户{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
+                    <span class="second-level">{{is_null($type) ? '客户' : '供应商'}}{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
                 </div>
             </div>
             <div class="row salesman">
@@ -216,65 +216,66 @@
                                 ></div>
                             </div>
                         </div>
+                        @if($userType < cons('user.type.maker'))
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">陈列费:</label>
+                                <div class="col-sm-6 col-md-4">
+                                    <select name="display_type" class="form-control visible-select">
+                                        @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
+                                            <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group visible-item visible-item-1 visible-item-2 {{ $salesmanCustomer->display_type ? '' : 'hidden' }}">
+                                <label class="col-sm-2 control-label" for="display_fee">有效时间:</label>
+                                <div class="col-sm-4 col-md-3">
+                                    <input {{ $salesmanCustomer->display_type ? '' : 'disabled' }} class="form-control datetimepicker"
+                                           id="display_start_month" data-format="YYYY-MM"
+                                           name="display_start_month" placeholder="有效开始月份"
+                                           value="{{ $salesmanCustomer->display_start_month }}"
+                                           type="text">
+                                </div>
+                                <div class="col-sm-1 col-md-1 company text-center">
+                                    至
+                                </div>
+                                <div class="col-sm-4 col-md-3">
+                                    <input {{ $salesmanCustomer->display_type ? '' : 'disabled' }} class="form-control datetimepicker"
+                                           id="display_end_month" data-format="YYYY-MM"
+                                           name="display_end_month" placeholder="有效结束月份"
+                                           value="{{ $salesmanCustomer->display_end_month }}"
+                                           type="text">
+                                </div>
+                            </div>
+                            <div class="form-group cash visible-item visible-item-1 {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.cash') ? '' : 'hidden' }}">
+                                <label class="col-sm-2 control-label">现金:</label>
+                                <div class="col-sm-6 col-md-4">
+                                    <input {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.cash') ? '' : 'disabled' }} name="display_fee"
+                                           value="{{ $salesmanCustomer->display_fee }}" type="text" class="form-control"
+                                           placeholder="请填写现金">
+                                </div>
+                            </div>
+                            <div class="form-group display-goods mortgage-goods visible-item visible-item-2 {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.mortgage') ? '' : 'hidden' }}">
+                                <label class="col-sm-2 control-label">陈列商品:</label>
+                                <div class="col-sm-6 col-md-4 ">
+                                    <button class="btn padding-clear" type="button" data-target="#mortgageGoodsModal"
+                                            data-toggle="modal">设置商品
+                                    </button>
+                                    已选商品数<span
+                                            class="red mortgage-goods-num">{{ count($salesmanCustomer->mortgageGoods) }}</span>个
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">陈列费:</label>
-                            <div class="col-sm-6 col-md-4">
-                                <select name="display_type" class="form-control visible-select">
-                                    @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
-                                        <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group visible-item visible-item-1 visible-item-2 {{ $salesmanCustomer->display_type ? '' : 'hidden' }}">
-                            <label class="col-sm-2 control-label" for="display_fee">有效时间:</label>
-                            <div class="col-sm-4 col-md-3">
-                                <input {{ $salesmanCustomer->display_type ? '' : 'disabled' }} class="form-control datetimepicker"
-                                       id="display_start_month" data-format="YYYY-MM"
-                                       name="display_start_month" placeholder="有效开始月份"
-                                       value="{{ $salesmanCustomer->display_start_month }}"
-                                       type="text">
-                            </div>
-                            <div class="col-sm-1 col-md-1 company text-center">
-                                至
-                            </div>
-                            <div class="col-sm-4 col-md-3">
-                                <input {{ $salesmanCustomer->display_type ? '' : 'disabled' }} class="form-control datetimepicker"
-                                       id="display_end_month" data-format="YYYY-MM"
-                                       name="display_end_month" placeholder="有效结束月份"
-                                       value="{{ $salesmanCustomer->display_end_month }}"
-                                       type="text">
-                            </div>
-                        </div>
-                        <div class="form-group cash visible-item visible-item-1 {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.cash') ? '' : 'hidden' }}">
-                            <label class="col-sm-2 control-label">现金:</label>
-                            <div class="col-sm-6 col-md-4">
-                                <input {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.cash') ? '' : 'disabled' }} name="display_fee"
-                                       value="{{ $salesmanCustomer->display_fee }}" type="text" class="form-control"
-                                       placeholder="请填写现金">
-                            </div>
-                        </div>
-                        <div class="form-group display-goods mortgage-goods visible-item visible-item-2 {{ $salesmanCustomer->display_type == cons('salesman.customer.display_type.mortgage') ? '' : 'hidden' }}">
-                            <label class="col-sm-2 control-label">陈列商品:</label>
-                            <div class="col-sm-6 col-md-4 ">
-                                <button class="btn padding-clear" type="button" data-target="#mortgageGoodsModal"
-                                        data-toggle="modal">设置商品
-                                </button>
-                                已选商品数<span
-                                        class="red mortgage-goods-num">{{ count($salesmanCustomer->mortgageGoods) }}</span>个
+                                    <div class="mortgage-goods-group hidden">
+                                        @foreach($salesmanCustomer->mortgageGoods as $mortgageGoods)
+                                            <input type="hidden" data-id="{{ $mortgageGoods->id }}"
+                                                   name="{{ 'mortgage_goods['. $mortgageGoods->id.']' }}"
+                                                   value="{{ (int)$mortgageGoods->pivot->total }}"/>
+                                        @endforeach
 
-                                <div class="mortgage-goods-group hidden">
-                                    @foreach($salesmanCustomer->mortgageGoods as $mortgageGoods)
-                                        <input type="hidden" data-id="{{ $mortgageGoods->id }}"
-                                               name="{{ 'mortgage_goods['. $mortgageGoods->id.']' }}"
-                                               value="{{ (int)$mortgageGoods->pivot->total }}"/>
-                                    @endforeach
+                                    </div>
 
                                 </div>
-
                             </div>
-                        </div>
+                        @endif
                         <div class="form-group row">
                             <div class="col-sm-push-2 col-sm-10 save">
                                 <button class="btn btn-success" type="submit">提交</button>
