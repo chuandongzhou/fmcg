@@ -339,13 +339,15 @@ class InventoryService extends BaseService
         $inventory,
         array $data,
         array $with = [
+            'goods.goodsPieces',
             'user',
             'order',
             'parent',
-            'goods.goodsPieces'
+
         ]
     ) {
-        return $inventory->with($with)->where(function ($query) use ($data) {
+        /*return*/
+        $inventory->with($with)->where(function ($query) use ($data) {
             $start_at = array_get($data, 'start_at');
             $end_at = array_get($data, 'end_at');
 
@@ -365,6 +367,7 @@ class InventoryService extends BaseService
                 });
             }
         });
+        return $inventory;
     }
 
     /**
@@ -378,7 +381,7 @@ class InventoryService extends BaseService
     {
         $result = '';
         if (!($goods instanceof Goods)) {
-            $goods = Goods::find($goods);
+            $goods = Goods::find($goods)->with('goodsPieces');
         }
         if (isset($goods->goodsPieces->pieces_level_1)) {
             $goodsPieces = $goods->goodsPieces->toArray();

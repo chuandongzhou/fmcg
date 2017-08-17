@@ -235,7 +235,7 @@
                                             已<span class="status-name">{{ cons()->valueLang('goods.status' ,$item->status) }}</span>
                                         </td>
                                         <td class="operating text-center">
-                                            @if(!$item->is_mortgage_goods)
+                                            @if(!$item->is_mortgage_goods && auth()->user()->type < cons('user.type.maker'))
                                                 <a href="javascript:" data-id="{{ $item->id }}" data-method="post"
                                                    data-url="{{ url('api/v1/my-goods/' . $item->id . '/mortgage') }}"
                                                    class="no-form mortgage color-blue" title="设为抵费商品">抵费</a>
@@ -246,16 +246,17 @@
                                                    data-url="{{ url('api/v1/my-goods/' . $item->id . '/promo') }}"
                                                    class="no-form mortgage color-blue" title="设为促销商品">设为促销</a>
                                             @endif
-
-                                            <a href="javascript:" data-method="put"
-                                               data-url="{{ url('api/v1/my-goods/gift')}}"
-                                               data-status="{{ $item->is_gift }}"
-                                               data-data='{ "id": "{{ $item->id }}" }'
-                                               data-on='设为赠品'
-                                               data-off='取消赠品'
-                                               class="ajax-no-form color-blue">
-                                                {{ $item->is_gift ? '取消赠品' : '设为赠品' }}
-                                            </a>
+                                            @if($item->shop_user_type < cons('user.type.maker'))
+                                                <a href="javascript:" data-method="put"
+                                                   data-url="{{ url('api/v1/my-goods/gift')}}"
+                                                   data-status="{{ $item->is_gift }}"
+                                                   data-data='{ "id": "{{ $item->id }}" }'
+                                                   data-on='设为赠品'
+                                                   data-off='取消赠品'
+                                                   class="ajax-no-form color-blue">
+                                                    {{ $item->is_gift ? '取消赠品' : '设为赠品' }}
+                                                </a>
+                                            @endif
                                             <a href="{{ url('my-goods/' . $item->id . '/edit') }}" class="edit">编辑</a>
                                             <a href="javascript:" data-method="put"
                                                data-url="{{ url('api/v1/my-goods/shelve')}}"

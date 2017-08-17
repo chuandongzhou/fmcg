@@ -207,33 +207,6 @@ class BillService
         }
         $section->addText('');
 
-        $section->addText('赠品对账单', $titleSize, $cellAlignCenter);
-        $table = $section->addTable($tableBolder);
-        $table->addRow();
-        $table->addCell(1400)->addText('时间', null, $cellAlignCenter);
-        $table->addCell(1600)->addText('订单编号', null, $cellAlignCenter);
-        $table->addCell(3000, $gridSpan2)->addText('赠品内容', null, $cellAlignCenter);
-        foreach ($bill['orderForm'] as $order) {
-            if ($order->gifts->count()) {
-                $table->addRow();
-                $table->addCell(1800, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
-                $table->addCell(1700, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
-                    null, $cellAlignCenter);
-                foreach ($order->gifts as $gifts) {
-                    $table->addRow();
-                    $table->addCell(1800, $cellRowContinue);
-                    $table->addCell(1700, $cellRowContinue);
-                    $table->addCell(3700, $cellVAlignCenter)->addText($gifts->name ?? '', null,
-                        $cellAlignCenter);
-                    $table->addCell(1800,
-                        $cellVAlignCenter)->addText($gifts->pivot->num . cons()->valueLang('goods.pieces',
-                            $gifts->pivot->pieces), null,
-                        $cellAlignCenter);
-                }
-            }
-        }
-        $section->addText('');
-
         $section->addText('促销对账单', $titleSize, $cellAlignCenter);
         $table = $section->addTable($tableBolder);
         $table->addRow();
@@ -268,6 +241,33 @@ class BillService
                         cons('promo.type.money-money')
                     ]) ? $order->promo->rebate[0]->money . '元' : $order->promo->rebate[0]->custom;
                     $table->addCell(4700, $gridSpan2)->addText($text, null,
+                        $cellAlignCenter);
+                }
+            }
+        }
+        $section->addText('');
+
+        $section->addText('赠品对账单', $titleSize, $cellAlignCenter);
+        $table = $section->addTable($tableBolder);
+        $table->addRow();
+        $table->addCell(1400)->addText('时间', null, $cellAlignCenter);
+        $table->addCell(1600)->addText('订单编号', null, $cellAlignCenter);
+        $table->addCell(3000, $gridSpan2)->addText('赠品内容', null, $cellAlignCenter);
+        foreach ($bill['orderForm'] as $order) {
+            if ($order->gifts->count()) {
+                $table->addRow();
+                $table->addCell(1800, $cellRowSpan)->addText($order->created_at, null, $cellAlignCenter);
+                $table->addCell(1700, $cellRowSpan)->addText($order->order_id . "(" . $order->order->status_name . ")",
+                    null, $cellAlignCenter);
+                foreach ($order->gifts as $gifts) {
+                    $table->addRow();
+                    $table->addCell(1800, $cellRowContinue);
+                    $table->addCell(1700, $cellRowContinue);
+                    $table->addCell(3700, $cellVAlignCenter)->addText($gifts->name ?? '', null,
+                        $cellAlignCenter);
+                    $table->addCell(1800,
+                        $cellVAlignCenter)->addText($gifts->pivot->num . cons()->valueLang('goods.pieces',
+                            $gifts->pivot->pieces), null,
                         $cellAlignCenter);
                 }
             }

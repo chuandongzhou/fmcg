@@ -71,7 +71,7 @@ class SalesmanCustomerController extends Controller
             [
                 'salesmen' => $salesmen,
                 'salesmanCustomer' => new SalesmanCustomer,
-                'type' => $request->input('type', null)
+                'customerType' => $request->input('type', null)
             ]);
     }
 
@@ -116,7 +116,7 @@ class SalesmanCustomerController extends Controller
     }
 
     /**
-     * 客户信息销售明细
+     * 客户信息销售明细导出
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\SalesmanCustomer $customer
@@ -156,7 +156,7 @@ class SalesmanCustomerController extends Controller
             [
                 'salesmen' => $salesmen,
                 'salesmanCustomer' => $salesmanCustomer,
-                'type' => $request->input('type', null)
+                'customerType' => $request->input('type', null)
             ]);
     }
 
@@ -255,8 +255,8 @@ class SalesmanCustomerController extends Controller
             $order = $item->order;
             if (!is_null($order)) {
                 return $order->is_cancel == 0
-                    && $order->pay_status < cons('order.pay_status.payment_failed')
-                    && $order->status != cons('order.status.invalid');
+                && $order->pay_status < cons('order.pay_status.payment_failed')
+                && $order->status != cons('order.status.invalid');
             }
             return true;
         });
@@ -543,6 +543,38 @@ class SalesmanCustomerController extends Controller
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['order_amount'], null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_num'], null, $cellAlignCenter);
                 $table->addCell(1000, $cellVAlignCenter)->addText($visit['return_amount'], null, $cellAlignCenter);
+            }
+        }
+
+        $section = $phpWord->addSection();
+        $table = $section->addTable($tableBolder);
+
+        $table->addRow();
+        $table->addCell(10500, $gridSpan10)->addText('赠品列表', null, $cellAlignCenter);
+
+        $table->addRow();
+        $table->addCell(1200, $cellVAlignCenter)->addText('商品ID', null, $cellAlignCenter);
+        $table->addCell(4500, $cellVAlignCenter)->addText('商品名称', null, $cellAlignCenter);
+        $table->addCell(1200, $cellVAlignCenter)->addText('订单ID', null, $cellAlignCenter);
+        $table->addCell(2100, $cellVAlignCenter)->addText('下单时间', null, $cellAlignCenter);
+        $table->addCell(1500, $cellVAlignCenter)->addText('数量', null, $cellAlignCenter);
+
+        foreach ($result['gifts'] as $goodsId => $gift) {
+            foreach ($gift['describe'] as $key => $describe) {
+                $table->addRow();
+                if($key == 0){
+                    $table->addCell(1000, $cellRowSpan)->addText($goodsId, null, $cellAlignCenter);
+                    $table->addCell(1000, $cellRowSpan)->addText($gift['name'], null, $cellAlignCenter);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['order_id'], null, $cellAlignCenter);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['time'], null, $cellAlignCenter);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',$describe['pieces']), null, $cellAlignCenter);
+                }else{
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(null, $cellRowContinue);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['order_id'], null, $cellAlignCenter);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['time'], null, $cellAlignCenter);
+                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',$describe['pieces']), null, $cellAlignCenter);
+                }
             }
         }
 

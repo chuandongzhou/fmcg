@@ -28,7 +28,8 @@ class PromoController extends Controller
     public function getSetting(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'number_name');
-        $promos = $this->promoService->search($this->shop->promo(), $data)->paginate();
+        $promo = $this->shop->promo()->with(['rebate.goods','condition.goods','apply.order.order','apply.salesman.orders.order']);
+        $promos = $this->promoService->search($promo, $data)->paginate();
         return view('index.promo.setting', [
             'promos' => $promos,
             'data' => $data
@@ -47,7 +48,7 @@ class PromoController extends Controller
             return view('errors.404');
         }
         return view('index.promo.add', [
-            'promo' => $promo
+            'promo' => $promo->load(['rebate.goods.goodsPieces','condition.goods.goodsPieces'])
         ]);
     }
 
@@ -63,7 +64,7 @@ class PromoController extends Controller
             return view('errors.404');
         }
         return view('index.promo.add', [
-            'promo' => $promo
+            'promo' => $promo->load(['rebate.goods.goodsPieces','condition.goods.goodsPieces'])
         ]);
     }
 
@@ -85,7 +86,7 @@ class PromoController extends Controller
     public function getGoods()
     {
         return view('index.promo.goods', [
-            'promoGoods' => $this->shop->promoGoods()->paginate()
+            'promoGoods' => $this->shop->promoGoods()->with(['goods.goodsPieces'])->paginate()
         ]);
     }
 
@@ -97,7 +98,7 @@ class PromoController extends Controller
     public function getApplyLog(Request $request)
     {
         $data = $request->only('start_at', 'end_at', 'number_name', 'status', 'salesman');
-        $promoApply = $this->shop->promoApply();
+        $promoApply = $this->shop->promoApply()->with(['promo.rebate.goods','promo.condition.goods','salesman','client']);
         $promoApply = $this->promoService->applyLogSearch($promoApply, $data);
         return view('index.promo.apply-log', [
             'promoApply' => $promoApply->paginate(),
@@ -132,6 +133,6 @@ class PromoController extends Controller
         if (Gate::denies('validate-shop-promo', $promo)) {
             return view('errors.404');
         }
-        return view('index.promo.partake')->with(['promo' => $promo->load(['apply.client','apply.salesman','apply.order.order'])]);
+        return view('index.promo.partake')->with(['promo' => $promo->load(['apply.client.shop','apply.salesman','apply.order.order'])]);
     }
 }

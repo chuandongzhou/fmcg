@@ -210,7 +210,11 @@ class PromoController extends Controller
         return $apply->fill($data)->save() ? $this->success('保存成功') : $this->error('保存失败');
     }
 
-
+    /**
+     * 参与数统计
+     * @param $apply
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function partakeOrderDetail($apply)
     {
         if($apply){

@@ -19,6 +19,7 @@ class Cart extends Model
         });
     }
 
+
     /**
      * 用户表
      *

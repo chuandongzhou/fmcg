@@ -577,8 +577,7 @@ class ReportController extends Controller
                         '总应付金额',
                     ];
                     $visitStatistics['amountPayable'] = bcsub($visitStatistics['totalAmount'],
-                        ($visitStatistics['ownOrderDisplayFeeAmount'] + $visitStatistics['visitOrderDisplayFeeAmount'] + $visitStatistics['ownOrderCouponAmount'] + $visitStatistics['visitOrderCouponAmount']),
-                        2);
+                        $visitStatistics['ownOrderDiscountAmount'] + $visitStatistics['visitOrderDiscountAmount'], 2);
                     unset(
                         $visitStatistics['visitOrderDiscountAmount'],
                         $visitStatistics['ownOrderDiscountAmount']

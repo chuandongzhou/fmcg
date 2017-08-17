@@ -43,23 +43,25 @@
                             <tbody>
 
                             @foreach($salesmen as $man)
-                                <tr>
-                                    <td>
-                                        {{ $man->name }}
-                                    </td>
-                                    <td>
-                                        {{ $target->getTarget($man->id, $date) }}
-                                    </td>
-                                    <td>
-                                        {{ $man->orderFormSumAmount }}
-                                    </td>
-                                    <td>
-                                        {{ $target->getTarget($man->id, $date) ? percentage($man->orderFormSumAmount, $target->getTarget($man->id, $date)) : '100%'}}
-                                    </td>
-                                    <td>
-                                        {{ $man->returnOrderSumAmount }}
-                                    </td>
-                                </tr>
+                                @if(!$man->maker_id)
+                                    <tr>
+                                        <td>
+                                            {{ $man->name }}
+                                        </td>
+                                        <td>
+                                            {{ $target->getTarget($man->id, $date) }}
+                                        </td>
+                                        <td>
+                                            {{ $man->orderFormSumAmount }}
+                                        </td>
+                                        <td>
+                                            {{ $target->getTarget($man->id, $date) ? percentage($man->orderFormSumAmount, $target->getTarget($man->id, $date)) : '100%'}}
+                                        </td>
+                                        <td>
+                                            {{ $man->returnOrderSumAmount }}
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                             </tbody>
                         </table>

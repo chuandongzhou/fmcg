@@ -1,6 +1,7 @@
 @section('body')
     @parent
-    <div class="modal fade in" id="salesmanTargetSet" tabindex="-1" role="dialog" aria-labelledby="salesmanTargetSetModalLabel"
+    <div class="modal fade in" id="salesmanTargetSet" tabindex="-1" role="dialog"
+         aria-labelledby="salesmanTargetSetModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -21,7 +22,8 @@
                             <label class="col-sm-2 control-label" for="price">月份:</label>
 
                             <div class="col-sm-10 col-md-5">
-                                <input type="text" name="date" class="form-control datetimepicker" value="{{ $date }}" data-format="YYYY-MM"/>
+                                <input type="text" name="date" class="form-control datetimepicker" value="{{ $date }}"
+                                       data-format="YYYY-MM"/>
                             </div>
                         </div>
 
@@ -32,9 +34,11 @@
                                 <select name="salesman_id" class="inline-control">
                                     <option value="">请选择业务员</option>
                                     @foreach($salesmen as $salesman)
-                                        <option value="{{ $salesman->id }}">
-                                            {{ $salesman->name }}
-                                        </option>
+                                        @if(!$salesman->maker_id)
+                                            <option value="{{ $salesman->id }}">
+                                                {{ $salesman->name }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

@@ -298,16 +298,17 @@
                                 <span class="title">业务员管理</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ path_active(['business/salesman-customer*']) }}">
-                            <a href="{{ url('business/salesman-customer') }}" class="nav-link ">
-                                <span class="title">客户管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item  {{ path_active('business/supplier-customer*') }}">
+                        <li class="nav-item  {{request()->is('business/salesman-customer*') && request()->input('type') ? 'active' : ''}}">
                             <a href="{{ url('business/salesman-customer?type=supplier') }}" class="nav-link ">
                                 <span class="title">供应商管理</span>
                             </a>
                         </li>
+                        <li class="nav-item {{request()->is('business/salesman-customer*') && empty(request()->input('type')) ? 'active' : '' }}">
+                            <a href="{{ url('business/salesman-customer') }}" class="nav-link ">
+                                <span class="title">客户管理</span>
+                            </a>
+                        </li>
+
                         <li class="nav-item {{ path_active(['business/report*']) }}">
                             <a href="{{ url('business/report') }}" class="nav-link ">
                                 <span class="title">业务报表</span>
@@ -495,7 +496,7 @@
                     </ul>
                 </li>
             @endif
-            @if($user->type <= cons('user.type.supplier'))
+            @if($user->type <= cons('user.type.maker'))
                 {{-- 消息列表 --}}
                 <li class="nav-item {!! path_active(['personal/chat*']) !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -513,7 +514,7 @@
                     </ul>
                 </li>
             @endif
-            @if($user->type > cons('user.type.retailer') && $user->type < cons('user.type.maker'))
+            @if($user->type > cons('user.type.retailer'))
                 {{-- 模板管理 --}}
                 <li class="nav-item {!! path_active('personal/model/*') !!} ">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -536,29 +537,31 @@
                     </ul>
                 </li>
                 {{-- 客户列表 --}}
-                <li class="nav-item {!! path_active('personal/customer/*') !!} ">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="fa fa-users "></i>
-                        <span class="title">客户列表</span>
-                        <span class="{!! request()->is('personal/customer/*')?'selected':'' !!}"></span>
-                        <span class="arrow"></span>
-                    </a>
-                    <ul class="sub-menu">
-                        @if ($user->type == cons('user.type.supplier'))
-                            <li class="nav-item {{ path_active('personal/customer/wholesaler') }}">
-                                <a class="nav-link" href="{{ url('personal/customer/wholesaler') }}">
-                                    <span class="title">批发客户</span>
+                @if($user->type < cons('user.type.maker'))
+                    <li class="nav-item {!! path_active('personal/customer/*') !!} ">
+                        <a href="javascript:;" class="nav-link nav-toggle">
+                            <i class="fa fa-users "></i>
+                            <span class="title">客户列表</span>
+                            <span class="{!! request()->is('personal/customer/*')?'selected':'' !!}"></span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            @if ($user->type == cons('user.type.supplier'))
+                                <li class="nav-item {{ path_active('personal/customer/wholesaler') }}">
+                                    <a class="nav-link" href="{{ url('personal/customer/wholesaler') }}">
+                                        <span class="title">批发客户</span>
+                                    </a>
+                                </li>
+                            @endif
+                            <li class="nav-item {{ path_active('personal/customer/retailer') }} ">
+                                <a href="{{ url('personal/customer/retailer') }}" class="nav-link ">
+                                    <span class="title">终端客户</span>
                                 </a>
                             </li>
-                        @endif
-                        <li class="nav-item {{ path_active('personal/customer/retailer') }} ">
-                            <a href="{{ url('personal/customer/retailer') }}" class="nav-link ">
-                                <span class="title">终端客户</span>
-                            </a>
-                        </li>
 
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                @endif
             @endif
         </ul>
     </div>

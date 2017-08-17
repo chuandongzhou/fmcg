@@ -36,7 +36,7 @@
                             <th>参与商家名称</th>
                             <th>参与时间</th>
                             <th>业务员</th>
-                            <th>供应商</th>
+                            <th>指派供应商</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -44,11 +44,11 @@
                         @foreach($promo->apply as $apply)
                             @if(count($apply->order))
                                 <tr>
-                                    <td>{{$apply->order->order->id ?? ''}}</td>
+                                    <td>{{$apply->order->order->id ?? ''}}({{cons()->valueLang('order.status',$apply->order->order->status)}})</td>
                                     <td>{{$apply->client_name ?? ''}}</td>
                                     <td>{{$apply->order->created_at}}</td>
                                     <td>{{$apply->salesman_name}}</td>
-                                    <td>成华玉林供应</td>
+                                    <td>{{$apply->salesman->shop->name ?? '未指派'}}</td>
                                     <td><a class="color-blue" data-order_id="{{$apply->id ?? ''}}"
                                            data-toggle="modal" data-target="#orderDetail">查看详情</a></td>
                                 </tr>

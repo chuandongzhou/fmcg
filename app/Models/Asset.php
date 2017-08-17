@@ -31,8 +31,10 @@ class Asset extends Model
             $model->assetReview()->delete();
         });
     }
+
     /**
      * 所属店铺
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function shop()
@@ -42,7 +44,7 @@ class Asset extends Model
 
     /**
      * 资产申请使用与审核
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function assetReview()

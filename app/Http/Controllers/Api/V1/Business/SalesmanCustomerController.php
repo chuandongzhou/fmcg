@@ -108,12 +108,10 @@ class SalesmanCustomerController extends Controller
         }
         $attributes = $request->all();
         $salesman = isset($attributes['salesman_id']) ? auth()->user()->shop->salesmen()->active()->find($attributes['salesman_id']) : salesman_auth()->user();
-        $attributes['letter'] = $this->_getLetter($attributes['name']);
-
+        $attributes['letter'] = $this->_getLetter($attributes['name']); //首字母大写
         if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
-
         $user = auth()->user();
         if (array_get($attributes, 'account')) {
             $customerUser = $this->_validateAccount($user->shop, $attributes, $customer);

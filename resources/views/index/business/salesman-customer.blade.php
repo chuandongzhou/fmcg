@@ -12,8 +12,8 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman-customer') }}"> {{is_null($type) ? '客户' : '供应商'}}管理</a> >
-                    <span class="second-level">{{is_null($type) ? '客户' : '供应商'}}{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
+                    <a href="{{ url('business/salesman-customer') }}"> {{is_null($customerType) ? '客户' : '供应商'}}管理</a> >
+                    <span class="second-level">{{is_null($customerType) ? '客户' : '供应商'}}{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
                 </div>
             </div>
             <div class="row salesman">
@@ -22,15 +22,15 @@
                           action="{{ url('api/v1/business/salesman-customer/' . $salesmanCustomer->id) }}"
                           method="{{ $salesmanCustomer->id ? 'put' : 'post' }}"
                           data-help-class="col-sm-push-2 col-sm-10"
-                          data-done-url="{{ url('business/salesman-customer') . (is_null($type) ? '' : '?type=supplier')}}"
+                          data-done-url="{{ url('business/salesman-customer') . (is_null($customerType) ? '' : '?type=supplier')}}"
                           autocomplete="off">
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="username"><span
-                                        class="red">*</span>{{is_null($type) ? '客户' : '供应商'}}名称:</label>
+                                        class="red">*</span>{{is_null($customerType) ? '客户' : '供应商'}}名称:</label>
 
                             <div class="col-sm-10 col-md-6">
                                 <input class="form-control" id="name" name="name"
-                                       placeholder="请输入{{is_null($type) ? '客户' : '供应商'}}名称"
+                                       placeholder="请输入{{is_null($customerType) ? '客户' : '供应商'}}名称"
                                        value="{{ $salesmanCustomer->name }}"
                                        type="text">
                             </div>
@@ -41,8 +41,7 @@
                                         class="red">*</span>业务员:</label>
 
                             <div class="col-sm-10 col-md-6">
-                                <select @if(auth()->user()->type == cons('user.type.maker') && $salesmanCustomer->id) disabled
-                                        @endif class="@if($salesmanCustomer->id) white-bg @endif form-control"
+                                <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
                                         id="salesman_id"
                                         name="salesman_id">
                                     <option value="">请选择业务员</option>
@@ -50,15 +49,14 @@
                                         <option value="{{ $key }}" {{ $key ==  $salesmanCustomer->salesman_id ? 'selected' : '' }}> {{ $salesman }}</option>
                                     @endforeach
                                 </select>
-                                @if(auth()->user()->type == cons('user.type.maker') && $salesmanCustomer->id)
+                                {{--@if(auth()->user()->type == cons('user.type.maker') && $salesmanCustomer->id)
                                     <input type="hidden" name="salesman_id"
                                            value="{{$salesmanCustomer->salesman_id or ''}}">
-                                @endif
+                                @endif--}}
                             </div>
                         </div>
-
                         @if(($userType = auth()->user()->type) == cons('user.type.supplier') || $userType == cons('user.type.maker') )
-                            @if(is_null($type))
+                            @if(is_null($customerType))
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label" for="type">客户类型:</label>
 
@@ -231,17 +229,18 @@
                                 ></div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">陈列费:</label>
-                            <div class="col-sm-6 col-md-4">
-                                <select name="display_type" class="form-control visible-select">
-                                    @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
-                                        <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
-                                    @endforeach
-                                </select>
+                        @if(is_null($customerType))
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">陈列费:</label>
+                                <div class="col-sm-6 col-md-4">
+                                    <select name="display_type" class="form-control visible-select">
+                                        @foreach(cons()->valueLang('salesman.customer.display_type') as $type => $name)
+                                            <option value="{{ $type }}" {{ $type == $salesmanCustomer->display_type ? 'selected' : '' }}>{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="form-group visible-item visible-item-1 visible-item-2 {{ $salesmanCustomer->display_type ? '' : 'hidden' }}">
                             <label class="col-sm-2 control-label" for="display_fee">有效时间:</label>
                             <div class="col-sm-4 col-md-3">

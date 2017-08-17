@@ -58,7 +58,7 @@ class AssetController extends Controller
             'salesman',
             'asset'
         ])->where('asset_apply.status', '>', 0)->whereNotNull('use_date');
-        $result = $this->assetService->getDataByCondition($assetApply, $data);
+        $result = $this->assetService->getDataByCondition($assetApply, $data,'apply');
         return view('index.asset.used', [
             'used' => $result->paginate(),
             'assetNames' => $this->_getAssetName(),
@@ -77,7 +77,7 @@ class AssetController extends Controller
         $data = $request->only('start_at', 'end_at', 'asset', 'salesmen', 'status');
         $salesmens = $this->shop->salesmen;
         $assetApply = $this->shop->assetApply()->with(['salesman', 'client', 'asset']);
-        $result = $this->assetService->getDataByCondition($assetApply, $data);
+        $result = $this->assetService->getDataByCondition($assetApply, $data,'apply');
         return view('index.asset.apply', [
             'assetApply' => $result->paginate(),
             'salesmens' => $salesmens,

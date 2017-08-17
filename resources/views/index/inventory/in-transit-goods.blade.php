@@ -28,17 +28,17 @@
                                     <tr>
                                         <td>
                                             <img class="store-img lazy"
-                                                 data-original="{{$item->goods->image_url}}"
-                                                 src="{{$item->goods->image_url}}">
-                                            <a class="product-name" href="{{url('my-goods/'.$item->goods->id)}}">
-                                                {{$item->goods->name}}</a>
+                                                 data-original="{{$item->image_url}}"
+                                                 src="{{$item->image_url}}">
+                                            <a class="product-name" href="{{url('my-goods/'.$item->id)}}">
+                                                {{$item->name}}</a>
                                         </td>
                                         <td>
-                                            {{$item->goods->bar_code}}
+                                            {{$item->bar_code}}
                                         </td>
                                         <td>{{$item->count}}</td>
                                         <td class="operating text-center">
-                                            <a href="{{url('inventory/in-transit-goods-detail/'.$item->goods->id)}}"
+                                            <a href="{{url('inventory/in-transit-goods-detail/'.$item->id)}}"
                                                class="color-blue"><i class="iconfont icon-chakan"></i>
                                                 查看</a>
                                         </td>

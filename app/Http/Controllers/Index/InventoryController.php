@@ -146,11 +146,14 @@ class InventoryController extends Controller
         $data = $request->only('start_at', 'end_at', 'goods');
         $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
         $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
-        $inventory = $this->shop->inventory()->OfOut()->orderBy('created_at', 'desc');
+
+        $inventory = $this->shop->inventory()->with(['goods.goodsPieces', 'parent'])->OfOut()->orderBy('created_at',
+            'desc');
         $result = $this->inventoryService->search($inventory, $data);
+        dd($result->paginate()->sum('profit'));
         return view('index.inventory.out', [
-            'lists' => $result->paginate(),
-            'countProfit' => $result->get()->sum('profit'),
+            'lists' => $result,
+            'countProfit' => $result->sum('profit'),
             'data' => $data,
             'errorCount' => $this->inventoryService->getOutError()->count()
         ]);
@@ -276,15 +279,25 @@ class InventoryController extends Controller
      */
     public function getInTransitGoods()
     {
+        //在途订单
         $orderIds = OrderService::getInTransitOrderIds();
-        $inTransitGoods = [];
-        if ($orderIds) {
-            $data = OrderGoods::whereIn('order_id', $orderIds)->with(['goods']);
-            $_inTransitGoods = $data->get()->groupBy('goods_id');
-            $inTransitGoods = $data->groupBy('goods_id')->paginate();
-            foreach ($inTransitGoods as $orderGoods) {
-                $orderGoods->count = $this->inventoryService->calculateQuantity($orderGoods->goods_id,
-                    $_inTransitGoods[$orderGoods->goods_id]->sum('quantity'));
+        $goodsModel = auth()->user()->shop->goods();
+        $inTransitGoods = collect();
+        if (count($orderIds)) {
+            //在途商品
+            $inTransitGoods = $goodsModel->with([
+                'orderGoods' => function ($query) use ($orderIds) {
+                    $query->whereIn('order_id', $orderIds);
+                },
+                'orderGoods.goods.goodsPieces',
+                'goodsPieces'
+            ])->whereHas('orderGoods', function ($query) use ($orderIds) {
+                $query->whereIn('order_id', $orderIds);
+            })->paginate();
+            //统计在途数量
+            foreach ($inTransitGoods as $goods) {
+                $goods->count = $this->inventoryService->calculateQuantity($goods,
+                    $goods->orderGoods->sum('quantity'));
             }
         }
         return view('index.inventory.in-transit-goods', [

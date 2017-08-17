@@ -41,11 +41,11 @@ class AssetController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function applyList(Request $request)
+    public function applyList(Request $request,AssetService $assetService)
     {
         $data = $request->all();
-        $applyAssetModel = $this->user->applyAsset()->with(['client', 'client.businessAddress', 'asset']);
-        $applyLists = (new AssetService())->getDataByCondition($applyAssetModel, $data)->orderBy('created_at',
+        $applyAssetModel = $this->user->applyAsset()->with(['client', 'log', 'client.businessAddress', 'asset']);
+        $applyLists = $assetService->getDataByCondition($applyAssetModel, $data, 'apply')->orderBy('created_at',
             'DESC')->get()->each(function ($item) {
             $item->setAppends(['pass_date']);
         });

@@ -46,7 +46,8 @@
                                                value="{{ $man->id }}">
                                     </td>
                                     <td class="clerk-name">
-                                        <img class="avatar" src="{{ $man->avatar_url }}"> {{ $man->name }}
+                                        <img class="avatar"
+                                             src="{{ $man->avatar_url }}"> {{ $man->name . (auth()->user()->type < cons('user.type.maker')&&$man->maker_id ? ' (厂家指派)':'') }}
                                     </td>
                                     <td>
                                         {{ $man->account }}
@@ -58,43 +59,50 @@
                                         {{ $man->expire  }}
                                     </td>
                                     <td>
-                                        <div role="group" class="btn-group btn-group-xs">
-                                            <a class="edit" href="javascript:void(0)" type="button"
-                                               data-target="#salesmanModal" data-toggle="modal"
-                                               data-id="{{ $man->id }}">
-                                                <i class="iconfont icon-xiugai"></i> 编辑
-                                            </a>
+                                        @if(auth()->user()->type < cons('user.type.maker') && $man->maker_id)
                                             <a class="color-blue" href="{{ url('business/report/' . $man->id) }}">
                                                 <i class="iconfont icon-jingzhibaogao"></i> 报告&nbsp;</a>
-                                            @if($man->status==cons('status.off'))
-                                                <a class="ajax gray-light"
-                                                   data-url="{{ url('api/v1/business/salesman/lock') }}"
-                                                   data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
-                                                   data-method="post" type="button">
-                                                    <i class="iconfont icon-dongjietubiao"></i> 解冻&nbsp;
-                                                </a>
-                                            @else
-                                                <a class="black ajax"
-                                                   data-url="{{ url('api/v1/business/salesman/lock') }}"
-                                                   data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
-                                                   data-method="post" type="button">
-                                                    <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
-                                                </a>
-                                            @endif
-                                            @if($man->expire_at)
-                                                <a data-target="#expireModal" data-toggle="modal" data-type="salesman"
+                                        @else
+                                            <div role="group" class="btn-group btn-group-xs">
+                                                <a class="edit" href="javascript:void(0)" type="button"
+                                                   data-target="#salesmanModal" data-toggle="modal"
                                                    data-id="{{ $man->id }}">
-                                                    <i class="iconfont icon-chaopiao"></i>续费</a>
-                                            @endif
-                                            @if(auth()->user()->type != cons('user.type.maker'))
-                                                <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}"
-                                                   data-method="delete"
-                                                   class="red ajax" type="button"><i class="iconfont icon-shanchu"></i>
-                                                    删除
+                                                    <i class="iconfont icon-xiugai"></i> 编辑
                                                 </a>
-                                            @endif
+                                                <a class="color-blue" href="{{ url('business/report/' . $man->id) }}">
+                                                    <i class="iconfont icon-jingzhibaogao"></i> 报告&nbsp;</a>
+                                                @if($man->status==cons('status.off'))
+                                                    <a class="ajax gray-light"
+                                                       data-url="{{ url('api/v1/business/salesman/lock') }}"
+                                                       data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
+                                                       data-method="post" type="button">
+                                                        <i class="iconfont icon-dongjietubiao"></i> 解冻&nbsp;
+                                                    </a>
+                                                @else
+                                                    <a class="black ajax"
+                                                       data-url="{{ url('api/v1/business/salesman/lock') }}"
+                                                       data-data='{ "id": "{{ $man->id }}","status":"{{ $man->status }}" }'
+                                                       data-method="post" type="button">
+                                                        <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
+                                                    </a>
+                                                @endif
+                                                @if($man->expire_at)
+                                                    <a data-target="#expireModal" data-toggle="modal"
+                                                       data-type="salesman"
+                                                       data-id="{{ $man->id }}">
+                                                        <i class="iconfont icon-chaopiao"></i>续费</a>
+                                                @endif
+                                                @if(auth()->user()->type != cons('user.type.maker'))
+                                                    <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}"
+                                                       data-method="delete"
+                                                       class="red ajax" type="button"><i
+                                                                class="iconfont icon-shanchu"></i>
+                                                        删除
+                                                    </a>
+                                                @endif
 
-                                        </div>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

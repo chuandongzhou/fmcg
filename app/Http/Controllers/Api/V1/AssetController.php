@@ -29,8 +29,7 @@ class AssetController extends Controller
      */
     public function postAdd(Requests\Api\v1\CreateAssetRequest $request)
     {
-        $data = $request->all();
-        if (auth()->user()->shop->asset()->create($data)) {
+        if (auth()->user()->shop->asset()->create($request->all())) {
             return $this->success('添加成功');
         }
         return $this->error('添加失败');
@@ -64,13 +63,11 @@ class AssetController extends Controller
      */
     public function postModify(Requests\Api\v1\CreateAssetRequest $request)
     {
-        $id = $request->input('id');
-        $asset = Asset::find($id);
+        $asset = Asset::find($request->input('id'));
         if (Gate::denies('validate-shop-asset', $asset)) {
             return $this->forbidden('权限不足');
         }
-        $data = $request->except('id');
-        if ($asset->fill($data)->save()) {
+        if ($asset->fill($request->except('id'))->save()) {
             return $this->success('操作成功');
         }
         return $this->error('操作失败');

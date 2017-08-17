@@ -19,10 +19,9 @@ class AssetService
      * @param $data
      * @return mixed
      */
-    public function getDataByCondition($model, $data)
+    public function getDataByCondition($model, $data, $type = '')
     {
-        $instance = $model->get();
-        $prefix = ($instance->first() instanceof AssetApply) ? 'asset_apply.' : '';
+        $prefix = ($type == 'apply') ? 'asset_apply.' : '';
         $model->orderBy('created_at', 'DESC');
         return $model->where(function ($query) use ($data, $prefix) {
             if ($start_at = array_get($data, 'start_at')) {
@@ -50,7 +49,7 @@ class AssetService
                         }
                     });
                 } else {
-                    $query->whereHas('asset',function ($query) use ($asset) {
+                    $query->whereHas('asset', function ($query) use ($asset) {
                         $is_id = is_numeric($asset);
                         if ($is_id) {
                             $query->where('id', $asset);

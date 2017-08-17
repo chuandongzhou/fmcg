@@ -25,8 +25,8 @@ class PromoController extends Controller
     {
         //获取启用且有效的活动(活动日期内)
         $promos = $this->user->maker->promo()->with([
-            'condition',
-            'rebate',
+            'condition.goods',
+            'rebate.goods',
         ])->where('status', '1')
             ->active()
             ->get()
@@ -49,8 +49,8 @@ class PromoController extends Controller
             'client',
             'client.businessAddress',
             'promo',
-            'promo.condition',
-            'promo.rebate'
+            'promo.condition.goods',
+            'promo.rebate.goods'
         ]);
         $applyLists = (new PromoService())->applyLogSearch($applyPromoModel, $data)->orderBy('created_at',
             'DESC')->get()->each(function ($item) {
@@ -71,8 +71,8 @@ class PromoController extends Controller
             'promo' => function ($promo) {
                 $promo->active();
             },
-            'promo.condition',
-            'promo.rebate'
+            'promo.condition.goods',
+            'promo.rebate.goods'
         ])->pass()->client($request->input('client_id'))->get();
         $applyLists->each(function ($item) use (
             $promos

@@ -78,7 +78,7 @@ class AssetApply extends Model
         $log = $this->log->filter(function ($log) {
             return $log->action == cons('asset_apply_log.action.review');
         })->first();
-        return $log->created_at ?? null;
+        return (string) ($log->created_at ?? '');
     }
 
 }

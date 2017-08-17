@@ -622,6 +622,7 @@
     min_money           decimal     最低配送额
     is_like             bool        是否已收藏
     goods_count         int         商品总数
+    user_type           int         店铺类型
     sales_volume        int         销售总量
     delivery_area       array       店铺配送区域
 
