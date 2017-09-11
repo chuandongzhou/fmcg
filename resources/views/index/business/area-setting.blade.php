@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-xs-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <span class="second-level">配送区域</span>
+                    <span class="second-level">业务区域</span>
                 </div>
             </div>
             <div class="row margin-clear">

@@ -70,34 +70,36 @@
                                 <td>{{ number_format($ownOrdersStatisticsPickUpCount = $ownOrdersStatistics['pickUpCount']) }}</td>
                                 <td>{{ number_format($ownOrdersStatisticsPickUpAmount = $ownOrdersStatistics['pickUpAmount'], 2) }}</td>
                             </tr>
-                            <tr>
-                                <td>业务订单</td>
-                                <td>{{ number_format($businessOrdersStatisticsCount = $businessOrdersStatistics['count']) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsAmount = $businessOrdersStatistics['amount'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsActualAmount = $businessOrdersStatistics['actualAmount'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsTargetFee = $businessOrdersStatistics['targetFee'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsNotPaidAmount = $businessOrdersStatistics['notPaidAmount'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsOnlinePayCount = $businessOrdersStatistics['onlinePayCount']) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsOnlinePayAmount = $businessOrdersStatistics['onlinePayAmount'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsCodPayCount = $businessOrdersStatistics['codPayCount']) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsCodPayAmount = $businessOrdersStatistics['codPayAmount'], 2) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsPickUpCount = $businessOrdersStatistics['pickUpCount']) }}</td>
-                                <td>{{ number_format($businessOrdersStatisticsPickUpAmount = $businessOrdersStatistics['pickUpAmount'], 2) }}</td>
-                            </tr>
-                            <tr>
-                                <td>合计</td>
-                                <td>{{ bcadd($ownOrdersStatisticsCount,$businessOrdersStatisticsCount) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsAmount, $businessOrdersStatisticsAmount, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsActualAmount, $businessOrdersStatisticsActualAmount, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsTargetFee, $businessOrdersStatisticsTargetFee, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsNotPaidAmount, $businessOrdersStatisticsNotPaidAmount, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsOnlinePayCount, $businessOrdersStatisticsOnlinePayCount) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsOnlinePayAmount, $businessOrdersStatisticsOnlinePayAmount, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsCodPayCount, $businessOrdersStatisticsCodPayCount) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsCodPayAmount, $businessOrdersStatisticsCodPayAmount, 2) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsPickUpCount, $businessOrdersStatisticsPickUpCount) }}</td>
-                                <td>{{ bcadd($ownOrdersStatisticsPickUpAmount, $businessOrdersStatisticsPickUpAmount, 2) }}</td>
-                            </tr>
+                            @if(auth()->user()->type < cons('user.type.maker'))
+                                <tr>
+                                    <td>业务订单</td>
+                                    <td>{{ number_format($businessOrdersStatisticsCount = $businessOrdersStatistics['count']) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsAmount = $businessOrdersStatistics['amount'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsActualAmount = $businessOrdersStatistics['actualAmount'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsTargetFee = $businessOrdersStatistics['targetFee'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsNotPaidAmount = $businessOrdersStatistics['notPaidAmount'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsOnlinePayCount = $businessOrdersStatistics['onlinePayCount']) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsOnlinePayAmount = $businessOrdersStatistics['onlinePayAmount'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsCodPayCount = $businessOrdersStatistics['codPayCount']) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsCodPayAmount = $businessOrdersStatistics['codPayAmount'], 2) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsPickUpCount = $businessOrdersStatistics['pickUpCount']) }}</td>
+                                    <td>{{ number_format($businessOrdersStatisticsPickUpAmount = $businessOrdersStatistics['pickUpAmount'], 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>合计</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsCount,$businessOrdersStatisticsCount) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsAmount, $businessOrdersStatisticsAmount, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsActualAmount, $businessOrdersStatisticsActualAmount, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsTargetFee, $businessOrdersStatisticsTargetFee, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsNotPaidAmount, $businessOrdersStatisticsNotPaidAmount, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsOnlinePayCount, $businessOrdersStatisticsOnlinePayCount) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsOnlinePayAmount, $businessOrdersStatisticsOnlinePayAmount, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsCodPayCount, $businessOrdersStatisticsCodPayCount) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsCodPayAmount, $businessOrdersStatisticsCodPayAmount, 2) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsPickUpCount, $businessOrdersStatisticsPickUpCount) }}</td>
+                                    <td>{{ bcadd($ownOrdersStatisticsPickUpAmount, $businessOrdersStatisticsPickUpAmount, 2) }}</td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                         <p class="title-table">客户订单汇总</p>
@@ -107,11 +109,13 @@
                                 <td class="first-td text-right">客户名称</td>
                                 <td class="2-1">
                                     订单数
-                                    <p class="margin-clear prompt">(业务订单+自主订单)</p>
+                                    <p class="margin-clear prompt">( @if(auth()->user()->type < cons('user.type.maker'))
+                                            业务订单+@endif自主订单)</p>
                                 </td>
                                 <td>
                                     总金额
-                                    <p class="margin-clear prompt">(业务订单+自主订单)</p>
+                                    <p class="margin-clear prompt">( @if(auth()->user()->type < cons('user.type.maker'))
+                                            业务订单+@endif自主订单)</p>
                                 </td>
                                 <td>实收金额</td>
                                 <td>手续费</td>
@@ -125,29 +129,33 @@
                             <tbody>
                             @foreach($orderStatisticsGroupName as $item)
                                 @if($item)
-                                <tr>
-                                    <td>{{ $item['shopName']}}</td>
-                                    <td>{{ $item['orderCount'] }}
-                                        <p class="margin-clear prompt">
-                                            ({{ $item['businessOrderCount'] }}+{{ $item['ownOrderCount'] }})
-                                        </p>
-                                    </td>
-                                    <td>{{ number_format($item['amount'], 2) }}
-                                        <p class="margin-clear prompt">
-                                            ({{ number_format($item['businessOrderAmount'], 2) }}
-                                            + {{ number_format($item['ownOrderAmount'], 2) }})
-                                        </p>
-                                    </td>
-                                    <td>{{ number_format($item['actualAmount'], 2) }}</td>
-                                    <td>{{ number_format($item['targetFee'], 2) }}</td>
-                                    <td>{{ number_format($item['notPaidAmount'], 2) }}</td>
-                                    <td>{{ $item['contact'] }}</td>
-                                    <td>{{ $item['address']->address_name }}</td>
-                                    <td>{{ $item['user_salesman'] }}</td>
-                                    <td><a href="javascript:"
-                                           onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ $item['shopName']}}</td>
+                                        <td>{{ $item['orderCount'] }}
+                                            @if(auth()->user()->type < cons('user.type.maker'))
+                                                <p class="margin-clear prompt">
+                                                    ({{   $item['businessOrderCount'] }}+{{ $item['ownOrderCount'] }})
+                                                </p>
+                                            @endif
+                                        </td>
+                                        <td>{{ number_format($item['amount'], 2) }}
+                                            @if(auth()->user()->type < cons('user.type.maker'))
+                                                <p class="margin-clear prompt">
+                                                    ({{ number_format($item['businessOrderAmount'], 2) }}
+                                                    + {{ number_format($item['ownOrderAmount'], 2) }})
+                                                </p>
+                                            @endif
+                                        </td>
+                                        <td>{{ number_format($item['actualAmount'], 2) }}</td>
+                                        <td>{{ number_format($item['targetFee'], 2) }}</td>
+                                        <td>{{ number_format($item['notPaidAmount'], 2) }}</td>
+                                        <td>{{ $item['contact'] }}</td>
+                                        <td>{{ $item['address']->address_name }}</td>
+                                        <td>{{ $item['user_salesman'] }}</td>
+                                        <td><a href="javascript:"
+                                               onclick="window.open ('{{ url('order/statistics-of-sell-user-detail?user_id=' . $item['id']) . '&' . http_build_query(array_except($data , 'user_shop_name')) }}', 'newwindow', 'height=800, width=1000')">明细</a>
+                                        </td>
+                                    </tr>
                                 @endif
                             @endforeach
                             </tbody>
