@@ -370,10 +370,14 @@ class Goods extends Model
      */
     public function scopeOfNameOrCode($query, $nameOrCode)
     {
-        return $query->where(function ($query) use ($nameOrCode) {
-            $query->where('name', 'LIKE', '%' . $nameOrCode . '%');
-            $query->orWhere('bar_code', 'LIKE', '%' . $nameOrCode . '%');
-        });
+        if ($nameOrCode) {
+            return $query->where(function ($query) use ($nameOrCode) {
+
+
+                $query->where('name', 'LIKE', '%' . $nameOrCode . '%');
+                $query->orWhere('bar_code', 'LIKE', '%' . $nameOrCode . '%');
+            });
+        }
     }
 
     /**
@@ -585,7 +589,7 @@ class Goods extends Model
     public function getSpecificationAttribute()
     {
         $userType = auth()->user()->type;
-        return  $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->specification_wholesaler : $this->specification_retailer;
+        return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->specification_wholesaler : $this->specification_retailer;
     }
 
     /**
@@ -750,14 +754,13 @@ class Goods extends Model
     }
 
     /**
-     * 获得转换后的商品库存剩余数量
+     * 获得商品库存剩余数量带单位字符串
      *
      * @return mixed
      */
     public function getSurplusInventoryAttribute()
     {
-        $total = $this->getTotalInventoryAttribute();
-        return InventoryService::calculateQuantity($this, $total);
+        return InventoryService::calculateQuantity($this, $this->getTotalInventoryAttribute());
     }
 
     /**

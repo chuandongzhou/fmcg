@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Index\Business;
 
 use App\Models\Goods;
-use App\Models\Salesman;
+use App\Models\Order;
 use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
-use App\Models\SystemTradeInfo;
 use App\Services\BillService;
 use App\Services\BusinessService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Index\Controller;
 use Gate;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 use PhpOffice\PhpWord\PhpWord;
-use Zend\Validator\File\Sha1;
 
 class SalesmanCustomerController extends Controller
 {
@@ -38,25 +40,40 @@ class SalesmanCustomerController extends Controller
         $salesmanId = $request->input('salesman_id');
         $name = $request->input('name');
         $type = $request->input('type', null);
-
+        $storeType = $request->input('store_type', null);
+        $areaId = $request->input('area_id', null);
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
+        $areas = $this->shop->areas()->get(['id', 'name']);
         $customers = SalesmanCustomer::whereIn('salesman_id',
             $salesmen->pluck('id'))
             ->OfSalesman($salesmanId)
             ->OfName($name)
-            ->where(function ($query) use ($type) {
+            ->where(function ($query) use ($type, $storeType, $areaId) {
                 if ($type == 'supplier') {
                     $query->where('type', cons('user.type.supplier'));
                 }
                 if (is_null($type)) {
                     $query->where('type', '<>', cons('user.type.supplier'));
                 }
+                if (!is_null($storeType)) {
+                    $query->where('store_type', $storeType);
+                }
+                if (!is_null($areaId)) {
+                    $query->where('area_id', $areaId);
+                }
             })
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
+
         //$customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
-            ['salesmen' => $salesmen, 'customers' => $customers, 'type' => $type, 'data' => $request->all()]);
+            [
+                'salesmen' => $salesmen,
+                'customers' => $customers,
+                'type' => $type,
+                'data' => $request->all(),
+                'areas' => $areas
+            ]);
     }
 
     /**
@@ -67,11 +84,13 @@ class SalesmanCustomerController extends Controller
     public function create(Request $request)
     {
         $salesmen = $this->shop->salesmen()->lists('name', 'id');
+        $areas = $this->shop->areas()->get(['id', 'name']);
         return view('index.business.salesman-customer',
             [
                 'salesmen' => $salesmen,
                 'salesmanCustomer' => new SalesmanCustomer,
-                'customerType' => $request->input('type', null)
+                'customerType' => $request->input('type', null),
+                'areas' => $areas
             ]);
     }
 
@@ -152,12 +171,13 @@ class SalesmanCustomerController extends Controller
     public function edit(Request $request, $salesmanCustomer)
     {
         $salesmen = $this->shop->salesmen()->active()->lists('name', 'id');
-
+        $areas = $this->shop->areas()->get(['id', 'name']);
         return view('index.business.salesman-customer',
             [
                 'salesmen' => $salesmen,
                 'salesmanCustomer' => $salesmanCustomer,
-                'customerType' => $request->input('type', null)
+                'customerType' => $request->input('type', null),
+                'areas' => $areas
             ]);
     }
 
@@ -194,6 +214,19 @@ class SalesmanCustomerController extends Controller
             ]);
     }
 
+    public function getStockQuery(Request $request, $customer)
+    {
+        $data = $request->only('name_code');
+        //店家商品库 shop goods library
+        $sgl = auth()->user()->shop->goods()->get(['bar_code']);
+        //客户商品库 customer goods library
+        $cgl = $customer->shop->goods()->ofNameOrCode($data['name_code'])->whereIn('bar_code',
+            $sgl->pluck('bar_code'))->paginate();
+        if ($request->input('action') === 'exp' && count($cgl)) {
+            return $this->stockQueryExport($cgl, Carbon::now()->toDateString() . $customer->name . '商品库存查询');
+        }
+        return view('index.business.stock-query-list', compact('customer', 'cgl', 'data'));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -563,18 +596,22 @@ class SalesmanCustomerController extends Controller
         foreach ($result['gifts'] as $goodsId => $gift) {
             foreach ($gift['describe'] as $key => $describe) {
                 $table->addRow();
-                if($key == 0){
+                if ($key == 0) {
                     $table->addCell(1000, $cellRowSpan)->addText($goodsId, null, $cellAlignCenter);
                     $table->addCell(1000, $cellRowSpan)->addText($gift['name'], null, $cellAlignCenter);
                     $table->addCell(1000, $cellVAlignCenter)->addText($describe['order_id'], null, $cellAlignCenter);
                     $table->addCell(1000, $cellVAlignCenter)->addText($describe['time'], null, $cellAlignCenter);
-                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',$describe['pieces']), null, $cellAlignCenter);
-                }else{
+                    $table->addCell(1000,
+                        $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',
+                            $describe['pieces']), null, $cellAlignCenter);
+                } else {
                     $table->addCell(null, $cellRowContinue);
                     $table->addCell(null, $cellRowContinue);
                     $table->addCell(1000, $cellVAlignCenter)->addText($describe['order_id'], null, $cellAlignCenter);
                     $table->addCell(1000, $cellVAlignCenter)->addText($describe['time'], null, $cellAlignCenter);
-                    $table->addCell(1000, $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',$describe['pieces']), null, $cellAlignCenter);
+                    $table->addCell(1000,
+                        $cellVAlignCenter)->addText($describe['num'] . cons()->valueLang('goods.pieces',
+                            $describe['pieces']), null, $cellAlignCenter);
                 }
             }
         }
@@ -582,5 +619,47 @@ class SalesmanCustomerController extends Controller
         $name = $result['customer']->name . $result['beginTime'] . ' 至 ' . $result['endTime'] . '销售明细.docx';
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
 
+    }
+
+    /**
+     * 库存查询记录导出
+     *
+     * @param $goods
+     * @param $excelName
+     */
+    public function stockQueryExport($goods, $excelName)
+    {
+        Excel::create($excelName, function (LaravelExcelWriter $excel) use ($goods) {
+            $excel->sheet('客户库存剩余', function (LaravelExcelWorksheet $sheet) use ($goods) {
+                // Set auto size for sheet
+                $sheet->setAutoSize(true);
+                //标题
+                $titles = [
+                    '商品名称',
+                    '商品条形码',
+                    '当前实时库存',
+                ];
+                $sheet->setWidth(array(
+                    'A' => 50,
+                    'B' => 20,
+                    'C' => 20,
+                ));
+                $goodsData = [];
+                foreach ($goods as $item) {
+                    $goodsData[] = [
+                        $item->name,
+                        $item->bar_code,
+                        $item->surplus_inventory
+                    ];
+                }
+                $sheetData = array_merge([$titles], $goodsData);
+                $sheet->rows($sheetData);
+                //单元格居中
+                $sheet->cells('A1:C' . (count($goodsData) + 1), function (CellWriter $cells) {
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+            });
+        })->export('xls');
     }
 }

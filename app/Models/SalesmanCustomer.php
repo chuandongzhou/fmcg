@@ -13,6 +13,8 @@ class SalesmanCustomer extends Model
         'number',
         'name',
         'type',
+        'store_type',
+        'area_id',
         'account',
         'shop_id', //平台id
         'letter',
@@ -74,8 +76,18 @@ class SalesmanCustomer extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function address(){
+    public function address()
+    {
         return $this->morphOne('App\Models\AddressData', 'addressable');
+    }
+
+    /**
+     * 关联业务区域
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
     }
 
     /**
@@ -96,7 +108,7 @@ class SalesmanCustomer extends Model
      */
     public function shippingAddress()
     {
-        return  $this->address()->where('type', cons('salesman.customer.address_type.shipping'));
+        return $this->address()->where('type', cons('salesman.customer.address_type.shipping'));
     }
 
     /**
@@ -116,7 +128,7 @@ class SalesmanCustomer extends Model
      */
     public function shop()
     {
-        return $this->belongsTo('App\Models\Shop');
+        return $this->belongsTo('App\Models\Shop', 'shop_id');
     }
 
     /**
@@ -321,7 +333,7 @@ class SalesmanCustomer extends Model
     {
         return $this->shop_id && $this->shop ? $this->shop->user_name : '';
     }
-    
+
 
     /**
      * 获取客户类型名
@@ -341,6 +353,16 @@ class SalesmanCustomer extends Model
     public function getSalesmanNameAttribute()
     {
         return $this->salesman ? $this->salesman->name : '';
+    }
+
+    /**
+     * 获取所属业务区域名
+     *
+     * @return string
+     */
+    public function getAreaNameAttribute()
+    {
+        return $this->area ? $this->area->name : '';
     }
 
 }

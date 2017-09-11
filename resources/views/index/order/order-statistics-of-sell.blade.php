@@ -100,6 +100,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <p class="title-table">客户订单汇总</p>
                         <table class="MyTable2 table-scroll">
                             <thead>
                             <tr>

@@ -27,11 +27,11 @@ class InventoryService extends BaseService
      *
      * @return string
      */
-    public function getInventoryNumber()
+    public function getInventoryNumber($filed = 'inventory_number')
     {
         $inventory_number = date('YmdHis') . rand(100, 999);
-        if ($this->inventory->where('inventory_number', $inventory_number)->first()) {
-            return $this->getInventoryNumber();
+        if ($this->inventory->where($filed, $inventory_number)->first()) {
+            return $this->getInventoryNumber($filed);
         }
         return $inventory_number;
 
@@ -145,7 +145,6 @@ class InventoryService extends BaseService
             ]);
             if (!$result) {
                 $orderGoods->update(['inventory_sate', cons('inventory.inventory_state.in-abnormal')]);
-                throw new \Exception('未知的错误!');
             }
         }
     }
@@ -486,14 +485,14 @@ class InventoryService extends BaseService
     }
 
     /**
-     * 检查是否有重复的生产日期
+     * 检查是否有重复的生产日期有且合并
      *
      * @param $record
      * @return mixed
      */
     public function _checkRepeated($record)
     {
-        $tmpArr = $res = $result = array();
+        $tmpArr = $res = $result = [];
         foreach ($record as $key => $value) {
             if (!in_array($value->production_date, $tmpArr)) {
                 $tmpArr[$key] = $value->production_date;

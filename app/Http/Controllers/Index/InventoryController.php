@@ -149,8 +149,8 @@ class InventoryController extends Controller
 
         $inventory = $this->shop->inventory()->with(['goods.goodsPieces', 'parent'])->OfOut()->orderBy('created_at',
             'desc');
-        $result = $this->inventoryService->search($inventory, $data);
-        dd($result->paginate()->sum('profit'));
+        $result = $this->inventoryService->search($inventory, $data)->paginate();
+
         return view('index.inventory.out', [
             'lists' => $result,
             'countProfit' => $result->sum('profit'),
@@ -319,7 +319,7 @@ class InventoryController extends Controller
 
         $goodsOutDetail = $this->shop->inventory()->with('goods')->OfOut()->where('goods_id',
             $goodsId)->whereIn('order_number', $orderIds)->paginate();
-        $inTransitTotal = $this->inventoryService->calculateQuantity($goodsId, $goodsOutDetail->sum('quantity'));
+        $inTransitTotal = $this->inventoryService->calculateQuantity($goodsOutDetail->first()->goods, $goodsOutDetail->sum('quantity'));
         return view('index.inventory.in-transit-goods-detail', [
             'goodsOutDetail' => $goodsOutDetail,
             'inTransitTotal' => $inTransitTotal

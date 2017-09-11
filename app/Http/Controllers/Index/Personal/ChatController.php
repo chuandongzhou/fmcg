@@ -35,6 +35,7 @@ class ChatController extends Controller
         $shopId = $request->input('remote_uid', '-1');
         $shop = Shop::with(['logo', 'user'])->select(['id', 'name', 'user_id'])->find($shopId);
         $thisShopId = auth()->user()->shop_id;
+
         return view('index.personal.chat-kit', [
             'remoteUid' => $shopId,
             'fullScreen' => $request->input('full_screen'),

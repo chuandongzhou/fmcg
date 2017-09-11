@@ -191,6 +191,16 @@ class Shop extends Model
     }
 
     /**
+     * 业务区域
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function areas()
+    {
+        return $this->hasMany(Area::class);
+    }
+
+    /**
      * 该店铺下完成的订单数量
      *
      * @return mixed
@@ -287,9 +297,11 @@ class Shop extends Model
     public function salesmenCustomer()
     {
         if ($this->user_type == cons('user.type.maker')) {
-            return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman', 'maker_id');
+            return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman', 'maker_id',
+                'salesman_id');
         }
-        return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
+        return $this->hasManyThrough('App\Models\SalesmanCustomer',
+            'App\Models\Salesman', 'shop_id', 'salesman_id')->where('salesman_customer.type', '<', $this->user_type);
     }
 
     /**

@@ -35,7 +35,6 @@
                                        type="text">
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="salesman_id"><span
                                         class="red">*</span>业务员:</label>
@@ -72,8 +71,40 @@
 
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label" for="salesman_id"><span
+                                                class="red">*</span>店铺类型:</label>
+
+                                    <div class="col-sm-10 col-md-6">
+                                        <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
+                                                name="store_type">
+                                            <option value="">请选择</option>
+                                            @foreach(cons()->valueLang('salesman.customer.store_type') as $storeType => $typeName)
+                                                <option @if(!is_null($salesmanCustomer->store_type) && $storeType == $salesmanCustomer->store_type) selected
+                                                        @endif value="{{$storeType}}">{{$typeName}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             @else
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label" for="salesman_id"><span
+                                                class="red">*</span>业务区域:</label>
+
+                                    <div class="col-sm-10 col-md-6">
+                                        <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
+                                                name="area_id">
+                                            <option value="">请选择</option>
+                                            @foreach($areas as $area)
+                                                <option @if($area->id == $salesmanCustomer->area_id) selected
+                                                        @endif value="{{$area->id}}">{{$area->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <input type="hidden" name="type" value="{{cons('user.type.supplier')}}">
+                                <input type="hidden" name="store_type"
+                                       value="{{cons('salesman.customer.store_type.supermarket')}}">
                             @endif
                         @endif
                         <div class="form-group row">
@@ -110,7 +141,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label" for="platform_id">平台账号:</label>
+                            <label class="col-sm-2 control-label" for="platform_id">
+                                @if(auth()->user()->type == cons('user.type.maker') && $customerType)
+                                    <span class="red">*</span>
+                                @endif 平台账号:
+                            </label>
 
                             <div class="col-sm-6 col-md-4">
                                 <input @if(auth()->user()->type == cons('user.type.maker') && $salesmanCustomer->id) readonly

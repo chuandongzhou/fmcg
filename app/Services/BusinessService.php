@@ -63,11 +63,11 @@ class BusinessService extends BaseService
      * @param $endDate
      * @return mixed
      */
-    public function getSalesmanOrders($shop, $startDate, $endDate)
+    public function getSalesmanOrders($shop, $startDate, $endDate, $salesmenName = null)
     {
         $salesmen = $shop instanceof Shop ? $shop->salesmen() : $shop;
         $user = auth()->user();
-        $salesmen = $salesmen->with([
+        $salesmen = $salesmen->ofName($salesmenName)->with([
             'orders.order',
             'orders.salesmanCustomer',
             'visits.salesmanCustomer'
@@ -84,7 +84,7 @@ class BusinessService extends BaseService
                 $user
             ) {
 
-                return  $order->salesmanCustomer->shop_id != $user->shop->id && ($order->created_at >= $startDate && $order->created_at <= $endDate);
+                return $order->salesmanCustomer->shop_id != $user->shop->id && ($order->created_at >= $startDate && $order->created_at <= $endDate);
             });
 
             //所有平台订货
@@ -109,11 +109,11 @@ class BusinessService extends BaseService
             //拜访客户数
             $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
             //订货总金额
-            $salesman->orderFormSumAmount = $orderForms->filter(function ($order){
+            $salesman->orderFormSumAmount = $orderForms->filter(function ($order) {
                 return ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true);
             })->sum('amount');
             //业务订单总金额
-            $salesman->visitOrderFormSumAmount = $visitOrderForms->filter(function ($order){
+            $salesman->visitOrderFormSumAmount = $visitOrderForms->filter(function ($order) {
                 return ($order->order ? $order->order->status < cons('order.status.invalid') : true) && ($order->order ? $order->order->pay_status < cons('order.pay_status.refund') : true);
             })->sum('amount');
 

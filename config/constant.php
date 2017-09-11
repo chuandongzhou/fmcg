@@ -591,6 +591,14 @@ return [
                 'no' => 0,
                 'cash' => 1,
                 'mortgage' => 2
+            ],
+            'store_type' => [
+                'supermarket' => 1,     //超市/百货/便利店
+                'catering' => 2,        //餐饮
+                'internet_bar' => 3,        //网咖
+                'stylistic_education' => 4,        //文体教育
+                'smoking_alcohol' => 5,        //烟酒
+                'fete_shop' => 6,        //喜铺
             ]
         ],
         //订单

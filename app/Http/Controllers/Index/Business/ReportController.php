@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index\Business;
 
+use App\Models\SalesmanCustomer;
 use App\Models\SalesmanCustomerDisplayList;
 use App\Models\SalesmanVisit;
 use App\Models\SalesmanVisitGoodsRecord;
@@ -16,7 +17,6 @@ use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
-use PhpOffice\PhpWord\PhpWord;
 
 class ReportController extends Controller
 {
@@ -31,10 +31,12 @@ class ReportController extends Controller
         $shop = auth()->user()->shop;
         $startDate = $request->input('start_date', ((new Carbon)->startOfMonth()->toDateString()));
         $endDate = $request->input('end_date', ((new Carbon)->toDateString()));
+        $salesmenName = $request->input('salesman_name', null);
         $endDateTemp = (new Carbon($endDate))->addDay()->toDateString();
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp);
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp, $salesmenName);
         return view('index.business.report', [
+            'salesmanName' => $salesmenName,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'salesmen' => $salesmenOrderData
@@ -103,6 +105,7 @@ class ReportController extends Controller
         if (!$customerId) {
             return $this->error('客户不存在');
         }
+        $customer = SalesmanCustomer::find($customerId);
 
         //开始时间
         $startDate = array_get($data, 'start_date', $carbon->copy()->startOfMonth()->toDateString());
@@ -121,8 +124,9 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
+        
         return view('index.business.report-customer-detail',
-            array_merge(compact('salesmanId', 'customerId', 'startDate', 'endDate'), $this->_getDetailData($visits)));
+            array_merge(compact('salesman', 'customer', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }
 
     /**
@@ -566,13 +570,13 @@ class ReportController extends Controller
                     //标题
                     $titles = [
                         '拜访客户数',
-                        '总订货单数',
+                        '退货总单数',
                         '退货金额',
                         '拜访订货单数',
                         '拜访订货金额',
                         '自主订货单数',
                         '自主订货金额',
-                        '退货总单数',
+                        '总订货单数',
                         '总订货金额',
                         '总应付金额',
                     ];
@@ -1064,9 +1068,10 @@ class ReportController extends Controller
         $shop = auth()->user()->shop;
         $startDate = $request->input('start_date', ((new Carbon)->startOfMonth()->toDateString()));
         $endDate = $request->input('end_date', ((new Carbon)->toDateString()));
+        $salesmenName = $request->input('salesman_name', null);
         $endDateTemp = (new Carbon($endDate))->addDay()->toDateString();
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp);
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp,$salesmenName);
 
         //客户列表
 

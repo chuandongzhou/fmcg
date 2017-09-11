@@ -156,6 +156,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('salesman/target', 'SalesmanController@target');
         $router->resource('salesman', 'SalesmanController');
         $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
+        $router->get('salesman-customer/{salesman_customer}/stock', 'SalesmanCustomerController@getStockQuery');
         $router->get('salesman-customer/{salesman_customer}/bill', 'SalesmanCustomerController@bill');
         $router->resource('salesman-customer', 'SalesmanCustomerController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
@@ -167,6 +168,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('display-info/export', 'DisplayInfoController@export');
 
         $router->resource('mortgage-goods', 'MortgageGoodsController');
+        $router->resource('area', 'AreaController');
         $router->group(['prefix' => 'order'], function ($router) {
             $router->get('export', 'SalesmanVisitOrderController@export');
             $router->get('order-forms', 'SalesmanVisitOrderController@orderForms');
@@ -493,9 +495,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->post('lock', 'SalesmanController@postLock');
                     $router->put('password', 'SalesmanController@password');  //修改密码
                 });
+                $router->resource('area', 'AreaController');
                 $router->resource('salesman', 'SalesmanController');
 
                 $router->group(['prefix' => 'salesman-customer'], function ($router) {
+                    $router->get('store_type','SalesmanCustomerController@getStoreType');
                     $router->put('update-by-app/{salesman_customer}',
                         'SalesmanCustomerController@updateByApp');
                     $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');

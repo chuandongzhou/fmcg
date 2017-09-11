@@ -9,7 +9,8 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
-                <a href="{{ url('order/statistics-of-sell-user-detail-export') . '?' . request()->getQueryString() }}" class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
+                <a href="{{ url('order/statistics-of-sell-user-detail-export') . '?' . request()->getQueryString() }}"
+                   class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
                 <div class="col-sm-12 tables">
                     <p class="title-table">订单总计</p>
                     <table class="MyTable1 table-scroll">
@@ -44,43 +45,46 @@
                             <td>{{ number_format($ownOrdersStatisticsPickUpCount = $ownOrdersStatistics['pickUpCount']) }}</td>
                             <td>{{ number_format($ownOrdersStatisticsPickUpAmount = $ownOrdersStatistics['pickUpAmount'], 2) }}</td>
                         </tr>
-                        <tr>
-                            <td>业务订单</td>
-                            <td>{{ number_format($businessOrdersStatisticsCount = $businessOrdersStatistics['count']) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsAmount = $businessOrdersStatistics['amount'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsActualAmount = $businessOrdersStatistics['actualAmount'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsTargetFee = $businessOrdersStatistics['targetFee'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsNotPaidAmount = $businessOrdersStatistics['notPaidAmount'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsOnlinePayCount = $businessOrdersStatistics['onlinePayCount']) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsOnlinePayAmount = $businessOrdersStatistics['onlinePayAmount'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsCodPayCount = $businessOrdersStatistics['codPayCount']) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsCodPayAmount = $businessOrdersStatistics['codPayAmount'], 2) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsPickUpCount = $businessOrdersStatistics['pickUpCount']) }}</td>
-                            <td>{{ number_format($businessOrdersStatisticsPickUpAmount = $businessOrdersStatistics['pickUpAmount'], 2) }}</td>
-                        </tr>
-                        <tr>
-                        <tr>
-                            <td>合计</td>
-                            <td>{{ bcadd($ownOrdersStatisticsCount,$businessOrdersStatisticsCount) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsAmount, $businessOrdersStatisticsAmount, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsActualAmount, $businessOrdersStatisticsActualAmount, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsTargetFee, $businessOrdersStatisticsTargetFee, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsNotPaidAmount, $businessOrdersStatisticsNotPaidAmount, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsOnlinePayCount, $businessOrdersStatisticsOnlinePayCount) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsOnlinePayAmount, $businessOrdersStatisticsOnlinePayAmount, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsCodPayCount, $businessOrdersStatisticsCodPayCount) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsCodPayAmount, $businessOrdersStatisticsCodPayAmount, 2) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsPickUpCount, $businessOrdersStatisticsPickUpCount) }}</td>
-                            <td>{{ bcadd($ownOrdersStatisticsPickUpAmount, $businessOrdersStatisticsPickUpAmount, 2) }}</td>
-                        </tr>
+                        @if(auth()->user()->type < cons('user.type.maker'))
+                            <tr>
+                                <td>业务订单</td>
+                                <td>{{ number_format($businessOrdersStatisticsCount = $businessOrdersStatistics['count']) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsAmount = $businessOrdersStatistics['amount'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsActualAmount = $businessOrdersStatistics['actualAmount'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsTargetFee = $businessOrdersStatistics['targetFee'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsNotPaidAmount = $businessOrdersStatistics['notPaidAmount'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsOnlinePayCount = $businessOrdersStatistics['onlinePayCount']) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsOnlinePayAmount = $businessOrdersStatistics['onlinePayAmount'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsCodPayCount = $businessOrdersStatistics['codPayCount']) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsCodPayAmount = $businessOrdersStatistics['codPayAmount'], 2) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsPickUpCount = $businessOrdersStatistics['pickUpCount']) }}</td>
+                                <td>{{ number_format($businessOrdersStatisticsPickUpAmount = $businessOrdersStatistics['pickUpAmount'], 2) }}</td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td>合计</td>
+                                <td>{{ bcadd($ownOrdersStatisticsCount,$businessOrdersStatisticsCount) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsAmount, $businessOrdersStatisticsAmount, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsActualAmount, $businessOrdersStatisticsActualAmount, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsTargetFee, $businessOrdersStatisticsTargetFee, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsNotPaidAmount, $businessOrdersStatisticsNotPaidAmount, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsOnlinePayCount, $businessOrdersStatisticsOnlinePayCount) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsOnlinePayAmount, $businessOrdersStatisticsOnlinePayAmount, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsCodPayCount, $businessOrdersStatisticsCodPayCount) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsCodPayAmount, $businessOrdersStatisticsCodPayAmount, 2) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsPickUpCount, $businessOrdersStatisticsPickUpCount) }}</td>
+                                <td>{{ bcadd($ownOrdersStatisticsPickUpAmount, $businessOrdersStatisticsPickUpAmount, 2) }}</td>
+                            </tr>
+                        @endif
 
                         </tbody>
                     </table>
+                    <p class="title-table">订单明细</p>
                     <table class="MyTable2 table-scroll ">
                         <thead>
                         <tr>
-                            <td >订单号</td>
-                            <td >订单类型</td>
+                            <td>订单号</td>
+                            <td>订单类型</td>
                             <td>订单金额</td>
                             <td>订单状态</td>
                             <td>支付方式</td>
@@ -130,10 +134,10 @@
                         </tbody>
                         <tfoot>
                         {{--<td colspan="5" class="text-center">--}}
-                            {{--<div class="text-right">--}}
-                                {{--<ul class="pagination management-pagination">--}}
-                                {{--</ul>--}}
-                            {{--</div>--}}
+                        {{--<div class="text-right">--}}
+                        {{--<ul class="pagination management-pagination">--}}
+                        {{--</ul>--}}
+                        {{--</div>--}}
                         {{--</td>--}}
                         </tfoot>
                     </table>

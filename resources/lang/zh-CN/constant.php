@@ -83,6 +83,7 @@ return [
             'not_pass' => '未通过'
         ]
     ],
+
     //广告表类型
     'advert' => [
         'type' => [
@@ -107,7 +108,8 @@ return [
             'alipay' => '支付宝(app)',
             //'alipay_wap' => '支付宝(app网页)',
             'balancepay' => '余额支付',
-            'wechat_pay' => '微信支付'
+            'wechat_pay' => '微信支付',
+            'union_pay' => '银联'
         ],
         'pay_status' => [
             'success' => '成功',
@@ -341,10 +343,17 @@ return [
                 'no' => '暂无',
                 'cash' => '现金',
                 'mortgage' => '陈列商品'
+            ],
+            'store_type' => [
+                'supermarket' => '超市/百货/便利店',
+                'catering' => '餐饮',
+                'internet_bar' => '网咖',
+                'stylistic_education' => '文体教育',
+                'smoking_alcohol' => '烟酒',
+                'fete_shop' => '喜铺'
             ]
         ]
     ],
-
     //出入库
     'inventory' => [
         'inventory_type' => [

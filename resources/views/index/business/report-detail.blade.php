@@ -36,6 +36,7 @@
                             </h3>
                         </div>
                         <div class="panel-container">
+                            <p class="title-table">业务汇总</p>
                             <table class="table table-bordered table-center public-table">
                                 <thead>
                                 <tr>
@@ -66,6 +67,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <p class="title-table">客户销售明细</p>
                             <table class="public-table MyTable1 table-scroll business-tables">
                                 <thead>
                                 <tr>
@@ -130,7 +132,7 @@
                         </div>
                         {{--@if(auth()->user()->type < cons('user.type.maker'))--}}
                         <div class="panel-container">
-                            <p class="title-table">自主订单</p>
+                            <p class="title-table">自主订单销售明细</p>
                             <table class="table business-table table-bordered table-center public-table">
                                 <thead>
                                 <tr>

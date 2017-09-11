@@ -52,7 +52,6 @@ class AddressController extends Controller
         if (!$provinceName) {
             $provinceId = $cacheConf['default_province'];
         } else {
-            $provinces = [];
             $cacheKey = $cacheConf['provinces']['cache']['name'];
             if (Cache::has($cacheKey)) {
                 $provinces = Cache::get($cacheKey);

@@ -12,7 +12,6 @@
                 <div class="row assets-modal-wrap">
                     <form class="ajax-form form-horizontal add-modify" method="post" accept-charset="UTF-8">
                         <div class="form-group">
-
                             <label class="col-xs-2 control-label"><span class="red">*</span> 资产名称:</label>
                             <div class="col-xs-7 col-md-5">
                                 <input name="id" class="form-control" type="hidden">

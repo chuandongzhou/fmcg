@@ -470,24 +470,7 @@ class GoodsService
      */
     static public function getPiecesSystem3(array $goodsPieces, $pieces)
     {
-        if (is_array($goodsPieces)) {
-            throw new \Exception('Parameter requires an array!');
-        }
-        $lv = array_search($pieces, $goodsPieces);
-        $s1 = array_get($goodsPieces, 'system_1');
-        $s2 = array_get($goodsPieces, 'system_2');
-        switch ($lv) {
-            case 'pieces_level_2' :
-                $system = $s2 == null ? 1 : $s2;
-                break;
-            case 'pieces_level_1' :
-                $system = (($s1 == null ? 1 : $s1) * ($s2 == null ? 1 : $s2));
-                break;
-            default :
-                $system = 1;
-                break;
-        }
-        return $system;
+        
     }
 
 }

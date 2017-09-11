@@ -298,6 +298,11 @@
                                 <span class="title">业务员管理</span>
                             </a>
                         </li>
+                        <li class="nav-item  {{request()->is('business/area*')}}">
+                            <a href="{{ url('business/area') }}" class="nav-link ">
+                                <span class="title">业务地区</span>
+                            </a>
+                        </li>
                         <li class="nav-item  {{request()->is('business/salesman-customer*') && request()->input('type') ? 'active' : ''}}">
                             <a href="{{ url('business/salesman-customer?type=supplier') }}" class="nav-link ">
                                 <span class="title">供应商管理</span>

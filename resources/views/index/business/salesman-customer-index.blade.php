@@ -26,6 +26,24 @@
                                 <option value="{{ $salesman->id }}" {{ isset($data['salesman_id']) && $salesman->id == $data['salesman_id'] ? 'selected' : '' }}>{{ $salesman->name }}</option>
                             @endforeach
                         </select>
+                        @if(empty($data['type']))
+                            店铺类型:
+                            <select name="store_type" class="ajax-select control">
+                                <option value="">全部</option>
+                                @foreach(cons()->valueLang('salesman.customer.store_type') as $storeType => $typeName)
+                                    <option {{ isset($data['store_type']) && $storeType == $data['store_type'] ? 'selected' : '' }} value="{{$storeType}}">{{$typeName}}</option>
+                                @endforeach
+                            </select>
+                        @endif
+                        @if(!empty($data['type']))
+                            <select name="area_id" class="ajax-select control">
+                                <option value="">全部区域</option>
+                                @foreach($areas as $area)
+                                    <option @if(isset($data['area_id']) &&$area->id == $data['area_id']) selected
+                                            @endif value="{{$area->id}}">{{$area->name}}</option>
+                                @endforeach
+                            </select>
+                        @endif
                         <input class="control" type="text" name="name"
                                value="{{ isset($data['name'])?$data['name']:'' }}"
                                placeholder="{{empty($data['type']) ? '客户' : '供应商'}}名称">
@@ -43,11 +61,17 @@
                                 <th>编号</th>
                                 <th>{{empty($data['type']) ? '客户' : '供应商'}}名称</th>
                                 <th>平台账号</th>
+                                @if(empty($data['type']))
+                                    <th>店铺类型</th>
+                                @endif
                                 <th>联系人</th>
                                 <th>联系方式</th>
                                 <th>营业地址</th>
                                 <th>收货地址</th>
                                 <th>营业面积</th>
+                                @if(!empty($data['type']))
+                                    <th>区域</th>
+                                @endif
                                 <th>业务员</th>
                                 <th>操作</th>
                             </tr>
@@ -64,6 +88,11 @@
                                     <td>
                                         {{ $customer->account }}
                                     </td>
+                                    @if(empty($data['type']))
+                                        <td>
+                                            {{$customer->store_type > 0 ? cons()->valueLang('salesman.customer.store_type',$customer->store_type) : '未指定'}}
+                                        </td>
+                                    @endif
                                     <td>
                                         {{ $customer->contact }}
                                     </td>
@@ -79,13 +108,18 @@
                                     <td>
                                         {{ $customer->business_area }}
                                     </td>
+                                    @if(!empty($data['type']))
+                                        <td>
+                                            {{ $customer->area_name}}
+                                        </td>
+                                    @endif
                                     <td>
                                         {{ $customer->salesman->name }}
                                     </td>
                                     <td>
                                         <div role="group" class="btn-group btn-group-xs">
                                             @if(auth()->user()->type == cons('user.type.maker') && empty($data['type']))
-                                                @else
+                                            @else
                                                 <a class=" edit"
                                                    href="{{ url('business/salesman-customer/' . $customer->id . '/edit')  . (empty($data['type']) ? '' : '?type=supplier')}}">
                                                     <i class="iconfont icon-xiugai"></i> 编辑
@@ -95,10 +129,14 @@
                                                href="{{ url('business/salesman-customer/' . $customer->id) }}">
                                                 <i class="iconfont icon-iconmingchengpaixu65"></i> 明细</a>
                                             @if(auth()->user()->type == cons('user.type.maker') && empty($data['type']))
-                                                @else
+                                            @else
                                                 <a class="edit"
                                                    href="{{ url('business/salesman-customer/' . $customer->id . '/bill') }}">
                                                     <i class="iconfont icon-duizhangdan"></i> 对账单
+                                                </a>
+                                                <a class="stock-query"
+                                                   href="{{ url('business/salesman-customer/' . $customer->id . '/stock') }}">
+                                                    <i class="iconfont icon-chaxun"></i> 库存查询
                                                 </a>
                                             @endif
 

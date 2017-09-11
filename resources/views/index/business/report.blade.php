@@ -26,9 +26,11 @@
                             <input class="inline-control datetimepicker control" type="text" name="end_date"
                                    value="{{ $endDate }}"
                                    data-format="YYYY-MM-DD" placeholder="结束时间">
+                            <input class="inline-control control" type="text" name="salesman_name"
+                                   value="{{ $salesmanName or '' }}" placeholder="业务员名称">
                             <button id="submitBtn" class="btn btn-blue-lighter search-by-get" type="submit">查询</button>
                             <a id="export"
-                               href="{{ url('business/report/export?start_date=' . $startDate . '&end_date=' . $endDate) }}"
+                               href="{{ url('business/report/export?start_date=' . $startDate . '&end_date=' . $endDate. '&salesman_name=' . $salesmanName) }}"
                                class="btn btn-border-blue">导出</a>
                         </form>
                     </div>
