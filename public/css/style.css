@@ -11217,6 +11217,10 @@ button.close {
   content: "\e60d";
 }
 
+.icon-shanchu2:before {
+  content: "\e60b";
+}
+
 .icon-gongyingshang:before {
   content: "\e63d";
 }
@@ -11425,7 +11429,7 @@ button.close {
   content: "\e632";
 }
 
-.icon-baocun :before {
+.icon-baocun:before {
   content: "\e62f";
 }
 
@@ -11503,10 +11507,6 @@ button.close {
 
 .icon-xiaoxi :before {
   content: "\e60a";
-}
-
-.icon-shanchu2 :before {
-  content: "\e60b";
 }
 
 .icon-tongji :before {

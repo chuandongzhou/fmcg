@@ -42,52 +42,6 @@ class SalesmanController extends Controller
         return view('index.business.salesman', ['salesman' => new Salesman]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-    
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
 
     /**
      * 业务员目标
@@ -99,8 +53,34 @@ class SalesmanController extends Controller
     {
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
+        $startDate = (new Carbon($date))->startOfMonth();
+
         $salesmenOrderData = (new BusinessService)->getSalesmanOrders($this->shop,
-            (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
+            $startDate, (new Carbon($date))->endOfMonth());
+
+        $shopId = $this->shop->id;
+
+
+        //新开家
+        $salesmenOrderData->each(function ($salesman) use ($startDate, $shopId) {
+            $customers = $salesman->usefulOrders->pluck('salesman_customer_id')->toBase()->unique();
+
+            //所有订单
+            $lowDateOrders = $salesman->orders->filter(function ($order) use (
+                $salesman,
+                $startDate,
+                $shopId
+            ) {
+                return $order->salesmanCustomer->shop_id != $shopId && $order->created_at < $startDate;
+            })->pluck('salesman_customer_id')->toBase()->unique();
+
+
+            $customers = $customers->filter(function ($customerId) use ($lowDateOrders) {
+                return !$lowDateOrders->contains($customerId);
+            });
+
+            $salesman->newCustomers = $customers->count();
+        });
 
 
         return view('index.business.salesman-target-index', [
@@ -108,5 +88,14 @@ class SalesmanController extends Controller
             'salesmen' => $salesmenOrderData,
             'target' => new SalesmanTargetService()
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function targetSet()
+    {
+        $salesmen = auth()->user()->shop->salesmen()->active()->get();
+        return view('index.business.salesman-target-set', compact('salesmen'));
     }
 }

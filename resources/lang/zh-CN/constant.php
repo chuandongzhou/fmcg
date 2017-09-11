@@ -109,7 +109,7 @@ return [
             //'alipay_wap' => '支付宝(app网页)',
             'balancepay' => '余额支付',
             'wechat_pay' => '微信支付',
-            'union_pay' => '银联'
+            'union_pay' => '银联支付'
         ],
         'pay_status' => [
             'success' => '成功',

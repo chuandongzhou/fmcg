@@ -8293,3 +8293,24 @@ table .product-panel .promotions {
   border: 1px solid #e0e0e0;
   margin-bottom: 15px;
 }
+
+.query-title {
+  padding: 15px;
+  color: #000;
+}
+
+.query-controls .control-name input {
+  width: 300px;
+}
+
+.query-controls .btn-item {
+  padding: 15px 8px !important;
+}
+
+.goods-tables .goods-table-panel .query-table table tr td .product-name {
+  width: 70% !important;
+}
+
+.set-target .select-commodity {
+  margin-bottom: 15px;
+}

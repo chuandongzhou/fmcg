@@ -328,16 +328,26 @@ class OrderService extends BaseService
         $orderGoods = collect();
         //陈列费商品
         $mortgageGoods = collect();
-        foreach ($order->goods as $item) {
-            if ($item->pivot->type == cons('order.goods.type.mortgage_goods')) {
+        //赠品
+        $giftGoods = collect();
+
+        $isOrder = $order instanceof Order;
+
+        $goods = $isOrder ? $order->goods : $order;
+
+        foreach ($goods as $item) {
+            $type = $isOrder ? $item->pivot->type : $item->type;
+            if ($type == cons('order.goods.type.mortgage_goods')) {
                 $mortgageGoods->push($item);
                 continue;
-            } else if ($item->pivot->type == cons('order.goods.type.order_goods')) {
+            } else if ($type == cons('order.goods.type.order_goods')) {
                 $orderGoods->push($item);
+            } else if ($type == cons('order.goods.type.gift_goods')) {
+                $giftGoods->push($item);
             }
         }
-        $order->addHidden(['goods']);
-        return compact('orderGoods', 'mortgageGoods');
+        $isOrder && $order->addHidden(['goods']);
+        return compact('orderGoods', 'mortgageGoods', 'giftGoods');
     }
 
     /**

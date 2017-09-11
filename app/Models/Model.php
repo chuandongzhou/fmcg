@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Cache;
 
-class Model extends Eloquent
+class  Model extends Eloquent
 {
     /**
      * 模型启动事件

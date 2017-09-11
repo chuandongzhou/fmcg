@@ -497,7 +497,7 @@ a {
     }
     @media screen and (max-width: 320px) {
       .step-item {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
     }
   }
@@ -793,7 +793,7 @@ a {
     text-align: center;
     .icon {
       display: inline-block;
-      background: url("/images/mobile-images/menu_icons.png") top center no-repeat;
+      background: url("images/mobile-images/menu_icons.png") top center no-repeat;
       background-size: 75%;
       @include square(60px);
       &.jiushui {
@@ -1121,13 +1121,10 @@ a {
     color:$body-bg;
     padding:0 2px!important;
     .item-wrap{
-      background:url("/images/mobile-images/coupon-bg.png") no-repeat center left;
+      background:url("../images/mobile-images/coupon-bg.png") no-repeat center left;
       background-size: cover;
       height:75px;
       @include clearfix;
-    }
-    &:nth-child(even){
-
     }
     .price{
       font-size: 2.8rem;
@@ -1310,7 +1307,7 @@ a {
     padding-top:15px;
     @include clearfix;
     .shop-name{
-      max-width: 60%;
+      max-width: 55%;
       &>div{
         display: inline-block;
         max-width: 75%;
@@ -1760,7 +1757,7 @@ a {
   height:90px;
   .money-panel {
     @include size(120px,100%);
-    background: url("/images/mobile-images/coupon-bg.png") no-repeat left center;
+    background: url("../images/mobile-images/coupon-bg.png") no-repeat left center;
     background-size: cover;
     color:$body-bg;
     padding: 5px 10px;

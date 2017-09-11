@@ -154,6 +154,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     //业务管理
     $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'deposit'], function ($router) {
         $router->get('salesman/target', 'SalesmanController@target');
+        $router->get('salesman/target-set', 'SalesmanController@targetSet');
         $router->resource('salesman', 'SalesmanController');
         $router->resource('salesman-customer/{salesman_customer}/export', 'SalesmanCustomerController@export');
         $router->get('salesman-customer/{salesman_customer}/stock', 'SalesmanCustomerController@getStockQuery');
@@ -194,6 +195,10 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('detail-list-export', 'InventoryController@detailListExport'); // 出入库记录导出
         $router->controller('/', 'InventoryController');
     });
+
+    //销售统计
+    $router->get('sales-statistics', 'SalesStatisticsController@index');
+    $router->get('sales-statistics/export', 'SalesStatisticsController@export');
 
 //资产管理
     $router->group(['prefix' => 'asset'], function ($router) {
@@ -242,6 +247,7 @@ $router->group(['prefix' => 'child-user', 'namespace' => 'ChildUser', 'middlewar
         $router->controller('model', 'ModelController');  //模版管理
         $router->get('customer/{user_type}', 'CustomerController@index'); // 客户列表
         $router->get('salesman/target', 'SalesmanController@target');
+        $router->get('salesman/target-set', 'SalesmanController@targetSet');
         $router->resource('salesman', 'SalesmanController');
         $router->get('report/{salesman_id}/export', 'ReportController@export');
         $router->get('report/{salesman_id}/customer-detail', 'ReportController@customerDetail');
@@ -405,6 +411,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->put('batch-shelve', 'MyGoodsController@batchShelve');     //商品批量上下架
             $router->get('images', 'MyGoodsController@getImages');
             $router->post('import', 'MyGoodsController@import');
+            $router->get('goods', 'MyGoodsController@goods');
         });
         $router->resource('my-goods', 'MyGoodsController');
         $router->group(['prefix' => 'personal', 'namespace' => 'Personal'], function ($router) {
@@ -491,6 +498,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('export-target', 'SalesmanController@exportTarget');
                     $router->delete('batch-delete', 'SalesmanController@batchDelete');
                     $router->put('target-set', 'SalesmanController@targetSet');
+                    $router->get('{salesman_id}/goods-target', 'SalesmanController@goodsTarget')->where('salesman_id', '[0-9]+');
                     $router->put('update-by-app', 'SalesmanController@updateByApp');
                     $router->post('lock', 'SalesmanController@postLock');
                     $router->put('password', 'SalesmanController@password');  //修改密码
@@ -572,10 +580,17 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('/apply/pass', 'PromoController@applyPass'); // 通过申请列表
                 });
             });
+        //微信支付
         $router->group(['prefix' => 'wechat-pay'], function ($router) {
             $router->get('qrcode/{order_id}', 'WechatPayController@getQrCode')->where('order_id', '[0-9]+');
             $router->get('renew-qrcode', 'WechatPayController@renewQrCode');
             $router->get('order-pay-status/{order_id}', 'WechatPayController@orderPayStatus')->where('order_id',
+                '[0-9]+');
+        });
+        //银联支付
+        $router->group(['prefix' => 'union-pay'], function ($router) {
+            $router->get('qrcode/{order_id}', 'UnionPayController@getQrCode')->where('order_id', '[0-9]+');
+            $router->get('order-pay-status/{order_id}', 'UnionPayController@orderPayStatus')->where('order_id',
                 '[0-9]+');
         });
         //支付渠道

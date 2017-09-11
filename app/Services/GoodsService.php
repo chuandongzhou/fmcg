@@ -473,4 +473,34 @@ class GoodsService
         
     }
 
+    /**
+     * 格式化商品数量
+     *
+     * @param $pieces
+     * @param $goodsPieces
+     * @return array
+     */
+    static function formatGoodsPieces($pieces, $goodsPieces)
+    {
+        $newArray = [];
+        if ($pieces['pieces_level_3'] && $piecesLevel3 = array_get($goodsPieces, $pieces['pieces_level_3'])) {
+
+            $goodsPieces[$pieces['pieces_level_2']] = isset($goodsPieces[$pieces['pieces_level_2']]) ? bcadd($goodsPieces[$pieces['pieces_level_2']],
+                bcdiv($piecesLevel3, $pieces['system_2'])) : bcdiv($piecesLevel3, $pieces['system_2']);
+            $goodsPieces[$pieces['pieces_level_3']] = bcmod($piecesLevel3, $pieces['system_2']);
+        }
+
+        if ($pieces['pieces_level_2'] && $piecesLevel2 = array_get($goodsPieces, $pieces['pieces_level_2'])) {
+            $goodsPieces[$pieces['pieces_level_1']] = isset($goodsPieces[$pieces['pieces_level_1']]) ? bcadd($goodsPieces[$pieces['pieces_level_1']],
+                bcdiv($piecesLevel2, $pieces['system_1'])) : bcdiv($piecesLevel2, $pieces['system_1']);
+            $goodsPieces[$pieces['pieces_level_2']] = bcmod($piecesLevel2, $pieces['system_1']);
+        }
+        //单位从大到小
+        $newArray[$pieces['pieces_level_1']] = array_get($goodsPieces, $pieces['pieces_level_1'], 0);
+        $pieces['pieces_level_2'] && ($newArray[$pieces['pieces_level_2']] = array_get($goodsPieces, $pieces['pieces_level_2'], 0));
+        $pieces['pieces_level_3'] && ($newArray[$pieces['pieces_level_3']] = array_get($goodsPieces, $pieces['pieces_level_3'], 0));
+
+        return array_filter($newArray);
+    }
+
 }

@@ -474,6 +474,23 @@
                                 </li>
                             </ul>
                         </li>
+
+                        {{-- 销售统计 --}}
+                        <li class="nav-item  {!! path_active(['sales-statistics*']) !!}">
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="icon-wallet"></i>
+                                <span class="title">销售统计</span>
+                                <span class="{!! request()->is('sales-statistics*') ? 'selected' : '' !!}"></span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="nav-item  {{ path_active(['sales-statistics*']) }}">
+                                    <a href="{{ url('sales-statistics') }}" class="nav-link ">
+                                        <span class="title">统计</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     @endif
                 @endif
             @endif

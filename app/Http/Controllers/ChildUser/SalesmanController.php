@@ -39,14 +39,51 @@ class SalesmanController extends Controller
     {
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
-        $salesmenOrderData = (new BusinessService)->getSalesmanOrders($this->shop,
-            (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
+        $startDate = (new Carbon($date))->startOfMonth();
 
+        $salesmenOrderData = (new BusinessService)->getSalesmanOrders($this->shop,
+            $startDate, (new Carbon($date))->endOfMonth());
+
+        $shopId = $this->shop->id;
+
+
+        //新开家
+        $salesmenOrderData->each(function ($salesman) use ($startDate, $shopId) {
+            $customers = $salesman->usefulOrders->pluck('salesman_customer_id')->toBase()->unique();
+
+            //所有订单
+            $lowDateOrders = $salesman->orders->filter(function ($order) use (
+                $salesman,
+                $startDate,
+                $shopId
+            ) {
+                return $order->salesmanCustomer->shop_id != $shopId && $order->created_at < $startDate;
+            })->pluck('salesman_customer_id')->toBase()->unique();
+
+
+            $customers = $customers->filter(function ($customerId) use ($lowDateOrders) {
+                return !$lowDateOrders->contains($customerId);
+            });
+
+            $salesman->newCustomers = $customers->count();
+        });
 
         return view('child-user.salesman.target', [
             'date' => $date,
             'salesmen' => $salesmenOrderData,
             'target' => new SalesmanTargetService()
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function targetSet()
+    {
+        $salesmen = child_auth()->user()->shop->salesmen()->active()->get();
+
+        $actionUrl = url('api/v1/child-user/salesman/target-set');
+
+        return view('index.business.salesman-target-set', compact('salesmen', 'actionUrl'));
     }
 }

@@ -29,7 +29,7 @@
 `失败返回：`
 
 
-#### 2.2.2 分配的订单信息[get] (orders)
+#### 2.1.2 分配的订单信息[get] (orders)
 `请求参数：`
 
 	id_name				  int/string	订单号/买家店铺名
@@ -62,7 +62,7 @@
 	
 `失败返回：`
 
-####2.2.3 完成配送操作[get] (deal-delivery)
+####2.1.3 完成配送操作[get] (deal-delivery)
 `请求参数：`
 
 	order_id        int          订单号
@@ -71,7 +71,7 @@
 
 `失败返回：`
 
-####2.2.4 订单详情[get] (detail)
+####2.1.4 订单详情[get] (detail)
 `请求参数：`
 
 	order_id        int          订单id
@@ -210,14 +210,14 @@
 
 `失败返回：`
 
-####2.2.6 退出登陆[get] (logout)
+####2.1.6 退出登陆[get] (logout)
 `请求参数：`
 
 `成功返回：`
 
 `失败返回：`
 
-####2.2.7 修改订单[post] (update-order)
+####2.1.7 修改订单[post] (update-order)
 `请求参数：`
 
 	order_id          int            订单号
@@ -229,7 +229,7 @@
 `失败返回：`
 
 
-####2.2.8 配送统计[get] (delivery-statistical)
+####2.1.8 配送统计[get] (delivery-statistical)
 `请求参数：`
 
 	start_at        	date           			开始时间
@@ -278,14 +278,14 @@
 
 `失败返回：`
 
-#### 2.2.9 订单商品删除[delete] (order-goods-delete/{order_goods_id})
+#### 2.1.9 订单商品删除[delete] (order-goods-delete/{order_goods_id})
 `请求参数：`
 
 `成功返回：`
 
 `失败返回：`
 
-#### 2.3.1 修改密码[ post] (modify-password)	
+#### 2.1.10 修改密码[ post] (modify-password)	
 
 `请求参数：`
 
@@ -298,7 +298,7 @@
 `失败返回：`  
 
 
-#### 2.3.2  检查最新版本[get] (latest-version)
+#### 2.1.11  检查最新版本[get] (latest-version)
 
 `请求参数：`
 
@@ -317,9 +317,9 @@
 `失败返回：`
 
 
-### 2.4 微信二维码支付 wechat-pay
+### 2.2 微信二维码支付 wechat-pay
 
-#### 2.4.1  获取二维码[get] (qrcode/{order_id})
+#### 2.2.1  获取二维码[get] (qrcode/{order_id})
 
 `请求参数：`
 
@@ -329,7 +329,7 @@
     created_at            timestamp             二维码生成时间
     
     
-#### 2.4.2  获取订单支付状态[get] (order-pay-status/{order_id})
+#### 2.2.2  获取订单支付状态[get] (order-pay-status/{order_id})
 
 `请求参数：`
 
@@ -338,7 +338,28 @@
     pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
 
     
+### 2.3 银联二维码支付 union-pay
 
+#### 2.3.1  获取二维码[get] (qrcode/{order_id})
+
+`请求参数：`
+    
+    pay_type                string              支付渠道 （alipay为支付宝二维码， wechat为微信二维码）
+
+`成功返回：`
+
+    code_url              string                二维码地址
+    
+    
+#### 2.3.2  获取订单支付状态[get] (order-pay-status/{order_id})
+
+`请求参数：`
+
+`成功返回：`
+
+    pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
+
+    
 
 
 	

@@ -448,14 +448,13 @@ class Order extends Model
         $statusArr = cons('order.status');
         $payStatusArr = cons('order.pay_status');
         $payTypeConf = cons('pay_type');
-        $result = false;
-        if ($payType == $payTypeConf['online']) {
-            $result = $status >= $statusArr['non_send'];
-        } elseif ($payType == $payTypeConf['cod']) {
+        if ($payType == $payTypeConf['cod']) {
             $result = $status > $statusArr['non_send'];
+        } else {
+            $result = $status >= $statusArr['non_send'];
         }
 
-        return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] && $this->attributes['pay_type'] != cons('pay_type.pick_up');
+        return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] /*&& $this->attributes['pay_type'] != cons('pay_type.pick_up')*/;
     }
 
     /**

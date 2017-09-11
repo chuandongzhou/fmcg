@@ -434,10 +434,7 @@ class InventoryService extends BaseService
      */
     public function getOutError()
     {
-        $orderIds = [];
-        auth()->user()->shop->orders->each(function ($order) use (&$orderIds) {
-            $orderIds[] = $order->id;
-        });
+        $orderIds = auth()->user()->shop->orders->pluck('id');
         return OrderGoods::where('inventory_state', cons('inventory.inventory_state.out-abnormal'))->whereIn('order_id',
             $orderIds);
     }

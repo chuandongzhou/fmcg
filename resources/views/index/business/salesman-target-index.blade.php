@@ -1,7 +1,6 @@
 @extends('index.manage-master')
 @section('subtitle', '业务管理-业务员目标')
 @include('includes.timepicker')
-@include('includes.salesman-target-set', ['url' => url('api/v1/business/salesman/target-set')])
 
 @section('container')
     @include('includes.menu')
@@ -24,24 +23,25 @@
                             <button type="submit" class=" btn btn-blue-lighter search control search-by-get">查询</button>
                             <a type="button" href="{{ url('api/v1/business/salesman/export-target?date=' . $date) }}"
                                class="btn btn-border-blue control statistical">导出</a>
-                            <a type="button" class=" btn btn-blue-lighter control" href="javascript:"
-                               data-toggle="modal"
-                               data-target="#salesmanTargetSet">设置目标</a>
+                            <a class=" btn btn-blue-lighter control" href="{{ url('business/salesman/target-set') }}">设置目标</a>
                         </form>
                     </div>
+
                     <div class="col-sm-12 table-responsive table-wrap">
                         <table class="table-bordered table table-center public-table">
                             <thead>
                             <tr align="center">
                                 <th>业务员</th>
-                                <th>月份目标</th>
-                                <th>订货总金额</th>
+                                <th>月份目标（元）</th>
+                                <th>完成金额（元）</th>
                                 <th>完成率</th>
-                                <th>退货总金额</th>
+                                <th>退货总额（元）</th>
+                                <th>成交家数</th>
+                                <th>新开点（家）</th>
+                                <th>单品目标</th>
                             </tr>
                             </thead>
                             <tbody>
-
                             @foreach($salesmen as $man)
                                 @if(!$man->maker_id)
                                     <tr>
@@ -52,14 +52,18 @@
                                             {{ $target->getTarget($man->id, $date) }}
                                         </td>
                                         <td>
-                                            {{ $man->orderFormSumAmount }}
+                                            {{ $man->finishedAmount }}
                                         </td>
                                         <td>
-                                            {{ $target->getTarget($man->id, $date) ? percentage($man->orderFormSumAmount, $target->getTarget($man->id, $date)) : '100%'}}
+                                            {{ $target->getTarget($man->id, $date) ? percentage($man->finishedAmount, $target->getTarget($man->id, $date)) : '100%'}}
                                         </td>
                                         <td>
                                             {{ $man->returnOrderSumAmount }}
                                         </td>
+                                        <td>{{ $man->finishedCount }}</td>
+                                        <td>{{ $man->newCustomers }}</td>
+                                        <td><a class="edit" href="javascript:;" data-id="{{ $man->id }}" data-month="{{ $date }}"
+                                               data-target="#salesmanGoodsTarget" data-toggle="modal">查看</a></td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -72,11 +76,12 @@
             </form>
         </div>
     </div>
+
+    @include('includes.salesman-goods-target')
 @stop
 @section('js')
     @parent
     <script type="text/javascript">
         formSubmitByGet();
-        onCheckChange('.parent', '.child');
     </script>
 @stop

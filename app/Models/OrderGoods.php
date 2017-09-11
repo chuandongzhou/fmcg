@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Services\GoodsService;
+use Carbon\Carbon;
 
 class OrderGoods extends Model
 {
@@ -17,7 +18,8 @@ class OrderGoods extends Model
         'pieces',
         'order_id',
     ];
-    protected $appends = ['pieces_name','goods_name','image'];
+    protected $appends = ['pieces_name', 'goods_name', 'image'];
+
     /**
      * 模型启动事件
      */
@@ -83,11 +85,30 @@ class OrderGoods extends Model
 
     /**
      * 获取转换后的数量
+     *
      * @return mixed
      */
     public function getQuantityAttribute()
     {
-      return $this->num * GoodsService::getPiecesSystem($this->goods,$this->pieces);
+        return $this->num * GoodsService::getPiecesSystem($this->goods, $this->pieces);
     }
-    
+
+    /**
+     * 按创建时间段搜索
+     *
+     * @param $query
+     * @param null $startAt
+     * @param null $endAt
+     */
+    public function scopeOfTime($query, $startAt = null, $endAt = null)
+    {
+        if ($startAt) {
+            return $query->where($this->getTable() . '.created_at', '>=', $startAt);
+        }
+        if ($endAt) {
+            $endOfDay = (new Carbon($endAt))->endOfDay();
+            return $query->where($this->getTable() . '.created_at', '<=', $endOfDay);
+        }
+    }
+
 }

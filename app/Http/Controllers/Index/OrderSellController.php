@@ -48,10 +48,8 @@ class OrderSellController extends OrderController
         ]);
         if (is_numeric($searchContent = array_get($search, 'search_content'))) {
             $orders = $orders->where('id', $searchContent);
-        } elseif ($searchContent) {
+        } else{
             $orders = $orders->ofSelectOptions($search)->ofUserShopName($searchContent);
-        } else {
-            $orders = $orders->ofSelectOptions($search);
         }
         //已作废 、已发货、已完成、退款成功按操作时间倒序
         if (array_get($search, 'status') == 'send') {

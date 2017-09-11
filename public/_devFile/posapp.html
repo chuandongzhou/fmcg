@@ -459,7 +459,7 @@ name         string      司机名称
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.2 分配的订单信息[get] (orders)</h4>
+<h4>2.1.2 分配的订单信息[get] (orders)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>id_name               int/string    订单号/买家店铺名
 </code></pre>
@@ -491,14 +491,14 @@ address         string      详细收货地址
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.3 完成配送操作[get] (deal-delivery)</h4>
+<h4>2.1.3 完成配送操作[get] (deal-delivery)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>order_id        int          订单号
 </code></pre>
 
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.2.4 订单详情[get] (detail)</h4>
+<h4>2.1.4 订单详情[get] (detail)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>order_id        int          订单id
 </code></pre>
@@ -634,11 +634,11 @@ pay_status            int              支付状态（0，未支付；1，已支
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.6 退出登陆[get] (logout)</h4>
+<h4>2.1.6 退出登陆[get] (logout)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.2.7 修改订单[post] (update-order)</h4>
+<h4>2.1.7 修改订单[post] (update-order)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>order_id          int            订单号
 num               int            修改后的数量
@@ -647,7 +647,7 @@ pivot_id          int            商品订单关联表ID
 
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.2.8 配送统计[get] (delivery-statistical)</h4>
+<h4>2.1.8 配送统计[get] (delivery-statistical)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>start_at            date                    开始时间
 end_at              date                    结束时间
@@ -669,7 +669,7 @@ deliveryMan字段说明
     num             int                      配送单数
     price           decimal                  配送总金额
     discount        decimal                  总优惠金额
-	display_fee     decimal                  总陈列现金
+    display_fee     decimal                  总陈列现金
     detail          array                    配送金额组成
 
     detail字段说明
@@ -693,11 +693,11 @@ data字段说明
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.9 订单商品删除[delete] (order-goods-delete/{order<em>goods</em>id})</h4>
+<h4>2.1.9 订单商品删除[delete] (order-goods-delete/{order<em>goods</em>id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.3.1 修改密码[ post] (modify-password)</h4>
+<h4>2.1.10 修改密码[ post] (modify-password)</h4>
 <p><code>请求参数：</code></p>
 <pre><code>old_password             string             原密码
 password                 string             新密码
@@ -707,7 +707,7 @@ password_confirmation    string             确认新密码
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code>
 </p>
-<h4>2.3.2 检查最新版本[get] (latest-version)</h4>
+<h4>2.1.11 检查最新版本[get] (latest-version)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <pre><code>record                  array             版本信息
@@ -722,15 +722,31 @@ content                string             内容
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h3>2.4 微信二维码支付 wechat-pay</h3>
-<h4>2.4.1 获取二维码[get] (qrcode/{order_id})</h4>
+<h3>2.2 微信二维码支付 wechat-pay</h3>
+<h4>2.2.1 获取二维码[get] (qrcode/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <pre><code>code_url              string                二维码地址
 created_at            timestamp             二维码生成时间
 </code></pre>
 
-<h4>2.4.2 获取订单支付状态[get] (order-pay-status/{order_id})</h4>
+<h4>2.2.2 获取订单支付状态[get] (order-pay-status/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<pre><code>pay_status             tinyint              订单支付状态（0=&gt;未支付， 1=&gt; 支付成功）
+</code></pre>
+
+<h3>2.3 银联二维码支付 union-pay</h3>
+<h4>2.3.1 获取二维码[get] (qrcode/{order_id})</h4>
+<p><code>请求参数：</code></p>
+<pre><code>pay_type                string              支付渠道 （alipay为支付宝二维码， wechat为微信二维码）
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>code_url              string                二维码地址
+</code></pre>
+
+<h4>2.3.2 获取订单支付状态[get] (order-pay-status/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <pre><code>pay_status             tinyint              订单支付状态（0=&gt;未支付， 1=&gt; 支付成功）

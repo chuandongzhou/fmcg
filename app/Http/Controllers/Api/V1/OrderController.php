@@ -1047,7 +1047,7 @@ class OrderController extends Controller
         });
         if (!$buyer && $order->user_id > 0 && $order->user) {
             $order->user->setVisible(['id', 'shop', 'type']);
-            $order->user->shop->setVisible(['name'])->setAppends([]);
+            $order->user->shop->setVisible(['name', 'contact_person', 'contact_info'])->setAppends([]);
         }
         $order->addHidden([
             'applyPromo'

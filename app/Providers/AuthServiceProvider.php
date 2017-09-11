@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\Order;
 use App\Models\SalesmanVisitOrder;
-use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

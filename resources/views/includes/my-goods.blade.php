@@ -7,8 +7,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <div class="modal-title forgot-modal-title" id="myModalLabel">
                         <span>请选择以下商品</span>
-                        <span>已选商品 <span
-                                    class="checked-goods-num">{{ count($shop->shopRecommendGoods) }}</span> 件</span>
+                        {{--<span>已选商品 <span--}}
+                                    {{--class="checked-goods-num">{{ count($shop->shopRecommendGoods) }}</span> 件</span>--}}
                     </div>
                 </div>
                 <div class="modal-body">
@@ -33,7 +33,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            var allGoodsId = "{{ $goodsId }}", goodsId = [], url = '{{ $getGoodsUrl }}';
+            var allGoodsId = "{{ $goodsId or '' }}", goodsId = [], url = '{{ $getGoodsUrl }}';
             //推荐商品ID
 
             if (allGoodsId) {
@@ -58,16 +58,11 @@
                 var obj = $(this);
 
                 if (obj.is(':checked')) {
-                    goodsId.push(obj.data('id') + '');
-
                     $('.checked-goods-num').html(goodsId.length);
                 } else {
-                    console.log(obj.data('id') + '===' + $.inArray(obj.data('id') + '', goodsId));
                     if ($.inArray(obj.data('id') + '', goodsId) != -1) {
                         goodsId.splice($.inArray(obj.data('id') + '', goodsId), 1);
                     }
-                    console.log(goodsId);
-
                     $('.checked-goods-num').html(goodsId.length);
                 }
             });
@@ -193,20 +188,17 @@
                         }
 
                         html += '<div class="img-wrap">' +
-                            '<img class="commodity-img lazy" src="' + allGoods[i]['image_url'] + '">' +
-                            '</div>' +
-                            '<div class="content-panel">' +
-                            '<a href="#">' +
-                            '<p class="commodity-name">' + allGoods[i].name + '</p>' +
-
-                            '<p class="sell-panel">' +
-                            '<b class="money red">¥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
-                            '</p>' +
-                            '</a>' +
-                            '</div>' +
+                            '       <img class="commodity-img lazy" src="' + allGoods[i]['image_url'] + '">' +
+                            '   </div>' +
+                            '   <div class="content-panel">' +
+                            '       <a href="#">' +
+                            '           <p class="commodity-name">' + allGoods[i].name + '</p>' +
+                            '           <p class="sell-panel">' +
+                            '              <b class="money red">¥' + allGoods[i]['price'] + '/' + allGoods[i]['pieces'] + '</b>' +
+                            '           </p>' +
+                            '       </a>' +
+                            '   </div>' +
                             '</div>';
-
-
                     }
                     $('.goods-list').html(html);
                     $('.page ul').html(pageHtml);
@@ -218,12 +210,8 @@
                     $('.page ul li').prop('disabled', false);
                     $('.goods-list').html(oldHtml);
                     alert('获取失败');
-
-
                 });
             }
-
-
         });
     </script>
 @stop

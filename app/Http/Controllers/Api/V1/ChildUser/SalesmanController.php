@@ -132,6 +132,7 @@ class SalesmanController extends Controller
             $salesmanId)->delete() ? $this->success('删除业务员成功') : $this->error('删除业务员时出现问题');
     }
 
+
     /**
      * 设置业务员目标
      *
@@ -140,6 +141,7 @@ class SalesmanController extends Controller
      */
     public function targetSet(Requests\Api\v1\UpdateSalesmanTargetRequest $request)
     {
+
         $data = $request->all();
 
         $salesman = child_auth()->user()->shop->salesmen()->find($data['salesman_id']);
@@ -147,7 +149,22 @@ class SalesmanController extends Controller
         if (is_null($salesman)) {
             return $this->error('业务员不存在');
         }
-        $result = (new SalesmanTargetService())->setTarget($data['salesman_id'], $data['date'], $data['target']);
+        $result = (new SalesmanTargetService())->setTarget($data['salesman_id'], $month = $data['date'],
+            $data['target']);
+
+        $salesman->goodsTarget()->wherePivot('month', $month)->detach();
+
+        $goods = array_get($data, 'goods');
+        if ($goods) {
+            $attributes = [];
+            foreach ($goods as $key => $item) {
+                if (0 <= ($pieces = (int)$item['pieces']) && 0 < ($num = (int)$item['num'])) {
+                    $attributes[$key] = compact('pieces', 'num', 'month');
+                }
+            }
+
+            !empty($attributes) && $salesman->goodsTarget()->attach($attributes);
+        }
 
         return $result ? $this->success('目标设置成功') : $this->success('更新目标成功');
     }
@@ -211,8 +228,34 @@ class SalesmanController extends Controller
     {
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders(child_auth()->user()->shop,
-            (new Carbon($date))->startOfMonth(), (new Carbon($date))->endOfMonth());
+        $shop = child_auth()->user()->shop;
+        $startDate = (new Carbon($date))->startOfMonth();
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop,
+            $startDate, (new Carbon($date))->endOfMonth());
+
+        $shopId = $shop->id;
+
+        //新开家
+        $salesmenOrderData->each(function ($salesman) use ($startDate, $shopId) {
+            $customers = $salesman->usefulOrders->pluck('salesman_customer_id')->toBase()->unique();
+
+            //所有订单
+            $lowDateOrders = $salesman->orders->filter(function ($order) use (
+                $salesman,
+                $startDate,
+                $shopId
+            ) {
+                return $order->salesmanCustomer->shop_id != $shopId && $order->created_at < $startDate;
+            })->pluck('salesman_customer_id')->toBase()->unique();
+
+
+            $customers = $customers->filter(function ($customerId) use ($lowDateOrders) {
+                return !$lowDateOrders->contains($customerId);
+            });
+
+            $salesman->newCustomers = $customers->count();
+        });
+
         $phpWord = new PhpWord();
 
         $styleTable = array('borderSize' => 1, 'borderColor' => '999999');
@@ -238,19 +281,24 @@ class SalesmanController extends Controller
         $table->addRow(16);
         $table->addCell(2000)->addText('业务员', null, $cellAlignCenter);
         $table->addCell(1500)->addText('月份目标', null, $cellAlignCenter);
-        $table->addCell(1500)->addText('订货总金额', null, $cellAlignCenter);
+        $table->addCell(1500)->addText('完成金额', null, $cellAlignCenter);
         $table->addCell(1500)->addText('完成率', null, $cellAlignCenter);
         $table->addCell(1500)->addText('退货总金额', null, $cellAlignCenter);
+        $table->addCell(1500)->addText('成交家数', null, $cellAlignCenter);
+        $table->addCell(1500)->addText('新开点（家）', null, $cellAlignCenter);
+
 
         foreach ($salesmenOrderData as $salesman) {
             $table->addRow(16);
             $table->addCell(2000)->addText($salesman->name, null, $cellAlignCenter);
             $table->addCell(1500)->addText($targetService->getTarget($salesman->id, $date), null, $cellAlignCenter);
-            $table->addCell(1500)->addText($salesman->orderFormSumAmount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($salesman->finishedAmount, null, $cellAlignCenter);
             $table->addCell(1500)->addText($targetService->getTarget($salesman->id,
                 $date) ? percentage($salesman->orderFormSumAmount,
                 $targetService->getTarget($salesman->id, $date)) : '100%', null, $cellAlignCenter);
             $table->addCell(1500)->addText($salesman->returnOrderSumAmount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($salesman->finishedCount, null, $cellAlignCenter);
+            $table->addCell(1500)->addText($salesman->newCustomers, null, $cellAlignCenter);
         }
 
         $name = child_auth()->user()->shop->name . $date . '业务员目标' . '.docx';

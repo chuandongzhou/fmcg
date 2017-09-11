@@ -50,6 +50,8 @@ class HomeController extends Controller
     public function test(Request $request)
     {
 
+        dd('test');
+        return view('index.index.test');
         $agentPay = app('union.pay')->batchTransfer();
 
         dd($agentPay);
@@ -65,14 +67,15 @@ class HomeController extends Controller
 
         dd($result);
 
-       /* delivery_auth()->loginUsingId(1);
+        /* delivery_auth()->loginUsingId(1);
 
-        return view('index.index.test');*/
+         return view('index.index.test');*/
 
-       /* dd(session(auth()->getName()));
-        dd($request->cookie(auth()->getRecallerName()));*/
+        /* dd(session(auth()->getName()));
+         dd($request->cookie(auth()->getRecallerName()));*/
 
-        $arr = explode('|', 'eyJpdiI6IllpcXRUdUtFNkE0dG11YmNiYjdZM2c9PSIsInZhbHVlIjoiVUZoVFVlK0t1OGsyRkRtOTJpNGlacTdHWGswa09GUmp3UXZlSlBlWGNrVjFNaG5BZUpCa01FZFkyc3JwN0pQTGg1dnJZRTBLVkhEZ1VPYVV0cDlpaHFxanJVOXA2a0RLK214azJ5NXpaR0U9IiwibWFjIjoiNTM4ZDY0YzVlNTkwN2M0ZjgzNzg3NDc5Njg0YTQzMWQ4NmVjNjM3Yjc1YmUyMzZkYWI2ODMyNDc5NzI4MWZjYiJ9');
+        $arr = explode('|',
+            'eyJpdiI6IllpcXRUdUtFNkE0dG11YmNiYjdZM2c9PSIsInZhbHVlIjoiVUZoVFVlK0t1OGsyRkRtOTJpNGlacTdHWGswa09GUmp3UXZlSlBlWGNrVjFNaG5BZUpCa01FZFkyc3JwN0pQTGg1dnJZRTBLVkhEZ1VPYVV0cDlpaHFxanJVOXA2a0RLK214azJ5NXpaR0U9IiwibWFjIjoiNTM4ZDY0YzVlNTkwN2M0ZjgzNzg3NDc5Njg0YTQzMWQ4NmVjNjM3Yjc1YmUyMzZkYWI2ODMyNDc5NzI4MWZjYiJ9');
 
         dd($arr);
         $first = ['02', '05', '13', '22', '27', '32'];
@@ -105,7 +108,7 @@ class HomeController extends Controller
             $item->load('attr');
             $result = $this->buildGoodsData($item);
             $newGoods = $toShop->goods()->create($result['data']);
-            if ($newGoods->exists){
+            if ($newGoods->exists) {
                 $newGoods->goodsPieces()->create($result['goodsPieces']);
                 $newGoods->attr()->sync($result['attr']);
                 $newGoods->deliveryArea()->saveMany($areas);

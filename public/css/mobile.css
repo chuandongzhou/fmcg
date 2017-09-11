@@ -593,7 +593,7 @@ body,
 
 @media screen and (max-width: 320px) {
   .reg-container .reg-step .step-item {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 }
 
@@ -972,7 +972,7 @@ body,
 
 .menu-list-wrap .list-item .icon {
   display: inline-block;
-  background: url("/images/mobile-images/menu_icons.png") top center no-repeat;
+  background: url("images/mobile-images/menu_icons.png") top center no-repeat;
   background-size: 75%;
   width: 60px;
   height: 60px;
@@ -1401,7 +1401,7 @@ body,
 }
 
 .shop-coupon-wrap .coupon-item .item-wrap {
-  background: url("/images/mobile-images/coupon-bg.png") no-repeat center left;
+  background: url("../images/mobile-images/coupon-bg.png") no-repeat center left;
   background-size: cover;
   height: 75px;
 }
@@ -1702,7 +1702,7 @@ body,
 }
 
 .cart-commodity .shop-name-panel .shop-name {
-  max-width: 60%;
+  max-width: 55%;
 }
 
 .cart-commodity .shop-name-panel .shop-name > div {
@@ -2290,7 +2290,7 @@ body,
 .coupon-list-wrap .money-panel {
   width: 120px;
   height: 100%;
-  background: url("/images/mobile-images/coupon-bg.png") no-repeat left center;
+  background: url("../images/mobile-images/coupon-bg.png") no-repeat left center;
   background-size: cover;
   color: #fff;
   padding: 5px 10px;

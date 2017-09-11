@@ -166,7 +166,19 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function returnOrders()
     {
-        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where('shop_id', $this->shop_id);
+        return $this->orders()->where('type', cons('salesman.order.type.return_order'))->where('shop_id',
+            $this->shop_id);
+    }
+
+
+    /**
+     * goods target
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function goodsTarget()
+    {
+        return $this->belongsToMany('App\Models\Goods', 'salesman_goods_target')->withPivot('id', 'num', 'pieces', 'month');
     }
 
     /**
@@ -310,6 +322,7 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function getModelNameAttribute()
     {
+
         return '业务员' . $this->attributes['name'];
     }
 
@@ -331,6 +344,7 @@ class Salesman extends Model implements AuthenticatableContract
         }
         return $query;
     }
+
 
 
     /**

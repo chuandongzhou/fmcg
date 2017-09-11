@@ -23,8 +23,17 @@ class UnionPay
     {
         $this->config = $config;
         $this->timeStamp = (string)Carbon::now();
+        $this->authConfig = $this->_getAuthConfig();
     }
 
+    /**
+     * 支付
+     *
+     * @param \App\Models\Order $order
+     * @param $payTypeName
+     * @param null $subPayTypeName
+     * @return array|bool
+     */
     public function pay(Order $order, $payTypeName, $subPayTypeName = null)
     {
         if (!($payType = array_get($this->config['pay_type'], $payTypeName))) {
@@ -91,6 +100,11 @@ class UnionPay
 
     }
 
+    /**
+     * 获取余额
+     *
+     * @return array
+     */
     public function balanceGet()
     {
 
@@ -186,7 +200,7 @@ class UnionPay
      */
     public function validateSign($sign, $data)
     {
-        return $sign == md5($data . $this->config['secret_key']);
+        return $sign == md5($data . $this->authConfig['secret_key']);
     }
 
     /**
@@ -198,8 +212,18 @@ class UnionPay
     public function decodeData($data)
     {
         $base64Decode = $this->_base64Decode($data);
-        $secretKey = $this->config['secret_key'];
+        $secretKey = $this->authConfig['secret_key'];
         return $this->_aesDecrypt($secretKey, $secretKey, $base64Decode);
+    }
+
+    /**
+     * 获取auth
+     *
+     * @return mixed
+     */
+    public function getAuthConfig()
+    {
+        return $this->authConfig;
     }
 
     /**
@@ -356,9 +380,9 @@ class UnionPay
         return md5($this->authConfig['secret_key'] . $this->authConfig['app_id'] . $encryptData . $this->config['format'] . $method . $this->authConfig['session'] . $this->timeStamp . $this->config['v'] . $this->authConfig['secret_key']);
     }
 
-    private function _getAuthConfig($method)
+    private function _getAuthConfig($method = null)
     {
-        if ($method == $this->config['method']['back_pay']) {
+        if (is_null($method) || $method == $this->config['method']['back_pay']) {
             return $this->config['back_pay'];
         }
         return $this->config['sub_company_add'];
@@ -374,8 +398,8 @@ class UnionPay
      */
     private function _aesEncrypt($privateKey, $iv, $data)
     {
-        return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $privateKey, $data, MCRYPT_MODE_CBC, $iv);
-        //return openssl_encrypt($data, 'AES-128-CBC', $privateKey, OPENSSL_RAW_DATA, $iv);
+        //return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $privateKey, $data, MCRYPT_MODE_CBC, $iv);
+        return openssl_encrypt($data, 'AES-128-CBC', $privateKey, OPENSSL_RAW_DATA, $iv);
     }
 
     /**
@@ -388,7 +412,7 @@ class UnionPay
      */
     private function _aesDecrypt($privateKey, $iv, $data)
     {
-        $str = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $privateKey, $data, MCRYPT_MODE_CBC, $iv);
+        $str = openssl_decrypt($data,'AES-128-CBC',$privateKey, 3, $iv);
         return json_decode($this->_stripSpecialChat($str), true);
     }
 
@@ -439,6 +463,6 @@ class UnionPay
      */
     private function _formatResponse($result)
     {
-        return (array)json_decode($result);
+        return (array)json_decode($result, true);
     }
 }

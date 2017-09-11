@@ -33,10 +33,6 @@ class EncryptCookies extends BaseEncrypter
         $inWindows = in_windows();
         $isApp = $request->is('api/v1/*') && !$request->ajax();
 
-        if ($request->ip() == '192.168.2.110') {
-            info($request->cookie(auth()->getRecallerName()));
-        }
-
         if ($inWindows && !$request->ajax() && !$isApp && !$request->is('auth/*', 'child-user/*', 'admin/*',
                 'upload/file/*')
         ) {

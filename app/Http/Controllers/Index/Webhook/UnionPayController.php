@@ -10,9 +10,9 @@ namespace App\Http\Controllers\Index\Webhook;
 
 use App\Http\Controllers\Index\Controller;
 use App\Models\Order;
-use App\Services\OrderService;
 use App\Services\PayService;
 use Illuminate\Http\Request;
+use Gate;
 
 class UnionPayController extends Controller
 {
@@ -20,30 +20,29 @@ class UnionPayController extends Controller
     public function anySuccess(Request $request)
     {
 
-        $datas = array(
-            'Data' => 'K40RplFF04dhrWNpK6haeBRNLZsjSVHMuebL5QwLSB_qJj-ubOZUkiD4YC-fP54VkigAbYOVUF14n_8vdoHJJx5BtEJwM1kcb8T0xTXxcAD4YlNsdHCVvA3s706JQpqQqXE-Uz8TvEO_J1d4CKkJrhu6jtbexwq-KB-jGmrsklYcxSSPk7edB2vYL8FiXg7fnOd9HjJdjIyhUVMefWrykg5VyNS5nqjmdF1-5SJI3_EqxSDiIsQPvsfhXCv1gFsyVZVg8pttLT_l21kMfhpJSEPPaftpFpWqGZ3-LSdO_UC2mSYKlwb1ltD2LJGluTXIGJWDyr94x5q4UyhsC4Pyn0qCTeFtrqW0iUVDfBt9Rjbpy7J7CArcxuFcBkuS6hXEBz1fYymQneczVg-sgT-Nzzwf8jLmRk9dQNBaq22ePAeCfauJj7ElS8LW9Ftr-S37A1qN3Wqlg_bET3MvMHq_sTICPGOrJqebJ-Bf8uqUKS9w4uxLgUmLE_d8jtvkpSY-QxfOv0r6nr3CSGkCQfuPxZa6-gsAskjrL1bYCi1yv1FYLceA-tLXtwmvIcgb0NumQfTo_dYzRvI4o33fDgfOeuSgzl7PIiDiUkR3e53OCZutj7T95W_YWzKTLL_AnlfqlQKMC3v-USMtJM6GL90W2nG0XtkJhnIiJNc9bnZlFI-_B9pnHGGxTkq_dhSBZJ8m8-_kPH0ma6bGhZ0CEvXhT3K53jFUXhb445tCnozBE6gfZFnFenTb12gMCXdzVuadCHkJ2jit2_5UL2WhM3Wu6gERVrioZTeugJ7sHtxWROE7X0U2FgUkvLIBago8xFFycn2QcxXXKVtkKW7aM6k4QSvtZqigM_NcyEQnvWNW52GE_GIriusX8XgNI2TU7t3XHDZQb4fzGCnfpP8uXKqfs8Qq85S7UgoO2SApW9FFR_PkA_hRu0UQGQ7GQkYcKvG1L2Ff7X1Y25K_mqUjeQH8aU3RPcxBnF7rMr4wiI8fIROlN_TOoIKF_1CvDNigGGkYAW-1QZglY54O0jekIIyNAc8vgLG5eHSJWXvpCbzQoAA=',
-            'Sign' => '42f472ed94909c27babe0b12196a2590',
+        $datas = $request->all();
+        /*$datas = array (
+            'Data' => 'K40RplFF04dhrWNpK6haeBRNLZsjSVHMuebL5QwLSB-NsaYuvI6GuP9ykPblgLYJPUaxhAxzfkeFEeVtCrT4nPMEAy4lt1rkhZXgbJcqGODSuhqwPnNKPjSVmf4oNbYPUjyBXD4g5Bj_Cdr6vdu409zMbCUWZVwUuTiTIDJOQMS-Oq-W_i9Z7TFqSSwKwM8Lo3Mej4HULv2CC755QiW0OiGo84qaP8swp6zlnFF0lhn-n75khlcpIBBQUuZqU3OWQtKovHuQI0DcCEuZs76PeoOexeG6xPFwd3kxrixEvE_ugc-iudJx_Yhla9JqEEeZPNCWxFbw0SF60qGv8JY6zRl5p9TGQiLA3CLdlEHccRMdtdyu1g_t13o5ABkX6IY8KDlti-gZresNjSspiGKb3-7qTmcEiPZvhDIrv18jCEwUV0e5W--Gbm1uvSuULXZw6OPvRgcbFXD5i-0hcAkBxo59E37Tj_yr0-NnDfIlq2yGwWMBO4Bl0_qLI9tAN7p57WuSHBkvVAF7mgs3DDZXhfoTq3c9pmTcJWvWZmYOCs1Cg-fKXQs1W1gBdK689yFlPTbMOo1b0BxplIsCOGeOS-q9a5FrksZIY2WB44EbC_5xxpyCPHZ2uO866EjeItHXQLW5lY1oNdYhg0L4yydi1gYorMvfK6wXA0SubdO4XnHcDO4vrvZfegwfXi3lpp3Uh0XxEHwwpVagvdhReVR6-4EF2yvRqEvN4C5x_t32RkIGHGE6etC5UmCbYSdpV0VQgYhLT8lk81u4rkurioE6JPeBsSkMGaNJgc4cNdsdL4juOeKL1EikcyyIc3UZDs16GG8dn1UmxAWoS9RLJ4nwcwyH9oHcTXpFIPj1uqnCv9CqnGNjJ4avJoDbOkl9tWeebNmZCmRBtegFQft9mI39PcSp2JmSpwk63vNxH7hR-HQg2aGjeCFVQhKDiezcA--1QdxOK70qNO4lY5bcVZtEgwB_mSkJxoiVePTMeYJ2BHcdxnvvJknX0QQXrIFErMKx-t4UhqozpoNLlPXFeH74oZ0_JNy-DNJOvaHvzFmCwu6MEYXuaWm3gJOZnxWh1F5S',
+            'Sign' => 'd2ad5bd58d205a8c812f79b59f1e1dc7',
             'Method' => 'paymentreport',
             'Appid' => '400445348',
-        );
+        );*/
+
         $unionPay = app('union.pay');
 
         //验证appid
-        if (array_get($datas, 'Appid') !== config('union-pay')['app_id']) {
+        if (array_get($datas, 'Appid') !== $unionPay->getAuthConfig()['app_id']) {
             return $this->_buildResponse('公司id错误', '01');
         }
-
 
         //验证sign
         if (!$unionPay->validateSign($sign = array_get($datas, 'Sign'), $data = array_get($datas, 'Data'))) {
             return $this->_buildResponse('Sign验证失败', '02');
         }
 
-        $method = array_get($datas, 'method');
+        $method = array_get($datas, 'Method');
 
         $reportData = $unionPay->decodeData($data);
-
-        dd($reportData);
 
         if ($method == 'paymentreport') {
             $result = $this->_payReport($reportData, $sign);
@@ -67,9 +66,14 @@ class UnionPayController extends Controller
 
         $orders = Order::where('id', $reportData['ordernumber'])->get();
 
-        $amount = $reportData['amount'];
+        //验证是否可支付
+        if (!$orders->first()->can_payment) {
+            return false;
+        }
 
-        $orderFee = sprintf("%.2f", $amount * 6 / 1000);
+        $amount = bcdiv($reportData['amount'], 100, 4);
+
+        $orderFee = sprintf("%.2f", $amount * 3 / 1000);
 
         $tradeNo = $reportData['channelordernumber'];
 

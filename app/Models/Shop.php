@@ -210,6 +210,16 @@ class Shop extends Model
         return $this->hasMany('App\Models\Order');
     }
 
+    /**
+     * 所有销售商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function orderGoods()
+    {
+        return $this->hasManyThrough('App\Models\OrderGoods', 'App\Models\Order');
+    }
+
 
     /**
      * 前面广告
@@ -301,7 +311,7 @@ class Shop extends Model
                 'salesman_id');
         }
         return $this->hasManyThrough('App\Models\SalesmanCustomer',
-            'App\Models\Salesman', 'shop_id', 'salesman_id')->where('salesman_customer.type', '<', $this->user_type);
+            'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
     }
 
     /**

@@ -33,11 +33,37 @@ class MyGoodsController extends Controller
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->with('goodsLike')->orderBy('id', 'DESC')->paginate();
         $goods->each(function ($goods) {
-            $goods->setAppends(['like_amount', 'image_url'])->setHidden(['goods_like']);
+            $goods->setAppends(['like_amount', 'image_url', 'pieces', 'price'])->setHidden(['goods_like']);
         });
         return $this->success([
             'goods' => $goods->toArray(),
             'categories' => CategoryService::formatShopGoodsCate($shop)
+        ]);
+    }
+
+
+    /**
+     * 获取商品for商品弹出窗
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function goods(Request $request)
+    {
+        $data = $request->only('condition', 'page');
+        $goods = auth()->user()->shop->goods()->with([
+            'goodsPieces'
+        ])->ofNameOrCode($data['condition'])->active()->paginate();
+        $goods->each(function ($item) {
+            $item->goodsPieces->pieces_level_1_lang = cons()->valueLang('goods.pieces',
+                $item->goodsPieces->pieces_level_1);
+            $item->goodsPieces->pieces_level_2_lang = cons()->valueLang('goods.pieces',
+                $item->goodsPieces->pieces_level_2);
+            $item->goodsPieces->pieces_level_3_lang = cons()->valueLang('goods.pieces',
+                $item->goodsPieces->pieces_level_3);
+        });
+        return $this->success([
+            'goods' => $goods->toArray(),
         ]);
     }
 
@@ -476,9 +502,6 @@ class MyGoodsController extends Controller
      */
     private function updateDeliveryArea($model, $area)
     {
-//        if (is_null($area) || $model->deliveryArea->count() == count(array_filter($area['province_id']))) {
-//            return true;
-//        }
         //配送区域添加
         $areaArr = (new AddressService($area))->formatAddressPost();
         //删除原有配送区域信息
@@ -486,20 +509,11 @@ class MyGoodsController extends Controller
         if (!empty($areaArr)) {
             $areas = [];
             foreach ($areaArr as $data) {
-                /* if (isset($data['coordinate'])) {
-                     $coordinate = $data['coordinate'];
-                     unset($data['coordinate']);
-                 }*/
                 unset($data['coordinate']);
                 $areasModal = new AddressData($data);
                 if (!in_array($areasModal, $areas)) {
                     $areas[] = $areasModal;
                 }
-
-
-                /* if (isset($coordinate)) {
-                     $areaModel->coordinate()->save(new Coordinate($coordinate));
-                 }*/
             }
             $model->deliveryArea()->saveMany($areas);
         }
