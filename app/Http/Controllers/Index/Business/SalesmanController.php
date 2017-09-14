@@ -94,7 +94,7 @@ class SalesmanController extends Controller
      */
     public function targetSet()
     {
-        $salesmen = auth()->user()->shop->salesmen()->active()->get()->filter(function ($salesman) {
+        $salesmen = $this->shop->salesmen()->active()->get()->filter(function ($salesman) {
             return $this->shop->user_type < cons('user.type.maker') ? is_null($salesman->maker_id) : true;
         });
         return view('index.business.salesman-target-set', compact('salesmen'));

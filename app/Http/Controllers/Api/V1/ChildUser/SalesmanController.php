@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1\ChildUser;
 use App\Http\Controllers\Api\V1\Controller;
 use App\Models\Salesman;
 use App\Services\BusinessService;
+use App\Services\GoodsService;
 use Carbon\Carbon;
 use App\Http\Requests;
 use App\Services\SalesmanTargetService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use PhpOffice\PhpWord\PhpWord;
 use Gate;
 use Hash;
@@ -170,13 +172,68 @@ class SalesmanController extends Controller
     }
 
     /**
+     * 商品目标
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $salesmanId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function goodsTarget(Request $request, $salesmanId)
+    {
+        $month = $request->input('month');
+        if (!$month) {
+            return $this->error('请输入月份');
+        }
+
+        $salesman = child_auth()->user()->shop->salesmen()->find($salesmanId);
+
+        if (is_null($salesman)) {
+            return $this->error('业务员不存在');
+        }
+
+        $goodsTarget = $salesman->goodsTarget()->wherePivot('month', $month)->get();
+
+        $goodsId = $goodsTarget->pluck('id');
+
+        $startMonth = (new Carbon($month));
+
+        $orderForms = $salesman->orderForms()->ofCreateTime($startMonth,
+            $startMonth->copy()->endOfMonth())->whereHas('order', function ($query) {
+            return $query->where('status', cons('order.status.finished'));
+        })->get();
+
+        $orderIds = $orderForms->pluck('id');
+
+        $orderGoods = SalesmanVisitOrderGoods::whereIn('salesman_visit_order_id', $orderIds)->whereIn('goods_id',
+            $goodsId)->get();
+
+        $goodsSalesNum = $this->_formatGoods($orderGoods);
+
+
+        $goodsPieces = array_key_to_value(GoodsPieces::whereIn('goods_id', $goodsId)->get()->toArray(), 'goods_id');
+
+
+        $goodsTarget->each(function ($item) use ($goodsSalesNum, $goodsPieces) {
+            $pieces = $item->pivot->pieces;
+            $goodsId = $item->id;
+            $piecesName = cons()->valueLang('goods.pieces', $pieces);
+            $item->salesNum = (isset($goodsPieces[$goodsId]) && isset($goodsSalesNum[$goodsId]) ? $this->_convertGoodsNum($goodsPieces[$goodsId],
+                $goodsSalesNum[$goodsId]) : 0);
+            $item->pivot->pieces_name = $piecesName;
+        });
+
+        return $this->success(compact('goodsTarget'));
+
+    }
+
+    /**
      * app首页数据
      *
      * @return array
      */
     public function homeData()
     {
-        $salesman = salesman_child_auth()->user();
+        $salesman = child_auth()->user();
         $thisDate = (new Carbon())->format('Y-m');
 
         $target = (new SalesmanTargetService)->getTarget($salesman->id, $thisDate);
@@ -303,5 +360,92 @@ class SalesmanController extends Controller
 
         $name = child_auth()->user()->shop->name . $date . '业务员目标' . '.docx';
         $phpWord->save(iconv('UTF-8', 'GBK//IGNORE', $name), 'Word2007', true);
+    }
+
+    /**
+     * 格式化商品
+     *
+     * @param \Illuminate\Support\Collection $goods
+     * @return array
+     */
+    private function _formatGoods(Collection $goods)
+    {
+        $data = [];
+        foreach ($goods as $item) {
+            if (isset($data[$item->goods_id])) {
+                $data[$item->goods_id][$item->pieces] = isset($data[$item->goods_id][$item->pieces]) ? $data[$item->goods_id][$item->pieces] + $item->num : $item->num;
+            } else {
+                $data[$item->goods_id] = [
+                    $item->pieces => $item->num
+                ];
+                continue;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 转换为固定数量
+     *
+     * @param $pieces
+     * @param $goodsSalesNum
+     * @param $goodsPieces
+     * @return int
+     */
+    /*  private function _convertGoodsNum($pieces, $goodsSalesNum, $goodsPieces)
+      {
+          $num = 0;
+
+          if ($pieces == ($pieces1 = array_get($goodsPieces, 'pieces_level_1'))) {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $pieces1) {
+                      $num += $value;
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += (int)bcdiv($value, $goodsPieces['system_1']);
+                  } else {
+                      $num += (int)bcdiv(bcdiv($value, $goodsPieces['system_2']), $goodsPieces['system_1']);
+                  }
+              }
+          } elseif ($pieces == $goodsPieces['pieces_level_2']) {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $goodsPieces['pieces_level_1']) {
+                      $num += (int)bcmul($value, $goodsPieces['system_1']);
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += $value;
+                  } else {
+                      $num += (int)bcdiv($value, $goodsPieces['system_2']);
+                  }
+              }
+          } else {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $goodsPieces['pieces_level_1']) {
+                      $num += (int)bcmul(bcmul($value, $goodsPieces['system_1']), $goodsPieces['system_2']);
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += bcmul($value, $goodsPieces['system_2']);
+                  } else {
+                      $num += $value;
+                  }
+              }
+          }
+
+          return $num;
+      }*/
+
+    /**
+     * 获取商品数量详情
+     *
+     * @param $goodsPieces
+     * @param $goodsSalesNum
+     * @return string
+     */
+    private function _convertGoodsNum($goodsPieces, $goodsSalesNum)
+    {
+        $goodsSalesArray = GoodsService::formatGoodsPieces($goodsPieces, $goodsSalesNum);
+
+        $piecesHtml = '';
+        foreach ($goodsSalesArray as $pieces => $num) {
+            $piecesHtml .= $num . cons()->valueLang('goods.pieces', $pieces);
+        }
+        return $piecesHtml;
     }
 }

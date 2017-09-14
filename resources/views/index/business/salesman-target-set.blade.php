@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman') }}">业务目标</a> >
+                    <a href="{{ url('business/salesman/target') }}">业务目标</a> >
                     <span class="second-level">设置目标</span>
                 </div>
             </div>
@@ -17,7 +17,8 @@
             <div class="row salesman">
                 <div class=" col-sm-push-1 col-sm-11"><b>业务员目标设置</b><br/><br/><br/></div>
                 <div class="col-sm-12 create">
-                    <form class="form-horizontal ajax-form" action="{{ $actionUrl or url('api/v1/business/salesman/target-set') }}"
+                    <form class="form-horizontal ajax-form"
+                          action="{{ $actionUrl or url('api/v1/business/salesman/target-set') }}"
                           method="post"
                           data-help-class="col-sm-push-2 col-sm-10"
                           data-done-url="{{ url('business/salesman/target') }}"
@@ -60,7 +61,7 @@
                             <div class="col-sm-10 set-target">
                                 <div class="select-commodity">
                                     <a class="btn btn-blue-lighter" data-target="#chooseGoods"
-                                       data-toggle="modal">选择商品</a> <span class="prompt">已选择商品5个</span>
+                                       data-toggle="modal">选择商品</a> <span class="prompt">已选择商品<span class="num">0</span>个</span>
                                 </div>
                                 <div>
                                     <table class="table table-selected-goods table-bordered table-center public-table">
@@ -130,13 +131,35 @@
                 html += '</td><td><i onclick="deleteChoose(this)" class="iconfont red icon-shanchu2"></i></td></tr>';
                 $('.table-selected-goods').find('tbody').append(html);
             });
-        })
+            setGoodsNum();
+        });
+
+        $('.ajax-form [type="submit"]').on('click', function () {
+            var target = true;
+            $(this).closest('form').find('.table-selected-goods').find('tbody').find('select,input:visible').each(function () {
+                var obj = $(this);
+                if(obj.val() == '') {
+                    tips(obj, '此选项不能为空');
+                    target = false;
+                    return false;
+                }
+
+            });
+            return target;
+
+        });
 
         //删除选择的商品
         function deleteChoose(obj) {
             if (confirm('确定删除？')) {
                 $(obj).parents('tr').remove()
+                setGoodsNum();
             }
+        }
+
+        function setGoodsNum() {
+            var goodsNum = $('.table-selected-goods tbody').children('tr').length;
+            $('.set-target').find('.num').html(goodsNum);
         }
     </script>
 @stop

@@ -11,7 +11,7 @@
             <div class="modal-body  ">
                 <div class="warehousing-control-search">
                     <input name="condition" type="text" class="control" placeholder="商品名称/商品条形码">
-                    <input type="button" class="control  btn btn-blue-lighter" value="搜索">
+                    <input type="button" class="control  btn btn-blue-lighter btn-search" value="搜索">
                 </div>
                 <table class="table table-center salesman-goods-table table-bordered public-table  margin-clear">
                     <thead>
@@ -44,7 +44,7 @@
 </div>
 @section('js')
     @parent
-    <script>
+    <script type="text/javascript">
         var
             chooseGoodsModal = $('#chooseGoods'),
             form = chooseGoodsModal.find('form'),
@@ -189,6 +189,9 @@
             }
         });
 
+        $('.btn-search').on('click', function () {
+            paginate(1);
+        })
 
     </script>
 @stop

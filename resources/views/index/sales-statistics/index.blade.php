@@ -1,8 +1,5 @@
 @extends('index.manage-master')
 @include('includes.timepicker')
-
-
-
 @section('subtitle', '销售统计')
 
 @section('container')
@@ -26,8 +23,10 @@
                         <select name="goods_type" class="ajax-select control">
                             <option value="">全部类型</option>
                             <option value="0" {{ $goodsType === '0' ? 'selected' : '' }}>商品销售统计</option>
-                            <option value="1" {{ $goodsType == 1 ? 'selected' : '' }}>陈列统计</option>
-                            <option value="2" {{ $goodsType == 2 ? 'selected' : '' }}>赠品统计</option>
+                            @if($user->type != cons('user.type.maker'))
+                                <option value="1" {{ $goodsType == 1 ? 'selected' : '' }}>陈列统计</option>
+                                <option value="2" {{ $goodsType == 2 ? 'selected' : '' }}>赠品统计</option>
+                            @endif
                         </select>
                         <select name="salesman" class="ajax-select control">
                             <option value="">请选择业务员</option>
@@ -62,50 +61,24 @@
                 <div class="col-sm-12 padding-clear">
                     <ul id="myTab" class="nav nav-tabs notice-bar padding-clear">
                         @if(is_null($goodsType)|| $goodsType === '0')
-                            <li class="{{ is_null($goodsType)|| $goodsType === '0' ? 'active' : '' }}"><a href="#table1"
-                                                                                                          data-toggle="tab">商品销售统计</a>
+                            <li class="{{ is_null($goodsType)|| $goodsType === '0' ? 'active' : '' }}">
+                                <a href="#table1" data-toggle="tab">商品销售统计</a>
                             </li>
                         @endif
-                        @if(is_null($goodsType)|| $goodsType === '1')
-                            <li class="{{ $goodsType === '1'? 'active' : '' }}"><a href="#table2"
-                                                                                   data-toggle="tab">陈列统计</a></li>
-                        @endif
-                        @if(is_null($goodsType)|| $goodsType === '2')
-                            <li class="{{ $goodsType === '2'? 'active' : '' }}"><a href="#table3"
-                                                                                   data-toggle="tab">赠品统计</a></li>
+                        @if($user->type != cons('user.type.maker'))
+                            @if(is_null($goodsType)|| $goodsType === '1')
+                                <li class="{{ $goodsType === '1'? 'active' : '' }}">
+                                    <a href="#table2" data-toggle="tab">陈列统计</a></li>
+                            @endif
+                            @if(is_null($goodsType)|| $goodsType === '2')
+                                <li class="{{ $goodsType === '2'? 'active' : '' }}">
+                                    <a href="#table3" data-toggle="tab">赠品统计</a></li>
+                            @endif
                         @endif
                     </ul>
                     <div id="myTabContent" class="tab-content ">
-                        <div class="tab-pane fade active in padding-clear tables" id="table1">
-                            <table class="table table-bordered table-center table-middle public-table">
-                                <thead>
-                                <tr>
-                                    <th>商品ID</th>
-                                    <th>商品条形码</th>
-                                    <th>商品名称</th>
-                                    <th>销售数量</th>
-                                    <th>销售金额</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($orderGoods as $goods)
-                                    <tr>
-                                        <td>{{ $goods['id'] }}</td>
-                                        <td>{{ $goods['barcode'] }}</td>
-                                        <td>{{ $goods['name'] }}</td>
-                                        <td>
-                                            @foreach($goods['num'] as $pieces=>$num)
-                                                {{ $num . cons()->valueLang('goods.pieces', $pieces) }}
-                                            @endforeach
-                                        </td>
-                                        <td>{{ $goods['amount'] }}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @if(is_null($goodsType))
-                            <div class="tab-pane fade in padding-clear tables" id="table2">
+                        @if(is_null($goodsType)|| $goodsType === '0')
+                            <div class="tab-pane fade active in padding-clear tables" id="table1">
                                 <table class="table table-bordered table-center table-middle public-table">
                                     <thead>
                                     <tr>
@@ -117,7 +90,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($mortgageGoods as $goods)
+                                    @foreach($orderGoods as $goods)
                                         <tr>
                                             <td>{{ $goods['id'] }}</td>
                                             <td>{{ $goods['barcode'] }}</td>
@@ -131,36 +104,82 @@
                                         </tr>
                                     @endforeach
                                     </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade in padding-clear tables" id="table3">
-                                <table class="table table-bordered table-center table-middle public-table">
-                                    <thead>
-                                    <tr>
-                                        <th>商品ID</th>
-                                        <th>商品条形码</th>
-                                        <th>商品名称</th>
-                                        <th>销售数量</th>
-                                        <th>销售金额</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($giftGoods as $goods)
+                                    @if($goodsType === '1')
+                                        <tfoot>
                                         <tr>
-                                            <td>{{ $goods['id'] }}</td>
-                                            <td>{{ $goods['barcode'] }}</td>
-                                            <td>{{ $goods['name'] }}</td>
-                                            <td>
-                                                @foreach($goods['num'] as $pieces=>$num)
-                                                    {{ $num . cons()->valueLang('goods.pieces', $pieces) }}
-                                                @endforeach
-                                            </td>
-                                            <td>{{ $goods['amount'] }}</td>
+                                            <th colspan="5">陈列现金统计：{{ $displayFee }}元</th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
+                                        </tfoot>
+                                    @endif
                                 </table>
                             </div>
+                        @endif
+                        @if($user->type != cons('user.type.maker'))
+                            @if(is_null($goodsType)|| $goodsType === '1')
+                                <div class="tab-pane fade {{ $goodsType === '1' ? 'active' : '' }} in padding-clear tables" id="table2">
+                                    <table class="table table-bordered table-center table-middle public-table">
+                                        <thead>
+                                        <tr>
+                                            <th>商品ID</th>
+                                            <th>商品条形码</th>
+                                            <th>商品名称</th>
+                                            <th>销售数量</th>
+                                            <th>销售金额</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($mortgageGoods as $goods)
+                                            <tr>
+                                                <td>{{ $goods['id'] }}</td>
+                                                <td>{{ $goods['barcode'] }}</td>
+                                                <td>{{ $goods['name'] }}</td>
+                                                <td>
+                                                    @foreach($goods['num'] as $pieces=>$num)
+                                                        {{ $num . cons()->valueLang('goods.pieces', $pieces) }}
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $goods['amount'] }}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="5">陈列现金统计：{{ $displayFee }}元</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            @endif
+                            @if(is_null($goodsType)|| $goodsType === '2')
+                                <div class="tab-pane fade in {{ $goodsType === '2' ? 'active' : '' }} padding-clear tables" id="table3">
+                                    <table class="table table-bordered table-center table-middle public-table">
+                                        <thead>
+                                        <tr>
+                                            <th>商品ID</th>
+                                            <th>商品条形码</th>
+                                            <th>商品名称</th>
+                                            <th>销售数量</th>
+                                            <th>销售金额</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($giftGoods as $goods)
+                                            <tr>
+                                                <td>{{ $goods['id'] }}</td>
+                                                <td>{{ $goods['barcode'] }}</td>
+                                                <td>{{ $goods['name'] }}</td>
+                                                <td>
+                                                    @foreach($goods['num'] as $pieces=>$num)
+                                                        {{ $num . cons()->valueLang('goods.pieces', $pieces) }}
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $goods['amount'] }}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 </div>

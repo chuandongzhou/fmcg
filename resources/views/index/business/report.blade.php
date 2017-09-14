@@ -66,9 +66,9 @@
                                         ({{ $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) }}
                                         )
                                     </td>
-                                    <th>{{ $man->deliveryFinishCount }}</th>
-                                    <th>{{ $man->finishedAmount }}</th>
-                                    <th>{{ $man->notFinishedAmount }}</th>
+                                    <td>{{ $man->deliveryFinishCount }}</td>
+                                    <td>{{ $man->finishedAmount }}</td>
+                                    <td>{{ $man->notFinishedAmount }}</td>
                                     <td>{{ $man->returnOrderCount }}</td>
                                     <td><b class="red">{{ $man->returnOrderSumAmount }}</b></td>
                                     <td>

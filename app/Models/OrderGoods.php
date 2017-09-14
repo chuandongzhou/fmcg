@@ -103,12 +103,13 @@ class OrderGoods extends Model
     public function scopeOfTime($query, $startAt = null, $endAt = null)
     {
         if ($startAt) {
-            return $query->where($this->getTable() . '.created_at', '>=', $startAt);
+            $query->where($this->getTable() . '.created_at', '>=', new Carbon($startAt));
         }
         if ($endAt) {
             $endOfDay = (new Carbon($endAt))->endOfDay();
-            return $query->where($this->getTable() . '.created_at', '<=', $endOfDay);
+            $query->where($this->getTable() . '.created_at', '<=', $endOfDay);
         }
+        return $query;
     }
 
 }

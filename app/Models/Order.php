@@ -454,7 +454,8 @@ class Order extends Model
             $result = $status >= $statusArr['non_send'];
         }
 
-        return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] /*&& $this->attributes['pay_type'] != cons('pay_type.pick_up')*/;
+        return $result && $this->attributes['is_cancel'] == cons('order.is_cancel.off') && $status < $statusArr['finished'] && $payStatus == $payStatusArr['non_payment'] /*&& $this->attributes['pay_type'] != cons('pay_type.pick_up')*/
+            ;
     }
 
     /**
@@ -740,12 +741,13 @@ class Order extends Model
             return $query->where(function ($query) use ($shopName) {
                 $query->whereHas('user.shop', function ($query) use ($shopName) {
                     $query->where('name', 'like', '%' . $shopName . '%');
-                })->orWhere(function ($query) use ($shopName) {
-                    $query->whereHas('salesmanVisitOrder.salesmanCustomer',
-                        function ($query) use ($shopName) {
-                            $query->where('name', 'like', '%' . $shopName . '%');
-                        });
-                });
+                })
+                    ->orWhere(function ($query) use ($shopName) {
+                        $query->whereHas('salesmanVisitOrder.salesmanCustomer',
+                            function ($query) use ($shopName) {
+                                $query->where('name', 'like', '%' . $shopName . '%');
+                            });
+                    });
             });
         }
 

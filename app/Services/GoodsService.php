@@ -497,8 +497,8 @@ class GoodsService
         }
         //单位从大到小
         $newArray[$pieces['pieces_level_1']] = array_get($goodsPieces, $pieces['pieces_level_1'], 0);
-        $pieces['pieces_level_2'] && ($newArray[$pieces['pieces_level_2']] = array_get($goodsPieces, $pieces['pieces_level_2'], 0));
-        $pieces['pieces_level_3'] && ($newArray[$pieces['pieces_level_3']] = array_get($goodsPieces, $pieces['pieces_level_3'], 0));
+        !is_null($pieces['pieces_level_2']) && ($newArray[$pieces['pieces_level_2']] = array_get($goodsPieces, $pieces['pieces_level_2'], 0));
+        !is_null($pieces['pieces_level_3']) && ($newArray[$pieces['pieces_level_3']] = array_get($goodsPieces, $pieces['pieces_level_3'], 0));
 
         return array_filter($newArray);
     }

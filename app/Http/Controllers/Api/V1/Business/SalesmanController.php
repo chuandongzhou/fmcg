@@ -7,6 +7,7 @@ use App\Models\GoodsPieces;
 use App\Models\Salesman;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
+use App\Services\GoodsService;
 use Carbon\Carbon;
 use App\Http\Requests;
 use App\Services\SalesmanTargetService;
@@ -175,6 +176,13 @@ class SalesmanController extends Controller
         return $result ? $this->success('目标设置成功') : $this->success('更新目标成功');
     }
 
+    /**
+     * 商品目标
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $salesmanId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
     public function goodsTarget(Request $request, $salesmanId)
     {
         $month = $request->input('month');
@@ -194,10 +202,12 @@ class SalesmanController extends Controller
 
         $startMonth = (new Carbon($month));
 
-        $orderForms = $salesman->orderForms()->ofCreateTime($startMonth,
-            $startMonth->copy()->endOfMonth())->whereHas('order', function ($query) {
-            return $query->where('status', cons('order.status.finished'));
-        })->get();
+        $query = $salesman->maker_id ? $salesman->orderForms()->where('salesman_visit_id', '>', 0) : $salesman->orderForms();
+
+        $orderForms = $query->ofCreateTime($startMonth, $startMonth->copy()->endOfMonth())->whereHas('order',
+            function ($query) {
+                return $query->where('status', cons('order.status.finished'));
+            })->get();
 
         $orderIds = $orderForms->pluck('id');
 
@@ -206,16 +216,18 @@ class SalesmanController extends Controller
 
         $goodsSalesNum = $this->_formatGoods($orderGoods);
 
+
         $goodsPieces = array_key_to_value(GoodsPieces::whereIn('goods_id', $goodsId)->get()->toArray(), 'goods_id');
+
 
         $goodsTarget->each(function ($item) use ($goodsSalesNum, $goodsPieces) {
             $pieces = $item->pivot->pieces;
+            $goodsId = $item->id;
             $piecesName = cons()->valueLang('goods.pieces', $pieces);
-            $item->salesNum = (isset($goodsPieces[$pieces]) && isset($goodsSalesNum[$pieces]) ? $this->_convertGoodsNum($pieces,
-                    $goodsSalesNum[$pieces], $goodsPieces[$pieces]) : 0) . $piecesName;
+            $item->salesNum = (isset($goodsPieces[$goodsId]) && isset($goodsSalesNum[$goodsId]) ? $this->_convertGoodsNum($goodsPieces[$goodsId],
+                $goodsSalesNum[$goodsId]) : 0);
             $item->pivot->pieces_name = $piecesName;
         });
-
 
         return $this->success(compact('goodsTarget'));
 
@@ -385,42 +397,60 @@ class SalesmanController extends Controller
      * @param $goodsPieces
      * @return int
      */
-    private function _convertGoodsNum($pieces, $goodsSalesNum, $goodsPieces)
+    /*  private function _convertGoodsNum($pieces, $goodsSalesNum, $goodsPieces)
+      {
+          $num = 0;
+
+          if ($pieces == ($pieces1 = array_get($goodsPieces, 'pieces_level_1'))) {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $pieces1) {
+                      $num += $value;
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += (int)bcdiv($value, $goodsPieces['system_1']);
+                  } else {
+                      $num += (int)bcdiv(bcdiv($value, $goodsPieces['system_2']), $goodsPieces['system_1']);
+                  }
+              }
+          } elseif ($pieces == $goodsPieces['pieces_level_2']) {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $goodsPieces['pieces_level_1']) {
+                      $num += (int)bcmul($value, $goodsPieces['system_1']);
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += $value;
+                  } else {
+                      $num += (int)bcdiv($value, $goodsPieces['system_2']);
+                  }
+              }
+          } else {
+              foreach ($goodsSalesNum as $key => $value) {
+                  if ($key == $goodsPieces['pieces_level_1']) {
+                      $num += (int)bcmul(bcmul($value, $goodsPieces['system_1']), $goodsPieces['system_2']);
+                  } elseif ($key == $goodsPieces['pieces_level_2']) {
+                      $num += bcmul($value, $goodsPieces['system_2']);
+                  } else {
+                      $num += $value;
+                  }
+              }
+          }
+
+          return $num;
+      }*/
+
+    /**
+     * 获取商品数量详情
+     *
+     * @param $goodsPieces
+     * @param $goodsSalesNum
+     * @return string
+     */
+    private function _convertGoodsNum($goodsPieces, $goodsSalesNum)
     {
-        $num = 0;
+        $goodsSalesArray = GoodsService::formatGoodsPieces($goodsPieces, $goodsSalesNum);
 
-        if ($pieces == ($pieces1 = array_get($goodsPieces, 'pieces_level_1'))) {
-            foreach ($goodsSalesNum as $key => $value) {
-                if ($key == $pieces1) {
-                    $num += $value;
-                } elseif ($key == $goodsPieces['pieces_level_2']) {
-                    $num += (int)bcdiv($value, $goodsPieces['system_1']);
-                } else {
-                    $num += (int)bcdiv(bcdiv($value, $goodsPieces['system_2']), $goodsPieces['system_1']);
-                }
-            }
-        } elseif ($pieces == $goodsPieces['pieces_level_2']) {
-            foreach ($goodsSalesNum as $key => $value) {
-                if ($key == $goodsPieces['pieces_level_1']) {
-                    $num += (int)bcmul($value, $goodsPieces['system_1']);
-                } elseif ($key == $goodsPieces['pieces_level_2']) {
-                    $num += $value;
-                } else {
-                    $num += (int)bcdiv($value, $goodsPieces['system_2']);
-                }
-            }
-        } else {
-            foreach ($goodsSalesNum as $key => $value) {
-                if ($key == $goodsPieces['pieces_level_1']) {
-                    $num += (int)bcmul(bcmul($value, $goodsPieces['system_1']), $goodsPieces['system_2']);
-                } elseif ($key == $goodsPieces['pieces_level_2']) {
-                    $num += bcmul($value, $goodsPieces['system_2']);
-                } else {
-                    $num += $value;
-                }
-            }
+        $piecesHtml = '';
+        foreach ($goodsSalesArray as $pieces => $num) {
+            $piecesHtml .= $num . cons()->valueLang('goods.pieces', $pieces);
         }
-
-        return $num;
+        return $piecesHtml;
     }
 }
