@@ -212,15 +212,13 @@ class SalesmanVisitController extends Controller
     public function addPhotos(Request $request, $visit)
     {
         try {
-            // return $this->error('不让你成功!');
             if (!$visit || $visit->salesman_id != salesman_auth()->id()) {
                 return $this->error('拜访信息出错!');
             }
             if (!$visit) {
                 return $this->error('没有拜访记录!');
             }
-            $visit->update($request->only('photos'));
-            return $this->success();
+            return $visit->fill($request->only('photos'))->save() ? $this->success() : $this->error('图片上传失败!');
         } catch (\Exception $e) {
             return $this->error('图片上传失败!');
         }

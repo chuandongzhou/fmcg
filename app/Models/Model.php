@@ -163,7 +163,6 @@ class  Model extends Eloquent
                 //文件地址或文件
                 $file = File::createWithFile($fileItem);
             }
-
             // 查出当前正在使用的附件
             if ($isOnly && $oldFile = $this->$relate()->where('type', $fileType)->first()) {
                 if ($file && $oldFile->id == $file->id) {

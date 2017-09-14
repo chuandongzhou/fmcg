@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman-customer') }}"> {{is_null($customerType) ? '客户' : '供应商'}}管理</a> >
+                    <a href="{{ url('business/salesman-customer'.(is_null($customerType) ? '' : '?type=supplier'))}}"> {{is_null($customerType) ? '客户' : '供应商'}}管理</a> >
                     <span class="second-level">{{is_null($customerType) ? '客户' : '供应商'}}{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
                 </div>
             </div>
@@ -71,21 +71,6 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 control-label" for="salesman_id"><span
-                                                class="red">*</span>店铺类型:</label>
-
-                                    <div class="col-sm-10 col-md-6">
-                                        <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
-                                                name="store_type">
-                                            <option value="">请选择</option>
-                                            @foreach(cons()->valueLang('salesman.customer.store_type') as $storeType => $typeName)
-                                                <option @if(!is_null($salesmanCustomer->store_type) && $storeType == $salesmanCustomer->store_type) selected
-                                                        @endif value="{{$storeType}}">{{$typeName}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                             @else
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label" for="salesman_id"><span
@@ -107,6 +92,25 @@
                                        value="{{cons('salesman.customer.store_type.supermarket')}}">
                             @endif
                         @endif
+                        @if(!$customerType)
+                            <div id="store_type"
+                                 class="form-group row @if($salesmanCustomer && $salesmanCustomer->type > cons('user.type.retailer')) hidden @endif">
+                                <label class="col-sm-2 control-label" for="salesman_id"><span
+                                            class="red">*</span>店铺类型:</label>
+
+                                <div class="col-sm-10 col-md-6">
+                                    <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
+                                            name="store_type">
+                                        <option value="">请选择</option>
+                                        @foreach(cons()->valueLang('salesman.customer.store_type') as $storeType => $typeName)
+                                            <option @if(!is_null($salesmanCustomer->store_type) && $storeType == $salesmanCustomer->store_type) selected
+                                                    @endif value="{{$storeType}}">{{$typeName}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="form-group row">
                             <label class="col-sm-2 control-label" for="contact"><span class="red">*</span>联系人:</label>
 
@@ -320,9 +324,7 @@
                                                    name="{{ 'mortgage_goods['. $mortgageGoods->id.']' }}"
                                                    value="{{ (int)$mortgageGoods->pivot->total }}"/>
                                         @endforeach
-
                                     </div>
-
                                 </div>
                             </div>
                         @endif
@@ -349,6 +351,9 @@
             var baiduMap = initMap();
             addressSelectChange(true, baiduMap);
             visibleSelect();
+            $('#type').change(function () {
+                $(this).find('option:selected').val() == "{{cons('user.type.retailer')}}" ? $('#store_type').removeClass('hidden') : $('#store_type').addClass('hidden')
+            })
         });
     </script>
 @stop

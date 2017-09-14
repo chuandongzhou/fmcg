@@ -9,8 +9,14 @@
     <div class="container">
         <div class="row order-report report-detail margin-clear">
             <div class="col-sm-12 content">
-                <a href="{{ url('order/statistics-of-sell-user-detail-export') . '?' . request()->getQueryString() }}"
-                   class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
+                <div class="col-sm-6">
+                    {{$customerInfo['shopName']}}---
+                    {{$customerInfo['contact']}}
+                </div>
+                <div class="col-sm-6">
+                    <a href="{{ url('order/statistics-of-sell-user-detail-export') . '?' . request()->getQueryString() }}"
+                       class="btn btn-border-blue"><i class="iconfont icon-xiazai"></i>下载打印</a>
+                </div>
                 <div class="col-sm-12 tables">
                     <p class="title-table">订单总计</p>
                     <table class="MyTable1 table-scroll">

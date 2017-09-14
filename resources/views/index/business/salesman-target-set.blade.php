@@ -40,11 +40,9 @@
                                 <select name="salesman_id" class="inline-control">
                                     <option value="">请选择业务员</option>
                                     @foreach($salesmen as $salesman)
-                                        @if(!$salesman->maker_id)
                                             <option value="{{ $salesman->id }}">
                                                 {{ $salesman->name }}
                                             </option>
-                                        @endif
                                     @endforeach
                                 </select>
                             </div>

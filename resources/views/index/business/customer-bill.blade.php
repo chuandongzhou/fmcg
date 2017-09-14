@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-xs-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman-customer') }}">客户管理</a> >
+                    <a href="{{ url('business/salesman-customer'.(empty($data['type']) ? '' : '?type=supplier'))}}">{{(empty($data['type']) ? '客户' : '供应商')}}管理</a> >
                     <span class="second-level">对账单</span>
                 </div>
             </div>

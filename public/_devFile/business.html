@@ -425,14 +425,21 @@ img {
 <body>
 <h1>快销品平台零售商API</h1>
 <h2>1. API接口通信规定</h2>
-<p>-接口采用<strong>HTTP</strong>,<strong>POST</strong>协议
--请求URL <strong>192.168.2.66/api/v1/business/</strong>
--请求返回数据格式
-	所有数据返回都基于以下的<strong>json</strong>协议
-	&gt;失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
-	id:状态值
-	message:返回具体内容
-	error:返回具体字段不合法</p>
+<ul>
+<li>接口采用<strong>HTTP</strong>,<strong>POST</strong>协议</li>
+<li>请求URL <strong>192.168.2.66/api/v1/business/</strong></li>
+<li>附加请求参数 <strong>ter_type</strong>: <strong>web端传1</strong>, <strong>ios端传2</strong>, <strong>android端传3</strong></li>
+<li>
+请求返回数据格式
+所有数据返回都基于以下的<strong>json</strong>协议
+<blockquote>
+<p>失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
+id:状态值
+message:返回具体内容
+error:返回具体字段不合法</p>
+</blockquote>
+</li>
+</ul>
 <h2>2. 接口详细说明</h2>
 <h3>2.1 公共模块auth</h3>
 <h4>2.1.1 登陆[post] (login)</h4>
@@ -508,6 +515,8 @@ name                    string          客户名
 letter                  char            客户名首字母
 shop_id                 int             客户的平台id
 account                 string          客户的平台账号
+store_type              int             客户商店类型
+store_type_name         string          客户商店类型名称
 type                    int             客户类型（1 为终端商， 2 批发商）
 contact                 string          联系人
 contact_information     string          联系方式
@@ -547,6 +556,7 @@ contact_information     string          联系方式
 business_area           string          营业面积
 account                 string          客户的平台账号(选填)
 business_address        array           营业地址
+store_type              int             客户商店类型
 shipping_address        array           收货地址
 business_address_lng    float           营业地址经度
 business_address_lat    float           营业地址纬度
@@ -582,6 +592,7 @@ type                    int             客户类型（登录业务员店铺为�
 contact_information     string          联系方式
 business_area           string          营业面积
 account                 string          客户的平台账号(选填)
+store_type              int             客户商店类型
 business_address        array           营业地址
 shipping_address        array           收货地址
 business_address_lng    float           营业地址经度
@@ -739,6 +750,12 @@ price                decimal          商品价格
 pieces               int              商品单位
 </code></pre>
 
+<h4>2.3.10 获取全部商店类型[get] (store-type)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code>
+	data                 array            所有类型
+	key					 int			  类型代码
+	value				 string			  具体类型</p>
 <h3>2.4 抵费商品 mortgage-goods</h3>
 <h4>2.4.1 获取所有抵费商品[get] (/)</h4>
 <p><code>请求参数：</code></p>
@@ -812,7 +829,7 @@ mortgage                array           抵费商品 [月份=&gt;商品信息]
 gifts                   array           赠品
 promo                   array           促销活动信息
 display_fee             array           订单陈列费 [月份 =&gt; 费用]
-photo_url               array           所有拜访图片url
+photos                  array           所有拜访图片url
 
 statistics字段子集说明
 

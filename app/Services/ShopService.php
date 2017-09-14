@@ -90,7 +90,7 @@ class ShopService extends RedisService
         $relatePath = str_replace(public_path(), '', $qrcodePath);
         $qrcodeSize = is_null($size) ? cons('shop.qrcode_size') : $size;
 
-        $fileNamePrefix = $isMobile ? 'mobile_'  : '';
+        $fileNamePrefix = $isMobile ? 'mobile_' : '';
         // 处理分割后的ID
         $path = implode('/', divide_uid($uid, "/{$fileNamePrefix}{$qrcodeSize}.png"));
 

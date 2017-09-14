@@ -43,29 +43,28 @@
                             </thead>
                             <tbody>
                             @foreach($salesmen as $man)
-                                @if(!$man->maker_id)
-                                    <tr>
-                                        <td>
-                                            {{ $man->name }}
-                                        </td>
-                                        <td>
-                                            {{ $target->getTarget($man->id, $date) }}
-                                        </td>
-                                        <td>
-                                            {{ $man->finishedAmount }}
-                                        </td>
-                                        <td>
-                                            {{ $target->getTarget($man->id, $date) ? percentage($man->finishedAmount, $target->getTarget($man->id, $date)) : '100%'}}
-                                        </td>
-                                        <td>
-                                            {{ $man->returnOrderSumAmount }}
-                                        </td>
-                                        <td>{{ $man->finishedCount }}</td>
-                                        <td>{{ $man->newCustomers }}</td>
-                                        <td><a class="edit" href="javascript:;" data-id="{{ $man->id }}" data-month="{{ $date }}"
-                                               data-target="#salesmanGoodsTarget" data-toggle="modal">查看</a></td>
-                                    </tr>
-                                @endif
+                                <tr>
+                                    <td>
+                                        {{ $man->name }}
+                                    </td>
+                                    <td>
+                                        {{ $target->getTarget($man->id, $date) }}
+                                    </td>
+                                    <td>
+                                        {{ $man->finishedAmount }}
+                                    </td>
+                                    <td>
+                                        {{ $target->getTarget($man->id, $date) ? percentage($man->finishedAmount, $target->getTarget($man->id, $date)) : '100%'}}
+                                    </td>
+                                    <td>
+                                        {{ $man->returnOrderSumAmount }}
+                                    </td>
+                                    <td>{{ $man->finishedCount }}</td>
+                                    <td>{{ $man->newCustomers }}</td>
+                                    <td><a class="edit" href="javascript:;" data-id="{{ $man->id }}"
+                                           data-month="{{ $date }}"
+                                           data-target="#salesmanGoodsTarget" data-toggle="modal">查看</a></td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>

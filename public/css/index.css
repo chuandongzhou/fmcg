@@ -675,6 +675,26 @@ a:hover {
   margin-top: 50px;
 }
 
+.mask-outer .maker-pop {
+  height: 160px !important;
+}
+
+.mask-outer .maker-pop .maker-wrap {
+  font-size: 14px;
+  color: #555555;
+}
+
+.mask-outer .maker-pop .maker-wrap .maker {
+  font-size: 16px;
+  color: #F25000;
+}
+
+.mask-outer .maker-pop .maker-msg {
+  color: #555555;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
 /*======================================pop======================================*/
 
 /*======================================login begin======================================*/
@@ -8285,7 +8305,7 @@ table .product-panel .promotions {
   cursor: pointer;
 }
 
-.goods-table table tr:hover .warning-edit-icon {
+table tr:hover .warning-edit-icon {
   visibility: inherit !important;
 }
 

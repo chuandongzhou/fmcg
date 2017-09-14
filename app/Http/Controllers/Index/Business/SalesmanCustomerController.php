@@ -44,11 +44,16 @@ class SalesmanCustomerController extends Controller
         $areaId = $request->input('area_id', null);
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
         $areas = $this->shop->areas()->get(['id', 'name']);
-        $customers = SalesmanCustomer::whereIn('salesman_id',
-            $salesmen->pluck('id'))
-            ->OfSalesman($salesmanId)
+        $customers = SalesmanCustomer::OfSalesman($salesmanId)
             ->OfName($name)
-            ->where(function ($query) use ($type, $storeType, $areaId) {
+            ->where(function ($query) use ($type, $storeType, $areaId, $salesmen) {
+                $user = auth()->user();
+                if ($user->type == cons('user.type.supplier')) {
+                    $query->where('belong_shop', auth()->user()->shop_id)
+                        ->orWhereIn('salesman_id', $salesmen->pluck('id'));
+                } else {
+                    $query->whereIn('salesman_id', $salesmen->pluck('id'));
+                }
                 if ($type == 'supplier') {
                     $query->where('type', cons('user.type.supplier'));
                 }
@@ -64,7 +69,6 @@ class SalesmanCustomerController extends Controller
             })
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
-
         //$customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
             [
@@ -126,6 +130,7 @@ class SalesmanCustomerController extends Controller
         $result = $this->_getCustomerDetail($customer, $beginTime, $endTime);
 
         $result = array_merge($result, [
+            'type' => $request->input('type', null),
             'beginTime' => $beginTime->toDateString(),
             'endTime' => $endTime->toDateString(),
             'customer' => $customer,
@@ -218,14 +223,18 @@ class SalesmanCustomerController extends Controller
     {
         $data = $request->only('name_code');
         //店家商品库 shop goods library
-        $sgl = auth()->user()->shop->goods()->get(['bar_code']);
+        $sgl_codes = auth()->user()->shop->goods->pluck('bar_code');
         //客户商品库 customer goods library
         $cgl = $customer->shop->goods()->ofNameOrCode($data['name_code'])->whereIn('bar_code',
-            $sgl->pluck('bar_code'))->paginate();
-        if ($request->input('action') === 'exp' && count($cgl)) {
-            return $this->stockQueryExport($cgl, Carbon::now()->toDateString() . $customer->name . '商品库存查询');
+            $sgl_codes);
+        if ($request->input('action') === 'exp' && count($cgl->get())) {
+            return $this->stockQueryExport($cgl->get(), Carbon::now()->toDateString() . $customer->name . '商品库存查询');
         }
-        return view('index.business.stock-query-list', compact('customer', 'cgl', 'data'));
+        return view('index.business.stock-query-list', [
+            'customer' => $customer,
+            'cgl' => $cgl->paginate(),
+            'data' => $data
+        ]);
     }
 
     /**

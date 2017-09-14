@@ -54,15 +54,16 @@ class SalesmanController extends Controller
         $date = $request->input('date', (new Carbon())->format('Y-m'));
 
         $startDate = (new Carbon($date))->startOfMonth();
+        $shopId = $this->shop->id;
 
         $salesmenOrderData = (new BusinessService)->getSalesmanOrders($this->shop,
             $startDate, (new Carbon($date))->endOfMonth());
 
-        $shopId = $this->shop->id;
-
-
+        $salesmans = $salesmenOrderData->filter(function ($salesman) {
+            return $this->shop->user_type < cons('user.type.maker') ? is_null($salesman->maker_id) : true;
+        });
         //新开家
-        $salesmenOrderData->each(function ($salesman) use ($startDate, $shopId) {
+        $salesmans->each(function ($salesman) use ($startDate, $shopId) {
             $customers = $salesman->usefulOrders->pluck('salesman_customer_id')->toBase()->unique();
 
             //所有订单
@@ -81,11 +82,9 @@ class SalesmanController extends Controller
 
             $salesman->newCustomers = $customers->count();
         });
-
-
         return view('index.business.salesman-target-index', [
             'date' => $date,
-            'salesmen' => $salesmenOrderData,
+            'salesmen' => $salesmans,
             'target' => new SalesmanTargetService()
         ]);
     }
@@ -95,7 +94,9 @@ class SalesmanController extends Controller
      */
     public function targetSet()
     {
-        $salesmen = auth()->user()->shop->salesmen()->active()->get();
+        $salesmen = auth()->user()->shop->salesmen()->active()->get()->filter(function ($salesman) {
+            return $this->shop->user_type < cons('user.type.maker') ? is_null($salesman->maker_id) : true;
+        });
         return view('index.business.salesman-target-set', compact('salesmen'));
     }
 }

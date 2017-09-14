@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\SalesmanCustomer;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Carbon\Carbon;
@@ -35,10 +36,30 @@ class OrderController extends Controller
         }
         $confirmedGoods = auth()->user()->carts()->whereIn('goods_id', array_keys($orderGoodsNum));
 
-        $carts = $confirmedGoods->with('goods')->get();
-
+        $carts = $confirmedGoods->with('goods.shop')->get();
         //验证
         $cartService = new CartService($carts);
+        $user = auth()->user();
+        if ($user->type == cons('user.type.supplier')) {
+            $salesmanCustomerModel = new SalesmanCustomer();
+            $notRelation = [];  //没有绑定客户关系的卖家
+            $shop_ids = [];
+            foreach ($carts as $cart) {
+                $sellerShop = $cart->goods->shop;  //卖家店铺
+                if (!in_array($sellerShop->id, $shop_ids)) {
+                    $sellerSalesman = $sellerShop->salesmen->pluck('id');
+                    $relation = $salesmanCustomerModel->where('shop_id', $user->shop_id)->whereIn('salesman_id',
+                        $sellerSalesman)->first();
+                    if (!$relation) {
+                        $notRelation[] = $sellerShop->name;
+                    }
+                    $shop_ids[] = $sellerShop->id;
+                }
+            }
+            if (count($notRelation)) {
+                return redirect()->back()->with('notRelation', implode(',', array_unique($notRelation)));
+            }
+        }
 
         if (!$cartService->validateOrder($orderGoodsNum, true)) {
             return redirect()->back()->with('message', $cartService->getError());
@@ -220,8 +241,9 @@ class OrderController extends Controller
             ])
             ->get();
         extract($this->_groupOrderByType($orders));
-
+        $customerInfo = $request->only('shopName', 'contact');
         return view('index.order.order-statistics-of-sell-user-detail', [
+            'customerInfo' => $customerInfo,
             'orders' => $orders,
             'ownOrdersStatistics' => $this->_orderStatistics($ownOrders),
             'businessOrdersStatistics' => $this->_orderStatistics($businessOrders),
@@ -865,7 +887,7 @@ class OrderController extends Controller
         $orderConf = cons('order');
         $payTypes = cons('pay_type');
         $orders = $orders->filter(function ($order) {
-            return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            return $order->pay_status < cons('order.pay_status.refund_success') && $order->status != cons('order.status.invalid');
         });
         //已支付订单
         $paidOrders = $orders->filter(function ($order) use ($orderConf) {
@@ -961,12 +983,12 @@ class OrderController extends Controller
             'address' => $isSeller ? $firstOrder->user_shop_address : $firstOrder->shop_address,
             'orderCount' => $orders->count(),
             'businessOrderCount' => $businessOrders->count(),
-            'businessOrderAmount' => $businessOrders->filter(function ($order){
-                return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            'businessOrderAmount' => $businessOrders->filter(function ($order) {
+                return $order->pay_status < cons('order.pay_status.refund_success') && $order->status != cons('order.status.invalid');
             })->sum('after_rebates_price'),
             'ownOrderCount' => $ownOrders->count(),
-            'ownOrderAmount' => $ownOrders->filter(function ($order){
-                return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            'ownOrderAmount' => $ownOrders->filter(function ($order) {
+                return $order->pay_status < cons('order.pay_status.refund_success') && $order->status != cons('order.status.invalid');
             })->sum('after_rebates_price'),
         ];
 
@@ -985,7 +1007,7 @@ class OrderController extends Controller
     private function _orderGoodsStatistics(Collection $orders)
     {
         $orders = $orders->filter(function ($order) {
-            return $order->pay_status < cons('order.pay_status.refund_success') &&  $order->status != cons('order.status.invalid');
+            return $order->pay_status < cons('order.pay_status.refund_success') && $order->status != cons('order.status.invalid');
         });
         $orderGoods = $orders->pluck('orderGoods')->collapse();
 

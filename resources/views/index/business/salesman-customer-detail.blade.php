@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman-customer') }}">客户管理</a> >
+                    <a href="{{ url('business/salesman-customer'.(empty($type) ? '' : '?type=supplier'))}}">{{(empty($type) ? '客户' : '供应商')}}管理</a> >
                     <span class="second-level">客户明细</span>
                 </div>
             </div>

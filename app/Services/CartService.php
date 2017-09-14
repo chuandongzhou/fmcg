@@ -106,7 +106,6 @@ class CartService extends BaseService
         }
         //是否通过验证
         $allow = true;
-
         foreach ($carts as $cart) {
             $buyNum = $num[$cart->goods_id];
             //判断商品购买数量是否小于该商品的最低配送额

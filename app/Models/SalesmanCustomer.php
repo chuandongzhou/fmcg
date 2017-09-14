@@ -17,6 +17,7 @@ class SalesmanCustomer extends Model
         'area_id',
         'account',
         'shop_id', //平台id
+        'belong_shop', //所属店铺
         'letter',
         'contact',
         'contact_information',
@@ -83,6 +84,7 @@ class SalesmanCustomer extends Model
 
     /**
      * 关联业务区域
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function area()
@@ -352,7 +354,17 @@ class SalesmanCustomer extends Model
      */
     public function getSalesmanNameAttribute()
     {
-        return $this->salesman ? $this->salesman->name : '';
+        if (!$this->salesman) {
+            return '';
+        }
+        $user = auth()->user();
+        if ($user->type == cons('user.type.supplier')) {
+            if ($this->salesman->shop_id <> $user->id) {
+                return '';
+            }
+        }
+        return $this->salesman->name;
+
     }
 
     /**
@@ -363,6 +375,16 @@ class SalesmanCustomer extends Model
     public function getAreaNameAttribute()
     {
         return $this->area ? $this->area->name : '';
+    }
+
+    /**
+     * 获取商店类型名称
+     *
+     * @return string
+     */
+    public function getStoreTypeNameAttribute()
+    {
+        return $this->store_type ? cons()->valueLang('salesman.customer.store_type', $this->store_type) : '未定义';
     }
 
 }

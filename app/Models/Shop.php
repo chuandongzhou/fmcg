@@ -309,6 +309,9 @@ class Shop extends Model
         if ($this->user_type == cons('user.type.maker')) {
             return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman', 'maker_id',
                 'salesman_id');
+        }elseif($this->user_type == cons('user.type.supplier')){
+            return $this->hasManyThrough('App\Models\SalesmanCustomer',
+                'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type)->orWhere('belong_shop',$this->id);
         }
         return $this->hasManyThrough('App\Models\SalesmanCustomer',
             'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
@@ -828,7 +831,7 @@ class Shop extends Model
      *
      * @return int|mixed|string
      */
-    public function getUserTypeAttribute()
+    public function getUserTypeAttribute():int
     {
         $shopService = new ShopService(true);
 

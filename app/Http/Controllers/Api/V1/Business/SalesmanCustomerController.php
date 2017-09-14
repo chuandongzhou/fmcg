@@ -24,7 +24,7 @@ class SalesmanCustomerController extends Controller
         $customers = salesman_auth()->user()->customers()->with('businessAddress', 'shippingAddress',
             'shop.user', 'mortgageGoods')->get()->each(function ($customer) {
             $customer->shop && $customer->shop->setAppends([]);
-            $customer->setAppends(['account']);
+            $customer->setAppends(['account', 'store_type_name']);
             $customer->business_district_id = $customer->businessAddress->district_id;
             $customer->business_street_id = $customer->businessAddress->street_id;
             $customer->business_address_address = $customer->businessAddress->address;
@@ -58,8 +58,11 @@ class SalesmanCustomerController extends Controller
         ) {
             return $this->error('抵费商品不能为空!');
         }
+
         //客户编号
         $attributes['number'] = $this->_getCustomerNumber($salesman);
+        //客户所属
+        $attributes['belong_shop'] = $salesman->shop_id;
         //客户名首字母
         $attributes['letter'] = $this->_getLetter($attributes['name']);
         //是否有线上账号
@@ -110,9 +113,7 @@ class SalesmanCustomerController extends Controller
         if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
-        if (array_get($attributes, 'account') != $customer->account || array_get($attributes,
-                'type') != $customer->type
-        ) {
+        if (array_get($attributes, 'account') != $customer->account) {
             $shop = $salesman->shop;
             $validatedResult = $this->_validateAccount($attributes, $shop->user_type);
             if (is_string($validatedResult)) {
@@ -163,10 +164,10 @@ class SalesmanCustomerController extends Controller
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
         $validatedResult = '';
-        if (array_get($attributes, 'account') != $customer->account || array_get($attributes,
-                'type') != $customer->type
-        ) {
+        $account = array_get($attributes, 'account', null);
+        if (!is_null($account) && $account != $customer->account) {
             $validatedResult = $this->_validateAccount($attributes, $salesman->shop);
+
             if (is_string($validatedResult)) {
                 return $this->invalidParam('account', $validatedResult);
             }
@@ -497,11 +498,38 @@ class SalesmanCustomerController extends Controller
 
     /**
      * 获取客户商店全部类型
+     *
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function getStoreType()
     {
-        return $this->success(['data' => cons()->valueLang('salesman.customer.store_type')]);
+        $types = cons()->valueLang('salesman.customer.store_type');
+        array_walk($types, function ($value, $key) use (&$new) {
+            $new[] = [
+                'key' => $key,
+                'value' => $value
+            ];
+        });
+        return $this->success($new);
+    }
+
+    /**
+     * 更新客户店铺类型
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function updateStoreType(Request $request, $customerId)
+    {
+        try {
+            $customer = SalesmanCustomer::find($customerId);
+            if (!$customer instanceof SalesmanCustomer) {
+                throw new \Exception('参数错误');
+            }
+            $customer->fill($request->only('store_type'))->save();
+            return $this->success('修改成功');
+        } catch (\Exception $e) {
+            return $this->error('修改失败');
+        }
     }
 
 }

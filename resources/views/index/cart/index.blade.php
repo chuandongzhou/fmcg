@@ -157,6 +157,20 @@
             </div>
         </form>
     @endif
+    {{--错误提示--}}
+    @if (session('notRelation'))
+        <div class="mask-outer" style="display: block;">
+            <div class="pop-general text-center maker-pop">
+                <div class="pop-content">
+                    <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
+                    <div class="pop-tips maker-wrap">
+                        请联系厂家 : <span class="maker">{{session('notRelation')}}</span>
+                    </div>
+                    <div class="maker-msg">绑定你的平台信息</div>
+                </div>
+            </div>
+        </div>
+    @endif
 @stop
 @section('js')
     @parent
@@ -167,6 +181,12 @@
             @if (session('message'))
                alert('{{ session('message') }}');
             @endif
+
+            //关闭弹窗
+            $('a.close-btn').on('click', function () {
+                $(".mask-outer").css("display", "none");
+//                window.location.reload();
+            });
         })
     </script>
 @stop

@@ -99,6 +99,8 @@
     letter                  char            客户名首字母
     shop_id                 int             客户的平台id
     account                 string          客户的平台账号
+    store_type              int             客户商店类型
+	store_type_name			string			客户商店类型名称
     type                    int             客户类型（1 为终端商， 2 批发商）
     contact                 string          联系人
     contact_information     string          联系方式
@@ -139,6 +141,7 @@
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
     business_address        array           营业地址
+	store_type				int				客户商店类型
     shipping_address        array           收货地址
     business_address_lng    float           营业地址经度
     business_address_lat    float           营业地址纬度
@@ -176,6 +179,7 @@
     contact_information     string          联系方式
     business_area           string          营业面积
     account                 string          客户的平台账号(选填)
+	store_type				int				客户商店类型
     business_address        array           营业地址
     shipping_address        array           收货地址
     business_address_lng    float           营业地址经度
@@ -344,6 +348,15 @@
 	goods_id             int              商品ID
 	price                decimal          商品价格
 	pieces               int              商品单位
+
+
+####2.3.10 获取全部商店类型[get] (store-type)	
+`请求参数：`
+
+`成功返回：`
+	data                 array            所有类型
+	key					 int			  类型代码
+	value				 string			  具体类型
 	
 	
 	

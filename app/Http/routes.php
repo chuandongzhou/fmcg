@@ -507,7 +507,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->resource('salesman', 'SalesmanController');
 
                 $router->group(['prefix' => 'salesman-customer'], function ($router) {
-                    $router->get('store_type','SalesmanCustomerController@getStoreType');
+                    $router->put('update-store-type/{customer}','SalesmanCustomerController@updateStoreType');
+                    $router->get('store-type','SalesmanCustomerController@getStoreType');
                     $router->put('update-by-app/{salesman_customer}',
                         'SalesmanCustomerController@updateByApp');
                     $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
