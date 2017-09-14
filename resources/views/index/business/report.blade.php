@@ -57,12 +57,15 @@
                                     <td>{{ $man->name }}</td>
                                     <td>{{ $man->visitCustomerCount }}</td>
                                     <td>
-                                        <b class="red">{{ $man->orderFormCount }}</b>
+                                        @if(auth()->user()->type < cons('user.type.maker'))<b
+                                                class="red">{{ $man->orderFormCount }}</b>@endif
                                         ({{ $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount, $man->visitOrderFormCount) }}
                                         )
                                     </td>
                                     <td>
-                                        <b class="red">{{ $man->orderFormSumAmount }}</b>
+                                        @if(auth()->user()->type < cons('user.type.maker'))<b
+                                                class="red">{{ $man->orderFormSumAmount }}</b>@endif
+
                                         ({{ $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) }}
                                         )
                                     </td>

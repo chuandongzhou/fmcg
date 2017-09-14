@@ -46,10 +46,12 @@
                                     <th>拜访订货单数</th>
                                     <th>拜访订货金额</th>
                                     <th>自主订货单数</th>
-                                    <th>自主订货金额</th>
-                                    <th>总订货单数</th>
-                                    <th>总订货金额</th>
-                                    <th>总应付金额</th>
+                                    @if(auth()->user()->type < cons('user.type.maker'))
+                                        <th>自主订货金额</th>
+                                        <th>总订货单数</th>
+                                        <th>总订货金额</th>
+                                        <th>总应付金额</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -60,10 +62,12 @@
                                     <td>{{ $visitStatistics['visitOrderCount'] or 0  }}</td>
                                     <td class="red">{{ $visitStatistics['visitOrderAmount'] or 0 }}</td>
                                     <td>{{ $visitStatistics['ownOrderCount'] }}</td>
-                                    <td class="red">{{ $visitStatistics['ownOrderAmount'] }}</td>
-                                    <td>{{ $visitStatistics['totalCount'] }}</td>
-                                    <td class="red">{{ $visitStatistics['totalAmount'] }}</td>
-                                    <td class="red">{{ bcsub($visitStatistics['totalAmount'],$visitStatistics['ownOrderDiscountAmount'] + $visitStatistics['visitOrderDiscountAmount'],2)}}</td>
+                                    @if(auth()->user()->type < cons('user.type.maker'))
+                                        <td class="red">{{ $visitStatistics['ownOrderAmount'] }}</td>
+                                        <td>{{ $visitStatistics['totalCount'] }}</td>
+                                        <td class="red">{{ $visitStatistics['totalAmount'] }}</td>
+                                        <td class="red">{{ bcsub($visitStatistics['totalAmount'],$visitStatistics['ownOrderDiscountAmount'] + $visitStatistics['visitOrderDiscountAmount'],2)}}</td>
+                                    @endif
                                 </tr>
                                 </tbody>
                             </table>
