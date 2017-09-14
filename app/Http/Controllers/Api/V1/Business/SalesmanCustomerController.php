@@ -115,7 +115,7 @@ class SalesmanCustomerController extends Controller
         }
         if (array_get($attributes, 'account') != $customer->account) {
             $shop = $salesman->shop;
-            $validatedResult = $this->_validateAccount($attributes, $shop->user_type);
+            $validatedResult = $this->_validateAccount($attributes, $shop);
             if (is_string($validatedResult)) {
                 return $this->invalidParam('account', $validatedResult);
             }
@@ -437,11 +437,13 @@ class SalesmanCustomerController extends Controller
             return '账号角色类型不匹配';
         }
         //查找是否已存在此客户
-        $existsCustomer = SalesmanCustomer::where('shop_id', $userInfo->shop_id)->whereIn('salesman_id',
-            $shop->salesmen->pluck('id'))->first();
+        $existsCustomer = SalesmanCustomer::where('shop_id', $userInfo->shop_id)->where(function ($query) use ($shop) {
+            $query->whereIn('salesman_id', $shop->salesmen->pluck('id'))
+                ->orWhere('belong_shop', $shop->id);
+        })->first();
 
         if ($existsCustomer) {
-            return $this->invalidParam('account', '已关联此用户!');
+            return '已关联此用户!';
         }
         return $userInfo;
     }

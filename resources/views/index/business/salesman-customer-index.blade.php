@@ -91,12 +91,12 @@
                                 </td>
                                 @if(empty($data['type']))
                                     <td>
-                                        @if(auth()->user()->type < cons('user.type.maker'))
+                                        @if($customer->type == cons('user.type.retailer') && auth()->user()->type < cons('user.type.maker'))
                                             <i class="iconfont icon-xiugai warning-edit-icon"></i>
                                         @endif
                                         <i class="iconfont icon-baocun hidden warning-edit-icon"
                                            data-id="{{$customer->id}}"></i>
-                                        <span class="store-type undisable"> {{$customer->store_type > 0 ? cons()->valueLang('salesman.customer.store_type',$customer->store_type) : '未指定'}} </span>
+                                        <span class="store-type undisable"> {{$customer->type == cons('user.type.retailer') ? $customer->store_type_name : ''}} </span>
                                         <select class="form-control store-type modify hidden" id="store_type"
                                                 name="store_type">
                                             @foreach(cons()->valueLang('salesman.customer.store_type') as $storeType => $typeName)

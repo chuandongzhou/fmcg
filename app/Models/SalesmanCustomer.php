@@ -359,7 +359,7 @@ class SalesmanCustomer extends Model
         }
         $user = auth()->user();
         if ($user->type == cons('user.type.supplier')) {
-            if ($this->salesman->shop_id <> $user->id) {
+            if ($this->salesman->shop_id <> $user->shop_id) {
                 return '';
             }
         }
@@ -384,7 +384,7 @@ class SalesmanCustomer extends Model
      */
     public function getStoreTypeNameAttribute()
     {
-        return $this->store_type ? cons()->valueLang('salesman.customer.store_type', $this->store_type) : '未定义';
+        return $this->store_type ? cons()->valueLang('salesman.customer.store_type', $this->store_type) : '未指定';
     }
 
 }

@@ -67,7 +67,6 @@ class ReportController extends Controller
         $endDate = array_get($data, 'end_date', $date);
 
         $dateEnd = (new Carbon($endDate))->endOfDay();
-
         //拜访记录
         $visits = $salesman->visits()->ofTime($startDate, $dateEnd)->with([
             'orders.orderGoods.goods',
@@ -124,7 +123,7 @@ class ReportController extends Controller
             'goodsRecord.goods',
             'salesmanCustomer.shippingAddress',
         ])->get();
-        
+
         return view('index.business.report-customer-detail',
             array_merge(compact('salesman', 'customer', 'startDate', 'endDate'), $this->_getDetailData($visits)));
     }
@@ -142,6 +141,7 @@ class ReportController extends Controller
         $orderTypes = cons('salesman.order.type');
         $userType = cons('user.type');
         //订货单
+
         $visitOrders = $orders->filter(function ($order) use ($orderTypes) {
             return ($order->type == $orderTypes['order'] && $order->salesman_visit_id > 0);
         });
@@ -156,6 +156,11 @@ class ReportController extends Controller
                 $customerIdentity = ($order->salesmanCustomer->type == $userType['supplier']);
             }
             return $customerIdentity && $order->type == $orderTypes['order'] && $order->salesman_visit_id == 0 && $order->order && $order->order->user_id != $user->id;
+        });
+
+        $visits = $visits->filter(function ($visit) {
+            $userType = cons('user.type');
+            return (auth()->user()->type < $userType['maker'] ? $visit->salesmanCustomer->type < $userType['supplier'] : true);
         });
 
         $customerIds = $visits->pluck('salesman_customer_id')->toBase()->unique();
@@ -446,9 +451,7 @@ class ReportController extends Controller
         $customerVisits = $visits->filter(function ($visit) use ($customerId) {
             return $visit->salesman_customer_id == $customerId;
         });
-
         $lastVisit = $customerVisits->first();
-
         //客户信息
         $salesmanCustomer = $lastVisit->salesmanCustomer;
 
@@ -1071,7 +1074,7 @@ class ReportController extends Controller
         $salesmenName = $request->input('salesman_name', null);
         $endDateTemp = (new Carbon($endDate))->addDay()->toDateString();
 
-        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp,$salesmenName);
+        $salesmenOrderData = (new BusinessService())->getSalesmanOrders($shop, $startDate, $endDateTemp, $salesmenName);
 
         //客户列表
 
@@ -1152,9 +1155,9 @@ class ReportController extends Controller
                     $sheet->appendRow([
                         $man->name,
                         $man->visitCustomerCount,
-                        $man->orderFormCount . '(' . $man->visitOrderFormCount . '+' . bcsub($man->orderFormCount,
-                            $man->visitOrderFormCount) . ')',
-                        $man->orderFormSumAmount . '(' . $man->visitOrderFormSumAmount . '+' . ($man->orderFormSumAmount - $man->visitOrderFormSumAmount) . ')',
+                        $man->orderFormCount . '(' . $man->visitOrderFormCount . '+' . abs(bcsub($man->orderFormCount,
+                            $man->visitOrderFormCount)) . ')',
+                        $man->orderFormSumAmount . '(' . $man->visitOrderFormSumAmount . '+' . (abs($man->orderFormSumAmount - $man->visitOrderFormSumAmount)) . ')',
                         $man->deliveryFinishCount,
                         $man->finishedAmount,
                         $man->notFinishedAmount,

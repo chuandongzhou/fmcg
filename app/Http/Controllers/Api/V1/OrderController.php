@@ -12,6 +12,7 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\SalesmanCustomer;
 use App\Models\SalesmanVisitOrder;
 use App\Models\SalesmanVisitOrderGoods;
 use App\Models\Shop;
@@ -961,13 +962,11 @@ class OrderController extends Controller
 
         $shop = $order->shop;
         $userShopId = $order->user->shop_id;
-        $salesmanCustomer = $shop->salesmenCustomer()->where('salesman_customer.shop_id', $userShopId)->first();
 
-
+        $salesmanCustomer = SalesmanCustomer::whereIn('id',$shop->salesmenCustomer->pluck('id'))->where('shop_id', $userShopId)->first();
         if (is_null($salesmanCustomer)) {
             return true;
         }
-
         $orderData = [
             'salesman_customer_id' => $salesmanCustomer->id,
             'amount' => $order->price,

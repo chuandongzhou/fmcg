@@ -82,13 +82,15 @@ class CreateSalesmanCustomerRequest extends SalesmanRequest
             }
 
             $userType = salesman_auth()->check() ? salesman_auth()->user()->shop_type : (auth()->check() ? auth()->user()->type : null);
+
             if (!is_null($userType) && $userType == cons('user.type.supplier')) {
                 if (!($customerShopType = $this->input('type'))) {
                     $validator->errors()->add('type', '客户类型不能为空');
                 }
-            } else {
+            }
+            if ($this->input('type') == cons('user.type.retailer')) {
                 if (!($this->input('store_type'))) {
-                    $validator->errors()->add('store_type', '商铺类型不能为空');
+                    $validator->errors()->add('store_type', '终端商客户商店类型必选');
                 }
             }
         });
