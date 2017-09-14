@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1\ChildUser;
 
 use App\Http\Controllers\Api\V1\Controller;
+use App\Models\GoodsPieces;
 use App\Models\Salesman;
+use App\Models\SalesmanVisitOrderGoods;
 use App\Services\BusinessService;
 use App\Services\GoodsService;
 use Carbon\Carbon;
@@ -195,20 +197,28 @@ class SalesmanController extends Controller
 
         $goodsId = $goodsTarget->pluck('id');
 
+        $goodsBarCodes = $goodsTarget->pluck('bar_code');
+
         $startMonth = (new Carbon($month));
 
-        $orderForms = $salesman->orderForms()->ofCreateTime($startMonth,
-            $startMonth->copy()->endOfMonth())->whereHas('order', function ($query) {
-            return $query->where('status', cons('order.status.finished'));
-        })->get();
+        $query = $salesman->maker_id ? $salesman->orderForms()->where('salesman_visit_id', '>',
+            0) : $salesman->orderForms();
+
+        $orderForms = $query->ofCreateTime($startMonth, $startMonth->copy()->endOfMonth())->whereHas('order',
+            function ($query) {
+                return $query->where('status', cons('order.status.finished'));
+            })->get();
+
 
         $orderIds = $orderForms->pluck('id');
 
-        $orderGoods = SalesmanVisitOrderGoods::whereIn('salesman_visit_order_id', $orderIds)->whereIn('goods_id',
-            $goodsId)->get();
+        $orderGoods = SalesmanVisitOrderGoods::whereIn('salesman_visit_order_id', $orderIds)->whereHas('goods',
+            function ($query) use ($goodsBarCodes) {
+                return $query->whereIn('bar_code', $goodsBarCodes);
+            })->with('goods')->get();
 
-        $goodsSalesNum = $this->_formatGoods($orderGoods);
 
+        $goodsSalesNum = $this->_formatGoods($orderGoods, $goodsTarget->pluck('bar_code', 'id')->toArray());
 
         $goodsPieces = array_key_to_value(GoodsPieces::whereIn('goods_id', $goodsId)->get()->toArray(), 'goods_id');
 
@@ -366,16 +376,18 @@ class SalesmanController extends Controller
      * 格式化商品
      *
      * @param \Illuminate\Support\Collection $goods
+     * @param $goodsTarget
      * @return array
      */
-    private function _formatGoods(Collection $goods)
+    private function _formatGoods(Collection $goods, $goodsTarget)
     {
         $data = [];
         foreach ($goods as $item) {
-            if (isset($data[$item->goods_id])) {
-                $data[$item->goods_id][$item->pieces] = isset($data[$item->goods_id][$item->pieces]) ? $data[$item->goods_id][$item->pieces] + $item->num : $item->num;
+            $goodsId = in_array($item->id, array_keys($goodsTarget)) ?  $item->id : array_search($item->goods->bar_code, $goodsTarget);
+            if (isset($data[$goodsId])) {
+                $data[$goodsId][$item->pieces] = isset($data[$goodsId][$item->pieces]) ? $data[$goodsId][$item->pieces] + $item->num : $item->num;
             } else {
-                $data[$item->goods_id] = [
+                $data[$goodsId] = [
                     $item->pieces => $item->num
                 ];
                 continue;

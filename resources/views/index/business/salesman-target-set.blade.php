@@ -29,7 +29,7 @@
 
                             <div class="col-sm-10 col-md-6">
                                 <input type="text" name="date" class="form-control datetimepicker"
-                                       value="{{ \Carbon\Carbon::now()->toDateString() }}"
+                                       value="{{ \Carbon\Carbon::now()->format('Y-m') }}"
                                        data-format="YYYY-MM"/>
                             </div>
                         </div>
