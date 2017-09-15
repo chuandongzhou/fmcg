@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 text-right">
-                    @if($inTransitGoods){!! $inTransitGoods->render() !!}@endif
+                    @if(count($inTransitGoods)){!! $inTransitGoods->render() !!}@endif
                 </div>
             </div>
         </div>

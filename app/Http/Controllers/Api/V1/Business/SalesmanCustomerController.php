@@ -72,8 +72,12 @@ class SalesmanCustomerController extends Controller
                 return $this->invalidParam('account', $validatedResult);
             }
             $attributes['shop_id'] = $validatedResult->shop_id;
+            if(array_get($attributes,'type') != $validatedResult->type){
+                return $this->invalidParam('type', '客户账号与客户类型不匹配');
+            }
         }
         $shop_id = array_get($attributes, 'shop_id', null);
+
         //厂家添加供应商客户处理
         if ($userType == cons('user.type.maker') && $attributes['type'] == cons('user.type.supplier')) {
             if (!$shop_id) {
@@ -121,6 +125,12 @@ class SalesmanCustomerController extends Controller
             }
         }
         $customerShopId = $attributes['shop_id'] = isset($validatedResult) ? $validatedResult->shop_id : $customer->shop_id;
+        if (($type = array_get($attributes, 'type')) != $customer->type) {
+            $customerType = isset($validatedResult) ? $validatedResult->type : $customer->type;
+            if ($customerType != $type) {
+                return $this->invalidParam('type', '客户账号与客户类型不匹配');
+            }
+        }
         if ($user->type == cons('user.type.maker') && $attributes['type'] == cons('user.type.supplier')) {
             if ($customer->salesman_id != $salesman->id) {
                 if (!$customerShopId) {
@@ -173,6 +183,12 @@ class SalesmanCustomerController extends Controller
             }
         }
         $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id : $customer->shop_id;
+        if (($type = array_get($attributes, 'type')) != $customer->type) {
+            $customerType = isset($validatedResult) ? $validatedResult->type : $customer->type;
+            if ($customerType != $type) {
+                return $this->invalidParam('type', '客户账号与客户类型不匹配');
+            }
+        }
         //厂家业务员未分配是不能登录的,所以暂时不做处理
         if ($customer->fill(array_except($attributes, 'account'))->save()) {
             return $this->success('修改客户成功');

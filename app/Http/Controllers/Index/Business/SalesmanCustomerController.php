@@ -69,7 +69,6 @@ class SalesmanCustomerController extends Controller
             })
             ->with('salesman', 'businessAddress', 'shippingAddress', 'shop.user')
             ->paginate();
-        //$customers = $customers->sortBy('business_address_address')->sortBy('business_district_id')->sortBy('business_street_id');
         return view('index.business.salesman-customer-index',
             [
                 'salesmen' => $salesmen,
