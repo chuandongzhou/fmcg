@@ -483,14 +483,13 @@ class GoodsService
     static function formatGoodsPieces($pieces, $goodsPieces)
     {
         $newArray = [];
-        if ($pieces['pieces_level_3'] && $piecesLevel3 = array_get($goodsPieces, $pieces['pieces_level_3'])) {
-
+        if (!is_null($pieces['pieces_level_3']) && $piecesLevel3 = array_get($goodsPieces, $pieces['pieces_level_3'])) {
             $goodsPieces[$pieces['pieces_level_2']] = isset($goodsPieces[$pieces['pieces_level_2']]) ? bcadd($goodsPieces[$pieces['pieces_level_2']],
                 bcdiv($piecesLevel3, $pieces['system_2'])) : bcdiv($piecesLevel3, $pieces['system_2']);
             $goodsPieces[$pieces['pieces_level_3']] = bcmod($piecesLevel3, $pieces['system_2']);
         }
 
-        if ($pieces['pieces_level_2'] && $piecesLevel2 = array_get($goodsPieces, $pieces['pieces_level_2'])) {
+        if (!is_null($pieces['pieces_level_2']) && $piecesLevel2 = array_get($goodsPieces, $pieces['pieces_level_2'])) {
             $goodsPieces[$pieces['pieces_level_1']] = isset($goodsPieces[$pieces['pieces_level_1']]) ? bcadd($goodsPieces[$pieces['pieces_level_1']],
                 bcdiv($piecesLevel2, $pieces['system_1'])) : bcdiv($piecesLevel2, $pieces['system_1']);
             $goodsPieces[$pieces['pieces_level_2']] = bcmod($piecesLevel2, $pieces['system_1']);
