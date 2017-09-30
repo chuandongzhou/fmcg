@@ -74,10 +74,6 @@ class HomeController extends Controller
         /* dd(session(auth()->getName()));
          dd($request->cookie(auth()->getRecallerName()));*/
 
-        $arr = explode('|',
-            'eyJpdiI6IllpcXRUdUtFNkE0dG11YmNiYjdZM2c9PSIsInZhbHVlIjoiVUZoVFVlK0t1OGsyRkRtOTJpNGlacTdHWGswa09GUmp3UXZlSlBlWGNrVjFNaG5BZUpCa01FZFkyc3JwN0pQTGg1dnJZRTBLVkhEZ1VPYVV0cDlpaHFxanJVOXA2a0RLK214azJ5NXpaR0U9IiwibWFjIjoiNTM4ZDY0YzVlNTkwN2M0ZjgzNzg3NDc5Njg0YTQzMWQ4NmVjNjM3Yjc1YmUyMzZkYWI2ODMyNDc5NzI4MWZjYiJ9');
-
-        dd($arr);
         $first = ['02', '05', '13', '22', '27', '32'];
         $second = ['03', '05', '11', '22', '29', '31'];
 

@@ -24,7 +24,6 @@ $router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
 $router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
 $router->controller('webhooks/union-pay', 'Index\Webhook\UnionPayController');
 
-
 /**
  * 登录注册
  */
@@ -38,7 +37,6 @@ $router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mo
         $router->get('logout', 'AuthController@logout');
         $router->get('forget-password', 'AuthController@forgetPassword');
     });
-
 
 /**
  * 移动端
@@ -100,22 +98,19 @@ $router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
     $router->get('geetest', 'AuthController@getGeetest');
 });
 
-
 /**
  * 前台
  *
  */
 $router->get('/test', 'Index\HomeController@test');
-$router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
 
+$router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->get('about', 'HomeController@about');         //关于我们
-
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
     $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');          //商家商店首页
     $router->get('shop/all-goods/{shop}/{sort?}', 'ShopController@shop')->where('shop', '[0-9]+');          //商家商店所有商品
     $router->get('shop/{sort?}', 'ShopController@index')->where('shop', '\d+');                   //商家
-
     $router->controller('order', 'OrderController');//订单统计
     $router->controller('order-buy', 'OrderBuyController');  //买家订单管理
     $router->controller('order-sell', 'OrderSellController');//卖家订单管理
@@ -219,7 +214,6 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
 
-
 //子帐号
 $router->group(['prefix' => 'child-user', 'namespace' => 'ChildUser', 'middleware' => 'child.auth'],
     function ($router) {
@@ -270,7 +264,6 @@ $router->group(['prefix' => 'child-user', 'namespace' => 'ChildUser', 'middlewar
         $router->get('display-info', 'DisplayInfoController@index');
         $router->get('display-info/export', 'DisplayInfoController@export');
     });
-
 
 /**
  * 后台
@@ -360,7 +353,6 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->resource('operation', 'OperationController');
     $router->resource('payment-channel', 'PaymentChannelController');
 });
-
 
 /**
  * 接口

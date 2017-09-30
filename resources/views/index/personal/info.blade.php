@@ -125,7 +125,7 @@
                     <div class="item-wrap">
                         <div class="clearfix">
                             <div class="pull-left icon-panel">
-                                <i class="iconfont icon-wodedingdan16"></i>
+                                <i class="iconfont icon-daifahuo"></i>
                             </div>
                             <div class="pull-right">
                                 <div class="title">
@@ -147,7 +147,7 @@
                     <div class="item-wrap">
                         <div class="clearfix">
                             <div class="pull-left icon-panel">
-                                <i class="iconfont icon-shape"></i>
+                                <i class="iconfont icon-daifukuan"></i>
                             </div>
                             <div class="pull-right">
                                 <div class="title">

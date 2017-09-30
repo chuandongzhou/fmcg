@@ -276,11 +276,11 @@
                                 <span class="title">提现账号</span>
                             </a>
                         </li>
-                        <li class="nav-item  {{ path_active(['personal/sign*']) }}">
-                            <a href="{{ url('personal/sign/renew') }}" class="nav-link ">
-                                <span class="title">签约管理</span>
-                            </a>
-                        </li>
+                        {{--<li class="nav-item  {{ path_active(['personal/sign*']) }}">--}}
+                            {{--<a href="{{ url('personal/sign/renew') }}" class="nav-link ">--}}
+                                {{--<span class="title">签约管理</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                     </ul>
                 </li>
                 {{-- 业务管理 --}}
