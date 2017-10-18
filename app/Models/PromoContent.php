@@ -14,9 +14,10 @@ class PromoContent extends Model
         'money',
         'custom',
     ];
-    public $appends = ['pieces_name','goods_name'];
+    public $appends = ['pieces_name', 'goods_name'];
 
-    protected $hidden = ['goods','id','promo_id','type','created_at','updated_at'];
+    protected $hidden = ['goods', 'id', 'promo_id', 'type', 'created_at', 'updated_at'];
+
     /**
      * 关联商品
      *
@@ -34,6 +35,7 @@ class PromoContent extends Model
 
     /**
      * 获得商品单位名
+     *
      * @return string
      */
     public function getPiecesNameAttribute()

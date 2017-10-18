@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Gate;
@@ -43,6 +44,7 @@ class OrderController extends Controller
         if ($user->type == cons('user.type.supplier')) {
             $salesmanCustomerModel = new SalesmanCustomer();
             $notRelation = [];  //没有绑定客户关系的卖家
+            $applyed = [];      //已申请未审核的卖家
             $shop_ids = [];
             foreach ($carts as $cart) {
                 $sellerShop = $cart->goods->shop;  //卖家店铺
@@ -51,13 +53,21 @@ class OrderController extends Controller
                     $relation = $salesmanCustomerModel->where('shop_id', $user->shop_id)->whereIn('salesman_id',
                         $sellerSalesman)->first();
                     if (!$relation) {
-                        $notRelation[] = $sellerShop->name;
+                        $isApply = DB::table('business_relation_apply')->where([
+                            'maker_id' => $sellerShop->id,
+                            'supplier_id' => $user->shop_id,
+                            'status' => 0
+                        ])->first();
+                        $isApply ? $applyed[$sellerShop->id] = $sellerShop->name : $notRelation[$sellerShop->id] = $sellerShop->name;
                     }
                     $shop_ids[] = $sellerShop->id;
                 }
             }
-            if (count($notRelation)) {
-                return redirect()->back()->with('notRelation', implode(',', array_unique($notRelation)));
+            if (count($notRelation) || count($applyed)) {
+                return redirect()->back()->with([
+                    'notRelation' => array_unique($notRelation),
+                    'applyed' => array_unique($applyed)
+                ]);
             }
         }
 

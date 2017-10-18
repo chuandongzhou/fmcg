@@ -50,4 +50,8 @@ class SystemTradeInfo extends Model
         return $this->belongsTo('App\Models\Order');
     }
 
+    public function getOperateAttribute()
+    {
+        return ($this->order->user_id === auth()->user()->id) ? '-' : '+';
+    }
 }

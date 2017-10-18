@@ -196,6 +196,17 @@ class  Model extends Eloquent
     }
 
     /**
+     * 条件 不活跃的
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeNotActive($query)
+    {
+        return $query->where('status', 0);
+    }
+
+    /**
      * 判断是否激活
      *
      * @return bool

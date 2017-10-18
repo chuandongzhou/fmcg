@@ -151,6 +151,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->controller('sign', 'SignController'); //签约管理
         $router->resource('child-user', 'ChildUserController'); //子帐号
     });
+    //$router->get('business/union-pay/qrcode/{order_id}', 'UnionPayController@getQrCode')->where('order_id', '[0-9]+');
     //业务管理
     $router->group(['prefix' => 'business', 'namespace' => 'Business', 'middleware' => 'deposit'], function ($router) {
         $router->get('salesman/target', 'SalesmanController@target');
@@ -178,6 +179,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
                 'SalesmanVisitOrderController@browserExport')->where('salesman_visit_order', '[0-9]+');
             $router->get('{salesman_visit_order}', 'SalesmanVisitOrderController@detail');
         });
+        $router->resource('trade-request', 'TradeRequestController'); //交易请求
     });
     $router->resource('mortgage-goods', 'MortgageGoodsController');
     $router->group(['prefix' => 'order'], function ($router) {
@@ -387,6 +389,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->controller('goods', 'GoodsController');                           //商品
         $router->group(['prefix' => 'shop'], function ($router) {
             $router->get('shops', 'ShopController@shops');                        //热门店铺
+            $router->get('salesman', 'ShopController@salesman');                        //热门店铺
             $router->get('{shop}', 'ShopController@detail')->where('shop', '[0-9]+');                        //店铺详细
             $router->get('{shop}/goods', 'ShopController@goods')->where('shop', '[0-9]+');                  //店铺商品
             $router->get('{shop}/adverts', 'ShopController@adverts')->where('shop', '[0-9]+');                  //店铺商品
@@ -498,7 +501,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('export-target', 'SalesmanController@exportTarget');
                     $router->delete('batch-delete', 'SalesmanController@batchDelete');
                     $router->put('target-set', 'SalesmanController@targetSet');
-                    $router->get('{salesman_id}/goods-target', 'SalesmanController@goodsTarget')->where('salesman_id', '[0-9]+');
+                    $router->get('{salesman_id}/goods-target', 'SalesmanController@goodsTarget')->where('salesman_id',
+                        '[0-9]+');
                     $router->put('update-by-app', 'SalesmanController@updateByApp');
                     $router->post('lock', 'SalesmanController@postLock');
                     $router->put('password', 'SalesmanController@password');  //修改密码
@@ -507,8 +511,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                 $router->resource('salesman', 'SalesmanController');
 
                 $router->group(['prefix' => 'salesman-customer'], function ($router) {
-                    $router->put('update-store-type/{customer}','SalesmanCustomerController@updateStoreType');
-                    $router->get('store-type','SalesmanCustomerController@getStoreType');
+                    $router->put('update-store-type/{customer}', 'SalesmanCustomerController@updateStoreType');
+                    $router->get('store-type', 'SalesmanCustomerController@getStoreType');
                     $router->put('update-by-app/{salesman_customer}',
                         'SalesmanCustomerController@updateByApp');
                     $router->post('add-sale-goods', 'SalesmanCustomerController@addSaleGoods');
@@ -517,6 +521,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('customer-display-fee', 'SalesmanCustomerController@customerDisplayFee');//客户陈列费发放情况
                     $router->post('display-fee', 'SalesmanCustomerController@displayFee');//陈列费发放情况
                     $router->get('purchased-goods', 'SalesmanCustomerController@purchasedGoods');//客户曾购买商品
+                    $router->post('apply-bind-relation', 'SalesmanCustomerController@bindRelation');//客户申请绑定业务关系
+                    $router->get('passed-promo', 'SalesmanCustomerController@getPassedPromos');//获取已通过活动
                 });
 
                 $router->resource('salesman-customer', 'SalesmanCustomerController');
@@ -580,6 +586,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->delete('/apply/{promo_apply}', 'PromoController@applyDelete'); // 删除申请
                     $router->get('/apply/pass', 'PromoController@applyPass'); // 通过申请列表
                 });
+                $router->group(['prefix' => 'trade-request'], function ($router) {
+                    $router->post('pass', 'TradeRequestController@pass'); //通过
+                });
+
             });
         //微信支付
         $router->group(['prefix' => 'wechat-pay'], function ($router) {

@@ -192,7 +192,8 @@
                                                            data-amount="{{ $goods->amount }}">
                                                             <i class="iconfont icon-xiugai"></i>编辑
                                                         </a>
-                                                        <a class="red delete-no-form" data-method="delete"
+                                                        <a class="red delete-no-form business-order-goods-delete"
+                                                           data-method="delete"
                                                            data-url="{{ url('api/v1/business/order/goods-delete/' . $goods->id) }}">
                                                             <i class="iconfont icon-shanchu"></i>删除
                                                         </a>
@@ -200,13 +201,13 @@
                                                 @endif
                                             </tr>
                                         @endforeach
-                                        <tr>
-
+                                        <tr class="statis">
                                             <td colspan="7">
                                                 <div class="text-right">
-                                                    订货总数 : {{ $goods_total_num }}
+                                                    订货总数 : <span class="total_num">{{ $goods_total_num }}</span>
 
-                                                    总金额 : {{ number_format($goods_total_amount, 2, '.', '')}}
+                                                    总金额 : <span
+                                                            class="total_amount">{{ number_format($goods_total_amount, 2, '.', '')}}</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -370,7 +371,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 item-text other">
-                                                有效日期 : <span class="prompt">{{$order->applyPromo->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->applyPromo->promo->end_at}}</span>
+                                                有效日期 : <span
+                                                        class="prompt">{{$order->applyPromo->promo->start_at . '&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;'. $order->applyPromo->promo->end_at}}</span>
                                             </div>
                                         </div>
                                         @include('includes.promo-content-view',['promo' => $order->applyPromo->promo])
@@ -494,11 +496,6 @@
 
             }
         }
-        $(function () {
-
-            deleteNoForm();
-        })
-
-
+        deleteNoForm();
     </script>
 @stop

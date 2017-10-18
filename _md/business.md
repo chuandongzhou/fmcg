@@ -357,10 +357,9 @@
 	data                 array            所有类型
 	key					 int			  类型代码
 	value				 string			  具体类型
-	
-	
-	
 
+####2.3.11 获取客户已通过未使用的活动申请[get] (passed-promo})	
+	同2.10.4
 
 ### 2.4 抵费商品 mortgage-goods
 #### 2.4.1 获取所有抵费商品[get] (/)
@@ -732,7 +731,32 @@
 
 `失败返回：`
 
+#### 2.6.6 订单通过[post] (batch-pass)
+`请求参数：`
 
+	order_id			array				订单IDs	
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.6.7 修改订单商品[put] (change)
+`请求参数：`
+  		
+	id 					int					订单商品ID
+	num					int					数量
+	amount				decimal				金额(退货单时传入)
+	price				decimal				单价(订货单时传入)
+	pieces				int					商品单位代码
+
+#### 2.6.8 删除订单商品[delete] (goods-delete/{orderGoods_id})
+
+`请求参数：`
+  		
+
+`成功返回：`
+
+`失败返回：`
 
 
 ### 2.7 平台商品 goods

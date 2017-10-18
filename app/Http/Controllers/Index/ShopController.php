@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\SalesmanCustomer;
 use App\Models\Shop;
 use App\Services\AddressService;
 use App\Services\CategoryService;
@@ -71,6 +72,9 @@ class ShopController extends Controller
             return redirect()->back();
         }
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
+        $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
+            $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+        })->first();
 
         $goods = $shop->goods()->active();
 
@@ -85,6 +89,7 @@ class ShopController extends Controller
             'goods' => $goods,
             'sort' => $sort,
             'isLike' => $isLike,
+            'haveRelation' => $haveRelation
         ]);
     }
 
@@ -99,18 +104,24 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return back()->withInput();
         }
+        $user = auth()->user();
         $shop->adverts = $shop->shopHomeAdverts()->with('image')->active()->get();
 
-        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+        $isLike = $user->likeShops()->where('shop_id', $shop->id)->first();
+        $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
+            $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+        })->first();
         $hotGoods = $shop->goods()->active()->ofHot()->take(10)->get();
         $recommendGoods = $shop->recommendGoods()->get();
+
         return view('index.shop.detail',
-            [
-                'shop' => $shop,
-                'isLike' => $isLike,
-                'hotGoods' => $hotGoods,
-                'recommendGoods' => $recommendGoods
-            ]);
+            compact(
+                'shop',
+                'isLike',
+                'hotGoods',
+                'recommendGoods',
+                'haveRelation'
+            ));
     }
 
     /**

@@ -426,7 +426,8 @@ if (!function_exists('in_windows')) {
     function in_windows()
     {
         $request = app('request');
-        return !preg_match('/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i', $request->server('HTTP_USER_AGENT'));
+        return !preg_match('/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i',
+            $request->server('HTTP_USER_AGENT'));
     }
 }
 if (!function_exists('obfuscate_string')) {
@@ -588,6 +589,41 @@ if (!function_exists('array_key_value')) {
         $result = [];
         foreach ($arrKey as $key => $val) {
             $result[$val] = is_array($arrValue) ? $arrValue[$key] : $arrValue;
+        }
+        return $result;
+    }
+}
+
+if (!function_exists('check_role')) {
+    /**
+     * 检查角色
+     * 
+     * @param $role /角色
+     * @param string $rule /规则
+     * @return bool 结果
+     */
+    function check_role($role, $rule = '=')
+    {
+        $userType = auth()->user()->type;
+        $type = cons('user.type.' . $role);
+        switch ($rule) {
+            case '=' :
+                $result = ($userType == $type);
+                break;
+            case '<' :
+                $result = ($userType < $type);
+                break;
+            case  '>':
+                $result = ($userType > $type);
+                break;
+            case  '>=':
+                $result = ($userType >= $type);
+                break;
+            case  '<=':
+                $result = ($userType >= $type);
+                break;
+            default :
+                $result = false;
         }
         return $result;
     }

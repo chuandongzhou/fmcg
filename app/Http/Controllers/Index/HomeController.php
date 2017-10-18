@@ -114,7 +114,6 @@ class HomeController extends Controller
                 $newGoods->deliveryArea()->saveMany($areas);
             }
         }
-
     }
 
     private function changeTest(Request $request)

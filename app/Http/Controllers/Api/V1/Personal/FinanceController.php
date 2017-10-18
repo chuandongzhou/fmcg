@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Personal;
 
 use App\Http\Requests\Api\v1\CreateWithdrawRequest;
+use App\Models\Order;
 use App\Models\SystemTradeInfo;
 use App\Models\UserBank;
 use App\Models\Withdraw;
@@ -48,21 +49,25 @@ class FinanceController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function getDaybook (Request $request){
+    public function getDaybook(Request $request)
+    {
         $data = $request->all();
-
-        $dayBook = SystemTradeInfo::select('trade_no', 'order_id', 'pay_type', 'type', 'amount', 'target_fee',
-            'finished_at')->where('account', auth()->user()->user_name)->where('is_finished',
-            cons('trade.is_finished.yes'));
-        if (isset($data['start_time'])) {
-            $data['end_time'] = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
-
-            $dayBook->whereBetween('finished_at',
-                [$data['start_time'], (new Carbon($data['end_time']))->endOfDay()]);
-        }
-        return $this->success([
-            'dayBook' => $dayBook->orderBy('id', 'DESC')->paginate()->toArray()
-        ]);
+        $user = auth()->user();
+        $carbon = new Carbon();
+        $data['start_at'] = isset($data['start_at']) ? $carbon->parse($data['start_at'])->startOfDay() : (string)$carbon->month($carbon->month - 1)->startOfDay();
+        $data['end_at'] = isset($data['end_at']) ? $carbon->parse($data['end_at'])->endOfDay() : (string)$carbon->now()->endOfDay();
+        
+        $systemTradeInfo = SystemTradeInfo::whereHas('order', function ($order) use ($user) {
+            $order->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)->orWhere('shop_id', $user->shop_id);
+            });
+        })->whereBetween('finished_at', [$data['start_at'], $data['end_at']])->orderBy('finished_at',
+            'DESC')->paginate();
+        
+        $systemTradeInfo->each(function ($info) use ($user) {
+            $info->setAppends(['operate'])->addHidden(['order']);
+        });
+        return $this->success($systemTradeInfo->toArray());
     }
 
     /**
@@ -70,7 +75,8 @@ class FinanceController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getBalance(){
+    public function getBalance()
+    {
         return $this->success((new UserService())->getUserBalance());
     }
 
@@ -89,7 +95,7 @@ class FinanceController extends Controller
         //获取该用户受保护的金额
 
         $protectedBalance = SystemTradeInfo::where('account', auth()->user()->user_name)->where('is_finished',
-            cons('trade.is_finished.yes'))->where('finished_at', '>=',  Carbon::now()->startOfDay())->sum('amount');
+            cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
 
         if ($amount > $user->balance - $protectedBalance) {
             return $this->error('可提现金额不足');

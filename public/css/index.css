@@ -172,6 +172,10 @@ a:hover {
   color: #F25000 !important;
 }
 
+.orange {
+  color: #F25000 !important;
+}
+
 .prompt {
   color: #777777;
 }
@@ -693,6 +697,21 @@ a:hover {
   color: #555555;
   font-size: 14px;
   margin-top: 10px;
+}
+
+.mask-outer .maker-pop .pop-footer-btn {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.mask-outer .maker-pop .pop-footer-btn .btn {
+  width: 100%;
+}
+
+.mask-outer .h200 {
+  height: 200px !important;
 }
 
 /*======================================pop======================================*/
@@ -1361,8 +1380,8 @@ a:hover {
   text-decoration: none;
 }
 
-.wholesalers-top-header .shop-header-wrap .operate a.contact {
-  margin-right: 10px;
+.wholesalers-top-header .shop-header-wrap .operate a + a {
+  margin-left: 10px;
 }
 
 .wholesalers-top-header .shop-header-wrap .more-classify {
@@ -8333,4 +8352,78 @@ table tr:hover .warning-edit-icon {
 
 .set-target .select-commodity {
   margin-bottom: 15px;
+}
+
+.clerk-appoint .search-clerk {
+  margin: 15px 0;
+}
+
+.clerk-appoint .search-clerk .control {
+  height: 35px;
+  vertical-align: middle;
+}
+
+.clerk-appoint .search-clerk .control.btn {
+  width: 29%;
+}
+
+.clerk-appoint .search-clerk input {
+  width: 70%;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px !important;
+  padding-left: 5px;
+}
+
+.clerk-submit {
+  width: 100%;
+}
+
+.clerk-submit.error-color {
+  color: #fe462f;
+}
+
+.clerk-list-wrap {
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+.clerk-list-wrap::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(193, 193, 193, 0.3);
+  background-color: #F5F5F5;
+}
+
+.clerk-list-wrap::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+.clerk-list-wrap::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+}
+
+.clerk-list-wrap li {
+  cursor: pointer;
+  padding: 0 10px;
+  height: 35px;
+  line-height: 35px;
+}
+
+.clerk-list-wrap li:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+.clerk-list-wrap li .iconfont {
+  display: none;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.clerk-list-wrap li.active .iconfont {
+  display: inline-block;
+}
+
+.salesman-tips {
+  font-weight: normal !important;
+  font-size: 12px;
+  color: #999999;
 }

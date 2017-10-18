@@ -44,13 +44,15 @@ class SalesmanCustomerController extends Controller
         $areaId = $request->input('area_id', null);
         $salesmen = $this->shop->salesmen()->get(['id', 'name']);
         $areas = $this->shop->areas()->get(['id', 'name']);
+        $user = auth()->user();
         $customers = SalesmanCustomer::OfSalesman($salesmanId)
             ->OfName($name)
-            ->where(function ($query) use ($type, $storeType, $areaId, $salesmen) {
-                $user = auth()->user();
+            ->where(function ($query) use ($type, $storeType, $areaId, $salesmen, $user) {
                 if ($user->type == cons('user.type.supplier')) {
-                    $query->where('belong_shop', auth()->user()->shop_id)
-                        ->orWhereIn('salesman_id', $salesmen->pluck('id'));
+                    $query->where(function ($query) use ($salesmen) {
+                        $query->where('belong_shop', $this->shop->id)
+                            ->orWhereIn('salesman_id', $salesmen->pluck('id'));
+                    });
                 } else {
                     $query->whereIn('salesman_id', $salesmen->pluck('id'));
                 }
@@ -75,7 +77,8 @@ class SalesmanCustomerController extends Controller
                 'customers' => $customers,
                 'type' => $type,
                 'data' => $request->all(),
-                'areas' => $areas
+                'areas' => $areas,
+                'relationApply' => $this->shop->businessRelation()->notActive()->count(),
             ]);
     }
 

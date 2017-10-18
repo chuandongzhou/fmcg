@@ -319,12 +319,12 @@ class DeliveryController extends Controller
     /**
      * 删除订单商品
      *
-     * @param $goodsId
+     * @param $orderGoodsId 订单商品表ID
      * @return \WeiHeng\Responses\Apiv1Response
      */
-    public function orderGoodsDelete($goodsId)
+    public function orderGoodsDelete($orderGoodsId)
     {
-        $orderGoods = OrderGoods::useful()->noInvalid()->with('order')->find($goodsId);
+        $orderGoods = OrderGoods::with('order')->find($orderGoodsId);
 
         if (is_null($orderGoods) || $orderGoods->order->shop_id != delivery_auth()->user()->shop_id) {
             return $this->error('订单商品不存在');
@@ -356,11 +356,8 @@ class DeliveryController extends Controller
                     $salesmanVisitOrder->orderGoods()->where('goods_id', $orderGoods->goods_id)->delete();
                 }
             }
-
             return 'success';
         });
-
-
         return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
     }
 

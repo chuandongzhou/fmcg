@@ -17,6 +17,7 @@ use App\Services\BusinessService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
@@ -38,7 +39,10 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date', 'customer']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
         $orders = (new BusinessService())->getOrders([$salesmenId], $data,
-            ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts']);
+            ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts', 'order.coupon']);
+        $orders->each(function($item){
+           $item->setAppends(['order_status_name', 'after_rebates_price']);
+        });
         return $this->success([
             'orders' => $orders->toArray()
         ]);
@@ -179,6 +183,7 @@ class SalesmanVisitOrderController extends Controller
         if (empty($orderIds)) {
             return $this->error('请选择要通过的订单');
         }
+
         $orders = SalesmanVisitOrder::whereIn('id', $orderIds)->with('salesmanCustomer')->get();
 
         if (Gate::denies('validate-salesman-order', $orders)) {
@@ -187,11 +192,9 @@ class SalesmanVisitOrderController extends Controller
 
         // 订货单才同步
         $result = $orders->sum('type') == 0 ? $this->_syncOrders($orders) : 'success';
-
         if ($result == 'success' && SalesmanVisitOrder::whereIn('id',
                 $orderIds)->update(['status' => cons('salesman.order.status.passed')])
         ) {
-
             $this->_updateDisplay($orders);
             return $this->success('操作成功');
         }
@@ -225,7 +228,7 @@ class SalesmanVisitOrderController extends Controller
      */
     public function batchSync(Request $request)
     {
-        $orderIds = $request->input('order_id');
+        $orderIds = $request->input('order_id', null);
         if (is_null($orderIds)) {
             return $this->error('请选择要同步的订单');
         }
@@ -259,7 +262,7 @@ class SalesmanVisitOrderController extends Controller
             'gifts' => function ($query) {
                 $query->select('bar_code', 'id', 'name');
             },
-            'gifts.goodsPieces',
+            'gifts.goodsPieces'
         ])->find($id);
         if (is_null($order)) {
             return $this->error('订单不存在');
@@ -267,7 +270,7 @@ class SalesmanVisitOrderController extends Controller
 
         if ($order->type == cons('salesman.order.type.order')) {
             $order->load('order.deliveryMan');
-            if (!is_null($order->displayList)) {
+            if (!$order->displayList->isEmpty()) {
                 foreach ($order->displayList as $item) {
                     if ($item->mortgage_goods_id == 0) {
                         $displayFee[] = [
@@ -295,6 +298,10 @@ class SalesmanVisitOrderController extends Controller
                 if (isset($mortgage)) {
                     $order->mortgage = $mortgage;
                 }
+            } else{
+                $order->load('order.coupon');
+                $order->setAppends(['after_rebates_price', 'order_status_name']);
+
             }
             if (isset($order->applyPromo)) {
                 $order->setHidden(['applyPromo']);
@@ -371,7 +378,6 @@ class SalesmanVisitOrderController extends Controller
             }
 
             $orderForm = SalesmanVisitOrder::create($attributes);
-
             if ($orderForm->exists) {
                 $orderForm->orderGoods()->saveMany($format['orderGoodsArr']);
                 //礼物
@@ -418,25 +424,20 @@ class SalesmanVisitOrderController extends Controller
      */
     public function goodsDelete($goodsId)
     {
-
         $orderGoods = SalesmanVisitOrderGoods::with('salesmanVisitOrder')->find($goodsId);
-
         if (is_null($orderGoods)) {
             return $this->error('订单商品不存在');
         }
-
         $order = $this->_validateOrder($orderGoods->salesman_visit_order_id);
         if (!$order) {
             return $this->error('订单商品不存在');
         }
-
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->amount;
             $orderGoods->delete();
             $orderGoodsPrice > 0 && $order->decrement('amount', $orderGoodsPrice);
             return 'success';
         });
-
         return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
     }
 
@@ -560,7 +561,6 @@ class SalesmanVisitOrderController extends Controller
             if (Gate::denies('validate-salesman', $order->salesman)) {
                 return false;
             }
-
         } else {
             if ($order->salesman_id != salesman_auth()->id()) {
                 return false;
@@ -577,6 +577,7 @@ class SalesmanVisitOrderController extends Controller
      */
     private function _syncOrders($salesmanVisitOrders)
     {
+
         $result = DB::transaction(function () use ($salesmanVisitOrders) {
             $syncConf = cons('salesman.order.sync');
             $orderConf = cons('order');
@@ -680,21 +681,19 @@ class SalesmanVisitOrderController extends Controller
                             return ['error' => '同步时出现错误，请重试'];
                         }
                     }
-                    
+
                 } else {
                     return ['error' => '同步时出现错误，请重试'];
                 }
                 if (!$salesmanVisitOrder->fill(['order_id' => $orderTemp->id])->save()) {
                     return ['error' => '同步时出现错误，请重试'];
                 }
-
             }
 
             return 'success';
         });
 
         return $result;
-
     }
 
     /**

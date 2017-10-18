@@ -213,6 +213,9 @@ class MyGoodsController extends Controller
         if (Gate::denies('validate-my-goods', $goods)) {
             return $this->forbidden('权限不足');
         }
+        if ($goods->inventory->count()) {
+            return $this->error('该商品已有库存信息,不能删除');
+        }
         if (!$goods->status && $goods->delete()) {
             return $this->success('删除商品成功');
         }

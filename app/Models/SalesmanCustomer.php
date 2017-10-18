@@ -177,6 +177,15 @@ class SalesmanCustomer extends Model
     }
 
     /**
+     * 申请的促销活动
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function applyPromo()
+    {
+        return $this->hasMany(PromoApply::class,'client_id');
+    }
+
+    /**
      * 按名字搜索
      *
      * @param $query
@@ -275,7 +284,7 @@ class SalesmanCustomer extends Model
     }
 
     /**
-     * 设置营业地址
+     * 设置收货地址
      *
      * @param $address
      * @return bool

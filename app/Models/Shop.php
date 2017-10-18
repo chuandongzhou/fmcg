@@ -88,6 +88,18 @@ class Shop extends Model
     }
 
     /**
+     * 业务关系 申请and审核
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function businessRelation()
+    {
+        $foreignKey = auth()->user()->type > cons('user.type.supplier') ? 'maker_id' : 'supplier_id';
+        return $this->hasMany(BusinessRelationApply::class, $foreignKey);
+    }
+
+
+    /**
      * 送货人列表
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -309,13 +321,15 @@ class Shop extends Model
         if ($this->user_type == cons('user.type.maker')) {
             return $this->hasManyThrough('App\Models\SalesmanCustomer', 'App\Models\Salesman', 'maker_id',
                 'salesman_id');
-        }elseif($this->user_type == cons('user.type.supplier')){
+        } elseif ($this->user_type == cons('user.type.supplier')) {
             return $this->hasManyThrough('App\Models\SalesmanCustomer',
-                'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type)->orWhere('belong_shop',$this->id);
+                'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type)->orWhere('belong_shop',
+                $this->id);
         }
         return $this->hasManyThrough('App\Models\SalesmanCustomer',
             'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
     }
+    
 
     /**
      * 对应客户

@@ -60,7 +60,7 @@ class PromoController extends Controller
     }
 
     /**
-     * 获取审核通过的申请
+     * 业务员获取审核通过的申请
      *
      * @return \WeiHeng\Responses\Apiv1Response
      */

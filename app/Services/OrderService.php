@@ -202,7 +202,10 @@ class OrderService extends BaseService
         $num = $attributes['num'];
 
         $price = isset($attributes['price']) ? $attributes['price'] : $orderGoods->price;
-
+        if (delivery_auth()->user() && $orderGoods->num < $num) {
+            $this->setError('不能大于原数量!');
+            return false;
+        }
         if ($num == $orderGoods->num && $price == $orderGoods->price) {
             return true;
         }
@@ -213,21 +216,22 @@ class OrderService extends BaseService
             $oldNum = $orderGoods->num;
             $oldPrice = $orderGoods->price;
             $newOrderPrice = bcadd(bcsub($order->price, $oldTotalPrice, 2), $newTotalPrice, 2);
-            if ($order->display_fee >= $newOrderPrice) {
+
+            if ($order->display_fee && $order->display_fee >= $newOrderPrice) {
                 //订单陈列费不能大于订单价格
                 $this->setError('订单陈列费不能大于订单价格');
                 return false;
             }
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
 
-            if ($order->status == cons('order.status.send')) {
+            /*if ($order->status == cons('order.status.send')) {
                 $inventoryService = new InventoryService();
                 if ($inventoryService->clearOut($orderGoods)) {
                     if (!$inventoryService->autoOut($order)) {
                         return false;
                     }
                 };
-            }
+            }*/
 
             // 价格不同才更新
             $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $newOrderPrice])->save();

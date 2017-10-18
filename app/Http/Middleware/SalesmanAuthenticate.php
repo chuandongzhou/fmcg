@@ -33,7 +33,7 @@ class SalesmanAuthenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!in_windows()) {
+        if (!in_windows() && auth()->guest()) {
             if ($this->auth->guest()) {
                 return response('Unauthorized.', 401);
             } else {

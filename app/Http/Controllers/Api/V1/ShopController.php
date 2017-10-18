@@ -169,5 +169,22 @@ class ShopController extends Controller
         return $this->success(['adverts' => $adverts]);
     }
 
+    /**
+     * 获取店铺业务员
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function salesman(Request $request)
+    {
+        $name = $request->input('salesman_name');
+        $salesman = auth()->user()->shop->salesmen()->where(function ($query) use ($name) {
+            if ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%');
+            }
+            $query->where('shop_id', auth()->user()->shop_id);
+        })->get();
+        return $this->success(['salesman' => $salesman]);
+    }
 
 }

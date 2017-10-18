@@ -53,6 +53,9 @@
                            data-toggle="modal">
                             <i class="fa fa-map-marker"></i> {{empty($data['type']) ? '客户' : '供应商'}}分布图
                         </a>
+                        @if(!empty($data['type']))
+                            <a class="btn btn-border-blue customer-map" href="{{asset('business/trade-request')}}">供应商申请<span class="red"> {{$relationApply ?? 0}} </span></a>
+                        @endif
                     </div>
                 </form>
                 <div class="col-sm-12 table-responsive padding-clear">
@@ -78,10 +81,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($customers as $customer)
+                        @foreach($customers as $key =>$customer)
                             <tr>
                                 <td>
-                                    {{ $customer->number }}
+                                    {{ $key +1 }}
                                 </td>
                                 <td>
                                     {{ $customer->name }}

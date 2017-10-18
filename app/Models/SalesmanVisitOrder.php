@@ -287,6 +287,9 @@ class SalesmanVisitOrder extends Model
         if (!is_null($status = array_get($data, 'status'))) {
             $query->where('status', $status);
         }
+        if (!is_null($type = array_get($data, 'type'))) {
+            $query->where('type', $type);
+        }
 
         if ($startDate = array_get($data, 'start_date')) {
             $query->where('created_at', '>=', $startDate);
@@ -310,6 +313,7 @@ class SalesmanVisitOrder extends Model
             $query->useful()->noInvalid();
         });
     }
+
     /**
      * 获取客户名
      *
@@ -386,8 +390,7 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/
-            ;
+        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/;
     }
 
     /**

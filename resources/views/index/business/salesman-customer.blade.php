@@ -12,7 +12,8 @@
             <div class="row">
                 <div class="col-sm-12 path-title">
                     <a href="{{ url('business/salesman') }}">业务管理</a> >
-                    <a href="{{ url('business/salesman-customer'.(is_null($customerType) ? '' : '?type=supplier'))}}"> {{is_null($customerType) ? '客户' : '供应商'}}管理</a> >
+                    <a href="{{url('business/salesman-customer'.(is_null($customerType) ? '' : '?type=supplier'))}}">{{is_null($customerType) ? '客户管理' : '供应商管理'}}</a>
+                    >
                     <span class="second-level">{{is_null($customerType) ? '客户' : '供应商'}}{{ $salesmanCustomer->id ? '编辑' : '新增' }}</span>
                 </div>
             </div>
@@ -58,7 +59,6 @@
                             @if(is_null($customerType))
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label" for="type">客户类型:</label>
-
                                     <div class="col-sm-10 col-md-6">
                                         <select class="form-control" id="type" name="type">
                                             <option value="">请选择客户类型</option>
@@ -68,14 +68,11 @@
                                                 @endif
                                             @endforeach
                                         </select>
-
                                     </div>
                                 </div>
                             @else
                                 <div class="form-group row">
-                                    <label class="col-sm-2 control-label" for="salesman_id"><span
-                                                class="red">*</span>业务区域:</label>
-
+                                    <label class="col-sm-2 control-label">业务区域:</label>
                                     <div class="col-sm-10 col-md-6">
                                         <select class="@if($salesmanCustomer->id) white-bg @endif form-control"
                                                 name="area_id">

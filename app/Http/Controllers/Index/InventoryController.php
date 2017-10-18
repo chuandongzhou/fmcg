@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Route;
 
 
 class InventoryController extends Controller
@@ -319,7 +320,8 @@ class InventoryController extends Controller
 
         $goodsOutDetail = $this->shop->inventory()->with('goods')->OfOut()->where('goods_id',
             $goodsId)->whereIn('order_number', $orderIds)->paginate();
-        $inTransitTotal = $this->inventoryService->calculateQuantity($goodsOutDetail->first()->goods, $goodsOutDetail->sum('quantity'));
+        $inTransitTotal = $this->inventoryService->calculateQuantity($goodsOutDetail->first()->goods,
+            $goodsOutDetail->sum('quantity'));
         return view('index.inventory.in-transit-goods-detail', [
             'goodsOutDetail' => $goodsOutDetail,
             'inTransitTotal' => $inTransitTotal

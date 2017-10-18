@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class SalesmanVisitController extends Controller
 {
@@ -280,13 +281,14 @@ class SalesmanVisitController extends Controller
     {
         $customerId = $request->input('customer_id');
         $month = $request->input('month');
-
-        $customer = salesman_auth()->user()->customers()->find($customerId);
-
+        //$customer = salesman_auth()->user()->customers()->find($customerId);
+        $customer = SalesmanCustomer::find($customerId);
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
-
+        if (auth()->user() && Gate::denies('validate-customer', $customer)) {
+            return $this->error('身份错误');
+        }
         if ($customer->display_type != cons('salesman.customer.display_type.cash') || $month > $customer->display_end_month || $month < $customer->display_start_month) {
             return $this->error('本月不可发放');
         }
@@ -316,11 +318,16 @@ class SalesmanVisitController extends Controller
         $customerId = $request->input('customer_id');
         $month = $request->input('month');
 
-        $customer = salesman_auth()->user()->customers()->find($customerId);
-
+        //$customer = salesman_auth()->user()->customers()->find($customerId);
+        $customer = SalesmanCustomer::find($customerId);
         if (is_null($customer)) {
             return $this->error('客户不存在');
         }
+
+        if (auth()->user() && Gate::denies('validate-customer', $customer)) {
+            return $this->error('身份错误');
+        }
+
         if ($customer->display_type != cons('salesman.customer.display_type.mortgage') || $month > $customer->display_end_month || $month < $customer->display_start_month) {
             return $this->error('本月不可发放');
         }

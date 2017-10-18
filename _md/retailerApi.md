@@ -776,9 +776,9 @@
 
 `成功返回：`
 
-   adverts       array           店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）
+   		adverts         array                店铺广告列表 （为空时默认图片地址：http://dingbaida.com/images/default-shop-image.jpg）
 
-   adverts       子集介绍
+   		adverts       子集介绍
 
         id              int                 广告id
         name            string              广告名
@@ -786,6 +786,23 @@
         goods_id        int                 广告所属商品id
 		type            int                 (5:商品广告，6:促销信息)
 		url				string              商品广告时是链接地址，促销信息时是促销信息类容
+
+#### 2.4.9 店铺业务员[get] (/salesman)
+`请求参数：`
+	
+	salesman_name			string				业务员名称(非必须)
+
+`成功返回：`
+		
+	id						int					业务员ID
+    account					string				账号
+    shop_id					int					所属店铺ID
+    name					string				名称
+    contact_information		int					电话
+    status					int					状态
+    maker_id				int/null			所属厂家
+    expire_at				time/null			过期时间
+    avatar_url				string				头像地址
 
 
 ### 2.5 分类 categories
@@ -1121,10 +1138,11 @@
 	payment_type				string      支付方式(如:在线支付;货到付款)
 	pay_way                     string      付款方式 （1为现金  2为刷卡）
 	pay_type					int			支付方式(1:在线支付;2:货到付款)
-	pay_status					int			支付状态(0:未付款;1:已付款)
+	pay_status					int			支付状态(0未付款，1付款成功，2付款失败，3退款中，4退款成功)
 	status						int			订单状态(1:未发货;2:已发货;3:完成)
 	is_cancel					int			订单是否被取消(1取消,0未取消)
 	can_cancel					bool		是否可取消(是true,否false)
+	can_payment					bool		是否可支付订单(是true,否false)
 	can_confirm					bool		是否可确认订单(是true,否false)
 	can_send					bool		是否可发货
 	can_confirm_collections 	bool		是否可确认收款(针对货到付款)
@@ -1233,8 +1251,8 @@
 	trade_no                string      付款成功时交易流水号
 	order_refund            array       退款详情
 	shipping_address    	array       收货信息
-    mortgageGoods    	array		抵费商品详细信息
-    orderGoods    	    array		订单商品详细信息 （格式同mortgageGoods）
+    mortgageGoods    		array		抵费商品详细信息
+    orderGoods    	    	array		订单商品详细信息 （格式同mortgageGoods）
     orderChangeRecode       array       订单修改记录
 
 
@@ -1426,6 +1444,44 @@
     refund                          int                     待收货
    
     waitConfirm                     int                     未确认
+
+`失败返回：`
+
+#### 2.7.25 获取业务订单列表[get] (business)
+`请求参数：`
+
+	salesman_id						int						业务员ID
+	start_date						time					开始时间
+	end_date						time					结束时间
+	customer						string/int				单号or客户名
+	status							int						状态
+	page							int						分页
+
+`成功返回：`
+  	
+	data							array					订单数组
+
+	data字段说明
+		
+		id							int						订单ID
+        created_at					time					创建时间
+        amount						decimal					总金额
+        order_id					int/null				平台订单ID
+        salesman_customer_id		int						客户ID
+        salesman_id					int						客户ID
+        status						int						订单状态
+        customer_name				string					客户名称
+        order_goods					array					订单商品
+     
+	order_goods 字段说明
+            salesman_visit_order_id		int					拜访订单ID
+            goods_id					int					商品ID
+            num							int					商品数量
+            pieces						int					单位代码
+            price						decimal				单价
+            pieces_name					string				单位名
+            goods_name					string				商品名
+            goods_image					string				商品图片地址
 
 `失败返回：`
 
@@ -1780,25 +1836,23 @@
 `请求参数:`
 
 	page				int			分页
-	start_time			string		开始时间(默认上个月的今天)
-	end_time			string		结束时间(默认今天的24点)
+	start_at			string		开始时间(默认上个月的今天)
+	end_at				string		结束时间(默认今天的24点)
 
 `成功返回:`
-	dayBook			array		交易流水帐
+	
+	data			array		交易记录
 
-	dayBook 字段子集说明
+	data 字段子集说明
 
-		data			array		交易记录
-
-		data 字段子集说明
-
-          trade_no          string          交易号
-          order_id          int             订单号
-          pay_type          int             交易平台    (1 易宝   2 pingxx  3 pos机)
-          type              int             交易类型  （1 入帐   2提现）
-          amount            decimal         交易金额
-          target_fee        decimal         交易手续费
-          finished_at       timestamp       交易完成时间
+      trade_no          string          交易号
+      order_id          int             订单号
+      pay_type          int             交易平台    (1 易宝   2 pingxx  3 pos机)
+      type              int             交易类型  （1 入帐   2提现）
+      amount            decimal         交易金额
+      target_fee        decimal         交易手续费
+      finished_at       timestamp       交易完成时间
+	  operate			string			+ / -
 
 
 `失败返回:`

@@ -25,30 +25,29 @@ class FinanceController extends Controller
      */
     public function getBalance(Request $request)
     {
-
         $data = $request->all();
+        $user = auth()->user();
+        $carbon = new Carbon();
+        $data['start_at'] = isset($data['start_at']) ? $carbon->parse($data['start_at'])->startOfDay() : (string)$carbon->month($carbon->month - 1)->startOfDay();
+        $data['end_at'] = isset($data['end_at']) ? $carbon->parse($data['end_at'])->endOfDay() : (string)$carbon->now()->endOfDay();
 
-        $tradeInfo = SystemTradeInfo::select('trade_no', 'order_id', 'pay_type', 'type', 'amount', 'target_fee',
-            'finished_at')->where('account', auth()->user()->user_name)->where('is_finished',
-            cons('trade.is_finished.yes'));
-        $tradeBuilder = clone $tradeInfo;
-        if (isset($data['start_time'])) {
-            $data['end_time'] = isset($data['end_time']) && $data['end_time'] != '' ? $data['end_time'] : date('Y-m-d');
+        $systemTradeInfo = SystemTradeInfo::whereHas('order', function ($order) use ($user) {
+            $order->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)->orWhere('shop_id', $user->shop_id);
+            });
+        })->whereBetween('finished_at', [$data['start_at'], $data['end_at']]);
+        $tradeBuilder = clone $systemTradeInfo;
 
-            $tradeInfo->whereBetween('finished_at',
-                [$data['start_time'], (new Carbon($data['end_time']))->endOfDay()]);
-        }
         $todayBegin = Carbon::now()->startOfDay();
 
         // 受保护的金额
         $protectedBalance = $tradeBuilder->where('finished_at', '>=', $todayBegin)->sum('amount');
 
         $bankInfo = auth()->user()->userBanks;
-
         return view('index.personal.finance-balance', [
             'balance' => auth()->user()->balance,
             'protectedBalance' => $protectedBalance,
-            'tradeInfo' => $tradeInfo->orderBy('finished_at', 'DESC')->paginate(30),
+            'tradeInfo' => $systemTradeInfo->orderBy('finished_at', 'DESC')->paginate(30),
             'bankInfo' => $bankInfo,
             'data' => $data
         ]);
@@ -78,7 +77,6 @@ class FinanceController extends Controller
 
         $protectedBalance = SystemTradeInfo::where('account', $user->user_name)->where('is_finished',
             cons('trade.is_finished.yes'))->where('finished_at', '>=', Carbon::now()->startOfDay())->sum('amount');
-
         return view('index.personal.finance-withdraw', [
             'balance' => $user->balance,
             'protectedBalance' => $protectedBalance,

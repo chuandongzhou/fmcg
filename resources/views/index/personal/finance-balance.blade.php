@@ -18,13 +18,13 @@
                         @include('index.personal.finance-common')
                         <div class="table">
                             <div class="form-group">
-                                <input class="datetimepicker inline-control control" name="start_time"
+                                <input class="datetimepicker inline-control control" name="start_at"
                                        data-format="YYYY-MM-DD"
                                        type="text"
-                                       value="{{ $data['start_time'] or '' }}"> 至
-                                <input class="datetimepicker inline-control control" name="end_time"
+                                       value="{{ $data['start_at'] or '' }}"> 至
+                                <input class="datetimepicker inline-control control" name="end_at"
                                        data-format="YYYY-MM-DD"
-                                       value="{{ $data['end_time'] or '' }}"
+                                       value="{{ $data['end_at'] or '' }}"
                                        type="text">
                                 <input type="submit" value="提交" class="btn btn-blue-lighter search-by-get">
                             </div>
@@ -33,8 +33,9 @@
                                     <thead>
                                     <tr>
                                         <th>订单号</th>
-                                        <th>实收金额</th>
+                                        <th>订单金额</th>
                                         <th>手续费</th>
+                                        <th>收支金额</th>
                                         <th>支付平台</th>
                                         <th>交易号</th>
                                         <th>完成时间</th>
@@ -44,8 +45,12 @@
                                     @foreach($tradeInfo as $trade)
                                         <tr>
                                             <td>{{ $trade->order_id }}</td>
-                                            <td><b class="red">¥{{ $trade->amount }}</b></td>
+                                            <td>¥{{bcsub($trade->amount,$trade->target_fee,2)}}
+                                                @if($trade->operate == '+')(收入)@else()(支出)@endif</td>
                                             <td>{{ $trade->target_fee }}</td>
+                                            <td>
+                                                <b class="@if($trade->operate == '-') red @endif">{{$trade->operate}}{{ $trade->amount}}</b>
+                                            </td>
                                             <td>{{ cons()->valueLang('trade.pay_type' , $trade->pay_type) }}</td>
                                             <td>{{ $trade->trade_no }}</td>
                                             <td>{{ $trade->finished_at }}</td>

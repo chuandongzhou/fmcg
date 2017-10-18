@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Business;
 
+use App\Models\PromoApply;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Salesman;
 use App\Models\ConfirmOrderDetail;
@@ -9,8 +10,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Api\V1\Controller;
 use App\Models\SalesmanCustomer;
 use App\Models\User;
+use Carbon\Carbon;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalesmanCustomerController extends Controller
 {
@@ -67,12 +70,12 @@ class SalesmanCustomerController extends Controller
         $attributes['letter'] = $this->_getLetter($attributes['name']);
         //是否有线上账号
         if (array_get($attributes, 'account')) {
-            $validatedResult = $this->_validateAccount($attributes, $salesman->shop);
+            $validatedResult = $this->_validateAccount($attributes, $salesman->shop, $salesman);
             if (is_string($validatedResult)) {
                 return $this->invalidParam('account', $validatedResult);
             }
             $attributes['shop_id'] = $validatedResult->shop_id;
-            if(array_get($attributes,'type') != $validatedResult->type){
+            if (array_get($attributes, 'type') != $validatedResult->type) {
                 return $this->invalidParam('type', '客户账号与客户类型不匹配');
             }
         }
@@ -117,16 +120,23 @@ class SalesmanCustomerController extends Controller
         if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
-        if (array_get($attributes, 'account') != $customer->account) {
+        //陈列费类型为商品时验证陈列费商品
+        if (array_get($attributes,
+                'display_type') == cons('salesman.customer.display_type.mortgage') && !isset($attributes['mortgage_goods'])
+        ) {
+            return $this->error('抵费商品不能为空!');
+        }
+        $account = array_get($attributes, 'account');
+        if ($account && $account != $customer->account) {
             $shop = $salesman->shop;
-            $validatedResult = $this->_validateAccount($attributes, $shop);
+            $validatedResult = $this->_validateAccount($attributes, $shop, $salesman);
             if (is_string($validatedResult)) {
                 return $this->invalidParam('account', $validatedResult);
             }
         }
         $customerShopId = $attributes['shop_id'] = isset($validatedResult) ? $validatedResult->shop_id : $customer->shop_id;
         if (($type = array_get($attributes, 'type')) != $customer->type) {
-            $customerType = isset($validatedResult) ? $validatedResult->type : $customer->type;
+            $customerType = isset($validatedResult) ? $validatedResult->type : $type;
             if ($customerType != $type) {
                 return $this->invalidParam('type', '客户账号与客户类型不匹配');
             }
@@ -173,18 +183,23 @@ class SalesmanCustomerController extends Controller
         if (isset($attributes['display_start_month']) && $attributes['display_start_month'] > $attributes['display_end_month']) {
             return $this->invalidParam('display_end_month', '开始月份不能大于结束月份');
         }
-        $validatedResult = '';
+        //陈列费类型为商品时验证陈列费商品
+        if (array_get($attributes,
+                'display_type') == cons('salesman.customer.display_type.mortgage') && !isset($attributes['mortgage_goods'])
+        ) {
+            return $this->error('抵费商品不能为空!');
+        }
         $account = array_get($attributes, 'account', null);
+        $validatedResult = '';
         if (!is_null($account) && $account != $customer->account) {
-            $validatedResult = $this->_validateAccount($attributes, $salesman->shop);
-
+            $validatedResult = $this->_validateAccount($attributes, $salesman->shop, $salesman);
             if (is_string($validatedResult)) {
                 return $this->invalidParam('account', $validatedResult);
             }
         }
-        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id : $customer->shop_id;
+        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id : 0;
         if (($type = array_get($attributes, 'type')) != $customer->type) {
-            $customerType = isset($validatedResult) ? $validatedResult->type : $customer->type;
+            $customerType = ($validatedResult instanceof User) ? $validatedResult->type : $type;
             if ($customerType != $type) {
                 return $this->invalidParam('type', '客户账号与客户类型不匹配');
             }
@@ -441,7 +456,7 @@ class SalesmanCustomerController extends Controller
      * @param $customer
      * @return bool
      */
-    private function _validateAccount($attributes, $shop)
+    private function _validateAccount($attributes, $shop, $salesman)
     {
         //得到客户信息
         $userInfo = User::where('user_name', $attributes['account'])->first();
@@ -452,14 +467,16 @@ class SalesmanCustomerController extends Controller
         if (array_get($attributes, 'type', cons('user.type.retailer')) != $userInfo->type) {
             return '账号角色类型不匹配';
         }
-        //查找是否已存在此客户
-        $existsCustomer = SalesmanCustomer::where('shop_id', $userInfo->shop_id)->where(function ($query) use ($shop) {
-            $query->whereIn('salesman_id', $shop->salesmen->pluck('id'))
-                ->orWhere('belong_shop', $shop->id);
-        })->first();
-
-        if ($existsCustomer) {
-            return '已关联此用户!';
+        if (!$salesman->maker_id) {
+            //查找是否已存在此客户
+            $existsCustomer = SalesmanCustomer::where('shop_id', $userInfo->shop_id)->where(function ($query) use ($shop
+            ) {
+                $query->whereIn('salesman_id', $shop->salesmen->pluck('id'))
+                    ->orWhere('belong_shop', $shop->id);
+            })->first();
+            if ($existsCustomer) {
+                return '已关联此用户!';
+            }
         }
         return $userInfo;
     }
@@ -550,4 +567,68 @@ class SalesmanCustomerController extends Controller
         }
     }
 
+    /**
+     * 绑定客户关系
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function bindRelation(Request $request)
+    {
+        $shopIds = $request->input('shopIds', null);
+        if (is_null($shopIds)) {
+            return $this->error('参数错误!');
+        }
+        $user = auth()->user();
+        $data = [];
+        $now = Carbon::now();
+        foreach (explode(',', $shopIds) as $shopId) {
+            $data[] = [
+                'maker_id' => $shopId,
+                'supplier_id' => $user->shop_id,
+                'created_at' => $now,
+                'updated_at' => $now
+            ];
+        }
+        if (DB::table('business_relation_apply')->insert($data)) {
+            return $this->success('操作成功');
+        }
+        return $this->error('操作失败');
+    }
+
+    /**
+     * 获取客户申请通过的且未被使用的促销活动
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getPassedPromos(Request $request)
+    {
+        $shop = auth()->user() ? auth()->user()->shop : salesman_auth()->user()->shop;
+        if (!count($shop->salesmen)) {
+            return $this->error('店铺业务员不见了');
+        }
+        $applyLists = PromoApply::with([
+            'promo' => function ($promo) {
+                $promo->active();
+            },
+            'promo.condition.goods',
+            'promo.rebate.goods'
+        ])->whereIn('salesman_id',
+            $shop->salesmen->pluck('id'))->client($request->input('client_id'))->pass()->get();
+
+        $promos = collect();
+        $applyLists->each(function ($item) use (
+            $promos
+        ) {
+            if ($item->promo) {
+                $item->promo->addHidden(['created_at', 'updated_at', 'status', 'deleted_at']);
+                $item->promo->apply_id = $item->id;
+                $item->promo->is_use = is_null($item->order) ? 0 : 1;
+                $promos->push($item->promo->toArray());
+            }
+        });
+        $promos->toArray();
+        return $this->success(compact('promos'));
+    }
 }

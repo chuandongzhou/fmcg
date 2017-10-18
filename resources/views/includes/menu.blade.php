@@ -466,9 +466,14 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item  {{ path_active('business/salesman/target') }}">
+                                <li class="nav-item  {{ path_active('business/salesman/target*') }}">
                                     <a href="{{ url('business/salesman/target') }}" class="nav-link ">
                                         <span class="title">业务员目标管理</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item  {{ path_active('business/trade-request*') }}">
+                                    <a href="{{ url('business/trade-request') }}" class="nav-link ">
+                                        <span class="title">厂商交易申请</span>
                                     </a>
                                 </li>
                             </ul>

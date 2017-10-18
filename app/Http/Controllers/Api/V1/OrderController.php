@@ -71,6 +71,51 @@ class OrderController extends Controller
     }
 
     /**
+     * 获取业务订单列表
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function getBusiness(Request $request)
+    {
+        $shop = auth()->user()->shop;
+        $salesmenId = $shop->salesmen->pluck('id');
+        $data = $request->all();
+        $orders = SalesmanVisitOrder::with([
+            'orderGoods' => function ($goods) {
+                $goods->select([
+                    'salesman_visit_order_id',
+                    'goods_id',
+                    'num',
+                    'pieces',
+                    'price',
+                ]);
+            },
+            'salesmanCustomer.businessAddress',
+            'orderGoods.goods'
+        ])->select([
+            'id',
+            'created_at',
+            'amount',
+            'type',
+            'order_id',
+            'salesman_customer_id',
+            'salesman_id',
+            'status',
+            'shop_id'
+        ])->where('shop_id', auth()->user()->shop_id)->whereIn('salesman_id',
+            $salesmenId)->OfData($data)->orderBy('updated_at', 'desc')->paginate();
+        $orders->each(function ($order) {
+            $order->orderGoods->each(function ($goods) {
+                $goods->addHidden(['goods']);
+            });
+            $order->customer_name = $order->salesmanCustomer->name ?? '';
+            $order->addHidden(['order_status_name']);
+        });
+        return $this->success($orders->toArray());
+    }
+
+    /**
      * 查询待付款订单列表
      *
      * @return \WeiHeng\Responses\Apiv1Response
@@ -963,7 +1008,8 @@ class OrderController extends Controller
         $shop = $order->shop;
         $userShopId = $order->user->shop_id;
 
-        $salesmanCustomer = SalesmanCustomer::whereIn('id',$shop->salesmenCustomer->pluck('id'))->where('shop_id', $userShopId)->first();
+        $salesmanCustomer = SalesmanCustomer::whereIn('id', $shop->salesmenCustomer->pluck('id'))->where('shop_id',
+            $userShopId)->first();
         if (is_null($salesmanCustomer)) {
             return true;
         }

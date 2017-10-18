@@ -137,6 +137,7 @@
                         @endforeach
                     </div>
                 </div>
+
                 <div class="row clearing text-right  ">
                     <div class="col-xs-6 text-left left-operation">
                         <div class="check-item">
@@ -158,19 +159,22 @@
         </form>
     @endif
     {{--错误提示--}}
-    @if (session('notRelation'))
-        <div class="mask-outer" style="display: block;">
-            <div class="pop-general text-center maker-pop">
-                <div class="pop-content">
-                    <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
-                    <div class="pop-tips maker-wrap">
-                        请联系厂家 : <span class="maker">{{session('notRelation')}}</span>
-                    </div>
-                    <div class="maker-msg">绑定你的平台信息</div>
+    <div class="mask-outer" id="mask-outer">
+        <div class="pop-general text-center maker-pop h200">
+            <div class="pop-content">
+                <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
+                <div class="pop-tips maker-wrap">
+                    <span class="title-name"></span> <span class="maker"></span>
                 </div>
+                <input type="hidden" class="hidden-input" name="shopIds" value="">
+                <div class="maker-msg">提交申请绑定您的平台账号信息</div>
+                <div class="maker-msg"></div>
+            </div>
+            <div class="pop-footer-btn">
+                <button class="btn btn-primary">提交申请</button>
             </div>
         </div>
-    @endif
+    </div>
 @stop
 @section('js')
     @parent
@@ -182,11 +186,52 @@
                alert('{{ session('message') }}');
             @endif
 
+            @if(session('notRelation'))
+                bindTips('{{implode(',',session('notRelation'))}}', '{{implode(',',array_keys(session('notRelation')))}}', 'notRelation');
+            @elseif(session('applyed'))
+                bindTips('{{implode(',',session('applyed'))}}', '{{implode(',',array_keys(session('applyed')))}}', 'applyed');
+            @endif
+            //绑定业务关系提示弹框
+            function bindTips(makerName, inputVal, type) {
+                var type = type || 'applyed';
+                var div = $('#mask-outer');
+                var titleName = '', msg = '', btn = '';
+                if (type == 'applyed') {
+                    titleName = '已向厂家';
+                    msg = '请您耐心等待...';
+                    btn = '查看';
+                } else {
+                    titleName = '向厂家';
+                    msg = '申请通过后才能进行购买';
+                    btn = '提交申请';
+                }
+                div.find('span.title-name').html(titleName);
+                div.find('span.maker').html(makerName);
+                div.find('input.hidden-input').val(inputVal);
+                div.find('div.maker-msg:eq(1)').html(msg);
+                div.find('button.btn').html(btn);
+                type == 'applyed' ? div.find('button.btn').addClass('applyed').removeClass('submit-apply') : div.find('button.btn').addClass('submit-apply').removeClass('applyed');
+                div.show();
+            }
+
             //关闭弹窗
             $('a.close-btn').on('click', function () {
                 $(".mask-outer").css("display", "none");
 //                window.location.reload();
             });
+            $('button.submit-apply').click(function () {
+                var shopIds = $('input[name=shopIds]').val();
+                if (shopIds != '') {
+                    $.post(site.api('business/salesman-customer/apply-bind-relation'), {'shopIds': shopIds}, function (data) {
+                        bindTips('{{implode(',',array_merge(session('notRelation') ?? [],session('applyed') ?? []))}}', '');
+                    })
+                }
+            });
+
+            $('.pop-footer-btn').on('click','.applyed', (function () {
+                window.open('{{asset('business/trade-request')}}')
+                $(".mask-outer").css("display", "none");
+            }));
         })
     </script>
 @stop

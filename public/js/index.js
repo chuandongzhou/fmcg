@@ -125,7 +125,7 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-            //submitBtn = $('input.btn-primary'),
+        //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length === cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
@@ -462,10 +462,17 @@ var deleteNoForm = function () {
             method: method,
             data: data
         }).done(function (data, textStatus, jqXHR) {
+            if (self.hasClass('business-order-goods-delete')) {
+                var total_num = self.parents('table').find('span.total_num');
+                var total_amount = self.parents('table').find('span.total_amount');
+                total_num.html(parseInt(total_num.html()) - parseInt(self.parents('tr').find('td:eq(4)').html()))
+                total_amount.html((parseFloat(total_amount.html()) - parseFloat(self.parents('tr').find('td:eq(5)').html())).toFixed(2))
+            }
             successMeg('删除成功');
             self.parents('tr').slideUp(function () {
                 self.remove();
-            })
+            });
+
         }).fail(function (jqXHR, textStatus, errorThrown) {
             if (errorThrown == 'Unauthorized') {
                 site.redirect('auth/login');

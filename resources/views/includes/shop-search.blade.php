@@ -40,6 +40,11 @@
                                     <i class="fa fa-star"></i> 已收藏
                                 @endif
                             </a>
+                            @if(!$haveRelation)
+                                <a class="alt" href="javascript:;">
+                                    <span class="iconfont icon-jiaoyi orange"></span>交易申请
+                                </a>
+                            @endif
                         </div>
                     </div>
                     <div class="shop-detail-popup">
@@ -201,6 +206,22 @@
             </div>
         </div>
     </nav>
+    <div class="mask-outer" id="mask-outer" >
+        <div class="pop-general text-center maker-pop h200">
+            <div class="pop-content">
+                <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
+                <div class="pop-tips maker-wrap">
+                    已向厂家 : <span class="maker">农夫山泉</span>
+                </div>
+                <div class="maker-msg">提交申请绑定您的平台账号信息</div>
+                <div class="maker-msg">请耐心等待</div>
+            </div>
+            <div class="pop-footer-btn">
+                <button class="btn btn-primary">查看</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(function () {
             formSubmitByGet();
@@ -218,6 +239,14 @@
             $('.more-classify').change(function () {
                 window.location.href = $(this).val();
             });
+
+            //交易申请
+            $(".alt").click(function(){
+                $("#mask-outer").show();
+            })
+            $("#mask-outer .close-btn").click(function(){
+                $("#mask-outer").hide();
+            })
         });
     </script>
 @stop
