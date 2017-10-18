@@ -82,6 +82,13 @@
                                             <td>{{ bcsub($total, $mortgageGood->used) }}</td>
                                         </tr>
                                     @endforeach
+                                    @if(empty($customer->mortgageGoods))
+                                        <tr>
+                                            <td colspan="6">
+                                                暂无
+                                            </td>
+                                        </tr>
+                                    @endif
                                     </tbody>
                                 </table>
                                 <div class="toggle-table">

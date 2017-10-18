@@ -90,7 +90,7 @@
 
                 $('input[name="name"]').val(name);
                 $('input[name="phone"]').val(phone);
-                account && $('input[name="account"]').val(account).prop('disabled', true);
+                account ? $('input[name="account"]').val(account).prop('disabled', true) : $('input[name="account"]').val(account).prop('disabled', false);
                 form.attr('action', site.api(obj.hasClass('add') ? 'personal/child-user' : 'personal/child-user/' + id));
                 form.attr('method', obj.hasClass('add') ? 'post' : 'put');
 

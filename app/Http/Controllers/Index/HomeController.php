@@ -112,6 +112,7 @@ class HomeController extends Controller
         }
     }
 
+
     private function changeTest(Request $request)
     {
         $shopId = $request->input('shop_id');

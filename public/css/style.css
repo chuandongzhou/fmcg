@@ -11882,6 +11882,10 @@ button.close {
   content: "\e659";
 }
 
+.icon-peisong1:before {
+  content: "\e63a";
+}
+
 .icon-dongjietubiao :before {
   content: "\e636";
 }

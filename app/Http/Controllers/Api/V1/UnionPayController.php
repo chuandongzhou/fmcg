@@ -28,9 +28,11 @@ class UnionPayController extends Controller
     public function getQrCode(Request $request, $orderId)
     {
         $order = Order::with('shop')->find($orderId);
+
         if (is_null($order) || !$order->can_payment) {
             return $this->error('订单不存在或已支付');
         }
+
 
         $payType = $request->input('pay_type', head($this->payTypes));
 

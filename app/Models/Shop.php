@@ -323,13 +323,14 @@ class Shop extends Model
                 'salesman_id');
         } elseif ($this->user_type == cons('user.type.supplier')) {
             return $this->hasManyThrough('App\Models\SalesmanCustomer',
-                'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type)->orWhere('belong_shop',
-                $this->id);
+                'App\Models\Salesman')->where(function ($query) {
+                return $query->where('salesman_customer.type', '<', $this->user_type)->orWhere('belong_shop',
+                    $this->id);
+            });
         }
         return $this->hasManyThrough('App\Models\SalesmanCustomer',
             'App\Models\Salesman')->where('salesman_customer.type', '<', $this->user_type);
     }
-    
 
     /**
      * 对应客户
@@ -845,7 +846,7 @@ class Shop extends Model
      *
      * @return int|mixed|string
      */
-    public function getUserTypeAttribute():int
+    public function getUserTypeAttribute()
     {
         $shopService = new ShopService(true);
 

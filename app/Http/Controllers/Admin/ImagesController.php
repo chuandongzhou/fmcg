@@ -67,7 +67,7 @@ class ImagesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -111,8 +111,8 @@ class ImagesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return Response
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\WeiHeng\Responses\AdminResponse
      */
     public function destroy($id)
     {
