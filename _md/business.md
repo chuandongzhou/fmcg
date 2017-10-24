@@ -1002,3 +1002,25 @@
 `成功返回:`
 	
 `失败返回:`
+
+### 2.11 银联二维码支付 union-pay
+
+#### 2.11.1  获取二维码[get] (qrcode/{order_id})
+
+`请求参数：`
+
+    pay_type                string              支付渠道 （alipay为支付宝二维码， wechat为微信二维码）
+
+`成功返回：`
+
+    code_url              string                二维码地址
+
+
+#### 2.11.2  获取订单支付状态[get] (order-pay-status/{order_id})
+
+`请求参数：`
+
+`成功返回：`
+
+    pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
+

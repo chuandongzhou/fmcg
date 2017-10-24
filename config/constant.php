@@ -395,7 +395,8 @@ return [
         'ios' => 1,
         'android' => 2,
         'delivery' => 3,
-        'business' => 4
+        'business' => 4,
+        'android_buyer' => 5
     ],
     //android推送通知类型
     'push_type' => [

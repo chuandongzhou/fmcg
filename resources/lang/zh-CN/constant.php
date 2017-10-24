@@ -256,7 +256,8 @@ return [
         'ios' => 'IOS',
         'android' => '安卓',
         'delivery' => '司机',
-        'business' => '外勤'
+        'business' => '外勤',
+        'android_buyer' => '安卓买家'
     ],
 
     //提现状态

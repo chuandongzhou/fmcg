@@ -172,7 +172,6 @@ class DisplayInfoController extends Controller
                                 }
                                 $table->addCell()->addText($item['name'], null, array('align' => 'center'));
                                 $table->addCell()->addText($item['used'], null, array('align' => 'center'));
-
                             }
                         }
                     } else {
@@ -193,7 +192,7 @@ class DisplayInfoController extends Controller
                 $table->addCell()->addText($month, null, array('align' => 'center'));
                 $table->addCell(0, $gridSpan2)->addText(number_format($fee = $customer->display_fee, 2), null,
                     array('align' => 'center'));
-                $table->addCell()->addText( number_format($used =  $customer->displayLists->sum('used'), 2) , null,
+                $table->addCell()->addText(number_format($used = $customer->displayLists->sum('used'), 2), null,
                     array('align' => 'center'));
                 $table->addCell()->addText(bcsub($fee, $used, 2), null,
                     array('align' => 'center'));
@@ -235,8 +234,7 @@ class DisplayInfoController extends Controller
                 $customer->displayLists = $customer->displayList->filter(function ($item) {
                     return $item->mortgage_goods_id == 0;
                 });
-            }
-            else {
+            } else {
                 $displayLists = collect([]);
                 $orders = [];
                 foreach ($customer->displayList as $item) {

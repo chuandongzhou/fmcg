@@ -17,6 +17,7 @@ use DB;
 use App\Models\Goods;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GoodsController extends Controller
 {
@@ -111,29 +112,32 @@ class GoodsController extends Controller
                 'DESC')->get()->pluck('goods_id');
         } else {
             $goodsId = OrderGoods::whereIn('order_id', $ordersId)->orderBy('id', 'DESC')->get()->pluck('goods_id');
-
-            $goodsId = $goodsId->toBase()->unique();
         }
-        $referenceIdsStr = implode(',', $goodsId->all());
+        $goodsId = $goodsId->toBase()->unique();
+        if (!$goodsId->isEmpty()) {
+            $referenceIdsStr = implode(',', $goodsId->all());
 
-        $goods = Goods::active()->whereIn('id', $goodsId)
-            ->ofGoodsName($name)
-            ->orderByRaw("FIELD(id, $referenceIdsStr)")
-            ->select([
-                'id',
-                'bar_code',
-                'name',
-                'price_retailer',
-                'price_wholesaler',
-                'pieces_retailer',
-                'pieces_wholesaler',
-                'min_num_retailer',
-                'min_num_wholesaler'
-            ])->paginate();
+            $goods = Goods::active()->whereIn('id', $goodsId)
+                ->ofGoodsName($name)
+                ->orderByRaw("FIELD(id, $referenceIdsStr)")
+                ->select([
+                    'id',
+                    'bar_code',
+                    'name',
+                    'price_retailer',
+                    'price_wholesaler',
+                    'pieces_retailer',
+                    'pieces_wholesaler',
+                    'min_num_retailer',
+                    'min_num_wholesaler'
+                ])->paginate();
 
-        $goods->each(function ($item) {
-            $item->setAppends(['image_url']);
-        });
+            $goods->each(function ($item) {
+                $item->setAppends(['image_url']);
+            });
+        } else {
+            $goods = new LengthAwarePaginator(collect([]), 0, 15);
+        }
         return $this->success(['goods' => $goods->toArray()]);
     }
 

@@ -31,7 +31,7 @@
                                 <th>联系方式</th>
                                 <th>POS机登录名</th>
                                 <th>POS机编号</th>
-                                <th>过期时间</th>
+                                {{--<th>过期时间</th>--}}
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -50,9 +50,9 @@
                                     <td>
                                         {{ $man->pos_sign }}
                                     </td>
-                                    <td>
-                                        {{ $man->expire }}
-                                    </td>
+                                    {{--<td>--}}
+                                        {{--{{ $man->expire }}--}}
+                                    {{--</td>--}}
                                     <td>
 
                                         <div role="group" class="btn-group btn-group-xs">
@@ -65,11 +65,11 @@
                                                class="edit update-modal">
                                                 <i class="iconfont icon-xiugai"></i> 编辑
                                             </a>
-                                            @if($man->expire_at)
-                                                <a data-target="#expireModal" data-toggle="modal" data-type="delivery"
-                                                   data-id="{{ $man->id }}">
-                                                    <i class="iconfont icon-chaopiao"></i>续费</a>
-                                            @endif
+                                            {{--@if($man->expire_at)--}}
+                                                {{--<a data-target="#expireModal" data-toggle="modal" data-type="delivery"--}}
+                                                   {{--data-id="{{ $man->id }}">--}}
+                                                    {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
+                                            {{--@endif--}}
                                             <a data-url="{{ url('api/v1/personal/delivery-man/'. $man->id) }}"
                                                data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                                type="button">

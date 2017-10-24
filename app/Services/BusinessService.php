@@ -117,12 +117,11 @@ class BusinessService extends BaseService
             $salesman->visitCustomerCount = $visits->pluck('salesman_customer_id')->toBase()->unique()->count();
 
             //订货总金额
-            $salesman->orderFormSumAmount = $orderForms->filter(function ($order) use ($user, &$a) {
+            $salesman->orderFormSumAmount = $orderForms->filter(function ($order) use ($user) {
                 if ($order->order) {
                     if ($order->order->status < cons('order.status.invalid') && $order->order->pay_status < cons('order.pay_status.refund')) {
                         return true;
                     }
-                    $a = $order->id;
                     return false;
                 }
                 return true;

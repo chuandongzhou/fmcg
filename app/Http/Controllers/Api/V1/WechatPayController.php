@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
-use App\Services\PayService;
+use QrCode;
 use Carbon\Carbon;
 use Gate;
 use Illuminate\Http\Request;
@@ -25,6 +25,9 @@ class WechatPayController extends Controller
      */
     public function getQrCode($orderId)
     {
+
+        //return app(WechatPayController::class)->getQrCode(489);
+
         $order = Order::with('wechatPayUrl', 'shop')->find($orderId);
         if (is_null($order) || !$order->can_payment) {
             return $this->error('订单不存在或已支付');
@@ -38,7 +41,7 @@ class WechatPayController extends Controller
                 return $this->error('二维码已过期,请选择其它渠道');
             } else {
                 return $this->success([
-                    'code_url' => $wechatPayUrl->code_url,
+                    'code_url' => $this->_getQrCodeUrl($wechatPayUrl->code_url, $orderId),
                     'created_at' => (string)$wechatPayUrl->created_at
                 ]);
             }
@@ -52,14 +55,37 @@ class WechatPayController extends Controller
             return $this->error($result['dealMsg']);
         }
 
-        if (!$wechatPay->verifySign($result)) {
-            return $this->error('请求出错，请重试');
-        }
-
         return $wechatPay->created($result, $orderId) ? $this->success([
-            'code_url' => $result['codeUrl'],
+            'code_url' => $this->_getQrCodeUrl($result['codeUrl'], $orderId),
             'created_at' => (string)Carbon::now()
         ]) : $this->error('创建二维码时出现问题');
+    }
+
+    /**
+     * 转换成url
+     *
+     * @param $url
+     * @param int $orderId
+     * @param null $size
+     * @return string
+     */
+    private function _getQrCodeUrl($url, $orderId, $size = null)
+    {
+        $qrcodePath = public_path('pay-qrcode/');
+        $relatePath = ltrim(str_replace(public_path(), '', $qrcodePath), '\\');
+        $qrcodeSize = is_null($size) ? cons('shop.qrcode_size') : $size;
+        $path = 'pay_' . $orderId . '.png';
+
+        if (!is_file($qrcodePath . $path)) {
+            @mkdir(dirname($qrcodePath . $path), 0777, true);
+            QrCode::format('png')->size($qrcodeSize)->margin(0)->generate($url, $qrcodePath . $path);
+        }
+        // 处理缓存
+        $mtime = @filemtime($qrcodePath . $path);
+        if (false !== $mtime) {
+            return asset($relatePath . $path) . '?' . $mtime;
+        }
+        return asset($relatePath . $path);
     }
 
 

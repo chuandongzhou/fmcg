@@ -33,7 +33,7 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest() && !($request->is('/') && in_windows()) && !$request->is('about')) {
+        if (!$request->is('about') && !($request->is('/') && in_windows()) && $this->auth->guest()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {

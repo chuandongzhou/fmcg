@@ -21,7 +21,7 @@ class DeliveryService
         $deliveryMan = [];
         $orderGoodsTypes = cons('order.goods.type');
         foreach ($delivery as $order) {
-            $orderDelivery = empty($deliveryManId) ? '' : count($order->deliveryMan->toArray());
+            $orderDelivery = empty($deliveryManId) ? '' : $order->deliveryMan->count();
             foreach ($order->orderGoods as $orderGoods) {
                 $pieces = $orderGoods->pieces;
                 $goodsItem = $orderGoods->goods ?: new Goods();
@@ -46,7 +46,7 @@ class DeliveryService
                     if (!empty($deliveryManId) && $delivery['id'] != $deliveryManId) {
                         continue;
                     }
-                    $deliveryMan[$delivery['name']]['first_time'] = isset($deliveryMan[$delivery['name']]['first_time']) ? $deliveryMan[$delivery['name']]['first_time'] : $order->delivery_finished_at;
+                    $deliveryMan[$delivery['name']]['first_time'] = isset($deliveryMan[$delivery['name']]['first_time']) ? $deliveryMan[$delivery['name']]['first_time'] : (new Carbon($order->delivery_finished_at))->toDateString();
                     $deliveryMan[$delivery['name']]['price'][$type] = isset($deliveryMan[$delivery['name']]['price'][$type]) ? bcadd($deliveryMan[$delivery['name']]['price'][$type],
                         $order->after_rebates_price, 2) : $order->after_rebates_price;
                     $deliveryMan[$delivery['name']]['orderNum'] = isset($deliveryMan[$delivery['name']]['orderNum']) ? (int)$deliveryMan[$delivery['name']]['orderNum'] + 1 : 1;
@@ -90,7 +90,7 @@ class DeliveryService
 
         //商品统计
         foreach ($delivery as $order) {
-            $orderDelivery = count($order->deliveryMan->lists('name')->toArray()) . '';
+            $orderDelivery = $order->deliveryMan->count() . '';
             $deliveryKey = array_search($orderDelivery . '', array_column($goods, 'deliveryManNum'));
             //配送人数是否在结果集
             if ($deliveryKey === false) {

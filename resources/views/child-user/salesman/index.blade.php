@@ -34,7 +34,7 @@
                                 <th>名称</th>
                                 <th>账号</th>
                                 <th>联系方式</th>
-                                <th>过期时间</th>
+                                {{--<th>过期时间</th>--}}
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -54,9 +54,9 @@
                                     <td>
                                         {{ $man->contact_information }}
                                     </td>
-                                    <td>
-                                        {{ $man->expire  }}
-                                    </td>
+                                    {{--<td>--}}
+                                        {{--{{ $man->expire  }}--}}
+                                    {{--</td>--}}
                                     <td>
                                         <div role="group" class="btn-group btn-group-xs">
                                             <a class="edit" href="javascript:void(0)" type="button"
@@ -81,13 +81,14 @@
                                                     <i class="iconfont icon-dongjietubiao"></i> 冻结&nbsp;
                                                 </a>
                                             @endif
-                                            @if($man->expire_at)
-                                                <a data-target="#expireModal" data-toggle="modal" data-type="salesman"
-                                                   data-id="{{ $man->id }}">
-                                                    <i class="iconfont icon-chaopiao"></i>续费</a>
-                                            @endif
+                                            {{--@if($man->expire_at)--}}
+                                                {{--<a data-target="#expireModal" data-toggle="modal" data-type="salesman"--}}
+                                                   {{--data-id="{{ $man->id }}">--}}
+                                                    {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
+                                            {{--@endif--}}
 
                                             <a data-url="{{ url('api/v1/child-user/salesman/'. $man->id) }}"
+                                               data-danger="确定要删除吗？"
                                                data-method="delete"
                                                class="red ajax" type="button"><i class="iconfont icon-shanchu"></i> 删除
                                             </a>

@@ -8,7 +8,7 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-sm-12 path-title">
-                    <a href="{{ url('personal/info') }}">个人中心</a> > <a href="{{ url('personal/delivery') }}">配送历史</a>> <span
+                    <a href="{{ url('personal/info') }}">个人中心</a> > <a href="{{ url('personal/delivery/history') }}">配送历史</a>> <span
                             class="second-level">配送统计</span>
                 </div>
             </div>

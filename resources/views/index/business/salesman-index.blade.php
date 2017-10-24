@@ -34,7 +34,7 @@
                                 <th>名称</th>
                                 <th>账号</th>
                                 <th>联系方式</th>
-                                <th>过期时间</th>
+                                {{--<th>过期时间</th>--}}
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -55,9 +55,9 @@
                                     <td>
                                         {{ $man->contact_information }}
                                     </td>
-                                    <td>
-                                        {{ $man->expire  }}
-                                    </td>
+                                    {{--<td>--}}
+                                        {{--{{ $man->expire  }}--}}
+                                    {{--</td>--}}
                                     <td>
                                         @if(auth()->user()->type < cons('user.type.maker') && $man->maker_id)
                                             <a class="color-blue" href="{{ url('business/report/' . $man->id) }}">
@@ -87,14 +87,15 @@
                                                     </a>
                                                 @endif
                                                 @if($man->expire_at)
-                                                    <a data-target="#expireModal" data-toggle="modal"
-                                                       data-type="salesman"
-                                                       data-id="{{ $man->id }}">
-                                                        <i class="iconfont icon-chaopiao"></i>续费</a>
+                                                    {{--<a data-target="#expireModal" data-toggle="modal"--}}
+                                                       {{--data-type="salesman"--}}
+                                                       {{--data-id="{{ $man->id }}">--}}
+                                                        {{--<i class="iconfont icon-chaopiao"></i>续费</a>--}}
                                                 @endif
                                                 @if(auth()->user()->type != cons('user.type.maker'))
                                                     <a data-url="{{ url('api/v1/business/salesman/'. $man->id) }}"
                                                        data-method="delete"
+                                                       data-danger="确定要删除吗？"
                                                        class="red ajax" type="button"><i
                                                                 class="iconfont icon-shanchu"></i>
                                                         删除

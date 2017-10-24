@@ -212,7 +212,7 @@
                             </a>
                         </li>
                         <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery','personal/delivery-statistical']) }}">
-                            <a href="{{ url('personal/delivery') }}" class="nav-link ">
+                            <a href="{{ url('personal/delivery/history') }}" class="nav-link ">
                                 <span class="title">配送历史</span>
                             </a>
                         </li>
@@ -276,11 +276,11 @@
                                 <span class="title">提现账号</span>
                             </a>
                         </li>
-                        <li class="nav-item  {{ path_active(['personal/sign*']) }}">
-                            <a href="{{ url('personal/sign/renew') }}" class="nav-link ">
-                                <span class="title">签约管理</span>
-                            </a>
-                        </li>
+                        {{--<li class="nav-item  {{ path_active(['personal/sign*']) }}">--}}
+                            {{--<a href="{{ url('personal/sign/renew') }}" class="nav-link ">--}}
+                                {{--<span class="title">签约管理</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                     </ul>
                 </li>
                 {{-- 业务管理 --}}
@@ -399,26 +399,26 @@
 
                     @if( true || $user->deposit && !$user->is_expire)
                         {{-- 配送管理 --}}
-                        <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-shopping-basket"></i>
-                                <span class="title">配送管理</span>
-                                <span class="{!! request()->is('personal/delivery*','personal/delivery-man*')?'selected':''  !!}"></span>
-                                <span class="arrow open"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item start {{ path_active(['personal/delivery-man','personal/delivery-man/*']) }}">
-                                    <a href="{{ url('personal/delivery-man') }}" class="nav-link ">
-                                        <span class="title">配送人员</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item start {{ path_active(['personal/delivery*','personal/delivery/statistical']) }}">
-                                    <a href="{{ url('personal/delivery/history') }}" class="nav-link ">
-                                        <span class="title">配送历史</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="nav-item {!! path_active(['personal/delivery/*', 'personal/delivery','personal/delivery-man*','personal/delivery-statistical']) !!}">
+                                <a href="javascript:;" class="nav-link nav-toggle">
+                                    <i class="fa fa-shopping-basket"></i>
+                                    <span class="title">配送管理</span>
+                                    <span class="{!! request()->is('personal/delivery*','personal/delivery-man*')?'selected':''  !!}"></span>
+                                    <span class="arrow open"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="nav-item start {{ path_active(['personal/delivery-man','personal/delivery-man/*']) }}">
+                                        <a href="{{ url('personal/delivery-man') }}" class="nav-link ">
+                                            <span class="title">配送人员</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item start {{ path_active(['personal/delivery/*','personal/delivery','personal/delivery-statistical']) }}">
+                                        <a href="{{ url('personal/delivery/history') }}" class="nav-link ">
+                                            <span class="title">配送历史</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {{-- 业务管理 --}}
                         <li class="nav-item  {!! path_active(['business/*']) !!}">
                             <a href="javascript:;" class="nav-link nav-toggle">

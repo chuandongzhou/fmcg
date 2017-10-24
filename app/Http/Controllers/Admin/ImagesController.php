@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
+use App\Models\BarcodeWithoutImages;
 use App\Models\Images;
-use App\Services\AttrService;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 
 class ImagesController extends Controller
 {
@@ -22,7 +20,7 @@ class ImagesController extends Controller
     {
         $barCode = $request->input('bar_code');
 
-        $goodsImage = Images::with('image');
+        $goodsImage = Images::active()->with('image');
         if ($barCode) {
             $goodsImage->where('bar_code', 'LIKE', '%' . $barCode . '%');
         }
@@ -30,7 +28,7 @@ class ImagesController extends Controller
         return view('admin.images.index',
             [
                 'barCode' => $barCode,
-                'goodsImage' => $goodsImage->paginate(),
+                'goodsImage' => $goodsImage->paginate(16),
             ]);
     }
 
@@ -58,6 +56,9 @@ class ImagesController extends Controller
             return $this->error('图片不能为空');
         }
         if (Images::whereIn('id', $imageIds)->update(['status' => 1])) {
+            //审核通过删除无图片条形码
+            $barcodes = Images::whereIn('id', $imageIds)->get()->pluck('bar_code');
+            BarcodeWithoutImages::whereIn('barcode', $barcodes)->delete();
             return $this->success('图片审核成功');
         }
         return $this->error('图片审核时出现问题');
@@ -66,7 +67,7 @@ class ImagesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -110,8 +111,8 @@ class ImagesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return Response
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\WeiHeng\Responses\AdminResponse
      */
     public function destroy($id)
     {

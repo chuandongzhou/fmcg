@@ -206,7 +206,7 @@ class ReportController extends Controller
         $visitLists = $this->_getVisitListForDetail($visits);
 
         $visits = $visits->filter(function ($visit) {
-            return isset($visit->orders[0]->order) ? ($visit->orders[0]->order->status < cons('order.status.invalid')) : true;
+            return isset($visit->orders->first()->order) ? ($visit->orders->first()->order->status < cons('order.status.invalid')) : true;
         });
         //销售统计
         $salesGoods = $this->_getSalesGoods($visits);
