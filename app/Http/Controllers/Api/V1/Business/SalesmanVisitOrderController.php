@@ -17,7 +17,6 @@ use App\Services\BusinessService;
 use App\Services\OrderService;
 use App\Services\ShippingAddressService;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
@@ -39,10 +38,7 @@ class SalesmanVisitOrderController extends Controller
         $data = $request->only(['status', 'start_date', 'end_date', 'customer']);
         $data = array_merge($data, ['type' => cons('salesman.order.type.order')]);
         $orders = (new BusinessService())->getOrders([$salesmenId], $data,
-            ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts', 'order.coupon']);
-        $orders->each(function($item){
-           $item->setAppends(['order_status_name', 'after_rebates_price']);
-        });
+            ['salesmanCustomer.businessAddress', 'salesman', 'order', 'gifts', 'order.coupon', 'displayList']);
         return $this->success([
             'orders' => $orders->toArray()
         ]);
@@ -269,7 +265,6 @@ class SalesmanVisitOrderController extends Controller
         }
 
         if ($order->type == cons('salesman.order.type.order')) {
-            $order->load('order.deliveryMan');
             if (!$order->displayList->isEmpty()) {
                 foreach ($order->displayList as $item) {
                     if ($item->mortgage_goods_id == 0) {
@@ -298,15 +293,15 @@ class SalesmanVisitOrderController extends Controller
                 if (isset($mortgage)) {
                     $order->mortgage = $mortgage;
                 }
-            } else{
-                $order->load('order.coupon');
-                $order->setAppends(['after_rebates_price', 'order_status_name']);
-
             }
+
             if (isset($order->applyPromo)) {
                 $order->setHidden(['applyPromo']);
                 $order->promo = $order->applyPromo->promo->load(['condition', 'rebate']);
             }
+
+            $order->load('order.coupon', 'order.deliveryMan');
+            $order->setAppends(['after_rebates_price', 'order_status_name']);
         }
 
         return $this->success(compact('order'));
@@ -325,7 +320,8 @@ class SalesmanVisitOrderController extends Controller
             DB::beginTransaction();
             $order = $this->_validateOrder($orderId);
             if (!$order) {
-                return $this->error('订单不存在');
+                $this->errMsg = $this->error('订单不存在');
+                throw new  \Exception();
             }
             $attributes = $request->all();
             $customer = $order->salesmanCustomer;
@@ -341,14 +337,16 @@ class SalesmanVisitOrderController extends Controller
                     $customer, $order);
 
                 if (!$validate) {
-                    return $businessService->getError();
+                    $this->errMsg = $businessService->getError();
+                    throw new  \Exception();
                 }
 
             } elseif ($customer->display_type == cons('salesman.customer.display_type.mortgage') && isset($attributes['mortgage'])) {
                 //验证抵费商品
                 $validate = $businessService->validateMortgage($attributes['mortgage'], $customer, $order);
                 if (!$validate) {
-                    return $businessService->getError();
+                    $this->errMsg = $businessService->getError();
+                    throw new  \Exception();
                 }
             }
 

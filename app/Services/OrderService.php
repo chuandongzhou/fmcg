@@ -217,7 +217,7 @@ class OrderService extends BaseService
             $oldPrice = $orderGoods->price;
             $newOrderPrice = bcadd(bcsub($order->price, $oldTotalPrice, 2), $newTotalPrice, 2);
 
-            if ($order->display_fee && $order->display_fee >= $newOrderPrice) {
+            if ($order->display_fee > 0 && $order->display_fee >= $newOrderPrice) {
                 //订单陈列费不能大于订单价格
                 $this->setError('订单陈列费不能大于订单价格');
                 return false;

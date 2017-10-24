@@ -196,9 +196,12 @@
                                 @foreach($goods  as $item)
                                     <tr>
                                         <td>
-                                            <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
-                                            <img class="store-img lazy" data-original="{{ $item->image_url }}">
-                                            <a class="product-name ellipsis"
+                                            <div class="pull-left">
+                                                <input type="checkbox" class="child" name="ids[]" value="{{ $item->id }}">
+                                                <img class="store-img lazy" data-original="{{ $item->image_url }}">
+                                            </div>
+
+                                            <a class="product-name ellipsis pull-right"
                                                href="{{ url('child-user/my-goods/' . $item->id) }}"
                                                title="{{ $item->name }}"> {{ $item->name }}</a>
                                         </td>

@@ -5,6 +5,7 @@
  * Date: 2015/9/17
  * Time: 14:22
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\v1\BackupPasswordRequest;
@@ -127,6 +128,9 @@ class AuthController extends Controller
                     'name' => $shopInput['name'],
                 ];
                 app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
+                //默认添加店铺地址为收货地址
+
+                $this->_addShippingAddress($shopInput, $user);
                 return $this->success('注册成功');
             } else {
                 $user->delete();
@@ -291,5 +295,33 @@ class AuthController extends Controller
             return $this->error('发送短信过于频繁');
         }
 
+    }
+
+    /**
+     * 默认添加店铺地址为收货地址
+     *
+     * @param $attribute
+     * @param $user
+     * @return bool
+     */
+    private function _addShippingAddress($attribute, User $user)
+    {
+        if ($user->type == cons('user.type.maker')) {
+            return true;
+        }
+
+        $shippingAddressData = [
+            'consigner' => $attribute['contact_person'],
+            'phone' => $attribute['contact_info'],
+            'is_default' => 1,
+            'x_lng' => $attribute['x_lng'],
+            'y_lat' => $attribute['y_lat'],
+        ];
+
+        $shippingAddress = $user->shippingAddress()->create($shippingAddressData);
+        if ($shippingAddress->exists) {
+            $shippingAddress->address()->create( $attribute['address']);
+        }
+        return true;
     }
 }

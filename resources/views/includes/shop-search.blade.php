@@ -211,7 +211,7 @@
             <div class="pop-content">
                 <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
                 <div class="pop-tips maker-wrap">
-                    已向厂家 : <span class="maker">农夫山泉</span>
+                    已向厂家 : <span class="maker">{{ $shop->name }}</span>
                 </div>
                 <div class="maker-msg">提交申请绑定您的平台账号信息</div>
                 <div class="maker-msg">请耐心等待</div>

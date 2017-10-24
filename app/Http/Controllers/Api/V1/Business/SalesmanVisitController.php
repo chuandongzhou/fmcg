@@ -41,7 +41,7 @@ class SalesmanVisitController extends Controller
             'orders' => function ($query) use ($startDate, $endDate, $salesman) {
                 $query->where('salesman_id', $salesman->id)->where('shop_id',
                     $salesman->shop_id)->whereBetween('created_at',
-                    [$startDate, $endDate])->with('order');
+                    [$startDate, $endDate])->with('order', 'displayList');
             },
             'visits' => function ($q) use ($startDate, $endDate, $salesman) {
                 $q->where('salesman_id', $salesman->id)->where('shop_id',

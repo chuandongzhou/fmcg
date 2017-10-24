@@ -517,7 +517,7 @@ a:hover {
 
 .footer .list-inline li #qr-content-panel .tooltip .qr-panel {
   border: 2px solid #F25000;
-  width: 335px;
+  width: 448px;
   height: 125px;
   background-color: #fff;
   padding-top: 3px;
@@ -552,6 +552,10 @@ a:hover {
   color: #000;
   font-weight: 600;
   margin: auto;
+}
+
+.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .dbd-buy {
+  background-image: url("../images/qr-code-buy.png");
 }
 
 .footer .list-inline .feedback-panel .popover {
@@ -5309,6 +5313,16 @@ table .product-panel .promotions {
   padding: 20px 0;
 }
 
+.goods-tables .goods-table-panel .goods-table table tr td:before,
+.goods-tables .goods-table-panel .goods-table table tr td:after {
+  content: " ";
+  display: table;
+}
+
+.goods-tables .goods-table-panel .goods-table table tr td:after {
+  clear: both;
+}
+
 .goods-tables .goods-table-panel .goods-table table tr td p {
   margin: 10px 0 !important;
 }
@@ -5318,11 +5332,13 @@ table .product-panel .promotions {
 }
 
 .goods-tables .goods-table-panel .goods-table table tr td .product-name {
-  display: inline-block;
-  width: 90px !important;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 130px !important;
+  padding-top: 13px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   color: #555555;
 }
 
@@ -8425,5 +8441,5 @@ table tr:hover .warning-edit-icon {
 .salesman-tips {
   font-weight: normal !important;
   font-size: 12px;
-  color: #999999;
+  color: #d2d2d2;
 }

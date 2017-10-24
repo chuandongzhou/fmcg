@@ -37,7 +37,7 @@ class UnionPay
     public function pay(Order $order, $payTypeName, $subPayTypeName = null)
     {
         if (!($payType = array_get($this->config['pay_type'], $payTypeName))) {
-            return false;
+            return ['ret' => -1, 'message' => '支付方式暂未开通'];
         }
         $subPayType = null;
         if ($subPayTypes = array_get($this->config['sub_pay_type'], $payTypeName)) {
@@ -412,7 +412,7 @@ class UnionPay
      */
     private function _aesDecrypt($privateKey, $iv, $data)
     {
-        $str = openssl_decrypt($data,'AES-128-CBC',$privateKey, 3, $iv);
+        $str = openssl_decrypt($data, 'AES-128-CBC', $privateKey, 3, $iv);
         return json_decode($this->_stripSpecialChat($str), true);
     }
 

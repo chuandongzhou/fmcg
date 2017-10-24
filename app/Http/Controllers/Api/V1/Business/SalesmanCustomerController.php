@@ -518,6 +518,7 @@ class SalesmanCustomerController extends Controller
      * 客户曾购买商品查询
      *
      * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function purchasedGoods(Request $request)
     {

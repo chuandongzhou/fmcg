@@ -57,7 +57,7 @@ class MyGoodsController extends Controller
             }
         }
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
-        $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
+        $categories = CategoryService::formatShopGoodsCate($shop, $cateId, false);
 
         return view('index.my-goods.index', [
             'goods' => $myGoods,

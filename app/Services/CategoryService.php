@@ -230,11 +230,12 @@ class CategoryService
      *
      * @param $shop
      * @param bool|false $cateId
+     * @param bool|false $isShelve
      * @return array
      */
-    static function formatShopGoodsCate($shop, $cateId = false)
+    static function formatShopGoodsCate($shop, $cateId = false, $isShelve = true)
     {
-        $shopGoods = $shop->goods()->active()->get();
+        $shopGoods = $isShelve ? $shop->goods()->active()->get() : $shop->goods()->get();
         $shopGoodsCates = $shopGoods->pluck('cate_level_1')->all();
         if ($cateId > 0 || !$cateId) {
             $cate2 = $shopGoods->pluck('cate_level_2')->all();
