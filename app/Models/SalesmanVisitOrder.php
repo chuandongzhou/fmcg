@@ -32,7 +32,7 @@ class SalesmanVisitOrder extends Model
         'display_list'
     ];
 
-    protected $appends = ['order_status_name'];
+    protected $appends = ['order_status_name', 'after_rebates_price'];
 
     /**
      * 模型启动事件
@@ -390,7 +390,8 @@ class SalesmanVisitOrder extends Model
      */
     public function getCanPassAttribute()
     {
-        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/;
+        return $this->status != cons('salesman.order.status.passed')/* && !$this->orderGoods->isEmpty()*/
+            ;
     }
 
     /**
@@ -451,6 +452,10 @@ class SalesmanVisitOrder extends Model
      */
     public function getAfterRebatesPriceAttribute()
     {
+
+        if ($this->salesman_visit_id) {
+            return bcsub($this->amount, $this->displayFees->sum('used'), 2);
+        }
         return $this->order_id && $this->order ? $this->order->after_rebates_price : $this->amount;
     }
 
