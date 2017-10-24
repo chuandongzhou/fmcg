@@ -69,7 +69,7 @@ class InventoryRequest extends Request
                             }
                         }
                         foreach ($v['pieces'] as $key => $value) {
-                            if (($value == '' || $value == '请选择') && $value != 0) {
+                            if ($value == '' || $value == '请选择') {
                                 $validator->errors()->add('goods[' . $goods_id . '][pieces][' . $key . ']', '单位 必需选择');
                             }
                         }

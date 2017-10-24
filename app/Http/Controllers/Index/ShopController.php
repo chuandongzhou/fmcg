@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Models\BusinessRelationApply;
 use App\Models\SalesmanCustomer;
 use App\Models\Shop;
 use App\Services\AddressService;
@@ -67,15 +68,17 @@ class ShopController extends Controller
      */
     public function shop($shop, $sort = '')
     {
+
         $user = auth()->user();
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
         $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
-            $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            $query->where(function ($query) use ($shop) {
+                $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            });
         })->first();
-
         $goods = $shop->goods()->active();
 
         if (in_array($sort, cons('goods.sort'))) {
@@ -109,18 +112,23 @@ class ShopController extends Controller
 
         $isLike = $user->likeShops()->where('shop_id', $shop->id)->first();
         $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
-            $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            $query->where(function ($query) use ($shop) {
+                $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            });
         })->first();
+        $applyed = BusinessRelationApply::where('supplier_id', $user->shop_id)->where('maker_id',
+            $shop->id)->first();
+
         $hotGoods = $shop->goods()->active()->ofHot()->take(10)->get();
         $recommendGoods = $shop->recommendGoods()->get();
-
         return view('index.shop.detail',
             compact(
                 'shop',
                 'isLike',
                 'hotGoods',
                 'recommendGoods',
-                'haveRelation'
+                'haveRelation',
+                'applyed'
             ));
     }
 

@@ -40,8 +40,9 @@
                                     <i class="fa fa-star"></i> 已收藏
                                 @endif
                             </a>
-                            @if(!$haveRelation)
-                                <a class="alt" href="javascript:;">
+                            @if(!$applyed && !$haveRelation && $shop->user_type == cons('user.type.maker'))
+                                <a class="alt" data-id="{{ $shop->id }}" data-name="{{ $shop->name }}"
+                                   href="javascript:;">
                                     <span class="iconfont icon-jiaoyi orange"></span>交易申请
                                 </a>
                             @endif
@@ -206,18 +207,19 @@
             </div>
         </div>
     </nav>
-    <div class="mask-outer" id="mask-outer" >
+    <div class="mask-outer" id="mask-outer">
         <div class="pop-general text-center maker-pop h200">
             <div class="pop-content">
                 <a class="pull-right close-btn" href="javascript:"><i class="fa fa-remove"></i></a>
                 <div class="pop-tips maker-wrap">
-                    已向厂家 : <span class="maker">农夫山泉</span>
+                    <span class="title-name"></span> <span class="maker"></span>
                 </div>
+                <input type="hidden" class="hidden-input" name="shopIds" value="">
                 <div class="maker-msg">提交申请绑定您的平台账号信息</div>
-                <div class="maker-msg">请耐心等待</div>
+                <div class="maker-msg"></div>
             </div>
             <div class="pop-footer-btn">
-                <button class="btn btn-primary">查看</button>
+                <button class="btn btn-primary">提交申请</button>
             </div>
         </div>
     </div>
@@ -241,12 +243,53 @@
             });
 
             //交易申请
-            $(".alt").click(function(){
-                $("#mask-outer").show();
-            })
-            $("#mask-outer .close-btn").click(function(){
-                $("#mask-outer").hide();
-            })
+            $(".alt").click(function () {
+                var name = $(this).data('name');
+                var shopId = $(this).data('id');
+                bindTips(name, shopId, 'notRelation');
+            });
+
+            function bindTips(makerName, inputVal, type) {
+                var type = type || 'applyed';
+                var div = $('#mask-outer');
+                var titleName = '', msg = '', btn = '';
+                if (type == 'applyed') {
+                    titleName = '已向厂家';
+                    msg = '请您耐心等待...';
+                    btn = '查看';
+                } else {
+                    titleName = '向厂家';
+                    msg = '申请通过后才能进行购买';
+                    btn = '提交申请';
+                }
+                div.find('span.title-name').html(titleName);
+                div.find('span.maker').html(makerName);
+                div.find('input.hidden-input').val(inputVal);
+                div.find('div.maker-msg:eq(1)').html(msg);
+                div.find('button.btn').html(btn);
+                type == 'applyed' ? div.find('button.btn').addClass('applyed').removeClass('submit-apply') : div.find('button.btn').addClass('submit-apply').removeClass('applyed');
+                div.show();
+            }
+
+            $('div.pop-footer-btn').on('click', '.submit-apply', (function () {
+                var shopIds = $('input[name=shopIds]').val();
+                if (shopIds != '') {
+                    $.post(site.api('business/salesman-customer/apply-bind-relation'), {'shopIds': shopIds}, function (data) {
+                        bindTips('{{implode(',',array_merge(session('notRelation') ?? [],session('applyed') ?? []))}}', '');
+                    })
+                }
+            }));
+
+            $('.pop-footer-btn').on('click', '.applyed', (function () {
+                window.open('{{asset('business/trade-request')}}')
+                $(".mask-outer").css("display", "none");
+                $(".alt").css("display", "none");
+            }));
+
+            $('a.close-btn').on('click', function () {
+                $(".mask-outer").css("display", "none");
+                /*window.location.reload();*/
+            });
         });
     </script>
 @stop

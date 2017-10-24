@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Business;
 
+use App\Models\BusinessRelationApply;
 use App\Models\PromoApply;
 use App\Models\SalesmanVisitOrder;
 use App\Models\Salesman;
@@ -590,6 +591,7 @@ class SalesmanCustomerController extends Controller
                 'updated_at' => $now
             ];
         }
+
         if (DB::table('business_relation_apply')->insert($data)) {
             return $this->success('操作成功');
         }

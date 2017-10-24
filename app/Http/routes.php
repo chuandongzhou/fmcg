@@ -475,6 +475,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         //获取移动端广告
         $router->get('advert', 'AdvertController@index');
         $router->post('feedback', 'FeedbackController@index'); //意见反馈
+        //仓管APP接口
+        $router->group(['prefix' => 'wk', 'namespace' => 'WarehouseKeeper'], function ($router) {
+            $router->post('login', 'AuthController@login');//处理仓管人员登陆
+            $router->get('logout', 'AuthController@logout');//处理仓管人员登出
+        });
         //司机版APP接口
         $router->group(['prefix' => 'delivery'], function ($router) {
             $router->get('index', 'DeliveryController@index');//配送人员登陆页面 测试用

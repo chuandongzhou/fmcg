@@ -217,8 +217,9 @@
             //关闭弹窗
             $('a.close-btn').on('click', function () {
                 $(".mask-outer").css("display", "none");
-//                window.location.reload();
+                /*window.location.reload();*/
             });
+
             $('button.submit-apply').click(function () {
                 var shopIds = $('input[name=shopIds]').val();
                 if (shopIds != '') {

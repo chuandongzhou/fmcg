@@ -6,7 +6,7 @@ html {
   min-height: 100%;
   font-family: "Microsoft YaHei", Arial, sans-serif !important;
   -ms-overflow-style: scrollbar;
-  //  background: url("../images/login-bg.jpg") bottom repeat;
+//  background: url("../images/login-bg.jpg") bottom repeat;
   min-width: 1200px;
 }
 
@@ -34,13 +34,11 @@ a {
     text-decoration: none;
   }
 }
-
-.image-preview {
-  img {
-    margin: 0 !important;
+.image-preview{
+  img{
+    margin:0!important;
   }
 }
-
 .text-left-important {
   text-align: left !important;
 }
@@ -96,29 +94,27 @@ a {
     }
   }
 }
-
 .public-table {
   thead {
-    td, th {
+    td,th {
       background-color: #f1f1f1;
     }
   }
-  tbody {
-    tr:nth-child(even) {
+  tbody{
+    tr:nth-child(even){
       td {
         background-color: #f1f1f1;
       }
     }
-    tr {
-      td {
-        vertical-align: middle;
-        word-wrap: break-word;
+    tr{
+      td{
+        vertical-align:middle;
+        word-wrap:break-word;
       }
     }
   }
 
 }
-
 .table-title-blue {
   margin-bottom: 0 !important;
   border: 1px solid $gray-plain-light !important;
@@ -130,21 +126,20 @@ a {
         text-align: center;
         color: $gray-base;
         background-color: #e3fbe3;
-        line-height: 30px;
+        line-height:30px;
       }
     }
   }
-  tbody {
-    tr {
-      td {
+  tbody{
+    tr{
+      td{
         border-left: none !important;
         border-right: none !important;
-        line-height: 30px;
+        line-height:30px;
       }
     }
   }
 }
-
 @mixin dash-bord {
   border-top: 1px dashed $gray-lighter;
   border-bottom: 1px dashed $gray-lighter;
@@ -170,14 +165,12 @@ a {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-
 @mixin btn-hover-color($color) {
   color: $color;
   &:hover, &:focus {
     color: $color;
   }
 }
-
 .margin-clear {
   margin: 0 !important;
 }
@@ -190,22 +183,24 @@ a {
   color: $theme-orange !important;
 }
 
+.orange {
+  color: $theme-orange !important;
+}
+
 .prompt {
   color: $gray-light;
 }
-
 .company {
   line-height: 35px;
-  width: 75px;
+  width:75px;
 }
-
-.black {
-  color: $gray-dark;
+.black{
+  color:$gray-dark;
   @include btn-hover-color($gray-dark);
 }
 
-.gray-light {
-  color: $gray-lighter;
+.gray-light{
+  color:$gray-lighter;
   @include btn-hover-color($gray-lighter);
 }
 
@@ -327,17 +322,15 @@ a {
   display: inline-block;
   padding: 0 5px;
 }
-
-.gray {
+.gray{
   @include btn-hover-color($gray-light);
   display: inline-block;
   padding: 0 5px;
-  .iconfont {
+  .iconfont{
     vertical-align: middle;
   }
 }
-
-.green {
+.green{
   @include btn-hover-color($brand-success);
   display: inline-block;
   padding: 0 5px;
@@ -619,8 +612,22 @@ a {
       font-size:14px;
       margin-top: 10px;
     }
+    .pop-footer-btn{
+      position:absolute;
+      bottom:0;
+      width:100%;
+      left:0;
+      .btn{
+        width: 100%;
+      }
+    }
   }
+  .h200{
+    height:200px!important;
+  }
+
 }
+
 
 /*======================================pop======================================*/
 
@@ -932,18 +939,17 @@ a {
     @include size(100%, 350px);
   }
   .address-list {
-    div {
+    div  {
       padding: 3px 0 5px 0;
       text-indent: 13px;
-      height: 26px;
-      margin-top: 10px;
+      height:26px;
+      margin-top:10px;
       & + div {
         margin-top: 5px;
       }
     }
   }
 }
-
 /*======================================register end======================================*/
 /*======================================passed begin======================================*/
 .passed-ok {
@@ -1195,8 +1201,8 @@ a {
         color: $word-gray !important;
         font-size: 12px;
         text-decoration: none;
-        &.contact {
-          margin-right: 10px;
+        & + a{
+          margin-left: 10px;
         }
       }
     }
@@ -1588,10 +1594,10 @@ a {
     position: relative;
     height: 185px;
     .img-wrap {
-      margin: 25px 0 0 20px;
-      width: 100px;
-      border-radius: 50%;
-      overflow: hidden;
+      margin:25px 0 0 20px;
+      width:100px;
+      border-radius:50%;
+      overflow:hidden;
       .commodity-img {
         width: 100px !important;
         height: inherit !important;
@@ -1887,7 +1893,7 @@ a {
           z-index: 999;
           padding: 10px 5px;
           background-color: $body-bg;
-          text-align: center;
+          text-align:center;
           span {
             font-size: 12px;
             color: $word-gray;
@@ -2668,8 +2674,8 @@ a {
   .attr-labels {
     padding: 0 !important;
     margin: 0 !important;
-    .item {
-      margin-bottom: 10px;
+    .item{
+      margin-bottom:10px;
     }
   }
   .editor-item {
@@ -2706,8 +2712,8 @@ a {
       }
     }
   }
-  .unit {
-    padding: 10px 0;
+  .unit{
+    padding:10px 0;
   }
   .promotions-msg {
     position: relative;
@@ -2889,8 +2895,8 @@ table {
     display: block;
     float: left;
     font-weight: bold;
-    min-width: 100px;
-    height: 40px;
+    min-width:100px;
+    height:40px;
     line-height: 40px;
     text-align: center;
     margin: 0 0 -1px -1px;
@@ -3369,8 +3375,8 @@ table {
   .go-history {
     padding: 10px 30px;
     .btn {
-      min-width: 100px;
-      height: 40px;
+      min-width:100px;
+      height:40px;
     }
   }
   .panel-title {
@@ -3728,71 +3734,68 @@ table {
   }
 
 }
-
-.report-detail {
-  .title-table {
-    margin-bottom: 20px;
+.report-detail{
+  .title-table{
+    margin-bottom:20px;
   }
 }
-
-.tableLayout {
-  margin-bottom: 20px;
-  thead {
-    tr {
-      td, th {
-        background-color: $gray-plain;
+.tableLayout{
+    margin-bottom:20px;
+  thead{
+    tr{
+      td,th{
+        background-color:$gray-plain;
       }
     }
   }
-  tr {
-    td, th {
+  tr{
+    td,th{
       text-align: center;
     }
   }
-  .tableHead {
-    min-width: 1033px;
-    table {
-      min-width: 1033px;
+  .tableHead{
+      min-width:1033px;
+      table{
+        min-width:1033px;
+      }
     }
-  }
-  .tableData {
-    min-width: 1049px;
-    table {
-      min-width: 1033px;
+  .tableData{
+      min-width:1049px;
+      table{
+        min-width:1033px;
 
+      }
     }
-  }
-  .tableColumn {
-    table {
-      tr {
-        td {
-          background-color: $gray-plain;
-          white-space: nowrap;
+  .tableColumn{
+    table{
+      tr{
+        td{
+          background-color:$gray-plain;
+          white-space:nowrap;
         }
       }
     }
   }
-  table {
-    thead {
-      td {
-        height: 35px;
-        .prompt {
+  table{
+    thead{
+      td{
+        height:35px;
+        .prompt{
           font-size: 12px;
-          color: $gray-lighter;
+          color:$gray-lighter;
         }
       }
     }
-    tr {
-      td {
-        min-width: 125px;
-        padding: 8px !important;
-        border: 1px solid #ddd;
-        white-space: nowrap;
+    tr{
+      td{
+        min-width:125px;
+        padding:8px!important;
+        border:1px solid #ddd;
+        white-space:nowrap;
       }
     }
   }
 }
-
 /*======================================order-report end======================================*/
 /*==================================================================================wholesalers end======================================================================*/
 
@@ -4328,7 +4331,7 @@ table {
   }
   .dealer-index-banner {
     .carousel-inner {
-      min-height: 80px;
+      min-height:80px;
       .item {
         padding: 0;
         img {
@@ -4598,8 +4601,8 @@ table {
             text-align: center;
             font-size: 13px;
             padding: 20px 0;
-            p {
-              margin: 10px 0 !important;
+            p{
+              margin:10px 0!important;
             }
             &:first-of-type {
               text-align: left !important;
@@ -4632,7 +4635,7 @@ table {
     margin-bottom: 10px;
     .control {
       height: 35px;
-      width: 100px;
+      width:100px;
       outline: none;
     }
   }
@@ -4986,7 +4989,7 @@ table {
       min-width: 50%;
       display: inline-block;
       line-height: 30px;
-      margin: 13px 0 0 20px;
+      margin:13px 0 0 20px;
       cursor: pointer;
       position: relative;
       label {
@@ -5002,7 +5005,7 @@ table {
           display: inline-block;
         }
       }
-      .option-wrap {
+      .option-wrap{
         z-index: 10;
       }
     }
@@ -5090,9 +5093,9 @@ table {
     display: inline-block;
     margin-left: 100px;
     .check-item {
-      padding: 0 !important;
+      padding:0!important;
       .default-checked {
-        padding: 10px 0;
+        padding:10px 0;
       }
     }
   }
@@ -5581,8 +5584,8 @@ table {
     padding: 10px 0 0 100px;
     margin-bottom: -25px;
     position: relative;
-    width: 40%;
-    z-index: 999;
+    width:40%;
+    z-index:999;
   }
 }
 
@@ -5604,8 +5607,7 @@ table {
     background-color: $body-bg !important;
   }
 }
-
-.modal {
+.modal{
   .panel-default {
     border: 1px solid $body-bg !important;
   }
@@ -5619,9 +5621,9 @@ table {
 
 .sales-details-panel {
   margin: 25px 0 0 25px;
-  .table-list {
-    margin-bottom: 30px;
-    border: 1px solid $word-gray !important;
+  .table-list{
+    margin-bottom:30px;
+    border:1px solid $word-gray!important;
   }
   .panel-title {
     padding-top: 20px;
@@ -5643,8 +5645,8 @@ table {
       .title-blue {
         background-color: #e2f8f7;
       }
-      .title-gray {
-        background-color: $gray-plain;
+      .title-gray{
+        background-color:$gray-plain;
       }
       .text-right {
         text-align: right !important;
@@ -5657,16 +5659,15 @@ table {
       margin-top: -1px !important;
     }
   }
-  .toggle-panel {
-    padding: 10px 0;
-    margin-top: -1px;
-    a {
-      @include btn-hover-color($brand-primary);
-    }
-  }
+  .toggle-panel{
+     padding:10px 0;
+     margin-top: -1px;
+     a{
+       @include btn-hover-color($brand-primary);
+     }
+   }
 }
-
-.table-scroll {
+.table-scroll{
   table {
     tr {
       td, th {
@@ -5678,8 +5679,8 @@ table {
       .title-blue {
         background-color: #e2f8f7;
       }
-      .title-gray {
-        background-color: $gray-plain;
+      .title-gray{
+        background-color:$gray-plain;
       }
       .text-right {
         text-align: right !important;
@@ -5687,10 +5688,9 @@ table {
     }
   }
 }
-
 .business-table {
   tr {
-    th, td {
+    th,td{
       border: 1px solid $gray-light !important;
       vertical-align: middle !important;
     }
@@ -5940,10 +5940,10 @@ table {
       border: 1px solid $gray-light !important;
     }
   }
-  .item {
+  .item{
     display: flex;
     flex-flow: row;
-    .column {
+    .column{
       flex: 1;
     }
   }
@@ -6172,7 +6172,7 @@ table {
     font-size: 14px;
     text-indent: 0;
     color: $gray-base;
-    background-image: none !important;
+    background-image: none!important;
   }
 }
 
@@ -6206,7 +6206,7 @@ table {
 
 }
 
-.popover {
+.popover  {
   th, td {
     padding: 15px 5px !important;
   }
@@ -6340,7 +6340,7 @@ table {
   .control {
     height: 40px;
     margin-right: 10px;
-    vertical-align: middle;
+    vertical-align:middle;
   }
   .enter {
     width: 180px;
@@ -6351,7 +6351,7 @@ table {
     margin-bottom: 20px;
     .btn {
       border-radius: 4px !important;
-      //      padding: 0 15px;
+//      padding: 0 15px;
     }
     .btn-default {
       background-color: $body-bg;
@@ -6478,15 +6478,13 @@ table {
       }
     }
   }
-  .disable {
-    background-color: $body-bg;
+  .disable{
+    background-color:$body-bg;
   }
 }
-
-.white-bg {
-  background-color: $body-bg !important;
+.white-bg{
+  background-color:$body-bg!important;
 }
-
 .salesman-table-wrap {
   @include size(800px, 450px);
   overflow-y: auto;
@@ -6576,25 +6574,23 @@ table {
     }
   }
 }
-
-.loading {
-  position: fixed;
+.loading{
+  position:fixed;
   @include square(100%);
-  top: 0;
-  left: 0;
-  text-align: center;
-  z-index: 9999;
-  background: rgba(0, 0, 0, 0.2);
-  img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+  top:0;
+  left:0;
+  text-align:center;
+  z-index:9999;
+  background:rgba(0, 0, 0, 0.2);
+  img{
+    position:absolute;
+    top:50%;
+    left:50%;
     @include square(80px);
-    margin-left: -40px;
-    margin-top: -40px;
+    margin-left:-40px;
+    margin-top:-40px;
   }
 }
-
 /*==============404 begin=================*/
 .error-wrap {
   position: relative;
@@ -6634,27 +6630,27 @@ table {
 
 /*==============404 end=================*/
 /*==============checkbox 公共按钮=================*/
-.checkbox-btn {
+.checkbox-btn{
   display: none;
-  & + label {
+  & + label{
     background-color: #FFF;
     border: 1px solid #C1CACA;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
     padding: 8px;
-    border-radius: 5px !important;
+    border-radius: 5px!important;
     display: inline-block;
     position: relative;
     margin-right: 30px;
-    &:active {
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    &:active{
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0 1px 3px rgba(0,0,0,0.1);
     }
   }
-  &:checked + label {
+  &:checked + label{
     background-color: #ECF2F7;
     border: 1px solid #92A1AC;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
     color: #243441;
-    &:after {
+    &:after{
       content: '\2714';
       position: absolute;
       top: -3px;
@@ -6668,120 +6664,113 @@ table {
     }
   }
 }
-
 /*==============checkbox 公共按钮=================*/
 /*==============库存管理begin=================*/
-.inventory-name-input {
-  width: 300px;
-  .control {
-    width: 100%;
+.inventory-name-input{
+  width:300px;
+  .control{
+    width:100%;
   }
 }
-
-.details-item {
-  text-indent: 5px;
-  margin: 10px 0;
-  label {
+.details-item{
+  text-indent:5px;
+  margin:10px 0;
+  label{
     font-weight: 600;
   }
-  .content {
+  .content{
     display: inline-block;
-    width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    width:80%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
     vertical-align: top;
   }
 }
-
-.promotion {
-  .details-item {
-    .content {
-      width: 65%;
+.promotion{
+  .details-item{
+    .content{
+      width:65%;
     }
   }
 }
-
-.wareh-details {
-  .content {
-    width: 63%;
+.wareh-details{
+  .content{
+    width:63%;
   }
 }
-
-.warehousing-error-btn {
+.warehousing-error-btn{
   display: inline-block;
   font-weight: 600;
-  .badge {
-    @include size(40px, 30px);
+  .badge{
+    @include size(40px,30px);
     border-radius: 40px !important;
-    margin-left: 10px;
+    margin-left:10px;
     background-color: $brand-danger;
-    line-height: 22px;
+    line-height:22px;
   }
 }
-
-.title-list-wrap {
-  .item {
+.title-list-wrap{
+  .item{
     line-height: 40px;
   }
-  label {
+  label{
     font-weight: 600;
   }
 }
-
-.warehousing-table {
-  table {
+.warehousing-table{
+  table{
     tbody {
       tr {
         td {
           vertical-align: middle;
-          &:first-of-type {
-            text-align: left !important;
+          &:first-of-type{
+            text-align: left!important;
           }
-          input, select {
+          input,select{
             outline: none;
-            border-radius: 3px !important;
-            height: 35px;
-            border: 1px solid $gray-lighter;
+            border-radius:3px !important;
+            height:35px;
+            border:1px solid $gray-lighter;
           }
-          .add-col {
-            @include square(35px);
+          .add-col{
+           @include square(35px);
             background-color: $body-bg;
             color: $backstage-blue;
             border: 1px solid $backstage-blue;
-            vertical-align: top;
-            border-radius: 4px !important;
-            outline: none;
+            vertical-align:top;
+            border-radius:4px!important;
+            outline:none;
             &:hover {
               background-color: $backstage-blue;
               color: $body-bg;
             }
           }
-          .remove-col {
+          .remove-col{
             @include square(35px);
             background-color: $body-bg;
             color: $red;
             border: 1px solid $red;
-            vertical-align: top;
-            border-radius: 4px !important;
-            outline: none;
+            vertical-align:top;
+            border-radius:4px!important;
+            outline:none;
             &:hover {
               background-color: $red;
               color: $body-bg;
             }
           }
-          .number {
-            width: 75px;
+          .number{
+            width:75px;
           }
-          textarea {
-            height: 55px;
-            margin-bottom: 10px;
+          textarea{
+            height:55px;
+            margin-bottom:10px;
           }
         }
       }
     }
   }
-  .store-img {
+  .store-img{
     @include square(60px);
   }
   .product-name {
@@ -6793,7 +6782,6 @@ table {
     color: $gray
   }
 }
-
 .warehousing-control-search {
   margin-bottom: 20px;
 
@@ -6804,9 +6792,9 @@ table {
     vertical-align: middle;
     &[type="text"] {
       width: 230px;
-      border-radius: 4px !important;
-      border: 1px solid $gray-lighter;
-      outline: none;
+      border-radius:4px!important;
+      border:1px solid $gray-lighter;
+      outline:none;
     }
   }
   .btn-default {
@@ -6819,38 +6807,34 @@ table {
     }
   }
 }
-
-.warehousing-table-wrap {
-  height: 400px;
+.warehousing-table-wrap{
+  height:400px;
 }
-
-.wareh-operating {
+.wareh-operating{
   margin-top: 20px;
   padding-left: 25px;
-  .btn-warning {
-    min-width: 100px;
+  .btn-warning{
+    min-width:100px;
   }
 }
-
-.wareh-details-table {
-  .product-name {
-    width: 200px;
-    overflow: hidden;
+.wareh-details-table{
+  .product-name{
+    width:200px;
+    overflow:hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  table {
-    tbody {
-      tr {
-        td {
-          font-size: 12px !important;
+  table{
+    tbody{
+      tr{
+        td{
+          font-size:12px!important;
         }
       }
     }
   }
 }
-
-.warh-error-modal {
+.warh-error-modal{
   .item {
     & + .item {
       padding: 5px 15px;
@@ -6870,333 +6854,314 @@ table {
     }
   }
 }
-
-.outhousing-product-name {
+.outhousing-product-name{
   width: 400px !important;
 }
-
-.outh-details-wrap {
-  ul {
+.outh-details-wrap{
+  ul{
     @include clearfix;
-    li {
+    li{
       float: left;
-      height: 40px;
+      height:40px;
       margin-left: 20px;
-      label {
+      label{
         font-weight: 600;
       }
-      .content {
+      .content{
         display: inline-block;
       }
     }
   }
 }
 
-#good-ontheway {
-  .product-name {
-    width: 400px !important;
+#good-ontheway{
+  .product-name{
+    width:400px !important;
   }
 }
-
 /*==============库存管理end=================*/
 /*==============资产管理begin=================*/
-.assets {
-  .btn {
-    padding: 8px 12px !important;
+.assets{
+  .btn{
+    padding:8px 12px!important;
   }
 }
-
-.modal-list-wrap {
+.modal-list-wrap{
   padding-bottom: 15px;
   & + .modal-list-wrap {
-    padding: 10px 0 !important;
+    padding:10px 0!important;
   }
   .item {
-    padding-top: 5px;
-    &.title {
-      padding: 0 0 10px 15px;
-      color: $gray-light;
+    padding-top:5px;
+    &.title{
+      padding:0 0 10px 15px;
+      color:$gray-light;
     }
     label {
       color: $gray-base;
     }
     .content {
       display: inline-block;
-      color: $gray-light;
+      color:$gray-light;
     }
   }
-  &.bg-gray {
-    background-color: $gray-plain;
+  &.bg-gray{
+    background-color:$gray-plain ;
   }
 }
-
-.assets-modal-wrap {
-  .control-label {
-    color: $gray-base !important;
+.assets-modal-wrap{
+  .control-label{
+    color:$gray-base!important;
   }
-  .prompt {
-    height: 35px;
-    line-height: 35px;
+  .prompt{
+    height:35px;
+    line-height:35px;
   }
 }
-
-.operating-panel {
-  label {
+.operating-panel{
+  label{
     display: inline-block;
-    margin-right: 10px;
+    margin-right:10px;
   }
 }
-
 /*==============资产管理end=================*/
 /*==============促销管理begin=================*/
-.fan {
+.fan{
   display: inline-block;
   @include square(39px);
-  color: $body-bg;
-  background-color: $red;
+  color:$body-bg;
+  background-color:$red;
   font-size: 25px;
-  border-radius: 50% !important;
+  border-radius:50%!important;
   text-align: center;
   line-height: 39px;
 }
-
-.select-wrap {
-  .option-panel {
+.select-wrap{
+  .option-panel{
     display: none;
-    &.active {
+    &.active{
       display: block;
     }
-    .num {
-      width: 75px;
+    .num{
+      width:75px;
     }
-    select, input {
+    select,input{
       outline: none;
     }
-    .select-commodity {
-      margin: 20px 0 10px 0;
-      .btn {
-        padding: 5px 10px !important;
+    .select-commodity{
+      margin:20px 0 10px 0;
+      .btn{
+        padding:5px 10px!important;
         margin-left: 10px;
       }
     }
-    table {
-      tr {
-        th, td {
+    table{
+      tr{
+        th,td{
           font-size: 13px;
         }
       }
     }
-    .prompt {
-      color: $gray-base;
+    .prompt{
+      color:$gray-base;
       margin-top: 80px;
     }
-    .item {
-      padding: 15px;
+    .item{
+      padding:15px;
       vertical-align: middle;
-      ul {
+      ul{
         @include clearfix;
-        li {
+        li{
           float: left;
-          height: 60px;
+          height:60px;
           padding: 0 10px;
-          label {
+          label{
             display: inline-block;
-            height: 60px;
+            height:60px;
             line-height: 60px;
           }
-          textarea {
-            height: 60px;
+          textarea{
+            height:60px;
           }
         }
       }
     }
-    .item-panel {
-      margin-top: 60px;
-      .fan {
+    .item-panel{
+      margin-top:60px;
+      .fan{
         vertical-align: middle;
-        margin: 0 15px;
+        margin:0 15px;
       }
-      .money {
-        @include size(90px, 40px);
-        border: 1px solid $gray-lighter;
-        border-radius: 4px !important;
+      .money{
+        @include size(90px,40px);
+        border:1px solid $gray-lighter;
+        border-radius:4px!important;
       }
-      &.other {
-        margin: 20px 0;
+      &.other{
+        margin:20px 0;
       }
     }
   }
 }
-
-.promotion-submit {
-  width: 100px !important;
+.promotion-submit{
+  width:100px!important;
 }
-
-.promotion-msg-wrap {
-  textarea {
-    height: 60px;
-    width: 80%;
+.promotion-msg-wrap{
+  textarea{
+    height:60px;
+    width:80%;
     vertical-align: middle;
   }
-  .item-text {
-    margin-top: 20px;
+  .item-text{
+    margin-top:20px;
   }
 }
-
 /*==============促销管理end=================*/
 /*==============月对账单begin=================*/
-.statement-item {
-  .list-wrap {
+.statement-item{
+  .list-wrap{
     margin-top: 20px;
-    .item-col {
-      margin-bottom: 10px;
-      color: $gray-base;
+    .item-col{
+      margin-bottom:10px;
+      color:$gray-base;
     }
   }
 }
-
-.statement-table-wrap {
-  .panel-default {
-    border: 1px solid #ddd !important;
+.statement-table-wrap{
+  .panel-default{
+    border:1px solid #ddd!important;
   }
-  .tab-pane {
-    padding: 0 30px;
+  .tab-pane{
+    padding:0 30px;
   }
-  table {
-    thead {
-      th, td {
-        background-color: #ffeeee !important;
+  table{
+    thead{
+      th,td{
+        background-color: #ffeeee!important;
       }
     }
-    tbody {
-      td {
+    tbody{
+      td{
         vertical-align: middle;
       }
     }
-    tfoot {
-      .money-item {
+    tfoot{
+      .money-item{
         display: inline-block;
-        margin-right: 20px;
+        margin-right:20px;
       }
-      .text-right {
-        text-align: right !important;
+      .text-right{
+        text-align:right!important;
       }
     }
   }
 }
-
-.bottom-note {
+.bottom-note{
   margin-top: 30px;
 }
-
 /*==============月对账单end=================*/
 /*==============签约管理begin=================*/
-.signed-list-wrap {
+.signed-list-wrap{
   margin-bottom: 30px;
-  .item {
+  .item{
     padding-right: 0;
-    padding-left: 5px;
-    &:last-of-type {
+    padding-left:5px;
+    &:last-of-type{
       padding-right: 15px;
     }
-    &:first-of-type {
+    &:first-of-type{
       padding-left: 15px;
     }
-    h4 {
+    h4{
       font-size: 13px;
       background-color: $gray-plain;
       text-align: center;
-      padding: 3px 0;
+      padding:3px 0;
     }
-    .content {
+    .content{
       text-align: center;
-      padding: 20px 0;
-      span {
+      padding:20px 0;
+      span{
         font-size: 20px;
         display: inline-block;
         vertical-align: middle;
-        &.money-baozheng {
-          color: $gray-base;
+        &.money-baozheng{
+          color:$gray-base;
         }
-        &.money-yucun {
-          color: #00cc66;
+        &.money-yucun{
+          color:#00cc66;
         }
       }
-      button {
+      button{
         background-color: $body-bg;
-        color: $gray;
-        border: 1px solid $gray;
-        border-radius: 4px !important;
-        outline: none;
+        color:$gray;
+        border:1px solid $gray;
+        border-radius:4px!important;
+        outline:none;
         vertical-align: middle;
       }
     }
   }
 }
-
-.signed-num {
-  color: $theme-orange;
+.signed-num{
+  color:$theme-orange;
   font-size: 15px;
   display: inline-block;
-  margin: 0 10px 0 10px;
+  margin:0 10px 0 10px;
 }
-
-.signed-submit {
-  background-color: $theme-orange;
-  color: $body-bg;
-  border: 1px solid $theme-orange;
-  border-radius: 4px !important;
+.signed-submit{
+  background-color:$theme-orange;
+  color:$body-bg;
+  border:1px solid $theme-orange;
+  border-radius:4px !important;
   outline: none;
-  padding: 2px 20px;
+  padding:2px 20px;
 }
-
-.signed-xuqi {
-  .item {
-    label {
+.signed-xuqi{
+  .item{
+    label{
       display: inline-block;
-      width: 65px;
+      width:65px;
     }
-    & + .item {
+    & + .item{
       margin-top: 15px;
     }
     &.last {
-      padding-left: 65px;
+      padding-left:65px;
     }
   }
-  ul {
+  ul{
     @include clearfix;
     display: inline-block;
-    height: 30px;
+    height:30px;
     vertical-align: middle;
-    li {
+    li{
       float: left;
-      @include size(60px, 30px);
+      @include size(60px,30px);
       text-align: center;
       line-height: 30px;
-      border: 1px solid $gray-lighter;
-      cursor: pointer;
-      & + li {
-        margin-left: -1px;
+      border:1px solid $gray-lighter;
+      cursor:pointer;
+      & + li{
+        margin-left:-1px;
       }
-      &.active {
+      &.active{
         background-color: $backstage-blue;
-        color: $body-bg;
+        color:$body-bg;
       }
     }
   }
 }
-
 /*==============签约管理end=================*/
 /*==============保证金begin=================*/
-.caption {
-  div, p {
-    margin: 15px 0;
+.caption{
+  div,p{
+    margin:15px 0;
   }
-  p {
-    padding-left: 15px;
+  p{
+    padding-left:15px;
   }
 }
-
 /*==============保证金end=================*/
 .stock-warning {
   display: inline-block;
@@ -7213,28 +7178,26 @@ table {
 table tr:hover .warning-edit-icon {
   visibility: inherit !important;
 }
-
-.bordered-bottom {
-  border: 1px solid $gray-plain-light;
-  margin-bottom: 15px;
+.bordered-bottom{
+  border:1px solid $gray-plain-light;
+  margin-bottom:15px;
 }
 
-.query-title {
-  padding: 15px;
-  color: $gray-base;
-}
 
-.query-controls {
-  .control-name {
-    input {
+.query-title{
+  padding:15px;
+  color:$gray-base;
+}
+.query-controls{
+  .control-name{
+    input{
       width: 300px;
     }
   }
-  .btn-item {
-    padding: 15px 8px !important;
+  .btn-item{
+    padding:15px 8px!important;
   }
 }
-
 .goods-tables {
   .goods-table-panel {
     .query-table {
@@ -7250,9 +7213,80 @@ table tr:hover .warning-edit-icon {
     }
   }
 }
-
-.set-target {
-  .select-commodity {
+.set-target{
+  .select-commodity{
     margin-bottom: 15px;
   }
+}
+
+.clerk-appoint{
+  .search-clerk{
+    margin:15px 0;
+    .control{
+      height:35px;
+      vertical-align:middle;
+      &.btn{
+        width:29%;
+      }
+    }
+    input{
+      width: 70%;
+      border:1px solid $gray-plain-light;
+      border-radius:4px !important;
+      padding-left:5px;
+    }
+  }
+}
+.clerk-submit{
+  width: 100%;
+  &.error-color{
+    color:$brand-danger;
+  }
+}
+.clerk-list-wrap{
+  max-height:330px ;
+  overflow-y: auto;
+  &::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(193,193,193,0.3);
+    background-color: #F5F5F5;
+  }
+
+  &::-webkit-scrollbar
+  {
+    width: 6px;
+    background-color: #F5F5F5;
+  }
+
+  &::-webkit-scrollbar-thumb
+  {
+    background-color: #c1c1c1;
+  }
+
+  li{
+    cursor: pointer;
+    padding:0 10px;
+    height:35px;
+    line-height: 35px;
+    &:nth-child(odd){
+      background-color:$theme-gray;
+    }
+    .iconfont{
+      display: none;
+      font-size: 20px;
+      margin-top:10px;
+    }
+    &.active{
+      .iconfont{
+        display: inline-block;
+      }
+    }
+  }
+}
+
+
+.salesman-tips{
+  font-weight:normal!important;
+  font-size:12px;
+  color:$word-gray;
 }

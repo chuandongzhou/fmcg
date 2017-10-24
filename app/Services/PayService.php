@@ -76,7 +76,7 @@ class PayService extends BaseService
                     'pay_status' => $orderConf['pay_status']['payment_success'],
                     'paid_at' => $nowTimestamp
                 ];
-                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
+                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod') || $order->pay_type == cons('pay_type.pick_up')) {
                     $orderAttr['status'] = $orderConf['status']['finished'];
                     $orderAttr['finished_at'] = $nowTimestamp;
                 }

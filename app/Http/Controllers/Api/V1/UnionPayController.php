@@ -34,7 +34,7 @@ class UnionPayController extends Controller
 
         $payType = $request->input('pay_type', head($this->payTypes));
 
-        if(!in_array($payType, $this->payTypes)) {
+        if (!in_array($payType, $this->payTypes)) {
             return $this->error('支付方式暂未开通');
         }
 

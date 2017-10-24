@@ -324,6 +324,17 @@ if (!function_exists('child_auth')) {
         return app('child.auth');
     }
 }
+if (!function_exists('wk_auth')) {
+    /**
+     * Get the available child auth instance.
+     *
+     * @return \Weiheng\ChildUser\Guard
+     */
+    function wk_auth()
+    {
+        return app('warehouse_keeper.auth');
+    }
+}
 if (!function_exists('array_to_xml')) {
     /**
      * 数组转xml

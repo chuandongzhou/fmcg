@@ -96,7 +96,9 @@ class MyGoodsController extends Controller
             $piecesAttributes = $piecesAttributes['pieces_level_2'] == '' ? array_except($piecesAttributes,
                 ['pieces_level_2', 'system_1']) : $piecesAttributes;
             $attributes['warning_piece'] = isset($piecesAttributes['pieces_level_2']) ? $piecesAttributes['pieces_level_2'] : $piecesAttributes['pieces_level_1'];
+
             $goods = $user->shop->goods()->create($attributes);
+
             if ($goods->exists) {
                 $goods->goodsPieces()->create($piecesAttributes);
 

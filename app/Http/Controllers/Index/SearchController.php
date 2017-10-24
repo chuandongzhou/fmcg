@@ -24,7 +24,6 @@ class SearchController extends Controller
         //$type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
         $goods = Goods::active()->shopUser()->with('shop')->ofSearchType($type);
-
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getGoodsBySearch($data, $goods);

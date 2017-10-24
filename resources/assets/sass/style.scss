@@ -148,7 +148,7 @@
 
 .icon-lianxidizhi :before { content: "\e649"; }
 
-.icon-lianxiren :before { content: "\e648"; }
+.icon-lianxiren:before { content: "\e648"; }
 
 .icon-shape :before { content: "\e646"; }
 
@@ -158,7 +158,7 @@
 
 .icon-baocun:before { content: "\e62f"; }
 
-.icon-dianhua :before { content: "\e62e"; }
+.icon-dianhua:before { content: "\e62e"; }
 
 .icon-fanhui :before { content: "\e62b"; }
 
@@ -190,7 +190,7 @@
 
 .icon-yue :before { content: "\e65f"; }
 
-.icon-peisong :before { content: "\e659"; }
+.icon-peisong:before { content: "\e659"; }
 
 .icon-dongjietubiao :before { content: "\e636"; }
 
@@ -199,6 +199,8 @@
 .icon-tongji :before { content: "\e608"; }
 
 .icon-tongji1:before { content: "\e628"; }
+
+.icon-jiaoyi:before { content: "\e634"; }
 
 .image-preview > img {
   margin: 5px 0;

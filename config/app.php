@@ -149,6 +149,7 @@ return [
         \WeiHeng\Delivery\DeliveryServiceProvider::class,
         \WeiHeng\ChildUser\ChildUserServiceProvider::class,
         \WeiHeng\ChildUser\ChildAuthServiceProvider::class,
+        \WeiHeng\WarehouseKeeper\WarehouseKeeperServiceProvider::class,
         \WeiHeng\Salesman\SalesmanServiceProvider::class,
         \WeiHeng\Recharge\Pushbox\PushboxServiceProvider::class,
         \WeiHeng\OrderDownload\OrderDownloadServiceProvider::class,
