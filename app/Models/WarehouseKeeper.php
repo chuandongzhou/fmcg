@@ -15,6 +15,10 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
     protected $fillable = [
         'account',
         'password',
+        'shop_id',
+        'remember_token',
+        'status',
+        'name'
     ];
 
 }

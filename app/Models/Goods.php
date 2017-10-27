@@ -447,7 +447,7 @@ class Goods extends Model
      */
     public function scopeWithGoodsPieces(
         $query,
-        $fields = ['goods_id', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3']
+        $fields = ['goods_id', 'system_1', 'system_2', 'pieces_level_1', 'pieces_level_2', 'pieces_level_3']
     ) {
         return $query->with([
             'goodsPieces' => function ($query) use ($fields) {
