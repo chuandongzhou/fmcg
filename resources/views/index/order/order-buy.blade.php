@@ -77,7 +77,6 @@
                                 </thead>
                                 <tbody>
                                 @foreach($order['goods'] as $key => $goods)
-
                                     <tr>
                                         <td width="50%">
                                             <img class="store-img" src="{{ $goods['image_url'] }}">

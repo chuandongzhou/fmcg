@@ -13,8 +13,35 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
     use Authenticatable;
     protected $table = 'warehouse_keeper';
     protected $fillable = [
+        'name',
+        'phone',
+        'status',
+        'shop_id',
         'account',
         'password',
     ];
+
+    /**
+     * 关联店铺
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    /**
+     * 设置密码
+     *
+     * @param $password
+     */
+    public function setPasswordAttribute($password)
+    {
+
+        if ($password) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
 
 }

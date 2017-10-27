@@ -39,7 +39,7 @@ class AssetController extends Controller
     /**
      * 资产状态切换
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  $asset
      * @return \WeiHeng\Responses\Apiv1Response
      */
     public function putStatusChange($asset)

@@ -27,10 +27,11 @@
                                 @foreach($inTransitGoods as $item)
                                     <tr>
                                         <td>
-                                            <img class="store-img lazy"
-                                                 data-original="{{$item->image_url}}"
-                                                 src="{{$item->image_url}}">
-                                            <a class="product-name" href="{{url('my-goods/'.$item->id)}}">
+                                            <div class="pull-left">
+                                                <img class="store-img lazy" data-original="{{$item->image_url}}"
+                                                     src="{{$item->image_url}}">
+                                            </div>
+                                            <a class="product-name pull-right" href="{{url('my-goods/'.$item->id)}}">
                                                 {{$item->name}}</a>
                                         </td>
                                         <td>

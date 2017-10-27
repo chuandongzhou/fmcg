@@ -446,6 +446,26 @@ class Shop extends Model
         return $this->hasMany('App\Models\Inventory');
     }
 
+    /**
+     * 关联库管
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function warehouseKeepers()
+    {
+        return $this->hasMany('App\Models\WarehouseKeeper');
+    }
+
+    /**
+     * 关联配送车辆
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deliveryTrucks()
+    {
+        return $this->hasMany(DeliveryTruck::class);
+    }
+
 
     /**
      * 获取热门商家

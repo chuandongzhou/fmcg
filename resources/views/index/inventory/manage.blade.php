@@ -123,9 +123,11 @@
                                 @foreach($goods as $item)
                                     <tr>
                                         <td>
-                                            <img class="store-img lazy" data-original="{{ $item->image_url }}"
-                                                 src="{{ $item->image_url }}">
-                                            <a class="product-name ellipsis"
+                                            <div class="pull-left">
+                                                <img class="store-img lazy" data-original="{{ $item->image_url }}"
+                                                     src="{{ $item->image_url }}">
+                                            </div>
+                                            <a class="product-name ellipsis pull-right"
                                                href="{{ url('goods/' . $item->id) }}"
                                                title="{{ $item->name }}"> {{$item->name}}</a>
                                         </td>
@@ -230,11 +232,11 @@
          */
         $('.icon-baocun').click(function () {
             var self = $(this),
-                    input = self.siblings('input'),
-                    select = self.siblings('select'),
-                    war_value = input.val(),
-                    id = self.data('id'),
-                    war_piece = $(select).find("option:selected").val();
+                input = self.siblings('input'),
+                select = self.siblings('select'),
+                war_value = input.val(),
+                id = self.data('id'),
+                war_piece = $(select).find("option:selected").val();
             self.parents('td').html('<i class="fa fa-spinner fa-pulse"></i>');
             $data = {'warning_value': war_value, 'warning_piece': war_piece};
             $.ajax({

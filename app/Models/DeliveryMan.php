@@ -88,6 +88,16 @@ class DeliveryMan extends Model implements AuthenticatableContract
     }
 
     /**
+     * 获取店铺名
+     *
+     * @return string
+     */
+    public function getShopNameAttribute()
+    {
+        return $this->shop_id && $this->shop ? $this->shop->name : '';
+    }
+
+    /**
      * 是否过期
      *
      * @return mixed

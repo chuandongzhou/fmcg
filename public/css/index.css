@@ -541,6 +541,10 @@ a:hover {
   background-image: url("../images/qr-code3.png");
 }
 
+.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .dbd-buy {
+  background-image: url("../images/qr-code-buy.png");
+}
+
 .footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .qr-code {
   background-size: cover;
   width: 100px;
@@ -552,10 +556,6 @@ a:hover {
   color: #000;
   font-weight: 600;
   margin: auto;
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .dbd-buy {
-  background-image: url("../images/qr-code-buy.png");
 }
 
 .footer .list-inline .feedback-panel .popover {
@@ -8443,3 +8443,80 @@ table tr:hover .warning-edit-icon {
   font-size: 12px;
   color: #d2d2d2;
 }
+
+/*==============app下载begin=================*/
+
+.app-download .download-role-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px !important;
+  margin-top: 55px;
+  padding: 20px 90px 40px 90px;
+  box-shadow: 0 1px 1px #777777;
+}
+
+.app-download .download-role-item .down-panel h1 {
+  font-size: 40px;
+  margin-top: 40px;
+}
+
+.app-download .download-role-item .down-panel .icon-role-down {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
+.app-download .download-role-item .down-panel .icon-role-down.dbd {
+  background-image: url("../images/sell-role-icon.png");
+}
+
+.app-download .download-role-item .down-panel .icon-role-down.helper {
+  background-image: url("../images/driver-role-icon.png");
+}
+
+.app-download .download-role-item .down-panel .icon-role-down.field {
+  background-image: url("../images/sales-role-icon.png");
+}
+
+.app-download .download-role-item .down-panel .icon-role-down.dbd-buy {
+  background-image: url("../images/buy-role-icon.png");
+}
+
+.app-download .download-role-item .down-panel .title {
+  color: #555555;
+  font-size: 38px;
+  margin: 30px auto 30px auto;
+}
+
+.app-download .download-role-item .down-panel .dbd-qr-code {
+  background-image: url("../images/qr-code.png");
+}
+
+.app-download .download-role-item .down-panel .helper-qr-code {
+  background-image: url("../images/qr-code2.png");
+}
+
+.app-download .download-role-item .down-panel .field-qr-code {
+  background-image: url("../images/qr-code3.png");
+}
+
+.app-download .download-role-item .down-panel .dbd-buy-code {
+  background-image: url("../images/qr-code-buy.png");
+}
+
+.app-download .download-role-item .down-panel .qr-code {
+  background-size: cover;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+}
+
+.app-download .download-role-item .down-panel .code-prompt {
+  margin-top: 20px;
+  font-size: 17px;
+  color: #b4b4b4;
+}
+
+/*==============app下载end=================*/
