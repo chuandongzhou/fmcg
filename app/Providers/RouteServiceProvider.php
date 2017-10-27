@@ -43,6 +43,8 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\PromoGoods' => 'promo-goods',
         'App\Models\Promo' => 'promo',
         'App\Models\PromoApply' => 'promo-apply',
+        'App\Models\WarehouseKeeper' => 'warehouse-keeper',
+        'App\Models\DeliveryTruck' => 'delivery-truck',
     ];
 
     /**

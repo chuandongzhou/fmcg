@@ -74,6 +74,7 @@ class DeliveryController extends Controller
         $deliveryMan->last_login_at = $nowTime;
         if ($deliveryMan->save()) {
             delivery_auth()->login($deliveryMan, true);
+            $deliveryMan->setAppends(['shop_name']);
             return $this->success($deliveryMan);
 
         }

@@ -47,8 +47,14 @@ class HomeController extends Controller
         return view('index.index.about');
     }
 
+    public function download(){
+        return view('index.index.download');
+    }
+
     public function test(Request $request)
     {
+
+        dd($request->server());
 
         dd('test');
         return view('index.index.test');

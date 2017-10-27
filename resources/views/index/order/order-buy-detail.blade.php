@@ -137,6 +137,12 @@
                                                                data-danger="真的要取消该订单吗？"
                                                                data-data='{"order_id":{{ $order['id'] }}}'>取消</a>
                                                         @endif
+                                                        @if($order['can_payment'])
+                                                            <a href="javascript:" data-target="#payModal"
+                                                               data-toggle="modal"
+                                                               class="btn btn-success" data-id="{{ $order->id }}"
+                                                               data-price="{{ $order->after_rebates_price }}">去付款</a>
+                                                        @endif
                                                     @else
                                                         @if ($order->can_refund)
                                                             <a class="btn btn-danger refund" data-target="#refund"

@@ -107,6 +107,7 @@ $router->get('/test', 'Index\HomeController@test');
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
     $router->get('about', 'HomeController@about');         //关于我们
+    $router->get('download', 'HomeController@download');         //关于我们
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
     $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');          //商家商店首页
     $router->get('shop/all-goods/{shop}/{sort?}', 'ShopController@shop')->where('shop', '[0-9]+');          //商家商店所有商品
@@ -145,6 +146,7 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->resource('coupon', 'CouponController'); // 优惠券
         $router->controller('sign', 'SignController'); //签约管理
         $router->resource('child-user', 'ChildUserController'); //子帐号
+        $router->get('delivery-truck', 'DeliveryTruckController@index'); //配送车辆
     });
     //$router->get('business/union-pay/qrcode/{order_id}', 'UnionPayController@getQrCode')->where('order_id', '[0-9]+');
     //业务管理
@@ -210,6 +212,8 @@ $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($rout
         $router->get('{promo}/partake', 'PromoController@partake');
         $router->controller('/', 'PromoController');
     });
+
+    $router->get('warehouse-keeper', 'WarehouseKeeperController@index'); //仓库管理员
 
     $router->get('help', 'HelpController@index'); // 帮助中心
 });
@@ -439,6 +443,9 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('child-user/bind-node/{child_user}', 'ChildUserController@bindNode'); //子帐号绑定节点权限
             $router->resource('child-user', 'ChildUserController'); //子帐号
             $router->get('index-node', 'IndexNodeController@index'); //获取所有节点
+            $router->put('delivery-truck/status/{delivery_truck}',
+                'DeliveryTruckController@status')->where('delivery_truck', '[0-9]+');
+            $router->resource('delivery-truck', 'DeliveryTruckController', ['only' => ['store', 'update', 'destroy']]);
 
         });
         $router->controller('cart', 'CartController');
@@ -706,6 +713,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                         'SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
 
                 });
-            });
+            }
+        );
+        $router->put('warehouse-keeper/status/{warehouse_keeper}',
+            'warehouseKeeperController@status')->where('warehouse_keeper', '[0-9]+');
+        $router->resource('warehouse-keeper', 'WarehouseKeeperController', ['only' => ['store', 'update', 'destroy']]);
     });
 });

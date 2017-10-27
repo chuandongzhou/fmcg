@@ -183,5 +183,12 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-salesman-promoApply', function ($salesman, $promoApply) {
             return $salesman->id == $promoApply->salesman_id;
         });
+
+        /**
+         * 验证仓管员
+         */
+        $gate->define('validate-warehouse-keeper', function ($user, $warehouseKeeper) {
+            return $warehouseKeeper->shop_id == $user->shop_id;
+        });
     }
 }

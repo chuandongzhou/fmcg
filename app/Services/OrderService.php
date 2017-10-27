@@ -491,6 +491,10 @@ class OrderService extends BaseService
         $successOrders = collect([]);  //保存提交成功的订单
 
         foreach ($shops as $shop) {
+            if ($shop->sum_price <= 0) {
+                continue;
+            }
+
             $remark = $data['shop'][$shop->id]['remark'] ? $data['shop'][$shop->id]['remark'] : '';
 
             $orderData = [
@@ -510,6 +514,7 @@ class OrderService extends BaseService
                 $couponId && ($orderData['coupon_id'] = $couponId);
             }
             if (!$orderData['shipping_address_id']) {
+                $this->setError('订单提交时出现问题');
                 $this->_deleteSuccessOrders($successOrders);
                 return false;
             }
