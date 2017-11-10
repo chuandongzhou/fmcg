@@ -331,7 +331,7 @@ class OrderController extends Controller
      * 确认订单消息
      *
      * @param \Illuminate\Http\Request $request
-     * @return $this|\Illuminate\View\View
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function postConfirmOrder(Request $request)
     {

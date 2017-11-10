@@ -73,7 +73,7 @@ class AddressService
         $cities = array_get($address, $provinceId . '.child');
         $cityCookie = request()->cookie('city_id');
         $cityId = $cityCookie && array_get($cities, $cityCookie) ? $cityCookie : key($cities);
-        $cityName = array_get($cities, $cityId . '.name', '');;
+        $cityName = array_get($cities, $cityId . '.name', '');
         return [
             'province_id' => $provinceId,
             'city_id' => $cityId,

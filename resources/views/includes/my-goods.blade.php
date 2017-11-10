@@ -8,7 +8,7 @@
                     <div class="modal-title forgot-modal-title" id="myModalLabel">
                         <span>请选择以下商品</span>
                         {{--<span>已选商品 <span--}}
-                                    {{--class="checked-goods-num">{{ count($shop->shopRecommendGoods) }}</span> 件</span>--}}
+                        {{--class="checked-goods-num">{{ count($shop->shopRecommendGoods) }}</span> 件</span>--}}
                     </div>
                 </div>
                 <div class="modal-body">
@@ -58,6 +58,7 @@
                 var obj = $(this);
 
                 if (obj.is(':checked')) {
+                    goodsId.push(obj.data('id'));
                     $('.checked-goods-num').html(goodsId.length);
                 } else {
                     if ($.inArray(obj.data('id') + '', goodsId) != -1) {
@@ -68,16 +69,14 @@
             });
             //提交推荐商品
             $('.goods-submit').click(function () {
+                var obj = $(this);
                 if (goodsId.length > 15) {
                     alert('最多选择15个推荐商品');
                     return false;
                 }
-                if (goodsId.length < 1) {
-                    alert('请选择推荐商品');
-                    return false;
-                }
-                $('.goods-submit').prop('disabled', true);
-                $('.goods-submit').html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
+
+                obj.prop('disabled', true);
+                obj.html('<i class="fa fa-spinner fa-pulse"></i> 操作中...');
                 $.ajax({
                     url: '{{ $setAdvertUrl }}',
                     method: 'post',
@@ -91,9 +90,10 @@
                 }).fail(function (jqXHR) {
                     $('.goods-submit').prop('disabled', false);
                     alert('添加失败');
-
+                    obj.html('提交');
                 });
             });
+
             // 获取商品分页内容
             function getGoods(currentPage) {
                 var oldHtml = $('.goods-list').html();

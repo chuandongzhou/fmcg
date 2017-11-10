@@ -60,7 +60,7 @@ class Advert extends Model
         $nowTime = $nowTime ?: Carbon::now();
         return $query->where('start_at', '<', $nowTime)->Where(function ($query) use ($nowTime) {
             $query->where('end_at', '>', $nowTime)->orWhere('end_at', null);
-        })->orderBy('id', 'asc')->take($limit);
+        })->take($limit);
     }
 
 
@@ -69,13 +69,24 @@ class Advert extends Model
      *
      * @param $query
      * @param $data
+     * @param bool $includeNoCity
      */
-    public function scopeOfAddress($query, $data)
+    public function scopeOfAddress($query, $data, $includeNoCity = false)
     {
-        if (isset($data['province_id']) && isset($data['city_id'])) {
+        if (($provinceId = array_get($data, 'province_id')) && ($cityId = array_get($data, 'city_id'))) {
+            if ($includeNoCity) {
+                return $query->where(function ($query) use ($provinceId, $cityId) {
+                    $query->where(['province_id' => $provinceId, 'city_id' => $cityId])->orWhere('province_id', null);
+                })->orderBy('province_id', 'desc')->orderBy('sort', 'DESC');
+            }
             return $query->where(['province_id' => $data['province_id'], 'city_id' => $data['city_id']]);
-        } elseif (isset($data['province_id'])) {
-            return $query->where('province_id', $data['province_id']);
+        } elseif ($provinceId = array_get($data, 'province_id')) {
+            if ($includeNoCity) {
+                return $query->where(function ($query) use ($provinceId) {
+                    $query->where(['province_id' => $provinceId])->orWhere('province_id', null);
+                })->orderBy('province_id', 'desc')->orderBy('sort', 'DESC');
+            }
+            return $query->where('province_id', $provinceId);
         }
     }
 

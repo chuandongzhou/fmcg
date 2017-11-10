@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Germey\Geetest\GeetestCaptcha;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Illuminate\Http\Request;
-use Germey\Geetest\CaptchaGeetest;
 
 class AuthController extends Controller
 {
@@ -19,7 +18,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, CaptchaGeetest;
+    use AuthenticatesAndRegistersUsers, GeetestCaptcha;
 
     /**
      * Create a new authentication controller instance.

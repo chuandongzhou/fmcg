@@ -27,29 +27,7 @@ class CartController extends Controller
     public function getIndex()
     {
         $myCarts = $this->user->carts();
-        $carts = $myCarts->with([
-            'goods' => function ($query) {
-                $query->select([
-                    'id',
-                    'bar_code',
-                    'name',
-                    'price_retailer',
-                    'price_retailer_pick_up',
-                    'pieces_retailer',
-                    'min_num_retailer',
-                    'specification_retailer',
-                    'price_wholesaler',
-                    'price_wholesaler_pick_up',
-                    'pieces_wholesaler',
-                    'min_num_wholesaler',
-                    'specification_wholesaler',
-                    'shop_id',
-                    'status',
-                    'user_type'
-                ]);
-            },
-            'goods.shop.user'
-        ])->get()->each(function ($item) {
+        $carts = $myCarts->with('goods.shop.user')->get()->each(function ($item) {
             $item->goods->setAppends(['image_url', 'price']);
         });
 
@@ -83,17 +61,17 @@ class CartController extends Controller
         if ($goodsInfo->is_out) {
             return $this->error('该商品缺货');
         }
-        if ($buyNum > 20000) {
-            return $this->error('商品数量不能大于20000');
+        if ($buyNum > ($maxNum = $goodsInfo->max_num)) {
+            return $this->error('商品数量不能大于' . $maxNum);
         }
         //查询是否有相同的商品,存在则合并
         $cart = $this->user->carts()->where('goods_id', $goodsId);
         if (!is_null($cart->pluck('num'))) {
-            if ($cart->pluck('num') + $buyNum <= 20000) {
+            if ($cart->pluck('num') + $buyNum <= $maxNum) {
                 $cart->increment('num', $buyNum);
                 return $this->success('加入购物车成功');
             } else {
-                return $this->error('商品数量不能大于20000');
+                return $this->error('商品数量不能大于' . $maxNum);
             }
         }
         if ($this->user->carts()->create(['goods_id' => $goodsId, 'num' => $buyNum])->exists) {

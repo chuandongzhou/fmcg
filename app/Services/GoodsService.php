@@ -195,102 +195,101 @@ class GoodsService
         $data = array_except($addressData, 'address_name');
 
         $homeColumnGoodsConf = cons('home_column.goods');
-        $cacheKey = $homeColumnGoodsConf['cache']['name_cate'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
+        /*$cacheKey = $homeColumnGoodsConf['cache']['name_cate'] . $type . ':' . $data['province_id'] . ':' . $data['city_id'];
 
-        $goodsColumns = [];
-        if (Cache::has($cacheKey)) {
-            $goodsColumns = Cache::get($cacheKey);
-        } else {
-            //商品
-            $goodsColumns = Category::active()
-                ->where('level', 1)
-                ->with(['adverts.image', 'leftAdverts.image'])
-                ->get(['id', 'level', 'pid', 'name'])
-                ->each(function ($category) use ($data) {
-                    $category->setAppends([]);
-                    if ($category->level == 1) {
-
-                        $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
-                            if (empty($advert['province_id'])) {
-                                return true;
-                            }
-                            if ($data['province_id'] && $data['city_id']) {
-                                return $advert['province_id'] == $data['province_id'] && $advert['city_id'] == $data['city_id'];
-                            }
-                            return $advert['province_id'] == $data['province_id'];
-                        })->take(5);
-                    }
-
-                    $category->leftAdverts = $category->leftAdverts->filter(function ($leftAdvert) use ($data) {
-                        if (empty($leftAdvert['province_id'])) {
+       $goodsColumns = [];
+       / (Cache::has($cacheKey)) {
+           $goodsColumns = Cache::get($cacheKey);
+       } else {*/
+        //商品
+        $goodsColumns = Category::active()
+            ->where('level', 1)
+            ->with(['adverts.image', 'leftAdverts.image'])
+            ->get(['id', 'level', 'pid', 'name'])
+            ->each(function ($category) use ($data) {
+                $category->setAppends([]);
+                if ($category->level == 1) {
+                    $category->adverts = $category->adverts->filter(function ($advert) use ($data) {
+                        if (empty($advert['province_id'])) {
                             return true;
                         }
                         if ($data['province_id'] && $data['city_id']) {
-                            return $leftAdvert['province_id'] == $data['province_id'] && $leftAdvert['city_id'] == $data['city_id'];
+                            return $advert['province_id'] == $data['province_id'] && $advert['city_id'] == $data['city_id'];
                         }
-                        return $leftAdvert['province_id'] == $data['province_id'];
-                    })->first();
-                });
-
-            $displayCount = $homeColumnGoodsConf['count']; //显示条数
-
-            $goodsFields = [
-                'id',
-                'name',
-                'bar_code',
-                'price_retailer',
-                'price_wholesaler',
-                'min_num_retailer',
-                'min_num_wholesaler',
-                'pieces_retailer',
-                'pieces_wholesaler',
-                'is_new',
-                'is_out',
-                'is_promotion',
-                'sales_volume',
-                'cate_level_1'
-            ];
-            $columnIds = GoodsColumn::OfAddress(array_filter($data))->lists('id_list', 'cate_level_1');
-
-            foreach ($goodsColumns as $category) {
-                $columnId = isset($columnIds[$category['id']]) ? $columnIds[$category['id']] : null;
-                $columnGoods = collect([]);
-                $categoryGoods = collect([]);
-                if (!is_null($columnId)) {
-                    $columnGoods = Goods::active()->whereIn('id', $columnId)
-                        ->ofSearchType($type)
-                        ->where('is_out', 0)
-                        ->ofCommonSort()
-                        ->latest()
-                        ->select($goodsFields)
-                        ->take($displayCount)
-                        ->get()
-                        ->each(function ($goods) {
-                            $goods->setAppends(['image_url']);
-                        });
-                }
-                $columnGoodsCount = $columnGoods->count();
-                if ($columnGoodsCount < $displayCount) {
-                    $categoryGoods = Goods::active()
-                        ->where('cate_level_1', $category['id'])
-                        ->ofSearchType($type)
-                        ->where('is_out', 0)
-                        ->whereNotIn('id', (array)$columnId)
-                        ->OfDeliveryArea(array_filter($data))
-                        ->ofCommonSort()
-                        ->latest()
-                        ->select($goodsFields)
-                        ->take($displayCount - $columnGoodsCount)
-                        ->get()
-                        ->each(function ($goods) {
-                            $goods->setAppends(['image_url']);
-                        });
+                        return $advert['province_id'] == $data['province_id'];
+                    })->take(5);
                 }
 
-                $category->goods = $columnGoods->merge($categoryGoods);
+                $category->leftAdverts = $category->leftAdverts->filter(function ($leftAdvert) use ($data) {
+                    if (empty($leftAdvert['province_id'])) {
+                        return true;
+                    }
+                    if ($data['province_id'] && $data['city_id']) {
+                        return $leftAdvert['province_id'] == $data['province_id'] && $leftAdvert['city_id'] == $data['city_id'];
+                    }
+                    return $leftAdvert['province_id'] == $data['province_id'];
+                })->first();
+            });
+
+        $displayCount = $homeColumnGoodsConf['count']; //显示条数
+
+        $goodsFields = [
+            'id',
+            'name',
+            'bar_code',
+            'price_retailer',
+            'price_wholesaler',
+            'min_num_retailer',
+            'min_num_wholesaler',
+            'pieces_retailer',
+            'pieces_wholesaler',
+            'is_new',
+            'is_out',
+            'is_promotion',
+            'sales_volume',
+            'cate_level_1'
+        ];
+        $columnIds = GoodsColumn::OfAddress(array_filter($data))->lists('id_list', 'cate_level_1');
+
+        foreach ($goodsColumns as $category) {
+            $columnId = isset($columnIds[$category['id']]) ? $columnIds[$category['id']] : null;
+            $columnGoods = collect([]);
+            $categoryGoods = collect([]);
+            if (!is_null($columnId)) {
+                $columnGoods = Goods::active()->whereIn('id', $columnId)
+                    ->ofSearchType($type)
+                    ->where('is_out', 0)
+                    ->ofCommonSort()
+                    ->latest()
+                    ->select($goodsFields)
+                    ->take($displayCount)
+                    ->get()
+                    ->each(function ($goods) {
+                        $goods->setAppends(['image_url']);
+                    });
             }
-            Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
+            $columnGoodsCount = $columnGoods->count();
+            if ($columnGoodsCount < $displayCount) {
+                $categoryGoods = Goods::active()
+                    ->where('cate_level_1', $category['id'])
+                    ->ofSearchType($type)
+                    ->where('is_out', 0)
+                    ->whereNotIn('id', (array)$columnId)
+                    ->OfDeliveryArea(array_filter($data))
+                    ->ofCommonSort()
+                    ->latest()
+                    ->select($goodsFields)
+                    ->take($displayCount - $columnGoodsCount)
+                    ->get()
+                    ->each(function ($goods) {
+                        $goods->setAppends(['image_url']);
+                    });
+            }
+
+            $category->goods = $columnGoods->merge($categoryGoods);
         }
+        /* Cache::put($cacheKey, $goodsColumns, $homeColumnGoodsConf['cache']['expire']);
+     }*/
         return $goodsColumns;
     }
 
@@ -417,7 +416,7 @@ class GoodsService
      *
      * 获得商品单位等级进制
      *
-     * @param $goodsId
+     * @param $goods
      * @param $piecesValue
      * @return int
      */
@@ -470,7 +469,7 @@ class GoodsService
      */
     static public function getPiecesSystem3(array $goodsPieces, $pieces)
     {
-        
+
     }
 
     /**
@@ -496,8 +495,10 @@ class GoodsService
         }
         //单位从大到小
         $newArray[$pieces['pieces_level_1']] = array_get($goodsPieces, $pieces['pieces_level_1'], 0);
-        !is_null($pieces['pieces_level_2']) && ($newArray[$pieces['pieces_level_2']] = array_get($goodsPieces, $pieces['pieces_level_2'], 0));
-        !is_null($pieces['pieces_level_3']) && ($newArray[$pieces['pieces_level_3']] = array_get($goodsPieces, $pieces['pieces_level_3'], 0));
+        !is_null($pieces['pieces_level_2']) && ($newArray[$pieces['pieces_level_2']] = array_get($goodsPieces,
+            $pieces['pieces_level_2'], 0));
+        !is_null($pieces['pieces_level_3']) && ($newArray[$pieces['pieces_level_3']] = array_get($goodsPieces,
+            $pieces['pieces_level_3'], 0));
 
         return array_filter($newArray);
     }

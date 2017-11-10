@@ -392,6 +392,7 @@ var commonAjaxSetup = function () {
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 common.loading('hide');
+                self.button('reset');
                 var params = [jqXHR, textStatus, errorThrown, self];
                 if (false !== self.triggerHandler('fail.hct.ajax', params)
                     && false !== form.triggerHandler('fail.hct.ajax', params)) {

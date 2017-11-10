@@ -98,6 +98,7 @@
                                         <td class="text-center">
                                             <button type="button" class="modified desc-num">-</button>
                                             <input class="num" data-min-num="{{ $cartGoods->goods->min_num }}"
+                                                   data-max-num="{{ $cartGoods->goods->max_num }}"
                                                    data-price="{{ $cartGoods->goods->price }}"
                                                    name="num[{{ $cartGoods->goods_id }}]" type="text"
                                                    value="{{ $cartGoods->num }}">

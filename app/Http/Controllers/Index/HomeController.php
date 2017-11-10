@@ -7,6 +7,8 @@ use App\Models\Advert;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\Shop;
+use App\Models\User;
+use App\Services\AddressService;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -21,16 +23,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //广告
-        $indexAdvertConf = cons('advert.cache.index');
-        $adverts = [];
-        if (Cache::has($indexAdvertConf['name'])) {
-            $adverts = Cache::get($indexAdvertConf['name']);
-        } else {
-            $adverts = Advert::with('image')->where('type',
-                cons('advert.type.index'))->OfTime()->orderBy('sort', 'DESC')->get();
-            Cache::put($indexAdvertConf['name'], $adverts, $indexAdvertConf['expire']);
-        }
+        $addressData = (new AddressService())->getAddressData();
+        $data = array_except($addressData, 'address_name');
+        $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->ofAddress($data, true)->get();
         return view('index.index.index', [
             'goodsColumns' => GoodsService::getNewGoodsColumn(),
             'adverts' => $adverts,
@@ -47,7 +42,13 @@ class HomeController extends Controller
         return view('index.index.about');
     }
 
-    public function download(){
+    /**
+     * app下载
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function download()
+    {
         return view('index.index.download');
     }
 

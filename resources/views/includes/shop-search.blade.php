@@ -40,7 +40,7 @@
                                     <i class="fa fa-star"></i> 已收藏
                                 @endif
                             </a>
-                            @if(!$applyed && !$haveRelation && $shop->user_type == cons('user.type.maker'))
+                            @if($shop->user_type == cons('user.type.maker')  && !$haveRelation && !$applyed)
                                 <a class="alt" data-id="{{ $shop->id }}" data-name="{{ $shop->name }}"
                                    href="javascript:;">
                                     <span class="iconfont icon-jiaoyi orange"></span>交易申请
@@ -233,6 +233,7 @@
             $('.search-station').click(function () {
                 checksubmit(site.url('search'));
             });
+
             function checksubmit(url) {
                 $("form").attr('action', url);
                 $('form').submit();

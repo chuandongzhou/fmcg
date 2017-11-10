@@ -194,6 +194,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * 关联第三方登录token
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userTokens()
+    {
+        return $this->hasMany(UserToken::class);
+    }
+
+    /**
      * 按名字检索
      *
      * @param $query

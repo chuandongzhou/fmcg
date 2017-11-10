@@ -13,7 +13,7 @@ class BackupSendSmsRequest extends Request
     public function rules()
     {
         return [
-            'user_name' => 'required|alpha_num|between:4,16|exists:user',
+            'user_name' => 'sometimes|required|alpha_num|between:4,16|exists:user',
             'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/'
         ];
     }

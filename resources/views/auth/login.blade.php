@@ -50,9 +50,7 @@
                                 </button>
                                 <div id="mask"></div>
                                 <div id="popup-captcha">
-                                    @if(request()->cookie('login_error') >=2)
-                                        {!! Geetest::render('popup') !!}
-                                    @endif
+                                    {!! Geetest::render('popup') !!}
                                 </div>
                             </div>
 
@@ -109,7 +107,6 @@
 
 @section('js')
     @parent
-    <script src="https://static.geetest.com/static/tools/gt.js"></script>
     <script type="text/javascript">
         $(function () {
             $("body").addClass("login-body");
@@ -126,53 +123,23 @@
                 $(this).attr('type', 'submit');
                 $("#mask, #popup-captcha").show();
             });
+            var loadGeetest = false;
             //登录失败事件
             $('.ajax-form').on('fail.hct.ajax', function (jqXHR, textStatus, errorThrown) {
                 $(".login-btn").html('登录').button('reset');
                 var json = textStatus['responseJSON'];
-                if (json) {
+                if (json && !loadGeetest) {
                     if (json['id'] == 'invalid_params') {
-                        if (json['errors'].loginError) {
-                            if (json['errors'].loginError >= 2) {
-                                //连续登录失败两次以上
-                                if (!$('#popup-captcha div').length) {
-                                    //页面未加载验证码
-                                    var handlerEmbed = function (captchaObj) {
-                                        $("#popup-captcha").closest('form').submit(function (e) {
-                                            var validate = captchaObj.getValidate();
-                                            if (!validate) {
-                                                alert('请完成验证');
-                                                e.preventDefault();
-                                            }
-                                        });
-                                        captchaObj.bindOn($('#popup-captcha').closest('form').find('.login-btn'));
-                                        captchaObj.appendTo("#popup-captcha");
-
-                                    };
-                                    $.ajax({
-                                        url: '/auth/geetest' + "?t=" + (new Date()).getTime(),
-                                        type: "get",
-                                        dataType: "json",
-                                        success: function (data) {
-                                            initGeetest({
-                                                gt: data.gt,
-                                                challenge: data.challenge,
-                                                product: "popup",
-                                                offline: !data.success,
-                                                lang: 'zh-cn'
-                                            }, handlerEmbed);
-                                        }
-                                    });
-                                }
-                                $('.login-btn').attr('type', 'button');
-                            }
-                            delete json['errors']['loginError'];
+                        if (json['errors'].loginError >= 2) {
+                            geetest('{{ Config::get('geetest.geetest_url', '/auth/geetest') }}')
+                            loadGeetest = true;
                         }
-                        $('form').formValidate(json['errors']);
+                        delete json['errors']['loginError'];
+                    } else if (json['message'] == '请完成验证') {
+                        geetest('{{ Config::get('geetest.geetest_url', '/auth/geetest') }}')
+                        loadGeetest = true;
                     }
                 }
-                return false;
-
             });
         });
     </script>

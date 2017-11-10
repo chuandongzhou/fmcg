@@ -125,7 +125,7 @@ function cartFunc() {
     var initMoney = function () {
         var cartSumPriceSpan = $('.cart-sum-price'),
             cartSumPrice = 0,
-        //submitBtn = $('input.btn-primary'),
+            //submitBtn = $('input.btn-primary'),
             cartShops = $('.shopping-table-list table');
         cartShops.find('.parent-checkbox:checked').length === cartShops.find('.parent-checkbox').length ? checkFa.addClass('fa-check') : checkFa.removeClass('fa-check');
         cartShops.each(function () {
@@ -138,9 +138,11 @@ function cartFunc() {
                 var tag = $(this),
                     goodsAllMonty = tag.find('.goods-all-money'),
                     descBtn = tag.find('.desc-num'),
+                    incBtn = tag.find('.inc-num'),
                     buyNumInp = tag.find('.num'),
                     buyNum = parseInt(buyNumInp.val()),
-                    minNum = buyNumInp.data('minNum');
+                    minNum = buyNumInp.data('minNum'),
+                    maxNum = buyNumInp.data('maxNum') || 20000;
 
                 if (tag.find('.inp-checkbox').is(':checked')) {
                     var money = parseFloat(goodsAllMonty.html());
@@ -148,6 +150,7 @@ function cartFunc() {
                     cartSumPrice = cartSumPrice.add(money);
                 }
                 descBtn.prop('disabled', buyNum <= minNum);
+                incBtn.prop('disabled', buyNum >= maxNum);
             });
             shopSumPriceSpan.html(shopSumPrice);
             if (shopSumPrice < minMoney.html() && shopSumPrice) {
@@ -172,9 +175,10 @@ function cartFunc() {
         var obj = $(this),
             buyInput = obj.siblings('.num'),
             minNum = buyInput.data('minNum'),
+            maxNum = buyInput.data('maxNum'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(buyInput.val());
-        if (buyNum < 20000) {
+        if (buyNum < maxNum) {
             buyInput.val(buyNum + 1);
             var goodsAllMoney = parseInt(buyInput.val()).mul(buyInput.data('price'));
             goodsAllMoneyTag.html(goodsAllMoney);
@@ -195,6 +199,7 @@ function cartFunc() {
     buyInput.on('keyup', '', function () {
         var obj = $(this),
             minNum = obj.data('min-num'),
+            maxNum = obj.data('max-num'),
             goodsAllMoneyTag = obj.closest('tr').find('.goods-all-money'),
             buyNum = parseInt(obj.val());
         //if (buyNum > 20000) {
@@ -203,9 +208,9 @@ function cartFunc() {
         if (buyNum < minNum) {
             obj.val(minNum);
             buyNum = minNum;
-        } else if (buyNum > 20000) {
-            obj.val(20000);
-            buyNum = 20000;
+        } else if (buyNum > maxNum) {
+            obj.val(maxNum);
+            buyNum = maxNum;
         }
         var goodsAllMoney = buyNum.mul(obj.data('price'));
         goodsAllMoneyTag.html(goodsAllMoney);
@@ -294,7 +299,8 @@ var numChange = function () {
         var descNum = carts.filter('.desc-num'),
             num = carts.filter('.num'),
             incNum = carts.filter('.inc-num'),
-            minNum = num.data('minNum');
+            minNum = num.data('minNum'),
+            maxNum = num.data('maxNum');
 
         if (descNum.length && num.length && incNum.length) {
             descNum.on('click', '', function () {
@@ -303,7 +309,7 @@ var numChange = function () {
             });
             incNum.on('click', '', function () {
                 var buyNum = parseInt(num.val());
-                if (buyNum < 20000) {
+                if (buyNum < maxNum) {
                     num.val(parseInt(num.val()) + 1);
                     changeDescButton();
                 }
@@ -311,8 +317,8 @@ var numChange = function () {
 
             num.on('keyup', '', function () {
                 var obj = $(this), buyNum = parseInt(obj.val());
-                if (buyNum > 20000) {
-                    obj.val(20000);
+                if (buyNum > maxNum) {
+                    obj.val(maxNum);
                 } else if (buyNum < minNum) {
                     obj.val(minNum);
                 } else {
@@ -321,15 +327,13 @@ var numChange = function () {
             });
 
             var changeDescButton = function () {
-                if (num.val() <= minNum) {
-                    descNum.prop('disabled', true);
-                } else {
-                    descNum.prop('disabled', false);
-                }
-            };
+                descNum.prop('disabled', num.val() <= minNum);
+
+            }
         }
     });
 };
+
 /**
  * 点击感兴趣处理函数
  * @param {string} module         模块
@@ -817,6 +821,7 @@ function menuFunc() {
     })
 
 }
+
 /**
  * 切换box
  */
@@ -828,6 +833,7 @@ function tabBox() {
         $('.' + boxClass).css('display', 'block').siblings('.box').css('display', 'none');
     })
 }
+
 /**
  * 商品显示与收起
  */
@@ -856,10 +862,12 @@ function displayList() {
         }
     })
 }
+
 //设置地址
 function setAddress(province, city, district, street) {
     var address = new Address(province, city, district, street);
 }
+
 //添加(编辑)商品验证
 function validform() {
 
@@ -999,6 +1007,7 @@ function validform() {
         }
     });
 }
+
 //选择单位变化时商品单位变化
 function selectedChange() {
     //一级单位变化时
@@ -1140,6 +1149,7 @@ function selectedChange() {
     });
 
 }
+
 //购物车数据
 function cartData() {
     $('#header_notification_bar').hover(function () {

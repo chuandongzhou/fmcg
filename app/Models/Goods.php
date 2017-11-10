@@ -29,11 +29,13 @@ class Goods extends Model
         'price_retailer_pick_up',
         'pieces_retailer',
         'min_num_retailer',
+        'max_num_retailer',
         'specification_retailer',
         'price_wholesaler',
         'price_wholesaler_pick_up',
         'pieces_wholesaler',
         'min_num_wholesaler',
+        'max_num_wholesaler',
         'specification_wholesaler',
         'shelf_life',
         'bar_code',
@@ -615,6 +617,20 @@ class Goods extends Model
 
         return $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->min_num_wholesaler : $this->min_num_retailer;
 
+    }
+
+    /**
+     * 根据不同角色获取最低购买数
+     *
+     * @return mixed
+     */
+    public function getMaxNumAttribute()
+    {
+        $userType = auth()->user() ? auth()->user()->type : cons('user.type.retailer');
+
+        $maxNum = $userType != $this->user_type && ($userType == cons('user.type.wholesaler') || $userType == cons('user.type.supplier')) ? $this->max_num_wholesaler : $this->max_num_retailer;
+
+        return $maxNum ?: 20000;
     }
 
     /**

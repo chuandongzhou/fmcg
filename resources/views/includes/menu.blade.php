@@ -223,7 +223,7 @@
                         </li>
                         <li class="nav-item start {{ path_active(['personal/delivery-truck']) }}">
                             <a href="{{ url('personal/delivery-truck') }}" class="nav-link ">
-                                <span class="title">配送人员</span>
+                                <span class="title">配送车辆</span>
                             </a>
                         </li>
                     </ul>
@@ -429,7 +429,7 @@
                                     </li>
                                     <li class="nav-item start {{ path_active(['personal/delivery-truck']) }}">
                                         <a href="{{ url('personal/delivery-truck') }}" class="nav-link ">
-                                            <span class="title">配送人员</span>
+                                            <span class="title">配送车辆</span>
                                         </a>
                                     </li>
                                 </ul>

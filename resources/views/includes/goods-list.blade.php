@@ -21,7 +21,7 @@
                                 disabled>-
                         </button>
                         <input type="text" data-group="group{{ $item->id }}" class="amount num" name="num"
-                               value="{{ $item->min_num }}" data-min-num="{{ $item->min_num }}">
+                               value="{{ $item->min_num }}" data-min-num="{{ $item->min_num }}" data-max-num="{{ $item->max_num }}">
                         <button type="button" data-group="group{{ $item->id }}" class="count modified inc-num">+
                         </button>
                         @if($item->is_out)

@@ -152,6 +152,12 @@ return [
             'pass' => 1,       //通过
             'not_pass' => 2,       //未通过
         ],
+        'token' => [
+            'type' => [
+                'weixinweb' => 0,
+                'weixin' => 1
+            ]
+        ]
     ],
     //首页栏目
     'home_column' => [

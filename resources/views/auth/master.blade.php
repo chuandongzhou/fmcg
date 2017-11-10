@@ -13,8 +13,7 @@
     </style>
 @stop
 
-@section('body')
-
+@section('header')
     <nav class="navbar register-nav">
         <div class="container padding-clear">
             <ul class="nav-title pull-left">

@@ -16,12 +16,16 @@ class EventServiceProvider extends ServiceProvider
         'eloquent.*' => [
             \App\Listeners\CreateAdminNotification::class,
         ],
+        /*\SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            // add your listeners (aka providers) here
+            'SocialiteProviders\WeixinWeb\WeixinWebExtendSocialite@handle',
+        ],*/
     ];
 
     /**
      * Register any other events for your application.
      *
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @param  \Illuminate\Contracts\Events\Dispatcher $events
      * @return void
      */
     public function boot(DispatcherContract $events)

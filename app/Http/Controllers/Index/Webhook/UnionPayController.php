@@ -75,7 +75,7 @@ class UnionPayController extends Controller
 
         $orderFee = sprintf("%.2f", $amount * 3 / 1000);
 
-        $tradeNo = $reportData['channelordernumber'];
+        $tradeNo = array_get($reportData, 'payorderid');
 
 
         return (new PayService())->addTradeInfo($orders, $amount, $orderFee, $tradeNo, 'union-pay', $sign);

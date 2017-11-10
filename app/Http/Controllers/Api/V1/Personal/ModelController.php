@@ -180,13 +180,13 @@ class ModelController extends Controller
      */
     public function postRecommendGoods(Request $request)
     {
-        $goodsId = $request->input('goodsId');
+        $goodsId = $request->input('goodsId', []);
         if (count($goodsId) > 15) {
             return $this->error('最多选择15个推荐商品');
         }
-        if (count($goodsId) < 1) {
+       /* if (count($goodsId) < 1) {
             return $this->error('请选择推荐商品');
-        }
+        }*/
         auth()->user()->shop->recommendGoods()->sync($goodsId);
         return $this->success('添加成功');
 
@@ -210,7 +210,8 @@ class ModelController extends Controller
         if ($currentPage > $allPage) {
             $currentPage = $allPage;
         }
-        $goods = Goods::where('shop_id', $shop_id)->active()->skip($skip)->take($pageNum)->get()->each(function($item) {
+        $goods = Goods::where('shop_id', $shop_id)->active()->skip($skip)->take($pageNum)->get()->each(function ($item
+        ) {
             $item->setAppends(['pieces', 'image_url', 'price']);
         });;
         return $this->success(['goods' => $goods, 'allPage' => $allPage, 'currentPage' => $currentPage]);

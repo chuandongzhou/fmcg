@@ -81,6 +81,7 @@
             <div class="title text-center">请填写购买数量</div>
             <div class="add-num">
                 <input type="text" class="enter-num num" maxlength="5" data-min-num="{{ $goods->min_num }}"
+                       data-max-num="{{ $goods->max_num }}"
                        value="{{ $goods->min_num }}"/>
             </div>
         </div>
@@ -97,7 +98,9 @@
                 <a class="red"><i class="iconfont icon-jia1"></i><span>{{ $goods->min_num }}</span></a>
             </div>
             <div class="col-xs-4 join-cart pd-clear">
-                <button type="button" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}" class="btn btn-primary add-cart">加入购物车</button>
+                <button type="button" data-url="{{ url('api/v1/cart/add/'.$goods->id) }}"
+                        class="btn btn-primary add-cart">加入购物车
+                </button>
             </div>
         </div>
     </div>
@@ -121,9 +124,11 @@
                     btn: ['确定', '取消'],
                     yes: function (index) {
                         var cartNumInput = $('.layui-m-layerchild').find('.num'),
-                            minNum = parseInt(cartNumInput.data('min-num'));
-                        cartNum = parseInt(cartNumInput.val()),
-                            cartNum = cartNum >= minNum ? cartNum : minNum;
+                            minNum = parseInt(cartNumInput.data('min-num')),
+                            maxNum = parseInt(cartNumInput.data('max-num'));
+                        cartNum = parseInt(cartNumInput.val());
+                        cartNum = cartNum >= minNum ? cartNum : minNum;
+                        cartNum = cartNum <= maxNum ? cartNum : maxNum;
                         $('.add-shopping-num span').html(cartNum);
                         layer.close(index)
                     },

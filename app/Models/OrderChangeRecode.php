@@ -38,6 +38,12 @@ class OrderChangeRecode extends Model
     {
         $order = $this->order;
 
-        return $order->shop->user_id == $this->user_id ? $order->shop_name : $order->deliveryMan()->find($this->user_id)->pluck('name');
+        if ($order->shop->user_id == $this->user_id) {
+            return $order->shop_name;
+        }
+
+        $deliveryMan = $order->deliveryMan()->find($this->user_id);
+
+        return $deliveryMan ? $deliveryMan->name : '';
     }
 }
