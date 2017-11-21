@@ -158,7 +158,7 @@ return [
         \Maatwebsite\Excel\ExcelServiceProvider::class,
         \Riverslei\Pusher\PusherServiceProvider::class,
         \Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
-//        \SocialiteProviders\Manager\ServiceProvider::class,
+        \SocialiteProviders\Manager\ServiceProvider::class,
 
 
 
@@ -220,7 +220,7 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
         'Geetest' => Germey\Geetest\Geetest::class,
-//        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

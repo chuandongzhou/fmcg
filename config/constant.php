@@ -155,7 +155,7 @@ return [
         'token' => [
             'type' => [
                 'weixinweb' => 0,
-                'weixin' => 1
+                'weixin' => 0
             ]
         ]
     ],
@@ -579,6 +579,12 @@ return [
             'shop-column-update' => 18,
             'notice-update' => 19,
         ],
+        'weixin_article' => [
+            'type' => [
+                'article' => 0,
+                'banner' => 1
+            ]
+        ]
     ],
     //业务员
     'salesman' => [

@@ -19,14 +19,18 @@ $router->group(['prefix' => 'child-user/auth', 'namespace' => 'ChildUser'], func
 /**
  * 移动端登录注册
  */
-$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'], function ($router) {
-    $router->get('login', 'AuthController@login');
-    $router->get('register-account', 'AuthController@registerAccount');
-    $router->get('register-password', 'AuthController@registerPassword');
-    $router->get('register-shop', 'AuthController@registerShop');
-    $router->get('register-success', 'AuthController@registerSuccess');
-    $router->get('logout', 'AuthController@logout');
-    $router->get('forget-password', 'AuthController@forgetPassword');
+$router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile'], function ($router) {
+    $router->group(['prefix' => 'auth'], function ($router) {
+        $router->get('login', 'AuthController@login');
+        $router->get('register-account', 'AuthController@registerAccount');
+        $router->get('register-password', 'AuthController@registerPassword');
+        $router->get('register-shop', 'AuthController@registerShop');
+        $router->get('register-success', 'AuthController@registerSuccess');
+        $router->get('logout', 'AuthController@logout');
+        $router->get('forget-password', 'AuthController@forgetPassword');
+    });
+    $router->get('weixin-article/articles', 'WeixinArticleController@articles');
+    $router->get('weixin-article', 'WeixinArticleController@index');
 });
 
 /**
@@ -74,6 +78,7 @@ $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' 
     $router->resource('shipping-address', 'ShippingAddressController');
     $router->get('like/goods', 'LikeController@goods');
     $router->get('like/shops', 'LikeController@shops');
+
 });
 
 /**
@@ -90,11 +95,23 @@ $router->group(['namespace' => 'Auth'], function ($router) {
         $router->get('geetest', 'AuthController@getGeetest');
     });
 
-   /* $router->group(['prefix' => 'weixinweb-auth'], function ($router) {
+    /**
+     * 微信 web登录
+     */
+    $router->group(['prefix' => 'weixinweb-auth'], function ($router) {
+        $router->get('login', 'WeixinWebAuthController@login');
+        $router->any('callback', 'WeixinWebAuthController@callback');
+        $router->get('bind-socialite', 'WeixinWebAuthController@bindSocialite');
+    });
+
+    /**
+     * 微信
+     */
+    $router->group(['prefix' => 'weixin-auth'], function ($router) {
         $router->get('login', 'WeixinAuthController@login');
         $router->any('callback', 'WeixinAuthController@callback');
         $router->get('bind-socialite', 'WeixinAuthController@bindSocialite');
-    });*/
+    });
 
 });
 
@@ -370,6 +387,10 @@ $router->group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'ad
     $router->get('operation/notification-export', 'OperationController@notificationExport');
     $router->resource('operation', 'OperationController');
     $router->resource('payment-channel', 'PaymentChannelController');
+    $router->group(['prefix' => 'weixin'], function ($router) {
+        $router->resource('article', 'WeixinArticleController');
+        $router->resource('article-banner', 'WeixinArticleBannerController');
+    });
 });
 
 /**

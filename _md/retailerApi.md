@@ -15,9 +15,16 @@
 #### 2.1.1 登录[post] (login)
 `请求参数：`  
 
-	account     string    账号
-	password    string    密码
+	account     string      账号
+	password    string      密码
 	type        int         用户类型 (1是终端   2是批发    3是供应)
+	token       array       第三方token数据 （可选,有的话为绑定第三方token并登录）
+	
+	token  字段子集介绍
+	
+	    token       string          第三方token字符串
+	    type        string          第三方类型（微信默认传weixin）
+	
 `成功返回:`
 
 	id          int             用户id
@@ -149,6 +156,69 @@
     code                        string      手机验证码
  
 `接口返回：`
+
+#### 2.1.9 获取是否已绑定平台账号（已绑定直接登录）[post] (user-token)
+`请求参数：`
+
+    token                       string      第三方token
+    type                        string      应用类型  （微信默认传 'weixin'）
+    
+`接口返回：`
+    
+    返回空字典为未绑定
+    返回user 对象为已绑定并已登录
+    
+#### 2.1.10 注册并绑定第三方token[post] (bind-socialite)
+
+`请求参数：`
+
+    password                    string      密码
+    password_confirmation       string      确认密码
+    type                        int         用户类型 （1终端商 2 批发商  3 供应商）
+    name                        string      店铺名
+    contact_person              string      联系人
+    backup_mobile               string      密保手机
+    license                     file        营业执照
+    license_num                 string      营业执照编号
+    business_license            file        食品经营许可证
+    agency_contract             file        代理合同
+    address                     array       店铺地址
+    area                        array       配送区域列表 (仅批发商和供应商上传)
+    x_lng                       float       经度
+    y_lat                       float       纬度
+    code                        string      验证码
+    token                       array       第三方token数据
+
+    address 字段子集介绍
+
+        id                      int             地址id
+        province_id             int             省id
+        city_id                 int             市id
+        district_id             int             县id
+        street_id               int             街道id
+        area_name               string          省、市、县、街道名
+        address                 string          详细地址
+
+    area 字段说明
+
+        id                     array               配送地址id列表(新添加地址id应为 '')
+        province_id            array               省id列表
+        city_id                array               市id列表
+        district_id            array               县id列表
+        street_id              array               街道id列表
+        area_name              array               省名+市名+县名+街道名  列表
+        address                array               详细地址列表
+        min_money              array               最低配送额列表
+         
+    token  字段子集介绍
+     	
+        token       string          第三方token字符串
+        type        string          第三方类型（微信默认传weixin）
+
+`成功返回:`
+
+`失败返回：`
+
 
 ### 2.2 商品模块 goods
 #### 2.2.1 获取商品栏目[get] (goods)

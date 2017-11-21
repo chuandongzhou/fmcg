@@ -16,10 +16,10 @@ class EventServiceProvider extends ServiceProvider
         'eloquent.*' => [
             \App\Listeners\CreateAdminNotification::class,
         ],
-        /*\SocialiteProviders\Manager\SocialiteWasCalled::class => [
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             // add your listeners (aka providers) here
-            'SocialiteProviders\WeixinWeb\WeixinWebExtendSocialite@handle',
-        ],*/
+            'SocialiteProviders\WeixinWeb\WeixinWebExtendSocialite@handle'
+        ],
     ];
 
     /**

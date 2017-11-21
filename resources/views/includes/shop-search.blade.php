@@ -226,15 +226,16 @@
 
     <script>
         $(function () {
+            likeFunc();
             formSubmitByGet();
             $('.search-shop').click(function () {
-                checksubmit(site.url('shop/' + "{{ $shop->id }}" + '/search'));
+                checkSubmit(site.url('shop/' + "{{ $shop->id }}" + '/search'));
             });
             $('.search-station').click(function () {
-                checksubmit(site.url('search'));
+                checkSubmit(site.url('search'));
             });
 
-            function checksubmit(url) {
+            function checkSubmit(url) {
                 $("form").attr('action', url);
                 $('form').submit();
             }

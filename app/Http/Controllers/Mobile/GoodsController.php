@@ -23,7 +23,6 @@ class GoodsController extends Controller
 
         //供应商暂时与批发商一致
         $type = auth()->user()->type;
-        //$type = $type <= cons('user.type.wholesaler') ? $type : cons('user.type.wholesaler');
 
         $goods = Goods::active()->shopUser()->with('shop')->ofSearchType($type);
 
@@ -65,7 +64,6 @@ class GoodsController extends Controller
 
             return $this->success(compact('goods'));
         }
-
 
         return view('mobile.goods.index', compact('name', 'goods', 'cateName'));
     }

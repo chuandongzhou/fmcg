@@ -19,7 +19,7 @@
                         <div class=" msg-tips">Hi,{{ $token['nickname'] }} 欢迎来到订百达 , 完成绑定后可以微信账号一键登录哦~</div>
                     </div>
                     <div class="col-xs-8 col-xs-offset-2">
-                        <form class="ajax-form form-horizontal" action="{{ url('api/v1/auth/register') }}" method="post" accept-charset="UTF-8">
+                        <form class="ajax-form form-horizontal" action="{{ url('api/v1/auth/bind-socialite') }}" data-done-url="{{ url('auth/reg-success') }}" method="post" accept-charset="UTF-8">
                             <fieldset>
                                 <div class="form-group">
                                     <label class="col-xs-3 control-label" for="name"><span class="red">*</span>
@@ -53,18 +53,20 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-xs-3 control-label" for="license"><span class="red">*</span> <span
-                                                class="prompt">营业执照:</span></label>
+                                    <label class="col-sm-3 control-label" for="license"><span class="red">*</span> 营业执照:</label>
 
-                                    <div class="col-xs-6 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
                                         <span data-name="license" class="btn btn-primary btn-sm fileinput-button"
                                               name="license">
                                             请选择图片文件
-                                            <input type="file" accept="image/*" name="file">
+                                            <input type="file" accept="image/*"
+                                                   data-url="{{ url('api/v1/file/upload-temp') }}"
+                                                   name="file">
                                         </span>
+
 
                                         <div class="image-preview w160">
                                             <img src="" class="img-thumbnail">
@@ -73,17 +75,19 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-xs-3 control-label" for="business_license"><span
-                                                class="red">*</span> <span class="prompt">食品流通许可证:</span></label>
+                                    <label class="col-sm-3 control-label" for="business_license"><span
+                                                class="red">*</span> 食品流通许可证:</label>
 
-                                    <div class="col-xs-6 col-md-6">
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
                                         <span data-name="business_license"
                                               class="btn btn-primary btn-sm fileinput-button" name="business_license">
                                             请选择图片文件
-                                            <input type="file" accept="image/*" name="file">
+                                            <input type="file" accept="image/*"
+                                                   data-url="{{ url('api/v1/file/upload-temp') }}"
+                                                   name="file">
                                         </span>
 
 
@@ -93,20 +97,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-xs-3 control-label" for="agent_contract"><span
-                                                class="red">*</span> <span class="prompt">代理合同:</span></label>
 
-                                    <div class="col-xs-6 col-md-6">
+                                <div class="form-group hidden">
+                                    <label class="col-sm-3 control-label" for="username"><span class="red">*</span>
+                                        代理合同:</label>
+
+                                    <div class="col-sm-9 col-md-6">
                                         <div class="progress collapse">
                                             <div class="progress-bar progress-bar-striped active"></div>
                                         </div>
-                                        <span data-name="business_license"
-                                              class="btn btn-primary btn-sm fileinput-button" name="agent_contract">
+                                        <span data-name="agency_contract"
+                                              class="btn btn-primary btn-sm fileinput-button" name="agency_contract">
                                             请选择图片文件
-                                            <input type="file" accept="image/*" name="file">
+                                            <input type="file" accept="image/*"
+                                                   data-url="{{ url('api/v1/file/upload-temp') }}"
+                                                   name="file" disabled>
                                         </span>
-
 
                                         <div class="image-preview w160">
                                             <img src=""
@@ -187,7 +193,7 @@
                                         <span class="prompt">用户密码:</span>
                                     </label>
                                     <div class="col-xs-6 col-md-6">
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="password" name="password">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -196,7 +202,7 @@
                                         <span class="prompt">确认密码:</span>
                                     </label>
                                     <div class="col-xs-6 col-md-6">
-                                        <input class="form-control" type="text">
+                                        <input class="form-control" type="password" name="password_confirmation">
                                     </div>
                                 </div>
                                 <div class="form-group">

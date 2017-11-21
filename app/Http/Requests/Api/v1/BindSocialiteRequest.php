@@ -9,7 +9,7 @@
 namespace App\Http\Requests\Api\v1;
 
 
-class RegisterRequest extends Request
+class BindSocialiteRequest extends Request
 {
 
     public function rules()
@@ -21,11 +21,12 @@ class RegisterRequest extends Request
             'logo' => 'sometimes|required',
             'name' => 'required|unique:shop',
             'contact_person' => 'required',
-//            'contact_info' => ['required', 'regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/'],
+            'contact_info' => ['required', 'regex:/^(0?1[0-9]\d{9})$|^((0(10|2[1-9]|[3-9]\d{2}))-?[1-9]\d{6,7})$/'],
             'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/|unique:user',
             'spreading_code' => 'alpha_num|max:20',
             'area' => 'sometimes|required|max:200',
-            'agency_contract' => 'sometimes|required'
+            'agency_contract' => 'sometimes|required',
+            'code' => 'required'
         ];
 
     }
@@ -68,6 +69,10 @@ class RegisterRequest extends Request
                     if (!$this->input('license_num')) {
                         $validator->errors()->add('license_num', '营业执照编号 不能为空');
                     }
+                }
+
+                if (empty($token = $this->input('token')) || !$token['token']) {
+                    $validator->errors()->add('code', 'TOKEN 不能为空');
                 }
             }
         });

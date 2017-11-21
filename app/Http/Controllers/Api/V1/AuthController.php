@@ -15,6 +15,7 @@ use App\Http\Requests\Api\v1\RegisterUserRequest;
 use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
 use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
+use App\Models\UserToken;
 use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -88,22 +89,28 @@ class AuthController extends Controller
 
         $nowTime = Carbon::now();
 
-        if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
-            $token = $request->input('token');
 
-            //第三方绑定时绑定token
-            if ($token && session('socialite_token')) {
-                $user->userTokens()->create($token);
-                $request->session()->forget('socialite_token');
+        //第三方绑定时绑定token
+        $token = $request->input('token');
+
+        if ($token) {
+            if ($user->userTokens()->where(['type' => $token['type'], 'user_id' => $user->id])->first()) {
+                return $this->invalidParam('password', '此账号与被绑定');
             }
+            $user->userTokens()->create([
+                'token' => $token['token'],
+                'type' => cons('user.token.type.' . $token['type'])
+            ]);
+            $request->session()->forget('socialite_token');
+        }
 
+        if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
             auth()->login($user, true);
             $cookie->queue('login_error', null, -1);
             return $this->success(['user' => $user]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
     }
-
 
     /**
      * 注册
@@ -114,8 +121,7 @@ class AuthController extends Controller
      */
     public function postRegister(RegisterRequest $request)
     {
-        $userInput = $request->only('user_name', 'password', 'backup_mobile', 'type');
-        !array_get($userInput, 'user_name') && ($shopInput['user_name'] = $userInput['backup_mobile']);
+        $userInput = $request->only(['user_name', 'password', 'backup_mobile', 'type']);
         //终端商不需要审核直接通过
         if ($userInput['type'] == cons('user.type.retailer')) {
             $userInput['audit_status'] = cons('user.audit_status.pass');
@@ -123,28 +129,21 @@ class AuthController extends Controller
         $user = User::Create($userInput);
         if ($user->exists) {
             //商店
-            $shopInput = $request->except('username', 'password', 'backup_mobile', 'type');
-
-            !array_get($shopInput, 'contact_info') && ($shopInput['contact_info'] = $userInput['backup_mobile']);
+            $shopInput = $request->except('user_name', 'password', 'backup_mobile', 'type');
 
             $shopModel = $user->shop();
 
             if ($user->type == cons('user.type.retailer')) {
                 unset($shopInput['area']);
             }
-            //return $this->error('注册用户时遇到问题');
             if ($shopModel->create($shopInput)->exists) {
                 session(['shop.name' => $shopInput['name']]);
                 $param = [
-                    'account' => $shopInput['user_name'],
+                    'account' => $userInput['user_name'],
                     'name' => $shopInput['name'],
                 ];
-                app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
-                //第三方绑定时绑定token
-                $token = $request->input('token');
-                if ($token && session('socialite_token')) {
-                    $user->userTokens()->create($token);
-                    $request->session()->forget('socialite_token');
+                if ($user->type != cons('user.type.retailer')) {
+                    app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
                 }
                 //默认添加店铺地址为收货地址
                 $this->_addShippingAddress($shopInput, $user);
@@ -191,6 +190,65 @@ class AuthController extends Controller
         }
         session(['user' => $request->all()]);
         return $this->success('设置密码成功');
+    }
+
+    /**
+     * 注册
+     *
+     * @param \App\Http\Requests\Api\v1\RegisterRequest $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     * @throws \Exception
+     */
+    public function postBindSocialite(RegisterRequest $request)
+    {
+        $userInput = $request->only(['user_name', 'password', 'backup_mobile', 'type', 'code']);
+
+        if (!app('pushbox.sms')->verifyCode('register', $userInput['backup_mobile'], $userInput['code'])) {
+            return $this->error('短信验证码错误');
+        }
+
+        !array_get($userInput, 'user_name') && ($userInput['user_name'] = $userInput['backup_mobile']);
+        //终端商不需要审核直接通过
+        if ($userInput['type'] == cons('user.type.retailer')) {
+            $userInput['audit_status'] = cons('user.audit_status.pass');
+        }
+        $user = User::Create($userInput);
+        if ($user->exists) {
+            //商店
+            $shopInput = $request->except('user_name', 'password', 'backup_mobile', 'type');
+
+            !array_get($shopInput, 'contact_info') && ($shopInput['contact_info'] = $userInput['backup_mobile']);
+
+            $shopModel = $user->shop();
+
+            if ($user->type == cons('user.type.retailer')) {
+                unset($shopInput['area']);
+            }
+
+            if ($shopModel->create($shopInput)->exists) {
+                session(['shop.name' => $shopInput['name']]);
+                $param = [
+                    'account' => $userInput['user_name'],
+                    'name' => $shopInput['name'],
+                ];
+                if ($user->type != cons('user.type.retailer')) {
+                    app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
+                }
+                //第三方绑定时绑定token
+                $token = $request->input('token');
+                if ($token) {
+                    $user->userTokens()->create($token);
+                    $request->session()->forget('socialite_token');
+                }
+                //默认添加店铺地址为收货地址
+                $this->_addShippingAddress($shopInput, $user);
+                return $this->success('注册成功');
+            } else {
+                $user->delete();
+                return $this->error('注册用户时遇到问题');
+            }
+        }
+        return $this->error('注册用户时遇到问题');
     }
 
     /**
@@ -316,6 +374,35 @@ class AuthController extends Controller
     }
 
     /**
+     * 判断是否已绑定平台账号
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\WeiHeng\Responses\Apiv1Response
+     */
+    public function postUserToken(Request $request)
+    {
+        $token = $request->input('token');
+        if (!$token) {
+            return $this->error('token不能为空');
+        }
+        $types = cons('user.token.type');
+
+        $type = $request->input('type');
+        if (!$type || !array_key_exists($type, $types)) {
+            return $this->error('type不能为空或不合法');
+        }
+
+        $userToken = UserToken::where(['type' => $types[$type], 'token' => $token])->with('user')->first();
+
+        if ($userToken) {
+            return $this->_handleLogin($userToken);
+        } else {
+            return $this->success([]);
+        }
+
+    }
+
+    /**
      * 默认添加店铺地址为收货地址
      *
      * @param $attribute
@@ -341,5 +428,47 @@ class AuthController extends Controller
             $shippingAddress->address()->create($attribute['address']);
         }
         return true;
+    }
+
+    /**
+     * 处理登录
+     *
+     * @param $userToken
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    private function _handleLogin($userToken)
+    {
+        $request = app('request');
+        $cookie = app('cookie');
+
+        $user = $userToken->user;
+        //是否已锁定
+        if ($user->status != cons('status.on')) {
+            return $this->error('账号已锁定');
+        }
+        //帐号审核
+        if ($user->audit_status != cons('user.audit_status.pass')) {
+            return $this->error('账户未审核或审核不通过');
+        }
+
+        //使用期限是否过期
+        if ($user->is_expire) {
+            return $this->error($user, '账户已到期，请续费');
+        }
+
+        $user->setVisible(['id', 'user_name', 'type', 'audit_status', 'backup_mobile', 'shop']);
+        if (!is_null($user->shop)) {
+            $user->shop->address_name = $user->shop->address;
+        }
+
+        $nowTime = Carbon::now();
+
+        if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
+            auth()->login($user, true);
+            $cookie->queue('login_error', null, -1);
+            $userToken->increment('login_count');
+            return $this->success(['user' => $user]);
+        }
+        return $this->invalidParam('password', '登录失败，请重试');
     }
 }
