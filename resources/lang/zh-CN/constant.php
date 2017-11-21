@@ -370,6 +370,7 @@ return [
             'mortgage' => '抵费',
             'promo' => '促销',
             'gift' => '赠品',
+            'wk_return' => '退货',
         ]
     ],
     //资产表
@@ -406,6 +407,23 @@ return [
         'review_status' => [
             'pass' => '通过',
             'non-review' => '未审核'
+        ]
+    ],
+    //车辆
+    'truck' => [
+        'status' => [
+            'forbidden' => '禁用',
+            'spare_time' => '空闲',
+            'wait' => '等待发车',
+            'delivering' => '配送中'
+        ]
+    ],
+    //配送单
+    'dispatch_truck' => [
+        'status' => [
+            'wait' => '等待发车',
+            'delivering' => '已发车',
+            'backed' => '已回车'
         ]
     ]
 ];

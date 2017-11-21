@@ -45,11 +45,14 @@ class InventoryService extends BaseService
      */
     public function in($data)
     {
-        $info['inventory_number'] = $data['inventory_number'] ?? '';
-        $info['inventory_type'] = $data['inventory_type'];
-        $info['action_type'] = $data['action_type'];
-        $info['user_id'] = $data['user_id'] ?? auth()->id();
-        $info['shop_id'] = $data['shop_id'] ?? auth()->user()->shop_id;
+        $info['inventory_number'] = $data['inventory_number'] ?? $this->getInventoryNumber();
+        $info['inventory_type'] = $data['inventory_type'] ?? cons('inventory.inventory_type.manual');
+        $info['action_type'] = $data['action_type'] ?? cons('inventory.action_type.in');
+        $auth = auth()->id() ? auth() : wk_auth();
+        $info['user_id'] = $data['user_id'] ?? $auth->id();
+        $info['operate'] = $data['operate'] ?? (wk_auth()->id() ? 'warehouseKeeper' : 'user');
+        $info['shop_id'] = $data['shop_id'] ?? $auth->user()->shop_id;
+
         DB::beginTransaction();
         $orderGoods = array_get($data, 'orderGoods');
         if ($orderGoods) { //存在为异常处理入库
@@ -131,6 +134,7 @@ class InventoryService extends BaseService
                 'inventory_number' => $inventory_number,
                 'user_id' => 0,
                 'source' => $record->source,
+                'operate' => 'user',
                 'goods_id' => $buyerGoods->id,
                 'shop_id' => $buyerShop->id,
                 'inventory_type' => cons('inventory.inventory_type.system'),
@@ -163,7 +167,7 @@ class InventoryService extends BaseService
             $info['action_type'] = $data['action_type'];
             $info['user_id'] = $data['user_id'] ?? auth()->id();
             $info['shop_id'] = $data['shop_id'] ?? (auth()->user()->shop_id ?? delivery_auth()->user()->shop->id);
-
+            $info['operate'] = array_get($data, 'operate', 'user');
             DB::beginTransaction();
             foreach ($data['goods'] as $goods_id => $value) {
                 //得到该商品的库存
@@ -197,11 +201,11 @@ class InventoryService extends BaseService
      * @param $goodsInfo
      * @return bool|string
      */
-    public function autoOut($order)
+    public function autoOut($order, $customData = [])
     {
-        $result = DB::transaction(function () use ($order) {
+        $result = DB::transaction(function () use ($order, $customData) {
             $inventory = $this->inventory->where('order_number', $order->id)->OfOut()->first();
-            $data = [
+            $data = count($customData) ? $customData : [
                 'inventory_number' => $inventory->inventory_number ?? $this->getInventoryNumber(),
                 'inventory_type' => cons('inventory.inventory_type.system'),  //系统
                 'action_type' => cons('inventory.action_type.out'),           //出库
@@ -342,6 +346,7 @@ class InventoryService extends BaseService
             'user',
             'order',
             'parent',
+            'warehouseKeeper',
 
         ]
     ) {
@@ -458,6 +463,16 @@ class InventoryService extends BaseService
             }
             return true;
         }
+    }
+
+    /**
+     * 订单作废入库
+     *
+     * @param $order
+     */
+    public function orderReasonIn($order)
+    {
+        return $this->clearOut($order->orderGoods);
     }
 
     /**
@@ -630,5 +645,21 @@ class InventoryService extends BaseService
                 break;
         }
         return $source;
+    }
+
+    /**
+     * 仓管获取出库记录
+     *
+     * @param $order_id
+     * @param $goods_id
+     * @return mixed
+     */
+    public function getOutRecordByWK($order_id, $goods_id)
+    {
+        return $this->inventory->with('goods')->where([
+            'shop_id' => wk_auth()->user()->shop_id,
+            'order_number' => $order_id,
+            'goods_id' => $goods_id
+        ])->ofOut()->where('source', cons('inventory.source.order'))->orderBy('production_date', 'DESC')->get();
     }
 }

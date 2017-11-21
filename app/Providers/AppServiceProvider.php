@@ -59,9 +59,9 @@ class AppServiceProvider extends ServiceProvider
             'admin.auth' => \WeiHeng\Admin\Guard::class,
             'delivery.auth' => \WeiHeng\Delivery\Guard::class,
             'salesman.auth' => \WeiHeng\Salesman\Guard::class,
-            'child.auth' => \WeiHeng\ChildUser\Guard::class
+            'child.auth' => \WeiHeng\ChildUser\Guard::class,
+            'warehouse_keeper.auth' => \WeiHeng\WarehouseKeeper\WarehouseKeeperGuard::class
         ];
-
         foreach ($aliases as $key => $value) {
             foreach ((array)$value as $alias) {
                 $this->app->alias($key, $alias);

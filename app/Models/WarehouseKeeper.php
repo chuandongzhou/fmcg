@@ -25,6 +25,8 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
         'name'
     ];
 
+    protected $hidden = ['password'];
+
     /**
      * 关联店铺
      *
@@ -42,10 +44,19 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
      */
     public function setPasswordAttribute($password)
     {
-
         if ($password) {
             $this->attributes['password'] = bcrypt($password);
         }
+    }
+
+    /**
+     * 获取店铺名
+     *
+     * @return string
+     */
+    public function getShopNameAttribute()
+    {
+        return $this->shop_id && $this->shop ? $this->shop->name : '';
     }
 
 }

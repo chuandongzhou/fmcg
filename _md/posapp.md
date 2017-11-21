@@ -78,12 +78,12 @@
 
 `成功返回：`
 	
-	id               		int         订单号
-	price           		float       订单金额
-	is_pay           		int         支付状态（0未付款，1已付款）
-	delivery_finished_at  	string    配送完成时间（该字段时空表示未完成配送）
-	user             		array       收货店家信息
-	shippingAddress  		array       收货信息
+	id               		int         	订单号
+	price           		float       	订单金额
+	is_pay           		int         	支付状态（0未付款，1已付款）
+	delivery_finished_at  	string    		配送完成时间（该字段时空表示未完成配送）
+	user             		array       	收货店家信息
+	shippingAddress  		array       	收货信息
 	orderGoods            		array       商品信息
 	user_shop_name          string          收货店家名
     after_rebates_price     decimal         优惠后价格
@@ -92,6 +92,7 @@
 	paid_at                 string          订单支付时间
     promo					array			促销活动
 	gifts					array			赠送商品
+	status					int				订单状态(0:未确认,1:未发货,2:已发货,3:完成,4:已作废)
 	
 	user字段说明
 	shop            		array       收货店家
@@ -270,9 +271,8 @@
 
 	data字段说明
 
-		pieces     int          		商品单位
-		num        int          		商品数量
-		amount     decimal      		商品金额
+		num_pieces_format	string				商品数量格式化
+		amount    			 decimal      		商品金额
 			
 
 
@@ -315,6 +315,22 @@
 	content                string             内容
 
 `失败返回：`
+
+#### 2.1.12  获取当前发车单详情[get] (now)
+
+`请求参数：`
+
+`成功返回：` 
+
+	见仓管2.4.7
+
+#### 2.1.13  作废订单[post] (order/{order_id}/cancel)
+
+`请求参数：`
+
+	reason					string				原因
+`成功返回：` 
+
 
 
 ### 2.2 微信二维码支付 wechat-pay
@@ -359,11 +375,3 @@
 
     pay_status             tinyint              订单支付状态（0=>未支付， 1=> 支付成功）
 
-    
-
-
-	
-	
-	
-	
-	

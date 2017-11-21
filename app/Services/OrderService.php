@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\Coupon;
+use App\Models\DispatchTruckReturnOrder;
 use App\Models\Order;
 use App\Models\OrderGoods;
+use App\Models\SalesmanVisitOrder;
 use Carbon\Carbon;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use Riverslei\Pusher\Pusher;
@@ -183,6 +185,18 @@ class OrderService extends BaseService
         return false;
     }
 
+
+    /**
+     * 返还陈列费
+     *
+     * @param $order
+     * @return bool
+     */
+    public function backDisplayFee(SalesmanVisitOrder $order)
+    {
+        return $order->displayList()->delete();
+    }
+
     /**
      * 订单修改处理
      *
@@ -191,12 +205,20 @@ class OrderService extends BaseService
      * @param $userId
      * @return array
      */
-    public function changeOrder($order, $attributes, $userId)
+    public function changeOrder($order, $attributes, $userId, $operate)
     {
-        //判断待修改物品是否属于该订单
+        //判断修改物品是否属于该订单
         $orderGoods = OrderGoods::find(intval($attributes['pivot_id']));
         if (!$orderGoods || $orderGoods->order_id != $order->id) {
             $this->setError('订单不存在');
+            return false;
+        }
+        if ($order->dispatch_status == cons('dispatch_truck.status.delivering') && !delivery_auth()->id()) {
+            $this->setError('已经发车,不能修改');
+            return false;
+        }
+        if ($order->dispatch_status > cons('dispatch_truck.status.delivering')) {
+            $this->setError('已经回车,不能修改');
             return false;
         }
         $num = $attributes['num'];
@@ -209,7 +231,7 @@ class OrderService extends BaseService
         if ($num == $orderGoods->num && $price == $orderGoods->price) {
             return true;
         }
-        $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId) {
+        $flag = DB::transaction(function () use ($orderGoods, $order, $price, $num, $userId, $operate) {
             $oldTotalPrice = $orderGoods->total_price;
             $newTotalPrice = bcmul($num, $price, 2);
             //增加修改记录
@@ -223,15 +245,6 @@ class OrderService extends BaseService
                 return false;
             }
             $orderGoods->fill(['price' => $price, 'num' => $num, 'total_price' => $newTotalPrice])->save();
-
-            /*if ($order->status == cons('order.status.send')) {
-                $inventoryService = new InventoryService();
-                if ($inventoryService->clearOut($orderGoods)) {
-                    if (!$inventoryService->autoOut($order)) {
-                        return false;
-                    }
-                };
-            }*/
 
             // 价格不同才更新
             $oldTotalPrice != $newTotalPrice && $order->fill(['price' => $newOrderPrice])->save();
@@ -265,12 +278,20 @@ class OrderService extends BaseService
                 }
                 !is_null($salesmanVisitOrderGoods) && $salesmanVisitOrderGoods->fill($fill)->save();
             }
-
-
+            //司机修改生成退货单
+            if (delivery_auth()->user()) {
+                DispatchTruckReturnOrder::create([
+                    'order_id' => $order->id,
+                    'dispatch_truck_id' => $order->dispatch_truck_id,
+                    'num' => $oldNum - $num,
+                    'pieces' => $orderGoods->pieces,
+                    'goods_id' => $orderGoods->goods_id
+                ]);
+            }
             $content = "商品编号：{$orderGoods->goods_id}; 原商品数量：{$oldNum},现商品数量：{$orderGoods->num}; 原商品价格：{$oldPrice},现商品价格：{$orderGoods->price}";
 
             //添加记录
-            $this->addOrderChangeRecord($order, $content, $userId);
+            $this->addOrderChangeRecord($order, $content, $userId, $operate);
 
             //通知买家订单价格发生了变化
             $redisKey = 'push:user:' . $order->user_id;
@@ -288,12 +309,13 @@ class OrderService extends BaseService
      * @param $content
      * @param null $userId
      */
-    public function addOrderChangeRecord($order, $content, $userId = null)
+    public function addOrderChangeRecord($order, $content, $userId = null, $operate = 'user')
     {
         $userId = $userId ?: auth()->id();
         $order->orderChangeRecode()->create([
             'user_id' => $userId,
-            'content' => $content
+            'content' => $content,
+            'operate' => $operate
         ]);
     }
 
@@ -590,6 +612,26 @@ class OrderService extends BaseService
     {
         $orders = auth()->user()->shop->orders()->NonArrived()->get(['id']);
         return $orders->pluck('id');
+    }
+
+    /**
+     * 添加操作记录
+     *
+     * @param $order
+     * @param $id
+     * @param $name
+     * @param $type
+     * @return mixed
+     */
+    static public function addOperateRecord($order, $id, $name, $type, $operate_name)
+    {
+        return $order->operateRecord()->create([
+            'operate_id' => $id,
+            'operater' => $name,
+            'operate_name' => $operate_name,
+            'type' => $type,
+            'time' => Carbon::now()
+        ]);
     }
 
 }

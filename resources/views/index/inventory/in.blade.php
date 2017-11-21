@@ -60,7 +60,7 @@
                                     <td>{{$list->cost ?? '0'}}
                                         / {{cons()->valueLang('goods.pieces',$list->pieces)}}</td>
                                     <td>{{cons()->valueLang('inventory.inventory_type',$list->inventory_type).cons()->valueLang('inventory.action_type',$list->action_type)}}</td>
-                                    <td>{{$list->user->user_name ?? '系统'}}</td>
+                                    <td>{{$list->operator_name}}</td>
                                     <td>{{$list->order_number > 0 ?$list->order_number: '---'}}</td>
                                     <td>{{$list->seller_name or '---'}}</td>
                                     <td>{{$list->created_at}}</td>

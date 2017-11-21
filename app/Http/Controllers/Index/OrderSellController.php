@@ -147,7 +147,6 @@ class OrderSellController extends OrderController
             $goods_quantity += $goods->pivot->num;
         });
         $deliveryMan = DeliveryMan::where('shop_id', auth()->user()->shop_id)->lists('name', 'id');
-
         return view('index.order.order-sell-detail', [
             'order' => $order,
             'goods_quantity' => $goods_quantity,

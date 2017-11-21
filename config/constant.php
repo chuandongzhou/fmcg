@@ -64,6 +64,7 @@ return [
             'mortgage' => 1,//陈列
             'gift' => 2,   //赠品
             'promo' => 3,  //促销
+            'wk_return' => 4,  //退货
 
 
         ]
@@ -641,5 +642,24 @@ return [
             'non-review' => 0,  //未审核
             'pass' => 1,        //通过
         ]
-    ]
+    ],
+
+    //车辆
+    'truck' => [
+        'status' => [
+            'forbidden' => 0,        //禁用
+            'spare_time' => 1,       //空闲
+            'wait' => 2,             //等待发车
+            'delivering' => 3        //配送中
+        ]
+    ],
+
+    //配送单
+    'dispatch_truck' => [
+        'status' => [
+            'wait' => 1,        //等待发车
+            'delivering' => 2,       //配送中
+            'backed' => 3,             //已回车
+        ]
+    ],
 ];

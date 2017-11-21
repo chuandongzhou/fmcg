@@ -122,15 +122,7 @@
                                                             </a>
                                                         </p>
                                                     @endif
-                                                    @if($order['can_send'])
-                                                        <p>
-                                                            <a class="btn btn-warning send-goods"
-                                                               data-target="#sendModal" data-toggle="modal"
-                                                               data-id="{{ $order['id'] }}">
-                                                                发货
-                                                            </a>
-                                                        </p>
-                                                    @elseif($order['can_confirm_collections'])
+                                                    @if($order['can_confirm_collections'])
                                                         <p><a class="btn btn-blue ajax" data-method='put'
                                                               data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>
@@ -242,13 +234,15 @@
                                     </div>
 
                                     <div class="panel-container">
-                                        @foreach($order->deliveryMan as $deliveryMan)
-                                            <ul class="contacts clearfix">
-                                                <li class="label-prompt">联系人 :</li>
-                                                <li>{{ $deliveryMan->name }}</li>
-                                                <li>{{ $deliveryMan->phone }}</li>
-                                            </ul>
-                                        @endforeach
+                                        @if($order->dispatchTruck)
+                                            @foreach($order->dispatchTruck->deliveryMans as $deliveryMan)
+                                                <ul class="contacts clearfix">
+                                                    <li class="label-prompt">联系人 :</li>
+                                                    <li>{{ $deliveryMan->name }}</li>
+                                                    <li>{{ $deliveryMan->phone }}</li>
+                                                </ul>
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -521,14 +515,17 @@
                                                 <td>{{ $order->user_shop_name }}</td>
                                             </tr>
                                         @endif
-                                        @if($order['status']==cons('order.status.invalid'))
-                                            <tr>
-                                                <td>作废订单</td>
-                                                <td>{{ $order['updated_at'] }}</td>
-                                                <td>{{ $order->shop_name }}</td>
-                                            </tr>
-                                        @endif
 
+                                        {{--操作记录--}}
+                                        @if($order->operateRecord)
+                                            @foreach($order->operateRecord as $operateRecord)
+                                                <tr>
+                                                    <td>{{$operateRecord->operate_name}}</td>
+                                                    <td>{{$operateRecord->time }}</td>
+                                                    <td>{{$operateRecord->operater}}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </table>
                                 </div>
                             </div>

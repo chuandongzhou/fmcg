@@ -140,15 +140,7 @@
                                                             </a>
                                                         </p>
                                                     @endif
-                                                    @if($order['can_send'])
-                                                        <p>
-                                                            <a class="btn btn-warning send-goods"
-                                                               data-target="#sendModal" data-toggle="modal"
-                                                               data-id="{{ $order['id'] }}">
-                                                                发货
-                                                            </a>
-                                                        </p>
-                                                    @elseif($order['can_confirm_collections'])
+                                                    @if($order['can_confirm_collections'])
                                                         <p><a class="btn btn-blue ajax" data-method='put'
                                                               data-url="{{ url('api/v1/order/batch-finish-of-sell') }}"
                                                               data-data='{"order_id":{{ $order['id'] }}}'>确认收款</a></p>

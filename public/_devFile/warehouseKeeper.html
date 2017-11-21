@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>posapp</title>
+<title>warehouseKeeper</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style type="text/css">
 /* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
@@ -423,346 +423,319 @@ img {
     </script>
 </head>
 <body>
-<h1>司机App API</h1>
+<h1>仓管App API</h1>
 <h2>1.API接口通信规定</h2>
 <ul>
 <li>接口采用<strong>HTTP</strong>,<strong>POST</strong>协议</li>
 <li>请求URL <strong>192.168.2.66/api/v1</strong></li>
 <li>附加请求参数 <strong>ter_type</strong>: <strong>web端传1</strong>, <strong>ios端传2</strong>, <strong>android端传3</strong></li>
-<li>
-请求返回数据格式
-所有数据返回都基于以下的<strong>json</strong>协议
-<blockquote>
-<p>失败时返回：{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:[&quot;不是一个合法的账号&quot;]}&quot;}
+</ul>
+<h2>- 请求返回数据格式</h2>
+<pre><code>所有数据返回都基于以下的**json**协议
+失败时返回：
+{&quot;id&quot;:'success',&quot;message&quot;:&quot;String|Array&quot;,'errors':&quot;{account:&quot;错误原因&quot;}&quot;}
 id:状态值
 message:返回具体内容
-error:返回具体字段不合法</p>
-</blockquote>
-</li>
-</ul>
+error:返回具体字段不合法
+</code></pre>
+
 <h2>2.接口详细说明</h2>
-<h3>2.1 公共模块 delivery</h3>
+<h3>2.1 公共模块 wk</h3>
 <h4>2.1.1 登陆[post] (login)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>user_name   string       账号
-
-password    string       密码
+<pre><code>account                     string                  账号
+password                    string                  密码
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<pre><code>id           int         配送人员id
-user_name    string      登录名
-password     string      密码
-pos_sign     string      pos机编号
-name         string      司机名称
+<pre><code>id                          int                     id
+account                     string                  账号
+password                    string                  密码
+name                        string                  名称
+mobile                      string                  手机
+status                      int                     状态
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.1.2 分配的订单信息[get] (orders)</h4>
+<h4>2.1.2 退出登陆[get] (logout)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>id_name               int/string    订单号/买家店铺名
-</code></pre>
-
 <p><code>成功返回：</code></p>
-<pre><code>id                    int            订单号
-price                 float          订单金额
-is_pay                int            支付状态（0未支付，1已支付）
-pieces                array          所有的商品单位
-user_shop_name        string         收货店家名
-created_at            string         下单时间
-remark                string          订单备注
-after_rebates_price   decimal     优惠后订单价格
-shippingAddress       array          收货信息
-
-
-shippingAddress字段说明
-
-consigner       string      收货人
-phone           string      收货人联系方式
-x-lng           string      收货地址经度（隐藏字段）
-y_lat           string      收货地址纬度（隐藏字段）
-address         array       收货地址
-
-address字段说明
-
-area_name       string      收货地址（area_name和address组合在一起是具体收货地址）
-address         string      详细收货地址
-</code></pre>
-
 <p><code>失败返回：</code></p>
-<h4>2.1.3 完成配送操作[get] (deal-delivery)</h4>
+<h3>2.2 个人中心 person-center</h3>
+<h4>2.2.1 修改密码[post] (password)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>order_id        int          订单号
+<pre><code>old_password                string                  原密码
+new_password                string                  新密码
 </code></pre>
 
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.1.4 订单详情[get] (detail)</h4>
+<h3>2.3 订单 order</h3>
+<h4>2.3.1 订单列表[get] (list)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>order_id        int          订单id
+<pre><code>condition                   int/string              订单号or店铺名称
+choice                      bool                    1:已选车,0:未选车
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<pre><code>id                      int             订单号
-price                   float           订单金额
-is_pay                  int             支付状态（0未付款，1已付款）
-delivery_finished_at    string          配送完成时间（该字段时空表示未完成配送）
-user                    array           收货店家信息
-shippingAddress         array           收货信息
-orderGoods                  array       商品信息
-user_shop_name          string          收货店家名
-after_rebates_price     decimal         优惠后价格
-mortgageGoods           array           陈列费商品
-display_fee             decimal         陈列费
-paid_at                 string          订单支付时间
-promo                   array           促销活动
-gifts                   array           赠送商品
-status                  int             订单状态(0:未确认,1:未发货,2:已发货,3:完成,4:已作废)
+<pre><code>id                          int                     订单ID
+user_id                     int                     用户ID
+status                      int                     状态
+pay_status                  int                     支付状态
+pay_type                    int                     支付类型
+is_cancel                   int                     是否取消
+shipping_address_id         int                     收货地址id
+goods_inventory             bool                    0:不足
+user_shop_name              string                  店铺名称
+status_name                 string                  状态名
+shipping_address            object                  收货地址
 
-user字段说明
-shop                    array       收货店家
-type                    int         买家用户类型（1是终端   2是批发）
+shipping 字段介绍:
 
-shop字段说明
-name                    string      收货店家名
+    consigner               string                  收货人
+    phone                   number                  收货人电话
+    address                 object                  地址信息
 
-promos 子集介绍
+address 字段介绍:
 
-id                      int                 促销活动ID（编号）
-name                    string              促销名称
-type                    int                 促销类型（1:自定义,2:钱返钱,3：钱返商品,4:商品返钱,5:商品返商品）
-start_at                date                开始时间
-end_at                  date                结束时间
-remark                  string              促销备注
-condition               array               促销申请条件
-rebate                  array               促销活动返利
-
-condition 子集介绍
-
-goods_id                int                 条件商品ID
-quantity                int                 条件商品数量
-unit                    int                 条件商品单位代码
-goods_name              string              条件商品名称
-goods_pirces            string              条件商品单位名称
-money                   int                 条件金额
-custom                  strint              自定义条件   
-
-rebate  子集介绍
-
-goods_id                int                 返利商品ID
-quantity                int                 返利商品数量
-unit                    int                 返利商品单位代码
-goods_name              string              返利商品名称
-goods_pirces            string              返利商品单位名称
-money                   int                 返利金额
-custom                  strint              自定义返利
-
-gifts字段子集说明
-
-id                      int                 商品id
-num                     int                 个数
-pieces                  int                 单位
-
-shippingAddress字段说明
-consigner               string       收货人姓名
-phone                   string       收货联系电话
-address                 array        收货地址
-
-address字段说明
-area_name               string      收货地址（area_name和address组合在一起是具体收货地址）
-address                 string      详细收货地址
-
-orderGoods字段说明
-name                    string        商品名称
-
-specification_retailer  string     规格  （对于终端商）
-
-specification_wholesaler  string  规格  （对于批发商 供应商时添加）
-
-promotion_info          string      促销信息    （取当是促销时传入）
-
-pivot                   array        购买商品信息中间表
-
-image_url               string      商品图片('第一张')
-
-images_url              array       商品全部图片
-
-pivot字段说明
-price                   decimal       购买商品单位价格
-num                     int           购买商品数量
-total_price             decimal       购买商品总价格
-pieces                  int           单位编号 （对于终端商  0盒  1瓶 2箱 3听 4条 5袋  6罐  7包 8桶 9杯 10支 11个 12筒） 
-
-
-mortgageGoods字段子集说明
-
-name            string       陈列商品名称
-image_url       string       陈列商品图片
-pivot          array        中间信息
-
-pivot字段子集说明
-
-num            int          陈列商品数量
-price          decimal      陈列商品单价
-total_price    decimal      陈列商品总价
-pieces         int          陈列商品单位
+    area_name               string                  地址
+    address                 string                  详细
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.2.5 订单历史记录[get] (history-orders)</h4>
-<p><code>请求参数：</code></p>
-<pre><code>start_at               date             开始时间
-end_at                 date             结束时间
-id_name               int/string        订单号/买家店铺名
-</code></pre>
-
-<p><code>成功返回：</code></p>
-<pre><code> historyOrder          array            历史订单详情
-
-order字段说明
-
-date                   string              日期
-
-data                   array               订单详情
-
-data字段说明
-
-id                    int              订单号
-delivery_finished_at  string          订单完成时间
-user_shop_name        string          收货店家名称
-pay_status            int              支付状态（0，未支付；1，已支付）
-</code></pre>
-
-<p><code>失败返回：</code></p>
-<h4>2.1.6 退出登陆[get] (logout)</h4>
+<h4>2.3.2 订单详情[get] ({order_id}/detail)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
+<pre><code>id                          int                     订单ID
+user_id                     int                     用户ID
+status                      int                     状态
+pay_status                  int                     支付状态
+pay_type                    int                     支付类型
+price                       decimal                 价格
+is_cancel                   int                     是否取消
+shipping_address_id         int                     收货地址id
+goods_inventory             bool                    0:不足
+user_shop_name              string                  店铺名称
+status_name                 string                  状态名
+remark                      string                  订单备注and陈列费备注
+display_fee                 decimal                 陈列费
+created_at                  time                    下单时间
+paid_at                     time                    支付时间
+shipping_address            array                   收货地址
+dispatch_truck              array                   发车单
+goods                       array                   订单商品
+mortgageGoods               array                   陈列费商品
+giftGoods                   array                   赠品
+
+order_goods 字段介绍:
+
+id                          int                     id
+type                        int                     商品类型(同订百达)
+goods_id                    int                     商品ID
+price                       decimal                 价格
+num                         int                     数量
+total_price                 decimal                 总价
+pieces                      int                     单位代码
+order_id                    int                     所属订单ID
+inventory_state             int                     库存状态?
+goods_inventory             bool                    1:足,0:不足
+pieces_name                 string                  单位名
+goods_name                  string                  商品名
+image                       string                  图片地
+
+dispatch_truck 字段介绍:
+
+    truck                   array                   卡车信息
+    delivery_mans           array                   配送人
+
+truck 字段介绍:
+
+    name                    string                  卡车名
+    license_plate           string                  车牌
+
+delivery_mans 字段介绍:
+
+    同 2.4.2
+
+shipping 字段介绍:
+
+    consigner               string                  收货人
+    phone                   number                  收货人电话
+    address                 array                   地址信息
+
+address 字段介绍:
+
+    area_name               string                  地址
+    address                 string                  详细
+</code></pre>
+
 <p><code>失败返回：</code></p>
-<h4>2.1.7 修改订单[post] (update-order)</h4>
+<h4>2.3.3 修改订单商品[put] ({order_id}/modify)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>order_id          int            订单号
-num               int            修改后的数量
+<pre><code>num               int            修改后的数量
 pivot_id          int            商品订单关联表ID
 </code></pre>
 
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.1.8 配送统计[get] (delivery-statistical)</h4>
-<p><code>请求参数：</code></p>
-<pre><code>start_at            date                    开始时间
-end_at              date                    结束时间
-num                 int                     订单配送人数（可选参数）
-</code></pre>
-
-<p><code>成功返回：</code></p>
-<pre><code>deliveryNum         array                   所有配送订单人数
-data                array                   统计数据
-
-data字段说明
-
-goods               array                    商品统计
-deliveryMan         array                    配送人员统计
-
-deliveryMan字段说明
-
-    name            string                   配送人员姓名
-    num             int                      配送单数
-    price           decimal                  配送总金额
-    discount        decimal                  总优惠金额
-    display_fee     decimal                  总陈列现金
-    detail          array                    配送金额组成
-
-    detail字段说明
-        pay_type     int                交易方式（0：现金，其他按正常表示）
-        amount       decimal            交易金额（其中:易宝=易宝+pingxx_易宝，支付宝支付=支付宝+支付宝app）
-
-goods字段说明
-    deliveryManNum     int              订单配送人数
-    allGoods           array            按商品名称分类明细
-
-allGoods字段说明
-    name          string                商品名称
-    data          array                按购买单位分类明细
-
-
-data字段说明
-
-    num_pieces_format   string              商品数量格式化
-    amount               decimal            商品金额
-</code></pre>
-
-<p><code>失败返回：</code></p>
-<h4>2.1.9 订单商品删除[delete] (order-goods-delete/{order<em>goods</em>id})</h4>
+<h4>2.3.4 删除订单商品[delete] (order-goods-delete/{order<em>goods</em>id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
 <p><code>失败返回：</code></p>
-<h4>2.1.10 修改密码[ post] (modify-password)</h4>
+<h3>2.4 配送单 dispatch-truck</h3>
+<h4>2.4.1 车辆列表[get] (trucks)</h4>
 <p><code>请求参数：</code></p>
-<pre><code>old_password             string             原密码
-password                 string             新密码
-password_confirmation    string             确认新密码
+<pre><code>available                   bool                    2：空闲 1:空闲，等待发车,0全部
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<p><code>失败返回：</code>  
-</p>
-<h4>2.1.11  检查最新版本[get] (latest-version)</h4>
-<p><code>请求参数：</code></p>
-<p><code>成功返回：</code></p>
-<pre><code>record                  array             版本信息
-download_url            string            下载地址
-
-
-record字段说明
-
-version_name           string             版本名称
-version_no             string             版本号
-content                string             内容
+<pre><code>id                          int                     车辆ID
+name                        string                  车辆名
+license_plate               string                  车牌号
+status                      int                     车辆状态(0:禁用,1,空闲,2等待发车,3配送中)
+staus_name                  string                  状态名
 </code></pre>
 
 <p><code>失败返回：</code></p>
-<h4>2.1.12  获取当前发车单详情[get] (now)</h4>
-<p><code>请求参数：</code></p>
-<p><code>成功返回：</code> </p>
-<pre><code>见仓管2.4.7
-</code></pre>
-
-<h4>2.1.13  作废订单[post] (order/{order_id}/cancel)</h4>
-<p><code>请求参数：</code></p>
-<pre><code>reason                  string              原因
-</code></pre>
-
-<p><code>成功返回：</code> </p>
-<h3>2.2 微信二维码支付 wechat-pay</h3>
-<h4>2.2.1  获取二维码[get] (qrcode/{order_id})</h4>
+<h4>2.4.2 配送人员列表[get] (delivery-mans)</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<pre><code>code_url              string                二维码地址
-created_at            timestamp             二维码生成时间
+<pre><code>id                      int                     id
+user_name               string                  账号
+name                    string                  名字
+phone                   string                  电话
+shop_id                 int                     店铺ID
+status                  bool                    状态
+delivery_status			bool					配送状态,1可以选择
 </code></pre>
 
-<h4>2.2.2  获取订单支付状态[get] (order-pay-status/{order_id})</h4>
+<p><code>失败返回：</code></p>
+<h4>2.4.3 添加订单到车辆[post] (order)</h4>
 <p><code>请求参数：</code></p>
-<p><code>成功返回：</code></p>
-<pre><code>pay_status             tinyint              订单支付状态（0=&gt;未支付， 1=&gt; 支付成功）
-</code></pre>
-
-<h3>2.3 银联二维码支付 union-pay</h3>
-<h4>2.3.1  获取二维码[get] (qrcode/{order_id})</h4>
-<p><code>请求参数：</code></p>
-<pre><code>pay_type                string              支付渠道 （alipay为支付宝二维码， wechat为微信二维码）
+<pre><code>truck_id                    int                     车辆ID
+order_id                    int/array               订单ID
+dispatch_truck_id           int                     有就传没得就算了
 </code></pre>
 
 <p><code>成功返回：</code></p>
-<pre><code>code_url              string                二维码地址
+<p><code>失败返回：</code></p>
+<h4>2.4.4 添加配送人员到车辆[post] (delivery-mans)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>truck_id                    int                     车辆ID
+delivery_mans               array                   配送人ID数组
 </code></pre>
 
-<h4>2.3.2  获取订单支付状态[get] (order-pay-status/{order_id})</h4>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.4.5 修改发车单订单排序[put] ({dtv_id}/change-sort)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>order_ids                   array                   排序订单(key为排序顺序)
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.4.6 创建发车单[post] (voucher-create)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>dtv_id                      int                     发车单ID
+remark                      string                  备注
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.4.7 发车单详情[get] (voucher-detail)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>turck_id                    int                     车辆ID
+dtv_id                      int                     发车单ID
+注: 车辆列表传车ID其他传发车单ID
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>id                          int                     发车单ID
+dispatch_number             number                  单号
+delivery_truck_id           int                     车ID
+status                      int                     发车单状态(1:等待发车,2:配送中,3:已回车)
+remark                      string                  备注
+dispatch_time               time                    发车时间
+back_time                   time                    回车时间
+can_back                    bool                    是否可回车
+order_goods_statis          array                   订单商品统计
+return_order_goods_statis   array                   退货订单商品统计
+orders                      array                   订单
+truck                       array                   车辆
+delivery_mans               array                   配送员
+
+order_goods_statis 字段介绍
+    goods_id                int                     商品ID
+    name                    string                  商品名称
+    img_url                 string                  图片地址
+    quantity                string                  统计数量
+    frequency               int                     出现次数
+    type                    int                     1:订货,2退货
+return_order_goods_statis 同上
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.4.8 发车历史[get] (history)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>number_license              string/int              车牌/发车单号
+start_at                    time                    开始时间
+end_at                      time                    结束时间
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>id                          int                     id
+dispatch_number             int                     发车单号
+delivery_truck_id           int                     车辆id
+status                      int                     状态
+remark                      string                  发车备注
+dispatch_time               time                    发车时间
+back_time                   time                    回车时间
+order_amount                int                     订单数
+is_return_order             bool                    是否有退货:1有
+truck                       array                   车辆信息
+
+truck字段介绍
+    同2.4.1
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.4.9 发车单订单商品单个统计[get] ({dtv_id}/goods-statistical)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>goods_id                    int                     商品ID
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>order_id                    int                     订单ID
+quantity                    string                  数量
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.4.10 发车单退货单商品单个统计[get] ({dtv_id}/return-goods-statistical)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>goods_id                    int                     商品ID
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<pre><code>order_id                    int                     订单ID
+quantity                    string                  数量
+</code></pre>
+
+<p><code>失败返回：</code></p>
+<h4>2.4.11 切换车辆[put] ({dtv_id}/change-truck)</h4>
+<p><code>请求参数：</code></p>
+<pre><code>new_truck_id                int                     新车ID
+</code></pre>
+
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
+<h4>2.4.12 删除发车单中的订单[delete] (delete-order/{order_id})</h4>
 <p><code>请求参数：</code></p>
 <p><code>成功返回：</code></p>
-<pre><code>pay_status             tinyint              订单支付状态（0=&gt;未支付， 1=&gt; 支付成功）
-</code></pre>
-
+<p><code>失败返回：</code></p>
+<h4>2.4.13 确认回车/确认入库[post] ({dtv_id}/truck-back)</h4>
+<p><code>请求参数：</code></p>
+<p><code>成功返回：</code></p>
+<p><code>失败返回：</code></p>
 
 </body>
 </html>

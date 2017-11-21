@@ -190,5 +190,18 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-warehouse-keeper', function ($user, $warehouseKeeper) {
             return $warehouseKeeper->shop_id == $user->shop_id;
         });
+
+        /**
+         * 仓管验证车辆
+         */
+        $gate->define('validate-warehouse-keeper-truck', function ($user, $truck) {
+            return $truck->shop_id == $user->shop_id;
+        });
+        /**
+         * 仓管验证订单
+         */
+        $gate->define('validate-warehouse-keeper-order', function ($user, $order) {
+            return $order->shop_id == $user->shop_id;
+        });
     }
 }

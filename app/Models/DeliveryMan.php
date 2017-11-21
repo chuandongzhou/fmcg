@@ -66,6 +66,16 @@ class DeliveryMan extends Model implements AuthenticatableContract
     }
 
     /**
+     * 关联配送单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function dispatchTruck()
+    {
+        return $this->belongsToMany('App\Models\DispatchTruck', 'dispatch_truck_delivery_man');
+    }
+
+    /**
      * 密码加密
      *
      * @param $password
@@ -116,6 +126,4 @@ class DeliveryMan extends Model implements AuthenticatableContract
     {
         return '司机' . $this->attributes['name'];
     }
-
-
 }

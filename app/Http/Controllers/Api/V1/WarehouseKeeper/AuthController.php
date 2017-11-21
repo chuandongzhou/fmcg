@@ -32,7 +32,7 @@ class AuthController extends Controller
         wk_auth()->login($wk);
         return $this->success(['wk' => $wk]);
     }
-
+    
     /**
      * 登出
      */

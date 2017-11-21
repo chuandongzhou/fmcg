@@ -1,12 +1,14 @@
 <?php
 namespace WeiHeng\WarehouseKeeper;
 
-class WarehouseKeeperGuard extends \Illuminate\Auth\Guard
+use Illuminate\Auth\Guard as BaseGuard;
+
+class WarehouseKeeperGuard extends BaseGuard
 {
     /**
      * Get the currently authenticated user.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return \Illuminate\Contracts\Auth\Authenticatable|\App\Models\WarehouseKeeper|null
      */
     public function user()
     {

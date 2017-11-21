@@ -70,7 +70,7 @@ class Shop extends Model
             $model->ShopSignature()->delete();
             $model->promo()->delete();
             $model->asset()->delete();
-            Inventory::where('shop_id', $model->id)->delete();
+            $model->inventory()->delete();
         });
         static::updated(function ($model) {
             (new UserService(true))->setShopDetail($model->user);
@@ -464,6 +464,15 @@ class Shop extends Model
     public function deliveryTrucks()
     {
         return $this->hasMany(DeliveryTruck::class);
+    }
+
+    /**
+     * 关联发车单
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function dispatchTrucks()
+    {
+        return $this->hasManyThrough('App\Models\DispatchTruck',DeliveryTruck::class);
     }
 
 
