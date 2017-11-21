@@ -39,5 +39,6 @@ class Kernel extends HttpKernel
         'deposit' => \App\Http\Middleware\VerifyDeposit::class,
         'child.auth' =>  \App\Http\Middleware\ChildUserAuthenticate::class,
         'maker_salesman' =>  \App\Http\Middleware\MakerSalesmanAuthenticate::class,
+        'wk.auth' =>  \App\Http\Middleware\WarehouseKeeperAuthenticate::class,
     ];
 }

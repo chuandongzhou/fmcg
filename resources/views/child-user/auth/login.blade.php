@@ -35,8 +35,7 @@
                     <div class="row login-wrap">
                         <form class="ajax-form" method="post" action="{{ url('api/v1/child-user/auth/login') }}"
                               accept-charset="UTF-8" data-help-class="error-msg text-center"
-                              data-done-url="{{ url('child-user/info') }}"
-                        >
+                              data-done-url="{{ url('child-user/info') }}">
                             <div class="col-xs-12 padding-clear">
                                 <span class="role-title"></span>
                             </div>

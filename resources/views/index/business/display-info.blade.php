@@ -95,7 +95,7 @@
                                     <table class="table table-bordered table-center margin-clear">
                                         <thead>
                                         <tr>
-                                            <th class="title-gray">订单号</th>
+                                            <th class="title-gray">订货单号</th>
                                             <th class="title-gray">业务员</th>
                                             <th class="title-gray">下单时间</th>
                                             <th class="title-gray">状态</th>
@@ -154,7 +154,7 @@
                                     <table class="table table-bordered table-center margin-clear">
                                         <thead>
                                         <tr>
-                                            <th class="title-gray">订单号</th>
+                                            <th class="title-gray">订货单号</th>
                                             <th class="title-gray">业务员</th>
                                             <th class="title-gray">下单时间</th>
                                             <th class="title-gray">状态</th>

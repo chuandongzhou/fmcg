@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Api\V1\WarehouseKeeper\DispatchTruckController;
+use App\Models\DispatchTruck;
+use App\Models\DispatchTruckReturnOrder;
 use App\Models\OrderGoods;
 use App\Models\DeliveryMan;
 use App\Models\VersionRecord;
 use App\Models\Order;
+use App\Services\DispatchTruckService;
+use App\Services\InventoryService;
 use DB;
 use Hash;
 use Carbon\Carbon;
@@ -90,16 +95,18 @@ class DeliveryController extends Controller
     public function orders(DeliveryRequest $request)
     {
         $idName = $request->input('id_name', null);
-        $orders = Order::ofDeliveryMan(delivery_auth()->id())
-            ->ofOrderIdName($idName)
-            ->whereNull('delivery_finished_at')
+        $dtv = delivery_auth()->user()->dispatchTruck()->whereNull('back_time')->where('status',
+            cons('dispatch_truck.status.delivering'))->get();
+        $orders = Order::
+        whereNull('delivery_finished_at')
+            ->whereIn('dispatch_truck_id', $dtv->pluck('id'))
             ->useful()
             ->noInvalid()
+            ->ofOrderIdName($idName)
             ->with('user.shop', 'shippingAddress.address', 'coupon')
+            ->orderBy('dispatch_truck_sort')
             ->get();
-
         $orders->each(function ($order) {
-
             $order->is_pay = $order->pay_status == 1 ? 1 : 0;
             $order->pieces = cons()->valueLang('goods.pieces');
             $order->setAppends([
@@ -117,12 +124,62 @@ class DeliveryController extends Controller
                 'user_shop_name',
                 'after_rebates_price'
             ]);
-
-            // $order->user&&$order->user->setHidden([]);
         });
         return $this->success($orders);
 
 
+    }
+
+    /**
+     * 当前发车单详情
+     *
+     * @param $dtv_id
+     * @return array|\WeiHeng\Responses\Apiv1Response
+     */
+    public function nowDispatchVoucherDetail()
+    {
+        $with = [
+            'orders' => function ($order) {
+                $order->orderBy('dispatch_truck_sort')->select([
+                    'id',
+                    'user_id',
+                    'status',
+                    'price',
+                    'coupon_id',
+                    'pay_status',
+                    'type',
+                    'pay_type',
+                    'shop_id',
+                    'is_cancel',
+                    'display_fee',
+                    'created_at',
+                    'remark',
+                    'shipping_address_id',
+                    'paid_at',
+                    'delivery_finished_at',
+                    'dispatch_truck_id'
+                ]);
+            },
+            'truck',
+            'deliveryMans',
+            'orders.orderGoods.goods.goodsPieces',
+            'orders.shippingAddress.address',
+            'returnOrders.goods.goodsPieces',
+        ];
+        $dtv = delivery_auth()->user()->dispatchTruck()->with($with)->whereNull('back_time')->first();
+        if (!$dtv) {
+            return $this->error('没有找到数据');
+        }
+        $dtv->addHidden(['returnOrders']);
+        $dtv->setAppends(['status_name']);
+        foreach ($dtv->orders as $order) {
+            $order->addHidden(['orderGoods', 'salesmanVisitOrder']);
+            $order->shippingAddress->setAppends(['address_name']);
+            $order->shippingAddress->addHidden(['address']);
+        };
+        $dtv->order_goods_statis = DispatchTruckService::goodsStatistical($dtv->orders);
+        $dtv->return_order_goods_statis = DispatchTruckService::returnOrderGoodsStatistical($dtv->returnOrders ?? []);
+        return $this->success($dtv->toArray());
     }
 
     /**
@@ -136,8 +193,10 @@ class DeliveryController extends Controller
         $start_at = (new Carbon($request->input('start_at')))->startOfDay();
         $end_at = (new Carbon($request->input('end_at')))->endOfDay();
         $idName = $request->input('id_name', null);
-        $orders = Order::useful()->noInvalid()->ofDeliveryMan(delivery_auth()->id())
+        $dtv = delivery_auth()->user()->dispatchTruck;
+        $orders = Order::useful()
             ->whereNotNull('delivery_finished_at')
+            ->whereIn('dispatch_truck_id', $dtv->pluck('id'))
             ->ofOrderIdName($idName)
             ->whereBetween('delivery_finished_at', [$start_at, $end_at])
             ->with('user.shop', 'shippingAddress.address')->orderBy('delivery_finished_at', 'DESC')->get();
@@ -173,7 +232,6 @@ class DeliveryController extends Controller
         }
 
         return $this->success(['historyOrder' => $historyOrder]);
-
     }
 
     /**
@@ -184,14 +242,13 @@ class DeliveryController extends Controller
      */
     public function detail(Request $request)
     {
-        $order = Order::useful()->noInvalid()->ofDeliveryMan(delivery_auth()->id())->with('user.shop',
+        $order = Order::useful()->with('user.shop',
             'shippingAddress.address',
             'goods.images.image', 'applyPromo.promo', 'gifts')->find($request->input('order_id'));
 
         if (is_null($order)) {
             return $this->error('订单已失效');
         }
-
         $goods = (new OrderService)->explodeOrderGoods($order);
         $order->orderGoods = $goods['orderGoods'];
         $order->mortgageGoods = $goods['mortgageGoods'];
@@ -233,7 +290,7 @@ class DeliveryController extends Controller
             return $this->error('订单号不能为空');
         }
 
-        $order = Order::useful()->noInvalid()->ofDeliveryMan(delivery_auth()->id())->find($orderId);
+        $order = Order::useful()->noInvalid()->find($orderId);
 
         if (empty($order)) {
             return $this->error('该订单已失效');
@@ -272,16 +329,15 @@ class DeliveryController extends Controller
     {
         $deliveryId = delivery_auth()->id();
         //判断该订单是否存在
-        $order = Order::useful()->noInvalid()->ofDeliveryMan(delivery_auth()->id())->find(intval($request->input('order_id')));
+        $order = Order::useful()->noInvalid()->find(intval($request->input('order_id')));
 
         if (!$order || !$order->can_change_price) {
             return $this->error('订单不存在或不能修改');
         }
-
         $attributes = $request->all();
 
         $orderService = new OrderService;
-        $flag = $orderService->changeOrder($order, $attributes, $deliveryId);
+        $flag = $orderService->changeOrder($order, $attributes, $deliveryId, 'deliveryMan');
         return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
 
@@ -295,22 +351,24 @@ class DeliveryController extends Controller
     {
         $search = $request->all();
         $user = delivery_auth()->user();
-        $search['delivery_man_id'] = $user->id;
-        $delivery = Order::useful()->noInvalid()->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with(
-            'systemTradeInfo',
-            'deliveryMan',
-            'coupon',
-            'orderGoods.goods'
-        )->get();
-
+        $delivery = Order::useful()->noInvalid()
+            ->whereNotNull('delivery_finished_at')
+            ->whereIn('dispatch_truck_id', $user->dispatchTruck->pluck('id'))
+            ->ofDeliverySearch($search)
+            ->with(
+                'systemTradeInfo',
+                'deliveryMan',
+                'coupon',
+                'orderGoods.goods'
+            )->get();
         $deliveryNum = array();
         foreach ($delivery as $order) {
-            $num = $order->deliveryMan->lists('name')->count();
+            $num = $order->dispatchTruck->deliveryMans->lists('name')->count();
             array_search($num, $deliveryNum) === false ? array_push($deliveryNum, $num) : '';
         };
         if (!empty($search['num'])) {
             $delivery = $delivery->filter(function ($item) use ($search) {
-                return $item->deliveryMan->lists('name')->count() == $search['num'];
+                return $item->dispatchTruck->deliveryMans->lists('name')->count() == $search['num'];
             });
         }
         $data = (new DeliveryService)->format($delivery, $user);
@@ -331,6 +389,9 @@ class DeliveryController extends Controller
             return $this->error('订单商品不存在');
         }
         $order = $orderGoods->order;
+        if ($order->dispatch_status > cons('dispatch_truck.status.delivering')) {
+            return $this->error('不能操作');
+        }
         $result = DB::transaction(function () use ($orderGoods, $order) {
             $orderGoodsPrice = $orderGoods->total_price;
             $orderGoods->delete();
@@ -342,7 +403,7 @@ class DeliveryController extends Controller
             }
 
             $content = '订单商品id:' . $orderGoods->goods_id . '，已被删除';
-            (new OrderService())->addOrderChangeRecord($order, $content, delivery_auth()->id());
+            (new OrderService())->addOrderChangeRecord($order, $content, delivery_auth()->id(), 'deliveryMan');
             //如果有业务订单修改业务订单
             if (!is_null($salesmanVisitOrder = $order->salesmanVisitOrder)) {
                 $salesmanVisitOrder->fill(['amount' => $order->price])->save();
@@ -357,6 +418,14 @@ class DeliveryController extends Controller
                     $salesmanVisitOrder->orderGoods()->where('goods_id', $orderGoods->goods_id)->delete();
                 }
             }
+
+            DispatchTruckReturnOrder::create([
+                'order_id' => $order->id,
+                'dispatch_truck_id' => $order->dispatch_truck_id,
+                'num' => $orderGoods->num,
+                'pieces' => $orderGoods->pieces,
+                'goods_id' => $orderGoods->goods_id
+            ]);
             return 'success';
         });
         return $result == 'success' ? $this->success('删除订单商品成功') : $this->error('删除订单商品时出现问题');
@@ -379,7 +448,6 @@ class DeliveryController extends Controller
                 return $this->success('修改密码成功');
             }
             return $this->error('修改密码时遇到错误');
-
         }
         return $this->error('原密码错误');
     }
@@ -391,11 +459,56 @@ class DeliveryController extends Controller
      */
     public function latestVersion()
     {
-
         return $this->success([
             'record' => VersionRecord::where('type', cons('push_device.delivery'))->orderBy('id', 'DESC')->first(),
             'download_url' => (new RedisService())->get('app-link:delivery'),
         ]);
+    }
+
+    /**
+     * 作废订单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function cancelOrder(Request $request, $orderId)
+    {
+        $order = Order::find($orderId);
+        $reason = $request->input('reason');
+        if (!$order) {
+            return $this->error('订单不存在');
+        }
+        if (!$reason) {
+            return $this->error('作废原因不能为空');
+        }
+        if (!$order->can_invalid || $order->dispatch_status == cons('dispatch_truck.status.backed') || $order->shop_id != delivery_auth()->user()->shop_id) {
+            return $this->error('订单不能作废');
+        }
+        try {
+            DB::beginTransaction();
+            if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
+                $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
+                $orderService = new OrderService();
+                // 返回优惠券
+                $orderService->backCoupon($order);
+                //返还陈列费
+                if ($order->salesmanVisitOrder) {
+                    $orderService->backDisplayFee($order->salesmanVisitOrder);
+                }
+                foreach ($order->orderGoods as $orderGoods) {
+                    (new InventoryService())->clearOut($orderGoods);
+                }
+                $orderService->addOperateRecord($order, delivery_auth()->id(), delivery_auth()->user()->name, '配送员',
+                    '作废订单');
+            }
+            DB::commit();
+            return $this->success('订单作废成功');
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e->getMessage() . '----' . $e->getFile() . '---' . $e->getLine());
+            return $this->error('作废订单时出现问题');
+        }
     }
 
 }

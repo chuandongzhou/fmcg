@@ -20,10 +20,10 @@
                     <form action="{{ url('personal/delivery/history') }}" method="get" autocomplete="off">
                         <input class="enter control datetimepicker" name="start_at"
                                placeholder="开始时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
-                               value="{{ array_get($search, 'start_at') }}">至
+                               value="{{ $search['start_at'] ?? '' }}">至
                         <input class="enter control datetimepicker" name="end_at"
                                placeholder="结束时间" type="text" data-format="YYYY-MM-DD" data-max-date="true"
-                               value="{{ array_get($search, 'end_at') }}">
+                               value="{{ $search['end_at'] ?? '' }}">
                         <select name="delivery_man_id" class="control ajax-select">
                             <option value="">所有配送人员</option>
                             @foreach($deliveryMen as $man)
@@ -55,8 +55,8 @@
 
                         @foreach($deliveries as $delivery)
                             <tr align="center">
-                                @if($delivery->deliveryMan)
-                                    <td>{!! implode("|",array_column($delivery->deliveryMan->toArray(), 'name')) !!} </td>
+                                @if(!is_null($delivery->dispatchTruck))
+                                    <td>{!! implode("|",array_column($delivery->dispatchTruck->deliveryMans->toArray(), 'name')) !!} </td>
                                 @else
                                     <td></td>
                                 @endif

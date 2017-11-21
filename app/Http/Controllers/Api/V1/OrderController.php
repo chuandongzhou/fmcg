@@ -389,11 +389,9 @@ class OrderController extends Controller
     public function putCancelSure(Request $request)
     {
         $orderIds = (array)$request->input('order_id');
-
         if (!$orderIds) {
             return $this->error('请选择需要取消的订单');
         }
-
         $orders = Order::with('shop.user', 'user')->whereIn('id', $orderIds)->useful()->get();
 
         $failOrderIds = [];
@@ -506,14 +504,32 @@ class OrderController extends Controller
         if (!$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单不能作废');
         }
-        if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
-            $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
-            // 返回优惠券
-            (new OrderService())->backCoupon($order);
-            return $this->success('订单作废成功');
+        if ($order->dispatch_status >= cons('dispatch_truck.status.delivering')) {
+            return $this->error('已发车订单,不能作废');
         }
 
-        return $this->error('作废订单时出现问题');
+        if ($order->dispatch_status < cons('dispatch_truck.status.delivering') || !$order->can_invalid || $order->shop_id != auth()->user()->shop_id) {
+            $order->dispatch_truck_id = '';
+        }
+        try {
+            DB::beginTransaction();
+            $order->fill(['status' => cons('order.status.invalid')])->save();
+            $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
+            // 返回优惠券
+            $orderService = new OrderService();
+            //返还陈列费
+            if ($order->salesmanVisitOrder) {
+                $orderService->backDisplayFee($order->salesmanVisitOrder);
+            }
+            $orderService->backCoupon($order);
+            $orderService->addOperateRecord($order, $order->shop_id, $order->shop_name, '店铺', '作废订单');
+            DB::commit();
+            return $this->success('订单作废成功');
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e->getMessage() . '----' . $e->getFile() . '---' . $e->getLine());
+            return $this->error('作废订单时出现问题');
+        }
     }
 
     /**
@@ -631,7 +647,7 @@ class OrderController extends Controller
     }
 
     /**
-     * 批量修改发货状态。不区分付款状态
+     * 批量修改发货状态。不区分付款状态  (作废)---
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -678,7 +694,6 @@ class OrderController extends Controller
                 $order->deliveryMan()->sync($deliveryManIds);
             }
         }
-
         return $this->success(['failIds' => $failIds]);
 
     }
@@ -812,7 +827,7 @@ class OrderController extends Controller
         $attributes = $request->all();
 
         $orderService = new OrderService;
-        $flag = $orderService->changeOrder($order, $attributes, auth()->id());
+        $flag = $orderService->changeOrder($order, $attributes, auth()->id(), 'user');
 
         return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
@@ -939,6 +954,10 @@ class OrderController extends Controller
 
         if (is_null($orderGoods) || $orderGoods->order->shop_id != auth()->user()->shop_id) {
             return $this->error('订单商品不存在');
+        }
+
+        if ($orderGoods->order->dispatch_status == cons('dispatch_truck.status.delivering')) {
+            return $this->error('已经发车,不能删除');
         }
         $order = $orderGoods->order;
         $result = DB::transaction(function () use ($orderGoods, $order) {

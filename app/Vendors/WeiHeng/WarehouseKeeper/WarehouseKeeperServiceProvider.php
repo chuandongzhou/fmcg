@@ -25,7 +25,6 @@ class WarehouseKeeperServiceProvider extends ServiceProvider
         $this->app->singleton('warehouse_keeper.auth', function ($app) {
             $provider = new EloquentUserProvider($app['hash'], \App\Models\WarehouseKeeper::class);
             $guard = new WarehouseKeeperGuard($provider, $app['session.store']);
-
             // 设置变量
             if (method_exists($guard, 'setCookieJar')) {
                 $guard->setCookieJar($app['cookie']);
@@ -38,7 +37,6 @@ class WarehouseKeeperServiceProvider extends ServiceProvider
             if (method_exists($guard, 'setRequest')) {
                 $guard->setRequest($app->refresh('request', $guard, 'setRequest'));
             }
-
             return $guard;
         });
     }

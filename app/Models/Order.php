@@ -33,7 +33,9 @@ class Order extends Model
         'finished_at',
         'is_cancel',
         'cancel_by',
-        'cancel_at'
+        'cancel_at',
+        'dispatch_truck_id',
+        'dispatch_truck_sort'
     ];
 
     protected $appends = [
@@ -107,6 +109,16 @@ class Order extends Model
     public function orderChangeRecode()
     {
         return $this->hasMany('App\Models\OrderChangeRecode');
+    }
+
+    /**
+     * 订单操作记录
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function operateRecord()
+    {
+        return $this->hasMany('App\Models\OrderOperateRecord');
     }
 
     /**
@@ -213,6 +225,18 @@ class Order extends Model
             ->withPivot('id', 'price', 'num', 'total_price', 'pieces', 'type')
             ->where('type', cons('order.goods.type.gift_goods'));
     }
+
+
+    /**
+     * 关联发车单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function dispatchTruck()
+    {
+        return $this->hasOne('App\Models\DispatchTruck', 'id', 'dispatch_truck_id');
+    }
+
 
     /**
      * 支付形式
@@ -606,7 +630,7 @@ class Order extends Model
     public function getUserShippingAddressNameAttribute()
     {
         if ($this->user_id > 0) {
-            return $this->user ? $this->shippingAddress->address : (new AddressData());
+            return $this->shippingAddress->address ?? (new AddressData());
         } elseif ($this->salesmanVisitOrder) {
             return $this->salesmanVisitOrder->business_address;
         }
@@ -741,6 +765,26 @@ class Order extends Model
     public function getActualAmountAttribute()
     {
         return $this->systemTradeInfo ? $this->systemTradeInfo->amount : $this->after_rebates_price;
+    }
+
+    /**
+     * 获取卡车
+     *
+     * @return mixed
+     */
+    public function getTruckAttribute()
+    {
+        return $this->dispatchTruck->truck ?? new  \stdClass();
+    }
+
+    /**
+     * 获取配送员
+     *
+     * @return mixed
+     */
+    public function getDeliveryMansAttribute()
+    {
+        return $this->dispatchTruck->deliveryMans ?? [];
     }
 
     /**
@@ -1064,16 +1108,21 @@ class Order extends Model
     public function scopeOfDeliverySearch($query, $search)
     {
         return $query->where(function ($query) use ($search) {
-            if ($deliveryManId = (int)array_get($search, 'delivery_man_id')) {
-                $query->ofDeliveryMan($deliveryManId);
-            }
             if (array_get($search, 'start_at')) {
                 $query->where('delivery_finished_at', '>', $search['start_at']);
             }
             if ($endAt = array_get($search, 'end_at')) {
                 $query->where('delivery_finished_at', '<', (new Carbon($endAt))->endOfDay());
             }
-            $query->has('deliveryMan');
+            if ($endAt = array_get($search, 'end_at')) {
+                $query->where('delivery_finished_at', '<', (new Carbon($endAt))->endOfDay());
+            }
+            if ($deliveryManId = array_get($search, 'delivery_man_id')) {
+                $query->whereHas('dispatchTruck.deliveryMans', function ($query) use ($deliveryManId) {
+                    $query->where('id', $deliveryManId);
+                });
+            }
+
         });
     }
 
@@ -1155,10 +1204,25 @@ class Order extends Model
             if ($isID) {
                 return $query->where('id', $idName);
             } else {
-                return $query->whereHas('user.shop', function ($query) use ($idName) {
-                    $query->where('name', 'like', '%' . $idName . '%');
+                return $query->where(function ($query) use ($idName) {
+                    $query->whereHas('user.shop', function ($query) use ($idName) {
+                        $query->where('name', 'like', '%' . $idName . '%');
+                    })->orWhereHas('salesmanVisitOrder.salesmanCustomer', function ($query) use ($idName) {
+                        $query->where('name', 'like', '%' . $idName . '%');
+                    });
                 });
-            };
+            }
         }
     }
+
+    /**
+     * 获取派送状态
+     *
+     * @return int
+     */
+    public function getDispatchStatusAttribute()
+    {
+        return $this->dispatchTruck->status ?? 0;
+    }
+
 }

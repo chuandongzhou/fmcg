@@ -436,6 +436,21 @@ class GoodsService
                 break;
         }
         return $system;
+
+    }
+
+    /**
+     *
+     * 获得商品最小单位单位代码
+     *
+     * @param $goodsId
+     * @param $piecesValue
+     * @return int
+     */
+    static public function getMinPieces($goods)
+    {
+        $pieces = $goods->goodsPieces;
+        return ($pieces->pieces_level_3 || $pieces->pieces_level_3 === 0 ? $pieces->pieces_level_3 : ($pieces->pieces_level_2 || $pieces->pieces_level_2 === 0 ? $pieces->pieces_level_2 : $pieces->pieces_level_1));
     }
 
     /**
@@ -461,16 +476,6 @@ class GoodsService
         return $system;
     }
 
-    /**
-     * @param array $goodsPieces 商品单位数据
-     * @param $pieces //当前单位
-     * @return int|mixed          换算后的进制值
-     * @throws \Exception         错误异常
-     */
-    static public function getPiecesSystem3(array $goodsPieces, $pieces)
-    {
-
-    }
 
     /**
      * 格式化商品数量

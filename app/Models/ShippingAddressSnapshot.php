@@ -25,4 +25,9 @@ class ShippingAddressSnapshot extends Model
     {
         return $this->morphOne('App\Models\AddressData', 'addressable');
     }
+
+    public function getAddressNameAttribute()
+    {
+        return $this->address->address_name;
+    }
 }

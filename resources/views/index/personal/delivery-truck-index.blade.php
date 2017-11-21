@@ -1,5 +1,5 @@
 @extends('index.manage-master')
-@section('subtitle', '个人中心-子账号')
+@section('subtitle', '个人中心-配送车辆')
 @include('includes.delivery-truck')
 @section('container')
     @include('includes.menu')

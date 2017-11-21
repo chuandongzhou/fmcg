@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Index\Personal;
 
 use App\Http\Controllers\Index\Controller;
+use App\Models\DispatchTruck;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use DB;
@@ -30,17 +31,29 @@ class DeliveryController extends Controller
     public function history(Request $request)
     {
         $search = $request->all();
-        $search['start_at'] = array_get($search, 'start_at');;
-        $search['end_at'] = array_get($search, 'end_at');
+        $carbon = new Carbon();
+        $search['start_at'] = array_get($search, 'start_at') ? array_get($search,
+            'start_at') : $carbon->firstOfMonth()->startOfDay()->toDateString();
+        $search['end_at'] = array_get($search, 'end_at') ? array_get($search,
+            'end_at') : $carbon->now()->toDateString();
         $search['delivery_man_id'] = isset($search['delivery_man_id']) ? $search['delivery_man_id'] : '';
+        $user = auth()->user();
+        $truckIds = $user->shop->deliveryTrucks->pluck('id');
+        $dtvIds = DispatchTruck::whereIn('delivery_truck_id', $truckIds)->where('status', '>',
+            cons('dispatch_truck.status.delivering'))->get()->pluck('id');
         $delivery = Order::where('shop_id',
-            auth()->user()->shop->id)->whereNotNull('delivery_finished_at')->ofDeliverySearch($search)->with('user.shop',
-            'shippingAddress.address', 'deliveryMan', 'systemTradeInfo')->orderBy('delivery_finished_at',
-            'DESC')->paginate();
+            $user->shop_id)
+            ->whereNotNull('delivery_finished_at')
+            ->noInvalid()
+            ->whereIn('dispatch_truck_id', $dtvIds)
+            ->ofDeliverySearch($search)->with('user.shop',
+                'shippingAddress.address', 'dispatchTruck.deliveryMans',
+                'systemTradeInfo')->orderBy('delivery_finished_at',
+                'DESC')->paginate();
 
         $deliveryMen = auth()->user()->shop->deliveryMans;
         return view('index.personal.delivery-history',
-            ['deliveryMen' => $deliveryMen, 'deliveries' => $delivery, 'search' => $request->all()]);
+            ['deliveryMen' => $deliveryMen, 'deliveries' => $delivery, 'search' => $search]);
     }
 
     /**

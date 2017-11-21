@@ -19,7 +19,7 @@ class DeliveryTruckController extends Controller
      */
     public function store(CreateDeliveryTruckRequest $request)
     {
-        return auth()->user()->shop->deliveryTrucks()->create($request->all()) ? $this->success('添加成功') : $this->error('添加配送车辆是出现问题');
+        return auth()->user()->shop->deliveryTrucks()->create($request->all()) ? $this->success('添加成功') : $this->error('添加配送车辆时出现问题');
     }
 
     /**
@@ -35,7 +35,7 @@ class DeliveryTruckController extends Controller
         if (Gate::denies('validate-warehouse-keeper', $deliveryTruck)) {
             return $this->error('配送车辆不存在');
         }
-        return $deliveryTruck->fill($request->all())->save() ? $this->success('修改成功') : $this->error('修改配送车辆是出现问题');
+        return $deliveryTruck->fill($request->all())->save() ? $this->success('修改成功') : $this->error('修改配送车辆时出现问题');
 
     }
 
@@ -50,7 +50,7 @@ class DeliveryTruckController extends Controller
         if (Gate::denies('validate-warehouse-keeper', $deliveryTruck)) {
             return $this->error('配送车辆不存在');
         }
-        return $deliveryTruck->delete() ? $this->success('删除配送车辆成功') : $this->error('删除配送车辆是出现问题');
+        return $deliveryTruck->delete() ? $this->success('删除配送车辆成功') : $this->error('删除配送车辆时出现问题');
     }
 
     /**
@@ -66,6 +66,9 @@ class DeliveryTruckController extends Controller
             return $this->error('配送车辆不存在');
         }
         $status = intval($request->input('status'));
+        if ($deliveryTruck->status > cons('truck.status.spare_time')) {
+            return $this->error('车辆正在使用,无法更改状态!');
+        }
         $deliveryTruck->status = $status;
         if ($deliveryTruck->save()) {
             if ($status) {

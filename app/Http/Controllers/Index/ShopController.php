@@ -15,9 +15,12 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
+    protected $user;
+
     public function __construct()
     {
-        //$this->middleware('supplier', ['only' => ['index']]);
+        $this->user = auth()->user();
+
     }
 
     /**
@@ -69,22 +72,17 @@ class ShopController extends Controller
     public function shop($shop, $sort = '')
     {
 
-        $user = auth()->user();
         if (Gate::denies('validate-allow', $shop)) {
             return redirect()->back();
         }
-        $isLike = $user->likeShops()->where('shop_id', $shop->id)->pluck('id');
-
-        if ($shop->user_type == cons('user.type.maker')) {
-            $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
-                $query->where(function ($query) use ($shop) {
-                    $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
-                });
-            })->first();
-            $applyed = BusinessRelationApply::where('supplier_id', $user->shop_id)->where('maker_id',
-                $shop->id)->first();
-        }
-
+        $isLike = $this->user->likeShops()->where('shop_id', $shop->id)->pluck('id');
+        $haveRelation = SalesmanCustomer::where('shop_id', $this->user->shop_id)->where(function ($query) use ($shop) {
+            $query->where(function ($query) use ($shop) {
+                $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            });
+        })->first();
+        $applyed = BusinessRelationApply::where('supplier_id', $this->user->shop_id)->where('maker_id',
+            $shop->id)->first();
         $goods = $shop->goods()->active();
 
         if (in_array($sort, cons('goods.sort'))) {
@@ -93,7 +91,14 @@ class ShopController extends Controller
             $goods = $goods->ofCommonSort()->orderBy('id', 'DESC');
         }
         $goods = $goods->paginate();
-        return view('index.shop.shop', compact('shop', 'goods', 'sort', 'isLike', 'haveRelation', 'applyed'));
+        return view('index.shop.shop', [
+            'shop' => $shop,
+            'goods' => $goods,
+            'sort' => $sort,
+            'isLike' => $isLike,
+            'haveRelation' => $haveRelation,
+            'applyed' => $applyed
+        ]);
     }
 
     /**
@@ -107,21 +112,17 @@ class ShopController extends Controller
         if (Gate::denies('validate-allow', $shop)) {
             return back()->withInput();
         }
-        $user = auth()->user();
+
         $shop->adverts = $shop->shopHomeAdverts()->with('image')->active()->get();
 
-        $isLike = $user->likeShops()->where('shop_id', $shop->id)->first();
-
-        if ($shop->user_type == cons('user.type.maker')) {
-            $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
-                $query->where(function ($query) use ($shop) {
-                    $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
-                });
-            })->first();
-            $applyed = BusinessRelationApply::where('supplier_id', $user->shop_id)->where('maker_id',
-                $shop->id)->first();
-        }
-
+        $isLike = $this->user->likeShops()->where('shop_id', $shop->id)->first();
+        $haveRelation = SalesmanCustomer::where('shop_id', $this->user->shop_id)->where(function ($query) use ($shop) {
+            $query->where(function ($query) use ($shop) {
+                $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            });
+        })->first();
+        $applyed = BusinessRelationApply::where('supplier_id', $this->user->shop_id)->where('maker_id',
+            $shop->id)->first();
         $hotGoods = $shop->goods()->active()->ofHot()->take(10)->get();
         $recommendGoods = $shop->recommendGoods()->get();
         return view('index.shop.detail',
@@ -155,23 +156,28 @@ class ShopController extends Controller
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
         $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
         $shop->load('goods');
-
-        if ($shop->user_type == cons('user.type.maker')) {
-            $applyed = BusinessRelationApply::where('supplier_id', $user->shop_id)->where('maker_id',
-                $shop->id)->first();
-            $haveRelation = SalesmanCustomer::where('shop_id', $user->shop_id)->where(function ($query) use ($shop) {
-                $query->where(function ($query) use ($shop) {
-                    $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
-                });
-            })->first();
-        }
-
-        return view('index.shop.search', array_merge([
-            'attrs' => $result['attrs'],
-            'searched' => $result['searched'],
-            'moreAttr' => $result['moreAttr'],
-            'get' => $gets
-        ], compact('shop', 'goods', 'categories', 'isLike', 'data', 'applyed', 'haveRelation')));
+        $haveRelation = SalesmanCustomer::where('shop_id', $this->user->shop_id)->where(function ($query) use ($shop
+        ) {
+            $query->where(function ($query) use ($shop) {
+                $query->where('belong_shop', $shop->id)->orWhereIn('salesman_id', $shop->salesmen->pluck('id'));
+            });
+        })->first();
+        $applyed = BusinessRelationApply::where('supplier_id', $this->user->shop_id)->where('maker_id',
+            $shop->id)->first();
+        return view('index.shop.search',
+            [
+                'shop' => $shop,
+                'goods' => $goods,
+                'categories' => $categories,
+                'attrs' => $result['attrs'],
+                'searched' => $result['searched'],
+                'moreAttr' => $result['moreAttr'],
+                'isLike' => $isLike,
+                'get' => $gets,
+                'data' => $data,
+                'haveRelation' => $haveRelation,
+                'applyed' => $applyed
+            ]);
     }
 
     /**
@@ -194,5 +200,4 @@ class ShopController extends Controller
 
         return $data;
     }
-
 }

@@ -33,8 +33,8 @@ class InventoryController extends Controller
      */
     public function postInSave(Requests\Api\v1\InventoryRequest $request)
     {
-
         $data = $request->all();
+
         if ($this->inventoryService->in($data)) {
             return $this->success('成功入库!');
         };

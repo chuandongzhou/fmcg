@@ -9,7 +9,8 @@ class OrderChangeRecode extends Model
     protected $fillable = [
         'user_id',
         'order_id',
-        'content'
+        'content',
+        'operate'
     ];
 
     protected $hidden = [
@@ -30,20 +31,42 @@ class OrderChangeRecode extends Model
     }
 
     /**
+     * 用户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * 配送员
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function deliveryMan()
+    {
+        return $this->belongsTo(DeliveryMan::class, 'user_id');
+    }
+
+    /**
+     * 仓管
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function warehouseKeeper()
+    {
+        return $this->belongsTo(WarehouseKeeper::class, 'user_id');
+    }
+
+    /**
      * 获取修改人名
      *
      * @return mixed
      */
     public function getNameAttribute()
     {
-        $order = $this->order;
-
-        if ($order->shop->user_id == $this->user_id) {
-            return $order->shop_name;
-        }
-
-        $deliveryMan = $order->deliveryMan()->find($this->user_id);
-
-        return $deliveryMan ? $deliveryMan->name : '';
+        return !is_null($this->{$this->operate}) ? ($this->operate == 'user' ? $this->{$this->operate}->shop_name : $this->{$this->operate}->name) : '不知道';
     }
 }

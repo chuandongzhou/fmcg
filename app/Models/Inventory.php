@@ -12,6 +12,7 @@ class Inventory extends Model
     protected $fillable = [
         'inventory_number',  //库存编号
         'user_id',           //操作人
+        'operate',
         'source',            //库存来源(订单,赠品,促销,陈列...)
         'goods_id',          //商品
         'shop_id',           //所属店铺
@@ -72,6 +73,16 @@ class Inventory extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * 仓管员关联
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function warehouseKeeper()
+    {
+        return $this->belongsTo('App\Models\WarehouseKeeper', 'user_id');
     }
 
     /**
@@ -240,10 +251,28 @@ class Inventory extends Model
     {
         if ($this->order_number) {
             $name = [];
-            $this->order->deliveryMan->each(function ($deliveryMan) use (&$name) {
+            if ($this->order->dispatchTruck) {
+                $deliveryMans = $this->order->dispatchTruck->deliveryMans;
+            } else {
+                $deliveryMans = $this->order->deliveryMan;
+            }
+            $deliveryMans->each(function ($deliveryMan) use (&$name) {
                 $name[] = $deliveryMan->name;
             });
             return implode(',', $name);
         }
+    }
+
+    /**
+     * 获取操作人员名
+     *
+     * @return mixed
+     */
+    public function getOperatorNameAttribute()
+    {
+        if (!$this->user_id || is_null($this->operate)) {
+            return '系统';
+        }
+        return ($this->operate == 'warehouseKeeper' ? '(仓管)' : '') . $this->{$this->operate}->{$this->operate == 'user' ? 'user_name' : 'name'};
     }
 }

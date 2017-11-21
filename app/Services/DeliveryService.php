@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DispatchTruck;
 use App\Models\Goods;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ class DeliveryService
         $deliveryMan = [];
         $orderGoodsTypes = cons('order.goods.type');
         foreach ($delivery as $order) {
-            $orderDelivery = empty($deliveryManId) ? '' : $order->deliveryMan->count();
+            $orderDelivery = empty($deliveryManId) ? '' : $order->dispatchTruck->deliveryMans->count();
             foreach ($order->orderGoods as $orderGoods) {
                 $pieces = $orderGoods->pieces;
                 $goodsItem = $orderGoods->goods ?: new Goods();
@@ -35,14 +36,14 @@ class DeliveryService
                     $orderGoods->total_price, 2) : $orderGoods->total_price;
             }
 
-            if ($order->deliveryMan) {
+            if ($order->dispatchTruck->deliveryMans) {
                 $systemTradeInfo = $order->systemTradeInfo;
                 $type = 0;
                 if ($systemTradeInfo) {
                     $type = $systemTradeInfo->pay_type;
                 }
 
-                foreach ($order->deliveryMan->toArray() as $delivery) {
+                foreach ($order->dispatchTruck->deliveryMans->toArray() as $delivery) {
                     if (!empty($deliveryManId) && $delivery['id'] != $deliveryManId) {
                         continue;
                     }
@@ -90,7 +91,7 @@ class DeliveryService
 
         //商品统计
         foreach ($delivery as $order) {
-            $orderDelivery = $order->deliveryMan->count() . '';
+            $orderDelivery = $order->dispatchTruck->deliveryMans->count() . '';
             $deliveryKey = array_search($orderDelivery . '', array_column($goods, 'deliveryManNum'));
             //配送人数是否在结果集
             if ($deliveryKey === false) {
@@ -119,28 +120,29 @@ class DeliveryService
                             array(
                                 'pieces' => $orderGoods->pieces,
                                 'num' => $orderGoods->num,
-                                'amount' => $orderGoods->total_price
+                                'quantity' => $orderGoods->num * GoodsService::getPiecesSystem($orderGoods->goods,
+                                        $orderGoods->pieces),
+                                'amount' => $orderGoods->total_price,
+                                'num_pieces_format' => InventoryService::calculateQuantity($orderGoods->goods,
+                                    $orderGoods->num * GoodsService::getPiecesSystem($orderGoods->goods,
+                                        $orderGoods->pieces)),
                             )
                         )
                     );
                     $goods[$deliveryKey]['allGoods'][] = $arrs;
                 } else {
-                    $piecesKey = array_search($orderGoods->pieces,
-                        array_column($goods[$deliveryKey]['allGoods'][$key]['data'], 'pieces'));
-                    if ($piecesKey === false) {
-                        //未在结果集的商品单位
-                        $add = array(
-                            'pieces' => $orderGoods->pieces,
-                            'num' => $orderGoods->num,
-                            'amount' => $orderGoods->total_price
-                        );
-                        $goods[$deliveryKey]['allGoods'][$key]['data'][] = $add;
-                    } else {
-                        //已在结果集的商品单位
-                        $goods[$deliveryKey]['allGoods'][$key]['data'][$piecesKey]['num'] += (int)$orderGoods->num;
-                        $goods[$deliveryKey]['allGoods'][$key]['data'][$piecesKey]['amount'] = bcadd($goods[$deliveryKey]['allGoods'][$key]['data'][$piecesKey]['amount'],
-                            $orderGoods->total_price, 2);
-                    }
+                    //已在结果集的商品单位
+                    $goods[$deliveryKey]['allGoods'][$key]['data'][0]['num'] += (int)$orderGoods->num;
+
+                    $goods[$deliveryKey]['allGoods'][$key]['data'][0]['quantity'] += (int)($orderGoods->num * GoodsService::getPiecesSystem($orderGoods->goods,
+                            $orderGoods->pieces));
+
+                    $goods[$deliveryKey]['allGoods'][$key]['data'][0]['num_pieces_format'] = InventoryService::calculateQuantity($orderGoods->goods,
+                        $goods[$deliveryKey]['allGoods'][$key]['data'][0]['quantity']);
+
+
+                    $goods[$deliveryKey]['allGoods'][$key]['data'][0]['amount'] = bcadd($goods[$deliveryKey]['allGoods'][$key]['data'][0]['amount'],
+                        $orderGoods->total_price, 2);
                 }
             }
             //配送统计
@@ -234,9 +236,13 @@ class DeliveryService
     {
 
         $user = $user ? $user : auth()->user();
-
+        $truckIds = $user->shop->deliveryTrucks->pluck('id');
+        $dtvIds = DispatchTruck::whereIn('delivery_truck_id', $truckIds)->where('status', '>',
+            cons('dispatch_truck.status.delivering'))->get()->pluck('id');
         $delivery = Order::ofSell($user->shop_id)
             ->useful()
+            ->noInvalid()
+            ->whereIn('dispatch_truck_id', $dtvIds)
             ->whereNotNull('delivery_finished_at')
             ->ofDeliverySearch($search)
             ->with('systemTradeInfo', 'deliveryMan', 'coupon', 'orderGoods.goods')
@@ -245,14 +251,14 @@ class DeliveryService
 
         if (array_get($search, 'delivery_man_id')) {
             foreach ($delivery as $order) {
-                $num = $order->deliveryMan->count();
+                $num = $order->dispatchTruck->deliveryMans->count();
                 in_array($num, $deliveryNum) || array_push($deliveryNum, $num);
             }
 
             sort($deliveryNum);
             if (!empty($search['num'])) {
                 $delivery = $delivery->filter(function ($item) use ($search) {
-                    return $item->deliveryMan->lists('name')->count() == $search['num'];
+                    return $item->dispatchTruck->deliveryMans->lists('name')->count() == $search['num'];
                 });
 
             }

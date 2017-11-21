@@ -392,7 +392,7 @@ class OrderController extends Controller
         $attributes = $request->all();
 
         $orderService = new OrderService;
-        $flag = $orderService->changeOrder($order, $attributes, auth()->id());
+        $flag = $orderService->changeOrder($order, $attributes, auth()->id(),'user');
 
         return $flag ? $this->success('修改成功') : $this->error($orderService->getError());
     }
