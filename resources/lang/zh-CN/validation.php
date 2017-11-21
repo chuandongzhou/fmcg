@@ -212,6 +212,7 @@ return [
         'unit' => '单位',
         'use_date' => '使用时间',
         'remark' => '备注',
+        'license_plate' => '车牌号'
     ],
 
 ];

@@ -110,13 +110,14 @@ class CartService extends BaseService
             $buyNum = $num[$cart->goods_id];
             //判断商品购买数量是否小于该商品的最低配送额
             /*$cart->goods->min_num > $buyNum || */
-            if ($cart->goods->is_out || $buyNum > 20000) {
+            $goods = $cart->goods;
+            if ($goods->is_out || $buyNum > $goods->max_num) {
                 $allow = false;
             }
             $updateNum && $cart->fill(['num' => $buyNum])->save();
         }
         if (!$allow) {
-            $this->setError('商品缺货或数量大于两万');
+            $this->setError('商品缺货或购买数量过大');
             return false;
         }
 

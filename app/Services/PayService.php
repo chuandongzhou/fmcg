@@ -114,7 +114,7 @@ class PayService extends BaseService
                 ];
 
                 // pos机支付和货到付款在线支付直接完成
-                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')) {
+                if ($payType == $tradeConf['pay_type']['pos'] || $order->pay_type == cons('pay_type.cod')|| $order->pay_type == cons('pay_type.pick_up')) {
                     $systemTradeInfoAttr['is_finished'] = cons('trade.is_finished.yes');
                     $systemTradeInfoAttr['finished_at'] = $nowTimestamp;
                     //买家入库

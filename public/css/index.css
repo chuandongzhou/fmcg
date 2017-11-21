@@ -515,49 +515,6 @@ a:hover {
   padding: 0;
 }
 
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel {
-  border: 2px solid #F25000;
-  width: 448px;
-  height: 125px;
-  background-color: #fff;
-  padding-top: 3px;
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item {
-  display: inline-block !important;
-  width: 105px;
-  height: 115px;
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .dbd-qr-code {
-  background-image: url("../images/qr-code.png");
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .helper {
-  background-image: url("../images/qr-code2.png");
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .field {
-  background-image: url("../images/qr-code3.png");
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .dbd-buy {
-  background-image: url("../images/qr-code-buy.png");
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .qr-code {
-  background-size: cover;
-  width: 100px;
-  height: 100px;
-  margin: auto;
-}
-
-.footer .list-inline li #qr-content-panel .tooltip .qr-panel .item .text {
-  color: #000;
-  font-weight: 600;
-  margin: auto;
-}
-
 .footer .list-inline .feedback-panel .popover {
   min-width: 340px;
 }
@@ -1019,6 +976,22 @@ a:hover {
   padding: 0 25px;
 }
 
+.bindwx-step-wrap {
+  margin-top: 40px;
+}
+
+.bindwx-step-wrap .step-item {
+  padding-bottom: 20px;
+  font-size: 20px;
+  color: #555555;
+  cursor: pointer;
+}
+
+.bindwx-step-wrap .step-item.active {
+  border-bottom: 2px solid #F25000;
+  color: #F25000;
+}
+
 .register {
   background-color: #fff;
   padding: 60px 0;
@@ -1060,6 +1033,11 @@ a:hover {
 
 .register .v-code .btn-warning {
   background-color: #F25000;
+  height: 40px;
+}
+
+.register .v-code .bindwx-vcode {
+  width: 100%;
 }
 
 .register .v-code .btn-default {
@@ -1080,6 +1058,11 @@ a:hover {
   margin-top: 25px;
 }
 
+.register .btn-submit.bindwx-submit {
+  width: 100%;
+  height: 40px;
+}
+
 .register .address-map {
   overflow: hidden;
   zoom: 1;
@@ -1097,6 +1080,39 @@ a:hover {
 
 .register .address-list div + div {
   margin-top: 5px;
+}
+
+.register .login-msg-panel {
+  padding: 15px 0;
+  margin-top: -20px;
+  margin-bottom: 30px;
+  background-color: #f2f2f2;
+}
+
+.register .login-msg-panel img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.register .login-msg-panel .msg-tips {
+  display: inline-block;
+  width: 450px;
+  margin-left: 20px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.register.bindwx-register {
+  display: none;
+}
+
+.register.bindwx-register.on {
+  display: block;
+}
+
+.register.bindwx-register .forget-pwd {
+  color: #777777;
 }
 
 /*======================================register end======================================*/

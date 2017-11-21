@@ -6,28 +6,28 @@
     <form class="form-horizontal ajax-form" method="{{ $advert->id ? 'put' : 'post' }}"
           action="{{ url('admin/advert-' . $type . '/' . $advert->id) }}" data-help-class="col-sm-push-2 col-sm-10"
           data-done-then="referer" autocomplete="off">
-        @if($type == 'category'|| $type == 'left-category')
-            <div class="form-group">
-                <label class="col-sm-2 control-label">地址</label>
 
-                <div class="col-sm-3">
-                    <select name="province_id" data-id="{{ $advert->province_id }}"
-                            class="address-province form-control">
-                    </select>
-                </div>
-                <div class="col-sm-3">
-                    <select name="city_id" data-id="{{ $advert->city_id }}" class="address-city form-control">
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <select name="district_id" class="address-district form-control hide useless-control">
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <select name="street_id" class="address-street form-control hide useless-control"></select>
-                </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">地址</label>
+
+            <div class="col-sm-3">
+                <select name="province_id" data-id="{{ $advert->province_id }}"
+                        class="address-province form-control">
+                </select>
             </div>
-        @endif
+            <div class="col-sm-3">
+                <select name="city_id" data-id="{{ $advert->city_id }}" class="address-city form-control">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select name="district_id" class="address-district form-control hide useless-control">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select name="street_id" class="address-street form-control hide useless-control"></select>
+            </div>
+        </div>
+
         @if($type == 'category' || $type == 'left-category')
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">商品分类</label>

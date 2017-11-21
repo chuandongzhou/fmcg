@@ -39,110 +39,15 @@
             <div class="col-sm-12 padding-clear classify-title">
                 热销品
             </div>
-            @foreach($hotGoods as $hotGoodsDetail)
-                <div class="col-sm-3 commodity new-listing commodity-search-product">
-                    <div class="commodity-border">
-                        <div class="img-wrap">
-                            <a href="{{ url('goods/'.$hotGoodsDetail->id) }}" target="_blank">
-                                <img class="commodity-img lazy" data-original="{{ $hotGoodsDetail->image_url }}">
-                                <span class="@if($hotGoodsDetail->is_out)prompt  lack  @elseif($hotGoodsDetail->is_promotion)prompt  promotions @elseif($hotGoodsDetail->is_new)prompt  new-listing @endif"></span>
-                            </a>
-                        </div>
-                        <div class="content-panel">
-                            <a href="{{ url('goods/'.$hotGoodsDetail->id) }}" target="_blank">
-                                <div class="commodity-name">{{ $hotGoodsDetail->name }}</div>
-                            </a>
-                            <div class="sell-panel">
-                                <span class="money red">¥{{ $hotGoodsDetail->price . '/' . $hotGoodsDetail->pieces }}</span>
-                                <span class="sales pull-right">最低购买量 : {{ $hotGoodsDetail->min_num }}</span>
-                            </div>
-                            {{--<div class="store-name prompt">{{ $hotGoodsDetail->shop->name }}</div>--}}
-                            <div class="shopping-store">
-                                <button type="button" data-group="group{{ $hotGoodsDetail->id }}"
-                                        class="count modified desc-num"
-                                        disabled>-
-                                </button>
-                                <input type="text" data-group="group{{ $hotGoodsDetail->id }}" class="amount num"
-                                       name="num"
-                                       value="{{ $hotGoodsDetail->min_num }}"
-                                       data-min-num="{{ $hotGoodsDetail->min_num }}">
-                                <button type="button" data-group="group{{ $hotGoodsDetail->id }}"
-                                        class="count modified inc-num">+
-                                </button>
-                                @if($hotGoodsDetail->is_out)
-                                    <a href="javascript:void(0)" class="btn btn-primary disabled join-cart" disabled="">缺货</a>
-                                @else
-                                    <a href="javascript:void(0)"
-                                       data-url="{{ $user->id==$shop->user_id?'':url('api/v1/cart/add/'.$hotGoodsDetail->id) }}"
-                                       class="btn btn-primary join-cart {{ $user->id==$shop->user_id?'disabled':'' }}"
-                                       data-group="group{{ $hotGoodsDetail->id }} ">加入购物车</a>
 
-                                @endif
-                                <div class="sales prompt">累积销量：{{ $hotGoodsDetail->sales_volume }}</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            @endforeach
+            @include('includes.goods-list' , ['goods'=> $hotGoods])
         </div>
         <div class="row list-penal" id="dptj">
             <div class="col-sm-12 padding-clear classify-title">
                 店铺推荐
             </div>
-            @foreach($recommendGoods as $recommendGoodsDetail)
-                <div class="col-sm-3 commodity new-listing commodity-search-product">
-                    <div class="commodity-border">
-                        <div class="img-wrap">
-                            <a href="{{ url('goods/'.$recommendGoodsDetail->id) }}" target="_blank">
-                                <img class="commodity-img lazy" data-original="{{ $recommendGoodsDetail->image_url }}">
-                                <span class="@if($recommendGoodsDetail->is_out)prompt  lack  @elseif($recommendGoodsDetail->is_promotion)prompt  promotions @elseif($recommendGoodsDetail->is_new)prompt  new-listing @endif"></span>
-                            </a>
-                        </div>
 
-                        <div class="content-panel">
-                            <a href="{{ url('goods/'.$recommendGoodsDetail->id) }}" target="_blank">
-                                <div class="commodity-name">{{ $recommendGoodsDetail->name }}</div>
-                            </a>
-                            <div class="sell-panel">
-                                <span class="money red">¥{{ $recommendGoodsDetail->price . '/' . $recommendGoodsDetail->pieces }}</span>
-                                <span class="sales pull-right">最低购买量 : {{ $recommendGoodsDetail->min_num }}</span>
-                            </div>
-                            {{--<div class="store-name prompt">{{ $recommendGoodsDetail->shop->name }}</div>--}}
-                            <div class="shopping-store">
-                                <button type="button" data-group="group{{ $recommendGoodsDetail->id }}"
-                                        class="count modified desc-num"
-                                        disabled>-
-                                </button>
-                                <input type="text" data-group="group{{ $recommendGoodsDetail->id }}" class="amount num"
-                                       name="num"
-                                       value="{{ $recommendGoodsDetail->min_num }}"
-                                       data-min-num="{{ $recommendGoodsDetail->min_num }}">
-                                <button type="button" data-group="group{{ $recommendGoodsDetail->id }}"
-                                        class="count modified inc-num">+
-                                </button>
-                                @if($recommendGoodsDetail->is_out)
-                                    <a href="javascript:void(0)" class="btn btn-primary disabled join-cart" disabled="">缺货</a>
-                                @else
-                                    @if($user->id==$shop->user_id)
-                                        <a href="javascript:void(0)" disabled="disabled"
-                                           class="btn btn-primary disabled join-cart" disabled="">加入购物车</a>
-                                    @else
-
-                                        <a href="javascript:void(0)"
-                                           data-url="{{$user->id==$shop->user_id?'': url('api/v1/cart/add/'.$recommendGoodsDetail->id) }}"
-                                           class="btn btn-primary join-cart {{ $user->id==$shop->user_id?'disabled':'' }}"
-                                           data-group="group{{ $recommendGoodsDetail->id }}">加入购物车</a>
-                                    @endif
-
-                                @endif
-                                <div class="sales prompt">累积销量：{{ $recommendGoodsDetail->sales_volume }}</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            @endforeach
+            @include('includes.goods-list' , ['goods'=> $recommendGoods])
         </div>
         <div class="row list-penal">
             <div class="col-sm-12 padding-clear classify-title">

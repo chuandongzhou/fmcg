@@ -270,15 +270,28 @@
                                             <div class="form-group editor-item">
                                                 <label class="control-label col-sm-2"><span class="red">*</span> 最低购买数
                                                     :</label>
-
                                                 <div class="col-sm-3">
                                                     <input type="text" value="{{ $goods->min_num_retailer }}"
                                                            name="min_num_retailer" class="form-control"
                                                            placeholder="如 3 "/>
                                                 </div>
-                                                <div class="col-sm-1 pieces padding-clear"><span
-                                                            class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                <div class="col-sm-1 pieces padding-clear">
+                                                    <span class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
                                                 </div>
+
+                                                <label class="control-label col-sm-2">最高购买数
+                                                    :</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" value="{{ $goods->max_num_retailer }}"
+                                                           name="max_num_retailer" class="form-control"
+                                                           placeholder="如 3 "/>
+                                                </div>
+                                                <div class="col-sm-1 pieces padding-clear">
+                                                    <span class="pieces_retailer">{{ is_numeric($goods->pieces_retailer)?cons()->valueLang('goods.pieces',$goods->pieces_retailer):'' }}</span>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group editor-item">
                                                 <label class="control-label col-sm-2">规格 :</label>
 
                                                 <div class="col-sm-3 spec spec_retailer">{{ $goods->specification_retailer ?? '' }}</div>
@@ -294,7 +307,8 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">
-                                                <b>{{auth()->user()->type == cons('user.type.maker')?'供应商':'批发商'}}购买价格</b></h3>
+                                                <b>{{auth()->user()->type == cons('user.type.maker')?'供应商':'批发商'}}
+                                                    购买价格</b></h3>
                                         </div>
                                         <div class="panel-container">
                                             <div class="form-group editor-item">
@@ -359,12 +373,28 @@
                                                            name="min_num_wholesaler" class="form-control"
                                                            placeholder="如 3 "/>
                                                 </div>
-                                                <div class="col-sm-1 pieces padding-clear"><span
-                                                            class="pieces_wholesaler">
-                                                {{   is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
-
-                                            </span>
+                                                <div class="col-sm-1 pieces padding-clear">
+                                                    <span class="pieces_wholesaler">
+                                                        {{  is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
+                                                    </span>
                                                 </div>
+
+                                                <label class="control-label col-sm-2"><span class="red">*</span> 最高购买数
+                                                    :</label>
+
+                                                <div class="col-sm-3">
+                                                    <input type="text" value="{{ $goods->max_num_wholesaler }}"
+                                                           name="max_num_wholesaler" class="form-control"
+                                                           placeholder="如 3 "/>
+                                                </div>
+                                                <div class="col-sm-1 pieces padding-clear">
+                                                    <span class="pieces_wholesaler">
+                                                        {{  is_numeric($goods->pieces_wholesaler)?cons()->valueLang('goods.pieces',$goods->pieces_wholesaler):'' }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group editor-item">
                                                 <label class="control-label col-sm-2">规格 :</label>
 
                                                 <div class="col-sm-3 spec spec_wholesaler">
@@ -550,10 +580,10 @@
             getCategory(site.api('categories'));
             //页面加载时获取所有分类
             getAllCategory(
-                    site.api('categories'),
-                    '{{ $goods->cate_level_1 }}',
-                    '{{ $goods->cate_level_2 }}',
-                    '{{ $goods->cate_level_3 }}'
+                site.api('categories'),
+                '{{ $goods->cate_level_1 }}',
+                '{{ $goods->cate_level_2 }}',
+                '{{ $goods->cate_level_3 }}'
             );
             {{--addGoodsFunc('{{ $goods->cate_level_1 }}', '{{ $goods->cate_level_2 }}', '{{ $goods->cate_level_3 }}');--}}
             loadGoodsImages('{{ $goods->bar_code }}');

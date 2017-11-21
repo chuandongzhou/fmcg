@@ -460,39 +460,6 @@ a {
             max-width: 340px !important;
             padding: 0;
           }
-          .qr-panel {
-            border: 2px solid $theme-orange;
-            @include size(448px, 125px);
-            background-color: $body-bg;
-            padding-top: 3px;
-            .item {
-              display: inline-block !important;
-              @include size(105px, 115px);
-              .dbd-qr-code {
-                background-image: url("../images/qr-code.png");
-              }
-              .helper {
-                background-image: url("../images/qr-code2.png");
-              }
-              .field {
-                background-image: url("../images/qr-code3.png");
-              }
-              .dbd-buy {
-                background-image: url("../images/qr-code-buy.png");
-              }
-              .qr-code {
-                background-size: cover;
-                @include square(100px);
-                margin: auto;
-              }
-              .text {
-                color: $gray-base;
-                font-weight: 600;
-                margin: auto;
-              }
-
-            }
-          }
         }
       }
     }
@@ -884,7 +851,19 @@ a {
     }
   }
 }
-
+.bindwx-step-wrap{
+  margin-top:40px;
+  .step-item{
+    padding-bottom:20px;
+    font-size: 20px;
+    color:$gray;
+    cursor: pointer;
+    &.active{
+      border-bottom:2px solid $theme-orange;
+      color:$theme-orange;
+    }
+  }
+}
 .register {
   background-color: $body-bg;
   padding: 60px 0;
@@ -918,6 +897,10 @@ a {
     }
     .btn-warning {
       background-color: $theme-orange;
+      height:40px;
+    }
+    .bindwx-vcode{
+      width:100%;
     }
     .btn-default {
       background-color: $word-gray !important;
@@ -934,6 +917,10 @@ a {
     padding: 7px 20px;
     border-radius: 4px;
     margin-top: 25px;
+    &.bindwx-submit{
+      width:100%;
+      height:40px;
+    }
   }
   .address-map {
     overflow: hidden;
@@ -950,6 +937,32 @@ a {
       & + div {
         margin-top: 5px;
       }
+    }
+  }
+  .login-msg-panel{
+    padding:15px 0;
+    margin-top:-20px;
+    margin-bottom:30px;
+    background-color:$gray-plain;
+    img{
+      @include square(50px);
+      border-radius:50%;
+    }
+    .msg-tips{
+      display:inline-block;
+      width:450px;
+      margin-left:20px;
+      vertical-align: middle;
+      text-align: left;
+    }
+  }
+  &.bindwx-register{
+    display: none;
+    &.on{
+      display: block;
+    }
+    .forget-pwd{
+      color:$gray-light;
     }
   }
 }

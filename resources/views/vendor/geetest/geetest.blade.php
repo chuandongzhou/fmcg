@@ -1,6 +1,6 @@
 <script src="https://static.geetest.com/static/tools/gt.js"></script>
 <div id="geetest-captcha"></div>
-<p id="wait" class="show">正在加载验证码...</p>
+{{--<p id="wait" class="show">正在加载验证码...</p>--}}
 @define use Illuminate\Support\Facades\Config
 <script>
     var geetest = function (url) {
@@ -20,7 +20,7 @@
                 captchaObj.appendTo("#geetest-captcha");
             }
             captchaObj.onReady(function () {
-                $("#wait")[0].className = "hide";
+                //$("#wait")[0].className = "hide";
             });
         };
         $.ajax({
@@ -39,7 +39,7 @@
         });
     };
     (function () {
-        geetest('{{ $geetest_url?$geetest_url:Config::get('geetest.geetest_url', '/auth/geetest') }}');
+        {{--geetest('{{ $geetest_url?$geetest_url:Config::get('geetest.geetest_url', '/auth/geetest') }}');--}}
     })();
 </script>
 <style>

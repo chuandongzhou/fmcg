@@ -146,12 +146,13 @@ class ShopController extends Controller
     public function search(Request $request, $shop)
     {
         $gets = $request->all();
+        $user = auth()->user();
         $data = array_filter($this->_formatGet($gets));
         $addressData = (new AddressService)->getAddressData();
         $data = array_merge($data, array_except($addressData, 'address_name'));
         $result = GoodsService::getShopGoods($shop, $data);
         $goods = $result['goods']->active()->hasPrice()->orderBy('id', 'DESC')->paginate();
-        $isLike = auth()->user()->likeShops()->where('shop_id', $shop->id)->first();
+        $isLike = $user->likeShops()->where('shop_id', $shop->id)->first();
         $cateId = isset($data['category_id']) ? $data['category_id'] : -1;
         $categories = CategoryService::formatShopGoodsCate($shop, $cateId);
         $shop->load('goods');

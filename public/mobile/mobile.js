@@ -200,47 +200,38 @@ var numChange = function () {
         var descNum = carts.filter('.desc-num'),
             num = carts.filter('.num'),
             incNum = carts.filter('.inc-num'),
-            minNum = num.data('minNum');
-
+            minNum = num.data('minNum'),
+            maxNum = num.data('maxNum');
 
         if (descNum.length && num.length && incNum.length) {
             descNum.on('click', '', function () {
-                if ($(this).hasClass('disabled')) {
-                    return false;
-                }
                 num.val(parseInt(num.val()) - 1);
                 changeDescButton();
             });
             incNum.on('click', '', function () {
                 var buyNum = parseInt(num.val());
-                if (buyNum < 20000) {
+                if (buyNum < maxNum) {
                     num.val(parseInt(num.val()) + 1);
                     changeDescButton();
                 }
             });
 
             num.on('keyup', '', function () {
-                var obj = $(this), buyNum = parseInt(obj.val()) || minNum;
-                if (buyNum > 20000) {
-                    obj.val(20000);
+                var obj = $(this), buyNum = parseInt(obj.val());
+                if (buyNum > maxNum) {
+                    obj.val(maxNum);
                 } else if (buyNum < minNum) {
                     obj.val(minNum);
                 } else {
                     changeDescButton();
                 }
-                obj.val(buyNum);
             });
 
             var changeDescButton = function () {
-                if (num.val() <= minNum) {
-                    descNum.addClass('disabled');
-                } else {
-                    descNum.removeClass('disabled');
-                }
-            };
-            changeDescButton();
-        }
+                descNum.prop('disabled', num.val() <= minNum);
 
+            }
+        }
     });
 };
 

@@ -58,7 +58,7 @@
                     <span class="prompt label-name pull-left">数量 : </span>
                     <div class="pull-left num-wrap">
                         <input type="text" class="amount num pull-left" name="num" value="{{ $goods->min_num }}"
-                               data-min-num="{{ $goods->min_num }}">
+                               data-min-num="{{ $goods->min_num }}" data-max-num="{{ $goods->max_num }}">
                         <span class="count-operation pull-left">
                             <input class=" count desc-num pull-left desc-num" type="button" value="-" disabled><br>
                             <input class=" count inc-num pull-right inc-num" type="button" value="+">

@@ -15,28 +15,19 @@ $router->group(['prefix' => 'child-user/auth', 'namespace' => 'ChildUser'], func
     $router->controller('/', 'AuthController');
 });
 
-/**
- * 处理支付回调
- */
-$router->controller('webhooks/pingxx', 'Index\Webhook\PingxxController');
-$router->controller('webhooks/yeepay', 'Index\Webhook\YeepayController');
-$router->controller('webhooks/alipay', 'Index\Webhook\AlipayController');
-$router->controller('webhooks/wechat', 'Index\Webhook\WechatController');
-$router->controller('webhooks/union-pay', 'Index\Webhook\UnionPayController');
 
 /**
- * 登录注册
+ * 移动端登录注册
  */
-$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'],
-    function ($router) {
-        $router->get('login', 'AuthController@login');
-        $router->get('register-account', 'AuthController@registerAccount');
-        $router->get('register-password', 'AuthController@registerPassword');
-        $router->get('register-shop', 'AuthController@registerShop');
-        $router->get('register-success', 'AuthController@registerSuccess');
-        $router->get('logout', 'AuthController@logout');
-        $router->get('forget-password', 'AuthController@forgetPassword');
-    });
+$router->group(['prefix' => 'auth', 'domain' => 'm.fmcg.com', 'namespace' => 'Mobile'], function ($router) {
+    $router->get('login', 'AuthController@login');
+    $router->get('register-account', 'AuthController@registerAccount');
+    $router->get('register-password', 'AuthController@registerPassword');
+    $router->get('register-shop', 'AuthController@registerShop');
+    $router->get('register-success', 'AuthController@registerSuccess');
+    $router->get('logout', 'AuthController@logout');
+    $router->get('forget-password', 'AuthController@forgetPassword');
+});
 
 /**
  * 移动端
@@ -88,26 +79,49 @@ $router->group(['domain' => 'm.fmcg.com', 'namespace' => 'Mobile', 'middleware' 
 /**
  * 前台登录注册
  */
-$router->group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
-    $router->get('login', 'AuthController@login');
-    $router->get('register', 'AuthController@register');
-    $router->get('register-set-password', 'AuthController@setPassword');
-    $router->get('register-add-shop', 'AuthController@addShop');
-    $router->get('reg-success', 'AuthController@regSuccess');
-    $router->get('logout', 'AuthController@logout');
-    $router->get('geetest', 'AuthController@getGeetest');
+$router->group(['namespace' => 'Auth'], function ($router) {
+    $router->group(['prefix' => 'auth'], function ($router) {
+        $router->get('login', 'AuthController@login');
+        $router->get('register', 'AuthController@register');
+        $router->get('register-set-password', 'AuthController@setPassword');
+        $router->get('register-add-shop', 'AuthController@addShop');
+        $router->get('reg-success', 'AuthController@regSuccess');
+        $router->get('logout', 'AuthController@logout');
+        $router->get('geetest', 'AuthController@getGeetest');
+    });
+
+   /* $router->group(['prefix' => 'weixinweb-auth'], function ($router) {
+        $router->get('login', 'WeixinAuthController@login');
+        $router->any('callback', 'WeixinAuthController@callback');
+        $router->get('bind-socialite', 'WeixinAuthController@bindSocialite');
+    });*/
+
 });
 
 /**
- * 前台
- *
+ * 前台无需登录模块
  */
-$router->get('/test', 'Index\HomeController@test');
+$router->group(['namespace' => 'Index'], function ($router) {
+    /**
+     * 处理支付回调
+     */
+    $router->group(['prefix' => 'webhooks', 'namespace' => 'Webhook'], function ($router) {
+        $router->controller('pingxx', 'PingxxController');
+        $router->controller('yeepay', 'YeepayController');
+        $router->controller('alipay', 'AlipayController');
+        $router->controller('wechat', 'WechatController');
+        $router->controller('union-pay', 'UnionPayController');
+    });
+
+
+    $router->get('test', 'HomeController@test');
+    $router->get('about', 'HomeController@about');         //关于我们
+    $router->get('download', 'HomeController@download');         //下载
+});
+
 
 $router->group(['namespace' => 'Index', 'middleware' => 'auth'], function ($router) {
     $router->get('/', 'HomeController@index');              //商家管理首页
-    $router->get('about', 'HomeController@about');         //关于我们
-    $router->get('download', 'HomeController@download');         //关于我们
     $router->get('shop/{shop}/search', 'ShopController@search')->where('shop', '[0-9]+');          //商家商店搜索
     $router->get('shop/{shop}', 'ShopController@detail')->where('shop', '[0-9]+');          //商家商店首页
     $router->get('shop/all-goods/{shop}/{sort?}', 'ShopController@shop')->where('shop', '[0-9]+');          //商家商店所有商品

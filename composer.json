@@ -21,7 +21,8 @@
     "tinpont/pushbox": "dev-master",
     "simplesoftwareio/simple-qrcode": "1.3.*",
     "overtrue/laravel-pinyin": "~3.0",
-    "germey/geetest" : "^1.0"
+    "germey/geetest" : "^2.0",
+    "socialiteproviders/weixin-web": "2.0.1"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

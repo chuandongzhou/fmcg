@@ -233,6 +233,7 @@
             $('.search-station').click(function () {
                 checksubmit(site.url('search'));
             });
+
             function checksubmit(url) {
                 $("form").attr('action', url);
                 $('form').submit();

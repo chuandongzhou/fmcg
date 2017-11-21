@@ -4,6 +4,11 @@
 
 @include('includes.jquery-lazeload')
 
+@section('css')
+    @parent
+    <link rel="stylesheet" href="{{ asset('css/swiper.min.css') }}">
+@stop
+
 @section('header')
     <div class="fixed-header fixed-item">
         <div class="row nav-top">
@@ -34,20 +39,21 @@
     <div class="container-fluid  m60 p65">
         <div class="row ">
             <div class="col-xs-12">
-                <div id="myCarousel" class="row carousel slide banner-slide index-slide">
-                    <ol class="carousel-indicators">
+
+                <!-- 轮播图 -->
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
                         @foreach($adverts as $key => $advert )
-                            <li data-target="#myCarousel" data-slide-to="{{ $key }}"
-                                class="{{ $key == 0 ? 'active' : '' }}"></li>
-                        @endforeach
-                    </ol>
-                    <div class="carousel-inner">
-                        @foreach($adverts as $key => $advert )
-                            <div class="item {{ $key == 0 ? 'active' : '' }}">
+                            <div class="swiper-slide">
                                 <a href="{{ $advert->url }}" target="_blank">
-                                    <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}">
+                                    <img src="{{ $advert->image_url }}" alt="{{ $advert->name }}"/>
                                 </a>
                             </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination">
+                        @foreach($adverts as $key => $advert )
+                            <span class="swiper-pagination-bullet {{ $key == 0 ? 'swiper-pagination-bullet-active' : '' }}"></span>
                         @endforeach
                     </div>
                 </div>
@@ -135,6 +141,7 @@
     <script type="text/javascript" src="{{ asset('mobile/dialog.js') }}"></script>
     <script type="text/javascript" src="{{ asset('mobile/mobile-select-area.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/address.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/swiper.min.js') }}"></script>
 @stop
 
 @section('js')
@@ -155,5 +162,10 @@
         if (!Cookies.get('province_id')) {
             setAddressCookie();
         }
+        var swiper = new Swiper('.swiper-container', {
+            autoplay: 3000,
+            pagination: '.swiper-pagination',
+            paginationClickable: true
+        });
     </script>
 @stop

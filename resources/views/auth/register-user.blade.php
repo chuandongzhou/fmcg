@@ -103,7 +103,7 @@
 @stop
 @section('js')
     @parent
-    <script>
+    <script type="text/javascript">
         $(function () {
             //验证码的显示与隐藏
             $("#mask").click(function () {
@@ -136,6 +136,7 @@
                 }, 2000);
             });
 
+            geetest('{{ Config::get('geetest.geetest_url', '/auth/geetest') }}')
         });
     </script>
 @stop

@@ -43,11 +43,11 @@ class AuthController extends Controller
         $cookie = app('cookie');
         if ($inWindows && $request->cookie('login_error') >= 2) {
             if (!$request->input('geetest_challenge')) {
-                return $this->invalidParam('password', '请完成验证');
+                return $this->error('请完成验证');
             }
             $res = (new ValidateService)->validateGeetest($request);
             if (!$res) {
-                return $this->invalidParam('password', '请完成验证');
+                return $this->error('请完成验证');
             }
         }
         if (!$account || !$password) {
@@ -55,10 +55,10 @@ class AuthController extends Controller
         }
         $type = $request->input('type');
 
-        $user = User::where('user_name', $account)->first();
+        $user = User::where(['user_name' => $account, 'type' => $type])->first();
 
         //帐号密码
-        if (!$user || !Hash::check($password, $user->password) || $user->type != $type) {
+        if (!$user || !Hash::check($password, $user->password)) {
             $loginError = 0;
             if ($inWindows) {
                 $loginError = $request->cookie('login_error');
@@ -89,12 +89,21 @@ class AuthController extends Controller
         $nowTime = Carbon::now();
 
         if ($user->fill(['last_login_at' => $nowTime, 'last_login_ip' => $request->ip()])->save()) {
+            $token = $request->input('token');
+
+            //第三方绑定时绑定token
+            if ($token && session('socialite_token')) {
+                $user->userTokens()->create($token);
+                $request->session()->forget('socialite_token');
+            }
+
             auth()->login($user, true);
             $cookie->queue('login_error', null, -1);
             return $this->success(['user' => $user]);
         }
         return $this->invalidParam('password', '登录失败，请重试');
     }
+
 
     /**
      * 注册
@@ -106,6 +115,7 @@ class AuthController extends Controller
     public function postRegister(RegisterRequest $request)
     {
         $userInput = $request->only('user_name', 'password', 'backup_mobile', 'type');
+        !array_get($userInput, 'user_name') && ($shopInput['user_name'] = $userInput['backup_mobile']);
         //终端商不需要审核直接通过
         if ($userInput['type'] == cons('user.type.retailer')) {
             $userInput['audit_status'] = cons('user.audit_status.pass');
@@ -114,6 +124,8 @@ class AuthController extends Controller
         if ($user->exists) {
             //商店
             $shopInput = $request->except('username', 'password', 'backup_mobile', 'type');
+
+            !array_get($shopInput, 'contact_info') && ($shopInput['contact_info'] = $userInput['backup_mobile']);
 
             $shopModel = $user->shop();
 
@@ -128,8 +140,13 @@ class AuthController extends Controller
                     'name' => $shopInput['name'],
                 ];
                 app('pushbox.sms')->send('tip', cons('admin.phone'), $param);
+                //第三方绑定时绑定token
+                $token = $request->input('token');
+                if ($token && session('socialite_token')) {
+                    $user->userTokens()->create($token);
+                    $request->session()->forget('socialite_token');
+                }
                 //默认添加店铺地址为收货地址
-
                 $this->_addShippingAddress($shopInput, $user);
                 return $this->success('注册成功');
             } else {
@@ -238,6 +255,7 @@ class AuthController extends Controller
     public function postSendSms(BackupSendSmsRequest $request)
     {
         $data = $request->all();
+
         $user = User::with('shop')->where('user_name', $data['user_name'])->first();
         if ($user->status != cons('status.on')) {
             return $this->error('账号已锁定');
@@ -320,7 +338,7 @@ class AuthController extends Controller
 
         $shippingAddress = $user->shippingAddress()->create($shippingAddressData);
         if ($shippingAddress->exists) {
-            $shippingAddress->address()->create( $attribute['address']);
+            $shippingAddress->address()->create($attribute['address']);
         }
         return true;
     }

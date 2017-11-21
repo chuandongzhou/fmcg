@@ -9,10 +9,8 @@ class ValidateService
 {
 
     /**
-     * 验证极限验证
-     *
-     * @param  \Illuminate\Http\Request $request
-     * $return boolean
+     * @param \Illuminate\Http\Request $request
+     * @return bool
      */
     public function validateGeetest(Request $request)
     {

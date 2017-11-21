@@ -198,7 +198,7 @@ class SalesmanCustomerController extends Controller
                 return $this->invalidParam('account', $validatedResult);
             }
         }
-        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id : 0;
+        $attributes['shop_id'] = ($validatedResult instanceof User) ? $validatedResult->shop_id  : $customer->shop_id;
         if (($type = array_get($attributes, 'type')) != $customer->type) {
             $customerType = ($validatedResult instanceof User) ? $validatedResult->type : $type;
             if ($customerType != $type) {

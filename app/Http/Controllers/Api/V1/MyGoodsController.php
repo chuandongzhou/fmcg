@@ -568,13 +568,13 @@ class MyGoodsController extends Controller
 
         $pieces = [
             'pieces_level_1' => $goodsArr[6],
-            'pieces_level_2' => $goodsArr[7] ??  null,
-            'pieces_level_3' => $goodsArr[9] ??  null,
+            'pieces_level_2' => $goodsArr[7] ?? null,
+            'pieces_level_3' => $goodsArr[9] ?? null,
             'system_1' => $goodsArr[8] ?? null,
             'system_2' => $goodsArr[10] ?? null,
         ];
         if ($shopType == cons('user.type.supplier')) {
-            if ($length != 16) {
+            if ($length < 16) {
                 return '不符合供应商批量录入商品标准请核对后再试!';
             }
             $goods['price_wholesaler'] = $goodsArr['6'] ?? $goodsArr['2'];
@@ -583,8 +583,8 @@ class MyGoodsController extends Controller
             $goods['min_num_wholesaler'] = $goodsArr[9] ?? $goodsArr[5];
             $pieces = [
                 'pieces_level_1' => $goodsArr[10],
-                'pieces_level_2' => $goodsArr[11] ??  null,
-                'pieces_level_3' => $goodsArr[13] ??  null,
+                'pieces_level_2' => $goodsArr[11] ?? null,
+                'pieces_level_3' => $goodsArr[13] ?? null,
                 'system_1' => $goodsArr[12] ?? null,
                 'system_2' => $goodsArr[14] ?? null,
             ];
@@ -598,11 +598,12 @@ class MyGoodsController extends Controller
             }
 
         } else {
-            if ($length != 12) {
+            if ($length < 12) {
                 return '不符合批发商批量录入商品标准请核对后再试!';
             }
         }
-        if (!in_array($goods['pieces_retailer'], $pieces) || !in_array($goods['pieces_wholesaler'] ?? '', $pieces)) {
+        if (!in_array($goods['pieces_retailer'], $pieces) || (array_get($goods,
+                    'pieces_wholesaler') && !in_array($goods['pieces_wholesaler'], $pieces))) {
             return '单位编号不正确请检查!';
         }
         if (!empty($pieces['pieces_level_2']) && empty($pieces['system_1'])) {

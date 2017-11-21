@@ -57,6 +57,16 @@ class UpdateGoodsRequest extends UserRequest
             $system2 = $this->input('system_2');
             $piecesLevel2 = $this->input('pieces_level_2');
             $piecesLevel3 = $this->input('pieces_level_3');
+            $maxNumRetailer = $this->input('max_num_retailer');
+            $maxNumWholesaler = $this->input('max_num_wholesaler');
+
+            if ($maxNumRetailer && $maxNumRetailer < $this->input('min_num_retailer')) {
+                $validator->errors()->add('max_num_retailer', '终端商最高购买数 必须大于最低购买数');
+            }
+
+            if ($maxNumWholesaler && $maxNumWholesaler < $this->input('min_num_wholesaler')) {
+                $validator->errors()->add('max_num_wholesaler', '批发商最高购买数 必须大于最低购买数');
+            }
 
             if ($this->user()->type != cons('user.type.maker')) {
                 if (!is_numeric($this->input('pieces_retailer'))) {

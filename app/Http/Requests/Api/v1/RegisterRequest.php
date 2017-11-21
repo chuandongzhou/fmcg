@@ -15,7 +15,7 @@ class RegisterRequest extends Request
     public function rules()
     {
         return [
-            'user_name' => 'required|alpha_num|between:4,16|unique:user',
+            'user_name' => 'sometimes|required|alpha_num|between:4,16|unique:user',
             'password' => 'required|between:6,18|alpha_num|confirmed',
             'type' => 'required|in:1,2,3,4',
             'logo' => 'sometimes|required',

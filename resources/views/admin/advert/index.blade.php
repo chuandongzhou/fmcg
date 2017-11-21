@@ -2,33 +2,33 @@
 
 @section('right-container')
 
-    @if($type == 'category' || $type == 'left-category')
-        <form class="form-horizontal" action="{{ url('admin/advert-category') }}" method="get" autocomplete="off">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">区域：</label>
 
-                <div class="col-sm-2">
-                    <select name="province_id" data-id="{{ $data['province_id'] or null }}"
-                            class="address-province form-control"></select>
-                </div>
-                <div class="col-sm-2">
-                    <select name="city_id" data-id="{{ $data['city_id'] or null }}" class="address-city form-control">
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <input type="submit" class="btn btn-default  search-by-get" value="查询"/>
-                </div>
-                <div class="col-sm-2">
-                    <select name="district_id" class="address-district form-control hide useless-control">
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <select name="street_id" class="address-street form-control hide useless-control"></select>
-                </div>
+    <form class="form-horizontal" action="{{ url('admin/advert-' . $type) }}" method="get" autocomplete="off">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">区域：</label>
 
+            <div class="col-sm-2">
+                <select name="province_id" data-id="{{ $data['province_id'] or null }}"
+                        class="address-province form-control"></select>
             </div>
-        </form>
-    @endif
+            <div class="col-sm-2">
+                <select name="city_id" data-id="{{ $data['city_id'] or null }}" class="address-city form-control">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" class="btn btn-default  search-by-get" value="查询"/>
+            </div>
+            <div class="col-sm-2">
+                <select name="district_id" class="address-district form-control hide useless-control">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select name="street_id" class="address-street form-control hide useless-control"></select>
+            </div>
+
+        </div>
+    </form>
+
     <table class="table table-striped">
         <thead>
         <tr>
