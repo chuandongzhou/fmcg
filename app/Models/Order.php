@@ -1122,7 +1122,6 @@ class Order extends Model
                     $query->where('id', $deliveryManId);
                 });
             }
-
         });
     }
 

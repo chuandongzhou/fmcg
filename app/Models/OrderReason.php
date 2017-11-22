@@ -9,6 +9,7 @@ class OrderReason extends Model
     protected $fillable = [
         'reason',
         'order_id',
+        /*'operater',*/
         'refunded_amount',
         'type',
     ];

@@ -22,7 +22,6 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
 use App\Services\RedisService;
 use App\Services\OrderService;
-use Illuminate\Support\Facades\Gate;
 
 class DeliveryController extends Controller
 {

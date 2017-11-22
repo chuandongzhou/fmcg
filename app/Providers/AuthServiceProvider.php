@@ -231,4 +231,6 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('validate-delivery-man-order', function ($user, $order) {
             return $order->shop_id == $user->shop_id;
         });
+    }
+}
 
