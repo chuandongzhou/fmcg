@@ -162,6 +162,7 @@
 
     token                       string      第三方token
     type                        string      应用类型  （微信默认传 'weixin'）
+    app_role_type               string      app角色类型 （买家版传 'buyer' 卖家版传 'seller'）
     
 `接口返回：`
     

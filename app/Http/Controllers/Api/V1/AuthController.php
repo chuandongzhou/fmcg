@@ -16,7 +16,6 @@ use App\Http\Requests\Api\v1\RegisterSetPasswordRequest;
 use App\Http\Requests\Api\v1\RegisterUserShopRequest;
 use App\Models\User;
 use App\Models\UserToken;
-use App\Services\CodeService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -393,6 +392,22 @@ class AuthController extends Controller
         }
 
         $userToken = UserToken::where(['type' => $types[$type], 'token' => $token])->with('user')->first();
+
+        $appRoleType = $request->input('app_role_type');
+
+        if (!$appRoleType) {
+            return $this->error('登录失败');
+        }
+
+        $user = $userToken->user;
+
+        if ($appRoleType == 'seller' && $user->type == cons('user.type.retailer')){
+            return $this->error('登录失败，请使用买家app登录');
+        }
+
+        if ($appRoleType == 'buyer' && $user->type == cons('user.type.supplier')){
+            return $this->error('登录失败，请使用卖家app登录');
+        }
 
         if ($userToken) {
             return $this->_handleLogin($userToken);

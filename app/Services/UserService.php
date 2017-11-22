@@ -59,6 +59,27 @@ class UserService extends RedisService
         return array_get($userTypes, object_get($user, 'type', cons('user.type.retailer')));
     }
 
+    /**
+     * 获取当前登录的用户
+     *
+     * @return \App\Models\DeliveryMan|\Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    public function getCurrentLoggedUser()
+    {
+        if (auth()->check()) {
+            return auth()->user();
+        } elseif (child_auth()->check()) {
+            return child_auth()->user();
+        } elseif (salesman_auth()->check()) {
+            return salesman_auth()->user();
+        } elseif (delivery_auth()->check()) {
+            return delivery_auth()->user();
+        } elseif (wk_auth()->check()) {
+            return wk_auth()->user();
+        }
+        return null;
+    }
+
 
     /**
      *  获取店铺详情

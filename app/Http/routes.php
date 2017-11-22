@@ -536,11 +536,14 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->post('voucher-create', 'DispatchTruckController@createDispatchTruckVoucher');//创建发车单
                     $router->get('voucher-detail', 'DispatchTruckController@getDispatchTruckVoucherDetail');//获取发车单详情
                     $router->get('history', 'DispatchTruckController@history');//获取发车历史
-                    $router->get('{dispatch_truck}/goods-statistical', 'DispatchTruckController@dispatchGoodsStatistical');//获取发车单订单单个商品统计
-                    $router->get('{dispatch_truck}/return-goods-statistical','DispatchTruckController@dispatchReturnGoodsStatistical');//获取发车单退货单个商品统计
+                    $router->get('{dispatch_truck}/goods-statistical',
+                        'DispatchTruckController@dispatchGoodsStatistical');//获取发车单订单单个商品统计
+                    $router->get('{dispatch_truck}/return-goods-statistical',
+                        'DispatchTruckController@dispatchReturnGoodsStatistical');//获取发车单退货单个商品统计
                     $router->put('{dispatch_truck}/change-truck', 'DispatchTruckController@changeTruck');//换车
                     $router->put('{dispatch_truck}/change-sort', 'DispatchTruckController@dispatchOrderSort');//订单排序
-                    $router->delete('delete-order/{order_id}', 'DispatchTruckController@deleteDispatchTruckOrder');//删除发车单内商品
+                    $router->delete('delete-order/{order_id}',
+                        'DispatchTruckController@deleteDispatchTruckOrder');//删除发车单内商品
                     $router->post('{dtv_id}/truck-back', 'DispatchTruckController@confirmTruckBack');//确认回车
                 });
             });
@@ -551,7 +554,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('login', 'DeliveryController@login');//处理配送人员登陆
             $router->get('orders', 'DeliveryController@orders');//已分配的订单信息
             $router->get('history-orders', 'DeliveryController@historyOrders');//已配送历史订单信息
-            $router->post('order/{order_id}/cancel', 'DeliveryController@cancelOrder');
+            $router->post('order/{order_id}/cancel', 'DeliveryController@cancelOrder')->where('order_id', '[0-9]+');
             $router->get('detail', 'DeliveryController@detail');//配送订单详情
             $router->get('deal-delivery', 'DeliveryController@dealDelivery');//处理完成配送
             $router->get('logout', 'DeliveryController@logout');//退出登陆
@@ -562,6 +565,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             $router->post('modify-password', 'DeliveryController@modifyPassword');//修改密码
             $router->get('latest-version', 'DeliveryController@latestVersion');//检查最新版本
             $router->get('now', 'DeliveryController@nowDispatchVoucherDetail');//当前配送单
+            $router->get('order-complete/{order_id}', 'DeliveryController@orderComplete')->where('order_id', '[0-9]+');
         });
         //业务管理
         $router->post('business/auth/login', 'Business\AuthController@login');
@@ -627,6 +631,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->get('display-fee-surplus', 'SalesmanVisitOrderController@displayFeeSurplus');//查询陈列费剩余
                     $router->get('mortgage-goods-surplus',
                         'SalesmanVisitOrderController@mortgageGoodsSurplus');//查询陈列商品剩余
+                    $router->get('order-complete/{order_id}',
+                        'SalesmanVisitOrderController@orderComplete')->where('order_id', '[0-9]+');
 
                 });
                 //抵费商品

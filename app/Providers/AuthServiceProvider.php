@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\ChildUser;
+use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\SalesmanVisitOrder;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -123,6 +125,25 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
+
+        /**
+         * 判断是否可操作订单
+         */
+        $gate->define('validate-order', function ($user, $order) {
+            if ($user instanceof ChildUser) {
+                return $order->shop_id == $user->user->shop_id;
+            }
+
+            if ($user instanceof DeliveryMan) {
+                if ($orderDispatchTruck = $order->dispatchTruck) {
+                    return $orderDispatchTruck->deliveryMans ? in_array($user->id,
+                        $order->dispatchTruck->deliveryMans->pluck('id')->toArray()) : false;
+                }
+                return false;
+            }
+            return $order->shop_id == $user->shop_id;
+        });
+
 
         /**
          * 验证抵费商品

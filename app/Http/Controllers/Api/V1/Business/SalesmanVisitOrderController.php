@@ -166,6 +166,29 @@ class SalesmanVisitOrderController extends Controller
         return $result === 'success' ? $this->success('修改成功') : $this->error(is_string($result) ? $result : '修改订单时出现问题');
     }
 
+
+    /**
+     * 确认订单完成
+     *
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function orderComplete($orderId)
+    {
+        $order = Order::with('goods')->useful()->find($orderId);
+
+        if (is_null($order) || Gate::forUser(salesman_auth()->user())->denies('validate-order', $order)) {
+            return $this->error('订单不存在');
+        }
+        if (!$order->can_confirm_collections) {
+            return $this->error('此订单不支持现金付款');
+        }
+
+        $result = new OrderService();
+
+        return $result->orderComplete($order) ? $this->success('确认订单完成') : $this->error($result->getError());
+    }
+
     /**
      * 订单批量通过
      *

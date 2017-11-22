@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Coupon;
 use App\Models\DispatchTruckReturnOrder;
 use App\Models\Order;
 use App\Models\OrderGoods;
@@ -374,6 +373,37 @@ class OrderService extends BaseService
         }
         $isOrder && $order->addHidden(['goods']);
         return compact('orderGoods', 'mortgageGoods', 'giftGoods');
+    }
+
+
+    /**
+     * 确认订单完成
+     *
+     * @param $order
+     * @return bool
+     */
+    public function orderComplete($order){
+        $inventoryService = new InventoryService();
+
+        if ($order->pay_type == cons('pay_type.pick_up')) {
+            //自提订单收款时卖家出库
+            $outResult = $inventoryService->autoOut($order);
+            if (!$outResult) {
+                $this->setError($inventoryService->getError());
+                return false;
+            };
+        }
+        if ($order->pay_type == cons('pay_type.pick_up') || $order->pay_type == cons('pay_type.cod')) {
+            //自提订单和货到付款订单收款时买家入库
+            $inventoryService->autoIn($order);
+        }
+        $nowTime = Carbon::now();
+
+        if ($order->fill(['pay_status' => cons('order.pay_status.payment_success'), 'paid_at' => $nowTime, 'status' => cons('order.status.finished'), 'finished_at' => $nowTime])->save()) {
+           return true;
+        }
+        $this->setError('确认收款时出现问题');
+        return false;
     }
 
     /**
