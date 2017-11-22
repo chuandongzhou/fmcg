@@ -29,10 +29,13 @@ class AuthController extends Controller
         if (!$wk || !Hash::check($password, $wk->password)) {
             return $this->invalidParam('password', '账号或密码错误');
         }
+        if ($wk->status == cons('status.off')) {
+            return $this->invalidParam('password', '该账号被禁用!');
+        }
         wk_auth()->login($wk);
         return $this->success(['wk' => $wk]);
     }
-    
+
     /**
      * 登出
      */

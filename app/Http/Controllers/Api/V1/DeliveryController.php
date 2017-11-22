@@ -22,6 +22,7 @@ use App\Http\Requests\Api\v1\UpdateOrderRequest;
 use App\Services\DeliveryService;
 use App\Services\RedisService;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Gate;
 
 class DeliveryController extends Controller
 {
@@ -244,11 +245,15 @@ class DeliveryController extends Controller
     {
         $order = Order::useful()->with('user.shop',
             'shippingAddress.address',
-            'goods.images.image', 'applyPromo.promo', 'gifts')->find($request->input('order_id'));
-
+            'goods.images.image',
+            'applyPromo.promo', 'gifts')->find($request->input('order_id'));
         if (is_null($order)) {
             return $this->error('订单已失效');
         }
+        if (Gate::forUser(delivery_auth()->user())->denies('validate-order', $order)) {
+            return $this->error('没有权限!');
+        }
+
         $goods = (new OrderService)->explodeOrderGoods($order);
         $order->orderGoods = $goods['orderGoods'];
         $order->mortgageGoods = $goods['mortgageGoods'];
@@ -267,7 +272,8 @@ class DeliveryController extends Controller
             'can_confirm_arrived',
             'can_change_price',
             'user_shop_name',
-            'after_rebates_price'
+            'after_rebates_price',
+            'invalid_reason'
         ]);
         $order->goods->each(function ($goods) {
             $goods->addHidden(['introduce', 'images_url', 'pieces']);

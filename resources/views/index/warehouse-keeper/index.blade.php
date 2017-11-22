@@ -1,5 +1,5 @@
 @extends('index.manage-master')
-@section('subtitle', '个人中心-子账号')
+@section('subtitle', '库存管理-仓库管理员')
 @include('includes.warehouse-keeper')
 @section('container')
     @include('includes.menu')

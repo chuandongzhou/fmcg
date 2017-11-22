@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\SalesmanVisitOrder;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -201,6 +202,26 @@ class AuthServiceProvider extends ServiceProvider
          * 仓管验证订单
          */
         $gate->define('validate-warehouse-keeper-order', function ($user, $order) {
+            return $order->shop_id == $user->shop_id;
+        });
+
+        /**
+         * 司机验证订单
+         */
+        $gate->define('validate-delivery-man-order', function ($user, $order) {
+            return $order->shop_id == $user->shop_id;
+        });
+
+        /**
+         * 获取订单身份验证
+         */
+        $gate->define('validate-order', function ($user, $order) {
+            if ($user instanceof DeliveryMan) {
+                if ($order->dispatchTruck) {
+                    return in_array($user->id, $order->dispatchTruck->deliveryMans->pluck('id')->toArray());
+                }
+                return false;
+            }
             return $order->shop_id == $user->shop_id;
         });
     }

@@ -104,7 +104,8 @@ class OrderController extends Controller
             'orderGoods.goods.goodsPieces',
             'orderGoods.goods.inventory',
             'shippingAddress.address',
-            'salesmanVisitOrder.salesmanCustomer'
+            'salesmanVisitOrder.salesmanCustomer',
+            'orderReason'
         ])->select([
             'id',
             'user_id',
@@ -131,7 +132,7 @@ class OrderController extends Controller
             return $this->error('没有权限!');
         }
         $order->addHidden(['user', 'salesmanVisitOrder', 'orderGoods']);
-        $order->setAppends(['user_shop_name', 'after_rebates_price', 'status_name', 'truck', 'delivery_mans']);
+        $order->setAppends(['invalid_reason','user_shop_name', 'after_rebates_price', 'status_name', 'truck', 'delivery_mans']);
         $this->validateGoodsInventory($order->orderGoods);
         $order->orderGoods->each(function ($orderGoods) {
             $orderGoods->addHidden(['goods']);
