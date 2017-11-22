@@ -45,6 +45,7 @@ class RouteServiceProvider extends ServiceProvider
         'App\Models\PromoApply' => 'promo-apply',
         'App\Models\WarehouseKeeper' => 'warehouse-keeper',
         'App\Models\DeliveryTruck' => 'delivery-truck',
+        'App\Models\WeixinArticle' => 'article'
     ];
 
     /**

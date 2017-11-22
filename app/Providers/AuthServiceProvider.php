@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ChildUser;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\SalesmanVisitOrder;
@@ -126,6 +127,25 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         /**
+         * 判断是否可操作订单
+         */
+        $gate->define('validate-order', function ($user, $order) {
+            if ($user instanceof ChildUser) {
+                return $order->shop_id == $user->user->shop_id;
+            }
+
+            if ($user instanceof DeliveryMan) {
+                if ($orderDispatchTruck = $order->dispatchTruck) {
+                    return $orderDispatchTruck->deliveryMans ? in_array($user->id,
+                        $order->dispatchTruck->deliveryMans->pluck('id')->toArray()) : false;
+                }
+                return false;
+            }
+            return $order->shop_id == $user->shop_id;
+        });
+
+
+        /**
          * 验证抵费商品
          */
         $gate->define('validate-mortgage-goods', function ($user, $mortgageGoods) {
@@ -212,17 +232,3 @@ class AuthServiceProvider extends ServiceProvider
             return $order->shop_id == $user->shop_id;
         });
 
-        /**
-         * 获取订单身份验证
-         */
-        $gate->define('validate-order', function ($user, $order) {
-            if ($user instanceof DeliveryMan) {
-                if ($order->dispatchTruck) {
-                    return in_array($user->id, $order->dispatchTruck->deliveryMans->pluck('id')->toArray());
-                }
-                return false;
-            }
-            return $order->shop_id == $user->shop_id;
-        });
-    }
-}

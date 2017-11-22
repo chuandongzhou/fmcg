@@ -13,23 +13,6 @@
     </style>
 @stop
 
-@section('header')
-    <nav class="navbar register-nav">
-        <div class="container padding-clear">
-            <ul class="nav-title pull-left">
-                <li><a class="logo-icon" href="/">
-                        <img src="{{ asset('images/logo.png') }}" alt="logo"/></a></li>
-                <li class="title">注册</li>
-            </ul>
-            <div class="pull-right right-title">
-                <a href="{{ url('/') }}">订百达首页</a>
-                <a href="{{ url('/about') }}">关于我们</a>
-            </div>
-
-        </div>
-    </nav>
-
-@stop
 @section('footer')
     @include('includes.footer', ['class' => 'register-footer'])
 @stop

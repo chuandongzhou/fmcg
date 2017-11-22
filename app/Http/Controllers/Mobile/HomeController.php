@@ -14,7 +14,7 @@ class HomeController extends Controller
         //广告
         $addressData = (new AddressService())->getAddressData();
         $data = array_except($addressData, 'address_name');
-        $adverts = Advert::with('image')->where('type', cons('advert.type.index'))->OfTime()->ofAddress($data, true)->get();
+        $adverts = Advert::with('image')->where('type', cons('advert.type.app'))->OfTime()->ofAddress($data, true)->get();
         return view('mobile.index.index', [
             'goodsColumns' => GoodsService::getNewGoodsColumn(),
             'adverts' => $adverts,

@@ -21,13 +21,13 @@ class CreateGoodsRequest extends UserRequest
         $retailer = [
             'price_retailer' => 'required|numeric|min:0',
             'price_retailer_pick_up' => 'numeric|min:0',
-            'min_num_retailer' => 'required|numeric|min:0',
+            'min_num_retailer' => 'required|numeric|min:0|max:20000',
         ];
         $rules = [
             'name' => 'required',
             'price_wholesaler' => 'sometimes|required|numeric|min:0',
             'price_wholesaler_pick_up' => 'numeric|min:0',
-            'min_num_wholesaler' => 'sometimes|required|numeric|min:0',
+            'min_num_wholesaler' => 'sometimes|required|numeric|min:0|max:20000',
             'bar_code' => 'required|digits_between:7,18',
             'cate_level_1' => 'required|numeric|min:0',
             'cate_level_2' => 'required|numeric|min:1',

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Order;
+use App\Services\UserService;
 use Gate;
 use Illuminate\Http\Request;
 
@@ -28,11 +29,10 @@ class UnionPayController extends Controller
     public function getQrCode(Request $request, $orderId)
     {
         $order = Order::with('shop')->find($orderId);
-
-        if (is_null($order) || !$order->can_payment) {
+        $loggedUser = (new UserService())->getCurrentLoggedUser();
+        if (is_null($order) || Gate::forUser($loggedUser)->denies('validate-order', $order) || !$order->can_payment) {
             return $this->error('订单不存在或已支付');
         }
-
 
         $payType = $request->input('pay_type', head($this->payTypes));
 
@@ -68,6 +68,5 @@ class UnionPayController extends Controller
 
         return $this->success(['pay_status' => $order->pay_status]);
     }
-
 
 }

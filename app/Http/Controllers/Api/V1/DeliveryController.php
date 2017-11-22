@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Api\V1\WarehouseKeeper\DispatchTruckController;
-use App\Models\DispatchTruck;
+
 use App\Models\DispatchTruckReturnOrder;
 use App\Models\OrderGoods;
 use App\Models\DeliveryMan;
@@ -13,6 +12,7 @@ use App\Services\DispatchTruckService;
 use App\Services\InventoryService;
 use DB;
 use Hash;
+use Gate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\v1\DeliveryRequest;
@@ -316,16 +316,6 @@ class DeliveryController extends Controller
     }
 
     /**
-     * 退出登陆
-     *
-     */
-    public function logout()
-    {
-        delivery_auth()->logout();
-        return $this->success();
-    }
-
-    /**
      * 修改订单
      *
      * @param \App\Http\Requests\Api\v1\UpdateOrderRequest $request
@@ -515,6 +505,37 @@ class DeliveryController extends Controller
             info($e->getMessage() . '----' . $e->getFile() . '---' . $e->getLine());
             return $this->error('作废订单时出现问题');
         }
+    }
+
+    /**
+     * 确认订单完成
+     *
+     * @param $orderId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function orderComplete($orderId)
+    {
+        $order = Order::with('goods', 'dispatchTruck.deliveryMans')->useful()->find($orderId);
+        if (is_null($order) || Gate::forUser(delivery_auth()->user())->denies('validate-order', $order)) {
+            return $this->error('订单不存在');
+        }
+        if (!$order->can_confirm_collections) {
+            return $this->error('此订单不支持现金付款');
+        }
+
+        $result = new OrderService();
+
+        return $result->orderComplete($order) ? $this->success('确认订单完成') : $this->error($result->getError());
+    }
+
+    /**
+     * 退出登陆
+     *
+     */
+    public function logout()
+    {
+        delivery_auth()->logout();
+        return $this->success();
     }
 
 }

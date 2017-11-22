@@ -45,7 +45,7 @@
                                 <button type="button" class="register-btn btn btn-primary" data-toggle="modal"
                                         data-target="#myModal-agreement">注册
                                 </button>
-                                <button type=" {{ request()->cookie('login_error') >=2?'button':'submit' }} "
+                                <button type=" {{ request()->cookie('login_error') >=2 ? 'button':'submit' }} "
                                         class="login-btn btn btn-warning no-prompt geetest-btn">登录
                                 </button>
                                 <div id="mask"></div>
@@ -55,10 +55,13 @@
                             </div>
 
                             <div class="col-xs-12 text-right forget-pwd">
-                                <div class="col-sm-6 text-left">
+                                <div class="col-sm-4 text-left">
+                                    <a href="{{ url('weixinweb-auth/login') }}" target="_blank">微信登录</a>
+                                </div>
+                                <div class="col-sm-4 text-left">
                                     <a href="{{ url('child-user/auth/login') }}" target="_blank">子帐号登录</a>
                                 </div>
-                                <div class="text-right col-sm-6">
+                                <div class="text-right col-sm-4">
                                     <a href="javascript:" data-toggle="modal" data-target="#backupModal">忘记密码 ?</a>
                                 </div>
                             </div>

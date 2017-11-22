@@ -35,11 +35,10 @@ class SocialiteController extends Controller
      */
     public function callback()
     {
-        /*$user = Socialite::driver($this->driver)->user();
-        $accessTokenResponseBody = $user->accessTokenResponseBody;*/
-        $token = 'abcdefghijklmnopqrstuvwxyz1';
-        $avatar = 'http://placehold.it/50x50';
-        $name = '某某某';
+        $user = Socialite::driver($this->driver)->user();
+        $token = array_get($user, 'unionid');
+        $avatar = array_get($user, 'headimgurl');
+        $name = array_get($user, 'nickname');
 
         $userToken = UserToken::ofType(cons('user.token.type.' . $this->driver))->where('token',
             $token)->with('user')->first();
@@ -120,13 +119,13 @@ class SocialiteController extends Controller
     {
         if (in_array($this->driver, $this->appDrivers)) {
             if ($error) {
-                return $this->error($error);
+                //return $this->error($error);
             } else {
                 return $this->success(['user' => $user]);
             }
         } else {
             if ($error) {
-
+                dd($error);
             } else {
                 $redirectUrl = $user->type <= cons('user.type.wholesaler') ? '/' : url('personal/info');
                 return redirect($redirectUrl);

@@ -331,6 +331,13 @@
 	reason					string				原因
 `成功返回：` 
 
+#### 2.1.14  订单确认收款[get] (order-complete/{order_id})
+
+`请求参数：`
+
+
+`成功返回：` 
+
 
 
 ### 2.2 微信二维码支付 wechat-pay

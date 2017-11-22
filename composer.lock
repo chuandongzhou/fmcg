@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "795fb22d7b990598cb8ab978a6bb83b7",
+    "content-hash": "4e7bb550e366d009a68ecd69f71b78a7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2255,26 +2255,26 @@
         },
         {
             "name": "socialiteproviders/weixin-web",
-            "version": "v2.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SocialiteProviders/Weixin-Web.git",
-                "reference": "30c741587e2ac6a77502f0ea8ea888a55d548108"
+                "reference": "f981b3bfa95d01cd3c92df27d2dca6ded8750c89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/SocialiteProviders/Weixin-Web/30c741587e2ac6a77502f0ea8ea888a55d548108.zip",
-                "reference": "30c741587e2ac6a77502f0ea8ea888a55d548108",
+                "url": "https://files.phpcomposer.com/files/SocialiteProviders/Weixin-Web/f981b3bfa95d01cd3c92df27d2dca6ded8750c89.zip",
+                "reference": "f981b3bfa95d01cd3c92df27d2dca6ded8750c89",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
-                "socialiteproviders/manager": "~2.0"
+                "socialiteproviders/manager": "~2.0 || ~3.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SocialiteProviders\\WeixinWeb\\": "src/"
+                    "SocialiteProviders\\WeixinWeb\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2288,7 +2288,7 @@
                 }
             ],
             "description": "Weixin-Web OAuth2 Provider for Laravel Socialite",
-            "time": "2016-03-31T05:10:48+00:00"
+            "time": "2017-07-19T09:30:14+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5325,7 +5325,8 @@
     "stability-flags": {
         "davibennun/laravel-push-notification": 20,
         "pingplusplus/pingpp-php": 20,
-        "tinpont/pushbox": 20
+        "tinpont/pushbox": 20,
+        "socialiteproviders/weixin-web": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

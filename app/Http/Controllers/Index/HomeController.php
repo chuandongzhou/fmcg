@@ -7,11 +7,9 @@ use App\Models\Advert;
 use App\Models\Goods;
 use App\Models\Order;
 use App\Models\Shop;
-use App\Models\User;
 use App\Services\AddressService;
 use App\Services\GoodsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 
 class HomeController extends Controller

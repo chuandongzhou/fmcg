@@ -8,7 +8,7 @@ class RegisterUserSendSmsRequest extends Request
     {
         return [
             'user_name' => 'sometimes|required|alpha_num|between:4,16|unique:user',
-            'type' => 'required|in:1,2,3,4',
+            'type' => 'sometimes|required|in:1,2,3,4',
             'backup_mobile' => 'required|regex:/^(0?1[0-9]\d{9})$/|unique:user',
         ];
 
