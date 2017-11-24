@@ -399,17 +399,16 @@ class AuthController extends Controller
             return $this->error('登录失败');
         }
 
-        $user = $userToken->user;
-
-        if ($appRoleType == 'seller' && $user->type == cons('user.type.retailer')){
-            return $this->error('登录失败，请使用买家app登录');
-        }
-
-        if ($appRoleType == 'buyer' && $user->type == cons('user.type.supplier')){
-            return $this->error('登录失败，请使用卖家app登录');
-        }
-
         if ($userToken) {
+            $user = $userToken->user;
+
+            if ($appRoleType == 'seller' && $user->type == cons('user.type.retailer')){
+                return $this->error('登录失败，请使用买家app登录');
+            }
+
+            if ($appRoleType == 'buyer' && $user->type == cons('user.type.supplier')){
+                return $this->error('登录失败，请使用卖家app登录');
+            }
             return $this->_handleLogin($userToken);
         } else {
             return $this->success([]);
