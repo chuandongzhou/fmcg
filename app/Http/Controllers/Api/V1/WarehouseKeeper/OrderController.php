@@ -60,7 +60,7 @@ class OrderController extends Controller
         $filter_orders = collect();
 
         $orders = $orders->filter(function ($order) {
-            if ($order->dispatch_truck_id && $order->dispatchTruck->status > cons('dispatch_truck.status.wait')) {
+            if ($order->dispatch_truck_id && $order->dispatch_status > cons('dispatch_truck.status.wait')) {
                 return false;
             }
             return true;

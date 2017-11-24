@@ -16,6 +16,9 @@ class DispatchTruckService
         $resultArray = [];
         if (count($orders)) {
             foreach ($orders as $order) {
+                if ($order->status == cons('order.status.invalid')) {
+                    continue;
+                }
                 foreach ($order->orderGoods as $orderGoods) {
                     if (!array_key_exists($orderGoods->goods_id, $tmpArray)) {
                         $tmpArray[$orderGoods->goods_id] = [
@@ -38,6 +41,7 @@ class DispatchTruckService
                 $resultArray[] = [
                     'goods_id' => $data['goods']->id,
                     'name' => $data['name'],
+                    'surplus_inventory' => $data['goods']->surplus_inventory,
                     'type' => 1,
                     'img_url' => $data['goods']->image_url,
                     'quantity' => InventoryService::calculateQuantity($data['goods'], $data['quantity']),

@@ -44,7 +44,7 @@
                                     {{ $user->phone }}
                                 </td>
                                 <td>
-                                    已<span class="status-name">{{ cons()->valueLang('status' ,$user->status) }}</span>
+                                    <span class="status-name">已{{$user->status_name}}</span>
                                 </td>
                                 <td>
                                     <div role="group" class="btn-group btn-group-xs">

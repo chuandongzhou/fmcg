@@ -281,6 +281,7 @@
 		img_url					string					图片地址
 		quantity				string					统计数量
 		frequency				int						出现次数
+		surplus_inventory		string					库存剩余总量
 	return_order_goods_statis 同上
 	
 `失败返回：`
@@ -319,6 +320,7 @@
 
 	order_id					int						订单ID
 	quantity					string					数量
+
 `失败返回：`
 
 #### 2.4.10 发车单退货单商品单个统计[get] ({dtv_id}/return-goods-statistical)

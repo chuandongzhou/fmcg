@@ -482,21 +482,29 @@ class DeliveryController extends Controller
         }
         try {
             DB::beginTransaction();
-            if ($order->fill(['status' => cons('order.status.invalid')])->save()) {
-                $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
-                $orderService = new OrderService();
-                // 返回优惠券
-                $orderService->backCoupon($order);
-                //返还陈列费
-                if ($order->salesmanVisitOrder) {
-                    $orderService->backDisplayFee($order->salesmanVisitOrder);
-                }
-                foreach ($order->orderGoods as $orderGoods) {
-                    (new InventoryService())->clearOut($orderGoods);
-                }
-                $orderService->addOperateRecord($order, delivery_auth()->id(), delivery_auth()->user()->name, '配送员',
-                    '作废订单');
+            $order->fill(['status' => cons('order.status.invalid')])->save();
+            $order->orderReason()->create(['type' => 1, 'reason' => $reason]);
+            $orderService = new OrderService();
+            // 返回优惠券
+            $orderService->backCoupon($order);
+            //返还陈列费
+            if ($order->salesmanVisitOrder) {
+                $orderService->backDisplayFee($order->salesmanVisitOrder);
             }
+            $inventoryService = new InventoryService();
+            $inventoryService->clearOut($order->id);
+
+            foreach ($order->orderGoods as $orderGoods){
+                DispatchTruckReturnOrder::create([
+                    'order_id' => $order->id,
+                    'dispatch_truck_id' => $order->dispatch_truck_id,
+                    'num' => $orderGoods->num,
+                    'pieces' => $orderGoods->pieces,
+                    'goods_id' => $orderGoods->goods_id
+                ]);
+            }
+            $orderService->addOperateRecord($order, delivery_auth()->id(), delivery_auth()->user()->name, '配送员',
+                '作废订单');
             DB::commit();
             return $this->success('订单作废成功');
         } catch (\Exception $e) {

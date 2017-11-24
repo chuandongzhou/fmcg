@@ -237,6 +237,16 @@ class Order extends Model
         return $this->hasOne('App\Models\DispatchTruck', 'id', 'dispatch_truck_id');
     }
 
+    /**
+     * 退货商品
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function returnGoods()
+    {
+        return $this->hasMany(DispatchTruckReturnOrder::class);
+    }
+
 
     /**
      * 支付形式

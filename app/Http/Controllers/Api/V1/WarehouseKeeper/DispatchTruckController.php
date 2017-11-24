@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class DispatchTruckController extends Controller
 {
@@ -83,15 +84,14 @@ class DispatchTruckController extends Controller
             $orderId = $request->input('order_id');
             $dtv_id = $request->input('dispatch_truck_id');
             $dispatchTruck = $truck->dispatchTruck()->where('status', '<=', $dispatchTruckStatus['wait'])->first();
-
             if (!$dispatchTruck) {
                 $dispatchTruck = $truck->dispatchTruck()->create([
                     'status' => $dispatchTruckStatus['wait']
                 ]);
             }
-
             if (isset($dtv_id) && $dtv_id != $dispatchTruck->id) {
                 $dtv = DispatchTruck::find($dtv_id);
+
                 if ($dtv->status > $dispatchTruckStatus['wait']) {
                     return $this->error('该订单已发车.');
                 }
@@ -107,10 +107,11 @@ class DispatchTruckController extends Controller
             return $this->success('保存成功');
         } catch (\Exception $e) {
             DB::rollback();
-            //info($e->getMessage() .'----'. $e->getLine().'行');
+            info($e->getMessage() . '----' . $e->getLine() . '行');
             return $this->error('保存失败');
         }
     }
+
 
     /**
      *
@@ -121,7 +122,6 @@ class DispatchTruckController extends Controller
      */
     public function addDeliveryMans(Request $request)
     {
-
         $truck = DeliveryTruck::find($request->input('truck_id'));
         if (!count($deliveryManIds = $request->input('delivery_mans')) || !$truck) {
             return $this->error('参数错误!');
@@ -177,7 +177,15 @@ class DispatchTruckController extends Controller
     public function updateBatch($orderIds, $dtv, $add = true)
     {
         if (!is_array($orderIds)) {
+            $order = Order::find($orderIds);
+            if ($order->dispatch_truck_id > 0 && $order->dispatchTruck) {
+                if ($order->dispatchTruck->orders->count() < 2) {
+                    $order->dispatchTruck->truck()->update(['status' => cons('truck.status.spare_time')]);
+                    $order->dispatchTruck->delete();
+                }
+            }
             $orderIds = [$orderIds];
+
         }
         $maxSort = $dtv->orders()->max('dispatch_truck_sort');
 
@@ -376,6 +384,9 @@ class DispatchTruckController extends Controller
         $allGoods = $dispatchTruck->orders->pluck('orderGoods')->collapse();
 
         foreach ($allGoods as $orderGoods) {
+            if ($orderGoods->order->status == cons('order.status.invalid')) {
+                continue;
+            }
             if ($orderGoods->goods_id == $goodsId) {
                 if (!array_key_exists($orderGoods->order_id, $tmpArray)) {
                     $tmpArray[$orderGoods->order_id] = [
@@ -506,9 +517,10 @@ class DispatchTruckController extends Controller
                 if ($dtv->returnOrders->count()) {
                     $inventoryService = new InventoryService();
                     foreach ($dtv->orders as $order) {
-                        foreach ($order->orderGoods as $orderGoods){
-                            $inventoryService->clearOut($orderGoods);
+                        if ($order->status == cons('order.status.invalid')) {
+                            continue;
                         }
+                        $inventoryService->clearOut($order->id);
                         $data = [
                             'inventory_number' => $inventoryService->getInventoryNumber(),
                             'inventory_type' => cons('inventory.inventory_type.system'),  //系统
@@ -594,7 +606,7 @@ class DispatchTruckController extends Controller
             });
             return $result ? $this->success('操作成功') : $this->error('操作失败');
         } catch (\Exception $e) {
-            info($e->getMessage() . '----' .$e->getFile(). $e->getLine() . '行');
+            info($e->getMessage() . '----' . $e->getFile() . $e->getLine() . '行');
             return $this->error('操作失败');
         }
     }

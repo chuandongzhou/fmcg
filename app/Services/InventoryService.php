@@ -445,15 +445,19 @@ class InventoryService extends BaseService
     }
 
     /**
-     * 清除订单商品出库记录
+     * 清除出库记录
      *
-     * @param $orderGoods
+     * @param $param
      * @return bool
      */
-    public function clearOut($orderGoods)
+    public function clearOut($param)
     {
-        $outRecord = $this->inventory->where('goods_id', $orderGoods->goods_id)->where('order_number',
-            $orderGoods->order_id)->OfOut()->get();
+        if (is_numeric($param)) {
+            $where = ['order_number' => $param];
+        } else {
+            $where = ['order_number' => $param->order_id, 'goods_id' => $param->goods_id];
+        }
+        $outRecord = $this->inventory->where($where)->OfOut()->get();
         if ($outRecord) {
             foreach ($outRecord as $record) {
                 $inRecord = $this->inventory->where('id', $record->in_id)->OfIn()->first();

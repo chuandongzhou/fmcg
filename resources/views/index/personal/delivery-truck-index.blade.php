@@ -44,7 +44,7 @@
                                     {{ $truck->license_plate }}
                                 </td>
                                 <td>
-                                    已<span class="status-name">{{ cons()->valueLang('status' ,$truck->status) }}</span>
+                                    <span class="status-name">{{ cons()->valueLang('truck.status' ,$truck->status) }}</span>
                                 </td>
                                 <td>
                                     <div role="group" class="btn-group btn-group-xs">

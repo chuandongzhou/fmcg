@@ -59,4 +59,14 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
         return $this->shop_id && $this->shop ? $this->shop->name : '';
     }
 
+    /**
+     *获取状态名
+     *
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        return cons()->valueLang('status', $this->status);
+    }
+
 }
