@@ -81,29 +81,10 @@ class DispatchTruck extends Model
      */
     public function truckSalesGoods()
     {
-        return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods', 'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
-    }
-
-    /**
-     * 关联业务员
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function salesman()
-    {
-        return $this->belongsTo(Salesman::class);
-    }
-
-    /**
-     * 车销单商品
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function truckSalesGoods()
-    {
         return $this->belongsToMany('App\Models\Goods', 'truck_sales_goods',
             'dispatch_truck_id')->withPivot(['quantity', 'pieces', 'surplus']);
     }
+    
 
     /**
      * 关联货车
