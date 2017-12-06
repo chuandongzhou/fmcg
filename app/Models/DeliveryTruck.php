@@ -68,4 +68,25 @@ class DeliveryTruck extends Model
         return $query->where('status', '>', cons('truck.status.forbidden'));
     }
 
+    /**
+     * 获取当前配送
+     *
+     * @return mixed
+     */
+    public function getNowDeliveryAttribute()
+    {
+        return $this->dispatchTruck()->where('status', '<=', cons('dispatch_truck.status.delivering'))->first();
+    }
+
+    /**
+     * 获取当前配送类型
+     *
+     * @return mixed
+     */
+    public function getNowDeliveryTypeAttribute()
+    {
+        $now = $this->getNowDeliveryAttribute();
+        return $now ? $now->type : '';
+    }
+
 }

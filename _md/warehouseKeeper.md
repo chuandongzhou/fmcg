@@ -27,6 +27,7 @@
 	name						string      			名称
 	mobile						string      			手机
 	status						int        				状态
+	shop_type					int						店铺类型
 
 `失败返回：`
 
@@ -154,6 +155,7 @@
 `失败返回：`
 
 #### 2.3.3 修改订单商品[put] ({order_id}/modify)
+
 `请求参数：`
 
 	num               int            修改后的数量
@@ -164,6 +166,7 @@
 `失败返回：`
 
 #### 2.3.4 删除订单商品[delete] (order-goods-delete/{order_goods_id})
+
 `请求参数：`
 
 `成功返回：`
@@ -240,7 +243,7 @@
 `失败返回：`
 
 
-#### 2.4.6 创建发车单[post] (voucher-create)
+#### 2.4.6 发车[post] (voucher-create)
 
 `请求参数：`
 	
@@ -266,6 +269,8 @@
 	dispatch_truck_id			int						发车单ID,未发车就没得
     status						int						发车单状态(1:等待发车,2:配送中,3:已回车)
     remark						string					备注
+	salesman_id					int						业务员ID
+	type						tinyint					0,发车单,1车销单
     dispatch_time				time					发车时间
     back_time					time					回车时间
 	can_back					bool					是否可回车,1可以回车
@@ -274,6 +279,7 @@
     orders						array					订单
     truck						array					车辆
     delivery_mans				array					配送员
+	salesman					array					业务员
 
 	order_goods_statis 字段介绍
 		goods_id				int						商品ID
@@ -283,6 +289,7 @@
 		frequency				int						出现次数
 		surplus_inventory		string					库存剩余总量
 	return_order_goods_statis 同上
+	truck_sales_goods			array					车销单商品
 	
 `失败返回：`
 
@@ -293,6 +300,7 @@
 	number_license				string/int				车牌/发车单号
 	start_at					time					开始时间
 	end_at						time					结束时间
+	type						int						类型,0:派车 1:车销
 
 `成功返回：`
 
@@ -304,10 +312,13 @@
 	back_time					time					回车时间
 	order_amount				int						订单数
 	is_return_order				bool					是否有退货:1有
+	sold_out					bool					卖完没有,1:卖完了
+	can_back					bool					是否可回车
 	truck						array					车辆信息
 	
 	truck字段介绍
 		同2.4.1
+
 `失败返回：`
 
 #### 2.4.9 发车单订单商品单个统计[get] ({dtv_id}/goods-statistical)
@@ -333,6 +344,7 @@
 
 	order_id					int						订单ID
 	quantity					string					数量
+
 `失败返回：`
 
 
@@ -361,6 +373,103 @@
 `成功返回：`
 
 `失败返回：`
+
+#### 2.4.14 创建车销单[post] (create-truck-sales)
+
+`请求参数：`
+
+	truck_id					int						车辆ID
+
+`成功返回：`
+
+	id							int						创建成功车销单ID
+
+`失败返回：`
+
+#### 2.4.15 获取店铺商品列表[get] (goods)
+
+`请求参数：`
+
+	name						string					商品名称
+
+`成功返回：`
+
+	id							int						商品ID
+	name						string					商品名称
+	image_url					string					图片
+    shop_id						int						店铺ID
+    pieces_retailer				int						终端商单位
+	price_retailer				decimal					终端商价格
+    pieces_wholesaler			int						批发商单位
+    price_wholesaler			decimal					批发商价格
+
+`失败返回：`
+
+#### 2.4.16 获取店铺业务员列表[get] (salesman)
+
+`请求参数：`
+
+`成功返回：`
+
+	id							int						业务员ID
+	name						string					名称
+	contact_information			int						电话
+	delivery_status				int						1可以使用,0占用
+
+`失败返回：`
+
+#### 2.4.17 添加商品到车销单[post] ({dtv_id}/goods)
+
+`请求参数：`
+	
+	goods_id					int						商品ID
+	quantity					int						数量
+	pieces						int						单位
+
+`成功返回：`
+
+`失败返回：`
+
+
+#### 2.4.18 添加业务员到车销单[post] ({dtv_id}/salesman)
+
+`请求参数：`
+	
+	salesman_id					int						业务员ID
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.4.19 取消创建[delete] ({dtv_id}/cancel)
+
+`请求参数：`
+
+`成功返回：`
+
+`失败返回：`
+
+#### 2.4.20 删除车销单商品[delete] ({dtv_id}/delete-sales-goods)
+
+`请求参数：`
+
+	goods_id					int						商品ID
+
+`成功返回：`
+
+`失败返回：`
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

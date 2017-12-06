@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\WarehouseKeeper;
 
 use App\Models\DeliveryTruck;
 use App\Models\DispatchTruck;
+use App\Models\Goods;
 use App\Models\Inventory;
 use App\Models\Order;
 use App\Services\DispatchTruckService;
@@ -81,26 +82,32 @@ class DispatchTruckController extends Controller
         }
         try {
             DB::beginTransaction();
-            $orderId = $request->input('order_id');
-            $dtv_id = $request->input('dispatch_truck_id');
-            $dispatchTruck = $truck->dispatchTruck()->where('status', '<=', $dispatchTruckStatus['wait'])->first();
+            $orderId = is_array($request->input('order_id')) ? $request->input('order_id') : [$request->input('order_id')];
+            $dtv_id = $request->input('dispatch_truck_id');  //已选车发车单ID
+            $dispatchTruck = $truck->dispatchTruck()->where('status', '<=',
+                $dispatchTruckStatus['wait'])->first(); //当前配送发车单
+            //没有即生成一张发车单
             if (!$dispatchTruck) {
                 $dispatchTruck = $truck->dispatchTruck()->create([
                     'status' => $dispatchTruckStatus['wait']
                 ]);
             }
-            if (isset($dtv_id) && $dtv_id != $dispatchTruck->id) {
+            if ($dispatchTruck->type == cons('dispatch_truck.type.sales')) {
+                return $this->error('车销车辆,无法添加');
+            }
+            //处理换车
+            if ($dtv_id && !empty($dtv_id) && $dtv_id != $dispatchTruck->id) {
                 $dtv = DispatchTruck::find($dtv_id);
-
                 if ($dtv->status > $dispatchTruckStatus['wait']) {
-                    return $this->error('该订单已发车.');
+                    return $this->error('订单已发车');
                 }
                 if ($dtv->orders->count() < 2) {
                     $dtv->truck()->update(['status' => cons('truck.status.spare_time')]);
+                    $dtv->orders()->update(['dispatch_truck_id' => 0]);
                     $dtv->delete();
                 }
             }
-
+            //批量更新订单
             $this->updateBatch($orderId, $dispatchTruck);
             $truck->update(['status' => cons('truck.status.wait')]);
             DB::commit();
@@ -132,11 +139,11 @@ class DispatchTruckController extends Controller
         $truckStatus = cons('truck.status');
         $dispatchTruck = $truck->dispatchTruck()->where('status', '<=', $truckStatus['wait'])->first();
         if (!$dispatchTruck) {
-            return $this->error('没有找到发车单!');
+            return $this->error('没有找到数据!');
         }
         try {
             if ($dispatchTruck->status > cons('dispatch_truck.status.wait')) {
-                return $this->error('订单已发车,不能操作');
+                return $this->error('已发车,不能操作');
             }
             //添加配送员
             $dispatchTruck->deliveryMans()->sync($deliveryManIds);
@@ -176,17 +183,6 @@ class DispatchTruckController extends Controller
      */
     public function updateBatch($orderIds, $dtv, $add = true)
     {
-        if (!is_array($orderIds)) {
-            $order = Order::find($orderIds);
-            if ($order->dispatch_truck_id > 0 && $order->dispatchTruck) {
-                if ($order->dispatchTruck->orders->count() < 2) {
-                    $order->dispatchTruck->truck()->update(['status' => cons('truck.status.spare_time')]);
-                    $order->dispatchTruck->delete();
-                }
-            }
-            $orderIds = [$orderIds];
-
-        }
         $maxSort = $dtv->orders()->max('dispatch_truck_sort');
 
         $sql = "UPDATE fmcg_order SET dispatch_truck_id =" . $dtv->id . ', dispatch_truck_sort = case id ';
@@ -204,48 +200,67 @@ class DispatchTruckController extends Controller
     }
 
     /**
-     *
      * 发车
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
      */
     public function createDispatchTruckVoucher(Request $request)
     {
         $dispatchTruck = DispatchTruck::with('orders.orderGoods')->find($request->input('dtv_id'));
-
         if (!$dispatchTruck) {
             return $this->error('参数错误!');
         }
         if ($dispatchTruck->status > cons('dispatch_truck.status.wait')) {
-            return $this->error('订单已发车,不能操作');
+            return $this->error('已发车,不能操作');
         }
         try {
             DB::beginTransaction();
-            //出库
-            $inventoryService = new  InventoryService();
-            $inventoryNumber = $inventoryService->getInventoryNumber();
-            foreach ($dispatchTruck->orders as $order) {
-                if (!$order->can_send || $order->shop_id != wk_auth()->user()->shop->id) {
-                    if (count($dispatchTruck->orders) == 1) {
-                        return $this->error('操作失败');
-                    }
-                    $failIds[] = $order->id;
-                    continue;
+            if ($dispatchTruck->type == cons('dispatch_truck.type.sales')) {
+                if (!$dispatchTruck->truckSalesGoods->count()) {
+                    return $this->error('没有商品');
                 }
-                $data = [
-                    'inventory_number' => $inventoryNumber,
-                    'inventory_type' => cons('inventory.inventory_type.system'),  //系统
-                    'action_type' => cons('inventory.action_type.out'),           //出库
-                    'user_id' => wk_auth()->id(),
-                    'shop_id' => wk_auth()->user()->shop_id,
-                    'operate' => 'warehouseKeeper',
-                ];
-                $result = $inventoryService->autoOut($order, $data);
-                if ($result == false) {
-                    return $this->error($inventoryService->getError());
-                };
-                if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
-                    $redisKey = 'push:user:' . $order->user_id;
-                    $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
-                    (new RedisService())->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+                foreach ($dispatchTruck->truckSalesGoods as $salesGoods) {
+                    if ($salesGoods->total_inventory < $salesGoods->pivot->surplus) {
+                        return $this->error($salesGoods->name . '库存不足');
+                        break;
+                    }
+                }
+
+            }
+            if ($dispatchTruck->type == cons('dispatch_truck.type.dispatch')) {
+                if (!$dispatchTruck->orders->count()) {
+                    return $this->error('没有订单');
+                }
+                $inventoryService = new  InventoryService();
+                $inventoryNumber = $inventoryService->getInventoryNumber();
+                if ($dispatchTruck->type == cons('dispatch_truck.type.dispatch')) {
+                    foreach ($dispatchTruck->orders as $order) {
+                        if (!$order->can_send || $order->shop_id != wk_auth()->user()->shop->id) {
+                            if (count($dispatchTruck->orders) == 1) {
+                                return $this->error('操作失败');
+                            }
+                            $failIds[] = $order->id;
+                            continue;
+                        }
+                        $data = [
+                            'inventory_number' => $inventoryNumber,
+                            'inventory_type' => cons('inventory.inventory_type.system'),  //系统
+                            'action_type' => cons('inventory.action_type.out'),           //出库
+                            'user_id' => wk_auth()->id(),
+                            'shop_id' => wk_auth()->user()->shop_id,
+                            'operate' => 'warehouseKeeper',
+                        ];
+                        $result = $inventoryService->autoOut($order, $data);
+                        if ($result == false) {
+                            return $this->error($inventoryService->getError());
+                        };
+                        if ($order->fill(['status' => cons('order.status.send'), 'send_at' => Carbon::now()])->save()) {
+                            $redisKey = 'push:user:' . $order->user_id;
+                            $redisVal = '您的订单' . $order->id . ',' . cons()->lang('push_msg.send');
+                            (new RedisService())->setRedis($redisKey, $redisVal, cons('push_time.msg_life'));
+                        }
+                    }
                 }
             }
             //更新发车单
@@ -267,7 +282,7 @@ class DispatchTruckController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             info($e->getMessage() . '-----' . $e->getLine() . '行');
-            return $this->error('保存失败');
+            return $this->error($e->getMessage() . '-----' . $e->getLine() . '行');
         }
     }
 
@@ -302,11 +317,16 @@ class DispatchTruckController extends Controller
                     'dispatch_truck_id'
                 ]);
             },
+            'salesman',
             'truck',
             'deliveryMans',
             'orders.orderGoods.goods.goodsPieces',
             'orders.shippingAddress.address',
             'returnOrders.goods.goodsPieces',
+            'truckSalesGoods.goodsPieces',
+            'truckSalesGoods' => function ($goods) {
+                $goods->select(['id', 'name']);
+            }
         ];
         $dtv = null;
         if (array_get($data, 'dtv_id')) {
@@ -320,6 +340,7 @@ class DispatchTruckController extends Controller
         }
 
         $dtv->addHidden(['returnOrders']);
+        $dtv->setAppends(['status_name']);
         $dtv->can_back = 1;
         foreach ($dtv->orders as $order) {
             $order->addHidden(['orderGoods', 'salesmanVisitOrder']);
@@ -329,6 +350,10 @@ class DispatchTruckController extends Controller
                 $dtv->can_back = 0;
             }
         };
+
+        $dtv->truckSalesGoods->each(function ($goods) {
+            $goods->surplus_string = InventoryService::calculateQuantity($goods, $goods->pivot->surplus);
+        });
         $dtv->order_goods_statis = DispatchTruckService::goodsStatistical($dtv->orders);
         $dtv->return_order_goods_statis = DispatchTruckService::returnOrderGoodsStatistical($dtv->returnOrders ?? []);
         return $this->success($dtv->toArray());
@@ -351,17 +376,28 @@ class DispatchTruckController extends Controller
             'returnOrders' => function ($returnOrders) {
                 $returnOrders->select('dispatch_truck_id');
             }
-        ])->condition($request->all())->whereIn('delivery_truck_id', $trucks->pluck('id'))->get()->each(function ($item
+        ])->condition($request->all())->whereIn('delivery_truck_id', $trucks->pluck('id'))->type($request->input('type',
+            0))->get()->each(function ($item
         ) {
             $item->setAppends(['order_amount', 'status_name', 'is_return_order']);
             $item->addHidden(['orders', 'returnOrders']);
-            $item->can_back = 1;
-            foreach ($item->orders as $order) {
-                if ($order->status < cons('order.status.invalid') && !$order->delivery_finished_at) {
-                    $item->can_back = 0;
-                    break;
-                }
-            };
+            if ($item->type == cons('dispatch_truck.type.sales')) {
+                $item->sold_out = 1;
+                foreach ($item->truckSalesGoods as $goods) {
+                    if ($goods->surplus > 0) {
+                        $item->sold_out = 0;
+                        break;
+                    }
+                };
+            } else {
+                $item->can_back = 1; //可否回车 0:不可,:1:可以回车
+                foreach ($item->orders as $order) {
+                    if ($order->status < cons('order.status.invalid') && !$order->delivery_finished_at) {
+                        $item->can_back = 0;
+                        break;
+                    }
+                };
+            }
         });
         return $this->success($dispatchTruck->toArray());
     }
@@ -458,16 +494,27 @@ class DispatchTruckController extends Controller
     public function changeTruck(Request $request, $dtv_id)
     {
         $dtv = DispatchTruck::find($dtv_id);
-        if (!$dtv || $dtv->status > cons('truck.status.wait')) {
+        $newTruckId = $request->input('new_truck_id');
+        if (!$dtv) {
             return $this->error('参数错误');
         }
-        if ($dtv->status > cons('dispatch_truck.status.wait')) {
-            return $this->error('订单已发车,不能操作');
+        if ($dtv->delivery_truck_id == $newTruckId) {
+            return $this->success('操作成功');
         }
-        $newTruckId = $request->input('new_truck_id');
+        if ($dtv->status > cons('dispatch_truck.status.wait')) {
+            return $this->error('已发车,不能操作');
+        }
+
+        $newTruck = DeliveryTruck::find($newTruckId);
+        if (!$newTruck || $newTruck->status > cons('truck.status.wait')) {
+            return $this->error('车辆信息错误!');
+        }
+        if ($newTruck->now_delivery_type && $newTruck->now_delivery_type != $dtv->type) {
+            return $this->error('类型错误!无法切换');
+        }
+
         $result = DB::transaction(function () use ($dtv, $newTruckId) {
             $dtv->truck()->update(['status' => cons('truck.status.spare_time')]);
-            //DB::table('dispatch_truck_delivery_man')->where('dispatch_truck_id',$dtv->id)->delete();
             $dtv->fill(['delivery_truck_id' => $newTruckId])->save();
             $dtv->truck()->update(['status' => cons('truck.status.wait')]);
             return true;
@@ -514,13 +561,15 @@ class DispatchTruckController extends Controller
         }
         try {
             $result = DB::transaction(function () use ($dtv) {
-                if ($dtv->returnOrders->count()) {
-                    $inventoryService = new InventoryService();
+                $inventoryService = new InventoryService();
+                if ($dtv->returnOrders->count() || $dtv->type == cons('dispatch_truck.type.sales')) {
                     foreach ($dtv->orders as $order) {
                         if ($order->status == cons('order.status.invalid')) {
                             continue;
                         }
-                        $inventoryService->clearOut($order->id);
+                        if ($dtv->returnOrders->count()) {
+                            $inventoryService->clearOut($order->id);
+                        }
                         $data = [
                             'inventory_number' => $inventoryService->getInventoryNumber(),
                             'inventory_type' => cons('inventory.inventory_type.system'),  //系统
@@ -534,66 +583,6 @@ class DispatchTruckController extends Controller
                             return $this->error($inventoryService->getError());
                         };
                     }
-
-                    /*$orderArray = [];
-                    $returnOrders = $dtv->returnOrders->groupBy('order_id');
-                    foreach ($returnOrders as $key => $returnOrder) {
-                        $tmpGoodsArray = [];
-                        foreach ($returnOrder as $orderGoods) {
-                            if (!array_key_exists($orderGoods->goods_id, $tmpGoodsArray)) {
-                                $tmpGoodsArray[$orderGoods->goods_id] = [
-                                    'goods_id' => $orderGoods->goods_id,
-                                    'pieces' => GoodsService::getMinPieces($orderGoods->goods),
-                                    'quantity' => $orderGoods->num * GoodsService::getPiecesSystem($orderGoods->goods,
-                                            $orderGoods->pieces),
-                                ];
-                            } else {
-                                $tmpGoodsArray[$orderGoods->goods_id]['quantity'] += $orderGoods->num * GoodsService::getPiecesSystem($orderGoods->goods,
-                                        $orderGoods->pieces);
-                            }
-                        }
-                        $orderArray[$key] = $tmpGoodsArray;
-                        unset($tmpGoodsArray);
-                    }
-                    $inventoryService = new InventoryService();
-                    foreach ($orderArray as $key => $item) {
-                        foreach ($item as $value) {
-                            $outRecord = $inventoryService->getOutRecordByWK($key, $value['goods_id']);
-                            if (!$outRecord) {
-                                return $this->error('入库错误');
-                                break;
-                            }
-                            foreach ($outRecord as $record) {
-                                $data = [
-                                    'source' => cons('inventory.source.wk_return'),
-                                    'inventory_number' => $inventoryService->getInventoryNumber(),
-                                    'user_id' => wk_auth()->id(),
-                                    'goods_id' => $record->goods_id,
-                                    'shop_id' => wk_auth()->user()->shop_id,
-                                    'inventory_type' => cons('inventory.inventory_type.manual'),
-                                    'action_type' => cons('inventory.action_type.in'),
-                                    'order_number' => '',
-                                    'operate' => 'warehouseKeeper',
-                                    'remark' => '订单:' . $record->order_number . ' 退货入库!',
-                                    'production_date' => $record->production_date,
-                                    'cost' => $record->in_cost,
-                                    'pieces' => $record->in_pieces
-                                ];
-                                if ($record->quantity >= $value['quantity']) {
-                                    $data['quantity'] = $value['quantity'];
-                                    $data['surplus'] = $value['quantity'];
-                                    Inventory::create($data);
-                                    break;
-                                } else {
-                                    $data['quantity'] = $value['quantity'] - $record->quantity;
-                                    $data['surplus'] = $value['quantity'] - $record->quantity;
-                                    Inventory::create($data);
-                                    $value['quantity'] -= $record->quantity;
-                                }
-                                unset($data);
-                            }
-                        }
-                    }*/
                 }
                 $dtv->truck()->update(['status' => cons('truck.status.spare_time')]);
                 $dtv->fill(['status' => cons('dispatch_truck.status.backed'), 'back_time' => Carbon::now()])->save();
@@ -608,6 +597,189 @@ class DispatchTruckController extends Controller
         } catch (\Exception $e) {
             info($e->getMessage() . '----' . $e->getFile() . $e->getLine() . '行');
             return $this->error('操作失败');
+        }
+    }
+
+
+    /**
+     * 创建车销单
+     *
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function createTruckSalesVoucher(Request $request)
+    {
+        $dispatchTruckConfig = cons('dispatch_truck');
+        $truck = DeliveryTruck::find($request->input('truck_id'));
+        if (Gate::forUser(wk_auth()->user())->denies('validate-warehouse-keeper-truck', $truck)) {
+            return $this->error('没有权限!');
+        }
+        $dispatchTruck = DispatchTruck::create([
+            'status' => $dispatchTruckConfig['status']['wait'],
+            'type' => $dispatchTruckConfig['type']['sales'],
+            'delivery_truck_id' => $truck->id
+        ]);
+
+        if ($dispatchTruck && $truck->fill(['status' => cons('truck.status.wait')])->save()) {
+            return $this->success(['id' => $dispatchTruck->id]);
+        }
+        return $this->success('创建失败');
+    }
+
+    /**
+     *
+     * 获取商品列表
+     *
+     * @return mixed
+     */
+    public function goodsList(Request $request)
+    {
+        $name = $request->input('name');
+        $list = wk_auth()->user()->shop->goods()->active()->withGoodsPieces()->select([
+            'id',
+            'name',
+            'shop_id',
+            'pieces_retailer',
+            'price_retailer',
+            'pieces_wholesaler',
+            'price_wholesaler'
+        ])->ofGoodsName($name)->get()->each(function ($item) {
+            $item->setAppends(['image_url']);
+        });
+        return $this->success($list);
+    }
+
+    /**
+     * 获取业务员列表
+     *
+     * @return mixed
+     */
+    public function salesmanList()
+    {
+        return wk_auth()->user()->shop->salesmen()->select([
+            'id',
+            'name',
+            'shop_id',
+            'contact_information'
+        ])->get()->each(function ($salesman) {
+            $salesman->delivery_status = 1;
+            $salesman->addHidden(['dispatchTruck']);
+            if ($salesman->dispatchTruck) {
+                foreach ($salesman->dispatchTruck as $dispatchTruck) {
+                    if ($dispatchTruck->status < cons('dispatch_truck.status.backed')) {
+                        $salesman->delivery_status = 0;
+                        break;
+                    }
+                }
+            };
+        });
+    }
+
+    /**
+     * 添加商品到车销单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function addGoods(Request $request, $truckSalesId)
+    {
+        $data = $request->only('goods_id', 'quantity', 'pieces');
+        $truckSales = DispatchTruck::with([
+            'deliveryMans',
+            'salesman',
+            'truck',
+            'truckSalesGoods'
+        ])->find($truckSalesId);
+        if (!$truckSales) {
+            return $this->error('车销单不存在');
+        }
+        if ($truckSales->type != cons('dispatch_truck.type.sales')) {
+            return $this->error('配送车辆,无法添加');
+        }
+        try {
+            DB::beginTransaction();
+            $goods = Goods::find(array_get($data, 'goods_id'));
+            $withPivot = [
+                'quantity' => $data['quantity'],
+                'surplus' => $data['quantity'] * GoodsService::getPiecesSystem($goods, $data['pieces']),
+                'pieces' => $data['pieces'],
+            ];
+            $truckSales->truckSalesGoods()->detach($goods->id);
+            $truckSales->truckSalesGoods()->attach([$goods->id => $withPivot]);
+            DB::commit();
+            return $this->success('添加成功');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->error('添加失败');
+        }
+    }
+
+    /**
+     * 删除商品
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $dtv_id
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function deleteGoods(Request $request, $dtv_id)
+    {
+        $truckSales = DispatchTruck::find($dtv_id);
+        if (!$truckSales) {
+            return $this->error('车销单不存在');
+        }
+        if ($truckSales->type != cons('dispatch_truck.type.sales')) {
+            return $this->error('无法删除');
+        }
+        if ($truckSales->truckSalesGoods()->detach($request->input('goods_id'))) {
+            return $this->success('删除成功');
+        }
+        return $this->error('删除失败');
+    }
+
+    /**
+     * 添加业务员到车销单
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $truckSalesId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function addSalesman(Request $request, $truckSalesId)
+    {
+        $truckSales = DispatchTruck::find($truckSalesId);
+        if (!$truckSales) {
+            return $this->error('车销单不存在');
+        }
+        if ($truckSales->type != cons('dispatch_truck.type.sales')) {
+            return $this->error('配送车辆,无法添加');
+        }
+        $salesman = wk_auth()->user()->shop->salesmen()->find($request->only('salesman_id'))->first();
+        if (!$salesman) {
+            return $this->error('业务员错误');
+        }
+        if ($truckSales->update(['salesman_id' => $salesman->id])) {
+            return $this->success('添加成功');
+        }
+        return $this->error('添加失败');
+    }
+
+    /**
+     * 取消创建
+     *
+     * @param $dispatchTruckId
+     * @return \WeiHeng\Responses\Apiv1Response
+     */
+    public function cancelCreate($dispatchTruckId)
+    {
+        $dtv = DispatchTruck::find($dispatchTruckId);
+        if (!$dtv || $dtv->status > cons('dispatch_truck.status.wait')) {
+            return $this->error('不能取消');
+        }
+        try {
+            DB::beginTransaction();
+            $dtv->delete();
+            DB::commit();
+            return $this->success('取消成功');
+        } catch (\Exception $e) {
+            return $this->error('取消失败');
         }
     }
 }

@@ -33,7 +33,7 @@ class AuthController extends Controller
             return $this->invalidParam('password', '该账号被禁用!');
         }
         wk_auth()->login($wk);
-        return $this->success(['wk' => $wk]);
+        return $this->success(['wk' => $wk->setAppends(['shop_type'])]);
     }
 
     /**

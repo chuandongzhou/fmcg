@@ -148,7 +148,12 @@ class InventoryController extends Controller
         $data['start_at'] = empty($data['start_at']) ? (new Carbon)->startOfMonth()->toDateTimeString() : $data['start_at'];
         $data['end_at'] = empty($data['end_at']) ? (new Carbon)->endOfDay()->toDateTimeString() : $data['end_at'];
 
-        $inventory = $this->shop->inventory()->with(['user','warehouseKeeper','goods.goodsPieces', 'parent.goods.goodsPieces'])->OfOut()->orderBy('created_at',
+        $inventory = $this->shop->inventory()->with([
+            'user',
+            'warehouseKeeper',
+            'goods.goodsPieces',
+            'parent.goods.goodsPieces'
+        ])->OfOut()->orderBy('created_at',
             'desc');
         $result = $this->inventoryService->search($inventory, $data)->paginate();
 

@@ -170,6 +170,16 @@ class Salesman extends Model implements AuthenticatableContract
             $this->shop_id);
     }
 
+    /**
+     * 车销单
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function dispatchTruck()
+    {
+        return $this->hasMany(DispatchTruck::class);
+    }
+
 
     /**
      * goods target
@@ -178,7 +188,8 @@ class Salesman extends Model implements AuthenticatableContract
      */
     public function goodsTarget()
     {
-        return $this->belongsToMany('App\Models\Goods', 'salesman_goods_target')->withPivot('id', 'num', 'pieces','barcode', 'month');
+        return $this->belongsToMany('App\Models\Goods', 'salesman_goods_target')->withPivot('id', 'num', 'pieces',
+            'barcode', 'month');
     }
 
     /**
@@ -343,7 +354,6 @@ class Salesman extends Model implements AuthenticatableContract
         }
         return $query;
     }
-
 
 
     /**

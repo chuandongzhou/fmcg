@@ -545,6 +545,16 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
                     $router->delete('delete-order/{order_id}',
                         'DispatchTruckController@deleteDispatchTruckOrder');//删除发车单内商品
                     $router->post('{dtv_id}/truck-back', 'DispatchTruckController@confirmTruckBack');//确认回车
+                    //车销
+                    $router->post('create-truck-sales', 'DispatchTruckController@createTruckSalesVoucher'); // 创建车销单
+                    $router->get('goods', 'DispatchTruckController@goodsList'); // 获取商品列表
+                    $router->post('{truck_sales}/goods', 'DispatchTruckController@addGoods'); // 添加商品到车销单
+                    $router->get('salesman', 'DispatchTruckController@salesmanList'); // 获取业务员列表
+                    $router->post('{truck_sales}/salesman', 'DispatchTruckController@addSalesman'); // 添加业务员到车销单
+
+
+                    $router->delete('{dtv_id}/cancel', 'DispatchTruckController@cancelCreate'); // 取消创建
+                    $router->delete('{dtv_id}/delete-sales-goods', 'DispatchTruckController@deleteGoods'); // 取消创建
                 });
             });
         });

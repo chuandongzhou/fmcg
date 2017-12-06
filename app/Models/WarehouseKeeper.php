@@ -25,7 +25,8 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
         'name'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'shop'];
+    protected $appends = ['shop_type'];
 
     /**
      * 关联店铺
@@ -60,6 +61,16 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
     }
 
     /**
+     * 获取店铺类型
+     *
+     * @return string
+     */
+    public function getShopTypeAttribute()
+    {
+        return $this->shop_id && $this->shop ? $this->shop->user_type : '';
+    }
+
+    /**
      *获取状态名
      *
      * @return string
@@ -68,5 +79,6 @@ class WarehouseKeeper extends Model implements AuthenticatableContract
     {
         return cons()->valueLang('status', $this->status);
     }
+
 
 }

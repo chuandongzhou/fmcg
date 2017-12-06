@@ -64,12 +64,12 @@
                                             {!!  $truck->status ? '<i class="iconfont icon-jinyong"></i> 禁用' : '<i class="iconfont icon-qiyong"></i> 启用' !!}
                                         </a>
 
-                                        <a data-url="{{ url('api/v1/personal/delivery-truck/'. $truck->id) }}"
+                                        {{--<a data-url="{{ url('api/v1/personal/delivery-truck/'. $truck->id) }}"
                                            data-method="delete" class="red delete-no-form ajax" href="javascript:"
                                            data-danger="真的要删除 {{ $truck->name }} 吗？"
                                            type="button">
                                             <i class="iconfont icon-shanchu"></i> 删除
-                                        </a>
+                                        </a>--}}
                                     </div>
                                 </td>
                             </tr>

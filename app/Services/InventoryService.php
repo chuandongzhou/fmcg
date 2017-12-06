@@ -644,6 +644,12 @@ class InventoryService extends BaseService
             case 3 :
                 $source = cons('inventory.source.promo');   //陈列商品
                 break;
+            case 4 :
+                $source = cons('inventory.source.wk_return');   //仓管发车退货
+                break;
+            case 5 :
+                $source = cons('inventory.source.wk_sales');   //仓管车销剩余
+                break;
             default :
                 $source = 0;
                 break;

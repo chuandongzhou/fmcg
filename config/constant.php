@@ -65,6 +65,7 @@ return [
             'gift' => 2,   //赠品
             'promo' => 3,  //促销
             'wk_return' => 4,  //退货
+            'wk_sales' => 5,  //车销
 
 
         ]
@@ -664,7 +665,7 @@ return [
             'wait' => 2,             //等待发车
             'delivering' => 3        //配送中
         ]
-    ],
+    ], 
 
     //配送单
     'dispatch_truck' => [
@@ -672,6 +673,10 @@ return [
             'wait' => 1,        //等待发车
             'delivering' => 2,       //配送中
             'backed' => 3,             //已回车
+        ],
+        'type' => [
+            'dispatch' => 0, //发车单
+            'sales' => 1, // 车销单
         ]
     ],
 ];
